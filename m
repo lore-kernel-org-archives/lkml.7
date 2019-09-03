@@ -2,111 +2,92 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68833C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2202FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAA623431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF81723431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:12:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729451AbfICOMb (ORCPT
+        id S1729494AbfICOMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:12:31 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:29666 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728679AbfICOMb (ORCPT
+        Tue, 3 Sep 2019 10:12:53 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57584 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728576AbfICOMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:12:31 -0400
-Received: from pps.filterd (m0134424.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x83AwDuw025168;
-        Tue, 3 Sep 2019 14:12:00 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2us2qw1dk6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 14:12:00 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 664528D;
-        Tue,  3 Sep 2019 14:12:00 +0000 (UTC)
-Received: from [16.116.163.9] (unknown [16.116.163.9])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 6552846;
-        Tue,  3 Sep 2019 14:11:58 +0000 (UTC)
-Subject: Re: [PATCH 2/8] x86/platform/uv: Return UV Hubless System Type
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
- <20190903001815.893030884@stormcage.eag.rdlabs.hpecorp.net>
- <20190903064914.GA9914@infradead.org>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <0eee6d96-e4fc-763b-a8b9-52c85ddd5531@hpe.com>
-Date:   Tue, 3 Sep 2019 07:12:28 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 10:12:52 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 80B2A81FA1; Tue,  3 Sep 2019 16:12:35 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 16:12:48 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Biwen Li <biwen.li@nxp.com>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v6 3/3] soc: fsl: add RCPM driver
+Message-ID: <20190903141248.GA8354@amd>
+References: <20190821031537.46824-1-ran.wang_1@nxp.com>
+ <20190821031537.46824-3-ran.wang_1@nxp.com>
+ <DB8PR04MB6826A9EA5D9232D55FE8BDEFF1AA0@DB8PR04MB6826.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190903064914.GA9914@infradead.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-02_04:2019-08-29,2019-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 spamscore=0 impostorscore=0 mlxlogscore=680 adultscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 mlxscore=0 suspectscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909020138
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Content-Disposition: inline
+In-Reply-To: <DB8PR04MB6826A9EA5D9232D55FE8BDEFF1AA0@DB8PR04MB6826.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 9/2/2019 11:49 PM, Christoph Hellwig wrote:
->>   static inline bool is_early_uv_system(void)
->>   {
->>   	return !((efi.uv_systab == EFI_INVALID_TABLE_ADDR) || !efi.uv_systab);
-> 
-> No need for the inner braces here.
-> 
-> But woudn't this be nicer as:
-> 
-> 	return efi.uv_systab != EFI_INVALID_TABLE_ADDR && efi.uv_systab;
-> 
-> anyway?
+Hi!
 
-Yes, good catch.  It somehow evolved to this but your suggestion is
-much more clear.
-> 
->> +#define is_uv_hubless _is_uv_hubless
-> 
-> Why the weird macro indirection?
-> 
->> -static inline int is_uv_hubless(void)	{ return 0; }
->> +static inline int _is_uv_hubless(int uv) { return 0; }
->> +#define is_uv_hubless _is_uv_hubless
-> 
-> And here again.
-> 
+> > +	/* Begin with first registered wakeup source */
+> > +	ws =3D wakeup_source_get_start(&idx);
+>=20
+> Since I have mad some change in this version, could you please take a loo=
+k on this.
+> If it's OK to you, I would re-add 'Acked-by: Pavel Machek <pavel@ucw.cz> '
 
-Sorry, I should have explained this better.  The problem arises because
-we have a number of UV specific kernel modules that support multiple
-distributions.  And with back porting to earlier distros we cannot
-rely on the KERNEL_VERSION macro to define whether the source is being
-built for an earlier kernel.  So this allows an ifdef on the function
-name to discover if the kernel is before or after these changes.
+I'm sorry, I'm a bit busy at the moment and this is not really my
+area.
 
-The primary motivation is to avoid referencing the hub structures
-when there aren't any, thus avoiding any NULL dereferences.  (Similar
-to patch 8/8.)
+Best regards,
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl1udOAACgkQMOfwapXb+vLLrwCgprpkyPdWIRm3F6Lv4rV9h5Vg
+zkUAnRa7EWL6E5/thkcXz87A7zdQUWUB
+=oBPe
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
