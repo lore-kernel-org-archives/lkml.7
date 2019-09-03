@@ -2,175 +2,242 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ECDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12320C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EE02077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0C02077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:38:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sfMjBj2S"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ts0NY2/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbfICPit (ORCPT
+        id S1729804AbfICPi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:38:49 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:33299 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICPit (ORCPT
+        Tue, 3 Sep 2019 11:38:58 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34596 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICPi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:38:49 -0400
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x83FcfWC009616;
-        Wed, 4 Sep 2019 00:38:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x83FcfWC009616
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567525122;
-        bh=ddsALsfzO0Qd/rlS27Z9Zxje7b1eMLR4GVZ55uvcTqA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sfMjBj2S2X9l8J2e4Fx8ZAKzz7/7evDwry2dnzrludXKrQ+mZuz9w2xuSSQI4M+/S
-         lawYclHxvJM5aO5e0nOOP77VQyUtKkdnXU+O9xDQ+F83eOMBTFW1GeHarV24kXWN+a
-         mnCWAwNv6URtIYjO5ZAjdim1fDgldC5olOlK/hNyH+QoQPZLdcILNNTozDo40zCifh
-         sDy6jFh8fJ2ujoa+8SYLpbyKPlBJwg4EgzylzMMqITQO19HXmmAL/MuKHHdry9iZco
-         pbDY7NxFzeQaLbIn6SIzF6xr7MZvsOh5aOZqZnSvqPwwJZXSJ1bhoBhfpr2ltKNQCl
-         7KWnWX3SKs24Q==
-X-Nifty-SrcIP: [209.85.222.47]
-Received: by mail-ua1-f47.google.com with SMTP id x2so5631790uar.8;
-        Tue, 03 Sep 2019 08:38:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAVxEVN6I407s425E4zcEPAQPDVDuMSRwDitVhrQE4agoNyuTam0
-        9JUwo4E24+qiU6IUuambOWo7h7GbyjLw1VtHVaY=
-X-Google-Smtp-Source: APXvYqziWvsVfo+DPHXywxk2KF/QFGtnFxRq4I537vXTbMgRSrTiWQnlLgQHO6TfYsfWCtdi5x0mpqJRspDDhMaRbrI=
-X-Received: by 2002:a9f:2213:: with SMTP id 19mr5138825uad.25.1567525121006;
- Tue, 03 Sep 2019 08:38:41 -0700 (PDT)
+        Tue, 3 Sep 2019 11:38:57 -0400
+Received: by mail-lf1-f65.google.com with SMTP id z21so13284898lfe.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:38:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W1Tb9t4twp/nux6lXbmtrYQ5FWLSza1v+0RZOROryBI=;
+        b=Ts0NY2/sRIP/7b27INZQksbp5peZPBNCTGDqagCisxjOvkrpdPsd274vEbhSAKUkie
+         L7O0G9SsB7tGdu+HCbM2Vki0FvNg3rTz4MXz+j6GCudu1/Akln0EkYnTjeXXAO4aVBAc
+         mJVo7mcoCyho2uA2Cv1jFi8Z+AcwC9LLVuzm69FJ4hBxOMIbDmFwsDKN6Rbyc9W69B5J
+         sYPopsGsodZ7Gn5KSqCQk1jejoGhWplsicRwpnX2Mk34lLCzoNzdRV36+Fmf0bQ/6/ww
+         pskPnRFfrrS4//exYKMAiUZ0XDxPcihlv5vHba5KGleDrmTRrQK9AY/RtZgR868lMiel
+         saPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W1Tb9t4twp/nux6lXbmtrYQ5FWLSza1v+0RZOROryBI=;
+        b=GyNSOX7xHDwwDHxu1+GqSgVpiUCmuffPMskc9KQu81woL8kn2e9lc7X22rxg/nrJWZ
+         MZW1hQrbH0awRbc5Ysws31PoS2R179fY5EdldA9m+Ilh91AZ6xbiQVdI3nARAOdRnNm+
+         Zvj9nlXBJfX2y7iMk/Bc11jdrlD2dYdoBOfYNi+u7ZaaXCrhb24AiLI9EEpHv3cYiQM4
+         b2WDFWVGfy15eDaWqCjSzF6SqySjBKJn6LPToS4rC16cqsU+oMo9w9B3nz1wZS/4R8rH
+         6e6Q12uRs/O7nfHrUynwq3xOVsKSTjtFHhzza1h4Dgmk5U/ouC1NTg9ymSTxLh+QzcTf
+         cTFg==
+X-Gm-Message-State: APjAAAWahFV/GcHr/Qup1M86qYoBhO9lyAKo7a658t5j77G/Ml7nAEy5
+        Lun9H+0XayGQfv64nhETYtvNWkNMUCAtub0elv1F6A==
+X-Google-Smtp-Source: APXvYqwrVEPc58DhYIyK5rYN3fjybOwhUUYuFA6X6iOZkGLH6gijnwK6jRTS2O3SuI9gHykGbD62gY8a029TEVZe8b0=
+X-Received: by 2002:ac2:59c2:: with SMTP id x2mr9106428lfn.125.1567525134666;
+ Tue, 03 Sep 2019 08:38:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
- <20190828055425.24765-2-yamada.masahiro@socionext.com> <20190828182017.GB127646@archlinux-threadripper>
- <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com> <20190829000551.GA62731@archlinux-threadripper>
-In-Reply-To: <20190829000551.GA62731@archlinux-threadripper>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 4 Sep 2019 00:38:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARL45QYMR5PM0kte-y6_XSErsGgoUJ6zg421hK99VT=+w@mail.gmail.com>
-Message-ID: <CAK7LNARL45QYMR5PM0kte-y6_XSErsGgoUJ6zg421hK99VT=+w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
- functions for W=1 build
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sven Schnelle <svens@stackframe.org>,
-        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190822021740.15554-1-riel@surriel.com> <20190822021740.15554-10-riel@surriel.com>
+In-Reply-To: <20190822021740.15554-10-riel@surriel.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 3 Sep 2019 17:38:43 +0200
+Message-ID: <CAKfTPtAw1f89d4Sv+vSfytP8pJy-fy1hvpcz-=hoz4nrZXQV6A@mail.gmail.com>
+Subject: Re: [PATCH 09/15] sched,fair: refactor enqueue/dequeue_entity
+To:     Rik van Riel <riel@surriel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mel Gorman <mgorman@techsingularity.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 9:05 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Wed, Aug 28, 2019 at 04:28:30PM -0700, Nick Desaulniers wrote:
-> > On Wed, Aug 28, 2019 at 11:20 AM Nathan Chancellor
-> > <natechancellor@gmail.com> wrote:
-> > >
-> > > On Wed, Aug 28, 2019 at 02:54:25PM +0900, Masahiro Yamada wrote:
-> > > > GCC and Clang have different policy for -Wunused-function; GCC does not
-> > > > warn unused static inline functions at all whereas Clang does if they
-> > > > are defined in source files instead of included headers although it has
-> > > > been suppressed since commit abb2ea7dfd82 ("compiler, clang: suppress
-> > > > warning for unused static inline functions").
-> > > >
-> > > > We often miss to delete unused functions where 'static inline' is used
-> > > > in *.c files since there is no tool to detect them. Unused code remains
-> > > > until somebody notices. For example, commit 075ddd75680f ("regulator:
-> > > > core: remove unused rdev_get_supply()").
-> > > >
-> > > > Let's remove __maybe_unused from the inline macro to allow Clang to
-> > > > start finding unused static inline functions. For now, we do this only
-> > > > for W=1 build since it is not a good idea to sprinkle warnings for the
-> > > > normal build.
-> > > >
-> > > > My initial attempt was to add -Wno-unused-function for no W=1 build
-> > > > (https://lore.kernel.org/patchwork/patch/1120594/)
-> > > >
-> > > > Nathan Chancellor pointed out that would weaken Clang's checks since
-> > > > we would no longer get -Wunused-function without W=1. It is true GCC
-> > > > would detect unused static non-inline functions, but it would weaken
-> > > > Clang as a standalone compiler at least.
-> >
-> > Got it. No problem.
-> >
-> > > >
-> > > > Here is a counter implementation. The current problem is, W=... only
-> > > > controls compiler flags, which are globally effective. There is no way
-> > > > to narrow the scope to only 'static inline' functions.
-> > > >
-> > > > This commit defines KBUILD_EXTRA_WARN[123] corresponding to W=[123].
-> > > > When KBUILD_EXTRA_WARN1 is defined, __maybe_unused is omitted from
-> > > > the 'inline' macro.
-> > > >
-> > > > This makes the code a bit uglier, so personally I do not want to carry
-> > > > this forever. If we can manage to fix most of the warnings, we can
-> > > > drop this entirely, then enable -Wunused-function all the time.
-> >
-> > How many warnings?
->
-> In an x86 defconfig build (one of the smallest builds we do), I see an
-> additional 35 warnings that crop up:
->
-> https://gist.github.com/003ba86ba60b4ac7e8109089d6cb1a5a
->
-> > > >
-> > > > If you contribute to code clean-up, please run "make CC=clang W=1"
-> > > > and check -Wunused-function warnings. You will find lots of unused
-> > > > functions.
-> > > >
-> > > > Some of them are false-positives because the call-sites are disabled
-> > > > by #ifdef. I do not like to abuse the inline keyword for suppressing
-> > > > unused-function warnings because it is intended to be a hint for the
-> > > > compiler optimization. I prefer #ifdef around the definition, or
-> > > > __maybe_unused if #ifdef would make the code too ugly.
-> > > >
-> > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > >
-> > > I can still see warnings from static unused functions and with W=1, I
-> > > see plenty more. I agree that this is uglier because of the
-> > > __inline_maybe_unused but I think this is better for regular developers.
-> > > I will try to work on these unused-function warnings!
-> >
-> > How many are we talking here?
-> >
-> > >
-> > > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-> >
-> > This is getting kind of messy.  I was more ok when the goal seemed to
-> > be simplifying the definition of `inline`, but this is worse IMO.
->
-> I guess if you want, we can just go back to v1 and have all unused
-> function warnings hidden by default with clang. Fixing these warnings
-> will take a significant amount of time given there will probably be a
-> few hundred so I don't think having this warning hidden behind W=1 for
-> that long is a good thing.
->
-> Cheers,
-> Nathan
+Hi Rik,
 
-I slightly prefer this version.
+On Thu, 22 Aug 2019 at 04:18, Rik van Riel <riel@surriel.com> wrote:
+>
+> Refactor enqueue_entity, dequeue_entity, and update_load_avg, in order
+> to split out the things we still want to happen at every level in the
+> cgroup hierarchy with a flat runqueue from the things we only need to
+> happen once.
+>
+> No functional changes.
+>
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> ---
+>  kernel/sched/fair.c | 64 +++++++++++++++++++++++++++++----------------
+>  1 file changed, 42 insertions(+), 22 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 74ee22c59d13..7b0d95f2e3a8 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3502,7 +3502,7 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>  #define DO_ATTACH      0x4
+>
+>  /* Update task and its cfs_rq load average */
+> -static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> +static inline bool update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>  {
+>         u64 now = cfs_rq_clock_pelt(cfs_rq);
+>         int decayed;
+> @@ -3531,6 +3531,8 @@ static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>
+>         } else if (decayed && (flags & UPDATE_TG))
+>                 update_tg_load_avg(cfs_rq, 0);
+> +
+> +       return decayed;
 
-Either way we go, I want to fix -Wunused-function warnings,
-then revert this patch as soon as possible.
+This is a functional change, isn't it ?
+update_cfs_group is now called only if decayed but we can we attach a
+task during the enqueue and there is no decay
 
-
---
-Best Regards
-
-Masahiro Yamada
+>
+>  }
+>
+>  #ifndef CONFIG_64BIT
+> @@ -3747,9 +3749,10 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+>  #define SKIP_AGE_LOAD  0x0
+>  #define DO_ATTACH      0x0
+>
+> -static inline void update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int not_used1)
+> +static inline bool update_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *se, int not_used1)
+>  {
+>         cfs_rq_util_change(cfs_rq, 0);
+> +       return false;
+>  }
+>
+>  static inline void remove_entity_load_avg(struct sched_entity *se) {}
+> @@ -3872,6 +3875,24 @@ static inline void check_schedstat_required(void)
+>   * CPU and an up-to-date min_vruntime on the destination CPU.
+>   */
+>
+> +static bool
+> +enqueue_entity_groups(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> +{
+> +       /*
+> +        * When enqueuing a sched_entity, we must:
+> +        *   - Update loads to have both entity and cfs_rq synced with now.
+> +        *   - Add its load to cfs_rq->runnable_avg
+> +        *   - For group_entity, update its weight to reflect the new share of
+> +        *     its group cfs_rq
+> +        *   - Add its new weight to cfs_rq->load.weight
+> +        */
+> +       if (!update_load_avg(cfs_rq, se, UPDATE_TG | DO_ATTACH))
+> +               return false;
+>
+> +
+> +       update_cfs_group(se);
+> +       return true;
+> +}
+> +
+>  static void
+>  enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>  {
+> @@ -3896,16 +3917,6 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>         if (renorm && !curr)
+>                 se->vruntime += cfs_rq->min_vruntime;
+>
+> -       /*
+> -        * When enqueuing a sched_entity, we must:
+> -        *   - Update loads to have both entity and cfs_rq synced with now.
+> -        *   - Add its load to cfs_rq->runnable_avg
+> -        *   - For group_entity, update its weight to reflect the new share of
+> -        *     its group cfs_rq
+> -        *   - Add its new weight to cfs_rq->load.weight
+> -        */
+> -       update_load_avg(cfs_rq, se, UPDATE_TG | DO_ATTACH);
+> -       update_cfs_group(se);
+>         enqueue_runnable_load_avg(cfs_rq, se);
+>         account_entity_enqueue(cfs_rq, se);
+>
+> @@ -3972,14 +3983,9 @@ static void clear_buddies(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>
+>  static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq);
+>
+> -static void
+> -dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> +static bool
+> +dequeue_entity_groups(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>  {
+> -       /*
+> -        * Update run-time statistics of the 'current'.
+> -        */
+> -       update_curr(cfs_rq);
+> -
+>         /*
+>          * When dequeuing a sched_entity, we must:
+>          *   - Update loads to have both entity and cfs_rq synced with now.
+> @@ -3988,7 +3994,21 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>          *   - For group entity, update its weight to reflect the new share
+>          *     of its group cfs_rq.
+>          */
+> -       update_load_avg(cfs_rq, se, UPDATE_TG);
+> +       if (!update_load_avg(cfs_rq, se, UPDATE_TG))
+> +               return false;
+> +       update_cfs_group(se);
+> +
+> +       return true;
+> +}
+> +
+> +static void
+> +dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> +{
+> +       /*
+> +        * Update run-time statistics of the 'current'.
+> +        */
+> +       update_curr(cfs_rq);
+> +
+>         dequeue_runnable_load_avg(cfs_rq, se);
+>
+>         update_stats_dequeue(cfs_rq, se, flags);
+> @@ -4012,8 +4032,6 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>         /* return excess runtime on last dequeue */
+>         return_cfs_rq_runtime(cfs_rq);
+>
+> -       update_cfs_group(se);
+> -
+>         /*
+>          * Now advance min_vruntime if @se was the entity holding it back,
+>          * except when: DEQUEUE_SAVE && !DEQUEUE_MOVE, in this case we'll be
+> @@ -5178,6 +5196,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>                 if (se->on_rq)
+>                         break;
+>                 cfs_rq = cfs_rq_of(se);
+> +               enqueue_entity_groups(cfs_rq, se, flags);
+>                 enqueue_entity(cfs_rq, se, flags);
+>
+>                 /*
+> @@ -5260,6 +5279,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>
+>         for_each_sched_entity(se) {
+>                 cfs_rq = cfs_rq_of(se);
+> +               dequeue_entity_groups(cfs_rq, se, flags);
+>                 dequeue_entity(cfs_rq, se, flags);
+>
+>                 /*
+> --
+> 2.20.1
+>
