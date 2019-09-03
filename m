@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A858BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A626C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85DD8206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 569C2206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbfICJi4 (ORCPT
+        id S1728854AbfICJjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:38:56 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:33219 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728573AbfICJiy (ORCPT
+        Tue, 3 Sep 2019 05:39:04 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:23106 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728129AbfICJjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:38:54 -0400
-X-UUID: 0bd7c60e03fa441e9d7741e6a44261b1-20190903
-X-UUID: 0bd7c60e03fa441e9d7741e6a44261b1-20190903
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        Tue, 3 Sep 2019 05:39:03 -0400
+X-UUID: 9d95ffdfe38d406598732577f6d3d164-20190903
+X-UUID: 9d95ffdfe38d406598732577f6d3d164-20190903
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
         (envelope-from <yong.wu@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 21343390; Tue, 03 Sep 2019 17:38:48 +0800
+        with ESMTP id 481907305; Tue, 03 Sep 2019 17:38:56 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
  mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Sep 2019 17:38:48 +0800
+ 15.0.1395.4; Tue, 3 Sep 2019 17:38:55 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Sep 2019 17:38:47 +0800
+ Transport; Tue, 3 Sep 2019 17:38:54 +0800
 From:   Yong Wu <yong.wu@mediatek.com>
 To:     Matthias Brugger <matthias.bgg@gmail.com>,
         Joerg Roedel <joro@8bytes.org>,
@@ -49,10 +49,10 @@ CC:     Evan Green <evgreen@chromium.org>,
         <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>, <anan.sun@mediatek.com>,
         <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>
-Subject: [PATCH v3 04/14] memory: mtk-smi: Add device-link between smi-larb and smi-common
-Date:   Tue, 3 Sep 2019 17:37:26 +0800
-Message-ID: <1567503456-24725-5-git-send-email-yong.wu@mediatek.com>
+        <ming-fan.chen@mediatek.com>, Rick Chang <rick.chang@mediatek.com>
+Subject: [PATCH v3 05/14] media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+Date:   Tue, 3 Sep 2019 17:37:27 +0800
+Message-ID: <1567503456-24725-6-git-send-email-yong.wu@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
 References: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
@@ -64,83 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Normally, If the smi-larb HW need work, we should enable the smi-common
-HW power and clock firstly.
-This patch adds device-link between the smi-larb dev and the smi-common
-dev. then If pm_runtime_get_sync(smi-larb-dev), the pm_runtime_get_sync
-(smi-common-dev) will be called automatically.
+MediaTek IOMMU has already added device_link between the consumer
+and smi-larb device. If the jpg device call the pm_runtime_get_sync,
+the smi-larb's pm_runtime_get_sync also be called automatically.
 
-Also, Add DL_FLAG_STATELESS to avoid the smi-common clocks be gated when
-probe.
-
-CC: Matthias Brugger <matthias.bgg@gmail.com>
-Suggested-by: Tomasz Figa <tfiga@chromium.org>
+CC: Rick Chang <rick.chang@mediatek.com>
 Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+Reviewed-by: Evan Green <evgreen@chromium.org>
 ---
- drivers/memory/mtk-smi.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 22 ----------------------
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  2 --
+ 2 files changed, 24 deletions(-)
 
-diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-index 439d7d8..5dab56c 100644
---- a/drivers/memory/mtk-smi.c
-+++ b/drivers/memory/mtk-smi.c
-@@ -273,6 +273,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *smi_node;
- 	struct platform_device *smi_pdev;
-+	struct device_link *link;
+diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+index ee802fc..3242a8d 100644
+--- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
++++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+@@ -21,7 +21,6 @@
+ #include <media/v4l2-ioctl.h>
+ #include <media/videobuf2-core.h>
+ #include <media/videobuf2-dma-contig.h>
+-#include <soc/mediatek/smi.h>
  
- 	larb = devm_kzalloc(dev, sizeof(*larb), GFP_KERNEL);
- 	if (!larb)
-@@ -312,6 +313,12 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
- 		if (!platform_get_drvdata(smi_pdev))
- 			return -EPROBE_DEFER;
- 		larb->smi_common_dev = &smi_pdev->dev;
-+		link = device_link_add(dev, larb->smi_common_dev,
-+				       DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS);
-+		if (!link) {
-+			dev_err(dev, "Unable to link smi-common dev\n");
-+			return -ENODEV;
-+		}
- 	} else {
- 		dev_err(dev, "Failed to get the smi_common device\n");
- 		return -EINVAL;
-@@ -324,6 +331,9 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+ #include "mtk_jpeg_hw.h"
+ #include "mtk_jpeg_core.h"
+@@ -893,11 +892,6 @@ static int mtk_jpeg_queue_init(void *priv, struct vb2_queue *src_vq,
  
- static int mtk_smi_larb_remove(struct platform_device *pdev)
+ static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
  {
-+	struct mtk_smi_larb *larb = platform_get_drvdata(pdev);
-+
-+	device_link_remove(&pdev->dev, larb->smi_common_dev);
- 	pm_runtime_disable(&pdev->dev);
- 	component_del(&pdev->dev, &mtk_smi_larb_component_ops);
- 	return 0;
-@@ -335,17 +345,9 @@ static int __maybe_unused mtk_smi_larb_resume(struct device *dev)
- 	const struct mtk_smi_larb_gen *larb_gen = larb->larb_gen;
- 	int ret;
- 
--	/* Power on smi-common. */
--	ret = pm_runtime_get_sync(larb->smi_common_dev);
--	if (ret < 0) {
--		dev_err(dev, "Failed to pm get for smi-common(%d).\n", ret);
--		return ret;
--	}
+-	int ret;
 -
- 	ret = mtk_smi_clk_enable(&larb->smi);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to enable clock(%d).\n", ret);
--		pm_runtime_put_sync(larb->smi_common_dev);
- 		return ret;
- 	}
- 
-@@ -360,7 +362,6 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
- 	struct mtk_smi_larb *larb = dev_get_drvdata(dev);
- 
- 	mtk_smi_clk_disable(&larb->smi);
--	pm_runtime_put_sync(larb->smi_common_dev);
- 	return 0;
+-	ret = mtk_smi_larb_get(jpeg->larb);
+-	if (ret)
+-		dev_err(jpeg->dev, "mtk_smi_larb_get larbvdec fail %d\n", ret);
+ 	clk_prepare_enable(jpeg->clk_jdec_smi);
+ 	clk_prepare_enable(jpeg->clk_jdec);
+ }
+@@ -906,7 +900,6 @@ static void mtk_jpeg_clk_off(struct mtk_jpeg_dev *jpeg)
+ {
+ 	clk_disable_unprepare(jpeg->clk_jdec);
+ 	clk_disable_unprepare(jpeg->clk_jdec_smi);
+-	mtk_smi_larb_put(jpeg->larb);
  }
  
+ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+@@ -1051,21 +1044,6 @@ static int mtk_jpeg_release(struct file *file)
+ 
+ static int mtk_jpeg_clk_init(struct mtk_jpeg_dev *jpeg)
+ {
+-	struct device_node *node;
+-	struct platform_device *pdev;
+-
+-	node = of_parse_phandle(jpeg->dev->of_node, "mediatek,larb", 0);
+-	if (!node)
+-		return -EINVAL;
+-	pdev = of_find_device_by_node(node);
+-	if (WARN_ON(!pdev)) {
+-		of_node_put(node);
+-		return -EINVAL;
+-	}
+-	of_node_put(node);
+-
+-	jpeg->larb = &pdev->dev;
+-
+ 	jpeg->clk_jdec = devm_clk_get(jpeg->dev, "jpgdec");
+ 	if (IS_ERR(jpeg->clk_jdec))
+ 		return PTR_ERR(jpeg->clk_jdec);
+diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+index 999bd14..8579494 100644
+--- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
++++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+@@ -47,7 +47,6 @@ enum mtk_jpeg_ctx_state {
+  * @dec_reg_base:	JPEG registers mapping
+  * @clk_jdec:		JPEG hw working clock
+  * @clk_jdec_smi:	JPEG SMI bus clock
+- * @larb:		SMI device
+  */
+ struct mtk_jpeg_dev {
+ 	struct mutex		lock;
+@@ -61,7 +60,6 @@ struct mtk_jpeg_dev {
+ 	void __iomem		*dec_reg_base;
+ 	struct clk		*clk_jdec;
+ 	struct clk		*clk_jdec_smi;
+-	struct device		*larb;
+ };
+ 
+ /**
 -- 
 1.9.1
 
