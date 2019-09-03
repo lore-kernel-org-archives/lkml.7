@@ -2,208 +2,154 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E6C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA46C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 853E322D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:26:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NwJ8i3oj"
+	by mail.kernel.org (Postfix) with ESMTP id 2A18521881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbfICE0p (ORCPT
+        id S1726282AbfICEiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 00:26:45 -0400
-Received: from ozlabs.org ([203.11.71.1]:45261 "EHLO ozlabs.org"
+        Tue, 3 Sep 2019 00:38:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39188 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfICE0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 00:26:45 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725821AbfICEiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 00:38:10 -0400
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Mv6T0Jx9z9s4Y;
-        Tue,  3 Sep 2019 14:26:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567484801;
-        bh=ik6lRfimEE9A3HxGKDLKD9BJcOQNRt21i98iuUwi5M0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NwJ8i3ojihMTskBHIBbe9TEs/+l0iR8utQxPTWhO2lje3Wnv7LoY/oKUKJk6isJsF
-         iR5hVYBbXu2JH97SdMW8jBElcHSo9czS3snJjjGqIAHzmrYuKAbKD0sxD08+UH+f/H
-         cUQFsQDgZyzXwwQ0xjzqSz7xrOYiCK5RBNotTRNqdy3TskGcp67Ca7ggpnMaxhiXwh
-         BRrQ2oLayNjbbs5llt1TcpzcZDM4/Ze69b2GTOGVrqPmey0pix6h3uSBwdqk1ApayE
-         g3EC4cC/muDt221j1K7AM4JcemCdMJL2ks6zPvLADgZYh6k8hQKISbCTpP02//YQBL
-         xcvouX91jrA8w==
-Date:   Tue, 3 Sep 2019 14:26:38 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: linux-next: build failure after merge of the regulator tree
-Message-ID: <20190903142638.79d2cc87@canb.auug.org.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 34EC385362
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 04:38:09 +0000 (UTC)
+Received: by mail-qk1-f200.google.com with SMTP id c187so3406360qkf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 21:38:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HyhlRljTDeAFaElZzW29mxoUpUqbbX7yuY1HM+Z3ooo=;
+        b=KPZf3HDZqIs+vpqBWz/RSC0UPXrG+c+0BhknZbBB+TYnbdjHnPfx7NepnUVd7EjDyt
+         KOqWtSB/isb7GvTCGvAyhgtmiLDtwOYz7ubal2cUtvvPD78OUQnakP5lxKWfNNumfaLK
+         2QY0u5a45Q6pmsGwl0EaCmNXGmD6rONekNfeFGAB1nRkX6SfyeP3yn3wbnXctke2d5Ws
+         ILIueRD5cN5jXB3ZAD6VAivAX3NwbIC4NFsOUser2C6+ND29i6SAduprJ9e+0+Jpq5t4
+         2HRZ4KRWIzBMtXEP7MQR2heVFNY6lxTsbXIHiNXjn8b665iDRU9ByhxAipam26rEmLhW
+         fIng==
+X-Gm-Message-State: APjAAAVDHNE8sOBM5NacCTeUXt4sqNTdmD2k/suhOISbgaUyYtIhVjw7
+        ksqCvnaW8RRMkYU3PxqrvdN1/C1bQYTA0/iLesYxVwxJbh9HchZBv/JVANuKOBn2v3MIEJT6KYz
+        OqbtZKGw7/Dg9h9zmN2zvE7/n
+X-Received: by 2002:a05:620a:1037:: with SMTP id a23mr25086418qkk.287.1567485488537;
+        Mon, 02 Sep 2019 21:38:08 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwtyQdlTmiZPOlqu1w1TwZvFjyv5qe4H/TBrecDHCyCHz4CXpvVw+PctTpIorzXinTE+wPlmQ==
+X-Received: by 2002:a05:620a:1037:: with SMTP id a23mr25086406qkk.287.1567485488344;
+        Mon, 02 Sep 2019 21:38:08 -0700 (PDT)
+Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
+        by smtp.gmail.com with ESMTPSA id y17sm3313998qtb.82.2019.09.02.21.38.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Sep 2019 21:38:07 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 00:38:02 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        virtualization@lists.linux-foundation.org,
+        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH v4 2/5] vsock/virtio: reduce credit update messages
+Message-ID: <20190903003050-mutt-send-email-mst@kernel.org>
+References: <20190717113030.163499-1-sgarzare@redhat.com>
+ <20190717113030.163499-3-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/u_So2=NMJY1hVIWxRbO1Sps";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190717113030.163499-3-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/u_So2=NMJY1hVIWxRbO1Sps
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 17, 2019 at 01:30:27PM +0200, Stefano Garzarella wrote:
+> In order to reduce the number of credit update messages,
+> we send them only when the space available seen by the
+> transmitter is less than VIRTIO_VSOCK_MAX_PKT_BUF_SIZE.
+> 
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  include/linux/virtio_vsock.h            |  1 +
+>  net/vmw_vsock/virtio_transport_common.c | 16 +++++++++++++---
+>  2 files changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> index 7d973903f52e..49fc9d20bc43 100644
+> --- a/include/linux/virtio_vsock.h
+> +++ b/include/linux/virtio_vsock.h
+> @@ -41,6 +41,7 @@ struct virtio_vsock_sock {
+>  
+>  	/* Protected by rx_lock */
+>  	u32 fwd_cnt;
+> +	u32 last_fwd_cnt;
+>  	u32 rx_bytes;
+>  	struct list_head rx_queue;
+>  };
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 095221f94786..a85559d4d974 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -211,6 +211,7 @@ static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
+>  void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct virtio_vsock_pkt *pkt)
+>  {
+>  	spin_lock_bh(&vvs->tx_lock);
+> +	vvs->last_fwd_cnt = vvs->fwd_cnt;
+>  	pkt->hdr.fwd_cnt = cpu_to_le32(vvs->fwd_cnt);
+>  	pkt->hdr.buf_alloc = cpu_to_le32(vvs->buf_alloc);
+>  	spin_unlock_bh(&vvs->tx_lock);
+> @@ -261,6 +262,7 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+>  	struct virtio_vsock_sock *vvs = vsk->trans;
+>  	struct virtio_vsock_pkt *pkt;
+>  	size_t bytes, total = 0;
+> +	u32 free_space;
+>  	int err = -EFAULT;
+>  
+>  	spin_lock_bh(&vvs->rx_lock);
+> @@ -291,11 +293,19 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+>  			virtio_transport_free_pkt(pkt);
+>  		}
+>  	}
+> +
+> +	free_space = vvs->buf_alloc - (vvs->fwd_cnt - vvs->last_fwd_cnt);
+> +
+>  	spin_unlock_bh(&vvs->rx_lock);
+>  
+> -	/* Send a credit pkt to peer */
+> -	virtio_transport_send_credit_update(vsk, VIRTIO_VSOCK_TYPE_STREAM,
+> -					    NULL);
+> +	/* We send a credit update only when the space available seen
+> +	 * by the transmitter is less than VIRTIO_VSOCK_MAX_PKT_BUF_SIZE
 
-Hi all,
+This is just repeating what code does though.
+Please include the *reason* for the condition.
+E.g. here's a better comment:
 
-After merging the regulator tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+	/* To reduce number of credit update messages,
+	 * don't update credits as long as lots of space is available.
+	 * Note: the limit chosen here is arbitrary. Setting the limit
+	 * too high causes extra messages. Too low causes transmitter
+	 * stalls. As stalls are in theory more expensive than extra
+	 * messages, we set the limit to a high value. TODO: experiment
+	 * with different values.
+	 */
 
-ld: drivers/ata/ahci.o:(.opd+0x150): multiple definition of `regulator_bulk=
-_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined here
-ld: drivers/ata/ahci.o: in function `.regulator_bulk_set_supply_names':
-ahci.c:(.text+0x1780): multiple definition of `.regulator_bulk_set_supply_n=
-ames'; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/ata/libahci.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x84a0): multiple definition of `.regulator_bulk_set_supply_names'; =
-drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/ata/libahci.o:(.opd+0x5d0): multiple definition of `regulator_b=
-ulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined h=
-ere
-ld: drivers/ata/sata_mv.o:(.opd+0x690): multiple definition of `regulator_b=
-ulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined h=
-ere
-ld: drivers/ata/sata_mv.o: in function `.regulator_bulk_set_supply_names':
-sata_mv.c:(.text+0xb9b0): multiple definition of `.regulator_bulk_set_suppl=
-y_names'; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/common/common.o: in function `.regulator_bulk_set_supply_na=
-mes':
-(.text+0x7d0): multiple definition of `.regulator_bulk_set_supply_names'; d=
-rivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/common/common.o:(.opd+0x120): multiple definition of `regul=
-ator_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first def=
-ined here
-ld: drivers/usb/core/usb.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x17d0): multiple definition of `.regulator_bulk_set_supply_names'; =
-drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/core/usb.o:(.opd+0x348): multiple definition of `regulator_=
-bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined =
-here
-ld: drivers/usb/core/hub.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x2610): multiple definition of `.regulator_bulk_set_supply_names'; =
-drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/core/hub.o:(.opd+0x378): multiple definition of `regulator_=
-bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined =
-here
-ld: drivers/usb/core/hcd.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x3020): multiple definition of `.regulator_bulk_set_supply_names'; =
-drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/core/hcd.o:(.opd+0x378): multiple definition of `regulator_=
-bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined =
-here
-ld: drivers/usb/core/message.o: in function `.regulator_bulk_set_supply_nam=
-es':
-(.text+0x2350): multiple definition of `.regulator_bulk_set_supply_names'; =
-drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/core/message.o:(.opd+0x240): multiple definition of `regula=
-tor_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defi=
-ned here
-ld: drivers/usb/core/phy.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x700): multiple definition of `.regulator_bulk_set_supply_names'; d=
-rivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/core/phy.o:(.opd+0xc0): multiple definition of `regulator_b=
-ulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined h=
-ere
-ld: drivers/usb/core/of.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x2f0): multiple definition of `.regulator_bulk_set_supply_names'; d=
-rivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/core/of.o:(.opd+0x48): multiple definition of `regulator_bu=
-lk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined he=
-re
-ld: drivers/usb/phy/of.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x120): multiple definition of `.regulator_bulk_set_supply_names'; d=
-rivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/phy/of.o:(.opd+0x18): multiple definition of `regulator_bul=
-k_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined here
-ld: drivers/usb/host/ehci-hcd.o: in function `.regulator_bulk_set_supply_na=
-mes':
-(.text+0x11830): multiple definition of `.regulator_bulk_set_supply_names';=
- drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/host/ehci-hcd.o:(.opd+0x8d0): multiple definition of `regul=
-ator_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first def=
-ined here
-ld: drivers/usb/host/ohci-hcd.o: in function `.regulator_bulk_set_supply_na=
-mes':
-(.text+0xe8d0): multiple definition of `.regulator_bulk_set_supply_names'; =
-drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/usb/host/ohci-hcd.o:(.opd+0x570): multiple definition of `regul=
-ator_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first def=
-ined here
-ld: drivers/of/platform.o: in function `.regulator_bulk_set_supply_names':
-(.text+0x1180): multiple definition of `.regulator_bulk_set_supply_names'; =
-drivers/phy/phy-core.o:(.text+0x2390): first defined here
-ld: drivers/of/platform.o:(.opd+0x180): multiple definition of `regulator_b=
-ulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined h=
-ere
 
-Caused by commit
-
-  d0087e72710c ("regulator: provide regulator_bulk_set_supply_names()")
-
-I applied the following patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 3 Sep 2019 14:23:17 +1000
-Subject: [PATCH] regulator: stubs in header files should be static inline
-
-Fixes: d0087e72710c ("regulator: provide regulator_bulk_set_supply_names()")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- include/linux/regulator/consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/c=
-onsumer.h
-index 6d2181a76987..fe9bdf37c296 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -586,7 +586,7 @@ static inline int regulator_list_voltage(struct regulat=
-or *regulator, unsigned s
- 	return -EINVAL;
- }
-=20
--void regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
-+static inline void regulator_bulk_set_supply_names(struct regulator_bulk_d=
-ata *consumers,
- 				     const char *const *supply_names,
- 				     unsigned int num_supplies)
- {
---=20
-2.23.0.rc1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/u_So2=NMJY1hVIWxRbO1Sps
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1t634ACgkQAVBC80lX
-0GzomAgAnqNtfMVaJ4JBPwCvcptoP8IMXucVJMvoiZrmu9EoCcUWC+tdLgkrYGCL
-xyBFAQd1gO08aPOSa0A7vRK9bIaS31u+qnLNqIxSdyg4Q17MBbZdZgkU1tfjqhAs
-vQ7OXXNkqU9DUcn12HqQhTwFFPi3dtXmUKp01mFXhr6mc/ougC4zfs8lNPpPPRaL
-0O5s3hrc8/+eEHNcIyL3hsx1gDwTocD/y8EiCtDIbeg1wDSzjIFsHFQ4D689pr1q
-f/vhCJGveLjQlvOytYpULtKhi0UK+st5xGpgyNzajhP/zdtQGTEe//JzUi60tJNM
-+oR49mpxhYfRlE8yEk8l+WwZ7C9kxQ==
-=mRcA
------END PGP SIGNATURE-----
-
---Sig_/u_So2=NMJY1hVIWxRbO1Sps--
+> +	 */
+> +	if (free_space < VIRTIO_VSOCK_MAX_PKT_BUF_SIZE) {
+> +		virtio_transport_send_credit_update(vsk,
+> +						    VIRTIO_VSOCK_TYPE_STREAM,
+> +						    NULL);
+> +	}
+>  
+>  	return total;
+>  
+> -- 
+> 2.20.1
