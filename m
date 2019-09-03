@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB8CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657C0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73357233A1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABAF23431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528498;
-	bh=sSeRt6p8HhSAsd59d96a0VCNoOTrr83ZilQQZ+iDj84=;
+	s=default; t=1567528502;
+	bh=zhVFKvgOVO0h6u6YsHm1erT5jr7By0XHYjeYvoOXFSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pJSqcM9GYKfwrlT3sfN+8NGx9viJk+e7ZcLugF13CmavIEwj39mpveWgECzlYSERD
-	 lCkcNs1Z701y3j3u5rlOgcn/gNoL1Gwq6cfHO0XW6FX766sN0cXkHHZLyDwDy6vnC4
-	 RtlCJPNUjWFu9qIADubFJ/79IAYFqEFdyuKFSS0g=
+	b=hrXdHWyX3DqgDUrAttqvSBMr+mSMhqGduxmBFtnNoaqDJToTR9nVLuUo/7wKutMqv
+	 N6booofh38XUoEvmFpba6j4Q6CVdWrY+Cs+ZaWS0wyVYo7ubHjR0/DZRtbMxuDfWNt
+	 Wmzta+cp0ZHZ9KbB+NsVSKVJaLjmoKaNQgXXMPuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbfICQ1y (ORCPT
+        id S1731248AbfICQfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:27:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49320 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:35:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730944AbfICQ1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:47 -0400
+        id S1730975AbfICQ1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 095252343A;
-        Tue,  3 Sep 2019 16:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA5812343A;
+        Tue,  3 Sep 2019 16:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528066;
-        bh=sSeRt6p8HhSAsd59d96a0VCNoOTrr83ZilQQZ+iDj84=;
+        s=default; t=1567528073;
+        bh=zhVFKvgOVO0h6u6YsHm1erT5jr7By0XHYjeYvoOXFSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mv3rJM/vgQA2E0imytNrAcX/LgT4tUPdYYO3Nw4HeR+xJBC+kM3Sd1WLlucCq4sO9
-         aAnYneEyMwTZC6HRClXXdEuYOPbskFPSSJpAdaZVu4WyOReopctMkmmrMdzSXiTLhf
-         Fv8Vh7iJ+3s7ZecrDqK2Dm18YYoc1IvbY6AqTs3I=
+        b=PNHSb3NzwJeamYcfHj4IP9o14jvGmweINJmk5Nh4Uv13qCZox1BVC005DO9Q84Ehp
+         qumff+XuQL2ytG1bn60/x7rmHCVVHeAnk69DH5WH2S6toVqEacwE7i4lckMyeD9nvk
+         EOSBoGsSkDjnWaiTNCZJ62jF3Hn4PBxyqjNF9jfg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 081/167] PCI: qcom: Fix error handling in runtime PM support
-Date:   Tue,  3 Sep 2019 12:23:53 -0400
-Message-Id: <20190903162519.7136-81-sashal@kernel.org>
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Adam Zabrocki <adamza@microsoft.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 087/167] drm/i915: Handle vm_mmap error during I915_GEM_MMAP ioctl with WC set
+Date:   Tue,  3 Sep 2019 12:23:59 -0400
+Message-Id: <20190903162519.7136-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,152 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 
-[ Upstream commit 6e5da6f7d82474e94c2d4a38cf9ca4edbb3e03a0 ]
+[ Upstream commit ebfb6977801da521d8d5d752d373a187e2a2b9b3 ]
 
-The driver does not cope with the fact that probe can fail in a number
-of cases after enabling runtime PM on the device; this results in
-warnings about "Unbalanced pm_runtime_enable". Furthermore if probe
-fails after invoking qcom_pcie_host_init() the power-domain will be left
-referenced.
+Add err goto label and use it when VMA can't be established or changes
+underneath.
 
-As it is not possible for the error handling in qcom_pcie_host_init() to
-handle errors happening after returning from that function the
-pm_runtime_get_sync() is moved to qcom_pcie_probe() as well.
+v2:
+- Dropping Fixes: as it's indeed impossible to race an object to the
+  error address. (Chris)
+v3:
+- Use IS_ERR_VALUE (Chris)
 
-Fixes: 854b69efbdd2 ("PCI: qcom: add runtime pm support to pcie_port")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[lorenzo.pieralisi@arm.com: updated commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Reported-by: Adam Zabrocki <adamza@microsoft.com>
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: Adam Zabrocki <adamza@microsoft.com>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com> #v2
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190207085454.10598-2-joonas.lahtinen@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 56 ++++++++++++++++++--------
- 1 file changed, 39 insertions(+), 17 deletions(-)
+ drivers/gpu/drm/i915/i915_gem.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 87a8887fd4d3e..79f06c76ae071 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1091,7 +1091,6 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 	struct qcom_pcie *pcie = to_qcom_pcie(pci);
- 	int ret;
- 
--	pm_runtime_get_sync(pci->dev);
- 	qcom_ep_reset_assert(pcie);
- 
- 	ret = pcie->ops->init(pcie);
-@@ -1128,7 +1127,6 @@ static int qcom_pcie_host_init(struct pcie_port *pp)
- 	phy_power_off(pcie->phy);
- err_deinit:
- 	pcie->ops->deinit(pcie);
--	pm_runtime_put(pci->dev);
- 
- 	return ret;
- }
-@@ -1218,6 +1216,12 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		pm_runtime_disable(dev);
-+		return ret;
-+	}
+diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+index e81abd468a15d..9634d3adb8d01 100644
+--- a/drivers/gpu/drm/i915/i915_gem.c
++++ b/drivers/gpu/drm/i915/i915_gem.c
+@@ -1881,6 +1881,9 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
+ 	addr = vm_mmap(obj->base.filp, 0, args->size,
+ 		       PROT_READ | PROT_WRITE, MAP_SHARED,
+ 		       args->offset);
++	if (IS_ERR_VALUE(addr))
++		goto err;
 +
- 	pci->dev = dev;
- 	pci->ops = &dw_pcie_ops;
- 	pp = &pci->pp;
-@@ -1227,44 +1231,56 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	pcie->ops = of_device_get_match_data(dev);
+ 	if (args->flags & I915_MMAP_WC) {
+ 		struct mm_struct *mm = current->mm;
+ 		struct vm_area_struct *vma;
+@@ -1896,17 +1899,22 @@ i915_gem_mmap_ioctl(struct drm_device *dev, void *data,
+ 		else
+ 			addr = -ENOMEM;
+ 		up_write(&mm->mmap_sem);
++		if (IS_ERR_VALUE(addr))
++			goto err;
  
- 	pcie->reset = devm_gpiod_get_optional(dev, "perst", GPIOD_OUT_LOW);
--	if (IS_ERR(pcie->reset))
--		return PTR_ERR(pcie->reset);
-+	if (IS_ERR(pcie->reset)) {
-+		ret = PTR_ERR(pcie->reset);
-+		goto err_pm_runtime_put;
-+	}
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "parf");
- 	pcie->parf = devm_ioremap_resource(dev, res);
--	if (IS_ERR(pcie->parf))
--		return PTR_ERR(pcie->parf);
-+	if (IS_ERR(pcie->parf)) {
-+		ret = PTR_ERR(pcie->parf);
-+		goto err_pm_runtime_put;
-+	}
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
- 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
--	if (IS_ERR(pci->dbi_base))
--		return PTR_ERR(pci->dbi_base);
-+	if (IS_ERR(pci->dbi_base)) {
-+		ret = PTR_ERR(pci->dbi_base);
-+		goto err_pm_runtime_put;
-+	}
- 
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "elbi");
- 	pcie->elbi = devm_ioremap_resource(dev, res);
--	if (IS_ERR(pcie->elbi))
--		return PTR_ERR(pcie->elbi);
-+	if (IS_ERR(pcie->elbi)) {
-+		ret = PTR_ERR(pcie->elbi);
-+		goto err_pm_runtime_put;
-+	}
- 
- 	pcie->phy = devm_phy_optional_get(dev, "pciephy");
--	if (IS_ERR(pcie->phy))
--		return PTR_ERR(pcie->phy);
-+	if (IS_ERR(pcie->phy)) {
-+		ret = PTR_ERR(pcie->phy);
-+		goto err_pm_runtime_put;
-+	}
- 
- 	ret = pcie->ops->get_resources(pcie);
- 	if (ret)
--		return ret;
-+		goto err_pm_runtime_put;
- 
- 	pp->ops = &qcom_pcie_dw_ops;
- 
- 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
- 		pp->msi_irq = platform_get_irq_byname(pdev, "msi");
--		if (pp->msi_irq < 0)
--			return pp->msi_irq;
-+		if (pp->msi_irq < 0) {
-+			ret = pp->msi_irq;
-+			goto err_pm_runtime_put;
-+		}
+ 		/* This may race, but that's ok, it only gets set */
+ 		WRITE_ONCE(obj->frontbuffer_ggtt_origin, ORIGIN_CPU);
  	}
+ 	i915_gem_object_put(obj);
+-	if (IS_ERR((void *)addr))
+-		return addr;
  
- 	ret = phy_init(pcie->phy);
- 	if (ret) {
- 		pm_runtime_disable(&pdev->dev);
--		return ret;
-+		goto err_pm_runtime_put;
- 	}
- 
- 	platform_set_drvdata(pdev, pcie);
-@@ -1273,10 +1289,16 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	if (ret) {
- 		dev_err(dev, "cannot initialize host\n");
- 		pm_runtime_disable(&pdev->dev);
--		return ret;
-+		goto err_pm_runtime_put;
- 	}
+ 	args->addr_ptr = (uint64_t) addr;
  
  	return 0;
 +
-+err_pm_runtime_put:
-+	pm_runtime_put(dev);
-+	pm_runtime_disable(dev);
++err:
++	i915_gem_object_put(obj);
 +
-+	return ret;
++	return addr;
  }
  
- static const struct of_device_id qcom_pcie_match[] = {
+ static unsigned int tile_row_pages(struct drm_i915_gem_object *obj)
 -- 
 2.20.1
 
