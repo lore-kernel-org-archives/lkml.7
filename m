@@ -2,514 +2,201 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E7CC41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF5CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9628D230F2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77C52087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:49:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WahOyVBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfICJqZ (ORCPT
+        id S1728509AbfICJtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:46:25 -0400
-Received: from foss.arm.com ([217.140.110.172]:35062 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728592AbfICJqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:46:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F7AD1570;
-        Tue,  3 Sep 2019 02:46:23 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6C9123F59C;
-        Tue,  3 Sep 2019 02:46:16 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will@kernel.org
-Cc:     mark.rutland@arm.com, mhocko@suse.com, ira.weiny@intel.com,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
-Subject: [PATCH V7 3/3] arm64/mm: Enable memory hot remove
-Date:   Tue,  3 Sep 2019 15:15:58 +0530
-Message-Id: <1567503958-25831-4-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
-References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
+        Tue, 3 Sep 2019 05:49:05 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36347 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfICJtE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:49:04 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g24so17933886edu.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mEls2kUVvBcaBZpvYEuQESBA2MX/ZhbqTw7OA+f9Nbs=;
+        b=WahOyVBEl0OVaAAIgzp1mXqBhNiSKi1rS1iYLd8wycHTbKi9/P+SA0o2wH8J4y5QPR
+         e6OiZXQUwJKelCzLkw5rPDo2/QvL+Dd4Ih+zYTNICr6DnqQDCFNDX/UxfyFVlF2AMTJ4
+         u7rovqA4TvuCbkOQOZXKzTLg9rORSmdP27cXo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=mEls2kUVvBcaBZpvYEuQESBA2MX/ZhbqTw7OA+f9Nbs=;
+        b=M60q/hx21zbBSkmAFLkkfG0lR6sUIiYnPZU5mnx49/wpBa3ooIpF2q2shSVtLdq0aQ
+         T7VXrYfp/A7vlwHFO1QKx7sKTNdOIn2zOoaqJp5LYnoOZENmNPXvoOklpPrYyEcnY7Y2
+         mc6ZouEF03k/u9ymqa0uluwLue9TAhaHJFJFbuHI9IQXXPGhcnGqSLKdLLBd4/T9Dsrz
+         kpnzKqiczAd2mRT0LfWP5Td4kuNPvQtRRHVKNsskDhVvAyeHmJdXNKuvwSLKrc7ZAeCR
+         r1fQTADjFDWrBsHsSLf6BKv/2ZiDILwVWZpgsIC5iVYUPzpqeE4byRgbvpQvEHHIWn7b
+         2f/A==
+X-Gm-Message-State: APjAAAUC0jwlusWxxCkODtC/P3uoMndUe9JMYrt3NiMlPLnKdZj6I5UK
+        8XiJ6/UHlqMAqdhddhnq4FlY4Q==
+X-Google-Smtp-Source: APXvYqxY0hmUni95XwccqU3GO7ZXnZTxf/p+ya82BW6ix0VT35ImlZc/up0XizPcjgRP0ff5z5gp6Q==
+X-Received: by 2002:a17:906:74d4:: with SMTP id z20mr16917924ejl.191.1567504142161;
+        Tue, 03 Sep 2019 02:49:02 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id k16sm1860071ejv.87.2019.09.03.02.49.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 02:49:01 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 11:48:59 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 05/17] drm: add mmap() to drm_gem_object_funcs
+Message-ID: <20190903094859.GQ2112@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, tzimmermann@suse.de,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190808134417.10610-1-kraxel@redhat.com>
+ <20190808134417.10610-6-kraxel@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190808134417.10610-6-kraxel@redhat.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arch code for hot-remove must tear down portions of the linear map and
-vmemmap corresponding to memory being removed. In both cases the page
-tables mapping these regions must be freed, and when sparse vmemmap is in
-use the memory backing the vmemmap must also be freed.
+On Thu, Aug 08, 2019 at 03:44:05PM +0200, Gerd Hoffmann wrote:
+> drm_gem_object_funcs->vm_ops alone can't handle
+> everything mmap() needs.  Add a new callback for it.
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  include/drm/drm_gem.h     | 9 +++++++++
+>  drivers/gpu/drm/drm_gem.c | 6 ++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+> index ae693c0666cd..ee3c4ad742c6 100644
+> --- a/include/drm/drm_gem.h
+> +++ b/include/drm/drm_gem.h
+> @@ -150,6 +150,15 @@ struct drm_gem_object_funcs {
+>  	 */
+>  	void (*vunmap)(struct drm_gem_object *obj, void *vaddr);
+>  
+> +	/**
+> +	 * @mmap:
+> +	 *
+> +	 * Called by drm_gem_mmap() for additional checks/setup.
+> +	 *
+> +	 * This callback is optional.
+> +	 */
+> +	int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);
 
-This patch adds a new remove_pagetable() helper which can be used to tear
-down either region, and calls it from vmemmap_free() and
-___remove_pgd_mapping(). The sparse_vmap argument determines whether the
-backing memory will be freed.
+I think if we do an mmap callback, it should replace all the mmap handling
+(except the drm_gem_object_get) that drm_gem_mmap_obj does. So maybe
+something like the below:
 
-remove_pagetable() makes two distinct passes over the kernel page table.
-In the first pass it unmaps, invalidates applicable TLB cache and frees
-backing memory if required (vmemmap) for each mapped leaf entry. In the
-second pass it looks for empty page table sections whose page table page
-can be unmapped, TLB invalidated and freed.
 
-While freeing intermediate level page table pages bail out if any of its
-entries are still valid. This can happen for partially filled kernel page
-table either from a previously attempted failed memory hot add or while
-removing an address range which does not span the entire page table page
-range.
-
-The vmemmap region may share levels of table with the vmalloc region.
-There can be conflicts between hot remove freeing page table pages with
-a concurrent vmalloc() walking the kernel page table. This conflict can
-not just be solved by taking the init_mm ptl because of existing locking
-scheme in vmalloc(). Hence unlike linear mapping, skip freeing page table
-pages while tearing down vmemmap mapping when vmalloc and vmemmap ranges
-overlap.
-
-While here update arch_add_memory() to handle __add_pages() failures by
-just unmapping recently added kernel linear mapping. Now enable memory hot
-remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
-
-This implementation is overall inspired from kernel page table tear down
-procedure on X86 architecture.
-
-Acked-by: Steve Capper <steve.capper@arm.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/Kconfig              |   3 +
- arch/arm64/include/asm/memory.h |   1 +
- arch/arm64/mm/mmu.c             | 338 +++++++++++++++++++++++++++++++-
- 3 files changed, 333 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6481964b6425..0079820af308 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -274,6 +274,9 @@ config ZONE_DMA32
- config ARCH_ENABLE_MEMORY_HOTPLUG
- 	def_bool y
+diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+index 6854f5867d51..e8b7779633dd 100644
+--- a/drivers/gpu/drm/drm_gem.c
++++ b/drivers/gpu/drm/drm_gem.c
+@@ -1104,17 +1104,22 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
+ 	if (obj_size < vma->vm_end - vma->vm_start)
+ 		return -EINVAL;
  
-+config ARCH_ENABLE_MEMORY_HOTREMOVE
-+	def_bool y
+-	if (obj->funcs && obj->funcs->vm_ops)
+-		vma->vm_ops = obj->funcs->vm_ops;
+-	else if (dev->driver->gem_vm_ops)
+-		vma->vm_ops = dev->driver->gem_vm_ops;
+-	else
+-		return -EINVAL;
+-
+-	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+ 	vma->vm_private_data = obj;
+-	vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+-	vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
 +
- config SMP
- 	def_bool y
- 
-diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-index b61b50bf68b1..615dcd08acfa 100644
---- a/arch/arm64/include/asm/memory.h
-+++ b/arch/arm64/include/asm/memory.h
-@@ -54,6 +54,7 @@
- #define MODULES_VADDR		(BPF_JIT_REGION_END)
- #define MODULES_VSIZE		(SZ_128M)
- #define VMEMMAP_START		(-VMEMMAP_SIZE - SZ_2M)
-+#define VMEMMAP_END		(VMEMMAP_START + VMEMMAP_SIZE)
- #define PCI_IO_END		(VMEMMAP_START - SZ_2M)
- #define PCI_IO_START		(PCI_IO_END - PCI_IO_SIZE)
- #define FIXADDR_TOP		(PCI_IO_START - SZ_2M)
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index ee1bf416368d..980d761a7327 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -60,6 +60,14 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
- 
- static DEFINE_SPINLOCK(swapper_pgdir_lock);
- 
-+/*
-+ * This represents if vmalloc and vmemmap address range overlap with
-+ * each other on an intermediate level kernel page table entry which
-+ * in turn helps in deciding whether empty kernel page table pages
-+ * if any can be freed during memory hotplug operation.
-+ */
-+static bool vmalloc_vmemmap_overlap;
++	if (obj->funcs && obj->funcs->mmap)
++		obj->funcs->mmap(obj, vma);
++	else {
++		if (obj->funcs && obj->funcs->vm_ops)
++			vma->vm_ops = obj->funcs->vm_ops;
++		else if (dev->driver->gem_vm_ops)
++			vma->vm_ops = dev->driver->gem_vm_ops;
++		else
++			return -EINVAL;
 +
- void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
- {
- 	pgd_t *fixmap_pgdp;
-@@ -723,6 +731,250 @@ int kern_addr_valid(unsigned long addr)
- 
- 	return pfn_valid(pte_pfn(pte));
- }
-+
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+static void free_hotplug_page_range(struct page *page, size_t size)
-+{
-+	WARN_ON(!page || PageReserved(page));
-+	free_pages((unsigned long)page_address(page), get_order(size));
-+}
-+
-+static void free_hotplug_pgtable_page(struct page *page)
-+{
-+	free_hotplug_page_range(page, PAGE_SIZE);
-+}
-+
-+static void free_pte_table(pmd_t *pmdp, unsigned long addr)
-+{
-+	struct page *page;
-+	pte_t *ptep;
-+	int i;
-+
-+	ptep = pte_offset_kernel(pmdp, 0UL);
-+	for (i = 0; i < PTRS_PER_PTE; i++) {
-+		if (!pte_none(READ_ONCE(ptep[i])))
-+			return;
++		vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
++		vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
++		vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
 +	}
-+
-+	page = pmd_page(READ_ONCE(*pmdp));
-+	pmd_clear(pmdp);
-+	__flush_tlb_kernel_pgtable(addr);
-+	free_hotplug_pgtable_page(page);
-+}
-+
-+static void free_pmd_table(pud_t *pudp, unsigned long addr)
-+{
-+	struct page *page;
-+	pmd_t *pmdp;
-+	int i;
-+
-+	if (CONFIG_PGTABLE_LEVELS <= 2)
-+		return;
-+
-+	pmdp = pmd_offset(pudp, 0UL);
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		if (!pmd_none(READ_ONCE(pmdp[i])))
-+			return;
-+	}
-+
-+	page = pud_page(READ_ONCE(*pudp));
-+	pud_clear(pudp);
-+	__flush_tlb_kernel_pgtable(addr);
-+	free_hotplug_pgtable_page(page);
-+}
-+
-+static void free_pud_table(pgd_t *pgdp, unsigned long addr)
-+{
-+	struct page *page;
-+	pud_t *pudp;
-+	int i;
-+
-+	if (CONFIG_PGTABLE_LEVELS <= 3)
-+		return;
-+
-+	pudp = pud_offset(pgdp, 0UL);
-+	for (i = 0; i < PTRS_PER_PUD; i++) {
-+		if (!pud_none(READ_ONCE(pudp[i])))
-+			return;
-+	}
-+
-+	page = pgd_page(READ_ONCE(*pgdp));
-+	pgd_clear(pgdp);
-+	__flush_tlb_kernel_pgtable(addr);
-+	free_hotplug_pgtable_page(page);
-+}
-+
-+static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
-+				    unsigned long end, bool sparse_vmap)
-+{
-+	struct page *page;
-+	pte_t *ptep, pte;
-+
-+	do {
-+		ptep = pte_offset_kernel(pmdp, addr);
-+		pte = READ_ONCE(*ptep);
-+		if (pte_none(pte))
-+			continue;
-+
-+		WARN_ON(!pte_present(pte));
-+		page = sparse_vmap ? pte_page(pte) : NULL;
-+		pte_clear(&init_mm, addr, ptep);
-+		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
-+		if (sparse_vmap)
-+			free_hotplug_page_range(page, PAGE_SIZE);
-+	} while (addr += PAGE_SIZE, addr < end);
-+}
-+
-+static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
-+				    unsigned long end, bool sparse_vmap)
-+{
-+	unsigned long next;
-+	struct page *page;
-+	pmd_t *pmdp, pmd;
-+
-+	do {
-+		next = pmd_addr_end(addr, end);
-+		pmdp = pmd_offset(pudp, addr);
-+		pmd = READ_ONCE(*pmdp);
-+		if (pmd_none(pmd))
-+			continue;
-+
-+		WARN_ON(!pmd_present(pmd));
-+		if (pmd_sect(pmd)) {
-+			page = sparse_vmap ? pmd_page(pmd) : NULL;
-+			pmd_clear(pmdp);
-+			flush_tlb_kernel_range(addr, next);
-+			if (sparse_vmap)
-+				free_hotplug_page_range(page, PMD_SIZE);
-+			continue;
-+		}
-+		WARN_ON(!pmd_table(pmd));
-+		unmap_hotplug_pte_range(pmdp, addr, next, sparse_vmap);
-+	} while (addr = next, addr < end);
-+}
-+
-+static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
-+				    unsigned long end, bool sparse_vmap)
-+{
-+	unsigned long next;
-+	struct page *page;
-+	pud_t *pudp, pud;
-+
-+	do {
-+		next = pud_addr_end(addr, end);
-+		pudp = pud_offset(pgdp, addr);
-+		pud = READ_ONCE(*pudp);
-+		if (pud_none(pud))
-+			continue;
-+
-+		WARN_ON(!pud_present(pud));
-+		if (pud_sect(pud)) {
-+			page = sparse_vmap ? pud_page(pud) : NULL;
-+			pud_clear(pudp);
-+			flush_tlb_kernel_range(addr, next);
-+			if (sparse_vmap)
-+				free_hotplug_page_range(page, PUD_SIZE);
-+			continue;
-+		}
-+		WARN_ON(!pud_table(pud));
-+		unmap_hotplug_pmd_range(pudp, addr, next, sparse_vmap);
-+	} while (addr = next, addr < end);
-+}
-+
-+static void unmap_hotplug_range(unsigned long addr, unsigned long end,
-+				bool sparse_vmap)
-+{
-+	unsigned long next;
-+	pgd_t *pgdp, pgd;
-+
-+	do {
-+		next = pgd_addr_end(addr, end);
-+		pgdp = pgd_offset_k(addr);
-+		pgd = READ_ONCE(*pgdp);
-+		if (pgd_none(pgd))
-+			continue;
-+
-+		WARN_ON(!pgd_present(pgd));
-+		unmap_hotplug_pud_range(pgdp, addr, next, sparse_vmap);
-+	} while (addr = next, addr < end);
-+}
-+
-+static void free_empty_pte_table(pmd_t *pmdp, unsigned long addr,
-+				 unsigned long end)
-+{
-+	pte_t *ptep, pte;
-+
-+	do {
-+		ptep = pte_offset_kernel(pmdp, addr);
-+		pte = READ_ONCE(*ptep);
-+		WARN_ON(!pte_none(pte));
-+	} while (addr += PAGE_SIZE, addr < end);
-+}
-+
-+static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
-+				 unsigned long end)
-+{
-+	unsigned long next;
-+	pmd_t *pmdp, pmd;
-+
-+	do {
-+		next = pmd_addr_end(addr, end);
-+		pmdp = pmd_offset(pudp, addr);
-+		pmd = READ_ONCE(*pmdp);
-+		if (pmd_none(pmd))
-+			continue;
-+
-+		WARN_ON(!pmd_present(pmd) || !pmd_table(pmd) || pmd_sect(pmd));
-+		free_empty_pte_table(pmdp, addr, next);
-+		free_pte_table(pmdp, addr);
-+	} while (addr = next, addr < end);
-+}
-+
-+static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
-+				 unsigned long end)
-+{
-+	unsigned long next;
-+	pud_t *pudp, pud;
-+
-+	do {
-+		next = pud_addr_end(addr, end);
-+		pudp = pud_offset(pgdp, addr);
-+		pud = READ_ONCE(*pudp);
-+		if (pud_none(pud))
-+			continue;
-+
-+		WARN_ON(!pud_present(pud) || !pud_table(pud) || pud_sect(pud));
-+		free_empty_pmd_table(pudp, addr, next);
-+		free_pmd_table(pudp, addr);
-+	} while (addr = next, addr < end);
-+}
-+
-+static void free_empty_tables(unsigned long addr, unsigned long end)
-+{
-+	unsigned long next;
-+	pgd_t *pgdp, pgd;
-+
-+	do {
-+		next = pgd_addr_end(addr, end);
-+		pgdp = pgd_offset_k(addr);
-+		pgd = READ_ONCE(*pgdp);
-+		if (pgd_none(pgd))
-+			continue;
-+
-+		WARN_ON(!pgd_present(pgd));
-+		free_empty_pud_table(pgdp, addr, next);
-+		free_pud_table(pgdp, addr);
-+	} while (addr = next, addr < end);
-+}
-+
-+static void remove_pagetable(unsigned long start, unsigned long end,
-+			     bool sparse_vmap)
-+{
-+	unmap_hotplug_range(start, end, sparse_vmap);
-+	free_empty_tables(start, end);
-+}
-+#endif
-+
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
- #if !ARM64_SWAPPER_USES_SECTION_MAPS
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-@@ -770,6 +1022,28 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- void vmemmap_free(unsigned long start, unsigned long end,
- 		struct vmem_altmap *altmap)
- {
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+	/*
-+	 * FIXME: We should have called remove_pagetable(start, end, true).
-+	 * vmemmap and vmalloc virtual range might share intermediate kernel
-+	 * page table entries. Removing vmemmap range page table pages here
-+	 * can potentially conflict with a concurrent vmalloc() allocation.
-+	 *
-+	 * This is primarily because vmalloc() does not take init_mm ptl for
-+	 * the entire page table walk and it's modification. Instead it just
-+	 * takes the lock while allocating and installing page table pages
-+	 * via [p4d|pud|pmd|pte]_alloc(). A concurrently vanishing page table
-+	 * entry via memory hot remove can cause vmalloc() kernel page table
-+	 * walk pointers to be invalid on the fly which can cause corruption
-+	 * or worst, a crash.
-+	 *
-+	 * So free_empty_tables() gets called where vmalloc and vmemmap range
-+	 * do not overlap at any intermediate level kernel page table entry.
-+	 */
-+	unmap_hotplug_range(start, end, true);
-+	if (!vmalloc_vmemmap_overlap)
-+		free_empty_tables(start, end);
-+#endif
- }
- #endif	/* CONFIG_SPARSEMEM_VMEMMAP */
  
-@@ -1048,10 +1322,18 @@ int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
- }
- 
- #ifdef CONFIG_MEMORY_HOTPLUG
-+static void __remove_pgd_mapping(pgd_t *pgdir, unsigned long start, u64 size)
-+{
-+	unsigned long end = start + size;
-+
-+	WARN_ON(pgdir != init_mm.pgd);
-+	remove_pagetable(start, end, false);
-+}
-+
- int arch_add_memory(int nid, u64 start, u64 size,
- 			struct mhp_restrictions *restrictions)
- {
--	int flags = 0;
-+	int ret, flags = 0;
- 
- 	if (rodata_full || debug_pagealloc_enabled())
- 		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
-@@ -1059,9 +1341,14 @@ int arch_add_memory(int nid, u64 start, u64 size,
- 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
- 			     size, PAGE_KERNEL, __pgd_pgtable_alloc, flags);
- 
--	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
-+	ret = __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
- 			   restrictions);
-+	if (ret)
-+		__remove_pgd_mapping(swapper_pg_dir,
-+				     __phys_to_virt(start), size);
-+	return ret;
- }
-+
- void arch_remove_memory(int nid, u64 start, u64 size,
- 			struct vmem_altmap *altmap)
- {
-@@ -1069,14 +1356,47 @@ void arch_remove_memory(int nid, u64 start, u64 size,
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
- 	struct zone *zone;
- 
--	/*
--	 * FIXME: Cleanup page tables (also in arch_add_memory() in case
--	 * adding fails). Until then, this function should only be used
--	 * during memory hotplug (adding memory), not for memory
--	 * unplug. ARCH_ENABLE_MEMORY_HOTREMOVE must not be
--	 * unlocked yet.
--	 */
- 	zone = page_zone(pfn_to_page(start_pfn));
- 	__remove_pages(zone, start_pfn, nr_pages, altmap);
-+	__remove_pgd_mapping(swapper_pg_dir, __phys_to_virt(start), size);
-+}
-+
-+static int __init find_vmalloc_vmemmap_overlap(void)
-+{
-+	unsigned long gap_start, gap_end;
-+
-+	/*
-+	 * vmalloc and vmemmap address ranges should be linearly
-+	 * increasing and non-overlapping before the gap between
-+	 * them can be measured.
-+	 */
-+	BUILD_BUG_ON(VMALLOC_END <= VMALLOC_START);
-+	BUILD_BUG_ON(VMEMMAP_END <= VMEMMAP_START);
-+	BUILD_BUG_ON((VMEMMAP_START >= VMALLOC_START)
-+			&& (VMEMMAP_START <= VMALLOC_END));
-+	BUILD_BUG_ON((VMEMMAP_END >= VMALLOC_START)
-+			&& (VMEMMAP_END <= VMALLOC_END));
-+
-+	/*
-+	 * vmalloc and vmemmap can only be non-overlapping disjoint
-+	 * ranges. So [gap_start..gap_end] is determined which will
-+	 * represent the gap between the above mentioned ranges.
-+	 */
-+	if (VMEMMAP_START > VMALLOC_END) {
-+		gap_start = VMALLOC_END;
-+		gap_end = VMEMMAP_START;
-+	} else {
-+		gap_start = VMEMMAP_END;
-+		gap_end = VMALLOC_START;
-+	}
-+
-+	/*
-+	 * Race condition during memory hot-remove exists when the
-+	 * gap edges share same PGD entry in kernel page table.
-+	 */
-+	if ((gap_start & PGDIR_MASK) == (gap_end & PGDIR_MASK))
-+		vmalloc_vmemmap_overlap = true;
-+	return 0;
- }
-+early_initcall(find_vmalloc_vmemmap_overlap);
- #endif
+ 	/* Take a ref for this mapping of the object, so that the fault
+ 	 * handler can dereference the mmap offset's pointer to the object.
+
+Since I remember quite a few discussions where the default vma flag
+wrangling we're doing is seriously getting in the way of things too.
+
+I think even better would be if this new ->mmap hook could also be used
+directly by the dma-buf mmap code, without having to jump through hoops
+creating a fake file and fake vma offset and everything. I think with that
+we'd have a really solid case to add this ->mmap hook.
+-Daniel
+
+
+> +
+>  	/**
+>  	 * @vm_ops:
+>  	 *
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index afc38cece3f5..84db8de217e1 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -1105,6 +1105,8 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
+>  		vma->vm_ops = obj->funcs->vm_ops;
+>  	else if (dev->driver->gem_vm_ops)
+>  		vma->vm_ops = dev->driver->gem_vm_ops;
+> +	else if (obj->funcs && obj->funcs->mmap)
+> +		/* obj->funcs->mmap must set vma->vm_ops */;
+>  	else
+>  		return -EINVAL;
+>  
+> @@ -1192,6 +1194,10 @@ int drm_gem_mmap(struct file *filp, struct vm_area_struct *vma)
+>  	ret = drm_gem_mmap_obj(obj, drm_vma_node_size(node) << PAGE_SHIFT,
+>  			       vma);
+>  
+> +	if (ret == 0)
+> +		if (obj->funcs->mmap)
+> +			ret = obj->funcs->mmap(obj, vma);
+> +
+>  	drm_gem_object_put_unlocked(obj);
+>  
+>  	return ret;
+> -- 
+> 2.18.1
+> 
+
 -- 
-2.20.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
