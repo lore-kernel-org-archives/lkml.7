@@ -2,73 +2,83 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB13C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6876BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D327A23431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395B423431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lonelycoder.com header.i=@lonelycoder.com header.b="UgVPPHBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbfICPuF (ORCPT
+        id S1729749AbfICPuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:50:05 -0400
-Received: from mx1.math.uh.edu ([129.7.128.32]:56392 "EHLO mx1.math.uh.edu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbfICPuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:50:05 -0400
-Received: from epithumia.math.uh.edu ([129.7.128.2])
-        by mx1.math.uh.edu with esmtp (Exim 4.92)
-        (envelope-from <tibbs@math.uh.edu>)
-        id 1i5B40-00036N-4s; Tue, 03 Sep 2019 10:50:03 -0500
-Received: by epithumia.math.uh.edu (Postfix, from userid 7225)
-        id 159ED801554; Tue,  3 Sep 2019 10:49:48 -0500 (CDT)
-From:   Jason L Tibbitts III <tibbs@math.uh.edu>
-To:     bfields@fieldses.org (J. Bruce Fields)
-Cc:     linux-nfs@vger.kernel.org, km@cm4all.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: Regression in 5.1.20: Reading long directory fails
-References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
-        <ufapnkxkn0x.fsf@epithumia.math.uh.edu>
-        <20190828174609.GB29148@fieldses.org>
-        <ufay2zduosz.fsf@epithumia.math.uh.edu>
-Date:   Tue, 03 Sep 2019 10:49:48 -0500
-In-Reply-To: <ufay2zduosz.fsf@epithumia.math.uh.edu> (Jason L. Tibbitts, III's
-        message of "Wed, 28 Aug 2019 13:29:00 -0500")
-Message-ID: <ufa5zm9s7kz.fsf@epithumia.math.uh.edu>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 3 Sep 2019 11:50:37 -0400
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:42244 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICPug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 11:50:36 -0400
+Received: by mail-ot1-f47.google.com with SMTP id c10so5877465otd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lonelycoder.com; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=i8XrzJqX/k14d/NNyJqP2fuyq+Gn/gMNB5vapsoUn58=;
+        b=UgVPPHBy7wPMXgWT0jSZjefR28XGx4gtdEcliXDELdGOyuWUfLGaQi196Es/6Aab7e
+         UCaGsyvJgZ0adWE8GYH9jZFJ10G6e73ruDZeGltRV3bRc3Szj9eH8BAjef7iBIBZG3sT
+         Ilc0DG0V3WcdWZXcwKOl83ia5gb3U5Xdwl1DWM5+FKF8P/R7sVDHG1NkvkbgZquVrhKi
+         G+vM4/VrdK8HA2AimQnFyz5sfIiPubj6M4PoBt9YWxYO5YuaAjf+MkuF8bU8LD2QOmrH
+         Jr/yQP6SdiegTLH++cc4BWfHCTmDjoRJZh1+bQZQNowRYkl43A/As+siwv/Z/00K9AV0
+         ywgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=i8XrzJqX/k14d/NNyJqP2fuyq+Gn/gMNB5vapsoUn58=;
+        b=geKtE6eK3acdyUnliglqR1HRVcBYs/ScD5S7/iermqRPY5wsdfZhedjkEPvj8q5JBY
+         KyBb3RP7WH5cRwBj7UTuQmX1IhFOdD95aTb8NV/EqJR2/1HEpE9L+pRSLhIuZyBP2zX9
+         4KWcJ8YBjUt17gWSWDJ9R2iE7m+tTTNhdU+FXM4gO+TsnRlNFNcoowrcL0h5WN+aS9r1
+         nKGA5i/IC97NU6no3uMJwR2fkzLRk7Rd7szOdM232zFXMM+FPlYxw/HhcGsNxO0FCaYd
+         0x+rmjpdXikM1HoyHbBXpo1+9pjhv6cgnykd2hquPQZ7KW/Wnk0WKyf3/K9t8qmgcy8i
+         w5Uw==
+X-Gm-Message-State: APjAAAWudf4mkN86BdBkNO6aur8+pVhx/za9gCyGPG0uGsyINM2UMGEJ
+        FgL2YeDHpa+OXxwgr85FU7Z/M0D+XyiqpzcvunCtvSFS75w=
+X-Google-Smtp-Source: APXvYqyN6cw/+flwkfGoM7u8JTsci0bUsTH1m0MnvNpbSpg1XPjL7sEB3w8MODkSqhhPK+wbj5t5VK3b3aWzlUh2h+4=
+X-Received: by 2002:a9d:4d0e:: with SMTP id n14mr4209186otf.285.1567525835588;
+ Tue, 03 Sep 2019 08:50:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+From:   Andreas Smas <andreas@lonelycoder.com>
+Date:   Tue, 3 Sep 2019 08:50:25 -0700
+Message-ID: <CAObFT-SqdcM2Xo7P3FqgwTABao5uoWrb+A3bXy9vKt5rBffSwA@mail.gmail.com>
+Subject: x86/purgatory: undefined symbol __stack_chk_fail
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>>>> "JLT" == Jason L Tibbitts <tibbs@math.uh.edu> writes:
+Hi,
 
-JLT> Certainly a server reboot, or maybe even just
-JLT> unmounting and remounting the filesystem or copying the data to
-JLT> another filesystem would tell me that.  In any case, as soon as I
-JLT> am able to mess with that server, I'll know more.
+For me, kernels built including this commit
+b059f801a937 (x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS)
 
-Rebooting the server did not make any difference, and now more users are
-seeing the problem.  At this point I'm in a state where NFS simply isn't
-reliable at all, and I'm not sure what to do.  If Centos 8 were out,
-I'd work on moving to that just so that the server was a little more
-modern.  (Currently the server is Centos 7.)  I guess I could try using
-Fedora, or installing one of the upstream kernels, just in case this has
-to do with some interaction between the client and the old RHEL7 kernel.
+results in kexec() failing to load the kernel:
 
-I do have a packet capture of a directory listing that fails with EIO,
-but I'm not sure if it's safe to simply post it, and I'm not sure what
-tshark options would be useful in decoding it.
+kexec: Undefined symbol: __stack_chk_fail
+kexec-bzImage64: Loading purgatory failed
 
-I do know that I can rsync one of the problematic directories to a
-different server (running the same kernel) and it doesn't have the same
-problem.  What I'll try next is rsyncing to a different filesystem on
-the same server, but again I'll have to wait until people log off to do
-proper testing.
+Can be seen:
 
- - J<
+$ readelf -a arch/x86/purgatory/purgatory.ro | grep UND
+     0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
+    51: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND __stack_chk_fail
+
+Using: gcc version 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)
+
+Adding -ffreestanding or -fno-stack-protector to ccflags-y in
+arch/x86/purgatory/Makefile
+fixes the problem. Not sure which would be preferred.
