@@ -7,63 +7,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13B0C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D9AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71E522D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570E622D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZGril3dA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EHgBr9Kf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfICHBK (ORCPT
+        id S1727541AbfICHBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:01:10 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36433 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfICHBJ (ORCPT
+        Tue, 3 Sep 2019 03:01:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41108 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfICHBz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:01:09 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so4545132pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:01:09 -0700 (PDT)
+        Tue, 3 Sep 2019 03:01:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so8587944pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:01:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NagLdWBO+mVhn30698+wliEZ00FrD+Sqb7vGzKlD9Rw=;
-        b=ZGril3dAsuGwTavstK9zZ3BJG6PEETVIA/v8TKVQX6K6+iX0Zx9DFKW67oPSqKs0v8
-         V6eN3iypDFAfzPfF5kwk2Bx1xR+ZmGLyADXVtKN2r0AdE7sZAiNg6s5CZ1skw9uk5SL6
-         CiIDzSIqNerBAgl0+GLmQi/+gl9BrdRCJ5I1hrv+b4Ku2GVOFju2wK07C4ygA25YOe+S
-         yEj2KCIBtqsB0WxIr+VItYXU0nuhoP5ERMFbR1mEjPbIU45ywPByWD6gUNi3h9aMsWBo
-         8gdyS3znC6ekRkcNQ2q6pXY1d8TXng5msBequzeGcHgr8ozAPLmABOR49tnjehtQWsjm
-         LR7Q==
+        bh=ATcsitRpTyb5wI6PMkB6H6IJliZcFvf7R0g9NfFMg9A=;
+        b=EHgBr9KfYik5R6FusPDhu53l+J3bX9l8zy+rd7KHjP5eJpWMJBDrvwknS9Pt9RsCsr
+         1AhNQzcmCHH9hqmZxFEi9bKhZfz9UiEgVdHOCOBb26fxtUWMRm90Wpehtn/bqoHFE7bB
+         goOWVwvsODaia2BAUb32k0QYR4cWSFXHHeaHp4RuK6nDFMiUZQTYFCPSUBW3MDWQApv+
+         Y9SP5AXKkI1/kJsVfCFyEsbDGeymtrlHCMxAg8nB/8sVoLY/KFIw1Gm2GH7Q42O2mWqv
+         I0cFnHbxAmjHo51uvaqpSr6CFedJhzS1ZJp8PYutClpWHQYPWbz8ASS6WgRUtQJyZchn
+         SUEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=NagLdWBO+mVhn30698+wliEZ00FrD+Sqb7vGzKlD9Rw=;
-        b=tG16LUqLztvPUlfpt8XXxMrPuT8+M6VmX+FyEH2rQTxWqAd4CTRZ0GxykfXNykfUpS
-         YMIJmSGj3lzzIS2up5A312g9aqfU455jNc+n62VhGzvn48zpsgU8LJoDSj35Ne1bjDQ1
-         C80PzEqkCqWPbqREtpicBn3Piv/1r/gZ6RssTNXCjb5xcUUpG259rN+z75n/D/8kAm1x
-         5M9PtkqGMuVJfWLUnNxNRaR2FtAaJDaFid2Oze6l9FABrJvZl6wKDqP8ZtpXUw0nEVrv
-         MfbcNTNGeF//PG7m2eZB4ndCfnah1untJqrld+kRsj/ad+o2FDXKPb50NbRwDxzanKn5
-         z+XQ==
-X-Gm-Message-State: APjAAAVSgRmdWIMAF0n4CGiX6TWC17dqaKRfSZnqXqlrTsckgp9A62Kn
-        k8D3I10eieTHHHMOfRGZJxRYBg==
-X-Google-Smtp-Source: APXvYqwqPD2WC070l0e4dPMy2t5gOoCPMQ7fGkPXUQVvc1sMtSMg5yHcMiWp0lBQvavafLlxWi/0SA==
-X-Received: by 2002:a65:6859:: with SMTP id q25mr28225218pgt.181.1567494069011;
-        Tue, 03 Sep 2019 00:01:09 -0700 (PDT)
+        bh=ATcsitRpTyb5wI6PMkB6H6IJliZcFvf7R0g9NfFMg9A=;
+        b=H1eR4k3RuOD6+njHnSx7/tZTdiEmPyAyVRKMXcp6kBAShPSR39YTBA+T3ct12cG94c
+         KbmP5l9bEY6R+O0CH4xTtg0A2TJNVf6NNDHFbYej3NdR52HNwga/Pt3g0auMSNL7bsck
+         G+jiWSdsgiCZlnte2ldM5kPMbAruFRoAn40hSoR/5gyufBBVExIr7QEGqcYKAVDDDC5N
+         EftT6bGnHALieC4ZOPnsFArk2Nmijnp3mk+pfKgbGDzeqhuMTZ4F+sKssr2kLkZ25PkY
+         pvb7LAh5BrKaXRwBVcXdfFezXLjtXSQr4VjEKlg0RXn/MToLbF81df5OsYjOfeCZkz1x
+         p7eg==
+X-Gm-Message-State: APjAAAWyJFVdBW2w4pu7tK+qN0+2aDBJiRg+YXJ0PJvd7PeJQlSgYwWW
+        yzkaBCHwfoIlXV8KnYNZaoCqFg==
+X-Google-Smtp-Source: APXvYqz7PqAPPuwHi9KNmY1wXWO+7XyHpi9GIfgIFWwbvr3Uy0dMS/qxpicDH9bsKAIcPc8znEA9iA==
+X-Received: by 2002:a65:690f:: with SMTP id s15mr27939370pgq.432.1567494114841;
+        Tue, 03 Sep 2019 00:01:54 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id l72sm26377107pjb.7.2019.09.03.00.01.06
+        by smtp.gmail.com with ESMTPSA id 19sm16471892pjc.25.2019.09.03.00.01.50
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 03 Sep 2019 00:01:08 -0700 (PDT)
+        Tue, 03 Sep 2019 00:01:54 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, paulus@samba.org
-Cc:     ebiggers@google.com, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
-        orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y 7/8] ppp: mppe: Revert "ppp: mppe: Add softdep to arc4"
-Date:   Tue,  3 Sep 2019 15:00:38 +0800
-Message-Id: <f4b1ac760bbae28721996034be7198458aa68523.1567492316.git.baolin.wang@linaro.org>
+To:     stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc:     lanqing.liu@unisoc.com, linux-serial@vger.kernel.org,
+        arnd@arndb.de, baolin.wang@linaro.org, orsonzhai@gmail.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.14.y 8/8] serial: sprd: Modify the baud rate calculation formula
+Date:   Tue,  3 Sep 2019 15:01:25 +0800
+Message-Id: <b72268635867cb643912bd842f4980c5d24cb2df.1567492316.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1567492316.git.baolin.wang@linaro.org>
 References: <cover.1567492316.git.baolin.wang@linaro.org>
@@ -72,43 +71,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Lanqing Liu <lanqing.liu@unisoc.com>
 
-Commit 0e5a610b5ca5 ("ppp: mppe: switch to RC4 library interface"),
-which was merged through the crypto tree for v5.3, changed ppp_mppe.c to
-use the new arc4_crypt() library function rather than access RC4 through
-the dynamic crypto_skcipher API.
+When the source clock is not divisible by the expected baud rate and
+the remainder is not less than half of the expected baud rate, the old
+formular will round up the frequency division coefficient. This will
+make the actual baud rate less than the expected value and can not meet
+the external transmission requirements.
 
-Meanwhile commit aad1dcc4f011 ("ppp: mppe: Add softdep to arc4") was
-merged through the net tree and added a module soft-dependency on "arc4".
+Thus this patch modifies the baud rate calculation formula to support
+the serial controller output the maximum baud rate.
 
-The latter commit no longer makes sense because the code now uses the
-"libarc4" module rather than "arc4", and also due to the direct use of
-arc4_crypt(), no module soft-dependency is required.
-
-So revert the latter commit.
-
-Cc: Takashi Iwai <tiwai@suse.de>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/net/ppp/ppp_mppe.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/tty/serial/sprd_serial.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
-index d9eda7c..6c7fd98 100644
---- a/drivers/net/ppp/ppp_mppe.c
-+++ b/drivers/net/ppp/ppp_mppe.c
-@@ -63,7 +63,6 @@
- MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
- MODULE_LICENSE("Dual BSD/GPL");
- MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
--MODULE_SOFTDEP("pre: arc4");
- MODULE_VERSION("1.0.2");
+diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
+index e902494..72e96ab8 100644
+--- a/drivers/tty/serial/sprd_serial.c
++++ b/drivers/tty/serial/sprd_serial.c
+@@ -380,7 +380,7 @@ static void sprd_set_termios(struct uart_port *port,
+ 	/* ask the core to calculate the divisor for us */
+ 	baud = uart_get_baud_rate(port, termios, old, 0, SPRD_BAUD_IO_LIMIT);
  
- static unsigned int
+-	quot = (unsigned int)((port->uartclk + baud / 2) / baud);
++	quot = port->uartclk / baud;
+ 
+ 	/* set data length */
+ 	switch (termios->c_cflag & CSIZE) {
 -- 
 1.7.9.5
 
