@@ -2,146 +2,134 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E277CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD76C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B261C217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36C522CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="NHzssr3l"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AMxBdtL3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KYyFDWkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbfICIez (ORCPT
+        id S1728169AbfICIo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:34:55 -0400
-Received: from mail-eopbgr1400132.outbound.protection.outlook.com ([40.107.140.132]:64504
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726062AbfICIex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:34:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mFCgWPFBd7Y3p9/HJBDrnpgw6iC5YVyzOeRYh/ALxVu6AUdW814sHM2ccIQn/PzAfh+ke8tTcWfhHrRjWhMsL5eOxxtXKiT+Xud9MOERwogYLjZaCtJafFaW7um8S+L7qE8H5eUfkPAMktRmea4cPZlbXIQ+r0Qcq45+hzZUDKOiOmiG/051B7hBxSv/XSsYUfoCG1HrlDeXLE3QskfF5I7jbY+CkYjwm9ea/vGsotsWCVVKQ1DRY0jMQXQtZj+YkK6SUEhnGL6wVGyXDrqvEQFCas+T9Qr+uy9l/sEfF72n1n+mk9VTBD7wwwE3oeefQleKRtEiK9RGrTTgk5p6pw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=owoIMTIFHxts4zI2/22TtbBDvKTq3nKCuyJyvTVoFP0=;
- b=IsrxI0vxTV0PzRCeKCSodTRv+PP5x40F0nv/qMFkb5VkNlcwvpIZg+s47g6r1SS79Z9f0uSIGDqNf5OMMHePilma/S+4h1eXjWf5B3+fge2bYzm2prpOE0qcFq1kZ7dKza0/PWmvzBZWRhHQr7z7QI/7SEL3g92xiscYklQQ1GecbB7w0CpQ9UJ4S/aniswCGobChvNp8KMe8RSLVdOyh54JEkjLKnEwdwhNoR/0OgFTWiWz//6tTnd1rgDDJiWMa9V8TNbmosXwKxtA3CbU9/xYdlARYabIBfzNcamfBDwOcqK2FvLMQ5FszO8KKgG+j7xyArNjEjxlvy1n3lOeEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=owoIMTIFHxts4zI2/22TtbBDvKTq3nKCuyJyvTVoFP0=;
- b=NHzssr3lLtgfy4kSYZqDSvou3nFfQtgngDHM4cVe4gnFa2age8PyI84D9K/49zxeLcADuyU/cd0ehPsgyeO0RASWOgo7WBt5nRotAXUyWOn00wvfbA7Gcr3SU9z4suZwIjfypY2flxMcQtOzt451PO+x4PwZs1Oh2ejUmmYDZjE=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4686.jpnprd01.prod.outlook.com (20.179.175.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Tue, 3 Sep 2019 08:34:49 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::6564:f61f:f179:facf]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::6564:f61f:f179:facf%5]) with mapi id 15.20.2220.022; Tue, 3 Sep 2019
- 08:34:49 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     David Howells <dhowells@redhat.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-CC:     Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "nicolas.dichtel@6wind.com" <nicolas.dichtel@6wind.com>,
-        "raven@themaw.net" <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 06/11] Add a general, global device notification watch
- list [ver #7]
-Thread-Topic: [PATCH 06/11] Add a general, global device notification watch
- list [ver #7]
-Thread-Index: AQHVXzsE5XB2C9EKnU2KIIXOsRrw8KcZpUEg
-Date:   Tue, 3 Sep 2019 08:34:49 +0000
-Message-ID: <TYAPR01MB454492E48362BED351E797B2D8B90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
- <156717348608.2204.16592073177201775472.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156717348608.2204.16592073177201775472.stgit@warthog.procyon.org.uk>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [150.249.235.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 13e28461-db53-4aa3-5778-08d730499596
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:TYAPR01MB4686;
-x-ms-traffictypediagnostic: TYAPR01MB4686:
-x-microsoft-antispam-prvs: <TYAPR01MB4686EB2F5B40A5593EF2E314D8B90@TYAPR01MB4686.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(39860400002)(346002)(366004)(189003)(199004)(71200400001)(74316002)(316002)(71190400001)(33656002)(6246003)(6436002)(7696005)(76176011)(26005)(25786009)(102836004)(66476007)(66946007)(66556008)(66446008)(64756008)(9686003)(86362001)(76116006)(110136005)(2906002)(6506007)(54906003)(4326008)(53936002)(3846002)(6116002)(99286004)(186003)(476003)(8936002)(7416002)(55016002)(52536014)(2501003)(305945005)(66066001)(7736002)(486006)(8676002)(81156014)(5660300002)(446003)(478600001)(81166006)(229853002)(11346002)(14454004)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4686;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: L3uLThTX1oWOXUg6fELZlDk2XI+1XVhKCa2ShZAg+4RRTfbaCjplxe//ZBjaBJ4ioqQOYwRuJhxZ6pxTcsNLH5Z28m5XMpBMDzqJj6akNWROtJbM+apRCUkQ6uURL5NV3I92QcUwuKG7xB/Ed8sfsdXXXsoI6N9Io1LQIhcw/KN2ktQpurBtm2smW6Gg7RDTsJorIEPgR7sZO+3YEJiwZH5LUrbhQdAyAXFmILPiGUl0Pis66cg4owp4zRVRu7XYMOX9XbpO/pHQjMy4qMXHOIFd34jWDdHtXQvH9n+o6lo9X2CJ91hl8/YXtx1rKlVbbYCzEUbmcnCnZVYluI60HL1L9/49PTwske1m25ixUkZykCXUeoRBHe7CnbCz4Lv4dSEh9KAfRUCjRgtCLBPYkmk1QJxnSwc+KHKDA5O49J4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 3 Sep 2019 04:44:27 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44142 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfICIo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:44:26 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9A52B6058E; Tue,  3 Sep 2019 08:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567500265;
+        bh=YuiLybM31Bk+gmnr2VNTbTZAla9U4l2MPe4lZBv0EOo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AMxBdtL3ra39gRR94d0b9/rv9Fd13SSD6hzlIr2M5Udg+hZ7/DFxZ/nlX4yRy2Zwi
+         WOxvB/ZHXGE0gwg10orF6k4zAxgAzzqIc6/4qlrp+2Lh2IAjWnl0lBuiri8DT1ufkY
+         HDLi/OxVHkWwiJmfiauXEsw4mtVljUEEZW0IJxYg=
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 63DB5602FC;
+        Tue,  3 Sep 2019 08:44:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567500264;
+        bh=YuiLybM31Bk+gmnr2VNTbTZAla9U4l2MPe4lZBv0EOo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KYyFDWkN5rhhNRASYJ7GoKb52HX+KWkf9sGodOd5H5GF2GggZzBCUzsmEobUg5FQA
+         NIigv4wM/lzYF5pHVN1bXThpfW7W7fgfdVNfzKWzjzlYXmMekUlMKyclQQ6y/B6uTi
+         csOVLws36jhUuGOpNY22YLmOFEwwrfL4mASTvmwU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 63DB5602FC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 3/6] dt-bindings: soc: qcom: Add RSC power domain
+ specifier
+To:     Rob Herring <robh@kernel.org>
+Cc:     swboyd@chromium.org, agross@kernel.org, david.brown@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org, ulf.hansson@linaro.org,
+        devicetree@vger.kernel.org
+References: <20190823081703.17325-1-mkshah@codeaurora.org>
+ <20190823081703.17325-4-mkshah@codeaurora.org> <20190827223252.GA26039@bogus>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <6002b812-b575-85c7-41a4-2b9a200b4ff3@codeaurora.org>
+Date:   Tue, 3 Sep 2019 14:14:17 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13e28461-db53-4aa3-5778-08d730499596
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 08:34:49.5289
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HCVQdtTboqLHNrezB5NrAiNvGJRZnSmFnlFo3rtiyhsh4PDUVxeikfgB831UPsp+KZPrbXlY+xFT+EsEJ7M1Pxtd8b9SyTEv8xJ2UP9DGaNl8nLNVciVPoeexWhF7x0/
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4686
+In-Reply-To: <20190827223252.GA26039@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNCj4gRnJvbTogRGF2aWQgSG93ZWxscywgU2VudDogRnJpZGF5LCBBdWd1c3QgMzAsIDIw
-MTkgMTA6NTggUE0NCjxzbmlwPg0KPiAtLS0NCj4gDQo+ICBEb2N1bWVudGF0aW9uL3dhdGNoX3F1
-ZXVlLnJzdCAgICAgICAgICAgICAgIHwgICAyMiArKysrKystDQo+ICBhcmNoL2FscGhhL2tlcm5l
-bC9zeXNjYWxscy9zeXNjYWxsLnRibCAgICAgIHwgICAgMQ0KPiAgYXJjaC9hcm0vdG9vbHMvc3lz
-Y2FsbC50YmwgICAgICAgICAgICAgICAgICB8ICAgIDENCj4gIGFyY2gvaWE2NC9rZXJuZWwvc3lz
-Y2FsbHMvc3lzY2FsbC50YmwgICAgICAgfCAgICAxDQoNCkl0IHNlZW1zIHRvIGxhY2sgbW9kaWZp
-Y2F0aW9uIGZvciBhcmNoL2FybTY0Lg0KDQpJJ20gbm90IHN1cmUgd2hldGhlciB0aGlzIGlzIHJl
-bGF0ZWQsIGJ1dCBteSBlbnZpcm9ubWVudCAoUi1DYXIgSDMgLyByOGE3Nzk1KQ0KY2Fubm90IGJv
-b3Qgb24gbmV4dC0yMDE5MDkwMiB3aGljaCBjb250YWlucyB0aGlzIHBhdGNoLiBJIGZvdW5kIGFu
-IGlzc3VlDQpvbiB0aGUgcGF0Y2ggMDgvMTEsIHNvIEknbGwgcmVwb3J0IG9uIHRoZSBlbWFpbCB0
-aHJlYWQgbGF0ZXIuDQoNCj4gIGFyY2gvbTY4ay9rZXJuZWwvc3lzY2FsbHMvc3lzY2FsbC50Ymwg
-ICAgICAgfCAgICAxDQo+ICBhcmNoL21pY3JvYmxhemUva2VybmVsL3N5c2NhbGxzL3N5c2NhbGwu
-dGJsIHwgICAgMQ0KPiAgYXJjaC9taXBzL2tlcm5lbC9zeXNjYWxscy9zeXNjYWxsX24zMi50Ymwg
-ICB8ICAgIDENCj4gIGFyY2gvbWlwcy9rZXJuZWwvc3lzY2FsbHMvc3lzY2FsbF9uNjQudGJsICAg
-fCAgICAxDQo+ICBhcmNoL21pcHMva2VybmVsL3N5c2NhbGxzL3N5c2NhbGxfbzMyLnRibCAgIHwg
-ICAgMQ0KPiAgYXJjaC9wYXJpc2Mva2VybmVsL3N5c2NhbGxzL3N5c2NhbGwudGJsICAgICB8ICAg
-IDENCj4gIGFyY2gvcG93ZXJwYy9rZXJuZWwvc3lzY2FsbHMvc3lzY2FsbC50YmwgICAgfCAgICAx
-DQo+ICBhcmNoL3MzOTAva2VybmVsL3N5c2NhbGxzL3N5c2NhbGwudGJsICAgICAgIHwgICAgMQ0K
-PiAgYXJjaC9zaC9rZXJuZWwvc3lzY2FsbHMvc3lzY2FsbC50YmwgICAgICAgICB8ICAgIDENCj4g
-IGFyY2gvc3BhcmMva2VybmVsL3N5c2NhbGxzL3N5c2NhbGwudGJsICAgICAgfCAgICAxDQo+ICBh
-cmNoL3g4Ni9lbnRyeS9zeXNjYWxscy9zeXNjYWxsXzMyLnRibCAgICAgIHwgICAgMQ0KPiAgYXJj
-aC94ODYvZW50cnkvc3lzY2FsbHMvc3lzY2FsbF82NC50YmwgICAgICB8ICAgIDENCj4gIGFyY2gv
-eHRlbnNhL2tlcm5lbC9zeXNjYWxscy9zeXNjYWxsLnRibCAgICAgfCAgICAxDQo+ICBkcml2ZXJz
-L2Jhc2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOSArKysNCj4gIGRyaXZl
-cnMvYmFzZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgfCAgICAxDQo+ICBkcml2ZXJz
-L2Jhc2Uvd2F0Y2guYyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA5MCArKysrKysrKysrKysr
-KysrKysrKysrKysrKysNCj4gIGluY2x1ZGUvbGludXgvZGV2aWNlLmggICAgICAgICAgICAgICAg
-ICAgICAgfCAgICA3ICsrDQo+ICBpbmNsdWRlL2xpbnV4L3N5c2NhbGxzLmggICAgICAgICAgICAg
-ICAgICAgIHwgICAgMQ0KPiAgaW5jbHVkZS91YXBpL2FzbS1nZW5lcmljL3VuaXN0ZC5oICAgICAg
-ICAgICB8ICAgIDQgKw0KPiAga2VybmVsL3N5c19uaS5jICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgIDENCj4gIDI0IGZpbGVzIGNoYW5nZWQsIDE0OSBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvYmFzZS93YXRjaC5jDQoN
-CkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCg==
+
+On 8/28/2019 4:02 AM, Rob Herring wrote:
+> On Fri, Aug 23, 2019 at 01:47:00PM +0530, Maulik Shah wrote:
+>> In addition to transmitting resource state requests to the remote
+>> processor, the RSC is responsible for powering off/lowering the
+>> requirements from CPUs subsystem for the associated hardware like
+>> buses, clocks, and regulators when all CPUs and cluster is powered down.
+>>
+>> The power domain is configured to a low power state and when all the
+>> CPUs are powered down, the RSC can lower resource state requirements
+>> and power down the rails that power the CPUs.
+>>
+>> Add PM domain specifier property for RSC controller.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>> ---
+>>   Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>> index 9b86d1eff219..d0ab6e9b6745 100644
+>> --- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+>> @@ -83,6 +83,13 @@ Properties:
+>>   	Value type: <string>
+>>   	Definition: Name for the RSC. The name would be used in trace logs.
+>>   
+>> +- #power-domain-cells:
+>> +	Usage: optional
+>> +	Value type: <u32>
+>> +	Definition: Number of cells in power domain specifier. Optional for
+>> +		    controllers that may be in 'solver' state where they can
+>> +		    be in autonomous mode executing low power modes.
+> What's the value? It's always 0?
+
+yes. its value is always 0. i will update definition to mention this in 
+next version.
+
+>> +
+>>   Drivers that want to use the RSC to communicate with RPMH must specify their
+>>   bindings as child nodes of the RSC controllers they wish to communicate with.
+>>   
+>> @@ -112,6 +119,7 @@ TCS-OFFSET: 0xD00
+>>   				  <SLEEP_TCS   3>,
+>>   				  <WAKE_TCS    3>,
+>>   				  <CONTROL_TCS 1>;
+>> +		#power-domain-cells = <0>;
+>>   	};
+>>   
+>>   Example 2:
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation.
+>>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
