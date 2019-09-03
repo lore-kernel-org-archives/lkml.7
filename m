@@ -2,139 +2,110 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F94BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E14C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 360FC2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 517312087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:41:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aiI+07M6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfICLku (ORCPT
+        id S1728989AbfICLl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:40:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48736 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728538AbfICLkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:40:49 -0400
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C90381F13
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:40:49 +0000 (UTC)
-Received: by mail-wm1-f70.google.com with SMTP id r21so6875806wme.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:40:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=utliAxXHlzv/OkA2fKwkZhMhH80mu0eBxhklhX2mOKE=;
-        b=qzBKbUV2RDNuRHBDX3MaId99DmjGV5pBqRLI7VnEDKXKbPFBnCNdrhla1Wv+Lm8Ohr
-         yVRFIfon2J+traLNa/Uf5pN++je9rQE0+ZoCvsYo4iQJQ6xrk6gMxvfFy2womcjIJi/E
-         tTYgL7ltUMFdX6GbYMlYTXXQPUIySUe3uAOXF0Eso8LlWs4tGqgTpbbGVAE9VKC3lXJj
-         OWbQoZe5tj7ULZAFNAykN3ruatEnX2p7/x4CDVc/6+cEeZXjxBobyTUvIVmi8NJcrO/V
-         FWITuoO6rgPS+nFOk91gSoQAfB0Dnr9gOEaFPnaIb5tvcZjl2r28Tb84Cudxw1acqg1h
-         e2Qw==
-X-Gm-Message-State: APjAAAWhfD7YBmJ/xbbAMh1xfLZ3lHQNl+iFzjfLuV8YH8Ul9vWXImcS
-        hJ2OWtzuYLER/ociZJeWSlZgboy/zzyy3S52jXsPBCgn1wM7d3nFb9Fdu1hxbuJSvooWat2W7mu
-        WFz5Rvk0YVG+09tSB9kA/jNlz
-X-Received: by 2002:a1c:1f10:: with SMTP id f16mr43374376wmf.176.1567510847262;
-        Tue, 03 Sep 2019 04:40:47 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwMCBM14tG/0MBT/Fvv9aOKldtm4+v9uJCHaNYSDrxbguWdlacEKZgsi+EmXgjnGTm4vUpItQ==
-X-Received: by 2002:a1c:1f10:: with SMTP id f16mr43374359wmf.176.1567510847039;
-        Tue, 03 Sep 2019 04:40:47 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id b3sm9823058wrw.4.2019.09.03.04.40.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 04:40:46 -0700 (PDT)
-From:   Miklos Szeredi <mszeredi@redhat.com>
-To:     virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Tue, 3 Sep 2019 07:41:58 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36134 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727639AbfICLl6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:41:58 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83BdILQ148258;
+        Tue, 3 Sep 2019 11:41:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=2niyy18iMJJrJbnP8/27ZI5yggmyydzdGwzqDO8E1T8=;
+ b=aiI+07M6+dErSEfDUqW5pKOo44r8JCLXMKr5mF6BjjMtUTynJnUJbcFw30BhtDIkiQGQ
+ 5r++ansMeXQsb3WbKLEwd0fb5tQZZMfUiFwWsetT7dh/UYniwvMj2/7x/FNjltg7Am/t
+ h01gutDr++PW63Ro3Bus98IDDQ/xF3l9YJVGadIdRjiSAtzdXHKw38BULJ+e5gT3s37k
+ NyFHIU7oR+3QnWKSDsglTMrsGzhFckH+tXDP3wZQs/46Z3hleVhJxIAEHZ/bViVlGZ6R
+ 8Odi23udtgDNdFlu1Ugu4cqfQOq4TkVeIjw2MsmZ+XSV+NiawRrP/Bu6DjmBolj88Z7b Gg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2uspv805x0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 11:41:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83BcdPp155219;
+        Tue, 3 Sep 2019 11:39:39 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2us4wdr040-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 11:39:39 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x83BdcOe017661;
+        Tue, 3 Sep 2019 11:39:38 GMT
+Received: from paddy.uk.oracle.com (/10.175.205.235)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Sep 2019 04:39:38 -0700
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: [PATCH v4 05/16] fuse: export fuse_len_args()
-Date:   Tue,  3 Sep 2019 13:40:33 +0200
-Message-Id: <20190903114044.8201-1-mszeredi@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190903113640.7984-1-mszeredi@redhat.com>
-References: <20190903113640.7984-1-mszeredi@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org
+Subject: [PATCH v1 4/4] cpuidle-haltpoll: do not set an owner to allow modunload
+Date:   Tue,  3 Sep 2019 12:39:13 +0100
+Message-Id: <20190903113913.9257-5-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190903113913.9257-1-joao.m.martins@oracle.com>
+References: <20190903113913.9257-1-joao.m.martins@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=716
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909030123
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=778 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909030123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Hajnoczi <stefanha@redhat.com>
+cpuidle-haltpoll can be built as a module to allow optional late load.
+Given we are setting @owner to THIS_MODULE, cpuidle will attempt to grab a
+module reference every time a cpuidle_device is registered -- so
+essentially all online cpus get a reference.
 
-virtio-fs will need to query the length of fuse_arg lists.  Make the symbol
-visible.
+This prevents for the module to be unloaded later, which makes the
+module_exit callback entirely unused. Thus remove the @owner and allow
+module to be unloaded.
 
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
 ---
- fs/fuse/dev.c    | 7 ++++---
- fs/fuse/fuse_i.h | 5 +++++
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/cpuidle/cpuidle-haltpoll.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 137b3de511ac..985654560d1a 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -350,7 +350,7 @@ void fuse_put_request(struct fuse_conn *fc, struct fuse_req *req)
- }
- EXPORT_SYMBOL_GPL(fuse_put_request);
- 
--static unsigned len_args(unsigned numargs, struct fuse_arg *args)
-+unsigned int fuse_len_args(unsigned int numargs, struct fuse_arg *args)
- {
- 	unsigned nbytes = 0;
- 	unsigned i;
-@@ -360,6 +360,7 @@ static unsigned len_args(unsigned numargs, struct fuse_arg *args)
- 
- 	return nbytes;
- }
-+EXPORT_SYMBOL_GPL(fuse_len_args);
- 
- static u64 fuse_get_unique(struct fuse_iqueue *fiq)
- {
-@@ -375,7 +376,7 @@ static unsigned int fuse_req_hash(u64 unique)
- static void queue_request(struct fuse_iqueue *fiq, struct fuse_req *req)
- {
- 	req->in.h.len = sizeof(struct fuse_in_header) +
--		len_args(req->in.numargs, (struct fuse_arg *) req->in.args);
-+		fuse_len_args(req->in.numargs, (struct fuse_arg *) req->in.args);
- 	list_add_tail(&req->list, &fiq->pending);
- 	wake_up_locked(&fiq->waitq);
- 	kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
-@@ -1912,7 +1913,7 @@ static int copy_out_args(struct fuse_copy_state *cs, struct fuse_out *out,
- 	if (out->h.error)
- 		return nbytes != reqsize ? -EINVAL : 0;
- 
--	reqsize += len_args(out->numargs, out->args);
-+	reqsize += fuse_len_args(out->numargs, out->args);
- 
- 	if (reqsize < nbytes || (reqsize > nbytes && !out->argvar))
- 		return -EINVAL;
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 67521103d3b2..81e436c9620a 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -1098,4 +1098,9 @@ int fuse_set_acl(struct inode *inode, struct posix_acl *acl, int type);
- /* readdir.c */
- int fuse_readdir(struct file *file, struct dir_context *ctx);
- 
-+/**
-+ * Return the number of bytes in an arguments list
-+ */
-+unsigned int fuse_len_args(unsigned int numargs, struct fuse_arg *args);
-+
- #endif /* _FS_FUSE_I_H */
+diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+index 7a0239ef717e..49a65c6fe91e 100644
+--- a/drivers/cpuidle/cpuidle-haltpoll.c
++++ b/drivers/cpuidle/cpuidle-haltpoll.c
+@@ -35,7 +35,6 @@ static int default_enter_idle(struct cpuidle_device *dev,
+ static struct cpuidle_driver haltpoll_driver = {
+ 	.name = "haltpoll",
+ 	.governor = "haltpoll",
+-	.owner = THIS_MODULE,
+ 	.states = {
+ 		{ /* entry 0 is for polling */ },
+ 		{
 -- 
-2.21.0
+2.17.1
 
