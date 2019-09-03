@@ -2,205 +2,124 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D9DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A35C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A6B2077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664A123431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:49:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="W5Fu6uYZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfICPoC (ORCPT
+        id S1729357AbfICPtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:44:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:21568 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728679AbfICPoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:44:01 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7A03F18C8919;
-        Tue,  3 Sep 2019 15:44:00 +0000 (UTC)
-Received: from flask (unknown [10.43.2.55])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5EEBE19C78;
-        Tue,  3 Sep 2019 15:43:57 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Tue, 03 Sep 2019 17:43:56 +0200
-From:   =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+        Tue, 3 Sep 2019 11:49:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45905 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfICPtN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 11:49:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q12so18001822wrj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KMrvGG+6F24s5MC7Y6IaVq8vPUJTYFOsulQL5TO7Nqk=;
+        b=W5Fu6uYZZO+WduaX+O8aGUyvxrCbbRzcS4ahAS8IU6Gyw7Nf9+iTO97dFzlY4Yl1LW
+         Nx0JlQXGgpMlk4nwHJHAowYo7tY2Y10Fr3U2Upx8tWVhgtnNbdj7KUPp7xNRPjMqSy9C
+         LETM4kUAYpOWdm6oxcPunqHERPtaAxIugnY/15he9PE1t6aurBTj19DonY81W2MBA7dn
+         DmnWKQMb4wAD2cD3yULH3wcYIcelNwJrGav+xR7o7f1uGD/aDnubSOltk6yrYD+BRx0e
+         GIT7jxXAkO9wefk2XBKcW05k+gVaxQ59ZPVgpvLxUH8tZAf05aMykR4rEGMlSmQnHQO+
+         V02A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KMrvGG+6F24s5MC7Y6IaVq8vPUJTYFOsulQL5TO7Nqk=;
+        b=ZXJDBRsb2hqeOsyLX9Ls86gg7SmPBTGRtjQ5XS4pHslKiyVpuHdpbvFExmuVMeB7gg
+         x1weATEo8wt2ij4fZ2eAsP14cnlUtfhhmA+jOxvncFPOw9VMTwpiOlTBQYG4TNEdQFBw
+         9gFntI3eCmyey40n7LBQyqPg/g7QAVOFqaYtMfMCI86wezt5qySeAV7CnhIutEGUvqL/
+         CZFX3JwHpsUdSDheWzBHqQaeSwtfSbGQJ1J2J3QXd6yZfTDK39FJZJl1DwSHiC3L9x6x
+         fJn7qj8o6eGn8MmzyDJbw8DuU7oEMpptiv9H7yS91wTocMTBhpCFyKW0tvAAU+TUgh+M
+         3bng==
+X-Gm-Message-State: APjAAAWbmj0owZtFHkTGMBj4wsu0xcSxul274SG0N3niqMNAViau3UDO
+        F+TGmUelQRBmWq4hpH5K0X66QCLxGrvMOQ==
+X-Google-Smtp-Source: APXvYqwlH3Sd7NdJ7XNxdAeQ39tZTraTn+v19KlesBg1LQ0Sq1H877gVVSvaAxc91mJw1yGhA7W2YA==
+X-Received: by 2002:adf:e947:: with SMTP id m7mr30125985wrn.178.1567525750995;
+        Tue, 03 Sep 2019 08:49:10 -0700 (PDT)
+Received: from balsini.lon.corp.google.com ([2a00:79e0:d:210:e751:37a0:1e95:e65d])
+        by smtp.gmail.com with ESMTPSA id f143sm11634889wme.40.2019.09.03.08.49.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 08:49:10 -0700 (PDT)
+From:   Alessio Balsini <balsini@android.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        =?UTF-8?q?Jirka=20Hladk=C3=BD?= <jhladky@redhat.com>,
-        =?UTF-8?q?Ji=C5=99=C3=AD=20Voz=C3=A1r?= <jvozar@redhat.com>,
-        x86@kernel.org
-Subject: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
-Date:   Tue,  3 Sep 2019 17:43:40 +0200
-Message-Id: <20190903154340.860299-3-rkrcmar@redhat.com>
-In-Reply-To: <20190903154340.860299-1-rkrcmar@redhat.com>
-References: <20190903154340.860299-1-rkrcmar@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, kernel-team@android.com,
+        Alessio Balsini <balsini@android.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] sysctl: Inline braces for ctl_table and ctl_table_header
+Date:   Tue,  3 Sep 2019 16:49:06 +0100
+Message-Id: <20190903154906.188651-1-balsini@android.com>
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 03 Sep 2019 15:44:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The paper "The Linux Scheduler: a Decade of Wasted Cores" used several
-custom data gathering points to better understand what was going on in
-the scheduler.
-Red Hat adapted one of them for the tracepoint framework and created a
-tool to plot a heatmap of nr_running, where the sched_update_nr_running
-tracepoint is being used for fine grained monitoring of scheduling
-imbalance.
-The tool is available from https://github.com/jirvoz/plot-nr-running.
+Fix coding style of "struct ctl_table" and "struct ctl_table_header" to
+have inline brances.
+Before:
 
-The best place for the tracepoints is inside the add/sub_nr_running,
-which requires some shenanigans to make it work as they are defined
-inside sched.h.
-The tracepoints have to be included from sched.h, which means that
-CREATE_TRACE_POINTS has to be defined for the whole header and this
-might cause problems if tree-wide headers expose tracepoints in sched.h
-dependencies, but I'd argue it's the other side's misuse of tracepoints.
+struct ctl_table
+{
+	...
 
-Moving the import sched.h line lower would require fixes in s390 and ppc
-headers, because they don't include dependecies properly and expect
-sched.h to do it, so it is simpler to keep sched.h there and
-preventively undefine CREATE_TRACE_POINTS right after.
+After:
 
-Exports of the pelt tracepoints remain because they don't need to be
-protected by CREATE_TRACE_POINTS and moving them closer would be
-unsightly.
+struct ctl_table {
+	...
 
-Tested-by: Jirka Hladký <jhladky@redhat.com>
-Tested-by: Jiří Vozár <jvozar@redhat.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+Besides the wide use of this proposed cose style, this change helps to
+find at a glance the struct definition when navigating the code.
+
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
 ---
- include/trace/events/sched.h | 22 ++++++++++++++++++++++
- kernel/sched/core.c          |  7 ++-----
- kernel/sched/fair.c          |  2 --
- kernel/sched/sched.h         |  7 +++++++
- 4 files changed, 31 insertions(+), 7 deletions(-)
+ include/linux/sysctl.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 420e80e56e55..1527fc695609 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -625,6 +625,28 @@ DECLARE_TRACE(sched_overutilized_tp,
- 	TP_PROTO(struct root_domain *rd, bool overutilized),
- 	TP_ARGS(rd, overutilized));
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 6df477329b76e..02fa84493f237 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -120,8 +120,7 @@ static inline void *proc_sys_poll_event(struct ctl_table_poll *poll)
+ 	struct ctl_table_poll name = __CTL_TABLE_POLL_INITIALIZER(name)
  
-+TRACE_EVENT(sched_update_nr_running,
-+
-+	TP_PROTO(int cpu, int change, unsigned int nr_running),
-+
-+	TP_ARGS(cpu, change, nr_running),
-+
-+	TP_STRUCT__entry(
-+		__field(int,          cpu)
-+		__field(int,          change)
-+		__field(unsigned int, nr_running)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu        = cpu;
-+		__entry->change     = change;
-+		__entry->nr_running = nr_running;
-+	),
-+
-+	TP_printk("cpu=%u nr_running=%u (%d)",
-+			__entry->cpu, __entry->nr_running, __entry->change)
-+);
-+
- #endif /* _TRACE_SCHED_H */
+ /* A sysctl table is an array of struct ctl_table: */
+-struct ctl_table 
+-{
++struct ctl_table {
+ 	const char *procname;		/* Text ID for /proc/sys, or zero */
+ 	void *data;
+ 	int maxlen;
+@@ -140,8 +139,7 @@ struct ctl_node {
  
- /* This part must be outside protection */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 71981ce84231..31ac37b9f6f7 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6,7 +6,9 @@
-  *
-  *  Copyright (C) 1991-2002  Linus Torvalds
-  */
-+#define CREATE_TRACE_POINTS
- #include "sched.h"
-+#undef CREATE_TRACE_POINTS
- 
- #include <linux/nospec.h>
- 
-@@ -20,9 +22,6 @@
- 
- #include "pelt.h"
- 
--#define CREATE_TRACE_POINTS
--#include <trace/events/sched.h>
--
- /*
-  * Export tracepoints that act as a bare tracehook (ie: have no trace event
-  * associated with them) to allow external modules to probe them.
-@@ -7618,5 +7617,3 @@ const u32 sched_prio_to_wmult[40] = {
-  /*  10 */  39045157,  49367440,  61356676,  76695844,  95443717,
-  /*  15 */ 119304647, 148102320, 186737708, 238609294, 286331153,
- };
--
--#undef CREATE_TRACE_POINTS
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 84959d3285d1..421236d39902 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -22,8 +22,6 @@
-  */
- #include "sched.h"
- 
--#include <trace/events/sched.h>
--
- /*
-  * Targeted preemption latency for CPU-bound tasks:
-  *
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index c4915f46035a..b89d7786109a 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -75,6 +75,8 @@
- #include "cpupri.h"
- #include "cpudeadline.h"
- 
-+#include <trace/events/sched.h>
-+
- #ifdef CONFIG_SCHED_DEBUG
- # define SCHED_WARN_ON(x)	WARN_ONCE(x, #x)
- #else
-@@ -1887,6 +1889,8 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
- 
- 	rq->nr_running = prev_nr + count;
- 
-+	trace_sched_update_nr_running(cpu_of(rq), count, rq->nr_running);
-+
- #ifdef CONFIG_SMP
- 	if (prev_nr < 2 && rq->nr_running >= 2) {
- 		if (!READ_ONCE(rq->rd->overload))
-@@ -1900,6 +1904,9 @@ static inline void add_nr_running(struct rq *rq, unsigned count)
- static inline void sub_nr_running(struct rq *rq, unsigned count)
- {
- 	rq->nr_running -= count;
-+
-+	trace_sched_update_nr_running(cpu_of(rq), -count, rq->nr_running);
-+
- 	/* Check if we still need preemption */
- 	sched_update_tick_dependency(rq);
- }
+ /* struct ctl_table_header is used to maintain dynamic lists of
+    struct ctl_table trees. */
+-struct ctl_table_header
+-{
++struct ctl_table_header {
+ 	union {
+ 		struct {
+ 			struct ctl_table *ctl_table;
 -- 
-2.23.0
+2.23.0.187.g17f5b7556c-goog
 
