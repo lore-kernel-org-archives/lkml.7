@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6938FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DEBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39BB6215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E13A0215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528678;
-	bh=FL0R0ieMlAqeFeTgj/WE4/2JzRGpRQvBCF/ziATjPCQ=;
+	s=default; t=1567528683;
+	bh=ClO/bzDIhLULGWnpUsHftP3fg5PSJ+uoh92az27gGyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxF3GsruEDo63yz8PTWck1ItVEwyVbbrYnsCB/Rkq2ePZbDTpc+bsx0izyuC7Mu7D
-	 Caz4ClpaY7dEPyk+X6Wv5NqaRfLHhcPCwlMxgnCp79Y5R9JHDuVaYPxfJYMgmEfdLS
-	 zyE5FaNzEsk3l/AJ13iFy9MkBWlhjVqjE1ElwkWg=
+	b=1hGI8nrMyfMRFPwn1p58i179XIbZ8h9akKX/R7KYZd0HOdVlYLK4zBYHChRAi3moi
+	 4S1B8tyKaH2XrkYQeYvuJLjWkO+AmCNymoSThZa+svAFzux5RpdT3v8Zk4tknn85ce
+	 T+ClK1PFKf/whWf/5hAq9LrkdkEkMJP8EjZAhy5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbfICQh5 (ORCPT
+        id S1731430AbfICQiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:37:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730629AbfICQ00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:26 -0400
+        id S1730617AbfICQ0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17E5D238CE;
-        Tue,  3 Sep 2019 16:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B1C238CD;
+        Tue,  3 Sep 2019 16:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527985;
-        bh=FL0R0ieMlAqeFeTgj/WE4/2JzRGpRQvBCF/ziATjPCQ=;
+        s=default; t=1567527982;
+        bh=ClO/bzDIhLULGWnpUsHftP3fg5PSJ+uoh92az27gGyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+Xomodswd4lGFkf38Ki6LFPNFajUWNXPUyOZjrUnWvwy8DVDNs3MVYOmB9ceHE1b
-         zKHSnnoDYxvtN6uHD92x82RnXQl2bsoSa0YuAlBMR4fK4OwqouEu78/ZhQ/oFpGFjs
-         45x2GkcUQys1YBziSNze9wydujV29FGkZ0oDYfcA=
+        b=HBmA00I9XkZo6h7TqjneVvk7mIibSb4lLK9IZG82sphmA0Mi22k5Q2LxzC8vLCLwy
+         GUhTGh03Eb8ODNLjsw9xgV4F405iS5W89wr69GsYA1ZngXfT1q1wrWRLvuPmiuzs4X
+         kwvSEsp5La3r0uAcdy/6xW6zCs+inyTkCIS8ecnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 040/167] scsi: megaraid_sas: Fix combined reply queue mode detection
-Date:   Tue,  3 Sep 2019 12:23:12 -0400
-Message-Id: <20190903162519.7136-40-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 037/167] Btrfs: fix deadlock with memory reclaim during scrub
+Date:   Tue,  3 Sep 2019 12:23:09 -0400
+Message-Id: <20190903162519.7136-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,59 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit e29c322133472628c6de85efb99ccd3b3df5571e ]
+[ Upstream commit a5fb11429167ee6ddeeacc554efaf5776b36433a ]
 
-For Invader series, if FW supports more than 8 MSI-x vectors, driver needs
-to enable combined reply queue mode. For Ventura series, driver enables
-combined reply queue mode in case of more than 16 MSI-x vectors.
+When a transaction commit starts, it attempts to pause scrub and it blocks
+until the scrub is paused. So while the transaction is blocked waiting for
+scrub to pause, we can not do memory allocation with GFP_KERNEL from scrub,
+otherwise we risk getting into a deadlock with reclaim.
 
-Signed-off-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Checking for scrub pause requests is done early at the beginning of the
+while loop of scrub_stripe() and later in the loop, scrub_extent() and
+scrub_raid56_parity() are called, which in turn call scrub_pages() and
+scrub_pages_for_parity() respectively. These last two functions do memory
+allocations using GFP_KERNEL. Same problem could happen while scrubbing
+the super blocks, since it calls scrub_pages().
+
+We also can not have any of the worker tasks, created by the scrub task,
+doing GFP_KERNEL allocations, because before pausing, the scrub task waits
+for all the worker tasks to complete (also done at scrub_stripe()).
+
+So make sure GFP_NOFS is used for the memory allocations because at any
+time a scrub pause request can happen from another task that started to
+commit a transaction.
+
+Fixes: 58c4e173847a ("btrfs: scrub: use GFP_KERNEL on the submission path")
+CC: stable@vger.kernel.org # 4.6+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ fs/btrfs/scrub.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 806ceabcabc3f..b6fc7c6337610 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -5325,12 +5325,29 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 				instance->msix_vectors = (scratch_pad_2
- 					& MR_MAX_REPLY_QUEUES_OFFSET) + 1;
- 				fw_msix_count = instance->msix_vectors;
--			} else { /* Invader series supports more than 8 MSI-x vectors*/
-+			} else {
- 				instance->msix_vectors = ((scratch_pad_2
- 					& MR_MAX_REPLY_QUEUES_EXT_OFFSET)
- 					>> MR_MAX_REPLY_QUEUES_EXT_OFFSET_SHIFT) + 1;
--				if (instance->msix_vectors > 16)
--					instance->msix_combined = true;
-+
-+				/*
-+				 * For Invader series, > 8 MSI-x vectors
-+				 * supported by FW/HW implies combined
-+				 * reply queue mode is enabled.
-+				 * For Ventura series, > 16 MSI-x vectors
-+				 * supported by FW/HW implies combined
-+				 * reply queue mode is enabled.
-+				 */
-+				switch (instance->adapter_type) {
-+				case INVADER_SERIES:
-+					if (instance->msix_vectors > 8)
-+						instance->msix_combined = true;
-+					break;
-+				case VENTURA_SERIES:
-+					if (instance->msix_vectors > 16)
-+						instance->msix_combined = true;
-+					break;
-+				}
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index 4bcc275f76128..5a2d10ba747f7 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -322,6 +322,7 @@ static struct full_stripe_lock *insert_full_stripe_lock(
+ 	struct rb_node *parent = NULL;
+ 	struct full_stripe_lock *entry;
+ 	struct full_stripe_lock *ret;
++	unsigned int nofs_flag;
  
- 				if (rdpq_enable)
- 					instance->is_rdpq = (scratch_pad_2 & MR_RDPQ_MODE_OFFSET) ?
+ 	lockdep_assert_held(&locks_root->lock);
+ 
+@@ -339,8 +340,17 @@ static struct full_stripe_lock *insert_full_stripe_lock(
+ 		}
+ 	}
+ 
+-	/* Insert new lock */
++	/*
++	 * Insert new lock.
++	 *
++	 * We must use GFP_NOFS because the scrub task might be waiting for a
++	 * worker task executing this function and in turn a transaction commit
++	 * might be waiting the scrub task to pause (which needs to wait for all
++	 * the worker tasks to complete before pausing).
++	 */
++	nofs_flag = memalloc_nofs_save();
+ 	ret = kmalloc(sizeof(*ret), GFP_KERNEL);
++	memalloc_nofs_restore(nofs_flag);
+ 	if (!ret)
+ 		return ERR_PTR(-ENOMEM);
+ 	ret->logical = fstripe_logical;
+@@ -1622,8 +1632,19 @@ static int scrub_add_page_to_wr_bio(struct scrub_ctx *sctx,
+ 	mutex_lock(&sctx->wr_lock);
+ again:
+ 	if (!sctx->wr_curr_bio) {
++		unsigned int nofs_flag;
++
++		/*
++		 * We must use GFP_NOFS because the scrub task might be waiting
++		 * for a worker task executing this function and in turn a
++		 * transaction commit might be waiting the scrub task to pause
++		 * (which needs to wait for all the worker tasks to complete
++		 * before pausing).
++		 */
++		nofs_flag = memalloc_nofs_save();
+ 		sctx->wr_curr_bio = kzalloc(sizeof(*sctx->wr_curr_bio),
+ 					      GFP_KERNEL);
++		memalloc_nofs_restore(nofs_flag);
+ 		if (!sctx->wr_curr_bio) {
+ 			mutex_unlock(&sctx->wr_lock);
+ 			return -ENOMEM;
+@@ -3775,6 +3796,7 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 	struct scrub_ctx *sctx;
+ 	int ret;
+ 	struct btrfs_device *dev;
++	unsigned int nofs_flag;
+ 
+ 	if (btrfs_fs_closing(fs_info))
+ 		return -EINVAL;
+@@ -3878,6 +3900,16 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 	atomic_inc(&fs_info->scrubs_running);
+ 	mutex_unlock(&fs_info->scrub_lock);
+ 
++	/*
++	 * In order to avoid deadlock with reclaim when there is a transaction
++	 * trying to pause scrub, make sure we use GFP_NOFS for all the
++	 * allocations done at btrfs_scrub_pages() and scrub_pages_for_parity()
++	 * invoked by our callees. The pausing request is done when the
++	 * transaction commit starts, and it blocks the transaction until scrub
++	 * is paused (done at specific points at scrub_stripe() or right above
++	 * before incrementing fs_info->scrubs_running).
++	 */
++	nofs_flag = memalloc_nofs_save();
+ 	if (!is_dev_replace) {
+ 		/*
+ 		 * by holding device list mutex, we can
+@@ -3890,6 +3922,7 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 
+ 	if (!ret)
+ 		ret = scrub_enumerate_chunks(sctx, dev, start, end);
++	memalloc_nofs_restore(nofs_flag);
+ 
+ 	wait_event(sctx->list_wait, atomic_read(&sctx->bios_in_flight) == 0);
+ 	atomic_dec(&fs_info->scrubs_running);
 -- 
 2.20.1
 
