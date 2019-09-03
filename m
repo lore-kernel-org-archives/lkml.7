@@ -2,94 +2,94 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB81C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B97CEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7760A22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567540017;
-	bh=iGpP72X9Gfm1P4HKsR74LYZo3Ydpk9P15xifOisfBxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XO4QprbE33sO3WkjyqLMJAo1X7Fyx8MeBu6Fbb536pVyZ7c8gezUSrjej+4Fsv1fr
-	 JOal9ZuaHRnehGQPpbP+my6tDHb6jwW0yB6tcMAJuujNEyg72gMHe0sORzp7vxdFkL
-	 72f/4INaYqdrFUxFJlZ6Xtm3gj8//q3EDz3gLnv0=
+	by mail.kernel.org (Postfix) with ESMTP id 908F221881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:47:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XXl2aHLE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfICTq4 (ORCPT
+        id S1726965AbfICTq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:46:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726179AbfICTq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:46:56 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        Tue, 3 Sep 2019 15:46:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49840 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfICTq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:46:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0oSK57qWeSItTDz/D1Y7sd4ufyamhAWf1L+/fFFqZyQ=; b=XXl2aHLEUe68XutV+fxkA3608
+        I7vNH9lR5XVbY+UgpzYTbkAox4OSJ03Bzgs3NwC0AtJMaQw1As2aLxpN8Opt30kA1U8WEKusrExp6
+        4fUj9HPZD+tR0VciCPG3qSl/CZARQgij/0mwWRcGQqaK3Q/H3iIfcz5rcG6VHDIG+iIP7zCdhLSWo
+        VbE53FBHmuMfjWaaoQGBr9JeLAyEjQVpBOkVOpBWFHw+vEVA4HVG1vjbX5cV6Be3UooOVtF2p/cyz
+        od9fmPPSm39VMMPVLf52xTnV3ErNBwd528mnkG76Q8EQ8wp6M4y0FiJ01d6F6zOLuhVe7If542Lb6
+        /Cvczd0Hg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5ElH-0000KZ-UH; Tue, 03 Sep 2019 19:46:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 792C321881;
-        Tue,  3 Sep 2019 19:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567540015;
-        bh=iGpP72X9Gfm1P4HKsR74LYZo3Ydpk9P15xifOisfBxo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dukkqYi+oIhKbc5l4o0v/PgTWPmdhzuAp1/a1bTLNTKocjXl5O/F3bHdUaJtpa0tV
-         5L87acgduZm74OZL7niFVcxCJBRY89xN+UhwedzmFyxm1UWyXZNG/sw+PEP7/NOK2O
-         GuMT+liOsStYPwbJHAyztoZ7vvDT3M89tOkVkzZU=
-Date:   Tue, 3 Sep 2019 15:46:54 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 066/167] iio: adc: exynos-adc: Add S5PV210
- variant
-Message-ID: <20190903194654.GI5281@sasha-vm>
-References: <20190903162519.7136-1-sashal@kernel.org>
- <20190903162519.7136-66-sashal@kernel.org>
- <20190903185328.74299c4d@archlinux>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F1B33306010;
+        Tue,  3 Sep 2019 21:46:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3CE6B20977765; Tue,  3 Sep 2019 21:46:42 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 21:46:42 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 0/3] task: Making tasks on the runqueue rcu protected
+Message-ID: <20190903194642.GV2349@hirez.programming.kicks-ass.net>
+References: <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
+ <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
+ <20190830160957.GC2634@redhat.com>
+ <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org>
+ <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <CAHk-=wgQ_tZXQkovVked+nEsZhZqGVNnKmoy3b699dycZqCdKA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190903185328.74299c4d@archlinux>
+In-Reply-To: <CAHk-=wgQ_tZXQkovVked+nEsZhZqGVNnKmoy3b699dycZqCdKA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 06:53:28PM +0100, Jonathan Cameron wrote:
->On Tue,  3 Sep 2019 12:23:38 -0400
->Sasha Levin <sashal@kernel.org> wrote:
->
->> From: Jonathan Bakker <xc-racer2@live.ca>
->>
->> [ Upstream commit 882bf52fdeab47dbe991cc0e564b0b51c571d0a3 ]
->>
->> S5PV210's ADC variant is almost the same as v1 except that it has 10
->> channels and doesn't require the pmu register
->>
->> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
->> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
->> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->
->I have no particular objection to adding new IDs (which is more
->or less what this patch is), but I didn't know autosel was
->picking them up.  So a bit of surprise... If intentional
->then fine to apply to stable.
+On Tue, Sep 03, 2019 at 08:44:40AM -0700, Linus Torvalds wrote:
 
-I dragged it in because 103cda6a3b8d2 ("iio: adc: exynos-adc: Use proper
-number of channels for Exynos4x12") which is tagged for stable depended
-on this patch, and given it just adds new IDs which is part of what we
-take for stable I just took it in as is.
+> That said, it won't affect any of the core architectures much, because
+> smp_store_release() isn't that expensive (it's just a compiler barrier
+> on x86, it's a cheap instruction on arm64, and it should be very cheap
+> on any other architecture too unless they do insane things - even on
+> powerpc, which is about the worst case for any barriers, it's just an
+> lwsync).
 
---
-Thanks,
-Sasha
+Right, x86/s390/Sparc it's a compiler barrier, ARM64 has a store-release
+op which is relatively cheap, Power has an LWSYNC, but the rest does
+store-release with smp_mb() -- and this includes ARM.
+
