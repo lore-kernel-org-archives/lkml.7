@@ -2,163 +2,116 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 849E1C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398EAC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DEA723697
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4037206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:31:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="To2J9hU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729841AbfICObE (ORCPT
+        id S1729594AbfICOb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:31:04 -0400
-Received: from mga09.intel.com ([134.134.136.24]:34539 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfICObE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:31:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 07:31:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="184768017"
-Received: from vkuppusa-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.39.67])
-  by orsmga003.jf.intel.com with ESMTP; 03 Sep 2019 07:30:54 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v22 24/24] docs: x86/sgx: Document kernel internals
-Date:   Tue,  3 Sep 2019 17:26:55 +0300
-Message-Id: <20190903142655.21943-25-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+        Tue, 3 Sep 2019 10:31:59 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:17012 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbfICOb6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:31:58 -0400
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x83EVtVI008834
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 23:31:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x83EVtVI008834
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567521116;
+        bh=peXU42EyKwQnnz8I8342mhS/H7burl4NL19/9YgGjD0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=To2J9hU4oq963etpjneGoIRkK8muL4ge1eFeFd+JOKSAJyIFu3eQLEfFuPe/7fCfD
+         T6Ev74+Bkwbd1zwYdlvOP/d2NpKZCY+Hzd8zQD1nzMEigbEsphDDV/eIrwuyVYscvM
+         j0A2ou96yem5vS0c3y30DGhGUicO2XSK2Rst8fxojqelE7n4rTVQBy1a5c0h8ImzIr
+         rGlQg/N9hc6wngoGrFAX16cLhWEnalbrkeA0kX3OCEtSbM1PYQQre9cTthEKjkO2A7
+         ECX/HlIMqBK/5owGmVEGMlrjUp2m2wbc6DhoPmskMp4Gs9OBrMAgV/SpAdK3DsI0ri
+         PBR0ztSiH6jAA==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id n13so5548575uap.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:31:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAWoMQbXdaMTiosmZ7GQYXkAyPtz+/ZmXHykP1frurHNeKOb1v8k
+        2c5rafJMhSZ5V8vbvKnw5gtv2hGqusewGgIjOTY=
+X-Google-Smtp-Source: APXvYqx4IX1fbc76BZv6H/GxXFHjyN7GN25SCkBJrPe9gxiGH6cezOB6+0NoGTi8i0Op3jHd2IuwId/eGsLoOtOPNkg=
+X-Received: by 2002:a9f:2213:: with SMTP id 19mr4944903uad.25.1567521114572;
+ Tue, 03 Sep 2019 07:31:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190821092658.32764-1-yamada.masahiro@socionext.com>
+ <20190826113526.GA23425@infradead.org> <CAK7LNAQ_5Hz_CXAdx8W0bLjMWQ08KDWK3gG2pfDZOEE+cr0KEw@mail.gmail.com>
+ <20190830155322.GA30046@infradead.org> <CAK7LNAR2JuZkdJGxO=f2hUxmQca5d7430NC-2hiqZwkJphJ9sA@mail.gmail.com>
+ <20190902074256.GA754@infradead.org>
+In-Reply-To: <20190902074256.GA754@infradead.org>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 3 Sep 2019 23:31:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASMx7XBDUALd+UOj1jw=0kU-XoJBExCpSvKyQwV37mz7A@mail.gmail.com>
+Message-ID: <CAK7LNASMx7XBDUALd+UOj1jw=0kU-XoJBExCpSvKyQwV37mz7A@mail.gmail.com>
+Subject: Re: [PATCH] riscv: add arch/riscv/Kbuild
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Mon, Sep 2, 2019 at 4:42 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Sat, Aug 31, 2019 at 10:04:53PM +0900, Masahiro Yamada wrote:
+> > Kbuild support two file names, "Makefile" and "Kbuild"
+> > for describing obj-y, obj-m, etc.
+>
+> <snipping the basic explanation, which is documented pretty well,
+> I I think I full understand>
+>
+> > Similarly, arch/$(SRCARCH)/Makefile is very special
+> > in that it is included from the top-level Makefile,
+> > and specify arch-specific compiler flags etc.
+> >
+> > We can use arch/$(SRCARCH)/Kbuild
+> > to specify obj-y, obj-m.
+> > The top-level Makefile does not need to know
+> > the directory structure under arch/$(SRCARCH)/.
+> >
+> > This is logical separation.
+>
+> But only if we document this specific split and eventually stop allowing
+> to build objects from arch/$(SRCARCH)/Makefile.
 
-Document some of the more tricky parts of the kernel implementation
-internals.
+I like this idea, but it would change the link order (i.e. probe order)
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Co-developed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- Documentation/x86/sgx/2.Kernel-internals.rst | 76 ++++++++++++++++++++
- Documentation/x86/sgx/index.rst              |  1 +
- 2 files changed, 77 insertions(+)
- create mode 100644 Documentation/x86/sgx/2.Kernel-internals.rst
+For example, I want move all drivers-y in arch/x86/Makefile
+to arch/x86/Kbuild.
 
-diff --git a/Documentation/x86/sgx/2.Kernel-internals.rst b/Documentation/x86/sgx/2.Kernel-internals.rst
-new file mode 100644
-index 000000000000..5c90a65936f2
---- /dev/null
-+++ b/Documentation/x86/sgx/2.Kernel-internals.rst
-@@ -0,0 +1,76 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+================
-+Kernel Internals
-+================
-+
-+CPU configuration
-+=================
-+
-+Because SGX has an ever evolving and expanding feature set, it's possible for
-+a BIOS or VMM to configure a system in such a way that not all CPUs are equal,
-+e.g. where Launch Control is only enabled on a subset of CPUs.  Linux does
-+*not* support such a heterogeneous system configuration, nor does it even
-+attempt to play nice in the face of a misconfigured system.  With the exception
-+of Launch Control's hash MSRs, which can vary per CPU, Linux assumes that all
-+CPUs have a configuration that is identical to the boot CPU.
-+
-+EPC management
-+==============
-+
-+Because the kernel can't arbitrarily read EPC memory or share RO backing pages
-+between enclaves, traditional memory models such as CoW and fork() do not work
-+with enclaves.  In other words, the architectural rules of EPC forces it to be
-+treated as MAP_SHARED at all times.
-+
-+The inability to employ traditional memory models also means that EPC memory
-+must be isolated from normal memory pools, e.g. attempting to use EPC memory
-+for normal mappings would result in faults and/or perceived data corruption.
-+Furthermore, EPC is not enumerated by as normal memory, e.g. BIOS enumerates
-+EPC as reserved memory in the e820 tables, or not at all.  As a result, EPC
-+memory is directly managed by the SGX subsystem, e.g. SGX employs VM_PFNMAP to
-+manually insert/zap/swap page table entries, and exposes EPC to userspace via
-+a well known device, /dev/sgx/enclave.
-+
-+The net effect is that all enclave VMAs must be MAP_SHARED and are backed by
-+a single file, /dev/sgx/enclave.
-+
-+EPC oversubscription
-+====================
-+
-+SGX allows to have larger enclaves than amount of available EPC by providing a
-+subset of leaf instruction for swapping EPC pages to the system memory.  The
-+details of these instructions are discussed in the architecture document. Due
-+to the unique requirements for swapping EPC pages, and because EPC pages do not
-+have associated page structures, management of the EPC is not handled by the
-+standard memory subsystem.
-+
-+SGX directly handles swapping of EPC pages, including a thread to initiate the
-+reclaiming process and a rudimentary LRU mechanism. When the amount of free EPC
-+pages goes below a low watermark the swapping thread starts reclaiming pages.
-+The pages that have not been recently accessed (i.e. do not have the A bit set)
-+are selected as victim pages. Each enclave holds an shmem file as a backing
-+storage for reclaimed pages.
-+
-+Launch Control
-+==============
-+
-+The current kernel implementation supports only writable MSRs. The launch is
-+performed by setting the MSRs to the hash of the public key modulus of the
-+enclave signer and a token with the valid bit set to zero. Because kernel makes
-+ultimately all the launch decisions token are not needed for anything.  We
-+don't need or have a launch enclave for generating them as the MSRs must always
-+be writable.
-+
-+Provisioning
-+============
-+
-+The use of provisioning must be controlled because it allows to get access to
-+the provisioning keys to attest to a remote party that the software is running
-+inside a legit enclave. This could be used by a malware network to ensure that
-+its nodes are running inside legit enclaves.
-+
-+The driver introduces a special device file /dev/sgx/provision and a special
-+ioctl SGX_IOC_ENCLAVE_SET_ATTRIBUTE to accomplish this. A file descriptor
-+pointing to /dev/sgx/provision is passed to ioctl from which kernel authorizes
-+the PROVISION_KEY attribute to the enclave.
-diff --git a/Documentation/x86/sgx/index.rst b/Documentation/x86/sgx/index.rst
-index c5dfef62e612..5d660e83d984 100644
---- a/Documentation/x86/sgx/index.rst
-+++ b/Documentation/x86/sgx/index.rst
-@@ -14,3 +14,4 @@ potentially malicious.
-    :maxdepth: 1
- 
-    1.Architecture
-+   2.Kernel-internals
--- 
-2.20.1
+I do not know how much we care about the probe order.
 
+
+>  And in my perfect world
+> we'd eventually phase out the magic arch/$(SRCARCH)/Makefile entire=C5=80=
+y.
+> In addition to the normal Kbuild file we'd then have say (names entirely
+> made up and probably not the best idea)
+>
+>   arch/$(SRCARCH)/flags.mk to set the various compiler flags and co
+>   arch/$(SRCARCH)/targets.mk for extra arch-specific targets
+
+I am not sure whether this split is a good idea.
+What is the problem with having the single arch-Makefile?
+
+
+--=20
+Best Regards
+Masahiro Yamada
