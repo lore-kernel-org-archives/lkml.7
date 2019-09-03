@@ -2,135 +2,140 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBBAC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8030FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F243C21881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49801230F2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 05:28:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TwIoioOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfICFZe (ORCPT
+        id S1726408AbfICF2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 01:25:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20106 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726180AbfICFZd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 01:25:33 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x835MRsN153278
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Sep 2019 01:25:32 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ushh38sng-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:25:31 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 3 Sep 2019 06:25:30 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Sep 2019 06:25:25 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x835POT138469740
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Sep 2019 05:25:24 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D342AE04D;
-        Tue,  3 Sep 2019 05:25:24 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E7D19AE045;
-        Tue,  3 Sep 2019 05:25:23 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Sep 2019 05:25:23 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 3 Sep 2019 01:28:54 -0400
+Received: from ozlabs.org ([203.11.71.1]:53019 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfICF2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 01:28:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id ADFCCA00EC;
-        Tue,  3 Sep 2019 15:25:22 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46MwVB3DbTz9s7T;
+        Tue,  3 Sep 2019 15:28:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567488531;
+        bh=rlB4msvYvPZrbjAElsyKaihIxhFBAWAORihfrpVeSfw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TwIoioOSknFD8Wlbd8xNit0YlfvjqwBTk5ysEuAh0+XSM4tvLce2oZcZ02/wV2018
+         P5YUalVvRupXbaVLmqeiZFMADVjYwgrE8sYhc3UAtcn92KVP5DucXMN1gq23/a45Wg
+         PdxQJkE8KK9stbLrd3RoFRcXzNzGxCnKomgfB7WLVcrHrhZuo7gxAXy86iZ5w+N18B
+         f94v1q3HalaZiaf7eLpnScvqpfUgCza1J8H14/HJJ3o+n4edVKCUjE9NoumKM5WCGY
+         gZtgHgr3cd0yjqXTe1bOX9N1Es12Mmxe+QyP3kSYQMWTPvusLNiYWDAOcbhSHj3B7U
+         9Kme8/hxodugQ==
+Date:   Tue, 3 Sep 2019 15:28:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qian Cai <cai@lca.pw>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 6/6] powerpc: Don't flush caches when adding memory
-Date:   Tue,  3 Sep 2019 15:24:00 +1000
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190903052407.16638-1-alastair@au1.ibm.com>
-References: <20190903052407.16638-1-alastair@au1.ibm.com>
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the iommu tree
+Message-ID: <20190903152849.770ae819@canb.auug.org.au>
+In-Reply-To: <d2493e6b-08fa-9ea8-a0a4-076def54e91b@amd.com>
+References: <20190902163951.6280e030@canb.auug.org.au>
+        <20190902140347.GA23482@8bytes.org>
+        <d2493e6b-08fa-9ea8-a0a4-076def54e91b@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090305-0028-0000-0000-00000396EEBA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090305-0029-0000-0000-000024593A68
-Message-Id: <20190903052407.16638-7-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=692 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909030060
+Content-Type: multipart/signed; boundary="Sig_/QC/nbyo+M/koxzSVz3tcjkr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+--Sig_/QC/nbyo+M/koxzSVz3tcjkr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This operation takes a significant amount of time when hotplugging
-large amounts of memory (~50 seconds with 890GB of persistent memory).
+Hi all,
 
-This was orignally in commit fb5924fddf9e
-("powerpc/mm: Flush cache on memory hot(un)plug") to support memtrace,
-but the flush on add is not needed as it is flushed on remove.
+On Mon, 2 Sep 2019 14:26:40 +0000 "Lendacky, Thomas" <Thomas.Lendacky@amd.c=
+om> wrote:
+>
+> On 9/2/19 9:03 AM, Joerg Roedel wrote:
+> >=20
+> > tl;dr: And IOMMU commit introduces a new user for sme_active() in
+> >         generic code, and commit
+> >=20
+> >         	284e21fab2cf x86, s390/mm: Move sme_active() and sme_me_mask t=
+o x86-specific header
+> >=20
+> >         breaks the build of drivers/iommu/ for all architectures not
+> >         implementing sme_active().
+> >=20
+> > On Mon, Sep 02, 2019 at 04:39:51PM +1000, Stephen Rothwell wrote: =20
+> >> drivers/iommu/iommu.c: In function 'iommu_subsys_init':
+> >> drivers/iommu/iommu.c:123:38: error: implicit declaration of function =
+'sme_active'; did you mean 'cpu_active'? [-Werror=3Dimplicit-function-decla=
+ration]
+> >>    123 |   if (iommu_default_passthrough() && sme_active()) { =20
+>=20
+> Maybe we should make this mem_encrypt_active(), since this will probably
+> be needed if/when an IOMMU device is eventually added to a guest, and the
+> referenced commit below doesn't remove that call.
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+I have done that for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 3 Sep 2019 15:19:34 +1000
+Subject: [PATCH] iommu: use mem_encrypt_active() instead of sme_active()
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- arch/powerpc/mm/mem.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/iommu/iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 854aaea2c6ae..2a14b5b93e19 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -111,7 +111,6 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
- {
- 	unsigned long start_pfn = start >> PAGE_SHIFT;
- 	unsigned long nr_pages = size >> PAGE_SHIFT;
--	u64 i;
- 	int rc;
- 
- 	resize_hpt_for_hotplug(memblock_phys_mem_size());
-@@ -124,12 +123,6 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
- 		return -EFAULT;
- 	}
- 
--	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
--		flush_dcache_range(start + i,
--				   min(start + size, start + i + FLUSH_CHUNK_SIZE));
--		cond_resched();
--	}
--
- 	return __add_pages(nid, start_pfn, nr_pages, restrictions);
- }
- 
--- 
-2.21.0
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 66cfacaa483d..b870044ecd49 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -120,7 +120,7 @@ static int __init iommu_subsys_init(void)
+ 		else
+ 			iommu_set_default_translated(false);
+=20
+-		if (iommu_default_passthrough() && sme_active()) {
++		if (iommu_default_passthrough() && mem_encrypt_active()) {
+ 			pr_info("SME detected - Disabling default IOMMU Passthrough\n");
+ 			iommu_set_default_translated(false);
+ 		}
+--=20
+2.23.0.rc1
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/QC/nbyo+M/koxzSVz3tcjkr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1t+hEACgkQAVBC80lX
+0GwcpAf+JfutCmod1dRdGPit/CwvcXnxjPi230q7rPjbytPpnAJMfx8GcpgR+ZNk
+y4JkL4WqKVDr1+txFZMWzwYj9/wiZjCllo0MXX0gGzaC+LZO1ZnLbMhxPNk54b6e
+g++atpHeOcUnGWFwcTpHeLo/E6q7z0zz9M8eE5NU2MIxc61ahRjqj0q2SMLI9omo
+4EnqlnYzXu9jQ5pXcO2vrng2Ri2jLBlt9LkIVCUOPhfEmW2q1/TbGVu9YvAQQvPY
+YTS++V2q12CKBlLBPPsH7fFGDmBJgSDOVL/SvPgnny8hpenO9XCT7SRFe0elA3Cs
+boCD8NbN/p7CYFj+mfMd7KboUC+gIw==
+=5WxQ
+-----END PGP SIGNATURE-----
+
+--Sig_/QC/nbyo+M/koxzSVz3tcjkr--
