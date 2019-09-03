@@ -2,133 +2,82 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFC3C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D333BC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCDE22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:14:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y3AMEKKL"
+	by mail.kernel.org (Postfix) with ESMTP id A700020828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfICGOH (ORCPT
+        id S1726864AbfICGP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:14:07 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38130 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbfICGOG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:14:06 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w11so7446214plp.5
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:14:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X56IDYGgH848OXVqS7siup3yiE3wR0xEVNMSreTqgdo=;
-        b=y3AMEKKLSVUNqigZFRl6vqbivo8ONu2wWnALKLMDMc58mKXv8dt1WPoc5s1l7AoJkd
-         bEd1/DYAizZBXBqpKoDvl0EwvbqFaBz5xRhAGLQZ7xmctZRSQ1LnS/PPfEZMDqiYjrOz
-         J5oppKWr7CODmyaxen0zqJKrJYVK40EJM1RvSaQwkVQ0z3SBy6X41YZKS2wrAxRKC0gd
-         B7bcAj3+Z9+/j+VwkhNq/gdzmyT5fuCFtrXdI1sANy1IuHwIolvMPMl9caZ6GZdzsGUf
-         C4ByUzzvg9vWkZfp3cCL+GDvvMtxUe0f603Gm4VlXnGPwkXyFph0x0XaNn3I3vyu1b4Y
-         uyrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X56IDYGgH848OXVqS7siup3yiE3wR0xEVNMSreTqgdo=;
-        b=uhBLXTX7SIi4+QiuB/Rc+pB/34B3tY2ufXyIcBmVaaBtzEJn3m35Vmba9F20M1TAi3
-         zNACFcRCN82ib3bepXfLVZOxAYwrbeLZW5oQwjjI9MfDQRmKT5/6IDLcdtpi8VhO7qdf
-         9Sj1eMsmn+bpkuliTe1FEOq0DDj3LB08bZbtoUgtR/CqH0EFr1est3lYu4BtdMNhSi94
-         akfzj0wEYgkLU09MSPYzkiMTl6BdJJ9dRnuYy/oCkhkfPVveUji8NgQl7n/4S7DbuZLX
-         WsJrJ/uzikBcHJ5OGmJU7sVwLm/kLLwxesAatHL49lBDFijuHNcoND6jmlZFRWCn1jNs
-         nDFw==
-X-Gm-Message-State: APjAAAVZcg6bBf08Y1auuYkMFYF5LRpMlAbwMWRFT50UayXYMR6FaDVc
-        cgM89vFDyC1lzv+oiXkm5/LPbQ==
-X-Google-Smtp-Source: APXvYqy2jgf96BPa+1HJhxpna1B7VYdeAxyhRykT9911XHflctDbHWllU730nibd82llGhzGl3E/gQ==
-X-Received: by 2002:a17:902:1122:: with SMTP id d31mr34104469pla.254.1567491245848;
-        Mon, 02 Sep 2019 23:14:05 -0700 (PDT)
-Received: from localhost ([122.167.132.221])
-        by smtp.gmail.com with ESMTPSA id p10sm18500683pff.132.2019.09.02.23.14.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 23:14:05 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 11:44:03 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
-Message-ID: <20190903061403.k3d333f54gj2kuxi@vireshk-i7>
-References: <cover.1567421750.git.hns@goldelico.com>
- <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
- <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
- <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
+        Tue, 3 Sep 2019 02:15:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56116 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725919AbfICGP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:15:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AD2173082E4E;
+        Tue,  3 Sep 2019 06:15:27 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-67.ams2.redhat.com [10.36.117.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 03A7E19D70;
+        Tue,  3 Sep 2019 06:15:25 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id A2AD346D3; Tue,  3 Sep 2019 08:15:24 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 08:15:24 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     dri-devel@lists.freedesktop.org, Jonathan Corbet <corbet@lwn.net>,
+        David Airlie <airlied@linux.ie>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH 1/5] drm/ttm: add drm_gem_ttm_print_info()
+Message-ID: <20190903061524.v75akt6rmx5vow2n@sirius.home.kraxel.org>
+References: <20190902124126.7700-1-kraxel@redhat.com>
+ <20190902124126.7700-2-kraxel@redhat.com>
+ <199bbf8d-68bc-ea99-723e-3b88045970c4@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <199bbf8d-68bc-ea99-723e-3b88045970c4@suse.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 03 Sep 2019 06:15:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-09-19, 08:01, H. Nikolaus Schaller wrote:
+  Hi,
+
+> > +		[ TTM_PL_SYSTEM ] = "system",
+> > +		[ TTM_PL_TT     ] = "tt",
+> > +		[ TTM_PL_VRAM   ] = "vram",
+> > +		[ TTM_PL_PRIV   ] = "priv",
+> > +
 > 
-> > Am 03.09.2019 um 04:36 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
-> > 
-> > On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
-> >> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
-> >> 1GHz capability is automatically detected.
-> >> 
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >> ---
-> >> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
-> >> 1 file changed, 7 deletions(-)
-> >> 
-> >> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >> index 5441e9ffdbb4..e98b0c615f19 100644
-> >> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> >> @@ -11,13 +11,6 @@
-> >> 	cpus {
-> >> 		cpu@0 {
-> >> 			cpu0-supply = <&vcc>;
-> >> -			operating-points = <
-> >> -				/* kHz    uV */
-> >> -				300000  1012500
-> >> -				600000  1200000
-> >> -				800000  1325000
-> >> -				1000000	1375000
-> >> -			>;
-> >> 		};
-> >> 	};
-> > 
-> > This should be merged with 2/5 ?
-> 
-> Well, it bloats 2/5.
+> This 'gap' in the array seems to be a problem for drivers that use these
+> bits. Could the print logic be moved into s separate function that also
+> takes the array as an argument?
 
-It is logically the right place to do this as that's where we are
-adding opp-v2.
+Are there any drivers which actually use these bits and which therefore
+might want to use a different array?
 
-> What I hope (I can't test) is that this opp-v1 table
-> is ignored if an opp-v2 table exists. So that it can be
-> removed by a separate follow-up patch.
+Also note they should not cause any problems (other than not being
+printed).  There is an explicit check here ...
 
-It should work as that's what we are doing in OPP core, but I still
-feel this better get merged with 2/5.
+> > +		if (!plname[i])
+> > +			continue;
 
--- 
-viresh
+.. to skip unknown bits.
+
+cheers,
+  Gerd
+
