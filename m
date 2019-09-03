@@ -2,118 +2,144 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF9CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8A3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9E62339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:31:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVXx869w"
+	by mail.kernel.org (Postfix) with ESMTP id 3F5E2204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567546387;
+	bh=YymkVWftAdEAJTU7xDiFlJnp7pb87J6LdTVZ/0wWnrU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ShpcFpNzAzlXxvjX9hIh+85HKQpYeLX+hj/VgMLO/vkjuYFA5pZpqDwV7gT20khy6
+	 T9Dwg7kLKLyKFOQ9GEPP6zsVPZZ5DnIHjhOnRzDx81KVeDKKjVrapwMuc9pJRj2+5C
+	 0L4zoKIuTZB4pMXMuGNRomGuxJESahlUXJd5B1HQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbfICVbT (ORCPT
+        id S1727295AbfICVdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:31:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41508 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfICVbT (ORCPT
+        Tue, 3 Sep 2019 17:33:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56566 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726375AbfICVdG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:31:19 -0400
-Received: by mail-io1-f65.google.com with SMTP id f19so1077427iof.8;
-        Tue, 03 Sep 2019 14:31:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sgg+hgCp6X2Un4SsyW+3qZ5TSFEYSxv9pzy5icvxR5Q=;
-        b=cVXx869w7AOAbXnHxMv3DkjrwOXif49phbiltz8MmrsuDF6uuKQUw+qy4J65cDsMZL
-         9DhgaVYSi1oZzI/RxpwjvpJSxUoxYl+TqN+Hq5OSob5YNnvbro2nHcIhzR+D7I0PRisj
-         A85/YlZGOFrvRSh3Nb+N6SJzjglfxzX/SW6d2DPgdmYHBfhy9R5QxZF51yeCRzYUQp5s
-         civHY6gG1Alh2IujuwTP3GVGzsrBdDZ2RH3TY1y/Lbg+1IFxlOFls5D7tAJR9PL1FKk5
-         3bWc3iJmJMZ5Y8oWQcOduKeZ1kw623ZQhxHgWIuYFQLP3NzpN4osOpj79BzYWgkqXQrq
-         GUPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sgg+hgCp6X2Un4SsyW+3qZ5TSFEYSxv9pzy5icvxR5Q=;
-        b=aArE05oDmHjf0z9GGrEfFZLLVM5rUB3kvYl2fK2dwg9p87LgvvUWTt3b6iMFDLWCb+
-         OZq83ewBDhc8CfpEr8+8drsU8l4Z94YntUF3i0hAzd/6BCFY+II3l3Uq256DCjLdjBcR
-         GgetZLL1rgb/QZt6X9uPcDNwfmXmbFwn8YUsWgx/mzQ2r5/eoqRdrhr7dsHpCOy1qzFU
-         v5fAJIzzHP6pb/iOPB9NWr8imykalC+X+lKQiEtkfj1v0hcDVogrdUPI5hDxCUEPgfEj
-         CybJIjg/Ctbyn4/8rDQRp5XA/SS6/UJcPD5XOplZAPz1utplXktBIYEgcrwqEXIxT9aO
-         Q1wA==
-X-Gm-Message-State: APjAAAVrtt4Ln8i8CPk5pyEMwsxGtFoZ0cfztEJj/m+BFRmcKD7/Gh2g
-        b2gl34vx8VsgilMOXIe9ZZy4ZH28SpkmaRiG9TWtaQ==
-X-Google-Smtp-Source: APXvYqzYN8zV2GdJXw8lWuTFP++GljjQs489OXmtW9RR6N5HtL7EAnbszXLMLn4MsNx1OjkUsq2kZBsi1vIXXBaN028=
-X-Received: by 2002:a02:948c:: with SMTP id x12mr1916478jah.96.1567546277969;
- Tue, 03 Sep 2019 14:31:17 -0700 (PDT)
+        Tue, 3 Sep 2019 17:33:06 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83LRH0k075353;
+        Tue, 3 Sep 2019 17:32:16 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2usx8qbhgw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 17:32:16 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x83LWC24088721;
+        Tue, 3 Sep 2019 17:32:16 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2usx8qbhgc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 17:32:16 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x83LUYo4023918;
+        Tue, 3 Sep 2019 21:32:14 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma02wdc.us.ibm.com with ESMTP id 2uqgh6w3jm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 21:32:14 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83LWEqi54395388
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Sep 2019 21:32:14 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58BC9B2065;
+        Tue,  3 Sep 2019 21:32:14 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 38E9DB2064;
+        Tue,  3 Sep 2019 21:32:14 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Sep 2019 21:32:14 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 76EE616C2133; Tue,  3 Sep 2019 14:32:18 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 14:32:18 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, mpe@ellerman.id.au
+Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
+Message-ID: <20190903213218.GG4125@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <878sr6t21a.fsf_-_@x220.int.ebiederm.org>
+ <20190903074117.GX2369@hirez.programming.kicks-ass.net>
+ <20190903074718.GT2386@hirez.programming.kicks-ass.net>
+ <87k1apqqgk.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
+ <874l1tp7st.fsf@x220.int.ebiederm.org>
+ <CAHk-=wjvyRJEdativFqqGGxzSgWnc-m7b+B04iQBMcZV4uM=hA@mail.gmail.com>
+ <20190903200603.GW2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <1567523922.5576.57.camel@lca.pw> <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
- <20190903211747.GD2899@mit.edu>
-In-Reply-To: <20190903211747.GD2899@mit.edu>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Tue, 3 Sep 2019 14:31:06 -0700
-Message-ID: <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
-Subject: Re: "beyond 2038" warnings from loopback mount is noisy
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Qian Cai <cai@lca.pw>, Jeff Layton <jlayton@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903200603.GW2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=987 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909030214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 2:18 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
-> On Tue, Sep 03, 2019 at 09:18:44AM -0700, Deepa Dinamani wrote:
-> >
-> > This prints a warning for each inode that doesn't extend limits beyond
-> > 2038. It is rate limited by the ext4_warning_inode().
-> > Looks like your filesystem has inodes that cannot be extended.
-> > We could use a different rate limit or ignore this corner case. Do the
-> > maintainers have a preference?
->
-> We need to drop this commit (ext4: Initialize timestamps limits), or
-> at least the portion which adds the call to the EXT4_INODE_SET_XTIME
-> macro in ext4.h.
+On Tue, Sep 03, 2019 at 10:06:03PM +0200, Peter Zijlstra wrote:
+> On Tue, Sep 03, 2019 at 12:18:47PM -0700, Linus Torvalds wrote:
+> > Now, if you can point to some particular field where that ordering
+> > makes sense for the particular case of "make it active on the
+> > runqueue" vs "look up the task from the runqueue using RCU", then I do
+> > think that the whole release->acquire consistency makes sense.
+> > 
+> > But it's not clear that such a field exists, particularly when this is
+> > in no way the *common* way to even get a task pointer, and other paths
+> > do *not* use the runqueue as the serialization point.
+> 
+> Even if we could find a case (and I'm not seeing one in a hurry), I
+> would try really hard to avoid adding extra barriers here and instead
+> make the consumer a little more complicated if at all possible.
+> 
+> The Power folks got rid of a SYNC (yes, more expensive than LWSYNC) from
+> their __switch_to() implementation and that had a measurable impact.
+> 
+> 9145effd626d ("powerpc/64: Drop explicit hwsync in context switch")
 
-As Arnd said, I think this can be fixed by warning only when the inode
-size is not uniformly 128 bytes in ext4.h. Is this an acceptable
-solution or we want to drop this warning altogether?
+The patch [1] looks good to me.  And yes, if the structure pointed to by
+the second argument of rcu_assign_pointer() is already visible to readers,
+it is OK to instead use RCU_INIT_POINTER().  Yes, this loses ordering.
+But weren't these simple assignments before RCU got involved?
 
-Arnd, should I be sending a pull request again with the fix? Or, we
-drop the ext4 patch and I can send it to the maintainers directly?
+As a very rough rule of thumb, LWSYNC is about twice as fast as SYNC.
+(Depends on workload, exact details of the hardware, timing, phase of
+the moon, you name it.)  So removing the LWSYNC is likely to provide
+measureable benefit, but I must defer to the powerpc maintainers.
+To that end, I added Michael on CC.
 
-> I know of a truly vast number of servers in production all over the
-> world which are using 128 byte inodes, and spamming the inodes at the
-> maximum rate limit is a really bad idea.  This includes at some major
-> cloud data centers where the life of individual servers in their data
-> centers is well understood (they're not going to last until 2038) and
-> nothing stored on the local Linux file systems are long-lived ---
-> that's all stored in the cluster file systems.  The choice of 128 byte
-> inode was deliberately chosen to maximize storage TCO, and so spamming
-> a warning at high rates is going to be extremely unfriendly.
->
-> In cases where the inode size is such that there is no chance at all
-> to support timestamps beyond 2038, a single warning at mount time, or
-> maybe a warning at mkfs time might be acceptable.  But there's no
-> point printing a warning time each time we set a timestamp on such a
-> file system.  It's not going to change, and past a certain point, we
-> need to trust that people who are using 128 byte inodes did so knowing
-> what the tradeoffs might be.  After all, it is *not* the default.
+							Thanx, Paul
 
-We have a single mount time warning already in place here. I did not
-realize some people actually chose to use 128 byte inodes on purpose.
-
--Deepa
+[1] https://lore.kernel.org/lkml/878sr6t21a.fsf_-_@x220.int.ebiederm.org/
