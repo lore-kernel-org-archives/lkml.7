@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF2AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511B0C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9B52339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A57C2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528612;
-	bh=UAiGUdrPfb+g2lb5wdRr2F7sPCY1m57xplW9JvOlQ/Q=;
+	s=default; t=1567528618;
+	bh=REnPNTLrhxtJ3anH3iT9BiT+jJLrbT6d4WeR9kfmNM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfN5RQ284EFsoLZ2QsMpF0X2kvOpfiz7rZeIl2jCX0jgZOxATEVOwOTzbvOgQdZWz
-	 9eFYJ+Wq3EXnUHPCk6q8xf7IH7mdRIGSrI5bWRw9DIop0nAjmgD28ZBU3nP/oFju+w
-	 gxeqX6zOlk5cJpo9Njw5MfCK613Ff78zQ1DAa+ds=
+	b=mciyWYtJm8ZNeo0kYx6pUN9I4in3EWm13GkUkflXj5426v+0VIF9Kl1GJUa5Pn2R+
+	 JxiyeYU3WRlKEz2P6coPV2HI3WJjaOmeZzgm69inW6l5nqeYx10suHX8NkNVKg9IQD
+	 R/Hgbm39e4iNzB97tCoyVxWU+IK9UXmpxXp2A51g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfICQgv (ORCPT
+        id S1730744AbfICQ04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48194 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbfICQ1D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:03 -0400
+        id S1730105AbfICQ0r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 531F6238C7;
-        Tue,  3 Sep 2019 16:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71CB1238C6;
+        Tue,  3 Sep 2019 16:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528023;
-        bh=UAiGUdrPfb+g2lb5wdRr2F7sPCY1m57xplW9JvOlQ/Q=;
+        s=default; t=1567528007;
+        bh=REnPNTLrhxtJ3anH3iT9BiT+jJLrbT6d4WeR9kfmNM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NVen0V82SYj3OwXJ/xZY4rm2TYBtDsVpWVFbloDGmQSHl+I0vyingezhH9vl1Zrp7
-         w3XHUvoQ1JIFNQ0UH9t33dGWUTwqzEoixkOFxqZCZfgGbFG2RyWhVoM96rk3dOFRZc
-         7uO5pD+ckVqUwBKWUKxmh1DDNRD6AhBV6TUc/oR0=
+        b=TfXxUsdAOlM7lAddg++FEUOfV+TcIoRH4UeTb8DRRucBruYZ4G20bBfd/awpWBoa+
+         NCHkaqwdGKBQWBb+1Jqez+NvSxvlvjxr5YYLc0IOgCMtPt+W3r9ptDNY9F4X2Jf9k8
+         /gyjWKMb4SM1mWWrjThROWvUVlYNaMYzP9QQM008=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gilad Ben-Yossef <gilad@benyossef.com>, stable@kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 058/167] crypto: ccree - add missing inline qualifier
-Date:   Tue,  3 Sep 2019 12:23:30 -0400
-Message-Id: <20190903162519.7136-58-sashal@kernel.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 050/167] ARC: mm: do_page_fault fixes #1: relinquish mmap_sem if signal arrives while handle_mm_fault
+Date:   Tue,  3 Sep 2019 12:23:22 -0400
+Message-Id: <20190903162519.7136-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,37 +59,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit f1071c3e2473ae19a7f5d892a187c4cab1a61f2e ]
+[ Upstream commit 4d447455e73b47c43dd35fcc38ed823d3182a474 ]
 
-Commit 1358c13a48c4 ("crypto: ccree - fix resume race condition on init")
-was missing a "inline" qualifier for stub function used when CONFIG_PM
-is not set causing a build warning.
+do_page_fault() forgot to relinquish mmap_sem if a signal came while
+handling handle_mm_fault() - due to say a ctl+c or oom etc.
+This would later cause a deadlock by acquiring it twice.
 
-Fixes: 1358c13a48c4 ("crypto: ccree - fix resume race condition on init")
-Cc: stable@kernel.org # v4.20
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This came to light when running libc testsuite tst-tls3-malloc test but
+is likely also the cause for prior seen LTP failures. Using lockdep
+clearly showed what the issue was.
+
+| # while true; do ./tst-tls3-malloc ; done
+| Didn't expect signal from child: got `Segmentation fault'
+| ^C
+| ============================================
+| WARNING: possible recursive locking detected
+| 4.17.0+ #25 Not tainted
+| --------------------------------------------
+| tst-tls3-malloc/510 is trying to acquire lock:
+| 606c7728 (&mm->mmap_sem){++++}, at: __might_fault+0x28/0x5c
+|
+|but task is already holding lock:
+|606c7728 (&mm->mmap_sem){++++}, at: do_page_fault+0x9c/0x2a0
+|
+| other info that might help us debug this:
+|  Possible unsafe locking scenario:
+|
+|       CPU0
+|       ----
+|  lock(&mm->mmap_sem);
+|  lock(&mm->mmap_sem);
+|
+| *** DEADLOCK ***
+|
+
+------------------------------------------------------------
+What the change does is not obvious (note to myself)
+
+prior code was
+
+| do_page_fault
+|
+|   down_read()		<-- lock taken
+|   handle_mm_fault	<-- signal pending as this runs
+|   if fatal_signal_pending
+|       if VM_FAULT_ERROR
+|           up_read
+|       if user_mode
+|          return	<-- lock still held, this was the BUG
+
+New code
+
+| do_page_fault
+|
+|   down_read()		<-- lock taken
+|   handle_mm_fault	<-- signal pending as this runs
+|   if fatal_signal_pending
+|       if VM_FAULT_RETRY
+|          return       <-- not same case as above, but still OK since
+|                           core mm already relinq lock for FAULT_RETRY
+|    ...
+|
+|   < Now falls through for bug case above >
+|
+|   up_read()		<-- lock relinquished
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccree/cc_pm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arc/mm/fault.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_pm.h b/drivers/crypto/ccree/cc_pm.h
-index f626243570209..907a6db4d6c03 100644
---- a/drivers/crypto/ccree/cc_pm.h
-+++ b/drivers/crypto/ccree/cc_pm.h
-@@ -30,7 +30,7 @@ static inline int cc_pm_init(struct cc_drvdata *drvdata)
- 	return 0;
- }
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index db6913094be3c..f28db0b112a30 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -143,12 +143,17 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 	 */
+ 	fault = handle_mm_fault(vma, address, flags);
  
--static void cc_pm_go(struct cc_drvdata *drvdata) {}
-+static inline void cc_pm_go(struct cc_drvdata *drvdata) {}
+-	/* If Pagefault was interrupted by SIGKILL, exit page fault "early" */
+ 	if (unlikely(fatal_signal_pending(current))) {
+-		if ((fault & VM_FAULT_ERROR) && !(fault & VM_FAULT_RETRY))
+-			up_read(&mm->mmap_sem);
+-		if (user_mode(regs))
++
++		/*
++		 * if fault retry, mmap_sem already relinquished by core mm
++		 * so OK to return to user mode (with signal handled first)
++		 */
++		if (fault & VM_FAULT_RETRY) {
++			if (!user_mode(regs))
++				goto no_context;
+ 			return;
++		}
+ 	}
  
- static inline void cc_pm_fini(struct cc_drvdata *drvdata) {}
- 
+ 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
 -- 
 2.20.1
 
