@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B5FC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB0AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF0B238C7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CD8215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528338;
-	bh=WG6uoZmxjfAMieB1hpPCkzQG0SYx+aPlTDuHzoGfSrQ=;
+	s=default; t=1567528340;
+	bh=yruG6zYRqI5FfoP6ioRKtGvCg1Enlfzh6rJyvHXfJSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=je8vhqm53Y5VXcOFS3oJx1y2TJnIXQwAt7+L7awpfPNpIG1W7zj7B3mewXUrwURMt
-	 65YTOoeXKzfL4U7t1ZbST/SKr8gyjgAHInLGtLHwodF9nbcQS7BqHHxOYmLFKIHbp/
-	 xyWFi0fP5v8nT8+rj4rCqvL1k/Im8Cd3t9Qr8U/8=
+	b=ehV4bHkXcanOEwdHpn+iFr4lWLLDqaHrcnBAl9WNb2fyVqHb8+p2Pk2Tr+vMsuXNP
+	 MWBOmR7VPd2GcWMDa3K1gX1TcCNN4+tEGphAWD9MARzMD+5/6uv4KFl0gC/rjpEomu
+	 uJD6KwQN9BkNqyoMEDNPjuD1SlQWlw38GPm33gG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbfICQcR (ORCPT
+        id S1731440AbfICQcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55654 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfICQcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:32:12 -0400
+        id S1730214AbfICQcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:32:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F155E2343A;
-        Tue,  3 Sep 2019 16:32:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BADE6238C7;
+        Tue,  3 Sep 2019 16:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528332;
-        bh=WG6uoZmxjfAMieB1hpPCkzQG0SYx+aPlTDuHzoGfSrQ=;
+        s=default; t=1567528334;
+        bh=yruG6zYRqI5FfoP6ioRKtGvCg1Enlfzh6rJyvHXfJSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFYVmPzOyQlXoAIe6NC0ZRfHzRXIYqZ7OMl666m40GM/YNLqY1AP4fd1LbRjjtiM+
-         eGJpduduePWnyNwKH70EngrkA5d5VjUMdWVbwZgpmb24B1+wtNG/sVdctENmdQFzPn
-         kIgPZHsdYBa0EZEjVt2P2XbNkEVlI2hs6NUrWiwE=
+        b=WVTi4ZV/E9IaigAGJOtcWfATBHZ3GB19otH+z+A9B1fgyKUYjAvxbisOoyaE6E+f7
+         I4zisdWzHUrq3tBI/sWm1MMCkE0dXt+qtWVeEzv0fTAs/TLUrWEyQSG7FzOUw5bATT
+         jPakjaABNZpX245JXAHcM/1DU8tBO9Eef4N7wBbc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 162/167] virtio/s390: fix race on airq_areas[]
-Date:   Tue,  3 Sep 2019 12:25:14 -0400
-Message-Id: <20190903162519.7136-162-sashal@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Dan Rue <dan.rue@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 164/167] ext4: don't perform block validity checks on the journal inode
+Date:   Tue,  3 Sep 2019 12:25:16 -0400
+Message-Id: <20190903162519.7136-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -62,53 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit 4f419eb14272e0698e8c55bb5f3f266cc2a21c81 ]
+[ Upstream commit 0a944e8a6c66ca04c7afbaa17e22bf208a8b37f0 ]
 
-The access to airq_areas was racy ever since the adapter interrupts got
-introduced to virtio-ccw, but since commit 39c7dcb15892 ("virtio/s390:
-make airq summary indicators DMA") this became an issue in practice as
-well. Namely before that commit the airq_info that got overwritten was
-still functional. After that commit however the two infos share a
-summary_indicator, which aggravates the situation. Which means
-auto-online mechanism occasionally hangs the boot with virtio_blk.
+Since the journal inode is already checked when we added it to the
+block validity's system zone, if we check it again, we'll just trigger
+a failure.
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 96b14536d935 ("virtio-ccw: virtio-ccw adapter interrupt support.")
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+This was causing failures like this:
+
+[   53.897001] EXT4-fs error (device sda): ext4_find_extent:909: inode
+#8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
+[   53.931430] jbd2_journal_bmap: journal block not found at offset 49 on sda-8
+[   53.938480] Aborting journal on device sda-8.
+
+... but only if the system was under enough memory pressure that
+logical->physical mapping for the journal inode gets pushed out of the
+extent cache.  (This is why it wasn't noticed earlier.)
+
+Fixes: 345c0dbf3a30 ("ext4: protect journal inode's blocks using block_validity")
+Reported-by: Dan Rue <dan.rue@linaro.org>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/virtio/virtio_ccw.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/ext4/extents.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index ec54538f7ae1c..67efdf25657f3 100644
---- a/drivers/s390/virtio/virtio_ccw.c
-+++ b/drivers/s390/virtio/virtio_ccw.c
-@@ -132,6 +132,7 @@ struct airq_info {
- 	struct airq_iv *aiv;
- };
- static struct airq_info *airq_areas[MAX_AIRQ_AREAS];
-+static DEFINE_MUTEX(airq_areas_lock);
- 
- #define CCW_CMD_SET_VQ 0x13
- #define CCW_CMD_VDEV_RESET 0x33
-@@ -244,9 +245,11 @@ static unsigned long get_airq_indicator(struct virtqueue *vqs[], int nvqs,
- 	unsigned long bit, flags;
- 
- 	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
-+		mutex_lock(&airq_areas_lock);
- 		if (!airq_areas[i])
- 			airq_areas[i] = new_airq_info();
- 		info = airq_areas[i];
-+		mutex_unlock(&airq_areas_lock);
- 		if (!info)
- 			return 0;
- 		write_lock_irqsave(&info->lock, flags);
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index 45aea792d22a0..00bf0b67aae87 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -518,10 +518,14 @@ __read_extent_tree_block(const char *function, unsigned int line,
+ 	}
+ 	if (buffer_verified(bh) && !(flags & EXT4_EX_FORCE_CACHE))
+ 		return bh;
+-	err = __ext4_ext_check(function, line, inode,
+-			       ext_block_hdr(bh), depth, pblk);
+-	if (err)
+-		goto errout;
++	if (!ext4_has_feature_journal(inode->i_sb) ||
++	    (inode->i_ino !=
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum))) {
++		err = __ext4_ext_check(function, line, inode,
++				       ext_block_hdr(bh), depth, pblk);
++		if (err)
++			goto errout;
++	}
+ 	set_buffer_verified(bh);
+ 	/*
+ 	 * If this is a leaf block, cache all of its entries
 -- 
 2.20.1
 
