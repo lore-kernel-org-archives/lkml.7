@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B234EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9ADC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DDD238F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148F8238F9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527980;
-	bh=8DzK93u3leP8+ss5457ROWWffQZJNtZmAWFrX94wVjs=;
+	s=default; t=1567527983;
+	bh=uMd4uvtbW1da0rDmTqsS1XFemtGN5vLwCY0w0LqKhqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wUUgUE/qRtXE6+aHO31b/il6wi5U4jDTMSH1fzSAN0Nphb3+XgjuEXtn52mPaEEBg
-	 nsP/XsFR8niERBdp5u4otpBj/mCKdJen8hEUHhS47pEh04ZuiHleKIpEFEzVwVayXH
-	 4aheCdwVSIK2jIOW3QtwK47DeWHBzbuw8m3VPl4k=
+	b=j25qfYFxHVJxGIKf6hmxJEfVUyYoK/HYe4xgYs6hZLEoSvpu93gMM5D6wXBMajqPX
+	 wGupvYoNAkdiTrStFv6BVOr3zHTbH6SC+bWzDbvU8UHDUENUIgUYCuQJ4/lkCpK/3P
+	 FyFgv3gGqbXm1fLLoJnKS2UAAj3QgbxdSR+J/Afw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbfICQ0T (ORCPT
+        id S1730616AbfICQ0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46564 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730531AbfICQ0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:03 -0400
+        id S1730552AbfICQ0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E66C23711;
-        Tue,  3 Sep 2019 16:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 094A2238F7;
+        Tue,  3 Sep 2019 16:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527962;
-        bh=8DzK93u3leP8+ss5457ROWWffQZJNtZmAWFrX94wVjs=;
+        s=default; t=1567527968;
+        bh=uMd4uvtbW1da0rDmTqsS1XFemtGN5vLwCY0w0LqKhqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nMVAf5e1G+vk8fwfvzPqf+cM3h1knhL/v13Wv9hd/H7dyMK+vFEOGr1V4cTphCwy2
-         4B2+aQjkU82Rhh+ltCt2rSfOkIjW/4v5N7mRTEh8poos89KP17QQlj2yF2HmYXKHKH
-         C/qITbkwYFhVtI9cCb1qFSGdMDwFK6uSnqneiiTY=
+        b=Wi7/rw8Im/TGo7uBIVHFmx0lnDkD+iVnjlAwEKJNSKOv9onF1AlDoE5H7hC29DsCl
+         1d/tr9wJrAnCcJDZA+6KsbxEKlywzFEhJ0VL5aK/cTcw2pkiqx2C0KLLKOyx47YTEk
+         6vX4dL+iiOOmFF3FFhxQ5dPSqHnuR5cOiPoQ1RkU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rex Zhu <Rex.Zhu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 023/167] drm/amd/pp: Fix truncated clock value when set watermark
-Date:   Tue,  3 Sep 2019 12:22:55 -0400
-Message-Id: <20190903162519.7136-23-sashal@kernel.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sekhar Nori <nsekhar@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 028/167] ARM: davinci: dm355: define gpio interrupts as separate resources
+Date:   Tue,  3 Sep 2019 12:23:00 -0400
+Message-Id: <20190903162519.7136-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,86 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rex Zhu <Rex.Zhu@amd.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-[ Upstream commit 4d454e9ffdb1ef5a51ebc147b5389c96048db683 ]
+[ Upstream commit 27db7baab640ea28d7994eda943fef170e347081 ]
 
-the clk value should be tranferred to MHz first and
-then transfer to uint16. otherwise, the clock value
-will be truncated.
+Since commit eb3744a2dd01 ("gpio: davinci: Do not assume continuous
+IRQ numbering") the davinci GPIO driver fails to probe if we boot
+in legacy mode from any of the board files. Since the driver now
+expects every interrupt to be defined as a separate resource, split
+the definition of IRQ resources instead of having a single continuous
+interrupt range.
 
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Reported-by: Hersen Wu <hersenxs.wu@amd.com>
-Signed-off-by: Rex Zhu <Rex.Zhu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: eb3744a2dd01 ("gpio: davinci: Do not assume continuous IRQ numbering")
 Cc: stable@vger.kernel.org
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/powerplay/hwmgr/smu_helper.c  | 32 +++++++++----------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ arch/arm/mach-davinci/dm355.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c
-index a321c465b7dce..cede78cdf28db 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu_helper.c
-@@ -669,20 +669,20 @@ int smu_set_watermarks_for_clocks_ranges(void *wt_table,
- 	for (i = 0; i < wm_with_clock_ranges->num_wm_dmif_sets; i++) {
- 		table->WatermarkRow[1][i].MinClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_dcfclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_dcfclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].MaxClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_dcfclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_dcfclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].MinUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_min_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].MaxUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_max_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[1][i].WmSetting = (uint8_t)
- 				wm_with_clock_ranges->wm_dmif_clocks_ranges[i].wm_set_id;
- 	}
-@@ -690,20 +690,20 @@ int smu_set_watermarks_for_clocks_ranges(void *wt_table,
- 	for (i = 0; i < wm_with_clock_ranges->num_wm_mcif_sets; i++) {
- 		table->WatermarkRow[0][i].MinClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_socclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_socclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].MaxClock =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_socclk_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_socclk_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].MinUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_min_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].MaxUclk =
- 			cpu_to_le16((uint16_t)
--			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_mem_clk_in_khz) /
--			1000);
-+			(wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_max_mem_clk_in_khz /
-+			1000));
- 		table->WatermarkRow[0][i].WmSetting = (uint8_t)
- 				wm_with_clock_ranges->wm_mcif_clocks_ranges[i].wm_set_id;
- 	}
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index 9f7d38d12c888..2b0f5d97ab7c1 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -548,6 +548,36 @@ static struct resource dm355_gpio_resources[] = {
+ 	},
+ 	{	/* interrupt */
+ 		.start	= IRQ_DM355_GPIOBNK0,
++		.end	= IRQ_DM355_GPIOBNK0,
++		.flags	= IORESOURCE_IRQ,
++	},
++	{
++		.start	= IRQ_DM355_GPIOBNK1,
++		.end	= IRQ_DM355_GPIOBNK1,
++		.flags	= IORESOURCE_IRQ,
++	},
++	{
++		.start	= IRQ_DM355_GPIOBNK2,
++		.end	= IRQ_DM355_GPIOBNK2,
++		.flags	= IORESOURCE_IRQ,
++	},
++	{
++		.start	= IRQ_DM355_GPIOBNK3,
++		.end	= IRQ_DM355_GPIOBNK3,
++		.flags	= IORESOURCE_IRQ,
++	},
++	{
++		.start	= IRQ_DM355_GPIOBNK4,
++		.end	= IRQ_DM355_GPIOBNK4,
++		.flags	= IORESOURCE_IRQ,
++	},
++	{
++		.start	= IRQ_DM355_GPIOBNK5,
++		.end	= IRQ_DM355_GPIOBNK5,
++		.flags	= IORESOURCE_IRQ,
++	},
++	{
++		.start	= IRQ_DM355_GPIOBNK6,
+ 		.end	= IRQ_DM355_GPIOBNK6,
+ 		.flags	= IORESOURCE_IRQ,
+ 	},
 -- 
 2.20.1
 
