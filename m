@@ -2,273 +2,185 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30160C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2004C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F186522CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A853F2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:23:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bXXnLyFD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EIQPFezC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfICXV2 (ORCPT
+        id S1727701AbfICXXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 19:21:28 -0400
-Received: from mail-qk1-f201.google.com ([209.85.222.201]:47458 "EHLO
-        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbfICXV1 (ORCPT
+        Tue, 3 Sep 2019 19:23:55 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60478 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727312AbfICXXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 19:21:27 -0400
-Received: by mail-qk1-f201.google.com with SMTP id y67so21033354qkc.14
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 16:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=fDmBEA1D+ybb+UVdGV9bamxSs7dgRCZmSdUuoBwezBQ=;
-        b=bXXnLyFDsLe3dUp1sEen41r1cAD7Ppm0LqwrlrhJmON4hBbIWNAHFMuq6X1R7YG1zy
-         pepcKS1MBHGUbuywFgrI1AxQnrVye+hARAYkPou4BIo1ztYXZUyl3E9ChDIPB8sM932I
-         2Ef8CKhYXwEMBaFnNRmjzgj4Fy/4X9BmAVQBsqF2UTjN/zu5mC935JiKUehLJnX3qzlv
-         iIhYI1z9kHHhsVkwVcBtyxFso+tmuXqzFB+QNj0qA+ZTtfjHL0vBa6TeOoxt1oqEi2Wn
-         bx4+jQ7LPyO+w2LPLEB3N19vI5mIJ/c3gMaxBnEnViGGJELDX9l3P0yQ5/WYJqUAamHH
-         ClQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=fDmBEA1D+ybb+UVdGV9bamxSs7dgRCZmSdUuoBwezBQ=;
-        b=Zoh/X8xw80ZX9Zs7A1e7DdY++OP2ONl48akYtVgZih1GCZH0v/jz2PB4A6vVK1JAKV
-         Lm9Q/MnygOxWb7Zn3AKdHldcEVN8886gQnC8A8TGLeWst9buRf9ypAOWRhlvNstryytm
-         9XS+uAyJP0CUsErjwetmoyeVCSlcM4L9L4zEh2nu5VvcxEGUrisO2xCKL/RYUjxo8eC2
-         vq84iMghMmwsQdl+IboCa0LI35ynyVv4N70H9F2Nd8i8F/JQBOlwVvMFdEqr6usSFF1E
-         aGOvaJHHycUeAX0TRkD1qwsarVuC3sZiZzn4wbUMkxkZk5P6F+bR3fZpRo0RH4YLe82W
-         HoHA==
-X-Gm-Message-State: APjAAAXjEVQY9OAjjk5zYaagOcGjjk8GyEbj+MDRGQAQz10k6FDfAoHh
-        1QLgxV/o69zLpG+vFfvjhWbxLJPZmaEt4lJxmmuj9w==
-X-Google-Smtp-Source: APXvYqypzmrKkV3VXCGEDkGpfvu5+XY1KqIPPNn3RJKyiGidn8lzy8xjsywsM/WLbAo/S5OTwy3arQaQwJjYjzy5gwYyjg==
-X-Received: by 2002:a0c:81f5:: with SMTP id 50mr10099426qve.229.1567552886148;
- Tue, 03 Sep 2019 16:21:26 -0700 (PDT)
-Date:   Tue,  3 Sep 2019 16:21:12 -0700
-Message-Id: <20190903232112.181303-1-brendanhiggins@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v3] kunit: fix failure to build without printk
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     shuah@kernel.org
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, frowand.list@gmail.com,
-        sboyd@kernel.org, pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, Brendan Higgins <brendanhiggins@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Joe Perches <joe@perches.com>, Tim.Bird@sony.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 3 Sep 2019 19:23:55 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83NJ1Vl190771;
+        Tue, 3 Sep 2019 23:22:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=UJw1Y7uj9g+SZ5DNCrU6LVe85QHvYGaiIqcF/IakMzU=;
+ b=EIQPFezCGZombwumJIllsao9P3vulQ05xy4KvTAHKiCCFloSPNeEKHi5OlHoGrv1KywI
+ oEjbyHmiYhG44mYXPnuwylFQ1PzN52amHke/Zqanyf1DeLJs33cQ6c6sQsWUJi6B0oRQ
+ Drv2yt+TAm6pTYcek0KfqBPYO68mTLgiaot870Q9pRx0VwCHt2BXwhNyJPg/ILYlstTz
+ dHS9ipoRL3q3zFEds5pVEeot46kL4vk7FwkCLqaVvmtonqeSjWLha6eU2qfLzqTt5vVV
+ 3oHXFMY1QDUKJMIrPl8SG4xS0YyxidZue22yDHP8mmwjkwJPZQoA39+sbrFauYHxrsKK zA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2ut1qf80je-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 23:22:20 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83NJNdf003211;
+        Tue, 3 Sep 2019 23:20:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2us5phdxgm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Sep 2019 23:20:19 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x83NKGsT015382;
+        Tue, 3 Sep 2019 23:20:16 GMT
+Received: from [192.168.14.112] (/79.176.230.160)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Sep 2019 16:20:16 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH 2/2] KVM: SVM: Disable posted interrupts for odd IRQs
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <20190903142954.3429-3-graf@amazon.com>
+Date:   Wed, 4 Sep 2019 02:20:08 +0300
+Cc:     kvm list <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7AEDDBE7-138A-455F-957C-C2DE64BD8B06@oracle.com>
+References: <20190903142954.3429-1-graf@amazon.com>
+ <20190903142954.3429-3-graf@amazon.com>
+To:     Alexander Graf <graf@amazon.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909030234
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909030234
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously KUnit assumed that printk would always be present, which is
-not a valid assumption to make. Fix that by removing call to
-vprintk_emit, and calling printk directly.
 
-This fixes a build error[1] reported by Randy.
 
-For context this change comes after much discussion. My first stab[2] at
-this was just to make the KUnit logging code compile out; however, it
-was agreed that if we were going to use vprintk_emit, then vprintk_emit
-should provide a no-op stub, which lead to my second attempt[3]. In
-response to me trying to stub out vprintk_emit, Sergey Senozhatsky
-suggested a way for me to remove our usage of vprintk_emit, which led to
-my third attempt at solving this[4].
+> On 3 Sep 2019, at 17:29, Alexander Graf <graf@amazon.com> wrote:
+>=20
+> We can easily route hardware interrupts directly into VM context when
+> they target the "Fixed" or "LowPriority" delivery modes.
+>=20
+> However, on modes such as "SMI" or "Init", we need to go via KVM code
+> to actually put the vCPU into a different mode of operation, so we can
+> not post the interrupt
+>=20
+> Add code in the SVM PI logic to explicitly refuse to establish posted
+> mappings for advanced IRQ deliver modes.
+>=20
+> This fixes a bug I have with code which configures real hardware to
+> inject virtual SMIs into my guest.
+>=20
+> Signed-off-by: Alexander Graf <graf@amazon.com>
 
-In my previous version of this patch[4], I completely removed
-vprintk_emit, as suggested by Sergey; however, there was a bit of debate
-over whether Sergey's solution was the best. The debate arose due to
-Sergey's version resulting in a checkpatch warning, which resulted in a
-debate over correct printk usage. Joe Perches offered an alternative fix
-which was somewhat less far reaching than what Sergey had suggested and
-importantly relied on continuing to use %pV. Much of the debated
-centered around whether %pV should be widely used, and whether Sergey's
-version would result in object size bloat. Ultimately, we decided to go
-with Sergey's version.
+Nit: I prefer to squash both commits into one that change both VMX & =
+SVM.
+As it=E2=80=99s exactly the same change.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Link[1]: https://lore.kernel.org/linux-kselftest/c7229254-0d90-d90e-f3df-5b6d6fc0b51f@infradead.org/
-Link[2]: https://lore.kernel.org/linux-kselftest/20190827174932.44177-1-brendanhiggins@google.com/
-Link[3]: https://lore.kernel.org/linux-kselftest/20190827234835.234473-1-brendanhiggins@google.com/
-Link[4]: https://lore.kernel.org/linux-kselftest/20190828093143.163302-1-brendanhiggins@google.com/
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Tim.Bird@sony.com
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Reviewed-by: Petr Mladek <pmladek@suse.com>
----
+> ---
+> arch/x86/kvm/svm.c | 16 ++++++++++++++++
+> 1 file changed, 16 insertions(+)
+>=20
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index 1f220a85514f..9a6ea78c3239 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -5266,6 +5266,21 @@ get_pi_vcpu_info(struct kvm *kvm, struct =
+kvm_kernel_irq_routing_entry *e,
+> 		return -1;
+> 	}
+>=20
+> +	switch (irq.delivery_mode) {
+> +	case dest_Fixed:
+> +	case dest_LowestPrio:
+> +		break;
+> +	default:
+> +		/*
+> +		 * For non-trivial interrupt events, we need to go
+> +		 * through the full KVM IRQ code, so refuse to take
+> +		 * any direct PI assignments here.
+> +		 */
+> +		pr_debug("SVM: %s: use legacy intr remap mode for irq =
+%u\n",
+> +			 __func__, irq.vector);
+> +		return -1;
+> +	}
+> +
 
-Sorry for the long commit message, but given the long discussion (and
-some of the confusion that occurred in the discussion), it seemed
-appropriate to summarize the discussion around this patch up to this
-point (especially since one of the proposed patches was under a separate
-patch subject).
+Prefer changing printed string to something different than the =
+!kvm_intr_is_single_vcpu() case.
+To assist debugging.
 
-No changes have been made to this patch since v2, other than the commit
-log.
+Having said that,
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
 
----
- include/kunit/test.h | 11 ++++-----
- kunit/test.c         | 57 +++++---------------------------------------
- 2 files changed, 11 insertions(+), 57 deletions(-)
+-Liran
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 8b7eb03d4971..efad2eacd6ba 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -339,9 +339,8 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
- 
- void kunit_cleanup(struct kunit *test);
- 
--void __printf(3, 4) kunit_printk(const char *level,
--				 const struct kunit *test,
--				 const char *fmt, ...);
-+#define kunit_print_level(KERN_LEVEL, test, fmt, ...) \
-+	printk(KERN_LEVEL "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
- 
- /**
-  * kunit_info() - Prints an INFO level message associated with @test.
-@@ -353,7 +352,7 @@ void __printf(3, 4) kunit_printk(const char *level,
-  * Takes a variable number of format parameters just like printk().
-  */
- #define kunit_info(test, fmt, ...) \
--	kunit_printk(KERN_INFO, test, fmt, ##__VA_ARGS__)
-+	kunit_print_level(KERN_INFO, test, fmt, ##__VA_ARGS__)
- 
- /**
-  * kunit_warn() - Prints a WARN level message associated with @test.
-@@ -364,7 +363,7 @@ void __printf(3, 4) kunit_printk(const char *level,
-  * Prints a warning level message.
-  */
- #define kunit_warn(test, fmt, ...) \
--	kunit_printk(KERN_WARNING, test, fmt, ##__VA_ARGS__)
-+	kunit_print_level(KERN_WARNING, test, fmt, ##__VA_ARGS__)
- 
- /**
-  * kunit_err() - Prints an ERROR level message associated with @test.
-@@ -375,7 +374,7 @@ void __printf(3, 4) kunit_printk(const char *level,
-  * Prints an error level message.
-  */
- #define kunit_err(test, fmt, ...) \
--	kunit_printk(KERN_ERR, test, fmt, ##__VA_ARGS__)
-+	kunit_print_level(KERN_ERR, test, fmt, ##__VA_ARGS__)
- 
- /**
-  * KUNIT_SUCCEED() - A no-op expectation. Only exists for code clarity.
-diff --git a/kunit/test.c b/kunit/test.c
-index b2ca9b94c353..c83c0fa59cbd 100644
---- a/kunit/test.c
-+++ b/kunit/test.c
-@@ -16,36 +16,12 @@ static void kunit_set_failure(struct kunit *test)
- 	WRITE_ONCE(test->success, false);
- }
- 
--static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
--{
--	return vprintk_emit(0, level, NULL, 0, fmt, args);
--}
--
--static int kunit_printk_emit(int level, const char *fmt, ...)
--{
--	va_list args;
--	int ret;
--
--	va_start(args, fmt);
--	ret = kunit_vprintk_emit(level, fmt, args);
--	va_end(args);
--
--	return ret;
--}
--
--static void kunit_vprintk(const struct kunit *test,
--			  const char *level,
--			  struct va_format *vaf)
--{
--	kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
--}
--
- static void kunit_print_tap_version(void)
- {
- 	static bool kunit_has_printed_tap_version;
- 
- 	if (!kunit_has_printed_tap_version) {
--		kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
-+		pr_info("TAP version 14\n");
- 		kunit_has_printed_tap_version = true;
- 	}
- }
-@@ -64,10 +40,8 @@ static size_t kunit_test_cases_len(struct kunit_case *test_cases)
- static void kunit_print_subtest_start(struct kunit_suite *suite)
- {
- 	kunit_print_tap_version();
--	kunit_printk_emit(LOGLEVEL_INFO, "\t# Subtest: %s\n", suite->name);
--	kunit_printk_emit(LOGLEVEL_INFO,
--			  "\t1..%zd\n",
--			  kunit_test_cases_len(suite->test_cases));
-+	pr_info("\t# Subtest: %s\n", suite->name);
-+	pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
- }
- 
- static void kunit_print_ok_not_ok(bool should_indent,
-@@ -87,9 +61,7 @@ static void kunit_print_ok_not_ok(bool should_indent,
- 	else
- 		ok_not_ok = "not ok";
- 
--	kunit_printk_emit(LOGLEVEL_INFO,
--			  "%s%s %zd - %s\n",
--			  indent, ok_not_ok, test_number, description);
-+	pr_info("%s%s %zd - %s\n", indent, ok_not_ok, test_number, description);
- }
- 
- static bool kunit_suite_has_succeeded(struct kunit_suite *suite)
-@@ -133,11 +105,11 @@ static void kunit_print_string_stream(struct kunit *test,
- 		kunit_err(test,
- 			  "Could not allocate buffer, dumping stream:\n");
- 		list_for_each_entry(fragment, &stream->fragments, node) {
--			kunit_err(test, fragment->fragment);
-+			kunit_err(test, "%s", fragment->fragment);
- 		}
- 		kunit_err(test, "\n");
- 	} else {
--		kunit_err(test, buf);
-+		kunit_err(test, "%s", buf);
- 		kunit_kfree(test, buf);
- 	}
- }
-@@ -504,20 +476,3 @@ void kunit_cleanup(struct kunit *test)
- 		kunit_resource_free(test, resource);
- 	}
- }
--
--void kunit_printk(const char *level,
--		  const struct kunit *test,
--		  const char *fmt, ...)
--{
--	struct va_format vaf;
--	va_list args;
--
--	va_start(args, fmt);
--
--	vaf.fmt = fmt;
--	vaf.va = &args;
--
--	kunit_vprintk(test, level, &vaf);
--
--	va_end(args);
--}
--- 
-2.23.0.187.g17f5b7556c-goog
+> 	pr_debug("SVM: %s: use GA mode for irq %u\n", __func__,
+> 		 irq.vector);
+> 	*svm =3D to_svm(vcpu);
+> @@ -5314,6 +5329,7 @@ static int svm_update_pi_irte(struct kvm *kvm, =
+unsigned int host_irq,
+> 		 * 1. When cannot target interrupt to a specific vcpu.
+> 		 * 2. Unsetting posted interrupt.
+> 		 * 3. APIC virtialization is disabled for the vcpu.
+> +		 * 4. IRQ has extended delivery mode (SMI, INIT, etc)
+> 		 */
+> 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set =
+&&
+> 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
+> --=20
+> 2.17.1
+>=20
+>=20
+>=20
+>=20
+> Amazon Development Center Germany GmbH
+> Krausenstr. 38
+> 10117 Berlin
+> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+> Sitz: Berlin
+> Ust-ID: DE 289 237 879
+>=20
+>=20
+>=20
 
