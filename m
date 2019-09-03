@@ -2,95 +2,111 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D70C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8421C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE492168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567536424;
-	bh=s7mcLgKB4jOy/NLAhdS5d6xI925IntO4luJjdKxdMnA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FG9LWdH8mqak5dZFt9rF8/wFDBpOgYw685mr0ukZ3LSqIZZs0N+fYGQmjYDhQTnug
-	 cZtUYU4/NdZVNiWkVzZ5cOAHI1SenYvb01xe93TStCkocXyR+pK+asVyBIweimaAXM
-	 Ah5Bt/F9umbV4yjk/Xi+TkERaRuGiQbxTWg3MXr8=
+	by mail.kernel.org (Postfix) with ESMTP id 85AC122CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:48:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OyE3pxgc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfICSrD (ORCPT
+        id S1726401AbfICSsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:47:03 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39514 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfICSrD (ORCPT
+        Tue, 3 Sep 2019 14:48:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46254 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfICSsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:47:03 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s12so4324903pfe.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:47:02 -0700 (PDT)
+        Tue, 3 Sep 2019 14:48:23 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q5so3463855pfg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IEYeijqNBx8FKsQCqztccyibS69/cramAhDtz2iOU7k=;
+        b=OyE3pxgc7aeDvUAkSmCMjkF82tfwOvEd6uR6WwP8Y27TMiWd6UxOGWlzMn+hdx4Lyv
+         rpIVbvfseTf6gbuZaAzdJniutKEjgVfg09dgi50K11LcjfEFIwdURoBmHyOkKq1ZsQDD
+         vMZsxocGWcH2DwAMUDoMsv+Sj+8jZ8ecnR1Dw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0oInCZCVxRDHHNZQh2zohajIbQXd80RnFiXOh17nr5s=;
-        b=pV0K+6WsqKnGeGVMeR8wr7mCyEKmd8L8LCX0iUm9Iyt4rFJ3bq1tX871XScWMsMh2P
-         iFpiVouGHEFzVIRE2xFCEeqesbEI4ZUlqApGD5JkoIf4KApARcGdXnOKSdLXoINekkoG
-         Ke9iSepR0koQ5GWdHeMIIFxsVqQ2zndzZCHtH6eD+8Zuzir7UMatRyPkAhmXMFyKtp7Z
-         m876otbgvrgaRUXlIcJxhuL6FzDv5q3yIYL1343+hzPclWbHon/ZyB+qHNZCDKQTi+qe
-         Y10HLZRRb+K7tf9iiOIgsP0b6F4suO8yjMR4eeMPu08AeNPvmB7zjRy8//PA7rQGV9MK
-         NulQ==
-X-Gm-Message-State: APjAAAW8zC0YEY93qe//nYu9ixb0SqXdzUX7Fw/6LVnZejLTgBUHt6l6
-        V6wgv8DubUenB+oUegXHD/xrzQ==
-X-Google-Smtp-Source: APXvYqyp6PsxC1jX74zAlOl3wgnSC/9PRLW24Vcbklx8mzvvIBD9O83FyaKqeLaZGizKum9GXqavpg==
-X-Received: by 2002:a63:5402:: with SMTP id i2mr31425861pgb.414.1567536422460;
-        Tue, 03 Sep 2019 11:47:02 -0700 (PDT)
-Received: from localhost ([2601:647:5b80:29f7:1bdd:d748:9a4e:8083])
-        by smtp.gmail.com with ESMTPSA id j26sm2975585pfe.181.2019.09.03.11.47.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 11:47:01 -0700 (PDT)
-From:   Moritz Fischer <mdf@kernel.org>
-To:     netdev@vger.kernel.org
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH] net: fixed_phy: Add forward declaration for struct gpio_desc;
-Date:   Tue,  3 Sep 2019 11:46:52 -0700
-Message-Id: <20190903184652.3148-1-mdf@kernel.org>
-X-Mailer: git-send-email 2.22.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IEYeijqNBx8FKsQCqztccyibS69/cramAhDtz2iOU7k=;
+        b=CCZ8ukH4pSwRLLyL5S1ut4zfAITz9gfH811X/Oaj1Ovb5MGFEg6RVfPZfQ4IDNLwPH
+         XbAuI35miwSoj9VTjjbKQLyeWWSyhuZoZmHJxsCTtkUmBPHfC5pUej3ZvrmifedVymOd
+         5fTQBTfsxaQy7qv+H3BUGxcSD9SCeOeM4+VK3ad+GWTlXWc7hK4+/gxm/AHLVZE4zhXt
+         nd9Y3XoDUPzIZ9knn740blMQ/cUvxNJmYuZoFmoQZOaiBQ82ozmOfifosAzK0kF8/tOV
+         m+k4CCKfJNVfTVwVaJRZozV7jtEUCal3YsGd9KFKtdaN2lPq19UHGT18JGRpNmNUUEW2
+         J6hQ==
+X-Gm-Message-State: APjAAAWT5/epLrqG9mJ8iE12cif1GDWQ9WYYmGnZmfZmYy0WVA6aVDcM
+        JKq2s0oxkPNpef89sZGOEmG3Jg==
+X-Google-Smtp-Source: APXvYqzX++xeelL0zbZVBt9i8AsSwDpC4wmYT9xqvVJMc0+k+GzPp/aiQiH3XMrvni+m2rj6xGSltg==
+X-Received: by 2002:a63:1310:: with SMTP id i16mr31163370pgl.187.1567536502419;
+        Tue, 03 Sep 2019 11:48:22 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id q4sm6220900pfh.115.2019.09.03.11.48.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2019 11:48:21 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 11:48:16 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2] ARM: Emit __gnu_mcount_nc when using Clang 10.0.0 or
+ newer
+Message-ID: <20190903184816.GF70797@google.com>
+References: <20190829062635.45609-1-natechancellor@gmail.com>
+ <20190831060530.43082-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190831060530.43082-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add forward declaration for struct gpio_desc in order to address
-the following:
+On Fri, Aug 30, 2019 at 11:05:31PM -0700, Nathan Chancellor wrote:
+> Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
+> with clang:
+> 
+> arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
+> softirq.c:(.text+0x504): undefined reference to `mcount'
+> arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
+> softirq.c:(.text+0x58c): undefined reference to `mcount'
+> arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
+> softirq.c:(.text+0x6c8): undefined reference to `mcount'
+> arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
+> softirq.c:(.text+0x75c): undefined reference to `mcount'
+> arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
+> softirq.c:(.text+0x840): undefined reference to `mcount'
+> arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
+> 
+> clang can emit a working mcount symbol, __gnu_mcount_nc, when
+> '-meabi gnu' is passed to it. Until r369147 in LLVM, this was
+> broken and caused the kernel not to boot with '-pg' because the
+> calling convention was not correct. Always build with '-meabi gnu'
+> when using clang but ensure that '-pg' (which is added with
+> CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
+> cannot be added with it unless this is fixed (which means using
+> clang 10.0.0 and newer).
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/35
+> Link: https://bugs.llvm.org/show_bug.cgi?id=33845
+> Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-./include/linux/phy_fixed.h:48:17: error: 'struct gpio_desc' declared inside parameter list [-Werror]
-./include/linux/phy_fixed.h:48:17: error: its scope is only this definition or declaration, which is probably not what you want [-Werror]
-
-Fixes commit 71bd106d2567 ("net: fixed-phy: Add
-fixed_phy_register_with_gpiod() API")
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
----
- include/linux/phy_fixed.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/include/linux/phy_fixed.h b/include/linux/phy_fixed.h
-index 1e5d86ebdaeb..52bc8e487ef7 100644
---- a/include/linux/phy_fixed.h
-+++ b/include/linux/phy_fixed.h
-@@ -11,6 +11,7 @@ struct fixed_phy_status {
- };
- 
- struct device_node;
-+struct gpio_desc;
- 
- #if IS_ENABLED(CONFIG_FIXED_PHY)
- extern int fixed_phy_change_carrier(struct net_device *dev, bool new_carrier);
--- 
-2.23.0.187.g17f5b7556c-goog
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
