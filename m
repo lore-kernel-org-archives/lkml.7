@@ -2,168 +2,170 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3246BC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE0BC41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84CED207E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="kSOMsA2z";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="niBPYPAU"
+	by mail.kernel.org (Postfix) with ESMTP id C6674207E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbfICDaA (ORCPT
+        id S1726382AbfICDaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 23:30:00 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:11916 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725848AbfICDaA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 23:30:00 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x833TH6r001032;
-        Mon, 2 Sep 2019 20:29:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=AayugZor2bloa/ubIcAhROb+YzDWi4cstUeG9E+GXac=;
- b=kSOMsA2zj6fVTFPwrU9TbqpFVW0TRCKEdjOEJlJL+oGUxYSt5jOMZP5PvhLI74Etthly
- zhZdHzTClaPvl2geosJHej9+JyRi6t7SXw34Umhfp6/E+ehAgDGtlsPZCQWjCO/f35u5
- VmZusOk+OcrKH/iL/BTEBPb7YDGm6E2jPqRMujKlD6+BEhvyIrVSYI5fUCo2qEbvvkKS
- YguQdO0q+AqI8Apbc5jCLK3u6oIELpjQb3AvApstKnLjJy6OTyWEOeOID5rU+aqSh0hj
- SNUd/OKRRBMnfh2EKbr6RJM+D+A1s+8EEcy4ARDF9ESo3rbGJB0NaoeSU0dzWayoT3bw EA== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pawell@cadence.com
-Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2055.outbound.protection.outlook.com [104.47.38.55])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2uqmfvhjeg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 02 Sep 2019 20:29:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bjeVwmyB9uk0a03TXoFNXfk2REL8xW7xDgJ2GsfHlPX9wOCJ3UyOaDVCwKBtzkFNeJTB+44+dd8FtSPDA64K007ccgHrF3oHtwp+IKxfkmdKU5fcKFa1DqcNBsjdiQNfZydgZtIYhKVq6BgFmc2KvyuyO72cTGbv6m8yGV8vB9yYxihRyzy2d8Xv1zJUS2UKuG+PJjcz3WrxHuTjkUd1JNqC2bmvkouS2dQELOvpxZdC6r2rscbt0d2PfpVW2ZQUbnwqnuDgBsb5tV4kVBWQ2HJ2m1gxtoJeOdCUr9PsqUuaThQud9pYH/QHZW3pEnD/Uc9pr5ySoQWMjdKcEaRYWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AayugZor2bloa/ubIcAhROb+YzDWi4cstUeG9E+GXac=;
- b=FcRKGl3It/xxgJ/Tph+nMoDU7WMDyZhVlu9JQ3kQ6GYdmS526MtiUUbJw+tALBnStBUflfxHQR8DVmJZVybi/pTfCmW2hfUrmm5Zy+G50jb/aBia8ee4pLAVFtjJ1ksx6zhxCSmhv7nkM7WVRyYU9MiiVJ4O9a5NUMPRpCWYombsg7U1PVXDYQgqyvpNk2EJvNL3rU+RkJBvQuFGdPmBabzUA9Xgo1jLRO7TCC+r/S33Hjw9JgNpCGDg3tIHs53EKCoqhqTbLGDKHLJ4UtgKUoEudoKbC2Wu0gV8mUEyDQDGfSeuDQWOVeSQbdC3yxREwe7PYwwd/wo2KNcvydYYLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AayugZor2bloa/ubIcAhROb+YzDWi4cstUeG9E+GXac=;
- b=niBPYPAUT0R6COSIpR5Ce+Qk+iWodNFvaA6Om3QYy2LbEAo9NJhoy1WsOwsmJ0TTb0EgSU9WLLtSQOC2tXd+z/+SbJbgYcuk4BXjxUcRxW96VUJsb17Lf4tH43d+JOyPKYqAoleBWgz9RH3yPwvJZeJNd4OHw1TA6utZXPc8ua0=
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com (52.135.204.159) by
- BYAPR07MB5687.namprd07.prod.outlook.com (20.178.0.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.21; Tue, 3 Sep 2019 03:29:50 +0000
-Received: from BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::98f2:1592:6dff:63e]) by BYAPR07MB4709.namprd07.prod.outlook.com
- ([fe80::98f2:1592:6dff:63e%7]) with mapi id 15.20.2220.013; Tue, 3 Sep 2019
- 03:29:50 +0000
-From:   Pawel Laszczak <pawell@cadence.com>
-To:     Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH][usb-next] usb: cdns3: fix missing assignment of ret
- before error check on ret
-Thread-Topic: [PATCH][usb-next] usb: cdns3: fix missing assignment of ret
- before error check on ret
-Thread-Index: AQHVYZ3KnTofVq3/tkKV7S4WfQAkHqcYgYMAgADJvCA=
-Date:   Tue, 3 Sep 2019 03:29:50 +0000
-Message-ID: <BYAPR07MB470927CBDF6CC2345DD350E6DDB90@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <20190902145035.18200-1-colin.king@canonical.com>
- <BYAPR07MB4709DF377BFBD54FD6BF88B3DDBE0@BYAPR07MB4709.namprd07.prod.outlook.com>
-In-Reply-To: <BYAPR07MB4709DF377BFBD54FD6BF88B3DDBE0@BYAPR07MB4709.namprd07.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [185.217.253.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 560fa123-529f-4213-0bf4-08d7301efa68
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR07MB5687;
-x-ms-traffictypediagnostic: BYAPR07MB5687:
-x-microsoft-antispam-prvs: <BYAPR07MB56874CF080FA546806D73379DDB90@BYAPR07MB5687.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(39860400002)(376002)(346002)(36092001)(199004)(189003)(74316002)(229853002)(7736002)(53936002)(25786009)(26005)(14444005)(446003)(86362001)(6116002)(3846002)(5660300002)(9686003)(256004)(55016002)(102836004)(6246003)(99286004)(110136005)(11346002)(54906003)(476003)(52536014)(486006)(4326008)(186003)(6436002)(33656002)(2501003)(66066001)(71200400001)(81156014)(8676002)(305945005)(81166006)(6506007)(76176011)(8936002)(76116006)(66476007)(478600001)(64756008)(66556008)(66446008)(66946007)(14454004)(2906002)(316002)(7696005)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB5687;H:BYAPR07MB4709.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iv0q1WqEp6RPUOlMNe+TMFSBN8Sbf8bZTlC2ZFuJWSzYt0FeTTvHEXrkrz9UmRWD7SWRTVP8fBZA8tm7MGakQ45BvRcu/pERKLMQ3l4G9HD79boVtLSWJff92Zc9BhFsSySOBcjR6jL+ssIGEO/k6oJvtBn0vKc3V8MPnT/XBtQhQ0OSDky968fHI0j0bW095X8vs12eKYsQLbHE/AXG/CKuXnZ8jtqh2PUfgFthYj5+m62KNlt/45P5+8WfxfdtUlTWyZZk5mTwYVxu8jQz19tYdFdeHXXxTkWqTaTDzXnpgxw38b3Nqk1O3JaOycOAg+moSvyeEP/408C6juJUL+bBr9T3NfMcOGC8NoFZZzs8hCX9YywlBNv5LppTbt4e2Wfj73oA6RvpofCK+WcigT0Vw3GQB4flPgvDKbFalmk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 2 Sep 2019 23:30:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48956 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfICDaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 23:30:24 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7A7D948FD;
+        Tue,  3 Sep 2019 03:30:23 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-19.pek2.redhat.com [10.72.8.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AAF345C21A;
+        Tue,  3 Sep 2019 03:30:13 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 11:30:08 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190903033001.GB23861@ming.t460p>
+References: <20190827085344.30799-1-ming.lei@redhat.com>
+ <20190827085344.30799-2-ming.lei@redhat.com>
+ <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
+ <20190827225827.GA5263@ming.t460p>
+ <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
+ <20190828110633.GC15524@ming.t460p>
+ <alpine.DEB.2.21.1908281316230.1869@nanos.tec.linutronix.de>
+ <20190828135054.GA23861@ming.t460p>
+ <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 560fa123-529f-4213-0bf4-08d7301efa68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 03:29:50.3410
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y7g0TOQO/7389o0DKQM+aRV9J953ErT5AoyvUejfv/7vfFxfiG47138zeVW4RS1gyXYVAYBDwhjtP6fV1rtaSzIciP71gFhXVpWtliCTi7s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB5687
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-02_10:2019-08-29,2019-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909030036
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 03 Sep 2019 03:30:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ29saW4NCg0KPkhpIENvbGluDQo+DQo+Pg0KPj5Gcm9tOiBDb2xpbiBJYW4gS2luZyA8Y29s
-aW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPj4NCj4+Q3VycmVudGx5IHRoZSBjaGVjayBvbiBhIG5v
-bi16ZXJvIHJldHVybiBjb2RlIGluIHJldCBpcyBmYWxzZSBiZWNhdXNlDQo+PnJldCBoYXMgYmVl
-biBpbml0aWFsaXplZCB0byB6ZXJvLiAgSSBiZWxpZXZlIHRoYXQgcmV0IHNob3VsZCBiZSBhc3Np
-Z25lZA0KPj50byB0aGUgcmV0dXJuIGZyb20gdGhlIGNhbGwgdG8gcmVhZGxfcG9sbF90aW1lb3V0
-X2F0b21pYyBiZWZvcmUgdGhlDQo+PmNoZWNrIG9uIHJldC4gIFNpbmNlIHJldCBpcyBiZWluZyBy
-ZS1hc3NpbmdlZCB0aGUgb3JpZ2luYWwgaW5pdGlhbGl6YXRpb24NCj4+b2YgcmV0IHRvIHplcm8g
-Y2FuIGJlIHJlbW92ZWQuDQo+DQo+VGhhbmtzIHlvdSBmb3IgbGV0dGluZyBtZSBrbm93Lg0KPkZv
-cnR1bmF0ZWx5IHRoYXQncyBub3QgYSBjcml0aWNhbCBidWcgYW5kIGhhcyBubyBpbXBhY3QgZm9y
-IGRyaXZlci4NCj5JIHdpbGwgY29ycmVjdCBpdC4NCj4NCj5DaGVlcnMNCj5QYXdlbGwNCj4NCj4+
-DQo+PkFkZHJlc3Nlcy1Db3Zlcml0eTogKCInQ29uc3RhbnQnIHZhcmlhYmxlIGd1YXJkcyBkZWFk
-IGNvZGUiKQ0KPj5GaXhlczogNzczM2Y2YzMyZTM2ICgidXNiOiBjZG5zMzogQWRkIENhZGVuY2Ug
-VVNCMyBEUkQgRHJpdmVyIikNCj4+U2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGlu
-LmtpbmdAY2Fub25pY2FsLmNvbT4NCj4+LS0tDQo+PiBkcml2ZXJzL3VzYi9jZG5zMy9nYWRnZXQu
-YyB8IDYgKysrLS0tDQo+PiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0
-aW9ucygtKQ0KPj4NCj4+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL2NkbnMzL2dhZGdldC5jIGIv
-ZHJpdmVycy91c2IvY2RuczMvZ2FkZ2V0LmMNCj4+aW5kZXggMzA5NGFkNjVmZmM5Li4wZWIzMDIy
-ODM4ZDYgMTAwNjQ0DQo+Pi0tLSBhL2RyaXZlcnMvdXNiL2NkbnMzL2dhZGdldC5jDQo+PisrKyBi
-L2RyaXZlcnMvdXNiL2NkbnMzL2dhZGdldC5jDQo+PkBAIC0yMTU0LDcgKzIxNTQsNyBAQCBpbnQg
-X19jZG5zM19nYWRnZXRfZXBfY2xlYXJfaGFsdChzdHJ1Y3QgY2RuczNfZW5kcG9pbnQgKnByaXZf
-ZXApDQo+PiB7DQo+PiAJc3RydWN0IGNkbnMzX2RldmljZSAqcHJpdl9kZXYgPSBwcml2X2VwLT5j
-ZG5zM19kZXY7DQo+PiAJc3RydWN0IHVzYl9yZXF1ZXN0ICpyZXF1ZXN0Ow0KPj4tCWludCByZXQg
-PSAwOw0KPj4rCWludCByZXQ7DQo+PiAJaW50IHZhbDsNCj4+DQo+PiAJdHJhY2VfY2RuczNfaGFs
-dChwcml2X2VwLCAwLCAwKTsNCj4+QEAgLTIxNjIsOCArMjE2Miw4IEBAIGludCBfX2NkbnMzX2dh
-ZGdldF9lcF9jbGVhcl9oYWx0KHN0cnVjdCBjZG5zM19lbmRwb2ludCAqcHJpdl9lcCkNCj4+IAl3
-cml0ZWwoRVBfQ01EX0NTVEFMTCB8IEVQX0NNRF9FUFJTVCwgJnByaXZfZGV2LT5yZWdzLT5lcF9j
-bWQpOw0KPj4NCj4+IAkvKiB3YWl0IGZvciBFUFJTVCBjbGVhcmVkICovDQo+Pi0JcmVhZGxfcG9s
-bF90aW1lb3V0X2F0b21pYygmcHJpdl9kZXYtPnJlZ3MtPmVwX2NtZCwgdmFsLA0KPj4tCQkJCSAg
-ISh2YWwgJiBFUF9DTURfRVBSU1QpLCAxLCAxMDApOw0KPj4rCXJldCA9IHJlYWRsX3BvbGxfdGlt
-ZW91dF9hdG9taWMoJnByaXZfZGV2LT5yZWdzLT5lcF9jbWQsIHZhbCwNCj4+KwkJCQkJISh2YWwg
-JiBFUF9DTURfRVBSU1QpLCAxLCAxMDApOw0KPj4gCWlmIChyZXQpDQo+PiAJCXJldHVybiAtRUlO
-VkFMOw0KDQpXaGF0IGFib3V0IHN1Y2ggY29uZGl0aW9uOg0KCWlmICh1bmxpa2VseShyZXQpKSB7
-DQoJCWRldl9lcnIocHJpdl9kZXYtPmRldiwgIkZhaWxlZCB0byBjbGVhciBoYWx0ICVzICh0aW1l
-b3V0KS4iLA0KCQkJcHJpdl9lcC0+bmFtZSk7DQoJCXJldHVybiByZXQ7DQoJfQ0KDQpJbnZhbGlk
-IHJldHVybiB2YWx1ZSBpbiB0aGlzIHBsYWNlIGlzIHJhdGhlciBpbXBvc3NpYmxlIGNhc2UuIElm
-IGl0IG9jY3VycyANCnRoZW4gaXQgc2hvdWxkIGJlIHRyZWF0ZWQgYXMgY3JpdGljYWwgZXJyb3Is
-IHNvIGl0IGNvdWxkIGJlIGdvb2QgdG8gaGF2ZSANCmluZm9ybWF0aW9uIGFib3V0IGl0Lg0KDQpD
-aGVlcnMsDQpQYXdlbA0KDQo+Pg0KPg0KPj4tLQ0KPj4yLjIwLjENCg0K
+On Wed, Aug 28, 2019 at 04:07:19PM +0200, Thomas Gleixner wrote:
+> On Wed, 28 Aug 2019, Ming Lei wrote:
+> > On Wed, Aug 28, 2019 at 01:23:06PM +0200, Thomas Gleixner wrote:
+> > > On Wed, 28 Aug 2019, Ming Lei wrote:
+> > > > On Wed, Aug 28, 2019 at 01:09:44AM +0200, Thomas Gleixner wrote:
+> > > > > > > Also how is that supposed to work when sched_clock is jiffies based?
+> > > > > > 
+> > > > > > Good catch, looks ktime_get_ns() is needed.
+> > > > > 
+> > > > > And what is ktime_get_ns() returning when the only available clocksource is
+> > > > > jiffies?
+> > > > 
+> > > > IMO, it isn't one issue. If the only clocksource is jiffies, we needn't to
+> > > > expect high IO performance. Then it is fine to always handle the irq in
+> > > > interrupt context or thread context.
+> > > > 
+> > > > However, if it can be recognized runtime, irq_flood_detected() can
+> > > > always return true or false.
+> > > 
+> > > Right. The clocksource is determined at runtime. And if there is no high
+> > > resolution clocksource then that function will return crap.
+> > 
+> > This patch still works even though the only clocksource is jiffies.
+> 
+> Works by some definition of works, right?
+
+I am not sure there is such system which doesn't provide any high resolution
+clocksource, meantime there is one high performance storage device
+attached, and expect top IO performance can be reached.
+
+Suppose there is such system: I mean that irq_flood_detected() returns either
+true or false, then the actual IO performance should be accepted on
+system without high resolution clocksource from user view.
+
+> 
+> > > Well, yes. But it's trivial enough to utilize parts of it for your
+> > > purposes.
+> > 
+> > >From the code of kernel/irq/timing.c:
+> > 
+> > 1) record_irq_time() only records the start time of one irq, and not
+> > consider the time taken in interrupt handler, so we can't figure out
+> > the real interval between two do_IRQ() on one CPU
+> 
+> I said utilize and that means that the infrastructure can be used and
+> extended. I did not say that it solves your problem, right?
+
+The infrastructure is for predicating when the next interrupt comes,
+which is used in PM cases(usually for mobile phone or power sensitive
+cases). However, IRQ flood is used in high performance system(usually
+enterprise case). The two use cases are actually orthogonal, also:
+
+1) if the irq timing infrastructure is used, we have to apply the
+management code on irq flood detection, for example, we have to
+build the irq timing code in kernel and enable it. Then performance
+regression might be caused for enterprise application.
+
+2) irq timing's runtime overload is much higher, irq_timings_push()
+touches much more memory footprint, since it records recent 32
+irq's timestamp. That isn't what IRQ flood detection wants, also
+not enough for flood detection.
+
+3) irq flood detection itself is very simple, just one EWMA
+calculation, see the following code:
+
+irq_update_interval() (called from irq_enter())
+        int cpu = raw_smp_processor_id();
+        struct irq_interval *inter = per_cpu_ptr(&avg_irq_interval, cpu);
+        u64 delta = sched_clock_cpu(cpu) - inter->last_irq_end;
+
+        inter->avg = (inter->avg * IRQ_INTERVAL_EWMA_PREV_FACTOR +
+                delta * IRQ_INTERVAL_EWMA_CURR_FACTOR) /
+                IRQ_INTERVAL_EWMA_WEIGHT;
+
+bool irq_flood_detected(void) (called from __handle_irq_event_percpu())
+{
+        return raw_cpu_ptr(&avg_irq_interval)->avg <= IRQ_FLOOD_THRESHOLD_NS;
+}
+
+irq_exit()
+	inter->last_irq_end = sched_clock_cpu(smp_processor_id());
+
+So there is basically nothing shared between the two, only one percpu
+variable is needed for detecting irq flood.
+
+> 
+> > 2) irq/timing doesn't cover softirq
+> 
+> That's solvable, right?
+
+Yeah, we can extend irq/timing, but ugly for irq/timing, since irq/timing
+focuses on hardirq predication, and softirq isn't involved in that
+purpose.
+
+>  
+> > Daniel, could you take a look and see if irq flood detection can be
+> > implemented easily by irq/timing.c?
+> 
+> I assume you can take a look as well, right?
+
+Yeah, I have looked at the code for a while, but I think that irq/timing
+could become complicated unnecessarily for covering irq flood detection,
+meantime it is much less efficient for detecting IRQ flood.
+
+thanks,
+Ming
