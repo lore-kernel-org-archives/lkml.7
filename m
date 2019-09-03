@@ -2,128 +2,107 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ADEC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F21622CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E4622CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfICIRC (ORCPT
+        id S1728052AbfICITD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:17:02 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:38859 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfICIRC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:17:02 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 25DB920001B;
-        Tue,  3 Sep 2019 08:16:58 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 10:16:58 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Yizhuo Zhai <yzhai003@ucr.edu>
-Cc:     Chengyu Song <csong@cs.ucr.edu>, Zhiyun Qian <zhiyunq@cs.ucr.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] clocksource: atmel-st: Variable sr in
- at91rm9200_timer_interrupt() could be uninitialized
-Message-ID: <20190903081658.GK21922@piout.net>
-References: <20190902222946.20548-1-yzhai003@ucr.edu>
- <20190902223650.GJ21922@piout.net>
- <CABvMjLRjeXAmhBwfZZPbmxdENq=FP9rR0Ld=T3veGXF6cjptxA@mail.gmail.com>
+        Tue, 3 Sep 2019 04:19:03 -0400
+Received: from mga14.intel.com ([192.55.52.115]:51418 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbfICITC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:19:02 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 01:19:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
+   d="scan'208";a="198721560"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 01:18:59 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 03 Sep 2019 11:18:58 +0300
+Date:   Tue, 3 Sep 2019 11:18:58 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        lee.jones@linaro.org, Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: Tweak I2C SDA hold time on GemniLake to make touchpad work
+Message-ID: <20190903081858.GA2691@lahna.fi.intel.com>
+References: <CAB4CAwdo7H3QNEHLgG-h1Z_eRYkb+pc=V3Wvrmeju8fBByYJzw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABvMjLRjeXAmhBwfZZPbmxdENq=FP9rR0Ld=T3veGXF6cjptxA@mail.gmail.com>
+In-Reply-To: <CAB4CAwdo7H3QNEHLgG-h1Z_eRYkb+pc=V3Wvrmeju8fBByYJzw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2019 22:56:48-0700, Yizhuo Zhai wrote:
-> In function regmap_read(),  there're two places which could make the read fail.
-> 
-> First, if "reg" and  "map->reg_stride" are not aligned, then remap_read() will
-> return -EINVAL without initialize variable "val".
-> 
++Jarkko
 
-A quick look at of_syscon_register would show you that this is not
-possible.
-
-> Second, _regmap_read() could also fail and return error code if "val" is not
-> initialized. The caller remap_read() returns the same error code, but
-> at91rm9200_timer_interrupt() does not use this information.
+On Tue, Sep 03, 2019 at 04:10:27PM +0800, Chris Chiu wrote:
+> Hi,
 > 
-
-How would _regmap_read fail exactly?
-
-> On Mon, Sep 2, 2019 at 3:37 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > On 02/09/2019 15:29:46-0700, Yizhuo wrote:
-> > > Inside function at91rm9200_timer_interrupt(), variable sr could
-> > > be uninitialized if regmap_read() fails. However, sr is used
-> >
-> > Could you elaborate on how this could fail?
-> >
-> > > to decide the control flow later in the if statement, which is
-> > > potentially unsafe. We could check the return value of
-> > > regmap_read() and print an error here.
-> > >
-> > > Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-> > > ---
-> > >  drivers/clocksource/timer-atmel-st.c | 8 +++++++-
-> > >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/clocksource/timer-atmel-st.c b/drivers/clocksource/timer-atmel-st.c
-> > > index ab0aabfae5f0..061a3f27847e 100644
-> > > --- a/drivers/clocksource/timer-atmel-st.c
-> > > +++ b/drivers/clocksource/timer-atmel-st.c
-> > > @@ -48,8 +48,14 @@ static inline unsigned long read_CRTR(void)
-> > >  static irqreturn_t at91rm9200_timer_interrupt(int irq, void *dev_id)
-> > >  {
-> > >       u32 sr;
-> > > +     int ret;
-> > > +
-> > > +     ret = regmap_read(regmap_st, AT91_ST_SR, &sr);
-> > > +     if (ret) {
-> > > +             pr_err("Fail to read AT91_ST_SR.\n");
-> > > +             return ret;
-> > > +     }
-> > >
-> > > -     regmap_read(regmap_st, AT91_ST_SR, &sr);
-> > >       sr &= irqmask;
-> > >
-> > >       /*
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > --
-> > Alexandre Belloni, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
+> We're working on the acer Gemnilake laptop TravelMate B118-M for
+> touchpad not working issue. The touchpad fails to bring up and the
+> i2c-hid ouput the message as follows
+>     [    8.317293] i2c_hid i2c-ELAN0502:00: hid_descr_cmd failed
+> We tried on latest linux kernel 5.3.0-rc6 and it reports the same.
 > 
+> We then look into I2C signal level measurement to find out why.
+> The following is the signal output from LA for the SCL/SDA.
+> https://imgur.com/sKcpvdo
+> The SCL frequency is ~400kHz from the SCL period, but the SDA
+> transition is quite weird. Per the I2C spec, the data on the SDA line
+> must be stable during the high period of the clock. The HIGH or LOW
+> state of the data line can only change when the clock signal on the
+> SCL line is LOW. The SDA period span across 2 SCL high, I think
+> that's the reason why the I2C read the wrong data and fail to initialize.
 > 
+> Thus, we treak the SDA hold time by the following modification.
 > 
-> -- 
-> Kind Regards,
+> --- a/drivers/mfd/intel-lpss-pci.c
+> +++ b/drivers/mfd/intel-lpss-pci.c
+> @@ -97,7 +97,8 @@ static const struct intel_lpss_platform_info bxt_uart_info = {
+>  };
 > 
-> Yizhuo Zhai
+>  static struct property_entry bxt_i2c_properties[] = {
+> -       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 42),
+> +       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 230),
+>         PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
+>         PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 208),
+>         { },
 > 
-> Computer Science, Graduate Student
-> University of California, Riverside
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> The reason why I choose sda hold time is by the Table 10 of
+> https://www.nxp.com/docs/en/user-guide/UM10204.pdf, the device
+> must provide a hold time at lease 300ns and and 42 here is relatively
+> too small. The signal measurement result for the same pin on Windows
+> is as follows.
+> https://imgur.com/BtKUIZB
+> Comparing to the same result running Linux
+> https://imgur.com/N4fPTYN
+> 
+> After applying the sda hold time tweak patch above, the touchpad can
+> be correctly initialized and work. The LA signal is shown as down below.
+> https://imgur.com/B3PmnIp
+> 
+> The chart which has yellow mark is the tweak version, the red marks
+> the original version.
+> 
+> I need suggestions about whether if the hold time is the value I can tweak?
+> Or I should modify sda falling time? Please help if any better idea.
+> 
+> Thanks
