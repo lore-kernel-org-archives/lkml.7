@@ -2,69 +2,91 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28642C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93AFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0273323774
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567517226;
-	bh=haTpkUOUatPzczAlhDd4FPo7PLw0VKU7P6K7K6xTcGY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vn2ucpKwg1IC4YJQfONzNIoWSOcu4rgZy3EzkXGscRwGSIKvzHx1loAXAgkMK+10/
-	 k5IF7IRsxAGGaPWCyEqi1fFmJjqrnS6lMwVir7GhJ17URXWgD2nDt+WGJ934zSu+rV
-	 BGvutqnvXPYmRktnzdNdMCJLwbNLeMbkgTj0jiaM=
+	by mail.kernel.org (Postfix) with ESMTP id BF65123402
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oWyyGkcB";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Pnl8xAnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbfICN1F (ORCPT
+        id S1729223AbfICN25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:27:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728538AbfICN1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:27:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 3 Sep 2019 09:28:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43856 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICN24 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:28:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8AD376083E; Tue,  3 Sep 2019 13:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567517335;
+        bh=K3E/QGwt8PVRCKQtxROTYRObKHRnmgQXb96agiICqk8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=oWyyGkcBm1bYRXtIfgtVXK459fuDWDJoQMzTNnBsY/ImTIbY9QSWvLttZzumOIZA1
+         kDaHy4tacjsRgjM64U0+vY49NBK5IlXrv9ChgsfiX3OjX9MPUdKAUSqhNwYZF2D8WB
+         hofKGcTK4EQkXUQnLK6CxS3yIFjbuWvuJ3/CNcAw=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9010C23402;
-        Tue,  3 Sep 2019 13:27:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567517223;
-        bh=haTpkUOUatPzczAlhDd4FPo7PLw0VKU7P6K7K6xTcGY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qzyZJNInjuePV+FilxaGy6VwkAvtPu9MzSqASQkJm8pcS5NllLDbDCZGyqgKztfWU
-         +dE/3Hk6pPvmsi/qPGKR3DypnZXSFWtid0O1mE9ZXAk0E49LzTxnz7wr2JOsQ4w2f8
-         2G9Hna5WKh1uGUNIVCABKezJyBipt5O0CQHkmqF0=
-Date:   Tue, 3 Sep 2019 15:27:00 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] usb/ohci-sm501: remove the HCD_DMA flag
-Message-ID: <20190903132700.GA15835@kroah.com>
-References: <20190903084615.19161-1-hch@lst.de>
- <20190903084615.19161-2-hch@lst.de>
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9BE12605A2;
+        Tue,  3 Sep 2019 13:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567517335;
+        bh=K3E/QGwt8PVRCKQtxROTYRObKHRnmgQXb96agiICqk8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=Pnl8xAnYep/ueky0p38sQ5/fga0Je+FBS3gzV+NwrmnenpvFCrATfI+ltEAHqdYiB
+         Opdsiuopg4OisnZpnm1kjyEuyUsKq8GdSb96qRUzGY5bmJSVY2izYar8wEzsgWlywB
+         iH9/9lue5LhiNXIPrbwStw0XnfCUTA4GLUnHh+C0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9BE12605A2
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903084615.19161-2-hch@lst.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtlwifi: remove unused variables
+ 'RTL8712_SDIO_EFUSE_TABLE' and 'MAX_PGPKT_SIZE'
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190816140513.72572-1-yuehaibing@huawei.com>
+References: <20190816140513.72572-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <pkshih@realtek.com>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190903132855.8AD376083E@smtp.codeaurora.org>
+Date:   Tue,  3 Sep 2019 13:28:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:46:10AM +0200, Christoph Hellwig wrote:
-> This driver doesn't support normal DMA, only direct access to its
-> local memory.  Remove the HCD_DMA flag to properly express that fact.
-> 
-> Fixes: 1e4946c4412e ("usb: add a HCD_DMA flag instead of guestimating DMA capabilities")
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-Wrong sha1.  I fixed it up in my tree.
+> drivers/net/wireless/realtek/rtlwifi/efuse.c:16:31:
+>  warning: RTL8712_SDIO_EFUSE_TABLE defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless/realtek/rtlwifi/efuse.c:9:17:
+>  warning: MAX_PGPKT_SIZE defined but not used [-Wunused-const-variable=]
+> 
+> They are never used, so can be removed.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Patch applied to wireless-drivers-next.git, thanks.
+
+84d31d3b6234 rtlwifi: remove unused variables 'RTL8712_SDIO_EFUSE_TABLE' and 'MAX_PGPKT_SIZE'
+
+-- 
+https://patchwork.kernel.org/patch/11097803/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
