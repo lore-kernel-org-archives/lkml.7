@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97946C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A17C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701A32339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD8B2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528619;
-	bh=VhYDu8fEbK18fdi3qDlTweaEVg3p6CaSTXf/vybgIME=;
+	s=default; t=1567528622;
+	bh=HZP2POAxEn65fG59z9X9HA/tlFO9WFGZJxvz8mPkXN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lUi9jVqmXqgc6ZeHYqsr59LufBqe/FpR4JZbi3l5dtZFZruAR2ktkBwv4Bl3k+Ec/
-	 rhWnzezEANi3UEaNCMiTIjHAycmQe5sM7w4p2NEtg5pAL4bDdgyGck1UTmKyqOjVrj
-	 4x8iKjaZHT8igEhoSwQl/C7gOLjj3e73biGli2ns=
+	b=laGSytqzaDDPCU1sv2PH3NLI/zkXLynhfj4zwdRsvjp+5Sn/wXnVCEQQkGSqH6sCH
+	 IQD8fYh3Ynqn/04uQYR+5XquxqPjMXYec+leI4J0+1icHDo3iXIjfFUF619XEhJbPi
+	 dwOLFdmKCUyeqZdn1E0m3hyN3zjmJ973gU1R2nmg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbfICQ0y (ORCPT
+        id S1731153AbfICQhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730177AbfICQ0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:45 -0400
+        id S1730251AbfICQ0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29A0E238C5;
-        Tue,  3 Sep 2019 16:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B67DE23878;
+        Tue,  3 Sep 2019 16:26:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528004;
-        bh=VhYDu8fEbK18fdi3qDlTweaEVg3p6CaSTXf/vybgIME=;
+        s=default; t=1567528013;
+        bh=HZP2POAxEn65fG59z9X9HA/tlFO9WFGZJxvz8mPkXN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PjVdcUApmjeGC0xzLSCpOM5LuD+iHYAaxoMhQyXlvZ0JcHTfxjxlDBQvnMDFpL7TZ
-         Q7Dv5Ioko/MkcttnY3MgdVvqdR8AYpM0VSyAvlQlcKgr3H55AYy9OtIQ9JZNtkVBp0
-         VlQdmaByo0yMRvAFFhT9eWJNRiMBisKI20AMyXkc=
+        b=GS6krZzBCp+8nc0q1x2fqvmwRPJT2K/A2HN2WGXKyODTL5rW19/v+v/E0iXTuPzip
+         gpp1NgrYg+5aANCjk2ZiLa3sPDaCQgqpJLtv/B4gvZinn1uTiKwRo/LPbRhhX7qDtU
+         pxYlItYEVU56pT5ecqG5YlhEcqwfLgypFOz12aio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 049/167] ARC: show_regs: lockdep: re-enable preemption
-Date:   Tue,  3 Sep 2019 12:23:21 -0400
-Message-Id: <20190903162519.7136-49-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+fbe0496f92a0ce7b786c@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 053/167] ALSA: pcm: Fix tight loop of OSS capture stream
+Date:   Tue,  3 Sep 2019 12:23:25 -0400
+Message-Id: <20190903162519.7136-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,70 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit f731a8e89f8c78985707c626680f3e24c7a60772 ]
+[ Upstream commit e190161f96b88ffae870405fd6c3fdd1d2e7f98d ]
 
-signal handling core calls show_regs() with preemption disabled which
-on ARC takes mmap_sem for mm/vma access, causing lockdep splat.
+When the trigger=off is passed for a PCM OSS stream, it sets the
+start_threshold of the given substream to the boundary size, so that
+it won't be automatically started.  This can be problematic for a
+capture stream, unfortunately, as detected by syzkaller.  The scenario
+is like the following:
 
-| [ARCLinux]# ./segv-null-ptr
-| potentially unexpected fatal signal 11.
-| BUG: sleeping function called from invalid context at kernel/fork.c:1011
-| in_atomic(): 1, irqs_disabled(): 0, pid: 70, name: segv-null-ptr
-| no locks held by segv-null-ptr/70.
-| CPU: 0 PID: 70 Comm: segv-null-ptr Not tainted 4.18.0+ #69
-|
-| Stack Trace:
-|  arc_unwind_core+0xcc/0x100
-|  ___might_sleep+0x17a/0x190
-|  mmput+0x16/0xb8
-|  show_regs+0x52/0x310
-|  get_signal+0x5ee/0x610
-|  do_signal+0x2c/0x218
-|  resume_user_mode_begin+0x90/0xd8
+- In __snd_pcm_lib_xfer() that is invoked from snd_pcm_oss_read()
+  loop, we have a check whether the stream was already started or the
+  stream can be auto-started.
+- The function at this check returns 0 with trigger=off since we
+  explicitly disable the auto-start.
+- The loop continues and repeats calling __snd_pcm_lib_xfer() tightly,
+  which may lead to an RCU stall.
 
-Workaround by re-enabling preemption temporarily.
+This patch fixes the bug by simply allowing the wait for non-started
+stream in the case of OSS capture.  For native usages, it's supposed
+to be done by the caller side (which is user-space), hence it returns
+zero like before.
 
-Note that the preemption disabling in core code around show_regs()
-was introduced by commit 3a9f84d354ce ("signals, debug: fix BUG: using
-smp_processor_id() in preemptible code in print_fatal_signal()")
+(In theory, __snd_pcm_lib_xfer() could wait even for the native API
+ usage cases, too; but I'd like to stay in a safer side for not
+ breaking the existing stuff for now.)
 
-to silence a differnt lockdep seen on x86 bakc in 2009.
-
+Reported-by: syzbot+fbe0496f92a0ce7b786c@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/kernel/troubleshoot.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/core/pcm_lib.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arc/kernel/troubleshoot.c b/arch/arc/kernel/troubleshoot.c
-index 5c6663321e873..215f515442e03 100644
---- a/arch/arc/kernel/troubleshoot.c
-+++ b/arch/arc/kernel/troubleshoot.c
-@@ -179,6 +179,12 @@ void show_regs(struct pt_regs *regs)
- 	struct task_struct *tsk = current;
- 	struct callee_regs *cregs;
- 
-+	/*
-+	 * generic code calls us with preemption disabled, but some calls
-+	 * here could sleep, so re-enable to avoid lockdep splat
-+	 */
-+	preempt_enable();
-+
- 	print_task_path_n_nm(tsk);
- 	show_regs_print_info(KERN_INFO);
- 
-@@ -221,6 +227,8 @@ void show_regs(struct pt_regs *regs)
- 	cregs = (struct callee_regs *)current->thread.callee_reg;
- 	if (cregs)
- 		show_callee_regs(cregs);
-+
-+	preempt_disable();
+diff --git a/sound/core/pcm_lib.c b/sound/core/pcm_lib.c
+index 40013b26f6719..6c99fa8ac5fa1 100644
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -2112,6 +2112,13 @@ int pcm_lib_apply_appl_ptr(struct snd_pcm_substream *substream,
+ 	return 0;
  }
  
- void show_kernel_fault_diag(const char *str, struct pt_regs *regs,
++/* allow waiting for a capture stream that hasn't been started */
++#if IS_ENABLED(CONFIG_SND_PCM_OSS)
++#define wait_capture_start(substream)	((substream)->oss.oss)
++#else
++#define wait_capture_start(substream)	false
++#endif
++
+ /* the common loop for read/write data */
+ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
+ 				     void *data, bool interleaved,
+@@ -2182,7 +2189,7 @@ snd_pcm_sframes_t __snd_pcm_lib_xfer(struct snd_pcm_substream *substream,
+ 			err = snd_pcm_start(substream);
+ 			if (err < 0)
+ 				goto _end_unlock;
+-		} else {
++		} else if (!wait_capture_start(substream)) {
+ 			/* nothing to do */
+ 			err = 0;
+ 			goto _end_unlock;
 -- 
 2.20.1
 
