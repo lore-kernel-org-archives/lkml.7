@@ -2,296 +2,158 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C978BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDB6216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDE0206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728652AbfICJiC (ORCPT
+        id S1728676AbfICJiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:38:02 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:54684 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbfICJiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:38:04 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:11874 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728618AbfICJiB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 05:38:01 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 902BC2002F2;
-        Tue,  3 Sep 2019 11:37:58 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 35C02200177;
-        Tue,  3 Sep 2019 11:37:40 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3F8314030B;
-        Tue,  3 Sep 2019 17:37:26 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        dmitry.torokhov@gmail.com, aisheng.dong@nxp.com,
-        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org,
-        olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com,
-        bjorn.andersson@linaro.org, dinguyen@kernel.org,
-        marcin.juszkiewicz@linaro.org, stefan@agner.ch,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch,
-        m.felsch@pengutronix.de, ping.bai@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V3 2/5] input: keyboard: imx_sc: Add i.MX system controller key support
-Date:   Tue,  3 Sep 2019 17:36:37 -0400
-Message-Id: <1567546600-21566-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567546600-21566-1-git-send-email-Anson.Huang@nxp.com>
-References: <1567546600-21566-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+X-UUID: 0f932c9f62d6477390f393006cbe4443-20190903
+X-UUID: 0f932c9f62d6477390f393006cbe4443-20190903
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 175340227; Tue, 03 Sep 2019 17:37:56 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 3 Sep 2019 17:37:55 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 3 Sep 2019 17:37:54 +0800
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
+        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>, <anan.sun@mediatek.com>,
+        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
+        <ming-fan.chen@mediatek.com>
+Subject: [PATCH v3 00/14] Clean up "mediatek,larb" after adding device_link
+Date:   Tue, 3 Sep 2019 17:37:22 +0800
+Message-ID: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-inside, the system controller is in charge of controlling power,
-clock and scu key etc..
+MediaTek IOMMU block diagram always like below:
 
-Adds i.MX system controller key driver support, Linux kernel has
-to communicate with system controller via MU (message unit) IPC
-to get scu key's status.
+        M4U
+         |
+    smi-common
+         |
+  -------------
+  |         |  ...
+  |         |
+larb1     larb2
+  |         |
+vdec       venc
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V2:
-	- use private platform data instead of global data;
-	- use "key" instead of "pwrkey";
-	- fix some data format.
----
- drivers/input/keyboard/Kconfig      |   7 ++
- drivers/input/keyboard/Makefile     |   1 +
- drivers/input/keyboard/imx_sc_key.c | 178 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 186 insertions(+)
- create mode 100644 drivers/input/keyboard/imx_sc_key.c
+All the consumer connect with smi-larb, then connect with smi-common.
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 2e6d288..607acf2 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -469,6 +469,13 @@ config KEYBOARD_IMX
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called imx_keypad.
- 
-+config KEYBOARD_IMX_SC_KEY
-+	tristate "IMX SCU Key Driver"
-+	depends on IMX_SCU
-+	help
-+	  This is the system controller key driver for NXP i.MX SoCs with
-+	  system controller inside.
-+
- config KEYBOARD_NEWTON
- 	tristate "Newton keyboard"
- 	select SERIO
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 9510325..f5b1752 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_KEYBOARD_HIL)		+= hil_kbd.o
- obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
- obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
- obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
-+obj-$(CONFIG_KEYBOARD_IMX_SC_KEY)	+= imx_sc_key.o
- obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
- obj-$(CONFIG_KEYBOARD_HP7XX)		+= jornada720_kbd.o
- obj-$(CONFIG_KEYBOARD_LKKBD)		+= lkkbd.o
-diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
-new file mode 100644
-index 0000000..e69479b
---- /dev/null
-+++ b/drivers/input/keyboard/imx_sc_key.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2019 NXP.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/firmware/imx/sci.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+
-+#define DEBOUNCE_TIME	100
-+#define REPEAT_INTERVAL	60
-+
-+#define SC_IRQ_BUTTON		1
-+#define SC_IRQ_GROUP_WAKE	3
-+#define IMX_SC_MISC_FUNC_GET_BUTTON_STATUS	18
-+
-+struct imx_key_drv_data {
-+	int keycode;
-+	bool keystate;  /* 1: pressed, 0: release */
-+	bool delay_check;
-+	struct delayed_work check_work;
-+	struct input_dev *input;
-+	struct imx_sc_ipc *key_ipc_handle;
-+	struct notifier_block key_notifier;
-+};
-+
-+struct imx_sc_msg_key {
-+	struct imx_sc_rpc_msg hdr;
-+	u8 state;
-+};
-+
-+static int imx_sc_key_notify(struct notifier_block *nb,
-+			     unsigned long event, void *group)
-+{
-+	struct imx_key_drv_data *priv =
-+				 container_of(nb,
-+					      struct imx_key_drv_data,
-+					      key_notifier);
-+
-+	if ((event & SC_IRQ_BUTTON) && (*(u8 *)group == SC_IRQ_GROUP_WAKE)
-+	    && !priv->delay_check) {
-+		priv->delay_check = 1;
-+		schedule_delayed_work(&priv->check_work,
-+				      msecs_to_jiffies(REPEAT_INTERVAL));
-+	}
-+
-+	return 0;
-+}
-+
-+static void imx_sc_check_for_events(struct work_struct *work)
-+{
-+	struct imx_key_drv_data *priv =
-+				 container_of(work,
-+					      struct imx_key_drv_data,
-+					      check_work.work);
-+	struct input_dev *input = priv->input;
-+	struct imx_sc_msg_key msg;
-+	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-+	bool state;
-+	int ret;
-+
-+	hdr->ver = IMX_SC_RPC_VERSION;
-+	hdr->svc = IMX_SC_RPC_SVC_MISC;
-+	hdr->func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS;
-+	hdr->size = 1;
-+
-+	ret = imx_scu_call_rpc(priv->key_ipc_handle, &msg, true);
-+	if (ret) {
-+		dev_err(&input->dev, "read imx sc key failed, ret %d\n", ret);
-+		return;
-+	}
-+
-+	state = (bool)msg.state;
-+
-+	if (!state && !priv->keystate)
-+		state = true;
-+
-+	if (state ^ priv->keystate) {
-+		pm_wakeup_event(input->dev.parent, 0);
-+		priv->keystate = state;
-+		input_event(input, EV_KEY, priv->keycode, state);
-+		input_sync(input);
-+		if (!state)
-+			priv->delay_check = 0;
-+		pm_relax(priv->input->dev.parent);
-+	}
-+
-+	if (state)
-+		schedule_delayed_work(&priv->check_work,
-+				      msecs_to_jiffies(DEBOUNCE_TIME));
-+}
-+
-+static int imx_sc_key_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	static struct imx_key_drv_data *priv;
-+	struct input_dev *input;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	ret = imx_scu_get_handle(&priv->key_ipc_handle);
-+	if (ret)
-+		return ret;
-+
-+	if (of_property_read_u32(np, "linux,keycode", &priv->keycode)) {
-+		dev_err(&pdev->dev, "missing KEY_POWER in DT\n");
-+		return -EINVAL;
-+	}
-+
-+	INIT_DELAYED_WORK(&priv->check_work, imx_sc_check_for_events);
-+
-+	input = devm_input_allocate_device(&pdev->dev);
-+	if (!input) {
-+		dev_err(&pdev->dev, "failed to allocate the input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	input->name = pdev->name;
-+	input->phys = "imx-sc-key/input0";
-+	input->id.bustype = BUS_HOST;
-+
-+	input_set_capability(input, EV_KEY, priv->keycode);
-+
-+	ret = input_register_device(input);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register input device\n");
-+		return ret;
-+	}
-+
-+	priv->input = input;
-+	platform_set_drvdata(pdev, priv);
-+
-+	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, true);
-+	if (ret) {
-+		dev_warn(&pdev->dev, "enable scu group irq failed\n");
-+		return ret;
-+	}
-+
-+	priv->key_notifier.notifier_call = imx_sc_key_notify;
-+	ret = imx_scu_irq_register_notifier(&priv->key_notifier);
-+	if (ret) {
-+		imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
-+		dev_warn(&pdev->dev, "register scu notifier failed\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id imx_sc_key_ids[] = {
-+	{ .compatible = "fsl,imx-sc-key" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, imx_sc_key_ids);
-+
-+static struct platform_driver imx_sc_key_driver = {
-+	.driver = {
-+		.name = "imx-sc-key",
-+		.of_match_table = imx_sc_key_ids,
-+	},
-+	.probe = imx_sc_key_probe,
-+};
-+module_platform_driver(imx_sc_key_driver);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-+MODULE_DESCRIPTION("i.MX System Controller Key Driver");
-+MODULE_LICENSE("GPL v2");
+MediaTek IOMMU don't have its power-domain. When the consumer works,
+it should enable the smi-larb's power which also need enable the smi-common's
+power firstly.
+
+Thus, Firstly, use the device link connect the consumer and the
+smi-larbs. then add device link between the smi-larb and smi-common.
+
+After adding the device_link, then "mediatek,larb" property can be removed.
+the iommu consumer don't need call the mtk_smi_larb_get/put to enable
+the power and clock of smi-larb and smi-common.
+
+This patchset depends on "MT8183 IOMMU SUPPORT"[1].
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2019-August/022611.html
+
+Change notes:
+v3: 1) rebase on v5.3-rc1 and the latest mt8183 patchset.
+    2) Use device_is_bound to check whether the driver is ready from Matthias.    
+    3) Add DL_FLAG_STATELESS flag when calling device_link_add and explain the
+   reason in the commit message[3/14].
+    4) Add a display patch[12/14] into this series. otherwise it may affect
+   display HW fastlogo even though it don't happen in mt8183.
+   
+v2: http://lists.infradead.org/pipermail/linux-mediatek/2019-June/020440.html
+   1) rebase on v5.2-rc1.
+   2) Move adding device_link between the consumer and smi-larb into
+iommu_add_device from Robin.
+   3) add DL_FLAG_AUTOREMOVE_CONSUMER even though the smi is built-in from Evan.
+   4) Remove the shutdown callback in iommu.   
+
+v1: https://lists.linuxfoundation.org/pipermail/iommu/2019-January/032387.html
+
+Yong Wu (13):
+  dt-binding: mediatek: Get rid of mediatek,larb for multimedia HW
+  iommu/mediatek: Add probe_defer for smi-larb
+  iommu/mediatek: Add device_link between the consumer and the larb
+    devices
+  memory: mtk-smi: Add device-link between smi-larb and smi-common
+  media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+  media: mtk-mdp: Get rid of mtk_smi_larb_get/put
+  media: mtk-vcodec: Get rid of mtk_smi_larb_get/put
+  drm/mediatek: Get rid of mtk_smi_larb_get/put
+  memory: mtk-smi: Get rid of mtk_smi_larb_get/put
+  iommu/mediatek: Use builtin_platform_driver
+  memory: mtk-smi: Use device_is_bound to check if smi-common is ready
+  arm: dts: mediatek: Get rid of mediatek,larb for MM nodes
+  arm64: dts: mediatek: Get rid of mediatek,larb for MM nodes
+
+Yongqiang Niu (1):
+  drm/mediatek: Add pm runtime support for ovl and rdma
+
+ .../bindings/display/mediatek/mediatek,disp.txt    |  9 ----
+ .../bindings/media/mediatek-jpeg-decoder.txt       |  4 --
+ .../devicetree/bindings/media/mediatek-mdp.txt     |  8 ----
+ .../devicetree/bindings/media/mediatek-vcodec.txt  |  4 --
+ arch/arm/boot/dts/mt2701.dtsi                      |  1 -
+ arch/arm/boot/dts/mt7623.dtsi                      |  1 -
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           | 15 ------
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  5 ++
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  5 ++
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            | 20 ++++----
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 31 ++----------
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  2 +-
+ drivers/iommu/mtk_iommu.c                          | 56 ++++++++++------------
+ drivers/iommu/mtk_iommu_v1.c                       | 49 ++++++++++---------
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c    | 22 ---------
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h    |  2 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c      | 38 ---------------
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.h      |  2 -
+ drivers/media/platform/mtk-mdp/mtk_mdp_core.c      |  1 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c  | 22 ---------
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h |  3 --
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c |  1 -
+ .../media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c  | 47 ------------------
+ drivers/memory/mtk-smi.c                           | 41 +++++++---------
+ include/soc/mediatek/smi.h                         | 20 --------
+ 25 files changed, 93 insertions(+), 316 deletions(-)
+
 -- 
-2.7.4
+1.9.1 
 
