@@ -2,149 +2,114 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8CBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA7CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8203322CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5A622CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfICIrJ (ORCPT
+        id S1728216AbfICIsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:47:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49524 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726452AbfICIrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:47:09 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2536308FBFC;
-        Tue,  3 Sep 2019 08:47:08 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C784160C18;
-        Tue,  3 Sep 2019 08:47:05 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 10:47:03 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 10/10] arm64: Retrieve stolen time as paravirtualized
- guest
-Message-ID: <20190903084703.hwpelmr7fikb32nj@kamzik.brq.redhat.com>
-References: <20190830084255.55113-1-steven.price@arm.com>
- <20190830084255.55113-11-steven.price@arm.com>
+        Tue, 3 Sep 2019 04:48:47 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:46233 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726557AbfICIsq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:48:46 -0400
+Received: from [109.168.11.45] (port=41926 helo=[192.168.101.73])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1i54UU-002hxn-8d; Tue, 03 Sep 2019 10:48:42 +0200
+Subject: Re: [RFC,v2 2/6] i2c: add I2C Address Translator (ATR) support
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Peter Rosin <peda@axentia.se>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-3-luca@lucaceresoli.net> <20190902204208.GA7253@kunai>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <8482d1e2-b1d9-3da5-5b1f-b7e492a87368@lucaceresoli.net>
+Date:   Tue, 3 Sep 2019 10:48:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190830084255.55113-11-steven.price@arm.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 03 Sep 2019 08:47:09 +0000 (UTC)
+In-Reply-To: <20190902204208.GA7253@kunai>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 09:42:55AM +0100, Steven Price wrote:
-> Enable paravirtualization features when running under a hypervisor
-> supporting the PV_TIME_ST hypercall.
-> 
-> For each (v)CPU, we ask the hypervisor for the location of a shared
-> page which the hypervisor will use to report stolen time to us. We set
-> pv_time_ops to the stolen time function which simply reads the stolen
-> value from the shared page for a VCPU. We guarantee single-copy
-> atomicity using READ_ONCE which means we can also read the stolen
-> time for another VCPU than the currently running one while it is
-> potentially being updated by the hypervisor.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->  arch/arm64/include/asm/paravirt.h |   9 +-
->  arch/arm64/kernel/paravirt.c      | 148 ++++++++++++++++++++++++++++++
->  arch/arm64/kernel/time.c          |   3 +
->  include/linux/cpuhotplug.h        |   1 +
->  4 files changed, 160 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/paravirt.h b/arch/arm64/include/asm/paravirt.h
-> index 799d9dd6f7cc..125c26c42902 100644
-> --- a/arch/arm64/include/asm/paravirt.h
-> +++ b/arch/arm64/include/asm/paravirt.h
-> @@ -21,6 +21,13 @@ static inline u64 paravirt_steal_clock(int cpu)
->  {
->  	return pv_ops.time.steal_clock(cpu);
->  }
-> -#endif
-> +
-> +int __init kvm_guest_init(void);
-> +
-> +#else
-> +
-> +#define kvm_guest_init()
-> +
-> +#endif // CONFIG_PARAVIRT
->  
->  #endif
-> diff --git a/arch/arm64/kernel/paravirt.c b/arch/arm64/kernel/paravirt.c
-> index 4cfed91fe256..5bf3be7ccf7e 100644
-> --- a/arch/arm64/kernel/paravirt.c
-> +++ b/arch/arm64/kernel/paravirt.c
-> @@ -6,13 +6,161 @@
->   * Author: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
->   */
->  
-> +#define pr_fmt(fmt) "kvmarm-pv: " fmt
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/cpuhotplug.h>
->  #include <linux/export.h>
-> +#include <linux/io.h>
->  #include <linux/jump_label.h>
-> +#include <linux/printk.h>
-> +#include <linux/psci.h>
-> +#include <linux/reboot.h>
-> +#include <linux/slab.h>
->  #include <linux/types.h>
-> +
->  #include <asm/paravirt.h>
-> +#include <asm/pvclock-abi.h>
-> +#include <asm/smp_plat.h>
->  
->  struct static_key paravirt_steal_enabled;
->  struct static_key paravirt_steal_rq_enabled;
->  
->  struct paravirt_patch_template pv_ops;
->  EXPORT_SYMBOL_GPL(pv_ops);
-> +
-> +struct kvmarm_stolen_time_region {
-> +	struct pvclock_vcpu_stolen_time *kaddr;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct kvmarm_stolen_time_region, stolen_time_region);
-> +
-> +static bool steal_acc = true;
-> +static int __init parse_no_stealacc(char *arg)
-> +{
-> +	steal_acc = false;
-> +	return 0;
-> +}
-> +
-> +early_param("no-steal-acc", parse_no_stealacc);
+Hi Wolfram,
 
-Need to also add an 'ARM64' to the
-Documentation/admin-guide/kernel-parameters.txt entry for this.
+On 02/09/19 22:42, Wolfram Sang wrote:
+> Hi Luca,
+> 
+>> + * Topology:
+>> + *
+>> + *                       Slave X @ 0x10
+>> + *               .-----.   |
+>> + *   .-----.     |     |---+---- B
+>> + *   | CPU |--A--| ATR |
+>> + *   `-----'     |     |---+---- C
+>> + *               `-----'   |
+>> + *                       Slave Y @ 0x10
+>> + *
+>> + * Alias table:
+>> + *
+>> + *   Client  Alias
+>> + *   -------------
+>> + *      X    0x20
+>> + *      Y    0x30
+> 
+> Great that you already provided docs for this driver!
+> 
+> One huge drawback for me is the attach/detach callbacks. One year ago, I
+> removed a similar callback from the I2C core ("[PATCH 0/2] i2c: remove
+> deprecated attach_adapter callback") because some drivers did a lot of
+> crazy things there. It took years to remove all that.
 
-Thanks,
-drew
+Oh dear, I was completely unaware, apologies! :-)
+
+> What I could imagine here: the adapter (B and C each in the picture
+> above) gets a flag like NEEDS_ATR before registering to the core. The
+> flag means all clients on that bus will have their address translated.
+> The core will figure out a free alias when a device is registered. We
+> can then have an ATR specific callback with the original and translated
+> address as arguments, so one can setup the HW as needed.
+
+Do you mean moving the alias selection code from i2c-atr.c to the i2c
+core? And the rest of the ATR core too?
+
+> Do you think that would work?
+
+Yes.
+
+-- 
+Luca
