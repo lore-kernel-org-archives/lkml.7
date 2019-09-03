@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D412DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC3C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2A023878
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603842343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527928;
-	bh=YaelBjv9CrC3Jq0WoYTd+rflT0fewMxLIJgPOZWkLcc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pMasLTbTQarG0XT0na4R7m51D09dY4CnbXHt+1+IJXsdD2pdkoYTRIAKqvY1KYrEI
-	 +n3uaxybamqBScnUzCYtKuvJzUzPf4VclsK02cG35sC9qsl2+Oh3lrxQ7cgzMM0eKI
-	 z7BkR1syjqkU0WIFiPY6ylfeH1UOn7wIxw1ieMsI=
+	s=default; t=1567527931;
+	bh=y6jv+OHUHxEmn5hA5V/b/pfb8RWdE4SDWdiWC+3AyFY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XGVFd3sRlCNvCNQTk9RMFDGrEwnG63Nja1JUP0kg+N65i7rFEySf/LULz04LLFYFL
+	 nYo4WlJj7KN6eJLJxSw8wqHNVi9FMUydQgmeYi+rVJst2eFpizHVrjukJ7WXd3rGtL
+	 STu57EUovyhCiDVqviRnCAIX9tJiO97ij/Z61hTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbfICQZ1 (ORCPT
+        id S1730400AbfICQZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45130 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730322AbfICQZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:16 -0400
+        id S1730355AbfICQZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19B0A2343A;
-        Tue,  3 Sep 2019 16:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F432343A;
+        Tue,  3 Sep 2019 16:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527915;
-        bh=YaelBjv9CrC3Jq0WoYTd+rflT0fewMxLIJgPOZWkLcc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yThhcpjJ9ttmo1oTs1wt3c1R1/rgO50Rn6XiBjbSuPsRQNsefJ7r7grfFCqU/Uf2Q
-         uAhnpQsOnf0ThglT40I+UYN58AItz17Y0XZfWvWaSIaZeB7x8tZSD6xrXYkropFo6D
-         RRt7hPu+Wd4eT2Zb/wiZllOuZB/pTqhGafpgaWXk=
+        s=default; t=1567527921;
+        bh=y6jv+OHUHxEmn5hA5V/b/pfb8RWdE4SDWdiWC+3AyFY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fktxo9kwQhwWMFXoU7eQDyn04xa/nB5bfIOAislXbhxWTJ4g9LGpF9cmGc6rq2ps0
+         VRB42Q6W2KyfuaY0P5a7TblDJND6KmCI2kShRIn+DhNumBMSbcO1I8AwQm2Rz6g+5W
+         LJqybxcRH3j1hlbMqPd97dqhlnP+Lg263ri59lSU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        Anuj Phogat <anuj.phogat@gmail.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Jan-Marek Glogowski <glogow@fbihome.de>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 23/23] drm/i915/icl: whitelist PS_(DEPTH|INVOCATION)_COUNT
-Date:   Tue,  3 Sep 2019 12:24:24 -0400
-Message-Id: <20190903162424.6877-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 001/167] drm/i915: Re-apply "Perform link quality check, unconditionally during long pulse"
+Date:   Tue,  3 Sep 2019 12:22:33 -0400
+Message-Id: <20190903162519.7136-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
-References: <20190903162424.6877-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,55 +57,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+From: Jan-Marek Glogowski <glogow@fbihome.de>
 
-[ Upstream commit cf8f9aa1eda7d916bd23f6b8c226404deb11690c ]
+[ Upstream commit 3cf71bc9904d7ee4a25a822c5dcb54c7804ea388 ]
 
-The same tests failing on CFL+ platforms are also failing on ICL.
-Documentation doesn't list the
-WaAllowPMDepthAndInvocationCountAccessFromUMD workaround for ICL but
-applying it fixes the same tests as CFL.
+This re-applies the workaround for "some DP sinks, [which] are a
+little nuts" from commit 1a36147bb939 ("drm/i915: Perform link
+quality check unconditionally during long pulse").
+It makes the secondary AOC E2460P monitor connected via DP to an
+acer Veriton N4640G usable again.
 
-v2: Use only one whitelist entry (Lionel)
+This hunk was dropped in commit c85d200e8321 ("drm/i915: Move SST
+DP link retraining into the ->post_hotplug() hook")
 
-Signed-off-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Tested-by: Anuj Phogat <anuj.phogat@gmail.com>
-Cc: stable@vger.kernel.org # 6883eab27481: drm/i915: Support flags in whitlist WAs
+Fixes: c85d200e8321 ("drm/i915: Move SST DP link retraining into the ->post_hotplug() hook")
+[Cleaned up commit message, added stable cc]
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
 Cc: stable@vger.kernel.org
-Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190628120720.21682-4-lionel.g.landwerlin@intel.com
-(cherry picked from commit 3fe0107e45ab396342497e06b8924cdd485cde3b)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20180825191035.3945-1-lyude@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_workarounds.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/drm/i915/intel_dp.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/i915/intel_workarounds.c b/drivers/gpu/drm/i915/intel_workarounds.c
-index efea5a18fa6db..edd57a5e0495f 100644
---- a/drivers/gpu/drm/i915/intel_workarounds.c
-+++ b/drivers/gpu/drm/i915/intel_workarounds.c
-@@ -1107,6 +1107,19 @@ static void icl_whitelist_build(struct intel_engine_cs *engine)
- 
- 		/* WaEnableStateCacheRedirectToCS:icl */
- 		whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
-+
+diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
+index f92079e19de8d..20cd4c8acecc3 100644
+--- a/drivers/gpu/drm/i915/intel_dp.c
++++ b/drivers/gpu/drm/i915/intel_dp.c
+@@ -4739,6 +4739,22 @@ intel_dp_long_pulse(struct intel_connector *connector,
+ 		 */
+ 		status = connector_status_disconnected;
+ 		goto out;
++	} else {
 +		/*
-+		 * WaAllowPMDepthAndInvocationCountAccessFromUMD:icl
++		 * If display is now connected check links status,
++		 * there has been known issues of link loss triggering
++		 * long pulse.
 +		 *
-+		 * This covers 4 register which are next to one another :
-+		 *   - PS_INVOCATION_COUNT
-+		 *   - PS_INVOCATION_COUNT_UDW
-+		 *   - PS_DEPTH_COUNT
-+		 *   - PS_DEPTH_COUNT_UDW
++		 * Some sinks (eg. ASUS PB287Q) seem to perform some
++		 * weird HPD ping pong during modesets. So we can apparently
++		 * end up with HPD going low during a modeset, and then
++		 * going back up soon after. And once that happens we must
++		 * retrain the link to get a picture. That's in case no
++		 * userspace component reacted to intermittent HPD dip.
 +		 */
-+		whitelist_reg_ext(w, PS_INVOCATION_COUNT,
-+				  RING_FORCE_TO_NONPRIV_RD |
-+				  RING_FORCE_TO_NONPRIV_RANGE_4);
- 		break;
++		struct intel_encoder *encoder = &dp_to_dig_port(intel_dp)->base;
++
++		intel_dp_retrain_link(encoder, ctx);
+ 	}
  
- 	case VIDEO_DECODE_CLASS:
+ 	/*
 -- 
 2.20.1
 
