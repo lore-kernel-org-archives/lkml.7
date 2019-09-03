@@ -2,142 +2,137 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC184C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1A4C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD02208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F48208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:08:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfICMIM (ORCPT
+        id S1729165AbfICMIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:08:12 -0400
-Received: from regular1.263xmail.com ([211.150.70.203]:33524 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfICMIJ (ORCPT
+        Tue, 3 Sep 2019 08:08:14 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:41668 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729067AbfICMIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:08:09 -0400
-X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Sep 2019 08:08:02 EDT
-Received: from finley.xiao?rock-chips.com (unknown [192.168.167.224])
-        by regular1.263xmail.com (Postfix) with ESMTP id 500B122C;
-        Tue,  3 Sep 2019 20:00:57 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P13045T140284270724864S1567511992953411_;
-        Tue, 03 Sep 2019 20:00:55 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <29b5b6971d3a2ee134c0ffe9bdde52f1>
-X-RL-SENDER: finley.xiao@rock-chips.com
-X-SENDER: xf@rock-chips.com
-X-LOGIN-NAME: finley.xiao@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Finley Xiao <finley.xiao@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        zhangqing@rock-chips.com, huangtao@rock-chips.com,
-        tony.xie@rock-chips.com, andy.yan@rock-chips.com,
-        Finley Xiao <finley.xiao@rock-chips.com>
-Subject: [PATCH v1 1/3] dt-bindings: Add bindings for rk3308 clock controller
-Date:   Tue,  3 Sep 2019 19:59:45 +0800
-Message-Id: <20190903115947.26618-2-finley.xiao@rock-chips.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190903115947.26618-1-finley.xiao@rock-chips.com>
-References: <20190903115947.26618-1-finley.xiao@rock-chips.com>
+        Tue, 3 Sep 2019 08:08:10 -0400
+Received: by mail-io1-f71.google.com with SMTP id t8so22681092iom.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:08:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=aX4G0iDqPx+MweGp7YMY5V/3PPLadE9WmDWOVG4Z+nc=;
+        b=WpNcYrvJj+xx4dknztYKtg0cP3KESUkYvLjd0Xf51tDzJ2WiCyCavOq/tTS6XH4cVS
+         S9XoXogRb8OzpTHAwLLl/Uic4Qhn+PoBHi8ReWhPgXkA1N8NSGL7gYXe4D3R6gla/t6E
+         EZ0icgdbzv//kXAsTSyrPTlwHatc+xi6Cxml0xArlufy0QLo9CgUBS/s4d7uN6ai6Sh3
+         ISuCAkEKzTA2pSwyCQPQxR1/57LcDjEuDjYAytvOGBszm51JoRMjsD45aE4+701hh5t0
+         8m8Xv9RQijAZz5qO/kc+bg+JEIR0UzfyVJdKYUSe21Owjijezh4L0rVJ7GTkIYGcZTLr
+         PXNw==
+X-Gm-Message-State: APjAAAX5XQVkYrGHOSjUqIpAEl+kZkbib2cfpeEAuBIaqDlcY79bJrEv
+        cT+izYoFTBCzgQ/6+MNxXFxZP6LyeYhSdgRfw78bPQwlmDrp
+X-Google-Smtp-Source: APXvYqzJ8UukIHJyCYHiMvGaItBRCKLR13k6V9qAbiaot38Gz3camB4GoeBD26AhIWOCUTf+bC5Dx1KcX49tS/7YmKtM9JYU7wIu
+MIME-Version: 1.0
+X-Received: by 2002:a5d:96cb:: with SMTP id r11mr41808403iol.200.1567512489310;
+ Tue, 03 Sep 2019 05:08:09 -0700 (PDT)
+Date:   Tue, 03 Sep 2019 05:08:09 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001b41900591a4f149@google.com>
+Subject: WARNING: ODEBUG bug in usbhid_disconnect (2)
+From:   syzbot <syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add devicetree bindings for Rockchip cru which found on
-Rockchip SoCs.
+Hello,
 
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+syzbot found the following crash on:
+
+HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=173983ac600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=14b53bfeb17f2b210eb7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d36aca600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178e208e600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object type: timer_list hint:  
+hid_retry_timeout+0x0/0xd0 drivers/hid/usbhid/hid-core.c:712
+WARNING: CPU: 1 PID: 17 at lib/debugobjects.c:481  
+debug_print_object+0x160/0x250 lib/debugobjects.c:481
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.0-rc5+ #28
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:481
+Code: dd 80 ef da 85 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
+8b 14 dd 80 ef da 85 48 c7 c7 c0 e4 da 85 e8 e5 dd 31 ff <0f> 0b 83 05 4b  
+0f a8 05 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+RSP: 0018:ffff8881da24f718 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed103b449ed5
+RBP: 0000000000000001 R08: ffff8881da233000 R09: fffffbfff11ad79a
+R10: fffffbfff11ad799 R11: ffffffff88d6bccf R12: ffffffff86d0dc60
+R13: ffffffff812e7b70 R14: ffff8881c9d5a8c8 R15: ffff8881cf8943f0
+  __debug_check_no_obj_freed lib/debugobjects.c:963 [inline]
+  debug_check_no_obj_freed+0x2df/0x443 lib/debugobjects.c:994
+  free_pages_prepare mm/page_alloc.c:1174 [inline]
+  __free_pages_ok+0x222/0x1d70 mm/page_alloc.c:1420
+  usbhid_disconnect+0xab/0xd0 drivers/hid/usbhid/hid-core.c:1414
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1134 [inline]
+  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+  device_del+0x420/0xb10 drivers/base/core.c:2339
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
- .../devicetree/bindings/clock/rockchip,rk3308.txt  | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3308.txt
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3308.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3308.txt
-new file mode 100644
-index 000000000000..5d46c9b7f937
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3308.txt
-@@ -0,0 +1,58 @@
-+* Rockchip RK3308 Clock and Reset Unit
-+
-+The RK3308 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: CRU should be "rockchip,rk3308-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing, pll rates are not changeable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3308-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "xin32k" - rtc clock - optional,
-+ - "mclk_i2sx_xch_in" - external I2S or SPDIF clock - optional,
-+ - "mac_clkin" - external MAC clock - optional
-+
-+Example: Clock controller node:
-+
-+	cru: clock-controller@ff500000 {
-+		compatible = "rockchip,rk3308-cru";
-+		reg = <0x0 0xff500000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@ff0a0000 {
-+		compatible = "rockchip,rk3308-uart", "snps,dw-apb-uart";
-+		reg = <0x0 0xff0a0000 0x0 0x100>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-+		clock-names = "baudclk", "apb_pclk";
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+		status = "disabled";
-+	};
--- 
-2.11.0
-
-
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
