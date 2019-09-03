@@ -2,113 +2,93 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C4FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:17:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A20C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E50B2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567516660;
-	bh=HELYILf7PmfHAJufYgPIbUuJ8NFb39wAtAfyP6VVXd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BnwW8os1OgqsLKvYtu1dNm12k99/a0BEoV0pxZRkihKP3o5d93ZXtNTlnhCdbxPdF
-	 cuAJ8jK5o4zWbPPRvOHYd13SzIfs7CFjlyMuDpyNUU8zsGIYbVvPG/k5IwKkF2C18W
-	 doqKr1/mhtzUpKlpKoNFiQtve3h1jx1PGzGSPbCY=
+	by mail.kernel.org (Postfix) with ESMTP id 8BDFD215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbfICNRj (ORCPT
+        id S1729109AbfICNUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:17:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58200 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727005AbfICNRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:17:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 252E0B116;
-        Tue,  3 Sep 2019 13:17:38 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 15:17:37 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     sunqiuyang <sunqiuyang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/1] mm/migrate: fix list corruption in migration of
- non-LRU movable pages
-Message-ID: <20190903131737.GB18939@dhcp22.suse.cz>
-References: <20190903082746.20736-1-sunqiuyang@huawei.com>
+        Tue, 3 Sep 2019 09:20:41 -0400
+Received: from 8bytes.org ([81.169.241.247]:52978 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbfICNUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:20:41 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id B7FA5284; Tue,  3 Sep 2019 15:20:39 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 15:20:38 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] iommu: Don't use sme_active() in generic code
+Message-ID: <20190903132038.GE11530@8bytes.org>
+References: <20190902163951.6280e030@canb.auug.org.au>
+ <20190902140347.GA23482@8bytes.org>
+ <d2493e6b-08fa-9ea8-a0a4-076def54e91b@amd.com>
+ <20190903152849.770ae819@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903082746.20736-1-sunqiuyang@huawei.com>
+In-Reply-To: <20190903152849.770ae819@canb.auug.org.au>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03-09-19 16:27:46, sunqiuyang wrote:
-> From: Qiuyang Sun <sunqiuyang@huawei.com>
+On Tue, Sep 03, 2019 at 03:28:49PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Currently, after a page is migrated, it
-> 1) has its PG_isolated flag cleared in move_to_new_page(), and
-> 2) is deleted from its LRU list (cc->migratepages) in unmap_and_move().
-> However, between steps 1) and 2), the page could be isolated by another
-> thread in isolate_movable_page(), and added to another LRU list, leading
-> to list_del corruption later.
+> On Mon, 2 Sep 2019 14:26:40 +0000 "Lendacky, Thomas" <Thomas.Lendacky@amd.com> wrote:
+> > Maybe we should make this mem_encrypt_active(), since this will probably
+> > be needed if/when an IOMMU device is eventually added to a guest, and the
+> > referenced commit below doesn't remove that call.
+> 
+> I have done that for today:
 
-Care to explain the race? Both paths use page_lock AFAICS
-> 
-> This patch fixes the bug by moving list_del into the critical section
-> protected by lock_page(), so that a page will not be isolated again before
-> it has been deleted from its LRU list.
-> 
-> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
-> ---
->  mm/migrate.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index a42858d..c58a606 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1124,6 +1124,8 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
->  	/* Drop an anon_vma reference if we took one */
->  	if (anon_vma)
->  		put_anon_vma(anon_vma);
-> +	if (rc != -EAGAIN)
-> +		list_del(&page->lru);
->  	unlock_page(page);
->  out:
->  	/*
-> @@ -1190,6 +1192,7 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  			put_new_page(newpage, private);
->  		else
->  			put_page(newpage);
-> +		list_del(&page->lru);
->  		goto out;
->  	}
->  
-> @@ -1200,14 +1203,6 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
->  out:
->  	if (rc != -EAGAIN) {
->  		/*
-> -		 * A page that has been migrated has all references
-> -		 * removed and will be freed. A page that has not been
-> -		 * migrated will have kepts its references and be
-> -		 * restored.
-> -		 */
-> -		list_del(&page->lru);
-> -
-> -		/*
->  		 * Compaction can migrate also non-LRU pages which are
->  		 * not accounted to NR_ISOLATED_*. They can be recognized
->  		 * as __PageMovable
-> -- 
-> 1.8.3.1
+Thanks Stephen and Tom. I queued the attached patch into the iommu tree
+to fix the problem.
 
+From 2896ba40d0becdb72b45f096cad70633abc014f6 Mon Sep 17 00:00:00 2001
+From: Joerg Roedel <jroedel@suse.de>
+Date: Tue, 3 Sep 2019 15:15:44 +0200
+Subject: [PATCH] iommu: Don't use sme_active() in generic code
+
+Switch to the generic function mem_encrypt_active() because
+sme_active() is x86 specific and can't be called from
+generic code on other platforms than x86.
+
+Fixes: 2cc13bb4f59f ("iommu: Disable passthrough mode when SME is active")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/iommu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 66cfacaa483d..d658c7c6a2ab 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -120,8 +120,8 @@ static int __init iommu_subsys_init(void)
+ 		else
+ 			iommu_set_default_translated(false);
+ 
+-		if (iommu_default_passthrough() && sme_active()) {
+-			pr_info("SME detected - Disabling default IOMMU Passthrough\n");
++		if (iommu_default_passthrough() && mem_encrypt_active()) {
++			pr_info("Memory encryption detected - Disabling default IOMMU Passthrough\n");
+ 			iommu_set_default_translated(false);
+ 		}
+ 	}
 -- 
-Michal Hocko
-SUSE Labs
+2.16.4
+
