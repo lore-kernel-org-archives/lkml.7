@@ -7,47 +7,57 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1C1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16948C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EFFC2377B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E170C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfICIbn (ORCPT
+        id S1728262AbfICIbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:31:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59175 "EHLO
+        Tue, 3 Sep 2019 04:31:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59200 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbfICIbl (ORCPT
+        with ESMTP id S1728235AbfICIbq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:31:41 -0400
+        Tue, 3 Sep 2019 04:31:46 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i54Dl-0002eS-Eb; Tue, 03 Sep 2019 10:31:25 +0200
+        id 1i54Dn-0002gC-4r; Tue, 03 Sep 2019 10:31:27 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E64841C0772;
-        Tue,  3 Sep 2019 10:31:24 +0200 (CEST)
-Date:   Tue, 03 Sep 2019 08:31:24 -0000
-From:   "tip-bot2 for Matt Fleming" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A60BC1C0DDE;
+        Tue,  3 Sep 2019 10:31:26 +0200 (CEST)
+Date:   Tue, 03 Sep 2019 08:31:26 -0000
+From:   "tip-bot2 for Patrick Bellasi" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/topology: Improve load balancing on AMD EPYC systems
-Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
+Subject: [tip: sched/core] sched/uclamp: Propagate system defaults to the root group
+Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Borislav Petkov <bp@alien8.de>,
+        Michal Koutny <mkoutny@suse.com>, Tejun Heo <tj@kernel.org>,
+        Alessio Balsini <balsini@android.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Suravee.Suthikulpanit@amd.com,
-        Thomas Gleixner <tglx@linutronix.de>, Thomas.Lendacky@amd.com,
-        Tony Luck <tony.luck@intel.com>,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190808195301.13222-3-matt@codeblueprint.co.uk>
-References: <20190808195301.13222-3-matt@codeblueprint.co.uk>
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Todd Kjos <tkjos@google.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20190822132811.31294-4-patrick.bellasi@arm.com>
+References: <20190822132811.31294-4-patrick.bellasi@arm.com>
 MIME-Version: 1.0
-Message-ID: <156749948482.12874.10100038281387418384.tip-bot2@tip-bot2>
+Message-ID: <156749948653.12884.4026456408630677258.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,169 +73,133 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     a55c7454a8c887b226a01d7eed088ccb5374d81e
-Gitweb:        https://git.kernel.org/tip/a55c7454a8c887b226a01d7eed088ccb5374d81e
-Author:        Matt Fleming <matt@codeblueprint.co.uk>
-AuthorDate:    Thu, 08 Aug 2019 20:53:01 +01:00
+Commit-ID:     7274a5c1bbec45f06f1fff4b8c8b5855b6cc189d
+Gitweb:        https://git.kernel.org/tip/7274a5c1bbec45f06f1fff4b8c8b5855b6cc189d
+Author:        Patrick Bellasi <patrick.bellasi@arm.com>
+AuthorDate:    Thu, 22 Aug 2019 14:28:08 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 03 Sep 2019 09:17:37 +02:00
+CommitterDate: Tue, 03 Sep 2019 09:17:38 +02:00
 
-sched/topology: Improve load balancing on AMD EPYC systems
+sched/uclamp: Propagate system defaults to the root group
 
-SD_BALANCE_{FORK,EXEC} and SD_WAKE_AFFINE are stripped in sd_init()
-for any sched domains with a NUMA distance greater than 2 hops
-(RECLAIM_DISTANCE). The idea being that it's expensive to balance
-across domains that far apart.
+The clamp values are not tunable at the level of the root task group.
+That's for two main reasons:
 
-However, as is rather unfortunately explained in:
+ - the root group represents "system resources" which are always
+   entirely available from the cgroup standpoint.
 
-  commit 32e45ff43eaf ("mm: increase RECLAIM_DISTANCE to 30")
+ - when tuning/restricting "system resources" makes sense, tuning must
+   be done using a system wide API which should also be available when
+   control groups are not.
 
-the value for RECLAIM_DISTANCE is based on node distance tables from
-2011-era hardware.
+When a system wide restriction is available, cgroups should be aware of
+its value in order to know exactly how much "system resources" are
+available for the subgroups.
 
-Current AMD EPYC machines have the following NUMA node distances:
+Utilization clamping supports already the concepts of:
 
- node distances:
- node   0   1   2   3   4   5   6   7
-   0:  10  16  16  16  32  32  32  32
-   1:  16  10  16  16  32  32  32  32
-   2:  16  16  10  16  32  32  32  32
-   3:  16  16  16  10  32  32  32  32
-   4:  32  32  32  32  10  16  16  16
-   5:  32  32  32  32  16  10  16  16
-   6:  32  32  32  32  16  16  10  16
-   7:  32  32  32  32  16  16  16  10
+ - system defaults: which define the maximum possible clamp values
+   usable by tasks.
 
-where 2 hops is 32.
+ - effective clamps: which allows a parent cgroup to constraint (maybe
+   temporarily) its descendants without losing the information related
+   to the values "requested" from them.
 
-The result is that the scheduler fails to load balance properly across
-NUMA nodes on different sockets -- 2 hops apart.
+Exploit these two concepts and bind them together in such a way that,
+whenever system default are tuned, the new values are propagated to
+(possibly) restrict or relax the "effective" value of nested cgroups.
 
-For example, pinning 16 busy threads to NUMA nodes 0 (CPUs 0-7) and 4
-(CPUs 32-39) like so,
+When cgroups are in use, force an update of all the RUNNABLE tasks.
+Otherwise, keep things simple and do just a lazy update next time each
+task will be enqueued.
+Do that since we assume a more strict resource control is required when
+cgroups are in use. This allows also to keep "effective" clamp values
+updated in case we need to expose them to user-space.
 
-  $ numactl -C 0-7,32-39 ./spinner 16
-
-causes all threads to fork and remain on node 0 until the active
-balancer kicks in after a few seconds and forcibly moves some threads
-to node 4.
-
-Override node_reclaim_distance for AMD Zen.
-
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Cc: Borislav Petkov <bp@alien8.de>
+Reviewed-by: Michal Koutny <mkoutny@suse.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Alessio Balsini <balsini@android.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Joel Fernandes <joelaf@google.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+Cc: Paul Turner <pjt@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Suravee.Suthikulpanit@amd.com
+Cc: Quentin Perret <quentin.perret@arm.com>
+Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
+Cc: Steve Muckle <smuckle@google.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas.Lendacky@amd.com
-Cc: Tony Luck <tony.luck@intel.com>
-Link: https://lkml.kernel.org/r/20190808195301.13222-3-matt@codeblueprint.co.uk
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: https://lkml.kernel.org/r/20190822132811.31294-4-patrick.bellasi@arm.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/kernel/cpu/amd.c |  5 +++++
- include/linux/topology.h  | 14 ++++++++++++++
- kernel/sched/topology.c   |  3 ++-
- mm/khugepaged.c           |  2 +-
- mm/page_alloc.c           |  2 +-
- 5 files changed, 23 insertions(+), 3 deletions(-)
+ kernel/sched/core.c | 31 +++++++++++++++++++++++++++++--
+ 1 file changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 8d4e504..ceeb8af 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -8,6 +8,7 @@
- #include <linux/sched.h>
- #include <linux/sched/clock.h>
- #include <linux/random.h>
-+#include <linux/topology.h>
- #include <asm/processor.h>
- #include <asm/apic.h>
- #include <asm/cacheinfo.h>
-@@ -824,6 +825,10 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
- {
- 	set_cpu_cap(c, X86_FEATURE_ZEN);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8855481..e6800fe 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1017,10 +1017,30 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 		uclamp_rq_dec_id(rq, p, clamp_id);
+ }
  
-+#ifdef CONFIG_NUMA
-+	node_reclaim_distance = 32;
++#ifdef CONFIG_UCLAMP_TASK_GROUP
++static void cpu_util_update_eff(struct cgroup_subsys_state *css);
++static void uclamp_update_root_tg(void)
++{
++	struct task_group *tg = &root_task_group;
++
++	uclamp_se_set(&tg->uclamp_req[UCLAMP_MIN],
++		      sysctl_sched_uclamp_util_min, false);
++	uclamp_se_set(&tg->uclamp_req[UCLAMP_MAX],
++		      sysctl_sched_uclamp_util_max, false);
++
++	rcu_read_lock();
++	cpu_util_update_eff(&root_task_group.css);
++	rcu_read_unlock();
++}
++#else
++static void uclamp_update_root_tg(void) { }
 +#endif
 +
- 	/*
- 	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
- 	 * Always set it, except when running under a hypervisor.
-diff --git a/include/linux/topology.h b/include/linux/topology.h
-index 47a3e3c..579522e 100644
---- a/include/linux/topology.h
-+++ b/include/linux/topology.h
-@@ -59,6 +59,20 @@ int arch_update_cpu_topology(void);
-  */
- #define RECLAIM_DISTANCE 30
- #endif
-+
-+/*
-+ * The following tunable allows platforms to override the default node
-+ * reclaim distance (RECLAIM_DISTANCE) if remote memory accesses are
-+ * sufficiently fast that the default value actually hurts
-+ * performance.
-+ *
-+ * AMD EPYC machines use this because even though the 2-hop distance
-+ * is 32 (3.2x slower than a local memory access) performance actually
-+ * *improves* if allowed to reclaim memory and load balance tasks
-+ * between NUMA nodes 2-hops apart.
-+ */
-+extern int __read_mostly node_reclaim_distance;
-+
- #ifndef PENALTY_FOR_NODE_WITH_CPUS
- #define PENALTY_FOR_NODE_WITH_CPUS	(1)
- #endif
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 8f83e8e..b5667a2 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1284,6 +1284,7 @@ static int			sched_domains_curr_level;
- int				sched_max_numa_distance;
- static int			*sched_domains_numa_distance;
- static struct cpumask		***sched_domains_numa_masks;
-+int __read_mostly		node_reclaim_distance = RECLAIM_DISTANCE;
- #endif
- 
- /*
-@@ -1402,7 +1403,7 @@ sd_init(struct sched_domain_topology_level *tl,
- 
- 		sd->flags &= ~SD_PREFER_SIBLING;
- 		sd->flags |= SD_SERIALIZE;
--		if (sched_domains_numa_distance[tl->numa_level] > RECLAIM_DISTANCE) {
-+		if (sched_domains_numa_distance[tl->numa_level] > node_reclaim_distance) {
- 			sd->flags &= ~(SD_BALANCE_EXEC |
- 				       SD_BALANCE_FORK |
- 				       SD_WAKE_AFFINE);
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index eaaa21b..ccede24 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -710,7 +710,7 @@ static bool khugepaged_scan_abort(int nid)
- 	for (i = 0; i < MAX_NUMNODES; i++) {
- 		if (!khugepaged_node_load[i])
- 			continue;
--		if (node_distance(nid, i) > RECLAIM_DISTANCE)
-+		if (node_distance(nid, i) > node_reclaim_distance)
- 			return true;
- 	}
- 	return false;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 272c6de..0d54cd2 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3522,7 +3522,7 @@ bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
- static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
+ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+ 				void __user *buffer, size_t *lenp,
+ 				loff_t *ppos)
  {
- 	return node_distance(zone_to_nid(local_zone), zone_to_nid(zone)) <=
--				RECLAIM_DISTANCE;
-+				node_reclaim_distance;
- }
- #else	/* CONFIG_NUMA */
- static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
++	bool update_root_tg = false;
+ 	int old_min, old_max;
+ 	int result;
+ 
+@@ -1043,16 +1063,23 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+ 	if (old_min != sysctl_sched_uclamp_util_min) {
+ 		uclamp_se_set(&uclamp_default[UCLAMP_MIN],
+ 			      sysctl_sched_uclamp_util_min, false);
++		update_root_tg = true;
+ 	}
+ 	if (old_max != sysctl_sched_uclamp_util_max) {
+ 		uclamp_se_set(&uclamp_default[UCLAMP_MAX],
+ 			      sysctl_sched_uclamp_util_max, false);
++		update_root_tg = true;
+ 	}
+ 
++	if (update_root_tg)
++		uclamp_update_root_tg();
++
+ 	/*
+-	 * Updating all the RUNNABLE task is expensive, keep it simple and do
+-	 * just a lazy update at each next enqueue time.
++	 * We update all RUNNABLE tasks only when task groups are in use.
++	 * Otherwise, keep it simple and do just a lazy update at each next
++	 * task enqueue time.
+ 	 */
++
+ 	goto done;
+ 
+ undo:
