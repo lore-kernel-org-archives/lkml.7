@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CD7C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B0AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB982217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D545C2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfICIbf convert rfc822-to-8bit (ORCPT
+        id S1728208AbfICIbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:31:35 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59136 "EHLO
+        Tue, 3 Sep 2019 04:31:38 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59155 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfICIbd (ORCPT
+        with ESMTP id S1728163AbfICIbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:31:33 -0400
+        Tue, 3 Sep 2019 04:31:37 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i54Dg-0002d5-H2; Tue, 03 Sep 2019 10:31:20 +0200
+        id 1i54Dk-0002eL-W9; Tue, 03 Sep 2019 10:31:25 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EB1BB1C0772;
-        Tue,  3 Sep 2019 10:31:19 +0200 (CEST)
-Date:   Tue, 03 Sep 2019 08:31:19 -0000
-From:   tip-bot2 for Valdis =?utf-8?q?Kl=C4=93tnieks?= 
-        <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 723F21C0DDE;
+        Tue,  3 Sep 2019 10:31:24 +0200 (CEST)
+Date:   Tue, 03 Sep 2019 08:31:24 -0000
+From:   "tip-bot2 for Matt Fleming" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86: Make more stuff static
-Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+Subject: [tip: sched/core] arch, ia64: Make NUMA select SMP
+Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <128059.1565286242@turing-police>
-References: <128059.1565286242@turing-police>
+        Mel Gorman <mgorman@techsingularity.net>,
+        Rik van Riel <riel@surriel.com>,
+        Suravee.Suthikulpanit@amd.com,
+        Thomas Gleixner <tglx@linutronix.de>, Thomas.Lendacky@amd.com,
+        Tony Luck <tony.luck@intel.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190808195301.13222-2-matt@codeblueprint.co.uk>
+References: <20190808195301.13222-2-matt@codeblueprint.co.uk>
 MIME-Version: 1.0
-Message-ID: <156749947971.12812.17483180496809148360.tip-bot2@tip-bot2>
+Message-ID: <156749948430.12871.13896634861148973044.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -61,102 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     d9f3b450f206332b7ef3d78b5a85b6c20ad00fd2
-Gitweb:        https://git.kernel.org/tip/d9f3b450f206332b7ef3d78b5a85b6c20ad00fd2
-Author:        Valdis Klētnieks <valdis.kletnieks@vt.edu>
-AuthorDate:    Thu, 08 Aug 2019 13:44:02 -04:00
+Commit-ID:     a2cbfd46559e809c8165773b7fe8afa058b35414
+Gitweb:        https://git.kernel.org/tip/a2cbfd46559e809c8165773b7fe8afa058b35414
+Author:        Matt Fleming <matt@codeblueprint.co.uk>
+AuthorDate:    Thu, 08 Aug 2019 20:53:00 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 03 Sep 2019 09:22:32 +02:00
+CommitterDate: Tue, 03 Sep 2019 09:17:36 +02:00
 
-perf/x86: Make more stuff static
+arch, ia64: Make NUMA select SMP
 
-When building with C=2, sparse makes note of a number of things:
+While it does make sense to allow CONFIG_NUMA and !CONFIG_SMP in
+theory, it doesn't make much sense in practice.
 
-  arch/x86/events/intel/rapl.c:637:30: warning: symbol 'rapl_attr_update' was not declared. Should it be static?
-  arch/x86/events/intel/cstate.c:449:30: warning: symbol 'core_attr_update' was not declared. Should it be static?
-  arch/x86/events/intel/cstate.c:457:30: warning: symbol 'pkg_attr_update' was not declared. Should it be static?
-  arch/x86/events/msr.c:170:30: warning: symbol 'attr_update' was not declared. Should it be static?
-  arch/x86/events/intel/lbr.c:276:1: warning: symbol 'lbr_from_quirk_key' was not declared. Should it be static?
+Follow other architectures and make CONFIG_NUMA select CONFIG_SMP.
 
-And they can all indeed be static.
+The motivation for this patch is to allow a new NUMA variable to be
+initialised in kernel/sched/topology.c.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mel Gorman <mgorman@techsingularity.net>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Suravee.Suthikulpanit@amd.com
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/128059.1565286242@turing-police
+Cc: Thomas.Lendacky@amd.com
+Cc: Tony Luck <tony.luck@intel.com>
+Link: https://lkml.kernel.org/r/20190808195301.13222-2-matt@codeblueprint.co.uk
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/intel/cstate.c | 4 ++--
- arch/x86/events/intel/lbr.c    | 2 +-
- arch/x86/events/intel/rapl.c   | 2 +-
- arch/x86/events/msr.c          | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ arch/ia64/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 688592b..db498b5 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -446,7 +446,7 @@ static int cstate_cpu_init(unsigned int cpu)
- 	return 0;
- }
- 
--const struct attribute_group *core_attr_update[] = {
-+static const struct attribute_group *core_attr_update[] = {
- 	&group_cstate_core_c1,
- 	&group_cstate_core_c3,
- 	&group_cstate_core_c6,
-@@ -454,7 +454,7 @@ const struct attribute_group *core_attr_update[] = {
- 	NULL,
- };
- 
--const struct attribute_group *pkg_attr_update[] = {
-+static const struct attribute_group *pkg_attr_update[] = {
- 	&group_cstate_pkg_c2,
- 	&group_cstate_pkg_c3,
- 	&group_cstate_pkg_c6,
-diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
-index 6f814a2..ea54634 100644
---- a/arch/x86/events/intel/lbr.c
-+++ b/arch/x86/events/intel/lbr.c
-@@ -273,7 +273,7 @@ static inline bool lbr_from_signext_quirk_needed(void)
- 	return !tsx_support && (lbr_desc[lbr_format] & LBR_TSX);
- }
- 
--DEFINE_STATIC_KEY_FALSE(lbr_from_quirk_key);
-+static DEFINE_STATIC_KEY_FALSE(lbr_from_quirk_key);
- 
- /* If quirk is enabled, ensure sign extension is 63 bits: */
- inline u64 lbr_from_signext_quirk_wr(u64 val)
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index 64ab51f..f34b949 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -634,7 +634,7 @@ static void cleanup_rapl_pmus(void)
- 	kfree(rapl_pmus);
- }
- 
--const struct attribute_group *rapl_attr_update[] = {
-+static const struct attribute_group *rapl_attr_update[] = {
- 	&rapl_events_cores_group,
- 	&rapl_events_pkg_group,
- 	&rapl_events_ram_group,
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index 9431447..5812e87 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -167,7 +167,7 @@ static const struct attribute_group *attr_groups[] = {
- 	NULL,
- };
- 
--const struct attribute_group *attr_update[] = {
-+static const struct attribute_group *attr_update[] = {
- 	&group_aperf,
- 	&group_mperf,
- 	&group_pperf,
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 7468d8e..997baba 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -389,6 +389,7 @@ config NUMA
+ 	depends on !IA64_HP_SIM && !FLATMEM
+ 	default y if IA64_SGI_SN2
+ 	select ACPI_NUMA if ACPI
++	select SMP
+ 	help
+ 	  Say Y to compile the kernel to support NUMA (Non-Uniform Memory
+ 	  Access).  This option is for configuring high-end multiprocessor
