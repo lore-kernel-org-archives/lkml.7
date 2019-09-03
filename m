@@ -2,185 +2,126 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEA9C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B5DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E604121881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567497518;
-	bh=UXh12NkSwZ12hWkXETNI+YE3LiuTShuDOHt89Jbh128=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A9w5J39pn8ZukCG+Sn0lYBGO+rN+Dkpg+DUqFR62qjy2i79p7J0MoTKTQCp2GD0cK
-	 F7oA/hkUA3E8g5saLynHTe8VmoLuDHDEoWwp5/UiX0gnpGBXElPdzfEeFiNLHsnlAf
-	 o2uBWPDkItH//QjGRAhzLg/sf7yHlj85eleJkZsg=
+	by mail.kernel.org (Postfix) with ESMTP id CEC2222DCC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:58:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iA7t8Ss2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfICH6h (ORCPT
+        id S1727933AbfICH6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725878AbfICH6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:58:36 -0400
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D827321881;
-        Tue,  3 Sep 2019 07:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567497515;
-        bh=UXh12NkSwZ12hWkXETNI+YE3LiuTShuDOHt89Jbh128=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=am7+Xbi2YfzdQSUw6p4YYdjuXFciTPcfw96UlPxdv1inY3pLUnYIUWWTTdp7gOu6j
-         mbOKZWr7h3x4jVZ7l5VuM603tR4gC52GePWzV1gNGQzP/qU2s4yOLmczxTPXfsHYeP
-         bsIivXjLkyEM2heVUy+enefLtMFc34vgtmnSlwbY=
-Received: by mail-lf1-f52.google.com with SMTP id u29so12081415lfk.7;
-        Tue, 03 Sep 2019 00:58:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAV73T5Ovkcgc1rE1XJcip6UUKUltD1FDhRq3L4+IJAmd2gUe7md
-        LN2c3MfXKplbpkNgqz/eWw5MQmh3KOYphcZrHak=
-X-Google-Smtp-Source: APXvYqzrJeKyNEvczFZsfe2tgLAYBl9BS475I7A9xOTHksgZrFCcJ43dEFvCe2Ya4ROGp9gR8nfJe7d+AYReOk1iVIQ=
-X-Received: by 2002:a19:c649:: with SMTP id w70mr20083717lff.33.1567497513112;
- Tue, 03 Sep 2019 00:58:33 -0700 (PDT)
+        Tue, 3 Sep 2019 03:58:43 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44732 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfICH6m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 03:58:42 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q21so5233196pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:58:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zfuRrUZi1m5bneOLAPdcpwGbeJ+nRXuErqjv4S4SGNc=;
+        b=iA7t8Ss201BF7nB3Sti/TkUxlKiWS2YBQTGzkbk/lCBEgWm4FCd9ocZteTqBFru779
+         zAb8Ui3QZ5yv/4RTaNrgEKbRgoJRIJQFQTsbKLgf+T7nWOs54lGqf6IbOEA0zn18dzv1
+         CwqioP4akrJe3yrG7Dg3SEAKmrwndlSnINHFnap0kvn4pip/SqvuZGtUlv99z07zBwYT
+         Cc608/20NA7ExFK7IINlbAc7jmFNEEhtzVukoe2eJJNz4Sz1qMXCdmIArwZh5vzoe9no
+         Dgtio93x2mpFrkjYtoG7wYaBnausTn+wfgaiDzukg9E5vWhUSFqRSOBPu+Xnib6VAn7Q
+         iNFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zfuRrUZi1m5bneOLAPdcpwGbeJ+nRXuErqjv4S4SGNc=;
+        b=bItaM83642g970Jks5pF3pE05Lo9mDxrC2NNwjcpS1XnyMdcFZEIlVhgwNDGoVJIjX
+         VW/HUpKhUE12sCsHIOVVSZAHq7Hl+5gM2qJcUND4ZBZEqXat8JuPW0K9pKVHTaUmfr5N
+         vU6OHViYThD6+ZVnwzUgm9wLEatYUTMw0+oFYeGfo6GDDaX3P20vR02aJt2qj11bHHXz
+         Q7FzTrdKPdwCm0BYXgjxg1wdjhCuLp2Tyam/t2qdnhs8gMVB+VKYLyPDHCblERuPjKX9
+         RZmRLD630EUDBeZKV/RNegIZGVfATNwlD7li/j4kYzIyxO+7z6ZuGZ1tn7d7wSv93zR6
+         2GjQ==
+X-Gm-Message-State: APjAAAUzc+w+Vt3CZ96/ZQrii2GDcn/Y1Xzx8Oew5a/opyQy+kDH2s2/
+        +X0viWmsk0eZxKb/k7vv7/w=
+X-Google-Smtp-Source: APXvYqzQy7t+cJuawHsvufeNhsg1u0/d8uvkCAsibSCOQk6TvMa00KW8LVlhRcjwHH6d0Ipjy0IHSw==
+X-Received: by 2002:a63:9245:: with SMTP id s5mr29603267pgn.123.1567497521586;
+        Tue, 03 Sep 2019 00:58:41 -0700 (PDT)
+Received: from localhost ([175.223.38.155])
+        by smtp.gmail.com with ESMTPSA id c127sm3583405pfb.5.2019.09.03.00.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 00:58:40 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 16:58:37 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: numlist API Re: [RFC PATCH v4 1/9] printk-rb: add a new printk
+ ringbuffer implementation
+Message-ID: <20190903075837.GA30322@jagdpanzerIV>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190807222634.1723-2-john.ogness@linutronix.de>
+ <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
+ <20190823171802.eo2chwyktibeub7a@pathway.suse.cz>
+ <87sgpnmqdo.fsf@linutronix.de>
+ <20190827130349.6mrnhdlqyqokgsfk@pathway.suse.cz>
 MIME-Version: 1.0
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
- <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 3 Sep 2019 09:58:21 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
-Message-ID: <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, notify@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190827130349.6mrnhdlqyqokgsfk@pathway.suse.cz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On (08/27/19 15:03), Petr Mladek wrote:
+[..]
+> > IMHO the API is sane. The only bizarre rule is that the numlist must
+> > always have at least 1 node. But since the readers are non-consuming,
+> > there is no real tragedy here.
 > >
-> > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> > format using json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
-> >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
-> >  2 files changed, 93 insertions(+), 72 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > My goal is not to create some fabulous abstract data structure that
+> > everyone should use. But I did try to minimize numlist (and dataring) to
+> > only be concerned with clearly defined and minimal responsibilities
+> > without imposing unnecessary restrictions on the user.
 >
+> The API is complicated because of the callbacks. It depends on a logic
+> that is implemented externally. It makes it abstract to some extent.
 >
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > new file mode 100644
-> > index 000000000000..818c6f3488ef
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > @@ -0,0 +1,93 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung Exynos SoC series Power Management Unit (PMU)
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - samsung,exynos3250-pmu
-> > +          - samsung,exynos4210-pmu
-> > +          - samsung,exynos4412-pmu
-> > +          - samsung,exynos5250-pmu
-> > +          - samsung,exynos5260-pmu
-> > +          - samsung,exynos5410-pmu
-> > +          - samsung,exynos5420-pmu
-> > +          - samsung,exynos5433-pmu
-> > +          - samsung,exynos7-pmu
-> > +      - const: syscon
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  '#clock-cells':
-> > +    const: 1
-> > +
-> > +  clock-names:
-> > +    description:
-> > +      list of clock names for particular CLKOUT mux inputs
-> > +    # TODO: what is the maximum number of elements (mux inputs)?
-> > +    minItems: 1
-> > +    maxItems: 32
-> > +    items:
-> > +      - enum:
+> My view is that the API would be much cleaner and easier to review
+> when the ID handling is "hardcoded" (helper functions). It could be
+> made abstract anytime later when there is another user.
+
+Makes sense.
+
+> There should always be a reason why to make a code more complicated
+> than necessary. It seems that the only reason is some theoretical
+> future user and its theoretical requirements.
+
+Agreed.
+
+> Symmetry is really important. It is often sign of a good design.
 >
-> This isn't correct as you are only defining possible names for the
-> first item. Drop the '-' (making items a schema instead of a list) and
-> then it applies to all. However, doing that will cause a meta-schema
-> error which I need to fix to allow. Or if there's a small set of
-> possibilities of number of inputs, you can list them under a 'oneOf'
-> list.
+> Simple and straightforward code is another important thing at
+> this stage. The code is complicated and we need to make sure
+> that it works. Any optimizations and generalization might
+> be done later when needed.
 
-Mhmm, I cannot test it or I have an error in the schema. if I
-understand correctly, this would be:
+Agreed.
 
-  clock-names:
-    description:
-      List of clock names for particular CLKOUT mux inputs
-    minItems: 1
-    maxItems: 16
-    items:
-      clkout0
-      clkout1
-      clkout2
-      clkout3
-      clkout4
-      clkout5
-      clkout6
-      clkout7
-      clkout8
-      clkout9
-      clkout10
-      clkout11
-      clkout12
-      clkout13
-      clkout14
-      clkout15
-      clkout16
-
-Now it produces the error "ignoring, error in schema 'items'" but
-maybe it is expected with current meta-schema?
-
-Best regards,
-Krzysztof
+	-ss
