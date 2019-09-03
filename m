@@ -2,137 +2,142 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BD0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5C9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0572522CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1439A22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="IClJ3jwz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfICJe7 (ORCPT
+        id S1728541AbfICJhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:34:59 -0400
-Received: from sauhun.de ([88.99.104.3]:51696 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726062AbfICJe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:34:58 -0400
-Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
-        by pokefinder.org (Postfix) with ESMTPSA id CA4802C4F2F;
-        Tue,  3 Sep 2019 11:34:55 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 11:34:55 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Peter Rosin <peda@axentia.se>
-Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
- deserializer
-Message-ID: <20190903093455.GD1020@kunai>
-References: <20190723203723.11730-1-luca@lucaceresoli.net>
- <20190723203723.11730-4-luca@lucaceresoli.net>
- <20190902204841.GB7253@kunai>
- <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
+        Tue, 3 Sep 2019 05:37:05 -0400
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:39853 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728438AbfICJhE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:37:04 -0400
+Received: by mail-wm1-f43.google.com with SMTP id n2so15986553wmk.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:37:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=qI/msxsXqWRFdL3aN3sjsVskSGThrgClxOqJ+yrbiFg=;
+        b=IClJ3jwzE0/tSlHhR/nSMgACWjFl7gf80AbtmZBxCUHLt/Jcojva+3rM9j+rrDNmZ6
+         LnL2oaZMOHls872SeyCum8/euj+LPM3aKsfWkOJYmKQMLEeAbBu1wVvhImNp0G92PVyC
+         la/HV8FTjwVgupmRNGrmxzC25ZN+cYXk4vKmetNrGxzVjnnxYvzxh5zAd87UNXEDEVTs
+         8aXDBns9TE/og3A1VyIrvgzraaj0SVG9v2nSlkh7w3QOM9m27GCuQ1GtLWs5hBbh0a6e
+         aTn4P54W6Bk4f2g1l0ZAyg3Orv7gPfEhYiBnkNJCdjkDn8uijF6ha1eEWe9LytiiyFfe
+         ntjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=qI/msxsXqWRFdL3aN3sjsVskSGThrgClxOqJ+yrbiFg=;
+        b=Ik6ALNbhtI3YgluHoA6JZSH6TbkCjv6KIatN2deexyEqjfnz4TSwcfXW9iJOfY2FEw
+         NDV3KYR0swp/Gm22Pirbq8MLWY8nLF/5ztYRNUqxKi5J/+cn8JS+MfJxHevTnbbyKbNn
+         fuOSghuawf6cpwosrecYXS0CJCsfhazhB8WmCN8ePwwbgO1cm1ZpAIxmOcRdaJprSX8l
+         GnZpifWiN8UfujpFe9GqMZZh8xmTrAn/6knj8dVKwdC1YO+WF56dJKmxiwsH1gwfcbbN
+         S5gWb2K28gAm8BTb1y6DcW6CU1p4C2jdyziOGDe5zGHoMQ70Mz1zumAMnq1T1XprWMRN
+         U6LQ==
+X-Gm-Message-State: APjAAAVNBKgv6fQodUIR6noFjnokw57DeKNguBuH5+tEJjPTGQZ4gcmk
+        e+CTxoLXc61As8INXbL6wKabug==
+X-Google-Smtp-Source: APXvYqwKeqWbkYsTbb1bHmCDBrDdZ4xi2S+xJY3fjb1VnljLf2QDsUv581Cs/3vKfnrmdnIVUqLZUg==
+X-Received: by 2002:a1c:658a:: with SMTP id z132mr42363159wmb.98.1567503422825;
+        Tue, 03 Sep 2019 02:37:02 -0700 (PDT)
+Received: from [10.32.50.252] ([185.149.63.251])
+        by smtp.gmail.com with ESMTPSA id v11sm29740643wrv.54.2019.09.03.02.37.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 02:37:02 -0700 (PDT)
+Subject: Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+To:     Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, leoyang.li@nxp.com
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
+References: <20190903061853.19793-1-biwen.li@nxp.com>
+From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
+Message-ID: <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
+Date:   Tue, 3 Sep 2019 11:37:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
-Content-Disposition: inline
-In-Reply-To: <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190903061853.19793-1-biwen.li@nxp.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---Hf61M2y+wYpnELGG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> Not if you define enough addresses in the pool. E.g. the DS90UB954
-> hardware can have 8 aliases per port, so if you have (n_ports * 8)
-> addresses in the pool the problem is solved.
-
-And then you plug-in somewhere another board with another need for ATR
-and you are out of addresses.
-
-> > And another add-on module with
-> > non-repogrammable devices may occupy addresses from the defined pool
-> > above.
->=20
-> You mean a new device on the local (SoC-to-ATR) bus? Well, it could as
-> well occupy a non-described address that the ATR has already picked as
-> an alias.
-
-Nope, I mean a seperate add-on which has a hardcoded I2C address on the
-bus of the ATR parent. Then this hardcoded address needs to be removed
-=66rom the pool if it is in the wrong range.
-
-> > I am not perfectly happy with the assumption that all undescribed
-> > addresses are automatically free. That also might need DTS updates to
-> > describe all clients properly. But this change only needs to be done
-> > once, and it will improve the description of the hardware.
->=20
-> Right, but I still suspect some users won't do their homework and
-> discover address conflicts at runtime, maybe months later, in a painful
-> way. Also a chip might be undocumented on a given board, so they could
-> do their homework and still have problems.
-
-Yes, we probably need a binding to mark an address as used even though
-we don't know the device or don't have a driver for it.
-
-Don't get me wrong, I know what you mean. One of my boards has a client
-soldered in a way so that it is still in debug mode. That means it
-listens to addresses 0x03-0x07 to provide debug information. Took me a
-while to find out what is happening there.
-
-But still, 'i2cdetect' showed all of these.
-
-> Despite my comments, I'm not strongly against your proposal. To me it
-> doesn't seem to solve any problem, while it does introduce some degree
-> of risk. Could you elaborate more on but what benefit it introduces?
-
-I'd think the risk of running out of defined addresses is somewhere
-equal to running into (after a while) an unexpectedly used address.
-I like the fix for the latter better because describing what is on the
-bus is more helpful and generic than updating the pool-property every
-time you need it. Plus, as mentioned above, other add-on hardware may
-disturb your pool allocation.
-
-I expect this topic to be one of the discussion points of the BoF.
+On 03/09/2019 08:18, Biwen Li wrote:
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..588f688b30d1 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,39 @@ Required properties:
+>   Optional properties:
+>   - interrupts: IRQ line for the RTC (not implemented).
+>   
+> +- interrupt-output-pin: The interrupt output pin must be
+> +  "INTA" or "INTB", default value is "INTA"
+> +
 
 
---Hf61M2y+wYpnELGG
-Content-Type: application/pgp-signature; name="signature.asc"
+The hardware has 2 interrupt pins which can be mapped to various 
+interrupt sources (alarm1, alarm2, periodic, ...)
 
------BEGIN PGP SIGNATURE-----
+Currently the driver only supports alarm1.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uM78ACgkQFA3kzBSg
-KbbX1g/9HFI+lf/0NsEaIJ2l6AiV3rF+wNU6EPfD86WhO7kPV2GG6Pv+M8+dpzvz
-ikq7miByyan8yRTbxtDXcmlHFUVDyb19owQdFl8xX1j6Ow317KKrIQKe/TFCof7c
-sqKI7x38aJQKdi0Xn+3aFQ7mIb5JME4ZkKfK+etgE3sZtqrA6GGVod37r9Mmmr/E
-1ZhcJg5DW+X0z76rEHG9TbzwP2OcIssPJXVUcOszng7HYTlxhlR0T3f5s6nnFu3G
-b1qfuTkj+BbTCJDN7KExB9gfah/CSUGvzHxOnNQQvyCfBgsu+ZP4oGYf5rJnwxug
-Z1Wz0VDE3H9N0WjOajc5bPmjyJFjMGbGcpyBKGR7tHvph2M2ASQm/ItYqMsSghCL
-wqk+mFLQr3dFDSsdcqF0fD1zEqsIoIyjbsi50XYAjuxUE3KbtxYFiQ85TceiAefI
-QwCPCmkUFQTZmyiYzdva4Qhs0FPpZ0gEgR/2x71Vp2CFrPxLnw9wdis68rfSo13a
-IDVgqyG2WVJNC2OWHBWdmUMLXKFHrpP/iZa32fb9xzZjZrk1fEkxAE2Boh0Bkr2d
-Z/0CbCSE6wU6H8WscoQw4va8z4ST8GzPSxxAe310UW8fmOSvVtAQnLdsnRYPrZla
-zZFtf3zSO0rvIYu0dvKLSvhDwWbtPXFqTubPkFC/FVSN14mSpws=
-=ZAhE
------END PGP SIGNATURE-----
+It is even possible to use both pins for the same interrupt (eg if INTA 
+were wired to the SoC, INTB to a PMIC and both used for alarm...)
 
---Hf61M2y+wYpnELGG--
+
+So maybe it would be better to have
+
+alarm1-interrupt-output-pin: The interrupt output pin used for the alarm 
+function. Must be "INTA", "INTB" or "BOTH"
+
+Then, if and when other types of interrupts are supported by the driver 
+new properties could be added for them.
+
+
+
+> +- quartz-load-femtofarads: The internal capacitor to select for the quartz:
+> +	PCF85263_QUARTZCAP_7pF		[0]
+> +	PCF85263_QUARTZCAP_6pF		[1]
+> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
+> +
+
+
+The standard DT property "quartz-load-femtofarads" takes the real 
+physical value in femto Farads ie values should be 7000, 6000, 12500 
+without defines.
+
+
+> +- nxp,quartz-drive-strength: Drive strength for the quartz:
+> +	PCF85263_QUARTZDRIVE_100ko	[0] DEFAULT
+> +	PCF85263_QUARTZDRIVE_60ko	[1]
+> +	PCF85263_QUARTZDRIVE_500ko	[2]
+> +
+
+
+Not sure about this.
+
+Wouldn't it be better to either use a real impedence value in ohms (like 
+load property above, even though it is a vendor specific value) rather 
+than a define, or defines for "Low, Medium, High"?
+
+
+Martin
+
+
