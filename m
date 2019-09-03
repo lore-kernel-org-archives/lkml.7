@@ -2,58 +2,102 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC17DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FB6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5B92343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFE8233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:55:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cF4EsaD1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mx1oOGdA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbfICNx5 (ORCPT
+        id S1729438AbfICNzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:53:57 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57886 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729015AbfICNx4 (ORCPT
+        Tue, 3 Sep 2019 09:55:22 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33430 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728576AbfICNzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:53:56 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
-        id 1i59Fq-000445-7m; Tue, 03 Sep 2019 13:53:54 +0000
-Date:   Tue, 3 Sep 2019 14:53:54 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Qian Cai <cai@lca.pw>, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot
- panic
-Message-ID: <20190903135354.GI1131@ZenIV.linux.org.uk>
-References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
- <20190903123719.GF1131@ZenIV.linux.org.uk>
- <20190903130456.GA9567@infradead.org>
- <20190903134832.GH1131@ZenIV.linux.org.uk>
- <20190903135024.GA8274@infradead.org>
+        Tue, 3 Sep 2019 09:55:22 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 34A40602FE; Tue,  3 Sep 2019 13:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567518921;
+        bh=vpuAZkMQK2ZFS6tbmxl5dnvT1U76VTwXtsFnvAQ8SCU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=cF4EsaD1Ppr50QyIHKwaV+hFeIHeWFrP2w50mOkX804W5poW+dY2Fs+NgVx3QTRr1
+         hkg23xuWRrZgx6UPBqNY00MsAEfkLKMHifmpVlkC9IQ1Ly5GeY5F1pPdOwz+u3SC5u
+         L6K5uGDdny0VWOwci0ePEKqwbzFcrCe2ABv3xh2A=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9ECA7602EF;
+        Tue,  3 Sep 2019 13:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567518920;
+        bh=vpuAZkMQK2ZFS6tbmxl5dnvT1U76VTwXtsFnvAQ8SCU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=Mx1oOGdAP3rS/RZz440W+Is4Z5hA243GvXV0Fb8/231frCMDhaKeLKEjKHgtxJNh5
+         tapTvV5t1y2SruEM6oWFbffWlk7fmI0zcioQR+Mpl0SS2cG2WXSQqeEblyOEdFqA/t
+         r5vwxxXRThxXtB77JTUJRxGAJTtSxVB2lddu5Q88=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9ECA7602EF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903135024.GA8274@infradead.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rsi: fix a double free bug in rsi_91x_deinit()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190819220230.10597-1-benquike@gmail.com>
+References: <20190819220230.10597-1-benquike@gmail.com>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     security@kernel.org, Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190903135521.34A40602FE@smtp.codeaurora.org>
+Date:   Tue,  3 Sep 2019 13:55:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 06:50:24AM -0700, Christoph Hellwig wrote:
-> On Tue, Sep 03, 2019 at 02:48:32PM +0100, Al Viro wrote:
-> > Not sure what would be the best way to do it...  I don't mind breaking
-> > the out-of-tree modules, whatever their license is; what I would rather
-> > avoid is _quiet_ breaking of such.
-> 
-> Any out of tree module running against an upstream kernel will need
-> a recompile for a new version anyway.  So I would not worry about it
-> at all.
+Hui Peng <benquike@gmail.com> wrote:
 
-There's much nastier situation than "new upstream kernel released,
-need to rebuild" - it's bisect in mainline trying to locate something...
+> `dev` (struct rsi_91x_usbdev *) field of adapter
+> (struct rsi_91x_usbdev *) is allocated  and initialized in
+> `rsi_init_usb_interface`. If any error is detected in information
+> read from the device side,  `rsi_init_usb_interface` will be
+> freed. However, in the higher level error handling code in
+> `rsi_probe`, if error is detected, `rsi_91x_deinit` is called
+> again, in which `dev` will be freed again, resulting double free.
+> 
+> This patch fixes the double free by removing the free operation on
+> `dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
+> used in `rsi_disconnect`, in that code path, the `dev` field is not
+>  (and thus needs to be) freed.
+> 
+> This bug was found in v4.19, but is also present in the latest version
+> of kernel. Fixes CVE-2019-15504.
+> 
+> Reported-by: Hui Peng <benquike@gmail.com>
+> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+> Signed-off-by: Hui Peng <benquike@gmail.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+Patch applied to wireless-drivers.git, thanks.
+
+8b51dc729147 rsi: fix a double free bug in rsi_91x_deinit()
+
+-- 
+https://patchwork.kernel.org/patch/11102087/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
