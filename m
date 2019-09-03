@@ -6,85 +6,119 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE09C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BD5C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93D820882
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F24121897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfICGbJ (ORCPT
+        id S1727315AbfICGbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:31:09 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34858 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725888AbfICGbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:31:09 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7037E8B6A2F31DF55807;
-        Tue,  3 Sep 2019 14:31:07 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 3 Sep 2019
- 14:30:56 +0800
-Subject: Re: [PATCH v8 11/24] erofs: introduce xattr & posixacl support
-To:     <dsterba@suse.cz>, Chao Yu <chao@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Tue, 3 Sep 2019 02:31:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51580 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727025AbfICGbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:31:42 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 031D9A36F07;
+        Tue,  3 Sep 2019 06:31:42 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 130595DA5B;
+        Tue,  3 Sep 2019 06:31:31 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 14:31:26 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         LKML <linux-kernel@vger.kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>, Pavel Machek <pavel@denx.de>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        "Dave Chinner" <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Richard Weinberger <richard@nod.at>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        <linux-erofs@lists.ozlabs.org>, Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-References: <20190815044155.88483-1-gaoxiang25@huawei.com>
- <20190815044155.88483-12-gaoxiang25@huawei.com>
- <20190902125711.GA23462@infradead.org> <20190902130644.GT2752@suse.cz>
- <813e1b65-e6ba-631c-6506-f356738c477f@kernel.org>
- <20190902142037.GW2752@twin.jikos.cz>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <12d37c63-dd0e-04fb-91f8-f4b930e867e5@huawei.com>
-Date:   Tue, 3 Sep 2019 14:30:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190903063125.GA21022@ming.t460p>
+References: <20190827085344.30799-2-ming.lei@redhat.com>
+ <alpine.DEB.2.21.1908271633450.1939@nanos.tec.linutronix.de>
+ <20190827225827.GA5263@ming.t460p>
+ <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
+ <20190828110633.GC15524@ming.t460p>
+ <alpine.DEB.2.21.1908281316230.1869@nanos.tec.linutronix.de>
+ <20190828135054.GA23861@ming.t460p>
+ <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
+ <20190903033001.GB23861@ming.t460p>
+ <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190902142037.GW2752@twin.jikos.cz>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Tue, 03 Sep 2019 06:31:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/2 22:20, David Sterba wrote:
-> Oh right, I think the reasons are historical and that we can remove the
-> options nowadays. From the compatibility POV this should be safe, with
-> ACLs compiled out, no tool would use them, and no harm done when the
-> code is present but not used.
+Hi Daniel,
+
+On Tue, Sep 03, 2019 at 07:59:39AM +0200, Daniel Lezcano wrote:
 > 
-> There were some efforts by embedded guys to make parts of kernel more
-> configurable to allow removing subsystems to reduce the final image
-> size. In this case I don't think it would make any noticeable
-> difference, eg. the size of fs/btrfs/acl.o on release config is 1.6KiB,
-> while the whole module is over 1.3MiB.
+> Hi Ming Lei,
+> 
+> On 03/09/2019 05:30, Ming Lei wrote:
+> 
+> [ ... ]
+> 
+> 
+> >>> 2) irq/timing doesn't cover softirq
+> >>
+> >> That's solvable, right?
+> > 
+> > Yeah, we can extend irq/timing, but ugly for irq/timing, since irq/timing
+> > focuses on hardirq predication, and softirq isn't involved in that
+> > purpose.
+> > 
+> >>  
+> >>> Daniel, could you take a look and see if irq flood detection can be
+> >>> implemented easily by irq/timing.c?
+> >>
+> >> I assume you can take a look as well, right?
+> > 
+> > Yeah, I have looked at the code for a while, but I think that irq/timing
+> > could become complicated unnecessarily for covering irq flood detection,
+> > meantime it is much less efficient for detecting IRQ flood.
+> 
+> In the series, there is nothing describing rigorously the problem (I can
+> only guess) and why the proposed solution solves it.
+> 
+> What is your definition of an 'irq flood'? A high irq load? An irq
+> arriving while we are processing the previous one in the bottom halves?
 
-Actually, btrfs's LOC is about 20 times larger than erofs's, acl part's LOC
-could be very small one in btrfs.
+So far, it means that handling interrupt & softirq takes all utilization
+of one CPU, then processes can't be run on this CPU basically, usually
+sort of CPU lockup warning will be triggered.
 
-EROFS can be slimmed about 10% size if we disable XATTR/ACL config, which is
-worth to keep that, at least for now.
+> 
+> The patch 2/4 description says "however IO completion is only done on
+> one of these submission CPU cores". That describes the bottleneck and
+> then the patch says "Add IRQF_RESCUE_THREAD to create one interrupt
+> thread handler", what is the rational between the bottleneck (problem)
+> and the irqf_rescue_thread (solution)?
+
+The solution is to switch to handle this interrupt on the created rescue
+irq thread context when irq flood is detected, and 'this interrupt' means
+the interrupt requested with IRQF_RESCUE_THREAD.
+
+> 
+> Is it really the solution to track the irq timings to detect a flood?
+
+The solution tracks the time taken on running do_IRQ() for each CPU.
+
 
 Thanks,
-
-
+Ming
