@@ -2,118 +2,136 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C20FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D41C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A282053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="bz+mTsoF"
+	by mail.kernel.org (Postfix) with ESMTP id 660FF2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbfICI26 (ORCPT
+        id S1728094AbfICIbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:28:58 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:22125 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfICI26 (ORCPT
+        Tue, 3 Sep 2019 04:31:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59106 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfICIbb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:28:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1567499336; x=1599035336;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=P6z13MI1ARt5SXT8pi9jJIecTNyGVKt5gyr5rY/6iws=;
-  b=bz+mTsoFUChshbRTg7pjlPidR+ZfOrJTTmT6pSJKo3vaMVX/zu8w3LxZ
-   a/l9qNgjX1nVNQtx5b9PT2TmieWrFO5CbXyys091ZbYJ57eGNN6UK9IU+
-   Y9dVPqDypoi3smv0c7uLAAMSBDr2c4bcOmUvjpXqBEWEzF+Q2od+ewuac
-   0=;
-X-IronPort-AV: E=Sophos;i="5.64,462,1559520000"; 
-   d="scan'208";a="419144230"
-Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.124.125.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 03 Sep 2019 08:28:55 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id F1608A1D4E;
-        Tue,  3 Sep 2019 08:28:50 +0000 (UTC)
-Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 3 Sep 2019 08:28:50 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 3 Sep 2019 08:28:50 +0000
-Received: from [10.85.97.90] (10.85.97.90) by mail-relay.amazon.com
- (10.43.162.232) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
- Transport; Tue, 3 Sep 2019 08:28:43 +0000
-Subject: Re: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-To:     Robert Richter <rrichter@marvell.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
- <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
- <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
-From:   "Hawa, Hanna" <hhhawa@amazon.com>
-Message-ID: <2bce020a-bf7e-1d54-48c3-0aa6d23c84d8@amazon.com>
-Date:   Tue, 3 Sep 2019 11:28:41 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 04:31:31 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i54Dh-0002d6-3X; Tue, 03 Sep 2019 10:31:21 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A08EB1C0DDE;
+        Tue,  3 Sep 2019 10:31:20 +0200 (CEST)
+Date:   Tue, 03 Sep 2019 08:31:20 -0000
+From:   "tip-bot2 for Liangyan" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/fair: Don't assign runtime for throttled cfs_rq
+Cc:     Liangyan <liangyan.peng@linux.alibaba.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Ben Segall <bsegall@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        shanpeic@linux.alibaba.com, stable@vger.kernel.org,
+        xlpang@linux.alibaba.com, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190826121633.6538-1-liangyan.peng@linux.alibaba.com>
+References: <20190826121633.6538-1-liangyan.peng@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Message-ID: <156749948052.12827.9239935639656619220.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the sched/urgent branch of tip:
 
+Commit-ID:     5e2d2cc2588bd3307ce3937acbc2ed03c830a861
+Gitweb:        https://git.kernel.org/tip/5e2d2cc2588bd3307ce3937acbc2ed03c830a861
+Author:        Liangyan <liangyan.peng@linux.alibaba.com>
+AuthorDate:    Mon, 26 Aug 2019 20:16:33 +08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 03 Sep 2019 08:55:07 +02:00
 
-On 9/3/2019 10:27 AM, Robert Richter wrote:
-> On 15.07.19 16:24:09, Hanna Hawa wrote:
->> Adds support for Amazon's Annapurna Labs L2 EDAC driver to detect and
->> report L2 errors.
->>
->> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
->> ---
->>   MAINTAINERS               |   6 ++
->>   drivers/edac/Kconfig      |   8 ++
->>   drivers/edac/Makefile     |   1 +
->>   drivers/edac/al_l2_edac.c | 187 ++++++++++++++++++++++++++++++++++++++++++++++
->>   4 files changed, 202 insertions(+)
->>   create mode 100644 drivers/edac/al_l2_edac.c
-> 
->  From a brief look at it, it seems some of my comments from 2/4 apply
-> here too. Please look through it.
+sched/fair: Don't assign runtime for throttled cfs_rq
 
-Thanks for your review, will look and fix on top of v5.
+do_sched_cfs_period_timer() will refill cfs_b runtime and call
+distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
+will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
+attached to this cfs_b can't get runtime and will be throttled.
 
-Thanks,
-Hanna
+We find that one throttled cfs_rq has non-negative
+cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
+in snippet:
 
-> 
-> -Robert
-> 
+  distribute_cfs_runtime() {
+    runtime = -cfs_rq->runtime_remaining + 1;
+  }
+
+The runtime here will change to a large number and consume all
+cfs_b->runtime in this cfs_b period.
+
+According to Ben Segall, the throttled cfs_rq can have
+account_cfs_rq_runtime called on it because it is throttled before
+idle_balance, and the idle_balance calls update_rq_clock to add time
+that is accounted to the task.
+
+This commit prevents cfs_rq to be assgined new runtime if it has been
+throttled until that distribute_cfs_runtime is called.
+
+Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: shanpeic@linux.alibaba.com
+Cc: stable@vger.kernel.org
+Cc: xlpang@linux.alibaba.com
+Fixes: d3d9dc330236 ("sched: Throttle entities exceeding their allowed bandwidth")
+Link: https://lkml.kernel.org/r/20190826121633.6538-1-liangyan.peng@linux.alibaba.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/fair.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index bc9cfea..500f5db 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4470,6 +4470,8 @@ static void __account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec)
+ 	if (likely(cfs_rq->runtime_remaining > 0))
+ 		return;
+ 
++	if (cfs_rq->throttled)
++		return;
+ 	/*
+ 	 * if we're unable to extend our runtime we resched so that the active
+ 	 * hierarchy can be throttled
+@@ -4673,6 +4675,9 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b,
+ 		if (!cfs_rq_throttled(cfs_rq))
+ 			goto next;
+ 
++		/* By the above check, this should never be true */
++		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
++
+ 		runtime = -cfs_rq->runtime_remaining + 1;
+ 		if (runtime > remaining)
+ 			runtime = remaining;
