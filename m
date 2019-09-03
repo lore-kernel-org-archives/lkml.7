@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E457C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C1BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064052077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9DF208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fKEgMIXF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FC0fNf03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfICMMy (ORCPT
+        id S1729198AbfICMNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:12:54 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33363 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728679AbfICMMx (ORCPT
+        Tue, 3 Sep 2019 08:13:09 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34937 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728679AbfICMNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:12:53 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n190so9049549pgn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:12:53 -0700 (PDT)
+        Tue, 3 Sep 2019 08:13:09 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 205so8211775pfw.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 05:13:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=i33E7WWdEboKNyevYA/anfEOPtDv0b8uFbanWM5nL2Q=;
-        b=fKEgMIXFMMLDYPfNa7kGOFe2d+pAkzLTqwc6hn9AUeGqgKxLcJKc4Pe24HMO9vPJhE
-         uxxRhILnRL+QBepPegjwj45ZNmeysyzznduRooz5DB8IJB4rxIa7xBbCP74YrFZDUfri
-         VK+taOhMbFZ7HILzZ9PbO79hhdU9PvTeNjR9tTLaUo5VEwgQLw2b6ju19ivGeeOYWhvv
-         q6C3SSTVo71T+VxXzGkLeGTBrqPnp5zG0BaITBsdGMnSmxs6Z9nuJ3pMdcEcn7HuglDy
-         GJDsSjpAT3GMK8Rq+E3kmHMfGQMLklQEylM/lVUe1xKz3NpZVlSE47Z8TjcsIGWVKBz2
-         kYpw==
+        bh=aciZLK4eHf2hi5CLyys3bwv1SZObhD4X2AM1NactPFs=;
+        b=FC0fNf03T8of5RPMxHUv9Yg92YKEFmswhiyMfatSIkD8a392Kh/qXDsXxDCenIbu1Q
+         eLTkb2CBu3qAvIP3PAKAWPk7IkKQGA4tXvbafs0OFUzEnt8dOZfxDPE3QO2GEyimqVPg
+         KSfXyitZWOIdaktqLESxcsxBIDkrx0ZGRCT+0bSHcjA+4XNCpWP+vHjuXj79rxMINcEZ
+         J3B99m1m4kJor3RNVOgTSE/ZI32faSwl7AA7PV3J3H4/Ty7hPkESADiD77SYWHxAR2aV
+         WqTujB7WiXmqcxB8900DQfQncjeWc6gWD4hk4GNZTTXKOGmQfKi933jpaekwfO1UGRmo
+         YYKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=i33E7WWdEboKNyevYA/anfEOPtDv0b8uFbanWM5nL2Q=;
-        b=pBEC0J99+cUMuRHTIGfa+t35K5qpdL1bZmch3mJg/kyK3ZCX7iJuvM3UzpXZw3i9Gs
-         fAZw5A7StmBsjV2g7sLP41Isa6iSmuS5g5k++CFOwqCbliVFbc8pb41vZYeaat8ZGhfr
-         mHosEK77sYgAL/qFrUpFApg3MOCFCE6t/dUkqKvy6zWdJ7AtEqINYyi4wYdImq+IqzMu
-         noQF9mPcv0GFr9wAByHcuLASAfIm3qAJOxjMUPuqrbcewlpZcFlfOt3qfMHiCmSK/Kyz
-         m/Fo2z/evQ+ceWKLiC9fsdRmpCysHytCDLiAI4I0SixWkMtJLAYSMzQQuFTR4edFlVMx
-         5waA==
-X-Gm-Message-State: APjAAAX0rbX9KD4/2ogEMj/6nJKPA9m3L7jfY/e+NSBFkOaVRTTBSEIj
-        GFF/krvqpx0zYXf2vegHp4wsJT3XgVe2mejbKyNjKA==
-X-Google-Smtp-Source: APXvYqyi103z0AEB0osS//f16WOxyZSwafnOdYF48RBS3SnYdJcg/hm0tFESDaFIBvNbYHZIVmoYtUK2PTaytGYAbTI=
-X-Received: by 2002:aa7:8bcc:: with SMTP id s12mr24728814pfd.93.1567512772555;
- Tue, 03 Sep 2019 05:12:52 -0700 (PDT)
+        bh=aciZLK4eHf2hi5CLyys3bwv1SZObhD4X2AM1NactPFs=;
+        b=gHsH+s+ja8JQybZa/3MmdG9uxXZsV03PGFGwNMIiFmduJT6r9c1fWV5YcOFxomUZv+
+         essVCRP1a6T41a1Bx5FKsFV6prBxEcoVBuPOkGMdLbbxudaaXwzT/JET5FNQB4NdBYJW
+         6ypZbF/uYAph9SkgiULhqQYa9YpUk9RJ4brczmvXaBewiRUbyC5TXXkbj70NDkGan09X
+         m0+N5DCj0fKKc31hdi4gI9MAQSuZBIfsLeJbtRzXvcTrqdqT2FZM13aQTE+KIMkdp0eV
+         eB5O+V5+X6Zb+Rbbz/de/7vZ3678Cllxy1lN2N/3Xc2R8EUBe2jTFvii0aL2THrY62rt
+         0Y7g==
+X-Gm-Message-State: APjAAAVFGQQcatjEebEL8ybzpOW1B6k8zuZOZbAad30LEhYv6pS/MvB4
+        C2WK8h11rPaZLvYL/HVXF8+QVh77L/bEzhVvAAEqaw==
+X-Google-Smtp-Source: APXvYqy7SPW3b+w0c6uj6yKM7FtVAbLfbdKXEzs6Lf0QeaBLM8Tpt/fY4DMZVbIkAFmN55lFmx9f7M8ge1hnfyZsPMk=
+X-Received: by 2002:a17:90a:ff08:: with SMTP id ce8mr8045016pjb.123.1567512787737;
+ Tue, 03 Sep 2019 05:13:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000004070630591a4f124@google.com>
-In-Reply-To: <0000000000004070630591a4f124@google.com>
+References: <00000000000043c9390591a4f14b@google.com>
+In-Reply-To: <00000000000043c9390591a4f14b@google.com>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 3 Sep 2019 14:12:41 +0200
-Message-ID: <CAAeHK+x8NtDVnnzMgGZXfCdfvV7LwoZ9ZUuXnqSsHSDvn4JDHQ@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in usbhid_close
-To:     syzbot <syzbot+90b997df76897a013829@syzkaller.appspotmail.com>
+Date:   Tue, 3 Sep 2019 14:12:56 +0200
+Message-ID: <CAAeHK+xdsA1wSBsrCJZsrB8FAvXtzt9JkDaeMK52v6FQe7Lbbw@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Write in usbhid_open
+To:     syzbot <syzbot+058e326a87dbb54f2426@syzkaller.appspotmail.com>
 Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
@@ -72,7 +72,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, Sep 3, 2019 at 2:08 PM syzbot
-<syzbot+90b997df76897a013829@syzkaller.appspotmail.com> wrote:
+<syzbot+058e326a87dbb54f2426@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
@@ -80,22 +80,24 @@ On Tue, Sep 3, 2019 at 2:08 PM syzbot
 >
 > HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
 > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=140a786c600000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16ab9982600000
 > kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-> dashboard link: https://syzkaller.appspot.com/bug?extid=90b997df76897a013829
+> dashboard link: https://syzkaller.appspot.com/bug?extid=058e326a87dbb54f2426
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 >
 > Unfortunately, I don't have any reproducer for this crash yet.
 >
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+90b997df76897a013829@syzkaller.appspotmail.com
+> Reported-by: syzbot+058e326a87dbb54f2426@syzkaller.appspotmail.com
 >
 > ==================================================================
-> BUG: KASAN: use-after-free in __lock_acquire+0x302a/0x3b50
-> kernel/locking/lockdep.c:3753
-> Read of size 8 at addr ffff8881d34368a0 by task syz-executor.3/10760
+> BUG: KASAN: use-after-free in clear_bit
+> include/asm-generic/bitops-instrumented.h:56 [inline]
+> BUG: KASAN: use-after-free in usbhid_open+0x263/0x390
+> drivers/hid/usbhid/hid-core.c:727
+> Write of size 8 at addr ffff8881c89228c0 by task syz-executor.1/10380
 >
-> CPU: 0 PID: 10760 Comm: syz-executor.3 Not tainted 5.3.0-rc5+ #28
+> CPU: 0 PID: 10380 Comm: syz-executor.1 Not tainted 5.3.0-rc5+ #28
 > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
 > Google 01/01/2011
 > Call Trace:
@@ -104,37 +106,33 @@ On Tue, Sep 3, 2019 at 2:08 PM syzbot
 >   print_address_description+0x6a/0x32c mm/kasan/report.c:351
 >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
 >   kasan_report+0xe/0x12 mm/kasan/common.c:612
->   __lock_acquire+0x302a/0x3b50 kernel/locking/lockdep.c:3753
->   lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
->   __raw_spin_lock_irq include/linux/spinlock_api_smp.h:128 [inline]
->   _raw_spin_lock_irq+0x2d/0x40 kernel/locking/spinlock.c:167
->   spin_lock_irq include/linux/spinlock.h:363 [inline]
->   usbhid_close+0x51/0x210 drivers/hid/usbhid/hid-core.c:740
->   hid_hw_close+0xa8/0xd0 drivers/hid/hid-core.c:2046
->   drop_ref.part.0+0x32/0xe0 drivers/hid/hidraw.c:337
->   drop_ref drivers/hid/hidraw.c:360 [inline]
->   hidraw_release+0x34f/0x440 drivers/hid/hidraw.c:356
->   __fput+0x2d7/0x840 fs/file_table.c:280
->   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
->   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
->   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+>   check_memory_region_inline mm/kasan/generic.c:185 [inline]
+>   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+>   clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
+>   usbhid_open+0x263/0x390 drivers/hid/usbhid/hid-core.c:727
+>   hid_hw_open+0xd2/0x160 drivers/hid/hid-core.c:2023
+>   hidraw_open+0x256/0x740 drivers/hid/hidraw.c:288
+>   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+>   do_dentry_open+0x494/0x1120 fs/open.c:797
+>   do_last fs/namei.c:3416 [inline]
+>   path_openat+0x1430/0x3f50 fs/namei.c:3533
+>   do_filp_open+0x1a1/0x280 fs/namei.c:3563
+>   do_sys_open+0x3c0/0x580 fs/open.c:1089
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
 >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x413561
-> Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48
-> 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48
-> 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-> RSP: 002b:00007ffc873b3300 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000413561
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-> RBP: 0000000000000001 R08: 0000000055395a94 R09: 0000000055395a98
-> R10: 00007ffc873b33e0 R11: 0000000000000293 R12: 000000000075bfc8
-> R13: 0000000000096f96 R14: 0000000000762460 R15: ffffffffffffffff
+> RIP: 0033:0x413761
+> Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48
+> 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48
+> 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> RSP: 002b:00007f50d4f077a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
+> RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 0000000000413761
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007f50d4f07850
+> RBP: 000000000075bf20 R08: 000000000000000f R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000293 R12: 00007f50d4f086d4
+> R13: 00000000004c8c86 R14: 00000000004dfc10 R15: 00000000ffffffff
 >
 > The buggy address belongs to the page:
-> page:ffffea00074d0d80 refcount:0 mapcount:0 mapping:0000000000000000
+> page:ffffea0007224880 refcount:0 mapcount:0 mapping:0000000000000000
 > index:0x0
 > flags: 0x200000000000000()
 > raw: 0200000000000000 0000000000000000 dead000000000122 0000000000000000
@@ -142,12 +140,12 @@ On Tue, Sep 3, 2019 at 2:08 PM syzbot
 > page dumped because: kasan: bad access detected
 >
 > Memory state around the buggy address:
->   ffff8881d3436780: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ffff8881d3436800: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-> > ffff8881d3436880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->                                 ^
->   ffff8881d3436900: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ffff8881d3436980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ffff8881c8922780: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ffff8881c8922800: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > ffff8881c8922880: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>                                             ^
+>   ffff8881c8922900: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>   ffff8881c8922980: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
 > ==================================================================
 >
 >
