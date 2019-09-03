@@ -2,195 +2,137 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACC5C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5921BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5B722D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E9923697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfICJkN (ORCPT
+        id S1728576AbfICJle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:40:13 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:17687 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727005AbfICJkM (ORCPT
+        Tue, 3 Sep 2019 05:41:34 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:43746 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfICJld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:40:12 -0400
-X-UUID: a0206e1987914d868c98dba182d76c77-20190903
-X-UUID: a0206e1987914d868c98dba182d76c77-20190903
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1943263720; Tue, 03 Sep 2019 17:40:09 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Sep 2019 17:40:08 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Sep 2019 17:40:07 +0800
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>, <anan.sun@mediatek.com>,
-        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>
-Subject: [PATCH v3 14/14] arm64: dts: mediatek: Get rid of mediatek,larb for MM nodes
-Date:   Tue, 3 Sep 2019 17:37:36 +0800
-Message-ID: <1567503456-24725-15-git-send-email-yong.wu@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
-References: <1567503456-24725-1-git-send-email-yong.wu@mediatek.com>
+        Tue, 3 Sep 2019 05:41:33 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x839fLmN001132, This message is accepted by code: ctloc85258
+Received: from RS-CAS02.realsil.com.cn (doc.realsil.com.cn[172.29.17.3](maybeforged))
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x839fLmN001132
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 3 Sep 2019 17:41:22 +0800
+Received: from laptop-alex (172.29.36.155) by RS-CAS02.realsil.com.cn
+ (172.29.17.3) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 3 Sep 2019
+ 17:41:20 +0800
+Date:   Tue, 3 Sep 2019 17:41:03 +0800
+From:   Alex Lu <alex_lu@realsil.com.cn>
+To:     Marcel Holtmann <marcel@holtmann.org>
+CC:     Johan Hedberg <johan.hedberg@gmail.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Max Chou <max.chou@realtek.com>
+Subject: [PATCH] Bluetooth: btusb: Use cmd_timeout to reset Realtek device
+Message-ID: <20190903094103.GA10714@laptop-alex>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [172.29.36.155]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After adding device_link between the IOMMU consumer and smi,
-the mediatek,larb is unnecessary now.
+From: Alex Lu <alex_lu@realsil.com.cn>
 
-CC: Matthias Brugger <matthias.bgg@gmail.com>
-Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-Reviewed-by: Evan Green <evgreen@chromium.org>
+Realtek Bluetooth controller provides a BT_DIS reset pin for hardware
+reset of it. The cmd_timeout is helpful on Realtek bluetooth controller
+where the firmware gets stuck.
+
+Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 15 ---------------
- 1 file changed, 15 deletions(-)
+ drivers/bluetooth/btusb.c | 29 +++++++++++++++++++++--------
+ 1 file changed, 21 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 15f1842..06e2c09 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -921,7 +921,6 @@
- 				 <&mmsys CLK_MM_MUTEX_32K>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_RDMA0>;
--			mediatek,larb = <&larb0>;
- 			mediatek,vpu = <&vpu>;
- 		};
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 31d3febed187..a626de3a3f4c 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -489,16 +489,19 @@ struct btusb_data {
+ 	int (*setup_on_usb)(struct hci_dev *hdev);
  
-@@ -932,7 +931,6 @@
- 				 <&mmsys CLK_MM_MUTEX_32K>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_RDMA1>;
--			mediatek,larb = <&larb4>;
- 		};
+ 	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
+-	unsigned cmd_timeout_cnt;
++	unsigned int cmd_timeout_cnt;
++	unsigned int cmd_timeout_max;
++	unsigned int reset_msecs;
++	int reset_gpio_value;
+ };
  
- 		mdp_rsz0: rsz@14003000 {
-@@ -962,7 +960,6 @@
- 			clocks = <&mmsys CLK_MM_MDP_WDMA>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_WDMA>;
--			mediatek,larb = <&larb0>;
- 		};
  
- 		mdp_wrot0: wrot@14007000 {
-@@ -971,7 +968,6 @@
- 			clocks = <&mmsys CLK_MM_MDP_WROT0>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_WROT0>;
--			mediatek,larb = <&larb0>;
- 		};
+-static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
++static void btusb_cmd_timeout(struct hci_dev *hdev)
+ {
+ 	struct btusb_data *data = hci_get_drvdata(hdev);
+ 	struct gpio_desc *reset_gpio = data->reset_gpio;
  
- 		mdp_wrot1: wrot@14008000 {
-@@ -980,7 +976,6 @@
- 			clocks = <&mmsys CLK_MM_MDP_WROT1>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			iommus = <&iommu M4U_PORT_MDP_WROT1>;
--			mediatek,larb = <&larb4>;
- 		};
+-	if (++data->cmd_timeout_cnt < 5)
++	if (++data->cmd_timeout_cnt < data->cmd_timeout_max)
+ 		return;
  
- 		ovl0: ovl@1400c000 {
-@@ -990,7 +985,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_OVL0>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL0>;
--			mediatek,larb = <&larb0>;
- 		};
+ 	if (!reset_gpio) {
+@@ -519,9 +522,9 @@ static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
+ 	}
  
- 		ovl1: ovl@1400d000 {
-@@ -1000,7 +994,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_OVL1>;
- 			iommus = <&iommu M4U_PORT_DISP_OVL1>;
--			mediatek,larb = <&larb4>;
- 		};
+ 	bt_dev_err(hdev, "Initiating HW reset via gpio");
+-	gpiod_set_value_cansleep(reset_gpio, 1);
+-	msleep(100);
+-	gpiod_set_value_cansleep(reset_gpio, 0);
++	gpiod_set_value_cansleep(reset_gpio, data->reset_gpio_value);
++	msleep(data->reset_msecs);
++	gpiod_set_value_cansleep(reset_gpio, !data->reset_gpio_value);
+ }
  
- 		rdma0: rdma@1400e000 {
-@@ -1010,7 +1003,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_RDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA0>;
--			mediatek,larb = <&larb0>;
- 		};
+ static inline void btusb_free_frags(struct btusb_data *data)
+@@ -3723,7 +3726,10 @@ static int btusb_probe(struct usb_interface *intf,
+ 		hdev->shutdown = btusb_shutdown_intel;
+ 		hdev->set_diag = btintel_set_diag_mfg;
+ 		hdev->set_bdaddr = btintel_set_bdaddr;
+-		hdev->cmd_timeout = btusb_intel_cmd_timeout;
++		hdev->cmd_timeout = btusb_cmd_timeout;
++		data->cmd_timeout_max = 5;
++		data->reset_msecs = 100;
++		data->reset_gpio_value = 1;
+ 		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
+ 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+ 		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
+@@ -3737,7 +3743,10 @@ static int btusb_probe(struct usb_interface *intf,
+ 		hdev->hw_error = btintel_hw_error;
+ 		hdev->set_diag = btintel_set_diag;
+ 		hdev->set_bdaddr = btintel_set_bdaddr;
+-		hdev->cmd_timeout = btusb_intel_cmd_timeout;
++		hdev->cmd_timeout = btusb_cmd_timeout;
++		data->cmd_timeout_max = 5;
++		data->reset_msecs = 100;
++		data->reset_gpio_value = 1;
+ 		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
+ 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+ 		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
+@@ -3783,6 +3792,10 @@ static int btusb_probe(struct usb_interface *intf,
+ 	if (id->driver_info & BTUSB_REALTEK) {
+ 		hdev->setup = btrtl_setup_realtek;
+ 		hdev->shutdown = btrtl_shutdown_realtek;
++		hdev->cmd_timeout = btusb_cmd_timeout;
++		data->cmd_timeout_max = 5;
++		data->reset_msecs = 200;
++		data->reset_gpio_value = 0;
  
- 		rdma1: rdma@1400f000 {
-@@ -1020,7 +1012,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_RDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA1>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		rdma2: rdma@14010000 {
-@@ -1030,7 +1021,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_RDMA2>;
- 			iommus = <&iommu M4U_PORT_DISP_RDMA2>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		wdma0: wdma@14011000 {
-@@ -1040,7 +1030,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_WDMA0>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA0>;
--			mediatek,larb = <&larb0>;
- 		};
- 
- 		wdma1: wdma@14012000 {
-@@ -1050,7 +1039,6 @@
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
- 			clocks = <&mmsys CLK_MM_DISP_WDMA1>;
- 			iommus = <&iommu M4U_PORT_DISP_WDMA1>;
--			mediatek,larb = <&larb4>;
- 		};
- 
- 		color0: color@14013000 {
-@@ -1294,7 +1282,6 @@
- 			      <0 0x16027800 0 0x800>,	/* VDEC_HWB */
- 			      <0 0x16028400 0 0x400>;	/* VDEC_HWG */
- 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_LOW>;
--			mediatek,larb = <&larb1>;
- 			iommus = <&iommu M4U_PORT_HW_VDEC_MC_EXT>,
- 				 <&iommu M4U_PORT_HW_VDEC_PP_EXT>,
- 				 <&iommu M4U_PORT_HW_VDEC_AVC_MV_EXT>,
-@@ -1364,8 +1351,6 @@
- 			      <0 0x19002000 0 0x1000>;	/* VENC_LT_SYS */
- 			interrupts = <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>,
- 				     <GIC_SPI 202 IRQ_TYPE_LEVEL_LOW>;
--			mediatek,larb = <&larb3>,
--					<&larb5>;
- 			iommus = <&iommu M4U_PORT_VENC_RCPU>,
- 				 <&iommu M4U_PORT_VENC_REC>,
- 				 <&iommu M4U_PORT_VENC_BSDMA>,
+ 		/* Realtek devices lose their updated firmware over global
+ 		 * suspend that means host doesn't send SET_FEATURE
 -- 
-1.9.1
+2.21.0
 
