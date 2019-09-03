@@ -2,154 +2,108 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA60C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AADC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150A5215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528119;
-	bh=FkGpRU1yy9aEz6Lo31CjpS1AI9j+y3Elk0LzZ2y+ofY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFqwyWKKsFd+zl22UnyMMkS/lC/T4JRIkWi9JHJQlKGa7G6o1KbazQ2MLdKSu/JwS
-	 gbsLL+COqzVMhsf9A0tMTmz3SzqwkyEhmvBHctb5eTWJy37XaVVBM262N3oEpPdCYg
-	 BToSv2j/DylygSX/AksT5EOKp/UBNEpboC1MZL4M=
+	by mail.kernel.org (Postfix) with ESMTP id C16CB215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oCJ92zCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbfICQ2i (ORCPT
+        id S1731143AbfICQ2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:28:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfICQ2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3129215EA;
-        Tue,  3 Sep 2019 16:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528111;
-        bh=FkGpRU1yy9aEz6Lo31CjpS1AI9j+y3Elk0LzZ2y+ofY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=amPuOO3ARIp3oBp2Rjhy7U0gnQcX7TpkPYBoYJBu2+9WaNSSoNw92sOhUTXZM41S0
-         3hWBwE8f3gv2Oy2GPL1ci3/xLtbZubmvSGkNtkTYYYp8rlNgEX2pB+igEyYHxdaQef
-         FH2twAkeoDVXjmiBvoUGVJrI251GbfxLVoZGV+zQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Eduardo Habkost <ehabkost@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 115/167] kvm: Check irqchip mode before assign irqfd
-Date:   Tue,  3 Sep 2019 12:24:27 -0400
-Message-Id: <20190903162519.7136-115-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+        Tue, 3 Sep 2019 12:28:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36526 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICQ2c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=A01EoZVAbENBU2ODnei5aZC/eSyCxIe7RviRDSpgglA=; b=oCJ92zCv0vaLqsiIF+BEQ5E5E
+        8tWg574OR1tXDNAdgxaEW9ZOtC9RgXU1YeUw55xOc80zTVRnxZCyUCNLfBkNAZiwoSCt+KyE7f7Kk
+        ECF8MrNiznXkAufY1RvmwEc4odtOEh9+oHbf3hsI4VKg4VwUYZq5xwAupL2R1uln6DSGhJXwYQuI8
+        RZQyCR8PGBPL7nxrArCSdqjcBVWN6LLgHZFUTqJMg7UzRJqLSd6mxYw8FwJFmVgpPJ2xIqwp5z5fm
+        /eE8MkNJ96Iu/HNE71eque6R66Ku7pz2Xo1iouPfCUsPb8CZ13tGOYrgSNMyfPJp/XL4BMK5TpA+i
+        lQqXK0fyg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5BfT-000149-Ek; Tue, 03 Sep 2019 16:28:31 +0000
+Date:   Tue, 3 Sep 2019 09:28:31 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     William Kucharski <william.kucharski@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Bob Kasten <robert.a.kasten@intel.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Chad Mynhier <chad.mynhier@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <jweiner@fb.com>
+Subject: Re: [PATCH v5 1/2] mm: Allow the page cache to allocate large pages
+Message-ID: <20190903162831.GI29434@bombadil.infradead.org>
+References: <20190902092341.26712-1-william.kucharski@oracle.com>
+ <20190902092341.26712-2-william.kucharski@oracle.com>
+ <20190903115748.GS14028@dhcp22.suse.cz>
+ <20190903121155.GD29434@bombadil.infradead.org>
+ <20190903121952.GU14028@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903121952.GU14028@dhcp22.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+On Tue, Sep 03, 2019 at 02:19:52PM +0200, Michal Hocko wrote:
+> On Tue 03-09-19 05:11:55, Matthew Wilcox wrote:
+> > On Tue, Sep 03, 2019 at 01:57:48PM +0200, Michal Hocko wrote:
+> > > On Mon 02-09-19 03:23:40, William Kucharski wrote:
+> > > > Add an 'order' argument to __page_cache_alloc() and
+> > > > do_read_cache_page(). Ensure the allocated pages are compound pages.
+> > > 
+> > > Why do we need to touch all the existing callers and change them to use
+> > > order 0 when none is actually converted to a different order? This just
+> > > seem to add a lot of code churn without a good reason. If anything I
+> > > would simply add __page_cache_alloc_order and make __page_cache_alloc
+> > > call it with order 0 argument.
+> > 
+> > Patch 2/2 uses a non-zero order.
+> 
+> It is a new caller and it can use a new function right?
+> 
+> > I agree it's a lot of churn without
+> > good reason; that's why I tried to add GFP_ORDER flags a few months ago.
+> > Unfortunately, you didn't like that approach either.
+> 
+> Is there any future plan that all/most __page_cache_alloc will get a
+> non-zero order argument?
 
-[ Upstream commit 654f1f13ea56b92bacade8ce2725aea0457f91c0 ]
+I'm not sure about "most".  It will certainly become more common, as
+far as I can tell.
 
-When assigning kvm irqfd we didn't check the irqchip mode but we allow
-KVM_IRQFD to succeed with all the irqchip modes.  However it does not
-make much sense to create irqfd even without the kernel chips.  Let's
-provide a arch-dependent helper to check whether a specific irqfd is
-allowed by the arch.  At least for x86, it should make sense to check:
+> > > Also is it so much to ask callers to provide __GFP_COMP explicitly?
+> > 
+> > Yes, it's an unreasonable burden on the callers.
+> 
+> Care to exaplain why? __GFP_COMP tends to be used in the kernel quite
+> extensively.
 
-- when irqchip mode is NONE, all irqfds should be disallowed, and,
-
-- when irqchip mode is SPLIT, irqfds that are with resamplefd should
-  be disallowed.
-
-For either of the case, previously we'll silently ignore the irq or
-the irq ack event if the irqchip mode is incorrect.  However that can
-cause misterious guest behaviors and it can be hard to triage.  Let's
-fail KVM_IRQFD even earlier to detect these incorrect configurations.
-
-CC: Paolo Bonzini <pbonzini@redhat.com>
-CC: Radim Krčmář <rkrcmar@redhat.com>
-CC: Alex Williamson <alex.williamson@redhat.com>
-CC: Eduardo Habkost <ehabkost@redhat.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kvm/irq.c | 7 +++++++
- arch/x86/kvm/irq.h | 1 +
- virt/kvm/eventfd.c | 9 +++++++++
- 3 files changed, 17 insertions(+)
-
-diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
-index faa264822cee3..007bc654f928a 100644
---- a/arch/x86/kvm/irq.c
-+++ b/arch/x86/kvm/irq.c
-@@ -172,3 +172,10 @@ void __kvm_migrate_timers(struct kvm_vcpu *vcpu)
- 	__kvm_migrate_apic_timer(vcpu);
- 	__kvm_migrate_pit_timer(vcpu);
- }
-+
-+bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
-+{
-+	bool resample = args->flags & KVM_IRQFD_FLAG_RESAMPLE;
-+
-+	return resample ? irqchip_kernel(kvm) : irqchip_in_kernel(kvm);
-+}
-diff --git a/arch/x86/kvm/irq.h b/arch/x86/kvm/irq.h
-index d5005cc265217..fd210cdd49839 100644
---- a/arch/x86/kvm/irq.h
-+++ b/arch/x86/kvm/irq.h
-@@ -114,6 +114,7 @@ static inline int irqchip_in_kernel(struct kvm *kvm)
- 	return mode != KVM_IRQCHIP_NONE;
- }
- 
-+bool kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args);
- void kvm_inject_pending_timer_irqs(struct kvm_vcpu *vcpu);
- void kvm_inject_apic_timer_irqs(struct kvm_vcpu *vcpu);
- void kvm_apic_nmi_wd_deliver(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index b20b751286fc6..757a17f5ebdeb 100644
---- a/virt/kvm/eventfd.c
-+++ b/virt/kvm/eventfd.c
-@@ -44,6 +44,12 @@
- 
- static struct workqueue_struct *irqfd_cleanup_wq;
- 
-+bool __attribute__((weak))
-+kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
-+{
-+	return true;
-+}
-+
- static void
- irqfd_inject(struct work_struct *work)
- {
-@@ -297,6 +303,9 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
- 	if (!kvm_arch_intc_initialized(kvm))
- 		return -EAGAIN;
- 
-+	if (!kvm_arch_irqfd_allowed(kvm, args))
-+		return -EINVAL;
-+
- 	irqfd = kzalloc(sizeof(*irqfd), GFP_KERNEL);
- 	if (!irqfd)
- 		return -ENOMEM;
--- 
-2.20.1
+Most of the places which call this function get their gfp_t from
+mapping->gfp_mask.  If we only want to allocate a single page, we
+must not set __GFP_COMP.  If we want to allocate a large page, we must
+set __GFP_COMP.  Rather than require individual filesystems to concern
+themselves with this wart of the GFP interface, we can solve it in the
+page cache.
 
