@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEABDC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F79C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9729C23697
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915D423431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528489;
-	bh=y7zrbxbyuIpeUNUY35urgqiiOnBeTRg/Nw172CvPTf0=;
+	s=default; t=1567528494;
+	bh=K2RqtYrOLPP/Zg4JwaI2CmIg9crPsLHGGZw/haRB/T4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NuL/BKewJ9H929sefTU2mULiaFDoN/fFs+Jl6akuknCkczCgNt/L6lbiI0Z5/Is7b
-	 PWOaXkq6vINFRYVSRuDK2xhVWYwWLXyJKZ3uV/VbDgffFYNBU6ipQRpThZ4MCN+pWY
-	 Rw0Hz4yWLH7X910L4giA3Z4qfOm0toDxKK7l46Hw=
+	b=OFimDBw7AQMSwYq0W2jEI3w2tx5JYYFerroLknKCYzXvhUFucuAlbGavsxRQ9Qxq6
+	 0/97lru3uL8wAil9alLwsbTlPTKwRiJDZP7CM7xqcesiFneTWfRiQg4LWFaLqLQS7K
+	 cODtcZRP1y6tY0gdheU805D4d/wTl7WtD31xjtg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbfICQ17 (ORCPT
+        id S1731082AbfICQex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49438 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:34:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730964AbfICQ1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:52 -0400
+        id S1730992AbfICQ16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA0F32343A;
-        Tue,  3 Sep 2019 16:27:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61772343A;
+        Tue,  3 Sep 2019 16:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528071;
-        bh=y7zrbxbyuIpeUNUY35urgqiiOnBeTRg/Nw172CvPTf0=;
+        s=default; t=1567528077;
+        bh=K2RqtYrOLPP/Zg4JwaI2CmIg9crPsLHGGZw/haRB/T4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vkfpgPGdfz2fmWmNauNAkgvxl0v17rp9Ex+oikIiHFRZkJW9VLY2KWngITr3s1gt+
-         /qrYeWecB9FS7FcNjayrQACNeXc+OOHr5E4FbvDqxagrztBCcqBZepjrkuybAcH56E
-         6fe5qnEOwe3tFKVN75InuHYqTzyqJJsjXSQW6WCE=
+        b=0REfY1DAK+mTQ0PjHwC6pfwBFflZCWUnQqlTFIDeZIfSj7ikWGDY6p8sK0to6UT2S
+         mjh6RCJE7sTi6CqJmHMM6FDXACxxgj/gKRVF9nAYoE0o+TW+pe++OSpHjMmjqxtQVJ
+         M9I5hoVbZd1Pa7KLzrYKocrb6Jdjjmcb74o0ZCNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 085/167] CIFS: Fix leaking locked VFS cache pages in writeback retry
-Date:   Tue,  3 Sep 2019 12:23:57 -0400
-Message-Id: <20190903162519.7136-85-sashal@kernel.org>
+Cc:     Dinh Nguyen <dinguyen@kernel.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 090/167] arm64: dts: stratix10: add the sysmgr-syscon property from the gmac's
+Date:   Tue,  3 Sep 2019 12:24:02 -0400
+Message-Id: <20190903162519.7136-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,67 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 165df9a080b6863ae286fa01780c13d87cd81076 ]
+[ Upstream commit 8efd6365417a044db03009724ecc1a9521524913 ]
 
-If we don't find a writable file handle when retrying writepages
-we break of the loop and do not unlock and put pages neither from
-wdata2 nor from the original wdata. Fix this by walking through
-all the remaining pages and cleanup them properly.
+The gmac ethernet driver uses the "altr,sysmgr-syscon" property to
+configure phy settings for the gmac controller.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Add the "altr,sysmgr-syscon" property to all gmac nodes.
+
+This patch fixes:
+
+[    0.917530] socfpga-dwmac ff800000.ethernet: No sysmgr-syscon node found
+[    0.924209] socfpga-dwmac ff800000.ethernet: Unable to parse OF data
+
+Cc: stable@vger.kernel.org
+Reported-by: Ley Foon Tan <ley.foon.tan@intel.com>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifssmb.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
-index a5cb7b2d1ac5d..86a54b809c484 100644
---- a/fs/cifs/cifssmb.c
-+++ b/fs/cifs/cifssmb.c
-@@ -2033,12 +2033,13 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 5089aa64088fc..9a1ea8a464057 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -140,6 +140,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
+ 			status = "disabled";
+ 		};
  
- 		wdata2->cfile = find_writable_file(CIFS_I(inode), false);
- 		if (!wdata2->cfile) {
--			cifs_dbg(VFS, "No writable handles for inode\n");
-+			cifs_dbg(VFS, "No writable handle to retry writepages\n");
- 			rc = -EBADF;
--			break;
-+		} else {
-+			wdata2->pid = wdata2->cfile->pid;
-+			rc = server->ops->async_writev(wdata2,
-+						       cifs_writedata_release);
- 		}
--		wdata2->pid = wdata2->cfile->pid;
--		rc = server->ops->async_writev(wdata2, cifs_writedata_release);
+@@ -156,6 +157,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x48 0>;
+ 			status = "disabled";
+ 		};
  
- 		for (j = 0; j < nr_pages; j++) {
- 			unlock_page(wdata2->pages[j]);
-@@ -2053,6 +2054,7 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 			kref_put(&wdata2->refcount, cifs_writedata_release);
- 			if (is_retryable_error(rc))
- 				continue;
-+			i += nr_pages;
- 			break;
- 		}
+@@ -172,6 +174,7 @@
+ 			tx-fifo-depth = <16384>;
+ 			rx-fifo-depth = <16384>;
+ 			snps,multicast-filter-bins = <256>;
++			altr,sysmgr-syscon = <&sysmgr 0x4c 0>;
+ 			status = "disabled";
+ 		};
  
-@@ -2060,6 +2062,13 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
- 		i += nr_pages;
- 	} while (i < wdata->nr_pages);
- 
-+	/* cleanup remaining pages from the original wdata */
-+	for (; i < wdata->nr_pages; i++) {
-+		SetPageError(wdata->pages[i]);
-+		end_page_writeback(wdata->pages[i]);
-+		put_page(wdata->pages[i]);
-+	}
-+
- 	if (rc != 0 && !is_retryable_error(rc))
- 		mapping_set_error(inode->i_mapping, rc);
- 	kref_put(&wdata->refcount, cifs_writedata_release);
 -- 
 2.20.1
 
