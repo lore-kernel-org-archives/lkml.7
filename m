@@ -2,58 +2,55 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3C4C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258BBC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4FF1238C7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1E723950
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528310;
-	bh=9O9BraUo5IvLn0Sw1l0/oYmpxdePNV92iG5PqiT23Kk=;
+	s=default; t=1567528315;
+	bh=MEDwmnHyT+j4wPSUrobOsrWKdcqz2wDWmQRnkf9QL14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QqKTUWUiS+wJlTR5EPSWb4gycgzJbT6zT48jJOc1rpGfYLbNJj4IcqifnKNsT/1BD
-	 kHwtZ9V9YJ/CI7Xb/ssErz2L1nqsIOF96qDqEBCSC/jl9FpFRxbDFOdPJt4MKj352V
-	 JvCRwKYuyKLBT2dQOa+fvr8n/RI6MxEH6Gt+7P0A=
+	b=urJRamxs+iLNVCod+1D7n/IyPF4RRSpMLx+bpOhiD5YYOi166oTvW7AZmOc+8rt96
+	 bJziSt/uPu9qoiFBimcNR8Dv2aJ36keA/wMxp0bo9Y1HgmCbE8VSU3IMYLiaV3KueR
+	 ha4LQh+2Zlk4cv3uDbk/+toZ9tEJPlHOPzP+uJ4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbfICQbu (ORCPT
+        id S1730758AbfICQby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:31:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54934 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731171AbfICQbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:31:48 -0400
+        id S1730010AbfICQbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:31:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08BE2238D0;
-        Tue,  3 Sep 2019 16:31:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1335238D0;
+        Tue,  3 Sep 2019 16:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528306;
-        bh=9O9BraUo5IvLn0Sw1l0/oYmpxdePNV92iG5PqiT23Kk=;
+        s=default; t=1567528303;
+        bh=MEDwmnHyT+j4wPSUrobOsrWKdcqz2wDWmQRnkf9QL14=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M9+bs4uxxSXQJvz9Q8IcdM0XVY6v0dWmnJeaPP0bnq+glYcBd02/JBh2e9ohRTjUZ
-         lbPIiRZX20pr+9bMHzwOdVR4k+NTxDOJidDrDJrfWmSiMmqOVAaqS1HIwqkGab877H
-         Q8Mt4Czl7y95dpnMestrznHnsohgSms6FqYNyqUs=
+        b=OCXFW2Q+TVdgPQnf3AV+8TjFRYg51gjyy7Oe/mm2yFjxrba+gMaAhdPhTuWzW8efK
+         GQIWODWrA327U8ge8vg876rA66SF5twR81QbkZ+cqoJ9HdKro9xqhXbHJPmvkQiiep
+         sDB/5LR8ZCtHU0PrhqJKxJKxKvb+WHdHXk+R0GTM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>, Rob Herring <robh@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 147/167] drm/panel: Add support for Armadeus ST0700 Adapt
-Date:   Tue,  3 Sep 2019 12:24:59 -0400
-Message-Id: <20190903162519.7136-147-sashal@kernel.org>
+Cc:     Norbert Manthey <nmanthey@amazon.de>,
+        Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 145/167] pstore: Fix double-free in pstore_mkfile() failure path
+Date:   Tue,  3 Sep 2019 12:24:57 -0400
+Message-Id: <20190903162519.7136-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,88 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+From: Norbert Manthey <nmanthey@amazon.de>
 
-[ Upstream commit c479450f61c7f1f248c9a54aedacd2a6ca521ff8 ]
+[ Upstream commit 4c6d80e1144bdf48cae6b602ae30d41f3e5c76a9 ]
 
-This patch adds support for the Armadeus ST0700 Adapt. It comes with a
-Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
-that it can be connected on the TFT header of Armadeus Dev boards.
+The pstore_mkfile() function is passed a pointer to a struct
+pstore_record. On success it consumes this 'record' pointer and
+references it from the created inode.
 
-Cc: stable@vger.kernel.org # v4.19
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190507152713.27494-1-sebastien.szymanski@armadeus.com
+On failure, however, it may or may not free the record. There are even
+two different code paths which return -ENOMEM -- one of which does and
+the other doesn't free the record.
+
+Make the behaviour deterministic by never consuming and freeing the
+record when returning failure, allowing the caller to do the cleanup
+consistently.
+
+Signed-off-by: Norbert Manthey <nmanthey@amazon.de>
+Link: https://lore.kernel.org/r/1562331960-26198-1-git-send-email-nmanthey@amazon.de
+Fixes: 83f70f0769ddd ("pstore: Do not duplicate record metadata")
+Fixes: 1dfff7dd67d1a ("pstore: Pass record contents instead of copying")
+Cc: stable@vger.kernel.org
+[kees: also move "private" allocation location, rename inode cleanup label]
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../display/panel/armadeus,st0700-adapt.txt   |  9 ++++++
- drivers/gpu/drm/panel/panel-simple.c          | 29 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
+ fs/pstore/inode.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
-new file mode 100644
-index 0000000000000..a30d63db3c8f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
-@@ -0,0 +1,9 @@
-+Armadeus ST0700 Adapt. A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT with
-+an adapter board.
-+
-+Required properties:
-+- compatible: "armadeus,st0700-adapt"
-+- power-supply: see panel-common.txt
-+
-+Optional properties:
-+- backlight: see panel-common.txt
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index b1d41c4921dd5..5fd94e2060297 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -436,6 +436,32 @@ static const struct panel_desc ampire_am800480r3tmqwa1h = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index 8cf2218b46a75..6f90d91a8733a 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -330,10 +330,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+ 		goto fail;
+ 	inode->i_mode = S_IFREG | 0444;
+ 	inode->i_fop = &pstore_file_operations;
+-	private = kzalloc(sizeof(*private), GFP_KERNEL);
+-	if (!private)
+-		goto fail_alloc;
+-	private->record = record;
  
-+static const struct display_timing santek_st0700i5y_rbslw_f_timing = {
-+	.pixelclock = { 26400000, 33300000, 46800000 },
-+	.hactive = { 800, 800, 800 },
-+	.hfront_porch = { 16, 210, 354 },
-+	.hback_porch = { 45, 36, 6 },
-+	.hsync_len = { 1, 10, 40 },
-+	.vactive = { 480, 480, 480 },
-+	.vfront_porch = { 7, 22, 147 },
-+	.vback_porch = { 22, 13, 3 },
-+	.vsync_len = { 1, 10, 20 },
-+	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
-+		DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE
-+};
+ 	switch (record->type) {
+ 	case PSTORE_TYPE_DMESG:
+@@ -383,12 +379,16 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+ 		break;
+ 	}
+ 
++	private = kzalloc(sizeof(*private), GFP_KERNEL);
++	if (!private)
++		goto fail_inode;
 +
-+static const struct panel_desc armadeus_st0700_adapt = {
-+	.timings = &santek_st0700i5y_rbslw_f_timing,
-+	.num_timings = 1,
-+	.bpc = 6,
-+	.size = {
-+		.width = 154,
-+		.height = 86,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-+};
-+
- static const struct drm_display_mode auo_b101aw03_mode = {
- 	.clock = 51450,
- 	.hdisplay = 1024,
-@@ -2330,6 +2356,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "ampire,am800480r3tmqwa1h",
- 		.data = &ampire_am800480r3tmqwa1h,
-+	}, {
-+		.compatible = "armadeus,st0700-adapt",
-+		.data = &armadeus_st0700_adapt,
- 	}, {
- 		.compatible = "auo,b101aw03",
- 		.data = &auo_b101aw03,
+ 	dentry = d_alloc_name(root, name);
+ 	if (!dentry)
+ 		goto fail_private;
+ 
++	private->record = record;
+ 	inode->i_size = private->total_size = size;
+-
+ 	inode->i_private = private;
+ 
+ 	if (record->time.tv_sec)
+@@ -404,7 +404,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+ 
+ fail_private:
+ 	free_pstore_private(private);
+-fail_alloc:
++fail_inode:
+ 	iput(inode);
+ 
+ fail:
 -- 
 2.20.1
 
