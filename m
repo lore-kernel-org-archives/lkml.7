@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03101C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA18C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0414238C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E6723789
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527997;
-	bh=eK+L9MGfvPLzftIEDXerbgiNvYTvBEHJUW/ZcohqNQI=;
+	s=default; t=1567528001;
+	bh=PjBn3F/ArEsB92idaMT9+Ob4PL0APGCB8i26BGnEN7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a5d+M4myvgRxdSnKzeET4HHB8/OY0/OawTwj1IoHxJl/UspRgOPBe1VMvzn/tkrA/
-	 PE3m/f+0Jq5QMNtVMhPX1kwqls1Yo4UfoECPo5oyYZFIMr2fyCTgRUJEmizmpFg5kz
-	 Urvss8QW1vnCkkn4s0JRKZiqM2gVEhFAWBEbLj+U=
+	b=TSwt5rhWcE/XYZUylRkhMNNWW0VUuONC/1UmBqEJVKBfM/ekVkhhrWTo1QUclvr4J
+	 /OG26dGDTmqMlf5RAf87Z+YZC3PTsC4Xq2lVaeBcTs1OnKXfAaIGw8mSY9VVo8hR1o
+	 O55oVTLqBo+3KdZnrq0xtd0kENVMPgg3+wh4FFN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730675AbfICQ0g (ORCPT
+        id S1730688AbfICQ0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47110 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730602AbfICQ0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:26:19 -0400
+        id S1730621AbfICQ0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B02C238CE;
-        Tue,  3 Sep 2019 16:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF571238F5;
+        Tue,  3 Sep 2019 16:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527979;
-        bh=eK+L9MGfvPLzftIEDXerbgiNvYTvBEHJUW/ZcohqNQI=;
+        s=default; t=1567527983;
+        bh=PjBn3F/ArEsB92idaMT9+Ob4PL0APGCB8i26BGnEN7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0aYXvjI637FZDGFn+OUoO1heyMML8XpiH82IRX6SFiWP2VExCSySFfJLNwlAU3x9M
-         9DqHBhSR0Evu5NeljLb+eX2QH5nrY/HvEUch3CkUMQ6PxipQI4Wolx7tVXdPvCVztS
-         7/DtvTmi6ivZMFj+fLVukkJUpeSBJu8dR+Wr+H5w=
+        b=Ma2Hbat3vd4nurI2Kf11h2GcrouZHQtNdq79pa5ALE3QbDd81t/AZlNEtZ5Ra/A60
+         wR0v24GGqwe1TaCQTM+pA/ArNnnqpsnh4nK/4RIuEFwoPypfbDtOO3pfnX9zJusc+N
+         dHTkWfGaTsriE+riedKkl9waXYWpgFkXmJ8PnynE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 034/167] drm/i915: Cleanup gt powerstate from gem
-Date:   Tue,  3 Sep 2019 12:23:06 -0400
-Message-Id: <20190903162519.7136-34-sashal@kernel.org>
+Cc:     Nikolay Borisov <nborisov@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 038/167] btrfs: Remove extent_io_ops::fill_delalloc
+Date:   Tue,  3 Sep 2019 12:23:10 -0400
+Message-Id: <20190903162519.7136-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,65 +60,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 30b710840e4b9c9699d3d4b33fb19ad8880d4614 ]
+[ Upstream commit 5eaad97af8aeff38debe7d3c69ec3a0d71f8350f ]
 
-Since the gt powerstate is allocated by i915_gem_init, clean it from
-i915_gem_fini for symmetry and to correct the imbalance on error.
+This callback is called only from writepage_delalloc which in turn is
+guaranteed to be called from the data page writeout path. In the end
+there is no reason to have the call to this function to be indrected via
+the extent_io_ops structure. This patch removes the callback definition,
+exports the function and calls it directly. No functional changes.
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20180812223642.24865-1-chris@chris-wilson.co.uk
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ rename to btrfs_run_delalloc_range ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/i915_gem.c      | 3 +++
- drivers/gpu/drm/i915/intel_display.c | 4 ----
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ fs/btrfs/ctree.h     |  3 +++
+ fs/btrfs/extent_io.c | 20 +++++++++-----------
+ fs/btrfs/extent_io.h |  5 -----
+ fs/btrfs/inode.c     | 15 +++++++--------
+ 4 files changed, 19 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
-index 5019dfd8bcf16..e81abd468a15d 100644
---- a/drivers/gpu/drm/i915/i915_gem.c
-+++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -5624,6 +5624,7 @@ int i915_gem_init(struct drm_i915_private *dev_priv)
- void i915_gem_fini(struct drm_i915_private *dev_priv)
- {
- 	i915_gem_suspend_late(dev_priv);
-+	intel_disable_gt_powersave(dev_priv);
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index 82682da5a40dd..4644f9b629a53 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -3200,6 +3200,9 @@ int btrfs_prealloc_file_range_trans(struct inode *inode,
+ 				    struct btrfs_trans_handle *trans, int mode,
+ 				    u64 start, u64 num_bytes, u64 min_size,
+ 				    loff_t actual_len, u64 *alloc_hint);
++int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
++		u64 start, u64 end, int *page_started, unsigned long *nr_written,
++		struct writeback_control *wbc);
+ extern const struct dentry_operations btrfs_dentry_operations;
+ #ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
+ void btrfs_test_inode_set_ops(struct inode *inode);
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 90b0a6eff5350..cb598eb4f3bd1 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3199,7 +3199,7 @@ static void update_nr_written(struct writeback_control *wbc,
+ /*
+  * helper for __extent_writepage, doing all of the delayed allocation setup.
+  *
+- * This returns 1 if our fill_delalloc function did all the work required
++ * This returns 1 if btrfs_run_delalloc_range function did all the work required
+  * to write the page (copy into inline extent).  In this case the IO has
+  * been started and the page is already unlocked.
+  *
+@@ -3220,7 +3220,7 @@ static noinline_for_stack int writepage_delalloc(struct inode *inode,
+ 	int ret;
+ 	int page_started = 0;
  
- 	/* Flush any outstanding unpin_work. */
- 	i915_gem_drain_workqueue(dev_priv);
-@@ -5635,6 +5636,8 @@ void i915_gem_fini(struct drm_i915_private *dev_priv)
- 	i915_gem_contexts_fini(dev_priv);
- 	mutex_unlock(&dev_priv->drm.struct_mutex);
+-	if (epd->extent_locked || !tree->ops || !tree->ops->fill_delalloc)
++	if (epd->extent_locked)
+ 		return 0;
  
-+	intel_cleanup_gt_powersave(dev_priv);
-+
- 	intel_uc_fini_misc(dev_priv);
- 	i915_gem_cleanup_userptr(dev_priv);
- 
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index 2622dfc7d2d9a..6902fd2da19ca 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -15972,8 +15972,6 @@ void intel_modeset_cleanup(struct drm_device *dev)
- 	flush_work(&dev_priv->atomic_helper.free_work);
- 	WARN_ON(!llist_empty(&dev_priv->atomic_helper.free_list));
- 
--	intel_disable_gt_powersave(dev_priv);
--
+ 	while (delalloc_end < page_end) {
+@@ -3233,18 +3233,16 @@ static noinline_for_stack int writepage_delalloc(struct inode *inode,
+ 			delalloc_start = delalloc_end + 1;
+ 			continue;
+ 		}
+-		ret = tree->ops->fill_delalloc(inode, page,
+-					       delalloc_start,
+-					       delalloc_end,
+-					       &page_started,
+-					       nr_written, wbc);
++		ret = btrfs_run_delalloc_range(inode, page, delalloc_start,
++				delalloc_end, &page_started, nr_written, wbc);
+ 		/* File system has been set read-only */
+ 		if (ret) {
+ 			SetPageError(page);
+-			/* fill_delalloc should be return < 0 for error
+-			 * but just in case, we use > 0 here meaning the
+-			 * IO is started, so we don't want to return > 0
+-			 * unless things are going well.
++			/*
++			 * btrfs_run_delalloc_range should return < 0 for error
++			 * but just in case, we use > 0 here meaning the IO is
++			 * started, so we don't want to return > 0 unless
++			 * things are going well.
+ 			 */
+ 			ret = ret < 0 ? ret : -EIO;
+ 			goto done;
+diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
+index b4d03e677e1d7..ed27becd963c5 100644
+--- a/fs/btrfs/extent_io.h
++++ b/fs/btrfs/extent_io.h
+@@ -106,11 +106,6 @@ struct extent_io_ops {
  	/*
- 	 * Interrupts and polling as the first thing to avoid creating havoc.
- 	 * Too much stuff here (turning of connectors, ...) would
-@@ -16001,8 +15999,6 @@ void intel_modeset_cleanup(struct drm_device *dev)
- 
- 	intel_cleanup_overlay(dev_priv);
- 
--	intel_cleanup_gt_powersave(dev_priv);
+ 	 * Optional hooks, called if the pointer is not NULL
+ 	 */
+-	int (*fill_delalloc)(void *private_data, struct page *locked_page,
+-			     u64 start, u64 end, int *page_started,
+-			     unsigned long *nr_written,
+-			     struct writeback_control *wbc);
 -
- 	intel_teardown_gmbus(dev_priv);
+ 	int (*writepage_start_hook)(struct page *page, u64 start, u64 end);
+ 	void (*writepage_end_io_hook)(struct page *page, u64 start, u64 end,
+ 				      struct extent_state *state, int uptodate);
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 355ff08e9d44e..bfacce295ef1e 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -110,8 +110,8 @@ static void __endio_write_update_ordered(struct inode *inode,
+  * extent_clear_unlock_delalloc() to clear both the bits EXTENT_DO_ACCOUNTING
+  * and EXTENT_DELALLOC simultaneously, because that causes the reserved metadata
+  * to be released, which we want to happen only when finishing the ordered
+- * extent (btrfs_finish_ordered_io()). Also note that the caller of the
+- * fill_delalloc() callback already does proper cleanup for the first page of
++ * extent (btrfs_finish_ordered_io()). Also note that the caller of
++ * btrfs_run_delalloc_range already does proper cleanup for the first page of
+  * the range, that is, it invokes the callback writepage_end_io_hook() for the
+  * range of the first page.
+  */
+@@ -1599,12 +1599,12 @@ static inline int need_force_cow(struct inode *inode, u64 start, u64 end)
+ }
  
- 	destroy_workqueue(dev_priv->modeset_wq);
+ /*
+- * extent_io.c call back to do delayed allocation processing
++ * Function to process delayed allocation (create CoW) for ranges which are
++ * being touched for the first time.
+  */
+-static int run_delalloc_range(void *private_data, struct page *locked_page,
+-			      u64 start, u64 end, int *page_started,
+-			      unsigned long *nr_written,
+-			      struct writeback_control *wbc)
++int btrfs_run_delalloc_range(void *private_data, struct page *locked_page,
++		u64 start, u64 end, int *page_started, unsigned long *nr_written,
++		struct writeback_control *wbc)
+ {
+ 	struct inode *inode = private_data;
+ 	int ret;
+@@ -10598,7 +10598,6 @@ static const struct extent_io_ops btrfs_extent_io_ops = {
+ 	.readpage_io_failed_hook = btrfs_readpage_io_failed_hook,
+ 
+ 	/* optional callbacks */
+-	.fill_delalloc = run_delalloc_range,
+ 	.writepage_end_io_hook = btrfs_writepage_end_io_hook,
+ 	.writepage_start_hook = btrfs_writepage_start_hook,
+ 	.set_bit_hook = btrfs_set_bit_hook,
 -- 
 2.20.1
 
