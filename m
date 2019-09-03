@@ -6,119 +6,79 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9906FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F99C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E9F22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0BD22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfICL1N (ORCPT
+        id S1728917AbfICL2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:27:13 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:44464 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728270AbfICL1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:27:13 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id BFF3C819EF; Tue,  3 Sep 2019 13:26:54 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 13:27:07 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     dsterba@suse.cz, Pavel Machek <pavel@denx.de>,
-        Joe Perches <joe@perches.com>,
-        Gao Xiang <gaoxiang25@huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Miao Xie <miaoxie@huawei.com>,
-        Li Guifu <bluce.liguifu@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH v6 01/24] erofs: add on-disk layout
-Message-ID: <20190903112707.GA3844@amd>
-References: <20190802125347.166018-1-gaoxiang25@huawei.com>
- <20190802125347.166018-2-gaoxiang25@huawei.com>
- <20190829095954.GB20598@infradead.org>
- <20190829103252.GA64893@architecture4>
- <67d6efbbc9ac6db23215660cb970b7ef29dc0c1d.camel@perches.com>
- <20190830120714.GN2752@twin.jikos.cz>
- <20190902084303.GC19557@amd>
- <20190902140712.GV2752@twin.jikos.cz>
+        Tue, 3 Sep 2019 07:28:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11167 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728270AbfICL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:28:04 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 04:28:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
+   d="scan'208";a="266262707"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga001.jf.intel.com with ESMTP; 03 Sep 2019 04:28:01 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i56ye-0008GR-7d; Tue, 03 Sep 2019 14:28:00 +0300
+Date:   Tue, 3 Sep 2019 14:28:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v5 09/11] lib/vsprintf: OF nodes are first and foremost,
+ struct device_nodes
+Message-ID: <20190903112800.GW2680@smile.fi.intel.com>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+ <20190902135732.23455-10-sakari.ailus@linux.intel.com>
+ <20190903085233.oksjcwqwdxb53eig@pathway.suse.cz>
+ <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902140712.GV2752@twin.jikos.cz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 03, 2019 at 11:28:16AM +0200, Petr Mladek wrote:
+> On Tue 2019-09-03 10:52:33, Petr Mladek wrote:
+> > On Mon 2019-09-02 16:57:30, Sakari Ailus wrote:
+> > > Factor out static kobject_string() function that simply calls
+> > > device_node_string(), and thus remove references to kobjects (as these are
+> > > struct device_node).
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > -		return kobject_string(buf, end, ptr, spec, fmt);
+> > > +		return device_node_string(buf, end, ptr, spec, fmt + 1);
+> > 
+> > I know that this come from from kobject_string(). But please, modify
+> > it to follow the style used by other %p modifiers. I mean to pass
+> > "fmt" as is and then use:
+> > 
+> > 	if (fmt[1] != 'F')
+> 
+> Ah, I see that it would need more changes in device_node_string().
+> OK, let's leave the patch as is. I am sorry for the noise.
 
-Hi!
+I came to the same conclusions, though can we consider to drop this patch?
 
-> > No. gdb tells you what the actual offsets _are_.
->=20
-> Ok, reading your reply twice, I think we have different perspectives. I
-> don't trust the comments.
->=20
-> The tool I had in mind is pahole that parses dwarf information about the
-> structures, the same as gdb does. The actual value of the struct members
-> is the thing that needs to be investigated in memory dumps or disk image
-> dumps.
->=20
-> > > > The expected offset is somewhat valuable, but
-> > > > perhaps the form is a bit off given the visual
-> > > > run-in to the field types.
-> > > >=20
-> > > > The extra work with this form is manipulating all
-> > > > the offsets whenever a structure change occurs.
-> > >=20
-> > > ... while this is error prone.
-> >=20
-> > While the comment tells you what they _should be_.
->=20
-> That's exactly the source of confusion and bugs. For me an acceptable
-> way of asserting that a value has certain offset is a build check, eg.
-> like
->=20
-> BUILD_BUG_ON(strct my_superblock, magic, 16);
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yes, that would work, too. As would documentation file with the disk
-structures.
 
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl1uTgsACgkQMOfwapXb+vL2IgCgs+lvDMnGJBdzf4Ded3ls5qz4
-u/sAn1m34p0fdk6NLGSW8jaPems7I5EL
-=38MN
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
