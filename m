@@ -2,153 +2,144 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7E50C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C0BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DFD23774
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B581E20828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="MawT0w1U"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KHMycYhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbfICOqx (ORCPT
+        id S1729393AbfICOtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:46:53 -0400
-Received: from mail-eopbgr810109.outbound.protection.outlook.com ([40.107.81.109]:14213
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727624AbfICOqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:46:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N+3+AvajZl5hRcEmSt0MWtuQAgDxpGKyk6NrgEknGMQy8zbnLSp437vJhxmWqAORjyFIl4e7hBDrlbvhn1EUntzh3hbg6xYeRXH/zwG7ZErVkgfSwbJHaF28SA5l7Sl0R9RRnLUr8boFSN5w4UFtQNhf24xLMDwr6mAw7y5E5P9VJ27FPICPcEuE2S/c8ng9E0tD2LsS0vSDZtkutMD3JoVwroZ0HI4hMidg0qy9dGfdzPkat0Ze7HFLqFmZXzDBFUgwcDiZRRIazrCJIg2cIZ1sC9/Cn3udoUxD/OCk9X6Gc1r0mq7HYUykwALuM3e70F/cgSqd5LVD5Adj7VmUaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C2dtdEHJXcN9+WtdTUFqQ0eyc4qTJl5/hCb1fiKQ5rs=;
- b=mQM9eWWfSX4RN9KZ56Inznc7MLfAjHqsk6i4DyaTAHmYM0WUF7puZGarYMdl76pTJgXAdD5XvIMBl5jimQpuE97EWYWy+ajwIRuvCGoHyYYEB8+6JtmkOuASARHzEtMP3ylPEmStbfNFz6aHV/7fcQIKT/IwEflFwfekRck6V6faZdkCHnWnQc24M9DiYlCMKAnily+X15gQN7SuGeFFHmaWWbfGPuj1H6H05Je4D/Fh76yPSZjCYHpzeeArXyx9Go54ww+Y/7lqLd6ehbW7KyzZqWBoYrA5JXelGQ+SpOmtlIcQtwR1cs80GmtosjcXUMBs80JxZY1lOvtzPrpeVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
- dkim=pass header.d=mips.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C2dtdEHJXcN9+WtdTUFqQ0eyc4qTJl5/hCb1fiKQ5rs=;
- b=MawT0w1UEc5RXPrt7VRsbpCfbifKXOwiIsw3nE7xiEnFqXD5ezYrZVrhNxPQTX3SI7qGvxg+q2kf9/fgOerslb4dPWkJCKw6wOkQIvRgEGfsSzQptY1h2D8PJBbyb44DZlc085Tv3qp0rCB0tgQ+d70QppJSiBJ3kQt2qqs8v8s=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1038.namprd22.prod.outlook.com (10.174.167.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.13; Tue, 3 Sep 2019 14:46:46 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2220.021; Tue, 3 Sep 2019
- 14:46:46 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "salyzyn@android.com" <salyzyn@android.com>,
-        "0x7f454c46@gmail.com" <0x7f454c46@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>
-Subject: Re: [PATCH v2 7/8] mips: vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
-Thread-Topic: [PATCH v2 7/8] mips: vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
-Thread-Index: AQHVYmZolDG5W8Ccs0Osntbpyln8KA==
-Date:   Tue, 3 Sep 2019 14:46:45 +0000
-Message-ID: <20190903143801.7upetfqe6upouzlh@pburton-laptop>
-References: <20190830135902.20861-1-vincenzo.frascino@arm.com>
- <20190830135902.20861-8-vincenzo.frascino@arm.com>
-In-Reply-To: <20190830135902.20861-8-vincenzo.frascino@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0065.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:60::29) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.196.167.206]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 191c575a-871f-4f0c-c469-08d7307d8afc
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1038;
-x-ms-traffictypediagnostic: MWHPR2201MB1038:
-x-microsoft-antispam-prvs: <MWHPR2201MB103838333F82D0AC004289CEC1B90@MWHPR2201MB1038.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(346002)(366004)(376002)(136003)(39840400004)(189003)(199004)(8676002)(6512007)(9686003)(55236004)(102836004)(33716001)(6506007)(386003)(66946007)(6486002)(6116002)(305945005)(7736002)(3846002)(4326008)(71200400001)(5660300002)(71190400001)(81166006)(76176011)(81156014)(66476007)(229853002)(66446008)(64756008)(66556008)(256004)(486006)(478600001)(8936002)(44832011)(446003)(11346002)(476003)(7416002)(14454004)(53936002)(25786009)(2906002)(186003)(42882007)(316002)(54906003)(58126008)(66066001)(6436002)(99286004)(6916009)(26005)(6246003)(52116002)(1076003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1038;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: B6LdeD6ARa35RtAijdqKNArBm3t/8A9hKXqTAJN1zI4pQnH0PHd/1Tt6OZXQNYobdEbZrLthmjAgUpXvFfFmsoCyVekecBhTw4G32beibyf7kO+4+VPxA6P9kl6wYty+SUTJZIxNDxo7qUOTQf2aEI3MsoCVtzp9bRxfTteizZ33keTpOqL4R6QaqiW/1NtPuKaIB6LZwE0J4fvLMzdH7P5akBD7lP9TzrKqfKpvXQtS5yWACSSNxpYptdhn9BQdfbcc9ag/i3zhzKR9E7la9SYfgppXd695v+FhpjEXrv3LG4u+ZDqztGJ+NyI1x9RrbOylmLb8SsXCNXTiYhoSEx04WtbS+z8HUScKp+P8aFd+DvOCOXQNVN1C/jTGj827HI3eKRRr/ktKcJHihQZUjWn4fkuJTY9M9ZyUhtXUQJU=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <AC316F9566DBF246B86E082AA7B4F9C9@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Sep 2019 10:49:10 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:33257 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICOtJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:49:09 -0400
+Received: by mail-vs1-f65.google.com with SMTP id s18so4422328vsa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:49:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CQLkGwKQ606SBhDXYVZ/wIEqALYPfmqGkU+b2OoxSog=;
+        b=KHMycYhG2Y7WHnw+EuBG4+CdLshJqNlVA/OT7aQHdigAAwCUgOApY5f6VL8hxznVHt
+         JWNHYAo+S/rFPORr1CpNVbINUk7JIin6Cs1Eka7rCL2nl1w8qq1M62XggCgUaMnURSGi
+         33Oxu+V3NVbtK/KbO0KIxVVKWLIUBG/xGRC3O2XMyB5CHGA2T0QKNWsoBVGadGaRruof
+         zbTrQEfkXyKf/QmAgHwUZzOXzdt8Q40N3Kqe+pKJCALXF9OTCRj3gDDfT5/MendnZxVy
+         Blc7JYR/GDFBtqv0NhshUYQInCUje++lKyDQQ5ZUTusnBi8U/Wal9R+YCiFUZ8FMUpDz
+         3w8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CQLkGwKQ606SBhDXYVZ/wIEqALYPfmqGkU+b2OoxSog=;
+        b=fHyy2XmWH84BUcT6jlIPcQiwQDMTqEd9SVeHXrDRfqNUWcSJbTH/VpQrXs0sxxZvAk
+         yMEqTZj9anZKOvDMkHS7B9g7gBQ8Nt986bE/bWt5/pIVy3q30tDXPmaxGnya1gIkMuYY
+         CndvR5KlOQC+PZ5qf40VRaMUd8z/Ck0e1qo/UB5uSG76JYMDHYxIwKpLrk8OnLZP6ZAi
+         oYr2YhBvjBQ/7+Lv+rPobChs3fRw2F6ZRGFYJciFb8BhcB3gmQ17K8Lb0IEbBOawiBPq
+         j/P2kZ2At6Oj96gqucOGy/IEEx611Kfx9AEEMd/b3gzLaX2MA+d63SzPHJq+W1cfU2GP
+         bdAw==
+X-Gm-Message-State: APjAAAVQxVfDx5E4kZJIAddJCiua1lIwCRGQNvN1fMMwwZO56j3CWsTx
+        1HpdGeTM0C5TsoJ3LielUqmccfyHzhsyNHq5HHvjKw==
+X-Google-Smtp-Source: APXvYqyd0pWvJiNrUztCCQ87hmga1RG1L9BG5LyLAKxB8i0L1jom1pOqkHDVUIvJHWJhzw9BQ4YovByAtRfexvKB21U=
+X-Received: by 2002:a67:fe4e:: with SMTP id m14mr19402036vsr.34.1567522148468;
+ Tue, 03 Sep 2019 07:49:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 191c575a-871f-4f0c-c469-08d7307d8afc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 14:46:45.8460
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 43If+A1jkVysJ79RZxyyjgZKbY7njpb/vP+0GBFJH8Yr+6b+gU88ABJvtBjIed3Hb9b3YXIDyAOw2SEG8+a0Vw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1038
+References: <20190902035842.2747-1-andrew@aj.id.au> <20190902035842.2747-2-andrew@aj.id.au>
+ <CACPK8XfYgEUfaK6rtr+FdEq-Vau6d4wE2Rvfp6Q4G2-kjVLT0g@mail.gmail.com> <83570e25-b20a-4a17-85ea-15a9a53289bf@www.fastmail.com>
+In-Reply-To: <83570e25-b20a-4a17-85ea-15a9a53289bf@www.fastmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 3 Sep 2019 16:48:32 +0200
+Message-ID: <CAPDyKFpWJu3RH4TWoO_wcJq0LDrM_fAUfsCC==e8O_6A8dLhiA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] mmc: sdhci-of-aspeed: Fix link failure for SPARC
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Joel Stanley <joel@jms.id.au>, Arnd Bergmann <arnd@arndb.de>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincenzo,
+On Mon, 2 Sep 2019 at 07:26, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Mon, 2 Sep 2019, at 13:42, Joel Stanley wrote:
+> > On Mon, 2 Sep 2019 at 03:58, Andrew Jeffery <andrew@aj.id.au> wrote:
+> > >
+> > > Resolves the following build error reported by the 0-day bot:
+> > >
+> > >     ERROR: "of_platform_device_create" [drivers/mmc/host/sdhci-of-aspeed.ko] undefined!
+> > >
+> > > SPARC does not set CONFIG_OF_ADDRESS so the symbol is missing. Guard the
+> > > callsite to maintain build coverage for the rest of the driver.
+> > >
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> > > ---
+> > >  drivers/mmc/host/sdhci-of-aspeed.c | 38 ++++++++++++++++++++----------
+> > >  1 file changed, 25 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
+> > > index d5acb5afc50f..96ca494752c5 100644
+> > > --- a/drivers/mmc/host/sdhci-of-aspeed.c
+> > > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
+> > > @@ -224,10 +224,30 @@ static struct platform_driver aspeed_sdhci_driver = {
+> > >         .remove         = aspeed_sdhci_remove,
+> > >  };
+> > >
+> > > -static int aspeed_sdc_probe(struct platform_device *pdev)
+> > > -
+> > > +static int aspeed_sdc_create_sdhcis(struct platform_device *pdev)
+> > >  {
+> > > +#if defined(CONFIG_OF_ADDRESS)
+> >
+> > This is going to be untested code forever, as no one will be running
+> > on a chip with this hardware present but OF_ADDRESS disabled.
+> >
+> > How about we make the driver depend on OF_ADDRESS instead?
+>
+> Testing is split into two pieces here: compile-time and run-time.
+> Clearly the run-time behaviour is going to be broken on configurations
+> without CONFIG_OF_ADDRESS (SPARC as mentioned), but I don't think
+> that means we shouldn't allow it to be compiled in that case
+> (e.g. CONFIG_COMPILE_TEST performs a similar role).
+>
+> With respect to compile-time it's possible to compile either path as
+> demonstrated by the build failure report.
+>
+> Having said that there's no reason we  couldn't do what you suggest,
+> just it wasn't the existing solution pattern for the problem (there are
+> several other drivers that suffered the same bug that were fixed in the
+> style of this patch). Either way works, it's all somewhat academic.
+> Your suggestion is more obvious in terms of correctness, but this
+> patch is basically just code motion (the only addition is the `#if`/
+> `#endif` lines over what was already there if we disregard the
+> function declaration/invocation). I'll change it if there are further
+> complaints and a reason to do a v3.
 
-On Fri, Aug 30, 2019 at 02:59:01PM +0100, Vincenzo Frascino wrote:
-> VDSO_HAS_32BIT_FALLBACK has been removed from the core since
-> the architectures that support the generic vDSO library have
-> been converted to support the 32 bit fallbacks.
->=20
-> Remove unused VDSO_HAS_32BIT_FALLBACK from mips vdso.
->=20
-> Cc: Paul Burton <paul.burton@mips.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+I am in favor of Joel's suggestion as I don't really like having
+ifdefs bloating around in the driver (unless very good reasons).
+Please re-spin a v3.
 
-Do you want this one in mips-next too, or applied somewhere else along
-with the rest of the series? If the latter:
+Another option is to implement stub function and to deal with error
+codes, but that sounds more like a long term thingy, if even
+applicable here.
 
-    Acked-by: Paul Burton <paul.burton@mips.com>
-
-Thanks,
-    Paul
-
-> ---
->  arch/mips/include/asm/vdso/gettimeofday.h | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/arch/mips/include/asm/vdso/gettimeofday.h b/arch/mips/includ=
-e/asm/vdso/gettimeofday.h
-> index e78462e8ca2e..5ad2b086626d 100644
-> --- a/arch/mips/include/asm/vdso/gettimeofday.h
-> +++ b/arch/mips/include/asm/vdso/gettimeofday.h
-> @@ -107,8 +107,6 @@ static __always_inline int clock_getres_fallback(
-> =20
->  #if _MIPS_SIM !=3D _MIPS_SIM_ABI64
-> =20
-> -#define VDSO_HAS_32BIT_FALLBACK	1
-> -
->  static __always_inline long clock_gettime32_fallback(
->  					clockid_t _clkid,
->  					struct old_timespec32 *_ts)
-> --=20
-> 2.23.0
->=20
+Kind regards
+Uffe
