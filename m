@@ -2,107 +2,137 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ADEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD85C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E4622CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5389E22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567498931;
+	bh=3/JPGZ4D3hGv1VMXcX2nDpmVDwHoIw8Nh10e4io2B8Y=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=LpH+RqPldVgTl2e91P0JVNykevIbyHgz52TTlLu35Nm76rLPNklaLGgvBz7VTOId2
+	 +yittsJykFnUcc5LlJBkHWKZ/eJldxJOKWlNhFjDSJFk8DEwg67gCK0vdBSRrNRJUp
+	 vBQUA00pM4OaGAs4s8mhhjC7y8W2arBv8Ty6DX6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbfICITD (ORCPT
+        id S1727667AbfICIWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:19:03 -0400
-Received: from mga14.intel.com ([192.55.52.115]:51418 "EHLO mga14.intel.com"
+        Tue, 3 Sep 2019 04:22:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:33864 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfICITC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:19:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 01:19:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
-   d="scan'208";a="198721560"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 01:18:59 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 03 Sep 2019 11:18:58 +0300
-Date:   Tue, 3 Sep 2019 11:18:58 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        lee.jones@linaro.org, Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: Tweak I2C SDA hold time on GemniLake to make touchpad work
-Message-ID: <20190903081858.GA2691@lahna.fi.intel.com>
-References: <CAB4CAwdo7H3QNEHLgG-h1Z_eRYkb+pc=V3Wvrmeju8fBByYJzw@mail.gmail.com>
+        id S1726452AbfICIWJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:22:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0694028;
+        Tue,  3 Sep 2019 01:22:09 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F12E03F246;
+        Tue,  3 Sep 2019 01:22:03 -0700 (PDT)
+Subject: Re: [PATCH] irqdomain: Add the missing assignment of domain->fwnode
+ for named fwnode
+To:     Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>
+References: <PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <4acd6871-ca66-b45d-50b8-8609eee0e488@kernel.org>
+Date:   Tue, 3 Sep 2019 09:22:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB4CAwdo7H3QNEHLgG-h1Z_eRYkb+pc=V3Wvrmeju8fBByYJzw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <PU1P153MB01694D9AF625AC335C600C5FBFBE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Jarkko
+Hi Dexuan,
 
-On Tue, Sep 03, 2019 at 04:10:27PM +0800, Chris Chiu wrote:
-> Hi,
+On 03/09/2019 00:14, Dexuan Cui wrote:
 > 
-> We're working on the acer Gemnilake laptop TravelMate B118-M for
-> touchpad not working issue. The touchpad fails to bring up and the
-> i2c-hid ouput the message as follows
->     [    8.317293] i2c_hid i2c-ELAN0502:00: hid_descr_cmd failed
-> We tried on latest linux kernel 5.3.0-rc6 and it reports the same.
+> Recently device pass-through stops working for Linux VM running on Hyper-V.
 > 
-> We then look into I2C signal level measurement to find out why.
-> The following is the signal output from LA for the SCL/SDA.
-> https://imgur.com/sKcpvdo
-> The SCL frequency is ~400kHz from the SCL period, but the SDA
-> transition is quite weird. Per the I2C spec, the data on the SDA line
-> must be stable during the high period of the clock. The HIGH or LOW
-> state of the data line can only change when the clock signal on the
-> SCL line is LOW. The SDA period span across 2 SCL high, I think
-> that's the reason why the I2C read the wrong data and fail to initialize.
+> git-bisect shows the regression is caused by the recent commit
+> 467a3bb97432 ("PCI: hv: Allocate a named fwnode ..."), but the root cause
+> is that the commit d59f6617eef0 forgets to set the domain->fwnode for
+> IRQCHIP_FWNODE_NAMED*, and as a result:
 > 
-> Thus, we treak the SDA hold time by the following modification.
+> 1. The domain->fwnode remains to be NULL.
 > 
-> --- a/drivers/mfd/intel-lpss-pci.c
-> +++ b/drivers/mfd/intel-lpss-pci.c
-> @@ -97,7 +97,8 @@ static const struct intel_lpss_platform_info bxt_uart_info = {
->  };
+> 2. irq_find_matching_fwspec() returns NULL since "h->fwnode == fwnode" is
+> false, and pci_set_bus_msi_domain() sets the Hyper-V PCI root bus's
+> msi_domain to NULL.
 > 
->  static struct property_entry bxt_i2c_properties[] = {
-> -       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 42),
-> +       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 230),
->         PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
->         PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 208),
->         { },
+> 3. When the device is added onto the root bus, the device's dev->msi_domain
+> is set to NULL in pci_set_msi_domain().
 > 
-> The reason why I choose sda hold time is by the Table 10 of
-> https://www.nxp.com/docs/en/user-guide/UM10204.pdf, the device
-> must provide a hold time at lease 300ns and and 42 here is relatively
-> too small. The signal measurement result for the same pin on Windows
-> is as follows.
-> https://imgur.com/BtKUIZB
-> Comparing to the same result running Linux
-> https://imgur.com/N4fPTYN
+> 4. When a device driver tries to enable MSI-X, pci_msi_setup_msi_irqs()
+> calls arch_setup_msi_irqs(), which uses the native MSI chip (i.e.
+> arch/x86/kernel/apic/msi.c: pci_msi_controller) to set up the irqs, but
+> actually pci_msi_setup_msi_irqs() is supposed to call
+> msi_domain_alloc_irqs() with the hbus->irq_domain, which is created in
+> hv_pcie_init_irq_domain() and is associated with the Hyper-V chip
+> hv_msi_irq_chip. Consequently, the irq line is not properly set up, and
+> the device driver can not receive any interrupt.
 > 
-> After applying the sda hold time tweak patch above, the touchpad can
-> be correctly initialized and work. The LA signal is shown as down below.
-> https://imgur.com/B3PmnIp
+> Fixes: d59f6617eef0 ("genirq: Allow fwnode to carry name information only")
+> Fixes: 467a3bb97432 ("PCI: hv: Allocate a named fwnode instead of an address-based one")
+> Reported-by: Lili Deng <v-lide@microsoft.com>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> ---
 > 
-> The chart which has yellow mark is the tweak version, the red marks
-> the original version.
+> Note: the commit 467a3bb97432 ("PCI: hv: Allocate a named fwnode ...") has not
+> gone in Linus's tree yet (the commit is in linux-next for a while), so the commit ID
+> in the changelog can change when it goes in Linus's tree.
+
+This branch is supposed to be stable, and I try to only apply fixes to
+it. This normally ensures that commit IDs are the same once they land in
+Linus' tree.
+
+> This patch works in my test, but I'm not 100% sure this is the right fix. 
 > 
-> I need suggestions about whether if the hold time is the value I can tweak?
-> Or I should modify sda falling time? Please help if any better idea.
+> Looking forward to your comment!
 > 
-> Thanks
+>  kernel/irq/irqdomain.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index e7bbab149750..132672b74e4b 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -149,6 +149,7 @@ struct irq_domain *__irq_domain_add(struct fwnode_handle *fwnode, int size,
+>  		switch (fwid->type) {
+>  		case IRQCHIP_FWNODE_NAMED:
+>  		case IRQCHIP_FWNODE_NAMED_ID:
+> +			domain->fwnode = fwnode;
+>  			domain->name = kstrdup(fwid->name, GFP_KERNEL);
+>  			if (!domain->name) {
+>  				kfree(domain);
+> 
+
+Looks absolutely correct to me, thanks for fixing it. I've applied it on
+top of irqchip-next.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead, it just smells funny...
