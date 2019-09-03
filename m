@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080BEC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2113C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA2B223878
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABD7023431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528045;
-	bh=jL960mftVsy4K2E1ETmoVa7GLoiRlSFtBXSAOIO1zaM=;
+	s=default; t=1567528051;
+	bh=jsNo2JAtwLO5t8pQDhbmm0cWLOVY3Kf9g8u0X5fQFxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E9zHUOQL5kr/K09+nX44KIEgtHs4xqyMgF3KBVCcHVepou5AVDxnfaBNjloGqN7m2
-	 pMKPQ67BEngHiAuO3eOMUPiKAJUTrtKuuepHAHPTMTXAQu9+DJsxYgvgZl/ATw5htZ
-	 x8rE6QOoPqWnmZKv1hl50awRn2eP3wExpmDt0iCg=
+	b=OfAHrV5Ko38LRp0brilHwwiQW+975xSeyvybf23pX63hzHYT9b/Dmlh3+hpjzlLZO
+	 ILKuq2TKNOx1jiS4Unm1CARnJbVlu86nmGLBhy1Rvsy/tqceWPo4TACt1JhIld1yM9
+	 aWoO/Oa5Bla4N54XvAGgyjPbG3cfI0VCJNyIjuuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbfICQ1Z (ORCPT
+        id S1730871AbfICQ1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:27:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48686 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730835AbfICQ1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:21 -0400
+        id S1730435AbfICQ10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB63623431;
-        Tue,  3 Sep 2019 16:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0800238D0;
+        Tue,  3 Sep 2019 16:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528040;
-        bh=jL960mftVsy4K2E1ETmoVa7GLoiRlSFtBXSAOIO1zaM=;
+        s=default; t=1567528045;
+        bh=jsNo2JAtwLO5t8pQDhbmm0cWLOVY3Kf9g8u0X5fQFxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nZRvBFHJg3rBVs21y87VOcjcF/AVWl9K9aqWSULDUtETkz20eL8K/nhz3oYoE7fCn
-         YucNfy2jDlLY9TThDuHutSQz7AyOC87+moElzAs6YdGhdXanAHWnXqoLt30er1euZH
-         s1S+3jlEZaa/734RKitO+EU/fCbl/RN0hawF7Dzc=
+        b=lZ4TzqjvCH5uSy+yH+F8qU8tUoSiWk1csju1R6EAe+Yqqoj+JEhHMDu0qbbwBrNOy
+         un9/6bm/Kku14QmjqCM6L1evoR5aRLfGMXEQnMIcSxEqaoCG+mm7cBJ4JXY3Qq3537
+         4+qIn7tqCgkLaVTQZKlPegFnoJ1WRMghsDSd1Mvc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 067/167] dt-bindings: iio: adc: exynos-adc: Add S5PV210 variant
-Date:   Tue,  3 Sep 2019 12:23:39 -0400
-Message-Id: <20190903162519.7136-67-sashal@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>, Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 069/167] mt76: fix corrupted software generated tx CCMP PN
+Date:   Tue,  3 Sep 2019 12:23:41 -0400
+Message-Id: <20190903162519.7136-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,42 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit a9b0a2a7c19316588421b94946c8e2e5a84ac14e ]
+[ Upstream commit 906d2d3f874a54183df5a609fda180adf0462428 ]
 
-Add information about new compatible for S5PV210
+Since ccmp_pn is u8 *, the second half needs to start at array index 4
+instead of 0. Fixes a connection stall after a certain amount of traffic
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 23405236460b9 ("mt76: fix transmission of encrypted management frames")
+Cc: stable@vger.kernel.org
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../devicetree/bindings/iio/adc/samsung,exynos-adc.txt        | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-index 6c49db7f8ad25..a10c1f89037de 100644
---- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.txt
-@@ -11,7 +11,7 @@ New driver handles the following
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
+index 6542644bc3259..cec31f0c3017b 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2_mac_common.c
+@@ -402,7 +402,7 @@ void mt76x2_mac_write_txwi(struct mt76x2_dev *dev, struct mt76x2_txwi *txwi,
+ 		ccmp_pn[6] = pn >> 32;
+ 		ccmp_pn[7] = pn >> 40;
+ 		txwi->iv = *((__le32 *)&ccmp_pn[0]);
+-		txwi->eiv = *((__le32 *)&ccmp_pn[1]);
++		txwi->eiv = *((__le32 *)&ccmp_pn[4]);
+ 	}
  
- Required properties:
- - compatible:		Must be "samsung,exynos-adc-v1"
--				for exynos4412/5250 and s5pv210 controllers.
-+				for exynos4412/5250 controllers.
- 			Must be "samsung,exynos-adc-v2" for
- 				future controllers.
- 			Must be "samsung,exynos3250-adc" for
-@@ -28,6 +28,8 @@ Required properties:
- 				the ADC in s3c2443 and compatibles
- 			Must be "samsung,s3c6410-adc" for
- 				the ADC in s3c6410 and compatibles
-+			Must be "samsung,s5pv210-adc" for
-+				the ADC in s5pv210 and compatibles
- - reg:			List of ADC register address range
- 			- The base address and range of ADC register
- 			- The base address and range of ADC_PHY register (every
+ 	spin_lock_bh(&dev->mt76.lock);
 -- 
 2.20.1
 
