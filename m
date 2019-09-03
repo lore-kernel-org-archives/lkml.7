@@ -2,92 +2,116 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998A4C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B40FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A82F230F2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:58:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qpGoVUUt"
+	by mail.kernel.org (Postfix) with ESMTP id 7CC5821883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbfICI61 (ORCPT
+        id S1728406AbfICI63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:58:27 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:35976 "EHLO mail.skyhub.de"
+        Tue, 3 Sep 2019 04:58:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33712 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfICI61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:58:27 -0400
-Received: from zn.tnic (p200300EC2F0CBF0008E9AF92B14A1F7E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:bf00:8e9:af92:b14a:1f7e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725888AbfICI62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:58:28 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A0AA91EC0428;
-        Tue,  3 Sep 2019 10:58:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1567501101;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3CsF8bhDZKwgwLASVgI+cCHhHJIZXtwmCXB+oV5r6YQ=;
-        b=qpGoVUUt9clSlVfR0Y7O5cZ1/F6vWs+eCyIDwVFZ6+jzADjKZFvLKACCb3hsF/z5s3zjVT
-        ZBODLIY6C75WJYKRt60jrAZhrJfHQqJWzjLZw3HB0hNyk7Jdv4wV3gMKKjwF9uSfw0Ruwt
-        0pat1qASCK6Qwp3KmFfW+gPVvKHHzsg=
-Date:   Tue, 3 Sep 2019 10:58:16 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     "Hawa, Hanna" <hhhawa@amazon.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
-        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
-        "benh@amazon.com" <benh@amazon.com>,
-        "ronenk@amazon.com" <ronenk@amazon.com>,
-        "talel@amazon.com" <talel@amazon.com>,
-        "jonnyc@amazon.com" <jonnyc@amazon.com>,
-        "hanochu@amazon.com" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
-Subject: Re: [PATCH v3 4/4] edac: Add support for Amazon's Annapurna Labs L2
- EDAC
-Message-ID: <20190903085816.GA11641@zn.tnic>
-References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
- <1563197049-12679-5-git-send-email-hhhawa@amazon.com>
- <20190903072655.kz5x7n3477dg4yap@rric.localdomain>
- <2bce020a-bf7e-1d54-48c3-0aa6d23c84d8@amazon.com>
- <20190903084614.mthff6hzbchkw7t2@rric.localdomain>
+        by mx1.redhat.com (Postfix) with ESMTPS id 741718665D;
+        Tue,  3 Sep 2019 08:58:28 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9FF160C18;
+        Tue,  3 Sep 2019 08:58:25 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 10:58:23 +0200
+From:   Andrew Jones <drjones@redhat.com>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 10/21] RISC-V: KVM: Handle MMIO exits for VCPU
+Message-ID: <20190903085823.s4amn27pewc54hl2@kamzik.brq.redhat.com>
+References: <20190829135427.47808-1-anup.patel@wdc.com>
+ <20190829135427.47808-11-anup.patel@wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903084614.mthff6hzbchkw7t2@rric.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190829135427.47808-11-anup.patel@wdc.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 03 Sep 2019 08:58:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:46:24AM +0000, Robert Richter wrote:
-> This is good, but recent practice is also to have all the drivers for
-> the same piece of hardware in a single file, see e.g. thunderx_edac.c.
-> I don't know how detailed this was discussed already, but I would
-> prefer to join the code.
+On Thu, Aug 29, 2019 at 01:56:18PM +0000, Anup Patel wrote:
+>  int kvm_riscv_vcpu_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  {
+> -	/* TODO: */
+> +	u8 data8;
+> +	u16 data16;
+> +	u32 data32;
+> +	u64 data64;
+> +	ulong insn;
+> +	int len, shift;
+> +
+> +	insn = vcpu->arch.mmio_decode.insn;
+> +
+> +	if (run->mmio.is_write)
+> +		goto done;
+> +
+> +	len = vcpu->arch.mmio_decode.len;
+> +	shift = vcpu->arch.mmio_decode.shift;
+> +
+> +	switch (len) {
+> +	case 1:
+> +		data8 = *((u8 *)run->mmio.data);
+> +		SET_RD(insn, &vcpu->arch.guest_context,
+> +			(ulong)data8 << shift >> shift);
+> +		break;
+> +	case 2:
+> +		data16 = *((u16 *)run->mmio.data);
+> +		SET_RD(insn, &vcpu->arch.guest_context,
+> +			(ulong)data16 << shift >> shift);
+> +		break;
+> +	case 4:
+> +		data32 = *((u32 *)run->mmio.data);
+> +		SET_RD(insn, &vcpu->arch.guest_context,
+> +			(ulong)data32 << shift >> shift);
+> +		break;
+> +	case 8:
+> +		data64 = *((u64 *)run->mmio.data);
+> +		SET_RD(insn, &vcpu->arch.guest_context,
+> +			(ulong)data64 << shift >> shift);
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	};
+> +
+> +done:
+> +	/* Move to next instruction */
+> +	vcpu->arch.guest_context.sepc += INSN_LEN(insn);
+> +
 
-This is no longer needed anymore. Check out this thread:
+As I pointed out in the last review, just moving this instruction skip
+here is not enough. Doing so introduces the same problem that 2113c5f62b74
+("KVM: arm/arm64: Only skip MMIO insn once") fixes for arm.
 
-https://lkml.kernel.org/r/1559211329-13098-3-git-send-email-hhhawa@amazon.com
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks,
+drew
