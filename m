@@ -2,290 +2,205 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A502C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75041C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E797022CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F87E22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:30:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tgRlscW4"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="PACcrujt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfICHaL (ORCPT
+        id S1727845AbfICHae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:30:11 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34799 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbfICHaL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:30:11 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s18so16281580wrn.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:30:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=pSCJycaKVh704Ac0S4neijcFEZ9GmBRQLJR3eMBbbCU=;
-        b=tgRlscW4dUEuVCGbWnPgzT9V8/L4/03gpsjK0WJYLO1GlhohBzsTHDNVvNhUqWJHJF
-         l4kW9qic54u3Tp/nztHukXAIMLr69gPXvNwznen0UWvLlNlaWbueEjHs0ZfwDYl0B89T
-         Q9DdfEFk6qFtx7hgB39DPC34CfIOizzxryX0dBVk7xRj47FeVyxBiICifGjhB5Xrvwj2
-         VaCrafQfyGgkJuvV441WC5KhYspZAv+q6G30TMkR4cLVMkwDPgZaup74kGIwPQIHdmw4
-         cCnBBUCLoKhHBnJUgmOiMQmlTzK9pV7Ok6edfvL7a/sRu7YTVZEhOG9pYuObis2oaL+y
-         8fag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=pSCJycaKVh704Ac0S4neijcFEZ9GmBRQLJR3eMBbbCU=;
-        b=WyESJcIGsTTftHjkXCizoejxXKG0eX3HUHY/tSojgxGf/YRawbx+N1/AOayZdUEeI3
-         0asx3rIAd7wVeW/akIgZ7/YKz37gwPfyTN0X2OrvhVSOgsg1cWtfdiUw/kXGVwIWDtYO
-         pCA7bm02tC9SF99sIc1OwODPE8SfXKb7koGSOuzxPs9i81HJ/gywBp2SoOYBiMwwZ6Iy
-         nmehzNl0DJTMAhaQ3shNKE/esCHq3ZXAQp5/YcV2MbbXoxbmGBwVkEaBEzKeXsAE7Hjm
-         OEYhUBIaqwO1dLrgHtYP+U2LFH2b5mUx0C+8QFoAdwtfjvhE44+KU6oftp/hVwBxcQWa
-         zdfw==
-X-Gm-Message-State: APjAAAWx+2J68V2ykg8M3q+DIm+Jvchyx0gWGzW6dEyBeuaJjALm0Jgh
-        r/y+dIPgHiS2l0zjqgBO4IHpIA==
-X-Google-Smtp-Source: APXvYqz4ooGnpbFcyZaSbyrgA6PANL0nccU1Lisypx0A74u9MR9WVmFK+4ohxfGtbbbqQaeYbOzJHQ==
-X-Received: by 2002:adf:de0d:: with SMTP id b13mr16181290wrm.140.1567495807765;
-        Tue, 03 Sep 2019 00:30:07 -0700 (PDT)
-Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id t198sm25856153wmt.39.2019.09.03.00.30.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 00:30:07 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Carlo Caione <carlo@caione.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Tao Zeng <tao.zeng@amlogic.com>
-Subject: Re: [PATCH 4/4] arm64: dts: add support for A1 based Amlogic AD401
-In-Reply-To: <1567493475-75451-5-git-send-email-jianxin.pan@amlogic.com>
-References: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com> <1567493475-75451-5-git-send-email-jianxin.pan@amlogic.com>
-Date:   Tue, 03 Sep 2019 09:30:06 +0200
-Message-ID: <1jef0xrg5d.fsf@starbuckisacylon.baylibre.com>
+        Tue, 3 Sep 2019 03:30:34 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:28666 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbfICHae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 03:30:34 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46MzBb0xz5z9ttBV;
+        Tue,  3 Sep 2019 09:30:31 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=PACcrujt; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id T0xRNXlM8bhP; Tue,  3 Sep 2019 09:30:31 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46MzBZ6yTWz9ttBQ;
+        Tue,  3 Sep 2019 09:30:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1567495831; bh=k+NYjZeOfQFXUZQiLH4UtQme2OzTv4EeVCcmJnZlXBg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PACcrujt/U+pxq6p5AU120JT3mbVQ3cW4oPpaXGbcbo9veT9LgqsFTyRF5V5MDw6t
+         h6HOwiDj4R7hIZnZYw3YSP24RxUHpxmf0peajHN8swFwfcWweeWL41p9BIqXw4BuvZ
+         HWOHEzFOceiIDOedYMTVw0tLK9IvknIMfWMwJ4Ak=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F129C8B7AF;
+        Tue,  3 Sep 2019 09:30:31 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id dIi89VWj3eRR; Tue,  3 Sep 2019 09:30:31 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF4558B777;
+        Tue,  3 Sep 2019 09:30:30 +0200 (CEST)
+Subject: Re: [PATCH v2 4/6] powerpc: Chunk calls to flush_dcache_range in
+ arch_*_memory
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Qian Cai <cai@lca.pw>, Nicholas Piggin <npiggin@gmail.com>,
+        Allison Randal <allison@lohutok.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190903052407.16638-1-alastair@au1.ibm.com>
+ <20190903052407.16638-5-alastair@au1.ibm.com>
+ <3bde4dbc-5176-0df5-a0bf-993eef2a333b@c-s.fr>
+ <f49d3a861ecd35b5c62ea1cd96a88751a3ad3649.camel@au1.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <aaea79e3-c0af-1a0c-f1c3-d8b12b3c2bb7@c-s.fr>
+Date:   Tue, 3 Sep 2019 08:51:57 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <f49d3a861ecd35b5c62ea1cd96a88751a3ad3649.camel@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03 Sep 2019 at 02:51, Jianxin Pan <jianxin.pan@amlogic.com> wrote:
 
-> Add basic support for the Amlogic A1 based Amlogic AD401 board:
-> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
-> Timer, UART. It's capable of booting up into the serial console.
->
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile           |   1 +
->  arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts |  30 ++++++
->  arch/arm64/boot/dts/amlogic/meson-a1.dtsi      | 121 +++++++++++++++++++++++++
->  3 files changed, 152 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index edbf128..1720c45 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-vega-s96.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-sei610.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-sm1-khadas-vim3l.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-a1-ad401.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-> new file mode 100644
-> index 00000000..3c05cc0
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-a1.dtsi"
-> +
-> +/ {
-> +	compatible = "amlogic,ad401", "amlogic,a1";
-> +	model = "Amlogic Meson A1 AD401 Development Board";
-> +
-> +	aliases {
-> +		serial0 = &uart_AO_B;
-> +	};
 
-Newline here please
+Le 03/09/2019 à 08:25, Alastair D'Silva a écrit :
+> On Tue, 2019-09-03 at 08:19 +0200, Christophe Leroy wrote:
+>>
+>> Le 03/09/2019 à 07:23, Alastair D'Silva a écrit :
+>>> From: Alastair D'Silva <alastair@d-silva.org>
+>>>
+>>> When presented with large amounts of memory being hotplugged
+>>> (in my test case, ~890GB), the call to flush_dcache_range takes
+>>> a while (~50 seconds), triggering RCU stalls.
+>>>
+>>> This patch breaks up the call into 1GB chunks, calling
+>>> cond_resched() inbetween to allow the scheduler to run.
+>>>
+>>> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+>>> ---
+>>>    arch/powerpc/mm/mem.c | 18 ++++++++++++++++--
+>>>    1 file changed, 16 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+>>> index cd540123874d..854aaea2c6ae 100644
+>>> --- a/arch/powerpc/mm/mem.c
+>>> +++ b/arch/powerpc/mm/mem.c
+>>> @@ -104,11 +104,14 @@ int __weak remove_section_mapping(unsigned
+>>> long start, unsigned long end)
+>>>    	return -ENODEV;
+>>>    }
+>>>    
+>>> +#define FLUSH_CHUNK_SIZE SZ_1G
+>>
+>> Maybe the name is a bit long for a local define. See if we could
+>> reduce
+>> code line splits below by shortening this name.
+>>
+>>> +
+>>>    int __ref arch_add_memory(int nid, u64 start, u64 size,
+>>>    			struct mhp_restrictions *restrictions)
+>>>    {
+>>>    	unsigned long start_pfn = start >> PAGE_SHIFT;
+>>>    	unsigned long nr_pages = size >> PAGE_SHIFT;
+>>> +	u64 i;
+>>>    	int rc;
+>>>    
+>>>    	resize_hpt_for_hotplug(memblock_phys_mem_size());
+>>> @@ -120,7 +123,12 @@ int __ref arch_add_memory(int nid, u64 start,
+>>> u64 size,
+>>>    			start, start + size, rc);
+>>>    		return -EFAULT;
+>>>    	}
+>>> -	flush_dcache_range(start, start + size);
+>>> +
+>>> +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
+>>> +		flush_dcache_range(start + i,
+>>> +				   min(start + size, start + i +
+>>> FLUSH_CHUNK_SIZE));
+>>
+>> My eyes don't like it.
+>>
+>> What about
+>> 	for (; i < size; i += FLUSH_CHUNK_SIZE) {
+>> 		int len = min(size - i, FLUSH_CHUNK_SIZE);
+>>
+>> 		flush_dcache_range(start + i, start + i + len);
+>> 		cond_resched();
+>> 	}
+>>
+>> or
+>>
+>> 	end = start + size;
+>> 	for (; start < end; start += FLUSH_CHUNK_SIZE, size -=
+>> FLUSH_CHUNK_SIZE) {
+>> 		int len = min(size, FLUSH_CHUNK_SIZE);
+>>
+>> 		flush_dcache_range(start, start + len);
+>> 		cond_resched();
+>> 	}
+>>
+>>> +		cond_resched();
+>>> +	}
+>>>    
+>>>    	return __add_pages(nid, start_pfn, nr_pages, restrictions);
+>>>    }
+>>> @@ -131,13 +139,19 @@ void __ref arch_remove_memory(int nid, u64
+>>> start, u64 size,
+>>>    	unsigned long start_pfn = start >> PAGE_SHIFT;
+>>>    	unsigned long nr_pages = size >> PAGE_SHIFT;
+>>>    	struct page *page = pfn_to_page(start_pfn) +
+>>> vmem_altmap_offset(altmap);
+>>> +	u64 i;
+>>>    	int ret;
+>>>    
+>>>    	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
+>>>    
+>>>    	/* Remove htab bolted mappings for this section of memory */
+>>>    	start = (unsigned long)__va(start);
+>>> -	flush_dcache_range(start, start + size);
+>>> +	for (i = 0; i < size; i += FLUSH_CHUNK_SIZE) {
+>>> +		flush_dcache_range(start + i,
+>>> +				   min(start + size, start + i +
+>>> FLUSH_CHUNK_SIZE));
+>>> +		cond_resched();
+>>> +	}
+>>> +
+>>
+>> This piece of code looks pretty similar to the one before. Can we
+>> refactor into a small helper ?
+>>
+> 
+> Not much point, it's removed in a subsequent patch.
+> 
 
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+But you tell me that you leave to people the opportunity to not apply 
+that subsequent patch, and that's the reason you didn't put that patch 
+before this one. In that case adding a helper is worth it.
 
-same
-
-> +	memory@0 {
-> +		device_type = "memory";
-> +		linux,usable-memory = <0x0 0x0 0x0 0x8000000>;
-> +	};
-> +};
-> +
-> +&uart_AO_B {
-> +	status = "okay";
-> +	/*pinctrl-0 = <&uart_ao_a_pins>;*/
-> +	/*pinctrl-names = "default";*/
-
-Remove the commented code please
-
-> +};
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> new file mode 100644
-> index 00000000..b98d648
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "amlogic,a1";
-> +
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <0x2>;
-> +		#size-cells = <0x0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&l2>;
-> +		};
-> +
-> +		l2: l2-cache0 {
-> +			compatible = "cache";
-> +		};
-> +	};
-
-New line here please
-
-With this minor comments adressed, looks good.
-
-Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			size = <0x0 0x800000>;
-> +			alignment = <0x0 0x400000>;
-> +			linux,cma-default;
-> +		};
-> +	};
-> +
-> +	sm: secure-monitor {
-> +		compatible = "amlogic,meson-gxbb-sm";
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		uart_AO: serial@fe001c00 {
-> +			compatible = "amlogic,meson-gx-uart",
-> +				     "amlogic,meson-ao-uart";
-> +			reg = <0x0 0xfe001c00 0x0 0x18>;
-> +			interrupts = <GIC_SPI 25 IRQ_TYPE_EDGE_RISING>;
-> +			clocks = <&xtal>, <&xtal>, <&xtal>;
-> +			clock-names = "xtal", "pclk", "baud";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart_AO_B: serial@fe002000 {
-> +			compatible = "amlogic,meson-gx-uart",
-> +				     "amlogic,meson-ao-uart";
-> +				     reg = <0x0 0xfe002000 0x0 0x18>;
-> +			interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-> +			clocks = <&xtal>, <&xtal>, <&xtal>;
-> +			clock-names = "xtal", "pclk", "baud";
-> +			status = "disabled";
-> +		};
-> +
-> +		gic: interrupt-controller@ff901000 {
-> +			compatible = "arm,gic-400";
-> +			reg = <0x0 0xff901000 0x0 0x1000>,
-> +			      <0x0 0xff902000 0x0 0x2000>,
-> +			      <0x0 0xff904000 0x0 0x2000>,
-> +			      <0x0 0xff906000 0x0 0x2000>;
-> +			interrupt-controller;
-> +			interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <0>;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10
-> +			(GIC_CPU_MASK_RAW(0xff) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +
-> +	xtal: xtal-clk {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <24000000>;
-> +		clock-output-names = "xtal";
-> +		#clock-cells = <0>;
-> +	};
-> +};
-> -- 
-> 2.7.4
+Christophe
