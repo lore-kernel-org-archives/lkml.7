@@ -2,106 +2,217 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E9EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E62C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF4A2053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E872343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YElJ2j2c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ny7CNQMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfICHrt (ORCPT
+        id S1727926AbfICHuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:47:49 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:50000 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfICHrs (ORCPT
+        Tue, 3 Sep 2019 03:50:12 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55993 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfICHuL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:47:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gGHouZH/ciuLGyIRExd41CGKa87B1imPF/6rkdY3lbg=; b=YElJ2j2cjWJ1exLoHh9Lpbmqv
-        hw/wtXMaB3TTMwc3g/SkOPult+gnfJTXSOgShNqQGiQPi4FGnWKO/L8hYZ8LjTKSbBeyedGsCJeC1
-        i/54yD30lPgCOwNoFj0uo+VQx/rSy3VIq1OVP/s8ECk13akb2FnpThTCis945OyiaA8GDkFYAXTq4
-        cGlDPArMTzyEOD6UFjDOjUIrKJw87nWQHX/LzmWMwX/wWrjd2kNCBPkDIU8KLZhfOxrBGd3vbTVAs
-        o9NBmUVOaBzJoFfjS6pDqkx5YuqAB9x9gPhIHNYCR90rjzFGNkwGS3/Z/3F1VPFP4mvNwnxfjWLkR
-        +sgHpbtfA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i53X6-0003Gi-RF; Tue, 03 Sep 2019 07:47:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AF5DF306010;
-        Tue,  3 Sep 2019 09:46:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 75C3A29BA4608; Tue,  3 Sep 2019 09:47:18 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 09:47:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
-Message-ID: <20190903074718.GT2386@hirez.programming.kicks-ass.net>
-References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
- <20190830160957.GC2634@redhat.com>
- <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
- <87o906wimo.fsf@x220.int.ebiederm.org>
- <20190902134003.GA14770@redhat.com>
- <87tv9uiq9r.fsf@x220.int.ebiederm.org>
- <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
- <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
- <878sr6t21a.fsf_-_@x220.int.ebiederm.org>
- <20190903074117.GX2369@hirez.programming.kicks-ass.net>
+        Tue, 3 Sep 2019 03:50:11 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g207so12946328wmg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:50:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4vZE09HDIWBO/CJ+tf4zc13wKX7qtMMzcbXhdHBRo6c=;
+        b=Ny7CNQMVzOyDTJtZ+D35rLWCPxO0fTYNx0rv1hA/Eg0KuBYjOI+lAFnHjDW51DHCBb
+         SMD26IppkD5fyB5kjX4dEvKFHY/nxcAS5VDavg8GUNf1SG+rbVmzmv+80zaeQpAVNajj
+         uaITNRtqol3uu9/CCFhxMsbhGJzZwvD7WlFzYoA1IFLbiaBMqZXw1ULZ034V+Tuypoj3
+         Dj+d82z67OlhdmVnDHrZsAtgmOLxZ5E3OnQnCKkNyRJv3i5UsqOJyZyD+rqexg5j297T
+         7ge1qlIt5mIdommqaziBKa9is2hi88PmMvDw9V1Smm5kKgskDFhuYPqsSfBWDA1xbcOG
+         rDVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4vZE09HDIWBO/CJ+tf4zc13wKX7qtMMzcbXhdHBRo6c=;
+        b=eJRRUuOtqswLHj0h27lADUbJw46y2hZsZU7jEFqHxnbU7pKSmSKGs5ndJnGYPGk5Vl
+         FMuqj5ZqQ6GvX4rD25ZIaX0xJAEv+UOJU3eHuZ2OFOFc6jOSCvH1z0/PhmM11v9wX7np
+         wcaaBZ5R+YTc3wRggSs3jhHx6rg1ZKmuQv8sH98O8qiaJ/AXhVFmSU8KXdq0JS/U0csf
+         VxW+I9saRrQMTtnZVBg7bXjEFm08eBVGgRGo0F4ct+qPa+tfZvxicnbZ5p7Kzfo3FAQC
+         optI46/zGccjeLvhj7U7svFK0gauUlpJKCVrr5LW/CGK6pRxsX39Wn5EtfPbWhvUEp2E
+         G7Rw==
+X-Gm-Message-State: APjAAAVWCZEWoFkLno2XdVS4Y1RESJqtL85p3wmIg4BoCD8hpNAkywZX
+        sVZ5bV/a2C7ypPJ8x3D9SLNqFw==
+X-Google-Smtp-Source: APXvYqzRpoTgdkP7LcbqlbvLQ/tqnEzKck2C5hl4YK2+VU7L/BHigKc/yps5U+IJM6T2nuW0hBbQsg==
+X-Received: by 2002:a1c:ed1a:: with SMTP id l26mr42215230wmh.34.1567497008463;
+        Tue, 03 Sep 2019 00:50:08 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:ca2:9689:fa5d:1fea? ([2a01:e34:ed2f:f020:ca2:9689:fa5d:1fea])
+        by smtp.googlemail.com with ESMTPSA id t13sm16071283wra.70.2019.09.03.00.50.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 00:50:07 -0700 (PDT)
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Long Li <longli@microsoft.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        John Garry <john.garry@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org
+References: <20190827225827.GA5263@ming.t460p>
+ <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
+ <20190828110633.GC15524@ming.t460p>
+ <alpine.DEB.2.21.1908281316230.1869@nanos.tec.linutronix.de>
+ <20190828135054.GA23861@ming.t460p>
+ <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
+ <20190903033001.GB23861@ming.t460p>
+ <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+ <20190903063125.GA21022@ming.t460p>
+ <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+ <20190903072848.GA22170@ming.t460p>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ mQINBFv/yykBEADDdW8RZu7iZILSf3zxq5y8YdaeyZjI/MaqgnvG/c3WjFaunoTMspeusiFE
+ sXvtg3ehTOoyD0oFjKkHaia1Zpa1m/gnNdT/WvTveLfGA1gH+yGes2Sr53Ht8hWYZFYMZc8V
+ 2pbSKh8wepq4g8r5YI1XUy9YbcTdj5mVrTklyGWA49NOeJz2QbfytMT3DJmk40LqwK6CCSU0
+ 9Ed8n0a+vevmQoRZJEd3Y1qXn2XHys0F6OHCC+VLENqNNZXdZE9E+b3FFW0lk49oLTzLRNIq
+ 0wHeR1H54RffhLQAor2+4kSSu8mW5qB0n5Eb/zXJZZ/bRiXmT8kNg85UdYhvf03ZAsp3qxcr
+ xMfMsC7m3+ADOtW90rNNLZnRvjhsYNrGIKH8Ub0UKXFXibHbafSuq7RqyRQzt01Ud8CAtq+w
+ P9EftUysLtovGpLSpGDO5zQ++4ZGVygdYFr318aGDqCljKAKZ9hYgRimPBToDedho1S1uE6F
+ 6YiBFnI3ry9+/KUnEP6L8Sfezwy7fp2JUNkUr41QF76nz43tl7oersrLxHzj2dYfWUAZWXva
+ wW4IKF5sOPFMMgxoOJovSWqwh1b7hqI+nDlD3mmVMd20VyE9W7AgTIsvDxWUnMPvww5iExlY
+ eIC0Wj9K4UqSYBOHcUPrVOKTcsBVPQA6SAMJlt82/v5l4J0pSQARAQABtCpEYW5pZWwgTGV6
+ Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz6JAlcEEwEIAEECGwEFCwkIBwIGFQoJ
+ CAsCBBYCAwECHgECF4ACGQEWIQQk1ibyU76eh+bOW/SP9LjScWdVJwUCXAkeagUJDRnjhwAK
+ CRCP9LjScWdVJ+vYEACStDg7is2JdE7xz1PFu7jnrlOzoITfw05BurgJMqlvoiFYt9tEeUMl
+ zdU2+r0cevsmepqSUVuUvXztN8HA/Ep2vccmWnCXzlE56X1AK7PRRdaQd1SK/eVsJVaKbQTr
+ ii0wjbs6AU1uo0LdLINLjwwItnQ83/ttbf1LheyN8yknlch7jn6H6J2A/ORZECTfJbG4ecVr
+ 7AEm4A/G5nyPO4BG7dMKtjQ+crl/pSSuxV+JTDuoEWUO+YOClg6azjv8Onm0cQ46x9JRtahw
+ YmXdIXD6NsJHmMG9bKmVI0I7o5Q4XL52X6QxkeMi8+VhvqXXIkIZeizZe5XLTYUvFHLdexzX
+ Xze0LwLpmMObFLifjziJQsLP2lWwOfg6ZiH8z8eQJFB8bYTSMqmfTulB61YO0mhd676q17Y7
+ Z7u3md3CLH7rh61wU1g7FcLm9p5tXXWWaAud9Aa2kne2O3sirO0+JhsKbItz3d9yXuWgv6w3
+ heOIF0b91JyrY6tjz42hvyjxtHywRr4cdAEQa2S7HeQkw48BQOG6PqQ9d3FYU34pt3WFJ19V
+ A5qqAiEjqc4N0uPkC79W32yLGdyg0EEe8v0Uhs3CxM9euGg37kr5fujMm+akMtR1ENITo+UI
+ fgsxdwjBD5lNb/UGodU4QvPipB/xx4zz7pS5+2jGimfLeoe7mgGJxrkBDQRb/8z6AQgAvSkg
+ 5w7dVCSbpP6nXc+i8OBz59aq8kuL3YpxT9RXE/y45IFUVuSc2kuUj683rEEgyD7XCf4QKzOw
+ +XgnJcKFQiACpYAowhF/XNkMPQFspPNM1ChnIL5KWJdTp0DhW+WBeCnyCQ2pzeCzQlS/qfs3
+ dMLzzm9qCDrrDh/aEegMMZFO+reIgPZnInAcbHj3xUhz8p2dkExRMTnLry8XXkiMu9WpchHy
+ XXWYxXbMnHkSRuT00lUfZAkYpMP7La2UudC/Uw9WqGuAQzTqhvE1kSQe0e11Uc+PqceLRHA2
+ bq/wz0cGriUrcCrnkzRmzYLoGXQHqRuZazMZn2/pSIMZdDxLbwARAQABiQI2BBgBCAAgFiEE
+ JNYm8lO+nofmzlv0j/S40nFnVScFAlv/zPoCGwwACgkQj/S40nFnVSf4OhAAhWJPjgUu6VfS
+ mV53AUGIyqpOynPvSaMoGJzhNsDeNUDfV5dEZN8K4qjuz2CTNvGIyt4DE/IJbtasvi5dW4wW
+ Fl85bF6xeLM0qpCaZtXAsU5gzp3uT7ut++nTPYW+CpfYIlIpyOIzVAmw7rZbfgsId2Lj7g1w
+ QCjvGHw19mq85/wiEiZZNHeJQ3GuAr/uMoiaRBnf6wVcdpUTFMXlkE8/tYHPWbW0YKcKFwJ3
+ uIsNxZUe6coNzYnL0d9GK2fkDoqKfKbFjNhW9TygfeL2Qhk949jMGQudFS3zlwvN9wwVaC0i
+ KC/D303DiTnB0WFPT8CltMAZSbQ1WEWfwqxhY26di3k9pj+X3BfOmDL9GBlnRTSgwjqjqzpG
+ VZsWouuTfXd9ZPPzvYdUBrlTKgojk1C8v4fhSqb+ard+bZcwNp8Tzl/EI9ygw6lYEATGCUYI
+ Wco+fjehCgG1FWvWavMU+jLNs8/8uwj1u+BtRpWFj4ug/VaDDIuiApKPwl1Ge+zoC7TLMtyb
+ c00W5/8EckjmNgLDIINEsOsidMH61ZOlwDKCxo2lbV+Ij078KHBIY76zuHlwonEQaHLCAdqm
+ WiI95pYZNruAJEqZCpvXDdClmBVMZRDRePzSljCvoHxn7ArEt3F14mabn2RRq/hqB8IhC6ny
+ xAEPQIZaxxginIFYEziOjR65AQ0EW//NCAEIALcJqSmQdkt04vIBD12dryF6WcVWYvVwhspt
+ RlZbZ/NZ6nzarzEYPFcXaYOZCOCv+Xtm6hB8fh5XHd7Y8CWuZNDVp3ozuqwTkzQuux/aVdNb
+ Fe4VNeKGN2FK1aNlguAXJNCDNRCpWgRHuU3rWwGUMgentJogARvxfex2/RV/5mzYG/N1DJKt
+ F7g1zEcQD3JtK6WOwZXd+NDyke3tdG7vsNRFjMDkV4046bOOh1BKbWYu8nL3UtWBxhWKx3Pu
+ 1VOBUVwL2MJKW6umk+WqUNgYc2bjelgcTSdz4A6ZhJxstUO4IUfjvYRjoqle+dQcx1u+mmCn
+ 8EdKJlbAoR4NUFZy7WUAEQEAAYkDbAQYAQgAIBYhBCTWJvJTvp6H5s5b9I/0uNJxZ1UnBQJb
+ /80IAhsCAUAJEI/0uNJxZ1UnwHQgBBkBCAAdFiEEGn3N4YVz0WNVyHskqDIjiipP6E8FAlv/
+ zQgACgkQqDIjiipP6E+FuggAl6lkO7BhTkrRbFhrcjCm0bEoYWnCkQtX9YFvElQeA7MhxznO
+ BY/r1q2Uf6Ifr3YGEkLnME/tQQzUwznydM94CtRJ8KDSa1CxOseEsKq6B38xJtjgYSxNdgQb
+ EIfCzUHIGfk94AFKPdV6pqqSU5VpPUagF+JxiAkoEPOdFiQCULFNRLMsOtG7yp8uSyJRp6Tz
+ cQ+0+1QyX1krcHBUlNlvfdmL9DM+umPtbS9F6oRph15mvKVYiPObI1z8ymHoc68ReWjhUuHc
+ IDQs4w9rJVAyLypQ0p+ySDcTc+AmPP6PGUayIHYX63Q0KhJFgpr1wH0pHKpC78DPtX1a7HGM
+ 7MqzQ4NbD/4oLKKwByrIp12wLpSe3gDQPxLpfGgsJs6BBuAGVdkrdfIx2e6ENnwDoF0Veeji
+ BGrVmjVgLUWV9nUP92zpyByzd8HkRSPNZNlisU4gnz1tKhQl+j6G/l2lDYsqKeRG55TXbu9M
+ LqJYccPJ85B0PXcy63fL9U5DTysmxKQ5RgaxcxIZCM528ULFQs3dfEx5euWTWnnh7pN30RLg
+ a+0AjSGd886Bh0kT1Dznrite0dzYlTHlacbITZG84yRk/gS7DkYQdjL8zgFr/pxH5CbYJDk0
+ tYUhisTESeesbvWSPO5uNqqy1dAFw+dqRcF5gXIh3NKX0gqiAA87NM7nL5ym/CNpJ7z7nRC8
+ qePOXubgouxumi5RQs1+crBmCDa/AyJHKdG2mqCt9fx5EPbDpw6Zzx7hgURh4ikHoS7/tLjK
+ iqWjuat8/HWc01yEd8rtkGuUcMqbCi1XhcAmkaOnX8FYscMRoyyMrWClRZEQRokqZIj79+PR
+ adkDXtr4MeL8BaB7Ij2oyRVjXUwhFQNKi5Z5Rve0a3zvGkkqw8Mz20BOksjSWjAF6g9byukl
+ CUVjC03PdMSufNLK06x5hPc/c4tFR4J9cLrV+XxdCX7r0zGos9SzTPGNuIk1LK++S3EJhLFj
+ 4eoWtNhMWc1uiTf9ENza0ntqH9XBWEQ6IA1gubCniGG+Xg==
+Message-ID: <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+Date:   Tue, 3 Sep 2019 09:50:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903074117.GX2369@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190903072848.GA22170@ming.t460p>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 09:41:17AM +0200, Peter Zijlstra wrote:
-> On Mon, Sep 02, 2019 at 11:52:01PM -0500, Eric W. Biederman wrote:
+On 03/09/2019 09:28, Ming Lei wrote:
+> On Tue, Sep 03, 2019 at 08:40:35AM +0200, Daniel Lezcano wrote:
+>> On 03/09/2019 08:31, Ming Lei wrote:
+>>> Hi Daniel,
+>>>
+>>> On Tue, Sep 03, 2019 at 07:59:39AM +0200, Daniel Lezcano wrote:
+>>>>
+>>>> Hi Ming Lei,
+>>>>
+>>>> On 03/09/2019 05:30, Ming Lei wrote:
+>>>>
+>>>> [ ... ]
+>>>>
+>>>>
+>>>>>>> 2) irq/timing doesn't cover softirq
+>>>>>>
+>>>>>> That's solvable, right?
+>>>>>
+>>>>> Yeah, we can extend irq/timing, but ugly for irq/timing, since irq/timing
+>>>>> focuses on hardirq predication, and softirq isn't involved in that
+>>>>> purpose.
+>>>>>
+>>>>>>  
+>>>>>>> Daniel, could you take a look and see if irq flood detection can be
+>>>>>>> implemented easily by irq/timing.c?
+>>>>>>
+>>>>>> I assume you can take a look as well, right?
+>>>>>
+>>>>> Yeah, I have looked at the code for a while, but I think that irq/timing
+>>>>> could become complicated unnecessarily for covering irq flood detection,
+>>>>> meantime it is much less efficient for detecting IRQ flood.
+>>>>
+>>>> In the series, there is nothing describing rigorously the problem (I can
+>>>> only guess) and why the proposed solution solves it.
+>>>>
+>>>> What is your definition of an 'irq flood'? A high irq load? An irq
+>>>> arriving while we are processing the previous one in the bottom halves?
+>>>
+>>> So far, it means that handling interrupt & softirq takes all utilization
+>>> of one CPU, then processes can't be run on this CPU basically, usually
+>>> sort of CPU lockup warning will be triggered.
+>>
+>> It is a scheduler problem then ?
 > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 2b037f195473..802958407369 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> 
-> > @@ -3857,7 +3857,7 @@ static void __sched notrace __schedule(bool preempt)
-> >  
-> >  	if (likely(prev != next)) {
-> >  		rq->nr_switches++;
-> > -		rq->curr = next;
-> > +		rcu_assign_pointer(rq->curr, next);
-> >  		/*
-> >  		 * The membarrier system call requires each architecture
-> >  		 * to have a full memory barrier after updating
-> 
-> This one is sad; it puts a (potentially) expensive barrier in here. And
-> I'm not sure I can explain the need for it. That is, we've not changed
-> @next before this and don't need to 'publish' it as such.
-> 
-> Can we use RCU_INIT_POINTER() or simply WRITE_ONCE(), here?
+> Scheduler can do nothing if the CPU is taken completely by handling
+> interrupt & softirq, so seems not a scheduler problem, IMO.
 
-That is, I'm thinking we qualify for point 3 (both a and b) of
-RCU_INIT_POINTER().
+Why? If there is a irq pressure on one CPU reducing its capacity, the
+scheduler will balance the tasks on another CPU, no?
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
