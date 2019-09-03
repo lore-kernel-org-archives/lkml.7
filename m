@@ -2,171 +2,106 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B891AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64482C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9054322DCC
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567503446;
-	bh=1pvNoYETXZHOaryWxGlz7vAjmxKlkKa4yKwwHuSZMVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GcUAEgjUNZ5pzfs9XMP1ipSe0bXm2VfNHqNAxmcZY/iXmPkQQRFf5xe1L+z1CLSFq
-	 eJK7VJ7p4l6ZcMgvTfNo+e/v0wKo9Nm48a8goUWtjElUI9W90N9LWr+zSj/9vzFuD9
-	 GdcZOccaXtUsR3UODu0dCejFTdLKb3JsUGfum6DY=
+	by mail.kernel.org (Postfix) with ESMTP id 445C1206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbfICJhZ (ORCPT
+        id S1728617AbfICJh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:37:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 05:37:58 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:54534 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbfICJhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:37:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A07C2173E;
-        Tue,  3 Sep 2019 09:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567503443;
-        bh=1pvNoYETXZHOaryWxGlz7vAjmxKlkKa4yKwwHuSZMVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TIdtFNVUgfs39r6OrFh5h/UU5nqUa+osiFIglZDVzLqzeVKvAKQOY4uo4MrQ3wTOR
-         iktWgzpMbsenQo1lKN/dw/zbemJ6jAUs1Oh5lHJg1SB++AKnnmuLbc8joRxdOquJR+
-         +77Rc4gc37ehaPRXnNk0T6OmffvNqIU6xQdYT1so=
-Date:   Tue, 3 Sep 2019 11:37:20 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "nicolas.dichtel@6wind.com" <nicolas.dichtel@6wind.com>,
-        "raven@themaw.net" <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 08/11] usb: Add USB subsystem notifications [ver #7]
-Message-ID: <20190903093720.GD12325@kroah.com>
-References: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
- <156717350329.2204.7056537095039252263.stgit@warthog.procyon.org.uk>
- <TYAPR01MB4544829484474FC61E850F32D8B90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB4544829484474FC61E850F32D8B90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1728122AbfICJh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:37:58 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8FAFC200303;
+        Tue,  3 Sep 2019 11:37:55 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 65B222002FD;
+        Tue,  3 Sep 2019 11:37:37 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 71247402B7;
+        Tue,  3 Sep 2019 17:37:23 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        dmitry.torokhov@gmail.com, aisheng.dong@nxp.com,
+        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com, mripard@kernel.org,
+        olof@lixom.net, arnd@arndb.de, jagan@amarulasolutions.com,
+        bjorn.andersson@linaro.org, dinguyen@kernel.org,
+        marcin.juszkiewicz@linaro.org, stefan@agner.ch,
+        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
+        yuehaibing@huawei.com, tglx@linutronix.de, ronald@innovation.ch,
+        m.felsch@pengutronix.de, ping.bai@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 1/5] dt-bindings: fsl: scu: add scu key binding
+Date:   Tue,  3 Sep 2019 17:36:36 -0400
+Message-Id: <1567546600-21566-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:53:31AM +0000, Yoshihiro Shimoda wrote:
-> Hi,
-> 
-> > From: David Howells, Sent: Friday, August 30, 2019 10:58 PM
-> <snip>
-> > diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-> > index 9063ede411ae..b8572e4d6a1b 100644
-> > --- a/drivers/usb/core/devio.c
-> > +++ b/drivers/usb/core/devio.c
-> > @@ -41,6 +41,7 @@
-> >  #include <linux/dma-mapping.h>
-> >  #include <asm/byteorder.h>
-> >  #include <linux/moduleparam.h>
-> > +#include <linux/watch_queue.h>
-> > 
-> >  #include "usb.h"
-> > 
-> > @@ -2660,13 +2661,68 @@ static void usbdev_remove(struct usb_device *udev)
-> >  	}
-> >  }
-> > 
-> > +#ifdef CONFIG_USB_NOTIFICATIONS
-> > +static noinline void post_usb_notification(const char *devname,
-> > +					   enum usb_notification_type subtype,
-> > +					   u32 error)
-> > +{
-> > +	unsigned int gran = WATCH_LENGTH_GRANULARITY;
-> > +	unsigned int name_len, n_len;
-> > +	u64 id = 0; /* Might want to put a dev# here. */
-> > +
-> > +	struct {
-> > +		struct usb_notification n;
-> > +		char more_name[USB_NOTIFICATION_MAX_NAME_LEN -
-> > +			       (sizeof(struct usb_notification) -
-> > +				offsetof(struct usb_notification, name))];
-> > +	} n;
-> > +
-> > +	name_len = strlen(devname);
-> > +	name_len = min_t(size_t, name_len, USB_NOTIFICATION_MAX_NAME_LEN);
-> > +	n_len = round_up(offsetof(struct usb_notification, name) + name_len,
-> > +			 gran) / gran;
-> > +
-> > +	memset(&n, 0, sizeof(n));
-> > +	memcpy(n.n.name, devname, n_len);
-> > +
-> > +	n.n.watch.type		= WATCH_TYPE_USB_NOTIFY;
-> > +	n.n.watch.subtype	= subtype;
-> > +	n.n.watch.info		= n_len;
-> > +	n.n.error		= error;
-> > +	n.n.name_len		= name_len;
-> > +
-> > +	post_device_notification(&n.n.watch, id);
-> > +}
-> > +
-> > +void post_usb_device_notification(const struct usb_device *udev,
-> > +				  enum usb_notification_type subtype, u32 error)
-> > +{
-> > +	post_usb_notification(dev_name(&udev->dev), subtype, error);
-> > +}
-> > +
-> > +void post_usb_bus_notification(const struct usb_bus *ubus,
-> 
-> This function's argument is struct usb_bus *, but ...
-> 
-> > +			       enum usb_notification_type subtype, u32 error)
-> > +{
-> > +	post_usb_notification(ubus->bus_name, subtype, error);
-> > +}
-> > +#endif
-> > +
-> >  static int usbdev_notify(struct notifier_block *self,
-> >  			       unsigned long action, void *dev)
-> >  {
-> >  	switch (action) {
-> >  	case USB_DEVICE_ADD:
-> > +		post_usb_device_notification(dev, NOTIFY_USB_DEVICE_ADD, 0);
-> >  		break;
-> >  	case USB_DEVICE_REMOVE:
-> > +		post_usb_device_notification(dev, NOTIFY_USB_DEVICE_REMOVE, 0);
-> > +		usbdev_remove(dev);
-> > +		break;
-> > +	case USB_BUS_ADD:
-> > +		post_usb_bus_notification(dev, NOTIFY_USB_BUS_ADD, 0);
-> > +		break;
-> > +	case USB_BUS_REMOVE:
-> > +		post_usb_bus_notification(dev, NOTIFY_USB_BUS_REMOVE, 0);
-> >  		usbdev_remove(dev);
-> 
-> this function calls usbdev_remove() with incorrect argument if the action
-> is USB_BUS_REMOVE. So, this seems to cause the following issue [1] on
-> my environment (R-Car H3 / r8a7795 on next-20190902) [2]. However, I have
-> no idea how to fix the issue, so I report this issue at the first step.
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and scu key event etc. management, Linux kernel has
+to communicate with system controller via MU (message unit) IPC
+to get scu key event, add binding doc for i.MX system controller
+key driver.
 
-As a few of us just discussed this on IRC, these bus notifiers should
-probably be dropped as these are the incorrect structure type as you
-found out.  Thanks for the report.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+Changes since V2:
+	- use "key" instead of "pwrkey" as the key function can be defined in DT.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-greg k-h
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index c149fad..5eab7d0 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -157,6 +157,15 @@ Required properties:
+ Optional properties:
+ - timeout-sec: contains the watchdog timeout in seconds.
+ 
++SCU key bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible: should be:
++              "fsl,imx8qxp-sc-key"
++              followed by "fsl,imx-sc-key";
++- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
++
+ Example (imx8qxp):
+ -------------
+ aliases {
+@@ -220,6 +229,11 @@ firmware {
+ 			compatible = "fsl,imx8qxp-sc-rtc";
+ 		};
+ 
++		scu_key: scu-key {
++			compatible = "fsl,imx8qxp-sc-key", "fsl,imx-sc-key";
++			linux,keycode = <KEY_POWER>;
++		};
++
+ 		watchdog {
+ 			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+ 			timeout-sec = <60>;
+-- 
+2.7.4
+
