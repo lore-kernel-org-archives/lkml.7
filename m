@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D04FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C1FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E807123789
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BB3238CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528066;
-	bh=0JIc5Xd51Cvq9nD6MJO5pe1/yMiw9hOTdQiacZjbLt8=;
+	s=default; t=1567528069;
+	bh=K2zEh8HBO4tXSDQGVU8dQEtEWMQXYEZ9OIiPIbCR+Mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QjE0OJ8YlDWy+m8ZKWySWQXWMpVu8PP8RywKQ3ydP/PaotFKSAO4jZLnTOPLCd/D5
-	 l6IGwLu8LyNVv/5Jvqm3l85zI6aAKBWEHHv4Qr1yJJpRFpU0S5r4npWfN/w7qDRITR
-	 EoPTDuJjB5VqiDr9RCcgmZC+6Cci5XhWevjHz7X8=
+	b=Jt3rZnVgvobt2fFYU+kCK0kPkOOXK0FCcZKFjWG61Nba4XS+ioMaEn4lYefsW20El
+	 WC8zcQEhLGYjd0Ntj4vN4A/PYRDVGT4BxeX5ooRvVJiMyCxuif4QKfblnIddAmPOyl
+	 AF9+4RNN43onch3o0MiJWFslwOcnXVwxOF1De3T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730508AbfICQ1o (ORCPT
+        id S1730956AbfICQ1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:27:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49026 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730464AbfICQ1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:37 -0400
+        id S1730512AbfICQ1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E26512343A;
-        Tue,  3 Sep 2019 16:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF14238C5;
+        Tue,  3 Sep 2019 16:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528056;
-        bh=0JIc5Xd51Cvq9nD6MJO5pe1/yMiw9hOTdQiacZjbLt8=;
+        s=default; t=1567528063;
+        bh=K2zEh8HBO4tXSDQGVU8dQEtEWMQXYEZ9OIiPIbCR+Mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvEWwP2E9ocMniCmIzwUVTnlrtf6ekAW34+oRPV7uVXRUnrcaiAsUmVtaT7FCfU1s
-         qlZ7H2LcWE6G0Cy2kCxbSBwRZQZpDL7YVJiCvLyH9SKGUtVe1Ibqb/d23uKnRW2SP/
-         qRxTb47AADs8l3aI9gLQfm5LHfNDulKQExbkg9L8=
+        b=nHPLRYM/rzO/oTp06xz4RfAa7Bvye2PMHIjFf8aSHTqK4Ctn0VCVKsyjTklt1q68n
+         6EuHIKZp37zrbTKWsQ7Hit2dNKRYfwPMyN0MlqfAiB67XuCilAXXkoSddiH5mwBdA0
+         fsnxqnTP5YCM3KmIivIATLAUmfo5hWfYxk1VjBxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ihab Zhaika <ihab.zhaika@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 072/167] iwlwifi: add new card for 9260 series
-Date:   Tue,  3 Sep 2019 12:23:44 -0400
-Message-Id: <20190903162519.7136-72-sashal@kernel.org>
+Cc:     David Sterba <dsterba@suse.com>, Sasha Levin <sashal@kernel.org>,
+        linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 078/167] btrfs: scrub: move scrub_setup_ctx allocation out of device_list_mutex
+Date:   Tue,  3 Sep 2019 12:23:50 -0400
+Message-Id: <20190903162519.7136-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,32 +58,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ihab Zhaika <ihab.zhaika@intel.com>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit 3941310cf665b8a7965424d2a185c80782faa030 ]
+[ Upstream commit 0e94c4f45d14cf89d1f40c91b0a8517e791672a7 ]
 
-Add one PCI ID for 9260 series.
+The scrub context is allocated with GFP_KERNEL and called from
+btrfs_scrub_dev under the fs_info::device_list_mutex. This is not safe
+regarding reclaim that could try to flush filesystem data in order to
+get the memory. And the device_list_mutex is held during superblock
+commit, so this would cause a lockup.
 
-CC: <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Ihab Zhaika <ihab.zhaika@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Move the alocation and initialization before any changes that require
+the mutex.
+
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/scrub.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-index d3a1c13bcf6f1..0982bd99b1c3c 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@ -601,6 +601,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
- 	{IWL_PCI_DEVICE(0x2526, 0x2030, iwl9560_2ac_cfg_soc)},
- 	{IWL_PCI_DEVICE(0x2526, 0x2034, iwl9560_2ac_cfg_soc)},
- 	{IWL_PCI_DEVICE(0x2526, 0x4010, iwl9260_2ac_cfg)},
-+	{IWL_PCI_DEVICE(0x2526, 0x4018, iwl9260_2ac_cfg)},
- 	{IWL_PCI_DEVICE(0x2526, 0x4030, iwl9560_2ac_cfg)},
- 	{IWL_PCI_DEVICE(0x2526, 0x4034, iwl9560_2ac_cfg_soc)},
- 	{IWL_PCI_DEVICE(0x2526, 0x40A4, iwl9460_2ac_cfg)},
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index efaad3e1b295a..56c4d2236484f 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -3837,13 +3837,18 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 		return -EINVAL;
+ 	}
+ 
++	/* Allocate outside of device_list_mutex */
++	sctx = scrub_setup_ctx(fs_info, is_dev_replace);
++	if (IS_ERR(sctx))
++		return PTR_ERR(sctx);
+ 
+ 	mutex_lock(&fs_info->fs_devices->device_list_mutex);
+ 	dev = btrfs_find_device(fs_info, devid, NULL, NULL);
+ 	if (!dev || (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state) &&
+ 		     !is_dev_replace)) {
+ 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+-		return -ENODEV;
++		ret = -ENODEV;
++		goto out_free_ctx;
+ 	}
+ 
+ 	if (!is_dev_replace && !readonly &&
+@@ -3851,7 +3856,8 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+ 		btrfs_err_in_rcu(fs_info, "scrub: device %s is not writable",
+ 				rcu_str_deref(dev->name));
+-		return -EROFS;
++		ret = -EROFS;
++		goto out_free_ctx;
+ 	}
+ 
+ 	mutex_lock(&fs_info->scrub_lock);
+@@ -3859,7 +3865,8 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 	    test_bit(BTRFS_DEV_STATE_REPLACE_TGT, &dev->dev_state)) {
+ 		mutex_unlock(&fs_info->scrub_lock);
+ 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+-		return -EIO;
++		ret = -EIO;
++		goto out_free_ctx;
+ 	}
+ 
+ 	btrfs_dev_replace_read_lock(&fs_info->dev_replace);
+@@ -3869,7 +3876,8 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 		btrfs_dev_replace_read_unlock(&fs_info->dev_replace);
+ 		mutex_unlock(&fs_info->scrub_lock);
+ 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+-		return -EINPROGRESS;
++		ret = -EINPROGRESS;
++		goto out_free_ctx;
+ 	}
+ 	btrfs_dev_replace_read_unlock(&fs_info->dev_replace);
+ 
+@@ -3877,16 +3885,9 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 	if (ret) {
+ 		mutex_unlock(&fs_info->scrub_lock);
+ 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+-		return ret;
++		goto out_free_ctx;
+ 	}
+ 
+-	sctx = scrub_setup_ctx(fs_info, is_dev_replace);
+-	if (IS_ERR(sctx)) {
+-		mutex_unlock(&fs_info->scrub_lock);
+-		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+-		scrub_workers_put(fs_info);
+-		return PTR_ERR(sctx);
+-	}
+ 	sctx->readonly = readonly;
+ 	dev->scrub_ctx = sctx;
+ 	mutex_unlock(&fs_info->fs_devices->device_list_mutex);
+@@ -3939,6 +3940,11 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 
+ 	scrub_put_ctx(sctx);
+ 
++	return ret;
++
++out_free_ctx:
++	scrub_free_ctx(sctx);
++
+ 	return ret;
+ }
+ 
 -- 
 2.20.1
 
