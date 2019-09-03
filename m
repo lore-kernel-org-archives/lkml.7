@@ -2,132 +2,183 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3979C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A04C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891CA206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:43:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/ttRM9O"
+	by mail.kernel.org (Postfix) with ESMTP id 0036622DBF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfICJnN (ORCPT
+        id S1728506AbfICJqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:43:13 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36873 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfICJnN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:43:13 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r195so1133203wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0J18E0tZ/M/Swa0MUYxxRnMzuj0KjoIKolLmA5LLu3s=;
-        b=T/ttRM9OHTtfzkq6pm9FFDX4XlOx+nR6jsMAwQPplwFxKY4FU81c6dnzDYIZ6R1a21
-         w++T6Z0eqyHOMsTFsD8OF4nn2uSESNoTCMsgz+twP5K3GjKvCIHc6FhBWegxMHNh8BWO
-         S8TMW7e7ofYZyWIhFBjiONySFaUBe2/jgzmrBkRP1VoeIAtxf0keoWJDoq72Fs+By48F
-         pVrNR3x05ZIhXKaX6a8bP2zKnkzjXIS87zx78+eGrvUpGJSEi3hcuSlyEr4b1fjanFY/
-         lwz9LOh8xJgKt3IkJH6yOYhF1xyiO8e/zSGISv2GdfmM3pGc8ZJtL4uULR9pB/jwEdDG
-         2iAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0J18E0tZ/M/Swa0MUYxxRnMzuj0KjoIKolLmA5LLu3s=;
-        b=SYvuRaRqZkBUH9TycNU78YWiSs9TQgrYbURXAP1hpaa4stANJ4K0SpUUlCPvkuu9fh
-         yKhNwfhH4cxcqvdExr4JOdX7r9AoZpgsqu7s7/pD0oxVKUSDL4GmWGRKy7dwJEKF1wzl
-         lMGboJgNS6Fxn9EsHVevyP556Z/6lFXW4h60jlCWTIYRjoYteINnypFnxMuQs54NPNmC
-         fYPLYXS518p11+tRrvU9CdLI4v2Kly7qoiNK/gEAXbt6uX00dQ6qoJ6yKazD4kaQFnXk
-         +5l+axQr2rlaAKlC03431fGsZzOzoHSzEf+XJaSBj/icUi2WNX+/6jVOXo++ZCu21/Ye
-         Ar8w==
-X-Gm-Message-State: APjAAAUK6wobg9Wtlcz0H0D3Pu26hqVRlAVmPzNjnyQ2Ly2i/0btoRCZ
-        LZbpeKX/qVxYG6PEDA3FVc/aFbFWPts39Wqk9kzG8sa57t1XmA==
-X-Google-Smtp-Source: APXvYqxbJlSC6bbjR/fc9S4RRnrIxUzp53YKAKAPuow/KORWKimQsGdW7wlS1bRSUd9j2/LNiTSbDOCOd/vDymgnCMQ=
-X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr2235442wmj.123.1567503790526;
- Tue, 03 Sep 2019 02:43:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190813212251.12316-1-ben.whitten@gmail.com> <20190814100115.GF4640@sirena.co.uk>
- <CAF3==iuZvCnmAg9hqs8ivHw0wHaUQEf8k9U8=KTekMMjdyyEKg@mail.gmail.com> <20190814161938.GI4640@sirena.co.uk>
-In-Reply-To: <20190814161938.GI4640@sirena.co.uk>
-From:   Ben Whitten <ben.whitten@gmail.com>
-Date:   Tue, 3 Sep 2019 10:42:59 +0100
-Message-ID: <CAF3==ivJycGpSpSy3Y9cL7kNf27=kZmETpb-v0=L7BNd1ZPJtg@mail.gmail.com>
-Subject: Re: [PATCH] regmap: fix writes to non incrementing registers
-To:     Mark Brown <broonie@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, nandor.han@vaisala.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 3 Sep 2019 05:46:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:34958 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727078AbfICJqC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:46:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F1C228;
+        Tue,  3 Sep 2019 02:46:01 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CDC9C3F59C;
+        Tue,  3 Sep 2019 02:45:53 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        catalin.marinas@arm.com, will@kernel.org
+Cc:     mark.rutland@arm.com, mhocko@suse.com, ira.weiny@intel.com,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
+Subject: [PATCH V7 0/3] arm64/mm: Enable memory hot remove
+Date:   Tue,  3 Sep 2019 15:15:55 +0530
+Message-Id: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 14 Aug 2019 at 17:19, Mark Brown <broonie@kernel.org> wrote:
->
-> On Wed, Aug 14, 2019 at 02:09:11PM +0100, Ben Whitten wrote:
->
-> > So it appeared that the last patch in this area for validating a register
-> > block [1] broke the regmap_noinc_write use case.
->
-> Please include human readable descriptions of things like commits and
-> issues being discussed in e-mail in your mails, this makes them much
-> easier for humans to read especially when they have no internet access.
-> I do frequently catch up on my mail on flights or while otherwise
-> travelling so this is even more pressing for me than just being about
-> making things a bit easier to read.
+This series enables memory hot remove on arm64 after fixing a memblock
+removal ordering problem in generic try_remove_memory() and a possible
+arm64 platform specific kernel page table race condition. This series
+is based on the following current arm64 tree.
 
-Sure thing, the patch adds in a call which checks if range of registers
-is writeable within _regmap_raw_write_impl. This check uses the length
-of the data given to _regmap_raw_write_impl to determine the range
-of registers to check from the given starting register.
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git (for-next/core)
 
-> > Because regmap_noinc_write calls _regmap_raw_write and in
-> > turn hits the _regmap_raw_write_impl, the val_len is the depth of the
-> > one register to write to and not a block of registers which is assumed
-> > by the previous check. By inserting a check that the first (and only)
-> > register is a noinc one allows me to start writing to my FIFO again.
->
-> > I'm all for an alternative solution though if there is a cleaner approach.
->
-> Like I said if we're checking for nonincrementing registers it shouldn't
-> just be on the first register, it should be for every address in the
-> range.  Probably accept it if the nonincrementing register is the first
-> and error otherwise, with some documentation explaining what's going on.
+Concurrent vmalloc() and hot-remove conflict:
 
-I see yes, we don't want to stumble into a noinc register by mistake when
-writing a register range.
+As pointed out earlier on the v5 thread [2] there can be potential conflict
+between concurrent vmalloc() and memory hot-remove operation. The problem here
+is caused by inadequate locking in vmalloc() which protects installation of a
+page table page but not the walk or the leaf entry modification.
 
-You mentioned that we likely have breakage elsewhere, I believe that
-regmap_noinc_write probably shouldn't ever have been calling
-_regmap_raw_write.
+Lets not free page table pages if any for vmemmap mappings after unmapping
+it's virtual range if vmalloc and vmemap range overlaps. The only downside
+here is that some page table pages might remain empty and unused until next
+memory hot-add operation for the same memory range. But as mentioned earlier
+those will be minimal.
 
-Whilst regmap_noinc_read calls _regmap_raw_read, this function doesn't
-do any massage and just calls map->bus->read after selecting a page.
-regmap_raw_write on the other hand is meant for writing blocks to
-register ranges as these added checks show, and does split work based
-on page length etc.
-This splitting up is something that shouldn't apply to the FIFO as it's a
-deep register.
+Only the following two configurations have vmalloc and vmemmap overlap where
+free_empty_tables() function is not getting called.
 
-I modified regmap_noinc_write to be much more like the raw_read
-internals, just select page then attempt a map->bus->gather_write,
-falling back to linearising if that's not supported.
-This approach worked at getting writing working into the FIFO.
+1. 4K page size with 48 bit VA space
+2. 16K page size with 48 bit VA space
 
-So I would propose that there are two 'Fixes:' patches here, one
-enhancing the checking when writing a register range to ensure you
-don't stumble into a noinc register.
-And one to fix noinc_writes to send data directly to the bus once the
-page is selected with no splitting up as you would a range.
+Testing:
 
-Kind regards,
-Ben
+Memory hot remove has been tested on arm64 for 4K, 16K, 64K page config
+options with all possible CONFIG_ARM64_VA_BITS and CONFIG_PGTABLE_LEVELS
+combinations. It is only build tested on non-arm64 platforms.
+
+Changes in V7:
+
+- vmalloc_vmemmap_overlap gets evaluated early during boot for a given config
+- free_empty_tables() gets conditionally called based on vmalloc_vmemmap_overlap
+
+Changes in V6: (https://lkml.org/lkml/2019/7/15/36)
+
+- Implemented most of the suggestions from Mark Rutland
+- Added <linux/memory_hotplug.h> in ptdump
+- remove_pagetable() now has two distinct passes over the kernel page table
+- First pass unmap_hotplug_range() removes leaf level entries at all level
+- Second pass free_empty_tables() removes empty page table pages
+- Kernel page table lock has been dropped completely
+- vmemmap_free() does not call freee_empty_tables() to avoid conflict with vmalloc()
+- All address range scanning are converted to do {} while() loop
+- Added 'unsigned long end' in __remove_pgd_mapping()
+- Callers need not provide starting pointer argument to free_[pte|pmd|pud]_table() 
+- Drop the starting pointer argument from free_[pte|pmd|pud]_table() functions
+- Fetching pxxp[i] in free_[pte|pmd|pud]_table() is wrapped around in READ_ONCE()
+- free_[pte|pmd|pud]_table() now computes starting pointer inside the function
+- Fixed TLB handling while freeing huge page section mappings at PMD or PUD level
+- Added WARN_ON(!page) in free_hotplug_page_range()
+- Added WARN_ON(![pm|pud]_table(pud|pmd)) when there is no section mapping
+
+- [PATCH 1/3] mm/hotplug: Reorder memblock_[free|remove]() calls in try_remove_memory()
+- Request earlier for separate merger (https://patchwork.kernel.org/patch/10986599/)
+- s/__remove_memory/try_remove_memory in the subject line
+- s/arch_remove_memory/memblock_[free|remove] in the subject line
+- A small change in the commit message as re-order happens now for memblock remove
+  functions not for arch_remove_memory()
+
+Changes in V5: (https://lkml.org/lkml/2019/5/29/218)
+
+- Have some agreement [1] over using memory_hotplug_lock for arm64 ptdump
+- Change 7ba36eccb3f8 ("arm64/mm: Inhibit huge-vmap with ptdump") already merged
+- Dropped the above patch from this series
+- Fixed indentation problem in arch_[add|remove]_memory() as per David
+- Collected all new Acked-by tags
+ 
+Changes in V4: (https://lkml.org/lkml/2019/5/20/19)
+
+- Implemented most of the suggestions from Mark Rutland
+- Interchanged patch [PATCH 2/4] <---> [PATCH 3/4] and updated commit message
+- Moved CONFIG_PGTABLE_LEVELS inside free_[pud|pmd]_table()
+- Used READ_ONCE() in missing instances while accessing page table entries
+- s/p???_present()/p???_none() for checking valid kernel page table entries
+- WARN_ON() when an entry is !p???_none() and !p???_present() at the same time
+- Updated memory hot-remove commit message with additional details as suggested
+- Rebased the series on 5.2-rc1 with hotplug changes from David and Michal Hocko
+- Collected all new Acked-by tags
+
+Changes in V3: (https://lkml.org/lkml/2019/5/14/197)
+ 
+- Implemented most of the suggestions from Mark Rutland for remove_pagetable()
+- Fixed applicable PGTABLE_LEVEL wrappers around pgtable page freeing functions
+- Replaced 'direct' with 'sparse_vmap' in remove_pagetable() with inverted polarity
+- Changed pointer names ('p' at end) and removed tmp from iterations
+- Perform intermediate TLB invalidation while clearing pgtable entries
+- Dropped flush_tlb_kernel_range() in remove_pagetable()
+- Added flush_tlb_kernel_range() in remove_pte_table() instead
+- Renamed page freeing functions for pgtable page and mapped pages
+- Used page range size instead of order while freeing mapped or pgtable pages
+- Removed all PageReserved() handling while freeing mapped or pgtable pages
+- Replaced XXX_index() with XXX_offset() while walking the kernel page table
+- Used READ_ONCE() while fetching individual pgtable entries
+- Taken overall init_mm.page_table_lock instead of just while changing an entry
+- Dropped previously added [pmd|pud]_index() which are not required anymore
+- Added a new patch to protect kernel page table race condition for ptdump
+- Added a new patch from Mark Rutland to prevent huge-vmap with ptdump
+
+Changes in V2: (https://lkml.org/lkml/2019/4/14/5)
+
+- Added all received review and ack tags
+- Split the series from ZONE_DEVICE enablement for better review
+- Moved memblock re-order patch to the front as per Robin Murphy
+- Updated commit message on memblock re-order patch per Michal Hocko
+- Dropped [pmd|pud]_large() definitions
+- Used existing [pmd|pud]_sect() instead of earlier [pmd|pud]_large()
+- Removed __meminit and __ref tags as per Oscar Salvador
+- Dropped unnecessary 'ret' init in arch_add_memory() per Robin Murphy
+- Skipped calling into pgtable_page_dtor() for linear mapping page table
+  pages and updated all relevant functions
+
+Changes in V1: (https://lkml.org/lkml/2019/4/3/28)
+
+References:
+
+[1] https://lkml.org/lkml/2019/5/28/584
+[2] https://lkml.org/lkml/2019/6/11/709
+
+Anshuman Khandual (3):
+  mm/hotplug: Reorder memblock_[free|remove]() calls in try_remove_memory()
+  arm64/mm: Hold memory hotplug lock while walking for kernel page table dump
+  arm64/mm: Enable memory hot remove
+
+ arch/arm64/Kconfig              |   3 +
+ arch/arm64/include/asm/memory.h |   1 +
+ arch/arm64/mm/mmu.c             | 338 +++++++++++++++++++++++++++++++-
+ arch/arm64/mm/ptdump_debugfs.c  |   4 +
+ mm/memory_hotplug.c             |   4 +-
+ 5 files changed, 339 insertions(+), 11 deletions(-)
+
+-- 
+2.20.1
+
