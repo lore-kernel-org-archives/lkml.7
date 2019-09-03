@@ -2,101 +2,116 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1D0C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CF7C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542C6217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcVosbsh"
+	by mail.kernel.org (Postfix) with ESMTP id 2477E217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:08:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbfICDHh (ORCPT
+        id S1726009AbfICDIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 23:07:37 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33626 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfICDHg (ORCPT
+        Mon, 2 Sep 2019 23:08:19 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:39245 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725813AbfICDIS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 23:07:36 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n190so8312479pgn.0;
-        Mon, 02 Sep 2019 20:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=uAKNKTEPFk1mVQ1+Q6BKvm0iGSLi1ciDyCpkJPyNehw=;
-        b=JcVosbshXiWymuUsBObokDYauCjKU0VfvBpioyzqVuMAnCQa7+VwRDf+RMdak46X50
-         0BUJRroacR9FuBp0fDFKXksCsM4Fun6pP3Pv1SRjd75caVrPdLf2uWWx1xsZLY+KyEC3
-         603x6XoemMEs7vA7XneTM7pKK2Mh6ymiAgupVzhX+R8ynUeO2hZ22m+FPMZ4InGtLsY6
-         vEq2BgODhmHOcSfgqlObA/l8BVOZ0i8AeAILu81RuWm4n8gtidq+b2tuLXOzyj4D+MOA
-         9ayRDZD/Wfx1Qri0sM49idSFxrb0XD5Bd63CGxbctFSWLbgg+nJqMXdBcf+vi775X4Ib
-         kpjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=uAKNKTEPFk1mVQ1+Q6BKvm0iGSLi1ciDyCpkJPyNehw=;
-        b=ETx3asnQEoo3V9NRHIZlTN8O/cUmqIlLRG0S+shHQOtJ4yHjFGhmKKk3SGHBaSLerH
-         LvupkP+KW+cZv2YCvRolzl0Me7Xy14EF5pMhjYxbxTVnYOfzsw9amM4VYqdmgwrLbVas
-         MtrBOxxJn7FmxpkOrF9tDyfhm53F/hrR4lbvy5lhQjvgbIIyn96ikSDTPUXajLb2mtNY
-         Ql1BqsZKSxppDwEZ0OIzpl/yidOHKD0Br1ZKtJyOuFxfloEIWv6ZTJVMQ8bCY0dTAXBg
-         eMK4ZYFDJO5ixXKbGbFDVOn4aE2W6VQ9DKeIl/3Nh4fFajAY4MKfIpZ3LnrAC8RscVaP
-         iHRA==
-X-Gm-Message-State: APjAAAXVMvIBHDaGSMnil+966yOphezPT5MOwkg/AJA2E+OREVa8VsCJ
-        AoTbtF8tOuw4UxYqNipgBsLYfJs7Z0k=
-X-Google-Smtp-Source: APXvYqyItemcIN/Oa2zFnFhC5SQ+uWBBZu0bF3vV7xBRx1fvs/iqvGRKUr1GPfi5PJEblut+UBD35w==
-X-Received: by 2002:a17:90a:248c:: with SMTP id i12mr10389198pje.130.1567480055910;
-        Mon, 02 Sep 2019 20:07:35 -0700 (PDT)
-Received: from [0.0.0.0] (82.ip-201-30-69.topnewsphil.com. [69.30.201.82])
-        by smtp.gmail.com with ESMTPSA id g18sm14703807pgm.9.2019.09.02.20.07.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Sep 2019 20:07:35 -0700 (PDT)
-To:     harryxiyou@gmail.com, alex.shi@linux.alibaba.com
-Cc:     corbet@lwn.net, robh@kernel.org, mchehab+samsung@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   lixianfa <lixianfa.official@gmail.com>
-Subject: [PATCH] doc: arm64: fix grammar dtb placed in no attributes region
-Message-ID: <3fe85082-6788-c693-c18f-4c029a3d093c@gmail.com>
-Date:   Tue, 3 Sep 2019 11:07:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Mon, 2 Sep 2019 23:08:18 -0400
+X-UUID: 5512fba9b63b4a1a9c449cfd92584e64-20190903
+X-UUID: 5512fba9b63b4a1a9c449cfd92584e64-20190903
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1278790854; Tue, 03 Sep 2019 11:08:12 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 3 Sep 2019 11:08:07 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 3 Sep 2019 11:08:07 +0800
+Message-ID: <1567480086.22890.21.camel@mtksdaap41>
+Subject: Re: [RFC v1] clk: core: support clocks that need to be enabled
+ during re-parent
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Stephen Boyd <sboyd@kernel.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+        <srv_heupstream@mediatek.com>, Biao Huang <biao.huang@mediatek.com>
+Date:   Tue, 3 Sep 2019 11:08:06 +0800
+In-Reply-To: <20190626035246.4591A20659@mail.kernel.org>
+References: <1560138293-4163-1-git-send-email-weiyi.lu@mediatek.com>
+         <20190625221415.B0DC22086D@mail.kernel.org>
+         <1561511122.24282.10.camel@mtksdaap41>
+         <20190626035246.4591A20659@mail.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix grammar dtb placed in no attributes region.
-This makes Chinese translation smooth to read.
+On Tue, 2019-06-25 at 20:52 -0700, Stephen Boyd wrote:
+> Quoting Weiyi Lu (2019-06-25 18:05:22)
+> > On Tue, 2019-06-25 at 15:14 -0700, Stephen Boyd wrote:
+> > > Quoting Weiyi Lu (2019-06-09 20:44:53)
+> > > > When using property assigned-clock-parents to assign parent clocks,
+> > > > core clocks might still be disabled during re-parent.
+> > > > Add flag 'CLK_OPS_CORE_ENABLE' for those clocks must be enabled
+> > > > during re-parent.
+> > > > 
+> > > > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> > > 
+> > > Can you further describe the scenario where this is a problem? Is it
+> > > some sort of clk that is enabled by default out of the bootloader and is
+> > > then configured to have an 'assigned-clock-parents' property to change
+> > > the parent, but that clk needs to be "enabled" so that the framework
+> > > turns on the parents for the parent switch?
+> > 
+> > When driver is built as module(.ko) and install at runtime after the
+> > whole initialization stage. Clk might already be turned off before
+> > configuring by assigned-clock-parents. For such clock design that need
+> > to have clock enabled during re-parent, the configuration of
+> > assigned-clock-parents might be failed. That's the problem we have now.
+> 
+> Great. Please put this sort of information in the commit text.
+> 
 
-Signed-off-by: lixinafa <lixinafa.official@gmail.com>
----
- Documentation/translations/zh_CN/arm64/booting.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+OK, I'll do when sending next version.
 
-diff --git a/Documentation/translations/zh_CN/arm64/booting.txt b/Documentation/translations/zh_CN/arm64/booting.txt
-index 4e373d1..5b01641 100644
---- a/Documentation/translations/zh_CN/arm64/booting.txt
-+++ b/Documentation/translations/zh_CN/arm64/booting.txt
-@@ -67,8 +67,8 @@ RAM，或可能使用对这个设备已知的 RAM 信息，还可能是引导装
- 必要性: 强制
+> > Do you have any suggestion for such usage of clocks? Many thanks.
+> > 
+> 
+> Ok, and in this case somehow CLK_OPS_PARENT_ENABLE flag doesn't work? Is
+> that because the clk itself doesn't do anything unless it's enabled?  I
+> seem to recall that we usually work around this by caching the state of
+> the clk parents or frequencies and then when the clk prepare or enable
+> op is called we actually write the hardware to change the state. There
+> are some qcom clks like this and we basically just use the hardware
+> itself to cache the state of the clk while it hasn't actually changed to
+> be at that rate, because the clk is not enabled yet.
+> 
 
- 设备树数据块（dtb）必须 8 字节对齐，且大小不能超过 2MB。由于设备树
--数据块将在使能缓存的情况下以 2MB 粒度被映射，故其不能被置于带任意
--特定属性被映射的 2MB 区域内。
-+数据块将在使能缓存的情况下以 2MB 粒度被映射，故其不能被置于必须以特定
-+属性映射的2M区域内。
+Hi Stephen,
 
- 注： v4.2 之前的版本同时要求设备树数据块被置于从内核映像以下
- text_offset 字节处算起第一个 512MB 内。
---
-1.8.3.1
+Will you recommend if we cache the state in the platform driver instead
+of the hardware itself and then change the state when clk enable op is
+called if we don't have such hardware design on MTK clocks?
+
+> The main concern is that we're having to turn on clks to make things
+> work, when it would be best to not turn on clks just so that register
+> writes actually make a difference to what the hardware does.
+> 
+
+In my view, it's a safe operation to enable clock shortly to make things
+work when its child clock is still disabled. What do you think?
+
