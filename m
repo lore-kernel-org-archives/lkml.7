@@ -2,174 +2,279 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A64C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A9AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5C322CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CFA21883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:40:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mSaHHI4H";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FcbIZ/0q"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="mb4mrOXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbfICRja (ORCPT
+        id S1730222AbfICRkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:39:30 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36864 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727662AbfICRja (ORCPT
+        Tue, 3 Sep 2019 13:40:11 -0400
+Received: from sonic311-30.consmr.mail.ne1.yahoo.com ([66.163.188.211]:44569
+        "EHLO sonic311-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729736AbfICRkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:39:30 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C98BB608FF; Tue,  3 Sep 2019 17:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567532368;
-        bh=xKD/ENinILDUC661caazKHdhGNze9nJEsqCHmhYq/gI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mSaHHI4HlqZuevjNtneF5Fa2yJjpP7bfH9j9pabBFRGe2jeFBT8mW9GzJPts/jfhS
-         X3LvycC7PVgj6ebntpN4mHQyNl6fk+wPTvVN62n/ytmfCZdEFBnZHrbYmABrjNTKw7
-         bliWM9PTZ5qt6qS7ysbpzLR53CqNUkYOuLQlcQfg=
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EF13C602DC;
-        Tue,  3 Sep 2019 17:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567532366;
-        bh=xKD/ENinILDUC661caazKHdhGNze9nJEsqCHmhYq/gI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FcbIZ/0q69EnCWiymdG7m0I+ACVb6+Yw9NnKnzl+XyDOR89aqQpX2ebgNrgB1GS7Z
-         LJ7N5D2R1hF4yrXVwlMyOHwD00Q1EMANIY0r0jA/4pBPA3BUDQj7RwDk2/j/BQ7/n/
-         IB6yq6j6JC7XeMKSOSo3R0uwCk6DUCRQEiVdWhqg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EF13C602DC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Tue, 3 Sep 2019 10:39:24 -0700
-From:   Jack Pham <jackp@codeaurora.org>
-To:     Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>, robh@kernel.org,
-        andy.gross@linaro.org, shawn.guo@linaro.org,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
- bindings
-Message-ID: <20190903173924.GB9754@jackp-linux.qualcomm.com>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
- <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
- <20190223165218.GB572@tuxbook-pro>
- <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
- <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
- <20190830164520.GK26807@tuxbook-pro>
- <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
- <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
+        Tue, 3 Sep 2019 13:40:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1567532408; bh=4M08xijWsFj+wrPz9IhAs5Zc9q4VQYH7Y0E6dN4LNIg=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=mb4mrOXRn9KmAFASJt2YrI04R3x6WIARTENTq9eG460DfRSjRmo0O0iw0dVA3mdn1xy5i0K+Ue3fR46ifVJSvRBs3+tq0zObG+VBPfkGon4/zhP4DCvMRG39W+ikBXMXYVg2izJg8y9u1uudDvQDlzFLpYLrUVpiNfFLGFygwPvb9bi9b6OC0WM/gjYaH7jspq5/Z8iHcbaLORWyI3woVw6BPH+5Od5A/ln7tjPTQ0lMVQqxdLvEhOVzHRV6dkG6iYIQjLqfIu/fjggP0sJ03JWWdf18sR6jhkDAOloL2p01sR8O2owt0jbMTNydDMilYndA3BziIjyF03tS/AbnEA==
+X-YMail-OSG: YDxtC3QVM1n85oqA3rTc6see1L.LLaZGwQh8Sj3WYSsQzSscFKYm.8QJM3bhztn
+ vZieAFueMmsq3an1iDc8P0gsCNJTgG0COBcqtPjrRdvjdIHKd_gS19_TnSgRciiGq39w8KWzHDgQ
+ dxNjoVuHDCIH6t6RDYn0H6Un3_eZzyNf3rEQczlefq_WLO.zccz010vmS7NtjYF5rlFbEW6vW13X
+ tj9gAhi4TUscN03JutrbhKzVZbO0jWRoMbp2oRWNXdduD7Q33pE9qI8FIWsAEsOOv.QIByKdsrPQ
+ 6SEolJZIO9QZD5mnBPzce04QzDKW_QA8svJ_y1uJadbanNj9sYR7XkGE4PpbMtO3J2Y30VZXZd9p
+ SZvTtXM9zLhlcPIqGeoeZ1PPO3Ro50.9Fxi7GNhZAL1qIAQ_tYTptOiWO40fAD1zUdjGsfIoT9H8
+ RFEiaYxjd4zKLo40N0wxiUgAqt9_Vy3rsQDJMiyNqlzT1.TG3VKGGsy_uNbMoFoPwNTdzMY6eV7F
+ Izise7j3liWbLjXsfHaNI51fgXHVLheu88wbxZgW2Zt9W0sdZhoMwVd_ap3SAmwh0AnZ8HCSFtH3
+ _LysYMQaF.hUivnA75rhL0waQZrve.2ZcjyXBhTsz4PKrbg1htcMcWM14e9GcbIs1J31kILno011
+ Vi3DyJsD34r4Tp92ovGBPot0rV.cigY2PvsSOe2Sf4xn.cwjOazOgjc4fDEsbhZPutiZ8XkfBidL
+ kuBXT2JRkSZJCRbuMAOPXyZiZq9k4ZexP6cuTjmsy.o3Hs8fSgOypcByqQlgldDhI.ctU8lzTHzx
+ dAwBOBOWIxZe75iDqMErkPmtY97D_0SG7u8l35NlNGSshAbHSCDzGrcJDgp224nj1IxlRgsF98uf
+ 4gQluf.7rzcSzQTahvH_kXbPrm_Bx0TopJha_6vSbHh2qwnxm5mMf83LwIlCiekcCQD051isXGKt
+ t5JiECh9c6S67ifPjMeohk8B_tifURgQkiYbmMyZTuyPSTi5I9blGXdL3IQwLGRcOSva4Ain5HKy
+ HiO.eVyZRWyoHk5k2PJB_YNg5umfeJx.hfo8fxDEMK7yRRLYhoAWG51tuTTk5czDSKQCe63_wleu
+ I9vTzZaccC7ltHkxSkmskn69PASq010MK533p0yQmto5XE1REbQU56dEVlx46gYhooF1dj0Kep9B
+ 50xLxtx0Sf7ONabb5MG7yMAmJAQD.der9CrGAQN4L2Rkz8ohatw2I5AycP86tLydKilrzjWNL._D
+ VrWVnj5JaJNj5RJ.KqbtKf8hhrD_GgJi73CWbekbcyiPKhpmQthoz0nanCS0ySqfH
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Tue, 3 Sep 2019 17:40:08 +0000
+Received: by smtp417.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 5ea2e0d4519e45f788c8eceafbe81aed;
+          Tue, 03 Sep 2019 17:40:06 +0000 (UTC)
+Subject: Re: [PATCH 11/11] smack: Implement the watch_key and
+ post_notification hooks [untested] [ver #7]
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        casey@schaufler-ca.com
+References: <e36fa722-a300-2abf-ae9c-a0246fc66d0e@schaufler-ca.com>
+ <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
+ <156717352917.2204.17206219813087348132.stgit@warthog.procyon.org.uk>
+ <4910.1567525310@warthog.procyon.org.uk>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ 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
+ abzjfg==
+Message-ID: <87bf0363-af77-1e5a-961f-72730e39e3a6@schaufler-ca.com>
+Date:   Tue, 3 Sep 2019 10:40:05 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <4910.1567525310@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
-> On 8/30/19 20:28, Stephen Boyd wrote:
-> > Quoting Bjorn Andersson (2019-08-30 09:45:20)
-> >> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
-> >>
-> >>> Quoting Jorge Ramirez (2019-08-29 00:03:48)
-> >>>> On 2/23/19 17:52, Bjorn Andersson wrote:
-> >>>>> On Thu 07 Feb 03:17 PST 2019, Jorge Ramirez-Ortiz wrote:
-> >>>>>> +
-> >>>>>> +Required child nodes:
-> >>>>>> +
-> >>>>>> +- usb connector node as defined in bindings/connector/usb-connector.txt
-> >>>>>> +  containing the property vbus-supply.
-> >>>>>> +
-> >>>>>> +Example:
-> >>>>>> +
-> >>>>>> +usb3_phy: usb3-phy@78000 {
-> >>>>>> +    compatible = "qcom,snps-usb-ssphy";
-> >>>>>> +    reg = <0x78000 0x400>;
-> >>>>>> +    #phy-cells = <0>;
-> >>>>>> +    clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
-> >>>>>> +             <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
-> >>>>>> +             <&gcc GCC_USB3_PHY_PIPE_CLK>;
-> >>>>>> +    clock-names = "ref", "phy", "pipe";
-> >>>>>> +    resets = <&gcc GCC_USB3_PHY_BCR>,
-> >>>>>> +             <&gcc GCC_USB3PHY_PHY_BCR>;
-> >>>>>> +    reset-names = "com", "phy";
-> >>>>>> +    vdd-supply = <&vreg_l3_1p05>;
-> >>>>>> +    vdda1p8-supply = <&vreg_l5_1p8>;
-> >>>>>> +    usb3_c_connector: usb3-c-connector {
-> >>>
-> >>> Node name should be 'connector', not usb3-c-connector.
-> >>>
-> >>
-> >> It probably has to be usb-c-connector, because we have a
-> >> micro-usb-connector on the same board.
-> > 
-> > Ok. Or connector@1 and connector@2? Our toplevel node container story is
-> > sort of sad because we have to play tricks with node names. But in the
-> > example, just connector I presume? 
-> > 
-> >>
-> >>>>>
-> >>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
-> >>>>> you should represent this external to this node and use of_graph to
-> >>>>> query it.
-> >>>>
-> >>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
-> >>>> node (that interface does not exist).
-> >>>>
-> >>>> rob, do you have a suggestion?
-> >>>
-> >>> Shouldn't the vbus supply be in the phy? Or is this a situation where
-> >>> the phy itself doesn't have the vbus supply going to it because the PMIC
-> >>> gets in the way and handles the vbus for the connector by having the SoC
-> >>> communicate with the PMIC about when to turn the vbus on and off, etc?
-> >>>
-> >>
-> >> That's correct, the VBUS comes out of the PMIC and goes directly to the
-> >> connector.
-> >>
-> >> The additional complicating factor here is that the connector is wired
-> >> to a USB2 phy as well, so we need to wire up detection and vbus control
-> >> to both of them - but I think this will be fine, if we can only figure
-> >> out a sane way of getting hold of the vbus-supply.
-> >>
-> > 
-> > Does it really matter to describe this situation though? Maybe it's
-> > simpler to throw the vbus supply into the phy and control it from the
-> > phy driver, even if it never really goes there. Or put it into the
-> > toplevel usb controller?
-> > 
-> that would work for me - the connector definition seemed a better way to
-> explain the connectivity but since we cant retrieve the supply from the
-> external node is not of much functional use.
-> 
-> but please let me know how to proceed. shall I add the supply back to
-> the phy?
+On 9/3/2019 8:41 AM, David Howells wrote:
+> Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+>> I tried running your key tests and they fail in "keyctl/move/valid",
+>> with 11 FAILED messages, finally hanging after "UNLINK KEY FROM SESSION".
+>> It's possible that my Fedora26 system is somehow incompatible with the
+>> tests. I don't see anything in your code that would cause this, as the
+>> Smack policy on the system shouldn't restrict any access.
+> Can you go into keyutils/tests/keyctl/move/valid/ and grab the test.out file?
 
-Putting it in the toplevel usb node makes sense to me, since that's
-usually the driver that knows when it's switching into host mode and
-needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't 
-do this but there's precedent in a couple of the other dwc3 "glues"--see
-Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
+Inline below
 
-One exception is if the PMIC is also USB-PD capable and can do power
-role swap, in which case the VBUS control needs to be done by the TCPM,
-so that'd be a case where having vbus-supply in the connector node might
-make more sense.
+> I presume you're running with an upstream-ish kernel
 
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Built from your tree. It's possible I've missed an important
+CONFIG or two.
+
+>  and a cutting edge
+> keyutils installed?
+
+Also built from your tree. 
+
+>
+> David
+
+$ cat test.out
+++++ BEGINNING TEST
++++ ADD KEYRING
+keyctl newring wibble @s
+1065401533
++++ ADD KEY
+keyctl add user lizard gizzard 1065401533
+483362336
++++ LIST KEYRING WITH ONE
+keyctl rlist 1065401533
+483362336
++++ MOVE KEY 1
+keyctl move 483362336 1065401533 @s
+keyctl_move: Operation not supported
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0       \_ user: lizard
+==============
++++ CHECK KEY LINKAGE
+keyctl rlist @s
+1065401533
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0       \_ user: lizard
+==============
++++ CHECK KEY REMOVED
+keyctl rlist 1065401533
+483362336
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0       \_ user: lizard
+==============
++++ MOVE KEY 2
+keyctl move 483362336 1065401533 @s
+keyctl_move: Operation not supported
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0       \_ user: lizard
+==============
++++ FORCE MOVE KEY 2
+keyctl move -f 483362336 1065401533 @s
+keyctl_move: Operation not supported
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0       \_ user: lizard
+==============
++++ MOVE KEY 3
+keyctl move 483362336 @s 1065401533
+keyctl_move: Operation not supported
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0       \_ user: lizard
+==============
++++ MOVE KEY 4
+keyctl move -f 483362336 @s 1065401533
+keyctl_move: Operation not supported
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0       \_ user: lizard
+==============
++++ ADD KEY 2
+keyctl add user lizard gizzard @s
+898499184
++++ MOVE KEY 5
+keyctl move 483362336 1065401533 @s
+keyctl_move: Operation not supported
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0   |   \_ user: lizard
+ 898499184 --alswrv      0     0   \_ user: lizard
+==============
++++ CHECK KEY UNMOVED
+keyctl rlist 1065401533
+483362336
++++ CHECK KEY UNDISPLACED
+keyctl rlist @s
+1065401533 898499184
++++ FORCE MOVE KEY 6
+keyctl move -f 483362336 1065401533 @s
+keyctl_move: Operation not supported
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0   |   \_ user: lizard
+ 898499184 --alswrv      0     0   \_ user: lizard
+==============
++++ CHECK KEY REMOVED
+keyctl rlist 1065401533
+483362336
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0   |   \_ user: lizard
+ 898499184 --alswrv      0     0   \_ user: lizard
+==============
++++ CHECK KEY DISPLACED
+keyctl rlist @s
+1065401533 898499184
+=== FAILED ===
+Session Keyring
+ 680859405 --alswrv      0     0  keyring: RHTS/keyctl/32472
+1065401533 --alswrv      0     0   \_ keyring: wibble
+ 483362336 --alswrv      0     0   |   \_ user: lizard
+ 898499184 --alswrv      0     0   \_ user: lizard
+==============
++++ UNLINK KEY FROM SESSION
+keyctl unlink 483362336 @s
++++ WAITING FOR KEY TO BE UNLINKED
+keyctl unlink 483362336 @s
+keyctl_unlink: No such file or directory
+keyctl unlink 483362336 @s
+keyctl_unlink: No such file or directory
+
+...
+
