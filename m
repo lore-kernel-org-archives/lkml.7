@@ -2,96 +2,116 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A17DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF4CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EC5822CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:12:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEAAilDc"
+	by mail.kernel.org (Postfix) with ESMTP id 821EF21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567527184;
+	bh=KFqgqdQ3pGDtjCG4UTcpzV2z895sdercfEv8QwliLtw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IBCzCCv6XPvKtRzNyjw5vd4aBVhYga4kJhDtF9GmNSmb4AuLDU1E1oOMI1NE5p1Fy
+	 wJLtQqXKY9EeVuGQGs1mAf2hSpip6wul2BlFhc3nVh35567xvCtgDC7udmWlq+q2Es
+	 62KD4kvF5o7NtniHz19ucM3xnxDy11ClY1vRG2ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfICQMF (ORCPT
+        id S1729973AbfICQND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:12:05 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40626 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICQME (ORCPT
+        Tue, 3 Sep 2019 12:13:03 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35900 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729117AbfICQND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:12:04 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w10so9403666pgj.7;
-        Tue, 03 Sep 2019 09:12:04 -0700 (PDT)
+        Tue, 3 Sep 2019 12:13:03 -0400
+Received: by mail-lj1-f193.google.com with SMTP id l20so2175476ljj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:13:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dAdXWGRp8/fowrCm9THOUSCdjWb7mJEYN/KL0laD3uQ=;
-        b=jEAAilDcPvvWxYMzUNyq//l5UEQBGUuBmUMPyBxdzYp6fxM1ioPQFZBYgdZ4sqHUR+
-         WslXxzCtPFbx1NMFXWrla4MahFqMCyDIbEYZ2E+rfY6xYIFHNsEurXdS/EIRi1tuDB56
-         BpWZUdx6tpv1YZZnUkNm5iKS5yjclvnc4uxOBYI4VJJ8nrqRp2zVbwdmjN0QnderQYs1
-         C+c9EfiRVVz/3XrPXrh40LxLwtC3mLELyQxZJGbzy7yYhVmULCZBRi2kDXR0iIb861rU
-         lpm4pHiwvvuVKY5S9k8qYCYTrRsHZDqogII32yUq7Qbdkv6zIgjZECMLxu3rHO6s3HBQ
-         zeMA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hv4kOe1VKjXUkrvGrBeqo5ExN9L2dWKCmjy289pdDpQ=;
+        b=H/3/d6xMLAjlOR5eNENXnRk9imQUfFu89C+DmFKWCU5gRq1bUeUFFFQeyAMnTbxLIN
+         ChTPIMIL6ytleW8mRmjBNooCJZXb9Oj/u6i1hFP0NnBQZC7GH3Q/cNhWylF+LUiVXzp+
+         /yOleW9Nnc711XM4jCWSLwilsHrPRf+iXxBoI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dAdXWGRp8/fowrCm9THOUSCdjWb7mJEYN/KL0laD3uQ=;
-        b=qJifALLtpZfZ0m5l0Ly9/WR6g9CxPaJWsmtj/eZ8NLufeh4Ta4kQ6exdUWoMvqC0TP
-         5V2L32GaTO1DcnFKjcdS0zMlcF/l6u4nfv234kdn0sJrAHnxm7T6PAsg44TTJNxL1lum
-         AQAYRV+b8UMM7hR5emcsHZf5A8bCT+j/evlj06VT0cmiM44A0YBW9HtkyJcv4HOthplN
-         D2eWwzq1i2942eIMNnWkgFwFEHG3hegWWZjcQAeTn90ODxP4lOsFwx+odGNoIZk7a/rE
-         nKo4e5YVAWMqiAZzquWOmpEraRBfblI/ZYtzmQrk5ug3Um8yhlZ9OwYUJUi2kGo69MJz
-         FlbA==
-X-Gm-Message-State: APjAAAUeeoVM0mKteBNj8D7ahieczHeqUI+r0wwGsh7aZZGoNOrwfNwu
-        rvqENlrSIdYBagRrsMJQcbg=
-X-Google-Smtp-Source: APXvYqx2Pzmh4yf64AqdUiNh7C3xwl72iP7Cuip7LJd3dmSUngMqqGhc2zBoeukjefZ5p76EL2axYQ==
-X-Received: by 2002:aa7:8ac5:: with SMTP id b5mr39773944pfd.56.1567527123858;
-        Tue, 03 Sep 2019 09:12:03 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 127sm1658049pfw.6.2019.09.03.09.12.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 09:12:03 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 09:12:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/11] usb: Add USB subsystem notifications [ver #7]
-Message-ID: <20190903161202.GB22754@roeck-us.net>
-References: <20190903125129.GA18838@roeck-us.net>
- <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
- <156717350329.2204.7056537095039252263.stgit@warthog.procyon.org.uk>
- <7481.1567526867@warthog.procyon.org.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hv4kOe1VKjXUkrvGrBeqo5ExN9L2dWKCmjy289pdDpQ=;
+        b=duuJMQIQL3qyvJfwzoZQHLcIHksIL3YUcjr8DP1lX262E4T/b7N7YfAKF1gCtuvycF
+         KNds+Tm4sOF5nsljkS2llSBPXOWSqeOsIEDsOnKyUYZFqVeGFyTP39HxTxxiB3u+1exG
+         A8az6igsN0LPDLtloR/rZl425xKueTkdDDD7wrJBcQ1f2xnO9EyS2ibCl/gQZjcQUh5c
+         8u734yL76WN9gdepe0wdQTXBtdyfYZu9nSmZPmzYwB0ELsyiKa6lqoJLiucVdv9jMpxY
+         qVvljCkUMWiyUmtO4PRwF0irJ47eBgB4YSd9UF7hPEqg2w3vmcH05fHxQkdFxpOF+eGH
+         TeJg==
+X-Gm-Message-State: APjAAAWNn0MPrKMPDEViD6t+thTOrveXQgZeI3/Ka4KyK/IpsE7ZvVza
+        YQP5HTdCA2E3GY8fZiSxfOzxguhFOQc=
+X-Google-Smtp-Source: APXvYqwlBuKFODJPJYS67nKSNwWz9EQwafbzlGHkGwjVtdYoTIzLqmUIjUCBrksK4jFxuUq7v/RUBA==
+X-Received: by 2002:a2e:1518:: with SMTP id s24mr18952323ljd.205.1567527180701;
+        Tue, 03 Sep 2019 09:13:00 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id d17sm2558344lji.41.2019.09.03.09.12.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Sep 2019 09:13:00 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id u14so10067226ljj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:12:59 -0700 (PDT)
+X-Received: by 2002:a05:651c:1104:: with SMTP id d4mr12625125ljo.90.1567527179509;
+ Tue, 03 Sep 2019 09:12:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7481.1567526867@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190903160036.2400-1-mathieu.desnoyers@efficios.com> <20190903160036.2400-2-mathieu.desnoyers@efficios.com>
+In-Reply-To: <20190903160036.2400-2-mathieu.desnoyers@efficios.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 3 Sep 2019 09:12:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg3YyA95bevUaW_fTxmq58ffoHgfFANk-8_RJcGESXEsw@mail.gmail.com>
+Message-ID: <CAHk-=wg3YyA95bevUaW_fTxmq58ffoHgfFANk-8_RJcGESXEsw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] Fix: sched: task_rcu_dereference: check
+ probe_kernel_address return value
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 05:07:47PM +0100, David Howells wrote:
-> Guenter Roeck <linux@roeck-us.net> wrote:
-> 
-> > This added call to usbdev_remove() results in a crash when running
-> > the qemu "tosa" emulation. Removing the call fixes the problem.
-> 
-> Yeah - I'm going to drop the bus notification messages for now.
-> 
-It is not the bus notification itself causing problems. It is the
-call to usbdev_remove().
+On Tue, Sep 3, 2019 at 9:00 AM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> probe_kernel_address can return -EFAULT on error, which leads to use of
+> an uninitialized or partially initialized sighand variable.
 
-Guenter
+I think this comment and this code is actively misleading.
+
+There is no "uninitialized or partially initialized sighand variable".
+That's completely wrong.
+
+The sighand variable is always completely initialized. It's just that
+the check for "is it initialized" is _not_ the return value from
+probe_kernel_address(), because that return value is simply not
+sufficient.
+
+So this is just wrong. Don't do it. You're just confusing the issue,
+and you're making statments that aren't true in the commit message,
+and making the code do a pointless and odd check.
+
+If you want to change this code for legibility, you should just add a
+comment above the probe_kernel_address() about why the return value is
+ignored, and why the check _below_ that code verifies the value of
+sighand with a different check.
+
+                Linus
