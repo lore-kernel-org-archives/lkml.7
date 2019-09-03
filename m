@@ -2,127 +2,73 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0A2C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651FFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925CD216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:57:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A8hMB12r"
+	by mail.kernel.org (Postfix) with ESMTP id 46F2E216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:57:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfICG5J (ORCPT
+        id S1727658AbfICG5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:57:09 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40111 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfICG5J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:57:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y10so1551198pll.7
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:57:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KB/V8KmhO87QpU2qi6NuMt+cmKaMtWbc3N1EFYpdy18=;
-        b=A8hMB12rzSIXxfNLfvQpaXb05wViyP2+l2zkaePY3jY9xLsOYXyLQWNvuXoUjKYdYN
-         aVEdikjHvxlsATSHPqByhDsXFeMegocbBJZB6BrUKuSUM34tMIYiSBRSOaRBDDLzzOOm
-         4c+lh19B+smCdveQxL5zxCOCRiNP2ssUIM4XuQXxl+Iqi4niG/BblKaKI5fdu9kf1tPA
-         qJUgEXWDofovWWdVES/7abXnZRPNKx2VnEVI5u0ABQB5rCFFlAxLrBUP5Xcr5i1z0xWD
-         gAbEPtvR5qlXbdBe+KvwSmpz/tPGBjcIKTp/Hw8T+bZmD7g+tXwXPBt0n1YU+wMO8iZZ
-         ePxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KB/V8KmhO87QpU2qi6NuMt+cmKaMtWbc3N1EFYpdy18=;
-        b=iKGJ/b6dm5FL3vneaWe0flkST73KGvAXal6T0S+xNwpJYg3E9RNHTQSIeP21gICwH+
-         k+3Tj18+nbzPzIiMDwsDosS+WUTr4K6ttdh1OafnlLY/FHTZcxXlYlvKnS1Af4QN5z/C
-         LPhIF6wYuSYB4dxC5WLmCz+3u8b4QvJ+zOKR4XKLshOSVy06Qutu5riYRmPpkwdZL9tp
-         M8xQrm4cFjStok42nb2IQ6zrlMqx1/lkVudh1IPyvfFzrGe7jT3HL1VJeagF3RdgvXrZ
-         qXSSNT6UjLUYPz0Z4dURFukPNecsrcPRDa8bJ3iUDDAV50gL3NDKSTxQwIVUHt4ZWhyX
-         Ay0A==
-X-Gm-Message-State: APjAAAV07BQUy+5b2CvzyFH1Dv9cIURDXSMejMW7Awg2fY3cSsP+jpep
-        0nro8M4IMoivQ+aWesZhWBrLBA==
-X-Google-Smtp-Source: APXvYqyfySDW7CEQtmCmNLVRVF0O3NlAe8+q1y4hjyEJb68cAg2PNngFpGF2JKZm/rmzjydG4ijMmQ==
-X-Received: by 2002:a17:902:d886:: with SMTP id b6mr8606471plz.149.1567493828795;
-        Mon, 02 Sep 2019 23:57:08 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id p20sm17786228pgi.81.2019.09.02.23.57.04
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 02 Sep 2019 23:57:08 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, edumazet@google.com
-Cc:     netdev@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
-        orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y 2/8] ip6: fix skb leak in ip6frag_expire_frag_queue()
-Date:   Tue,  3 Sep 2019 14:56:42 +0800
-Message-Id: <3cf0695f42e8f1b4172b68ad145a5d2afae39a0e.1567492316.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1567492316.git.baolin.wang@linaro.org>
-References: <cover.1567492316.git.baolin.wang@linaro.org>
+        Tue, 3 Sep 2019 02:57:19 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49374 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725919AbfICG5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:57:19 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 65F0365CFEEEB187FB60;
+        Tue,  3 Sep 2019 14:57:17 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 3 Sep 2019 14:57:10 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <catalin.marinas@arm.com>
+CC:     <will@kernel.org>, <zhongjiang@huawei.com>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] crypto: arm64: Use PTR_ERR_OR_ZERO rather than its implementation.
+Date:   Tue, 3 Sep 2019 14:54:16 +0800
+Message-ID: <1567493656-19916-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+PTR_ERR_OR_ZERO contains if(IS_ERR(...)) + PTR_ERR. It is better to
+use it directly. hence just replace it.
 
-Since ip6frag_expire_frag_queue() now pulls the head skb
-from frag queue, we should no longer use skb_get(), since
-this leads to an skb leak.
-
-Stefan Bader initially reported a problem in 4.4.stable [1] caused
-by the skb_get(), so this patch should also fix this issue.
-
-296583.091021] kernel BUG at /build/linux-6VmqmP/linux-4.4.0/net/core/skbuff.c:1207!
-[296583.091734] Call Trace:
-[296583.091749]  [<ffffffff81740e50>] __pskb_pull_tail+0x50/0x350
-[296583.091764]  [<ffffffff8183939a>] _decode_session6+0x26a/0x400
-[296583.091779]  [<ffffffff817ec719>] __xfrm_decode_session+0x39/0x50
-[296583.091795]  [<ffffffff818239d0>] icmpv6_route_lookup+0xf0/0x1c0
-[296583.091809]  [<ffffffff81824421>] icmp6_send+0x5e1/0x940
-[296583.091823]  [<ffffffff81753238>] ? __netif_receive_skb+0x18/0x60
-[296583.091838]  [<ffffffff817532b2>] ? netif_receive_skb_internal+0x32/0xa0
-[296583.091858]  [<ffffffffc0199f74>] ? ixgbe_clean_rx_irq+0x594/0xac0 [ixgbe]
-[296583.091876]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091893]  [<ffffffff8183d431>] icmpv6_send+0x21/0x30
-[296583.091906]  [<ffffffff8182b500>] ip6_expire_frag_queue+0xe0/0x120
-[296583.091921]  [<ffffffffc04eb27f>] nf_ct_frag6_expire+0x1f/0x30 [nf_defrag_ipv6]
-[296583.091938]  [<ffffffff810f3b57>] call_timer_fn+0x37/0x140
-[296583.091951]  [<ffffffffc04eb260>] ? nf_ct_net_exit+0x50/0x50 [nf_defrag_ipv6]
-[296583.091968]  [<ffffffff810f5464>] run_timer_softirq+0x234/0x330
-[296583.091982]  [<ffffffff8108a339>] __do_softirq+0x109/0x2b0
-
-Fixes: d4289fcc9b16 ("net: IP6 defrag: use rbtrees for IPv6 defrag")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Stefan Bader <stefan.bader@canonical.com>
-Cc: Peter Oskolkov <posk@google.com>
-Cc: Florian Westphal <fw@strlen.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 ---
- include/net/ipv6_frag.h |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/crypto/aes-glue.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/include/net/ipv6_frag.h b/include/net/ipv6_frag.h
-index 28aa9b3..1f77fb4 100644
---- a/include/net/ipv6_frag.h
-+++ b/include/net/ipv6_frag.h
-@@ -94,7 +94,6 @@ static inline u32 ip6frag_obj_hashfn(const void *data, u32 len, u32 seed)
- 		goto out;
+diff --git a/arch/arm64/crypto/aes-glue.c b/arch/arm64/crypto/aes-glue.c
+index ca0c84d..2a2e0a3 100644
+--- a/arch/arm64/crypto/aes-glue.c
++++ b/arch/arm64/crypto/aes-glue.c
+@@ -409,10 +409,8 @@ static int essiv_cbc_init_tfm(struct crypto_skcipher *tfm)
+ 	struct crypto_aes_essiv_cbc_ctx *ctx = crypto_skcipher_ctx(tfm);
  
- 	head->dev = dev;
--	skb_get(head);
- 	spin_unlock(&fq->q.lock);
+ 	ctx->hash = crypto_alloc_shash("sha256", 0, 0);
+-	if (IS_ERR(ctx->hash))
+-		return PTR_ERR(ctx->hash);
  
- 	icmpv6_send(head, ICMPV6_TIME_EXCEED, ICMPV6_EXC_FRAGTIME, 0);
+-	return 0;
++	return PTR_ERR_OR_ZERO(ctx->hash);
+ }
+ 
+ static void essiv_cbc_exit_tfm(struct crypto_skcipher *tfm)
 -- 
-1.7.9.5
+1.7.12.4
 
