@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3F5C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEABDC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B6F23697
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9729C23697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528481;
-	bh=gzq+NjRgMmksXn34dkQZ3dKzR8VqerRUJi/9FJJrSjg=;
+	s=default; t=1567528489;
+	bh=y7zrbxbyuIpeUNUY35urgqiiOnBeTRg/Nw172CvPTf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cNZTv9rn2pI2wmByeb59Bwk3xZ3i7HpPWlyA82/+lvv76oP0NSb6QUGa8Miv/N8i2
-	 KZoD5y5yC18LvWqFm7SzzjOGXxFNssQ9lFSh2SOZkx4Q1jlPqVY+HY6UMkQe0FN+Bd
-	 3LWeisMgxkf8Pf5EPVZ/gPBfFTsXhwOoLqkE8L/g=
+	b=NuL/BKewJ9H929sefTU2mULiaFDoN/fFs+Jl6akuknCkczCgNt/L6lbiI0Z5/Is7b
+	 PWOaXkq6vINFRYVSRuDK2xhVWYwWLXyJKZ3uV/VbDgffFYNBU6ipQRpThZ4MCN+pWY
+	 Rw0Hz4yWLH7X910L4giA3Z4qfOm0toDxKK7l46Hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731240AbfICQek (ORCPT
+        id S1730546AbfICQ17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:34:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:27:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731012AbfICQ2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:02 -0400
+        id S1730964AbfICQ1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CF9F238C7;
-        Tue,  3 Sep 2019 16:28:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA0F32343A;
+        Tue,  3 Sep 2019 16:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528081;
-        bh=gzq+NjRgMmksXn34dkQZ3dKzR8VqerRUJi/9FJJrSjg=;
+        s=default; t=1567528071;
+        bh=y7zrbxbyuIpeUNUY35urgqiiOnBeTRg/Nw172CvPTf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LllWghzMchxxaIVlx9oXSA79k5f4wFgQdZ9mYJowlWe01I9YmHl975S5f6OtKZb5V
-         h1FRDNJ5GunmMO1SIelePd4r9W6V6bcBTi9kZ2VmJXyrpnZ3zILnJsdGHFCrlBFYey
-         X2c5ZYbHUg472jEQJ/Dge9cAVvpHA5t+aksu3MNQ=
+        b=vkfpgPGdfz2fmWmNauNAkgvxl0v17rp9Ex+oikIiHFRZkJW9VLY2KWngITr3s1gt+
+         /qrYeWecB9FS7FcNjayrQACNeXc+OOHr5E4FbvDqxagrztBCcqBZepjrkuybAcH56E
+         6fe5qnEOwe3tFKVN75InuHYqTzyqJJsjXSQW6WCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     WANG Chao <chao.wang@ucloud.cn>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 093/167] x86/kvm: move kvm_load/put_guest_xcr0 into atomic context
-Date:   Tue,  3 Sep 2019 12:24:05 -0400
-Message-Id: <20190903162519.7136-93-sashal@kernel.org>
+Cc:     Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 085/167] CIFS: Fix leaking locked VFS cache pages in writeback retry
+Date:   Tue,  3 Sep 2019 12:23:57 -0400
+Message-Id: <20190903162519.7136-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,153 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: WANG Chao <chao.wang@ucloud.cn>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-[ Upstream commit 1811d979c71621aafc7b879477202d286f7e863b ]
+[ Upstream commit 165df9a080b6863ae286fa01780c13d87cd81076 ]
 
-guest xcr0 could leak into host when MCE happens in guest mode. Because
-do_machine_check() could schedule out at a few places.
+If we don't find a writable file handle when retrying writepages
+we break of the loop and do not unlock and put pages neither from
+wdata2 nor from the original wdata. Fix this by walking through
+all the remaining pages and cleanup them properly.
 
-For example:
-
-kvm_load_guest_xcr0
-...
-kvm_x86_ops->run(vcpu) {
-  vmx_vcpu_run
-    vmx_complete_atomic_exit
-      kvm_machine_check
-        do_machine_check
-          do_memory_failure
-            memory_failure
-              lock_page
-
-In this case, host_xcr0 is 0x2ff, guest vcpu xcr0 is 0xff. After schedule
-out, host cpu has guest xcr0 loaded (0xff).
-
-In __switch_to {
-     switch_fpu_finish
-       copy_kernel_to_fpregs
-         XRSTORS
-
-If any bit i in XSTATE_BV[i] == 1 and xcr0[i] == 0, XRSTORS will
-generate #GP (In this case, bit 9). Then ex_handler_fprestore kicks in
-and tries to reinitialize fpu by restoring init fpu state. Same story as
-last #GP, except we get DOUBLE FAULT this time.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: WANG Chao <chao.wang@ucloud.cn>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/svm.c |  2 ++
- arch/x86/kvm/vmx.c |  4 ++++
- arch/x86/kvm/x86.c | 10 ++++------
- arch/x86/kvm/x86.h |  2 ++
- 4 files changed, 12 insertions(+), 6 deletions(-)
+ fs/cifs/cifssmb.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 0f33f00aa4dfe..ac2cc2ed7a85f 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5622,6 +5622,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	svm->vmcb->save.cr2 = vcpu->arch.cr2;
+diff --git a/fs/cifs/cifssmb.c b/fs/cifs/cifssmb.c
+index a5cb7b2d1ac5d..86a54b809c484 100644
+--- a/fs/cifs/cifssmb.c
++++ b/fs/cifs/cifssmb.c
+@@ -2033,12 +2033,13 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
  
- 	clgi();
-+	kvm_load_guest_xcr0(vcpu);
+ 		wdata2->cfile = find_writable_file(CIFS_I(inode), false);
+ 		if (!wdata2->cfile) {
+-			cifs_dbg(VFS, "No writable handles for inode\n");
++			cifs_dbg(VFS, "No writable handle to retry writepages\n");
+ 			rc = -EBADF;
+-			break;
++		} else {
++			wdata2->pid = wdata2->cfile->pid;
++			rc = server->ops->async_writev(wdata2,
++						       cifs_writedata_release);
+ 		}
+-		wdata2->pid = wdata2->cfile->pid;
+-		rc = server->ops->async_writev(wdata2, cifs_writedata_release);
  
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
-@@ -5769,6 +5770,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (unlikely(svm->vmcb->control.exit_code == SVM_EXIT_NMI))
- 		kvm_before_interrupt(&svm->vcpu);
+ 		for (j = 0; j < nr_pages; j++) {
+ 			unlock_page(wdata2->pages[j]);
+@@ -2053,6 +2054,7 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
+ 			kref_put(&wdata2->refcount, cifs_writedata_release);
+ 			if (is_retryable_error(rc))
+ 				continue;
++			i += nr_pages;
+ 			break;
+ 		}
  
-+	kvm_put_guest_xcr0(vcpu);
- 	stgi();
+@@ -2060,6 +2062,13 @@ cifs_writev_requeue(struct cifs_writedata *wdata)
+ 		i += nr_pages;
+ 	} while (i < wdata->nr_pages);
  
- 	/* Any pending NMI will happen here */
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 562f5dc4645b6..ee9ff20da3902 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -10756,6 +10756,8 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (vcpu->guest_debug & KVM_GUESTDBG_SINGLESTEP)
- 		vmx_set_interrupt_shadow(vcpu, 0);
- 
-+	kvm_load_guest_xcr0(vcpu);
++	/* cleanup remaining pages from the original wdata */
++	for (; i < wdata->nr_pages; i++) {
++		SetPageError(wdata->pages[i]);
++		end_page_writeback(wdata->pages[i]);
++		put_page(wdata->pages[i]);
++	}
 +
- 	if (static_cpu_has(X86_FEATURE_PKU) &&
- 	    kvm_read_cr4_bits(vcpu, X86_CR4_PKE) &&
- 	    vcpu->arch.pkru != vmx->host_pkru)
-@@ -10971,6 +10973,8 @@ static void __noclone vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 			__write_pkru(vmx->host_pkru);
- 	}
- 
-+	kvm_put_guest_xcr0(vcpu);
-+
- 	vmx->nested.nested_run_pending = 0;
- 	vmx->idt_vectoring_info = 0;
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 4f564dc17c333..253326aaea9ac 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -713,7 +713,7 @@ void kvm_lmsw(struct kvm_vcpu *vcpu, unsigned long msw)
- }
- EXPORT_SYMBOL_GPL(kvm_lmsw);
- 
--static void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
-+void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
- {
- 	if (kvm_read_cr4_bits(vcpu, X86_CR4_OSXSAVE) &&
- 			!vcpu->guest_xcr0_loaded) {
-@@ -723,8 +723,9 @@ static void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu)
- 		vcpu->guest_xcr0_loaded = 1;
- 	}
- }
-+EXPORT_SYMBOL_GPL(kvm_load_guest_xcr0);
- 
--static void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
-+void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
- {
- 	if (vcpu->guest_xcr0_loaded) {
- 		if (vcpu->arch.xcr0 != host_xcr0)
-@@ -732,6 +733,7 @@ static void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu)
- 		vcpu->guest_xcr0_loaded = 0;
- 	}
- }
-+EXPORT_SYMBOL_GPL(kvm_put_guest_xcr0);
- 
- static int __kvm_set_xcr(struct kvm_vcpu *vcpu, u32 index, u64 xcr)
- {
-@@ -7648,8 +7650,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		goto cancel_injection;
- 	}
- 
--	kvm_load_guest_xcr0(vcpu);
--
- 	if (req_immediate_exit) {
- 		kvm_make_request(KVM_REQ_EVENT, vcpu);
- 		kvm_x86_ops->request_immediate_exit(vcpu);
-@@ -7702,8 +7702,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 	vcpu->mode = OUTSIDE_GUEST_MODE;
- 	smp_wmb();
- 
--	kvm_put_guest_xcr0(vcpu);
--
- 	kvm_before_interrupt(vcpu);
- 	kvm_x86_ops->handle_external_intr(vcpu);
- 	kvm_after_interrupt(vcpu);
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 1826ed9dd1c8f..8889e0c029a70 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -345,4 +345,6 @@ static inline void kvm_after_interrupt(struct kvm_vcpu *vcpu)
- 	__this_cpu_write(current_vcpu, NULL);
- }
- 
-+void kvm_load_guest_xcr0(struct kvm_vcpu *vcpu);
-+void kvm_put_guest_xcr0(struct kvm_vcpu *vcpu);
- #endif
+ 	if (rc != 0 && !is_retryable_error(rc))
+ 		mapping_set_error(inode->i_mapping, rc);
+ 	kref_put(&wdata->refcount, cifs_writedata_release);
 -- 
 2.20.1
 
