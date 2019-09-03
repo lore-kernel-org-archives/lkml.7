@@ -2,103 +2,77 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE0C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271D7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683DB208E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0424D208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbfICQIW (ORCPT
+        id S1729961AbfICQIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:08:22 -0400
-Received: from mga11.intel.com ([192.55.52.93]:60132 "EHLO mga11.intel.com"
+        Tue, 3 Sep 2019 12:08:41 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:32898 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728679AbfICQIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:08:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:08:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="183603458"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2019 09:08:12 -0700
-Date:   Tue, 3 Sep 2019 09:08:12 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Andy Whitcroft <apw@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] checkpatch: Remove obsolete period from "ambiguous SHA1"
- query
-Message-ID: <20190903160812.GD10768@linux.intel.com>
-References: <20190830163103.15914-1-sean.j.christopherson@intel.com>
- <19c9b30b3d77a65c6c4289a2eeeb6cbe40594aab.camel@perches.com>
- <20190830171731.GB15405@linux.intel.com>
- <a8afdbf13db47e7650473c7f71384f177f3dff59.camel@perches.com>
+        id S1728679AbfICQIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:08:40 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1i5BLi-0007Ci-LT; Tue, 03 Sep 2019 10:08:08 -0600
+To:     Keith Busch <keith.busch@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <20190831000139.7662-1-logang@deltatee.com>
+ <20190831152910.GA29439@localhost.localdomain>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
+Date:   Tue, 3 Sep 2019 10:08:01 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8afdbf13db47e7650473c7f71384f177f3dff59.camel@perches.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190831152910.GA29439@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: martin.petersen@oracle.com, hare@suse.com, kbusch@kernel.org, axboe@fb.com, sagi@grimberg.me, hch@lst.de, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, keith.busch@intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:01:29AM -0700, Joe Perches wrote:
-> On Fri, 2019-08-30 at 10:17 -0700, Sean Christopherson wrote:
-> > On Fri, Aug 30, 2019 at 09:37:51AM -0700, Joe Perches wrote:
-> > > On Fri, 2019-08-30 at 09:31 -0700, Sean Christopherson wrote:
-> > > > Git dropped the period from its "ambiguous SHA1" error message in commit
-> > > > 0c99171ad2 ("get_short_sha1: mark ambiguity error for translation"),
-> > > > circa 2016.  Drop the period from checkpatch's associated query so as to
-> > > > match both the old and new error messages.
-> > > > 
-> > > > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > > ---
-> > > >  scripts/checkpatch.pl | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > > index 93a7edfe0f05..ef3642c53100 100755
-> > > > --- a/scripts/checkpatch.pl
-> > > > +++ b/scripts/checkpatch.pl
-> > > > @@ -962,7 +962,7 @@ sub git_commit_info {
-> > > >  
-> > > >  	return ($id, $desc) if ($#lines < 0);
-> > > >  
-> > > > -	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous\./) {
-> > > > +	if ($lines[0] =~ /^error: short SHA1 $commit is ambiguous/) {
-> > > >  # Maybe one day convert this block of bash into something that returns
-> > > >  # all matching commit ids, but it's very slow...
-> > > >  #
-> > > 
-> > > Thanks.
-> > > 
-> > > Did git ever change to actually support human readable
-> > > messages in multiple languages?
-> > 
-> > Yep, e.g.:
-> > 
-> >   error: Kurzer SHA-1 745f ist mehrdeutig.
-> > 
-> > > If so, this won't work for non-english output.
-> > 
-> > Yep again.  The next check for 'fatal: ambiguous argument' obviously fails
-> > as well and checkpatch ends up using git's error message as the id and
-> > description.
-> > 
-> >   ERROR: Please use git ... - ie: 'commit error: Kurze ("")'
+
+
+On 2019-08-31 9:29 a.m., Keith Busch wrote:
+> On Fri, Aug 30, 2019 at 06:01:39PM -0600, Logan Gunthorpe wrote:
+>> To fix this, assign the subsystem's instance based on the instance
+>> number of the controller's instance that first created it. There should
+>> always be fewer subsystems than controllers so the should not be a need
+>> to create extra subsystems that overlap existing controllers.
 > 
-> Does git exit with unique failure codes?
+> The subsystem's lifetime is not tied to the controller's. When the
+> controller is removed and releases its instance, the next controller
+> to take that available instance will create naming collisions with the
+> subsystem still using it.
+> 
 
-Nope, AFAICT usage errors get exit(129) and everything else gets exit(128).
+Hmm, yes, ok.
 
-> If so, maybe the waitid/siginfo_t error could be used instead.
+So perhaps we can just make the subsystem prefer the ctrl's instance
+when allocating the ID? Then at least, in the common case, the
+controller numbers will match the subsystem numbers. Only when there's
+random hot-plugs would the numbers get out of sync.
+
+Logan
