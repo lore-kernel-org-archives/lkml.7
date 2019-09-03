@@ -2,84 +2,152 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D32C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CC2C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090D821881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8739B21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 01:33:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R1Lpt51w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfICBbG (ORCPT
+        id S1726405AbfICBdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 21:31:06 -0400
-Received: from mga06.intel.com ([134.134.136.31]:40781 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbfICBbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 21:31:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Sep 2019 18:31:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,461,1559545200"; 
-   d="scan'208";a="381967332"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga005.fm.intel.com with ESMTP; 02 Sep 2019 18:31:04 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Micha=c5=82_Wajdeczko?= <michal.wajdeczko@intel.com>
-Subject: Re: [RFC PATCH] iommu/vt-d: Fix IOMMU field not populated on device
- hot re-plug
-To:     Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-References: <20190822142922.31526-1-janusz.krzysztofik@linux.intel.com>
- <3255251.C7nBVfOIaa@jkrzyszt-desk.ger.corp.intel.com>
- <ccb1434d-281c-abae-0726-7fd924041315@linux.intel.com>
- <1769080.0GM3UzqXcv@jkrzyszt-desk.ger.corp.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <52fbfac9-c879-4b45-dd74-fafe62c2432b@linux.intel.com>
-Date:   Tue, 3 Sep 2019 09:29:40 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 2 Sep 2019 21:33:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35875 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfICBc7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 21:32:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so15593726wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 18:32:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uFS2gOcYr8n/ORpATsI1tuRB3yF1KuNhjqNeg1CIjrE=;
+        b=R1Lpt51wO+GzINS3yWChj0BXJMJqkMP9mu6bSaU5xh7eK2U7gKQYnWPZixECbB7E2z
+         Qf0Rd22TO25rNh/j6ZmaqL3NQXKxSydxgAZClM6F4+xFQzMurJ4pR08CINMOu9KE0wby
+         +U9N+RQHPY9nCCjZ+/t65IkRtr18tQ+0Vg1jpCk5xIRu2cBgBut9+qtvZ3U1MXykbeIJ
+         +La4378jP6SneFiirqWrq/MI8Xfeq2Px3oyDErIsGA7P08U2ETtUMZDeO5MrkM1lZ+ye
+         Wm/kjvarMmzB572BllROeT5Zd+d9r989UwjmNkmxE/pQRLfjeHx2tHRYJQSgobS9URj/
+         eVFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uFS2gOcYr8n/ORpATsI1tuRB3yF1KuNhjqNeg1CIjrE=;
+        b=t/inoX783n5oJHvsWJZU9CLkrDApr3EFLrS4rqpnUU56W80c5EuwB43wIEpSyVZJEX
+         yOAriQ/jEaYX9kcfDQYvGIb4dze3m05TbDrZ2l0V7XnZ4SpcAgebZjYnW+7v70wZkzRo
+         ggiUoQn4mfyggSuy0gH7QUDikmaw+ReHyYRFJINkNHVfrVJSpLR8FU+PtYw6WrO0ayjY
+         5nvpPU0kYKJ1qC+mBMng9sSJwd+Q0pP2KkilN4ZTH1GUz3HFBQaHW20dxbK9C1PHLAjq
+         ugkpvSQogHPKHWz8tv+s+FClwJHUlARD/ccc4127kyedciWkBAbkpYhaLo9MvPhuFFFS
+         LPbg==
+X-Gm-Message-State: APjAAAXeytSWHLcWsboS0ZxsqQkpuzPXr/e/X14OfqKerEwt7gu1SGG0
+        pY0BYSPqwT8GH8fRo7blF5ZXxa/KPWQQp7RHxc1DQg==
+X-Google-Smtp-Source: APXvYqywEhSAzEzmZtouqsNLkCC21lslmkYtGd0pJB5YXkRwe5tytIQ1eMiVj7rGRvIQoLguHC7TQ2mmRCWTSeERGPw=
+X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr40375615wrx.241.1567474377709;
+ Mon, 02 Sep 2019 18:32:57 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1769080.0GM3UzqXcv@jkrzyszt-desk.ger.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190902141910.1080-1-yuehaibing@huawei.com>
+In-Reply-To: <20190902141910.1080-1-yuehaibing@huawei.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 2 Sep 2019 18:32:45 -0700
+Message-ID: <CAKv+Gu-KFp13gnx=cnVRrU4_sD8qLLXFcTOK8zuc7MC+B+GmcQ@mail.gmail.com>
+Subject: Re: [PATCH -next] crypto: inside-secure - Fix build error without CONFIG_PCI
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Pascal Van Leeuwen <pvanleeuwen@insidesecure.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Janusz,
+On Mon, 2 Sep 2019 at 07:19, YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> If CONFIG_PCI is not set, building fails:
+>
+> rivers/crypto/inside-secure/safexcel.c: In function safexcel_request_ring_irq:
+> drivers/crypto/inside-secure/safexcel.c:944:9: error: implicit declaration of function pci_irq_vector;
+>  did you mean rcu_irq_enter? [-Werror=implicit-function-declaration]
+>    irq = pci_irq_vector(pci_pdev, irqid);
+>          ^~~~~~~~~~~~~~
+>
+> Use #ifdef block to guard this.
+>
+> Fixes: 625f269a5a7a ("crypto: inside-secure - add support for PCI based FPGA development board")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/crypto/inside-secure/safexcel.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-secure/safexcel.c
+> index e12a2a3..c23fe34 100644
+> --- a/drivers/crypto/inside-secure/safexcel.c
+> +++ b/drivers/crypto/inside-secure/safexcel.c
+> @@ -937,7 +937,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+>         int ret, irq;
+>         struct device *dev;
+>
+> -       if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
+> +#if IS_ENABLED(CONFIG_PCI)
 
-On 9/2/19 4:37 PM, Janusz Krzysztofik wrote:
->> I am not saying that keeping data is not acceptable. I just want to
->> check whether there are any other solutions.
-> Then reverting 458b7c8e0dde and applying this patch still resolves the issue
-> for me.  No errors appear when mappings are unmapped on device close after the
-> device has been removed, and domain info preserved on device removal is
-> successfully reused on device re-plug.
+please don't use IS_ENABLED() with preprocessor conditionals - just
+use #ifdef CONFIG_PCI instead
 
-This patch doesn't look good to me although I agree that keeping data is
-acceptable. It updates dev->archdata.iommu, but leaves the hardware
-context/pasid table unchanged. This might cause problems somewhere.
-
-> 
-> Is there anything else I can do to help?
-
-Can you please tell me how to reproduce the problem? Keeping the per
-device domain info while device is unplugged is a bit dangerous because
-info->dev might be a wild pointer. We need to work out a clean fix.
-
-> 
-> Thanks,
-> Janusz
-> 
-
-Best regards,
-Baolu
+> +       if (is_pci_dev) {
+>                 struct pci_dev *pci_pdev = pdev;
+>
+>                 dev = &pci_pdev->dev;
+> @@ -947,7 +948,10 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+>                                 irqid, irq);
+>                         return irq;
+>                 }
+> -       } else if (IS_ENABLED(CONFIG_OF)) {
+> +       } else
+> +#endif
+> +       {
+> +#if IS_ENABLED(CONFIG_OF)
+>                 struct platform_device *plf_pdev = pdev;
+>                 char irq_name[6] = {0}; /* "ringX\0" */
+>
+> @@ -960,6 +964,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+>                                 irq_name, irq);
+>                         return irq;
+>                 }
+> +#endif
+>         }
+>
+>         ret = devm_request_threaded_irq(dev, irq, handler,
+> @@ -1137,7 +1142,8 @@ static int safexcel_probe_generic(void *pdev,
+>
+>         safexcel_configure(priv);
+>
+> -       if (IS_ENABLED(CONFIG_PCI) && priv->version == EIP197_DEVBRD) {
+> +#if IS_ENABLED(CONFIG_PCI)
+> +       if (priv->version == EIP197_DEVBRD) {
+>                 /*
+>                  * Request MSI vectors for global + 1 per ring -
+>                  * or just 1 for older dev images
+> @@ -1153,6 +1159,7 @@ static int safexcel_probe_generic(void *pdev,
+>                         return ret;
+>                 }
+>         }
+> +#endif
+>
+>         /* Register the ring IRQ handlers and configure the rings */
+>         priv->ring = devm_kcalloc(dev, priv->config.rings,
+> --
+> 2.7.4
+>
+>
