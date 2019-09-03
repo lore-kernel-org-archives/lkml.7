@@ -2,116 +2,177 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B40FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:58:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C98EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC5821883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:58:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DEA2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567501227;
+	bh=mVnvcxp+G9Lg09PKVia7IRCacGhHCMYuQLC/geqOJ/4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SlVu1fVlpnbFY4qMkSilZILNBXpyhpQv37HJMxA3fewMOdmoGTNLWwjez5kkT7pIS
+	 95SEHZnXb60oZQP47pPuR2OkIOIl+5MM2RsG70Us9ZEMUN+V8Ju4WKbnWQ3pMwvIf1
+	 pisLGXTeHtfCXgxhs7u4nMxVTTL9TIuhLQT90Jr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfICI63 (ORCPT
+        id S1728208AbfICJA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:58:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33712 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 05:00:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfICI62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:58:28 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726557AbfICJA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:00:26 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 741718665D;
-        Tue,  3 Sep 2019 08:58:28 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9FF160C18;
-        Tue,  3 Sep 2019 08:58:25 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 10:58:23 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 10/21] RISC-V: KVM: Handle MMIO exits for VCPU
-Message-ID: <20190903085823.s4amn27pewc54hl2@kamzik.brq.redhat.com>
-References: <20190829135427.47808-1-anup.patel@wdc.com>
- <20190829135427.47808-11-anup.patel@wdc.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C43E21883;
+        Tue,  3 Sep 2019 09:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567501225;
+        bh=mVnvcxp+G9Lg09PKVia7IRCacGhHCMYuQLC/geqOJ/4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qAKAWwZEd/yvtlIIDRkP8+OQaZqVZulzqnHj2cQBPUTH2pf3gFRAOlWqqJERYclcg
+         KK9JAzB4eSsgZLU1CVX4TQcLi+BEsciUkTj0Nkw3F4kdhXXFv8LYIC7I96SykPW7p0
+         DCJMjCQbD7+46O1I3nONz923kX6yissO0EN+FPao=
+Received: by mail-qt1-f175.google.com with SMTP id k10so8579311qth.2;
+        Tue, 03 Sep 2019 02:00:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAXOMkvMSvR1xDEiwo7tGUJNJhZQLVBOE0hKuq1+5rlsHoxCcn2V
+        ers9BrEH4VHqnUYD2tgGq5IM046o/hW8I1WNUw==
+X-Google-Smtp-Source: APXvYqxINc1z5+kUGayW8tQqoY1hH7ZohnenT2DMo0cxL15BrooAJ51z08nZ2stlFiJ8pZ/eaBW9rKX+cE1M9Hly+Ug=
+X-Received: by 2002:ac8:44c4:: with SMTP id b4mr32496188qto.224.1567501224313;
+ Tue, 03 Sep 2019 02:00:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190829135427.47808-11-anup.patel@wdc.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 03 Sep 2019 08:58:28 +0000 (UTC)
+References: <20190902150336.3600-1-krzk@kernel.org> <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
+ <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
+In-Reply-To: <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 3 Sep 2019 10:00:12 +0100
+X-Gmail-Original-Message-ID: <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
+Message-ID: <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
+ to json-schema
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 01:56:18PM +0000, Anup Patel wrote:
->  int kvm_riscv_vcpu_mmio_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  {
-> -	/* TODO: */
-> +	u8 data8;
-> +	u16 data16;
-> +	u32 data32;
-> +	u64 data64;
-> +	ulong insn;
-> +	int len, shift;
-> +
-> +	insn = vcpu->arch.mmio_decode.insn;
-> +
-> +	if (run->mmio.is_write)
-> +		goto done;
-> +
-> +	len = vcpu->arch.mmio_decode.len;
-> +	shift = vcpu->arch.mmio_decode.shift;
-> +
-> +	switch (len) {
-> +	case 1:
-> +		data8 = *((u8 *)run->mmio.data);
-> +		SET_RD(insn, &vcpu->arch.guest_context,
-> +			(ulong)data8 << shift >> shift);
-> +		break;
-> +	case 2:
-> +		data16 = *((u16 *)run->mmio.data);
-> +		SET_RD(insn, &vcpu->arch.guest_context,
-> +			(ulong)data16 << shift >> shift);
-> +		break;
-> +	case 4:
-> +		data32 = *((u32 *)run->mmio.data);
-> +		SET_RD(insn, &vcpu->arch.guest_context,
-> +			(ulong)data32 << shift >> shift);
-> +		break;
-> +	case 8:
-> +		data64 = *((u64 *)run->mmio.data);
-> +		SET_RD(insn, &vcpu->arch.guest_context,
-> +			(ulong)data64 << shift >> shift);
-> +		break;
-> +	default:
-> +		return -ENOTSUPP;
-> +	};
-> +
-> +done:
-> +	/* Move to next instruction */
-> +	vcpu->arch.guest_context.sepc += INSN_LEN(insn);
-> +
+On Tue, Sep 3, 2019 at 8:47 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Tue, 3 Sep 2019 at 09:14, Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Mon, Sep 2, 2019 at 4:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > >
+> > > Convert the Syscon reboot bindings to DT schema format using
+> > > json-schema.
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > ---
+> > >  .../bindings/power/reset/syscon-reboot.txt    | 30 --------
+> > >  .../bindings/power/reset/syscon-reboot.yaml   | 68 +++++++++++++++++++
+> > >  2 files changed, 68 insertions(+), 30 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> >
+> > > diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > new file mode 100644
+> > > index 000000000000..a583f3dc8ef4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml
+> > > @@ -0,0 +1,68 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/power/reset/syscon-reboot.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Generic SYSCON mapped register reset driver
+> > > +
+> > > +maintainers:
+> > > +  - Sebastian Reichel <sre@kernel.org>
+> > > +
+> > > +description: |+
+> > > +  This is a generic reset driver using syscon to map the reset register.
+> > > +  The reset is generally performed with a write to the reset register
+> > > +  defined by the register map pointed by syscon reference plus the offset
+> > > +  with the value and mask defined in the reboot node.
+> > > +  Default will be little endian mode, 32 bit access only.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: syscon-reboot
+> > > +
+> > > +  mask:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: Update only the register bits defined by the mask (32 bit).
+> > > +    maxItems: 1
+> >
+> > Drop this as that is already defined for uint32.
+> >
+> > It also doesn't actually work. The $ref has to be under an 'allOf' if
+> > you have additional schemas. A quirk of json-schema...
+> >
+> > > +
+> > > +  offset:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: Offset in the register map for the reboot register (in bytes).
+> > > +    maxItems: 1
+> > > +
+> > > +  regmap:
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > > +    description: Phandle to the register map node.
+> > > +    maxItems: 1
+> > > +
+> > > +  value:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: The reset value written to the reboot register (32 bit access).
+> > > +    maxItems: 1
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - regmap
+> > > +  - offset
+> > > +
+> > > +allOf:
+> > > +  - if:
+> > > +      properties:
+> > > +        value:
+> > > +          not:
+> > > +            type: array
+> >
+> > I think you could make this a bit more readable with:
+> >
+> > if:
+> >   not:
+> >     required:
+> >       - value
+>
+> I do not understand how does it work (value is not mentioned in the
+> required fields so why checking of it?)... but it works fine.
 
-As I pointed out in the last review, just moving this instruction skip
-here is not enough. Doing so introduces the same problem that 2113c5f62b74
-("KVM: arm/arm64: Only skip MMIO insn once") fixes for arm.
+What's under required doesn't have to be listed as a property.
 
-Thanks,
-drew
+> > However, if the tree is free of legacy usage, then you could just drop all this.
+>
+> One of them - mask or value - has to be provided.
+
+Or both, right?
+
+Actually, a better way to express it is probably this:
+
+oneOf:
+  - required: [ value ]
+  - required: [ mask ]
+  - required: [ value, mask ]
+
+Rob
