@@ -2,112 +2,105 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC21C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03118C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6034622DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567508910;
-	bh=XgZDVToYtxydQv1kuHCV3/EJ66RoUOiOqTzG5Lf9Fuc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=W2VGioISrW8u+jHS0NoJIay46vRjqm4Q8mnCiMUpjq0U0CA+AVvkUyiZV0Wt13LT/
-	 8C9oOB8ZCOEraR7ZkcBpnBaDXqsKbp9qu1GnOyrrlRrQeziwzFeDw6c76ygH124rcH
-	 DaGOBUFlYKd5kDLZmPmtlS6RWdo1jjjrpXGqAQRM=
+	by mail.kernel.org (Postfix) with ESMTP id D66B222CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbfICLI3 (ORCPT
+        id S1728739AbfICLK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbfICLI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:08:27 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AE0022CF8;
-        Tue,  3 Sep 2019 11:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567508906;
-        bh=XgZDVToYtxydQv1kuHCV3/EJ66RoUOiOqTzG5Lf9Fuc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1ueJrrTJnHQsSbbOw/cYdAZPLZ/IXfGus1SoFofc6Mnbipf01Ni8trxtiRb1QEoE8
-         fjC4wGWTJ8/iuUXREri1B3g88LRn54FdntT5m9RUAngP/2JCAyzMQLtFnmtd9Lj4n7
-         QEoHMaKPY4QZiDejY6up7/R9OMLYdRQa0w5I91vc=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
+        Tue, 3 Sep 2019 07:10:29 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34118 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICLK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:10:28 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s18so17054164wrn.1;
+        Tue, 03 Sep 2019 04:10:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YYxd6voxuN3AOnqV2EKoZHgTVJ5qnR7Q8JGoro2CGRk=;
+        b=ADnHg/CyiakTuAS7kEPDcC5AD7fCAAG9Uo5tsUTsQLhZtmj29di5ZaoL3ZjQKdvaCo
+         0RafNf1P5VaUxLFqUN+mVwRmKn8rGpNkhlawco0VZY7A8+eKu/oHWqnvdmZBumgI1dzG
+         kWCKr12VVIObZo/Cbk9hK+XziaLsK6wwaQ7jggx37JsYxkd3F3U8AnZ1p5LkO1eKDO8b
+         P8XpixWB/RreHmMfM/48itnzdBI2Ut8SCBP5GzJWg0rqXOEZ3+lfXDBVceyDZq8HbwNo
+         ztA6+JLuGPKJQVJ743pEAd3jAnnfA8qhRB2XRDqZh64l7w0ujhaobK80Qy85QHtCj6Uv
+         yFwA==
+X-Gm-Message-State: APjAAAW5o0O9iiBEzbUc2N1CcjvnlBi62E8p6kbmdvnEhIedKE179DT6
+        kdNJl3XHR8HHYj1ajkpxDLNZBON9
+X-Google-Smtp-Source: APXvYqzxwN3aVldTzA/VxWu0ZjGxluwpmnioYH4CasgCT4Q83CXocBbes4XmFZtxxwj5pDmEHjcGYA==
+X-Received: by 2002:a5d:46c4:: with SMTP id g4mr25243954wrs.189.1567509026565;
+        Tue, 03 Sep 2019 04:10:26 -0700 (PDT)
+Received: from black.home (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id w12sm4363572wrg.47.2019.09.03.04.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 04:10:25 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>, Lukas Wunner <lukas@wunner.de>,
+        linux-pci@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH -tip v2] kprobes: Prohibit probing on BUG() and WARN() address
-Date:   Tue,  3 Sep 2019 20:08:21 +0900
-Message-Id: <156750890133.19112.3393666300746167111.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+Subject: [PATCH v4 0/4] Simplify PCIe hotplug indicator control
+Date:   Tue,  3 Sep 2019 14:10:17 +0300
+Message-Id: <20190903111021.1559-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
-get the address where the BUG() has occurred, kprobes can not
-do single-step out-of-line that instruction. So prohibit
-probing on such address.
+PCIe defines two optional hotplug indicators: a Power indicator and an
+Attention indicator. Both are controlled by the same register, and each
+can be on, off or blinking. The current interfaces
+(pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+non-uniform and require two register writes in many cases where we could
+do one.
 
-Without this fix, if someone put a kprobe on WARN(), the
-kernel will crash with invalid opcode error instead of
-outputing warning message, because kernel can not find
-correct bug address.
+This patchset introduces the new function pciehp_set_indicators(). It
+allows one to set two indicators with a single register write. All
+calls to previous interfaces (pciehp_green_led_* and
+pciehp_set_attention_status()) are replaced with a new one. Thus,
+the amount of duplicated code for setting indicators is reduced.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
-  Changes in v2:
-   - Add find_bug() stub function for !CONFIG_GENERIC_BUG
-   - Cast the p->addr to unsigned long.
----
- include/linux/bug.h |    5 +++++
- kernel/kprobes.c    |    3 ++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Changes in v4:
+  - Changed the inputs validation in pciehp_set_indicators()
+  - Moved PCI_EXP_SLTCTL_ATTN_IND_NONE, PCI_EXP_SLTCTL_PWR_IND_NONE
+    to drivers/pci/hotplug/pciehp.h and set to -1 for not interfering
+    with reserved values in the PCIe Base spec
+  - Added set_power_indicator define
 
-diff --git a/include/linux/bug.h b/include/linux/bug.h
-index fe5916550da8..f639bd0122f3 100644
---- a/include/linux/bug.h
-+++ b/include/linux/bug.h
-@@ -47,6 +47,11 @@ void generic_bug_clear_once(void);
- 
- #else	/* !CONFIG_GENERIC_BUG */
- 
-+static inline void *find_bug(unsigned long bugaddr)
-+{
-+	return NULL;
-+}
-+
- static inline enum bug_trap_type report_bug(unsigned long bug_addr,
- 					    struct pt_regs *regs)
- {
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 452151e79535..5bdf47190f09 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1514,7 +1514,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
- 	/* Ensure it is not in reserved area nor out of text */
- 	if (!kernel_text_address((unsigned long) p->addr) ||
- 	    within_kprobe_blacklist((unsigned long) p->addr) ||
--	    jump_label_text_reserved(p->addr, p->addr)) {
-+	    jump_label_text_reserved(p->addr, p->addr) ||
-+	    find_bug((unsigned long) p->addr)) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
+Changes in v3:
+  - Changed pciehp_set_indicators() to work with existing
+    PCI_EXP_SLTCTL_* macros
+  - Reworked the inputs validation in pciehp_set_indicators()
+  - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+    completely
+
+Denis Efremov (4):
+  PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+  PCI: pciehp: Switch LED indicators with a single write
+  PCI: pciehp: Remove pciehp_set_attention_status()
+  PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+
+ drivers/pci/hotplug/pciehp.h      | 12 ++++--
+ drivers/pci/hotplug/pciehp_core.c |  7 ++-
+ drivers/pci/hotplug/pciehp_ctrl.c | 26 +++++------
+ drivers/pci/hotplug/pciehp_hpc.c  | 72 +++++++------------------------
+ include/uapi/linux/pci_regs.h     |  1 +
+ 5 files changed, 45 insertions(+), 73 deletions(-)
+
+-- 
+2.21.0
 
