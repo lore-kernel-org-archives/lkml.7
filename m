@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EFCC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0CBC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD1C215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9827C215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528287;
-	bh=69HaPlmuyFK7cykVSPEjEiFOabnH7gqUReKQ5BDCWys=;
+	s=default; t=1567528291;
+	bh=dyrfv+WP+eThW7h6SeQXXHb7vB1kv65ppMyTfn8KQow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F62/D0lzHrWO4WKVNXfcWk0cdoY8k1pJ1Uv/MJj0j1i0NRGFtKQgtRKcEIE94I6mE
-	 huC6p3vhfakf2WcifUIMdwmTRyUj3y9WZ/9LLe6hqnpQhSIwW4ybNkXDrj+oXyeZ9G
-	 z+cM/Sm3lY6fcGMVBNpyS8Se3+/hFyw7TGWUJce8=
+	b=w33htz35e9oipOlQ3LwwBGMBa7sNEOz7XFeB5wrzvJyjYSSxjrzDfDqsPxLo+TeQk
+	 PVuFEBW6DZTMktHkfK+8JoQ8Xlcg2+Peccj9yb/sI58YUqsyF7FcE2ZoBaDPeHnFo3
+	 9J1nL1Cu9rkYsl6W1GYkrFhjr0Rf9/WRqaSCZIcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbfICQbZ (ORCPT
+        id S1731104AbfICQ2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:31:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50346 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:28:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbfICQ2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:23 -0400
+        id S1731080AbfICQ2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 530EF238C5;
-        Tue,  3 Sep 2019 16:28:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EFA3238C6;
+        Tue,  3 Sep 2019 16:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528102;
-        bh=69HaPlmuyFK7cykVSPEjEiFOabnH7gqUReKQ5BDCWys=;
+        s=default; t=1567528096;
+        bh=dyrfv+WP+eThW7h6SeQXXHb7vB1kv65ppMyTfn8KQow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qpj5ADqudtknxFPtWlYJkAQYyFOq97jww+vTytjFZWVGGyMXegUA2CqUiXKZtP88I
-         av/l5MPs00/geAQf3aacJOTUVii0rM7h4tAItndqoTiUgGH8qOxgtI5z3SdvEfgRWt
-         jPmmFIYzg91hoMoj+DEE4h3IjQq0ShaVKkc6lMOw=
+        b=1iZbDcN0rFadrEOo41N4z2PB+gL7ULkZePJJNhx3OIgeCG9phzPT+1wkyM8BsxQmy
+         nWceNAjZ7oT8/i5b5oeEH6KTCKl83FMzBt302hR1oTLWXxj0xCvIfngiOJ7xGgNM+U
+         B2HcG90eaRfTH/dqvY7f719Kc8N2Obk64eDdNnSc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Milan Broz <gmazyland@gmail.com>,
+Cc:     Yufen Yu <yuyufen@huawei.com>, stable@vger.kernl.org,
         Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 110/167] dm crypt: move detailed message into debug level
-Date:   Tue,  3 Sep 2019 12:24:22 -0400
-Message-Id: <20190903162519.7136-110-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 105/167] dm mpath: fix missing call of path selector type->end_io
+Date:   Tue,  3 Sep 2019 12:24:17 -0400
+Message-Id: <20190903162519.7136-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,57 +59,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milan Broz <gmazyland@gmail.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit 7a1cd7238fde6ab367384a4a2998cba48330c398 ]
+[ Upstream commit 5de719e3d01b4abe0de0d7b857148a880ff2a90b ]
 
-The information about tag size should not be printed without debug info
-set. Also print device major:minor in the error message to identify the
-device instance.
+After commit 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via
+blk_insert_cloned_request feedback"), map_request() will requeue the tio
+when issued clone request return BLK_STS_RESOURCE or BLK_STS_DEV_RESOURCE.
 
-Also use rate limiting and debug level for info about used crypto API
-implementaton.  This is important because during online reencryption
-the existing message saturates syslog (because we are moving hotzone
-across the whole device).
+Thus, if device driver status is error, a tio may be requeued multiple
+times until the return value is not DM_MAPIO_REQUEUE.  That means
+type->start_io may be called multiple times, while type->end_io is only
+called when IO complete.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
+In fact, even without commit 396eaf21ee17, setup_clone() failure can
+also cause tio requeue and associated missed call to type->end_io.
+
+The service-time path selector selects path based on in_flight_size,
+which is increased by st_start_io() and decreased by st_end_io().
+Missed calls to st_end_io() can lead to in_flight_size count error and
+will cause the selector to make the wrong choice.  In addition,
+queue-length path selector will also be affected.
+
+To fix the problem, call type->end_io in ->release_clone_rq before tio
+requeue.  map_info is passed to ->release_clone_rq() for map_request()
+error path that result in requeue.
+
+Fixes: 396eaf21ee17 ("blk-mq: improve DM's blk-mq IO merging via blk_insert_cloned_request feedback")
+Cc: stable@vger.kernl.org
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-crypt.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/md/dm-mpath.c         | 17 ++++++++++++++++-
+ drivers/md/dm-rq.c            |  8 ++++----
+ drivers/md/dm-target.c        |  3 ++-
+ include/linux/device-mapper.h |  3 ++-
+ 4 files changed, 24 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index f3dcc7640319e..34f5de13a93d1 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -949,6 +949,7 @@ static int crypt_integrity_ctr(struct crypt_config *cc, struct dm_target *ti)
+diff --git a/drivers/md/dm-mpath.c b/drivers/md/dm-mpath.c
+index baa966e2778c0..481e54ded9dc7 100644
+--- a/drivers/md/dm-mpath.c
++++ b/drivers/md/dm-mpath.c
+@@ -554,8 +554,23 @@ static int multipath_clone_and_map(struct dm_target *ti, struct request *rq,
+ 	return DM_MAPIO_REMAPPED;
+ }
+ 
+-static void multipath_release_clone(struct request *clone)
++static void multipath_release_clone(struct request *clone,
++				    union map_info *map_context)
  {
- #ifdef CONFIG_BLK_DEV_INTEGRITY
- 	struct blk_integrity *bi = blk_get_integrity(cc->dev->bdev->bd_disk);
-+	struct mapped_device *md = dm_table_get_md(ti->table);
++	if (unlikely(map_context)) {
++		/*
++		 * non-NULL map_context means caller is still map
++		 * method; must undo multipath_clone_and_map()
++		 */
++		struct dm_mpath_io *mpio = get_mpio(map_context);
++		struct pgpath *pgpath = mpio->pgpath;
++
++		if (pgpath && pgpath->pg->ps.type->end_io)
++			pgpath->pg->ps.type->end_io(&pgpath->pg->ps,
++						    &pgpath->path,
++						    mpio->nr_bytes);
++	}
++
+ 	blk_put_request(clone);
+ }
  
- 	/* From now we require underlying device with our integrity profile */
- 	if (!bi || strcasecmp(bi->profile->name, "DM-DIF-EXT-TAG")) {
-@@ -968,7 +969,7 @@ static int crypt_integrity_ctr(struct crypt_config *cc, struct dm_target *ti)
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index 264b84e274aac..17c6a73c536c6 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -219,7 +219,7 @@ static void dm_end_request(struct request *clone, blk_status_t error)
+ 	struct request *rq = tio->orig;
  
- 	if (crypt_integrity_aead(cc)) {
- 		cc->integrity_tag_size = cc->on_disk_tag_size - cc->integrity_iv_size;
--		DMINFO("Integrity AEAD, tag size %u, IV size %u.",
-+		DMDEBUG("%s: Integrity AEAD, tag size %u, IV size %u.", dm_device_name(md),
- 		       cc->integrity_tag_size, cc->integrity_iv_size);
+ 	blk_rq_unprep_clone(clone);
+-	tio->ti->type->release_clone_rq(clone);
++	tio->ti->type->release_clone_rq(clone, NULL);
  
- 		if (crypto_aead_setauthsize(any_tfm_aead(cc), cc->integrity_tag_size)) {
-@@ -976,7 +977,7 @@ static int crypt_integrity_ctr(struct crypt_config *cc, struct dm_target *ti)
- 			return -EINVAL;
+ 	rq_end_stats(md, rq);
+ 	if (!rq->q->mq_ops)
+@@ -270,7 +270,7 @@ static void dm_requeue_original_request(struct dm_rq_target_io *tio, bool delay_
+ 	rq_end_stats(md, rq);
+ 	if (tio->clone) {
+ 		blk_rq_unprep_clone(tio->clone);
+-		tio->ti->type->release_clone_rq(tio->clone);
++		tio->ti->type->release_clone_rq(tio->clone, NULL);
+ 	}
+ 
+ 	if (!rq->q->mq_ops)
+@@ -495,7 +495,7 @@ static int map_request(struct dm_rq_target_io *tio)
+ 	case DM_MAPIO_REMAPPED:
+ 		if (setup_clone(clone, rq, tio, GFP_ATOMIC)) {
+ 			/* -ENOMEM */
+-			ti->type->release_clone_rq(clone);
++			ti->type->release_clone_rq(clone, &tio->info);
+ 			return DM_MAPIO_REQUEUE;
  		}
- 	} else if (cc->integrity_iv_size)
--		DMINFO("Additional per-sector space %u bytes for IV.",
-+		DMDEBUG("%s: Additional per-sector space %u bytes for IV.", dm_device_name(md),
- 		       cc->integrity_iv_size);
  
- 	if ((cc->integrity_tag_size + cc->integrity_iv_size) != bi->tag_size) {
+@@ -505,7 +505,7 @@ static int map_request(struct dm_rq_target_io *tio)
+ 		ret = dm_dispatch_clone_request(clone, rq);
+ 		if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE) {
+ 			blk_rq_unprep_clone(clone);
+-			tio->ti->type->release_clone_rq(clone);
++			tio->ti->type->release_clone_rq(clone, &tio->info);
+ 			tio->clone = NULL;
+ 			if (!rq->q->mq_ops)
+ 				r = DM_MAPIO_DELAY_REQUEUE;
+diff --git a/drivers/md/dm-target.c b/drivers/md/dm-target.c
+index 314d17ca64668..64dd0b34fcf49 100644
+--- a/drivers/md/dm-target.c
++++ b/drivers/md/dm-target.c
+@@ -136,7 +136,8 @@ static int io_err_clone_and_map_rq(struct dm_target *ti, struct request *rq,
+ 	return DM_MAPIO_KILL;
+ }
+ 
+-static void io_err_release_clone_rq(struct request *clone)
++static void io_err_release_clone_rq(struct request *clone,
++				    union map_info *map_context)
+ {
+ }
+ 
+diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
+index bef2e36c01b4b..91f9f95ad5066 100644
+--- a/include/linux/device-mapper.h
++++ b/include/linux/device-mapper.h
+@@ -62,7 +62,8 @@ typedef int (*dm_clone_and_map_request_fn) (struct dm_target *ti,
+ 					    struct request *rq,
+ 					    union map_info *map_context,
+ 					    struct request **clone);
+-typedef void (*dm_release_clone_request_fn) (struct request *clone);
++typedef void (*dm_release_clone_request_fn) (struct request *clone,
++					     union map_info *map_context);
+ 
+ /*
+  * Returns:
 -- 
 2.20.1
 
