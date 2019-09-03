@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3795C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E15C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF0023431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61BBA215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528270;
-	bh=ACuq4WuBRpCSB7xWkWBjA44XlYiLFHErnApYBjTmmtE=;
+	s=default; t=1567528278;
+	bh=DC2/254MyIulsavyqOQkDxVwwmDUGlRmSLs26nF3vxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GF2ZuYxPAQ+eDNzZGNKsH1VyeA2wNATXBkwVYR9hP2nFq4RVSOR8y9sk+CdS6aXvg
-	 B1soOYWACRG4s3G2rAmwjx2CtQnpT4KBWLcQyWjCZP8M4PkOhM4ElOCDgw6xip+nSr
-	 +/iFC0U+SOgC6DJz6yAhJVL7jjDOaXIgxd8pBaUo=
+	b=mQUegUK8Y1LJZy/1uLcPNMmY9s2T6tiVpi+3maF/SW0h5Coq/zjk63NHLAuR9wzc/
+	 mxOUCTlaCX5PYL8SdOdvfuMruqRLG24PBjo2Vcl4G1QKtWmB4l6op74bAHCclrjZai
+	 N+9Do/PppPtYkG69GYbnvH3erar/J7GRGgrm3Ty8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730978AbfICQbJ (ORCPT
+        id S1731013AbfICQbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:31:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50666 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:31:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbfICQ2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:35 -0400
+        id S1731130AbfICQ21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CF67215EA;
-        Tue,  3 Sep 2019 16:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CD6F2343A;
+        Tue,  3 Sep 2019 16:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528114;
-        bh=ACuq4WuBRpCSB7xWkWBjA44XlYiLFHErnApYBjTmmtE=;
+        s=default; t=1567528107;
+        bh=DC2/254MyIulsavyqOQkDxVwwmDUGlRmSLs26nF3vxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ID2d7U4Y6rOhL0+LUOFqRSpqpqDr1lbGtgkM/FDga69pqsQkFJ9reWM3nuikfZqEi
-         1lcdpqdyGyxPuko4TEmRNJCpPRoNKJZXtBHT1zNGQF0NmzGxUllTIA7A0agvBUF9//
-         zCwDD4J8EEoBWos68yII1QNwIkC9W1f6/6+Aoy0g=
+        b=GrLJzsjJP4sPkToIIHDZ7T59roi/9DKNDl5+LbzpiqfhtAQJdc6Vcs3TS3cd13yUt
+         ++70f8kyCuood1emHhGEw8NnwLu21t+RUQe1nsMAToVCHbSyHUMIZlg9O2PSZAZoVk
+         6D6Eda13ZI20HwBp85MTNyVduzKbF6k4+L/VNHTs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Louis Li <Ching-shih.Li@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 116/167] drm/amdgpu: fix ring test failure issue during s3 in vce 3.0 (V2)
-Date:   Tue,  3 Sep 2019 12:24:28 -0400
-Message-Id: <20190903162519.7136-116-sashal@kernel.org>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 112/167] ARC: mm: fix uninitialised signal code in do_page_fault
+Date:   Tue,  3 Sep 2019 12:24:24 -0400
+Message-Id: <20190903162519.7136-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,60 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Li <Ching-shih.Li@amd.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 
-[ Upstream commit ce0e22f5d886d1b56c7ab4347c45b9ac5fcc058d ]
+[ Upstream commit 121e38e5acdc8e1e4cdb750fcdcc72f94e420968 ]
 
-[What]
-vce ring test fails consistently during resume in s3 cycle, due to
-mismatch read & write pointers.
-On debug/analysis its found that rptr to be compared is not being
-correctly updated/read, which leads to this failure.
-Below is the failure signature:
-	[drm:amdgpu_vce_ring_test_ring] *ERROR* amdgpu: ring 12 test failed
-	[drm:amdgpu_device_ip_resume_phase2] *ERROR* resume of IP block <vce_v3_0> failed -110
-	[drm:amdgpu_device_resume] *ERROR* amdgpu_device_ip_resume failed (-110).
+Commit 15773ae938d8 ("signal/arc: Use force_sig_fault where
+appropriate") introduced undefined behaviour by leaving si_code
+unitiailized and leaking random kernel values to user space.
 
-[How]
-fetch rptr appropriately, meaning move its read location further down
-in the code flow.
-With this patch applied the s3 failure is no more seen for >5k s3 cycles,
-which otherwise is pretty consistent.
-
-V2: remove reduntant fetch of rptr
-
-Signed-off-by: Louis Li <Ching-shih.Li@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 15773ae938d8 ("signal/arc: Use force_sig_fault where appropriate")
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arc/mm/fault.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-index 5f3f540738187..17862b9ecccd7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vce.c
-@@ -1070,7 +1070,7 @@ void amdgpu_vce_ring_emit_fence(struct amdgpu_ring *ring, u64 addr, u64 seq,
- int amdgpu_vce_ring_test_ring(struct amdgpu_ring *ring)
- {
- 	struct amdgpu_device *adev = ring->adev;
--	uint32_t rptr = amdgpu_ring_get_rptr(ring);
-+	uint32_t rptr;
- 	unsigned i;
- 	int r, timeout = adev->usec_timeout;
- 
-@@ -1084,6 +1084,9 @@ int amdgpu_vce_ring_test_ring(struct amdgpu_ring *ring)
- 			  ring->idx, r);
- 		return r;
- 	}
-+
-+	rptr = amdgpu_ring_get_rptr(ring);
-+
- 	amdgpu_ring_write(ring, VCE_CMD_END);
- 	amdgpu_ring_commit(ring);
- 
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index a0366f9dca051..535cf18e8bf2c 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -66,7 +66,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 	struct vm_area_struct *vma = NULL;
+ 	struct task_struct *tsk = current;
+ 	struct mm_struct *mm = tsk->mm;
+-	int si_code;
++	int si_code = 0;
+ 	int ret;
+ 	vm_fault_t fault;
+ 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
 -- 
 2.20.1
 
