@@ -2,72 +2,115 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F42C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98B6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812B52377B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E0D23711
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vqN/bJgq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbfICOaH (ORCPT
+        id S1729800AbfICOaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:30:07 -0400
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:45513 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729780AbfICOaH (ORCPT
+        Tue, 3 Sep 2019 10:30:14 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:18802 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729566AbfICOaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:30:07 -0400
-Received: by mail-qk1-f175.google.com with SMTP id z67so3234423qkb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:30:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=txdROfjUl9dM+2yPuRDkyhhvxXozqecsN8VhuY+SZ7M=;
-        b=ULLfLJRUthwwQFUok6aLJJI3L7rutVQkHBR3ssAcfR9bKNBce8F3ZlwoOGVyfZ4cus
-         ibChoEl7Y/q5ODSkTcgP078pg6570sweuswR7Yv2yl1RcCn/DifjZ2IH25UD7N/+mEK5
-         dZCZJHiRk+pYhTy7bC6pXU8c7C8KhBIuVgKikPM6a7Wp3h4JsmJe6XL6Hn/ZOHzQETvU
-         a4m5MWNgT1ZeeYrFELvhWWgBKJoMwQdhNudjyTxkycwAPJc7pKGIBgmwQ6MKRro6cg5E
-         LmO8vu9lgqZBVyb21JQF5EGylqfiJp55wa6NBlt/HN2r4LCrokKX+KDMzZSOgZqdg040
-         pY2Q==
-X-Gm-Message-State: APjAAAUkpvk2buhnaDCRuT3mZ7yHpwI2/JgbqbTrbbdJqPyhPC77yqEa
-        KPEfUZ71Ost9w9qOUQUhIoASkEqpusbLT++g6Is=
-X-Google-Smtp-Source: APXvYqwLjTNx47Gj2QNqFyNsIzMwL+B4ROtxwyKeybUMtTA2U06E+WJnLtr/oIupoTE/Ww1krRjNLWQNdg1l/SO1/Tg=
-X-Received: by 2002:a37:4b0d:: with SMTP id y13mr33577722qka.3.1567521006053;
- Tue, 03 Sep 2019 07:30:06 -0700 (PDT)
+        Tue, 3 Sep 2019 10:30:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1567521013; x=1599057013;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=i7AwnRT7NByHxBFu3Yt3euqrSCjx8giqctEq9HJ4eH4=;
+  b=vqN/bJgq4L9WJFBj02CMxNcQyUGDI0JuwEtR9PufXzUoBg/taNC95kuT
+   S+Lwgfzh2oF6b46J2lCsQBspTUeDQTX9MLRs/r4RZTGWiMWYDF1j6XI2Y
+   zP1Fcpsdy4N1dbyx+nC31P3youJMEYRy75YIZNkyz1iZJnHy+IAkXrVLX
+   c=;
+X-IronPort-AV: E=Sophos;i="5.64,463,1559520000"; 
+   d="scan'208";a="700284570"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 03 Sep 2019 14:30:06 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 9E72FA22D3;
+        Tue,  3 Sep 2019 14:30:05 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Sep 2019 14:30:05 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.162.242) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Sep 2019 14:30:01 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     <kvm@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 0/2] KVM: Only use posted interrupts for Fixes/LowPrio MSIs
+Date:   Tue, 3 Sep 2019 16:29:52 +0200
+Message-ID: <20190903142954.3429-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <878srdzjpj.fsf@FE-laptop>
-In-Reply-To: <878srdzjpj.fsf@FE-laptop>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 3 Sep 2019 16:29:49 +0200
-Message-ID: <CAK8P3a1+mZ43aKg5mEU+LsAtCr5paLseYdCPv5qJ=xH3Qaufjw@mail.gmail.com>
-Subject: Re: [GIT PULL] ARM: mvebu: dt for v5.4 (#1)
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.242]
+X-ClientProxiedBy: EX13D27UWA002.ant.amazon.com (10.43.160.30) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 12:07 PM Gregory CLEMENT
-<gregory.clement@bootlin.com> wrote:
+The MSI-X descriptor has a "delivery mode" field which can be set to
+various different targets, such as "Fixed" (default), SMI, NMI or INIT.
 
-> ----------------------------------------------------------------
-> mvebu dt for 5.4 (part 1)
->
->  - Disable the kirkwood RTC that doesn't work on the ts219 board
->
+Usually when we pass devices into guests, we only ever see this MSI-X
+descriptor configured as Fixed, so nobody realized that the other modes
+were broken when using posted interrupts.
 
-Pulled into arm/dt, thanks!
+With posted interrupts, we end up configuring these special modes just
+the same as a Fixed interrupt. That means instead of generating an SMI,
+we inject a normal GSI into the guest.
+
+Of course, that if completely broken. These two patches attempt to fix
+the situation for x86 systems. If anyone has a great idea how to generalize
+the filtering though, I'm all ears.
 
 
-    Arnd
+Alex
+
+Alexander Graf (2):
+  KVM: VMX: Disable posted interrupts for odd IRQs
+  KVM: SVM: Disable posted interrupts for odd IRQs
+
+ arch/x86/kvm/svm.c     | 16 ++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c | 22 ++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+
+-- 
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
