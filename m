@@ -2,85 +2,69 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888DFC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DDD3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 615F62339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A3F1233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731366AbfICQdk (ORCPT
+        id S1731144AbfICQds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:33:40 -0400
-Received: from mga12.intel.com ([192.55.52.136]:59971 "EHLO mga12.intel.com"
+        Tue, 3 Sep 2019 12:33:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:40480 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730658AbfICQdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:33:38 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:33:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="173263755"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga007.jf.intel.com with ESMTP; 03 Sep 2019 09:33:32 -0700
-Date:   Tue, 3 Sep 2019 09:33:32 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc: kvm: fix return description of KVM_SET_MSRS
-Message-ID: <20190903163332.GF10768@linux.intel.com>
-References: <20190902101214.77833-1-xiaoyao.li@intel.com>
+        id S1731200AbfICQbt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:31:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80A9C360;
+        Tue,  3 Sep 2019 09:31:48 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59C973F246;
+        Tue,  3 Sep 2019 09:31:47 -0700 (PDT)
+Subject: Re: [PATCH] sched: make struct task_struct::state 32-bit
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        linux-block@vger.kernel.org, dm-devel@redhat.com, axboe@kernel.dk,
+        aarcange@redhat.com
+References: <20190902210558.GA23013@avx2>
+ <7b94004e-4a65-462b-cd6b-5cbd23d607bf@arm.com> <20190903162303.GA2173@avx2>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <64003dcd-d954-b76d-856a-214ff11ac000@arm.com>
+Date:   Tue, 3 Sep 2019 17:31:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902101214.77833-1-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190903162303.GA2173@avx2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 06:12:14PM +0800, Xiaoyao Li wrote:
 
-It may seem silly, but a proper changelog would be helpful even here,
-e.g. to explain how and when a positive return value can diverge from the
-number of MSRs specific in struct kvm_msrs.
 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  Documentation/virt/kvm/api.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 03/09/2019 17:23, Alexey Dobriyan wrote:
+> On Tue, Sep 03, 2019 at 12:02:38AM +0100, Valentin Schneider wrote:
+>> struct task_struct {
+>> 	struct thread_info         thread_info;          /*     0    24 */
+>> 	volatile int               state;                /*    24     4 */
+>>
+>> 	/* XXX 4 bytes hole, try to pack */
+>>
+>> 	void *                     stack;                /*    32     8 */
+>>
+>> Though seeing as this is also the boundary of the randomized layout we can't
+>> really do much better without changing the boundary itself. So much for
+>> cacheline use :/
 > 
-> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-> index 2d067767b617..a2efc19e0f4e 100644
-> --- a/Documentation/virt/kvm/api.txt
-> +++ b/Documentation/virt/kvm/api.txt
-> @@ -586,7 +586,7 @@ Capability: basic
->  Architectures: x86
->  Type: vcpu ioctl
->  Parameters: struct kvm_msrs (in)
-> -Returns: 0 on success, -1 on error
-> +Returns: number of msrs successfully set, -1 on error
-
-Similar to the changelong comment, it'd be helpful to elaborate on the
-positive return value, e.g.:
-
-  Returns: number of msrs successfully set (see below), -1 on error
-
-and then something in the free form text explaining how the ioctl stops
-processing MSRs if setting an MSR fails.
-
->  Writes model-specific registers to the vcpu.  See KVM_GET_MSRS for the
->  data structures.
-> -- 
-> 2.19.1
+> Cacheline use of task_struct is pretty hopeless because of all the ifdefs.
 > 
+
+Yeah I figured, then had a minute of silence for those forsaken bytes.
