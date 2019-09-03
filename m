@@ -2,107 +2,90 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52F6C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039B3C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6722077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF9A92077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LI2L8c7D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iMLtZahe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbfICPjs (ORCPT
+        id S1729631AbfICPlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:39:48 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:34429 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729589AbfICPjs (ORCPT
+        Tue, 3 Sep 2019 11:41:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53684 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728860AbfICPlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:39:48 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x83Fdi8F009932;
-        Wed, 4 Sep 2019 00:39:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x83Fdi8F009932
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567525185;
-        bh=mNQ/8Q4lNQ2CgeCETQDXp73cvMbK+QmBj7K2vN48yOY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LI2L8c7Dydp4FNoa/m04U8sBZr24ewfpewGxysI5dRM0Q/wT8MsnW2ZV6qhzRwp+j
-         gGuYWjhJjWihsnF/VRI9u6ZyXy+gUn/uoQ3IVNBzkkpd0m/clEPWDBxfI2uL0Jw8x8
-         rgcwtNtORkx/8AJin3veS316ZNwM8FVCyjbPznMj95UuAVpl0DkxW5FvCe30G5ZsPZ
-         /OStfgi/vOzcBTSACf3ut+SODJ03M+WUz6ne4Ag+1tQxdOJJpXgDQMSE9P+MiEJVZP
-         +DjGcPdQJukty30ys0FswxjiLpPoR9X/T6o3ryQrcTY7PGaNAVSZQYEfJfHn13mL/E
-         pn9Qz22/3Ckhw==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id i128so11593816vsc.7;
-        Tue, 03 Sep 2019 08:39:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAVrAC9b5V34qQuXt4+WP8GqUpEW0oPG4KPx0LaOpgh1hBpvmjnS
-        hNuRCVs5wxmSKOgq2Jks+Mvsj3BuGweXloH6Px8=
-X-Google-Smtp-Source: APXvYqxClUo4hmFiaBOaF3Bg7pczDjRMUbD9av9h9lJvgIWGJYlSIcpebE6uSVbl53YuUMcivb3JuT6HOYFTfBHcWQI=
-X-Received: by 2002:a67:f418:: with SMTP id p24mr1417399vsn.215.1567525183683;
- Tue, 03 Sep 2019 08:39:43 -0700 (PDT)
+        Tue, 3 Sep 2019 11:41:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ULjjH4sen9zfb9BXYRsup9ADAXBJxX8uc7RUDCdLvBI=; b=iMLtZaheRsuIIVHr5rl4845Z/
+        DQ4Krr08gV8xH84IYbia5dX0+JhszL5ZcZBnSeyExOmZFBqXF7CcL2MNVCZCq9tyJtdZYKwrJmZCb
+        EglUAwGDTmn5HoxA89fVRVoWsmuRCXZTwoEp2Q03cznjk1R5NHDz0Fo2WlVGzKhnuBdGIUo1hb3Y9
+        uT4AtWQHg+LuKzFCXP79w6r3cLv6R7QKv1ZIzJHSzD3byMeBY9RB+Nqg9cSLyx5BUR2r8yRKVB/ny
+        +O2cQUg5jS8QXvSKwizythOZTh3Qt2gWBn9gS3WJ0y5IR1cPNFSd53JleIPN/dwvgrOd3Pv3qQt+F
+        WrdrrEDEw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5Avd-0002Gk-UO; Tue, 03 Sep 2019 15:41:09 +0000
+Date:   Tue, 3 Sep 2019 08:41:09 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 2/8] x86/platform/uv: Return UV Hubless System Type
+Message-ID: <20190903154109.GB2791@infradead.org>
+References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
+ <20190903001815.893030884@stormcage.eag.rdlabs.hpecorp.net>
+ <20190903064914.GA9914@infradead.org>
+ <0eee6d96-e4fc-763b-a8b9-52c85ddd5531@hpe.com>
 MIME-Version: 1.0
-References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
- <20190828055425.24765-2-yamada.masahiro@socionext.com> <20190828182017.GB127646@archlinux-threadripper>
- <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com>
- <CA+icZUWmmC7CruvXx6U0cdXMLaMWJadU=T61E0om1rOuW3==pw@mail.gmail.com> <CA+icZUXX6YG7=4n60A3_HiTYE0SkNXd8yr4-pqfOsqg66QvXzw@mail.gmail.com>
-In-Reply-To: <CA+icZUXX6YG7=4n60A3_HiTYE0SkNXd8yr4-pqfOsqg66QvXzw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 4 Sep 2019 00:39:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQLM2RXELr=WY7O8UEHx3EQZKeQdfZ_Ko4wTTPe0ZrqHg@mail.gmail.com>
-Message-ID: <CAK7LNAQLM2RXELr=WY7O8UEHx3EQZKeQdfZ_Ko4wTTPe0ZrqHg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
- functions for W=1 build
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sven Schnelle <svens@stackframe.org>,
-        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0eee6d96-e4fc-763b-a8b9-52c85ddd5531@hpe.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 6:52 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> Just as a sidenote:
->
-> From [PATCH v2] kbuild: enable unused-function warnings for W= build with Clang:
->
-> "Per the documentation [1], -Wno-unused-function will also disable
-> -Wunneeded-internal-declaration, which can help find bugs like
-> commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
-> mlxplat_mlxcpld_msn201x_items"). (pointed out by Nathan Chancellor)
-> I added -Wunneeded-internal-declaration to address it.
->
-> If you contribute to code clean-up, please run "make CC=clang W=1"
-> and check -Wunused-function warnings. You will find lots of unused
-> functions."
+On Tue, Sep 03, 2019 at 07:12:28AM -0700, Mike Travis wrote:
+> > > +#define is_uv_hubless _is_uv_hubless
+> > 
+> > Why the weird macro indirection?
+> > 
+> > > -static inline int is_uv_hubless(void)	{ return 0; }
+> > > +static inline int _is_uv_hubless(int uv) { return 0; }
+> > > +#define is_uv_hubless _is_uv_hubless
+> > 
+> > And here again.
+> > 
+> 
+> Sorry, I should have explained this better.  The problem arises because
+> we have a number of UV specific kernel modules that support multiple
+> distributions.  And with back porting to earlier distros we cannot
+> rely on the KERNEL_VERSION macro to define whether the source is being
+> built for an earlier kernel.  So this allows an ifdef on the function
+> name to discover if the kernel is before or after these changes.
 
-This information is unrelated to this version,
-so I dropped it.
-
-
-> Isn't that missing in your double?
->
-> - Sedat -
->
-> [1] https://lkml.org/lkml/2019/8/27/729
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+And none of these matter for upstream.  We'd rather not make the code
+more convouluted than required.  If you actually really cared about these
+modules you would simply submit them upstream.
