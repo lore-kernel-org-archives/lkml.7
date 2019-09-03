@@ -6,67 +6,52 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DFEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440EFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5DB6215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA402341E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 22:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfICWjN (ORCPT
+        id S1727102AbfICWla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 18:39:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47028 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfICWjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 18:39:12 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 225807F750;
-        Tue,  3 Sep 2019 22:39:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3BF44194B2;
-        Tue,  3 Sep 2019 22:39:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <23d61564-026e-b37a-8b16-ce68d5949f6c@schaufler-ca.com>
-References: <23d61564-026e-b37a-8b16-ce68d5949f6c@schaufler-ca.com> <87bf0363-af77-1e5a-961f-72730e39e3a6@schaufler-ca.com> <e36fa722-a300-2abf-ae9c-a0246fc66d0e@schaufler-ca.com> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk> <156717352917.2204.17206219813087348132.stgit@warthog.procyon.org.uk> <4910.1567525310@warthog.procyon.org.uk> <11467.1567534014@warthog.procyon.org.uk>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/11] smack: Implement the watch_key and post_notification hooks [untested] [ver #7]
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <14968.1567550348.1@warthog.procyon.org.uk>
-Date:   Tue, 03 Sep 2019 23:39:08 +0100
-Message-ID: <14969.1567550348@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 03 Sep 2019 22:39:12 +0000 (UTC)
+        Tue, 3 Sep 2019 18:41:30 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52658 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfICWl3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 18:41:29 -0400
+Received: from localhost (unknown [62.21.130.100])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C343D14B7A8A2;
+        Tue,  3 Sep 2019 15:41:27 -0700 (PDT)
+Date:   Tue, 03 Sep 2019 15:41:20 -0700 (PDT)
+Message-Id: <20190903.154120.2030052439962343992.davem@davemloft.net>
+To:     alexandru.ardelean@analog.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com
+Subject: Re: [PATCH 0/4] ethtool: implement Energy Detect Powerdown support
+ via phy-tunable
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190903160626.7518-1-alexandru.ardelean@analog.com>
+References: <20190903160626.7518-1-alexandru.ardelean@analog.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Sep 2019 15:41:29 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Casey Schaufler <casey@schaufler-ca.com> wrote:
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Date: Tue, 3 Sep 2019 19:06:22 +0300
 
-> I rebuilt with keys-next, updated the tests again, and now
-> the suite looks to be running trouble free.
+> First 2 patches implement the kernel support for controlling Energy Detect
+> Powerdown support via phy-tunable, and the next 2 patches implement the
+> ethtool user-space control.
 
-Glad to hear that, thanks.
-
-> I do see a message SKIP DUE TO DISABLED SELINUX which I take to mean that
-> there is an SELinux specific test.
-
-tests/bugzillas/bz1031154/runtest.sh
-
-David
+You should do this as two separate patch series, one for the kernel
+portion and one for the ethtool part.
