@@ -2,225 +2,150 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DF4C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F2FC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9512A217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:46:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="oDI5zO2M"
+	by mail.kernel.org (Postfix) with ESMTP id 9EB02217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfICGqQ (ORCPT
+        id S1726910AbfICGsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:46:16 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44960 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfICGqQ (ORCPT
+        Tue, 3 Sep 2019 02:48:03 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49119 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfICGsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:46:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id j4so33401864iog.11
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=evIBGpMkKq7gF2bmpGJVBBvFtlHOCCwSRuXGW57v0+I=;
-        b=oDI5zO2M8YPD9bqqe8WAGL5+SleeShW5D3daIfkP4IBrrtXnD8iiyqQSSSur5aK/+6
-         tnXF13xw3i9XX6HysJWBNS2tnbdzOimL7w66m7ezaTaFsxq1/UcfO+cBBwWOFwVMHMxV
-         tq3hIjQlxiuxg80Z/I3ThLDprCX5lXjcEn053bs24k59SCmmMdQdAb2g6Xmu/SOiP/l7
-         1DPQFOui3x52Xy12pyhTRUA1NjZo1TOIN1+jQq90/KptExJ5SbGYuevS3C1T5eLPGnjT
-         xRjE93h4x90xtAQKaaeGcoidicG7tIvfIcw9wl/Yq1tlNXLgOpPwg0vD4u/VvFuHRfQJ
-         CExg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=evIBGpMkKq7gF2bmpGJVBBvFtlHOCCwSRuXGW57v0+I=;
-        b=P7s4Vaj33AFu0tvoZOOYlt+HI4fBqoxhCb6RjgcpEbFOPiW1XhU21hTl10IJysaSun
-         UlQPRQn/kIitqDkcmiN/kZmRZG799k1qg7jsG8M9udYip+Fm1xG5B+fYievSg2POFHuy
-         4Gs0vq26kT0Xwb3T/pShl2Bih11Faj94g4j61IwAEErRxOOF/9B4y8PaYn4icmYit1TE
-         Gmhylwen9RrNsjs3tSzOxd+s4U1HRlrTFkH51ESYq4snwkrFDjm+EL0E9wrFkCgukuJn
-         Df62Tw4KcXPXhcrzl0UdqtXY+FDluneKBYtvk4Rl8gPwnwJAbT2KpmZiddBF2uWWY26F
-         WImA==
-X-Gm-Message-State: APjAAAUbfcCVtzd4LtB53WxSMffohx49z3jwGkfOF7DJMq9y8RBuf/lR
-        a6p0nohqLMGVEtoKwmMD27/i6RHunCqTq4nhsPIkUQ==
-X-Google-Smtp-Source: APXvYqxCXXDVuNB2PUOLGJK10JygRjb97+McBAXtxlqw5yercmiWGDQp5Y2f1gYVpwc4cq+ZwIk5nVJf7wrFx10heJ0=
-X-Received: by 2002:a02:6a56:: with SMTP id m22mr34218784jaf.114.1567493175261;
- Mon, 02 Sep 2019 23:46:15 -0700 (PDT)
+        Tue, 3 Sep 2019 02:48:03 -0400
+Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <o.rempel@pengutronix.de>)
+        id 1i52bf-00046q-DR; Tue, 03 Sep 2019 08:47:59 +0200
+Subject: Re: [PATCH V2 1/5] dt-bindings: fsl: scu: add scu power key binding
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "ronald@innovation.ch" <ronald@innovation.ch>,
+        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
+ <21d2e400-976a-35c3-6875-4cc0c476fdf2@pengutronix.de>
+ <DB3PR0402MB391656FC3603B30300ADBF27F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Oleksij Rempel <o.rempel@pengutronix.de>
+Message-ID: <7c3b6ae3-9f22-11f8-2464-79d02ac656f3@pengutronix.de>
+Date:   Tue, 3 Sep 2019 08:47:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190903142638.79d2cc87@canb.auug.org.au>
-In-Reply-To: <20190903142638.79d2cc87@canb.auug.org.au>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 3 Sep 2019 08:46:04 +0200
-Message-ID: <CAMRc=Mc=nCCgjrp_4j+n0RBKSoboHzvUFJnQZeG2qOXc8KnZ=g@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the regulator tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <DB3PR0402MB391656FC3603B30300ADBF27F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
+X-SA-Exim-Mail-From: o.rempel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-wt., 3 wrz 2019 o 06:26 Stephen Rothwell <sfr@canb.auug.org.au> napisa=C5=
-=82(a):
->
-> Hi all,
->
-> After merging the regulator tree, today's linux-next build (powerpc
-> ppc64_defconfig) failed like this:
->
-> ld: drivers/ata/ahci.o:(.opd+0x150): multiple definition of `regulator_bu=
-lk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined he=
-re
-> ld: drivers/ata/ahci.o: in function `.regulator_bulk_set_supply_names':
-> ahci.c:(.text+0x1780): multiple definition of `.regulator_bulk_set_supply=
-_names'; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/ata/libahci.o: in function `.regulator_bulk_set_supply_names'=
-:
-> (.text+0x84a0): multiple definition of `.regulator_bulk_set_supply_names'=
-; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/ata/libahci.o:(.opd+0x5d0): multiple definition of `regulator=
-_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined=
- here
-> ld: drivers/ata/sata_mv.o:(.opd+0x690): multiple definition of `regulator=
-_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined=
- here
-> ld: drivers/ata/sata_mv.o: in function `.regulator_bulk_set_supply_names'=
-:
-> sata_mv.c:(.text+0xb9b0): multiple definition of `.regulator_bulk_set_sup=
-ply_names'; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/common/common.o: in function `.regulator_bulk_set_supply_=
-names':
-> (.text+0x7d0): multiple definition of `.regulator_bulk_set_supply_names';=
- drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/common/common.o:(.opd+0x120): multiple definition of `reg=
-ulator_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first d=
-efined here
-> ld: drivers/usb/core/usb.o: in function `.regulator_bulk_set_supply_names=
-':
-> (.text+0x17d0): multiple definition of `.regulator_bulk_set_supply_names'=
-; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/core/usb.o:(.opd+0x348): multiple definition of `regulato=
-r_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first define=
-d here
-> ld: drivers/usb/core/hub.o: in function `.regulator_bulk_set_supply_names=
-':
-> (.text+0x2610): multiple definition of `.regulator_bulk_set_supply_names'=
-; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/core/hub.o:(.opd+0x378): multiple definition of `regulato=
-r_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first define=
-d here
-> ld: drivers/usb/core/hcd.o: in function `.regulator_bulk_set_supply_names=
-':
-> (.text+0x3020): multiple definition of `.regulator_bulk_set_supply_names'=
-; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/core/hcd.o:(.opd+0x378): multiple definition of `regulato=
-r_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first define=
-d here
-> ld: drivers/usb/core/message.o: in function `.regulator_bulk_set_supply_n=
-ames':
-> (.text+0x2350): multiple definition of `.regulator_bulk_set_supply_names'=
-; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/core/message.o:(.opd+0x240): multiple definition of `regu=
-lator_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first de=
-fined here
-> ld: drivers/usb/core/phy.o: in function `.regulator_bulk_set_supply_names=
-':
-> (.text+0x700): multiple definition of `.regulator_bulk_set_supply_names';=
- drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/core/phy.o:(.opd+0xc0): multiple definition of `regulator=
-_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined=
- here
-> ld: drivers/usb/core/of.o: in function `.regulator_bulk_set_supply_names'=
-:
-> (.text+0x2f0): multiple definition of `.regulator_bulk_set_supply_names';=
- drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/core/of.o:(.opd+0x48): multiple definition of `regulator_=
-bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined =
-here
-> ld: drivers/usb/phy/of.o: in function `.regulator_bulk_set_supply_names':
-> (.text+0x120): multiple definition of `.regulator_bulk_set_supply_names';=
- drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/phy/of.o:(.opd+0x18): multiple definition of `regulator_b=
-ulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined h=
-ere
-> ld: drivers/usb/host/ehci-hcd.o: in function `.regulator_bulk_set_supply_=
-names':
-> (.text+0x11830): multiple definition of `.regulator_bulk_set_supply_names=
-'; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/host/ehci-hcd.o:(.opd+0x8d0): multiple definition of `reg=
-ulator_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first d=
-efined here
-> ld: drivers/usb/host/ohci-hcd.o: in function `.regulator_bulk_set_supply_=
-names':
-> (.text+0xe8d0): multiple definition of `.regulator_bulk_set_supply_names'=
-; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/usb/host/ohci-hcd.o:(.opd+0x570): multiple definition of `reg=
-ulator_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first d=
-efined here
-> ld: drivers/of/platform.o: in function `.regulator_bulk_set_supply_names'=
-:
-> (.text+0x1180): multiple definition of `.regulator_bulk_set_supply_names'=
-; drivers/phy/phy-core.o:(.text+0x2390): first defined here
-> ld: drivers/of/platform.o:(.opd+0x180): multiple definition of `regulator=
-_bulk_set_supply_names'; drivers/phy/phy-core.o:(.opd+0x3f0): first defined=
- here
->
-> Caused by commit
->
->   d0087e72710c ("regulator: provide regulator_bulk_set_supply_names()")
->
-> I applied the following patch for today.
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 3 Sep 2019 14:23:17 +1000
-> Subject: [PATCH] regulator: stubs in header files should be static inline
->
-> Fixes: d0087e72710c ("regulator: provide regulator_bulk_set_supply_names(=
-)")
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  include/linux/regulator/consumer.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator=
-/consumer.h
-> index 6d2181a76987..fe9bdf37c296 100644
-> --- a/include/linux/regulator/consumer.h
-> +++ b/include/linux/regulator/consumer.h
-> @@ -586,7 +586,7 @@ static inline int regulator_list_voltage(struct regul=
-ator *regulator, unsigned s
->         return -EINVAL;
->  }
->
-> -void regulator_bulk_set_supply_names(struct regulator_bulk_data *consume=
-rs,
-> +static inline void regulator_bulk_set_supply_names(struct regulator_bulk=
-_data *consumers,
->                                      const char *const *supply_names,
->                                      unsigned int num_supplies)
->  {
-> --
-> 2.23.0.rc1
->
-> --
-> Cheers,
-> Stephen Rothwell
 
-Hi Stephen,
 
-a patch for this was already on the list: https://lkml.org/lkml/2019/9/2/66=
-8
+On 03.09.19 08:37, Anson Huang wrote:
+> Hi, Oleksij
+> 
+>> On 03.09.19 16:03, Anson Huang wrote:
+>>> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as system
+>>> controller, the system controller is in charge of system power, clock
+>>> and power key event etc. management, Linux kernel has to communicate
+>>> with system controller via MU (message unit) IPC to get power key
+>>> event, add binding doc for i.MX system controller power key driver.
+>>>
+>>> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+>>> ---
+>>> Changes since V1:
+>>> 	- remove "wakeup-source" property, as it is NOT needed for SCU
+>> interrupt;
+>>> 	- remove "status" in example.
+>>> ---
+>>>    .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14
+>> ++++++++++++++
+>>>    1 file changed, 14 insertions(+)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>>> b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>>> index c149fad..f93e2e4 100644
+>>> --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+>>> @@ -157,6 +157,15 @@ Required properties:
+>>>    Optional properties:
+>>>    - timeout-sec: contains the watchdog timeout in seconds.
+>>>
+>>> +Power key bindings based on SCU Message Protocol
+>>> +------------------------------------------------------------
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be:
+>>> +              "fsl,imx8qxp-sc-pwrkey"
+>>> +              followed by "fsl,imx-sc-pwrkey";
+>>> +- linux,keycodes: See
+>>> +Documentation/devicetree/bindings/input/keys.txt
+>>
+>> linux,keycodes is required parameter. So, this kay cab be anything. Why the
+>> compatible is called pwrkey? Probably it is better to call it "*-sc-key"
+> 
+> This key is kind of special, it is ON/OFF button which is designed for power key
+> purpose, it has HW function such as long pressing it would shutdown the system power,
+> so we always use it as power key, NOT general key, does it make sense?
 
-Bart
+I assume, OF devs will argue: DT is describing hardware not software.
+On other hand, software will get notification about assertion/deassertion of this key. So, 
+it is just normal key. If, for some reason, it will trigger world destruction, if it is 
+pressed too long... probably no body cares.
+You can provide fsl,imx-sc-key as additional compatible. In case linux will need some 
+quirks, we still can fall back to more precise compatible "fsl,imx8qxp-sc-pwrkey".
+
+Kind regards,
+Oleksij Rempel
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
