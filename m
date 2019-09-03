@@ -2,144 +2,168 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F113C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07422C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22180206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D250F206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:59:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PdwDeQPp"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="TFFcxvXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfICG6x (ORCPT
+        id S1727525AbfICG7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:58:53 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35481 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbfICG6w (ORCPT
+        Tue, 3 Sep 2019 02:59:12 -0400
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:37352 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726408AbfICG7L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:58:52 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 205so7723414pfw.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:58:52 -0700 (PDT)
+        Tue, 3 Sep 2019 02:59:11 -0400
+Received: by mail-ot1-f45.google.com with SMTP id 97so12833443otr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uoHHEgFr/r/SO8I5nMCow7X4j/JyWHdeMkJD+GMFPiE=;
-        b=PdwDeQPp9bRkpVyUB8ZnEfizHOBfcvi+IexgeYYfm0/QujYrw17S3BbX9Astr2LmOX
-         zwkG55XZnK9eNPTmFKugnMZRQotzoCWVW/1vV7dTgHOAKn7mRI//mOOmY75xG/yd1G74
-         7tJ8WqV0Qm29EjB6IVpudwwyrsqXRmoSAJHKGqWL2lb/Es9uH3EwFA1ft99E5+x6bXkF
-         WfEt4tpdpy0HSafEI6XChqqIrkgf6i4nx+wPTt+WNJ0l26isH8+dgP/mZ5wr1RHRs9Dz
-         TdI4Z3cuNxAQcAMWmuTOZIxy20vEqn+feb17ZRe4whsQKVXDRHYc8O28bz5bnVYEJDtd
-         H05Q==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=XvLI4nhOg17VvgP8/NkdRtVRVRohTIN7xR7OZSWHP1E=;
+        b=TFFcxvXeswXxwVv57GhiWDQBgHHv/H7/4OZMAf9BgYQgDHX53QtNvtfHSjiBbLXgjR
+         afz+gg4hJ+d22XnMwwrShNQZsz0sBIq0X4qA/svjHa99MEmsyFCZY1/IvTgnuKAqwuEw
+         oy9QK6fchWFRoVQXPl9BQpy1wr5OhrWFLSbSljSIv5/YAlB0ZtYe4kDV+SsdlOAmaOqU
+         8N5AyUqvY9gjo3BRnXawmCrdPasLSpQ8tTaHMp9f9a2T8cBJrW0mirYmreKV4BPV1pRL
+         19FiiExtk0kBFyLp8Ex0PjH3h1kgEHb61NdEhqZamqWm3WQLi25Cfl0PxI40k4oju3RG
+         kf+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=uoHHEgFr/r/SO8I5nMCow7X4j/JyWHdeMkJD+GMFPiE=;
-        b=NZhUje/1tA3uY4fooyUzWo5ikrumgul7RBByc2U2HHBTFgEa6LLG5+f36Zc3BAkZtD
-         J2E8faTFb1veDL5zJ2o1gyhfc0XB2iCXqftGahasPLKOZTcMSvjWG4LSEWoUkL4dsAfI
-         87JSZn5435+WT5KfO07BUU95Ottn0RzL/4x1azBygfCMPNbP0csJHJs7YfFIj6r3xDS0
-         m4BobvEAGh2pIRlaTU9hAzFh2Qn4M4FRvDbgYrW9gnHYtPp+pqDLo/wyF04BZATT9pD5
-         0eNNDLddum/bL2UMKjypA418ViHAxP9oPaMIFbfs8H8LGYNgrAUaCqRDJv1pZq1zfTZ9
-         P18A==
-X-Gm-Message-State: APjAAAVB3CYU2pBafHiudtg4O2JNY3r/O36Y57n0L39rw+tzA7yTz3TP
-        R4BCYijSu2LEUpb0X13j/H93uQ==
-X-Google-Smtp-Source: APXvYqzap82tgzKvLQdG4ZjZS7aG4WDG/VFnG3s09pGmnhbkG7ylScuYPfA+bIKIxPx1knoDAwA00Q==
-X-Received: by 2002:a63:1f1f:: with SMTP id f31mr26065616pgf.353.1567493932285;
-        Mon, 02 Sep 2019 23:58:52 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id b126sm36847718pfa.177.2019.09.02.23.58.48
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 02 Sep 2019 23:58:51 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, vyasevich@gmail.com, nhorman@tuxdriver.com,
-        davem@davemloft.net
-Cc:     hariprasad.kelam@gmail.com, linux-sctp@vger.kernel.org,
-        netdev@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
-        orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y 4/8] net: sctp: fix warning "NULL check before some freeing functions is not needed"
-Date:   Tue,  3 Sep 2019 14:58:16 +0800
-Message-Id: <0e71732006c11f119826b3be9c1a9ccd102742d8.1567492316.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1567492316.git.baolin.wang@linaro.org>
-References: <cover.1567492316.git.baolin.wang@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=XvLI4nhOg17VvgP8/NkdRtVRVRohTIN7xR7OZSWHP1E=;
+        b=sWFMXPJlri0qjTH3+Zeu9yRJfOHCShQJIH5WYxom+nhztFlsCJ2zKzPVrypHLs1qwI
+         fecOapr4AJGYrK66VJJGLE6W5d3X34OzZcHc/Kt741y6T0MlW/vtEDJmU/O07e5a1MlD
+         Lr5qI3bDc9enD7x2vJNMeVFVQ7WmKybvYyw7M18miiNRpgEk+lf+7SjhNPZCXkSzlO0N
+         vs4LxxYB+wqaPutPZJWE1+Y1J85JZ8UJrEJJJVEi3C+fvtR8ZgHGHFmCMPmXiD5bm1tW
+         5u0CLK+0MlcCsEvILEApSE0cdRYVFeW30CzPm1GkSsAgFsq9TXj18on0wuOt74eNSAlP
+         YUIw==
+X-Gm-Message-State: APjAAAV++eAJthoyqFbhYFgz9DOXrcX1RcW1EDmyByzyt3Rqt1sWj5Zw
+        AZ1cWTvMaVnf15YxxF7o3+fHNda6c1aQ+sAzGUH5oEu6gYWv5cqvCfC9N+aRFdQ8QvMp2CeBWS7
+        FXbQBxTU9e8T5e6XUqN8tPqEdUxC41IXktQ==
+X-Google-Smtp-Source: APXvYqx35cNljM/L2CPC6zi87YfAiEcrAsPoQ0BB/qKtC35yDmXooI9h+LuFXDaaFrOCwntPfDPnZdwyXjKpzImIYXg=
+X-Received: by 2002:a05:6830:1054:: with SMTP id b20mr13165770otp.65.1567493950717;
+ Mon, 02 Sep 2019 23:59:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190824060351.3776-1-tim.froidcoeur@tessares.net>
+ <400C4757-E7AD-4CCF-8077-79563EA869B1@gmail.com> <20190830232657.GL45416@MacBook-Pro-64.local>
+ <20190830.192049.1447010488040109227.davem@davemloft.net> <F95AC9340317A84688A5F0DF0246F3F21AAAA8E1@dggeml532-mbs.china.huawei.com>
+ <CAOj+RUsqTUF9fuetskRRw26Z=sBM-mELSMcV21Ch06007aP5yQ@mail.gmail.com> <F95AC9340317A84688A5F0DF0246F3F21AAB8F82@dggeml512-mbx.china.huawei.com>
+In-Reply-To: <F95AC9340317A84688A5F0DF0246F3F21AAB8F82@dggeml512-mbx.china.huawei.com>
+From:   Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Date:   Tue, 3 Sep 2019 08:58:33 +0200
+Message-ID: <CAOj+RUvXMaoVKzSeDab4oTn3p=-BJtuhgqwKDCUuhCQWHO7bgQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14] tcp: fix tcp_rtx_queue_tail in case of empty
+ retransmit queue
+To:     maowenan <maowenan@huawei.com>
+Cc:     David Miller <davem@davemloft.net>,
+        "cpaasch@apple.com" <cpaasch@apple.com>,
+        "jonathan.lemon@gmail.com" <jonathan.lemon@gmail.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "matthieu.baerts@tessares.net" <matthieu.baerts@tessares.net>,
+        "aprout@ll.mit.edu" <aprout@ll.mit.edu>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "jtl@netflix.com" <jtl@netflix.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mkubecek@suse.cz" <mkubecek@suse.cz>,
+        "ncardwell@google.com" <ncardwell@google.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "ycheng@google.com" <ycheng@google.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Hi,
 
-This patch removes NULL checks before calling kfree.
+I also tried to reproduce this in a targeted way, and run into the
+same difficulty as you: satisfying the first condition =E2=80=9C
+(sk->sk_wmem_queued >> 1) > limit =E2=80=9C.
+I will not have bandwidth the coming days to try and reproduce it in
+this way. Maybe simply forcing a very small send buffer using sysctl
+net.ipv4.tcp_wmem might even do the trick?
 
-fixes below issues reported by coccicheck
-net/sctp/sm_make_chunk.c:2586:3-8: WARNING: NULL check before some
-freeing functions is not needed.
-net/sctp/sm_make_chunk.c:2652:3-8: WARNING: NULL check before some
-freeing functions is not needed.
-net/sctp/sm_make_chunk.c:2667:3-8: WARNING: NULL check before some
-freeing functions is not needed.
-net/sctp/sm_make_chunk.c:2684:3-8: WARNING: NULL check before some
-freeing functions is not needed.
+I suspect that the bug is easier to trigger with the MPTCP patch like
+I did originally, due to the way this patch manages the tcp subflow
+buffers (it can temporarily overfill the buffers, satisfying that
+first condition more often).
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- net/sctp/sm_make_chunk.c |   12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+another thing, the stacktrace you shared before seems caused by
+another issue (corrupted socket?), it will not be solved by the patch
+we submitted.
 
-diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
-index f67df16..6dac492 100644
---- a/net/sctp/sm_make_chunk.c
-+++ b/net/sctp/sm_make_chunk.c
-@@ -2586,8 +2586,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 	case SCTP_PARAM_STATE_COOKIE:
- 		asoc->peer.cookie_len =
- 			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
--		if (asoc->peer.cookie)
--			kfree(asoc->peer.cookie);
-+		kfree(asoc->peer.cookie);
- 		asoc->peer.cookie = kmemdup(param.cookie->body, asoc->peer.cookie_len, gfp);
- 		if (!asoc->peer.cookie)
- 			retval = 0;
-@@ -2652,8 +2651,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 			goto fall_through;
- 
- 		/* Save peer's random parameter */
--		if (asoc->peer.peer_random)
--			kfree(asoc->peer.peer_random);
-+		kfree(asoc->peer.peer_random);
- 		asoc->peer.peer_random = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_random) {
-@@ -2667,8 +2665,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 			goto fall_through;
- 
- 		/* Save peer's HMAC list */
--		if (asoc->peer.peer_hmacs)
--			kfree(asoc->peer.peer_hmacs);
-+		kfree(asoc->peer.peer_hmacs);
- 		asoc->peer.peer_hmacs = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_hmacs) {
-@@ -2684,8 +2681,7 @@ static int sctp_process_param(struct sctp_association *asoc,
- 		if (!ep->auth_enable)
- 			goto fall_through;
- 
--		if (asoc->peer.peer_chunks)
--			kfree(asoc->peer.peer_chunks);
-+		kfree(asoc->peer.peer_chunks);
- 		asoc->peer.peer_chunks = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_chunks)
--- 
-1.7.9.5
+kind regards,
+
+Tim
+
+
+On Tue, Sep 3, 2019 at 5:22 AM maowenan <maowenan@huawei.com> wrote:
+>
+> Hi Tim,
+>
+>
+>
+> I try to reproduce it with packetdrill or user application, but I can=E2=
+=80=99t.
+>
+> The first condition =E2=80=9C (sk->sk_wmem_queued >> 1) > limit =E2=80=9C=
+    can=E2=80=99t be satisfied,
+>
+> This condition is to avoid tiny SO_SNDBUF values set by user.
+>
+> It also adds the some room due to the fact that tcp_sendmsg()
+>
+> and tcp_sendpage() might overshoot sk_wmem_queued by about one full
+>
+> TSO skb (64KB size).
+>
+>
+>
+>         limit =3D sk->sk_sndbuf + 2 * SKB_TRUESIZE(GSO_MAX_SIZE);
+>
+>         if (unlikely((sk->sk_wmem_queued >> 1) > limit &&
+>
+>                      skb !=3D tcp_rtx_queue_head(sk) &&
+>
+>                      skb !=3D tcp_rtx_queue_tail(sk))) {
+>
+>                 NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
+>
+>                 return -ENOMEM;
+>
+>         }
+>
+>
+>
+> Can you try to reproduce it with packetdrill or C socket application?
+>
+>
+
+
+
+--=20
+Tim Froidcoeur | R&D engineer HAG
+tim.froidcoeur@tessares.net
+Tessares SA | Hybrid Access Solutions
+www.tessares.net
+1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+
+--=20
+
+
+Disclaimer: https://www.tessares.net/mail-disclaimer/=20
+<https://www.tessares.net/mail-disclaimer/>
+
 
