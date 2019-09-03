@@ -2,137 +2,138 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FB6C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427CBC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A45F2054F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1687120828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wep3juTm"
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wserly1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfICGM1 (ORCPT
+        id S1726944AbfICGNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:12:27 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43679 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfICGM1 (ORCPT
+        Tue, 3 Sep 2019 02:13:31 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:32921 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725888AbfICGNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:12:27 -0400
-Received: by mail-io1-f65.google.com with SMTP id u185so29482191iod.10;
-        Mon, 02 Sep 2019 23:12:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GZ5aGUxM1e1yAxeiEBXNgI8jjZDu1KoSilHhJTQM1zk=;
-        b=Wep3juTmL73l+HU2tDif3J1tPbmROfBh6z6wBs94tp5cxNJLrGZxFgQlSGpnSSRPPH
-         oTkMvyeCpeMI5ECRFaSvjc9HiQJEfMCTk/lrFOVPmYGQXwyKcc8CUmRCFzIIrhLaKNyD
-         3z2XRvdXF3fItuYEDCvcBCCLPjkFafM2rG2rMtVyUOlLRyLgiYWpW4GYClUyepfweeaz
-         b3+lKyAmSHAcLNppvm3AGZEOMUfXrcl2ixluW/2FhVQ07TRYZoTjzrKw5MojHYEW53lB
-         3DjQQ0aVOgb8yJ7gxDI9GPt5lRBBDtqtJrH5EjLGIn+IEeWGL90mvoGz6Fa4Gxa0xoPo
-         xKSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GZ5aGUxM1e1yAxeiEBXNgI8jjZDu1KoSilHhJTQM1zk=;
-        b=KmJlZl5H009KsSueieKeqo9izO0IV16u7UhVBzzQUM0y3ZIaB7Y01cDQoyd5cRrYfr
-         8PW+BkZ4/W8IzUknXm33VBHoRbRwNJm2dutv4VBbeX6t3YMKOe4dbmaYD3P2ycF69HT6
-         ldPxBdouu0FuRHv9buZRG0OoeA/4TDuzyCxKD/YP1Z9xKWMkSVUd6fk9N2v3O7YRZg7y
-         v0XGKCjB5GFK4+cuUsxX/gSae5/AYqFwmqHlxgYNuiu46ivnomN82WvfQEhmNy2aFVS7
-         3Ccs/ofTicaf4VxFsz/BRiyxyU1GkqLleQs6e/9qB2eqZygQ3cigCR9w/4tPLodOsXt3
-         iZeg==
-X-Gm-Message-State: APjAAAV0KH86GaeZi3GQy9HAfYez7OkIF/o8/rkysIQ0zkuYcLY9Tmkc
-        LONJZIdYk+A6T4+KSTkCN02O2jsCyzvPm7x6WAo=
-X-Google-Smtp-Source: APXvYqx2QRjbzZ7hc5y/0wPXxc2BOsqW7rYBr5/+9NPVJBc9aypHeg6RUiCGJe8eAjajGn857PgZlmUrG9vDjyGLKMk=
-X-Received: by 2002:a5d:974d:: with SMTP id c13mr11863170ioo.87.1567491145896;
- Mon, 02 Sep 2019 23:12:25 -0700 (PDT)
+        Tue, 3 Sep 2019 02:13:30 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id B2E372ADE;
+        Tue,  3 Sep 2019 02:13:29 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 03 Sep 2019 02:13:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WsBdGL
+        PtmaM6MSH9coelJlBJ4FZ7Hzc7Dzf0YZFPgy4=; b=wserly1Bhz0LmmcOl/brqN
+        ybDGSCkwc6ymsOVBdkTDE8AQhl62rSZJtRgJd+ikVqCZpBVW+0wOtnlFb/EOPr0G
+        ydGf2GZ4lx87S8klfNEn6s0Iq3/xNgaCW66HTh7tf6LYK2/oXzA/N8I59ojOLR8m
+        pCxHjYZbutbAMmyq79m5zwhvda53SFWKu99i5jGr2tj8N77Nm8T4P6WhJSH/4UQq
+        oq72qlDYlxWj+JPSjlR+ibt4+3pw1AWf+WPRdohmf6nN1kZs5UF2X8PmA+8qxaOA
+        t6VpsD1M8lMZtuiVoJh3Q5t+DJM+pF2HAdyjlTPKZYjGEtqoLFnw6BIbpX61LZLw
+        ==
+X-ME-Sender: <xms:hwRuXYQoAUzoJfO5G7QDItEHleVn4L-VJcOUlV4manlOt6DBYEWfyg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejuddguddtgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkugho
+    ucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepud
+    elfedrgeejrdduieehrddvhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgt
+    hhesihguohhstghhrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:hwRuXVEGvlmWJGpAKzD72YrisRKEm1emrPbb7YaGD-yYazu8eVqHfg>
+    <xmx:hwRuXcwwijQfOfpF1oi-7yOUoTv6x3toBG8u4LMwJlnd-ObDXoyjJg>
+    <xmx:hwRuXXXUYooL3QFFDo-4_l9sKYse6f53cqGLCIQPjBK3qgku2wzX-w>
+    <xmx:iQRuXcpyXC_DdNKFlNG-CNNdSr7hta0vo8CvyqukHlst9yRkXP7azw>
+Received: from localhost (unknown [193.47.165.251])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A733C80060;
+        Tue,  3 Sep 2019 02:13:26 -0400 (EDT)
+Date:   Tue, 3 Sep 2019 09:13:24 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Jiri Pirko <jiri@resnulli.us>, David Miller <davem@davemloft.net>,
+        andrew@lunn.ch, horatiu.vultur@microchip.com,
+        alexandre.belloni@bootlin.com, UNGLinuxDriver@microchip.com,
+        ivecera@redhat.com, f.fainelli@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] net: core: Notify on changes to dev->promiscuity.
+Message-ID: <20190903061324.GA6149@splinter>
+References: <20190829193613.GA23259@splinter>
+ <20190829.151201.940681219080864052.davem@davemloft.net>
+ <20190830053940.GL2312@nanopsycho>
+ <20190829.230233.287975311556641534.davem@davemloft.net>
+ <20190830063624.GN2312@nanopsycho>
+ <20190902174229.uur7r7duq4dvbnqq@lx-anielsen.microsemi.net>
 MIME-Version: 1.0
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com>
- <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com> <CAOMZO5CHmvrbVG_h8hOb7hMjXasV_QwtNoXpEw9kqY=4Jj5HAg@mail.gmail.com>
- <DB3PR0402MB391636D31F486639FB8B3BA6F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB391636D31F486639FB8B3BA6F5B90@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Mon, 2 Sep 2019 23:12:14 -0700
-Message-ID: <CAKdAkRRX4Cs1m7iwTuM0dpNr+xjp3qAZ1fo1pqreE7rR8KFgQQ@mail.gmail.com>
-Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
- controller power key support
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Andy Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "mripard@kernel.org" <mripard@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        "marcin.juszkiewicz@linaro.org" <marcin.juszkiewicz@linaro.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "ronald@innovation.ch" <ronald@innovation.ch>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Jacky Bai <ping.bai@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902174229.uur7r7duq4dvbnqq@lx-anielsen.microsemi.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 2, 2019 at 8:11 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Hi, Fabio
->
-> > On Mon, Sep 2, 2019 at 11:05 PM Anson Huang <Anson.Huang@nxp.com>
-> > wrote:
-> >
-> > > +       ret = input_register_device(input);
-> > > +       if (ret < 0) {
-> > > +               dev_err(&pdev->dev, "failed to register input device\n");
-> > > +               return ret;
-> > > +       }
-> > > +
-> > > +       pdata->input = input;
-> > > +       platform_set_drvdata(pdev, pdata);
-> > > +
-> > > +       ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE,
-> > SC_IRQ_BUTTON, true);
-> > > +       if (ret) {
-> > > +               dev_warn(&pdev->dev, "enable scu group irq failed\n");
-> > > +               return ret;
-> >
-> > Better do a 'goto input_unregister' here instead and call
-> > input_unregister_device().
->
-> Agreed, will fix in V3 later.
+On Mon, Sep 02, 2019 at 07:42:31PM +0200, Allan W. Nielsen wrote:
+> I have been reading through this thread several times and I still do not get it.
 
-Not needed actually as input device is managed by devm.
+Allan,
 
-Thanks.
+I kept thinking about this and I want to make sure that I correctly
+understand the end result.
 
--- 
-Dmitry
+With these patches applied I assume I will see the following traffic
+when running tcpdump on one of the netdevs exposed by the ocelot driver:
+
+- Ingress: All
+- Egress: Only locally generated traffic and traffic forwarded by the
+  kernel from interfaces not belonging to the ocelot driver
+
+The above means I will not see any offloaded traffic transmitted by the
+port. Is that correct? I see that the driver is setting
+'offload_fwd_mark' for any traffic trapped from bridged ports, which
+means the bridge will drop it before it traverses the packet taps on
+egress.
+
+Large parts of the discussion revolve around the fact that switch ports
+are not any different than other ports. Dave wrote "Please stop
+portraying switches as special in this regard" and Andrew wrote "[The
+user] just wants tcpdump to work like on their desktop."
+
+But if anything, this discussion proves that switch ports are special in
+this regard and that tcpdump will not work like on the desktop.
+
+Beside the fact that I don't agree (but gave up) with the new
+interpretation of promisc mode, I wonder if we're not asking for trouble
+with this patchset. Users will see all offloaded traffic on ingress, but
+none of it on egress. This is in contrast to the sever/desktop, where
+Linux is much more dominant in comparison to switches (let alone hw
+accelerated ones) and where all the traffic is visible through tcpdump.
+I can already see myself having to explain this over and over again to
+confused users.
+
+Now, I understand that showing egress traffic is inherently difficult.
+It means one of two things:
+
+1. We allow packets to be forwarded by both the software and the
+hardware
+2. We trap all ingressing traffic from all the ports
+
+Both options can have devastating effects on the network and therefore
+should not be triggered by a supposedly innocent invocation of tcpdump.
+
+I again wonder if it would not be wiser to solve this by introducing two
+new flags to tcpdump for ingress/egress (similar to -Q in/out) capturing
+of offloaded traffic. The capturing of egress offloaded traffic can be
+documented with the appropriate warnings.
+
+Anyway, I don't want to hold you up, I merely want to make sure that the
+above (assuming it's correct) is considered before the patches are
+applied.
+
+Thanks
