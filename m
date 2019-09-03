@@ -2,102 +2,168 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9637C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCEAC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DA72339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D003C22D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbfICNFt (ORCPT
+        id S1729299AbfICNGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:05:49 -0400
-Received: from mga01.intel.com ([192.55.52.88]:10447 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728576AbfICNFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:05:49 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 06:05:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="183548662"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2019 06:05:48 -0700
-From:   richard.gong@linux.intel.com
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, dinguyen@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        sen.li@intel.com, richard.gong@intel.com
-Subject: [PATCHv5 0/4] add Intel Stratix10 remote system update driver 
-Date:   Tue,  3 Sep 2019 08:18:17 -0500
-Message-Id: <1567516701-26026-1-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 3 Sep 2019 09:06:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50322 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728576AbfICNGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:06:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9C87DB60E;
+        Tue,  3 Sep 2019 13:06:07 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 15:06:07 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 10/11] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Message-ID: <20190903130607.cf2qv3s3evobbd5g@pathway.suse.cz>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-11-sakari.ailus@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902083240.20367-11-sakari.ailus@linux.intel.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+On Mon 2019-09-02 11:32:39, Sakari Ailus wrote:
+> Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> support printing full path of the node, including its name ("f") and only
+> the node's name ("P") in the printk family of functions. The two flags
+> have equivalent functionality to existing %pOF with the same two modifiers
+> ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> based systems is added by this patch.
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 922a29eb70e6c..abba210f67567 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -418,6 +418,30 @@ Examples::
+>  
+>  Passed by reference.
+>  
+> +Fwnode handles
+> +--------------
+> +
+> +::
+> +
+> +	%pfw[fP]
+> +
+> +For printing information on fwnode handles. The default is to print the full
+> +node name, including the path. The modifiers are functionally equivalent to
+> +%pOF above.
+> +
+> +	- f - full name of the node, including the path
+> +	- P - the name of the node including an address (if there is one)
+> +
+> +Examples (ACPI):
 
-This is the 5th submission of Intel Stratix10 remote system update (RSU)
-driver.
+s/:/::/ for the .rst formar.
 
-Intel Stratix10 remote system update driver patches have been reviewed by
-Alan Tull and other colleagues at Intel.
+> +
+> +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
+> +	%pfwP	endpoint@0				- Node name
+> +
+> +Examples (OF):
 
-The Intel Stratix10 Remote System Update driver exposes interfaces
-access through the Intel Stratix10 Service Layer to user space via sysfs
-interface. The RSU interfaces report and control some of the optional RSU
-features on Intel Stratix 10 SoC.
+Same here.
 
-The RSU feature provides a way for customers to update the boot
-configuration of a Intel Stratix 10 SoC device with significantly reduced
-risk of corrupting the bitstream storage and bricking the system.
+> +
+> +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
+> +	%pfwP	endpoint				- Node name
+> +
+>  Time and date (struct rtc_time)
+>  -------------------------------
+>  
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 4ad9332d54ba6..b9b4c835db063 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1981,6 +1981,36 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+>  	return widen_string(buf, buf - buf_start, end, spec);
+>  }
+>  
+> +static noinline_for_stack
+> +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+> +		    struct printf_spec spec, const char *fmt)
+> +{
+> +	struct printf_spec str_spec = spec;
+> +	char *buf_start = buf;
+> +
+> +	str_spec.field_width = -1;
+> +
+> +	if (*fmt != 'w')
+> +		return error_string(buf, end, "(%pfw?)", spec);
 
-v5: changed to use dev_group pointer from driver core
-    changed to support max_retry with watchdog event
-    s/KernelVersion:5.3/KernelVersion:5.4
-    replaced /sys/devices/.../stratix10-rsu.0/driver/ with
-    /sys/devices/platform/stratix10-rsu.0/
-    replace contact email address with richard.gong@linux.intel.com
-v4: removed devm_device_add_groups() & devm_device_remove_groups(), then
-    utilized groups at struct device_driver
-    replaced /sys/devices/platform/stratix10-rsu.0/ with /sys/devices/.../
-    stratix10-rsu.0/driver/
-    removed spaces
-v3: changed kernel version from 5.2 to 5.3 in RSU sysfs interface document
-v2: removed compatible = "intel,stratix10-rsu"
-    added intel stratix10 RSU device
-    changed to support RSU in handling watchdog timeout
-    s/attr_group/ATTRIBUTE_GROUPS, use devm_device_add_groups() and
-    devm_device_remove_groups()
-    added check the return value from rsu_send_msg()
-    removed RSU binding text file
-    other corrections/change
+This means that only "%pfw" will dereference the pointer by
+fwnode_full_name_string() or fwnode_get_name(). All the other
+eventual misuses of the obsolete %pf format will result in this
+error message.
 
-Richard Gong (4):
-  firmware: stratix10-svc: extend svc to support new RSU features
-  firmware: add Intel Stratix10 remote system update driver
-  firmware: rsu: document sysfs interface
-  MAINTAINERS: add maintainer for Intel Stratix10 FW drivers
+OK, it is hard to imagine using "%pf" to get symbol name and always add
+'w' suffix. Therefore it looks that reusing the obsolete %pf format
+modifier is pretty safe after all.
 
- .../testing/sysfs-devices-platform-stratix10-rsu   | 128 ++++++
- MAINTAINERS                                        |  11 +
- drivers/firmware/Kconfig                           |  18 +
- drivers/firmware/Makefile                          |   1 +
- drivers/firmware/stratix10-rsu.c                   | 451 +++++++++++++++++++++
- drivers/firmware/stratix10-svc.c                   |  76 +++-
- include/linux/firmware/intel/stratix10-smc.h       |  51 ++-
- .../linux/firmware/intel/stratix10-svc-client.h    |  11 +-
- 8 files changed, 737 insertions(+), 10 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-platform-stratix10-rsu
- create mode 100644 drivers/firmware/stratix10-rsu.c
 
--- 
-2.7.4
+> +	if (check_pointer(&buf, end, fwnode, spec))
+> +		return buf;
+> +
+> +	fmt++;
+> +
+> +	switch (*fmt) {
+> +	case 'f':	/* full_name */
+> +	default:
+
+Using default: in the middle of switch might cause a lot of confusion.
+Please, make it the last label.
+
+
+> +		buf = fwnode_full_name_string(fwnode, buf, end);
+> +		break;
+> +	case 'P':	/* name */
+> +		buf = string(buf, end, fwnode_get_name(fwnode), str_spec);
+> +		break;
+> +	}
+> +
+> +	return widen_string(buf, buf - buf_start, end, spec);
+> +}
+> +
+>  /*
+>   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+>   * by an extra set of alphanumeric characters that are extended format
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index a60c241112cd4..8df50911ff4e9 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -5995,7 +5995,8 @@ sub process {
+>  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+>  					$specifier = $1;
+>  					$extension = $2;
+> -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
+> +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
+> +					    $extension =~ /^f[^w]/) {
+
+This does not work. $extension seems to have only one character.
+
+Best Regards,
+Petr
 
