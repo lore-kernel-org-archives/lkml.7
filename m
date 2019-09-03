@@ -2,81 +2,107 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2900EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52F6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64422077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6722077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:39:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PdKulyV7"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LI2L8c7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729791AbfICPjc (ORCPT
+        id S1729838AbfICPjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:39:32 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53356 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICPjb (ORCPT
+        Tue, 3 Sep 2019 11:39:48 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:34429 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729589AbfICPjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:39:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=X/cB+D23nb3lX4M1niPmjOpwMGJ9zXCGneGvPXK49yk=; b=PdKulyV7w7y/A8JCioTeyJUuR
-        y3Xccyj9G6xJF2RbjybT/K0F29/PFbSQafRj+pndk+/yoedkvuH6HVhD+zzptW42f6J2cebfVmilo
-        UNCn4jitxx8GqoLqUeXZOioygfsc1XMfHMWCzocd0q7Urfh/oVU50o4uyCZT5QpB4l+l7s85hrNsg
-        uGKJ4n6sUvDKSao5Au9nJQ2YGcmxOPY0AWIul0QyWh9AR42l4GbY4gzFykHKXbftY6tvnlAqs+7p2
-        C8UMMHkQWMBLyIS5XfOzykxhVUY1pjbdarKNnJY9X7cUBurB6BwqqGNengoL8WlmZQS9sUtZHwPNK
-        s8MoEWvCA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5Au2-0000xR-JZ; Tue, 03 Sep 2019 15:39:30 +0000
-Date:   Tue, 3 Sep 2019 08:39:30 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@infradead.org>, Qian Cai <cai@lca.pw>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot
- panic
-Message-ID: <20190903153930.GA2791@infradead.org>
-References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
- <20190903123719.GF1131@ZenIV.linux.org.uk>
- <20190903130456.GA9567@infradead.org>
- <20190903134832.GH1131@ZenIV.linux.org.uk>
- <20190903135024.GA8274@infradead.org>
- <20190903135354.GI1131@ZenIV.linux.org.uk>
+        Tue, 3 Sep 2019 11:39:48 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x83Fdi8F009932;
+        Wed, 4 Sep 2019 00:39:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x83Fdi8F009932
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567525185;
+        bh=mNQ/8Q4lNQ2CgeCETQDXp73cvMbK+QmBj7K2vN48yOY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LI2L8c7Dydp4FNoa/m04U8sBZr24ewfpewGxysI5dRM0Q/wT8MsnW2ZV6qhzRwp+j
+         gGuYWjhJjWihsnF/VRI9u6ZyXy+gUn/uoQ3IVNBzkkpd0m/clEPWDBxfI2uL0Jw8x8
+         rgcwtNtORkx/8AJin3veS316ZNwM8FVCyjbPznMj95UuAVpl0DkxW5FvCe30G5ZsPZ
+         /OStfgi/vOzcBTSACf3ut+SODJ03M+WUz6ne4Ag+1tQxdOJJpXgDQMSE9P+MiEJVZP
+         +DjGcPdQJukty30ys0FswxjiLpPoR9X/T6o3ryQrcTY7PGaNAVSZQYEfJfHn13mL/E
+         pn9Qz22/3Ckhw==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id i128so11593816vsc.7;
+        Tue, 03 Sep 2019 08:39:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAVrAC9b5V34qQuXt4+WP8GqUpEW0oPG4KPx0LaOpgh1hBpvmjnS
+        hNuRCVs5wxmSKOgq2Jks+Mvsj3BuGweXloH6Px8=
+X-Google-Smtp-Source: APXvYqxClUo4hmFiaBOaF3Bg7pczDjRMUbD9av9h9lJvgIWGJYlSIcpebE6uSVbl53YuUMcivb3JuT6HOYFTfBHcWQI=
+X-Received: by 2002:a67:f418:: with SMTP id p24mr1417399vsn.215.1567525183683;
+ Tue, 03 Sep 2019 08:39:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903135354.GI1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190828055425.24765-1-yamada.masahiro@socionext.com>
+ <20190828055425.24765-2-yamada.masahiro@socionext.com> <20190828182017.GB127646@archlinux-threadripper>
+ <CAKwvOd=r5Y8hQQBeKZ6zAokPdyeT2AVKFsdviTvwV5AyDQQHrw@mail.gmail.com>
+ <CA+icZUWmmC7CruvXx6U0cdXMLaMWJadU=T61E0om1rOuW3==pw@mail.gmail.com> <CA+icZUXX6YG7=4n60A3_HiTYE0SkNXd8yr4-pqfOsqg66QvXzw@mail.gmail.com>
+In-Reply-To: <CA+icZUXX6YG7=4n60A3_HiTYE0SkNXd8yr4-pqfOsqg66QvXzw@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 4 Sep 2019 00:39:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQLM2RXELr=WY7O8UEHx3EQZKeQdfZ_Ko4wTTPe0ZrqHg@mail.gmail.com>
+Message-ID: <CAK7LNAQLM2RXELr=WY7O8UEHx3EQZKeQdfZ_Ko4wTTPe0ZrqHg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kbuild: allow Clang to find unused static inline
+ functions for W=1 build
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sven Schnelle <svens@stackframe.org>,
+        Xiaozhou Liu <liuxiaozhou@bytedance.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 02:53:54PM +0100, Al Viro wrote:
-> On Tue, Sep 03, 2019 at 06:50:24AM -0700, Christoph Hellwig wrote:
-> > On Tue, Sep 03, 2019 at 02:48:32PM +0100, Al Viro wrote:
-> > > Not sure what would be the best way to do it...  I don't mind breaking
-> > > the out-of-tree modules, whatever their license is; what I would rather
-> > > avoid is _quiet_ breaking of such.
-> > 
-> > Any out of tree module running against an upstream kernel will need
-> > a recompile for a new version anyway.  So I would not worry about it
-> > at all.
-> 
-> There's much nastier situation than "new upstream kernel released,
-> need to rebuild" - it's bisect in mainline trying to locate something...
+On Fri, Aug 30, 2019 at 6:52 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> Just as a sidenote:
+>
+> From [PATCH v2] kbuild: enable unused-function warnings for W= build with Clang:
+>
+> "Per the documentation [1], -Wno-unused-function will also disable
+> -Wunneeded-internal-declaration, which can help find bugs like
+> commit 8289c4b6f2e5 ("platform/x86: mlx-platform: Properly use
+> mlxplat_mlxcpld_msn201x_items"). (pointed out by Nathan Chancellor)
+> I added -Wunneeded-internal-declaration to address it.
+>
+> If you contribute to code clean-up, please run "make CC=clang W=1"
+> and check -Wunused-function warnings. You will find lots of unused
+> functions."
 
-I really don't get the point.  And it's not like we've card about
-this anywhere else.  And jumping wildly around with the numeric values
-for constants will lead to bugs like the one you added and fixed again
-and again.
+This information is unrelated to this version,
+so I dropped it.
+
+
+> Isn't that missing in your double?
+>
+> - Sedat -
+>
+> [1] https://lkml.org/lkml/2019/8/27/729
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
