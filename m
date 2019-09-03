@@ -2,110 +2,134 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAAAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F16C41514
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F33922CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE3A22CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:52:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YuGW0e5H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730164AbfICQtx (ORCPT
+        id S1729919AbfICQwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:49:53 -0400
-Received: from correo.us.es ([193.147.175.20]:37160 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729056AbfICQtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:49:53 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id A6D63DA3D2
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 18:49:49 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 9A27AFF2EB
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 18:49:49 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id 8FBBEB8001; Tue,  3 Sep 2019 18:49:49 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E356AD1929;
-        Tue,  3 Sep 2019 18:49:46 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Tue, 03 Sep 2019 18:49:46 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id AEF35426CCBC;
-        Tue,  3 Sep 2019 18:49:46 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 18:49:48 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Leonardo Bras <leonardo@linux.ibm.com>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, FlorianWestphal <fw@strlen.de>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v4 1/2] netfilter: Terminate rule eval if protocol=IPv6
- and ipv6 module is disabled
-Message-ID: <20190903164948.kuvtpy7viqhcmp77@salvia>
-References: <20190830181354.26279-1-leonardo@linux.ibm.com>
- <20190830181354.26279-2-leonardo@linux.ibm.com>
- <20190830205802.GS20113@breakpoint.cc>
- <99e3ef9c5ead1c95df697d49ab9cc83a95b0ac7c.camel@linux.ibm.com>
+        Tue, 3 Sep 2019 12:52:10 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39237 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729602AbfICQwK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:52:10 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s12so4141073pfe.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=h8ngCQI7EcgQWs7APOFWbvcG4aSSwNLHZV1kuBNnkzI=;
+        b=YuGW0e5HrYZ6b94ppeM5MXTtua4CcL16l3ub8KkaJuMmVJgtVIA/KuvNZdHKhrB1aP
+         b3xLah9iPDQQvqGgTvGVB8dqgoQ9yfLVsPeFjXoqLZvmFulF6BltLka8xKVVoApPI6WU
+         4RodOC944LFAyTo5JOofVH8PPXRQOMmmtgcaA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=h8ngCQI7EcgQWs7APOFWbvcG4aSSwNLHZV1kuBNnkzI=;
+        b=CF8ppEGKmckKAPUsFp3TEr0iOl7vW8gQlavzf65aGRq3Xa4o6JnTjpofRiyaugfIqw
+         sVAuX7lU4sEELBS5cqjxGXthhcGzo/lfdzG1p/cFBszyy7A5AHK5liSn1y/BHAD56ff5
+         QZnzb9qgeDPmgzwSO6ORJ0gCLxYcYIEVNgo3ZBaIjRtu3tXRU+LeUH12LX9p/BKlicYc
+         BKsfz+R5tM8X/cWumlOpL14T3vV7ryGnXUmkMQefVKmQduWjH/pZR3xF6YqWGROSrDDn
+         sq3nIE6bi/9mZjh1iGQ0jidg3TBImEpTjEL6Lamq6ScVeIc/QLkyLb2DATL6N4jHcXyE
+         +n3g==
+X-Gm-Message-State: APjAAAVrxY+uBZfLOEx6y7oSBN3os7//2w/Vw24HJbLPjDttXzyBqGKD
+        gB1+DADXp78KjK5RzgUj7r/uCu2824/mMQ==
+X-Google-Smtp-Source: APXvYqwtlv4autqI3NKfe7BRjyKjRftw9BYTCaZgTZpqVeHhpReslgkrKgkusl97Sb4RiFhhgxGohA==
+X-Received: by 2002:a63:ee08:: with SMTP id e8mr31805414pgi.70.1567529529306;
+        Tue, 03 Sep 2019 09:52:09 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id v12sm16966488pff.40.2019.09.03.09.52.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 09:52:08 -0700 (PDT)
+Message-ID: <5d6e9a38.1c69fb81.ad03c.cb4c@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <99e3ef9c5ead1c95df697d49ab9cc83a95b0ac7c.camel@linux.ibm.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a950f3986375ee4893dff156dc2f9554338c27d8.camel@linux.intel.com>
+References: <20190829224110.91103-1-swboyd@chromium.org> <20190829224110.91103-5-swboyd@chromium.org> <a950f3986375ee4893dff156dc2f9554338c27d8.camel@linux.intel.com>
+Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v6 4/4] tpm: tpm_tis_spi: Support cr50 devices
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 03 Sep 2019 09:52:07 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:46:50PM -0300, Leonardo Bras wrote:
-> On Fri, 2019-08-30 at 22:58 +0200, Florian Westphal wrote:
-> > Leonardo Bras <leonardo@linux.ibm.com> wrote:
-> > > If IPv6 is disabled on boot (ipv6.disable=1), but nft_fib_inet ends up
-> > > dealing with a IPv6 packet, it causes a kernel panic in
-> > > fib6_node_lookup_1(), crashing in bad_page_fault.
-> > > 
-> > > The panic is caused by trying to deference a very low address (0x38
-> > > in ppc64le), due to ipv6.fib6_main_tbl = NULL.
-> > > BUG: Kernel NULL pointer dereference at 0x00000038
-> > > 
-> > > The kernel panic was reproduced in a host that disabled IPv6 on boot and
-> > > have to process guest packets (coming from a bridge) using it's ip6tables.
-> > > 
-> > > Terminate rule evaluation when packet protocol is IPv6 but the ipv6 module
-> > > is not loaded.
-> > > 
-> > > Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-> > 
-> > Acked-by: Florian Westphal <fw@strlen.de>
-> > 
-> 
-> Hello Pablo,
-> 
-> Any trouble with this patch? 
-> I could see the other* one got applied, but not this one.
-> *(The other did not get acked, so i released it alone as v5)
-> 
-> Is there any fix I need to do in this one?
+Quoting Jarkko Sakkinen (2019-09-03 09:39:51)
+> On Thu, 2019-08-29 at 15:41 -0700, Stephen Boyd wrote:
+> > From: Andrey Pronin <apronin@chromium.org>
+> >=20
+> > Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
+> > firmware. The firmware running on the currently supported H1 Secure
+> > Microcontroller requires a special driver to handle its specifics:
+> >=20
+> >  - need to ensure a certain delay between SPI transactions, or else
+> >    the chip may miss some part of the next transaction
+> >  - if there is no SPI activity for some time, it may go to sleep,
+> >    and needs to be waken up before sending further commands
+> >  - access to vendor-specific registers
+> >=20
+> > Cr50 firmware has a requirement to wait for the TPM to wakeup before
+> > sending commands over the SPI bus. Otherwise, the firmware could be in
+> > deep sleep and not respond. The method to wait for the device to wakeup
+> > is slightly different than the usual flow control mechanism described in
+> > the TCG SPI spec. Add a completion to tpm_tis_spi_transfer() before we
+> > start a SPI transfer so we can keep track of the last time the TPM
+> > driver accessed the SPI bus to support the flow control mechanism.
+> >=20
+> > Split the cr50 logic off into a different file to keep it out of the
+> > normal code flow of the existing SPI driver while making it all part of
+> > the same module when the code is optionally compiled into the same
+> > module. Export a new function, tpm_tis_spi_init(), and the associated
+> > read/write/transfer APIs so that we can do this. Make the cr50 code wrap
+> > the tpm_tis_spi_phy struct with its own struct to override the behavior
+> > of tpm_tis_spi_transfer() by supplying a custom flow control hook. This
+> > shares the most code between the core driver and the cr50 support
+> > without combining everything into the core driver or exporting module
+> > symbols.
+> >=20
+> > Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> > Cc: Andrey Pronin <apronin@chromium.org>
+> > Cc: Duncan Laurie <dlaurie@chromium.org>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Guenter Roeck <groeck@chromium.org>
+> > Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+>=20
+> Had to time to look at this patch set after all before LPC. I just
+> realized that the kconfig has taken away. Not sure why is that
+> because there's been only request to not have a new LKM. There
+> still should be ability opt-out to have Cr50 support in vmlinux.
+>=20
 
-Hm, I see, so this one:
+That's fair. I'll put the Kconfig option back. There's still the small
+issue of what to do about the module name. Should I rename the
+tpm_tis_spi.c file to something else so that the module can keep the
+same name? Or was the tpm_tis_spi_mod.ko trick from v5 good enough?
 
-https://patchwork.ozlabs.org/patch/1156100/
-
-is not enough?
-
-I was expecting we could find a way to handle this from br_netfilter
-alone itself.
-
-Thanks.
