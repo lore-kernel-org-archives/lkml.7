@@ -2,496 +2,151 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B527FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69285C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848BE22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E76233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:37:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="on/HiodS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbfICLgw (ORCPT
+        id S1729024AbfICLhN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:36:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbfICLgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:36:50 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EA21C8535D
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 11:36:48 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id n2so2024755wru.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 04:36:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GsTPmCBROXkWENE8u9zhZAvKwRylFezdTcPk/AGw/ug=;
-        b=GGOVpnrZ4xlPs5D3If0q4USHBrbt67q1MxjzdexDl8FtaXPR9XfUYV4jFBMzBPCq2A
-         9Ctw3Zatm4+EVxQN4ZILU9hjAGlB7xd+rMQEygAgonZR/NFDBUSYQFSVHsEZnromz6mk
-         wgz7eJQa6+d/2MMxbXxpuRsR6oSKWVjcTb/kPCBQXIvZXUNJqqfxBGpJDyCCmsCvCfnp
-         lplP0Uek595WTeDkoq7gsDhVf5fhUnRdtjw7FhVC/brrHqPFhux1w7HE2rNacuR91kbV
-         jNMZDnGWDmG9qhRc4xfsl8Lj5XhNNN4TuV929l2v0eePDQbnz8XQv8yB5ZWaaMVBP1qC
-         6vaA==
-X-Gm-Message-State: APjAAAUaQhpYlhub8u7gjvb8ZYd3t4hRen4aa6KX2QVFjJxUK23Tz7qK
-        VFE3nRZjcwPpBjABqJhlyOAt9JRoUKmoeMCe12kabjt7RdeXFdxet2bqBZ9ox6GiJcdl5gHoHbO
-        olTJWpDecuOb3yaQ9EpTOFS0I
-X-Received: by 2002:a1c:cf8c:: with SMTP id f134mr36659168wmg.174.1567510607222;
-        Tue, 03 Sep 2019 04:36:47 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyaQmM6ki55/MXLUqsRFjhUVH9FR9teEsXG03/JzDrxL6iIV536blqTA9FvfRi/RsyYgT+xpA==
-X-Received: by 2002:a1c:cf8c:: with SMTP id f134mr36659137wmg.174.1567510606923;
-        Tue, 03 Sep 2019 04:36:46 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id v186sm40446906wmb.5.2019.09.03.04.36.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 04:36:46 -0700 (PDT)
-From:   Miklos Szeredi <mszeredi@redhat.com>
-To:     virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH v4 02/16] fuse: convert to use the new mount API
-Date:   Tue,  3 Sep 2019 13:36:26 +0200
-Message-Id: <20190903113640.7984-3-mszeredi@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190903113640.7984-1-mszeredi@redhat.com>
-References: <20190903113640.7984-1-mszeredi@redhat.com>
+        Tue, 3 Sep 2019 07:37:13 -0400
+Received: from mx0a-002c1b01.pphosted.com ([148.163.151.68]:23074 "EHLO
+        mx0a-002c1b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728923AbfICLhL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:37:11 -0400
+Received: from pps.filterd (m0127838.ppops.net [127.0.0.1])
+        by mx0a-002c1b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x83B9tLw025014;
+        Tue, 3 Sep 2019 04:14:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint20171006;
+ bh=2eShb8ZVlR1djqEtIBM+AQMVA3y9uR2hZbvS4ztCLHg=;
+ b=on/HiodSAcBIsciVgR7gKP8YVp3yT9jvCkZebY0tkqiFvsy+xN8AxmZ60veK++wIpEuf
+ AimbeuFr+hHbV8vrw6ma9LWFQnYOEHYHyQ0YpDNJglojcfU3xDWqNbNMEyllsSOVtYtX
+ PEEiIXa08cczheNeFlQ8Twj9ihSLA6YQqpzKGkFIvlQfYjys5aW62Vexy1VUKK/yFXak
+ h1vJQIf4R1WbwRn3pbGu88ZpM2gQC3ro0zzrtv1ODS5dheTEh9GWkrTr12xWoNN9wTAT
+ GLBvHtLBhbbeGpiaobroUwleSUKZb4RRQkWe6senuzv3UWi4SREkyHIaThtNZLHZhz5K qw== 
+Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2055.outbound.protection.outlook.com [104.47.34.55])
+        by mx0a-002c1b01.pphosted.com with ESMTP id 2uqrexmqu1-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 04:14:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IPEYD2dNaiLQ5x9gAUC0JjmEyjygg+QnwsMDlhPnG7CWwmJzx1kkC4U7tGscnsgEx8IylEBn8+Pkfu2NXEoQEfzx1egty4BCZ/Z93VgpwfOmEDzfJiFsjb0+0gapJUMZ+O6CrkU+20bHQqqrTdK7bc35iXJF904eVSKwwfpA/SNzI3E515T6t8Bpy2mjq6+JvOOyjb7uVn6raXb+P4IEAUdssCHjYCOegwsj21V8viTreCUTOAxc0s62HvzYjzrs3oynOqjYfZyvKf45z4sGXMA8smPdYHWwbK6c6pApNwP5Bu60g9BRm/jcxaMIIO0RYkpW95MqJfQLgUgmmPw8Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2eShb8ZVlR1djqEtIBM+AQMVA3y9uR2hZbvS4ztCLHg=;
+ b=Q+0yKo39AtYcy5xXYd/ToMje97sHgyU//SCSQOkFo/Xiw4NDqBfoFgSjGgwq/abq/g6YQSUUkrYQqLIuqLraIdLgvt/7/+EeYYN7NsDThObOhYvHG+udXtXiGITYM48W+ny00mAk0Y+IXHMPvZvui2d3fQzGBsm7Yz9UfvnpBNsr6IUGtfpEjlbbWN2xvuwP90Vhu1S2yaKEXtEwnO5ttQIlppg8zCgq7m79X2SX/DwT8hfxqNAD+1TmOjquGghlt7naSQXLR1Oq7TOyfr/NpTq/ap1xaP4QYmNr43xtH0HHnjDQ2sm8INteKhmV5S68zmddQHsUVgVyzWqp4Sbyeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+Received: from CY4PR0201MB3588.namprd02.prod.outlook.com (52.132.98.38) by
+ CY4PR0201MB3409.namprd02.prod.outlook.com (52.132.98.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2199.21; Tue, 3 Sep 2019 11:14:14 +0000
+Received: from CY4PR0201MB3588.namprd02.prod.outlook.com
+ ([fe80::5598:9f2e:9d39:c737]) by CY4PR0201MB3588.namprd02.prod.outlook.com
+ ([fe80::5598:9f2e:9d39:c737%6]) with mapi id 15.20.2199.021; Tue, 3 Sep 2019
+ 11:14:14 +0000
+From:   Florian Schmidt <florian.schmidt@nutanix.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Florian Schmidt <florian.schmidt@nutanix.com>
+Subject: [PATCH 2/2] trace-vmscan-postprocess: fix output table spacing
+Thread-Topic: [PATCH 2/2] trace-vmscan-postprocess: fix output table spacing
+Thread-Index: AQHVYki4LEg7lvV4zkeKLmneuY6/wg==
+Date:   Tue, 3 Sep 2019 11:14:14 +0000
+Message-ID: <20190903111342.17731-3-florian.schmidt@nutanix.com>
+References: <20190903111342.17731-1-florian.schmidt@nutanix.com>
+In-Reply-To: <20190903111342.17731-1-florian.schmidt@nutanix.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM4PR07CA0033.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::46) To CY4PR0201MB3588.namprd02.prod.outlook.com
+ (2603:10b6:910:8b::38)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.23.0
+x-originating-ip: [62.254.189.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a887a5f-f8bb-4bc6-54a5-08d7305fda69
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CY4PR0201MB3409;
+x-ms-traffictypediagnostic: CY4PR0201MB3409:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR0201MB340965937AC7E4BC495C20FCF7B90@CY4PR0201MB3409.namprd02.prod.outlook.com>
+x-proofpoint-crosstenant: true
+x-ms-oob-tlc-oobclassifiers: OLM:635;
+x-forefront-prvs: 01494FA7F7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(39860400002)(136003)(366004)(376002)(396003)(189003)(199004)(1076003)(36756003)(305945005)(476003)(6512007)(186003)(71190400001)(71200400001)(50226002)(107886003)(81166006)(66066001)(14454004)(52116002)(81156014)(8676002)(86362001)(7736002)(6486002)(54906003)(5660300002)(102836004)(66946007)(3846002)(6116002)(4326008)(66476007)(66556008)(316002)(8936002)(478600001)(76176011)(6916009)(26005)(2906002)(486006)(53936002)(44832011)(25786009)(446003)(6506007)(386003)(11346002)(64756008)(99286004)(2616005)(14444005)(256004)(6436002)(66446008)(64030200001);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR0201MB3409;H:CY4PR0201MB3588.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nutanix.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /NtxLahfv5WOPbaoTJ56KEaBjTpy7PdQv9V8GspgXl55vh4JFYH49CwuP1KGl850za7K/oX6B44UsfiAdfLVy+uDeR5Lo+EfLRbNKGlseedlSzZQkm9KUc5lOiY75TksQwP/nFsCrKKC72RVSgOTNKAP5oCy8grO4x5MIDA/twlL8buCdVx4GI4e97FabfQKj6iUxzeIYW/2w5v80+jQbTKinVDk4I+17fbHItoBlbXhiE7lwReMss97JFK92I2CRHwdtohg25M5OIHc9R3dyiminEMJNwry1FTooQofvn0rDvveCSHoHGJCoYp4TaAsQVWgTL7W6ZmBKXARypIRWapuBDfujPxW84DJp4Gw0XBTkOPLk0GFNDV0AplRQjyVNelFt3KXNWF1vzLV5Rez9uswvVYUYAE9joWoqbqMyLQ=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a887a5f-f8bb-4bc6-54a5-08d7305fda69
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 11:14:14.3635
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cfyo57Mvz5ovwKCQxQv8GLkoHJCGoKsxzw29YA0vV+gWFRKcCZpJDwvDZxzeudfK1VgzM1YHCvsaJm2Y+zTq+WIbwuFkgLNJQL+O9Z3/nkY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR0201MB3409
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-03_01:2019-09-03,2019-09-03 signatures=0
+X-Proofpoint-Spam-Reason: safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
-
-Convert the fuse filesystem to the new internal mount API as the old
-one will be obsoleted and removed.  This allows greater flexibility in
-communication of mount parameters between userspace, the VFS and the
-filesystem.
-
-See Documentation/filesystems/mount_api.txt for more information.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- fs/fuse/inode.c | 292 +++++++++++++++++++++++++++---------------------
- 1 file changed, 167 insertions(+), 125 deletions(-)
-
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 4bb885b0f032..2597ed237ada 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -15,7 +15,8 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
--#include <linux/parser.h>
-+#include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include <linux/statfs.h>
- #include <linux/random.h>
- #include <linux/sched.h>
-@@ -59,7 +60,13 @@ MODULE_PARM_DESC(max_user_congthresh,
- /** Congestion starts at 75% of maximum */
- #define FUSE_DEFAULT_CONGESTION_THRESHOLD (FUSE_DEFAULT_MAX_BACKGROUND * 3 / 4)
- 
--struct fuse_mount_data {
-+#ifdef CONFIG_BLOCK
-+static struct file_system_type fuseblk_fs_type;
-+#endif
-+
-+struct fuse_fs_context {
-+	const char	*subtype;
-+	bool		is_bdev;
- 	int fd;
- 	unsigned rootmode;
- 	kuid_t user_id;
-@@ -443,6 +450,8 @@ static int fuse_statfs(struct dentry *dentry, struct kstatfs *buf)
- }
- 
- enum {
-+	OPT_SOURCE,
-+	OPT_SUBTYPE,
- 	OPT_FD,
- 	OPT_ROOTMODE,
- 	OPT_USER_ID,
-@@ -454,111 +463,110 @@ enum {
- 	OPT_ERR
- };
- 
--static const match_table_t tokens = {
--	{OPT_FD,			"fd=%u"},
--	{OPT_ROOTMODE,			"rootmode=%o"},
--	{OPT_USER_ID,			"user_id=%u"},
--	{OPT_GROUP_ID,			"group_id=%u"},
--	{OPT_DEFAULT_PERMISSIONS,	"default_permissions"},
--	{OPT_ALLOW_OTHER,		"allow_other"},
--	{OPT_MAX_READ,			"max_read=%u"},
--	{OPT_BLKSIZE,			"blksize=%u"},
--	{OPT_ERR,			NULL}
-+static const struct fs_parameter_spec fuse_param_specs[] = {
-+	fsparam_string	("source",		OPT_SOURCE),
-+	fsparam_u32	("fd",			OPT_FD),
-+	fsparam_u32oct	("rootmode",		OPT_ROOTMODE),
-+	fsparam_u32	("user_id",		OPT_USER_ID),
-+	fsparam_u32	("group_id",		OPT_GROUP_ID),
-+	fsparam_flag	("default_permissions",	OPT_DEFAULT_PERMISSIONS),
-+	fsparam_flag	("allow_other",		OPT_ALLOW_OTHER),
-+	fsparam_u32	("max_read",		OPT_MAX_READ),
-+	fsparam_u32	("blksize",		OPT_BLKSIZE),
-+	__fsparam(fs_param_is_string, "subtype", OPT_SUBTYPE,
-+		  fs_param_v_optional),
-+	{}
-+};
-+
-+static const struct fs_parameter_description fuse_fs_parameters = {
-+	.name		= "fuse",
-+	.specs		= fuse_param_specs,
- };
- 
--static int fuse_match_uint(substring_t *s, unsigned int *res)
-+static int fuse_parse_param(struct fs_context *fc, struct fs_parameter *param)
- {
--	int err = -ENOMEM;
--	char *buf = match_strdup(s);
--	if (buf) {
--		err = kstrtouint(buf, 10, res);
--		kfree(buf);
-+	struct fs_parse_result result;
-+	struct fuse_fs_context *ctx = fc->fs_private;
-+	int opt;
-+
-+	opt = fs_parse(fc, &fuse_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch (opt) {
-+	case OPT_SOURCE:
-+		if (fc->source)
-+			return invalf(fc, "fuse: Multiple sources specified");
-+		fc->source = param->string;
-+		param->string = NULL;
-+		break;
-+
-+	case OPT_SUBTYPE:
-+		if (ctx->subtype)
-+			return invalf(fc, "fuse: Multiple subtypes specified");
-+		ctx->subtype = param->string;
-+		param->string = NULL;
-+		return 0;
-+
-+	case OPT_FD:
-+		ctx->fd = result.uint_32;
-+		ctx->fd_present = 1;
-+		break;
-+
-+	case OPT_ROOTMODE:
-+		if (!fuse_valid_type(result.uint_32))
-+			return invalf(fc, "fuse: Invalid rootmode");
-+		ctx->rootmode = result.uint_32;
-+		ctx->rootmode_present = 1;
-+		break;
-+
-+	case OPT_USER_ID:
-+		ctx->user_id = make_kuid(fc->user_ns, result.uint_32);
-+		if (!uid_valid(ctx->user_id))
-+			return invalf(fc, "fuse: Invalid user_id");
-+		ctx->user_id_present = 1;
-+		break;
-+
-+	case OPT_GROUP_ID:
-+		ctx->group_id = make_kgid(fc->user_ns, result.uint_32);
-+		if (!gid_valid(ctx->group_id))
-+			return invalf(fc, "fuse: Invalid group_id");
-+		ctx->group_id_present = 1;
-+		break;
-+
-+	case OPT_DEFAULT_PERMISSIONS:
-+		ctx->default_permissions = 1;
-+		break;
-+
-+	case OPT_ALLOW_OTHER:
-+		ctx->allow_other = 1;
-+		break;
-+
-+	case OPT_MAX_READ:
-+		ctx->max_read = result.uint_32;
-+		break;
-+
-+	case OPT_BLKSIZE:
-+		if (!ctx->is_bdev)
-+			return invalf(fc, "fuse: blksize only supported for fuseblk");
-+		ctx->blksize = result.uint_32;
-+		break;
-+
-+	default:
-+		return -EINVAL;
- 	}
--	return err;
-+
-+	return 0;
- }
- 
--static int parse_fuse_opt(char *opt, struct fuse_mount_data *d, int is_bdev,
--			  struct user_namespace *user_ns)
-+static void fuse_free_fc(struct fs_context *fc)
- {
--	char *p;
--	memset(d, 0, sizeof(struct fuse_mount_data));
--	d->max_read = ~0;
--	d->blksize = FUSE_DEFAULT_BLKSIZE;
--
--	while ((p = strsep(&opt, ",")) != NULL) {
--		int token;
--		int value;
--		unsigned uv;
--		substring_t args[MAX_OPT_ARGS];
--		if (!*p)
--			continue;
--
--		token = match_token(p, tokens, args);
--		switch (token) {
--		case OPT_FD:
--			if (match_int(&args[0], &value))
--				return 0;
--			d->fd = value;
--			d->fd_present = 1;
--			break;
--
--		case OPT_ROOTMODE:
--			if (match_octal(&args[0], &value))
--				return 0;
--			if (!fuse_valid_type(value))
--				return 0;
--			d->rootmode = value;
--			d->rootmode_present = 1;
--			break;
--
--		case OPT_USER_ID:
--			if (fuse_match_uint(&args[0], &uv))
--				return 0;
--			d->user_id = make_kuid(user_ns, uv);
--			if (!uid_valid(d->user_id))
--				return 0;
--			d->user_id_present = 1;
--			break;
--
--		case OPT_GROUP_ID:
--			if (fuse_match_uint(&args[0], &uv))
--				return 0;
--			d->group_id = make_kgid(user_ns, uv);
--			if (!gid_valid(d->group_id))
--				return 0;
--			d->group_id_present = 1;
--			break;
--
--		case OPT_DEFAULT_PERMISSIONS:
--			d->default_permissions = 1;
--			break;
--
--		case OPT_ALLOW_OTHER:
--			d->allow_other = 1;
--			break;
--
--		case OPT_MAX_READ:
--			if (match_int(&args[0], &value))
--				return 0;
--			d->max_read = value;
--			break;
--
--		case OPT_BLKSIZE:
--			if (!is_bdev || match_int(&args[0], &value))
--				return 0;
--			d->blksize = value;
--			break;
--
--		default:
--			return 0;
--		}
--	}
-+	struct fuse_fs_context *ctx = fc->fs_private;
- 
--	if (!d->fd_present || !d->rootmode_present ||
--	    !d->user_id_present || !d->group_id_present)
--		return 0;
--
--	return 1;
-+	if (ctx) {
-+		kfree(ctx->subtype);
-+		kfree(ctx);
-+	}
- }
- 
- static int fuse_show_options(struct seq_file *m, struct dentry *root)
-@@ -1075,12 +1083,12 @@ void fuse_dev_free(struct fuse_dev *fud)
- }
- EXPORT_SYMBOL_GPL(fuse_dev_free);
- 
--static int fuse_fill_super(struct super_block *sb, void *data, int silent)
-+static int fuse_fill_super(struct super_block *sb, struct fs_context *fsc)
- {
-+	struct fuse_fs_context *ctx = fsc->fs_private;
- 	struct fuse_dev *fud;
- 	struct fuse_conn *fc;
- 	struct inode *root;
--	struct fuse_mount_data d;
- 	struct file *file;
- 	struct dentry *root_dentry;
- 	struct fuse_req *init_req;
-@@ -1093,19 +1101,19 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	sb->s_flags &= ~(SB_NOSEC | SB_I_VERSION);
- 
--	if (!parse_fuse_opt(data, &d, is_bdev, sb->s_user_ns))
--		goto err;
--
- 	if (is_bdev) {
- #ifdef CONFIG_BLOCK
- 		err = -EINVAL;
--		if (!sb_set_blocksize(sb, d.blksize))
-+		if (!sb_set_blocksize(sb, ctx->blksize))
- 			goto err;
- #endif
- 	} else {
- 		sb->s_blocksize = PAGE_SIZE;
- 		sb->s_blocksize_bits = PAGE_SHIFT;
- 	}
-+
-+	sb->s_subtype = ctx->subtype;
-+	ctx->subtype = NULL;
- 	sb->s_magic = FUSE_SUPER_MAGIC;
- 	sb->s_op = &fuse_super_operations;
- 	sb->s_xattr = fuse_xattr_handlers;
-@@ -1116,7 +1124,7 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 	if (sb->s_user_ns != &init_user_ns)
- 		sb->s_iflags |= SB_I_UNTRUSTED_MOUNTER;
- 
--	file = fget(d.fd);
-+	file = fget(ctx->fd);
- 	err = -EINVAL;
- 	if (!file)
- 		goto err;
-@@ -1159,17 +1167,17 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 		fc->dont_mask = 1;
- 	sb->s_flags |= SB_POSIXACL;
- 
--	fc->default_permissions = d.default_permissions;
--	fc->allow_other = d.allow_other;
--	fc->user_id = d.user_id;
--	fc->group_id = d.group_id;
--	fc->max_read = max_t(unsigned, 4096, d.max_read);
-+	fc->default_permissions = ctx->default_permissions;
-+	fc->allow_other = ctx->allow_other;
-+	fc->user_id = ctx->user_id;
-+	fc->group_id = ctx->group_id;
-+	fc->max_read = max_t(unsigned, 4096, ctx->max_read);
- 
- 	/* Used by get_root_inode() */
- 	sb->s_fs_info = fc;
- 
- 	err = -ENOMEM;
--	root = fuse_get_root_inode(sb, d.rootmode);
-+	root = fuse_get_root_inode(sb, ctx->rootmode);
- 	sb->s_d_op = &fuse_root_dentry_operations;
- 	root_dentry = d_make_root(root);
- 	if (!root_dentry)
-@@ -1229,11 +1237,50 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
- 	return err;
- }
- 
--static struct dentry *fuse_mount(struct file_system_type *fs_type,
--		       int flags, const char *dev_name,
--		       void *raw_data)
-+static int fuse_get_tree(struct fs_context *fc)
- {
--	return mount_nodev(fs_type, flags, raw_data, fuse_fill_super);
-+	struct fuse_fs_context *ctx = fc->fs_private;
-+
-+	if (!ctx->fd_present || !ctx->rootmode_present ||
-+	    !ctx->user_id_present || !ctx->group_id_present)
-+		return -EINVAL;
-+
-+#ifdef CONFIG_BLOCK
-+	if (ctx->is_bdev)
-+		return vfs_get_block_super(fc, fuse_fill_super);
-+#endif
-+
-+	return get_tree_nodev(fc, fuse_fill_super);
-+}
-+
-+static const struct fs_context_operations fuse_context_ops = {
-+	.free		= fuse_free_fc,
-+	.parse_param	= fuse_parse_param,
-+	.get_tree	= fuse_get_tree,
-+};
-+
-+/*
-+ * Set up the filesystem mount context.
-+ */
-+static int fuse_init_fs_context(struct fs_context *fc)
-+{
-+	struct fuse_fs_context *ctx;
-+
-+	ctx = kzalloc(sizeof(struct fuse_fs_context), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ctx->max_read = ~0;
-+	ctx->blksize = FUSE_DEFAULT_BLKSIZE;
-+
-+#ifdef CONFIG_BLOCK
-+	if (fc->fs_type == &fuseblk_fs_type)
-+		ctx->is_bdev = true;
-+#endif
-+
-+	fc->fs_private = ctx;
-+	fc->ops = &fuse_context_ops;
-+	return 0;
- }
- 
- static void fuse_sb_destroy(struct super_block *sb)
-@@ -1262,19 +1309,13 @@ static struct file_system_type fuse_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "fuse",
- 	.fs_flags	= FS_HAS_SUBTYPE | FS_USERNS_MOUNT,
--	.mount		= fuse_mount,
-+	.init_fs_context = fuse_init_fs_context,
-+	.parameters	= &fuse_fs_parameters,
- 	.kill_sb	= fuse_kill_sb_anon,
- };
- MODULE_ALIAS_FS("fuse");
- 
- #ifdef CONFIG_BLOCK
--static struct dentry *fuse_mount_blk(struct file_system_type *fs_type,
--			   int flags, const char *dev_name,
--			   void *raw_data)
--{
--	return mount_bdev(fs_type, flags, dev_name, raw_data, fuse_fill_super);
--}
--
- static void fuse_kill_sb_blk(struct super_block *sb)
- {
- 	fuse_sb_destroy(sb);
-@@ -1284,7 +1325,8 @@ static void fuse_kill_sb_blk(struct super_block *sb)
- static struct file_system_type fuseblk_fs_type = {
- 	.owner		= THIS_MODULE,
- 	.name		= "fuseblk",
--	.mount		= fuse_mount_blk,
-+	.init_fs_context = fuse_init_fs_context,
-+	.parameters	= &fuse_fs_parameters,
- 	.kill_sb	= fuse_kill_sb_blk,
- 	.fs_flags	= FS_REQUIRES_DEV | FS_HAS_SUBTYPE,
- };
--- 
-2.21.0
-
+Rml4IHNwYWNpbmcgc28gdGhhdCBib3RoIHRoZSBoZWFkZXJzIGluIHRoZW1zZWx2ZXMsIGFzIHdl
+bGwgYXMgdGhlDQpvdXRwdXQgb2YgdGhlIHR3byB0YWJsZXMgcmVsYXRlZCB0byBlYWNoIG90aGVy
+LCBhcmUgcHJvcGVybHkgYWxpZ25lZC4NCg0KU2lnbmVkLW9mZi1ieTogRmxvcmlhbiBTY2htaWR0
+IDxmbG9yaWFuLnNjaG1pZHRAbnV0YW5peC5jb20+DQotLS0NCiBEb2N1bWVudGF0aW9uL3RyYWNl
+L3Bvc3Rwcm9jZXNzL3RyYWNlLXZtc2Nhbi1wb3N0cHJvY2Vzcy5wbCB8IDYgKysrLS0tDQogMSBm
+aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vdHJhY2UvcG9zdHByb2Nlc3MvdHJhY2Utdm1zY2FuLXBvc3Rwcm9j
+ZXNzLnBsIGIvRG9jdW1lbnRhdGlvbi90cmFjZS9wb3N0cHJvY2Vzcy90cmFjZS12bXNjYW4tcG9z
+dHByb2Nlc3MucGwNCmluZGV4IDZjNGUzZmRlOTQ0Ny4uNWE1ZDcwMDI5YzQxIDEwMDY0NA0KLS0t
+IGEvRG9jdW1lbnRhdGlvbi90cmFjZS9wb3N0cHJvY2Vzcy90cmFjZS12bXNjYW4tcG9zdHByb2Nl
+c3MucGwNCisrKyBiL0RvY3VtZW50YXRpb24vdHJhY2UvcG9zdHByb2Nlc3MvdHJhY2Utdm1zY2Fu
+LXBvc3Rwcm9jZXNzLnBsDQpAQCAtNTc1LDggKzU3NSw4IEBAIHN1YiBkdW1wX3N0YXRzIHsNCiAN
+CiAJIyBQcmludCBvdXQga3N3YXBkIGFjdGl2aXR5DQogCXByaW50ZigiXG4iKTsNCi0JcHJpbnRm
+KCIlLSIgLiAkbWF4X3N0cmxlbiAuICJzICU4cyAlMTBzICAgJThzICAgJThzICU4cyAlOHNcbiIs
+ICJLc3dhcGQiLCAgICJLc3dhcGQiLCAgIk9yZGVyIiwgICAgICJQYWdlcyIsICAgIlBhZ2VzIiwg
+ICAiUGFnZXMiLCAgIlBhZ2VzIik7DQotCXByaW50ZigiJS0iIC4gJG1heF9zdHJsZW4gLiAicyAl
+OHMgJTEwcyAgICU4cyAgICU4cyAlOHMgJThzXG4iLCAiSW5zdGFuY2UiLCAiV2FrZXVwcyIsICJS
+ZS13YWtldXAiLCAiU2Nhbm5lZCIsICJSY2xtZWQiLCAgIlN5bmMtSU8iLCAiQVN5bmMtSU8iKTsN
+CisJcHJpbnRmKCIlLSIgLiAkbWF4X3N0cmxlbiAuICJzICU4cyAlMTBzICAgJThzICAlOHMgJThz
+ICU4c1xuIiwgIktzd2FwZCIsICAgIktzd2FwZCIsICAiT3JkZXIiLCAgICAgIlBhZ2VzIiwgICAi
+UGFnZXMiLCAgICJQYWdlcyIsICAiUGFnZXMiKTsNCisJcHJpbnRmKCIlLSIgLiAkbWF4X3N0cmxl
+biAuICJzICU4cyAlMTBzICAgJThzICAlOHMgJThzICU4c1xuIiwgIkluc3RhbmNlIiwgIldha2V1
+cHMiLCAiUmUtd2FrZXVwIiwgIlNjYW5uZWQiLCAiUmNsbWVkIiwgICJTeW5jLUlPIiwgIkFTeW5j
+LUlPIik7DQogCWZvcmVhY2ggJHByb2Nlc3NfcGlkIChrZXlzICVzdGF0cykgew0KIA0KIAkJaWYg
+KCEkc3RhdHN7JHByb2Nlc3NfcGlkfS0+e01NX1ZNU0NBTl9LU1dBUERfV0FLRX0pIHsNCkBAIC01
+OTUsNyArNTk1LDcgQEAgc3ViIGR1bXBfc3RhdHMgew0KIAkJJHRvdGFsX2tzd2FwZF93cml0ZXBh
+Z2VfZmlsZV9hc3luYyArPSAkc3RhdHN7JHByb2Nlc3NfcGlkfS0+e01NX1ZNU0NBTl9XUklURVBB
+R0VfRklMRV9BU1lOQ307DQogCQkkdG90YWxfa3N3YXBkX3dyaXRlcGFnZV9hbm9uX2FzeW5jICs9
+ICRzdGF0c3skcHJvY2Vzc19waWR9LT57TU1fVk1TQ0FOX1dSSVRFUEFHRV9BTk9OX0FTWU5DfTsN
+CiANCi0JCXByaW50ZigiJS0iIC4gJG1heF9zdHJsZW4gLiAicyAlOGQgJTEwZCAgICU4dSAlOHUg
+ICU4aSAlOHUiLA0KKwkJcHJpbnRmKCIlLSIgLiAkbWF4X3N0cmxlbiAuICJzICU4ZCAlMTBkICAl
+OHUgICAlOHUgJThpICU4dSAgICAgICAgICIsDQogCQkJJHByb2Nlc3NfcGlkLA0KIAkJCSRzdGF0
+c3skcHJvY2Vzc19waWR9LT57TU1fVk1TQ0FOX0tTV0FQRF9XQUtFfSwNCiAJCQkkc3RhdHN7JHBy
+b2Nlc3NfcGlkfS0+e0hJR0hfS1NXQVBEX1JFV0FLRVVQfSwNCi0tIA0KMi4yMy4wLnJjMQ0KDQo=
