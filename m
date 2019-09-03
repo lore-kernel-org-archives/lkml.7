@@ -2,145 +2,164 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAF4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F408DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B818F206BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D433522D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfICJqJ (ORCPT
+        id S1728623AbfICJqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:46:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:35000 "EHLO foss.arm.com"
+        Tue, 3 Sep 2019 05:46:13 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11447 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728593AbfICJqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728592AbfICJqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 05:46:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 931B91570;
-        Tue,  3 Sep 2019 02:46:08 -0700 (PDT)
-Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.170])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B19A73F59C;
-        Tue,  3 Sep 2019 02:46:01 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, will@kernel.org
-Cc:     mark.rutland@arm.com, mhocko@suse.com, ira.weiny@intel.com,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
-Subject: [PATCH V7 1/3] mm/hotplug: Reorder memblock_[free|remove]() calls in try_remove_memory()
-Date:   Tue,  3 Sep 2019 15:15:56 +0530
-Message-Id: <1567503958-25831-2-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
-References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 02:46:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
+   d="scan'208";a="187200218"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 03 Sep 2019 02:46:05 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1i55O1-000FcR-BB; Tue, 03 Sep 2019 17:46:05 +0800
+Date:   Tue, 3 Sep 2019 17:45:47 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     kbuild-all@01.org, Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 3/3] task: Clean house now that tasks on the runqueue are
+ rcu protected
+Message-ID: <201909031743.p1GcoXXk%lkp@intel.com>
+References: <8736het20c.fsf_-_@x220.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8736het20c.fsf_-_@x220.int.ebiederm.org>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
-entries between memory block and node. It first checks pfn validity with
-pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
-(arm64 has this enabled) pfn_valid_within() calls pfn_valid().
+Hi "Eric,
 
-pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
-which scans all mapped memblock regions with memblock_is_map_memory(). This
-creates a problem in memory hot remove path which has already removed given
-memory range from memory block with memblock_[remove|free] before arriving
-at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
-skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
-sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
-of existing sysfs entries.
+Thank you for the patch! Perhaps something to improve:
 
-[   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
-[   62.052517] ------------[ cut here ]------------
-[   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
-[   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-[   62.054589] Modules linked in:
-[   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
-[   62.056274] Hardware name: linux,dummy-virt (DT)
-[   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
-[   62.058083] pc : add_memory_resource+0x1cc/0x1d8
-[   62.058961] lr : add_memory_resource+0x10c/0x1d8
-[   62.059842] sp : ffff0000168b3ce0
-[   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
-[   62.061501] x27: 0000000000000000 x26: 0000000000000000
-[   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
-[   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
-[   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
-[   62.065558] x19: 0000000000680000 x18: 0000000000000024
-[   62.066566] x17: 0000000000000000 x16: 0000000000000000
-[   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
-[   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
-[   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
-[   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
-[   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
-[   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
-[   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
-[   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
-[   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
-[   62.076930] Call trace:
-[   62.077411]  add_memory_resource+0x1cc/0x1d8
-[   62.078227]  __add_memory+0x70/0xa8
-[   62.078901]  probe_store+0xa4/0xc8
-[   62.079561]  dev_attr_store+0x18/0x28
-[   62.080270]  sysfs_kf_write+0x40/0x58
-[   62.080992]  kernfs_fop_write+0xcc/0x1d8
-[   62.081744]  __vfs_write+0x18/0x40
-[   62.082400]  vfs_write+0xa4/0x1b0
-[   62.083037]  ksys_write+0x5c/0xc0
-[   62.083681]  __arm64_sys_write+0x18/0x20
-[   62.084432]  el0_svc_handler+0x88/0x100
-[   62.085177]  el0_svc+0x8/0xc
+[auto build test WARNING on linus/master]
+[cannot apply to v5.3-rc7 next-20190902]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Re-ordering memblock_[free|remove]() with arch_remove_memory() solves the
-problem on arm64 as pfn_valid() behaves correctly and returns positive
-as memblock for the address range still exists. arch_remove_memory()
-removes applicable memory sections from zone with __remove_pages() and
-tears down kernel linear mapping. Removing memblock regions afterwards
-is safe because there is no other memblock (bootmem) allocator user that
-late. So nobody is going to allocate from the removed range just to blow
-up later. Also nobody should be using the bootmem allocated range else
-we wouldn't allow to remove it. So reordering is indeed safe.
+url:    https://github.com/0day-ci/linux/commits/Eric-W-Biederman/task-Making-tasks-on-the-runqueue-rcu-protected/20190903-130546
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> kernel/sched/membarrier.c:74:21: sparse: sparse: incompatible types in comparison expression (different address spaces):
+>> kernel/sched/membarrier.c:74:21: sparse:    struct task_struct [noderef] <asn:4> *
+>> kernel/sched/membarrier.c:74:21: sparse:    struct task_struct *
+   kernel/sched/membarrier.c:153:21: sparse: sparse: incompatible types in comparison expression (different address spaces):
+   kernel/sched/membarrier.c:153:21: sparse:    struct task_struct [noderef] <asn:4> *
+   kernel/sched/membarrier.c:153:21: sparse:    struct task_struct *
+
+vim +74 kernel/sched/membarrier.c
+
+    32	
+    33	static int membarrier_global_expedited(void)
+    34	{
+    35		int cpu;
+    36		bool fallback = false;
+    37		cpumask_var_t tmpmask;
+    38	
+    39		if (num_online_cpus() == 1)
+    40			return 0;
+    41	
+    42		/*
+    43		 * Matches memory barriers around rq->curr modification in
+    44		 * scheduler.
+    45		 */
+    46		smp_mb();	/* system call entry is not a mb. */
+    47	
+    48		/*
+    49		 * Expedited membarrier commands guarantee that they won't
+    50		 * block, hence the GFP_NOWAIT allocation flag and fallback
+    51		 * implementation.
+    52		 */
+    53		if (!zalloc_cpumask_var(&tmpmask, GFP_NOWAIT)) {
+    54			/* Fallback for OOM. */
+    55			fallback = true;
+    56		}
+    57	
+    58		cpus_read_lock();
+    59		for_each_online_cpu(cpu) {
+    60			struct task_struct *p;
+    61	
+    62			/*
+    63			 * Skipping the current CPU is OK even through we can be
+    64			 * migrated at any point. The current CPU, at the point
+    65			 * where we read raw_smp_processor_id(), is ensured to
+    66			 * be in program order with respect to the caller
+    67			 * thread. Therefore, we can skip this CPU from the
+    68			 * iteration.
+    69			 */
+    70			if (cpu == raw_smp_processor_id())
+    71				continue;
+    72	
+    73			rcu_read_lock();
+  > 74			p = rcu_dereference(cpu_rq(cpu)->curr);
+    75			if (p && p->mm && (atomic_read(&p->mm->membarrier_state) &
+    76					   MEMBARRIER_STATE_GLOBAL_EXPEDITED)) {
+    77				if (!fallback)
+    78					__cpumask_set_cpu(cpu, tmpmask);
+    79				else
+    80					smp_call_function_single(cpu, ipi_mb, NULL, 1);
+    81			}
+    82			rcu_read_unlock();
+    83		}
+    84		if (!fallback) {
+    85			preempt_disable();
+    86			smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
+    87			preempt_enable();
+    88			free_cpumask_var(tmpmask);
+    89		}
+    90		cpus_read_unlock();
+    91	
+    92		/*
+    93		 * Memory barrier on the caller thread _after_ we finished
+    94		 * waiting for the last IPI. Matches memory barriers around
+    95		 * rq->curr modification in scheduler.
+    96		 */
+    97		smp_mb();	/* exit from system call is not a mb */
+    98		return 0;
+    99	}
+   100	
+
 ---
- mm/memory_hotplug.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index c73f09913165..355c466e0621 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1770,13 +1770,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
- 
- 	/* remove memmap entry */
- 	firmware_map_remove(start, start + size, "System RAM");
--	memblock_free(start, size);
--	memblock_remove(start, size);
- 
- 	/* remove memory block devices before removing memory */
- 	remove_memory_block_devices(start, size);
- 
- 	arch_remove_memory(nid, start, size, NULL);
-+	memblock_free(start, size);
-+	memblock_remove(start, size);
- 	__release_memory_resource(start, size);
- 
- 	try_offline_node(nid);
--- 
-2.20.1
-
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
