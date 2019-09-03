@@ -2,91 +2,108 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C27C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:44:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA7E2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C31A23697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Rj3jWCV9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hgBpb1Hg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A+gZ6QEs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j7w/Kur1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbfICNoW (ORCPT
+        id S1729393AbfICNp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:44:22 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55046 "EHLO
+        Tue, 3 Sep 2019 09:45:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55756 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728854AbfICNoV (ORCPT
+        with ESMTP id S1727624AbfICNp5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:44:21 -0400
+        Tue, 3 Sep 2019 09:45:57 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6A8D9608FF; Tue,  3 Sep 2019 13:44:19 +0000 (UTC)
+        id 03455607C3; Tue,  3 Sep 2019 13:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567518260;
-        bh=S87jAdIzNJ4HJS3B9OrtK4jGRfZUJGaxJeLtOQb91mQ=;
+        s=default; t=1567518356;
+        bh=8MtYQPJtCCG1I+6U/438W5qf6/QsXnNCsuIDqRRNfbY=;
         h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=Rj3jWCV9W2rtqmJW/rgg9ZrCunRclUAtqk40oYfOg/2218FudtqQypWGYLCoz7NYF
-         VVKIJcWY4wMGeNuDUmsOrHozH1bm1RaW6SAmgE+uyXtgrDo73h+vTrfa6AK4xjH635
-         PsJClmtm8EMcivC3KuKmxzE6rsCDPL1HAggSmb5U=
+        b=A+gZ6QEsC/ll3TPk4tjHG99YrINSuJC/UJ84PVmIW4OOEiKN4Epr6jJqt+dKSuWds
+         zu4G++k5YCmr2T8j+OTSw7ADNZYhk6d2qNLL436HDlsps7vmqNuWH7Y0J/ZlxLOUIu
+         XRyil3F9BjnV2Ukv/Mpsg1F5U2m/EIMZPRR17BXU=
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B72D060592;
-        Tue,  3 Sep 2019 13:44:17 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A761E602A9;
+        Tue,  3 Sep 2019 13:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567518259;
-        bh=S87jAdIzNJ4HJS3B9OrtK4jGRfZUJGaxJeLtOQb91mQ=;
+        s=default; t=1567518355;
+        bh=8MtYQPJtCCG1I+6U/438W5qf6/QsXnNCsuIDqRRNfbY=;
         h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=hgBpb1HgXrKmujql76Xuq3Pp1dqWDkpNs1e9aiihdaXjALsugTkDO5wpShGRKL4Ij
-         Nr7W/qVo9kGZGnDU8n2/W0AAZbEgKm/gCkBhmzRxX93zYbUfYZPY1xhFaUQRSzILrn
-         NbfSfLSqrmLFFIlw/HMX3KmvKyLPd4C+GwF3LDpM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B72D060592
+        b=j7w/Kur1P/Zm59AjGDGKckWzdgryME7rOH//1nD3YM240//d5I36GBWnCq9XIHqPv
+         AJSKhX2FUyLwXs7PHkMK5yz/aIkrZKOo1kx4PKuqpS0yPptd6VsH8jBmxrUmlIh+4R
+         bx5eE0rKMCujLoVxyaRr88JFHGxly7SmoJBD172Q=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A761E602A9
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH][V2] bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
+Subject: Re: [PATCH][next] zd1211rw: zd_usb: Use struct_size() helper
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190827081620.20998-1-colin.king@canonical.com>
-References: <20190827081620.20998-1-colin.king@canonical.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
-        =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        linux-wireless@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+In-Reply-To: <20190830185716.GA10044@embeddedor>
+References: <20190830185716.GA10044@embeddedor>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Daniel Drake <dsd@gentoo.org>, Ulrich Kunitz <kune@deine-taler.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190903134420.6A8D9608FF@smtp.codeaurora.org>
-Date:   Tue,  3 Sep 2019 13:44:19 +0000 (UTC)
+Message-Id: <20190903134556.03455607C3@smtp.codeaurora.org>
+Date:   Tue,  3 Sep 2019 13:45:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Colin King <colin.king@canonical.com> wrote:
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
 
-> From: Colin Ian King <colin.king@canonical.com>
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
 > 
-> An earlier commit re-worked the setting of the bitmask and is now
-> assigning v with some bit flags rather than bitwise or-ing them
-> into v, consequently the earlier bit-settings of v are being lost.
-> Fix this by replacing an assignment with the bitwise or instead.
+> struct usb_int_regs {
+> 	...
+>         struct reg_data regs[0];
+> } __packed;
 > 
-> Addresses-Coverity: ("Unused value")
-> Fixes: 2be25cac8402 ("bcma: add constants for PCI and use them")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+> 
+> So, replace the following function:
+> 
+> static int usb_int_regs_length(unsigned int count)
+> {
+>        return sizeof(struct usb_int_regs) + count * sizeof(struct reg_data);
+> }
+> 
+> with:
+> 
+> struct_size(regs, regs, count)
+> 
+> This code was detected with the help of Coccinelle.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
 Patch applied to wireless-drivers-next.git, thanks.
 
-420c20be08a4 bcma: fix incorrect update of BCMA_CORE_PCI_MDIO_DATA
+84b0b6635247 zd1211rw: zd_usb: Use struct_size() helper
 
 -- 
-https://patchwork.kernel.org/patch/11116317/
+https://patchwork.kernel.org/patch/11124457/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
