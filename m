@@ -2,70 +2,127 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D44C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB5CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B391A20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E8C20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5WaH2n/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbfICOFI (ORCPT
+        id S1729417AbfICOFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:05:08 -0400
-Received: from www62.your-server.de ([213.133.104.62]:51478 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfICOFI (ORCPT
+        Tue, 3 Sep 2019 10:05:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41262 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICOFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:05:08 -0400
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i59Qf-0004U9-TM; Tue, 03 Sep 2019 16:05:05 +0200
-Received: from [178.197.249.19] (helo=pc-63.home)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1i59Qf-000CjB-Mh; Tue, 03 Sep 2019 16:05:05 +0200
-Subject: Re: [PATCH bpf-next] arm64: bpf: optimize modulo operation
-To:     jerinj@marvell.com, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "open list:BPF JIT for ARM64" <bpf@vger.kernel.org>,
-        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190902061448.28252-1-jerinj@marvell.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <4da4bb59-5578-6981-55b7-5dbc4f0a8254@iogearbox.net>
-Date:   Tue, 3 Sep 2019 16:05:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 3 Sep 2019 10:05:17 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m9so7940207pls.8;
+        Tue, 03 Sep 2019 07:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qtPPg5GqUhEobWxZd2+sHLIYtebNTUnoITCh7ZrUMVw=;
+        b=q5WaH2n/KEV7bv90Rzgt4ZxK6vTg4R3z/QjtWRq9YmtVxEgl1bSDYsI28rRpFhMOUY
+         ty/MkrHMs3Kku2/prOEGnwtMlVDOTWJjwi3ewVOTcqKlbqqXH0aypsVkvih1oE3S1fFj
+         RpLFBXtbECANC3dQXCrOz/r6ge05qOha7+DmmvPi5DIWzHcMYs5LO4ckS0gh+g2Qy90l
+         VYhilCAsod2I736k+txNQ6cNwkVAxsjpWIgkkcsJJlBO8kfno25x83vLlZFI9vYervJ0
+         UJC8UrE412R9A2CbrWWuYZUVJeEkKkQsc3QaqB9bpuAmHpbpsWKSu/lOOdHgaXi4gANY
+         v+jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qtPPg5GqUhEobWxZd2+sHLIYtebNTUnoITCh7ZrUMVw=;
+        b=KhgYQIAWFRS6B/D2QQ43DB/7UWosq/3aCqw3avaZP+C5E4lExp9hheN+ewnzhymvdZ
+         CqG3gyDOMKZl5hbRMt1z9vYq2yf+9nv5sx26CXbe55TTysbT+PRxeH6LplOY5dTZN982
+         +kn1x5k+GjbdFge/Mob+t61wK2t0rkLjSklSjUPXUnfyGtpC7Suq1RcUntr9PZr7Xphf
+         sXaldWOUfT5odc0COHNr+w2fqFzNZOvFollAWO6IhU5z43Y7jIiwmigvvpfqfGuz74uS
+         TbKUtvTkqqYAqJsJfn9Hjr9QUhu3uh8uCswlzwTL/2EXjzLeKKE6g3RcCxFct49mbjW9
+         1+Dg==
+X-Gm-Message-State: APjAAAUzDpo/b5DWdbltltyCqo4NunDqLaMLR701LscaWFTTKvuZO8LQ
+        cSzeWuVUrLp0qKf4p82dUb0=
+X-Google-Smtp-Source: APXvYqzkqnsdir2zt5OJPtTipf1rSsjwGymZG1cnM9kXXpM+tj3z1yhdNDaMT7pwxwBSXTpc9VEM+A==
+X-Received: by 2002:a17:902:9041:: with SMTP id w1mr36170722plz.83.1567519517159;
+        Tue, 03 Sep 2019 07:05:17 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q186sm6777816pfb.47.2019.09.03.07.05.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 07:05:16 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 07:05:15 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kbuild-all@01.org
+Subject: Re: [PATCH] hwmon: fix devm_platform_ioremap_resource.cocci warnings
+Message-ID: <20190903140515.GA16775@roeck-us.net>
+References: <alpine.DEB.2.21.1909030646180.3228@hadrien>
 MIME-Version: 1.0
-In-Reply-To: <20190902061448.28252-1-jerinj@marvell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25561/Tue Sep  3 10:24:26 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909030646180.3228@hadrien>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/19 8:14 AM, jerinj@marvell.com wrote:
-> From: Jerin Jacob <jerinj@marvell.com>
+On Tue, Sep 03, 2019 at 06:47:52AM +0200, Julia Lawall wrote:
+> From: kbuild test robot <lkp@intel.com>
 > 
-> Optimize modulo operation instruction generation by
-> using single MSUB instruction vs MUL followed by SUB
-> instruction scheme.
+>  Use devm_platform_ioremap_resource helper which wraps
+>  platform_get_resource() and devm_ioremap_resource() together.
 > 
-> Signed-off-by: Jerin Jacob <jerinj@marvell.com>
+> Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
+> 
+> Fixes: 658e687b4218 ("hwmon: Add Synaptics AS370 PVT sensor driver")
+> CC: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+> Reviewed-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 
-Applied, thanks!
+Applied to hwmon-next.
+
+Thanks,
+Guenter
+
+> ---
+> 
+> tree:   https://kernel.googlesource.com/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+> head:   9c551fac9ea9629cdc6deb205292c2bbe7b38917
+> commit: 658e687b4218b42d03a5b0b79a292c9c48f1ddaf [32/34] hwmon: Add Synaptics AS370 PVT sensor driver
+> :::::: branch date: 7 hours ago
+> :::::: commit date: 7 hours ago
+> 
+> Please take the patch only if it's a positive warning. Thanks!
+> 
+>  as370-hwmon.c |    4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> --- a/drivers/hwmon/as370-hwmon.c
+> +++ b/drivers/hwmon/as370-hwmon.c
+> @@ -103,7 +103,6 @@ static const struct hwmon_chip_info as37
+> 
+>  static int as370_hwmon_probe(struct platform_device *pdev)
+>  {
+> -	struct resource *res;
+>  	struct device *hwmon_dev;
+>  	struct as370_hwmon *hwmon;
+>  	struct device *dev = &pdev->dev;
+> @@ -112,8 +111,7 @@ static int as370_hwmon_probe(struct plat
+>  	if (!hwmon)
+>  		return -ENOMEM;
+> 
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	hwmon->base = devm_ioremap_resource(&pdev->dev, res);
+> +	hwmon->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(hwmon->base))
+>  		return PTR_ERR(hwmon->base);
