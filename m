@@ -2,185 +2,183 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2004C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69521C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A853F2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A9022CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 23:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EIQPFezC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hhxlaIHT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfICXXz (ORCPT
+        id S1727379AbfICXcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 19:23:55 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60478 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727312AbfICXXz (ORCPT
+        Tue, 3 Sep 2019 19:32:06 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46611 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726177AbfICXcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 19:23:55 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83NJ1Vl190771;
-        Tue, 3 Sep 2019 23:22:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=UJw1Y7uj9g+SZ5DNCrU6LVe85QHvYGaiIqcF/IakMzU=;
- b=EIQPFezCGZombwumJIllsao9P3vulQ05xy4KvTAHKiCCFloSPNeEKHi5OlHoGrv1KywI
- oEjbyHmiYhG44mYXPnuwylFQ1PzN52amHke/Zqanyf1DeLJs33cQ6c6sQsWUJi6B0oRQ
- Drv2yt+TAm6pTYcek0KfqBPYO68mTLgiaot870Q9pRx0VwCHt2BXwhNyJPg/ILYlstTz
- dHS9ipoRL3q3zFEds5pVEeot46kL4vk7FwkCLqaVvmtonqeSjWLha6eU2qfLzqTt5vVV
- 3oHXFMY1QDUKJMIrPl8SG4xS0YyxidZue22yDHP8mmwjkwJPZQoA39+sbrFauYHxrsKK zA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2ut1qf80je-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 23:22:20 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83NJNdf003211;
-        Tue, 3 Sep 2019 23:20:19 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2us5phdxgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 23:20:19 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x83NKGsT015382;
-        Tue, 3 Sep 2019 23:20:16 GMT
-Received: from [192.168.14.112] (/79.176.230.160)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 16:20:16 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH 2/2] KVM: SVM: Disable posted interrupts for odd IRQs
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20190903142954.3429-3-graf@amazon.com>
-Date:   Wed, 4 Sep 2019 02:20:08 +0300
-Cc:     kvm list <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7AEDDBE7-138A-455F-957C-C2DE64BD8B06@oracle.com>
-References: <20190903142954.3429-1-graf@amazon.com>
- <20190903142954.3429-3-graf@amazon.com>
-To:     Alexander Graf <graf@amazon.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909030234
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909030234
+        Tue, 3 Sep 2019 19:32:05 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q5so4049515pfg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 16:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LfTKMbZe2QVHemXyI/fIb1Ivk454nudy7JvQKOTshZI=;
+        b=hhxlaIHTv3gXPMOEiEPTnhAjD9Y6bAgnhOJMrJaoKWITBLAEEXo3g+Dr2AbD2y2cNW
+         aVavGUpAgsD4jBtLtEdcSxEL4wLAtcHcQKJ+FN+dvjfpwYreNISdkKS6biYVAK6DtoAA
+         Zk0HK2Zi15ceZYkRx0KmoAQUwfHZ/KUWv1S/klYU/mGRS+G98nPqD3x9ggg1VsPL/TRD
+         tan1EttguFZmZzPYbMfKngbDKfMfRPDmpDkOw1ekyVuS2GOV7CzX1zIu+KtLeRFee8U3
+         p7MkywnwKuyKa3RQPnqFQoCteQJuhSKOBDHg/btqO/Wkmv67b/R11k8TlQP68drElMhr
+         MsEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LfTKMbZe2QVHemXyI/fIb1Ivk454nudy7JvQKOTshZI=;
+        b=GRIW4yOZxxsMwJErZCPZEeniznEN2LQ9dQluYnKXHqvuveKxxX6oKmR5msEkKV53mD
+         nGfwFHw0bkAbreX4419+oVS+uE5EoOTl9bK2/1R8jcKGTdU3B2DCCHeknGoxH22qCPir
+         vS7ODb+/PoCbc244WjQlyS0SN8dicYvoVUzEORzHSdJp4eHyOqgmwSkd376gtE4Of5LH
+         c+2drjDvsgHEy4JXF6HubwlxlKqtAxaYlKSR/NOS13V9ywNncnGGoZXP+NFfc2aYHGzL
+         rm+daz6ZeDFKgliqdSWUePTzHQeyrAmbAWcJs9j4kX7HVUlTGttVeuT2TdD035YPWhuL
+         y2RA==
+X-Gm-Message-State: APjAAAV858rwXnKinQFWdHnHMnHSI06CEgrqCX5CM+x/pT/3fVJD2/YT
+        S3N5u78eFZFQCWqG2pQTN/0tzA==
+X-Google-Smtp-Source: APXvYqzOEVmuwaiwOAKa84Gb6UNz3WotsIqSI/TBfnStU4C0+10SnuM4+VTmlepgJynzri/fsmD3jg==
+X-Received: by 2002:a63:3fc9:: with SMTP id m192mr33069603pga.429.1567553524617;
+        Tue, 03 Sep 2019 16:32:04 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id a29sm29714392pfr.152.2019.09.03.16.32.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 16:32:03 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 16:34:10 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Jack Pham <jackp@codeaurora.org>,
+        Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>,
+        robh@kernel.org, andy.gross@linaro.org, shawn.guo@linaro.org,
+        gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
+Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY
+ bindings
+Message-ID: <20190903233410.GQ26807@tuxbook-pro>
+References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org>
+ <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org>
+ <20190223165218.GB572@tuxbook-pro>
+ <6dc0957d-5806-7643-4454-966015865d38@linaro.org>
+ <5d694878.1c69fb81.5f13b.ec4f@mx.google.com>
+ <20190830164520.GK26807@tuxbook-pro>
+ <5d696ad2.1c69fb81.977ea.39e5@mx.google.com>
+ <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org>
+ <20190903173924.GB9754@jackp-linux.qualcomm.com>
+ <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 03 Sep 14:45 PDT 2019, Stephen Boyd wrote:
+
+> Quoting Jack Pham (2019-09-03 10:39:24)
+> > On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
+> > > On 8/30/19 20:28, Stephen Boyd wrote:
+> > > > Quoting Bjorn Andersson (2019-08-30 09:45:20)
+> > > >> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
+> > > >>
+> > > >>>>>
+> > > >>>>> The USB-C connector is attached both to the HS and SS PHYs, so I think
+> > > >>>>> you should represent this external to this node and use of_graph to
+> > > >>>>> query it.
+> > > >>>>
+> > > >>>> but AFAICS we wont be able to retrieve the vbux-supply from an external
+> > > >>>> node (that interface does not exist).
+> > > >>>>
+> > > >>>> rob, do you have a suggestion?
+> > > >>>
+> > > >>> Shouldn't the vbus supply be in the phy? Or is this a situation where
+> > > >>> the phy itself doesn't have the vbus supply going to it because the PMIC
+> > > >>> gets in the way and handles the vbus for the connector by having the SoC
+> > > >>> communicate with the PMIC about when to turn the vbus on and off, etc?
+> > > >>>
+> > > >>
+> > > >> That's correct, the VBUS comes out of the PMIC and goes directly to the
+> > > >> connector.
+> > > >>
+> > > >> The additional complicating factor here is that the connector is wired
+> > > >> to a USB2 phy as well, so we need to wire up detection and vbus control
+> > > >> to both of them - but I think this will be fine, if we can only figure
+> > > >> out a sane way of getting hold of the vbus-supply.
+> > > >>
+> > > > 
+> > > > Does it really matter to describe this situation though? Maybe it's
+> > > > simpler to throw the vbus supply into the phy and control it from the
+> > > > phy driver, even if it never really goes there. Or put it into the
+> > > > toplevel usb controller?
+> > > > 
+> > > that would work for me - the connector definition seemed a better way to
+> > > explain the connectivity but since we cant retrieve the supply from the
+> > > external node is not of much functional use.
+> > > 
+> > > but please let me know how to proceed. shall I add the supply back to
+> > > the phy?
+> 
+> So does the vbus actually go to the phy? I thought it never went there
+> and the power for the phy was different (and possibly lower in voltage).
+> 
+
+No, the PHYs use different - lower voltage - supplies to operate. VBUS
+is coming from a 5V supply straight to the connector and plug-detect
+logic (which is passive in this design).
+
+> > 
+> > Putting it in the toplevel usb node makes sense to me, since that's
+> > usually the driver that knows when it's switching into host mode and
+> > needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't 
+> > do this but there's precedent in a couple of the other dwc3 "glues"--see
+> > Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
+> > 
+> > One exception is if the PMIC is also USB-PD capable and can do power
+> > role swap, in which case the VBUS control needs to be done by the TCPM,
+> > so that'd be a case where having vbus-supply in the connector node might
+> > make more sense.
+> > 
+> 
+> The other way is to implement the code to get the vbus supply out of a
+> connector. Then any driver can do the work if it knows it needs to and
+> we don't have to care that the vbus isn't going somewhere. I suppose
+> that would need an of_regulator_get() sort of API that can get the
+> regulator out of there? Or to make the connector into a struct device
+> that can get the regulator out per some generic connector driver and
+> then pass it through to the USB controller when it asks for it. Maybe
+> try to prototype that out?
+> 
+
+The examples given in the DT bindings describes the connector as a child
+of a PMIC, with of_graph somehow tying it to the various inputs. But in
+these examples vbus is handled by implicitly inside the MFD, where
+extcon is informed about the plug event they toggle vbus as well.
+
+In our case we have a extcon-usb-gpio to detect mode, which per Jorge's
+proposal will trickle down to the PHY and become a regulator calls on
+either some external regulator or more typically one of the chargers in
+the system.
 
 
-> On 3 Sep 2019, at 17:29, Alexander Graf <graf@amazon.com> wrote:
->=20
-> We can easily route hardware interrupts directly into VM context when
-> they target the "Fixed" or "LowPriority" delivery modes.
->=20
-> However, on modes such as "SMI" or "Init", we need to go via KVM code
-> to actually put the vCPU into a different mode of operation, so we can
-> not post the interrupt
->=20
-> Add code in the SVM PI logic to explicitly refuse to establish posted
-> mappings for advanced IRQ deliver modes.
->=20
-> This fixes a bug I have with code which configures real hardware to
-> inject virtual SMIs into my guest.
->=20
-> Signed-off-by: Alexander Graf <graf@amazon.com>
+So if we come up with a struct device for the connector and some API for
+toggling the vbus we're going to have to fairly abstract entities
+representing pretty much the same thing - and in a design with a mux we
+would have a different setup.
 
-Nit: I prefer to squash both commits into one that change both VMX & =
-SVM.
-As it=E2=80=99s exactly the same change.
-
-> ---
-> arch/x86/kvm/svm.c | 16 ++++++++++++++++
-> 1 file changed, 16 insertions(+)
->=20
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 1f220a85514f..9a6ea78c3239 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5266,6 +5266,21 @@ get_pi_vcpu_info(struct kvm *kvm, struct =
-kvm_kernel_irq_routing_entry *e,
-> 		return -1;
-> 	}
->=20
-> +	switch (irq.delivery_mode) {
-> +	case dest_Fixed:
-> +	case dest_LowestPrio:
-> +		break;
-> +	default:
-> +		/*
-> +		 * For non-trivial interrupt events, we need to go
-> +		 * through the full KVM IRQ code, so refuse to take
-> +		 * any direct PI assignments here.
-> +		 */
-> +		pr_debug("SVM: %s: use legacy intr remap mode for irq =
-%u\n",
-> +			 __func__, irq.vector);
-> +		return -1;
-> +	}
-> +
-
-Prefer changing printed string to something different than the =
-!kvm_intr_is_single_vcpu() case.
-To assist debugging.
-
-Having said that,
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-
--Liran
-
-> 	pr_debug("SVM: %s: use GA mode for irq %u\n", __func__,
-> 		 irq.vector);
-> 	*svm =3D to_svm(vcpu);
-> @@ -5314,6 +5329,7 @@ static int svm_update_pi_irte(struct kvm *kvm, =
-unsigned int host_irq,
-> 		 * 1. When cannot target interrupt to a specific vcpu.
-> 		 * 2. Unsetting posted interrupt.
-> 		 * 3. APIC virtialization is disabled for the vcpu.
-> +		 * 4. IRQ has extended delivery mode (SMI, INIT, etc)
-> 		 */
-> 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set =
-&&
-> 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
-> --=20
-> 2.17.1
->=20
->=20
->=20
->=20
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
->=20
->=20
->=20
-
+Regards,
+Bjorn
