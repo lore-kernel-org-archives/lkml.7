@@ -2,91 +2,208 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9F0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE841C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5516A217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79F85217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:33:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cw59jTH8"
+	dkim=pass (2048-bit key) header.d=joaomoreno-com.20150623.gappssmtp.com header.i=@joaomoreno-com.20150623.gappssmtp.com header.b="mZqmbg8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfICSdo (ORCPT
+        id S1726566AbfICSdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:33:44 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33811 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfICSdo (ORCPT
+        Tue, 3 Sep 2019 14:33:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38542 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfICSds (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:33:44 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b24so11334958pfp.1;
-        Tue, 03 Sep 2019 11:33:43 -0700 (PDT)
+        Tue, 3 Sep 2019 14:33:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l11so9726960wrx.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8fPcA2n/gw3WbMf6U41vJ1QWvF2zPzp7zyhN3MXEYHU=;
-        b=Cw59jTH88uVS+Va/wBCMnpIyhKcT9Dw92ntEcxEBuhJFwbCaAmy8++hfXyusGDgNez
-         inMV5uLSyb0TsjeNgzYvk3bAjm+S7ckPGHxbpW1bFsmrERMtVcnwSXGPdNX1LdQjb03K
-         UIROHm2T7k1E6YtQn+VUuvtG8I/znJf8F+yBhIrNCpXiX+e+dIMWY9g/9ilivZMcV72+
-         xbWSQrFd4Fg9ay34H9UqldiQyVGThM6EzzrO2NWxY8wR4K15oy2YTaVrsncE92yQhP99
-         r80PMf5LO4PvZ9MjjxHGjjf5ZZMVsJaAnWq5QUGCiOc9MdQADZRZo1HfI8Qfm/BXDIcj
-         sdOw==
+        d=joaomoreno-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pspeRXdO2j1HTYVZdDPL9GbMWHeSQdfOo4maF+TAMok=;
+        b=mZqmbg8YdNqm34eF30MUz6zRJpRyWQwWiHvgFGGDoIc5o/DLmk4lWlBvIxB1TWT5PS
+         SMt4UNMbxD+X9bDEnkCxLYHz4qaPKkrMwUm+PeqX4UVxc3VcYgI1SR68yWPae4NXD4bw
+         l9RXbjfoGnpmRzR7t+WyAURZLrH/cIILLenAF24VwIaGUxU+I60L6pSbHqpHOIWeoPJ5
+         DcFwJVx7j/RKZrHrAY0/4cW/mcvFR3TOQX8PDwkYZ9/f5P+GgDaI6FIn80XUnmSaT4hr
+         j7F8Ruoiw/0oC2VkRg8jarJnoUHkXyHekZKB/B4gW4s1JiN+KVyGrvWEDhJsOSbnYjk4
+         k9lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8fPcA2n/gw3WbMf6U41vJ1QWvF2zPzp7zyhN3MXEYHU=;
-        b=l9PfEPeH/05pFVHIgaFN5JCVe1f6ephuBiAhyV0ruDJjFopb7j0i6CXfdaNhAdxISc
-         pbiZy8Kft1xfIBT/t7KzvmIG4eJoP2iz+I0Bhm8FsAF0/vaGBKqEZYRKyy49ar3ig5Yv
-         StN4GwVcPGgfZu21SAuqb3n+yGmXPlcfTok0z+alYrkf5qhghRhAdl9FotIyuvGZqQ2n
-         ZtC+e2AfjYiIOwQR3ua92IGkdURat3hm0+lj5clg16iFfOkGx1MG5TT3kuXEHS9/3rZF
-         TbR0M6pREXzvwb5Hds8IoJ+zYIHofD7IpKOv5oCpPt76HEYVKxDbp2gUTaXTRBgxdoo5
-         Mtxw==
-X-Gm-Message-State: APjAAAX3FlQzz9Emz/Kk+oSn2zvmIhj548qMr/N8VsWUYRlyUnPXkEoO
-        AXOCm7ZVdQEFYm15UXtMXVg8Rr1Y
-X-Google-Smtp-Source: APXvYqzMaN+LKRUINHBzLWlDSuuzKG7G8aylSlRYk/1SS1pGn9mlUOUJebB6VBCjDhcuDnthBL0ESA==
-X-Received: by 2002:a62:8246:: with SMTP id w67mr43013468pfd.226.1567535623359;
-        Tue, 03 Sep 2019 11:33:43 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a186sm20119246pge.0.2019.09.03.11.33.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 11:33:42 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 11:33:40 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 0/3] hwmon: convert remaining drivers to
- i2c_new_dummy_device()
-Message-ID: <20190903183340.GA29077@roeck-us.net>
-References: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pspeRXdO2j1HTYVZdDPL9GbMWHeSQdfOo4maF+TAMok=;
+        b=QlM6nZVTdjVZFzGcbp0/MvmVWfq5lL8gISPbB470KE2VcpjtyIvZXIo99e1jBLA8Mo
+         MaWdlTUcSC4HtXQf9wV6H5xCWjNOYvshKgs9ba6aI7ahxBACgZbnRUHZY+Js/OzbLSI+
+         iDYHFQ2PBDjx31BmU7t0oJmj7RCZxepkm1TlFcFzUzCAIX25Mi9p38zjhhbXIarXB7ZX
+         UXqtAPcpHMy9w60q0SKQeMlQrHTOTLSbXqJsqNrOBrsiSWmSfabuMvuS7l68WLa0ZFFf
+         FzR+kYwlnBHQP/RuDPD624ke9757qHWTd8X0tSv0kOckE58uUhfnahX95ezCwX3qnrF6
+         sRWw==
+X-Gm-Message-State: APjAAAVCT93uZIYfbazdJjUvypVMuDlGKsPUcuUoiKgz0hGrtJofw0dZ
+        3TDKVx49Nfu6N5JlJnpIwZ4qqK3UNt6kMD2af4dNew==
+X-Google-Smtp-Source: APXvYqy/XvaP6187x664PfozZKvN1XpiK8C6lANO0NJPJjHlN8sofCs58c1EFb512gWlwYZ/ifV+D642d6Sk2TTlDno=
+X-Received: by 2002:a5d:6211:: with SMTP id y17mr3220387wru.35.1567535625608;
+ Tue, 03 Sep 2019 11:33:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190903144632.26299-1-benjamin.tissoires@redhat.com>
+In-Reply-To: <20190903144632.26299-1-benjamin.tissoires@redhat.com>
+From:   =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
+Date:   Tue, 3 Sep 2019 20:33:34 +0200
+Message-ID: <CAHxFc3SXM6hkbpTGZCsWOk70tByHE8af59ftOBwahY4fL0Sz=g@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: apple: Fix stuck function keys when using FN
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:12:53PM +0200, Wolfram Sang wrote:
-> This series is part of a tree-wide movement to replace the I2C API call
-> 'i2c_new_dummy' which returns NULL with its new counterpart returning an
-> ERRPTR.
-> 
-> This series fixes the remaining hwmon drivers which could not be
-> converted by my cocci script. So, I did it manually, yet all drivers
-> still follow the same pattern. Build tested by me and by buildbot. No
-> tests on HW have been performed, so testing is appreciated.
-> 
-I still have the previous version (with RFT) in my queue.
-Question is what to do with it; I have not seen any test feedback.
-I tend to just apply the series and wait for fallout.
-Any objections ?
+Hi Benjamin,
 
-Guenter
+On Tue, 3 Sep 2019 at 16:46, Benjamin Tissoires
+<benjamin.tissoires@redhat.com> wrote:
+>
+> From: Joao Moreno <mail@joaomoreno.com>
+>
+> This fixes an issue in which key down events for function keys would be
+> repeatedly emitted even after the user has raised the physical key. For
+> example, the driver fails to emit the F5 key up event when going through
+> the following steps:
+> - fnmode=3D1: hold FN, hold F5, release FN, release F5
+> - fnmode=3D2: hold F5, hold FN, release F5, release FN
+>
+> The repeated F5 key down events can be easily verified using xev.
+>
+> Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+> Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> ---
+>
+> Hi Joao,
+>
+> last chance to pull back :)
+>
+> If you are still happy, I'll push this version
+>
+> Cheers,
+> Benjamin
+>
+
+Looks great. Thanks a bunch for your help!
+
+Cheers,
+Jo=C3=A3o
+
+>  drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+>  1 file changed, 28 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+> index 81df62f48c4c..6ac8becc2372 100644
+> --- a/drivers/hid/hid-apple.c
+> +++ b/drivers/hid/hid-apple.c
+> @@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\=
+") and Command (\"Flag\")
+>  struct apple_sc {
+>         unsigned long quirks;
+>         unsigned int fn_on;
+> -       DECLARE_BITMAP(pressed_fn, KEY_CNT);
+>         DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+>  };
+>
+> @@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hi=
+d, struct input_dev *input,
+>  {
+>         struct apple_sc *asc =3D hid_get_drvdata(hid);
+>         const struct apple_key_translation *trans, *table;
+> +       bool do_translate;
+> +       u16 code =3D 0;
+>
+>         if (usage->code =3D=3D KEY_FN) {
+>                 asc->fn_on =3D !!value;
+> @@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hi=
+d, struct input_dev *input,
+>         }
+>
+>         if (fnmode) {
+> -               int do_translate;
+> -
+>                 if (hid->product >=3D USB_DEVICE_ID_APPLE_WELLSPRING4_ANS=
+I &&
+>                                 hid->product <=3D USB_DEVICE_ID_APPLE_WEL=
+LSPRING4A_JIS)
+>                         table =3D macbookair_fn_keys;
+> @@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *=
+hid, struct input_dev *input,
+>                 trans =3D apple_find_translation (table, usage->code);
+>
+>                 if (trans) {
+> -                       if (test_bit(usage->code, asc->pressed_fn))
+> -                               do_translate =3D 1;
+> -                       else if (trans->flags & APPLE_FLAG_FKEY)
+> -                               do_translate =3D (fnmode =3D=3D 2 && asc-=
+>fn_on) ||
+> -                                       (fnmode =3D=3D 1 && !asc->fn_on);
+> -                       else
+> -                               do_translate =3D asc->fn_on;
+> -
+> -                       if (do_translate) {
+> -                               if (value)
+> -                                       set_bit(usage->code, asc->pressed=
+_fn);
+> -                               else
+> -                                       clear_bit(usage->code, asc->press=
+ed_fn);
+> -
+> -                               input_event(input, usage->type, trans->to=
+,
+> -                                               value);
+> -
+> -                               return 1;
+> +                       if (test_bit(trans->from, input->key))
+> +                               code =3D trans->from;
+> +                       else if (test_bit(trans->to, input->key))
+> +                               code =3D trans->to;
+> +
+> +                       if (!code) {
+> +                               if (trans->flags & APPLE_FLAG_FKEY) {
+> +                                       switch (fnmode) {
+> +                                       case 1:
+> +                                               do_translate =3D !asc->fn=
+_on;
+> +                                               break;
+> +                                       case 2:
+> +                                               do_translate =3D asc->fn_=
+on;
+> +                                               break;
+> +                                       default:
+> +                                               /* should never happen */
+> +                                               do_translate =3D false;
+> +                                       }
+> +                               } else {
+> +                                       do_translate =3D asc->fn_on;
+> +                               }
+> +
+> +                               code =3D do_translate ? trans->to : trans=
+->from;
+>                         }
+> +
+> +                       input_event(input, usage->type, code, value);
+> +                       return 1;
+>                 }
+>
+>                 if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
+> --
+> 2.19.2
+>
