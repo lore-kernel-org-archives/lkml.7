@@ -2,121 +2,113 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EBCC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32611C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15ED22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0929921897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:22:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WECgJvE2"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="jIa9Ctjn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PLkUsrI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfICGV7 (ORCPT
+        id S1727304AbfICGWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:21:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34873 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfICGV6 (ORCPT
+        Tue, 3 Sep 2019 02:22:24 -0400
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:42465 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726062AbfICGWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:21:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n10so6007776wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 23:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=yGyIrrLARg5qwoC8MjSZ4CSFbPrX3vElTlOaYxFgRnQ=;
-        b=WECgJvE2QdLRhFj3i4AxCxgR1vpUfhF1VNqwGZrLdkOacFB3XcpZNKbAF3NPedfZ/9
-         NBL/hguADRwjl3TUHJEJH0iVlHeLIR4wEQwX2cSmF6t8kcuSlI4rmHAOymYXKvv3tYY2
-         w0Wt4JwGqayHRUygZM/OOR7JTKFcpDZ745eZFw2fInD7Z0RvyY0IqhSWczFLRF3LEOyq
-         6QKJzl3cJs5W83haW4N35dmVvoJWgr0cK4u5ldys+zILBsGfeAIJS5o7Yg70dH+Mw/eH
-         tHzP7IJmd7dBNszmnvjZvVfwOEWtD9w0hV2ZrcLP2P/xH2smB/BG3P1QGDaGfyLNV0vB
-         hUQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=yGyIrrLARg5qwoC8MjSZ4CSFbPrX3vElTlOaYxFgRnQ=;
-        b=JUmMo10liUY9/PnToZKoNckcpuDZ7qYsG6r8FrnOO9mDWVE7tNYSq8kClzbMDLIBDt
-         h1rdHCi9YPCWTCMGpQkhnYADu5et5p3Fhiom7GDfoZxDbTVAV3EdgifEi+6skbyconEx
-         s9Mjqxq75mf/0oKThiJxy8CWmO6TZIPEXB/3ec9PuTkDAtn3jprEmfOTIR9sQt8W9Fbe
-         FzlvwZLgVitji4LE22PO3d3lTHnpFRXMc3e76exX2SWeP/GcsYFo7I9Lbb5gkUEq+Hvg
-         QQ1/ovG1/60RmC0iWHkvxCy4ZNBaZDq0x45FMPINUAlxBxMmJVhAzK15BpMe+snerDYH
-         e2Rw==
-X-Gm-Message-State: APjAAAW55WQWGgrrEhrcCfC3tQDii9Fl8Pkn+n+pCRmiG2JH1FC2iybg
-        M/U3l5GJgvlFnISKgOZzjsvo6Q==
-X-Google-Smtp-Source: APXvYqzO8/MDChhFJYV9n2Mdiniy4ia5sEDZAcYL4Cu8Zn76jxIlVNCV1TBkQZbX2z2LJb8KuGs6CQ==
-X-Received: by 2002:a7b:c5d6:: with SMTP id n22mr23766517wmk.65.1567491715654;
-        Mon, 02 Sep 2019 23:21:55 -0700 (PDT)
-Received: from dell ([95.147.198.93])
-        by smtp.gmail.com with ESMTPSA id c132sm21978999wme.27.2019.09.02.23.21.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 02 Sep 2019 23:21:55 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 07:21:53 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Message-ID: <20190903062153.GD26880@dell>
-References: <20190902132400.14084-1-lee.jones@linaro.org>
- <20190903054451.GV6167@minitux>
- <20190903062040.GC26880@dell>
+        Tue, 3 Sep 2019 02:22:24 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id C3DC216D5;
+        Tue,  3 Sep 2019 02:22:22 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 03 Sep 2019 02:22:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=/xUD1wLmlpwJ5edK6tPldfDA3Ye
+        FCK8ecZmnsFsCvOc=; b=jIa9Ctjn7vppxVEyKvYa1j7vpoyCifALHPMV9llsRHF
+        dKl9H8QPOpwU+Jffublx8gYhKbJeVqjAoIysLvi8NOTXlTLuyGIj7hQVOni/zu4H
+        LyAheB107TdhTXuHd+pCGhofXRARQ5ImT8MhVXnQ6hbkgdklf6mynZGHCHlWPtyN
+        gHBc9vIA+5rmMRgPn5WZxznaBOVU5GhQwaYZY8G+AAIzeDmPp4jMLF7ZjMJvmpI7
+        37uB21QlQC2bXzk3OgmuyWTky1DsEN23ZN2kEVvUXcPGpve3Od3Jv8VP51c+bmuF
+        OtR1ddhb+oCkLfb32nsDcIVLdMggPTx0ra18Jk/nl6g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/xUD1w
+        LmlpwJ5edK6tPldfDA3YeFCK8ecZmnsFsCvOc=; b=PLkUsrI398X/WvogxsAD0k
+        f/3DBXXZhn3U7+WnMM5Rs7KU8d0sZLOW3D+0i+zmnhDOewsYNUQLLwF7G/NIOUY+
+        pRzd4pmhYzxEdjSw4VuYNR5YOxDqxegHjBbWzZp76w584wJSE+8768rY+sqwPHEM
+        vOr3KJ71YXUVYAlUmOXBmy2vVt/Jdd+rN8zoYELt0Uq4rerDTGmJjrxuHRQMAdCT
+        tBQsGekkAyG2uOeIOrqF9MUxJmL0h5A6GXK+MnAHAnzxCbqw1j3PWHrr3cXgyN4A
+        pLUa1ec/VVKcjBNAStCG5+cr5EBPccp4B3a6Mr1vA1ZkeClHL4cBgbqB/Qmhd2HQ
+        ==
+X-ME-Sender: <xms:nQZuXc84uyenr4nhBaypfB3UtEVzbO30kA9GXZvN9pWK7ELtEvyDBg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejuddguddtiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvg
+    hlrdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhf
+    rhhomhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:nQZuXfWCElGXem0P1CFg1EcuzWE4aWcgqX7pigTzLuqUmrMcE4ioVw>
+    <xmx:nQZuXWHLyh8mPMkdWIvN65UrfSvPVNhldrN26A7fK-_MO1brGucmwQ>
+    <xmx:nQZuXRtD9EsLShxRge0W1gF32td00ZXho-4bDHBCSiHtShlz8Do5Cw>
+    <xmx:ngZuXXr8odWrDiDoBZ7yGpvklvEX4ha1bkyHP4ApmzhxEBSM3C7Pag>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 478CCD6006A;
+        Tue,  3 Sep 2019 02:22:21 -0400 (EDT)
+Date:   Tue, 3 Sep 2019 08:22:19 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
+Message-ID: <20190903062219.GB16647@kroah.com>
+References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
+ <20190903001816.427611357@stormcage.eag.rdlabs.hpecorp.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190903062040.GC26880@dell>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190903001816.427611357@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 03 Sep 2019, Lee Jones wrote:
+On Mon, Sep 02, 2019 at 07:18:21PM -0500, Mike Travis wrote:
+> Decode the hubless UVsystab passed from BIOS to the kernel saving
+> pertinent info in a similar manner that hubbed UVsystabs are decoded.
+> 
+> Signed-off-by: Mike Travis <mike.travis@hpe.com>
+> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+> Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+> ---
+>  arch/x86/kernel/apic/x2apic_uv_x.c |   16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
 
-> On Mon, 02 Sep 2019, Bjorn Andersson wrote:
-> 
-> > On Mon 02 Sep 06:24 PDT 2019, Lee Jones wrote:
-> > 
-> > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > 
-> > > The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
-> > > to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
-> > > 
-> > > Supported by this patch is: keyboard, battery monitoring, UFS storage,
-> > > USB host and Bluetooth.
-> > 
-> > Applied this to next-20190829 and booted it, got a little bit of EFI FB,
-> > then the screen goes blank and after a while I'm back in GRUB.
-> > 
-> > I've not been able to figure out what's causing this though.
-> 
-> Probably DMA.  There is still an issue in the COM GENI Serial Engine
-> Driver which reboots the system when a DMA transaction is initiated.
-> 
-> However, with a workaround patch applied to the Serial Engine driver
-> (drivers/soc/qcom/qcom-geni-se.c) this DTS has no issue booting the
-> system.
-> 
-> We have ~12 weeks to either fix or elegantly work around the Serial
-> Engine issue.  IMHO is makes no sense to hold back this enablement
-> patch (which cannot go in via the -rcs) for something which is likely
-> to be fixed and applied during v3.4-rcX.
+<formletter>
 
-NB: If you're worried about other entities thinking the platform boots
-fault free due to this DTS patch being applied, I would suggest we
-place a little "NB:" note in the changelog to explain the situation.
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+</formletter>
+
+Same thing goes for all of the patches in this series...
