@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D9AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D13B0C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E25F723401
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:00:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A71E522D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UPU7L+KP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZGril3dA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727625AbfICHA0 (ORCPT
+        id S1727573AbfICHBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:00:26 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41912 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfICHA0 (ORCPT
+        Tue, 3 Sep 2019 03:01:10 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36433 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfICHBJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:00:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x15so8585521pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:00:25 -0700 (PDT)
+        Tue, 3 Sep 2019 03:01:09 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so4545132pfr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:01:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=a26K1G4II4kSTCpPaGf8xIGxYORQ0ipUth+fFd+YiK8=;
-        b=UPU7L+KPhHP8odNhmO413net+8H+PjG3HBOL/x+TlXWTBUfqXIFOLxkNVDYSLJ2XLe
-         k9CtHzOGplSirS4CWcPWtl842R/pPk47Eop6wdsFo4tN1YtN3GJAZLlVR/fZYhF2EQe5
-         p6tuFG2kTLwUv2RGrYI5KUNKLA2OGq9RhwJdUPsO75BHOU/1VVqp2+JHXBuFskppDtTb
-         PqRtJF0EHcewXECVEwFz14qPujJgvMSCAc0VEIYb8oW8Uya94HLV3S8J2nhymFrGPd7k
-         5uz187MHG68fKQRwD8q1XQEUZ0EEGwVFqS1SWgmrXpEvrSMWIbOM0dRM4rypz/N2QO+7
-         fKCQ==
+        bh=NagLdWBO+mVhn30698+wliEZ00FrD+Sqb7vGzKlD9Rw=;
+        b=ZGril3dAsuGwTavstK9zZ3BJG6PEETVIA/v8TKVQX6K6+iX0Zx9DFKW67oPSqKs0v8
+         V6eN3iypDFAfzPfF5kwk2Bx1xR+ZmGLyADXVtKN2r0AdE7sZAiNg6s5CZ1skw9uk5SL6
+         CiIDzSIqNerBAgl0+GLmQi/+gl9BrdRCJ5I1hrv+b4Ku2GVOFju2wK07C4ygA25YOe+S
+         yEj2KCIBtqsB0WxIr+VItYXU0nuhoP5ERMFbR1mEjPbIU45ywPByWD6gUNi3h9aMsWBo
+         8gdyS3znC6ekRkcNQ2q6pXY1d8TXng5msBequzeGcHgr8ozAPLmABOR49tnjehtQWsjm
+         LR7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=a26K1G4II4kSTCpPaGf8xIGxYORQ0ipUth+fFd+YiK8=;
-        b=tZyYMmQv0bUL3ETjcTO3l0V9N5sY7P7MTa7FdN5dfX8IflK0rkgt94Uu8ohRzKPbm8
-         dp9D6OxptfPjgWQhxg9TW9mPpywpDWHDijc5s7XVeoaB+3HBucCgfLiTleBvdRrK2Ecm
-         DmO2+J0V47gvqYjn+Nvk0XKNWk1CQ9TT1et0cZEq4pSS/EyiKoP9gNtCi5qLdy6D+vH2
-         MKtFnUrEKOl57Lc+caVNofA9da3k8G1i0LQUBnYgsDd+hOAxCcq0CAz+gY9V9UlRQFf8
-         uLSZAD6baW9xExykQTS52XMPSlm3LKW/HEzw5ZFPY7Gpp94D3YYfDYon2Xj/qLAmXFmz
-         jSrg==
-X-Gm-Message-State: APjAAAX7H5n9aG2OppUOdsvNigWuR6BcVya4e9Bs7mea9HxgmN4EZmKh
-        BCMQPc78/kazKnYrtRCX+a78wJBG9AHyzQ==
-X-Google-Smtp-Source: APXvYqymysOYUOCz8E4NKrZC4xIqdnSdzUBf34OpeOICcOfXYKfVlxK0NwEJqCB3TAzP2fUb9Xdx0g==
-X-Received: by 2002:a17:90a:32c8:: with SMTP id l66mr16676286pjb.44.1567494025517;
-        Tue, 03 Sep 2019 00:00:25 -0700 (PDT)
+        bh=NagLdWBO+mVhn30698+wliEZ00FrD+Sqb7vGzKlD9Rw=;
+        b=tG16LUqLztvPUlfpt8XXxMrPuT8+M6VmX+FyEH2rQTxWqAd4CTRZ0GxykfXNykfUpS
+         YMIJmSGj3lzzIS2up5A312g9aqfU455jNc+n62VhGzvn48zpsgU8LJoDSj35Ne1bjDQ1
+         C80PzEqkCqWPbqREtpicBn3Piv/1r/gZ6RssTNXCjb5xcUUpG259rN+z75n/D/8kAm1x
+         5M9PtkqGMuVJfWLUnNxNRaR2FtAaJDaFid2Oze6l9FABrJvZl6wKDqP8ZtpXUw0nEVrv
+         MfbcNTNGeF//PG7m2eZB4ndCfnah1untJqrld+kRsj/ad+o2FDXKPb50NbRwDxzanKn5
+         z+XQ==
+X-Gm-Message-State: APjAAAVSgRmdWIMAF0n4CGiX6TWC17dqaKRfSZnqXqlrTsckgp9A62Kn
+        k8D3I10eieTHHHMOfRGZJxRYBg==
+X-Google-Smtp-Source: APXvYqwqPD2WC070l0e4dPMy2t5gOoCPMQ7fGkPXUQVvc1sMtSMg5yHcMiWp0lBQvavafLlxWi/0SA==
+X-Received: by 2002:a65:6859:: with SMTP id q25mr28225218pgt.181.1567494069011;
+        Tue, 03 Sep 2019 00:01:09 -0700 (PDT)
 Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id t12sm13376138pfe.58.2019.09.03.00.00.22
+        by smtp.gmail.com with ESMTPSA id l72sm26377107pjb.7.2019.09.03.00.01.06
         (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 03 Sep 2019 00:00:25 -0700 (PDT)
+        Tue, 03 Sep 2019 00:01:08 -0700 (PDT)
 From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, sre@kernel.org
-Cc:     david@lechnology.com, linux-pm@vger.kernel.org, arnd@arndb.de,
-        baolin.wang@linaro.org, orsonzhai@gmail.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y 6/8] power: supply: sysfs: ratelimit property read error message
-Date:   Tue,  3 Sep 2019 14:59:59 +0800
-Message-Id: <582e968f59d6ece6de33c3e4f3d65c5e4a198fa1.1567492316.git.baolin.wang@linaro.org>
+To:     stable@vger.kernel.org, paulus@samba.org
+Cc:     ebiggers@google.com, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org, arnd@arndb.de, baolin.wang@linaro.org,
+        orsonzhai@gmail.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: [BACKPORT 4.14.y 7/8] ppp: mppe: Revert "ppp: mppe: Add softdep to arc4"
+Date:   Tue,  3 Sep 2019 15:00:38 +0800
+Message-Id: <f4b1ac760bbae28721996034be7198458aa68523.1567492316.git.baolin.wang@linaro.org>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <cover.1567492316.git.baolin.wang@linaro.org>
 References: <cover.1567492316.git.baolin.wang@linaro.org>
@@ -71,34 +72,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Lechner <david@lechnology.com>
+From: Eric Biggers <ebiggers@google.com>
 
-This adds rate limiting to the message that is printed when reading a
-power supply property via sysfs returns an error. This will prevent
-userspace applications from unintentionally dDOSing the system by
-continuously reading a property that returns an error.
+Commit 0e5a610b5ca5 ("ppp: mppe: switch to RC4 library interface"),
+which was merged through the crypto tree for v5.3, changed ppp_mppe.c to
+use the new arc4_crypt() library function rather than access RC4 through
+the dynamic crypto_skcipher API.
 
-Signed-off-by: David Lechner <david@lechnology.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Meanwhile commit aad1dcc4f011 ("ppp: mppe: Add softdep to arc4") was
+merged through the net tree and added a module soft-dependency on "arc4".
+
+The latter commit no longer makes sense because the code now uses the
+"libarc4" module rather than "arc4", and also due to the direct use of
+arc4_crypt(), no module soft-dependency is required.
+
+So revert the latter commit.
+
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- drivers/power/supply/power_supply_sysfs.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ppp/ppp_mppe.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index eb5dc74..2ccaf4f 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -91,7 +91,8 @@ static ssize_t power_supply_show_property(struct device *dev,
- 				dev_dbg(dev, "driver has no data for `%s' property\n",
- 					attr->attr.name);
- 			else if (ret != -ENODEV && ret != -EAGAIN)
--				dev_err(dev, "driver failed to report `%s' property: %zd\n",
-+				dev_err_ratelimited(dev,
-+					"driver failed to report `%s' property: %zd\n",
- 					attr->attr.name, ret);
- 			return ret;
- 		}
+diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
+index d9eda7c..6c7fd98 100644
+--- a/drivers/net/ppp/ppp_mppe.c
++++ b/drivers/net/ppp/ppp_mppe.c
+@@ -63,7 +63,6 @@
+ MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
+-MODULE_SOFTDEP("pre: arc4");
+ MODULE_VERSION("1.0.2");
+ 
+ static unsigned int
 -- 
 1.7.9.5
 
