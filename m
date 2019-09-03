@@ -2,174 +2,149 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4215C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76C9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A87CE20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9122420674
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="piNmEVL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbfICMnY (ORCPT
+        id S1729005AbfICMoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:43:24 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5732 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729169AbfICMnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:43:23 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id E990D41C36F8384B482D;
-        Tue,  3 Sep 2019 20:43:18 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Sep 2019
- 20:43:13 +0800
-Date:   Tue, 3 Sep 2019 13:43:03 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Martin Kepplinger <martin.kepplinger@puri.sm>
-CC:     <lorenzo.bianconi83@gmail.com>, <jic23@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] iio: imu: st_lsm6dsx: replace underscore with hyphen in
- device name
-Message-ID: <20190903134303.000008be@huawei.com>
-In-Reply-To: <20190903051802.22716-1-martin.kepplinger@puri.sm>
-References: <20190903051802.22716-1-martin.kepplinger@puri.sm>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 3 Sep 2019 08:44:17 -0400
+Received: from mout.web.de ([212.227.17.12]:59177 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728996AbfICMoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 08:44:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1567514650;
+        bh=OB42t441CkjUlM1xTY9OGP06693iK0948hcgi9EiEaI=;
+        h=X-UI-Sender-Class:To:Cc:From:Subject:Date;
+        b=piNmEVL1DWo/PMf5GIczGhNf0CJqcg8I50t6Sc8YLLKwEFeRrUGF6jPArwPAOPmvp
+         8pVrwi4hbiiwhjF8meDrwiFKEYIyI8qIqD/nlPHxyMb5bALS5bddLi4R3laNjDq5Ux
+         pE5V+DqdlzJf8XApYOxc+O3VVlNS4SmzsJfr9f2A=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.133.43]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MEVhF-1hynZo3b7B-00Fk6p; Tue, 03
+ Sep 2019 14:44:09 +0200
+To:     linux-ext4@vger.kernel.org, Jan Kara <jack@suse.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] ext2: Delete an unnecessary check before brelse()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <51dea296-2207-ebc0-bac3-13f3e5c3b235@web.de>
+Date:   Tue, 3 Sep 2019 14:44:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fDKb4hhNMYZ9p7iiL29GGAMRQGX7LPMidSNO+OnTKZ78fOm7c6J
+ BFisXkPeKxMsK37Ku8FRDkpbsPvtUV/gfS05RjhPaHadUTHkfS1RdjYf2kAe5pehUXYY8N2
+ sbnFXk7D8AQcYWDMsN7sF6upjqh5VMmWwdy0XRusMVOlgL+dH9ndq6/5/KE55/nVTkolY9J
+ IBrF1kj+0beDEtnNUMKgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1WAao00adBI=:5FDVXGdCEhCxWD/GZiDAbj
+ qlo/6vlG2hkOkp30I9oWBPMrMfm2Ips+u0YbLNbCcux4zyLTVUVek44zn+cgAsZBRjcxMGkyY
+ hJkKF+4K3aVqP2swznTj0kpHRHlEM4YGoorQLTiQKCiVONgS+Uz2J2HlwwME18amYaRe/rFKX
+ tbvdpWBQDBtqzCmqY8IRRdMbV2cfFlVmv1bRUYxLQVxioVUd2Ud2xcpXa/zHAX+6+gT0dVfQV
+ qjQWwmAq0PJNrRNWljT6Z9AezCKpDUe2k/MbUt6E5bPzGlYbE0bzFrqGbdT81s9rCRyziyUEu
+ 7HGVJplqTQDknsCmCsPvroUZ97dUG7j7dfNtpIhvfrnIwFnC9+JowTwK/LtOm3hlXu0QkUQER
+ LbPWWgMxdXO6j66SIzxFgMgEGNv43gLVuplmku8jArAje/zZc3tQZ0i0qdGA3n2CDk9VQArQE
+ AD2Tn9gJ1p3CXMKUO8pZg0xok6riffIj9kCqTGvhn9HXzxHve/ENIWKBI7a3JamHzI8I23EmD
+ LVemdo+HsNnMHOvzKuK36wlSYpq/rx4ki9vqFzM/iZNpgi+pMnQyaqSu6O0/F+KpBf99D7138
+ xcvvzHgzWS5ILUr4jXMXqGqx8SKXNELUAGZJ0zPFhgMyMUd0qe536ZlvTNVPhG4e2WKEK1WS2
+ 6zp5qpAOyN3YX8t0BJQph1NUIS8JDqyeSJBEDCbLKA7Nckr3axvxzVvCnxIy8YuZW0dn79nwq
+ FciJYy2ArTQfFdsvr938css8RBzCh2TsoXDuujPr9opnzWA0kwCLDGnqpmdaqdydwuHVShH/I
+ igLAHTZu5G0FNkG2y9XjehMw9oodp5mq0tgNBtMChBSAXxZLVXzSm6tXW19ohPK+LnzZRa/0G
+ RHMvBvcUC/wMEpGOiBW8QBb9ii1xubjt9G0PfbqTtJygLCMj7a9IrpddILBCOJixxAZ7soGRe
+ liJXOU4J7XTWkmtzo0Zm+IeUJBlLV1fe8IDqsV6TliB75zq5dCHynPaxp4aKobZxUQiQnx5lr
+ goaJrxGgs5XgAvEbGDa8FRzt+JztnkLG00jpK6jt98GE4+C2W/LxnWA2l0wD9t93msqaVNTIt
+ L7X9cU1ctck3xl05fZ7jeQXCZIJ3DWlJIsqpU11te5ahUTn7INMjBxqy9XngE3Ay7uf14mzov
+ KNJMgUdCWlO41DQbLRxHED/yKnEwZvkarahU/9wCu3Q28lyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+CC Greg as fix for a patch in my outstanding pull request.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 3 Sep 2019 14:40:18 +0200
 
-On Tue, 3 Sep 2019 07:18:02 +0200
-Martin Kepplinger <martin.kepplinger@puri.sm> wrote:
+The brelse() function tests whether its argument is NULL
+and then returns immediately.
+Thus the test around the call is not needed.
 
-> With the underscore character in the lsm9ds1_imu device name, we get the
-> following error below, so use a dash, just like the other device names do too.
-> 
-> [    3.961399] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
-> [    4.010581] Mem abort info:
-> [    4.013838]   ESR = 0x96000004
-> [    4.023602]   Exception class = DABT (current EL), IL = 32 bits
-> [    4.047993]   SET = 0, FnV = 0
-> [    4.052690]   EA = 0, S1PTW = 0
-> [    4.056015] Data abort info:
-> [    4.059020]   ISV = 0, ISS = 0x00000004
-> [    4.080106]   CM = 0, WnR = 0
-> [    4.085237] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000e4f61000
-> [    4.092194] [0000000000000018] pgd=0000000000000000
-> [    4.097474] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> [    4.103286] Modules linked in: tcpci st_sensors st_lsm6dsx_i2c(+) tcpm st_lsm6dsx industrialio_triggered_buffer kfifo_buf vcnl4000 roles typec goodix snd_soc_sgtl5000 bq25890_charger snvs_pwrkey imx_sdma virt_dma qoriq_thermal imx2_wdt snd_soc_fsl_sai aes_ce_blk imx_pcm_dma crypto_simd watchdog crct10dif_ce ghash_ce sha2_ce snd_soc_simple_card snd_soc_gtm601 snd_soc_simple_card_utils sha1_ce snd_soc_core snd_pcm_dmaengine snd_pcm snd_timer snd soundcore gpio_vibra usb_f_acm u_serial usb_f_rndis g_multi usb_f_mass_storage u_ether libcomposite ip_tables x_tables ipv6 nf_defrag_ipv6 xhci_plat_hcd xhci_hcd usbcore dwc3 ulpi udc_core usb_common phy_fsl_imx8mq_usb
-> [    4.105389] bq25890-charger 0-006b: Capacity for 3784000 is 86%
-> [    4.164061] CPU: 1 PID: 344 Comm: systemd-udevd Tainted: G        W         5.3.0-rc2-g24e3d989d49f-dirty #161
-> [    4.164063] Hardware name: Purism Librem 5 devkit (DT)
-> [    4.164067] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> [    4.164082] pc : st_lsm6dsx_i2c_probe+0x18/0x80 [st_lsm6dsx_i2c]
-> [    4.164093] lr : i2c_device_probe+0x1f0/0x2b8
-> [    4.164094] sp : ffff8000a499f970
-> [    4.164097] x29: ffff8000a499f970 x28: 0000000000000000
-> [    4.164100] x27: ffff000010b70000 x26: ffff8000a499fd68
-> [    4.164104] x25: ffff000010860000 x24: ffff000008a8b038
-> [    4.164108] x23: ffff000008a8b038 x22: ffff000008a8b000
-> [    4.164111] x21: ffff8000a55b2400 x20: ffff000008a89000
-> [    4.164115] x19: ffff8000a55b2400 x18: ffffffffffffffff
-> [    4.164118] x17: 0000000000000000 x16: 0000000000000000
-> [    4.164121] x15: 0000000000040000 x14: 00000000fffffff0
-> [    4.164125] x13: ffff000010b6c898 x12: 0000000000000030
-> [    4.164128] x11: 0000000000000000 x10: 0101010101010101
-> [    4.260542] x9 : fffffffffffffffc x8 : 0000000000000008
-> [    4.266073] x7 : 0000000000000004 x6 : 1e0e1a00f2ade4ef
-> [    4.271605] x5 : 6f642d72001a0e1e x4 : 8080808000000000
-> [    4.277136] x3 : 0000000000000000 x2 : ffff000008a8a000
-> [    4.282667] x1 : 0000000000000000 x0 : ffff8000a55b2400
-> [    4.288199] Call trace:
-> [    4.290753]  st_lsm6dsx_i2c_probe+0x18/0x80 [st_lsm6dsx_i2c]
-> [    4.296648]  i2c_device_probe+0x1f0/0x2b8
-> [    4.300825]  really_probe+0x168/0x368
-> [    4.304638]  driver_probe_device.part.2+0x10c/0x128
-> [    4.309716]  device_driver_attach+0x74/0xa0
-> [    4.314071]  __driver_attach+0x84/0x130
-> [    4.318065]  bus_for_each_dev+0x68/0xc8
-> [    4.322058]  driver_attach+0x20/0x28
-> [    4.325780]  bus_add_driver+0xd4/0x1f8
-> [    4.329683]  driver_register+0x60/0x110
-> [    4.333677]  i2c_register_driver+0x44/0x98
-> [    4.337944]  st_lsm6dsx_driver_init+0x1c/0x1000 [st_lsm6dsx_i2c]
-> [    4.344200]  do_one_initcall+0x58/0x1a8
-> [    4.348195]  do_init_module+0x54/0x1d4
-> [    4.352098]  load_module+0x1998/0x1c40
-> [    4.356001]  __se_sys_finit_module+0xc0/0xd8
-> [    4.360446]  __arm64_sys_finit_module+0x14/0x20
-> [    4.365166]  el0_svc_common.constprop.0+0xb0/0x168
-> [    4.370154]  el0_svc_handler+0x18/0x20
-> [    4.374056]  el0_svc+0x8/0xc
-> [    4.377059] Code: d2800003 910003fd a90153f3 aa0003f3 (f9400c34)
-> [    4.383406] ---[ end trace 6dfe010c028e3371 ]---
-> 
+This issue was detected by using the Coccinelle software.
 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
-Fixes: a106864fd667 ("iio: imu: st_lsm6dsx: add support for accel/gyro unit of lsm9ds1")
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/ext2/super.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks Martin.  This one is entirely my fault for messing up tweaking
-that naming.  I should have bounced the patch back for another round
-rather than thinking "it's trivial, what could possibly go wrong!"
-
-On basis Greg may prefer to pick this one directly:
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Convenient lore.kernel.org link.
-
-https://lore.kernel.org/linux-iio/20190903051802.22716-1-martin.kepplinger@puri.sm/T/#u
-
-
-If not I'll pick it up for first set of fixes post rc1.
-
-As for the question below, I've not taken a look yet and certainly seems
-an odd result!
-
-Thanks,
-
-Jonathan
-
-
-
-> ---
-> 
-> While this patch fixes my (formerly already mentioned) issue, it's
-> a question actually: Why does is this underscore character a problem?
-> 
-> thanks,
-> 
->                         martin
-> 
-> 
-> 
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> index 5e3cd96b0059..80e42c7dbcbe 100644
-> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-> @@ -24,7 +24,7 @@
->  #define ST_LSM6DSR_DEV_NAME	"lsm6dsr"
->  #define ST_LSM6DS3TRC_DEV_NAME	"lsm6ds3tr-c"
->  #define ST_ISM330DHCX_DEV_NAME	"ism330dhcx"
-> -#define ST_LSM9DS1_DEV_NAME	"lsm9ds1_imu"
-> +#define ST_LSM9DS1_DEV_NAME	"lsm9ds1-imu"
->  
->  enum st_lsm6dsx_hw_id {
->  	ST_LSM6DS3_ID,
-
+diff --git a/fs/ext2/super.c b/fs/ext2/super.c
+index baa36c6fb71e..30c630d73f0f 100644
+=2D-- a/fs/ext2/super.c
++++ b/fs/ext2/super.c
+@@ -162,8 +162,7 @@ static void ext2_put_super (struct super_block * sb)
+ 	}
+ 	db_count =3D sbi->s_gdb_count;
+ 	for (i =3D 0; i < db_count; i++)
+-		if (sbi->s_group_desc[i])
+-			brelse (sbi->s_group_desc[i]);
++		brelse(sbi->s_group_desc[i]);
+ 	kfree(sbi->s_group_desc);
+ 	kfree(sbi->s_debts);
+ 	percpu_counter_destroy(&sbi->s_freeblocks_counter);
+=2D-
+2.23.0
 
