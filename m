@@ -2,207 +2,209 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D04C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2696DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0B2216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567499118;
-	bh=f3ZXaegcsrrqhqRDRKGqx4s4cVnRArE7RmypILYd+g8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=m0faVrXwp5eaxOOp9VoPc7JlL1IDpDzLQ+MZxVXEsHxHJxp+PV4AHxUOVqMrXYCe5
-	 XX8FFU+2tli2Xr/a6wY2VpOqMJlb1zw1uwO2wqds0KFkkHFyH2rehtz8BiTk1Zj+rP
-	 QyIWTMpitc0DfpmgAFib8Tp0+9g8bDcIglNTVKM4=
+	by mail.kernel.org (Postfix) with ESMTP id F33232053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="uCKpyBQa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfICIZR (ORCPT
+        id S1727894AbfICI1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbfICIZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:25:17 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4ACB23402;
-        Tue,  3 Sep 2019 08:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567499115;
-        bh=f3ZXaegcsrrqhqRDRKGqx4s4cVnRArE7RmypILYd+g8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wabHV1k5dEyrX/7adpcLxEwW1MB7sdRxtSAl/Q+ixCo+poiVeI7wlb7c8pmEkomba
-         VUBXX9c9bK4EcJ2Rh1xAjjOW6eeil29NeZmenL+Lv7/KjHckb3WHRxEYYillGkJ9G9
-         qLA7PMTnlMqUtaKofcpPZkOnAPIPUWPD0G9OlK5o=
-Received: by mail-qt1-f174.google.com with SMTP id k10so8458253qth.2;
-        Tue, 03 Sep 2019 01:25:15 -0700 (PDT)
-X-Gm-Message-State: APjAAAXXEucNZGmWiG31cCd8kIkK9e5dmFN6bGl74op4stTEi8jdKATy
-        z+vlJ7//HqgK0Y0xgKL4g/H5E7AvPNScXdbolw==
-X-Google-Smtp-Source: APXvYqwIM9DiXxim6rM127j/POM2TKvL5qYklc3Bu+DdP6aV4fnCf6MCR6CZRi7sMcNn4eza859i00dqzSkL7gf1mNo=
-X-Received: by 2002:ac8:28b6:: with SMTP id i51mr8990758qti.143.1567499114797;
- Tue, 03 Sep 2019 01:25:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190823145356.6341-1-krzk@kernel.org> <20190823145356.6341-5-krzk@kernel.org>
- <CAL_JsqJybT41cEqiTriLMywUQj1BtAG_9muJ4=84OkF23y53CA@mail.gmail.com> <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
-In-Reply-To: <CAJKOXPc0SY_8BHMsWLN=1M3VQh41+bdBiH21L4KQPA+iLPYy+A@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 3 Sep 2019 09:25:03 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
-Message-ID: <CAL_JsqKdsABWK9Og_f38T9zf3SCFFdhU8WOJ4uJjREantoYvYQ@mail.gmail.com>
-Subject: Re: [RFC 5/9] dt-bindings: arm: samsung: Convert Exynos PMU bindings
- to json-schema
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Tue, 3 Sep 2019 04:27:50 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:43641 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfICI1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:27:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1567499268; x=1599035268;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=KuPZeQju7vhEp+UkqVn9efqnEIKWk9EHCgp5USgIAM4=;
+  b=uCKpyBQavByrJYs+zzmcs7KYHgYENDhi29A+4EgntRUc3DDfMgz1JU9Q
+   8HEk8/rmi9iBOmkLvB5GSp7H54NtMrVTcLXp0b2eFcaRSlJ7phoNmZfUL
+   atVWwDxcVLRqT34mm9GquuzrNhbIlQARyEUWKXUuUR7f04eYNcVZ8x2ql
+   o=;
+X-IronPort-AV: E=Sophos;i="5.64,462,1559520000"; 
+   d="scan'208";a="413268000"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-a70de69e.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 03 Sep 2019 08:27:46 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-a70de69e.us-east-1.amazon.com (Postfix) with ESMTPS id 85317A2434;
+        Tue,  3 Sep 2019 08:27:42 +0000 (UTC)
+Received: from EX13D13UWA002.ant.amazon.com (10.43.160.172) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Sep 2019 08:27:41 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
+ EX13D13UWA002.ant.amazon.com (10.43.160.172) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Sep 2019 08:27:41 +0000
+Received: from [10.85.97.90] (10.85.97.90) by mail-relay.amazon.com
+ (10.43.162.232) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Tue, 3 Sep 2019 08:27:35 +0000
+Subject: Re: [PATCH v3 2/4] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+To:     Robert Richter <rrichter@marvell.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "benh@amazon.com" <benh@amazon.com>,
+        "ronenk@amazon.com" <ronenk@amazon.com>,
+        "talel@amazon.com" <talel@amazon.com>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "hanochu@amazon.com" <hanochu@amazon.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, notify@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+References: <1563197049-12679-1-git-send-email-hhhawa@amazon.com>
+ <1563197049-12679-3-git-send-email-hhhawa@amazon.com>
+ <20190903072427.ptmde6hda5uyauhf@rric.localdomain>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <3521cf92-55a0-70d9-9c1c-a1f4ca8bc725@amazon.com>
+Date:   Tue, 3 Sep 2019 11:27:33 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190903072427.ptmde6hda5uyauhf@rric.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 8:58 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Mon, 26 Aug 2019 at 13:54, Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Fri, Aug 23, 2019 at 9:54 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
-> > > format using json-schema.
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/arm/samsung/pmu.txt   | 72 --------------
-> > >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 93 +++++++++++++++++++
-> > >  2 files changed, 93 insertions(+), 72 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> >
-> >
-> > > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > new file mode 100644
-> > > index 000000000000..818c6f3488ef
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
-> > > @@ -0,0 +1,93 @@
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Samsung Exynos SoC series Power Management Unit (PMU)
-> > > +
-> > > +maintainers:
-> > > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - enum:
-> > > +          - samsung,exynos3250-pmu
-> > > +          - samsung,exynos4210-pmu
-> > > +          - samsung,exynos4412-pmu
-> > > +          - samsung,exynos5250-pmu
-> > > +          - samsung,exynos5260-pmu
-> > > +          - samsung,exynos5410-pmu
-> > > +          - samsung,exynos5420-pmu
-> > > +          - samsung,exynos5433-pmu
-> > > +          - samsung,exynos7-pmu
-> > > +      - const: syscon
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  '#clock-cells':
-> > > +    const: 1
-> > > +
-> > > +  clock-names:
-> > > +    description:
-> > > +      list of clock names for particular CLKOUT mux inputs
-> > > +    # TODO: what is the maximum number of elements (mux inputs)?
-> > > +    minItems: 1
-> > > +    maxItems: 32
-> > > +    items:
-> > > +      - enum:
-> >
-> > This isn't correct as you are only defining possible names for the
-> > first item. Drop the '-' (making items a schema instead of a list) and
-> > then it applies to all. However, doing that will cause a meta-schema
-> > error which I need to fix to allow. Or if there's a small set of
-> > possibilities of number of inputs, you can list them under a 'oneOf'
-> > list.
->
-> Mhmm, I cannot test it or I have an error in the schema. if I
-> understand correctly, this would be:
->
->   clock-names:
->     description:
->       List of clock names for particular CLKOUT mux inputs
->     minItems: 1
->     maxItems: 16
->     items:
->       clkout0
->       clkout1
->       clkout2
->       clkout3
->       clkout4
->       clkout5
->       clkout6
->       clkout7
->       clkout8
->       clkout9
->       clkout10
->       clkout11
->       clkout12
->       clkout13
->       clkout14
->       clkout15
->       clkout16
->
-> Now it produces the error "ignoring, error in schema 'items'" but
-> maybe it is expected with current meta-schema?
 
-'make dt_binding_check' will give more detailed errors.
 
-Are the inputs always contiguous 0-N? If so, you want:
+On 9/3/2019 10:24 AM, Robert Richter wrote:
+> On 15.07.19 16:24:07, Hanna Hawa wrote:
+>> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+>> report L1 errors.
+>>
+>> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+>> Reviewed-by: James Morse <james.morse@arm.com>
+>> ---
+>>   MAINTAINERS               |   6 ++
+>>   drivers/edac/Kconfig      |   8 +++
+>>   drivers/edac/Makefile     |   1 +
+>>   drivers/edac/al_l1_edac.c | 156 ++++++++++++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 171 insertions(+)
+>>   create mode 100644 drivers/edac/al_l1_edac.c
+> 
+>> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+>> new file mode 100644
+>> index 0000000..70510ea
+>> --- /dev/null
+>> +++ b/drivers/edac/al_l1_edac.c
+> 
+> [...]
+> 
+>> +static void al_l1_edac_cpumerrsr(void *arg)
+> 
+> Could this being named to something meaningful, such as
+> *_read_status() or so?
+> 
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev = arg;
+>> +	int cpu, i;
+>> +	u32 ramid, repeat, other, fatal;
+>> +	u64 val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
+>> +	char msg[AL_L1_EDAC_MSG_MAX];
+>> +	int space, count;
+>> +	char *p;
+>> +
+>> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
+>> +		return;
+> 
+> [...]
+> 
+>> +static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
+>> +{
+>> +	on_each_cpu(al_l1_edac_cpumerrsr, edac_dev, 1);
+>> +}
+>> +
+>> +static int al_l1_edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct device *dev = &pdev->dev;
+>> +	int ret;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(0, (char *)dev_name(dev), 1, "L",
+> 
+> This type cast looks broken. dev_name() is a constant string already.
+> 
+> Other drivers do not use the dynamically generated dev_name() string
+> here, instead a fix string such as mod_name or ctl_name could be used.
+> edac_device_alloc_ctl_info() later generates a unique instance name
+> derived from name + index.
 
-items:
-  - const: clkout0
-  - const: clkout1
-  - const: clkout2
-  ...
+Ack, will fix and use DRV_NAME.
 
-If you want to express any number and order of strings is valid, then you need:
+> 
+> Regarding the type, this seems to be an API issue of edac_device_
+> alloc_ctl_info() that should actually use const char* in its
+> interface. So if needed (from what I wrote above it is not) the type
+> in the argument list needs to be changed instead.
+> 
+>> +					      1, 1, NULL, 0,
+>> +					      edac_device_alloc_index());
+>> +	if (IS_ERR(edac_dev))
+>> +		return -ENOMEM;
+> 
+> Use the original error code instead.
 
-items:
-  enum:
-    - clkout0
-    - clkout1
-    - clkout2
+Actually it return NULL in case of failure, it was changed in v5 to 
+check if error/NULL.
 
-Doing that is discouraged for bindings though. Currently, it will
-generate an error from the meta-schema, but we could change that.
+> 
+>> +
+>> +	edac_dev->edac_check = al_l1_edac_check;
+>> +	edac_dev->dev = dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(dev);
+>> +	edac_dev->ctl_name = "L1 cache";
+> 
+> Should not contain spaces and maybe a bit more specific.
 
-Rob
+L1_cache_ecc_err? or L1_cache_err?
+
+> 
+>> +	platform_set_drvdata(pdev, edac_dev);
+>> +
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to add L1 edac device\n");
+> 
+> Move this printk below to the error path and maybe print the error
+> code. You do not cover the -ENOMEM failure.
+
+Ack.
+
+> 
+> -Robert
+> 
+>> +		goto err;
+>> +	}
+>> +
+>> +	return 0;
+>> +err:
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return ret;
+>> +}
