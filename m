@@ -2,107 +2,83 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D9AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DD4C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570E622D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:01:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EHgBr9Kf"
+	by mail.kernel.org (Postfix) with ESMTP id 7FBB222DCC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfICHBz (ORCPT
+        id S1727005AbfICHG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:01:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41108 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfICHBz (ORCPT
+        Tue, 3 Sep 2019 03:06:27 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:19737 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfICHG1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:01:55 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so8587944pgg.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ATcsitRpTyb5wI6PMkB6H6IJliZcFvf7R0g9NfFMg9A=;
-        b=EHgBr9KfYik5R6FusPDhu53l+J3bX9l8zy+rd7KHjP5eJpWMJBDrvwknS9Pt9RsCsr
-         1AhNQzcmCHH9hqmZxFEi9bKhZfz9UiEgVdHOCOBb26fxtUWMRm90Wpehtn/bqoHFE7bB
-         goOWVwvsODaia2BAUb32k0QYR4cWSFXHHeaHp4RuK6nDFMiUZQTYFCPSUBW3MDWQApv+
-         Y9SP5AXKkI1/kJsVfCFyEsbDGeymtrlHCMxAg8nB/8sVoLY/KFIw1Gm2GH7Q42O2mWqv
-         I0cFnHbxAmjHo51uvaqpSr6CFedJhzS1ZJp8PYutClpWHQYPWbz8ASS6WgRUtQJyZchn
-         SUEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ATcsitRpTyb5wI6PMkB6H6IJliZcFvf7R0g9NfFMg9A=;
-        b=H1eR4k3RuOD6+njHnSx7/tZTdiEmPyAyVRKMXcp6kBAShPSR39YTBA+T3ct12cG94c
-         KbmP5l9bEY6R+O0CH4xTtg0A2TJNVf6NNDHFbYej3NdR52HNwga/Pt3g0auMSNL7bsck
-         G+jiWSdsgiCZlnte2ldM5kPMbAruFRoAn40hSoR/5gyufBBVExIr7QEGqcYKAVDDDC5N
-         EftT6bGnHALieC4ZOPnsFArk2Nmijnp3mk+pfKgbGDzeqhuMTZ4F+sKssr2kLkZ25PkY
-         pvb7LAh5BrKaXRwBVcXdfFezXLjtXSQr4VjEKlg0RXn/MToLbF81df5OsYjOfeCZkz1x
-         p7eg==
-X-Gm-Message-State: APjAAAWyJFVdBW2w4pu7tK+qN0+2aDBJiRg+YXJ0PJvd7PeJQlSgYwWW
-        yzkaBCHwfoIlXV8KnYNZaoCqFg==
-X-Google-Smtp-Source: APXvYqz7PqAPPuwHi9KNmY1wXWO+7XyHpi9GIfgIFWwbvr3Uy0dMS/qxpicDH9bsKAIcPc8znEA9iA==
-X-Received: by 2002:a65:690f:: with SMTP id s15mr27939370pgq.432.1567494114841;
-        Tue, 03 Sep 2019 00:01:54 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 19sm16471892pjc.25.2019.09.03.00.01.50
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 03 Sep 2019 00:01:54 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc:     lanqing.liu@unisoc.com, linux-serial@vger.kernel.org,
-        arnd@arndb.de, baolin.wang@linaro.org, orsonzhai@gmail.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
-Subject: [BACKPORT 4.14.y 8/8] serial: sprd: Modify the baud rate calculation formula
-Date:   Tue,  3 Sep 2019 15:01:25 +0800
-Message-Id: <b72268635867cb643912bd842f4980c5d24cb2df.1567492316.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1567492316.git.baolin.wang@linaro.org>
-References: <cover.1567492316.git.baolin.wang@linaro.org>
+        Tue, 3 Sep 2019 03:06:27 -0400
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Sep 2019 03:06:26 EDT
+Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 3 Sep 2019
+ 14:52:13 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+Subject: [PATCH 0/4] arm64: Add basic support for Amlogic A1 SoC Family
+Date:   Tue, 3 Sep 2019 02:51:11 -0400
+Message-ID: <1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [116.236.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lanqing Liu <lanqing.liu@unisoc.com>
+A1 is an application processor designed for smart audio and IoT applications,
+with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
+there is no Cortex-M3 AO CPU in it.
 
-When the source clock is not divisible by the expected baud rate and
-the remainder is not less than half of the expected baud rate, the old
-formular will round up the frequency division coefficient. This will
-make the actual baud rate less than the expected value and can not meet
-the external transmission requirements.
+This serial add basic support for the Amlogic A1 based Amlogic AD401 board:
+which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+Timer, UART. It's capable of booting up into the serial console.
 
-Thus this patch modifies the baud rate calculation formula to support
-the serial controller output the maximum baud rate.
+The pclk for uart_AO_B need to be fixed once A1 clock driver is merged.
+In this version, it rely on bootloader to enable the pclk gate
 
-Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/tty/serial/sprd_serial.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Jianxin Pan (4):
+  soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
+  dt-bindings: arm: amlogic: add A1 bindings
+  dt-bindings: arm: amlogic: add Amlogic AD401 bindings
+  arm64: dts: add support for A1 based Amlogic AD401
 
-diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-index e902494..72e96ab8 100644
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -380,7 +380,7 @@ static void sprd_set_termios(struct uart_port *port,
- 	/* ask the core to calculate the divisor for us */
- 	baud = uart_get_baud_rate(port, termios, old, 0, SPRD_BAUD_IO_LIMIT);
- 
--	quot = (unsigned int)((port->uartclk + baud / 2) / baud);
-+	quot = port->uartclk / baud;
- 
- 	/* set data length */
- 	switch (termios->c_cflag & CSIZE) {
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   6 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts     |  30 +++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 121 +++++++++++++++++++++
+ drivers/soc/amlogic/meson-gx-socinfo.c             |   2 +
+ 5 files changed, 160 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+
 -- 
-1.7.9.5
+2.7.4
 
