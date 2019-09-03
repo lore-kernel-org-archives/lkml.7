@@ -2,86 +2,70 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40DFC41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D44C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B712341F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B391A20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729241AbfICOEY (ORCPT
+        id S1729299AbfICOFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:04:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43958 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfICOEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:04:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 034A1B117;
-        Tue,  3 Sep 2019 14:04:21 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 16:04:20 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>, rafael@kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, devicetree@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: Re: [PATCH v4 07/11] lib/vsprintf: Remove support for %pF and %pf in
- favour of %pS and %ps
-Message-ID: <20190903140420.kmb42cwr3scrfd3e@pathway.suse.cz>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-8-sakari.ailus@linux.intel.com>
- <20190902143935.xtd44jdvhjuc2wxe@pathway.suse.cz>
- <20190902160139.GQ2680@smile.fi.intel.com>
+        Tue, 3 Sep 2019 10:05:08 -0400
+Received: from www62.your-server.de ([213.133.104.62]:51478 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICOFI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:05:08 -0400
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1i59Qf-0004U9-TM; Tue, 03 Sep 2019 16:05:05 +0200
+Received: from [178.197.249.19] (helo=pc-63.home)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1i59Qf-000CjB-Mh; Tue, 03 Sep 2019 16:05:05 +0200
+Subject: Re: [PATCH bpf-next] arm64: bpf: optimize modulo operation
+To:     jerinj@marvell.com, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "open list:BPF JIT for ARM64" <bpf@vger.kernel.org>,
+        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190902061448.28252-1-jerinj@marvell.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <4da4bb59-5578-6981-55b7-5dbc4f0a8254@iogearbox.net>
+Date:   Tue, 3 Sep 2019 16:05:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902160139.GQ2680@smile.fi.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190902061448.28252-1-jerinj@marvell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25561/Tue Sep  3 10:24:26 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-09-02 19:01:39, Andy Shevchenko wrote:
-> On Mon, Sep 02, 2019 at 04:39:35PM +0200, Petr Mladek wrote:
-> > On Mon 2019-09-02 11:32:36, Sakari Ailus wrote:
-> > > %pS and %ps are now the preferred conversion specifiers to print function
-> > > names. The functionality is equivalent; remove the old, deprecated %pF
-> > > and %pf support.
-> > 
-> > Hmm, I see the following in master:
-> > 
-> > $> git grep %pF
-> > tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt:or events have "%pF" or "%pS" parameter in its format string. It is common to
-> > 
-> > $> git grep %pf
-> > tools/lib/traceevent/event-parse.c:             if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
-> > tools/lib/traceevent/event-parse.c:     if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
-> > 
-> > I wonder how this is related to printk(). In each case, it seems
+On 9/2/19 8:14 AM, jerinj@marvell.com wrote:
+> From: Jerin Jacob <jerinj@marvell.com>
 > 
-> It's going thru binary printf() I suppose. The fist stage just saves the format
-> string and argument addresses or so and prints in later on when user is looking
-> for human-readable output.
+> Optimize modulo operation instruction generation by
+> using single MSUB instruction vs MUL followed by SUB
+> instruction scheme.
+> 
+> Signed-off-by: Jerin Jacob <jerinj@marvell.com>
 
-It seems that vbin_printf() still thinks that %pf and %pF
-handle function pointers. If I get it correctly, it just
-stores the binary data and the formating is done when
-tracing log is read. The idea is the function pointers
-will stay the same.
-
-We need to fix/obsolete this path as well.
-
-Best Regards,
-Petr
+Applied, thanks!
