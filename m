@@ -2,99 +2,145 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62C3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1851AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79ECB217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA55217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="D511TNyT"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UMkvzjLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbfICK5l (ORCPT
+        id S1728860AbfICK6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:57:41 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19917 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICK5k (ORCPT
+        Tue, 3 Sep 2019 06:58:33 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33732 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728571AbfICK6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:57:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d6e47260000>; Tue, 03 Sep 2019 03:57:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 03 Sep 2019 03:57:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 03 Sep 2019 03:57:40 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Sep
- 2019 10:57:39 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 3 Sep 2019 10:57:39 +0000
-Received: from nkristam-ubuntu.nvidia.com (Not Verified[10.19.65.118]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d6e47220000>; Tue, 03 Sep 2019 03:57:39 -0700
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Nagarjuna Kristam <nkristam@nvidia.com>
-Subject: [Patch V2] soc/tegra: fuse: Add fuse clock check in tegra_fuse_readl
-Date:   Tue, 3 Sep 2019 16:26:52 +0530
-Message-ID: <1567508212-1194-1-git-send-email-nkristam@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Tue, 3 Sep 2019 06:58:32 -0400
+Received: by mail-ed1-f66.google.com with SMTP id o9so6545412edq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 03:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1fmMyGS0tNg2ZrUjMXrQHItun5hzN9B9+GAHYDnxm80=;
+        b=UMkvzjLsCC2sjAxyLFkC+oxnIHOCVIrCP8LNWhgtHwHfHVoDJNqWNA1lb/Wtp8jGo2
+         GCGAA8VSliVvR7CFYm9CMTgUUn06B+IoCzWE6JtVQRmjVzPXu3RQfegMMdsswRxHLQfT
+         B+9IEE/xV2uvU/uuhS+1E9HVKQPPbYYMvBYLQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=1fmMyGS0tNg2ZrUjMXrQHItun5hzN9B9+GAHYDnxm80=;
+        b=sCnTtgxhfZj/ejwq7JuHhvxqRTv342Ull1/1HpJhp9Tv4NQTla268fgXvyK/KyI0Zh
+         plyUL90ywt1JC6HBOkdIOcQS3Jw7VvCFu0ucwiRYK3XCm8dIg9dfH8rw03Cghld83k45
+         AkKT+MMU33Q+HtjUbqwQ4XRYv6FkLCVIhQf3HuJeZMPqDaANrorYb1J+ZaE9JhP3ZWZv
+         VTlFIy+5lik8kfI+TvhhhUmdjfMnzWGzgBcVcfP2k0FQo0BPKlegWj7QsLESa8F5YCwt
+         iAUtICvmPHzRF+xrfpIADYV99oFPG2gnwxb7UAxYrvSTJA1zPTcs+6AI/0UssmBJlcTH
+         oOvQ==
+X-Gm-Message-State: APjAAAVtXhzMuWq+jdk7+Fc0izOryMhnognGaPnFKXhlVHIjv2IPpoa3
+        D0rt5pp8DG1Fv+tdsT29ScJ7Qg==
+X-Google-Smtp-Source: APXvYqw5isHmx06+1+EN3i1c9akHWdMgAFkS8ga2Hxp68Sh6sDTlsUNHiff4YPNE1vu4FjaDz+IcUQ==
+X-Received: by 2002:a17:906:ce48:: with SMTP id se8mr22871363ejb.98.1567508310915;
+        Tue, 03 Sep 2019 03:58:30 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id p11sm146389edh.77.2019.09.03.03.58.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 03:58:30 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 12:58:28 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/6] drm/vram: use drm_gem_ttm_print_info
+Message-ID: <20190903105828.GW2112@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190903101248.12879-1-kraxel@redhat.com>
+ <20190903101248.12879-4-kraxel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567508262; bh=oZmGi1sLCM2WV+qf/aVhpNReB5QM4vMqnRpZls/4mbc=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=D511TNyTOKWh5m/HiPYwOyvG0hQEWXOGbTg4ox7sWAZlndy8jd32quzZiwDabBEFI
-         SJlnVrKl3vV+ZL2SKV+QQnlmu0NBAz1m26UCa6ys+oK2IdeKIBoLzAMeFiA+fiMOXn
-         kR+RI+3Ohxh3EYEu4j35RYpPqpF0D6xBYqABvVO1ypA+QBRXJ5mT4A3VcRmj2sXjWz
-         2ARA2EXKn8hxyijWAbZYZGjnfeEe6Rfr/UNPrICmFHKgMHXBDOltjyzKQMLOXQwgft
-         6ZrQuDFtoov2IX7wPW32v+SjcoYII5c+g/5Fv1pUp3+Jqv/GVTJhnQIfN/f2VZ/9BO
-         e3aysmADOQ7Jg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903101248.12879-4-kraxel@redhat.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tegra_fuse_readl() can be called from drivers at any time. If this API is
-called before tegra_fuse_probe(), we end up enabling clock before it is
-registered. Add check for fuse clock in tegra_fuse_readl() and return
-corresponding error if any.
+On Tue, Sep 03, 2019 at 12:12:45PM +0200, Gerd Hoffmann wrote:
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+> ---
+>  drivers/gpu/drm/drm_gem_vram_helper.c | 4 +++-
+>  drivers/gpu/drm/Kconfig               | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/drm_gem_vram_helper.c
+> index fd751078bae1..71552f757b4a 100644
+> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+>  
+> +#include <drm/drm_gem_ttm_helper.h>
+>  #include <drm/drm_gem_vram_helper.h>
+>  #include <drm/drm_device.h>
+>  #include <drm/drm_mode.h>
+> @@ -633,5 +634,6 @@ static const struct drm_gem_object_funcs drm_gem_vram_object_funcs = {
+>  	.pin	= drm_gem_vram_object_pin,
+>  	.unpin	= drm_gem_vram_object_unpin,
+>  	.vmap	= drm_gem_vram_object_vmap,
+> -	.vunmap	= drm_gem_vram_object_vunmap
+> +	.vunmap	= drm_gem_vram_object_vunmap,
+> +	.print_info = drm_gem_ttm_print_info,
 
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
----
-V2:
-	- Added Null and other error checks for fuse->clk.
----
- drivers/soc/tegra/fuse/fuse-tegra.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Yeah definitely link to the new way of doing stuff in the kerneldoc of the
+previous patch. For this.
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse/fuse-tegra.c
-index 3eb44e6..58996c6 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-@@ -186,9 +186,12 @@ u32 __init tegra_fuse_read_early(unsigned int offset)
- 
- int tegra_fuse_readl(unsigned long offset, u32 *value)
- {
--	if (!fuse->read)
-+	if (!fuse->read || !fuse->clk)
- 		return -EPROBE_DEFER;
- 
-+	if (IS_ERR(fuse->clk))
-+		return PTR_ERR(fuse->clk);
-+
- 	*value = fuse->read(fuse, offset);
- 
- 	return 0;
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+>  };
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index f7b25519f95c..1be8ad30d8fe 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -169,6 +169,7 @@ config DRM_VRAM_HELPER
+>  	tristate
+>  	depends on DRM
+>  	select DRM_TTM
+> +	select DRM_TTM_HELPER
+
+Select isn't recursive, which means anyone who selects vram helpers now
+also needs to select ttm helpers. This is already broken with DRM_TTM I
+think ...
+-Daniel
+
+
+>  	help
+>  	  Helpers for VRAM memory management
+>  
+> -- 
+> 2.18.1
+> 
+
 -- 
-2.7.4
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
