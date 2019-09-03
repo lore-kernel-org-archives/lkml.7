@@ -2,62 +2,58 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD152C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3C4C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9645423789
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4FF1238C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528307;
-	bh=rkqcKpaAl5k6JghFCig/QH6Jn5EnL2Ec9Nqq3twxghg=;
+	s=default; t=1567528310;
+	bh=9O9BraUo5IvLn0Sw1l0/oYmpxdePNV92iG5PqiT23Kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQ6vM4p5AvMmxchU+fdG0mQEaUrLKkTEHSnfs5FMfB/wvNWb+yaynnv4cgjQHANX7
-	 rli0iaCwXV9fJL6p5oXQ6zO4bjdvoPhJWJpXQ7QlvTeyxlW/ZjBDMqtMPFivRiuWna
-	 UkPVkfKAOmCHGipP6T8TfaBTDmJ+6sZrUYr0MrOg=
+	b=QqKTUWUiS+wJlTR5EPSWb4gycgzJbT6zT48jJOc1rpGfYLbNJj4IcqifnKNsT/1BD
+	 kHwtZ9V9YJ/CI7Xb/ssErz2L1nqsIOF96qDqEBCSC/jl9FpFRxbDFOdPJt4MKj352V
+	 JvCRwKYuyKLBT2dQOa+fvr8n/RI6MxEH6Gt+7P0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfICQbq (ORCPT
+        id S1731250AbfICQbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:31:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54824 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:31:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731171AbfICQbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:31:43 -0400
+        id S1731171AbfICQbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:31:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A440238CE;
-        Tue,  3 Sep 2019 16:31:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08BE2238D0;
+        Tue,  3 Sep 2019 16:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528302;
-        bh=rkqcKpaAl5k6JghFCig/QH6Jn5EnL2Ec9Nqq3twxghg=;
+        s=default; t=1567528306;
+        bh=9O9BraUo5IvLn0Sw1l0/oYmpxdePNV92iG5PqiT23Kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3PTu+yW8jvolbjaLbhehZ0NndWWQCLxXzEFaQpFkiuf9mXRf+CxOLYTkRmqDcZVs
-         EwtDWOy8JreTgZjIUZAKDGq4SmuYphA6YPRj+IRM+MooR40eCYQ4tb+YtGJbv69MFf
-         ++jXv5EXXoMp1qFj+KCqM9jagtikzWdPwWHF2YpU=
+        b=M9+bs4uxxSXQJvz9Q8IcdM0XVY6v0dWmnJeaPP0bnq+glYcBd02/JBh2e9ohRTjUZ
+         lbPIiRZX20pr+9bMHzwOdVR4k+NTxDOJidDrDJrfWmSiMmqOVAaqS1HIwqkGab877H
+         Q8Mt4Czl7y95dpnMestrznHnsohgSms6FqYNyqUs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nadav Amit <namit@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Borislav Petkov <bp@suse.de>, Toshi Kani <toshi.kani@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 144/167] resource: fix locking in find_next_iomem_res()
-Date:   Tue,  3 Sep 2019 12:24:56 -0400
-Message-Id: <20190903162519.7136-144-sashal@kernel.org>
+Cc:     =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>, Rob Herring <robh@kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 147/167] drm/panel: Add support for Armadeus ST0700 Adapt
+Date:   Tue,  3 Sep 2019 12:24:59 -0400
+Message-Id: <20190903162519.7136-147-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,77 +62,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nadav Amit <namit@vmware.com>
+From: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
 
-[ Upstream commit 49f17c26c123b60fd1c74629eef077740d16ffc2 ]
+[ Upstream commit c479450f61c7f1f248c9a54aedacd2a6ca521ff8 ]
 
-Since resources can be removed, locking should ensure that the resource
-is not removed while accessing it.  However, find_next_iomem_res() does
-not hold the lock while copying the data of the resource.
+This patch adds support for the Armadeus ST0700 Adapt. It comes with a
+Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
+that it can be connected on the TFT header of Armadeus Dev boards.
 
-Keep holding the lock while the data is copied.  While at it, change the
-return value to a more informative value.  It is disregarded by the
-callers.
-
-[akpm@linux-foundation.org: fix find_next_iomem_res() documentation]
-Link: http://lkml.kernel.org/r/20190613045903.4922-2-namit@vmware.com
-Fixes: ff3cc952d3f00 ("resource: Add remove_resource interface")
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Toshi Kani <toshi.kani@hpe.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org # v4.19
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190507152713.27494-1-sebastien.szymanski@armadeus.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/resource.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ .../display/panel/armadeus,st0700-adapt.txt   |  9 ++++++
+ drivers/gpu/drm/panel/panel-simple.c          | 29 +++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
 
-diff --git a/kernel/resource.c b/kernel/resource.c
-index 38b8d11c9eaf4..bce773cc5e416 100644
---- a/kernel/resource.c
-+++ b/kernel/resource.c
-@@ -325,7 +325,7 @@ EXPORT_SYMBOL(release_resource);
-  *
-  * If a resource is found, returns 0 and *res is overwritten with the part
-  * of the resource that's within [start..end]; if none is found, returns
-- * -1.
-+ * -ENODEV.  Returns -EINVAL for invalid parameters.
-  *
-  * This function walks the whole tree and not just first level children
-  * unless @first_level_children_only is true.
-@@ -359,16 +359,16 @@ static int find_next_iomem_res(resource_size_t start, resource_size_t end,
- 			break;
- 	}
- 
-+	if (p) {
-+		/* copy data */
-+		res->start = max(start, p->start);
-+		res->end = min(end, p->end);
-+		res->flags = p->flags;
-+		res->desc = p->desc;
-+	}
+diff --git a/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
+new file mode 100644
+index 0000000000000..a30d63db3c8f7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/armadeus,st0700-adapt.txt
+@@ -0,0 +1,9 @@
++Armadeus ST0700 Adapt. A Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT with
++an adapter board.
 +
- 	read_unlock(&resource_lock);
--	if (!p)
--		return -1;
--
--	/* copy data */
--	res->start = max(start, p->start);
--	res->end = min(end, p->end);
--	res->flags = p->flags;
--	res->desc = p->desc;
--	return 0;
-+	return p ? 0 : -ENODEV;
- }
++Required properties:
++- compatible: "armadeus,st0700-adapt"
++- power-supply: see panel-common.txt
++
++Optional properties:
++- backlight: see panel-common.txt
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index b1d41c4921dd5..5fd94e2060297 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -436,6 +436,32 @@ static const struct panel_desc ampire_am800480r3tmqwa1h = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
  
- static int __walk_iomem_res_desc(resource_size_t start, resource_size_t end,
++static const struct display_timing santek_st0700i5y_rbslw_f_timing = {
++	.pixelclock = { 26400000, 33300000, 46800000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = { 16, 210, 354 },
++	.hback_porch = { 45, 36, 6 },
++	.hsync_len = { 1, 10, 40 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 7, 22, 147 },
++	.vback_porch = { 22, 13, 3 },
++	.vsync_len = { 1, 10, 20 },
++	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
++		DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE
++};
++
++static const struct panel_desc armadeus_st0700_adapt = {
++	.timings = &santek_st0700i5y_rbslw_f_timing,
++	.num_timings = 1,
++	.bpc = 6,
++	.size = {
++		.width = 154,
++		.height = 86,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
++};
++
+ static const struct drm_display_mode auo_b101aw03_mode = {
+ 	.clock = 51450,
+ 	.hdisplay = 1024,
+@@ -2330,6 +2356,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "ampire,am800480r3tmqwa1h",
+ 		.data = &ampire_am800480r3tmqwa1h,
++	}, {
++		.compatible = "armadeus,st0700-adapt",
++		.data = &armadeus_st0700_adapt,
+ 	}, {
+ 		.compatible = "auo,b101aw03",
+ 		.data = &auo_b101aw03,
 -- 
 2.20.1
 
