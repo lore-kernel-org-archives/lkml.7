@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BB8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B2FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23E2215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC03A23431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528077;
-	bh=krAUKclN5zuG1oCarZQF52J+e248ke7MQqKEOMq6egk=;
+	s=default; t=1567528084;
+	bh=Jx4h1OLqgtM+TERApXP4s/2ms0EySlgEHJea4wI2Qf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ojm7jl/SBBXduZh2NsGk56ykOWyrej0J72mpJ3ywvRUu1R9BR4KqoG55YdSFV4gi0
-	 2SHl9Ed+t8Mnh/bD2RuWw+IHNdKev17qcfeo6frUANH5n1O3Wrdbm/D9O3BHViQask
-	 cGW2bysyTYtDbYQJ29j1wvKgO2lAqjvMqC+dfw9U=
+	b=fpj3aZKmSQJ2i7FZ4fsjc6fkqdmUZ3egyAxy3wdMbuLJZhPeJ6O7vntqwKyd5R2LA
+	 jxHl/uYCv8SVfW9hwGMntLZ/33VYFWmblaOciJZD7I3brfFpGS/+ke/8uZlfs7+hov
+	 Y6xdkTmXxjSJcrsszUJg+uOjjnttmubVeCSDX9so=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfICQ15 (ORCPT
+        id S1731030AbfICQ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49358 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:28:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730957AbfICQ1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:50 -0400
+        id S1730986AbfICQ15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 701D3238C6;
-        Tue,  3 Sep 2019 16:27:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98772238C5;
+        Tue,  3 Sep 2019 16:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528069;
-        bh=krAUKclN5zuG1oCarZQF52J+e248ke7MQqKEOMq6egk=;
+        s=default; t=1567528076;
+        bh=Jx4h1OLqgtM+TERApXP4s/2ms0EySlgEHJea4wI2Qf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uS7PmZ9YH8yfjYHHeRe+aV4VqFPg6QQxiyde4g/BbA6OQdZ9DvvN6RYooZUsa54DW
-         9C9r6o+dPk5AKQPQWkNmv3WKIaW5KZ/WD1Df8DOBX6FVSOvhi3TMDbkOB6XsH++ve3
-         LFFk7xJAbmp92sqmE2sATw+plEpSWPJdO5z+tVO8=
+        b=DH7yIoGwDMBTdYv3qFeQSRvtY6GlzdhCxWqSgXJkLrP2DfIg7UOCxa4i1de3YteXg
+         WcuQj56idzDoSJ1zcLdkuf2TIW4dob1UErDoo/PyCrrNuwMyIHTUw3yGKPZvG0GEwB
+         zqIcSldOknaaGI+tu1ZWQxM2e9SDdpqwtqZPuQdo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 083/167] drm: add __user attribute to ptr_to_compat()
-Date:   Tue,  3 Sep 2019 12:23:55 -0400
-Message-Id: <20190903162519.7136-83-sashal@kernel.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 089/167] usb: typec: tcpm: Try PD-2.0 if sink does not respond to 3.0 source-caps
+Date:   Tue,  3 Sep 2019 12:24:01 -0400
+Message-Id: <20190903162519.7136-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,61 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit e552f0851070fe4975d610a99910be4e9bf5d7bd ]
+[ Upstream commit 976daf9d1199932df80e7b04546d1a1bd4ed5ece ]
 
-The ptr_to_compat() call takes a "void __user *", so cast
-the compat drm calls that use it to avoid the following
-warnings from sparse:
+PD 2.0 sinks are supposed to accept src-capabilities with a 3.0 header and
+simply ignore any src PDOs which the sink does not understand such as PPS
+but some 2.0 sinks instead ignore the entire PD_DATA_SOURCE_CAP message,
+causing contract negotiation to fail.
 
-drivers/gpu/drm/drm_ioc32.c:188:39: warning: incorrect type in argument 1 (different address spaces)
-drivers/gpu/drm/drm_ioc32.c:188:39:    expected void [noderef] <asn:1>*uptr
-drivers/gpu/drm/drm_ioc32.c:188:39:    got void *[addressable] [assigned] handle
-drivers/gpu/drm/drm_ioc32.c:529:41: warning: incorrect type in argument 1 (different address spaces)
-drivers/gpu/drm/drm_ioc32.c:529:41:    expected void [noderef] <asn:1>*uptr
-drivers/gpu/drm/drm_ioc32.c:529:41:    got void *[addressable] [assigned] handle
+This commit fixes such sinks not working by re-trying the contract
+negotiation with PD-2.0 source-caps messages if we don't have a contract
+after PD_N_HARD_RESET_COUNT hard-reset attempts.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190301120046.26961-1-ben.dooks@codethink.co.uk
+The problem fixed by this commit was noticed with a Type-C to VGA dongle.
+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_ioc32.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/typec/tcpm.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
-index 138680b37c709..f8672238d444b 100644
---- a/drivers/gpu/drm/drm_ioc32.c
-+++ b/drivers/gpu/drm/drm_ioc32.c
-@@ -185,7 +185,7 @@ static int compat_drm_getmap(struct file *file, unsigned int cmd,
- 	m32.size = map.size;
- 	m32.type = map.type;
- 	m32.flags = map.flags;
--	m32.handle = ptr_to_compat(map.handle);
-+	m32.handle = ptr_to_compat((void __user *)map.handle);
- 	m32.mtrr = map.mtrr;
- 	if (copy_to_user(argp, &m32, sizeof(m32)))
- 		return -EFAULT;
-@@ -216,7 +216,7 @@ static int compat_drm_addmap(struct file *file, unsigned int cmd,
- 
- 	m32.offset = map.offset;
- 	m32.mtrr = map.mtrr;
--	m32.handle = ptr_to_compat(map.handle);
-+	m32.handle = ptr_to_compat((void __user *)map.handle);
- 	if (map.handle != compat_ptr(m32.handle))
- 		pr_err_ratelimited("compat_drm_addmap truncated handle %p for type %d offset %x\n",
- 				   map.handle, m32.type, m32.offset);
-@@ -529,7 +529,7 @@ static int compat_drm_getsareactx(struct file *file, unsigned int cmd,
- 	if (err)
- 		return err;
- 
--	req32.handle = ptr_to_compat(req.handle);
-+	req32.handle = ptr_to_compat((void __user *)req.handle);
- 	if (copy_to_user(argp, &req32, sizeof(req32)))
- 		return -EFAULT;
- 
+diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
+index 5f29ce8d6c3f9..e8524ad5a4c0a 100644
+--- a/drivers/usb/typec/tcpm.c
++++ b/drivers/usb/typec/tcpm.c
+@@ -37,6 +37,7 @@
+ 	S(SRC_ATTACHED),			\
+ 	S(SRC_STARTUP),				\
+ 	S(SRC_SEND_CAPABILITIES),		\
++	S(SRC_SEND_CAPABILITIES_TIMEOUT),	\
+ 	S(SRC_NEGOTIATE_CAPABILITIES),		\
+ 	S(SRC_TRANSITION_SUPPLY),		\
+ 	S(SRC_READY),				\
+@@ -2987,10 +2988,34 @@ static void run_state_machine(struct tcpm_port *port)
+ 			/* port->hard_reset_count = 0; */
+ 			port->caps_count = 0;
+ 			port->pd_capable = true;
+-			tcpm_set_state_cond(port, hard_reset_state(port),
++			tcpm_set_state_cond(port, SRC_SEND_CAPABILITIES_TIMEOUT,
+ 					    PD_T_SEND_SOURCE_CAP);
+ 		}
+ 		break;
++	case SRC_SEND_CAPABILITIES_TIMEOUT:
++		/*
++		 * Error recovery for a PD_DATA_SOURCE_CAP reply timeout.
++		 *
++		 * PD 2.0 sinks are supposed to accept src-capabilities with a
++		 * 3.0 header and simply ignore any src PDOs which the sink does
++		 * not understand such as PPS but some 2.0 sinks instead ignore
++		 * the entire PD_DATA_SOURCE_CAP message, causing contract
++		 * negotiation to fail.
++		 *
++		 * After PD_N_HARD_RESET_COUNT hard-reset attempts, we try
++		 * sending src-capabilities with a lower PD revision to
++		 * make these broken sinks work.
++		 */
++		if (port->hard_reset_count < PD_N_HARD_RESET_COUNT) {
++			tcpm_set_state(port, HARD_RESET_SEND, 0);
++		} else if (port->negotiated_rev > PD_REV20) {
++			port->negotiated_rev--;
++			port->hard_reset_count = 0;
++			tcpm_set_state(port, SRC_SEND_CAPABILITIES, 0);
++		} else {
++			tcpm_set_state(port, hard_reset_state(port), 0);
++		}
++		break;
+ 	case SRC_NEGOTIATE_CAPABILITIES:
+ 		ret = tcpm_pd_check_request(port);
+ 		if (ret < 0) {
 -- 
 2.20.1
 
