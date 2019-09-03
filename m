@@ -2,533 +2,200 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350ECC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21FFC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEE7D233A1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528776;
-	bh=QUMAEaHBONUt+RS9m92xj47kS2yJW6scqTjbc7GD/xY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jp0Ke3rVacY5bIvKnvM2AmN7uHvl3YgyJeXBYUTT/hnofrNLfM/Q873uPe6Xo3ucW
-	 Wu6ManDRJDoQUCUMyW7W5p/UXmzCGqm0dEvbpIwgLZ2nQzsPsLf1zA6gPpvT57Sm1T
-	 okkX8rsMUupsDCWbwGJ3exm4rXBpXTYF+7TYsZ0o=
+	by mail.kernel.org (Postfix) with ESMTP id 93453233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRpQzv72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730414AbfICQZd (ORCPT
+        id S1731247AbfICQjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:25:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730378AbfICQZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 462FE23697;
-        Tue,  3 Sep 2019 16:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527925;
-        bh=QUMAEaHBONUt+RS9m92xj47kS2yJW6scqTjbc7GD/xY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZffyy3LFz+mQmqsHJsjHsClHY6J257aRqeWEqdr4RpD/lxKTwStoRxpMRFaznowv
-         t7W19dQJPY3IUYgqeEGUW5h5oRfl1RpxnIUYqthGH5A+h2GRknzLzqsC88tdArz51z
-         BDQE2h0IGwt1dxHCs+uM/lWA8jKobFFw9O0cKfFw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 002/167] media: cec/v4l2: move V4L2 specific CEC functions to V4L2
-Date:   Tue,  3 Sep 2019 12:22:34 -0400
-Message-Id: <20190903162519.7136-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+        Tue, 3 Sep 2019 12:39:37 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42196 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729939AbfICQjf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:39:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id n197so35441307iod.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JzftJXzoOTFgbjF3xTbUoWc131CYvIfGIZLcafzYJHs=;
+        b=jRpQzv72f0HZUJvx5o8Tjjf1nGxAfyjIBUkYXUQHDIflZYZp5Y3OWrgG3NoATvrbIT
+         99h1T7plhj3mbL68RFdH+otunF0AX/njw29m+8yntWCKN3b25UO9S9youqKfZwYlrGLy
+         HyfBZy3AQeRmy9xGVhAVntJcGG7A4s/zhBMA1dNM0TYfVYJxF58st0I5w+UuZN6B8bSi
+         dqwntQuIcjlQhaZEODpPQW7i4W4uZjPrh7KGdWfUMa+8dOjqp0zHbKnlW8gjuLcI29Ed
+         t35dGdAd1t8hQ2rYkwqjPRHste2w+ZGJ4xnrRCe5P6EJLYUKf7E16RCtNjlE0UlfJkLg
+         ALvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JzftJXzoOTFgbjF3xTbUoWc131CYvIfGIZLcafzYJHs=;
+        b=YBipFauYZSaeK0t5o0G2vlTraA6OEiaTM9KxhZFrE1N3LQ7XaxQ7eZ4obWHZRtYzuB
+         IbDtzxAmdTc1WRck88AHjT7E2shqrSbuHTWKSrs0qsCkCPoQriFDp+1j9vQV2MG36mcR
+         kBe7ijb3do9Pcfghiq7JRH59lSbR0Q/C3FYI6KtvwFuj6/1VtVsSLPPRM1DLFWjYefmB
+         bzy2jZHldDj3Uby+uWphYnrA11/yb9VzTpAKbPlsdKU7Kasmy7HYVUukemo/exDTA9Xr
+         v4kfcxUGM35JCuIKaba7X/l0LA4b19XOGkKvLjbSJ6ePzrKkSFeo0UM9wn45L4UvYwtf
+         78NA==
+X-Gm-Message-State: APjAAAU5lj2LbLj+3FjE76pXrSrUCw0UsQ0Z1xMCKezj3nzk6QFinWVO
+        1wBPcNVipv52nm+racjlRdPInvEFfuYyNxeaPJ0=
+X-Google-Smtp-Source: APXvYqxFcxaXizUfkzAkarARBL9OQt+CU3nnchi5sZTg5CAf54xc5ETUf7QWVo7WdxDzekz2H/nhunhKKyEH9Q13vNM=
+X-Received: by 2002:a6b:6d0f:: with SMTP id a15mr20477540iod.278.1567528774230;
+ Tue, 03 Sep 2019 09:39:34 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190830060116.10476-1-kraxel@redhat.com>
+In-Reply-To: <20190830060116.10476-1-kraxel@redhat.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Tue, 3 Sep 2019 09:39:23 -0700
+Message-ID: <CAPaKu7TuBg0pAKJrvWAG4B0dWjKuGh_HwMKS4JoktS8q_NwOyg@mail.gmail.com>
+Subject: Re: [PATCH] drm/virtio: add worker for object release
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
-
-[ Upstream commit 9cfd2753f8f3923f89cbb15f940f3aa0e7202d3e ]
-
-Several CEC functions are actually specific for use with receivers,
-i.e. they should be part of the V4L2 subsystem, not CEC.
-
-These functions deal with validating and modifying EDIDs for (HDMI)
-receivers, and they do not actually have anything to do with the CEC
-subsystem and whether or not CEC is enabled. The problem was that if
-the CEC_CORE config option was not set, then these functions would
-become stubs, but that's not right: they should always be valid.
-
-So replace the cec_ prefix by v4l2_ and move them to v4l2-dv-timings.c.
-Update all drivers that call these accordingly.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reported-by: Lars-Peter Clausen <lars@metafoo.de>
-Cc: <stable@vger.kernel.org>      # for v4.17 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/cec/cec-edid.c                  |  71 --------
- drivers/media/i2c/adv7604.c                   |   4 +-
- drivers/media/i2c/adv7842.c                   |   4 +-
- drivers/media/i2c/tc358743.c                  |   2 +-
- drivers/media/platform/vivid/vivid-vid-cap.c  |   4 +-
- .../media/platform/vivid/vivid-vid-common.c   |   2 +-
- drivers/media/v4l2-core/v4l2-dv-timings.c     | 151 ++++++++++++++++++
- include/media/cec.h                           |  80 ----------
- include/media/v4l2-dv-timings.h               |   6 +
- 9 files changed, 165 insertions(+), 159 deletions(-)
-
-diff --git a/drivers/media/cec/cec-edid.c b/drivers/media/cec/cec-edid.c
-index f587e8eaefd81..e2f54eec08294 100644
---- a/drivers/media/cec/cec-edid.c
-+++ b/drivers/media/cec/cec-edid.c
-@@ -22,74 +22,3 @@ u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
- 	return (edid[loc] << 8) | edid[loc + 1];
- }
- EXPORT_SYMBOL_GPL(cec_get_edid_phys_addr);
--
--void cec_set_edid_phys_addr(u8 *edid, unsigned int size, u16 phys_addr)
--{
--	unsigned int loc = cec_get_edid_spa_location(edid, size);
--	u8 sum = 0;
--	unsigned int i;
--
--	if (loc == 0)
--		return;
--	edid[loc] = phys_addr >> 8;
--	edid[loc + 1] = phys_addr & 0xff;
--	loc &= ~0x7f;
--
--	/* update the checksum */
--	for (i = loc; i < loc + 127; i++)
--		sum += edid[i];
--	edid[i] = 256 - sum;
--}
--EXPORT_SYMBOL_GPL(cec_set_edid_phys_addr);
--
--u16 cec_phys_addr_for_input(u16 phys_addr, u8 input)
--{
--	/* Check if input is sane */
--	if (WARN_ON(input == 0 || input > 0xf))
--		return CEC_PHYS_ADDR_INVALID;
--
--	if (phys_addr == 0)
--		return input << 12;
--
--	if ((phys_addr & 0x0fff) == 0)
--		return phys_addr | (input << 8);
--
--	if ((phys_addr & 0x00ff) == 0)
--		return phys_addr | (input << 4);
--
--	if ((phys_addr & 0x000f) == 0)
--		return phys_addr | input;
--
--	/*
--	 * All nibbles are used so no valid physical addresses can be assigned
--	 * to the input.
--	 */
--	return CEC_PHYS_ADDR_INVALID;
--}
--EXPORT_SYMBOL_GPL(cec_phys_addr_for_input);
--
--int cec_phys_addr_validate(u16 phys_addr, u16 *parent, u16 *port)
--{
--	int i;
--
--	if (parent)
--		*parent = phys_addr;
--	if (port)
--		*port = 0;
--	if (phys_addr == CEC_PHYS_ADDR_INVALID)
--		return 0;
--	for (i = 0; i < 16; i += 4)
--		if (phys_addr & (0xf << i))
--			break;
--	if (i == 16)
--		return 0;
--	if (parent)
--		*parent = phys_addr & (0xfff0 << i);
--	if (port)
--		*port = (phys_addr >> i) & 0xf;
--	for (i += 4; i < 16; i += 4)
--		if ((phys_addr & (0xf << i)) == 0)
--			return -EINVAL;
--	return 0;
--}
--EXPORT_SYMBOL_GPL(cec_phys_addr_validate);
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index f01964c36ad57..a4b0a89c7e7e6 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -2297,8 +2297,8 @@ static int adv76xx_set_edid(struct v4l2_subdev *sd, struct v4l2_edid *edid)
- 		edid->blocks = 2;
- 		return -E2BIG;
- 	}
--	pa = cec_get_edid_phys_addr(edid->edid, edid->blocks * 128, &spa_loc);
--	err = cec_phys_addr_validate(pa, &pa, NULL);
-+	pa = v4l2_get_edid_phys_addr(edid->edid, edid->blocks * 128, &spa_loc);
-+	err = v4l2_phys_addr_validate(pa, &pa, NULL);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/media/i2c/adv7842.c b/drivers/media/i2c/adv7842.c
-index bb43a75ed6d0b..58662ba92d4f8 100644
---- a/drivers/media/i2c/adv7842.c
-+++ b/drivers/media/i2c/adv7842.c
-@@ -791,8 +791,8 @@ static int edid_write_hdmi_segment(struct v4l2_subdev *sd, u8 port)
- 		return 0;
- 	}
- 
--	pa = cec_get_edid_phys_addr(edid, 256, &spa_loc);
--	err = cec_phys_addr_validate(pa, &pa, NULL);
-+	pa = v4l2_get_edid_phys_addr(edid, 256, &spa_loc);
-+	err = v4l2_phys_addr_validate(pa, &pa, NULL);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/media/i2c/tc358743.c b/drivers/media/i2c/tc358743.c
-index 26070fb6ce4eb..e4c0a27b636aa 100644
---- a/drivers/media/i2c/tc358743.c
-+++ b/drivers/media/i2c/tc358743.c
-@@ -1789,7 +1789,7 @@ static int tc358743_s_edid(struct v4l2_subdev *sd,
- 		return -E2BIG;
- 	}
- 	pa = cec_get_edid_phys_addr(edid->edid, edid->blocks * 128, NULL);
--	err = cec_phys_addr_validate(pa, &pa, NULL);
-+	err = v4l2_phys_addr_validate(pa, &pa, NULL);
- 	if (err)
- 		return err;
- 
-diff --git a/drivers/media/platform/vivid/vivid-vid-cap.c b/drivers/media/platform/vivid/vivid-vid-cap.c
-index 3b09ffceefd56..2e273f4dfc295 100644
---- a/drivers/media/platform/vivid/vivid-vid-cap.c
-+++ b/drivers/media/platform/vivid/vivid-vid-cap.c
-@@ -1724,7 +1724,7 @@ int vidioc_s_edid(struct file *file, void *_fh,
- 		return -E2BIG;
- 	}
- 	phys_addr = cec_get_edid_phys_addr(edid->edid, edid->blocks * 128, NULL);
--	ret = cec_phys_addr_validate(phys_addr, &phys_addr, NULL);
-+	ret = v4l2_phys_addr_validate(phys_addr, &phys_addr, NULL);
- 	if (ret)
- 		return ret;
- 
-@@ -1740,7 +1740,7 @@ int vidioc_s_edid(struct file *file, void *_fh,
- 
- 	for (i = 0; i < MAX_OUTPUTS && dev->cec_tx_adap[i]; i++)
- 		cec_s_phys_addr(dev->cec_tx_adap[i],
--				cec_phys_addr_for_input(phys_addr, i + 1),
-+				v4l2_phys_addr_for_input(phys_addr, i + 1),
- 				false);
- 	return 0;
- }
-diff --git a/drivers/media/platform/vivid/vivid-vid-common.c b/drivers/media/platform/vivid/vivid-vid-common.c
-index 2079861d2270f..e108e9befb77f 100644
---- a/drivers/media/platform/vivid/vivid-vid-common.c
-+++ b/drivers/media/platform/vivid/vivid-vid-common.c
-@@ -863,7 +863,7 @@ int vidioc_g_edid(struct file *file, void *_fh,
- 	if (edid->blocks > dev->edid_blocks - edid->start_block)
- 		edid->blocks = dev->edid_blocks - edid->start_block;
- 	if (adap)
--		cec_set_edid_phys_addr(dev->edid, dev->edid_blocks * 128, adap->phys_addr);
-+		v4l2_set_edid_phys_addr(dev->edid, dev->edid_blocks * 128, adap->phys_addr);
- 	memcpy(edid->edid, dev->edid + edid->start_block * 128, edid->blocks * 128);
- 	return 0;
- }
-diff --git a/drivers/media/v4l2-core/v4l2-dv-timings.c b/drivers/media/v4l2-core/v4l2-dv-timings.c
-index c7c600c1f63b8..a24b40dfec97a 100644
---- a/drivers/media/v4l2-core/v4l2-dv-timings.c
-+++ b/drivers/media/v4l2-core/v4l2-dv-timings.c
-@@ -15,6 +15,7 @@
- #include <media/v4l2-dv-timings.h>
- #include <linux/math64.h>
- #include <linux/hdmi.h>
-+#include <media/cec.h>
- 
- MODULE_AUTHOR("Hans Verkuil");
- MODULE_DESCRIPTION("V4L2 DV Timings Helper Functions");
-@@ -942,3 +943,153 @@ v4l2_hdmi_rx_colorimetry(const struct hdmi_avi_infoframe *avi,
- 	return c;
- }
- EXPORT_SYMBOL_GPL(v4l2_hdmi_rx_colorimetry);
-+
-+/**
-+ * v4l2_get_edid_phys_addr() - find and return the physical address
-+ *
-+ * @edid:	pointer to the EDID data
-+ * @size:	size in bytes of the EDID data
-+ * @offset:	If not %NULL then the location of the physical address
-+ *		bytes in the EDID will be returned here. This is set to 0
-+ *		if there is no physical address found.
-+ *
-+ * Return: the physical address or CEC_PHYS_ADDR_INVALID if there is none.
-+ */
-+u16 v4l2_get_edid_phys_addr(const u8 *edid, unsigned int size,
-+			    unsigned int *offset)
-+{
-+	unsigned int loc = cec_get_edid_spa_location(edid, size);
-+
-+	if (offset)
-+		*offset = loc;
-+	if (loc == 0)
-+		return CEC_PHYS_ADDR_INVALID;
-+	return (edid[loc] << 8) | edid[loc + 1];
-+}
-+EXPORT_SYMBOL_GPL(v4l2_get_edid_phys_addr);
-+
-+/**
-+ * v4l2_set_edid_phys_addr() - find and set the physical address
-+ *
-+ * @edid:	pointer to the EDID data
-+ * @size:	size in bytes of the EDID data
-+ * @phys_addr:	the new physical address
-+ *
-+ * This function finds the location of the physical address in the EDID
-+ * and fills in the given physical address and updates the checksum
-+ * at the end of the EDID block. It does nothing if the EDID doesn't
-+ * contain a physical address.
-+ */
-+void v4l2_set_edid_phys_addr(u8 *edid, unsigned int size, u16 phys_addr)
-+{
-+	unsigned int loc = cec_get_edid_spa_location(edid, size);
-+	u8 sum = 0;
-+	unsigned int i;
-+
-+	if (loc == 0)
-+		return;
-+	edid[loc] = phys_addr >> 8;
-+	edid[loc + 1] = phys_addr & 0xff;
-+	loc &= ~0x7f;
-+
-+	/* update the checksum */
-+	for (i = loc; i < loc + 127; i++)
-+		sum += edid[i];
-+	edid[i] = 256 - sum;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_set_edid_phys_addr);
-+
-+/**
-+ * v4l2_phys_addr_for_input() - calculate the PA for an input
-+ *
-+ * @phys_addr:	the physical address of the parent
-+ * @input:	the number of the input port, must be between 1 and 15
-+ *
-+ * This function calculates a new physical address based on the input
-+ * port number. For example:
-+ *
-+ * PA = 0.0.0.0 and input = 2 becomes 2.0.0.0
-+ *
-+ * PA = 3.0.0.0 and input = 1 becomes 3.1.0.0
-+ *
-+ * PA = 3.2.1.0 and input = 5 becomes 3.2.1.5
-+ *
-+ * PA = 3.2.1.3 and input = 5 becomes f.f.f.f since it maxed out the depth.
-+ *
-+ * Return: the new physical address or CEC_PHYS_ADDR_INVALID.
-+ */
-+u16 v4l2_phys_addr_for_input(u16 phys_addr, u8 input)
-+{
-+	/* Check if input is sane */
-+	if (WARN_ON(input == 0 || input > 0xf))
-+		return CEC_PHYS_ADDR_INVALID;
-+
-+	if (phys_addr == 0)
-+		return input << 12;
-+
-+	if ((phys_addr & 0x0fff) == 0)
-+		return phys_addr | (input << 8);
-+
-+	if ((phys_addr & 0x00ff) == 0)
-+		return phys_addr | (input << 4);
-+
-+	if ((phys_addr & 0x000f) == 0)
-+		return phys_addr | input;
-+
-+	/*
-+	 * All nibbles are used so no valid physical addresses can be assigned
-+	 * to the input.
-+	 */
-+	return CEC_PHYS_ADDR_INVALID;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_phys_addr_for_input);
-+
-+/**
-+ * v4l2_phys_addr_validate() - validate a physical address from an EDID
-+ *
-+ * @phys_addr:	the physical address to validate
-+ * @parent:	if not %NULL, then this is filled with the parents PA.
-+ * @port:	if not %NULL, then this is filled with the input port.
-+ *
-+ * This validates a physical address as read from an EDID. If the
-+ * PA is invalid (such as 1.0.1.0 since '0' is only allowed at the end),
-+ * then it will return -EINVAL.
-+ *
-+ * The parent PA is passed into %parent and the input port is passed into
-+ * %port. For example:
-+ *
-+ * PA = 0.0.0.0: has parent 0.0.0.0 and input port 0.
-+ *
-+ * PA = 1.0.0.0: has parent 0.0.0.0 and input port 1.
-+ *
-+ * PA = 3.2.0.0: has parent 3.0.0.0 and input port 2.
-+ *
-+ * PA = f.f.f.f: has parent f.f.f.f and input port 0.
-+ *
-+ * Return: 0 if the PA is valid, -EINVAL if not.
-+ */
-+int v4l2_phys_addr_validate(u16 phys_addr, u16 *parent, u16 *port)
-+{
-+	int i;
-+
-+	if (parent)
-+		*parent = phys_addr;
-+	if (port)
-+		*port = 0;
-+	if (phys_addr == CEC_PHYS_ADDR_INVALID)
-+		return 0;
-+	for (i = 0; i < 16; i += 4)
-+		if (phys_addr & (0xf << i))
-+			break;
-+	if (i == 16)
-+		return 0;
-+	if (parent)
-+		*parent = phys_addr & (0xfff0 << i);
-+	if (port)
-+		*port = (phys_addr >> i) & 0xf;
-+	for (i += 4; i < 16; i += 4)
-+		if ((phys_addr & (0xf << i)) == 0)
-+			return -EINVAL;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_phys_addr_validate);
-diff --git a/include/media/cec.h b/include/media/cec.h
-index dc4b412e8fa1e..59bf280e9715c 100644
---- a/include/media/cec.h
-+++ b/include/media/cec.h
-@@ -333,67 +333,6 @@ void cec_queue_pin_5v_event(struct cec_adapter *adap, bool is_high, ktime_t ts);
- u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
- 			   unsigned int *offset);
- 
--/**
-- * cec_set_edid_phys_addr() - find and set the physical address
-- *
-- * @edid:	pointer to the EDID data
-- * @size:	size in bytes of the EDID data
-- * @phys_addr:	the new physical address
-- *
-- * This function finds the location of the physical address in the EDID
-- * and fills in the given physical address and updates the checksum
-- * at the end of the EDID block. It does nothing if the EDID doesn't
-- * contain a physical address.
-- */
--void cec_set_edid_phys_addr(u8 *edid, unsigned int size, u16 phys_addr);
--
--/**
-- * cec_phys_addr_for_input() - calculate the PA for an input
-- *
-- * @phys_addr:	the physical address of the parent
-- * @input:	the number of the input port, must be between 1 and 15
-- *
-- * This function calculates a new physical address based on the input
-- * port number. For example:
-- *
-- * PA = 0.0.0.0 and input = 2 becomes 2.0.0.0
-- *
-- * PA = 3.0.0.0 and input = 1 becomes 3.1.0.0
-- *
-- * PA = 3.2.1.0 and input = 5 becomes 3.2.1.5
-- *
-- * PA = 3.2.1.3 and input = 5 becomes f.f.f.f since it maxed out the depth.
-- *
-- * Return: the new physical address or CEC_PHYS_ADDR_INVALID.
-- */
--u16 cec_phys_addr_for_input(u16 phys_addr, u8 input);
--
--/**
-- * cec_phys_addr_validate() - validate a physical address from an EDID
-- *
-- * @phys_addr:	the physical address to validate
-- * @parent:	if not %NULL, then this is filled with the parents PA.
-- * @port:	if not %NULL, then this is filled with the input port.
-- *
-- * This validates a physical address as read from an EDID. If the
-- * PA is invalid (such as 1.0.1.0 since '0' is only allowed at the end),
-- * then it will return -EINVAL.
-- *
-- * The parent PA is passed into %parent and the input port is passed into
-- * %port. For example:
-- *
-- * PA = 0.0.0.0: has parent 0.0.0.0 and input port 0.
-- *
-- * PA = 1.0.0.0: has parent 0.0.0.0 and input port 1.
-- *
-- * PA = 3.2.0.0: has parent 3.0.0.0 and input port 2.
-- *
-- * PA = f.f.f.f: has parent f.f.f.f and input port 0.
-- *
-- * Return: 0 if the PA is valid, -EINVAL if not.
-- */
--int cec_phys_addr_validate(u16 phys_addr, u16 *parent, u16 *port);
--
- #else
- 
- static inline int cec_register_adapter(struct cec_adapter *adap,
-@@ -428,25 +367,6 @@ static inline u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
- 	return CEC_PHYS_ADDR_INVALID;
- }
- 
--static inline void cec_set_edid_phys_addr(u8 *edid, unsigned int size,
--					  u16 phys_addr)
--{
--}
--
--static inline u16 cec_phys_addr_for_input(u16 phys_addr, u8 input)
--{
--	return CEC_PHYS_ADDR_INVALID;
--}
--
--static inline int cec_phys_addr_validate(u16 phys_addr, u16 *parent, u16 *port)
--{
--	if (parent)
--		*parent = phys_addr;
--	if (port)
--		*port = 0;
--	return 0;
--}
--
- #endif
- 
- /**
-diff --git a/include/media/v4l2-dv-timings.h b/include/media/v4l2-dv-timings.h
-index 17cb27df1b813..4e7732d3908c4 100644
---- a/include/media/v4l2-dv-timings.h
-+++ b/include/media/v4l2-dv-timings.h
-@@ -234,4 +234,10 @@ v4l2_hdmi_rx_colorimetry(const struct hdmi_avi_infoframe *avi,
- 			 const struct hdmi_vendor_infoframe *hdmi,
- 			 unsigned int height);
- 
-+u16 v4l2_get_edid_phys_addr(const u8 *edid, unsigned int size,
-+			    unsigned int *offset);
-+void v4l2_set_edid_phys_addr(u8 *edid, unsigned int size, u16 phys_addr);
-+u16 v4l2_phys_addr_for_input(u16 phys_addr, u8 input);
-+int v4l2_phys_addr_validate(u16 phys_addr, u16 *parent, u16 *port);
-+
- #endif
--- 
-2.20.1
-
+On Thu, Aug 29, 2019 at 11:01 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> Move object release into a separate worker.  Releasing objects requires
+> sending commands to the host.  Doing that in the dequeue worker will
+> cause deadlocks in case the command queue gets filled up, because the
+> dequeue worker is also the one which will free up slots in the command
+> queue.
+>
+> Reported-by: Chia-I Wu <olvaffe@gmail.com>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Tested-by: Chia-I Wu <olvaffe@gmail.com>
+Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.h |  8 ++++++++
+>  drivers/gpu/drm/virtio/virtgpu_gem.c | 27 +++++++++++++++++++++++++++
+>  drivers/gpu/drm/virtio/virtgpu_kms.c |  6 ++++++
+>  drivers/gpu/drm/virtio/virtgpu_vq.c  |  2 +-
+>  4 files changed, 42 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index fb35831ed351..314e02f94d9c 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -78,6 +78,7 @@ struct virtio_gpu_object {
+>
+>  struct virtio_gpu_object_array {
+>         struct ww_acquire_ctx ticket;
+> +       struct list_head next;
+>         u32 nents, total;
+>         struct drm_gem_object *objs[];
+>  };
+> @@ -197,6 +198,10 @@ struct virtio_gpu_device {
+>
+>         struct work_struct config_changed_work;
+>
+> +       struct work_struct obj_free_work;
+> +       spinlock_t obj_free_lock;
+> +       struct list_head obj_free_list;
+> +
+>         struct virtio_gpu_drv_capset *capsets;
+>         uint32_t num_capsets;
+>         struct list_head cap_cache;
+> @@ -246,6 +251,9 @@ void virtio_gpu_array_unlock_resv(struct virtio_gpu_object_array *objs);
+>  void virtio_gpu_array_add_fence(struct virtio_gpu_object_array *objs,
+>                                 struct dma_fence *fence);
+>  void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs);
+> +void virtio_gpu_array_put_free_delayed(struct virtio_gpu_device *vgdev,
+> +                                      struct virtio_gpu_object_array *objs);
+> +void virtio_gpu_array_put_free_work(struct work_struct *work);
+>
+>  /* virtio vg */
+>  int virtio_gpu_alloc_vbufs(struct virtio_gpu_device *vgdev);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_gem.c b/drivers/gpu/drm/virtio/virtgpu_gem.c
+> index b812094ae916..4c1f579edfb3 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_gem.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_gem.c
+> @@ -239,3 +239,30 @@ void virtio_gpu_array_put_free(struct virtio_gpu_object_array *objs)
+>                 drm_gem_object_put_unlocked(objs->objs[i]);
+>         virtio_gpu_array_free(objs);
+>  }
+> +
+> +void virtio_gpu_array_put_free_delayed(struct virtio_gpu_device *vgdev,
+> +                                      struct virtio_gpu_object_array *objs)
+> +{
+> +       spin_lock(&vgdev->obj_free_lock);
+> +       list_add_tail(&objs->next, &vgdev->obj_free_list);
+> +       spin_unlock(&vgdev->obj_free_lock);
+> +       schedule_work(&vgdev->obj_free_work);
+> +}
+> +
+> +void virtio_gpu_array_put_free_work(struct work_struct *work)
+> +{
+> +       struct virtio_gpu_device *vgdev =
+> +               container_of(work, struct virtio_gpu_device, obj_free_work);
+> +       struct virtio_gpu_object_array *objs;
+> +
+> +       spin_lock(&vgdev->obj_free_lock);
+> +       while (!list_empty(&vgdev->obj_free_list)) {
+> +               objs = list_first_entry(&vgdev->obj_free_list,
+> +                                       struct virtio_gpu_object_array, next);
+> +               list_del(&objs->next);
+> +               spin_unlock(&vgdev->obj_free_lock);
+> +               virtio_gpu_array_put_free(objs);
+> +               spin_lock(&vgdev->obj_free_lock);
+> +       }
+> +       spin_unlock(&vgdev->obj_free_lock);
+> +}
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> index 231c4e27b3b3..0b3cdb0d83b0 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
+> @@ -147,6 +147,11 @@ int virtio_gpu_init(struct drm_device *dev)
+>         INIT_WORK(&vgdev->config_changed_work,
+>                   virtio_gpu_config_changed_work_func);
+>
+> +       INIT_WORK(&vgdev->obj_free_work,
+> +                 virtio_gpu_array_put_free_work);
+> +       INIT_LIST_HEAD(&vgdev->obj_free_list);
+> +       spin_lock_init(&vgdev->obj_free_lock);
+> +
+>  #ifdef __LITTLE_ENDIAN
+>         if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_VIRGL))
+>                 vgdev->has_virgl_3d = true;
+> @@ -226,6 +231,7 @@ void virtio_gpu_deinit(struct drm_device *dev)
+>  {
+>         struct virtio_gpu_device *vgdev = dev->dev_private;
+>
+> +       flush_work(&vgdev->obj_free_work);
+>         vgdev->vqs_ready = false;
+>         flush_work(&vgdev->ctrlq.dequeue_work);
+>         flush_work(&vgdev->cursorq.dequeue_work);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> index ecf57df965b0..595fa6ec2d58 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
+> @@ -227,7 +227,7 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work)
+>
+>         list_for_each_entry_safe(entry, tmp, &reclaim_list, list) {
+>                 if (entry->objs)
+> -                       virtio_gpu_array_put_free(entry->objs);
+> +                       virtio_gpu_array_put_free_delayed(vgdev, entry->objs);
+>                 list_del(&entry->list);
+>                 free_vbuf(vgdev, entry);
+>         }
+> --
+> 2.18.1
+>
