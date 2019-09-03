@@ -2,160 +2,110 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEF7C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB71C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B86932173E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A622173E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 06:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hNUoMHsK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="aOr7oPej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfICGAO (ORCPT
+        id S1726923AbfICGBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 02:00:14 -0400
-Received: from mail-eopbgr1310103.outbound.protection.outlook.com ([40.107.131.103]:36027
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725919AbfICGAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 02:00:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YGGfc4XNBxEZ4kKvI1CdvHjNcwpiAzU72ksBCPK2Qw56vQLx4CeiFXY5rNpULNkWtXThmGSYJl21nGVRr2d1Y0SDx2NpTLG1qTVcOojPTKMutDtYZ/UVkZVCRiXBKeiTyfICiWj15F0ICpvF5F8BmNH3dNV+JtDjL/UXS2YdrTBsuQucXOiVXoB+A6PwCxqpnySJG4ODaDJ36L+KXLOhroTk2xxnIjklGaQoZ3R6BpgZYpLtm18pTrePcgImjfT19J1zhBGeTDKuea0F8tC0v2/Sb06CqdhYyhQdhRdy6/+UX0NbpuGqIfflxd72+c17/sT2s5MAlCfZB5KzdCBPGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mpwu8ROwUscLkYBXZeg40SuRIUVnbVkK4ZYfg3Lu9Kk=;
- b=aRSupJR5Nbb5OtH0mvdR0ZiSjViimEXyvvtKlO5NRHgveFI2jN801TR9d26Zh+q3iyszHA4QMrB9doOFHvhU+GUXCk4KcHxJicsfPQB/BSH36ZRH5B3zIKZreuj/eem3iZx140Wn+jUzfQmZrrARaIksDGgbnBBtIEG1ehNC/UN/4LZHfACzbA+eDdqxkLblm9uxiVNp3PtgNUxt5H6HsrOJqKXx9QzFstgyl8ax06k76puXzA1S0ywyQXD9x3w5XNAyUgCAW/ozmAs2sCASyNtFh5JMrtozPuN4kczQ7aO+4OfD8Ilomgpv2u7jdLufxoIxdXPqbWUkyNlyOFL84A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mpwu8ROwUscLkYBXZeg40SuRIUVnbVkK4ZYfg3Lu9Kk=;
- b=hNUoMHsK+R5t5KBpg1AyGv05lLTZ8aSwNdT8Xj3vYQA/fARB5AkqNr+8w7Yhi/AOWPgQ6cFPHWQRAa/M1KnFSMsizPvBQ9D5O5b4Oak9tuFY9eS9zZNwzW1uMmwgaU7+WpZ50X98kwMRSgojHCBjNd8r33TN4MQ0VT4FbOBDt9k=
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM (10.170.173.13) by
- KU1P153MB0133.APCP153.PROD.OUTLOOK.COM (10.170.172.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.1; Tue, 3 Sep 2019 06:00:06 +0000
-Received: from KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::f112:af3b:a908:db07]) by KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
- ([fe80::f112:af3b:a908:db07%7]) with mapi id 15.20.2263.004; Tue, 3 Sep 2019
- 06:00:06 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>, Qian Cai <cai@lca.pw>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Dexuan-Linux Cui <dexuan.linux@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Lili Deng (Wicresoft North America Ltd)" <v-lide@microsoft.com>
-Subject: RE: "fs/namei.c: keep track of nd->root refcount status" causes boot
- panic
-Thread-Topic: "fs/namei.c: keep track of nd->root refcount status" causes boot
- panic
-Thread-Index: AQHVYhea2RO2fNjnZkqQ7htfXZO/uKcZbPIQgAAHtWA=
-Date:   Tue, 3 Sep 2019 06:00:06 +0000
-Message-ID: <KU1P153MB016668095F9181680464173BBFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
- <CAA42JLZySdadoL5LAhofXZx3T41A9hm=_izyrRs0MHbSbMf3MA@mail.gmail.com>
- <KU1P153MB016606E33CF2FFEBF2581C58BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <KU1P153MB016606E33CF2FFEBF2581C58BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-03T05:50:31.7179496Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4d8d62fd-1bc7-4759-8732-2e13cbb300f8;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:45b3:904b:db76:f1a7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 37849b41-9be9-4a5b-52d6-08d73033f87c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:KU1P153MB0133;
-x-ms-traffictypediagnostic: KU1P153MB0133:|KU1P153MB0133:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KU1P153MB01333FDF0E972DC57A15C720BFB90@KU1P153MB0133.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01494FA7F7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(346002)(136003)(376002)(199004)(189003)(71200400001)(11346002)(305945005)(66446008)(186003)(7696005)(229853002)(66946007)(46003)(316002)(64756008)(66556008)(66476007)(22452003)(74316002)(9686003)(25786009)(10090500001)(8936002)(71190400001)(2940100002)(8990500004)(52536014)(33656002)(86362001)(76116006)(53936002)(4326008)(10290500003)(81156014)(81166006)(478600001)(256004)(14444005)(6506007)(2906002)(446003)(6436002)(5660300002)(6116002)(76176011)(55016002)(6246003)(7736002)(486006)(110136005)(54906003)(8676002)(14454004)(476003)(102836004)(107886003)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:KU1P153MB0133;H:KU1P153MB0166.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kW5OkFwoyka/jyoH7DbeKBW+O2QQhBlUC0YY1QWY7nydjpm5nDJuz3vJ0fI4gsgzEr7pV2OJcgPYLzZKcdD/z+sedtVMAg5DaBS/o4nwHnNZO8nPyqGqE68F7RBeF+8bl8/2wDraRK6qONriJmzHZaNtGuj25O4sE247gpeDJNxf1hSsWFFtZ+tHPpZ2PA72QWCaKS3dkqkxsWkR2d96uHUMh/juAARzR93khL8Z7c5JjJH95kt+EmaWJsoDJVlJzsYEFa3U+rIQTMDeTJonLMdvUJ2WrEOz43bglR3ewkfUINcuQT9Zg4OU9WKOscFj1095JgpqI6VyOztmNzXrXu0q+38QLjlC3lEvUz2ZAWcT+6euprfXX34J3/UL4bD4HEhqdTpHRPZyDuNBtSM4QEVoEhEc7pWl2Yx/SJ/BHgw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37849b41-9be9-4a5b-52d6-08d73033f87c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 06:00:06.1859
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ST842N1FzEKHWd+O4Y4dEBMspUzDEmU9FsS2O1h5jL71FIEUNABn74p3Y0fpxdTxyEoGJzMAAt++B68ZnmKTFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0133
+        Tue, 3 Sep 2019 02:01:18 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:36482 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfICGBR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 02:01:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567490475;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=u/+ojArweC8kk4EIq1yNectL323djAJn8D6lLCw1aG0=;
+        b=aOr7oPejYboHMGMxBCvjhkCHGo86jukLqZsi8v/hfVeVe4qZUqF4dvhzTqo0mr/5Q4
+        AnzPyZ2PRKutoR1jtWqGMpRq+BjCyvzDKHUvOhwKPc2FTH9ZqU0XavLededCHXFe3J6q
+        YCq4c9sb4kTxvfFN1tluslKLQHWIdP8OFcmkLAlwgdDj2MLrWkP/RvoDqirmgLq7tiH5
+        Kg/zAZSk5q6VpMifEsah9GFvhbHtmNL8VzlUcc3UyJN04PrjPyAVeHPYqXCWLKQS30w/
+        Kp1VdPBH1KmzA08IVIU/nHO28qsOglt6c7os35aNcBk3jVlO28Gu0KP1u0ZYvxjrgiFa
+        9CJQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlWfXA4ONfA="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v83616Ugh
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 3 Sep 2019 08:01:06 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
+Date:   Tue, 3 Sep 2019 08:01:05 +0200
+Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8BC1AEC9-7B24-4C07-8659-16741D018164@goldelico.com>
+References: <cover.1567421750.git.hns@goldelico.com> <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com> <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RllJOiB0aGlzIGlzIGEgc2xpZ2h0bHkgZGlmZmVyZW50IGNhbGwtdHJhY2UuIEkgYmVsaWV2ZSB0
-aGlzIGFsc28gc2hvdyBhIG1lbW9yeSBjb3JydXB0aW9uLi4uDQoNClsgICAxNy44NDg5NzVdIFJ1
-biAvaW5pdCBhcyBpbml0IHByb2Nlc3MNCkxvYWRpbmcsIHBsZWFzZSB3YWl0Li4uDQpzdGFydGlu
-ZyB2ZXJzaW9uIDIzOQ0KWyAgIDE4LjA0NTkxM10gQlVHOiB1bmFibGUgdG8gaGFuZGxlIHBhZ2Ug
-ZmF1bHQgZm9yIGFkZHJlc3M6IGZmZmY4ODg0YmI4ZjRiOTgNClsgICAxOC4wNDYwMTJdICNQRjog
-c3VwZXJ2aXNvciB3cml0ZSBhY2Nlc3MgaW4ga2VybmVsIG1vZGUNClsgICAxOC4wNDYwNjFdICNQ
-RjogZXJyb3JfY29kZSgweDAwMDIpIC0gbm90LXByZXNlbnQgcGFnZQ0KWyAgIDE4LjA0NjEyNF0g
-UEdEIDNhMDIwNjcgUDREIDNhMDIwNjcgUFVEIDUwNWFmMDA2NyBQTUQgNTA1OTEzMDY3IFBURSA4
-MDBmZmZmYjQ0NzBiMDYwDQpbICAgMTguMDQ2Mjg2XSBPb3BzOiAwMDAyIFsjMV0gUFJFRU1QVCBT
-TVAgREVCVUdfUEFHRUFMTE9DIFBUSQ0KWyAgIDE4LjA0NjM1NV0gQ1BVOiAzMyBQSUQ6IDQyOCBD
-b21tOiB1ZGV2YWRtIE5vdCB0YWludGVkIDUuMy4wLXJjNi1uZXh0LTIwMTkwOTAyKyAjMg0KWyAg
-IDE4LjA0NjUyOF0gUklQOiAwMDEwOl9fbG9ja19hY3F1aXJlKzB4YTgvMHgxNmMwDQpbICAgMTgu
-MDQ2NTkwXSBDb2RlOiA0OCA4OSBjMyA0NCA4YiA0YyAyNCAxMCAwZiA4NCAxMyAwNCAwMCAwMCA0
-OCA4MSBlYiA4MCBkNyBhOSAuLi4NClsgICAxOC4wNDY3ODJdIFJTUDogMDAxODpmZmZmYzkwMDA0
-M2ZmYzEwIEVGTEFHUzogMDAwMTA4MDMNClsgICAxOC4wNDY4MjhdIFJBWDogMmU4YmEyZThiYTJl
-OGJhMyBSQlg6IDQ2NmRiMzg0ZmEwY2JjN2EgUkNYOiAwMDAwMDAwMDAwMDAwMDAwDQpbICAgMTgu
-MDQ2ODkzXSBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiAwMDAwMDAwMDAwMDAwMDAwIFJESTog
-ZmZmZjg4ODRlMzM4MjQ1OA0KWyAgIDE4LjA0Njk1OV0gUkJQOiBmZmZmODg4NGUyODljYzAwIFIw
-ODogMDAwMDAwMDAwMDAwMDAwMSBSMDk6IDAwMDAwMDAwMDAwMDAwMDANClsgICAxOC4wNDcwMjJd
-IFIxMDogMDAwMDAwMDAwMDAwMDAwMSBSMTE6IGZmZmZmZmZmZmEwY2JjN2EgUjEyOiAwMDAwMDAw
-MDAwMDAwMDAwDQpbICAgMTguMDQ3MTAxXSBSMTM6IDAwMDAwMDAwMDAwMDAwMDEgUjE0OiAwMDAw
-MDAwMDAwMDAwMDAwIFIxNTogZmZmZjg4ODRlMzM4MjQ1OA0KWyAgIDE4LjA0NzE2M10gRlM6ICAw
-MDAwN2ZkODE4M2E4OGMwKDAwMDApIEdTOmZmZmY4ODg0ZWIyODAwMDAoMDAwMCkga25sR1M6MDAw
-MDAwMDAwMDAwMDAwMA0KWyAgIDE4LjA0NzIzOF0gQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAw
-IENSMDogMDAwMDAwMDA4MDA1MDAzMw0KWyAgIDE4LjA0NzI4N10gQ1IyOiBmZmZmODg4NGJiOGY0
-Yjk4IENSMzogMDAwMDAwMDRlMzI5ODAwNSBDUjQ6IDAwMDAwMDAwMDAzNjA2ZTANClsgICAxOC4w
-NDczNTZdIERSMDogMDAwMDAwMDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAw
-MDAwMDAwMDAwMDAwMDAwDQpbICAgMTguMDQ3NDI0XSBEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2
-OiAwMDAwMDAwMGZmZmUwZmYwIERSNzogMDAwMDAwMDAwMDAwMDQwMA0KWyAgIDE4LjA0NzQ4Nl0g
-Q2FsbCBUcmFjZToNClsgICAxOC4wNDc1NDNdICBsb2NrX2FjcXVpcmUrMHhiNS8weDFjMA0KWyAg
-IDE4LjA0NzYzOV0gIF9yYXdfc3Bpbl9sb2NrKzB4MmYvMHg0MA0KWyAgIDE4LjA0NzcwNl0gIGRw
-dXQucGFydC4zMysweDFmYi8weDRmMA0KWyAgIDE4LjA0NzczNl0gIHRlcm1pbmF0ZV93YWxrKzB4
-MTI2LzB4MTUwDQpbICAgMTguMDQ3Nzc3XSAgcGF0aF9sb29rdXBhdC5pc3JhLjYzKzB4YTMvMHgy
-MjANClsgICAxOC4wNDc4MjZdICBmaWxlbmFtZV9sb29rdXAucGFydC43OCsweGEwLzB4MTcwDQpb
-ICAgMTguMjQ3Mjc3XSAgZG9fcmVhZGxpbmthdCsweDVkLzB4MTEwDQpbICAgMTguMjQ3Mjc3XSAg
-X194NjRfc3lzX3JlYWRsaW5rYXQrMHgxYS8weDIwDQpbICAgMTguMjQ3Mjc3XSAgZG9fc3lzY2Fs
-bF82NCsweDU4LzB4MjcwDQpbICAgMTguMjQ3Mjc3XSAgZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9o
-d2ZyYW1lKzB4NDkvMHhiZQ0KWyAgIDE4LjI0NzI3N10gUklQOiAwMDMzOjB4N2ZkODE4YzI2YTRh
-DQpbICAgMTguMjQ3Mjc3XSBDb2RlOiA0OCA4YiAwZCA0OSA4NCAwZCAwMCBmNyBkOCA2NCA4OSAw
-MSA0OCA4MyBjOCBmZiBjMyA2NiAyZSAwZiAuLi4NClsgICAxOC4yNDcyNzddIFJTUDogMDAyYjow
-MDAwN2ZmZWNiMWJhZGU4IEVGTEFHUzogMDAwMDAyMDIgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAx
-MGINClsgICAxOC4yNDcyNzddIFJBWDogZmZmZmZmZmZmZmZmZmZkYSBSQlg6IDAwMDA1NjBkNTZi
-Y2EyMjAgUkNYOiAwMDAwN2ZkODE4YzI2YTRhDQpbICAgMTguMjQ3Mjc3XSBSRFg6IDAwMDA1NjBk
-NTZiY2EyMjAgUlNJOiAwMDAwNTYwZDU2YmNhMjAxIFJESTogMDAwMDAwMDAwMDAwMDAwNQ0KWyAg
-IDE4LjI0NzI3N10gUkJQOiAwMDAwMDAwMDAwMDAwMDY0IFIwODogMDAwMDU2MGQ1NmJiOTAxMCBS
-MDk6IDAwMDAwMDAwMDAwMDAwMDANClsgICAxOC4yNDcyNzddIFIxMDogMDAwMDAwMDAwMDAwMDA2
-MyBSMTE6IDAwMDAwMDAwMDAwMDAyMDIgUjEyOiAwMDAwNTYwZDU2YmNhMjAxDQpbICAgMTguMjQ3
-Mjc3XSBSMTM6IDAwMDAwMDAwMDAwMDAwMDUgUjE0OiAwMDAwN2ZmZWNiMWJhZTc4IFIxNTogMDAw
-MDAwMDAwMDAwMDA2Mw0KWyAgIDE4LjI0NzI3N10gTW9kdWxlcyBsaW5rZWQgaW46DQpbICAgMTgu
-MjQ3Mjc3XSBDUjI6IGZmZmY4ODg0YmI4ZjRiOTgNCg0KVGhhbmtzLA0KLS0gRGV4dWFuDQo=
+
+> Am 03.09.2019 um 04:36 schrieb Viresh Kumar <viresh.kumar@linaro.org>:
+>=20
+> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
+>> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
+>> 1GHz capability is automatically detected.
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
+>> 1 file changed, 7 deletions(-)
+>>=20
+>> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi =
+b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+>> index 5441e9ffdbb4..e98b0c615f19 100644
+>> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+>> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+>> @@ -11,13 +11,6 @@
+>> 	cpus {
+>> 		cpu@0 {
+>> 			cpu0-supply =3D <&vcc>;
+>> -			operating-points =3D <
+>> -				/* kHz    uV */
+>> -				300000  1012500
+>> -				600000  1200000
+>> -				800000  1325000
+>> -				1000000	1375000
+>> -			>;
+>> 		};
+>> 	};
+>=20
+> This should be merged with 2/5 ?
+
+Well, it bloats 2/5.
+
+What I hope (I can't test) is that this opp-v1 table
+is ignored if an opp-v2 table exists. So that it can be
+removed by a separate follow-up patch.
+
+BR,
+Nikolaus=
