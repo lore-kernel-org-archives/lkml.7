@@ -2,181 +2,85 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908F8C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B38C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0A42087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qz0J8r4o"
+	by mail.kernel.org (Postfix) with ESMTP id BECBE208E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:45:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567539929;
+	bh=6rDGf6Mr2PWH+edV87q7LtUbadgXTDv9RgfsX/XKqn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eDgBdkCU8KYo3BoH/DkM+G5b35s7Yhw55glWMo//r/Lr5s6035iSEinT6E+jByQoA
+	 uCeIhINDDXiuOrbB/EVsOLW9Yat7OQPNi3EjBrfcEKsKqn4JM9oa7wFX1yXp+4fE2/
+	 NWk6HzrNmSj8BZ72DXPbIL5nizkdkWKdg1/AfuL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfICTpE (ORCPT
+        id S1726830AbfICTp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:45:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38302 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfICTpE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:45:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d10so5190639pgo.5;
-        Tue, 03 Sep 2019 12:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0HJ26q274yfFUxN/rroX+4JQvPYL2ewq9OiwcW+uRuw=;
-        b=Qz0J8r4oFdvQg/dAAM1QCZCGRCVSvFYnglOc6l7CxmpCB7gRRw5K35YC9ZIBo6urqQ
-         l7waJyKm7IIpQ2+1jrwyvxcKZDBzKBzIIr+VEheJ/oj5MxC4l5TYko3xdozWVHt7xCyZ
-         iRHvsZWeA+d9AcIT4F5Pr4ho3VSqDiqD5Lfn8vEUMFOWjctsQGmtB9URxBeO9xcjX4IZ
-         9xqPrbrxSJZZ8s6cM4aI6eEwzcrG2BAEALXbeNC7pDAd/3FVNbgxRK1sXDmlbXVHUpW6
-         ACKDtniAnTBAT1lvx0Or9A6eRl62SEyAdtvqh3SIjauh5Plt0UmGRUkYqHfOhg38Bn3/
-         X64w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0HJ26q274yfFUxN/rroX+4JQvPYL2ewq9OiwcW+uRuw=;
-        b=Jg+wjVrexATCnOXJlCncOAT84N64CxeE+H4bbA03wzcI9qmfzIde7g9eAYFNN7Ipog
-         Rdio9b9rn46O03IilxQ/kvlgaLDguFegnK3gOStl0GFQ5fxEproxw+GqK0FyKvhhmRZq
-         FS2KOiYrr0OEtK2XZmZldhshx3Jv+KZvdpdTZyg1ko6+7unaQIuHYxF7rzII4ezxkcLI
-         UB884zF2uwwoH6l6pHhRUnKQmR90Jo42i4xuPPtQ+DnW3FfXM2wsjEoFKnu9AH1kLo+B
-         Dxn3b3ftCXGgSk5b27PXraO7aWYMkVHceTYEXe3aDngHHtWu8lxx8rcwX9p8GIeKhnWw
-         NuOg==
-X-Gm-Message-State: APjAAAXSLhkYrWhUGVyiNF8w+tQYvxI3h9VIiFTA8seS4TmhOTwKvcdc
-        skxN3zy0/S3kcxV1ARCIBGU=
-X-Google-Smtp-Source: APXvYqxyryJcHkFNROieNWtJumnnoeWeMUdMWu8tXA0GfFAglnu4D54Rkj6WwuvV/N+3/Y2Ws02EEA==
-X-Received: by 2002:a63:7887:: with SMTP id t129mr32041977pgc.309.1567539903272;
-        Tue, 03 Sep 2019 12:45:03 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d16sm23501330pfd.81.2019.09.03.12.45.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 12:45:02 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 12:45:02 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 2/3] hwmon: w83792d: convert to use
- devm_i2c_new_dummy_device
-Message-ID: <20190903194501.GA32299@roeck-us.net>
-References: <20190903181256.13450-1-wsa+renesas@sang-engineering.com>
- <20190903181256.13450-3-wsa+renesas@sang-engineering.com>
+        Tue, 3 Sep 2019 15:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44328 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725994AbfICTp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:45:28 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61EBE2087E;
+        Tue,  3 Sep 2019 19:45:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567539927;
+        bh=6rDGf6Mr2PWH+edV87q7LtUbadgXTDv9RgfsX/XKqn8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jw3H8NWSRa/rp7Tx15FaQOmdJ42hgPL1DfPKDvlJtMeuGY3Dg6vh3yf8D4795tj5m
+         tI59r7Ki98NrvwlFHhIZ6Bx15f1w2DWv8YOHeEZ/koehoD56ZFPYbTSK0ngOX9DVfi
+         MAIVxuFzvhWu76lGqTl8bZoIzPrXfYJEXGunY9Z8=
+Date:   Tue, 3 Sep 2019 15:45:26 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-snps-arc@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 4.19 111/167] signal/arc: Use force_sig_fault
+ where appropriate
+Message-ID: <20190903194526.GH5281@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-111-sashal@kernel.org>
+ <87ef0xqq9f.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190903181256.13450-3-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <87ef0xqq9f.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 08:12:55PM +0200, Wolfram Sang wrote:
-> And simplify the error handling.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Tue, Sep 03, 2019 at 11:49:16AM -0500, Eric W. Biederman wrote:
+>Sasha Levin <sashal@kernel.org> writes:
+>
+>> From: "Eric W. Biederman" <ebiederm@xmission.com>
+>>
+>> [ Upstream commit 15773ae938d8d93d982461990bebad6e1d7a1830 ]
+>
+>To the best of my knowledge this is just a clean up, no changes in
+>behavior are present.
+>
+>The only reason I can see to backport this is so that later fixes could
+>be applied cleanly.
+>
+>So while I have no objections to this patch being backported I don't see
+>why you would want to either.
 
-Applied to hwmon-next.
+This patch along with the next one came in as a dependency for
+a8c715b4dd73c ("ARC: mm: SIGSEGV userspace trying to access kernel
+virtual memory").
 
+--
 Thanks,
-Guenter
+Sasha
 
-> ---
->  drivers/hwmon/w83792d.c | 32 +++++++++-----------------------
->  1 file changed, 9 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/hwmon/w83792d.c b/drivers/hwmon/w83792d.c
-> index da8a6d62aa23..7fc8a1160c8f 100644
-> --- a/drivers/hwmon/w83792d.c
-> +++ b/drivers/hwmon/w83792d.c
-> @@ -924,7 +924,7 @@ store_sf2_level(struct device *dev, struct device_attribute *attr,
->  static int
->  w83792d_detect_subclients(struct i2c_client *new_client)
->  {
-> -	int i, id, err;
-> +	int i, id;
->  	int address = new_client->addr;
->  	u8 val;
->  	struct i2c_adapter *adapter = new_client->adapter;
-> @@ -938,8 +938,7 @@ w83792d_detect_subclients(struct i2c_client *new_client)
->  				dev_err(&new_client->dev,
->  					"invalid subclient address %d; must be 0x48-0x4f\n",
->  					force_subclients[i]);
-> -				err = -ENODEV;
-> -				goto ERROR_SC_0;
-> +				return -ENODEV;
->  			}
->  		}
->  		w83792d_write_value(new_client, W83792D_REG_I2C_SUBADDR,
-> @@ -949,28 +948,21 @@ w83792d_detect_subclients(struct i2c_client *new_client)
->  
->  	val = w83792d_read_value(new_client, W83792D_REG_I2C_SUBADDR);
->  	if (!(val & 0x08))
-> -		data->lm75[0] = i2c_new_dummy(adapter, 0x48 + (val & 0x7));
-> +		data->lm75[0] = devm_i2c_new_dummy_device(&new_client->dev, adapter,
-> +							  0x48 + (val & 0x7));
->  	if (!(val & 0x80)) {
-> -		if ((data->lm75[0] != NULL) &&
-> +		if (!IS_ERR(data->lm75[0]) &&
->  			((val & 0x7) == ((val >> 4) & 0x7))) {
->  			dev_err(&new_client->dev,
->  				"duplicate addresses 0x%x, use force_subclient\n",
->  				data->lm75[0]->addr);
-> -			err = -ENODEV;
-> -			goto ERROR_SC_1;
-> +			return -ENODEV;
->  		}
-> -		data->lm75[1] = i2c_new_dummy(adapter,
-> -					      0x48 + ((val >> 4) & 0x7));
-> +		data->lm75[1] = devm_i2c_new_dummy_device(&new_client->dev, adapter,
-> +							  0x48 + ((val >> 4) & 0x7));
->  	}
->  
->  	return 0;
-> -
-> -/* Undo inits in case of errors */
-> -
-> -ERROR_SC_1:
-> -	i2c_unregister_device(data->lm75[0]);
-> -ERROR_SC_0:
-> -	return err;
->  }
->  
->  static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, show_in, NULL, 0);
-> @@ -1396,7 +1388,7 @@ w83792d_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  	/* Register sysfs hooks */
->  	err = sysfs_create_group(&dev->kobj, &w83792d_group);
->  	if (err)
-> -		goto exit_i2c_unregister;
-> +		return err;
->  
->  	/*
->  	 * Read GPIO enable register to check if pins for fan 4,5 are used as
-> @@ -1441,9 +1433,6 @@ w83792d_probe(struct i2c_client *client, const struct i2c_device_id *id)
->  	sysfs_remove_group(&dev->kobj, &w83792d_group);
->  	for (i = 0; i < ARRAY_SIZE(w83792d_group_fan); i++)
->  		sysfs_remove_group(&dev->kobj, &w83792d_group_fan[i]);
-> -exit_i2c_unregister:
-> -	i2c_unregister_device(data->lm75[0]);
-> -	i2c_unregister_device(data->lm75[1]);
->  	return err;
->  }
->  
-> @@ -1459,9 +1448,6 @@ w83792d_remove(struct i2c_client *client)
->  		sysfs_remove_group(&client->dev.kobj,
->  				   &w83792d_group_fan[i]);
->  
-> -	i2c_unregister_device(data->lm75[0]);
-> -	i2c_unregister_device(data->lm75[1]);
-> -
->  	return 0;
->  }
->  
-> -- 
-> 2.20.1
-> 
