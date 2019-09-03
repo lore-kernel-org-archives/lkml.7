@@ -2,168 +2,84 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F69C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 370B6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C55D233A1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K0s++cTn"
+	by mail.kernel.org (Postfix) with ESMTP id 1475E23431
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfICPVN (ORCPT
+        id S1729577AbfICPZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:21:13 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55202 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729537AbfICPVM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:21:12 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83FG3Fs160811;
-        Tue, 3 Sep 2019 15:20:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=869p3klhxOWoSRwfDTA+aY5yiVHTTslfctwPq9J8bY0=;
- b=K0s++cTnj9jxu3jAzrwUgqXfOmT0ugXi6w8uBKxiwlxdeItgQP1jXsxOu6sf+R5ZjphZ
- C3AaK7QCUdEhKXuRVgTrQLiZw6m0VDajlfDg1tKuWWCcDuHV+RIN9skXdwNU8e/BSGyn
- nrX25gB1sxHk5RtfPAL1htKXbj7Xt2a3CSUW6wf2eje93Nib3nJ9sksOUeEyX0/zCIob
- +Rd0l9nIkIXRseZ0kVnRqIMvJoYgCZUUCOn8EKfMLSti4Jvjqbv1iJX1nhtED1Bc2X62
- DD7UtjgAhXqkWR7xD09Zig9Bjc6WaDugQLyjKpgAyNQFx9oROToRymhErUzSYSRYWiub DQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2ustnn81u1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 15:20:54 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x83F9goh095168;
-        Tue, 3 Sep 2019 15:20:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2uryv6vse1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Sep 2019 15:20:53 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x83FKn7B016932;
-        Tue, 3 Sep 2019 15:20:50 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Sep 2019 08:20:49 -0700
-Date:   Tue, 3 Sep 2019 08:20:48 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhengbin13@huawei.com, yi.zhang@huawei.com
-Subject: Re: [PATCH v2] xfs: revise function comment for xfs_trans_ail_delete
-Message-ID: <20190903152048.GZ5354@magnolia>
-References: <1567243423-59571-1-git-send-email-yukuai3@huawei.com>
+        Tue, 3 Sep 2019 11:25:32 -0400
+Received: from sauhun.de ([88.99.104.3]:55040 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728679AbfICPZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 11:25:31 -0400
+Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
+        by pokefinder.org (Postfix) with ESMTPSA id 7E8672C4F2F;
+        Tue,  3 Sep 2019 17:25:29 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 17:25:29 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     =?utf-8?B?VGFtw6FzIFN6xbFjcw==?= <tszucs@protonmail.ch>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] mmc: sdhi: fill in actual_clock
+Message-ID: <20190903152529.GB6718@kunai>
+References: <20190829183634.3376-1-tszucs@protonmail.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
 Content-Disposition: inline
-In-Reply-To: <1567243423-59571-1-git-send-email-yukuai3@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909030160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9368 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909030160
+In-Reply-To: <20190829183634.3376-1-tszucs@protonmail.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 31, 2019 at 05:23:43PM +0800, yu kuai wrote:
-> Since xfs_trans_ail_delete_bulk no longer exists, revising the comment
-> for new function xfs_trans_ail_delete.
-> 
-> Fix following warning:
-> make W=1 fs/xfs/xfs_trans_ail.o
-> fs/xfs/xfs_trans_ail.c:793: warning: Function parameter or member 
-> 'ailp' not described in 'xfs_trans_ail_delete'
-> fs/xfs/xfs_trans_ail.c:793: warning: Function parameter or member
-> 'lip' not described in 'xfs_trans_ail_delete'
-> fs/xfs/xfs_trans_ail.c:793: warning: Function parameter or member
-> 'shutdown_type' not described in 'xfs_trans_ail_delete'
-> 
-> Fixes:27af1bbf5244("xfs: remove xfs_trans_ail_delete_bulk")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->  fs/xfs/xfs_trans_ail.c | 27 +++++++++++----------------
->  1 file changed, 11 insertions(+), 16 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-> index 6ccfd75..6c43b66e 100644
-> --- a/fs/xfs/xfs_trans_ail.c
-> +++ b/fs/xfs/xfs_trans_ail.c
-> @@ -765,25 +765,20 @@ xfs_ail_delete_one(
->  }
->  
-> -/**
-> - * Remove a log items from the AIL
-> +/*
-> + * xfs_trans_ail_delet - remove a log item from the AIL
 
-Function name misspelled.
+--tsOsTdHNUZQcU9Ye
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> - * @xfs_trans_ail_delete_bulk takes an array of log items that all need to
-> - * removed from the AIL. The caller is already holding the AIL lock, and done
-> - * all the checks necessary to ensure the items passed in via @log_items are
-> - * ready for deletion. This includes checking that the items are in the AIL.
-> + * @xfs_trans_ail_delete takes a log item that needs to be removed from the
-> + * AIL. The caller is already holding the AIL lock, and done all the checks
-> + * necessary to ensure the item passed in via @lip are ready for deletion.
-> + * This includes checking that the items are in the AIL.
->   *
-> - * For each log item to be removed, unlink it  from the AIL, clear the IN_AIL
-> - * flag from the item and reset the item's lsn to 0. If we remove the first
-> - * item in the AIL, update the log tail to match the new minimum LSN in the
-> - * AIL.
-> + * For the log item to be removed, call xfs_ail_delete_one to unlink it
-> + * from the AIL, clear the IN_AIL flag from the item and reset the item's
-> + * lsn to 0. If we remove the first item in the AIL, update the log tail
-> + * to match the new minimum LSN in the AIL.
+On Thu, Aug 29, 2019 at 08:36:34PM +0200, Tam=C3=A1s Sz=C5=B1cs wrote:
+> Save set clock in mmc_host actual_clock enabling exporting it via debugfs.
+> This will indicate the precise SD clock in I/O settings rather than only =
+the
+> sometimes misleading requested clock.
+>=20
+> Signed-off-by: Tam=C3=A1s Sz=C5=B1cs <tszucs@protonmail.ch>
 
-FWIW, now that this is a 30-line function I don't think it helps at all
-to describe what the function does.  We mostly care about things that
-might not be immediately obvious from reading the function, such as
-preconditions and whatever side effects the function has.
+Oops, I thought I replied already. For the record:
 
-/*
- * Remove a log item from the AIL.
- *
- * The caller must already hold the AIL lock and is responsible for
- * ensuring that the item is in the AIL and ready for deletion.  The log
- * item's LSN will be reset to 0, and if it was the first item in the
- * AIL, the log tail will be updated to match the new minimum LSN in the
- * AIL.  The AIL lock will be dropped before returning.
- */
-void
-xfs_trans_ail_delete(
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
---D
 
->   *
-> - * This function will not drop the AIL lock until all items are removed from
-> - * the AIL to minimise the amount of lock traffic on the AIL. This does not
-> - * greatly increase the AIL hold time, but does significantly reduce the amount
-> - * of traffic on the lock, especially during IO completion.
-> - *
-> - * This function must be called with the AIL lock held.  The lock is dropped
-> - * before returning.
-> + * This function must be called with the AIL lock held. The lock will be
-> + * dropped before returning.
->   */
->  void
->  xfs_trans_ail_delete(
-> -- 
-> 2.7.4
-> 
+--tsOsTdHNUZQcU9Ye
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uheUACgkQFA3kzBSg
+KbaCwg/+O2P7U/V3PSUWunSFkHZg7dqiAeb5loMjy2RYmUnjrc7PCir2Cb44mRkz
+Tyz9XMXpx3g+7VtqUNHG7pj76M7em1OdiulP631pOUroRmVzfo8vpEu/JJlGTAhG
+cymJ5x4KSaBA5itAdYWa4TbIdIxfDTxCNkxdZvvpI8LwR5TZ6anPXgwZwQBeYEhk
+jyFbyPgoa7ipivVCJKtNCIlxzWPvTOwNiOD/Y8AwL4MdvTXXqdIM6yD6lhao9wm2
++HaSrMYLX9yv0sFBP2OyOpB3tgTPtsyj9MTjYpffzvy/BVeombUE2qYJg2uuOAda
+rcUWQNST5hMRoblcWaLoh1pEX5DiuDeV0J9x5x3cnuRAQnpevPo4mli/GLTyaZYB
+nklFBJMhr3Yi9cXrnBYmtNvOnm8A6pjo7ML8G/5q3d1+LrqqMEEE2totRFs7/bw/
+CXYhW5Y2/m3VEhPflPwq8nzg5jycVegtm9dz7FphAGvYuzCVY0zbggMNPVkBiTbS
+RNZJGmlepoJJiR126SOJDNYyedH8zuHpj2DFazOZlfi+aBAehNBoGAmDJTiOzHrf
+hXdhPFENueQgdu0nJ71mYNwqatqiYTgcPfSEA5mFV8g2ji5xsS80alB97neoODKS
+lBCuQAWSwPF0oPQlTYgRhpd81h+9gYa7IX1SQoAeLIlQoCBo/lE=
+=0Ztz
+-----END PGP SIGNATURE-----
+
+--tsOsTdHNUZQcU9Ye--
