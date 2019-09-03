@@ -2,120 +2,68 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3A2C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6941FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB0521881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43AFF21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730149AbfICRPY (ORCPT
+        id S1730117AbfICRRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:15:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35876 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729602AbfICRPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:15:24 -0400
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BFE543C919
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 17:15:23 +0000 (UTC)
-Received: by mail-qt1-f200.google.com with SMTP id b9so19649351qti.20
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 10:15:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t6tGfYo/dTj24n3kyKLuufR3DdwgMhB7RVSFb+mWOVs=;
-        b=B8fqPY1dFDCXnlKLHefS+kCTRYWc3EeK2cQRRdOR6n+bCbTdq5JDdSnBMwCvbiihB2
-         ksafcW727ZCCEtJblBlZssy0DHsvFSJfVywlFuWst+OMN8NpsPeFRWS4Puce6o3rZq9o
-         g/h56iNX4e0zSSR+rIJElIJo2zpsx/nN4scIt9NHc3+LupTCOJ0v6tDlZifUbUwwTfzL
-         X4mBVZhFMZxGBdgtkZlX0xJzgfBI+rTgtyDrET99AvXPckVQDAt9QBXsazVRNRXMGiNl
-         UWNvy0U7Ju0rzM+jstkeIaB5CQTrS8fooLVso+JFdWxcuquK+Bl6YcP8DG734vp6W6KL
-         jc9A==
-X-Gm-Message-State: APjAAAValTZT3zWVfgDNfS0gBvisVlPbnlIXmaQl7CHfpumV1B97/uD/
-        M/oEm3ECb1xy3aFqMTrX+fQQC0RieoP884BpuICI+Jwr7MiJleK7QyapWzWFrDRLf2SlfyFSK9C
-        jFBLO3AnptHGu20os3ZYaFIM+
-X-Received: by 2002:a05:620a:15cc:: with SMTP id o12mr12890167qkm.140.1567530923144;
-        Tue, 03 Sep 2019 10:15:23 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwTXnMlZHpGHJ4mdlNJD+IRREku2Hx5W9v7Fh85/S/pmi7c/BEoxrqFXUQUyWjzlWCWQwErAg==
-X-Received: by 2002:a05:620a:15cc:: with SMTP id o12mr12890124qkm.140.1567530922908;
-        Tue, 03 Sep 2019 10:15:22 -0700 (PDT)
-Received: from redhat.com (bzq-79-180-62-110.red.bezeqint.net. [79.180.62.110])
-        by smtp.gmail.com with ESMTPSA id t2sm8561495qkm.34.2019.09.03.10.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 10:15:21 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 13:15:16 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
- machines
-Message-ID: <20190903111628-mutt-send-email-mst@kernel.org>
-References: <20190821173742.24574-1-vgoyal@redhat.com>
- <CAJfpegvPTxkaNhXWhiQSprSJqyW1cLXeZEz6x_f0PxCd-yzHQg@mail.gmail.com>
- <20190903041507-mutt-send-email-mst@kernel.org>
- <20190903140752.GA10983@redhat.com>
- <20190903101001-mutt-send-email-mst@kernel.org>
- <20190903141851.GC10983@redhat.com>
+        Tue, 3 Sep 2019 13:17:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54293 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729499AbfICRRB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 13:17:01 -0400
+Received: from 1.general.cascardo.us.vpn ([10.172.70.58] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <cascardo@canonical.com>)
+        id 1i5CQM-0006gX-Vl; Tue, 03 Sep 2019 17:16:59 +0000
+From:   Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Subject: [PATCH 1/2] sched: sched_getattr should return E2BIG, not EFBIG
+Date:   Tue,  3 Sep 2019 14:16:44 -0300
+Message-Id: <20190903171645.28090-1-cascardo@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903141851.GC10983@redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:18:51AM -0400, Vivek Goyal wrote:
-> On Tue, Sep 03, 2019 at 10:12:16AM -0400, Michael S. Tsirkin wrote:
-> > On Tue, Sep 03, 2019 at 10:07:52AM -0400, Vivek Goyal wrote:
-> > > On Tue, Sep 03, 2019 at 04:31:38AM -0400, Michael S. Tsirkin wrote:
-> > > 
-> > > [..]
-> > > > +	/* TODO lock */
-> > > > give me pause.
-> > > > 
-> > > > Cleanup generally seems broken to me - what pauses the FS
-> > > 
-> > > I am looking into device removal aspect of it now. Thinking of adding
-> > > a reference count to virtiofs device and possibly also a bit flag to
-> > > indicate if device is still alive. That way, we should be able to cleanup
-> > > device more gracefully.
-> > 
-> > Generally, the way to cleanup things is to first disconnect device from
-> > linux so linux won't send new requests, wait for old ones to finish.
-> 
-> I was thinking of following.
-> 
-> - Set a flag on device to indicate device is dead and not queue new
->   requests. Device removal call can set this flag.
-> 
-> - Return errors when fs code tries to queue new request.
-> 
-> - Drop device creation reference in device removal path. If device is
->   mounted at the time of removal, that reference will still be active
->   and device state will not be cleaned up in kernel yet.
-> 
-> - User unmounts the fs, and that will drop last reference to device and
->   will lead to cleanup of in kernel state of the device.
-> 
-> Does that sound reasonable.
-> 
-> Vivek
+As documented and the behavior before commit 22400674945c (sched: Simplify
+return logic in sched_read_attr()), sched_getattr should return E2BIG instead
+of EFBIG when there is not enough space to copy sched_attr.
 
-Just we aware of the fact that virtio device, all vqs etc
-will be gone by the time remove returns.
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Fixes: 22400674945c (sched: Simplify return logic in sched_read_attr())
+---
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2477893dd069..0fd67281e656 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5129,7 +5129,7 @@ static int sched_read_attr(struct sched_attr __user *uattr,
+ 
+ 		for (; addr < end; addr++) {
+ 			if (*addr)
+-				return -EFBIG;
++				return -E2BIG;
+ 		}
+ 
+ 		attr->size = usize;
 -- 
-MST
+2.20.1
+
