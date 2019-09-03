@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8803EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D412DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A9B2377F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2A023878
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527925;
-	bh=24HeKgZc0EdrCzr8e/aVIGvdzcTwEfQ6sZ6O29G15NY=;
+	s=default; t=1567527928;
+	bh=YaelBjv9CrC3Jq0WoYTd+rflT0fewMxLIJgPOZWkLcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgLbE8OqOjwADhXzg9PnLOmr8TpNzOWOmPiCuj6/bKstzUFudzt3K6+hGT2WYF1zb
-	 BbYdxMK5lawxUziJ1Cdwd0e0DbKf1DOAFNQAVouEpcIMHdKu6PY/XVWwJwpmj6C01F
-	 KMw2LxiVrdjSseuPKsVKAN7m/4EVl1nVTfxQlQ5o=
+	b=pMasLTbTQarG0XT0na4R7m51D09dY4CnbXHt+1+IJXsdD2pdkoYTRIAKqvY1KYrEI
+	 +n3uaxybamqBScnUzCYtKuvJzUzPf4VclsK02cG35sC9qsl2+Oh3lrxQ7cgzMM0eKI
+	 z7BkR1syjqkU0WIFiPY6ylfeH1UOn7wIxw1ieMsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbfICQZY (ORCPT
+        id S1730388AbfICQZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45092 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbfICQZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:14 -0400
+        id S1730322AbfICQZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB83123711;
-        Tue,  3 Sep 2019 16:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B0A2343A;
+        Tue,  3 Sep 2019 16:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527913;
-        bh=24HeKgZc0EdrCzr8e/aVIGvdzcTwEfQ6sZ6O29G15NY=;
+        s=default; t=1567527915;
+        bh=YaelBjv9CrC3Jq0WoYTd+rflT0fewMxLIJgPOZWkLcc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=00WD3xG1HXVmfZCWpIRI6NgAfgxq9CJbQsZdJoQ2ElVDbFVR29qcqJ0ih4VGnjyHL
-         sDwYBUdplNaVqHypg1Z4G1P5s1hPb9b7KAOo2fNL3b69A9W9YSBK2RkBK9To7U+q0N
-         YKAzlj/q9qlnSU036H8BleVMdwSdt/1dvvepczcw=
+        b=yThhcpjJ9ttmo1oTs1wt3c1R1/rgO50Rn6XiBjbSuPsRQNsefJ7r7grfFCqU/Uf2Q
+         uAhnpQsOnf0ThglT40I+UYN58AItz17Y0XZfWvWaSIaZeB7x8tZSD6xrXYkropFo6D
+         RRt7hPu+Wd4eT2Zb/wiZllOuZB/pTqhGafpgaWXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Harrison <John.C.Harrison@Intel.com>,
-        "Robert M . Fosha" <robert.m.fosha@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+Cc:     Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
+        Anuj Phogat <anuj.phogat@gmail.com>,
         Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>,
         Sasha Levin <sashal@kernel.org>,
         intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 22/23] drm/i915: Add whitelist workarounds for ICL
-Date:   Tue,  3 Sep 2019 12:24:23 -0400
-Message-Id: <20190903162424.6877-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 23/23] drm/i915/icl: whitelist PS_(DEPTH|INVOCATION)_COUNT
+Date:   Tue,  3 Sep 2019 12:24:24 -0400
+Message-Id: <20190903162424.6877-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
 References: <20190903162424.6877-1-sashal@kernel.org>
@@ -62,77 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Harrison <John.C.Harrison@Intel.com>
+From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
 
-[ Upstream commit 7b3d406310983a89ed7a1ecdd115efbe12b0ded5 ]
+[ Upstream commit cf8f9aa1eda7d916bd23f6b8c226404deb11690c ]
 
-Updated whitelist table for ICL.
+The same tests failing on CFL+ platforms are also failing on ICL.
+Documentation doesn't list the
+WaAllowPMDepthAndInvocationCountAccessFromUMD workaround for ICL but
+applying it fixes the same tests as CFL.
 
-v2: Reduce changes to just those required for media driver until
-the selftest can be updated to support the new features of the
-other entries.
+v2: Use only one whitelist entry (Lionel)
 
-Signed-off-by: John Harrison <John.C.Harrison@Intel.com>
-Signed-off-by: Robert M. Fosha <robert.m.fosha@intel.com>
-Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Signed-off-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190618010108.27499-4-John.C.Harrison@Intel.com
+Signed-off-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Tested-by: Anuj Phogat <anuj.phogat@gmail.com>
+Cc: stable@vger.kernel.org # 6883eab27481: drm/i915: Support flags in whitlist WAs
+Cc: stable@vger.kernel.org
+Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190628120720.21682-4-lionel.g.landwerlin@intel.com
+(cherry picked from commit 3fe0107e45ab396342497e06b8924cdd485cde3b)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_workarounds.c | 38 +++++++++++++++++-------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/i915/intel_workarounds.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/drivers/gpu/drm/i915/intel_workarounds.c b/drivers/gpu/drm/i915/intel_workarounds.c
-index be3688908f0ce..efea5a18fa6db 100644
+index efea5a18fa6db..edd57a5e0495f 100644
 --- a/drivers/gpu/drm/i915/intel_workarounds.c
 +++ b/drivers/gpu/drm/i915/intel_workarounds.c
-@@ -1097,17 +1097,33 @@ static void icl_whitelist_build(struct intel_engine_cs *engine)
- {
- 	struct i915_wa_list *w = &engine->whitelist;
+@@ -1107,6 +1107,19 @@ static void icl_whitelist_build(struct intel_engine_cs *engine)
  
--	if (engine->class != RENDER_CLASS)
--		return;
--
--	/* WaAllowUMDToModifyHalfSliceChicken7:icl */
--	whitelist_reg(w, GEN9_HALF_SLICE_CHICKEN7);
--
--	/* WaAllowUMDToModifySamplerMode:icl */
--	whitelist_reg(w, GEN10_SAMPLER_MODE);
--
--	/* WaEnableStateCacheRedirectToCS:icl */
--	whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
-+	switch (engine->class) {
-+	case RENDER_CLASS:
-+		/* WaAllowUMDToModifyHalfSliceChicken7:icl */
-+		whitelist_reg(w, GEN9_HALF_SLICE_CHICKEN7);
+ 		/* WaEnableStateCacheRedirectToCS:icl */
+ 		whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
 +
-+		/* WaAllowUMDToModifySamplerMode:icl */
-+		whitelist_reg(w, GEN10_SAMPLER_MODE);
-+
-+		/* WaEnableStateCacheRedirectToCS:icl */
-+		whitelist_reg(w, GEN9_SLICE_COMMON_ECO_CHICKEN1);
-+		break;
-+
-+	case VIDEO_DECODE_CLASS:
-+		/* hucStatusRegOffset */
-+		whitelist_reg_ext(w, _MMIO(0x2000 + engine->mmio_base),
-+				  RING_FORCE_TO_NONPRIV_RD);
-+		/* hucUKernelHdrInfoRegOffset */
-+		whitelist_reg_ext(w, _MMIO(0x2014 + engine->mmio_base),
-+				  RING_FORCE_TO_NONPRIV_RD);
-+		/* hucStatus2RegOffset */
-+		whitelist_reg_ext(w, _MMIO(0x23B0 + engine->mmio_base),
-+				  RING_FORCE_TO_NONPRIV_RD);
-+		break;
-+
-+	default:
-+		break;
-+	}
- }
++		/*
++		 * WaAllowPMDepthAndInvocationCountAccessFromUMD:icl
++		 *
++		 * This covers 4 register which are next to one another :
++		 *   - PS_INVOCATION_COUNT
++		 *   - PS_INVOCATION_COUNT_UDW
++		 *   - PS_DEPTH_COUNT
++		 *   - PS_DEPTH_COUNT_UDW
++		 */
++		whitelist_reg_ext(w, PS_INVOCATION_COUNT,
++				  RING_FORCE_TO_NONPRIV_RD |
++				  RING_FORCE_TO_NONPRIV_RANGE_4);
+ 		break;
  
- void intel_engine_init_whitelist(struct intel_engine_cs *engine)
+ 	case VIDEO_DECODE_CLASS:
 -- 
 2.20.1
 
