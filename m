@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28695C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B24C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3669238F9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02A323878
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527973;
-	bh=qUDXs+NRk9kq4QOIe8TO4tnvqCIQP/qICPClCjAc3Kg=;
+	s=default; t=1567527975;
+	bh=h+d4u5kndta5HqWAnAN9o4gvTNOwWTJ5yg5EuUBs6as=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vS6djtXoHZfnt1eGlGH8G+PkqIxz5B42ldXaMWgYoKTFJDJdqDoD/MrzqAeP3MC7e
-	 qGAMbTeF/KCrA09W/nuRy9YfSj5UvjcGZSi5Bt0PSF+R7pKvIH//NHxL32ZjPY6EtO
-	 Q0ZIr4fc1/WFad10VWipNyjR4DJS/I2ARDNXAOHI=
+	b=LUWSSKb0PB65Xn/Up8sAXtex9F0ttcZGwSm9iPGM7B3kdWWDyfvJ4xLTYgl762Fp5
+	 5yX7d9yRV7M919XNBh9RU1KexEgmgBnvJj+A/Iai1lPcnWq6taVTa3xC45YzmgkNhe
+	 1iq+GXNSQbRrKdQRm6T0YamBNPuVDwbVjahFAN7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbfICQ0M (ORCPT
+        id S1730576AbfICQ0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:26:12 -0400
+        Tue, 3 Sep 2019 12:26:15 -0400
 Received: from mail.kernel.org ([198.145.29.99]:46242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730103AbfICQZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:54 -0400
+        id S1730513AbfICQZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A4823717;
-        Tue,  3 Sep 2019 16:25:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D549C23717;
+        Tue,  3 Sep 2019 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527953;
-        bh=qUDXs+NRk9kq4QOIe8TO4tnvqCIQP/qICPClCjAc3Kg=;
+        s=default; t=1567527955;
+        bh=h+d4u5kndta5HqWAnAN9o4gvTNOwWTJ5yg5EuUBs6as=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmWpGoTvgLAU39UmPomTJN0cDldoLCAmFcFhgkXF/7hPqzeFCfo3PQRxaknskDlvn
-         Hki1MiXQwZ3+1HJnxHqOT1rGq97dGgDqNrI/u7C8w+OyvENyYaklTy2tyfYXpKuxrv
-         g9oavyA++9iG5MnftRgY0vzrVhW1kh7DmUNcHTq4=
+        b=bSdQDpKJYc2lN4Tw1RMTGAEluKXNuoctTjeICF9iHnjz7A6H7zlUubdOk8yiREz/q
+         D6NdaIFr0VcQBH8JO+DEpeOY1RNgLs8G5DnwgcuyFVf2JD3sJpQfUSYXeEN1zNtubl
+         HaOit7XRT8w26wWHK5QGaTn+rNng7o66AoE2CPks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lyude Paul <lyude@redhat.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 019/167] drm/atomic_helper: Disallow new modesets on unregistered connectors
-Date:   Tue,  3 Sep 2019 12:22:51 -0400
-Message-Id: <20190903162519.7136-19-sashal@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>, Stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hyperv@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 021/167] Drivers: hv: kvp: Fix the recent regression caused by incorrect clean-up
+Date:   Tue,  3 Sep 2019 12:22:53 -0400
+Message-Id: <20190903162519.7136-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,70 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 4d80273976bf880c4bed9359b8f2d45663140c86 ]
+[ Upstream commit e670de54c813b5bc3672dd1c67871dc60e9206f4 ]
 
-With the exception of modesets which would switch the DPMS state of a
-connector from on to off, we want to make sure that we disallow all
-modesets which would result in enabling a new monitor or a new mode
-configuration on a monitor if the connector for the display in question
-is no longer registered. This allows us to stop userspace from trying to
-enable new displays on connectors for an MST topology that were just
-removed from the system, without preventing userspace from disabling
-DPMS on those connectors.
+In kvp_send_key(), we do need call process_ib_ipinfo() if
+message->kvp_hdr.operation is KVP_OP_GET_IP_INFO, because it turns out
+the userland hv_kvp_daemon needs the info of operation, adapter_id and
+addr_family. With the incorrect fc62c3b1977d, the host can't get the
+VM's IP via KVP.
 
-Changes since v5:
-- Fix typo in comment, nothing else
+And, fc62c3b1977d added a "break;", but actually forgot to initialize
+the key_size/value in the case of KVP_OP_SET, so the default key_size of
+0 is passed to the kvp daemon, and the pool files
+/var/lib/hyperv/.kvp_pool_* can't be updated.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: stable@vger.kernel.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20181008232437.5571-2-lyude@redhat.com
+This patch effectively rolls back the previous fc62c3b1977d, and
+correctly fixes the "this statement may fall through" warnings.
+
+This patch is tested on WS 2012 R2 and 2016.
+
+Fixes: fc62c3b1977d ("Drivers: hv: kvp: Fix two "this statement may fall through" warnings")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Cc: K. Y. Srinivasan <kys@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_atomic_helper.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ drivers/hv/hv_kvp.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-index c22062cc99923..71c70a031a043 100644
---- a/drivers/gpu/drm/drm_atomic_helper.c
-+++ b/drivers/gpu/drm/drm_atomic_helper.c
-@@ -307,6 +307,26 @@ update_connector_routing(struct drm_atomic_state *state,
- 		return 0;
- 	}
+diff --git a/drivers/hv/hv_kvp.c b/drivers/hv/hv_kvp.c
+index a7513a8a8e372..d6106e1a0d4af 100644
+--- a/drivers/hv/hv_kvp.c
++++ b/drivers/hv/hv_kvp.c
+@@ -353,6 +353,9 @@ static void process_ib_ipinfo(void *in_msg, void *out_msg, int op)
  
-+	crtc_state = drm_atomic_get_new_crtc_state(state,
-+						   new_connector_state->crtc);
-+	/*
-+	 * For compatibility with legacy users, we want to make sure that
-+	 * we allow DPMS On->Off modesets on unregistered connectors. Modesets
-+	 * which would result in anything else must be considered invalid, to
-+	 * avoid turning on new displays on dead connectors.
-+	 *
-+	 * Since the connector can be unregistered at any point during an
-+	 * atomic check or commit, this is racy. But that's OK: all we care
-+	 * about is ensuring that userspace can't do anything but shut off the
-+	 * display on a connector that was destroyed after its been notified,
-+	 * not before.
-+	 */
-+	if (!READ_ONCE(connector->registered) && crtc_state->active) {
-+		DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] is not registered\n",
-+				 connector->base.id, connector->name);
-+		return -EINVAL;
-+	}
+ 		out->body.kvp_ip_val.dhcp_enabled = in->kvp_ip_val.dhcp_enabled;
+ 
++		/* fallthrough */
 +
- 	funcs = connector->helper_private;
++	case KVP_OP_GET_IP_INFO:
+ 		utf16s_to_utf8s((wchar_t *)in->kvp_ip_val.adapter_id,
+ 				MAX_ADAPTER_ID_SIZE,
+ 				UTF16_LITTLE_ENDIAN,
+@@ -405,7 +408,11 @@ kvp_send_key(struct work_struct *dummy)
+ 		process_ib_ipinfo(in_msg, message, KVP_OP_SET_IP_INFO);
+ 		break;
+ 	case KVP_OP_GET_IP_INFO:
+-		/* We only need to pass on message->kvp_hdr.operation.  */
++		/*
++		 * We only need to pass on the info of operation, adapter_id
++		 * and addr_family to the userland kvp daemon.
++		 */
++		process_ib_ipinfo(in_msg, message, KVP_OP_GET_IP_INFO);
+ 		break;
+ 	case KVP_OP_SET:
+ 		switch (in_msg->body.kvp_set.data.value_type) {
+@@ -446,9 +453,9 @@ kvp_send_key(struct work_struct *dummy)
  
- 	if (funcs->atomic_best_encoder)
-@@ -351,7 +371,6 @@ update_connector_routing(struct drm_atomic_state *state,
+ 		}
  
- 	set_best_encoder(state, new_connector_state, new_encoder);
+-		break;
+-
+-	case KVP_OP_GET:
++		/*
++		 * The key is always a string - utf16 encoding.
++		 */
+ 		message->body.kvp_set.data.key_size =
+ 			utf16s_to_utf8s(
+ 			(wchar_t *)in_msg->body.kvp_set.data.key,
+@@ -456,6 +463,17 @@ kvp_send_key(struct work_struct *dummy)
+ 			UTF16_LITTLE_ENDIAN,
+ 			message->body.kvp_set.data.key,
+ 			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
++
++		break;
++
++	case KVP_OP_GET:
++		message->body.kvp_get.data.key_size =
++			utf16s_to_utf8s(
++			(wchar_t *)in_msg->body.kvp_get.data.key,
++			in_msg->body.kvp_get.data.key_size,
++			UTF16_LITTLE_ENDIAN,
++			message->body.kvp_get.data.key,
++			HV_KVP_EXCHANGE_MAX_KEY_SIZE - 1) + 1;
+ 		break;
  
--	crtc_state = drm_atomic_get_new_crtc_state(state, new_connector_state->crtc);
- 	crtc_state->connectors_changed = true;
- 
- 	DRM_DEBUG_ATOMIC("[CONNECTOR:%d:%s] using [ENCODER:%d:%s] on [CRTC:%d:%s]\n",
+ 	case KVP_OP_DELETE:
 -- 
 2.20.1
 
