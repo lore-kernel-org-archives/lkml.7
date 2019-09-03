@@ -2,116 +2,114 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D24FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F62C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0AB22087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D5AE2341F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJ0krnZR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzOKPbc4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbfICLva (ORCPT
+        id S1728958AbfICLvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:51:30 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42460 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfICLv3 (ORCPT
+        Tue, 3 Sep 2019 07:51:36 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34373 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfICLvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:51:29 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b16so17125214wrq.9;
-        Tue, 03 Sep 2019 04:51:28 -0700 (PDT)
+        Tue, 3 Sep 2019 07:51:36 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b24so10665322pfp.1;
+        Tue, 03 Sep 2019 04:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=LFB91c3nmv/pz8b+u80goQVipPJpjyjQS62qRFXUgtQ=;
-        b=bJ0krnZRH3xIjehbkmbbVQxBnkUa74KSuTBDO//BQo0cigELoAv1mrtFxrColLkIZM
-         omcKsHUfEe9PPcv836qz1cl2MBhLKye0mZu2NLvhOEuEaN2UywKFLZ39fexi+pwe18ZQ
-         2HXkAewEgMuqKFVDkXpvnuXzhsuDab9mG1+oyzKqcOX+Vz/UIMWwhjq8h4oNkYiITH4K
-         H4wY8S4xnA712lpsnpJoBc4BIEgALRz3H2B6LkKSuQunJ7ug5co/gSfJKJfL6YrUlc24
-         oAiOd5ckrjC+FCtJF4F4lWHxd71KtESgi9ImmMb1SNcvCF+fPxFyc7pEJXOsLPtJUBGa
-         l2Pw==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=t2PxMG5OIm2u7yWMEpUqisBZ79ACocY8nzC9BY2ai8g=;
+        b=BzOKPbc4/MSMJfSK7LLEp7SNUCYYvBh4HDURdwaOsyyPnkmUTy/AKujgqW6L8uCJl6
+         XaL05v//eas0UdRSvSlKHyqwRFpRc/OqfKXo+pv6LGkymd+s1Q3HNWnKJfOg/3glY8pA
+         UUEmInY3y7aOIKQyPJKGU/KHvZRRANXNdyo1DVJX8D0D0PC4xTX0IRU/sdg2mPjLYCl2
+         jIgp072oXsEGLUyrYylNlT/GrfN3zP675thrTvlGYnNIaaJAvY4G9CdB4bMXBkzbQqzA
+         diGhS8KsD5HlryTqkAqj6N+3g9AW/tTi1c5Tn27Dwh2RyL5s1K+yw6JRQ1O6IkAT4M0I
+         AyuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=LFB91c3nmv/pz8b+u80goQVipPJpjyjQS62qRFXUgtQ=;
-        b=qYIWYDir8ccONDlup4/U8gsh3CsbmWs7OvcbR5N1Aml1TDTp+Mc9COQvohSm5PTGUH
-         /Y9d1xdZOHfGeRrWmrX8CQZzTgAZl0aO7M8gj5q9nEx4kFBRH68HzbvUU519JMQ+m0cR
-         F8njjRdKfmVuzTWh6Jx68vKao2SmZe28uaX01zQ9JHitnwAeqJKfFNfglMuYxRSb2heW
-         vFsi2lyi4MwRuHpna2ET/rohnsx+hk2g3RxEqSqw13KYWy3xmjsArWAiJqgAscEUWX7W
-         L7T2TK0HIRKH7dUXwmvDRV/fmotbhdpW6Jmn3DFolkfWVDqxwjG4vhQoXEQvMDBuSRbS
-         b4ig==
-X-Gm-Message-State: APjAAAXOpR0R0mf2Ff7OObe8eBsFPomhssit6rzAuflKdalBOLX6VNJa
-        d5NbpbIx4/wJw/w7r3lMZKt6nuOZ
-X-Google-Smtp-Source: APXvYqwbEWX6uMe+Chq94s40RNi2NT4phCD3BvTPenhL7mFjVNrfZ2XEQ/SieLlzjcCHquFVjwcwPg==
-X-Received: by 2002:a5d:4bc1:: with SMTP id l1mr8441064wrt.259.1567511487060;
-        Tue, 03 Sep 2019 04:51:27 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id a192sm22926128wma.1.2019.09.03.04.51.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 04:51:26 -0700 (PDT)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH] mmc: sdhci: Fix incorrect switch to HS mode
-Date:   Tue,  3 Sep 2019 07:51:14 -0400
-Message-Id: <20190903115114.33053-1-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=t2PxMG5OIm2u7yWMEpUqisBZ79ACocY8nzC9BY2ai8g=;
+        b=RznjvVOVUqxloO9dz3xRveY4yWKs9OWwMCDCnqgp+CrGXQqK8vugruwpP4+RHVudCl
+         B6vAUeZZaSSuTeb3GCaGAyNZHRBsMWdQ5s5+4f/tCPD3XOZAkZMowcjyEIdIWIWmryZj
+         8cxqNPyDoyxeGP8lD9lGltxMp5vcFWCcYRLqavDHi9kX9pRdwj0voefEAbSY279RScoF
+         cvrAk9YQS18LrqGkAD0opg7HIsKayMR8+fMefulAaOPSZ32x1w4WDBYWRf10+CqiaGv2
+         RNPcBROWPFDQKrGzUjKYwXoerFaufiUDwHitoKt3Wb0U2XymqCmOtvyYrhX8ZOiVrkTn
+         Kdew==
+X-Gm-Message-State: APjAAAXO/ii+qd4tdqpQz6KkxuqNrUrXg8vA+sTT+UDrbCyIpjdKgAOj
+        3oHzf4mxUNqonyHIyj3IxlI=
+X-Google-Smtp-Source: APXvYqzaQC+6kNqfUI/eVx4HPCBbmJTTOPyiSjSJY5k6LjVLpW9HArFoDoPFVW2rvicRDKjCvdCQRA==
+X-Received: by 2002:aa7:9303:: with SMTP id 3mr19787525pfj.29.1567511495522;
+        Tue, 03 Sep 2019 04:51:35 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r23sm7173244pjo.22.2019.09.03.04.51.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Sep 2019 04:51:34 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 04:51:33 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] mfd: don't select DMA_DECLARE_COHERENT for the sm501
+ and tc6393xb drivers
+Message-ID: <20190903115133.GA3543@roeck-us.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When switching from any MMC speed mode that requires 1.8v
-(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
-ends up configured for SDR12 with a 50MHz clock which is an illegal
-mode.
+On Tue, Sep 03, 2019 at 10:46:15AM +0200, Christoph Hellwig wrote:
+> Now that these drivers use the usb localmem pool there is no need to
+> select DMA_DECLARE_COHERENT.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-This happens because the SDHCI_CTRL_VDD_180 bit in the
-SDHCI_HOST_CONTROL2 register is left set and when this bit is
-set, the speed mode is controlled by the SDHCI_CTRL_UHS field
-in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
-will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
-because there is no UHS mode being set.
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-The fix is to change sdhci_set_uhs_signaling() to set the
-SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
-any switch to HS mode.
+for SM501.
 
-This was found on a new eMMC controller that does strict checking
-of the speed mode and the corresponding clock rate. It caused the
-switch to HS400 mode to fail because part of the sequence to switch
-to HS400 requires a switch from HS200 to HS before going to HS400.
-
-This fix was suggested by Adrian Hunter
-
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
----
- drivers/mmc/host/sdhci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 61d845fe0b97..068149640ecd 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1858,7 +1858,9 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
- 	else if (timing == MMC_TIMING_UHS_SDR12)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
--	else if (timing == MMC_TIMING_UHS_SDR25)
-+	else if (timing == MMC_TIMING_SD_HS ||
-+		 timing == MMC_TIMING_MMC_HS ||
-+		 timing == MMC_TIMING_UHS_SDR25)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
- 	else if (timing == MMC_TIMING_UHS_SDR50)
- 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
--- 
-2.17.1
-
+> ---
+>  drivers/mfd/Kconfig | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index f129f9678940..c8cbde59bbf6 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1105,7 +1105,6 @@ config MFD_SI476X_CORE
+>  config MFD_SM501
+>  	tristate "Silicon Motion SM501"
+>  	depends on HAS_DMA
+> -	select DMA_DECLARE_COHERENT
+>  	 ---help---
+>  	  This is the core driver for the Silicon Motion SM501 multimedia
+>  	  companion chip. This device is a multifunction device which may
+> @@ -1714,7 +1713,6 @@ config MFD_TC6393XB
+>  	select GPIOLIB
+>  	select MFD_CORE
+>  	select MFD_TMIO
+> -	select DMA_DECLARE_COHERENT
+>  	help
+>  	  Support for Toshiba Mobile IO Controller TC6393XB
+>  
+> -- 
+> 2.20.1
+> 
