@@ -2,92 +2,130 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AD3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1289C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0646422DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:38:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZWYwkcS/"
+	by mail.kernel.org (Postfix) with ESMTP id 8F6AF2053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:39:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbfICHi4 (ORCPT
+        id S1728116AbfICHjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:38:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54488 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbfICHiv (ORCPT
+        Tue, 3 Sep 2019 03:39:42 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:32023 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726062AbfICHjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:38:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zMlhPvXbFRvudQ4Wa6rXBHMxB5a9svwnPxE7oMqO/UQ=; b=ZWYwkcS/DNQwcA/qB3ONLZ/EdM
-        RIbDgQlzzAAy3fBP7PQ9X8hhQug0ul1bPw7yDwcqWGWDfyysfvCi6BI4LG/+Nx+kzfEtGiule0IYI
-        uQNtvGDz2UTuocqdY4R3CiflvMfmTyBqXzuCz1K+Fk52aCVt+lHwQMx1kDdHXJ2s7f9lGUdZMwiLr
-        v+K5G5U9AdwZzbYzkFAHEnN/in6HWsGHer1nItvPZvYF8hnk/9ckLXHlWX6LHFA1iV+aD4YMf5DwZ
-        EPMm53+f2taQ8DH7n6FIozM2TH2rCVag6JvRGmxyow+At8Wwo9QDIe+Hmp8mW5a57nCBCaK4ITWEt
-        PK0LgQgw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i53On-0002SC-Nm; Tue, 03 Sep 2019 07:38:45 +0000
-Date:   Tue, 3 Sep 2019 00:38:45 -0700
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     Atish Patra <Atish.Patra@wdc.com>
-Cc:     "hch@infradead.org" <hch@infradead.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "alankao@andestech.com" <alankao@andestech.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "anup@brainfault.org" <anup@brainfault.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "gary@garyguo.net" <gary@garyguo.net>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-Subject: Re: [RFC PATCH 0/2] Add support for SBI version to 0.2
-Message-ID: <20190903073845.GA1170@infradead.org>
-References: <20190826233256.32383-1-atish.patra@wdc.com>
- <20190827144624.GA18535@infradead.org>
- <a31c39e8653bd04efe0051a5fd6f0238d33a80e7.camel@wdc.com>
- <20190829105919.GB8968@infradead.org>
- <4bd0a62ba36587661574e1bf8b094b0a28ec8941.camel@wdc.com>
+        Tue, 3 Sep 2019 03:39:42 -0400
+IronPort-SDR: JCSLeuwZdj8Ynscl8d03ZQDv6CgILXpRexnIQQJEZIwXp1nE4F6By1yVqkCWnoJWQwcug31kW5
+ uoqkBVGfNzBK4o3LMaDD0f2Cz3yj1hl6Rd5YrdxtQP9llL8IuZpjbIezjgDxDWMO4fSPDvSTFg
+ dBeWm2JPmzGBKi/pQ+ULMGwbteOaxE6mkGCfpl9K6bOnJfZa2wYN31hTajgXU/1eDQiGRB5FGW
+ R6UVZ/i3FmyPBu/8Hqrtz4pLbIl1FQ5rLFfkfesQJQ/wTyAqoc1swEfdTvzN52FDShqkvRcUNE
+ v/o=
+X-IronPort-AV: E=Sophos;i="5.64,462,1559548800"; 
+   d="scan'208";a="40981245"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 02 Sep 2019 23:39:41 -0800
+IronPort-SDR: 35HFBf4IB4rsH7nw4NcOS0b3VfKkz2tp1a128GNUK3777TLBhFYVr+aAGcw0NzD5XH8dldBOrr
+ WLV8+0gC3Xho28VXqtulwGLvWmwcW9oC3Nv5h8LfrJi+jqDfR8AgwD004peu7ZGkc2q6oucHTa
+ f4jSi9C5ha1TMXkXwdunlPAYS3mGkSKSkImEj0cc6cKa5tUpCHN658HMvUBrwix8Gxz3F09tW4
+ Lk7CLHumHK7alvUxRm4i1/yxNJvQ6b3Z7XMT/f33rUhFGHn3JVD1D1MrVht38+xZcCZRZ83UC0
+ leU=
+Subject: Re: [PATCH v2 29/49] Input: atmel_mxt_ts - implement debug output for
+ messages
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+CC:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
+        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <george_davis@mentor.com>
+References: <20190827062943.20698-1-jiada_wang@mentor.com>
+ <20190827062943.20698-5-jiada_wang@mentor.com>
+ <20190829153124.cozqsegnmvxveecd@holly.lan>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <f0e8045a-e5d8-1fcf-268e-9a0ae6d9c0d4@mentor.com>
+Date:   Tue, 3 Sep 2019 16:39:32 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4bd0a62ba36587661574e1bf8b094b0a28ec8941.camel@wdc.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190829153124.cozqsegnmvxveecd@holly.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:13:25PM +0000, Atish Patra wrote:
-> If I understood you clearly, you want to call it legacy in the spec and
-> just say v0.1 extensions.
-> 
-> The whole idea of marking them as legacy extensions to indicate that it
-> would be obsolete in the future.
-> 
-> But I am not too worried about the semantics here. So I am fine with
-> just changing the text to v0.1 if that avoids confusion.
+Hi Daniel
 
-So my main problems is that we are lumping all the "legacy" extensions
-together.  While some of them are simply a bad idea and shouldn't
-really be implemented for anything new ever, others like the sfence.vma
-and ipi ones are needed until we have hardware support to avoid them
-and possibly forever for virtualization.
+On 2019/08/30 0:31, Daniel Thompson wrote:
+> On Tue, Aug 27, 2019 at 03:29:23PM +0900, Jiada Wang wrote:
+>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>
+>> Add a debug switch which causes all messages from the touch controller to
+>> be dumped to the dmesg log with a set prefix "MXT MSG:". This is used by
+>> Atmel user-space utilities to debug touch operation. Enabling this output
+>> does impact touch performance.
+>>
+>> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+>> (cherry picked from ndyer/linux/for-upstream commit 3c3fcfdd4889dfeb1c80ae8cd94a622c6342b06a)
+>> [gdavis: Forward port and fix conflicts.]
+>> Signed-off-by: George G. Davis <george_davis@mentor.com>
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   drivers/input/touchscreen/atmel_mxt_ts.c | 44 ++++++++++++++++++++++--
+>>   1 file changed, 41 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> index 2d2e8ea30547..941c6970cb70 100644
+>> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+>> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> @@ -335,6 +335,7 @@ struct mxt_data {
+>>   	u8 t100_aux_ampl;
+>>   	u8 t100_aux_area;
+>>   	u8 t100_aux_vect;
+>> +	bool debug_enabled;
+>>   	u8 max_reportid;
+>>   	u32 config_crc;
+>>   	u32 info_crc;
+>> @@ -460,8 +461,8 @@ static bool mxt_object_readable(unsigned int type)
+>>   
+>>   static void mxt_dump_message(struct mxt_data *data, u8 *message)
+>>   {
+>> -	dev_dbg(&data->client->dev, "message: %*ph\n",
+>> -		data->T5_msg_size, message);
+>> +	dev_dbg(&data->client->dev, "MXT MSG: %*ph\n",
+>> +		       data->T5_msg_size, message);
+> 
+> I'm not 100% convinced that the kernel should change here (arguably the
+> userspace utility should be modified instead) but if the messages are
+> conforming to some sort of vendor specific protocol then some commenting
+> is needed.
+I will update with inline comment
+> 
+> 
+>> @@ -3538,6 +3573,8 @@ static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
+>>   static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
+>>   static DEVICE_ATTR(update_cfg, S_IWUSR, NULL, mxt_update_cfg_store);
+>>   static DEVICE_ATTR(config_crc, S_IRUGO, mxt_config_crc_show, NULL);
+>> +static DEVICE_ATTR(debug_enable, S_IWUSR | S_IRUSR, mxt_debug_enable_show,
+>> +		   mxt_debug_enable_store);
+> 
+> Why isn't CONFIG_DYNAMIC_DEBUG sufficient to enable/disable the
+> messages?
+> 
+thanks for the comment, I think the only difference is,
+by only using CONFIG_DYNAMC_DEBUG, it's hard to differentiate
+the messages between valid report_id and exceptional case
+(explicitly set of "dump = true")
 
-So either we use different markers of legacy for them, or we at least
-define new extensions that replace them at the same time.  What I
-want to avoid is the possibіly of an implementation using the really
-legacy bits and new extensions at the same time.
+
+Thanks,
+Jiada
+> 
+> Daniel.
+> 
