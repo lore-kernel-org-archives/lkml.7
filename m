@@ -2,111 +2,85 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8421C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB053C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85AC122CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OyE3pxgc"
+	by mail.kernel.org (Postfix) with ESMTP id A271A22CED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726401AbfICSsX (ORCPT
+        id S1726438AbfICSsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:48:23 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46254 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfICSsX (ORCPT
+        Tue, 3 Sep 2019 14:48:54 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38313 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfICSsx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:48:23 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q5so3463855pfg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:48:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IEYeijqNBx8FKsQCqztccyibS69/cramAhDtz2iOU7k=;
-        b=OyE3pxgc7aeDvUAkSmCMjkF82tfwOvEd6uR6WwP8Y27TMiWd6UxOGWlzMn+hdx4Lyv
-         rpIVbvfseTf6gbuZaAzdJniutKEjgVfg09dgi50K11LcjfEFIwdURoBmHyOkKq1ZsQDD
-         vMZsxocGWcH2DwAMUDoMsv+Sj+8jZ8ecnR1Dw=
+        Tue, 3 Sep 2019 14:48:53 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w11so8300382plp.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 11:48:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IEYeijqNBx8FKsQCqztccyibS69/cramAhDtz2iOU7k=;
-        b=CCZ8ukH4pSwRLLyL5S1ut4zfAITz9gfH811X/Oaj1Ovb5MGFEg6RVfPZfQ4IDNLwPH
-         XbAuI35miwSoj9VTjjbKQLyeWWSyhuZoZmHJxsCTtkUmBPHfC5pUej3ZvrmifedVymOd
-         5fTQBTfsxaQy7qv+H3BUGxcSD9SCeOeM4+VK3ad+GWTlXWc7hK4+/gxm/AHLVZE4zhXt
-         nd9Y3XoDUPzIZ9knn740blMQ/cUvxNJmYuZoFmoQZOaiBQ82ozmOfifosAzK0kF8/tOV
-         m+k4CCKfJNVfTVwVaJRZozV7jtEUCal3YsGd9KFKtdaN2lPq19UHGT18JGRpNmNUUEW2
-         J6hQ==
-X-Gm-Message-State: APjAAAWT5/epLrqG9mJ8iE12cif1GDWQ9WYYmGnZmfZmYy0WVA6aVDcM
-        JKq2s0oxkPNpef89sZGOEmG3Jg==
-X-Google-Smtp-Source: APXvYqzX++xeelL0zbZVBt9i8AsSwDpC4wmYT9xqvVJMc0+k+GzPp/aiQiH3XMrvni+m2rj6xGSltg==
-X-Received: by 2002:a63:1310:: with SMTP id i16mr31163370pgl.187.1567536502419;
-        Tue, 03 Sep 2019 11:48:22 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id q4sm6220900pfh.115.2019.09.03.11.48.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Sep 2019 11:48:21 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 11:48:16 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2] ARM: Emit __gnu_mcount_nc when using Clang 10.0.0 or
- newer
-Message-ID: <20190903184816.GF70797@google.com>
-References: <20190829062635.45609-1-natechancellor@gmail.com>
- <20190831060530.43082-1-natechancellor@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190831060530.43082-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=pVDfotd4+mwULNcYBfwZPb3QNstzNQ7Yt+TJQtciNHA=;
+        b=MQEIeYFTUx+JIO0IAp6Z0e/o6ZuckATJYCqYrYVsPhNWxdwFVbbuYbtWf9ayJijgki
+         BNsKl9kC74Q+z8mLmOQ5OxYDgjzWkcy4hyMUvkUtbiC4RRcbOhBMVqm8wd6x/oKlQHjs
+         VD2nKSDwoCdq5Qc40TX+fF6svUjNBwmxxieP+3SfgNX+DTb3WJOGwC9nwt1grbg0mSiU
+         ukQRnPTTj1AFOTDcymHuPaKeEfFAQxQAsGjVgReW8S2xpY1W1kyxNOA7/rLhl5v++iYJ
+         LZvA1uGauNTVa6QDpjlrwkGbQtYgpfIWBtTzIBEskKNI6Urnw7T5GXOwoJ2iSN8FdfNZ
+         YuuA==
+X-Gm-Message-State: APjAAAWHMJxsb8HXQ/oGLL07TzzEO9QHsSeiTZhmpPErFInSZIUKrPOw
+        gQSf8LkUsLOw4JBT084QR84Jk8NsEr8=
+X-Google-Smtp-Source: APXvYqwtoRP54sGdEy4OpTdOgUHkbVNMvMEjJcBT5t9TYgg5UIoQdGr9aaZjO0QECWhIJF3SEFni1A==
+X-Received: by 2002:a17:902:b604:: with SMTP id b4mr4432102pls.94.1567536533041;
+        Tue, 03 Sep 2019 11:48:53 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id r187sm11696625pfc.105.2019.09.03.11.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 11:48:52 -0700 (PDT)
+Date:   Tue, 03 Sep 2019 11:48:52 -0700 (PDT)
+X-Google-Original-Date: Tue, 03 Sep 2019 11:48:19 PDT (-0700)
+Subject:     Re: [PATCH 08/15] riscv: provide native clint access for M-mode
+In-Reply-To: <20190828061146.GA21670@lst.de>
+CC:     Christoph Hellwig <hch@lst.de>, mark.rutland@arm.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Christoph Hellwig <hch@lst.de>
+Message-ID: <mhng-e03fb9a6-73ee-437e-aee1-e30427f5d644@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 11:05:31PM -0700, Nathan Chancellor wrote:
-> Currently, multi_v7_defconfig + CONFIG_FUNCTION_TRACER fails to build
-> with clang:
-> 
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `_local_bh_enable':
-> softirq.c:(.text+0x504): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `__local_bh_enable_ip':
-> softirq.c:(.text+0x58c): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `do_softirq':
-> softirq.c:(.text+0x6c8): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_enter':
-> softirq.c:(.text+0x75c): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o: in function `irq_exit':
-> softirq.c:(.text+0x840): undefined reference to `mcount'
-> arm-linux-gnueabi-ld: kernel/softirq.o:softirq.c:(.text+0xa50): more undefined references to `mcount' follow
-> 
-> clang can emit a working mcount symbol, __gnu_mcount_nc, when
-> '-meabi gnu' is passed to it. Until r369147 in LLVM, this was
-> broken and caused the kernel not to boot with '-pg' because the
-> calling convention was not correct. Always build with '-meabi gnu'
-> when using clang but ensure that '-pg' (which is added with
-> CONFIG_FUNCTION_TRACER and its prereq CONFIG_HAVE_FUNCTION_TRACER)
-> cannot be added with it unless this is fixed (which means using
-> clang 10.0.0 and newer).
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/35
-> Link: https://bugs.llvm.org/show_bug.cgi?id=33845
-> Link: https://github.com/llvm/llvm-project/commit/16fa8b09702378bacfa3d07081afe6b353b99e60
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Reviewed-by: Stefan Agner <stefan@agner.ch>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On Tue, 27 Aug 2019 23:11:46 PDT (-0700), Christoph Hellwig wrote:
+> On Tue, Aug 27, 2019 at 04:37:16PM -0700, Palmer Dabbelt wrote:
+>> clint0 would be version 0 of the clint, with is the core-local interrupt
+>> controller in rocket chip.  It should be "sifive,clint-1.0.0", not
+>> "riscv,clint0", as it's a SiFive widget.  Unfortunately there are a lot of
+>> legacy device trees floating around, but I'm only considering what's been
+>> upstream to be actually part of the spec.
+>>
+>> In this case the code should match on a "sifive,clint-1.0.0", and the
+>> device trees should be fixed up to match.  We match on "riscv,plic0" for
+>> legacy systems, and I guess it makes sense to do something similar here.
+>
+> IFF we decided to change it I'd rather separate DT noes for the ipi
+> bank vs timecmp register vs timeval to support variable layouts.  The
+> downside is that we can't just boot on unmodified upstream qemu, which
+> has used the "riscv,clint0" for years.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Like I alluded to above, matching on "riscv,clint0" seems reasonable to me as 
+it's a defacto standard -- we'll just have to make sure that if we ever end up 
+with a RISC-V CLINT that the DT entry is something else.
+
+As far as splitting the memory maps goes, I don't have a strong opinion but it 
+seems like that'll introduce more complexity than it's worth.
