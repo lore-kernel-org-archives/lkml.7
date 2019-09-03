@@ -2,272 +2,143 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56639C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A08DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4BC22D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1407C21883
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wavecomp.com header.i=@wavecomp.com header.b="VCoxzS8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfICI4X (ORCPT
+        id S1728453AbfICI5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:56:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60938 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725888AbfICI4W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:56:22 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x838q4iE092234;
-        Tue, 3 Sep 2019 04:55:12 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2usmcc1njb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 04:55:11 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x838pn2k017636;
-        Tue, 3 Sep 2019 08:55:10 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 2uqgh6wn5c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 08:55:10 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x838t95R54460892
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Sep 2019 08:55:09 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8464AC059;
-        Tue,  3 Sep 2019 08:55:09 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32736AC05B;
-        Tue,  3 Sep 2019 08:55:07 +0000 (GMT)
-Received: from [9.124.31.200] (unknown [9.124.31.200])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Sep 2019 08:55:06 +0000 (GMT)
-Message-ID: <1567500907.5082.12.camel@abdul>
-Subject: [mainline][BUG][PPC][btrfs][bisected 00801a] kernel BUG at
- fs/btrfs/locking.c:71!
-From:   Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-To:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, nborisov@suse.com,
-        dsterba@suse.com, linux-btrfs@vger.kernel.org,
-        chandan <chandan@linux.vnet.ibm.com>, josef@toxicpanda.com,
-        mpe <mpe@ellerman.id.au>, sachinp <sachinp@linux.vnet.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>
-Date:   Tue, 03 Sep 2019 14:25:07 +0530
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909030094
+        Tue, 3 Sep 2019 04:57:08 -0400
+Received: from mail-eopbgr750127.outbound.protection.outlook.com ([40.107.75.127]:6020
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725888AbfICI5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 04:57:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ffEmgDXQ32ktnYik+eVGVMhdy8ERJFJeO9bVlL8V0Mxg4D6rOgPOUmRR7Fyc3r5aBchk3kD/SxYNJ6jDqMm+AlskxxR5D6gxXz4Ap3C9770rvYs5nLEsf8mirPxU147GUK5AgKTMUtISMWNOtFlGwWzrwULp+0VStdI2wTEgEgT9m9CiXwweHgnAEA6bmg/le9JCAHcolXW4kVPKP+4i/tjNhpMPCtb+PiJR4S+hcx3BtV38qnjTaW2sukEWyMAFLneojynBG7YRQMRvUfkTpCTzG2o8YIi3y8H3g6xYI5TS5hmsnaBUCgqXB3ZFMQw1YJyeLXmZ+RH55DXVzybgeg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pKGjwp1Uo8LfIHoyH7+b//d/bD44+fJfePgvviW7l8g=;
+ b=mG1tWN7uUdyshf80A5MUT9b4f6P+Wl3TJJjI2GQ8ZUx0AFflfdICBbq8iw3/Yhzq8BPbGw5wEEcJcYFHMoY9CTTLu5rjbdoYrQRooJHt40TGSSs8CRwl3yHAmgH3BcdBm212x/sNaI/JHePgkCL5RI5ImrHCW4Va/8xjqT8RxvnislgjsJYAH74bugV/eCnLe84HjYXFBqSKMRX7dUb10TLokdEPKjB2Pk6ZuJOwUa60shooMhVChq5OtJZYqPC3c7Lh8TPywmKg3ZnAePzVm64g0iURm4a0MshUvC9WoYxNmVvtGmHAyRBCFSAQ2px4keNF4rch/Xz1xwu89RP0iw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wavecomp.com; dmarc=pass action=none header.from=mips.com;
+ dkim=pass header.d=mips.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wavecomp.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pKGjwp1Uo8LfIHoyH7+b//d/bD44+fJfePgvviW7l8g=;
+ b=VCoxzS8WWTGfTcQYd0/WZ+jzrF0fosMbreNkfKpbvjQ4IW659Bg+NPwvuAf4EQKOuVRKFsAOj0pCb8p+7Dill9cY5mxZ4QAPW5CJCiLvD1LY+jZ1udVFo87TRkJbmYam+XgewallJsGzm3jjrChp1wMbXFymbbSiyHLv9/Ei034=
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
+ MWHPR2201MB1422.namprd22.prod.outlook.com (10.172.59.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.18; Tue, 3 Sep 2019 08:57:01 +0000
+Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f9e8:5e8c:7194:fad3]) by MWHPR2201MB1277.namprd22.prod.outlook.com
+ ([fe80::f9e8:5e8c:7194:fad3%11]) with mapi id 15.20.2220.021; Tue, 3 Sep 2019
+ 08:57:01 +0000
+From:   Paul Burton <paul.burton@mips.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-hexagon@vger.kernel.org" <linux-hexagon@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "nios2-dev@lists.rocketboards.org" <nios2-dev@lists.rocketboards.org>,
+        "openrisc@lists.librecores.org" <openrisc@lists.librecores.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+Subject: Re: [PATCH 04/26] mips: remove ioremap_cachable
+Thread-Topic: [PATCH 04/26] mips: remove ioremap_cachable
+Thread-Index: AQHVYjWM7xZdW0g9rk2mdDHsFCA7Ig==
+Date:   Tue, 3 Sep 2019 08:57:00 +0000
+Message-ID: <MWHPR2201MB1277E4E8214F6E50E5EC9BFCC1B90@MWHPR2201MB1277.namprd22.prod.outlook.com>
+References: <20190817073253.27819-5-hch@lst.de>
+In-Reply-To: <20190817073253.27819-5-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0041.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:61::29) To MWHPR2201MB1277.namprd22.prod.outlook.com
+ (2603:10b6:301:18::12)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=pburton@wavecomp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.196.173.241]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bc4e3957-ec12-4171-af7d-08d7304cae89
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1422;
+x-ms-traffictypediagnostic: MWHPR2201MB1422:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR2201MB14223E109C3EC6DA480974C1C1B90@MWHPR2201MB1422.namprd22.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 01494FA7F7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(376002)(346002)(39840400004)(199004)(189003)(7736002)(71190400001)(6116002)(4744005)(3846002)(71200400001)(256004)(7416002)(99286004)(966005)(8936002)(66446008)(64756008)(66556008)(66946007)(66476007)(14454004)(8676002)(478600001)(386003)(6506007)(55236004)(53936002)(102836004)(2906002)(6246003)(74316002)(6436002)(42882007)(316002)(44832011)(446003)(476003)(11346002)(26005)(486006)(9686003)(6306002)(186003)(54906003)(55016002)(66066001)(81166006)(81156014)(25786009)(52116002)(7696005)(305945005)(52536014)(6916009)(229853002)(5660300002)(4326008)(76176011)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1422;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: wavecomp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AMsW0LyaOM/yHrXI9m5Kie1YaQxjkfvMhyNX9ES2CGzwwwtpZntVqBckfi52aNkMc1Cdw2HlQMfo43GMtbo5mFVnqmdWekTCV8WgfEaqK2CjzX3+jfIMYgUYhhBN4zWgT9CB6mowfVObZSeeIEMtj7+DNC2MxefkmdolMdDmNiKZeyM/3alS0wsSmeCRCsmzACIx3yo9Czz0fYxxpPvPbHTf+KaRtsqNbIV5fuR38UuaxwgSY7khdFw8Ar3ThZt6HWelwgU4vmFePNfnQ/2+RAPxMWvPKk8KwT0tM6kvsaKJZ5DXKM+M8iKqCcMBcLD53stvyeVLaj4Syqkv0mqrETEw4t6/7LI69R/6BoyyTS/WN9nNKWlcsqFhE/rl8Anat/j9v2p6UBqUVH6JJkwAm+0PTbtyAY3KukhvYKL2BNg=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: mips.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc4e3957-ec12-4171-af7d-08d7304cae89
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 08:57:00.4929
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: CsvUw2VRN18dDCQo8ThReG3qLd2pbxbAWkvlwIUDlGTbHTsWbcHQ6WJEwrmmhkC2GbNjKIBlixwAJHAstD6HBA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1422
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greeting's
+Hello,
 
-Mainline kernel panics with LTP/fs_fill-dir tests for btrfs file system on my P9 box running mainline kernel 5.3.0-rc5
+Christoph Hellwig wrote:
+> Just define ioremap_cache directly.
 
-BUG_ON was first introduced by below commit
+Applied to mips-next.
 
-commit 00801ae4bb2be5f5af46502ef239ac5f4b536094
-Author: David Sterba <dsterba@suse.com>
-Date:   Thu May 2 16:53:47 2019 +0200
+> commit 60af0d94cc37
+> https://git.kernel.org/mips/c/60af0d94cc37
+>=20
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Paul Burton <paul.burton@mips.com>
 
-    btrfs: switch extent_buffer write_locks from atomic to int
-    
-    The write_locks is either 0 or 1 and always updated under the lock,
-    so we don't need the atomic_t semantics.
-    
-    Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-    Signed-off-by: David Sterba <dsterba@suse.com>
+Thanks,
+    Paul
 
-diff --git a/fs/btrfs/locking.c b/fs/btrfs/locking.c
-index 2706676279..98fccce420 100644
---- a/fs/btrfs/locking.c
-+++ b/fs/btrfs/locking.c
-@@ -58,17 +58,17 @@ static void btrfs_assert_tree_read_locked(struct
-extent_buffer *eb)
- 
- static void btrfs_assert_tree_write_locks_get(struct extent_buffer *eb)
- {
--       atomic_inc(&eb->write_locks);
-+       eb->write_locks++;
- }
- 
- static void btrfs_assert_tree_write_locks_put(struct extent_buffer *eb)
- {
--       atomic_dec(&eb->write_locks);
-+       eb->write_locks--;
- }
- 
- void btrfs_assert_tree_locked(struct extent_buffer *eb)
- {
--       BUG_ON(!atomic_read(&eb->write_locks));
-+       BUG_ON(!eb->write_locks);
- }
- 
-
-tests logs:
-avocado-misc-tests/io/disk/ltp_fs.py:LtpFs.test_fs_run;fs_fill-dir-ext3-61cd:  [ 3376.022096] EXT4-fs (nvme0n1): mounting ext3 file system using the ext4 subsystem
-EXT4-fs (nvme0n1): mounted filesystem with ordered data mode. Opts: (null)
-EXT4-fs (loop1): mounting ext2 file system using the ext4 subsystem
-EXT4-fs (loop1): mounted filesystem without journal. Opts: (null)
-EXT4-fs (loop1): mounting ext3 file system using the ext4 subsystem
-EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
-EXT4-fs (loop1): mounted filesystem with ordered data mode. Opts: (null)
-XFS (loop1): Mounting V5 Filesystem
-XFS (loop1): Ending clean mount
-XFS (loop1): Unmounting Filesystem
-BTRFS: device fsid 7c08f81b-6642-4a06-9182-2884e80d56ee devid 1 transid 5 /dev/loop1
-BTRFS info (device loop1): disk space caching is enabled
-BTRFS info (device loop1): has skinny extents
-BTRFS info (device loop1): enabling ssd optimizations
-BTRFS info (device loop1): creating UUID tree
-------------[ cut here ]------------
-kernel BUG at fs/btrfs/locking.c:71!
-Oops: Exception in kernel mode, sig: 5 [#1]
-LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-Dumping ftrace buffer:
-   (ftrace buffer empty)
-Modules linked in: fuse(E) vfat(E) fat(E) btrfs(E) xor(E)
-zstd_decompress(E) zstd_compress(E) raid6_pq(E) xfs(E) raid0(E)
-linear(E) dm_round_robin(E) dm_queue_length(E) dm_service_time(E)
-dm_multipath(E) loop(E) rpadlpar_io(E) rpaphp(E) lpfc(E) bnx2x(E)
-xt_CHECKSUM(E) xt_MASQUERADE(E) tun(E) bridge(E) stp(E) llc(E) kvm_pr(E)
-kvm(E) tcp_diag(E) udp_diag(E) inet_diag(E) unix_diag(E)
-af_packet_diag(E) netlink_diag(E) ip6t_rpfilter(E) ipt_REJECT(E)
-nf_reject_ipv4(E) ip6t_REJECT(E) nf_reject_ipv6(E) xt_conntrack(E)
-ip_set(E) nfnetlink(E) ebtable_nat(E) ebtable_broute(E) ip6table_nat(E)
-ip6table_mangle(E) ip6table_security(E) ip6table_raw(E) iptable_nat(E)
-nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E)
-iptable_mangle(E) iptable_security(E) iptable_raw(E) ebtable_filter(E)
-ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) sunrpc(E)
-raid10(E) xts(E) pseries_rng(E) vmx_crypto(E) sg(E) uio_pdrv_genirq(E)
-uio(E) binfmt_misc(E) sch_fq_codel(E) ip_tables(E)
- ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sd_mod(E) ibmvscsi(E)
-scsi_transport_srp(E) ibmveth(E) nvmet_fc(E) nvmet(E) nvme_fc(E)
-nvme_fabrics(E) scsi_transport_fc(E) mdio(E) libcrc32c(E) ptp(E)
-pps_core(E) nvme(E) nvme_core(E) dm_mirror(E) dm_region_hash(E)
-dm_log(E) dm_mod(E) [last unloaded: lpfc]
-CPU: 14 PID: 1803 Comm: kworker/u32:8 Tainted: G            E     5.3.0-rc5-autotest-autotest #1
-Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
-NIP:  c00800000164dd70 LR: c00800000164df00 CTR: c000000000a817a0
-REGS: c00000000260b5d0 TRAP: 0700   Tainted: G            E      (5.3.0-rc5-autotest-autotest)
-MSR:  8000000102029033 <SF,VEC,EE,ME,IR,DR,RI,LE,TM[E]>  CR: 22444082  XER: 00000000
-CFAR: c00800000164defc IRQMASK: 0
-GPR00: c0080000015c55f4 c00000000260b860 c008000001703b00 c000000267a29af0
-GPR04: 0000000000000000 0000000000000001 0000000000000000 0000000000000000
-GPR08: 0000000000000000 0000000000000001 0000000000000000 0000000000000004
-GPR12: 0000000000004000 c00000001ec58e00 0000000000000000 0000000000000000
-GPR16: 0000000000010000 0000000000000004 0000000000000001 0000000000000001
-GPR20: 0000000000000000 0000000000000001 000000003e0f83e1 c00000025a7cbef0
-GPR24: c00000000260ba26 0000000040000000 c0000000014a26e8 0000000000000003
-GPR28: 0000000000000004 c00000025f2010a0 c000000267a29af0 0000000000000000
-NIP [c00800000164dd70] btrfs_assert_tree_locked+0x10/0x20 [btrfs]
-LR [c00800000164df00] btrfs_set_lock_blocking_write+0x60/0x100 [btrfs]
-Call Trace:
-[c00000000260b860] [c00000000260b8e0] 0xc00000000260b8e0 (unreliable)
-[c00000000260b890] [c0080000015c55f4] btrfs_set_path_blocking+0xb4/0xc0 [btrfs]
-[c00000000260b8e0] [c0080000015cb808] btrfs_search_slot+0x8e8/0xb80 [btrfs]
-[c00000000260ba00] [c0080000015eb348] btrfs_csum_file_blocks+0x518/0x6e0 [btrfs]
-[c00000000260bad0] [c0080000015fd34c] add_pending_csums+0x8c/0x100 [btrfs]
-[c00000000260bb20] [c0080000016093b0] btrfs_finish_ordered_io+0x550/0xe00 [btrfs]
-[c00000000260bc10] [c008000001641aa4] normal_work_helper+0xf4/0x5a0 [btrfs]
-[c00000000260bc80] [c00000000013c8a0] process_one_work+0x1c0/0x490
-[c00000000260bd20] [c00000000013cbf8] worker_thread+0x88/0x570
-[c00000000260bdb0] [c0000000001444d8] kthread+0x158/0x1a0
-[c00000000260be20] [c00000000000b760] ret_from_kernel_thread+0x5c/0x7c
-Instruction dump:
-81430108 7d490034 5529d97e 69290001 0b090000 394a0001 91430108 4e800020
-81230114 7d290034 5529d97e 79290020 <0b090000> 4e800020 60000000 60420000
----[ end trace 7890aa8e373f5bfa ]---
-
-Kernel panic - not syncing: Fatal exception
-Dumping ftrace buffer:
-   (ftrace buffer empty)
-------------[ cut here ]------------
-WARNING: CPU: 14 PID: 1803 at drivers/tty/vt/vt.c:4256 do_unblank_screen+0x1ec/0x260
-Modules linked in: fuse(E) vfat(E) fat(E) btrfs(E) xor(E)
-zstd_decompress(E) zstd_compress(E) raid6_pq(E) xfs(E) raid0(E)
-linear(E) dm_round_robin(E) dm_queue_length(E) dm_service_time(E)
-dm_multipath(E) loop(E) rpadlpar_io(E) rpaphp(E) lpfc(E) bnx2x(E)
-xt_CHECKSUM(E) xt_MASQUERADE(E) tun(E) bridge(E) stp(E) llc(E) kvm_pr(E)
-kvm(E) tcp_diag(E) udp_diag(E) inet_diag(E) unix_diag(E)
-af_packet_diag(E) netlink_diag(E) ip6t_rpfilter(E) ipt_REJECT(E)
-nf_reject_ipv4(E) ip6t_REJECT(E) nf_reject_ipv6(E) xt_conntrack(E)
-ip_set(E) nfnetlink(E) ebtable_nat(E) ebtable_broute(E) ip6table_nat(E)
-ip6table_mangle(E) ip6table_security(E) ip6table_raw(E) iptable_nat(E)
-nf_nat(E) nf_conntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E)
-iptable_mangle(E) iptable_security(E) iptable_raw(E) ebtable_filter(E)
-ebtables(E) ip6table_filter(E) ip6_tables(E) iptable_filter(E) sunrpc(E)
-raid10(E) xts(E) pseries_rng(E) vmx_crypto(E) sg(E) uio_pdrv_genirq(E)
-uio(E) binfmt_misc(E) sch_fq_codel(E) ip_tables(E)
- ext4(E) mbcache(E) jbd2(E) sr_mod(E) cdrom(E) sd_mod(E) ibmvscsi(E)
-scsi_transport_srp(E) ibmveth(E) nvmet_fc(E) nvmet(E) nvme_fc(E)
-nvme_fabrics(E) scsi_transport_fc(E) mdio(E) libcrc32c(E) ptp(E)
-pps_core(E) nvme(E) nvme_core(E) dm_mirror(E) dm_region_hash(E)
-dm_log(E) dm_mod(E) [last unloaded: lpfc]
-CPU: 14 PID: 1803 Comm: kworker/u32:8 Tainted: G      D     E     5.3.0-rc5-autotest-autotest #1
-Workqueue: btrfs-endio-write btrfs_endio_write_helper [btrfs]
-NIP:  c00000000064f79c LR: c00000000064f798 CTR: 000000000083cf60
-REGS: c00000000260b0c0 TRAP: 0700   Tainted: G      D     E      (5.3.0-rc5-autotest-autotest)
-MSR:  8000000000021033 <SF,ME,IR,DR,RI,LE>  CR: 42442022  XER: 00000005
-CFAR: c0000000001998f4 IRQMASK: 3
-GPR00: c00000000064f798 c00000000260b350 c0000000012f2000 0000000000000024
-GPR04: 0000000000000001 0000000000000000 00041dab23bc8187 00000000000000ee
-GPR08: 0000000000000001 0000000000000007 0000000000000006 00000000000012cc
-GPR12: 0000000000002000 c00000001ec58e00 0000000000000000 0000000000000000
-GPR16: 0000000000010000 0000000000000004 0000000000000001 0000000000000001
-GPR20: 0000000000000000 0000000000000001 000000003e0f83e1 c00000025a7cbef0
-GPR24: c00000000260ba26 0000000040000000 c0000000011c2678 c0000000014c6720
-GPR28: c0000000014c66f8 0000000000000000 c000000000c9cbc0 c0000000015d5170
-NIP [c00000000064f79c] do_unblank_screen+0x1ec/0x260
-LR [c00000000064f798] do_unblank_screen+0x1e8/0x260
-Call Trace:
-[c00000000260b350] [c00000000064f798] do_unblank_screen+0x1e8/0x260 (unreliable)
-[c00000000260b3d0] [c000000000112fcc] panic+0x1d4/0x3f8
-[c00000000260b460] [c00000000002a8b8] oops_end+0x1b8/0x1c0
-[c00000000260b4e0] [c00000000002d26c] program_check_exception+0x2ac/0x3b0
-[c00000000260b560] [c000000000008e14] program_check_common+0x134/0x140
---- interrupt: 700 at btrfs_assert_tree_locked+0x10/0x20 [btrfs]
-    LR = btrfs_set_lock_blocking_write+0x60/0x100 [btrfs]
-[c00000000260b860] [c00000000260b8e0] 0xc00000000260b8e0 (unreliable)
-[c00000000260b890] [c0080000015c55f4] btrfs_set_path_blocking+0xb4/0xc0 [btrfs]
-[c00000000260b8e0] [c0080000015cb808] btrfs_search_slot+0x8e8/0xb80 [btrfs]
-[c00000000260ba00] [c0080000015eb348] btrfs_csum_file_blocks+0x518/0x6e0 [btrfs]
-[c00000000260bad0] [c0080000015fd34c] add_pending_csums+0x8c/0x100 [btrfs]
-[c00000000260bb20] [c0080000016093b0] btrfs_finish_ordered_io+0x550/0xe00 [btrfs]
-[c00000000260bc10] [c008000001641aa4] normal_work_helper+0xf4/0x5a0 [btrfs]
-[c00000000260bc80] [c00000000013c8a0] process_one_work+0x1c0/0x490
-[c00000000260bd20] [c00000000013cbf8] worker_thread+0x88/0x570
-[c00000000260bdb0] [c0000000001444d8] kthread+0x158/0x1a0
-[c00000000260be20] [c00000000000b760] ret_from_kernel_thread+0x5c/0x7c
-Instruction dump:
-60420000 4bb44c49 60000000 2fa30000 409efe80 813f0000 2f890000 409efe74
-3c62ff9b 38639d78 4bb4a121 60000000 <0fe00000> 4bfffe5c 60000000 60000000
----[ end trace 7890aa8e373f5bfb ]---
-Rebooting in 10 seconds..
-
-!!! 01FT700� FCode, Copyright (c) 2000-2017 Emulex !!!  Version 4.03a12
-
-
--- 
-Regard's
-
-Abdul Haleem
-IBM Linux Technology Centre
-
-
-
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
