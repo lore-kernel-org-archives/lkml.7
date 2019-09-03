@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1CDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E40BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350FF2343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB412343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528177;
-	bh=hBx5ImkVQqYWq+cF/CW/LVs6pWNQ4sgiXx/pajQkoCk=;
+	s=default; t=1567528183;
+	bh=KXSNpiQMAJFXBeg9Is2IzCyQCyTFr1hSLsvhqn5Qayo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ki9e8IucBu7NSOLfuqz6yGeGvsT2R39ynaMUME2vH21NNg8u3g8gbLUQtWuisyVfL
-	 HtjPQIgE0deYeep4Uw/ZKSbfH7xzWrjFg46uoFM3OnSrvLPApKodjul4AjTRdTIzmU
-	 p51pgkHUNp4nRS5dE0KTleTi238PsOl1Qhn+lRgk=
+	b=i9H2/d84r562yLY1a8Y/6UtKSt/Ggj5I43r0otHUqUbfkF2trBzUVGj65Wb9VDBP6
+	 iCeYsm0nF0CCY4HO5msoXRGHt11X6LexrixwSLpL3HSblmz7PG31I8WoU+H1Pcvb+M
+	 QgItcam3koLbqTye48zRUKiGvpm1bOzDTRMoMi3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbfICQ3g (ORCPT
+        id S1730970AbfICQ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51856 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731310AbfICQ3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:29:13 -0400
+        id S1731297AbfICQ3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:29:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964752343A;
-        Tue,  3 Sep 2019 16:29:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C78A238CF;
+        Tue,  3 Sep 2019 16:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528152;
-        bh=hBx5ImkVQqYWq+cF/CW/LVs6pWNQ4sgiXx/pajQkoCk=;
+        s=default; t=1567528149;
+        bh=KXSNpiQMAJFXBeg9Is2IzCyQCyTFr1hSLsvhqn5Qayo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xC5hQCHGH2YIDhB6uD1Hp8sQ3MlC0vL2SgDiWNhGg9qNxzCIjl8QxSx9n/801upWL
-         EFHQKSeuU8zTUCUOYeoKfwQ1HGD6Uhmzrmy9HJdOHaknh4DleOum93Xnm44O+VhZlR
-         /SF1mjGFTPyRUt3/3Y9AVCun89HQ2Haje9lJ115w=
+        b=lGPmEjNknHENwG7VDcKtvblH8bVJSI8FTyvOXBVf67Hg/hpo+kLCNUXTH1ijF8HbO
+         EUcNgyykSp6p8A1udoYBRij1QA0PMUr9iUwGy9LXTPLQ0wDyLKzwL/saU6NE5mGe8l
+         5C1fRdOL6sAozqrhwhOPMGluMWdW06flT5xBJJqY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 140/167] RDMA/srp: Accept again source addresses that do not have a port number
-Date:   Tue,  3 Sep 2019 12:24:52 -0400
-Message-Id: <20190903162519.7136-140-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 138/167] ARM: dts: gemini: Set DIR-685 SPI CS as active low
+Date:   Tue,  3 Sep 2019 12:24:50 -0400
+Message-Id: <20190903162519.7136-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,91 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit bcef5b7215681250c4bf8961dfe15e9e4fef97d0 ]
+[ Upstream commit f90b8fda3a9d72a9422ea80ae95843697f94ea4a ]
 
-The function srp_parse_in() is used both for parsing source address
-specifications and for target address specifications. Target addresses
-must have a port number. Having to specify a port number for source
-addresses is inconvenient. Make sure that srp_parse_in() supports again
-parsing addresses with no port number.
+The SPI to the display on the DIR-685 is active low, we were
+just saved by the SPI library enforcing active low on everything
+before, so set it as active low to avoid ambiguity.
 
-Cc: <stable@vger.kernel.org>
-Fixes: c62adb7def71 ("IB/srp: Fix IPv6 address parsing")
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Link: https://lore.kernel.org/r/20190715202101.16060-1-linus.walleij@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Olof Johansson <olof@lixom.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/srp/ib_srp.c | 21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/gemini-dlink-dir-685.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
-index 9da30d88a615e..bc6a44a16445c 100644
---- a/drivers/infiniband/ulp/srp/ib_srp.c
-+++ b/drivers/infiniband/ulp/srp/ib_srp.c
-@@ -3404,13 +3404,14 @@ static const match_table_t srp_opt_tokens = {
-  * @net:	   [in]  Network namespace.
-  * @sa:		   [out] Address family, IP address and port number.
-  * @addr_port_str: [in]  IP address and port number.
-+ * @has_port:	   [out] Whether or not @addr_port_str includes a port number.
-  *
-  * Parse the following address formats:
-  * - IPv4: <ip_address>:<port>, e.g. 1.2.3.4:5.
-  * - IPv6: \[<ipv6_address>\]:<port>, e.g. [1::2:3%4]:5.
-  */
- static int srp_parse_in(struct net *net, struct sockaddr_storage *sa,
--			const char *addr_port_str)
-+			const char *addr_port_str, bool *has_port)
- {
- 	char *addr_end, *addr = kstrdup(addr_port_str, GFP_KERNEL);
- 	char *port_str;
-@@ -3419,9 +3420,12 @@ static int srp_parse_in(struct net *net, struct sockaddr_storage *sa,
- 	if (!addr)
- 		return -ENOMEM;
- 	port_str = strrchr(addr, ':');
--	if (!port_str)
--		return -EINVAL;
--	*port_str++ = '\0';
-+	if (port_str && strchr(port_str, ']'))
-+		port_str = NULL;
-+	if (port_str)
-+		*port_str++ = '\0';
-+	if (has_port)
-+		*has_port = port_str != NULL;
- 	ret = inet_pton_with_scope(net, AF_INET, addr, port_str, sa);
- 	if (ret && addr[0]) {
- 		addr_end = addr + strlen(addr) - 1;
-@@ -3443,6 +3447,7 @@ static int srp_parse_options(struct net *net, const char *buf,
- 	char *p;
- 	substring_t args[MAX_OPT_ARGS];
- 	unsigned long long ull;
-+	bool has_port;
- 	int opt_mask = 0;
- 	int token;
- 	int ret = -EINVAL;
-@@ -3541,7 +3546,8 @@ static int srp_parse_options(struct net *net, const char *buf,
- 				ret = -ENOMEM;
- 				goto out;
- 			}
--			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p);
-+			ret = srp_parse_in(net, &target->rdma_cm.src.ss, p,
-+					   NULL);
- 			if (ret < 0) {
- 				pr_warn("bad source parameter '%s'\n", p);
- 				kfree(p);
-@@ -3557,7 +3563,10 @@ static int srp_parse_options(struct net *net, const char *buf,
- 				ret = -ENOMEM;
- 				goto out;
- 			}
--			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p);
-+			ret = srp_parse_in(net, &target->rdma_cm.dst.ss, p,
-+					   &has_port);
-+			if (!has_port)
-+				ret = -EINVAL;
- 			if (ret < 0) {
- 				pr_warn("bad dest parameter '%s'\n", p);
- 				kfree(p);
+diff --git a/arch/arm/boot/dts/gemini-dlink-dir-685.dts b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+index 502a361d1fe90..15d6157b661db 100644
+--- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
++++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+@@ -65,7 +65,7 @@
+ 		gpio-miso = <&gpio1 8 GPIO_ACTIVE_HIGH>;
+ 		gpio-mosi = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+ 		/* Collides with pflash CE1, not so cool */
+-		cs-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
++		cs-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+ 		num-chipselects = <1>;
+ 
+ 		panel: display@0 {
 -- 
 2.20.1
 
