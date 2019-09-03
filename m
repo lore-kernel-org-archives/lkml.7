@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D684FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60378C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA3B23400
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFE723400
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528507;
-	bh=IYyyR7M7rGBO8OqHSI9KXgCb+rxiIEbdYid7/md1cm4=;
+	s=default; t=1567528514;
+	bh=5ZT2XI1WUbOsdYDUfs/eoI2vbKjG89YMBIlt1zsysqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D5/+Z9qVIoaaovweEZsAS47cFnT+kfLLQ/yWHvfAHKBdN+4Pcl6+gPIs+gEdKktbH
-	 bkkt5Q2bFm24ajTQRxQVIOxrJ70csYpdtiROYepW58WVAZZnQpr7BHowE5NZnKPgSq
-	 CCLQHb+IlQR1+C801drShZqnTeIp5vY73Y/J0ty0=
+	b=t5/EWpHDTEXBHtxEUUpjNtHbLsJvbqIhtOT2O8VS4x9zlH4T06bkj6Au0wee/ybWO
+	 vRsuaI3Ybf6gSJgXqO7AGomP3FoyeIN6fVv+hxHPR7G0w8cPdxknhPwXoaDdhneRbb
+	 bgYFlhwPnc814Z/YHxw0oKKXIIsX1NCenX1NgzLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbfICQfF (ORCPT
+        id S1730967AbfICQ1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49448 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730969AbfICQ1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:27:53 -0400
+        id S1730429AbfICQ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF84A23789;
-        Tue,  3 Sep 2019 16:27:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6724238CD;
+        Tue,  3 Sep 2019 16:27:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528072;
-        bh=IYyyR7M7rGBO8OqHSI9KXgCb+rxiIEbdYid7/md1cm4=;
+        s=default; t=1567528062;
+        bh=5ZT2XI1WUbOsdYDUfs/eoI2vbKjG89YMBIlt1zsysqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCiBhg12JczNeZ1/hWa1Giip1v343kkPWQ9z7TrObducII42aYGSPSNICC2t45sUR
-         muQrXB3D2RB6XgcXM9W2j/KLc6m3lkfKO5mr/YehEbgqrtUAFClWuhpgVDFI7kpr7P
-         V0IFrwSlRxlmThAIt6R4SbVuR2gKD5YgyBklmPN0=
+        b=FD2+wtMvMtBJgBnHkZbDtRB39Sh+xxvkadK01PQU1z8LnyEB7liS+RHGENWvoMw3i
+         2hImcR8xDuGIA32LDj0O9tt/JT6kgvmQmz9qYxodN/nKIpyl1wdjjfPm5aiUgGS5DK
+         XgSmRlZFAVSRpbLM6DT20CLwMzmvFjGBPJMMvOy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnd Bergmann <arnd@arndb.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 086/167] x86/ftrace: Fix warning and considate ftrace_jmp_replace() and ftrace_call_replace()
-Date:   Tue,  3 Sep 2019 12:23:58 -0400
-Message-Id: <20190903162519.7136-86-sashal@kernel.org>
+Cc:     David Sterba <dsterba@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 077/167] btrfs: scrub: pass fs_info to scrub_setup_ctx
+Date:   Tue,  3 Sep 2019 12:23:49 -0400
+Message-Id: <20190903162519.7136-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -58,124 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: David Sterba <dsterba@suse.com>
 
-[ Upstream commit 745cfeaac09ce359130a5451d90cb0bd4094c290 ]
+[ Upstream commit 92f7ba434f51e8e9317f1d166105889aa230abd2 ]
 
-Arnd reported the following compiler warning:
+We can pass fs_info directly as this is the only member of btrfs_device
+that's bing used inside scrub_setup_ctx.
 
-arch/x86/kernel/ftrace.c:669:23: error: 'ftrace_jmp_replace' defined but not used [-Werror=unused-function]
-
-The ftrace_jmp_replace() function now only has a single user and should be
-simply moved by that user. But looking at the code, it shows that
-ftrace_jmp_replace() is similar to ftrace_call_replace() except that instead
-of using the opcode of 0xe8 it uses 0xe9. It makes more sense to consolidate
-that function into one implementation that both ftrace_jmp_replace() and
-ftrace_call_replace() use by passing in the op code separate.
-
-The structure in ftrace_code_union is also modified to replace the "e8"
-field with the more appropriate name "op".
-
-Cc: stable@vger.kernel.org
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Link: http://lkml.kernel.org/r/20190304200748.1418790-1-arnd@arndb.de
-Fixes: d2a68c4effd8 ("x86/ftrace: Do not call function graph from dynamic trampolines")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ftrace.c | 42 ++++++++++++++++------------------------
- 1 file changed, 17 insertions(+), 25 deletions(-)
+ fs/btrfs/scrub.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 50d309662d78c..5790671857e55 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -53,7 +53,7 @@ int ftrace_arch_code_modify_post_process(void)
- union ftrace_code_union {
- 	char code[MCOUNT_INSN_SIZE];
- 	struct {
--		unsigned char e8;
-+		unsigned char op;
- 		int offset;
- 	} __attribute__((packed));
- };
-@@ -63,20 +63,23 @@ static int ftrace_calc_offset(long ip, long addr)
- 	return (int)(addr - ip);
+diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
+index 5a2d10ba747f7..efaad3e1b295a 100644
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -578,12 +578,11 @@ static void scrub_put_ctx(struct scrub_ctx *sctx)
+ 		scrub_free_ctx(sctx);
  }
  
--static unsigned char *ftrace_call_replace(unsigned long ip, unsigned long addr)
-+static unsigned char *
-+ftrace_text_replace(unsigned char op, unsigned long ip, unsigned long addr)
+-static noinline_for_stack
+-struct scrub_ctx *scrub_setup_ctx(struct btrfs_device *dev, int is_dev_replace)
++static noinline_for_stack struct scrub_ctx *scrub_setup_ctx(
++		struct btrfs_fs_info *fs_info, int is_dev_replace)
  {
- 	static union ftrace_code_union calc;
+ 	struct scrub_ctx *sctx;
+ 	int		i;
+-	struct btrfs_fs_info *fs_info = dev->fs_info;
  
--	calc.e8		= 0xe8;
-+	calc.op		= op;
- 	calc.offset	= ftrace_calc_offset(ip + MCOUNT_INSN_SIZE, addr);
+ 	sctx = kzalloc(sizeof(*sctx), GFP_KERNEL);
+ 	if (!sctx)
+@@ -592,7 +591,7 @@ struct scrub_ctx *scrub_setup_ctx(struct btrfs_device *dev, int is_dev_replace)
+ 	sctx->is_dev_replace = is_dev_replace;
+ 	sctx->pages_per_rd_bio = SCRUB_PAGES_PER_RD_BIO;
+ 	sctx->curr = -1;
+-	sctx->fs_info = dev->fs_info;
++	sctx->fs_info = fs_info;
+ 	for (i = 0; i < SCRUB_BIOS_PER_SCTX; ++i) {
+ 		struct scrub_bio *sbio;
  
--	/*
--	 * No locking needed, this must be called via kstop_machine
--	 * which in essence is like running on a uniprocessor machine.
--	 */
- 	return calc.code;
- }
- 
-+static unsigned char *
-+ftrace_call_replace(unsigned long ip, unsigned long addr)
-+{
-+	return ftrace_text_replace(0xe8, ip, addr);
-+}
-+
- static inline int
- within(unsigned long addr, unsigned long start, unsigned long end)
- {
-@@ -686,22 +689,6 @@ int __init ftrace_dyn_arch_init(void)
- 	return 0;
- }
- 
--#if defined(CONFIG_X86_64) || defined(CONFIG_FUNCTION_GRAPH_TRACER)
--static unsigned char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
--{
--	static union ftrace_code_union calc;
--
--	/* Jmp not a call (ignore the .e8) */
--	calc.e8		= 0xe9;
--	calc.offset	= ftrace_calc_offset(ip + MCOUNT_INSN_SIZE, addr);
--
--	/*
--	 * ftrace external locks synchronize the access to the static variable.
--	 */
--	return calc.code;
--}
--#endif
--
- /* Currently only x86_64 supports dynamic trampolines */
- #ifdef CONFIG_X86_64
- 
-@@ -923,8 +910,8 @@ static void *addr_from_call(void *ptr)
- 		return NULL;
- 
- 	/* Make sure this is a call */
--	if (WARN_ON_ONCE(calc.e8 != 0xe8)) {
--		pr_warn("Expected e8, got %x\n", calc.e8);
-+	if (WARN_ON_ONCE(calc.op != 0xe8)) {
-+		pr_warn("Expected e8, got %x\n", calc.op);
- 		return NULL;
+@@ -3881,7 +3880,7 @@ int btrfs_scrub_dev(struct btrfs_fs_info *fs_info, u64 devid, u64 start,
+ 		return ret;
  	}
  
-@@ -995,6 +982,11 @@ void arch_ftrace_trampoline_free(struct ftrace_ops *ops)
- #ifdef CONFIG_DYNAMIC_FTRACE
- extern void ftrace_graph_call(void);
- 
-+static unsigned char *ftrace_jmp_replace(unsigned long ip, unsigned long addr)
-+{
-+	return ftrace_text_replace(0xe9, ip, addr);
-+}
-+
- static int ftrace_mod_jmp(unsigned long ip, void *func)
- {
- 	unsigned char *new;
+-	sctx = scrub_setup_ctx(dev, is_dev_replace);
++	sctx = scrub_setup_ctx(fs_info, is_dev_replace);
+ 	if (IS_ERR(sctx)) {
+ 		mutex_unlock(&fs_info->scrub_lock);
+ 		mutex_unlock(&fs_info->fs_devices->device_list_mutex);
 -- 
 2.20.1
 
