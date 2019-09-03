@@ -2,154 +2,266 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F67C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB29C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D90523711
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7F322CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3J24BLz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jQ4sr8CT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfICQGG (ORCPT
+        id S1729983AbfICQGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:06:06 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45575 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729709AbfICQGF (ORCPT
+        Tue, 3 Sep 2019 12:06:22 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54638 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728860AbfICQGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:06:05 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y72so3479859pfb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sCfAZ6FcWE/Ra7JeZeEWDGvzMRc1z2NIPSNI/z4SnG4=;
-        b=V3J24BLzylgKwKh6YH7jauZXbnITYVEVj7ZDmCfsKzdE98Rym6ITHptLSyHLk9j+qQ
-         Eh7DX/9mRvIH1jMR4AsNEk7Hcu/EdM5OdA9NLcejVpEc22i+WxGtJt1klI+26KfPi8m6
-         vXpfw859zeEADTFrb7idJrVIX/n2Ib4Ds6uN0V9355TG55imO0lHfGIFAqh3SVJN8l7P
-         DGaT3/zSOaeD4Hbih9tFpj19xrtTvONbee0eKHoyVIG+Ckfq8DywENu3xMmv9AXNuPId
-         KOW0JUkZepbrcrLbJCaq3B/kxIU5hQ7xDkd4fme2mJd70Nk5SOkcLR5uT96cLlZ9J7RU
-         aj5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sCfAZ6FcWE/Ra7JeZeEWDGvzMRc1z2NIPSNI/z4SnG4=;
-        b=kCmz90Dj9+qNWVcRW8Z0uhm9/jOBi+9eMGTLMIIPBlKp+W5pRVBKbbB7cVeBB6+qa4
-         eLApku7A2w+/mtclNRse9cMlSEY173BWIFTNEkPHGHEB5N9j+XTv0rEDTrtxpXONaDCk
-         /1/To3e90+Ya/+CGnm/FW/9YTIDDle9iTGAge56yexlfh4XlhhvIaBVt8Qd0r3pRx7+Y
-         /AUfkzFxNmuF05uRDIW7pvzy6T0JWds+QOmZt+nqebcF3fqyrXsGcHKUZ2XLp7Fh0ILJ
-         cjL2AjDFH23UtbB/+lMldwCcPrI/QE8lyyNWj8YUmAMbnfkotpBmJvq3je7Qzm3Jmdcr
-         xIJg==
-X-Gm-Message-State: APjAAAVsSFUfyVrP76qX5CJDZ4V9E4atLTz8zBzJcw0hAMemAK6G2U0p
-        noTdMeemvojdWPUx9X38oek=
-X-Google-Smtp-Source: APXvYqwgdPLWgf9CQVGxcsYwYCpR2opRVq4DieDZTvtrFChqcqgCZ//VbQIXYX/vaYyIZE3HgbQqNg==
-X-Received: by 2002:a65:41c6:: with SMTP id b6mr30842525pgq.269.1567526765171;
-        Tue, 03 Sep 2019 09:06:05 -0700 (PDT)
-Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id t11sm18501567pgb.33.2019.09.03.09.05.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 09:06:04 -0700 (PDT)
-From:   Pengfei Li <lpf.vector@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH 3/5] mm, slab: Remove unused kmalloc_size()
-Date:   Wed,  4 Sep 2019 00:04:28 +0800
-Message-Id: <20190903160430.1368-4-lpf.vector@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190903160430.1368-1-lpf.vector@gmail.com>
-References: <20190903160430.1368-1-lpf.vector@gmail.com>
+        Tue, 3 Sep 2019 12:06:22 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x83G67jM000871;
+        Tue, 3 Sep 2019 11:06:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1567526767;
+        bh=dWCu0QuJUs0IyQ1/Rtl+NIOAzjgpEKr0XpQfGQC8zZM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jQ4sr8CTxM1RXZCVGZXpmteeIoCpype5fDVez/odaEeCxCW9YLJdPo7MuYb9B4EMM
+         J9SoLMaiLeWcD9xTkhnaVBQ2pNBm3GuhxceRXdiA4WEN5fhhefBtQeICt89NkA1wAB
+         uraq7RVXcPZyZuwfvL31l1G3vY+octRvo/lWfTGE=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x83G67xk019578
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Sep 2019 11:06:07 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 3 Sep
+ 2019 11:06:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 3 Sep 2019 11:06:06 -0500
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x83G665J033317;
+        Tue, 3 Sep 2019 11:06:06 -0500
+Subject: Re: [PATCH v5 1/2] rpmsg: core: add API to get message length
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        xiang xiao <xiaoxiang781216@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
+CC:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+References: <1567005566-10986-1-git-send-email-arnaud.pouliquen@st.com>
+ <1567005566-10986-2-git-send-email-arnaud.pouliquen@st.com>
+ <7dc4d1cf-4f15-19ab-b8dd-424175f2a11a@ti.com>
+ <f6f2ad3e-123a-268b-2586-544752c54db7@st.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <2a81a04d-e4f9-b9c8-57ec-47f8e140235a@ti.com>
+Date:   Tue, 3 Sep 2019 11:06:06 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <f6f2ad3e-123a-268b-2586-544752c54db7@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The size of kmalloc can be obtained from kmalloc_info[],
-so remove kmalloc_size() that will not be used anymore.
+Hi Arnaud,
 
-Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
----
- include/linux/slab.h | 20 --------------------
- mm/slab.c            |  5 +++--
- mm/slab_common.c     |  5 ++---
- 3 files changed, 5 insertions(+), 25 deletions(-)
+On 9/3/19 4:49 AM, Arnaud Pouliquen wrote:
+> hi Suman
+> 
+> On 8/29/19 12:34 AM, Suman Anna wrote:
+>> Hi Arnaud,
+>>
+>> On 8/28/19 10:19 AM, Arnaud Pouliquen wrote:
+>>> Return the rpmsg buffer size for sending message, so rpmsg users
+>>> can split a long message in several sub rpmsg buffers.
+>>
+>> Thanks for the patch, I also have a need for the same to be able to
+>> compute permissible payload size. Minor comments below.
+> 
+> Thanks for your review. i will update it ASAP. Then if you need it and
+> ack it, i suppose that we could request Bjorn to integrate it in a first
+> step, if the rpmsg tty driver has not a level of quality sufficient to
+> be accepted...
 
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index 56c9c7eed34e..e773e5764b7b 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -557,26 +557,6 @@ static __always_inline void *kmalloc(size_t size, gfp_t flags)
- 	return __kmalloc(size, flags);
- }
- 
--/*
-- * Determine size used for the nth kmalloc cache.
-- * return size or 0 if a kmalloc cache for that
-- * size does not exist
-- */
--static __always_inline unsigned int kmalloc_size(unsigned int n)
--{
--#ifndef CONFIG_SLOB
--	if (n > 2)
--		return 1U << n;
--
--	if (n == 1 && KMALLOC_MIN_SIZE <= 32)
--		return 96;
--
--	if (n == 2 && KMALLOC_MIN_SIZE <= 64)
--		return 192;
--#endif
--	return 0;
--}
--
- static __always_inline void *kmalloc_node(size_t size, gfp_t flags, int node)
- {
- #ifndef CONFIG_SLOB
-diff --git a/mm/slab.c b/mm/slab.c
-index c42b6211f42e..7bc4e90e1147 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1248,8 +1248,9 @@ void __init kmem_cache_init(void)
- 	 */
- 	kmalloc_caches[KMALLOC_NORMAL][INDEX_NODE] = create_kmalloc_cache(
- 				kmalloc_info[INDEX_NODE].name[KMALLOC_NORMAL],
--				kmalloc_size(INDEX_NODE), ARCH_KMALLOC_FLAGS,
--				0, kmalloc_size(INDEX_NODE));
-+				kmalloc_info[INDEX_NODE].size,
-+				ARCH_KMALLOC_FLAGS, 0,
-+				kmalloc_info[INDEX_NODE].size);
- 	slab_state = PARTIAL_NODE;
- 	setup_kmalloc_cache_index_table();
- 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 002e16673581..8b542cfcc4f2 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1239,11 +1239,10 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- 		struct kmem_cache *s = kmalloc_caches[KMALLOC_NORMAL][i];
- 
- 		if (s) {
--			unsigned int size = kmalloc_size(i);
--
- 			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
- 				kmalloc_info[i].name[KMALLOC_DMA],
--				size, SLAB_CACHE_DMA | flags, 0, 0);
-+				kmalloc_info[i].size,
-+				SLAB_CACHE_DMA | flags, 0, 0);
- 		}
- 	}
- #endif
--- 
-2.21.0
+Yeah, this patch can always be merged independently ahead of the rpmsg
+tty driver. Anyways, the tty patch will have to be picked up by a
+separate maintainer right. So, it would be nice to get the revised
+version get into 5.4
+
+regards
+Suman
+
+> 
+> Regards
+> Arnaud
+>>
+>>>
+>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>>> ---
+>>> V4 to V5 :
+>>>    - rename rpmsg_get_buf_payload_size to rpmsg_get_mtu
+>>>
+>>>   drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+>>>   drivers/rpmsg/rpmsg_internal.h   |  2 ++
+>>>   drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+>>>   include/linux/rpmsg.h            | 10 ++++++++++
+>>>   4 files changed, 43 insertions(+)
+>>>
+>>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+>>> index 8122807db380..daca2e24fc71 100644
+>>> --- a/drivers/rpmsg/rpmsg_core.c
+>>> +++ b/drivers/rpmsg/rpmsg_core.c
+>>> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct
+>>> rpmsg_endpoint *ept, u32 src, u32 dst,
+>>>   }
+>>>   EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+>>>   +/**
+>>> + * rpmsg_get_mtu() - get maximum transmission buffer size for
+>>> sending message.
+>>> + * @ept: the rpmsg endpoint
+>>> + *
+>>> + * This function returns maximum buffer size available for a single
+>>> message.
+>>> + *
+>>> + * Return: the maximum transmission size on success and an
+>>> appropriate error
+>>> + * value on failure.
+>>> + */
+>>> +
+>>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>>> +{
+>>> +    if (WARN_ON(!ept))
+>>> +        return -EINVAL;
+>>> +    if (!ept->ops->get_buf_mtu)
+>>
+>> How about calling the ops just get_mtu or rename the function to follow
+>> the ops name, like all the others.
+>>
+>>> +        return -ENXIO;
+>>
+>> Perhaps ENOTSUPP or EOPNOTSUPP.
+>>
+>>> +
+>>> +    return ept->ops->get_buf_mtu(ept);
+>>> +}
+>>> +EXPORT_SYMBOL(rpmsg_get_mtu);
+>>> +
+>>>   /*
+>>>    * match an rpmsg channel with a channel info struct.
+>>>    * this is used to make sure we're not creating rpmsg devices for
+>>> channels
+>>> diff --git a/drivers/rpmsg/rpmsg_internal.h
+>>> b/drivers/rpmsg/rpmsg_internal.h
+>>> index 0d791c30b7ea..645c402569ac 100644
+>>> --- a/drivers/rpmsg/rpmsg_internal.h
+>>> +++ b/drivers/rpmsg/rpmsg_internal.h
+>>> @@ -46,6 +46,7 @@ struct rpmsg_device_ops {
+>>>    * @trysend:        see @rpmsg_trysend(), required
+>>>    * @trysendto:        see @rpmsg_trysendto(), optional
+>>>    * @trysend_offchannel:    see @rpmsg_trysend_offchannel(), optional
+>>> + * @get_buf_payload_size: see @rpmsg_get_buf_payload_size(), optional
+>>
+>> Missed updating the kerneldoc to the new name.
+>>
+>>>    *
+>>>    * Indirection table for the operations that a rpmsg backend should
+>>> implement.
+>>>    * In addition to @destroy_ept, the backend must at least implement
+>>> @send and
+>>> @@ -65,6 +66,7 @@ struct rpmsg_endpoint_ops {
+>>>                    void *data, int len);
+>>>       __poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
+>>>                    poll_table *wait);
+>>> +    ssize_t (*get_buf_mtu)(struct rpmsg_endpoint *ept);
+>>>   };
+>>>     int rpmsg_register_device(struct rpmsg_device *rpdev);
+>>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c
+>>> b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>> index e757f0038a1c..f80b1ad23e7e 100644
+>>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>>> @@ -178,6 +178,7 @@ static int virtio_rpmsg_trysendto(struct
+>>> rpmsg_endpoint *ept, void *data,
+>>>                     int len, u32 dst);
+>>>   static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint
+>>> *ept, u32 src,
+>>>                          u32 dst, void *data, int len);
+>>> +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept);
+>>
+>> Minor nit, virtio_rpmsg_ prefix similar to all the other ops.
+>>
+>> regards
+>> Suman
+>>
+>>>     static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+>>>       .destroy_ept = virtio_rpmsg_destroy_ept,
+>>> @@ -187,6 +188,7 @@ static const struct rpmsg_endpoint_ops
+>>> virtio_endpoint_ops = {
+>>>       .trysend = virtio_rpmsg_trysend,
+>>>       .trysendto = virtio_rpmsg_trysendto,
+>>>       .trysend_offchannel = virtio_rpmsg_trysend_offchannel,
+>>> +    .get_buf_mtu = virtio_get_buf_mtu,
+>>>   };
+>>>     /**
+>>> @@ -702,6 +704,14 @@ static int
+>>> virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+>>>       return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len,
+>>> false);
+>>>   }
+>>>   +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept)
+>>> +{
+>>> +    struct rpmsg_device *rpdev = ept->rpdev;
+>>> +    struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
+>>> +
+>>> +    return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
+>>> +}
+>>> +
+>>>   static int rpmsg_recv_single(struct virtproc_info *vrp, struct
+>>> device *dev,
+>>>                    struct rpmsg_hdr *msg, unsigned int len)
+>>>   {
+>>> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+>>> index 9fe156d1c018..9d638bf2bdce 100644
+>>> --- a/include/linux/rpmsg.h
+>>> +++ b/include/linux/rpmsg.h
+>>> @@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct
+>>> rpmsg_endpoint *ept, u32 src, u32 dst,
+>>>   __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+>>>               poll_table *wait);
+>>>   +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
+>>> +
+>>>   #else
+>>>     static inline int register_rpmsg_device(struct rpmsg_device *dev)
+>>> @@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct
+>>> rpmsg_endpoint *ept,
+>>>       return 0;
+>>>   }
+>>>   +static ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>>> +{
+>>> +    /* This shouldn't be possible */
+>>> +    WARN_ON(1);
+>>> +
+>>> +    return -ENXIO;
+>>> +}
+>>> +
+>>>   #endif /* IS_ENABLED(CONFIG_RPMSG) */
+>>>     /* use a macro to avoid include chaining to get THIS_MODULE */
+>>>
+>>
 
