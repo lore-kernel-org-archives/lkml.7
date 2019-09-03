@@ -2,111 +2,89 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17FBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E1C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD072339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528413;
-	bh=zYpf6LcmcPRXNyxdZ9NouTwFkdG53ktbHALUub252VU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1QSQF6ixXbzr5W2DnV5z+jizkIxmj38+ynv2iTGgNV3Y6XbKaatxKVZ5Mbuu67WLv
-	 sjFwwfvEd63UPKV2GWkOPtbZzcvjAoujLFDLr3Zz7BSAOBX4knTtpwwb86HWj5AYEL
-	 3NnN4dCgOl0WuqhUWnG67sjINgMKoIriRD3iadcs=
+	by mail.kernel.org (Postfix) with ESMTP id E9A432339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gXA92M+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731164AbfICQdb (ORCPT
+        id S1730833AbfICQdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:33:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54990 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730823AbfICQbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:31:50 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AE2523789;
-        Tue,  3 Sep 2019 16:31:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528309;
-        bh=zYpf6LcmcPRXNyxdZ9NouTwFkdG53ktbHALUub252VU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLt0mdXf0/xRqbpvZfMxXNOXAUNwXe5lSgAyuYzkg+uAXt3cTU7eFrTT4dF67FruS
-         wMrj70xhmsNXpeFz4b1Tb2Sbqp6VdNTSl87BSgXIOVcTMrBega2gOqvtYf2Jl6HK3r
-         RQMvb4flWiwRQPm7YwIPvcl8O//onX0Xw1QrB6vA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Todd Brandt <todd.e.brandt@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 148/167] ALSA: hda - Fix intermittent CORB/RIRB stall on Intel chips
-Date:   Tue,  3 Sep 2019 12:25:00 -0400
-Message-Id: <20190903162519.7136-148-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+        Tue, 3 Sep 2019 12:33:36 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38984 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730823AbfICQdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:33:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=E7M5OHCPCFGvSidMPlknkuDvFUT36qFbZFw1uswvZFM=; b=gXA92M+qRj1oJOmfHj6Hbgihwb
+        cXmqRb2s7gGx0C3dDRwlGKMVyI6YboNSetcl7skx30OYn1TxPXw1SYH1oVICQI+ywmWooxbiZ7GMF
+        QJg1x4zpoXkD7fjvz5f5bU9LLFTSO4JXBhcAt+N2PBRJBPrl76Ifgm7fAL5ZUIe8cfQ0el5gFkSqS
+        6hUqq3sLNdf68QBmQPzxIA1u1VMnfMiyGe9mCq8q/wPxumMAvikntDCAkUnnoku6Te9C4D1SdlDu9
+        ZA9J1RytDuqMtBsvyAbh0aQOBCUoe5358UC5SYyR9PqdJHoSR6tVDOGYCGzmS99eScsOwkm+2z9cO
+        HKkGg5rA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5BkJ-0003C9-U1; Tue, 03 Sep 2019 16:33:31 +0000
+Date:   Tue, 3 Sep 2019 09:33:31 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     =?utf-8?B?0JDQvdC00YDQtdC5INCb0LXQvtC90YfQuNC60L7Qsg==?= 
+        <andreil499@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andrei Leonchikov <andreil499@gmail.com>
+Subject: Re: [PATCH 1/1] Fix ARI enabling for a NVME devices
+Message-ID: <20190903163331.GA32703@infradead.org>
+References: <20190903125315.10349-1-andreil499@gmail.com>
+ <20190903131416.GA26756@infradead.org>
+ <CA+kE0xQ+z4f8xQ=8oRVcTMC-VsU5dyqVUWxuDamTy59_HTYOeg@mail.gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+kE0xQ+z4f8xQ=8oRVcTMC-VsU5dyqVUWxuDamTy59_HTYOeg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+[adding back the Cc list]
 
-[ Upstream commit 2756d9143aa517b97961e85412882b8ce31371a6 ]
+On Tue, Sep 03, 2019 at 07:24:15PM +0300, Андрей Леончиков wrote:
+> All drives has ARI capability, but everywhere the PCI_EXP_DEVCAP2_ARI
+> in the DEVCAP2 register is reset (see NVMe specification, bit 5).
+> At the same time, when the device is initialized, the DEVSAP register is
+> requested and this bit is checked. And if it is reset, ARI will never turn
+> on.
+> Because of this, it will be impossible to correctly initialize more than 8
+> functions per interface (1 physical and 7 virtual).
+> At the moment we are developing a disk, one of the requirements for
+> which is the correct operation of up to 128 virtual functions on one
+> interface.
+> During testing of this device, this behavior was noticed.
 
-It turned out that the recent Intel HD-audio controller chips show a
-significant stall during the system PM resume intermittently.  It
-doesn't happen so often and usually it may read back successfully
-after one or more seconds, but in some rare worst cases the driver
-went into fallback mode.
+Looking at the PCIe spec this bit actually means "ARI forwarding
+supported" and isn't the actual ARI support.  And the PCIe spec says
+about that:
 
-After trial-and-error, we found out that the communication stall seems
-covered by issuing the sync after each verb write, as already done for
-AMD and other chipsets.  So this patch enables the write-sync flag for
-the recent Intel chips, Skylake and onward, as a workaround.
+"Applicable only to Switch
+Downstream Ports and Root Ports; must be 0b for other
+Function types. This bit must be set to 1b if a Switch
+Downstream Port or Root Port supports this optional capability.
+See Section 6.13 for additional details."
 
-Also, since Broxton and co have the very same driver flags as Skylake,
-refer to the Skylake driver flags instead of defining the same
-contents again for simplification.
+So I don't see how we'd ever see this bit set on an actual NVMe device.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201901
-Reported-and-tested-by: Todd Brandt <todd.e.brandt@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/hda/hda_intel.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 7a3e34b120b33..c3e3d80ff7203 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -329,13 +329,11 @@ enum {
- 
- #define AZX_DCAPS_INTEL_SKYLAKE \
- 	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME |\
-+	 AZX_DCAPS_SYNC_WRITE |\
- 	 AZX_DCAPS_SEPARATE_STREAM_TAG | AZX_DCAPS_I915_COMPONENT |\
- 	 AZX_DCAPS_I915_POWERWELL)
- 
--#define AZX_DCAPS_INTEL_BROXTON \
--	(AZX_DCAPS_INTEL_PCH_BASE | AZX_DCAPS_PM_RUNTIME |\
--	 AZX_DCAPS_SEPARATE_STREAM_TAG | AZX_DCAPS_I915_COMPONENT |\
--	 AZX_DCAPS_I915_POWERWELL)
-+#define AZX_DCAPS_INTEL_BROXTON			AZX_DCAPS_INTEL_SKYLAKE
- 
- /* quirks for ATI SB / AMD Hudson */
- #define AZX_DCAPS_PRESET_ATI_SB \
--- 
-2.20.1
-
+And yes, the name for our define is a little misnamed.
