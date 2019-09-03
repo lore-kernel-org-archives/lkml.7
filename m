@@ -2,108 +2,73 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4F7C41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16951C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB78822DBF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:04:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567469099;
-	bh=C2Oo2ekkJf07UhZBjYcgHSOlX2ttr9aZ7KHtFcD/uVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bk7bFxLtunxTxdyoYwNovB9ZdUKklq9hDS7+Hjz4Ig/HW+1VOEGKzB/3UOfrMH4T1
-	 CsqhYbM7GJ2qxG6UpGHLqtzVpJsX6YhT0zv6ILPm3QaTh3LQedJKmcuG5gOTAu2XWt
-	 6+w+4Suqn0KPOYrkwIdyeaqplMDxsRrcqItyLR4g=
+	by mail.kernel.org (Postfix) with ESMTP id E2DEA22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfICAE7 (ORCPT
+        id S1727969AbfICASg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 20:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfICAE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 20:04:58 -0400
-Received: from earth.universe (dyndsl-091-096-044-124.ewe-ip-backbone.de [91.96.44.124])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FE9F21881;
-        Tue,  3 Sep 2019 00:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567469097;
-        bh=C2Oo2ekkJf07UhZBjYcgHSOlX2ttr9aZ7KHtFcD/uVs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Pqgu9s97I5kIBQCgfJOcjjiwIvlIAMdsQ6MttlVE7h5NayMbcKz8kzhxfO14I/W0e
-         uNclzdygVNWAo96lxNW6jLxOFs9xu8+YcCuAfZFVSEOMjUQvreWEj2hEOYKjgsk0gn
-         1+sO9sTJvJyfBKgHu7ISaJIGc5yH4t6OezqHBoQE=
-Received: by earth.universe (Postfix, from userid 1000)
-        id E087E3C0CFA; Tue,  3 Sep 2019 02:04:54 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 02:04:54 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nandor Han <nandor.han@vaisala.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] power: reset: make reboot-mode user selectable
-Message-ID: <20190903000454.lul7fn5nxqcvi5x5@earth.universe>
-References: <20190805075812.1056069-1-arnd@arndb.de>
- <20190902203857.zusvlv3yv5arel6y@earth.universe>
- <CAK8P3a3uNPepYweCN9+_cQNQyiSGdidwNGL0+xhti2vm8g9O_g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jk6o2ixaejebpkmd"
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3uNPepYweCN9+_cQNQyiSGdidwNGL0+xhti2vm8g9O_g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        Mon, 2 Sep 2019 20:18:36 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:6424 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727868AbfICASe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Sep 2019 20:18:34 -0400
+Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8307BKl007200;
+        Tue, 3 Sep 2019 00:18:17 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2ur2gebynq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 00:18:17 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (unknown [128.162.236.70])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 312178D;
+        Tue,  3 Sep 2019 00:18:16 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
+        id BA2B5201E92B3; Mon,  2 Sep 2019 19:18:15 -0500 (CDT)
+Message-Id: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: quilt/0.46-1
+Date:   Mon, 02 Sep 2019 19:18:15 -0500
+From:   Mike Travis <mike.travis@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-02_10:2019-08-29,2019-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1011
+ mlxlogscore=519 mlxscore=0 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 malwarescore=0 spamscore=0 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909030000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jk6o2ixaejebpkmd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These patches support upcoming UV systems that do not have a UV HUB.
 
-Hi,
+	* Save OEM_ID from ACPI MADT probe
+	* Return UV Hubless System Type
+	* Add return code to UV BIOS Init function
+	* Setup UV functions for Hubless UV Systems
+	* Add UV Hubbed/Hubless Proc FS Files
+	* Decode UVsystab Info
+	* Account for UV Hubless in is_uvX_hub Ops
 
-On Mon, Sep 02, 2019 at 11:16:27PM +0200, Arnd Bergmann wrote:
-> On Mon, Sep 2, 2019 at 10:39 PM Sebastian Reichel <sre@kernel.org> wrote:
-> > This patch does not look good to me. Better patch would be to
-> > allow compiling CONFIG_REBOOT_MODE without CONFIG_OF. Obviously
-> > the configuration would not be useful for anything except compile
-> > testing, but that is also true for this patch.
->=20
-> Ok, I'd suggest we leave it with the bugfix you already applied then.
-> [caa2b55784, power: reset: nvmem-reboot-mode: add CONFIG_OF dependency]
-
-That's also fine with me.
-
--- Sebastian
-
---jk6o2ixaejebpkmd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1triEACgkQ2O7X88g7
-+prOIw//St+HxBGAjsiXQniqUuYYbeK3Snbkmksh6ma9RNd6of3UOCaeF0jMr0sQ
-SjIgMlGJUgmOoa28eSoI+v2hRxugs1Wz5by/YCIAZxXysseA/xB8iDuScnjR2/FV
-BC9xhdAUQorvqeSHfBjrYQVSVjBqAg2lxbYFLLIbJFMvFTOf4656fQr6YaORvvC7
-lF4W9sedS1nqv5fStCQmFWoiodzKcie6QVvJtDuqueg7g/St1d0dDDiJO8fbgp1/
-w1sK3QEhrzGBfTp9GzmO7F98RUXxsCpxv5K+nQBuWx1pbLJIabJ9PP113Zuz2HQY
-/m/n4bwXeO47PaQ85/iC1qpn/L6XIReQC1TSA/pYureaazxf0zKwm0zOD5X9qHQJ
-0e5BxzWKsg5DgRg573oFoCzQtE1mgTm1Bv3ehmIYkW25I2pFhph+z5EI6tyFPIW1
-WxtgZY19dKK3YQQ7MF1ZxMUazuChHWqzGfLyrjhcglD8uQlx39fLu5N+DQceNhJm
-z9hv44m2kdcqUctjT91qi1CdZJDJhu3fJHy/QYk/KB9RdP6rhQUCmirmLMn1jjjO
-T6IhRTvtjKVtABjVa4ps97rY+hAIOffepm3KtPHa+6qPI7Wf8AY/JTCHE2+Tc1q4
-C2IFoOxpAd5HjBC+ZJqjkW+r/2xq+1bY4Z0WhT8BCvTYvJqWeOI=
-=UaPm
------END PGP SIGNATURE-----
-
---jk6o2ixaejebpkmd--
+-- 
