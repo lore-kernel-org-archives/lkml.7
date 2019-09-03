@@ -2,156 +2,136 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138F8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889F0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB19722CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:45:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HiSF87MF"
+	by mail.kernel.org (Postfix) with ESMTP id 5B28022CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 21:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567547202;
+	bh=OP29gy/q+Cu68z+EtjpWoGyc83iGnUe1WahW7rKmtJU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dQGAqgkjAXFek3lBmakHFpgO6wTDMFgdHP+RpGqdepTzoU8y+PoCaZ04tqIbKKPS3
+	 olEgcnX7VLortbpN05rb6THz68dJ5ncsXnQAeKhugej0nRl/i+9xl/AzIpJxAOLsTP
+	 dxDD5niVdT2yT+9OUkZBWKQoGo/1gDlveHggApEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfICVpN (ORCPT
+        id S1727009AbfICVql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 17:45:13 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35179 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfICVpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 17:45:11 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n4so9960849pgv.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=DC974GZJGhexkCFBOM5qEmYf6z0HgA/VnDsSvsVF7D0=;
-        b=HiSF87MFMlybKjWPbamDnFr8jF4yrV8wWRl/q7vTLdCayEIsdov0M2UgoQlf3JX4H1
-         gBBiyAdAu8IAEwYR1bevmCl7HFTR9sajVfhMDgAXak5uU/WC9Pk+G7i996fVdJTigDwR
-         CK8z8PVAiAURMoDDeyttp6CxAFcufTD9LoaXE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=DC974GZJGhexkCFBOM5qEmYf6z0HgA/VnDsSvsVF7D0=;
-        b=jRLQTDFUZUtjvKo9dH3tMT/kdvGIZLwjPWE08+oQZG6DN8pcliAYxTyiZiSGAWRgms
-         Lm97fSgY/HMCf6qorH80u9HiTaY15QcPHg30D6ox+rL1FPjK6Zp+Lb60D1jgxNeI+9am
-         DHV/aCURK751SAiphGsJdHfGwiaf6xIfXbEjsaF2Nmvjk+KyWo/japvw9pTsxi85QLRA
-         J5jTJurF2YGIrnsvDQsMSPCjbOdYSf4WQcApJUhlkF25t7JA4N//+MDKSi5jbfvWadNL
-         2PXxzNyzfmP+Fc4v6dB9RzLTB6IBUAGK/7T6p/gV0VOBEB9AxbZUO3mFIcsO7PZ8oOjq
-         T2Rw==
-X-Gm-Message-State: APjAAAUUiTchlzlNZvV5Ejm/EoX9epxNea5vbYDZjIgQDm19P9C5qhQc
-        7B9G6lcWGeOzDZ45BlyNA1orNQ==
-X-Google-Smtp-Source: APXvYqyyXLc2Kx3iRoFjN/Pmqbfyp7/k/scbD3QixYgco+j3rtBA2rDoAT/CxZaV2vtfjY0BzldgGg==
-X-Received: by 2002:a65:6454:: with SMTP id s20mr32157131pgv.15.1567547110418;
-        Tue, 03 Sep 2019 14:45:10 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id ck8sm498898pjb.25.2019.09.03.14.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 14:45:09 -0700 (PDT)
-Message-ID: <5d6edee5.1c69fb81.a3896.1d05@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 3 Sep 2019 17:46:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726079AbfICVql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 17:46:41 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C18C022CF8
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Sep 2019 21:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567547200;
+        bh=OP29gy/q+Cu68z+EtjpWoGyc83iGnUe1WahW7rKmtJU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CD6/9CM1nKcIzrbPVDQFlgnKevgZNXmRfLLC6PyzUU/mCHfU3iVEH4CGTWufDJwfm
+         qS1yJoSThByNKWmHG8XrhXhForrSoQrkKjc/rwJBxAjJDMqkBbjYony0DU8r71kWro
+         3KTryIXmbZM88cQ6U4i08+KJlFlSkKvQ8zduc6hY=
+Received: by mail-wr1-f54.google.com with SMTP id y8so18999593wrn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 14:46:39 -0700 (PDT)
+X-Gm-Message-State: APjAAAV0foZD80Mc3sysMQBXac7BBYkg4TVMa0b501L/vIa9NrTD+F5o
+        xm7OCCCSCR+SlzcJQ9hd/5vgFSj0UH9SP3Y/mIE37Q==
+X-Google-Smtp-Source: APXvYqz4RxECik3SSeHnQ6uGsdoUHoPvfoX8v95tD35kbPoLbUJAHEgyU34VuuCfEWn1rCU4+4Q1Ye17KG1ilOuoQ0w=
+X-Received: by 2002:adf:eec5:: with SMTP id a5mr45408830wrp.352.1567547198323;
+ Tue, 03 Sep 2019 14:46:38 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190903131504.18935-1-thomas_os@shipmail.org>
+ <20190903131504.18935-4-thomas_os@shipmail.org> <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
+ <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
+ <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com> <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+ <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com> <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+In-Reply-To: <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 3 Sep 2019 14:46:27 -0700
+X-Gmail-Original-Message-ID: <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
+Message-ID: <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
+ memory encryption
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        pv-drivers@vmware.com,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190903173924.GB9754@jackp-linux.qualcomm.com>
-References: <20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org> <20190207111734.24171-4-jorge.ramirez-ortiz@linaro.org> <20190223165218.GB572@tuxbook-pro> <6dc0957d-5806-7643-4454-966015865d38@linaro.org> <5d694878.1c69fb81.5f13b.ec4f@mx.google.com> <20190830164520.GK26807@tuxbook-pro> <5d696ad2.1c69fb81.977ea.39e5@mx.google.com> <f3584f38-dabc-7e7a-d1cb-84c80ed26215@linaro.org> <20190903173924.GB9754@jackp-linux.qualcomm.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, robh@kernel.org,
-        andy.gross@linaro.org, shawn.guo@linaro.org,
-        gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, khasim.mohammed@linaro.org
-Subject: Re: [PATCH v4 3/4] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-To:     Jack Pham <jackp@codeaurora.org>,
-        Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 03 Sep 2019 14:45:08 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jack Pham (2019-09-03 10:39:24)
-> On Mon, Sep 02, 2019 at 08:23:04AM +0200, Jorge Ramirez wrote:
-> > On 8/30/19 20:28, Stephen Boyd wrote:
-> > > Quoting Bjorn Andersson (2019-08-30 09:45:20)
-> > >> On Fri 30 Aug 09:01 PDT 2019, Stephen Boyd wrote:
-> > >>
-> > >>>>>
-> > >>>>> The USB-C connector is attached both to the HS and SS PHYs, so I =
-think
-> > >>>>> you should represent this external to this node and use of_graph =
-to
-> > >>>>> query it.
-> > >>>>
-> > >>>> but AFAICS we wont be able to retrieve the vbux-supply from an ext=
-ernal
-> > >>>> node (that interface does not exist).
-> > >>>>
-> > >>>> rob, do you have a suggestion?
-> > >>>
-> > >>> Shouldn't the vbus supply be in the phy? Or is this a situation whe=
-re
-> > >>> the phy itself doesn't have the vbus supply going to it because the=
- PMIC
-> > >>> gets in the way and handles the vbus for the connector by having th=
-e SoC
-> > >>> communicate with the PMIC about when to turn the vbus on and off, e=
-tc?
-> > >>>
-> > >>
-> > >> That's correct, the VBUS comes out of the PMIC and goes directly to =
-the
-> > >> connector.
-> > >>
-> > >> The additional complicating factor here is that the connector is wir=
-ed
-> > >> to a USB2 phy as well, so we need to wire up detection and vbus cont=
-rol
-> > >> to both of them - but I think this will be fine, if we can only figu=
-re
-> > >> out a sane way of getting hold of the vbus-supply.
-> > >>
-> > >=20
-> > > Does it really matter to describe this situation though? Maybe it's
-> > > simpler to throw the vbus supply into the phy and control it from the
-> > > phy driver, even if it never really goes there. Or put it into the
-> > > toplevel usb controller?
-> > >=20
-> > that would work for me - the connector definition seemed a better way to
-> > explain the connectivity but since we cant retrieve the supply from the
-> > external node is not of much functional use.
-> >=20
-> > but please let me know how to proceed. shall I add the supply back to
-> > the phy?
+On Tue, Sep 3, 2019 at 2:05 PM Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
+>
+> On 9/3/19 10:51 PM, Dave Hansen wrote:
+> > On 9/3/19 1:36 PM, Thomas Hellstr=C3=B6m (VMware) wrote:
+> >> So the question here should really be, can we determine already at mma=
+p
+> >> time whether backing memory will be unencrypted and adjust the *real*
+> >> vma->vm_page_prot under the mmap_sem?
+> >>
+> >> Possibly, but that requires populating the buffer with memory at mmap
+> >> time rather than at first fault time.
+> > I'm not connecting the dots.
+> >
+> > vma->vm_page_prot is used to create a VMA's PTEs regardless of if they
+> > are created at mmap() or fault time.  If we establish a good
+> > vma->vm_page_prot, can't we just use it forever for demand faults?
+>
+> With SEV I think that we could possibly establish the encryption flags
+> at vma creation time. But thinking of it, it would actually break with
+> SME where buffer content can be moved between encrypted system memory
+> and unencrypted graphics card PCI memory behind user-space's back. That
+> would imply killing all user-space encrypted PTEs and at fault time set
+> up new ones pointing to unencrypted PCI memory..
+>
+> >
+> > Or, are you concerned that if an attempt is made to demand-fault page
+> > that's incompatible with vma->vm_page_prot that we have to SEGV?
+> >
+> >> And it still requires knowledge whether the device DMA is always
+> >> unencrypted (or if SEV is active).
+> > I may be getting mixed up on MKTME (the Intel memory encryption) and
+> > SEV.  Is SEV supported on all memory types?  Page cache, hugetlbfs,
+> > anonymous?  Or just anonymous?
+>
+> SEV AFAIK encrypts *all* memory except DMA memory. To do that it uses a
+> SWIOTLB backed by unencrypted memory, and it also flips coherent DMA
+> memory to unencrypted (which is a very slow operation and patch 4 deals
+> with caching such memory).
+>
 
-So does the vbus actually go to the phy? I thought it never went there
-and the power for the phy was different (and possibly lower in voltage).
+I'm still lost.  You have some fancy VMA where the backing pages
+change behind the application's back.  This isn't particularly novel
+-- plain old anonymous memory and plain old mapped files do this too.
+Can't you all the insert_pfn APIs and call it a day?  What's so
+special that you need all this magic?  ISTM you should be able to
+allocate memory that's addressable by the device (dma_alloc_coherent()
+or whatever) and then map it into user memory just like you'd map any
+other page.
 
->=20
-> Putting it in the toplevel usb node makes sense to me, since that's
-> usually the driver that knows when it's switching into host mode and
-> needs to turn on VBUS. The dwc3-qcom driver & bindings currently don't=20
-> do this but there's precedent in a couple of the other dwc3 "glues"--see
-> Documentation/devicetree/bindings/usb/{amlogic\,dwc3,omap-usb}.txt
->=20
-> One exception is if the PMIC is also USB-PD capable and can do power
-> role swap, in which case the VBUS control needs to be done by the TCPM,
-> so that'd be a case where having vbus-supply in the connector node might
-> make more sense.
->=20
-
-The other way is to implement the code to get the vbus supply out of a
-connector. Then any driver can do the work if it knows it needs to and
-we don't have to care that the vbus isn't going somewhere. I suppose
-that would need an of_regulator_get() sort of API that can get the
-regulator out of there? Or to make the connector into a struct device
-that can get the regulator out per some generic connector driver and
-then pass it through to the USB controller when it asks for it. Maybe
-try to prototype that out?
-
+I feel like I'm missing something here.
