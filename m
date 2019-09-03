@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E2BC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7163BC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4F121881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C1D22CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 04:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfICEvw (ORCPT
+        id S1726449AbfICEwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 00:51:52 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:45537 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfICEvw (ORCPT
+        Tue, 3 Sep 2019 00:52:19 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:53120 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfICEwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 00:51:52 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        Tue, 3 Sep 2019 00:52:18 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1i50nF-00084V-T4; Mon, 02 Sep 2019 22:51:49 -0600
+        id 1i50nh-00026d-2Q; Mon, 02 Sep 2019 22:52:17 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1i50nE-0002we-S2; Mon, 02 Sep 2019 22:51:49 -0600
+        id 1i50ng-0003qV-4H; Mon, 02 Sep 2019 22:52:16 -0600
 From:   ebiederm@xmission.com (Eric W. Biederman)
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Oleg Nesterov <oleg@redhat.com>,
@@ -52,114 +52,124 @@ References: <20190830140805.GD13294@shell.armlinux.org.uk>
         <87tv9uiq9r.fsf@x220.int.ebiederm.org>
         <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
         <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 02 Sep 2019 23:51:34 -0500
+Date:   Mon, 02 Sep 2019 23:52:01 -0500
 In-Reply-To: <87k1aqt23r.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
         message of "Mon, 02 Sep 2019 23:50:32 -0500")
-Message-ID: <87ef0yt221.fsf_-_@x220.int.ebiederm.org>
+Message-ID: <878sr6t21a.fsf_-_@x220.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
-X-XM-SPF: eid=1i50nE-0002we-S2;;;mid=<87ef0yt221.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/WdBvJe/MmSZcx8hN1lvDA8NY0dW/SX9M=
+X-XM-SPF: eid=1i50ng-0003qV-4H;;;mid=<878sr6t21a.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19YUXs76k4Q08j1l/tfqck24htknfoJwtk=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 1/3] task: Add a count of task rcu users
+Subject: [PATCH 2/3] task: RCU protect tasks on the runqueue
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Add a count of the number of rcu users (currently 1) of the task
-struct so that we can later add the scheduler case and get rid of the
-very subtle task_rcu_dereference, and just use rcu_dereference.
+In the ordinary case today the rcu grace period of a task comes when a
+task is reaped, well after the task has left the runqueue.  This
+change guarantees that the rcu grace period always happens after a
+task has left the runqueue.  As this is something that usaually happens
+today I do not expect any code correctness problems with this change.
+At most I anticipate timing challenges.
 
-As suggested by Oleg have the count overlap rcu_head so that no
-additional space in task_struct is required.
+The only code that will run later are the functions
+perf_event_delayed_put, and trace-sched_process_free.  The function
+perf_event_delayed_put in the final analysis is just a WARN_ON for
+cases that I assume should never happen.  So I don't see any problem
+with delaying it.
+
+The function trace_sched_process_free is a trace point and thus user
+space visible.   The strangest dependencies can happen but short
+of the bizarre it appears to me that trace_sched_process_free is
+getting a slightly more accurate picture of when a task struct
+is free.  As it is now guaranteed that the process will not be
+on the runqueue.
+
+Resources for a process are freed in release_task or in __put_task_struct
+when the reference count goes to 0.  Both of which are happening at
+effectively the same time as before.  The rcu grace period is just
+potentially happening a little bit later in the timeline.
+
+In the common case of a process being reaped after it leaves the
+runqueue everything will happen exactly as before.
+
+In the case where a task self reaps we are pretty much guaranteed that
+the rcu grace period is delayed.  So we should get quite a bit of
+coverage in of this worst case for the change in a normal threaded
+workload.  So I expect any issues to turn up quickly or not at all.
+
+I have lightly tested this change and everything appears to work
+fine.
 
 Inspired-by: Linus Torvalds <torvalds@linux-foundation.org>
 Inspired-by: Oleg Nesterov <oleg@redhat.com>
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- include/linux/sched.h      | 5 ++++-
- include/linux/sched/task.h | 1 +
- kernel/exit.c              | 7 ++++++-
- kernel/fork.c              | 7 +++----
- 4 files changed, 14 insertions(+), 6 deletions(-)
+ kernel/fork.c       | 11 +++++++----
+ kernel/sched/core.c |  7 ++++---
+ 2 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 9f51932bd543..99a4518b9b17 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1142,7 +1142,10 @@ struct task_struct {
- 
- 	struct tlbflush_unmap_batch	tlb_ubc;
- 
--	struct rcu_head			rcu;
-+	union {
-+		refcount_t		rcu_users;
-+		struct rcu_head		rcu;
-+	};
- 
- 	/* Cache last used pipe for splice(): */
- 	struct pipe_inode_info		*splice_pipe;
-diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 0497091e40c1..4c44c37236b2 100644
---- a/include/linux/sched/task.h
-+++ b/include/linux/sched/task.h
-@@ -116,6 +116,7 @@ static inline void put_task_struct(struct task_struct *t)
- }
- 
- struct task_struct *task_rcu_dereference(struct task_struct **ptask);
-+void put_task_struct_rcu_user(struct task_struct *task);
- 
- #ifdef CONFIG_ARCH_WANTS_DYNAMIC_TASK_STRUCT
- extern int arch_task_struct_size __read_mostly;
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 5b4a5dcce8f8..2e259286f4e7 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -182,6 +182,11 @@ static void delayed_put_task_struct(struct rcu_head *rhp)
- 	put_task_struct(tsk);
- }
- 
-+void put_task_struct_rcu_user(struct task_struct *task)
-+{
-+	if (refcount_dec_and_test(&task->rcu_users))
-+		call_rcu(&task->rcu, delayed_put_task_struct);
-+}
- 
- void release_task(struct task_struct *p)
- {
-@@ -222,7 +227,7 @@ void release_task(struct task_struct *p)
- 
- 	write_unlock_irq(&tasklist_lock);
- 	release_thread(p);
--	call_rcu(&p->rcu, delayed_put_task_struct);
-+	put_task_struct_rcu_user(p);
- 
- 	p = leader;
- 	if (unlikely(zap_leader))
 diff --git a/kernel/fork.c b/kernel/fork.c
-index 2852d0e76ea3..9f04741d5c70 100644
+index 9f04741d5c70..7a74ade4e7d6 100644
 --- a/kernel/fork.c
 +++ b/kernel/fork.c
-@@ -900,10 +900,9 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+@@ -900,10 +900,13 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
  	if (orig->cpus_ptr == &orig->cpus_mask)
  		tsk->cpus_ptr = &tsk->cpus_mask;
  
--	/*
--	 * One for us, one for whoever does the "release_task()" (usually
--	 * parent)
--	 */
-+	/* One for the user space visible state that goes away when reaped. */
-+	refcount_set(&tsk->rcu_users, 1);
-+	/* One for the rcu users, and one for the scheduler */
- 	refcount_set(&tsk->usage, 2);
+-	/* One for the user space visible state that goes away when reaped. */
+-	refcount_set(&tsk->rcu_users, 1);
+-	/* One for the rcu users, and one for the scheduler */
+-	refcount_set(&tsk->usage, 2);
++	/*
++	 * One for the user space visible state that goes away when reaped.
++	 * One for the scheduler.
++	 */
++	refcount_set(&tsk->rcu_users, 2);
++	/* One for the rcu users */
++	refcount_set(&tsk->usage, 1);
  #ifdef CONFIG_BLK_DEV_IO_TRACE
  	tsk->btrace_seq = 0;
+ #endif
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 2b037f195473..802958407369 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3135,7 +3135,7 @@ static struct rq *finish_task_switch(struct task_struct *prev)
+ 		/* Task is done with its stack. */
+ 		put_task_stack(prev);
+ 
+-		put_task_struct(prev);
++		put_task_struct_rcu_user(prev);
+ 	}
+ 
+ 	tick_nohz_task_switch();
+@@ -3857,7 +3857,7 @@ static void __sched notrace __schedule(bool preempt)
+ 
+ 	if (likely(prev != next)) {
+ 		rq->nr_switches++;
+-		rq->curr = next;
++		rcu_assign_pointer(rq->curr, next);
+ 		/*
+ 		 * The membarrier system call requires each architecture
+ 		 * to have a full memory barrier after updating
+@@ -5863,7 +5863,8 @@ void init_idle(struct task_struct *idle, int cpu)
+ 	__set_task_cpu(idle, cpu);
+ 	rcu_read_unlock();
+ 
+-	rq->curr = rq->idle = idle;
++	rq->idle = idle;
++	rcu_assign_pointer(rq->curr, idle);
+ 	idle->on_rq = TASK_ON_RQ_QUEUED;
+ #ifdef CONFIG_SMP
+ 	idle->on_cpu = 1;
 -- 
 2.21.0.dirty
 
