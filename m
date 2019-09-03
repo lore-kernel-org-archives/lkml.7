@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2BBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6045AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8BC2339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27FAE233A1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528451;
-	bh=zOEvKuP84iy7xxd7ym7VPI3TVVXP8RVt/WegrSzIvrU=;
+	s=default; t=1567528460;
+	bh=tUGdMBJf65IiFRyiMd6tSnbbwmB1wNqA8i8OFvyBO9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hPXJJ6iIt1eD5h9xdl3Y45g1SLCtF6TcxnqhImzviv9sQlyUXT3FwVFSEVhs+BXmQ
-	 vRv119gxEIRbPy7wewtsB8baU8ZKgMeK5k9sC4Gll0vooFVT8zQtXxFwxf4GCr8DdW
-	 YkmAdTlLGATNjlAZ0OQmKp4ZUEagikuI7HEyTt2I=
+	b=rh8F9gZUsBtH4I4qN/0FFD9p6k1EvhS/G2RcxCikbe5mtdLS3ZvPcW7nEWN/fWRby
+	 AXyLy1+aiwhgnW1jBplqKt0gQtR4jiGPP4MyVUWBsxtbeWaPo+Srn9dUvNs5aq+Vmz
+	 LMT3ankvIYmzzNNJlxU7ezAi1p4anStxti18mf2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbfICQeK (ORCPT
+        id S1730254AbfICQ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:34:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49876 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731051AbfICQ2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:10 -0400
+        id S1730528AbfICQ17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:27:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B13EE238C6;
-        Tue,  3 Sep 2019 16:28:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6B9F238C6;
+        Tue,  3 Sep 2019 16:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528089;
-        bh=zOEvKuP84iy7xxd7ym7VPI3TVVXP8RVt/WegrSzIvrU=;
+        s=default; t=1567528078;
+        bh=tUGdMBJf65IiFRyiMd6tSnbbwmB1wNqA8i8OFvyBO9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PQW2UsDvYwmrtT8aFI3ULarBUAvxeaOr8Uip+82CaWcRrEfHSAHb8mWwg2jTSrvxD
-         jvPsz8EtEHaKC/8pvxTBnY7CjF351RW8A89jsXNE6aYVzh+PcY7tUvE6kbAiQ4Iio6
-         Fw2IijX6tiqDGKEVi1WkxTArJIW7xO+sKIRPXveA=
+        b=CY3XEip6PGTrxekHChuxHvldQmPbs5LU0quYXHi4SHgtVlSGK4FuHI91smmHlpLUS
+         ttZdEKkUBPn4om+dk5qGH9oUaA7Gb2QVbfL6HRfoenYMaqU1zXU5HFcPlq8RsBPr8R
+         VUnmo4te8qLC/LFRawLbXA8PC5HCjm6TYQlOOx9U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 099/167] ARM: dts: qcom: ipq4019: Fix MSI IRQ type
-Date:   Tue,  3 Sep 2019 12:24:11 -0400
-Message-Id: <20190903162519.7136-99-sashal@kernel.org>
+Cc:     Moni Shoua <monis@mellanox.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 091/167] IB/mlx5: Reset access mask when looping inside page fault handler
+Date:   Tue,  3 Sep 2019 12:24:03 -0400
+Message-Id: <20190903162519.7136-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,44 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@linaro.org>
+From: Moni Shoua <monis@mellanox.com>
 
-[ Upstream commit 97131f85c08e024df49480ed499aae8fb754067f ]
+[ Upstream commit 1abe186ed8a6593069bc122da55fc684383fdc1c ]
 
-The databook clearly states that the MSI IRQ (msi_ctrl_int) is a level
-triggered interrupt.
+If page-fault handler spans multiple MRs then the access mask needs to
+be reset before each MR handling or otherwise write access will be
+granted to mapped pages instead of read-only.
 
-The msi_ctrl_int will be high for as long as any MSI status bit is set,
-thus the IRQ type should be set to IRQ_TYPE_LEVEL_HIGH, causing the
-IRQ handler to keep getting called, as long as any MSI status bit is set.
-
-A git grep shows that ipq4019 is the only SoC using snps,dw-pcie that has
-configured this IRQ incorrectly.
-
-Not having the correct IRQ type defined will cause us to lose interrupts,
-which in turn causes timeouts in the PCIe endpoint drivers.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Cc: <stable@vger.kernel.org> # 3.19
+Fixes: 7bdf65d411c1 ("IB/mlx5: Handle page faults")
+Reported-by: Jerome Glisse <jglisse@redhat.com>
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/mlx5/odp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 2c3168d95a2d5..814ab7283228a 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -389,7 +389,7 @@
- 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
- 				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index 9e1cac8cb2609..453e5c4ac19f4 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -497,7 +497,7 @@ void mlx5_ib_free_implicit_mr(struct mlx5_ib_mr *imr)
+ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
+ 			u64 io_virt, size_t bcnt, u32 *bytes_mapped)
+ {
+-	u64 access_mask = ODP_READ_ALLOWED_BIT;
++	u64 access_mask;
+ 	int npages = 0, page_shift, np;
+ 	u64 start_idx, page_mask;
+ 	struct ib_umem_odp *odp;
+@@ -522,6 +522,7 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
+ 	page_shift = mr->umem->page_shift;
+ 	page_mask = ~(BIT(page_shift) - 1);
+ 	start_idx = (io_virt - (mr->mmkey.iova & page_mask)) >> page_shift;
++	access_mask = ODP_READ_ALLOWED_BIT;
  
--			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
+ 	if (mr->umem->writable)
+ 		access_mask |= ODP_WRITE_ALLOWED_BIT;
 -- 
 2.20.1
 
