@@ -2,67 +2,82 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB7FC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E267C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF33E21883
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A82A22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbfICMwO (ORCPT
+        id S1729254AbfICMxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:52:14 -0400
-Received: from 8bytes.org ([81.169.241.247]:52958 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbfICMwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:52:13 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A4DE0284; Tue,  3 Sep 2019 14:52:11 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 14:52:10 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
-Subject: Re: [PATCH v1 1/2] iommu: pass cell_count = -1 to
- of_for_each_phandle with cells_name
-Message-ID: <20190903125210.GB11530@8bytes.org>
-References: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 3 Sep 2019 08:53:09 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51257 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728538AbfICMxI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 08:53:08 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i58J0-0001Lr-Ol; Tue, 03 Sep 2019 14:53:06 +0200
+Message-ID: <1567515184.5229.5.camel@pengutronix.de>
+Subject: Re: [PATCH 02/12] media: hantro: Do not reorder H264 scaling list
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Date:   Tue, 03 Sep 2019 14:53:04 +0200
+In-Reply-To: <DB6PR06MB4007C140420365E83064C5BEACB90@DB6PR06MB4007.eurprd06.prod.outlook.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <20190901124531.23645-1-jonas@kwiboo.se>
+         <HE1PR06MB40116C92C3D52C5957EF48E9ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <1567432843.3666.6.camel@pengutronix.de>
+         <HE1PR06MB4011A8F99D58E5ACFAE3CECAACBE0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+         <DB6PR06MB4007C140420365E83064C5BEACB90@DB6PR06MB4007.eurprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 24, 2019 at 03:28:45PM +0200, Uwe Kleine-König wrote:
-> Currently of_for_each_phandle ignores the cell_count parameter when a
-> cells_name is given. I intend to change that and let the iterator fall
-> back to a non-negative cell_count if the cells_name property is missing
-> in the referenced node.
+On Tue, 2019-09-03 at 07:54 +0000, Jonas Karlman wrote:
+[...]
+> After a closer look both ffmpeg and rkmpp only apply zig-zag scan and not field scan,
+> ffmpeg will memcpy the scaling_matrix4/8 as is for vaapi, vdpau and nvdec,
+> for dxva2 there is a workaround flag that controls if zig-zag should be applied or not.
 > 
-> To not change how existing of_for_each_phandle's users iterate, fix them
-> to pass cell_count = -1 when also cells_name is given which yields the
-> expected behaviour with and without my change.
+> I suggest a clarification of the expect order of values and use of the same value order as vaapi, vdpau and nvdec.
+> i.e. have the scaling list values in "matrix order"/"raster order", after zig-zag scan has been applied,
+> as is currently expected by cedrus and hantro after this patch.
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/iommu/arm-smmu.c     | 2 +-
->  drivers/iommu/mtk_iommu_v1.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> I would also suggest a change to the expected order of the 8x8 scaling lists to follow the H264 standard,
+> instead of the ffmpeg order like this patch and cedrus driver currently expects.
+> 
+> Expected scaling list order would then be,
+> for 4x4: Intra Y, Intra Cb, Intra Cr, Inter Y, Inter Cb, Inter Cr,
+> for 8x8: Intra Y, Inter Y, Intra Cb, Inter Cb, Intra Cr, Inter Cr.
 
-Acked-by: Joerg Roedel <jroedel@suse.de>
+I'm in favor of both, it seems unnecessary to reorder the lists in
+userspace only to have the kernel reorder them back before passing them
+to the hardware.
 
+regards
+Philipp
