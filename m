@@ -2,90 +2,72 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039B3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC36C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF9A92077B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iMLtZahe"
+	by mail.kernel.org (Postfix) with ESMTP id 1F0F92077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfICPlQ (ORCPT
+        id S1729764AbfICPlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:41:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53684 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbfICPlP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:41:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ULjjH4sen9zfb9BXYRsup9ADAXBJxX8uc7RUDCdLvBI=; b=iMLtZaheRsuIIVHr5rl4845Z/
-        DQ4Krr08gV8xH84IYbia5dX0+JhszL5ZcZBnSeyExOmZFBqXF7CcL2MNVCZCq9tyJtdZYKwrJmZCb
-        EglUAwGDTmn5HoxA89fVRVoWsmuRCXZTwoEp2Q03cznjk1R5NHDz0Fo2WlVGzKhnuBdGIUo1hb3Y9
-        uT4AtWQHg+LuKzFCXP79w6r3cLv6R7QKv1ZIzJHSzD3byMeBY9RB+Nqg9cSLyx5BUR2r8yRKVB/ny
-        +O2cQUg5jS8QXvSKwizythOZTh3Qt2gWBn9gS3WJ0y5IR1cPNFSd53JleIPN/dwvgrOd3Pv3qQt+F
-        WrdrrEDEw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5Avd-0002Gk-UO; Tue, 03 Sep 2019 15:41:09 +0000
-Date:   Tue, 3 Sep 2019 08:41:09 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/8] x86/platform/uv: Return UV Hubless System Type
-Message-ID: <20190903154109.GB2791@infradead.org>
-References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
- <20190903001815.893030884@stormcage.eag.rdlabs.hpecorp.net>
- <20190903064914.GA9914@infradead.org>
- <0eee6d96-e4fc-763b-a8b9-52c85ddd5531@hpe.com>
+        Tue, 3 Sep 2019 11:41:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35500 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbfICPlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 11:41:55 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8E59A155E0;
+        Tue,  3 Sep 2019 15:41:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA15B5D6B2;
+        Tue,  3 Sep 2019 15:41:51 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <e36fa722-a300-2abf-ae9c-a0246fc66d0e@schaufler-ca.com>
+References: <e36fa722-a300-2abf-ae9c-a0246fc66d0e@schaufler-ca.com> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk> <156717352917.2204.17206219813087348132.stgit@warthog.procyon.org.uk>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/11] smack: Implement the watch_key and post_notification hooks [untested] [ver #7]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0eee6d96-e4fc-763b-a8b9-52c85ddd5531@hpe.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4909.1567525310.1@warthog.procyon.org.uk>
+Date:   Tue, 03 Sep 2019 16:41:50 +0100
+Message-ID: <4910.1567525310@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 03 Sep 2019 15:41:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 07:12:28AM -0700, Mike Travis wrote:
-> > > +#define is_uv_hubless _is_uv_hubless
-> > 
-> > Why the weird macro indirection?
-> > 
-> > > -static inline int is_uv_hubless(void)	{ return 0; }
-> > > +static inline int _is_uv_hubless(int uv) { return 0; }
-> > > +#define is_uv_hubless _is_uv_hubless
-> > 
-> > And here again.
-> > 
-> 
-> Sorry, I should have explained this better.  The problem arises because
-> we have a number of UV specific kernel modules that support multiple
-> distributions.  And with back porting to earlier distros we cannot
-> rely on the KERNEL_VERSION macro to define whether the source is being
-> built for an earlier kernel.  So this allows an ifdef on the function
-> name to discover if the kernel is before or after these changes.
+Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-And none of these matter for upstream.  We'd rather not make the code
-more convouluted than required.  If you actually really cared about these
-modules you would simply submit them upstream.
+> I tried running your key tests and they fail in "keyctl/move/valid",
+> with 11 FAILED messages, finally hanging after "UNLINK KEY FROM SESSION".
+> It's possible that my Fedora26 system is somehow incompatible with the
+> tests. I don't see anything in your code that would cause this, as the
+> Smack policy on the system shouldn't restrict any access.
+
+Can you go into keyutils/tests/keyctl/move/valid/ and grab the test.out file?
+
+I presume you're running with an upstream-ish kernel and a cutting edge
+keyutils installed?
+
+David
