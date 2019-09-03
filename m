@@ -4,63 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C150C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06207C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F127215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D315F215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OehgC/Qp"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EFphzrlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbfICPHw (ORCPT
+        id S1729930AbfICPH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:07:52 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:52365 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729905AbfICPHv (ORCPT
+        Tue, 3 Sep 2019 11:07:58 -0400
+Received: from mail-qk1-f202.google.com ([209.85.222.202]:48349 "EHLO
+        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729923AbfICPHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:07:51 -0400
-Received: by mail-yw1-f73.google.com with SMTP id d18so13595269ywb.19
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:07:50 -0700 (PDT)
+        Tue, 3 Sep 2019 11:07:54 -0400
+Received: by mail-qk1-f202.google.com with SMTP id 11so7556023qkh.15
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:07:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=PXDMDCBfc2xecCOj15IRjy6gG7tFhf1boblcojHoIqc=;
-        b=OehgC/QpGVW5WHRtYYFEBPQjfIK+N42Odb/gz465atQlpSIk1lvdVNY2fEt5bT5y/i
-         ncnP5Uzjks7oK05vFxfW7R4g/0AHAm6ZfhdpT9wXG6QB9n3Z0n3y2ZjV4jnYLOuSPB+V
-         X3WZHM6Z6AEL0iTYXZ2q8rc3cx61dR3VH7hA6VsD64SSclKjEvBcfHz00aeGDU4u9Wg0
-         kO46LRoLWUpD93faDcaTwE3uYYBlaEGBRH9xLFbyVy1nOz7+8Ec5oTMVlw5Xr2i9V05w
-         0afYMRX4Wu/UypBQBMVOR/dlbL/g92c6Fkmc05h9ztxwfejrJ3k5dAKR3nVZAllXy1E2
-         4rlw==
+        bh=zRWSVeb5W05ehvG18tGL2ilvhm06WavygbArZEKUTQI=;
+        b=EFphzrlXR0Q3X5gcyhY/QpNLUIKGO6Mu86Y7KiyAnZSAJCuL+nBTfH/jlK5erD7K2r
+         W8pEWRT1FseJg9jN2oX0QQ+pK6swlE6nXwrBZ6Wb5ategvz0WdbO4zdMpl4JlgBIHf2v
+         IzNy2RHxCVLFsD+LRUIe4g3TZB+8D3g68RwEhZjlWK09mvWkkYF7Yd6gbZ943ljGv0Pe
+         1AAxqU/OY+EFee6I23XvaOzyBbuR/9P9VIte/Y05WhkZZKwnXhu3vmyH8723rsuiufZI
+         mLPqCZpvo8SV8k8H0mF6pGEksWdC7a3+5KSIrnkafdHCyITOpeyiUevIBhWx42asYq9T
+         wNTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=PXDMDCBfc2xecCOj15IRjy6gG7tFhf1boblcojHoIqc=;
-        b=KVSF6QnI3ygQJzTHaFZmvoaASF9xAa0LhgUnMWL/hSsZoxolrQHq/yuJsNMNpKvEs/
-         NrMqJUfZniaFqMire9sNqWOOUoZ5k0T3l0g6o/ZLbrlaa5jj7fGPwCB2vSuE76u2e/eF
-         yXCtNzn1XWhiigPd9QbK7HiXqQIRXwFXFq9u+kOL+1FCIdeeayaaoQORnsKQwmtmrlLs
-         QuXozY3Hyo5uLCvxdGBtlnjqrvUCIHHNswB0TJiSLFQQ8OJcNsfrBbghOf8SJPX7RDqY
-         H5BA9EBiuBFIzoR7IzjzH/3dfulf4KJfVVkwqadYO6vDtgexA03RaJ93acZoREcAQ9Fc
-         83ug==
-X-Gm-Message-State: APjAAAWgcILALansKW9TyK6eIkcQzJcMeoyqpKnVzVGhjE+W5v9Y8tZ8
-        TbpCWM0g6TAvagcNfPvGdyhmhRnktQOA9olkGcdmG4dp57P8KwrePT3oSOI+PA2oOi2bTCNe5JH
-        3lRDg8Z5SexZ9T7HqNPRLw3lwtx2m3dG9Gk8rdB1uGZqtiligwKWCk5iUW7q+5QDtlZtqFOrQYb
-        Y=
-X-Google-Smtp-Source: APXvYqylPWFHf2hpNQhFQu2/5vQMLUmJtcBW5//m7WkaHo/DcTGkmE7DrAleumJF4actayeB+yWtnVWCxpa+8g==
-X-Received: by 2002:a25:6191:: with SMTP id v139mr25130367ybb.396.1567523270130;
- Tue, 03 Sep 2019 08:07:50 -0700 (PDT)
-Date:   Tue,  3 Sep 2019 16:06:35 +0100
+        bh=zRWSVeb5W05ehvG18tGL2ilvhm06WavygbArZEKUTQI=;
+        b=ZeYu+RoQIb0M7YhBt6q6txCcz4q4joJ7dP5TFUZlA4qttvgaFU9qYL3pr5kOY/ygBb
+         4XXMcIrNfvswppzsI17B2/NoFN28L3/HBORgVlCuU05FdqPf4LhjyedImfoqBwqhs1SR
+         Yln74EIirAHXeSc75iE49x8nUNMKxsbUuN8e5Lx4V1+5k3bmMxDLHIGeqlg7Vex9vlcN
+         4/AjulLGS8rGcy0keMn69C6WvHGgFWTU2kKsYPp3VCEbRdHlYHBw/6tk+5ZjqddBzfDK
+         T8oR/TmENhlfrj1glOe12GxhTjlgvJ7czfGkM77mtOYnzaE+wsPusfvFoqB/r3PZHBgj
+         Ibew==
+X-Gm-Message-State: APjAAAUHazmlP/MkdBmRYbtZsuAgaJCYBiQerJUA+I8e93Ckdz/MFdLQ
+        9C5lHHI7L48TPaoXmhDyZ7aysBrzD3zLUbdlZiVGzKir0l8HttiVPtxZIsL9gs+8Luxy2Qa0dMi
+        ABOEm2EL202hw7xy6WPRgfxRwNbG8yDNkagIt44Xdh2T/S9VaAkxu6EA52GP4wwZyPOV7+grDD3
+        4=
+X-Google-Smtp-Source: APXvYqwXLQ60AAfU9iVgSfT4ANntf+V9n3+Zm6PoQo1JQsqHzpyZDSgMHAEiaguzYB+Iw7z7S32mkOrSiVC1PQ==
+X-Received: by 2002:ac8:5296:: with SMTP id s22mr17672802qtn.139.1567523273051;
+ Tue, 03 Sep 2019 08:07:53 -0700 (PDT)
+Date:   Tue,  3 Sep 2019 16:06:36 +0100
 In-Reply-To: <20190903150638.242049-1-maennich@google.com>
-Message-Id: <20190903150638.242049-10-maennich@google.com>
+Message-Id: <20190903150638.242049-11-maennich@google.com>
 Mime-Version: 1.0
 References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v4 09/12] docs: Add documentation for Symbol Namespaces
+Subject: [PATCH v4 10/12] usb-storage: remove single-use define for debugging
 From:   Matthias Maennich <maennich@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
@@ -77,205 +78,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe using Symbol Namespaces from a perspective of a user. I.e.
-module authors or subsystem maintainers.
+USB_STORAGE was defined as "usb-storage: " and used in a single location
+as argument to printk. In order to be able to use the name
+'USB_STORAGE', drop the definition and use the string directly for the
+printk call.
 
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Matthias Maennich <maennich@google.com>
 ---
- Documentation/kbuild/namespaces.rst      | 154 +++++++++++++++++++++++
- Documentation/kernel-hacking/hacking.rst |  18 +++
- 2 files changed, 172 insertions(+)
- create mode 100644 Documentation/kbuild/namespaces.rst
+ drivers/usb/storage/debug.h    | 2 --
+ drivers/usb/storage/scsiglue.c | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/kbuild/namespaces.rst b/Documentation/kbuild/namespaces.rst
-new file mode 100644
-index 000000000000..982ed7b568ac
---- /dev/null
-+++ b/Documentation/kbuild/namespaces.rst
-@@ -0,0 +1,154 @@
-+=================
-+Symbol Namespaces
-+=================
-+
-+The following document describes how to use Symbol Namespaces to structure the
-+export surface of in-kernel symbols exported through the family of
-+EXPORT_SYMBOL() macros.
-+
-+.. Table of Contents
-+
-+	=== 1 Introduction
-+	=== 2 How to define Symbol Namespaces
-+	   --- 2.1 Using the EXPORT_SYMBOL macros
-+	   --- 2.2 Using the DEFAULT_SYMBOL_NAMESPACE define
-+	=== 3 How to use Symbols exported in Namespaces
-+	=== 4 Loading Modules that use namespaced Symbols
-+	=== 5 Automatically creating MODULE_IMPORT_NS statements
-+
-+1. Introduction
-+===============
-+
-+Symbol Namespaces have been introduced as a means to structure the export
-+surface of the in-kernel API. It allows subsystem maintainers to partition
-+their exported symbols into separate namespaces. That is useful for
-+documentation purposes (think of the SUBSYSTEM_DEBUG namespace) as well as for
-+limiting the availability of a set of symbols for use in other parts of the
-+kernel. As of today, modules that make use of symbols exported into namespaces,
-+are required to import the namespace. Otherwise the kernel will, depending on
-+its configuration, reject loading the module or warn about a missing import.
-+
-+2. How to define Symbol Namespaces
-+==================================
-+
-+Symbols can be exported into namespace using different methods. All of them are
-+changing the way EXPORT_SYMBOL and friends are instrumented to create ksymtab
-+entries.
-+
-+2.1 Using the EXPORT_SYMBOL macros
-+==================================
-+
-+In addition to the macros EXPORT_SYMBOL() and EXPORT_SYMBOL_GPL(), that allow
-+exporting of kernel symbols to the kernel symbol table, variants of these are
-+available to export symbols into a certain namespace: EXPORT_SYMBOL_NS() and
-+EXPORT_SYMBOL_NS_GPL(). They take one additional argument: the namespace.
-+Please note that due to macro expansion that argument needs to be a
-+preprocessor symbol. E.g. to export the symbol `usb_stor_suspend` into the
-+namespace `USB_STORAGE`, use::
-+
-+	EXPORT_SYMBOL_NS(usb_stor_suspend, USB_STORAGE);
-+
-+The corresponding ksymtab entry struct `kernel_symbol` will have the member
-+`namespace` set accordingly. A symbol that is exported without a namespace will
-+refer to `NULL`. There is no default namespace if none is defined. `modpost`
-+and kernel/module.c make use the namespace at build time or module load time,
-+respectively.
-+
-+2.2 Using the DEFAULT_SYMBOL_NAMESPACE define
-+=============================================
-+
-+Defining namespaces for all symbols of a subsystem can be very verbose and may
-+become hard to maintain. Therefore a default define (DEFAULT_SYMBOL_NAMESPACE)
-+is been provided, that, if set, will become the default for all EXPORT_SYMBOL()
-+and EXPORT_SYMBOL_GPL() macro expansions that do not specify a namespace.
-+
-+There are multiple ways of specifying this define and it depends on the
-+subsystem and the maintainer's preference, which one to use. The first option
-+is to define the default namespace in the `Makefile` of the subsystem. E.g. to
-+export all symbols defined in usb-common into the namespace USB_COMMON, add a
-+line like this to drivers/usb/common/Makefile::
-+
-+	ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_COMMON
-+
-+That will affect all EXPORT_SYMBOL() and EXPORT_SYMBOL_GPL() statements. A
-+symbol exported with EXPORT_SYMBOL_NS() while this definition is present, will
-+still be exported into the namespace that is passed as the namespace argument
-+as this argument has preference over a default symbol namespace.
-+
-+A second option to define the default namespace is directly in the compilation
-+unit as preprocessor statement. The above example would then read::
-+
-+	#undef  DEFAULT_SYMBOL_NAMESPACE
-+	#define DEFAULT_SYMBOL_NAMESPACE USB_COMMON
-+
-+within the corresponding compilation unit before any EXPORT_SYMBOL macro is
-+used.
-+
-+3. How to use Symbols exported in Namespaces
-+============================================
-+
-+In order to use symbols that are exported into namespaces, kernel modules need
-+to explicitly import these namespaces. Otherwise the kernel might reject to
-+load the module. The module code is required to use the macro MODULE_IMPORT_NS
-+for the namespaces it uses symbols from. E.g. a module using the
-+usb_stor_suspend symbol from above, needs to import the namespace USB_STORAGE
-+using a statement like::
-+
-+	MODULE_IMPORT_NS(USB_STORAGE);
-+
-+This will create a `modinfo` tag in the module for each imported namespace.
-+This has the side effect, that the imported namespaces of a module can be
-+inspected with modinfo::
-+
-+	$ modinfo drivers/usb/storage/ums-karma.ko
-+	[...]
-+	import_ns:      USB_STORAGE
-+	[...]
-+
-+
-+It is advisable to add the MODULE_IMPORT_NS() statement close to other module
-+metadata definitions like MODULE_AUTHOR() or MODULE_LICENSE(). Refer to section
-+5. for a way to create missing import statements automatically.
-+
-+4. Loading Modules that use namespaced Symbols
-+==============================================
-+
-+At module loading time (e.g. `insmod`), the kernel will check each symbol
-+referenced from the module for its availability and whether the namespace it
-+might be exported to has been imported by the module. The default behaviour of
-+the kernel is to reject loading modules that don't specify sufficient imports.
-+An error will be logged and loading will be failed with EINVAL. In order to
-+allow loading of modules that don't satisfy this precondition, a configuration
-+option is available: Setting MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=y will
-+enable loading regardless, but will emit a warning.
-+
-+5. Automatically creating MODULE_IMPORT_NS statements
-+=====================================================
-+
-+Missing namespaces imports can easily be detected at build time. In fact,
-+modpost will emit a warning if a module uses a symbol from a namespace
-+without importing it.
-+MODULE_IMPORT_NS() statements will usually be added at a definite location
-+(along with other module meta data). To make the life of module authors (and
-+subsystem maintainers) easier, a script and make target is available to fixup
-+missing imports. Fixing missing imports can be done with::
-+
-+	$ make nsdeps
-+
-+A typical scenario for module authors would be::
-+
-+	- write code that depends on a symbol from a not imported namespace
-+	- `make`
-+	- notice the warning of modpost telling about a missing import
-+	- run `make nsdeps` to add the import to the correct code location
-+
-+For subsystem maintainers introducing a namespace, the steps are very similar.
-+Again, `make nsdeps` will eventually add the missing namespace imports for
-+in-tree modules::
-+
-+	- move or add symbols to a namespace (e.g. with EXPORT_SYMBOL_NS())
-+	- `make` (preferably with an allmodconfig to cover all in-kernel
-+	  modules)
-+	- notice the warning of modpost telling about a missing import
-+	- run `make nsdeps` to add the import to the correct code location
-+
-diff --git a/Documentation/kernel-hacking/hacking.rst b/Documentation/kernel-hacking/hacking.rst
-index 5891a701a159..a3ddb213a5e1 100644
---- a/Documentation/kernel-hacking/hacking.rst
-+++ b/Documentation/kernel-hacking/hacking.rst
-@@ -594,6 +594,24 @@ internal implementation issue, and not really an interface. Some
- maintainers and developers may however require EXPORT_SYMBOL_GPL()
- when adding any new APIs or functionality.
+diff --git a/drivers/usb/storage/debug.h b/drivers/usb/storage/debug.h
+index 6d64f342f587..16ce06039a4d 100644
+--- a/drivers/usb/storage/debug.h
++++ b/drivers/usb/storage/debug.h
+@@ -29,8 +29,6 @@
  
-+:c:func:`EXPORT_SYMBOL_NS()`
-+----------------------------
-+
-+Defined in ``include/linux/export.h``
-+
-+This is the variant of `EXPORT_SYMBOL()` that allows specifying a symbol
-+namespace. Symbol Namespaces are documented in
-+``Documentation/kbuild/namespaces.rst``.
-+
-+:c:func:`EXPORT_SYMBOL_NS_GPL()`
-+--------------------------------
-+
-+Defined in ``include/linux/export.h``
-+
-+This is the variant of `EXPORT_SYMBOL_GPL()` that allows specifying a symbol
-+namespace. Symbol Namespaces are documented in
-+``Documentation/kbuild/namespaces.rst``.
-+
- Routines and Conventions
- ========================
+ #include <linux/kernel.h>
  
+-#define USB_STORAGE "usb-storage: "
+-
+ #ifdef CONFIG_USB_STORAGE_DEBUG
+ void usb_stor_show_command(const struct us_data *us, struct scsi_cmnd *srb);
+ void usb_stor_show_sense(const struct us_data *us, unsigned char key,
+diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+index 05b80211290d..df4de8323eff 100644
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -379,7 +379,7 @@ static int queuecommand_lck(struct scsi_cmnd *srb,
+ 
+ 	/* check for state-transition errors */
+ 	if (us->srb != NULL) {
+-		printk(KERN_ERR USB_STORAGE "Error in %s: us->srb = %p\n",
++		printk(KERN_ERR "usb-storage: Error in %s: us->srb = %p\n",
+ 			__func__, us->srb);
+ 		return SCSI_MLQUEUE_HOST_BUSY;
+ 	}
 -- 
 2.23.0.187.g17f5b7556c-goog
 
