@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258BBC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923CFC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1E723950
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B46B238C7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528315;
-	bh=MEDwmnHyT+j4wPSUrobOsrWKdcqz2wDWmQRnkf9QL14=;
+	s=default; t=1567528317;
+	bh=Rc0nyCb11rtoLwKBSMsZv14/IRpM9ByxOTtCoc7QxmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=urJRamxs+iLNVCod+1D7n/IyPF4RRSpMLx+bpOhiD5YYOi166oTvW7AZmOc+8rt96
-	 bJziSt/uPu9qoiFBimcNR8Dv2aJ36keA/wMxp0bo9Y1HgmCbE8VSU3IMYLiaV3KueR
-	 ha4LQh+2Zlk4cv3uDbk/+toZ9tEJPlHOPzP+uJ4E=
+	b=hWWnylnZIovQI5UbfFc/JoKuIsOj9bEPuNUlOnRqtgMTSvFBlh14AY2577WK02kKp
+	 iWwVjHZscvmbW4YheHMfujZ21wVFhj70+aMykZ5CevEiyHFATtTa++WUxoRpz2DPoo
+	 SVbD1MyWWj8gEKOXngHs1Lz51SMJe+LNYwSMFJtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbfICQby (ORCPT
+        id S1729921AbfICQb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:31:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54856 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730010AbfICQbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:31:44 -0400
+        id S1731303AbfICQbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:31:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1335238D0;
-        Tue,  3 Sep 2019 16:31:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C829B238F5;
+        Tue,  3 Sep 2019 16:31:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528303;
-        bh=MEDwmnHyT+j4wPSUrobOsrWKdcqz2wDWmQRnkf9QL14=;
+        s=default; t=1567528311;
+        bh=Rc0nyCb11rtoLwKBSMsZv14/IRpM9ByxOTtCoc7QxmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OCXFW2Q+TVdgPQnf3AV+8TjFRYg51gjyy7Oe/mm2yFjxrba+gMaAhdPhTuWzW8efK
-         GQIWODWrA327U8ge8vg876rA66SF5twR81QbkZ+cqoJ9HdKro9xqhXbHJPmvkQiiep
-         sDB/5LR8ZCtHU0PrhqJKxJKxKvb+WHdHXk+R0GTM=
+        b=Wq6xJFgitu45ILS7zCsZPDOuyGMQU4rTRapwTtf/tPW0E7KVLR3TgEprQ2zzSiuYo
+         Ukd07FOer0vvRzVe0CS+uU+GzLjDbltJcY5XDcMavKAaBcsvwnoWt2glBruJtjJzaZ
+         Mtf/sqbtANuPvhkKumUsdbhpCCEdPgg4S1Al0GTs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Norbert Manthey <nmanthey@amazon.de>,
-        Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 145/167] pstore: Fix double-free in pstore_mkfile() failure path
-Date:   Tue,  3 Sep 2019 12:24:57 -0400
-Message-Id: <20190903162519.7136-145-sashal@kernel.org>
+Cc:     Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 4.19 149/167] powerpc/mm: Limit rma_size to 1TB when running without HV mode
+Date:   Tue,  3 Sep 2019 12:25:01 -0400
+Message-Id: <20190903162519.7136-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,76 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Norbert Manthey <nmanthey@amazon.de>
+From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 
-[ Upstream commit 4c6d80e1144bdf48cae6b602ae30d41f3e5c76a9 ]
+[ Upstream commit da0ef93310e67ae6902efded60b6724dab27a5d1 ]
 
-The pstore_mkfile() function is passed a pointer to a struct
-pstore_record. On success it consumes this 'record' pointer and
-references it from the created inode.
+The virtual real mode addressing (VRMA) mechanism is used when a
+partition is using HPT (Hash Page Table) translation and performs real
+mode accesses (MSR[IR|DR] = 0) in non-hypervisor mode. In this mode
+effective address bits 0:23 are treated as zero (i.e. the access is
+aliased to 0) and the access is performed using an implicit 1TB SLB
+entry.
 
-On failure, however, it may or may not free the record. There are even
-two different code paths which return -ENOMEM -- one of which does and
-the other doesn't free the record.
+The size of the RMA (Real Memory Area) is communicated to the guest as
+the size of the first memory region in the device tree. And because of
+the mechanism described above can be expected to not exceed 1TB. In
+the event that the host erroneously represents the RMA as being larger
+than 1TB, guest accesses in real mode to memory addresses above 1TB
+will be aliased down to below 1TB. This means that a memory access
+performed in real mode may differ to one performed in virtual mode for
+the same memory address, which would likely have unintended
+consequences.
 
-Make the behaviour deterministic by never consuming and freeing the
-record when returning failure, allowing the caller to do the cleanup
-consistently.
+To avoid this outcome have the guest explicitly limit the size of the
+RMA to the current maximum, which is 1TB. This means that even if the
+first memory block is larger than 1TB, only the first 1TB should be
+accessed in real mode.
 
-Signed-off-by: Norbert Manthey <nmanthey@amazon.de>
-Link: https://lore.kernel.org/r/1562331960-26198-1-git-send-email-nmanthey@amazon.de
-Fixes: 83f70f0769ddd ("pstore: Do not duplicate record metadata")
-Fixes: 1dfff7dd67d1a ("pstore: Pass record contents instead of copying")
-Cc: stable@vger.kernel.org
-[kees: also move "private" allocation location, rename inode cleanup label]
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: c610d65c0ad0 ("powerpc/pseries: lift RTAS limit for hash")
+Cc: stable@vger.kernel.org # v4.16+
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Tested-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20190710052018.14628-1-sjitindarsingh@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/pstore/inode.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/mm/hash_utils_64.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-index 8cf2218b46a75..6f90d91a8733a 100644
---- a/fs/pstore/inode.c
-+++ b/fs/pstore/inode.c
-@@ -330,10 +330,6 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 		goto fail;
- 	inode->i_mode = S_IFREG | 0444;
- 	inode->i_fop = &pstore_file_operations;
--	private = kzalloc(sizeof(*private), GFP_KERNEL);
--	if (!private)
--		goto fail_alloc;
--	private->record = record;
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index f23a89d8e4ce6..29fd8940867e5 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -1859,11 +1859,20 @@ void hash__setup_initial_memory_limit(phys_addr_t first_memblock_base,
+ 	 *
+ 	 * For guests on platforms before POWER9, we clamp the it limit to 1G
+ 	 * to avoid some funky things such as RTAS bugs etc...
++	 *
++	 * On POWER9 we limit to 1TB in case the host erroneously told us that
++	 * the RMA was >1TB. Effective address bits 0:23 are treated as zero
++	 * (meaning the access is aliased to zero i.e. addr = addr % 1TB)
++	 * for virtual real mode addressing and so it doesn't make sense to
++	 * have an area larger than 1TB as it can't be addressed.
+ 	 */
+ 	if (!early_cpu_has_feature(CPU_FTR_HVMODE)) {
+ 		ppc64_rma_size = first_memblock_size;
+ 		if (!early_cpu_has_feature(CPU_FTR_ARCH_300))
+ 			ppc64_rma_size = min_t(u64, ppc64_rma_size, 0x40000000);
++		else
++			ppc64_rma_size = min_t(u64, ppc64_rma_size,
++					       1UL << SID_SHIFT_1T);
  
- 	switch (record->type) {
- 	case PSTORE_TYPE_DMESG:
-@@ -383,12 +379,16 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 		break;
- 	}
- 
-+	private = kzalloc(sizeof(*private), GFP_KERNEL);
-+	if (!private)
-+		goto fail_inode;
-+
- 	dentry = d_alloc_name(root, name);
- 	if (!dentry)
- 		goto fail_private;
- 
-+	private->record = record;
- 	inode->i_size = private->total_size = size;
--
- 	inode->i_private = private;
- 
- 	if (record->time.tv_sec)
-@@ -404,7 +404,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
- 
- fail_private:
- 	free_pstore_private(private);
--fail_alloc:
-+fail_inode:
- 	iput(inode);
- 
- fail:
+ 		/* Finally limit subsequent allocations */
+ 		memblock_set_current_limit(ppc64_rma_size);
 -- 
 2.20.1
 
