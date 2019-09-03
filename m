@@ -7,77 +7,75 @@ X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EFEC3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE1DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973C6217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320FB21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 00:37:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPt6HoNI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GG9uHqY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfICAgD (ORCPT
+        id S1726108AbfICAhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 20:36:03 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41440 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfICAgD (ORCPT
+        Mon, 2 Sep 2019 20:37:19 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33224 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfICAhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 20:36:03 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b13so3048016pfo.8;
-        Mon, 02 Sep 2019 17:36:02 -0700 (PDT)
+        Mon, 2 Sep 2019 20:37:18 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so8144624pgn.0;
+        Mon, 02 Sep 2019 17:37:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WXtfRvg0HAQ1AbEkMFK2l6qpRZ1eLo172QU9YP505tU=;
-        b=XPt6HoNIPUbuL/95hSsOFO0I1CAdHaDzNErILR0nCfMLntVWTY24bl3CMpH5IhNewN
-         S3/vnM0T/fE4nyLTw5JFoKy0pkFkZhXYRN/TaOyrpaEU13CT7kHyUnV4n9bnjYxbGwyi
-         J6w56A32kTq9m2b9o4Ca3uP6FyVC+oWZT/nPGftMTRqpUD3O+lzBs1r3o0xShuuYJZP/
-         g5QogblP9INkNpN3QGHH9eVwdHbjALej5NkB1va1cn7PmXpIc1m4K8hWuJe5y1GK5KHv
-         tg9iAtdt3BM9E8lMhuATUGQrk69mdNrswTj7baUG4XL4Tz3/0zMq1MtS+BVzVukeBfoK
-         DIeQ==
+        bh=HYKhqZZp7jnIMlp6HX/xKA8CzksLvNCX8Kw12YKrVSI=;
+        b=GG9uHqY6EzKTp+NmNFXol0x0Yo8b//eg5hirJUjGZbF8Ewi6n3Aqv7g5Qrs0WqwQzn
+         sYwtAwbs8OtQOgUAVDuGRTUtGcLmQMWv4Ut+WcNtxSx4RwlMr+vCoe9uD0ie205jaN8F
+         PfebOKtzphUwJgdQ382wOh2cZLBWxdCmOIP2WpEXo8+gsu09D1A6XomasjFchYmx1nOI
+         XegTHmoC3NxSSC86A053v0JJS56nqb055YMqKnvesE4JSl8QbDQ8Wp1YMn7OM3UVs1IG
+         XUQ/9dOwqVpsSPRIfP77FZdjdz4Yy+YHRU3taDM1pNNGowqahRwQCqlNw3zObX2COMrO
+         E21Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=WXtfRvg0HAQ1AbEkMFK2l6qpRZ1eLo172QU9YP505tU=;
-        b=V1yY/iCURdbiAq36aVwdHa3XIPdc10rIaRXpx1W4QtMWxZVx93pnz/jg5NdLlI5rzj
-         b4nOtBycMtL98QujaQUvGEfvBoCaPelV5DhtmgTbxNTmWnlNAa0aJVd6NoZ7TPDug1oa
-         b5kdmyjA5pJxSwEXZfceRUEUhOMqSHZabVOn/u7Y/vM2+jMiZ4WfPnZr6WqkyygwyHU4
-         38KfKFnmYCHIFESmT4fynWZ9b8QiKelILdy5Z/0DJaaBG6IhtNcGjbZCcGRR46frYqC4
-         GAnuaubGfIZjSTPh/v6EE9sQ5L0H4uun29CLi9cr7vxJ0501OrrRXwbsRx0GCyVB1Iep
-         jWNA==
-X-Gm-Message-State: APjAAAW+Zu3bHGUcOPVSwRfCRgsZGT09gfwJ9ss5EONIlXpogXiZdLU1
-        y7MmwrZWY0TSFF5ZlmKSYqIf90ci
-X-Google-Smtp-Source: APXvYqycvnSPCdJaiVlKt7unzIMr9yXnjMozZhnMiM7HNdOy26e4EDqRyUsVQaHOYZcxp9um/bw0yg==
-X-Received: by 2002:a63:5b52:: with SMTP id l18mr27404687pgm.21.1567470962173;
-        Mon, 02 Sep 2019 17:36:02 -0700 (PDT)
+        bh=HYKhqZZp7jnIMlp6HX/xKA8CzksLvNCX8Kw12YKrVSI=;
+        b=DBtBTIBzT7Tgl8gWDmNQWYQah3QZwKf+NgdC5IkOlk4YKLq3km33CIhk7oB+oLzLoJ
+         HMyyHMNLRVreXWlgxumd8r42gUvASivdtfWhbtebhLY8dM3aoN6F4yXs9SUQUzDib1ci
+         T698Qx2ORrDdH4TPbEnvCeEWrz9KWuI2Mf4T/uFOGliAzeg+/xorNuhEM4zBPqGhKBJ3
+         agxEWvym/Dxosb+f1EtuwXjGPh+tHsbZK09XcxaZFIZ58tLrq1iSrZ/oZ9AMZptmZQS1
+         /8rET0pf7CuBH6EkHbygs1pRq9+sac6RPWo4sEWGkRC+FKZthNSDUKs6qTKF/aQ2H6pq
+         QfcA==
+X-Gm-Message-State: APjAAAWiV0OP00WgCHuSK2OJVUlCRxYuWLNW92Ans5C2f2U6iNaEhaGJ
+        il+Zapi7eMEdTEP55IhF5uUzpMLY
+X-Google-Smtp-Source: APXvYqyaxD5JaG3LjjtT0YzYZcEzB/up1o1Kca6y0BH2nffXoIjkDxft6i8APuQY3uZc8Dx2gSgPwg==
+X-Received: by 2002:a65:4c4d:: with SMTP id l13mr27017264pgr.156.1567471037707;
+        Mon, 02 Sep 2019 17:37:17 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q186sm2031334pfb.47.2019.09.02.17.36.00
+        by smtp.gmail.com with ESMTPSA id l7sm15825681pff.35.2019.09.02.17.37.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Sep 2019 17:36:01 -0700 (PDT)
-Subject: Re: [PATCH] Fix a double free bug in rsi_91x_deinit
-To:     Greg KH <greg@kroah.com>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, Hui Peng <benquike@gmail.com>,
-        security@kernel.org, Mathias Payer <mathias.payer@nebelwelt.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190819220230.10597-1-benquike@gmail.com>
- <20190831181852.GA22160@roeck-us.net>
- <87k1asqw87.fsf@kamboji.qca.qualcomm.com>
- <385361d3-048e-9b3f-c749-aa5861e397e7@roeck-us.net>
- <20190902184722.GC5697@kroah.com>
- <804fb4dc-23e5-3442-c64e-9857d61d6b6c@roeck-us.net>
- <20190902200635.GA29465@kroah.com>
+        Mon, 02 Sep 2019 17:37:17 -0700 (PDT)
+Subject: Re: [PATCH RESEND v2 1/6] dt-bindings: watchdog: Add YAML schemas for
+ the generic watchdog bindings
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     wim@linux-watchdog.org, linux-kernel@vger.kernel.org,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+References: <20190821143835.7294-1-mripard@kernel.org>
+ <20190830164811.GA7911@roeck-us.net> <20190902114650.w65ya7mgfsyu275x@flea>
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a3432c17-f3ec-6d1e-77ec-fab43feefcaf@roeck-us.net>
-Date:   Mon, 2 Sep 2019 17:35:59 -0700
+Message-ID: <a7c5892b-4fd5-9b24-fdd6-f3aa1e6c98e7@roeck-us.net>
+Date:   Mon, 2 Sep 2019 17:37:15 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190902200635.GA29465@kroah.com>
+In-Reply-To: <20190902114650.w65ya7mgfsyu275x@flea>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,68 +84,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/19 1:06 PM, Greg KH wrote:
-> On Mon, Sep 02, 2019 at 12:32:37PM -0700, Guenter Roeck wrote:
->> On 9/2/19 11:47 AM, Greg KH wrote:
->>> On Sun, Sep 01, 2019 at 07:08:29AM -0700, Guenter Roeck wrote:
->>>> On 9/1/19 1:03 AM, Kalle Valo wrote:
->>>>> Guenter Roeck <linux@roeck-us.net> writes:
->>>>>
->>>>>> On Mon, Aug 19, 2019 at 06:02:29PM -0400, Hui Peng wrote:
->>>>>>> `dev` (struct rsi_91x_usbdev *) field of adapter
->>>>>>> (struct rsi_91x_usbdev *) is allocated  and initialized in
->>>>>>> `rsi_init_usb_interface`. If any error is detected in information
->>>>>>> read from the device side,  `rsi_init_usb_interface` will be
->>>>>>> freed. However, in the higher level error handling code in
->>>>>>> `rsi_probe`, if error is detected, `rsi_91x_deinit` is called
->>>>>>> again, in which `dev` will be freed again, resulting double free.
->>>>>>>
->>>>>>> This patch fixes the double free by removing the free operation on
->>>>>>> `dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
->>>>>>> used in `rsi_disconnect`, in that code path, the `dev` field is not
->>>>>>>     (and thus needs to be) freed.
->>>>>>>
->>>>>>> This bug was found in v4.19, but is also present in the latest version
->>>>>>> of kernel.
->>>>>>>
->>>>>>> Reported-by: Hui Peng <benquike@gmail.com>
->>>>>>> Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
->>>>>>> Signed-off-by: Hui Peng <benquike@gmail.com>
->>>>>>
->>>>>> FWIW:
->>>>>>
->>>>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>>>>>
->>>>>> This patch is listed as fix for CVE-2019-15504, which has a CVSS 2.0 score
->>>>>> of 10.0 (high) and CVSS 3.0 score of 9.8 (critical).
->>>>>
->>>>> A double free in error path is considered as a critical CVE issue? I'm
->>>>> very curious, why is that?
->>>>>
->>>>
->>>> You'd have to ask the people assigning CVSS scores. However, if the memory
->>>> was reallocated, that reallocated memory (which is still in use) is freed.
->>>> Then all kinds of bad things can happen.
+On 9/2/19 4:46 AM, Maxime Ripard wrote:
+> Hi Guenther,
+> 
+> On Fri, Aug 30, 2019 at 09:48:11AM -0700, Guenter Roeck wrote:
+>> On Wed, Aug 21, 2019 at 04:38:30PM +0200, Maxime Ripard wrote:
+>>> From: Maxime Ripard <maxime.ripard@bootlin.com>
 >>>
->>> Yes, but moving from "bad things _can_ happen" to "bad things happen" in
->>> an instance like this will be a tough task.  It also requires physical
->>> access to the machine.
+>>> The watchdogs have a bunch of generic properties that are needed in a
+>>> device tree. Add a YAML schemas for those.
 >>>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 >>
->> Is this correct even with usbip enabled ?
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 > 
-> Who has usbip enabled anywhere?  :)
+> Thanks for reviewing this, which tree should this go through? Yours or Rob's?
 > 
-
-It is enabled in Ubuntu, and it looks like it is enabled in Fedora as well.
-It is disabled in Chrome OS. I didn't check other distributions.
-
-> I don't know if usbip can trigger this type of thing, maybe someone
-> needs to test that...
-> 
-
-I seemed to recall someone mentioning that it is possible to use usbip
-for remote attacks. This is why I mentioned it. I don't recall details,
-though, and I don't know if it is really possible and to what extent.
+I added the watchdog patches to my watchdog-next tree, where Wim
+usually pick them up. I would be ok with Rob picking them up too
+if he wants to.
 
 Guenter
