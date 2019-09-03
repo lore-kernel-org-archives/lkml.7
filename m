@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCD0C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C93C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4733722D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAA222D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 03:30:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V0bCu0jb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n0zgI5mb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726492AbfICDaf (ORCPT
+        id S1726771AbfICDaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 23:30:35 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12104 "EHLO
+        Mon, 2 Sep 2019 23:30:55 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:12114 "EHLO
         hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfICDaf (ORCPT
+        with ESMTP id S1725848AbfICDaf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Sep 2019 23:30:35 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d6dde5a0003>; Mon, 02 Sep 2019 20:30:34 -0700
+        id <B5d6dde5a0002>; Mon, 02 Sep 2019 20:30:34 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
   Mon, 02 Sep 2019 20:30:33 -0700
@@ -37,7 +37,7 @@ Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
  (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
  Transport; Tue, 3 Sep 2019 03:30:33 +0000
 Received: from vdumpa-ubuntu.nvidia.com (Not Verified[172.17.173.140]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d6dde590007>; Mon, 02 Sep 2019 20:30:33 -0700
+        id <B5d6dde590005>; Mon, 02 Sep 2019 20:30:33 -0700
 From:   Krishna Reddy <vdumpa@nvidia.com>
 CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -47,9 +47,9 @@ CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
         <talho@nvidia.com>, <avanbrunt@nvidia.com>, <thomasz@nvidia.com>,
         <olof@lixom.net>, <jtukkinen@nvidia.com>, <mperttunen@nvidia.com>,
         Krishna Reddy <vdumpa@nvidia.com>
-Subject: [PATCH v2 7/7] arm64: tegra: enable SMMU for SDHCI and EQOS on T194
-Date:   Mon, 2 Sep 2019 20:32:08 -0700
-Message-ID: <1567481528-31163-8-git-send-email-vdumpa@nvidia.com>
+Subject: [PATCH v2 5/7] arm64: tegra: Add Memory controller DT node on T194
+Date:   Mon, 2 Sep 2019 20:32:06 -0700
+Message-ID: <1567481528-31163-6-git-send-email-vdumpa@nvidia.com>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1567481528-31163-1-git-send-email-vdumpa@nvidia.com>
 References: <1567481528-31163-1-git-send-email-vdumpa@nvidia.com>
@@ -57,65 +57,71 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567481434; bh=0qnKv4AL+zgfotB4+aagt14SzZy5B/jdgMadFvnQidE=;
+        t=1567481434; bh=eBq8+pmSZ4GEOeaq+B+bPoC14S2kYmqdfA9PyT31IhY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=V0bCu0jbuj/W8kcfpxyxq7coxrnMd0w/viaMwONQRgvCGIDHdHRQhjQBEeMYdq+82
-         skCGaxdQPnvxDvme2R1maqtb6U3i+21GIr2me8L1drayGPhT/DbmSes00IMZR9NoiX
-         ibD4I7FPjOO4FD2jUc3PsLzWND/4QGBJe53J05x1bHot4QKHfpjBb16M5sv1vJXPPO
-         sW1yWhHkfGASoh/XvSyzE+ujh4ElynGb5HUCQmanp8cPOrynWBHkfqOf2WyHPk2nIL
-         BW6cgF0WrUE1eKIfPn5iTBEnRWLH+CYSupqCQeqS2SRZOWKVUsxPfSPA45obfS/3H0
-         o5in+W58imcxw==
+        b=n0zgI5mbRtSBHWK12M0yQ6YJXVKhr5NaBM0CFpcH2WlH79h0ALTCWIcrQv6HDdtfV
+         s81JllGArrBSiYXB9K7tI1OB8KurHeBmTd9PyeI96Wv8cArfeAYo1JPhzbyX1Rg9vN
+         g31M8JGezcvh90t7GH09ddA1/D2lMaBsE2nzL1adtCmMyq3ZXCUef4A/rjgbvdLIDy
+         HRpWroKDZWakdVKX9K/phQBQkNAd75Wz+4tKtkwT8q0irn4vTWF6fZvMBwoOk/+4pW
+         XyBiXt2fB8rgsAR61JRUrZf3q29bHkDHIE9GRrU+8YJqY7CHiVTeJDsbE1P7S1rtUO
+         +FHP6d+ejKtzg==
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable SMMU translations for SDHCI and EQOS transactions on T194.
+Add Memory controller DT node on T194 and enable it.
+This patch is a prerequisite for SMMU enable on T194.
 
 Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 4 ++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 7 +++++++
+ 2 files changed, 11 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+index 62e07e11..4b3441b 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+@@ -47,6 +47,10 @@
+ 			};
+ 		};
+ 
++		memory-controller@2c00000 {
++			status = "okay";
++		};
++
+ 		serial@3110000 {
+ 			status = "okay";
+ 		};
 diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 5ae3bbf..cac3462 100644
+index adebbbf..d906958 100644
 --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
 +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -51,6 +51,7 @@
- 			clock-names = "master_bus", "slave_bus", "rx", "tx", "ptp_ref";
- 			resets = <&bpmp TEGRA194_RESET_EQOS>;
- 			reset-names = "eqos";
-+			iommus = <&smmu TEGRA186_SID_EQOS>;
- 			status = "disabled";
+@@ -6,6 +6,7 @@
+ #include <dt-bindings/reset/tegra194-reset.h>
+ #include <dt-bindings/power/tegra194-powergate.h>
+ #include <dt-bindings/thermal/tegra194-bpmp-thermal.h>
++#include <dt-bindings/memory/tegra186-mc.h>
  
- 			snps,write-requests = <1>;
-@@ -381,6 +382,7 @@
- 			clock-names = "sdhci";
- 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
- 			reset-names = "sdhci";
-+			iommus = <&smmu TEGRA186_SID_SDMMC1>;
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
- 									<0x07>;
- 			nvidia,pad-autocal-pull-down-offset-3v3-timeout =
-@@ -403,6 +405,7 @@
- 			clock-names = "sdhci";
- 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
- 			reset-names = "sdhci";
-+			iommus = <&smmu TEGRA186_SID_SDMMC3>;
- 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
- 			nvidia,pad-autocal-pull-down-offset-1v8 = <0x7a>;
- 			nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x07>;
-@@ -430,6 +433,7 @@
- 					  <&bpmp TEGRA194_CLK_PLLC4>;
- 			resets = <&bpmp TEGRA194_RESET_SDMMC4>;
- 			reset-names = "sdhci";
-+			iommus = <&smmu TEGRA186_SID_SDMMC4>;
- 			nvidia,pad-autocal-pull-up-offset-hs400 = <0x00>;
- 			nvidia,pad-autocal-pull-down-offset-hs400 = <0x00>;
- 			nvidia,pad-autocal-pull-up-offset-1v8-timeout = <0x0a>;
+ / {
+ 	compatible = "nvidia,tegra194";
+@@ -130,6 +131,12 @@
+ 			};
+ 		};
+ 
++		memory-controller@2c00000 {
++			compatible = "nvidia,tegra186-mc";
++			reg = <0x02c00000 0xb0000>;
++			status = "disabled";
++		};
++
+ 		uarta: serial@3100000 {
+ 			compatible = "nvidia,tegra194-uart", "nvidia,tegra20-uart";
+ 			reg = <0x03100000 0x40>;
 -- 
 2.1.4
 
