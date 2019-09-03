@@ -7,55 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8E6C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31170C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F4521881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08117206BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:00:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567533630;
-	bh=q2tpp8gPRoDhIszlCPj5TA4tisYBJdwc+9JF2shZ08k=;
+	s=default; t=1567533633;
+	bh=Ki7hUtJWSph385VbpRjcbpXhHfqyj4dyyaomug7GcmI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Um7gJztlBGIIgZwThDHGV8ggAcnt3hl4BjC0Cv8PKE3XCGX376H9ueJqIgSCufRRz
-	 AEFdM2I2bx+jYiDBWTmpVjeVRm45LK9DqFWKAYjM6TF2BgD0Pz9QVnbR5AeIQVgfIo
-	 ttFXRBm12xGRU/un4VEV0iTveYm33rYSrjGWiVbg=
+	b=N71MeQgt/c0Y1lRh0npw0HYUCUeUi4961V22C3aDnVEcPgvsRnUU/PNcRFAXPmPVm
+	 +w0TtWPhKxBQqKlZqCz0j51c6XBwbhGvAsTxdqPKgbuYy5QWm1b4p97b8wgmvGju40
+	 B3zAWQxWKjaSFkLlD1C1FddmeacmmVOgvuocmm8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbfICSA3 (ORCPT
+        id S1730193AbfICSAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:00:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40890 "EHLO
+        Tue, 3 Sep 2019 14:00:32 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40984 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725782AbfICSA3 (ORCPT
+        with ESMTP id S1725782AbfICSAb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:00:29 -0400
+        Tue, 3 Sep 2019 14:00:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Z1/6KbixvXgzeLN5YqOSqKmNDnkEfTxK979SrcIDgOw=; b=aJ8OyIbO9+OM
-        GENRjF/rGpQ/B6FMenV8d7b2xrnJqRJwcgDGyGH8w5enynE+WyAOmDUjXhG2gQrRxAkkCX+XL23pS
-        Xqj9y2GYy8QrO4INslmwvVDbccEwT4GN0tp3xlbcQs9lYS72wwatBaS/Rwg6bCbKMweQy8vB9Uf5J
-        5ntMs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=RdLH2ZTiN6IpQfecfpyPUnYCdkx66hXjm5Z+KctwrOE=; b=Yb0GmWkfxlH+
+        08aWfPNAxiEc1Xclj+N6nFLFCMYn9xLgVgfh41dK8JctgI/kzMfDFQOiKX0F0YRkcdrQpA/fpH67/
+        F/9PBHpPx72hUZCsJQKYNUqr6srA5Uax5sICnbGuAXtzwpiL8RR5Rh0Qa/Hz66hfObkxZr2xpnuw3
+        0azrc=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i5D6J-0000zX-4Y; Tue, 03 Sep 2019 18:00:19 +0000
+        id 1i5D6N-0000zj-V6; Tue, 03 Sep 2019 18:00:24 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8E9D62740FDC; Tue,  3 Sep 2019 19:00:18 +0100 (BST)
+        id 769DA2740A97; Tue,  3 Sep 2019 19:00:23 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     alsa-devel@alsa-project.org, Daniel Drake <drake@endlessm.com>,
-        David Yang <yangxiaohua@everest-semi.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: es8316: add DT-bindings" to the asoc tree
-In-Reply-To: <20190903165322.20791-4-katsuhiro@katsuster.net>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Avi Fishman <avifishman70@gmail.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Nancy Yuen <yuenn@google.com>, openbmc@lists.ozlabs.org,
+        Patrick Venture <venture@google.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: Applied "spi: npcm-fiu: fix spelling mistake "frequancy" -> "frequency"" to the spi tree
+In-Reply-To: <20190903122812.3986-1-colin.king@canonical.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190903180018.8E9D62740FDC@ypsilon.sirena.org.uk>
-Date:   Tue,  3 Sep 2019 19:00:18 +0100 (BST)
+Message-Id: <20190903180023.769DA2740A97@ypsilon.sirena.org.uk>
+Date:   Tue,  3 Sep 2019 19:00:23 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +67,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: es8316: add DT-bindings
+   spi: npcm-fiu: fix spelling mistake "frequancy" -> "frequency"
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,47 +92,36 @@ to this mail.
 Thanks,
 Mark
 
-From 3a3edd6ffe671115c4b3d715f08ed0cf4e927ce1 Mon Sep 17 00:00:00 2001
-From: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Date: Wed, 4 Sep 2019 01:53:22 +0900
-Subject: [PATCH] ASoC: es8316: add DT-bindings
+From 0d6fccc1b6fbaf9c24e71efbbe9c3826a7b6a03d Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Tue, 3 Sep 2019 13:28:12 +0100
+Subject: [PATCH] spi: npcm-fiu: fix spelling mistake "frequancy" ->
+ "frequency"
 
-This patch adds missing DT-bindings document for Everest ES8316.
+There is a spelling mistake in a dev_warning message. Fix it. Also
+break line to clear up checkpatch warning.
 
-Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Link: https://lore.kernel.org/r/20190903165322.20791-4-katsuhiro@katsuster.net
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20190903122812.3986-1-colin.king@canonical.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/sound/everest,es8316.txt         | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/everest,es8316.txt
+ drivers/spi/spi-npcm-fiu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/everest,es8316.txt b/Documentation/devicetree/bindings/sound/everest,es8316.txt
-new file mode 100644
-index 000000000000..aefcff9c48a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/everest,es8316.txt
-@@ -0,0 +1,20 @@
-+Everest ES8316 audio CODEC
-+
-+This device supports both I2C and SPI.
-+
-+Required properties:
-+
-+  - compatible  : should be "everest,es8316"
-+  - reg : the I2C address of the device for I2C
-+  - clocks : a list of phandle, should contain entries for clock-names
-+  - clock-names : should include as follows:
-+         "mclk" : master clock (MCLK) of the device
-+
-+Example:
-+
-+es8316: codec@11 {
-+	compatible = "everest,es8316";
-+	reg = <0x11>;
-+	clocks = <&clks 10>;
-+	clock-names = "mclk";
-+};
+diff --git a/drivers/spi/spi-npcm-fiu.c b/drivers/spi/spi-npcm-fiu.c
+index 3ea1ec68147e..d9e2f58b104b 100644
+--- a/drivers/spi/spi-npcm-fiu.c
++++ b/drivers/spi/spi-npcm-fiu.c
+@@ -544,7 +544,8 @@ static int npcm_fiu_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	if (fiu->clkrate != chip->clkrate) {
+ 		ret = clk_set_rate(fiu->clk, chip->clkrate);
+ 		if (ret < 0)
+-			dev_warn(fiu->dev, "Failed setting %lu frequancy, stay at %lu frequancy\n", chip->clkrate, fiu->clkrate);
++			dev_warn(fiu->dev, "Failed setting %lu frequency, stay at %lu frequency\n",
++				 chip->clkrate, fiu->clkrate);
+ 		else
+ 			fiu->clkrate = chip->clkrate;
+ 	}
 -- 
 2.20.1
 
