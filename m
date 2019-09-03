@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC65C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07034C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8630B238CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23D32343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528089;
-	bh=5a1NYFVj1E1tb2pLQaCqcgLB6whCrKzXo36U2GMgsaY=;
+	s=default; t=1567528092;
+	bh=NdnzEdhOKQCo6wnC0RJ0qayx+6RC9/BYkZg6aPhDzms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jvgZXOcSFsMO9ehMD7CLbJ9Q6u7IsLuPUYpaUkgrvBDzfVrjvmCu394bEvNi3cDRg
-	 sT+23IebNd2M0MG00WVdECv/gSyIQaVTtH4030ObbARjQloEZSSxQ0IrTRX9YfEsKn
-	 d0tgtKjjjVmguGy4dx8zSjXIGDhWoPgeYJvE0Mkc=
+	b=hyOcipoZmEQ9LhbdiabYXjSsl067B4swfL9Y1LsuDGp2uKpPO4WJr6wmsTU9BSrD2
+	 PgVJBYIuWBft0EOxjNxrs/9aIDQjWf7htrS2pMPNlZiOr3zBuEWdqXN+9SdAd9Jhmp
+	 0oJbv9TUUQNW1XeJ8tvn9Yv4F52DpzXMfz5k1+sE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbfICQ2I (ORCPT
+        id S1731058AbfICQ2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49680 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:28:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfICQ2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:01 -0400
+        id S1731039AbfICQ2I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F4592343A;
-        Tue,  3 Sep 2019 16:27:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65102238C6;
+        Tue,  3 Sep 2019 16:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528079;
-        bh=5a1NYFVj1E1tb2pLQaCqcgLB6whCrKzXo36U2GMgsaY=;
+        s=default; t=1567528087;
+        bh=NdnzEdhOKQCo6wnC0RJ0qayx+6RC9/BYkZg6aPhDzms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGaNe4JkYsKmE5ZyCo4ArOqL+e+29APDnPc//nQOcJ9y5UALfmKwW/d1nP+tATRJR
-         +a4eFzckfO2YkKmZzozJEgsCcDVkhKnUtSKUSHW7CvwHnrtwzCmlbvHSBsf1v/ERTy
-         S/wEN2Rtd1uKl4ytOD7kQdDGfTP2pwWwiJGTQ1sY=
+        b=YYJVsOhaAInm3M2gyQjcCU3kqvGssGRlsRucm11JMrNXa7p4WD5tzqucAJx41gvLL
+         j9xXZ8DBWIE6zp8R84EehQ+YsCHOHVzIEUZ6mLEONhwa2hj7qUsTN7cs/Blg+qARL5
+         Yd5pXojzxJM2g3w0osWo2lyq6flGjjTfMk24FJ4I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Gardon <bgardon@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 092/167] kvm: mmu: Fix overflow on kvm mmu page limit calculation
-Date:   Tue,  3 Sep 2019 12:24:04 -0400
-Message-Id: <20190903162519.7136-92-sashal@kernel.org>
+Cc:     Theodore Ts'o <tytso@mit.edu>, stable@kernel.org,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 097/167] ext4: protect journal inode's blocks using block_validity
+Date:   Tue,  3 Sep 2019 12:24:09 -0400
+Message-Id: <20190903162519.7136-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -59,150 +58,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Gardon <bgardon@google.com>
+From: Theodore Ts'o <tytso@mit.edu>
 
-[ Upstream commit bc8a3d8925a8fa09fa550e0da115d95851ce33c6 ]
+[ Upstream commit 345c0dbf3a30872d9b204db96b5857cd00808cae ]
 
-KVM bases its memory usage limits on the total number of guest pages
-across all memslots. However, those limits, and the calculations to
-produce them, use 32 bit unsigned integers. This can result in overflow
-if a VM has more guest pages that can be represented by a u32. As a
-result of this overflow, KVM can use a low limit on the number of MMU
-pages it will allocate. This makes KVM unable to map all of guest memory
-at once, prompting spurious faults.
+Add the blocks which belong to the journal inode to block_validity's
+system zone so attempts to deallocate or overwrite the journal due a
+corrupted file system where the journal blocks are also claimed by
+another inode.
 
-Tested: Ran all kvm-unit-tests on an Intel Haswell machine. This patch
-	introduced no new failures.
-
-Signed-off-by: Ben Gardon <bgardon@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202879
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kvm_host.h | 12 ++++++------
- arch/x86/kvm/mmu.c              | 13 ++++++-------
- arch/x86/kvm/mmu.h              |  2 +-
- arch/x86/kvm/x86.c              |  4 ++--
- 4 files changed, 15 insertions(+), 16 deletions(-)
+ fs/ext4/block_validity.c | 48 ++++++++++++++++++++++++++++++++++++++++
+ fs/ext4/inode.c          |  4 ++++
+ 2 files changed, 52 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index b6417454a9d79..0d3f5cf3ff3ea 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -117,7 +117,7 @@ static inline gfn_t gfn_to_index(gfn_t gfn, gfn_t base_gfn, int level)
+diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
+index 913061c0de1b3..9409b1e11a22e 100644
+--- a/fs/ext4/block_validity.c
++++ b/fs/ext4/block_validity.c
+@@ -137,6 +137,48 @@ static void debug_print_tree(struct ext4_sb_info *sbi)
+ 	printk(KERN_CONT "\n");
  }
  
- #define KVM_PERMILLE_MMU_PAGES 20
--#define KVM_MIN_ALLOC_MMU_PAGES 64
-+#define KVM_MIN_ALLOC_MMU_PAGES 64UL
- #define KVM_MMU_HASH_SHIFT 12
- #define KVM_NUM_MMU_PAGES (1 << KVM_MMU_HASH_SHIFT)
- #define KVM_MIN_FREE_MMU_PAGES 5
-@@ -796,9 +796,9 @@ enum kvm_irqchip_mode {
- };
- 
- struct kvm_arch {
--	unsigned int n_used_mmu_pages;
--	unsigned int n_requested_mmu_pages;
--	unsigned int n_max_mmu_pages;
-+	unsigned long n_used_mmu_pages;
-+	unsigned long n_requested_mmu_pages;
-+	unsigned long n_max_mmu_pages;
- 	unsigned int indirect_shadow_pages;
- 	unsigned long mmu_valid_gen;
- 	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
-@@ -1201,8 +1201,8 @@ void kvm_mmu_clear_dirty_pt_masked(struct kvm *kvm,
- 				   gfn_t gfn_offset, unsigned long mask);
- void kvm_mmu_zap_all(struct kvm *kvm);
- void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen);
--unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm);
--void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned int kvm_nr_mmu_pages);
-+unsigned long kvm_mmu_calculate_mmu_pages(struct kvm *kvm);
-+void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned long kvm_nr_mmu_pages);
- 
- int load_pdptrs(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu, unsigned long cr3);
- bool pdptrs_changed(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index cdc0c460950f3..88940261fb537 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -1954,7 +1954,7 @@ static int is_empty_shadow_page(u64 *spt)
-  * aggregate version in order to make the slab shrinker
-  * faster
-  */
--static inline void kvm_mod_used_mmu_pages(struct kvm *kvm, int nr)
-+static inline void kvm_mod_used_mmu_pages(struct kvm *kvm, unsigned long nr)
++static int ext4_protect_reserved_inode(struct super_block *sb, u32 ino)
++{
++	struct inode *inode;
++	struct ext4_sb_info *sbi = EXT4_SB(sb);
++	struct ext4_map_blocks map;
++	u32 i = 0, err = 0, num, n;
++
++	if ((ino < EXT4_ROOT_INO) ||
++	    (ino > le32_to_cpu(sbi->s_es->s_inodes_count)))
++		return -EINVAL;
++	inode = ext4_iget(sb, ino, EXT4_IGET_SPECIAL);
++	if (IS_ERR(inode))
++		return PTR_ERR(inode);
++	num = (inode->i_size + sb->s_blocksize - 1) >> sb->s_blocksize_bits;
++	while (i < num) {
++		map.m_lblk = i;
++		map.m_len = num - i;
++		n = ext4_map_blocks(NULL, inode, &map, 0);
++		if (n < 0) {
++			err = n;
++			break;
++		}
++		if (n == 0) {
++			i++;
++		} else {
++			if (!ext4_data_block_valid(sbi, map.m_pblk, n)) {
++				ext4_error(sb, "blocks %llu-%llu from inode %u "
++					   "overlap system zone", map.m_pblk,
++					   map.m_pblk + map.m_len - 1, ino);
++				err = -EFSCORRUPTED;
++				break;
++			}
++			err = add_system_zone(sbi, map.m_pblk, n);
++			if (err < 0)
++				break;
++			i += n;
++		}
++	}
++	iput(inode);
++	return err;
++}
++
+ int ext4_setup_system_zone(struct super_block *sb)
  {
- 	kvm->arch.n_used_mmu_pages += nr;
- 	percpu_counter_add(&kvm_total_used_mmu_pages, nr);
-@@ -2704,7 +2704,7 @@ static bool prepare_zap_oldest_mmu_page(struct kvm *kvm,
-  * Changing the number of mmu pages allocated to the vm
-  * Note: if goal_nr_mmu_pages is too small, you will get dead lock
-  */
--void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned int goal_nr_mmu_pages)
-+void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned long goal_nr_mmu_pages)
- {
- 	LIST_HEAD(invalid_list);
- 
-@@ -5926,10 +5926,10 @@ int kvm_mmu_module_init(void)
- /*
-  * Caculate mmu pages needed for kvm.
-  */
--unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm)
-+unsigned long kvm_mmu_calculate_mmu_pages(struct kvm *kvm)
- {
--	unsigned int nr_mmu_pages;
--	unsigned int  nr_pages = 0;
-+	unsigned long nr_mmu_pages;
-+	unsigned long nr_pages = 0;
- 	struct kvm_memslots *slots;
- 	struct kvm_memory_slot *memslot;
- 	int i;
-@@ -5942,8 +5942,7 @@ unsigned int kvm_mmu_calculate_mmu_pages(struct kvm *kvm)
+ 	ext4_group_t ngroups = ext4_get_groups_count(sb);
+@@ -171,6 +213,12 @@ int ext4_setup_system_zone(struct super_block *sb)
+ 		if (ret)
+ 			return ret;
  	}
++	if (ext4_has_feature_journal(sb) && sbi->s_es->s_journal_inum) {
++		ret = ext4_protect_reserved_inode(sb,
++				le32_to_cpu(sbi->s_es->s_journal_inum));
++		if (ret)
++			return ret;
++	}
  
- 	nr_mmu_pages = nr_pages * KVM_PERMILLE_MMU_PAGES / 1000;
--	nr_mmu_pages = max(nr_mmu_pages,
--			   (unsigned int) KVM_MIN_ALLOC_MMU_PAGES);
-+	nr_mmu_pages = max(nr_mmu_pages, KVM_MIN_ALLOC_MMU_PAGES);
- 
- 	return nr_mmu_pages;
- }
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 1fab69c0b2f32..65892288bf510 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -69,7 +69,7 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu);
- int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
- 				u64 fault_address, char *insn, int insn_len);
- 
--static inline unsigned int kvm_mmu_available_pages(struct kvm *kvm)
-+static inline unsigned long kvm_mmu_available_pages(struct kvm *kvm)
+ 	if (test_opt(sb, DEBUG))
+ 		debug_print_tree(sbi);
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index e65559bf77281..cff6277f7a9ff 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -399,6 +399,10 @@ static int __check_block_validity(struct inode *inode, const char *func,
+ 				unsigned int line,
+ 				struct ext4_map_blocks *map)
  {
- 	if (kvm->arch.n_max_mmu_pages > kvm->arch.n_used_mmu_pages)
- 		return kvm->arch.n_max_mmu_pages -
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ed6b43f344b0c..4f564dc17c333 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4116,7 +4116,7 @@ static int kvm_vm_ioctl_set_identity_map_addr(struct kvm *kvm,
- }
- 
- static int kvm_vm_ioctl_set_nr_mmu_pages(struct kvm *kvm,
--					  u32 kvm_nr_mmu_pages)
-+					 unsigned long kvm_nr_mmu_pages)
- {
- 	if (kvm_nr_mmu_pages < KVM_MIN_ALLOC_MMU_PAGES)
- 		return -EINVAL;
-@@ -4130,7 +4130,7 @@ static int kvm_vm_ioctl_set_nr_mmu_pages(struct kvm *kvm,
- 	return 0;
- }
- 
--static int kvm_vm_ioctl_get_nr_mmu_pages(struct kvm *kvm)
-+static unsigned long kvm_vm_ioctl_get_nr_mmu_pages(struct kvm *kvm)
- {
- 	return kvm->arch.n_max_mmu_pages;
- }
++	if (ext4_has_feature_journal(inode->i_sb) &&
++	    (inode->i_ino ==
++	     le32_to_cpu(EXT4_SB(inode->i_sb)->s_es->s_journal_inum)))
++		return 0;
+ 	if (!ext4_data_block_valid(EXT4_SB(inode->i_sb), map->m_pblk,
+ 				   map->m_len)) {
+ 		ext4_error_inode(inode, func, line, map->m_pblk,
 -- 
 2.20.1
 
