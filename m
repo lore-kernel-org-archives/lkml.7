@@ -2,67 +2,66 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B29C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE29CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FAD12339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF39215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:07:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PB5Ah+kY"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pghRn16I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfICPHo (ORCPT
+        id S1729903AbfICPHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:07:44 -0400
-Received: from mail-yw1-f74.google.com ([209.85.161.74]:48780 "EHLO
-        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729854AbfICPHm (ORCPT
+        Tue, 3 Sep 2019 11:07:49 -0400
+Received: from mail-yb1-f202.google.com ([209.85.219.202]:47972 "EHLO
+        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729879AbfICPHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:07:42 -0400
-Received: by mail-yw1-f74.google.com with SMTP id l16so10006249ywb.15
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:07:41 -0700 (PDT)
+        Tue, 3 Sep 2019 11:07:48 -0400
+Received: by mail-yb1-f202.google.com with SMTP id y12so5050269ybg.14
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=QzLwUka7MndmPbLBfBjtnVUWcO8y+yUapUjSVd2AkdE=;
-        b=PB5Ah+kYC1m4B/Vqzh02d5Dma2M2yVL7Bdqf/cgU5C5/QHZXWWxWusz5yxJTxv/UaW
-         cPQ+if9lMxNZfGZL8S6lAAv/KZXOdRW/TgOTyyk2SxYWVb84rGwfPhHTdzrwyml3fyYR
-         zMB9ShCEW07O4VXQZsewgm0bwovFzEdsUHPpP51HT13xk3Eva1qhEajcX6jZ8XP0Sq9l
-         WK3aEEJXUIn/x+ktaxUYG8u++q7nTs10fbIeFJFJgHQ61R003giZa7EC3s1heJ+v3BkU
-         DhFAq5i9QktVcROUV7GZTvihIhoDpLPBW6QkwLuwo8b24v/88OsKzS4oZLrp9/OjXMdl
-         ZYLw==
+        bh=b+cqXt6YX0mnoCtMoAi03cOiwWu215/p06/ubbgFzR4=;
+        b=pghRn16IfODUbRoRofiFw9344SQdsDElwKyv5Z95AmcH9uCOS/7iVJBCyGHvc/XCEy
+         gkY5kuzQ6cLmq8hF+aYXS8YpZRO1LElUudHSnNOlAg92jvEAVfMIX0sXYM+j80ne2XN5
+         ew4kT/L8zajaJGRIn38fVNp6Bga8rn18WL17+ND4o5SoAMvp4PhgdP+vUMjEOyttyKeo
+         8I4AKstWoIagp2ogkgcbLX8OT1rZ164y6do+U7Ih2Vm0fqPQXkeDQscyE/S/Fqfu824T
+         5jcb0MlM+415vcNXYgIcezGLpu/FmCO736XMgZ58KY59Ay0KHzA9qZHW8kUBknr4+GiS
+         qE3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=QzLwUka7MndmPbLBfBjtnVUWcO8y+yUapUjSVd2AkdE=;
-        b=fsNK9iqnXdcZTlL/+DzVZaI6GtKaP8hytMeFinW+VitTg4iRKS+4ER7Zsc/ldd6B+7
-         Rsl7tRYhELvgjh7KYe35+TKn3e7z1B/cTLF/JGZhJPXWgIb4go5oksEUGCMVvz8xo9Oy
-         cpzOC83ZnglGSnZI3rVflvJBO1m+pHMaZnxw9z/I3oB4LkitIvNx9DO8KHBPZI2alhQI
-         jz0z/8/Fh6GMmON9smAz+PVvH2ttVzQo7QY0FlWtGH1IcSMb9JOrZRzIo3whGVvjscxE
-         i130ll412lqd9qdjpT9KTqvBOQPPKycWydfMULbY9XjfHmyA3mYbs8xZ3FAwtJM5FvM+
-         SXgw==
-X-Gm-Message-State: APjAAAVxcWgkNb7UkrokhqlSy5piCygD6Rh4X8FTcHE8H1MafPalHexi
-        RPq6EnQZQsCGCrTMqPm9yX2avFj1zaT2Oiy33uNPfcIcJHncGgxrM6Ve+9OW08TYSKXwi0Ox3H7
-        fBWMTYwhAcGcSKo6+WHlN/ZMX2VTD4OdRqLmxmt4q1W5UwGLrXPSjI8ofhFuVf97FtqVeDzg5jV
-        I=
-X-Google-Smtp-Source: APXvYqwwwghshBlXbu3SzPrPSRDK2LVE5Xdl4WcySrrwEMVrzGCbbqWqp4Yfsy68npcFDyQxAHFyHkK5McSccQ==
-X-Received: by 2002:a81:9ac2:: with SMTP id r185mr25908588ywg.210.1567523261200;
- Tue, 03 Sep 2019 08:07:41 -0700 (PDT)
-Date:   Tue,  3 Sep 2019 16:06:32 +0100
+        bh=b+cqXt6YX0mnoCtMoAi03cOiwWu215/p06/ubbgFzR4=;
+        b=Mk5il7Pxtw5QJoraWFSfHCJMwXlAC0vHB9+a4b6lGpW4oArrpVHEabIUiZ9v1LP64+
+         tPNtWamSvgicagSw6C8wnyb2OJGSo8qlkNjgEtTsTcXlmi5hi/SVPjIClbceGKI+FTBG
+         2jiHejomR+GXqy+hNhZzPKcqx+9BovldncXnL4oQ60uWmPHVzCqfClaZWOVD+LuhHlQr
+         dbiwjnkA8fNjtyMFoUuvbTLLXCPLCj5FMUpCHSDVdQPrkoVOdZQIoQ9OY2EX4SHKrlzB
+         FzqznhtD35rTDrnnG++YNnvkG5cA0gDDkzIlN1vJkIq5674/dRgdug5mltNOgvMD7+kT
+         9+IQ==
+X-Gm-Message-State: APjAAAWBD9mM16Y61jJhjYMm6MzPtQVzNMakJn4lTFOdYwPyMUeMh8Ah
+        mHBpz9ZKsp7wsMwM8zMNmhdY925nDe/69VzeY+9keKEQdA7UbFH+22RKH1oDgc7yxp2bKDMsP8h
+        ICbuBnuCuS3/Bxalfqdley/86ypNpwwHmV5pDnntlW6NFMIWIZSdgfUEHZcyIKy0z5Z8dFbbViv
+        4=
+X-Google-Smtp-Source: APXvYqwGLfcjypBVL+sbGsInUOD2na+AqTJP3yxgIKU456ykAlcmq7n9nMIrTuQLo+AzVop6kWrMmmVg8foeIQ==
+X-Received: by 2002:a81:84d0:: with SMTP id u199mr17120277ywf.284.1567523267075;
+ Tue, 03 Sep 2019 08:07:47 -0700 (PDT)
+Date:   Tue,  3 Sep 2019 16:06:34 +0100
 In-Reply-To: <20190903150638.242049-1-maennich@google.com>
-Message-Id: <20190903150638.242049-7-maennich@google.com>
+Message-Id: <20190903150638.242049-9-maennich@google.com>
 Mime-Version: 1.0
 References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH v4 06/12] export: allow definition default namespaces in
- Makefiles or sources
+Subject: [PATCH v4 08/12] scripts: Coccinelle script for namespace dependencies.
 From:   Matthias Maennich <maennich@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
@@ -72,65 +71,206 @@ Cc:     kernel-team@android.com, maennich@google.com, arnd@arndb.de,
         yamada.masahiro@socionext.com, linux-kbuild@vger.kernel.org,
         linux-modules@vger.kernel.org, linux-usb@vger.kernel.org,
         usb-storage@lists.one-eyed-alien.net,
-        linux-watchdog@vger.kernel.org
+        linux-watchdog@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid excessive usage of EXPORT_SYMBOL_NS(sym, MY_NAMESPACE), where
-MY_NAMESPACE will always be the namespace we are exporting to, allow
-exporting all definitions of EXPORT_SYMBOL() and friends by defining
-DEFAULT_SYMBOL_NAMESPACE.
+A script that uses the '<module>.ns_deps' files generated by modpost to
+automatically add the required symbol namespace dependencies to each
+module.
 
-For example, to export all symbols defined in usb-common into the
-namespace USB_COMMON, add a line like this to drivers/usb/common/Makefile:
+Usage:
+1) Move some symbols to a namespace with EXPORT_SYMBOL_NS() or define
+   DEFAULT_SYMBOL_NAMESPACE
+2) Run 'make' (or 'make modules') and get warnings about modules not
+   importing that namespace.
+3) Run 'make nsdeps' to automatically add required import statements
+   to said modules.
 
-  ccflags-y += -DDEFAULT_SYMBOL_NAMESPACE=USB_COMMON
+This makes it easer for subsystem maintainers to introduce and maintain
+symbol namespaces into their codebase.
 
-That is equivalent to changing all EXPORT_SYMBOL(sym) definitions to
-EXPORT_SYMBOL_NS(sym, USB_COMMON). Subsequently all symbol namespaces
-functionality will apply.
-
-Another way of making use of this feature is to define the namespace
-within source or header files similar to how TRACE_SYSTEM defines are
-used:
-  #undef DEFAULT_SYMBOL_NAMESPACE
-  #define DEFAULT_SYMBOL_NAMESPACE USB_COMMON
-
-Please note that, as opposed to TRACE_SYSTEM, DEFAULT_SYMBOL_NAMESPACE
-has to be defined before including include/linux/export.h.
-
-If DEFAULT_SYMBOL_NAMESPACE is defined, a symbol can still be exported
-to another namespace by using EXPORT_SYMBOL_NS() and friends with
-explicitly specifying the namespace.
-
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Martijn Coenen <maco@android.com>
+Co-developed-by: Martijn Coenen <maco@android.com>
+Signed-off-by: Martijn Coenen <maco@android.com>
+Acked-by: Julia Lawall <julia.lawall@lip6.fr>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Matthias Maennich <maennich@google.com>
 ---
- include/linux/export.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ MAINTAINERS                                 |  5 ++
+ Makefile                                    | 12 +++++
+ scripts/Makefile.modpost                    |  4 +-
+ scripts/coccinelle/misc/add_namespace.cocci | 23 ++++++++
+ scripts/nsdeps                              | 60 +++++++++++++++++++++
+ 5 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 scripts/coccinelle/misc/add_namespace.cocci
+ create mode 100644 scripts/nsdeps
 
-diff --git a/include/linux/export.h b/include/linux/export.h
-index d59461e71478..2c5468d8ea9a 100644
---- a/include/linux/export.h
-+++ b/include/linux/export.h
-@@ -166,6 +166,12 @@ struct kernel_symbol {
- #define __EXPORT_SYMBOL ___EXPORT_SYMBOL
- #endif
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5210fd..3b170c11a0e6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11436,6 +11436,11 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/nolibc.git
+ F:	tools/include/nolibc/
  
-+#ifdef DEFAULT_SYMBOL_NAMESPACE
-+#undef __EXPORT_SYMBOL
-+#define __EXPORT_SYMBOL(sym, sec)				\
-+	__EXPORT_SYMBOL_NS(sym, sec, DEFAULT_SYMBOL_NAMESPACE)
-+#endif
++NSDEPS
++M:	Matthias Maennich <maennich@google.com>
++S:	Maintained
++F:	scripts/nsdeps
 +
- #define EXPORT_SYMBOL(sym) __EXPORT_SYMBOL(sym, "")
- #define EXPORT_SYMBOL_GPL(sym) __EXPORT_SYMBOL(sym, "_gpl")
- #define EXPORT_SYMBOL_GPL_FUTURE(sym) __EXPORT_SYMBOL(sym, "_gpl_future")
+ NTB AMD DRIVER
+ M:	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+ L:	linux-ntb@googlegroups.com
+diff --git a/Makefile b/Makefile
+index 0cdb957ae2c3..573e90e738ad 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1500,6 +1500,9 @@ help:
+ 	@echo  '  headerdep       - Detect inclusion cycles in headers'
+ 	@echo  '  coccicheck      - Check with Coccinelle'
+ 	@echo  ''
++	@echo  'Tools:'
++	@echo  '  nsdeps          - Generate missing symbol namespace dependencies'
++	@echo  ''
+ 	@echo  'Kernel selftest:'
+ 	@echo  '  kselftest       - Build and run kernel selftest (run as root)'
+ 	@echo  '                    Build, install, and boot kernel before'
+@@ -1687,6 +1690,15 @@ quiet_cmd_tags = GEN     $@
+ tags TAGS cscope gtags: FORCE
+ 	$(call cmd,tags)
+ 
++# Script to generate missing namespace dependencies
++# ---------------------------------------------------------------------------
++
++PHONY += nsdeps
++
++nsdeps:
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost nsdeps
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
++
+ # Scripts to check various things for consistency
+ # ---------------------------------------------------------------------------
+ 
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 26e6574ecd08..743fe3a2e885 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -56,7 +56,8 @@ MODPOST = scripts/mod/modpost						\
+ 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
+ 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
+ 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
+-	$(if $(KBUILD_MODPOST_WARN),-w)
++	$(if $(KBUILD_MODPOST_WARN),-w)					\
++	$(if $(filter nsdeps,$(MAKECMDGOALS)),-d)
+ 
+ ifdef MODPOST_VMLINUX
+ 
+@@ -134,6 +135,7 @@ $(modules): %.ko :%.o %.mod.o FORCE
+ 
+ targets += $(modules)
+ 
++nsdeps: __modpost
+ 
+ # Add FORCE to the prequisites of a target to force it to be always rebuilt.
+ # ---------------------------------------------------------------------------
+diff --git a/scripts/coccinelle/misc/add_namespace.cocci b/scripts/coccinelle/misc/add_namespace.cocci
+new file mode 100644
+index 000000000000..c832bb6445a8
+--- /dev/null
++++ b/scripts/coccinelle/misc/add_namespace.cocci
+@@ -0,0 +1,23 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++/// Adds missing MODULE_IMPORT_NS statements to source files
++///
++/// This script is usually called from scripts/nsdeps with -D ns=<namespace> to
++/// add a missing namespace tag to a module source file.
++///
++
++@has_ns_import@
++declarer name MODULE_IMPORT_NS;
++identifier virtual.ns;
++@@
++MODULE_IMPORT_NS(ns);
++
++// Add missing imports, but only adjacent to a MODULE_LICENSE statement.
++// That ensures we are adding it only to the main module source file.
++@do_import depends on !has_ns_import@
++declarer name MODULE_LICENSE;
++expression license;
++identifier virtual.ns;
++@@
++MODULE_LICENSE(license);
+++ MODULE_IMPORT_NS(ns);
+diff --git a/scripts/nsdeps b/scripts/nsdeps
+new file mode 100644
+index 000000000000..75dcf79a11ed
+--- /dev/null
++++ b/scripts/nsdeps
+@@ -0,0 +1,60 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Linux kernel symbol namespace import generator
++#
++# This script requires a minimum spatch version.
++SPATCH_REQ_VERSION="1.0.4"
++
++DIR="$(dirname $(readlink -f $0))/.."
++SPATCH="`which ${SPATCH:=spatch}`"
++if [ ! -x "$SPATCH" ]; then
++	echo 'spatch is part of the Coccinelle project and is available at http://coccinelle.lip6.fr/'
++	exit 1
++fi
++
++SPATCH_REQ_VERSION_NUM=$(echo $SPATCH_REQ_VERSION | ${DIR}/scripts/ld-version.sh)
++SPATCH_VERSION=$($SPATCH --version | head -1 | awk '{print $3}')
++SPATCH_VERSION_NUM=$(echo $SPATCH_VERSION | ${DIR}/scripts/ld-version.sh)
++
++if [ "$SPATCH_VERSION_NUM" -lt "$SPATCH_REQ_VERSION_NUM" ] ; then
++	echo "spatch needs to be version $SPATCH_REQ_VERSION or higher"
++	exit 1
++fi
++
++set -e
++
++generate_deps_for_ns() {
++	$SPATCH --very-quiet --in-place --sp-file \
++		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
++}
++
++generate_deps() {
++	local mod_name=`basename $@ .ko`
++	local mod_file=`echo $@ | sed -e 's/\.ko/\.mod/'`
++	local ns_deps_file=`echo $@ | sed -e 's/\.ko/\.ns_deps/'`
++	if [ ! -f "$ns_deps_file" ]; then return; fi
++	local mod_source_files=`cat $mod_file | sed -n 1p                      \
++					      | sed -e 's/\.o/\.c/g'           \
++					      | sed "s/[^ ]* */${srctree}\/&/g"`
++	for ns in `cat $ns_deps_file`; do
++		echo "Adding namespace $ns to module $mod_name (if needed)."
++		generate_deps_for_ns $ns $mod_source_files
++		# sort the imports
++		for source_file in $mod_source_files; do
++			sed '/MODULE_IMPORT_NS/Q' $source_file > ${source_file}.tmp
++			offset=$(wc -l ${source_file}.tmp | awk '{print $1;}')
++			cat $source_file | grep MODULE_IMPORT_NS | sort -u >> ${source_file}.tmp
++			tail -n +$((offset +1)) ${source_file} | grep -v MODULE_IMPORT_NS >> ${source_file}.tmp
++			if ! diff -q ${source_file} ${source_file}.tmp; then
++				mv ${source_file}.tmp ${source_file}
++			else
++				rm ${source_file}.tmp
++			fi
++		done
++	done
++}
++
++for f in `cat $objtree/modules.order`; do
++	generate_deps $f
++done
++
 -- 
 2.23.0.187.g17f5b7556c-goog
 
