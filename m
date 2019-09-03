@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C92C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5298BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEE4217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FDAB217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728582AbfICIc0 (ORCPT
+        id S1728109AbfICIdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:32:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59211 "EHLO
+        Tue, 3 Sep 2019 04:33:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59266 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbfICIbx (ORCPT
+        with ESMTP id S1726062AbfICIdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:31:53 -0400
+        Tue, 3 Sep 2019 04:33:21 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i54Dn-0002gL-Kl; Tue, 03 Sep 2019 10:31:27 +0200
+        id 1i54EJ-0002pb-Tg; Tue, 03 Sep 2019 10:32:00 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 370651C0772;
-        Tue,  3 Sep 2019 10:31:27 +0200 (CEST)
-Date:   Tue, 03 Sep 2019 08:31:27 -0000
-From:   "tip-bot2 for Patrick Bellasi" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 724D31C0DDE;
+        Tue,  3 Sep 2019 10:31:59 +0200 (CEST)
+Date:   Tue, 03 Sep 2019 08:31:59 -0000
+From:   "tip-bot2 for Christoph Hellwig" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/uclamp: Use TG's clamps to restrict TASK's clamps
-Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
+Subject: [tip: x86/mm] x86/mm: Remove the unused set_memory_array_*() functions
+Cc:     Christoph Hellwig <hch@lst.de>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Michal Koutny <mkoutny@suse.com>, Tejun Heo <tj@kernel.org>,
-        Alessio Balsini <balsini@android.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
+        Rik van Riel <riel@surriel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Todd Kjos <tkjos@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20190822132811.31294-5-patrick.bellasi@arm.com>
-References: <20190822132811.31294-5-patrick.bellasi@arm.com>
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+In-Reply-To: <20190826075558.8125-3-hch@lst.de>
+References: <20190826075558.8125-3-hch@lst.de>
 MIME-Version: 1.0
-Message-ID: <156749948707.12887.5752456843363605543.tip-bot2@tip-bot2>
+Message-ID: <156749951932.13282.8464509353434255681.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,112 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     3eac870a324728e5d17118888840dad70bcd37f3
-Gitweb:        https://git.kernel.org/tip/3eac870a324728e5d17118888840dad70bcd37f3
-Author:        Patrick Bellasi <patrick.bellasi@arm.com>
-AuthorDate:    Thu, 22 Aug 2019 14:28:09 +01:00
+Commit-ID:     a919198b97c85e093c81eaae0b4864206ec2fe02
+Gitweb:        https://git.kernel.org/tip/a919198b97c85e093c81eaae0b4864206ec2fe02
+Author:        Christoph Hellwig <hch@lst.de>
+AuthorDate:    Mon, 26 Aug 2019 09:55:55 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 03 Sep 2019 09:17:39 +02:00
+CommitterDate: Tue, 03 Sep 2019 09:26:37 +02:00
 
-sched/uclamp: Use TG's clamps to restrict TASK's clamps
+x86/mm: Remove the unused set_memory_array_*() functions
 
-When a task specific clamp value is configured via sched_setattr(2), this
-value is accounted in the corresponding clamp bucket every time the task is
-{en,de}qeued. However, when cgroups are also in use, the task specific
-clamp values could be restricted by the task_group (TG) clamp values.
-
-Update uclamp_cpu_inc() to aggregate task and TG clamp values. Every time a
-task is enqueued, it's accounted in the clamp bucket tracking the smaller
-clamp between the task specific value and its TG effective value. This
-allows to:
-
-1. ensure cgroup clamps are always used to restrict task specific requests,
-   i.e. boosted not more than its TG effective protection and capped at
-   least as its TG effective limit.
-
-2. implement a "nice-like" policy, where tasks are still allowed to request
-   less than what enforced by their TG effective limits and protections
-
-Do this by exploiting the concept of "effective" clamp, which is already
-used by a TG to track parent enforced restrictions.
-
-Apply task group clamp restrictions only to tasks belonging to a child
-group. While, for tasks in the root group or in an autogroup, system
-defaults are still enforced.
-
-Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Michal Koutny <mkoutny@suse.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Alessio Balsini <balsini@android.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Joel Fernandes <joelaf@google.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-Cc: Paul Turner <pjt@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Quentin Perret <quentin.perret@arm.com>
-Cc: Rafael J . Wysocki <rafael.j.wysocki@intel.com>
-Cc: Steve Muckle <smuckle@google.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Rik van Riel <riel@surriel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Link: https://lkml.kernel.org/r/20190822132811.31294-5-patrick.bellasi@arm.com
+Link: https://lkml.kernel.org/r/20190826075558.8125-3-hch@lst.de
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/core.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/set_memory.h |  5 +--
+ arch/x86/mm/pageattr.c            | 75 +------------------------------
+ 2 files changed, 80 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index e6800fe..c32ac07 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -873,16 +873,42 @@ unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id,
- 	return uclamp_idle_value(rq, clamp_id, clamp_value);
+diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+index ae7b909..899ec9a 100644
+--- a/arch/x86/include/asm/set_memory.h
++++ b/arch/x86/include/asm/set_memory.h
+@@ -48,11 +48,6 @@ int set_memory_encrypted(unsigned long addr, int numpages);
+ int set_memory_decrypted(unsigned long addr, int numpages);
+ int set_memory_np_noalias(unsigned long addr, int numpages);
+ 
+-int set_memory_array_uc(unsigned long *addr, int addrinarray);
+-int set_memory_array_wc(unsigned long *addr, int addrinarray);
+-int set_memory_array_wt(unsigned long *addr, int addrinarray);
+-int set_memory_array_wb(unsigned long *addr, int addrinarray);
+-
+ int set_pages_array_uc(struct page **pages, int addrinarray);
+ int set_pages_array_wc(struct page **pages, int addrinarray);
+ int set_pages_array_wt(struct page **pages, int addrinarray);
+diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+index 08a6f04..1f97a72 100644
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -1819,63 +1819,6 @@ int set_memory_uc(unsigned long addr, int numpages)
  }
+ EXPORT_SYMBOL(set_memory_uc);
  
-+static inline struct uclamp_se
-+uclamp_tg_restrict(struct task_struct *p, unsigned int clamp_id)
-+{
-+	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
-+#ifdef CONFIG_UCLAMP_TASK_GROUP
-+	struct uclamp_se uc_max;
-+
-+	/*
-+	 * Tasks in autogroups or root task group will be
-+	 * restricted by system defaults.
-+	 */
-+	if (task_group_is_autogroup(task_group(p)))
-+		return uc_req;
-+	if (task_group(p) == &root_task_group)
-+		return uc_req;
-+
-+	uc_max = task_group(p)->uclamp[clamp_id];
-+	if (uc_req.value > uc_max.value || !uc_req.user_defined)
-+		return uc_max;
-+#endif
-+
-+	return uc_req;
-+}
-+
- /*
-  * The effective clamp bucket index of a task depends on, by increasing
-  * priority:
-  * - the task specific clamp value, when explicitly requested from userspace
-+ * - the task group effective clamp value, for tasks not either in the root
-+ *   group or in an autogroup
-  * - the system default clamp value, defined by the sysadmin
-  */
- static inline struct uclamp_se
- uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
+-static int _set_memory_array(unsigned long *addr, int numpages,
+-		enum page_cache_mode new_type)
+-{
+-	enum page_cache_mode set_type;
+-	int i, j;
+-	int ret;
+-
+-	for (i = 0; i < numpages; i++) {
+-		ret = reserve_memtype(__pa(addr[i]), __pa(addr[i]) + PAGE_SIZE,
+-					new_type, NULL);
+-		if (ret)
+-			goto out_free;
+-	}
+-
+-	/* If WC, set to UC- first and then WC */
+-	set_type = (new_type == _PAGE_CACHE_MODE_WC) ?
+-				_PAGE_CACHE_MODE_UC_MINUS : new_type;
+-
+-	ret = change_page_attr_set(addr, numpages,
+-				   cachemode2pgprot(set_type), 1);
+-
+-	if (!ret && new_type == _PAGE_CACHE_MODE_WC)
+-		ret = change_page_attr_set_clr(addr, numpages,
+-					       cachemode2pgprot(
+-						_PAGE_CACHE_MODE_WC),
+-					       __pgprot(_PAGE_CACHE_MASK),
+-					       0, CPA_ARRAY, NULL);
+-	if (ret)
+-		goto out_free;
+-
+-	return 0;
+-
+-out_free:
+-	for (j = 0; j < i; j++)
+-		free_memtype(__pa(addr[j]), __pa(addr[j]) + PAGE_SIZE);
+-
+-	return ret;
+-}
+-
+-int set_memory_array_uc(unsigned long *addr, int numpages)
+-{
+-	return _set_memory_array(addr, numpages, _PAGE_CACHE_MODE_UC_MINUS);
+-}
+-EXPORT_SYMBOL(set_memory_array_uc);
+-
+-int set_memory_array_wc(unsigned long *addr, int numpages)
+-{
+-	return _set_memory_array(addr, numpages, _PAGE_CACHE_MODE_WC);
+-}
+-EXPORT_SYMBOL(set_memory_array_wc);
+-
+-int set_memory_array_wt(unsigned long *addr, int numpages)
+-{
+-	return _set_memory_array(addr, numpages, _PAGE_CACHE_MODE_WT);
+-}
+-EXPORT_SYMBOL_GPL(set_memory_array_wt);
+-
+ int _set_memory_wc(unsigned long addr, int numpages)
  {
--	struct uclamp_se uc_req = p->uclamp_req[clamp_id];
-+	struct uclamp_se uc_req = uclamp_tg_restrict(p, clamp_id);
- 	struct uclamp_se uc_max = uclamp_default[clamp_id];
+ 	int ret;
+@@ -1952,24 +1895,6 @@ int set_memory_wb(unsigned long addr, int numpages)
+ }
+ EXPORT_SYMBOL(set_memory_wb);
  
- 	/* System default restrictions always apply */
+-int set_memory_array_wb(unsigned long *addr, int numpages)
+-{
+-	int i;
+-	int ret;
+-
+-	/* WB cache mode is hard wired to all cache attribute bits being 0 */
+-	ret = change_page_attr_clear(addr, numpages,
+-				      __pgprot(_PAGE_CACHE_MASK), 1);
+-	if (ret)
+-		return ret;
+-
+-	for (i = 0; i < numpages; i++)
+-		free_memtype(__pa(addr[i]), __pa(addr[i]) + PAGE_SIZE);
+-
+-	return 0;
+-}
+-EXPORT_SYMBOL(set_memory_array_wb);
+-
+ int set_memory_x(unsigned long addr, int numpages)
+ {
+ 	if (!(__supported_pte_mask & _PAGE_NX))
