@@ -2,171 +2,137 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B706C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BD0C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F38F822CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:34:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="n2UGEt1g"
+	by mail.kernel.org (Postfix) with ESMTP id 0572522CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfICJcu (ORCPT
+        id S1728540AbfICJe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:32:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55692 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728493AbfICJcr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:32:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=V+f2G+cgKLc1xmd5cIRO1ilePI+Z6rsbxxfmORin59I=; b=n2UGEt1gkac6QXtWZ19kZvTwgQ
-        UNi5fFjzebdd1eUqmNZo3z6ob3Yj+15njNMRbd0JtL8PDXqtiw2vlYTeykrPxSm3t+GNjzgz5Bg+E
-        Dkuw9Bue+V4gjZOtqo+5sjxSY+2n/jYSK81yMV2vzPWcnif5xmqvHYlf1foom67w0tyqTg9vaI5Lx
-        ei0SUYl1FvJhCbc5hhxAzG0ONOUExibGdF9xM8/lpyyZY0sFBbsH0knYs6Yxl6NOlwGx0uOPOKVlg
-        KcotyV5hdTGIv6mEy7zMpyC4OdbpdJqdcu2lRmzEUIGP/3kt0GoR7u/abj8MJlilxpQAmmt6AKUwX
-        +6jMmxzw==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i55B7-0004Ha-NS; Tue, 03 Sep 2019 09:32:46 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Atish Patra <atish.patra@wdc.com>
-Subject: [PATCH 02/20] riscv: refactor the IPI code
-Date:   Tue,  3 Sep 2019 11:32:21 +0200
-Message-Id: <20190903093239.21278-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903093239.21278-1-hch@lst.de>
-References: <20190903093239.21278-1-hch@lst.de>
+        Tue, 3 Sep 2019 05:34:59 -0400
+Received: from sauhun.de ([88.99.104.3]:51696 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726062AbfICJe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:34:58 -0400
+Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
+        by pokefinder.org (Postfix) with ESMTPSA id CA4802C4F2F;
+        Tue,  3 Sep 2019 11:34:55 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 11:34:55 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
+ deserializer
+Message-ID: <20190903093455.GD1020@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-4-luca@lucaceresoli.net>
+ <20190902204841.GB7253@kunai>
+ <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Hf61M2y+wYpnELGG"
+Content-Disposition: inline
+In-Reply-To: <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This prepares for adding native non-SBI IPI code.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Atish Patra <atish.patra@wdc.com>
----
- arch/riscv/kernel/smp.c | 55 +++++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 24 deletions(-)
+--Hf61M2y+wYpnELGG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-index 5a9834503a2f..8cd730239613 100644
---- a/arch/riscv/kernel/smp.c
-+++ b/arch/riscv/kernel/smp.c
-@@ -78,13 +78,38 @@ static void ipi_stop(void)
- 		wait_for_interrupt();
- }
- 
-+static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
-+{
-+	int cpuid, hartid;
-+	struct cpumask hartid_mask;
-+
-+	cpumask_clear(&hartid_mask);
-+	mb();
-+	for_each_cpu(cpuid, mask) {
-+		set_bit(op, &ipi_data[cpuid].bits);
-+		hartid = cpuid_to_hartid_map(cpuid);
-+		cpumask_set_cpu(hartid, &hartid_mask);
-+	}
-+	mb();
-+	sbi_send_ipi(cpumask_bits(&hartid_mask));
-+}
-+
-+static void send_ipi_single(int cpu, enum ipi_message_type op)
-+{
-+	send_ipi_mask(cpumask_of(cpu), op);
-+}
-+
-+static inline void clear_ipi(void)
-+{
-+	csr_clear(CSR_SIP, SIE_SSIE);
-+}
-+
- void riscv_software_interrupt(void)
- {
- 	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
- 	unsigned long *stats = ipi_data[smp_processor_id()].stats;
- 
--	/* Clear pending IPI */
--	csr_clear(CSR_SIP, SIE_SSIE);
-+	clear_ipi();
- 
- 	while (true) {
- 		unsigned long ops;
-@@ -118,23 +143,6 @@ void riscv_software_interrupt(void)
- 	}
- }
- 
--static void
--send_ipi_message(const struct cpumask *to_whom, enum ipi_message_type operation)
--{
--	int cpuid, hartid;
--	struct cpumask hartid_mask;
--
--	cpumask_clear(&hartid_mask);
--	mb();
--	for_each_cpu(cpuid, to_whom) {
--		set_bit(operation, &ipi_data[cpuid].bits);
--		hartid = cpuid_to_hartid_map(cpuid);
--		cpumask_set_cpu(hartid, &hartid_mask);
--	}
--	mb();
--	sbi_send_ipi(cpumask_bits(&hartid_mask));
--}
--
- static const char * const ipi_names[] = {
- 	[IPI_RESCHEDULE]	= "Rescheduling interrupts",
- 	[IPI_CALL_FUNC]		= "Function call interrupts",
-@@ -156,12 +164,12 @@ void show_ipi_stats(struct seq_file *p, int prec)
- 
- void arch_send_call_function_ipi_mask(struct cpumask *mask)
- {
--	send_ipi_message(mask, IPI_CALL_FUNC);
-+	send_ipi_mask(mask, IPI_CALL_FUNC);
- }
- 
- void arch_send_call_function_single_ipi(int cpu)
- {
--	send_ipi_message(cpumask_of(cpu), IPI_CALL_FUNC);
-+	send_ipi_single(cpu, IPI_CALL_FUNC);
- }
- 
- void smp_send_stop(void)
-@@ -176,7 +184,7 @@ void smp_send_stop(void)
- 
- 		if (system_state <= SYSTEM_RUNNING)
- 			pr_crit("SMP: stopping secondary CPUs\n");
--		send_ipi_message(&mask, IPI_CPU_STOP);
-+		send_ipi_mask(&mask, IPI_CPU_STOP);
- 	}
- 
- 	/* Wait up to one second for other CPUs to stop */
-@@ -191,6 +199,5 @@ void smp_send_stop(void)
- 
- void smp_send_reschedule(int cpu)
- {
--	send_ipi_message(cpumask_of(cpu), IPI_RESCHEDULE);
-+	send_ipi_single(cpu, IPI_RESCHEDULE);
- }
--
--- 
-2.20.1
 
+> Not if you define enough addresses in the pool. E.g. the DS90UB954
+> hardware can have 8 aliases per port, so if you have (n_ports * 8)
+> addresses in the pool the problem is solved.
+
+And then you plug-in somewhere another board with another need for ATR
+and you are out of addresses.
+
+> > And another add-on module with
+> > non-repogrammable devices may occupy addresses from the defined pool
+> > above.
+>=20
+> You mean a new device on the local (SoC-to-ATR) bus? Well, it could as
+> well occupy a non-described address that the ATR has already picked as
+> an alias.
+
+Nope, I mean a seperate add-on which has a hardcoded I2C address on the
+bus of the ATR parent. Then this hardcoded address needs to be removed
+=66rom the pool if it is in the wrong range.
+
+> > I am not perfectly happy with the assumption that all undescribed
+> > addresses are automatically free. That also might need DTS updates to
+> > describe all clients properly. But this change only needs to be done
+> > once, and it will improve the description of the hardware.
+>=20
+> Right, but I still suspect some users won't do their homework and
+> discover address conflicts at runtime, maybe months later, in a painful
+> way. Also a chip might be undocumented on a given board, so they could
+> do their homework and still have problems.
+
+Yes, we probably need a binding to mark an address as used even though
+we don't know the device or don't have a driver for it.
+
+Don't get me wrong, I know what you mean. One of my boards has a client
+soldered in a way so that it is still in debug mode. That means it
+listens to addresses 0x03-0x07 to provide debug information. Took me a
+while to find out what is happening there.
+
+But still, 'i2cdetect' showed all of these.
+
+> Despite my comments, I'm not strongly against your proposal. To me it
+> doesn't seem to solve any problem, while it does introduce some degree
+> of risk. Could you elaborate more on but what benefit it introduces?
+
+I'd think the risk of running out of defined addresses is somewhere
+equal to running into (after a while) an unexpectedly used address.
+I like the fix for the latter better because describing what is on the
+bus is more helpful and generic than updating the pool-property every
+time you need it. Plus, as mentioned above, other add-on hardware may
+disturb your pool allocation.
+
+I expect this topic to be one of the discussion points of the BoF.
+
+
+--Hf61M2y+wYpnELGG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1uM78ACgkQFA3kzBSg
+KbbX1g/9HFI+lf/0NsEaIJ2l6AiV3rF+wNU6EPfD86WhO7kPV2GG6Pv+M8+dpzvz
+ikq7miByyan8yRTbxtDXcmlHFUVDyb19owQdFl8xX1j6Ow317KKrIQKe/TFCof7c
+sqKI7x38aJQKdi0Xn+3aFQ7mIb5JME4ZkKfK+etgE3sZtqrA6GGVod37r9Mmmr/E
+1ZhcJg5DW+X0z76rEHG9TbzwP2OcIssPJXVUcOszng7HYTlxhlR0T3f5s6nnFu3G
+b1qfuTkj+BbTCJDN7KExB9gfah/CSUGvzHxOnNQQvyCfBgsu+ZP4oGYf5rJnwxug
+Z1Wz0VDE3H9N0WjOajc5bPmjyJFjMGbGcpyBKGR7tHvph2M2ASQm/ItYqMsSghCL
+wqk+mFLQr3dFDSsdcqF0fD1zEqsIoIyjbsi50XYAjuxUE3KbtxYFiQ85TceiAefI
+QwCPCmkUFQTZmyiYzdva4Qhs0FPpZ0gEgR/2x71Vp2CFrPxLnw9wdis68rfSo13a
+IDVgqyG2WVJNC2OWHBWdmUMLXKFHrpP/iZa32fb9xzZjZrk1fEkxAE2Boh0Bkr2d
+Z/0CbCSE6wU6H8WscoQw4va8z4ST8GzPSxxAe310UW8fmOSvVtAQnLdsnRYPrZla
+zZFtf3zSO0rvIYu0dvKLSvhDwWbtPXFqTubPkFC/FVSN14mSpws=
+=ZAhE
+-----END PGP SIGNATURE-----
+
+--Hf61M2y+wYpnELGG--
