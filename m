@@ -2,118 +2,248 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD240C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FA5C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CEC5216C8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6EB216C8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 08:13:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="nDWRpHby"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o6oUECDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfICIKl (ORCPT
+        id S1728023AbfICINY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 04:10:41 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]:41275 "EHLO
-        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfICIKl (ORCPT
+        Tue, 3 Sep 2019 04:13:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39270 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfICINY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 04:10:41 -0400
-Received: by mail-qt1-f170.google.com with SMTP id j10so996740qtp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:10:40 -0700 (PDT)
+        Tue, 3 Sep 2019 04:13:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id l11so12144204lfk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 01:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=XlGhAEQhS5vDA63JscWsmUO0Zxj4rYUWag9weQn38YI=;
-        b=nDWRpHbydaDd1tKlATnHiW0Xk0qQHvQcJmSGqN0k0Dd/NPgfwuxwBgNx+wSldgM1mD
-         w8u/W2WOS3efOXk0b0RcLIytnVbl0a9+v42WuTk66N6No20M2kp7b0e9nR/WNjwupgMw
-         UbaGKxEYTSSvFtdtiVXklTupaBNZV8d6BtlcUoGPZve/z+r09tEeUKuiOZaeNXFBnjDR
-         Fyc0SIYBFMc3kSAXHU3C2Ppb8eA7ihu7/xnTi8A6wd08B0ZJRJXLLp4tIWnz9K+S/pEA
-         Mc/JIy1XnjVQ1iRGUoG+TLRUeCFnwJZfz9XGnUM73Z8uaXf5kMxshVU//GOpBqakWtuT
-         cR/g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=tolH3D55wRJVvoVj7G+TtEu5ivH6DhNUR4UBADzwzKg=;
+        b=o6oUECDeFmzOs8qtAv7INu7XZ4/K9fjKDS6TECghoijZHBSPwtgjdn8F8f6LfpLT6x
+         d/d1CN79oDHPMSpvo7aawL3qEhwVTDhBz5lSv6vbpt/1+VssyUFVZ2JFhWTE8WhXZNlI
+         mZbS0Meiro/kd8ISCE9vcexmMM3es5hsFky5+V1DnyeT8dozwj+AelxHYUBIF2/4BMGR
+         cruUJI8Ze7tLGSx5zB2njBxetNwswlXi/CnXjXEs7UW+Mgb8rsx4IP0GaW9X6rkb5YCa
+         +/EQoygrK/qpIyzsnn3I9YxSWTQzc8uRQtSXaYHLlC9iaxCx3sywwCngOYcCY2auWWPs
+         MKhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=XlGhAEQhS5vDA63JscWsmUO0Zxj4rYUWag9weQn38YI=;
-        b=CQAI6DqzxI3V05BD15tTuQVq54gEF0M/6V40NW0GdPFbve+dNub9ioW+hSEtjBAW/8
-         OfuWnVGdxaMaN1JUeunrusBXUh4YfzLoc7OpCJUa+Oe+hy6IWYCASEfHRtvUt4QT/lTd
-         Nec6u8rBRVpG82NwXVseuahVHRZB3QPhVhiQdkgQDUUpaNTXT4AfuTuCul/kJNldUm77
-         mpkpl/BPIdHC7crdHiAiFoJZNmJZkdmbXZoO0wjguCcQ1GvmH4NTGK5MoS0+cpFn4p60
-         if0Ogh6ai/NkaUeUBBFXO++H3aPk8KIcwrbBYtNzIRD0xXi5IKebmNA883Bx2e7xTenP
-         YJcw==
-X-Gm-Message-State: APjAAAWntspaoI7P0aXgtjL9x1Ca4jzm1CMw8pnDPdx2myCTbHmMekwn
-        cSF+jPpaddmZ4UurxsG7EjZyP0/PhDjwIzYk9xyBaxY9wPE=
-X-Google-Smtp-Source: APXvYqw+cUPAj7uf8xfh57/PSX+Qy32snhGaoKcV06DsA9Y9HAejLtWaGNRxZajlXWxBg0W2DBhWDqPPeltyzHGkYcY=
-X-Received: by 2002:ac8:74c7:: with SMTP id j7mr1933769qtr.37.1567498240130;
- Tue, 03 Sep 2019 01:10:40 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=tolH3D55wRJVvoVj7G+TtEu5ivH6DhNUR4UBADzwzKg=;
+        b=B5joy5S1B/S6N4JwC9ccQPDeyG7viv8KqQ7bbobVE/zVdn9XF5AWcWN16DRZojD0pQ
+         R989yr/UOTVVTjlEq/GF6/c5m9pFyOdztBycRcC8V4lVvTQt8CeJ+T44Ot5nkiRj0YDj
+         fppovqFhvRWnHlutHUhVlcvBr1pQN/IS+I8+GrblkDsZuJWvsQdGyODdYiblEscCD2uL
+         vJYcB8zxDK5YAAlcpuOK65srDok5GtFvpa+AHAGbam8hfATrvlnuzOKlm2wSrez/idXI
+         +KmFUoKL8LeAsqpJxV7YdlplY/zfcR9Zc8grl+wH+lLts1w4Uj/xpIFwCrehzeaM4Y5M
+         TZPg==
+X-Gm-Message-State: APjAAAX1VF7c2PYCl6lPC/sooDBz5afXZ5e70d76Be+QrGzD3Fjo2rMC
+        a5+JT8Ze+QG2ROgJoSHTqYif77yb84l1PyfQN+jLYZYNBp0=
+X-Google-Smtp-Source: APXvYqyQRgeTjLJvsiQUasNopOTOQbGwBZmdzgUXGWyN41mBKTiKI7Dxp6Hj9Do78HMmSnOo1lF5Q5phzs2eezTyDB8=
+X-Received: by 2002:a19:8017:: with SMTP id b23mr19036406lfd.132.1567498400885;
+ Tue, 03 Sep 2019 01:13:20 -0700 (PDT)
 MIME-Version: 1.0
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Tue, 3 Sep 2019 16:10:27 +0800
-Message-ID: <CAB4CAwdo7H3QNEHLgG-h1Z_eRYkb+pc=V3Wvrmeju8fBByYJzw@mail.gmail.com>
-Subject: Tweak I2C SDA hold time on GemniLake to make touchpad work
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        lee.jones@linaro.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
+In-Reply-To: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 3 Sep 2019 13:43:09 +0530
+Message-ID: <CA+G9fYvOUch79HoBiJbuod2bTGS5h8se5EB5LRJAwTCfPQr2ow@mail.gmail.com>
+Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot panic
+To:     Qian Cai <cai@lca.pw>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 3 Sep 2019 at 09:51, Qian Cai <cai@lca.pw> wrote:
+>
+> The linux-next commit "fs/namei.c: keep track of nd->root refcount status=
+=E2=80=9D [1] causes boot panic on all
+> architectures here on today=E2=80=99s linux-next (0902). Reverted it will=
+ fix the issue.
 
-We're working on the acer Gemnilake laptop TravelMate B118-M for
-touchpad not working issue. The touchpad fails to bring up and the
-i2c-hid ouput the message as follows
-    [    8.317293] i2c_hid i2c-ELAN0502:00: hid_descr_cmd failed
-We tried on latest linux kernel 5.3.0-rc6 and it reports the same.
+I have same problem and reverting this patch fixed the kernel crash.
 
-We then look into I2C signal level measurement to find out why.
-The following is the signal output from LA for the SCL/SDA.
-https://imgur.com/sKcpvdo
-The SCL frequency is ~400kHz from the SCL period, but the SDA
-transition is quite weird. Per the I2C spec, the data on the SDA line
-must be stable during the high period of the clock. The HIGH or LOW
-state of the data line can only change when the clock signal on the
-SCL line is LOW. The SDA period span across 2 SCL high, I think
-that's the reason why the I2C read the wrong data and fail to initialize.
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/c=
+ommit/?id=3De013ec23b8231cf7f95605cbb0e47aa0e3d047a4
+>
 
-Thus, we treak the SDA hold time by the following modification.
+FYI,
+on x86_64 device I have noticed kernel bug [1].
 
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -97,7 +97,8 @@ static const struct intel_lpss_platform_info bxt_uart_info = {
- };
+[   12.941007] Run /sbin/init as init process
+[   12.946381] random: fast init done
+[   13.023482] BUG: kernel NULL pointer dereference, address: 0000000000000=
+235
+[   13.030444] #PF: supervisor read access in kernel mode
+[   13.035576] #PF: error_code(0x0000) - not-present page
+[   13.040725] PGD 0 P4D 0
+[   13.043263] Oops: 0000 [#1] SMP PTI
+[   13.046755] CPU: 2 PID: 1 Comm: systemd Not tainted
+5.3.0-rc6-next-20190902 #1
+[   13.053966] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[   13.061438] RIP: 0010:dput+0x72/0x4a0
+[   13.065101] Code: 68 0d 5f 41 56 31 d2 45 31 c9 45 31 c0 31 f6 b9
+02 00 00 00 48 c7 c7 e0 dd 66 a2 e8 48 6c e1 ff e8 e3 9f e3 ff 85 c0
+5a 75 76 <f6> 03 08 4c 8d a3 80 00 00 00 4c 89 e7 0f 85 7b 01 00 00 e8
+16 66
+[   13.083838] RSP: 0018:ffffb16100027c00 EFLAGS: 00010202
+[   13.089055] RAX: 0000000000000001 RBX: 0000000000000235 RCX: 00000000fff=
+78e19
+[   13.096180] RDX: ffffffffa0f3f630 RSI: 00000000ffffffff RDI: 00000000000=
+00000
+[   13.103301] RBP: ffffb16100027c30 R08: 0000000000000000 R09: 00000000000=
+00000
+[   13.110425] R10: 0000000000000000 R11: 0000000000000000 R12: ffffb161000=
+27e30
+[   13.117550] R13: ffffffffa23a557f R14: ffffffffa0f3f630 R15: ffffb161000=
+27e30
+[   13.124685] FS:  00007f2541dc4840(0000) GS:ffff9983dfb00000(0000)
+knlGS:0000000000000000
+[   13.132767] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   13.138506] CR2: 0000000000000235 CR3: 000000045a2fe003 CR4: 00000000003=
+606e0
+[   13.145630] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000
+[   13.152752] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
+00400
+[   13.159875] Call Trace:
+[   13.162323]  terminate_walk+0x104/0x160
+[   13.166162]  path_lookupat+0xa4/0x210
+[   13.169828]  filename_lookup+0xb6/0x180
+[   13.173682]  ? fs_reclaim_release.part.107+0x5/0x30
+[   13.178581]  ? getname_flags+0x4b/0x1e0
+[   13.182419]  ? rcu_read_lock_sched_held+0x4f/0x80
+[   13.187116]  ? kmem_cache_alloc+0x290/0x2c0
+[   13.191293]  ? __might_fault+0x85/0x90
+[   13.195037]  user_path_at_empty+0x36/0x40
+[   13.199041]  ? user_path_at_empty+0x36/0x40
+[   13.203217]  vfs_statx+0x76/0xe0
+[   13.206442]  __do_sys_newfstatat+0x35/0x70
+[   13.210535]  ? entry_SYSCALL_64_after_hwframe+0x3e/0xbe
+[   13.215758]  ? trace_hardirqs_off_caller+0x22/0xf0
+[   13.220542]  ? do_syscall_64+0x17/0x1c0
+[   13.224374]  ? lockdep_hardirqs_on+0xf6/0x190
+[   13.228730]  ? do_syscall_64+0x17/0x1c0
+[   13.232564]  ? trace_hardirqs_on+0x4c/0x100
+[   13.236747]  __x64_sys_newfstatat+0x1e/0x20
+[   13.240925]  do_syscall_64+0x55/0x1c0
+[   13.244582]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.249625] RIP: 0033:0x7f25405bba09
+[   13.253196] Code: 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 0f 1f 40
+00 89 f0 48 89 d6 83 ff 01 77 36 89 c7 45 89 c2 48 89 ca b8 06 01 00
+00 0f 05 <48> 3d 00 f0 ff ff 77 07 c3 66 0f 1f 44 00 00 48 8b 15 59 94
+2c 00
+[   13.271934] RSP: 002b:00007ffd6722dfc8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000106
+[   13.279490] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f25405=
+bba09
+[   13.286614] RDX: 00007ffd6722e090 RSI: 00007f25418c06d6 RDI: 00000000000=
+00004
+[   13.293738] RBP: 0000000000000004 R08: 0000000000001000 R09: 00000000000=
+00001
+[   13.300860] R10: 0000000000001000 R11: 0000000000000246 R12: 000055bd9f6=
+67281
+[   13.307984] R13: 0000000000000400 R14: 00007ffd6722e518 R15: 00000000000=
+00001
+[   13.315111] Modules linked in:
+[   13.318170] CR2: 0000000000000235
+[   13.321489] ---[ end trace 2f1042f3cbf26726 ]---
+[   13.326107] RIP: 0010:dput+0x72/0x4a0
+[   13.329763] Code: 68 0d 5f 41 56 31 d2 45 31 c9 45 31 c0 31 f6 b9
+02 00 00 00 48 c7 c7 e0 dd 66 a2 e8 48 6c e1 ff e8 e3 9f e3 ff 85 c0
+5a 75 76 <f6> 03 08 4c 8d a3 80 00 00 00 4c 89 e7 0f 85 7b 01 00 00 e8
+16 66
+[   13.348499] RSP: 0018:ffffb16100027c00 EFLAGS: 00010202
+[   13.353740] RAX: 0000000000000001 RBX: 0000000000000235 RCX: 00000000fff=
+78e19
+[   13.360865] RDX: ffffffffa0f3f630 RSI: 00000000ffffffff RDI: 00000000000=
+00000
+[   13.367990] RBP: ffffb16100027c30 R08: 0000000000000000 R09: 00000000000=
+00000
+[   13.375115] R10: 0000000000000000 R11: 0000000000000000 R12: ffffb161000=
+27e30
+[   13.382238] R13: ffffffffa23a557f R14: ffffffffa0f3f630 R15: ffffb161000=
+27e30
+[   13.389361] FS:  00007f2541dc4840(0000) GS:ffff9983dfb00000(0000)
+knlGS:0000000000000000
+[   13.397439] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   13.403176] CR2: 0000000000000235 CR3: 000000045a2fe003 CR4: 00000000003=
+606e0
+[   13.410301] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 00000000000=
+00000
+[   13.417422] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 00000000000=
+00400
+[   13.424549] BUG: sleeping function called from invalid context at
+/usr/src/kernel/include/linux/percpu-rwsem.h:38
+[   13.434793] in_atomic(): 1, irqs_disabled(): 1, pid: 1, name: systemd
+[   13.441222] INFO: lockdep is turned off.
+[   13.445138] irq event stamp: 1373108
+[   13.448740] hardirqs last  enabled at (1373107):
+[<ffffffffa0f3216b>] path_init+0x21b/0x520
+[   13.457083] hardirqs last disabled at (1373108):
+[<ffffffffa0c01c9a>] trace_hardirqs_off_thunk+0x1a/0x20
+[   13.466555] softirqs last  enabled at (1373040):
+[<ffffffffa16ea835>] release_sock+0x85/0xb0
+[   13.474985] softirqs last disabled at (1373038):
+[<ffffffffa16ea7ce>] release_sock+0x1e/0xb0
+[   13.483409] CPU: 2 PID: 1 Comm: systemd Tainted: G      D
+5.3.0-rc6-next-20190902 #1
+[   13.492007] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[   13.499478] Call Trace:
+[   13.501923]  dump_stack+0x70/0xa5
+[   13.505243]  ___might_sleep+0x152/0x240
+[   13.509080]  __might_sleep+0x4a/0x80
+[   13.512679]  exit_signals+0x33/0x2e0
+[   13.516273]  do_exit+0xb1/0xce0
+[   13.519410]  ? do_syscall_64+0x17/0x1c0
+[   13.523240]  ? trace_hardirqs_on+0x4c/0x100
+[   13.527419]  rewind_stack_do_exit+0x17/0x20
+[   13.531595] RIP: 0033:0x7f25405bba09
+[   13.535166] Code: 64 c7 00 16 00 00 00 b8 ff ff ff ff c3 0f 1f 40
+00 89 f0 48 89 d6 83 ff 01 77 36 89 c7 45 89 c2 48 89 ca b8 06 01 00
+00 0f 05 <48> 3d 00 f0 ff ff 77 07 c3 66 0f 1f 44 00 00 48 8b 15 59 94
+2c 00
+[   13.553900] RSP: 002b:00007ffd6722dfc8 EFLAGS: 00000246 ORIG_RAX:
+0000000000000106
+[   13.561459] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f25405=
+bba09
+[   13.568581] RDX: 00007ffd6722e090 RSI: 00007f25418c06d6 RDI: 00000000000=
+00004
+[   13.575735] RBP: 0000000000000004 R08: 0000000000001000 R09: 00000000000=
+00001
+[   13.582865] R10: 0000000000001000 R11: 0000000000000246 R12: 000055bd9f6=
+67281
+[   13.589990] R13: 0000000000000400 R14: 00007ffd6722e518 R15: 00000000000=
+00001
+[   13.597146] note: systemd[1] exited with preempt_count 1
+[   13.602674] Kernel panic - not syncing: Attempted to kill init!
+exitcode=3D0x00000009
+[   13.610402] Kernel Offset: 0x1fc00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
- static struct property_entry bxt_i2c_properties[] = {
--       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 42),
-+       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 230),
-        PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
-        PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 208),
-        { },
 
-The reason why I choose sda hold time is by the Table 10 of
-https://www.nxp.com/docs/en/user-guide/UM10204.pdf, the device
-must provide a hold time at lease 300ns and and 42 here is relatively
-too small. The signal measurement result for the same pin on Windows
-is as follows.
-https://imgur.com/BtKUIZB
-Comparing to the same result running Linux
-https://imgur.com/N4fPTYN
+Full test log,
+[1] https://lkft.validation.linaro.org/scheduler/job/896370#L970
 
-After applying the sda hold time tweak patch above, the touchpad can
-be correctly initialized and work. The LA signal is shown as down below.
-https://imgur.com/B3PmnIp
 
-The chart which has yellow mark is the tweak version, the red marks
-the original version.
-
-I need suggestions about whether if the hold time is the value I can tweak?
-Or I should modify sda falling time? Please help if any better idea.
-
-Thanks
+Best regards
+Naresh Kamboju
