@@ -2,116 +2,103 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48677C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DA5C3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C96820828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A9022CF7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tw2YiN+H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NfkZw4ey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfICCjB (ORCPT
+        id S1727138AbfICCjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 22:39:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38949 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfICCjA (ORCPT
+        Mon, 2 Sep 2019 22:39:45 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35147 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfICCjo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 22:39:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id l11so11610985lfk.6;
-        Mon, 02 Sep 2019 19:38:59 -0700 (PDT)
+        Mon, 2 Sep 2019 22:39:44 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so7377575pfw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 19:39:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bypCdtkGCzTYBLw17U+HKNiJ2TPW1+aSuUx/xJPZIZo=;
-        b=Tw2YiN+HIU2vOIqjXQvLB1Aaa7OR8piST1fyAxnRATGJ7xPFti8tvGrk+Q1W2IfFwh
-         3is/D+npGDgCVdQZk8KI89Cjs03qBDMuqpAVhR3qD/Be2CZozOGXWYP9/jvB7cG8oMsy
-         GbynC5WW+g/omkxFMfkzATGJm9qsXdKbZOQkYg6aQjgrEpCDczgIO+Sb+egz6jrHvtku
-         H/cmrwxJ22Flcr0ha+YNU9ZYGDqCRkPIZ90JirjlV7Mkie/dqQePYO3CNN3UkcLszKyS
-         JtmmL/T2kErBT9Xi0cimYGOuKfbsuMEWvlf/Icz1yKur63PrmdWLqpXQXShH+bE1P4O+
-         4QLA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iMDW/m3hv6pM+84dygmzOuAaegfuHoNMyS2NH8pm8Tg=;
+        b=NfkZw4eyCld6HLQ14Z0yBRk9nQWDeOJzJn3bGZI69PVFoufD62dwEMB2i+VaoSFwST
+         xxSVybA3SHPnkk8EGa8GpTs5c7d6IYiOeSnBofD39vIoUZirmiRTKoBhZkeEg30uORP5
+         XhMCtZE2WHfl0k5/FsjZy+cw1ZCnKOb6IShidLwJrcKLV7A0WABr/WBwZy4oQsdmCnyM
+         Ru0F8hmsIVkOFjKQl8GOBxIxiv/YSgV/3HHLQPqX55Q9x9R8nLHWy7B4YIKjfC05jQZk
+         7HhFchFD0OaZjNwAMtpFY7ZWtRk0RQobeY2GvpY7520XLZQBQIRjPSOJzYDg7jceTgLG
+         R5oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bypCdtkGCzTYBLw17U+HKNiJ2TPW1+aSuUx/xJPZIZo=;
-        b=aQY4HZyLdI6Wkl1Ol+VY8CobOk0ExCOfbW1TrXEleIyARNdnsPI68e3jtqX1WgFRID
-         NkhfIa9YnestnnACioreRwC2341ZvgTNBDEvYga1Jiwnu0Muqnz1U8eI8bcWiACN1a5p
-         yK0UOfBbUb8WoJOKRLaSvpgn/hZE+dgELxgIhRTEjhE0MbP5M1mjQY4A1cqEYBrNvbR5
-         theyqNDY/mPYekrliimPB0rFD6nsj0STEl7nf2dkM2xWuvuKs4+Tbr2nag2WIGBQ9hlf
-         mdu430cmWWLJVbDYJjyWH2VI1QC1hScukKApU0EpBeYYHDGEpoX0WxNcgCPHZDcDRfs3
-         Fv8w==
-X-Gm-Message-State: APjAAAUVECIpGcmDIWYm2jb9OkDnd5BuvWfzxVDwzhsGocXnxO7iYvvo
-        +rY/37T/3TPKsPbvkDu+0nKS055ghmAsCzWiaYk=
-X-Google-Smtp-Source: APXvYqwGGeSGkPpuwW5dwm7rAyPowBBe7Ix/KIQ0UDaaZQ+Ir4C6sIN/uDqrUD6hZZwmSAh0xU9ocevalRVs66GAl1c=
-X-Received: by 2002:a19:f11c:: with SMTP id p28mr8434160lfh.44.1567478338404;
- Mon, 02 Sep 2019 19:38:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <1567519424-32271-1-git-send-email-Anson.Huang@nxp.com> <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1567519424-32271-2-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 2 Sep 2019 23:38:54 -0300
-Message-ID: <CAOMZO5CHmvrbVG_h8hOb7hMjXasV_QwtNoXpEw9kqY=4Jj5HAg@mail.gmail.com>
-Subject: Re: [PATCH V2 2/5] input: keyboard: imx_sc: Add i.MX system
- controller power key support
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iMDW/m3hv6pM+84dygmzOuAaegfuHoNMyS2NH8pm8Tg=;
+        b=LE1u4T1FkP63YucKtL1nL/8VrwwYOv7/WKcEOtlHgO1vXWZJOpuY+D5NiU9mBQtN66
+         KW/XfJpfrRJtCpS7jCpYG8UyRtiK2fnT+WgPI/bjaJJpzNA58nSneCh0x7u7A+HtJeqz
+         z0xaxGIORLsTCztTtKlmAC/MpNpfghk9uzkzROFfKBnvnpb29bRODho1nJpi/aWeI+XX
+         KshKTbmDJOXn0wM3+tupkzkUXdBA8yqOYJhSrOznDhlqa6RqhxfRKAh9el3BP3kYQG7w
+         r/KtRBf2+EapCL9L7anSRoXDVtmcX+4BUgNqdPGV1zoZneIVhqnNrhEGY1B6/QbKbIaF
+         52dg==
+X-Gm-Message-State: APjAAAW7MQisyDENFTW0F6DTAzsD3xO67F1SDEp8RImIwPUSAEDUNape
+        pKm4ZRbXXXGUoOnL9nd3g8MyfA==
+X-Google-Smtp-Source: APXvYqyEZC6bVMU9/I4/7wZb0vVsPM80Gk3t1roo/YA9fCGd/tMfPnLz7IzwHQ2W3GuO5dvE77vpdA==
+X-Received: by 2002:a17:90a:148:: with SMTP id z8mr16008922pje.96.1567478384117;
+        Mon, 02 Sep 2019 19:39:44 -0700 (PDT)
+Received: from localhost ([122.167.132.221])
+        by smtp.gmail.com with ESMTPSA id c127sm1785472pfb.5.2019.09.02.19.39.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 19:39:43 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 08:09:41 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Fugang Duan <fugang.duan@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>, mripard@kernel.org,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        marcin.juszkiewicz@linaro.org, Stefan Agner <stefan@agner.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        yuehaibing@huawei.com, Thomas Gleixner <tglx@linutronix.de>,
-        ronald@innovation.ch, Marco Felsch <m.felsch@pengutronix.de>,
-        Ping Bai <ping.bai@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-input@vger.kernel.org, NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [RFC 2/5] ARM: dts: add support for opp-v2 for omap34xx and
+ omap36xx
+Message-ID: <20190903023941.pgh24mz4jh325xrc@vireshk-i7>
+References: <cover.1567421750.git.hns@goldelico.com>
+ <d0dc1623ed6b1bd657f169dc2b4482b269bdba37.1567421751.git.hns@goldelico.com>
+ <20190903023805.qum23m7tge3zkb5a@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903023805.qum23m7tge3zkb5a@vireshk-i7>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+On 03-09-19, 08:08, Viresh Kumar wrote:
+> On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
+> > +		opp1-125000000 {
+> > +			opp-hz = /bits/ 64 <125000000>;
+> > +			// we currently only select the max voltage from table Table 3-3 of the omap3530 Data sheet (SPRS507F)
+> > +			// <target min max> could also be single <target>
+> > +			opp-microvolt = <975000 975000 975000>;
+> > +			// first value is silicon revision, second one 720MHz Device Identification
+> 
+> > +			opp-supported-hw = <0xffffffff 3>;
+> 
+> I don't see the driver changes using this field, am I missing
+> something ?
 
-On Mon, Sep 2, 2019 at 11:05 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+The driver already had them it seems. Hmm..
 
-> +       ret = input_register_device(input);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "failed to register input device\n");
-> +               return ret;
-> +       }
-> +
-> +       pdata->input = input;
-> +       platform_set_drvdata(pdev, pdata);
-> +
-> +       ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, true);
-> +       if (ret) {
-> +               dev_warn(&pdev->dev, "enable scu group irq failed\n");
-> +               return ret;
-
-Better do a 'goto input_unregister' here instead and call
-input_unregister_device().
+-- 
+viresh
