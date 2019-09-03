@@ -2,107 +2,143 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F10EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F5DC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C0E215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58388215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ua+qEoKR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WO3yaL50"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfICPKR (ORCPT
+        id S1727107AbfICPLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:10:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40456 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbfICPKR (ORCPT
+        Tue, 3 Sep 2019 11:11:13 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:36129 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbfICPLM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 11:10:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kMYjLPkGWlldvgkaEMtVa8ofXfOGNI4Vt2JfjkgF+V8=; b=ua+qEoKR5NGKobxrhyfObMiaz
-        28qJVK5Cmtj469tUpUMjB5lIhBAeCh8YKXRWmBqvQ4pA4q2geWOc7hwsuuLD8+20ifshN6X4mmUS8
-        dnku9KimzBjhNU+wOPyckNP9v2fCKVt0JqP6dfPr2Iy2wR6+wKii5AXoHWgk31haG0tSLeZ9E705l
-        OgK0SqS7wfjf5NjzHOsFVLkmeE914uKAhFYNYTgaxuyEY7xR1vymBvwcopjWnk96vWdEiuI0IbOp7
-        HGt1Xj+QSm5q/t4M5uq0KOhEsWQL/MElDbumvXJxhbLoV4Mop2RQClRXXx2FzsZes+pqT9yHt9vfO
-        O3Dtop/1A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5ARj-0008Bn-Vp; Tue, 03 Sep 2019 15:10:15 +0000
-Date:   Tue, 3 Sep 2019 08:10:15 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>
-Subject: Re: [PATCH v5 2/2] mm,thp: Add experimental config option
- RO_EXEC_FILEMAP_HUGE_FAULT_THP
-Message-ID: <20190903151015.GF29434@bombadil.infradead.org>
-References: <20190902092341.26712-1-william.kucharski@oracle.com>
- <20190902092341.26712-3-william.kucharski@oracle.com>
- <20190903121424.GT14028@dhcp22.suse.cz>
- <20190903122208.GE29434@bombadil.infradead.org>
- <20190903125150.GW14028@dhcp22.suse.cz>
+        Tue, 3 Sep 2019 11:11:12 -0400
+Received: by mail-ua1-f65.google.com with SMTP id n6so2201100uaq.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 08:11:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=D3e9W2yeYksy0f4fuNlRYAPcfLR8aSNbO/EU86R0hP4=;
+        b=WO3yaL50caVRPNVVzECDC1KIYPSQoV/F/kmIrCspE7EpXM29WGxFHYDjMLBRTOcwWR
+         /HDfH528vagRQJqA41CrJe3/GSu3MzBR4zrmCXJuNTzcH2jeXniIEpG7NXknajc8mHUt
+         ak1CtU1+Fqfjmjp62RHNsgmkgWDWurtv+l/UlKP4e0RJEMtJQ9fs6DK1uPhx/D7ckQlD
+         X15jTqnfvUwMdE6veV6PXWW+SujPbHo+BXVLG2O7bauSrqc2eEHpFDDATBRRkRWYUcha
+         0w5iGr3k/BvfuScoE2q1GJaNcz97lo3GkFZZZHAams/1Nwwh7UWCl1t+XttNuoE09jJW
+         Ea+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D3e9W2yeYksy0f4fuNlRYAPcfLR8aSNbO/EU86R0hP4=;
+        b=gT5jpQYdnqaRpd+VUudCFgqZIYg3PHjyHWVoadUv68HXpsr9gvmzrKOWaxzLKRb1t9
+         PFui/Y8sMKb8hLu686wipy7t4X9t8AkciWZkic71WUN5WMUNTXIzLuet7Lrie76MTagu
+         70pVtsLV8KYGENNk2uVx5QdTIptB3OS1bqzRswU7YTFk2YKvvY95ZdBwSW8CuHwEg1UB
+         CcAih+q9T2Xxqxk3Wk9HyM6a4RSHJOxzmD5uErGXr8r+pNfG5o0IHVW3S4lzFc+nyKUc
+         r9PVwXJFvS2uC79c/CRUT91YvqZg+rfN2orgC1qeLcwmMEq4trrLBU8rHkv3tMDy//lP
+         BfBA==
+X-Gm-Message-State: APjAAAVyVTvJhfht0pfYdxeKuHZAVgTaGqZczWUchucBw1vFKbdaGapE
+        bbuQ5TwCrdawYRetYxXQJisf5WdyE9BOdpSj8d+5sMmY
+X-Google-Smtp-Source: APXvYqzZVbNhOosd22YGLbO9TXiU0/LmjJ+fiNJ65ysBR9g7sb/vcJNqesHJIz9Axt0Evic7ko3VJu8vP0VDM325ZeY=
+X-Received: by 2002:ab0:6883:: with SMTP id t3mr17513945uar.104.1567523471452;
+ Tue, 03 Sep 2019 08:11:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903125150.GW14028@dhcp22.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190829183634.3376-1-tszucs@protonmail.ch>
+In-Reply-To: <20190829183634.3376-1-tszucs@protonmail.ch>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 3 Sep 2019 17:10:35 +0200
+Message-ID: <CAPDyKFpRtzS3CXAi4jKjyPOEd5KjCZ1Vqpi_fmm-F+O8eAqbmQ@mail.gmail.com>
+Subject: Re: [PATCH v2] mmc: sdhi: fill in actual_clock
+To:     =?UTF-8?B?VGFtw6FzIFN6xbFjcw==?= <tszucs@protonmail.ch>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 02:51:50PM +0200, Michal Hocko wrote:
-> On Tue 03-09-19 05:22:08, Matthew Wilcox wrote:
-> > On Tue, Sep 03, 2019 at 02:14:24PM +0200, Michal Hocko wrote:
-> > > On Mon 02-09-19 03:23:41, William Kucharski wrote:
-> > > > Add filemap_huge_fault() to attempt to satisfy page
-> > > > faults on memory-mapped read-only text pages using THP when possible.
-> > > 
-> > > This deserves much more description of how the thing is implemented and
-> > > expected to work. For one thing it is not really clear to me why you
-> > > need CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP at all. You need a support
-> > > from the filesystem anyway. So who is going to enable/disable this
-> > > config?
-> > 
-> > There are definitely situations in which enabling this code will crash
-> > the kernel.  But we want to get filesystems to a point where they can
-> > start working on their support for large pages.  So our workaround is
-> > to try to get the core pieces merged under a CONFIG_I_KNOW_WHAT_IM_DOING
-> > flag and let people play with it.  Then continue to work on the core
-> > to eliminate those places that are broken.
-> 
-> I am not sure I understand. Each fs has to opt in to the feature
-> anyway. If it doesn't then there should be no risk of regression, right?
-> I do not expect any fs would rush an implementation in while not being
-> sure about the correctness. So how exactly does a config option help
-> here.
+On Thu, 29 Aug 2019 at 20:36, Tam=C3=A1s Sz=C5=B1cs <tszucs@protonmail.ch> =
+wrote:
+>
+> Save set clock in mmc_host actual_clock enabling exporting it via debugfs=
+.
+> This will indicate the precise SD clock in I/O settings rather than only =
+the
+> sometimes misleading requested clock.
+>
+> Signed-off-by: Tam=C3=A1s Sz=C5=B1cs <tszucs@protonmail.ch>
 
-Filesystems won't see large pages unless they've opted into them.
-But there's a huge amount of page-cache work that needs to get done
-before this can be enabled by default.  For example, truncate() won't
-work properly.
+Applied for next, thanks!
 
-Rather than try to do all the page cache work upfront, then wait for the
-filesystems to catch up, we want to get some basics merged.  Since we've
-been talking about this for so long without any movement in the kernel
-towards actual support, this felt like a good way to go.
+Kind regards
+Uffe
 
-We could, of course, develop the entire thing out of tree, but that's
-likely to lead to pain and anguish.
 
+> ---
+>  drivers/mmc/host/renesas_sdhi_core.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/mmc/host/renesas_sdhi_core.c b/drivers/mmc/host/rene=
+sas_sdhi_core.c
+> index 64d3b5fb7fe5..4c9774dbcfc1 100644
+> --- a/drivers/mmc/host/renesas_sdhi_core.c
+> +++ b/drivers/mmc/host/renesas_sdhi_core.c
+> @@ -124,7 +124,7 @@ static unsigned int renesas_sdhi_clk_update(struct tm=
+io_mmc_host *host,
+>  {
+>         struct renesas_sdhi *priv =3D host_to_priv(host);
+>         unsigned int freq, diff, best_freq =3D 0, diff_min =3D ~0;
+> -       int i, ret;
+> +       int i;
+>
+>         /* tested only on R-Car Gen2+ currently; may work for others */
+>         if (!(host->pdata->flags & TMIO_MMC_MIN_RCAR2))
+> @@ -153,9 +153,9 @@ static unsigned int renesas_sdhi_clk_update(struct tm=
+io_mmc_host *host,
+>                 }
+>         }
+>
+> -       ret =3D clk_set_rate(priv->clk, best_freq);
+> +       clk_set_rate(priv->clk, best_freq);
+>
+> -       return ret =3D=3D 0 ? best_freq : clk_get_rate(priv->clk);
+> +       return clk_get_rate(priv->clk);
+>  }
+>
+>  static void renesas_sdhi_set_clock(struct tmio_mmc_host *host,
+> @@ -166,10 +166,13 @@ static void renesas_sdhi_set_clock(struct tmio_mmc_=
+host *host,
+>         sd_ctrl_write16(host, CTL_SD_CARD_CLK_CTL, ~CLK_CTL_SCLKEN &
+>                 sd_ctrl_read16(host, CTL_SD_CARD_CLK_CTL));
+>
+> -       if (new_clock =3D=3D 0)
+> +       if (new_clock =3D=3D 0) {
+> +               host->mmc->actual_clock =3D 0;
+>                 goto out;
+> +       }
+>
+> -       clock =3D renesas_sdhi_clk_update(host, new_clock) / 512;
+> +       host->mmc->actual_clock =3D renesas_sdhi_clk_update(host, new_clo=
+ck);
+> +       clock =3D host->mmc->actual_clock / 512;
+>
+>         for (clk =3D 0x80000080; new_clock >=3D (clock << 1); clk >>=3D 1=
+)
+>                 clock <<=3D 1;
+> --
+> 2.11.0
+>
