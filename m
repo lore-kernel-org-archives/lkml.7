@@ -2,71 +2,105 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2EDC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506F9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949C923402
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:17:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325B123402
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbfICORp (ORCPT
+        id S1729507AbfICORt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:17:45 -0400
-Received: from mail-qk1-f179.google.com ([209.85.222.179]:42966 "EHLO
-        mail-qk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbfICORp (ORCPT
+        Tue, 3 Sep 2019 10:17:49 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:53512 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728122AbfICORr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:17:45 -0400
-Received: by mail-qk1-f179.google.com with SMTP id f13so16023805qkm.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:17:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NBvHA58am235Kil4REO1DbmmyCPU05PPM7Vs0ryKTNo=;
-        b=owjmXsy4sYDrqU1u2Nlwf3ErqlBJJ+Zqe8bJK+XXeo3xgO22z8/xj4ToLVaXXh63PD
-         XfPxNQb1YCG95aDHDJHl7HBd7HK1iyRNg+iD89UOGbqEb6W/x9Wfcb/8ZDB9NuCeqN7E
-         a44S5S5XvOj+pq+t7fg2sp342LkaZiJod9JbyUlNyyTcydkcCKcV6V/c/pczWCOOrAXK
-         fxEuZ8GkkH9wpZZxobADiOqWQjdSpQj5r1oKxPBBPOqlrJplKTaQBSaOnmlaQ1u7q0kJ
-         jvQeJ8dAWR8d65rJZ8YeRugsLsguRVhgB+jWdkxFJSrLFd3c3t3eWwLhDFkA8yYcymGH
-         xWEg==
-X-Gm-Message-State: APjAAAXwCBvNnpAqd+8EVKbZheNy4FUbr0b2+x7rOuYN7cIl+5hHfo1/
-        3fhjAgPD2qDlN6pPixFxszT/0a5lV7dae1e2ZEaoaA==
-X-Google-Smtp-Source: APXvYqwVhpns+/EW7fpsdQhggKdxH3/H/t+l4aj+6vVdTXMt4EPrOuqWUGnp7WY2QEGcRuvIcLyWQG01kiIpa+fcW6k=
-X-Received: by 2002:a37:89c4:: with SMTP id l187mr6689014qkd.286.1567520264292;
- Tue, 03 Sep 2019 07:17:44 -0700 (PDT)
+        Tue, 3 Sep 2019 10:17:47 -0400
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x83EGqUX026941;
+        Tue, 3 Sep 2019 14:17:28 GMT
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2us2nfgyk2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 14:17:28 +0000
+Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 5D61B4F;
+        Tue,  3 Sep 2019 14:17:27 +0000 (UTC)
+Received: from [16.116.163.9] (unknown [16.116.163.9])
+        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 4F5EE45;
+        Tue,  3 Sep 2019 14:17:26 +0000 (UTC)
+Subject: Re: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
+ <20190903074717.GA34890@gmail.com>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <481b2921-760a-c0f3-489b-2b9c5f792883@hpe.com>
+Date:   Tue, 3 Sep 2019 07:17:56 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <875zmhzjml.fsf@FE-laptop>
-In-Reply-To: <875zmhzjml.fsf@FE-laptop>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 3 Sep 2019 16:17:28 +0200
-Message-ID: <CAK8P3a2whyE+GRg5Q-fDWHKRegnEybuGHY34B45WNkmx1pY9Mw@mail.gmail.com>
-Subject: Re: [GIT PULL] ARM: mvebu: dt64 for v5.4 (#1)
-To:     Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190903074717.GA34890@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-03_02:2019-09-03,2019-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ lowpriorityscore=0 adultscore=0 mlxscore=0 impostorscore=0 clxscore=1011
+ spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=996 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909030150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 12:09 PM Gregory CLEMENT
-<gregory.clement@bootlin.com> wrote:
-> ----------------------------------------------------------------
-> mvebu dt64 for 5.4 (part 1)
->
->  - Add mailbox support on Armada 37xx
->  - Add cpu clock node needed for CPU freq on Armada 7K/8K
->  - Enhance CP110 COMPHY support used by PCIe, USB3 and SATA
 
-Pulled into arm/dt, thanks!
 
-     Arnd
+On 9/3/2019 12:47 AM, Ingo Molnar wrote:
+> 
+> * Mike Travis <mike.travis@hpe.com> wrote:
+> 
+>>
+>> These patches support upcoming UV systems that do not have a UV HUB.
+>>
+>> 	* Save OEM_ID from ACPI MADT probe
+>> 	* Return UV Hubless System Type
+>> 	* Add return code to UV BIOS Init function
+>> 	* Setup UV functions for Hubless UV Systems
+>> 	* Add UV Hubbed/Hubless Proc FS Files
+>> 	* Decode UVsystab Info
+>> 	* Account for UV Hubless in is_uvX_hub Ops
+> 
+> Beyond addressing Christoph's feedback, please also make sure the series
+> applies cleanly to tip:master, because right now it doesn't.
+> 
+> Thanks,
+> 
+> 	Ingo
+> 
+
+I will do this, and retest.  Currently we are using the latest upstream
+version but obviously that thinking is flawed, since we are hoping to
+get into the next merge period.
+
+I also noticed that the MAINTAINERS list for UV is out of date, I will 
+tend to that too.
+
+Thanks,
+Mike
