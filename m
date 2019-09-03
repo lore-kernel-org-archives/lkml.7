@@ -2,94 +2,70 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6F4C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4627C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE86217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C93D20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 17:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfICRGJ (ORCPT
+        id S1730233AbfICRGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 13:06:09 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:32892 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1730135AbfICRGI (ORCPT
+        Tue, 3 Sep 2019 13:06:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53947 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725782AbfICRGl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 13:06:08 -0400
-Received: (qmail 4903 invoked by uid 2102); 3 Sep 2019 13:06:07 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 3 Sep 2019 13:06:07 -0400
-Date:   Tue, 3 Sep 2019 13:06:07 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     David Howells <dhowells@redhat.com>
-cc:     Guenter Roeck <linux@roeck-us.net>, <viro@zeniv.linux.org.uk>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <nicolas.dichtel@6wind.com>, <raven@themaw.net>,
-        Christian Brauner <christian@brauner.io>,
-        <keyrings@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 08/11] usb: Add USB subsystem notifications [ver #7]
-In-Reply-To: <29419.1567528161@warthog.procyon.org.uk>
-Message-ID: <Pine.LNX.4.44L0.1909031303500.1859-100000@iolanthe.rowland.org>
+        Tue, 3 Sep 2019 13:06:41 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i5CGN-0005kb-Az; Tue, 03 Sep 2019 17:06:39 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: cx231xx: remove redundant assignment to variable status
+Date:   Tue,  3 Sep 2019 18:06:39 +0100
+Message-Id: <20190903170639.13849-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019, David Howells wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> Guenter Roeck <linux@roeck-us.net> wrote:
-> 
-> > > > This added call to usbdev_remove() results in a crash when running
-> > > > the qemu "tosa" emulation. Removing the call fixes the problem.
-> > > 
-> > > Yeah - I'm going to drop the bus notification messages for now.
-> > > 
-> > It is not the bus notification itself causing problems. It is the
-> > call to usbdev_remove().
-> 
-> Unfortunately, I don't know how to fix it and don't have much time to
-> investigate it right now - and it's something that can be added back later.
+Variable status is being initialized with a value that is never read
+and is being re-assigned a later on. The assignment is redundant and
+hence can be removed.
 
-The cause of your problem is quite simple:
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/media/usb/cx231xx/cx231xx-avcore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- static int usbdev_notify(struct notifier_block *self,
- 			       unsigned long action, void *dev)
+diff --git a/drivers/media/usb/cx231xx/cx231xx-avcore.c b/drivers/media/usb/cx231xx/cx231xx-avcore.c
+index d417b5fe4093..0974965e848f 100644
+--- a/drivers/media/usb/cx231xx/cx231xx-avcore.c
++++ b/drivers/media/usb/cx231xx/cx231xx-avcore.c
+@@ -1240,7 +1240,7 @@ int cx231xx_init_ctrl_pin_status(struct cx231xx *dev)
+ int cx231xx_set_agc_analog_digital_mux_select(struct cx231xx *dev,
+ 					      u8 analog_or_digital)
  {
- 	switch (action) {
- 	case USB_DEVICE_ADD:
-+		post_usb_device_notification(dev, NOTIFY_USB_DEVICE_ADD, 0);
- 		break;
- 	case USB_DEVICE_REMOVE:
-+		post_usb_device_notification(dev, NOTIFY_USB_DEVICE_REMOVE, 0);
-+		usbdev_remove(dev);
-+		break;
-+	case USB_BUS_ADD:
-+		post_usb_bus_notification(dev, NOTIFY_USB_BUS_ADD, 0);
-+		break;
-+	case USB_BUS_REMOVE:
-+		post_usb_bus_notification(dev, NOTIFY_USB_BUS_REMOVE, 0);
- 		usbdev_remove(dev);
- 		break;
- 	}
-
-The original code had usbdev_remove(dev) under the USB_DEVICE_REMOVE
-case.  The patch mistakenly moves it, putting it under the
-USB_BUS_REMOVE case.
-
-If the usbdev_remove() call were left where it was originally, the 
-problem would be solved.
-
-Alan Stern
+-	int status = 0;
++	int status;
+ 
+ 	/* first set the direction to output */
+ 	status = cx231xx_set_gpio_direction(dev,
+-- 
+2.20.1
 
