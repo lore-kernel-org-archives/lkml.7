@@ -2,203 +2,161 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9F8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44185C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F62422CED
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145F721897
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 18:52:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OMXcLyAN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZUvKv9wf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbfICSvk (ORCPT
+        id S1726566AbfICSwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 14:51:40 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45169 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfICSvj (ORCPT
+        Tue, 3 Sep 2019 14:52:35 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:40436 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbfICSwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 14:51:39 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l16so282380wrv.12;
-        Tue, 03 Sep 2019 11:51:37 -0700 (PDT)
+        Tue, 3 Sep 2019 14:52:35 -0400
+Received: by mail-yw1-f65.google.com with SMTP id k200so1960468ywa.7;
+        Tue, 03 Sep 2019 11:52:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M49FXpPUxwjgm7t3Wg8oHOMmzMmjLMqZvhOGi0L5BtA=;
-        b=OMXcLyANNe8Ie5TMqqTd10UfP6QPEWVHXvV4/K+9jinRSiTZLKb4re7W3YzRxdfaJ4
-         GjUwEDIni9y3PXUUq7h6L2ohPAdZPawjH6OKYjCRS4qjSTrhv6HhteXLvbX7P9meLolT
-         XCBwUJcC2BcmMIUnR3FZWd8rjc5olVESia+UeilKHBT4DovVUPUkEVq7n1XKliXmL6+x
-         ewocFqRiZUXhvTJzkl0Y6Ha3+GRVCGfG3UrQrsO3U3rzAFu7tAn1STGlQ7be+omxpD1J
-         ywnlBjdCGQtcLlF4EyHd7LaBMTEUabVcoR+QP0L0Sbryfw+sjGnKbroKKA1dy3/wbJKA
-         DzFQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qvN3tEABI8j9RhzV3JG9hjBCQ1Sc1MREYVujeWztLHA=;
+        b=ZUvKv9wfq5zCoQ0l1Cj5oVdGMp9YSolF6Gaa8vf2aKoid3Ple2w4pNYT05ZLK9U0mp
+         BN2Vgf55QYXZd42VV/YGJ1BSqMLbiOIDsJZK5yQJFXZeIGZROQ+fXEA2D0kPEe1Ii7x2
+         AynRTRqaMJXSupZTHDs87FPG1yRQqZUbgVuv7mz1g3jHwFUTYEaJl+bWrhIPBt8MWzG9
+         MvsyDSvpvYyD1BwhIuLBuPy3dml5k78qopmwxfdDkk5mn34tN4PQsfbPVvqeLLk7V/Re
+         tFfklfr8Ow2rJE6BmmNnJ4Pzi87blDptCs2CuJQTMoekXxfeNh9p6PdOYHSzpPjn5OIM
+         TX/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=M49FXpPUxwjgm7t3Wg8oHOMmzMmjLMqZvhOGi0L5BtA=;
-        b=sjnFu9OdJgdLr94THMvCb1scvcG7Zu44B41n218e0dJ3ejxao8+7W/ZbMDoExaKkx5
-         rEa21P2ZbLiPG5AEFS22YX7yEs4Egxb5PcgHpItq6vcdgSpnnR9LcQeKOui/me1jboCc
-         WTPSNFWdzUiideo7bAnDVcZopI9WkCIb3FiDvu0WrMf499wu9nqQUdjJdubK/d2CiWAa
-         TPe9EPj+rpXeMcI4H7oyDiRS3kTxcpkCh7ehHX60Lx29Wty7Rr7b3/OlPSpcaEsBnsYk
-         +xA3O3Ymgz+bNxzoMr+u7PscG8oziIEzTISF6gfQfrP27KizDatg1HqPOBjQojkRjarr
-         03NQ==
-X-Gm-Message-State: APjAAAXCcyg3MpD2+wkf7YR68c/XwbOthWYOGWfubVdv4r196hkKCHyi
-        1TEv1o+7JXeXRDERw3vCJd9iVKmF
-X-Google-Smtp-Source: APXvYqzaChP754b4O5iJUcZbrlTXxV51IGfsrUYx+Yf+KbFJv8eqhSlRfwccR8wdPbcn9wBsAnjNEA==
-X-Received: by 2002:a5d:45c3:: with SMTP id b3mr24343528wrs.207.1567536696437;
-        Tue, 03 Sep 2019 11:51:36 -0700 (PDT)
-Received: from [192.168.1.19] (bkv132.neoplus.adsl.tpnet.pl. [83.28.189.132])
-        by smtp.gmail.com with ESMTPSA id e13sm266388wmh.44.2019.09.03.11.51.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 11:51:35 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] leds: lm3532: Move static keyword to the front of
- declarations
-To:     Krzysztof Wilczynski <kw@linux.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190830090958.27108-1-kw@linux.com>
- <20190830181104.5813-1-kw@linux.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <30443cb8-cd19-2b0e-7e11-2a272d000696@gmail.com>
-Date:   Tue, 3 Sep 2019 20:51:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qvN3tEABI8j9RhzV3JG9hjBCQ1Sc1MREYVujeWztLHA=;
+        b=Dv3j4gwfh0Isp9Xk5mawkwAMu1IWrrjYZ9S4Ja8tR8viKioiIOAi/byljafBVj+sw0
+         vbaU0YiH7ELsmwUjiR8jx2Icb4yPB6ryjIntP/yMXqWOM3sVdJA4FKXKiHVwJJXkg49j
+         UBV2GpNgvGY0B3d0XrO97yAUOuMGagbiBDo0fNUMHnUMfZzxLYd+QdgDQ0Jvi0WuTKoG
+         TrjTWV8mVveItl9mJeH3FF+18fHVbx0P7KkaRPyheEw9aMCeQFrFcd/7RMG0RniUBJ5u
+         ccu9+w6aqQAlfQI8lrKU3HOtaJhC3HhdG+ks75vc0PY2HMKGtsHPaA71MUIKrlAwAxlI
+         s4Dg==
+X-Gm-Message-State: APjAAAWF0T/PlE0sPY5W0YXC/TUJLCIPlyCIUj3joT1CLgh8FrfGoEfx
+        AGZ9+nODMHB7Dd56x47GC35yD2EO0mf7BooeXGU=
+X-Google-Smtp-Source: APXvYqxMjCISiR1Fyudln+rFJnaD4DlR1o7fJ/dFxxPiq2eryQQdPtkgJt+pQOZ/hqR7ZI10OS2aYRFMfPeXgryy4GU=
+X-Received: by 2002:a81:9108:: with SMTP id i8mr25633727ywg.346.1567536754195;
+ Tue, 03 Sep 2019 11:52:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190830181104.5813-1-kw@linux.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190830095639.4562-1-kkamagui@gmail.com> <20190830095639.4562-3-kkamagui@gmail.com>
+ <20190830124334.GA10004@ziepe.ca> <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
+ <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
+ <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com> <3f3ce42707f09eded801ff8543be6aee6ef35cf8.camel@linux.intel.com>
+In-Reply-To: <3f3ce42707f09eded801ff8543be6aee6ef35cf8.camel@linux.intel.com>
+From:   Seunghun Han <kkamagui@gmail.com>
+Date:   Wed, 4 Sep 2019 03:52:20 +0900
+Message-ID: <CAHjaAcSftPfPNEHFco9Y609r+s=z8cy8Nnq-A368JgjQSEmJkg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for
+ supporting AMD's fTPM
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Matthew Garrett <mjg59@google.com>
+Cc:     "Safford, David (GE Global Research, US)" <david.safford@ge.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+>
+> On Tue, 2019-09-03 at 18:56 +0900, Seunghun Han wrote:
+> > Thank you for your notification. I am sorry. I missed it and
+> > misunderstood Jarkko's idea. So, I would like to invite Matthew
+> > Garrett to this thread and attach my opinion on that. The problem is
+> > that command and response buffers are in ACPI NVS area. ACPI NVS area
+> > is saved and restored by drivers/acpi/nvs.c during hibernation, so
+> > command and response buffers in ACPI NVS are also handled by nvs.c
+> > file. However, TPM CRB driver uses the buffers to control a TPM
+> > device, therefore, something may break.
+> >
+> > I agree on that point. To remove uncertainty and find the solution,
+> > I read the threads we discussed and did research about two points, 1)
+> > the race condition and 2) the unexpected behavior of the TPM device.
+> >
+> > 1) The race condition concern comes from unknowing buffer access order
+> > while hibernation.
+> > If nvs.c and TPM CRB driver access the buffers concurrently, the race
+> > condition occurs. Then, we can't know the contents of the buffers
+> > deterministically, and it may occur the failure of TPM device.
+> > However, hibernation_snapshot() function calls dpm_suspend() and
+> > suspend_nvs_save() in order when the system enters into hibernation.
+> > It also calls suspend_nvs_restore() and dpm_resume() in order when the
+> > system exits from hibernation. So, no race condition occurs while
+> > hibernation, and we always guarantee the contents of buffers as we
+> > expect.
+> >
+> > 2) The unexpected behavior of the TPM device.
+> > If nvs.c saves and restores the contents of the TPM CRB buffers while
+> > hibernation, it may occur the unexpected behavior of the TPM device
+> > because the buffers are used to control the TPM device. When the
+> > system entered into hibernation, suspend_nvs_save() saved the command
+> > and response buffers, and they had the last command and response data.
+> > After exiting from hibernation, suspend_nvs_restore() restored the
+> > last command and response data into the buffers and nothing happened.
+> > I realized that they were just buffers. If we want to send a command
+> > to the TPM device, we have to set the CRB_START_INVOKE bit to a
+> > control_start register of a control area. The control area was not in
+> > the ACPI NVS area, so it was not affected by nvs.c file. We can
+> > guarantee the behavior of the TPM device.
+> >
+> > Because of these two reasons, I agreed on Jarkko's idea in
+> > https://lkml.org/lkml/2019/8/29/962 . It seems that removing or
+> > changing regions described in the ACPI table is not natural after
+> > setup. In my view, saving and restoring buffers was OK like other NVS
+> > areas were expected because the buffers were in ACPI NVS area.
+> >
+> > So, I made and sent this patch series. I would like to solve this
+> > AMD's fTPM problem because I have been doing research on TPM and this
+> > problem is critical for me (as you know fTPM doesn't work). If you
+> > have any other concern or advice on the patch I made, please let me
+> > know.
+>
+> Please take time to edit your responses. Nobody will read that properly
+> because it is way too exhausting. A long prose only indicates unclear
+> thoughts in the end. If you know what you are doing, you can put things
+> into nutshell only in few senteces.
+>
+> /Jarkko
+>
 
-Thank you for the patch set.
+I'm sorry about that. I would like to invite Matthew Garrett and
+discuss ACPI NVS and command/response buffer mapping again. So, I want
+to summarize my test result and explain my opinion on that. I think
+the data and result are important to make a decision clearly.
+According to my test results, it seems that intersects between ACPI
+NVS and command/response buffers will not make a problem.
 
-On 8/30/19 8:11 PM, Krzysztof Wilczynski wrote:
-> Move the static keyword to the front of declarations ramp_table,
-> als_avrg_table and als_imp_table, and resolve the following
-> compiler warnings that can be seen when building with warnings
-> enabled (W=1):
-> 
-> drivers/leds/leds-lm3532.c:209:1: warning:
-> ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-> 
-> drivers/leds/leds-lm3532.c:266:1: warning:
-> ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-> 
-> drivers/leds/leds-lm3532.c:281:1: warning:
-> ‘static’ is not at beginning of declaration [-Wold-style-declaration]
-> 
-> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> ---
-> Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
-> 
->  drivers/leds/leds-lm3532.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/leds/leds-lm3532.c b/drivers/leds/leds-lm3532.c
-> index c5cfd8e3f15f..62ace6698d25 100644
-> --- a/drivers/leds/leds-lm3532.c
-> +++ b/drivers/leds/leds-lm3532.c
-> @@ -208,7 +208,7 @@ static const struct regmap_config lm3532_regmap_config = {
->  	.cache_type = REGCACHE_FLAT,
->  };
->  
-> -const static int als_imp_table[LM3532_NUM_IMP_VALS] = {37000, 18500, 12330,
-> +static const int als_imp_table[LM3532_NUM_IMP_VALS] = {37000, 18500, 12330,
->  						       92500, 7400, 6170, 5290,
->  						       4630, 4110, 3700, 3360,
->  						       3080, 2850, 2640, 2440,
-> @@ -265,7 +265,7 @@ static int lm3532_get_index(const int table[], int size, int value)
->  	return -EINVAL;
->  }
->  
-> -const static int als_avrg_table[LM3532_NUM_AVG_VALS] = {17920, 35840, 71680,
-> +static const int als_avrg_table[LM3532_NUM_AVG_VALS] = {17920, 35840, 71680,
->  							1433360, 286720, 573440,
->  							1146880, 2293760};
->  static int lm3532_get_als_avg_index(int avg_time)
-> @@ -280,7 +280,7 @@ static int lm3532_get_als_avg_index(int avg_time)
->  				avg_time);
->  }
->  
-> -const static int ramp_table[LM3532_NUM_RAMP_VALS] = { 8, 1024, 2048, 4096, 8192,
-> +static const int ramp_table[LM3532_NUM_RAMP_VALS] = { 8, 1024, 2048, 4096, 8192,
->  						     16384, 32768, 65536};
->  static int lm3532_get_ramp_index(int ramp_time)
->  {
-> 
+Additionally, according to Dave's test results, this patch series can
+cover not only an intersection with ACPI NVS area but also an
+intersection with the reserved area. Here is the link,
+https://lkml.org/lkml/2019/9/3/481 . Considering these results, my
+patch series can solve AMD's fTPM problems.
 
-Both 1/2 and 2/2 applied.
+Matthew,
+what do you think about test results and this patch? In my view, if
+the command/response buffers are in ACPI NVS area, saving and
+restoring the buffers are ok and couldn't break anything.
+I would like to get some feedback from you.
 
--- 
-Best regards,
-Jacek Anaszewski
+Seunghun
