@@ -2,183 +2,100 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05FAC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D8EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B85682053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 199462053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 07:45:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="ufwLEFax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfICHp0 (ORCPT
+        id S1727984AbfICHpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 03:45:26 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:7344 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726062AbfICHp0 (ORCPT
+        Tue, 3 Sep 2019 03:45:34 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:41464 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbfICHpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:45:26 -0400
-IronPort-SDR: NnOPLYU1yOgTEf48OaiyDH3UvjPgQ/D436lgbqX6H15/mSBh7zF8OlTDCqYDevXYgVZIJw8034
- 7SFhc6Qx9sXeohxFT8pBplvSxntLre4QHf//CdIAVA2t9UzUqiZn8iKsgtXPVkXnpxyp3vxiL1
- GqtKOMhEOYrHYrc6CQOq3TlDRy9RihcdNhq0hXGNX69yqzN2LBIecDRPnPt1fg4lRAM9G7jPcv
- e6+JZvgGW+MoxIbkQJ1qWpRdny16EeAX800epYiPP4Vs2MsvuELw8sVfVgLxNHE14HvVrUdn7c
- g0w=
-X-IronPort-AV: E=Sophos;i="5.64,462,1559548800"; 
-   d="scan'208";a="42783682"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 02 Sep 2019 23:45:25 -0800
-IronPort-SDR: zS9Qcrp0QIto19fhteCGENLNW3U4uU8+/TQYd7KFyKSKbvz/o5aeusb/voJslW3KcDNEh/0OoB
- 0QtOzBfyiTeWHvZH/LR77bRqJp1IvkR2Fr54NRVIeQ3OatphMoxqHYUOj5aLdcSuMNY9XG2AQU
- +n5LDlJZmMaXZXq5SLptpWex/MMpKJAknOdf9nRI9w2hhhrlZ3s1oVRrfLs1+xGSoq6yXOGiJf
- eNiuYAnQ9/DSRAuS0T9/tNmOwTBlg9edRtZ+6fXLlVpkAoqfNogVdskndxYOq2FxrmgJTzVisk
- sIw=
-Subject: Re: [PATCH v2 12/49] Input: atmel_mxt_ts - add debug for T92 gesture
- and T93 touch seq msgs
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-CC:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <george_davis@mentor.com>
-References: <20190827062756.20380-1-jiada_wang@mentor.com>
- <20190827062756.20380-3-jiada_wang@mentor.com>
- <20190829152400.iqup6lztqjmcqzrc@holly.lan>
-From:   Jiada Wang <jiada_wang@mentor.com>
-Message-ID: <7d40a6d7-b032-838d-9a97-c9dc241f365f@mentor.com>
-Date:   Tue, 3 Sep 2019 16:45:20 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 03:45:33 -0400
+Received: by mail-vs1-f66.google.com with SMTP id m62so10660653vsc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 00:45:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cFrdK23ABQ4OmIay3wgO+JPOpB+v5jDpV220cb1264Q=;
+        b=ufwLEFaxFvvebslcyBbnlbc241i8XCEIlYE9wBiVJzjKucNO4eL1Na+LBUvtqz1FgL
+         0nI9xN8fOYPappYKOskoqbaYYxhCb3PvLx9y4Wny7CjinopqfC0cv3EIvJ/tIXAhI4vz
+         E2fyfXxycZQ1V9MaJ5KrZ8n//JHLSaT3S3mSjjxjsGU1LuBvEYlxEQyL5b/F3KVpIFiP
+         N3NFsrY+79vToYlc7OsQuMRZr4xpv8JWicFnaCsy143PuOIncx321v5ZzrJHufsTr/CI
+         BUGGU8MQvYhE3W+DRpd/1UQmERT3DAY8x7i5MtUQm23Ix019VfmAutO3WtSiyRx3lM8R
+         mOog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cFrdK23ABQ4OmIay3wgO+JPOpB+v5jDpV220cb1264Q=;
+        b=EPfybDy/fr9uQIBfKI3idoEYPqzEuWrXRDNRHhpeGj1ijL/n7s4+UK1vPrlcrPUIw4
+         3V2vY/HkN1wUTz9XpzIeC4MmlaeWsXlD8LMilXpTpuwSdXH7qJZFmNRYAU6AgCa8zVt0
+         fn++GQ1EFnLuQj5EhubslcVCjqjH7ahWRC7ZaEmT2VYCcJ2A5xjFEwDLAylvSuF8OCZI
+         I/3+oRM+bjN6+oPnl/GuDMD7iSQCj0FFzrqxvBaI9sP2UFbW7IdOE/tRkD1jiJcbqhGp
+         5JYsfH73CJhNWHzQYOsPjr3ltGaUDhBrKzmuTGk/pjBPCwdIKLp86cAObOk/o66SWdqS
+         jEHw==
+X-Gm-Message-State: APjAAAWbXhuvofYEoyBdHa09SI/fFfieGUPdLUixF64ud1BNMXftO027
+        TzBunsD28lxAXlud9y3xSBaQYJJSbpCw9vvlhwpYKQ==
+X-Google-Smtp-Source: APXvYqwbodlz7C9/rGshgIf7/qYpAxUq0gr6cTRVIP3xE0GyOpy2iRluovRfONJrQ0fD8bl9acvTKe0dYnil3LY22UY=
+X-Received: by 2002:a67:e886:: with SMTP id x6mr9386146vsn.117.1567496732233;
+ Tue, 03 Sep 2019 00:45:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190829152400.iqup6lztqjmcqzrc@holly.lan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SVR-ORW-MBX-05.mgc.mentorg.com (147.34.90.205) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+References: <20190901203532.2615-1-hdegoede@redhat.com> <20190901203532.2615-6-hdegoede@redhat.com>
+In-Reply-To: <20190901203532.2615-6-hdegoede@redhat.com>
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+Date:   Tue, 3 Sep 2019 10:45:21 +0300
+Message-ID: <CAOtvUMdd+V5pesw+O-kk9_JB5YpxUM+hU+Uu=kiMvOL9d0AziQ@mail.gmail.com>
+Subject: Re: [PATCH 5/9] crypto: ccree - Rename arrays to avoid conflict with crypto/sha256.h
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Atul Gupta <atul.gupta@chelsio.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        x86@kernel.org, linux-s390@vger.kernel.org,
+        linux-efi@vger.kernel.org,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel
+On Sun, Sep 1, 2019 at 11:36 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Rename the algo_init arrays to cc_algo_init so that they do not conflict
+> with the functions declared in crypto/sha256.h.
+>
+> This is a preparation patch for folding crypto/sha256.h into crypto/sha.h.
 
-On 2019/08/30 0:24, Daniel Thompson wrote:
-> On Tue, Aug 27, 2019 at 03:27:19PM +0900, Jiada Wang wrote:
->> From: Karl Tsou <karl.funlab@gmail.com>
-> 
-> This description is a little brief.
-> 
->>
->> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
->> (cherry picked from ndyer/linux/for-upstream commit cb98986f8342107bf4a536aed4160b20839e97c1)
->> Signed-off-by: George G. Davis <george_davis@mentor.com>
->> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->> ---
->>   drivers/input/touchscreen/atmel_mxt_ts.c | 40 ++++++++++++++++++++++++
->>   1 file changed, 40 insertions(+)
->>
->> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
->> index 4e237209cb34..26861252c088 100644
->> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
->> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
->> @@ -71,6 +71,8 @@
->>   #define MXT_SPT_MESSAGECOUNT_T44	44
->>   #define MXT_SPT_CTECONFIG_T46		46
->>   #define MXT_SPT_DYNAMICCONFIGURATIONCONTAINER_T71 71
->> +#define MXT_PROCI_SYMBOLGESTUREPROCESSOR	92
->> +#define MXT_PROCI_TOUCHSEQUENCELOGGER	93
->>   #define MXT_TOUCH_MULTITOUCHSCREEN_T100 100
->>   #define MXT_PROCI_ACTIVESTYLUS_T107	107
->>   
->> @@ -349,6 +351,10 @@ struct mxt_data {
->>   	u8 T42_reportid_max;
->>   	u16 T44_address;
->>   	u8 T48_reportid;
->> +	u16 T92_address;
->> +	u8 T92_reportid;
->> +	u16 T93_address;
->> +	u8 T93_reportid;
->>   	u8 T100_reportid_min;
->>   	u8 T100_reportid_max;
->>   	u16 T107_address;
->> @@ -1113,6 +1119,24 @@ static int mxt_proc_t48_messages(struct mxt_data *data, u8 *msg)
->>   	return 0;
->>   }
->>   
->> +static void mxt_proc_t92_messages(struct mxt_data *data, u8 *msg)
->> +{
->> +	struct device *dev = &data->client->dev;
->> +	u8 status = msg[1];
->> +
->> +	dev_info(dev, "T92 long stroke LSTR=%d %d\n",
->> +		 (status & 0x80) ? 1 : 0,
->> +		 status & 0x0F);
-> 
-> Shouldn't this be dev_dbg().
-> 
-> 
->> +}
->> +
->> +static void mxt_proc_t93_messages(struct mxt_data *data, u8 *msg)
->> +{
->> +	struct device *dev = &data->client->dev;
->> +	u8 status = msg[1];
->> +
->> +	dev_info(dev, "T93 report double tap %d\n", status);
-> 
-> Ditto.
-> 
+I'm fine with the renaming.
 
-I will replace with dev_dbg() and add appropriate commit description
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 
 Thanks,
-Jiada
-> 
-> Daniel.
-> 
->> +}
->> +
->>   static int mxt_proc_message(struct mxt_data *data, u8 *message)
->>   {
->>   	u8 report_id = message[0];
->> @@ -1145,6 +1169,10 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
->>   	} else if (report_id >= data->T15_reportid_min
->>   		   && report_id <= data->T15_reportid_max) {
->>   		mxt_proc_t15_messages(data, message);
->> +	} else if (report_id == data->T92_reportid) {
->> +		mxt_proc_t92_messages(data, message);
->> +	} else if (report_id == data->T93_reportid) {
->> +		mxt_proc_t93_messages(data, message);
->>   	} else {
->>   		mxt_dump_message(data, message);
->>   	}
->> @@ -1814,6 +1842,10 @@ static void mxt_free_object_table(struct mxt_data *data)
->>   	data->T42_reportid_max = 0;
->>   	data->T44_address = 0;
->>   	data->T48_reportid = 0;
->> +	data->T92_reportid = 0;
->> +	data->T92_address = 0;
->> +	data->T93_reportid = 0;
->> +	data->T93_address = 0;
->>   	data->T100_reportid_min = 0;
->>   	data->T100_reportid_max = 0;
->>   	data->max_reportid = 0;
->> @@ -1906,6 +1938,14 @@ static int mxt_parse_object_table(struct mxt_data *data,
->>   		case MXT_PROCG_NOISESUPPRESSION_T48:
->>   			data->T48_reportid = min_id;
->>   			break;
->> +		case MXT_PROCI_SYMBOLGESTUREPROCESSOR:
->> +			data->T92_reportid = min_id;
->> +			data->T92_address = object->start_address;
->> +			break;
->> +		case MXT_PROCI_TOUCHSEQUENCELOGGER:
->> +			data->T93_reportid = min_id;
->> +			data->T93_address = object->start_address;
->> +			break;
->>   		case MXT_TOUCH_MULTITOUCHSCREEN_T100:
->>   			data->multitouch = MXT_TOUCH_MULTITOUCHSCREEN_T100;
->>   			data->T100_reportid_min = min_id;
->> -- 
->> 2.19.2
->>
+Gilad
