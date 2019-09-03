@@ -2,119 +2,334 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F783C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349F9C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDA0423431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527849;
-	bh=j+qpT1vHkSZ0DEujxjH4VH5DqX9H4heVAkcJL+/KR3E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wfnqI5KHq94Vs3JDR70w5sNJVRz9E8vB+Ye2RjL/MV8XeYeo30rP1TLAhmMgHBtEI
-	 pRThTHrveV9sLUqvpqrLCUwgqzKLkAjrq1U5N4KRgSY7zLg8tiMycY5QUekF+gdCkV
-	 pjBBn+FaH+4JNvXad4ea1lMla/Du6SwNr0Qz1Qd0=
+	by mail.kernel.org (Postfix) with ESMTP id E2F662343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="cvJtQ5xi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbfICQYJ (ORCPT
+        id S1730064AbfICQYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:24:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43776 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729692AbfICQYI (ORCPT
+        Tue, 3 Sep 2019 12:24:16 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:24648 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729692AbfICQYP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:24:08 -0400
-Received: by mail-lj1-f196.google.com with SMTP id d5so5686784lja.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qZveg6mK+E2YHe55A6a0W+my7BBYnxsHTvRqGKfbHHU=;
-        b=N8zWABOn9S+3i7NCdVRFka+PsNBaHlwe6NsbV/3gcuW2ESNEl8uh2oqvumWFPXbEDr
-         iBEFwEPZjx9RRFw8g7fhIy0mOrWL3g6kOkSPnp4dKT4RTMG007mkeRGB1skoCqMaPrzC
-         G+cvlMy/mviUKpyz2n8C346C4h1M3FKOxUums=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qZveg6mK+E2YHe55A6a0W+my7BBYnxsHTvRqGKfbHHU=;
-        b=RhW8ycm31TxaCgHT+iHK0tVJ0AsDqJoZREjQeLSv/3FXXiXFqsy7HXmPJJv0qIUZJX
-         o/pDFrpR5nXT8Stp5gNWDREy+afKc5zCidzEx2ihM95yLdKi9xFxjSCjdPF2kiVdG9ja
-         j6H5NoJ2Sx+n1IAkCF/xKBm+ZLBjP70fZDs+fxmcGm3xPoTlHn+muoRfx0Eph1OhwIKi
-         7PAlY6RZCjw5ttFZlO7iYsjqx5kgp+zFZL6iajZIjb7pYS2jkbQjbOa5STkhzc8OwyS/
-         ijKOAU57p3UM/3zZdiVT0bqSfe3tVbMNYmOyvcoIhd8mMkJ8PU+5Kj+KR29+C0RuQN0t
-         1Nzw==
-X-Gm-Message-State: APjAAAUYdoRpB87rbdEWNAghBdAcEdjTc+J2sncbBcmSVg1yfgKgp7kw
-        yrjdfD10uJ0RMVBJSrQzkGbxTs8ojGM=
-X-Google-Smtp-Source: APXvYqx4dEnCkmdGVl0jCWjVBW9P1sRYsV1ytrnX1cger/wrSfWhamm6O20NVyrKY9kdcCC0+t/YHA==
-X-Received: by 2002:a2e:9586:: with SMTP id w6mr702131ljh.47.1567527845472;
-        Tue, 03 Sep 2019 09:24:05 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id f26sm1004976ljc.10.2019.09.03.09.24.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Sep 2019 09:24:04 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id y23so5576701lje.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:24:03 -0700 (PDT)
-X-Received: by 2002:a2e:814d:: with SMTP id t13mr8334804ljg.72.1567527843691;
- Tue, 03 Sep 2019 09:24:03 -0700 (PDT)
+        Tue, 3 Sep 2019 12:24:15 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x83GNuga018634
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Sep 2019 01:23:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x83GNuga018634
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567527837;
+        bh=y+e3X3MFeRPRQ94ud5uQm3RXqxAVNjo2F8aWOFAv0Tg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cvJtQ5xi0z5+eBfL2LTHDTGJQd55FFdII9cuj3sYTNI8l1tSEcRpK2jgBzi9oFG9O
+         odCEtZtx/MP6GJtPjsd1qcA+zBeZPtBMgd5H4Vq+aBIyyBkHmRnXSgrSmHeWiZX2ON
+         Hi9+QPvmEwl5VxcyWokagGvUKDSIOg5Mz1emQmGV3ewcUA+NXl/yDBdEqhYteHgR7C
+         ygTcVmpHNKlTDsO9Rsr3cyjWkfM/aRrrI9UtND0Dz6ReAzFQl/5AqTaEEFzPNHXUp4
+         He1AXUPtnaeT7tgBDNKbDjIpjdIKApCQhRRTYrzCw35lR8XIuK12ciqTKqRkv0dK6x
+         4exd/Ouj3ETdg==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id w195so9043040vsw.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 09:23:56 -0700 (PDT)
+X-Gm-Message-State: APjAAAUrA38eG8gOHLzmRamRkHQgaWS7sIMRLNK/XkWFE4qmxHwGXFm2
+        4rkrFyka7xVbTkLbdWtw3TTjphGVWg5Qmo5/txU=
+X-Google-Smtp-Source: APXvYqzlQHEQ2AF+Jw1PfKxY2PsYc9qAKjBvTVDFoq9TbtWIgjl6qzVfYmqQfVrtL7Fr2DcBqiVgXNmgL9Dj6TWhNvk=
+X-Received: by 2002:a67:e9cc:: with SMTP id q12mr9756351vso.181.1567527835701;
+ Tue, 03 Sep 2019 09:23:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190903160036.2400-1-mathieu.desnoyers@efficios.com> <20190903160036.2400-3-mathieu.desnoyers@efficios.com>
-In-Reply-To: <20190903160036.2400-3-mathieu.desnoyers@efficios.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 3 Sep 2019 09:23:47 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiY-Lh1SvzpG2OPh_DUNJMeTTSyfNmx=ALz1UuZ4EiC=g@mail.gmail.com>
-Message-ID: <CAHk-=wiY-Lh1SvzpG2OPh_DUNJMeTTSyfNmx=ALz1UuZ4EiC=g@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/3] Fix: sched/membarrier: READ_ONCE p->mm in membarrier_global_expedited
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <20190806211047.232709-1-nhuck@google.com>
+In-Reply-To: <20190806211047.232709-1-nhuck@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 4 Sep 2019 01:23:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARewhp0TZ1tQ1Sy=R3wbBB0BwY6QasEBg6xmPJ3SpErbg@mail.gmail.com>
+Message-ID: <CAK7LNARewhp0TZ1tQ1Sy=R3wbBB0BwY6QasEBg6xmPJ3SpErbg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] Add clang-tidy and static analyzer support to makefile
+To:     Nathan Huckleberry <nhuck@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 9:00 AM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
+On Wed, Aug 7, 2019 at 6:13 AM Nathan Huckleberry <nhuck@google.com> wrote:
 >
-> Due to the lack of READ_ONCE() on p->mm, this code can in fact turn into
-> a NULL deref when we hit do_exit() around exit_mm(). The first p->mm
-> read is before and sees !NULL, the second is after and does observe
-> NULL, which triggers a null pointer dereference.
+> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+> ---
+> These patches add clang-tidy and the clang static-analyzer as make
+> targets. The goal of these patches is to make static analysis tools
+> usable and extendable by any developer or researcher who is familiar
+> with basic c++.
+>
+> The current static analysis tools require intimate knowledge of the internal
+> workings of the static analysis.  Clang-tidy and the clang static analyzers
+> expose an easy to use api and allow users unfamiliar with clang to
+> write new checks with relative ease.
+>
+> ===Clang-tidy===
+>
+> Clang-tidy is an easily extendable 'linter' that runs on the AST.
+> Clang-tidy checks are easy to write and understand. A check consists of
+> two parts, a matcher and a checker. The matcher is created using a
+> domain specific language that acts on the AST
+> (https://clang.llvm.org/docs/LibASTMatchersReference.html).  When AST
+> nodes are found by the matcher a callback is made to the checker. The
+> checker can then execute additional checks and issue warnings.
+>
+> Here is an example clang-tidy check to report functions that have calls
+> to local_irq_disable without calls to local_irq_enable and vice-versa.
+> Functions flagged with __attribute((annotation("ignore_irq_balancing")))
+> are ignored for analysis.
+>
+> The full patch can be found here (https://reviews.llvm.org/D65828)
+>
+> ```
+> void IrqUnbalancedCheck::registerMatchers(MatchFinder *Finder) {
+>   // finds calls to "arch_local_irq_disable" in a function body
+>   auto disable =
+>               forEachDescendant(
+>                   callExpr(
+>                       hasDeclaration(
+>                           namedDecl(
+>                               hasName("arch_local_irq_disable")))).bind("disable"));
+>
+>   // finds calls to "arch_local_irq_enable" in a function body
+>   auto enable =
+>               forEachDescendant(
+>                   callExpr(
+>                       hasDeclaration(
+>                           namedDecl(
+>                               hasName("arch_local_irq_enable")))).bind("enable"));
+>
+>   // Looks for function body that has the following property:
+>   // ((disable && !enable) || (enable && !disable))
+>   auto matcher = functionDecl(
+>       anyOf(allOf(disable, unless(enable)), allOf(enable, unless(disable))));
+>
+>   Finder->addMatcher(matcher.bind("func"), this);
+> }
+>
+> std::string annotation = "ignore_irq_balancing";
+> void IrqUnbalancedCheck::check(const MatchFinder::MatchResult &Result) {
+>   const auto *MatchedDecl = Result.Nodes.getNodeAs<FunctionDecl>("func");
+>   const auto *DisableCall = Result.Nodes.getNodeAs<CallExpr>("disable");
+>   const auto *EnableCall = Result.Nodes.getNodeAs<CallExpr>("enable");
+>
+>   // If the function has __attribute((annotate("ignore_irq_balancing"))
+>   for (const auto *Attr : MatchedDecl->attrs()) {
+>     if (Attr->getKind() == clang::attr::Annotate) {
+>       if(dyn_cast<AnnotateAttr>(Attr)->getAnnotation().str() == annotation) {
+>         return;
+>       }
+>     }
+>   }
+>
+>   if(EnableCall) {
+>     diag(MatchedDecl->getLocation(), "call to 'enable_local_irq' without 'disable_local_irq' in %0 ")
+>         << MatchedDecl;
+>     diag(EnableCall->getBeginLoc(), "call to 'enable_local_irq'", DiagnosticIDs::Note)
+>         << MatchedDecl;
+>   }
+>
+>   if(DisableCall) {
+>     diag(MatchedDecl->getLocation(), "call to 'disable_local_irq' without 'enable_local_irq' in %0 ")
+>         << MatchedDecl;
+>     diag(DisableCall->getBeginLoc(), "call to 'disable_local_irq'", DiagnosticIDs::Note)
+>         << MatchedDecl;
+>   }
+> }
+> ```
+>
+> ===Clang static analyzer===
+>
+> The clang static analyzer is a more powerful static analysis tool that
+> uses symbolic execution to find bugs. Currently there is a check that
+> looks for potential security bugs from invalid uses of kmalloc and
+> kfree. There are several more general purpose checks that are useful for
+> the kernel.
+>
+> The clang static analyzer is well documented and designed to be
+> extensible.
+> (https://clang-analyzer.llvm.org/checker_dev_manual.html)
+> (https://github.com/haoNoQ/clang-analyzer-guide/releases/download/v0.1/clang-analyzer-guide-v0.1.pdf)
+>
+>
+> Why add clang-tidy and the clang static analyzer when other static
+> analyzers are already in the kernel?
+>
+> The main draw of the clang tools is how accessible they are. The clang
+> documentation is very nice and these tools are built specifically to be
+> easily extendable by any developer. They provide an accessible method of
+> bug-finding and research to people who are not overly familiar with the
+> kernel codebase.
+>
+>  Makefile                                      |  3 ++
+>  scripts/clang-tools/Makefile.clang-tools      | 35 ++++++++++++++
+>  .../{ => clang-tools}/gen_compile_commands.py |  0
+>  scripts/clang-tools/parse_compile_commands.py | 47 +++++++++++++++++++
+>  4 files changed, 85 insertions(+)
+>  create mode 100644 scripts/clang-tools/Makefile.clang-tools
+>  rename scripts/{ => clang-tools}/gen_compile_commands.py (100%)
+>  create mode 100755 scripts/clang-tools/parse_compile_commands.py
+>
+> diff --git a/Makefile b/Makefile
+> index fabc127d127f..49f1d3fa48a8 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -709,6 +709,7 @@ KBUILD_CFLAGS       += $(call cc-option,--param=allow-store-data-races=0)
+>
+>  include scripts/Makefile.kcov
+>  include scripts/Makefile.gcc-plugins
+> +include scripts/clang-tools/Makefile.clang-tools
+>
+>  ifdef CONFIG_READABLE_ASM
+>  # Disable optimizations that make assembler listings hard to read.
+> @@ -1470,6 +1471,8 @@ help:
+>         @echo  '  headers_check   - Sanity check on exported headers'
+>         @echo  '  headerdep       - Detect inclusion cycles in headers'
+>         @echo  '  coccicheck      - Check with Coccinelle'
+> +       @echo  '  clang-analyzer  - Check with clang static analyzer'
+> +       @echo  '  clang-tidy      - Check with clang-tidy'
+>         @echo  ''
+>         @echo  'Kernel selftest:'
+>         @echo  '  kselftest       - Build and run kernel selftest (run as root)'
+> diff --git a/scripts/clang-tools/Makefile.clang-tools b/scripts/clang-tools/Makefile.clang-tools
+> new file mode 100644
+> index 000000000000..0adb6df20777
+> --- /dev/null
+> +++ b/scripts/clang-tools/Makefile.clang-tools
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +PHONY += clang-tidy
+> +HAS_PARALLEL := $(shell (parallel --version 2> /dev/null) | grep 'GNU parallel' 2> /dev/null)
+> +clang-tidy:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +ifdef HAS_PARALLEL
+> +       #Xargs interleaves multiprocessed output. GNU Parallel does not.
+> +       scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +               | parallel -k -j $(shell nproc) 'echo {} && clang-tidy -p . "-checks=-*,linuxkernel-*" {}'
+> +else
+> +       @echo "GNU parallel is not installed. Defaulting to non-parallelized runs"
+> +       scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +               | xargs -L 1 -I@ sh -c "echo '@' && clang-tidy -p . '-checks=-*,linuxkernel-*' @"
+> +endif
+> +else
+> +       $(error Clang-tidy requires CC=clang)
+> +endif
 
-This is horribly ugly, and I don't think it is necessary.
 
-The way to fix the problem you are addressing in patches 2-3 is to
-move the MEMBARRIER_STATE_GLOBAL_EXPEDITED flag from the mm struct to
-the task struct, and avoiding the whole issue with "mm may be released
-at any point" that way.
+What is the benefit for wiring this to the Makefile?
 
-Now, your reaction will be "but lots of threads can share an 'mm', so
-we can't do that", but that doesn't seem to be true. Looking at the
-place that _sets_ this, you already handle the single-thread cases
-specially, and the multiple threads has to do a "synchronize_rcu()".
-You might as well either walk the current CPU's and set it in all
-threads where the thread->mm matches the mm. And then you make the
-scheduler set the bit on newly scheduled entities.
+Is there any drawback if you implement this in a small
+independent shell script or something?
 
-NOTE! When you walk all current cpu's in
-membarrier_register_global_expedited(), you only look at the
-'task->mm' _value_, you don't dereference it. And that's ok, because
-'task' itself is stable, it's just mm that can go away.
 
-Wouldn't that solve the issue much more cleanly?
+You are already adding a new python script
+just for reading the json file.
 
-             Linus
+I would invoke clang-{tidy,analyzer} from that python script.
+
+If you unify these into a python script,
+you can support the multiprocessing with a
+python library ('import multiprocessing')
+without GNU parallel.
+
+
+Thanks.
+
+
+
+> +PHONY += clang-analyzer
+> +clang-analyzer:
+> +ifdef CONFIG_CC_IS_CLANG
+> +       $(PYTHON3) scripts/clang-tools/gen_compile_commands.py
+> +ifdef HAS_PARALLEL
+> +       #Xargs interleaves multiprocessed output. GNU Parallel does not.
+> +       scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +               | parallel -k -j $(shell nproc) 'echo {} && clang-tidy -p . "-checks=-*,clang-analyzer-*" {}'
+> +else
+> +       @echo "GNU parallel is not installed. Defaulting to non-parallelized runs"
+> +       scripts/clang-tools/parse_compile_commands.py compile_commands.json \
+> +               | xargs -L 1 -I@ sh -c "echo '@' && clang-tidy -p . '-checks=-*,clang-analyzer-*' @"
+> +endif
+> +else
+> +       $(error Clang-analyzer requires CC=clang)
+> +endif
+> diff --git a/scripts/gen_compile_commands.py b/scripts/clang-tools/gen_compile_commands.py
+> similarity index 100%
+> rename from scripts/gen_compile_commands.py
+> rename to scripts/clang-tools/gen_compile_commands.py
+> diff --git a/scripts/clang-tools/parse_compile_commands.py b/scripts/clang-tools/parse_compile_commands.py
+> new file mode 100755
+> index 000000000000..d6bc1bf9951e
+> --- /dev/null
+> +++ b/scripts/clang-tools/parse_compile_commands.py
+> @@ -0,0 +1,47 @@
+> +#!/usr/bin/env python
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Copyright (C) Google LLC, 2019
+> +#
+> +# Author: Nathan Huckleberry <nhuck@google.com>
+> +#
+> +"""A helper routine for make clang-tidy to parse compile_commands.json."""
+> +
+> +import argparse
+> +import json
+> +import logging
+> +import os
+> +import re
+> +
+> +def parse_arguments():
+> +  """Set up and parses command-line arguments.
+> +  Returns:
+> +    file_path: Path to compile_commands.json file
+> +  """
+> +  usage = """Parse a compilation database and return a list of files
+> +  included in the database"""
+> +  parser = argparse.ArgumentParser(description=usage)
+> +
+> +  file_path_help = ('Path to the compilation database to parse')
+> +  parser.add_argument('file',  type=str, help=file_path_help)
+> +
+> +  args = parser.parse_args()
+> +
+> +  return args.file
+> +
+> +
+> +def main():
+> +  filename = parse_arguments()
+> +
+> +  #Read JSON data into the datastore variable
+> +  if filename:
+> +    with open(filename, 'r') as f:
+> +      datastore = json.load(f)
+> +
+> +      #Use the new datastore datastructure
+> +      for entry in datastore:
+> +        print(entry['file'])
+> +
+> +
+> +if __name__ == '__main__':
+> +    main()
+> --
+> 2.22.0.709.g102302147b-goog
+>
+
+
+--
+Best Regards
+Masahiro Yamada
