@@ -2,108 +2,120 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08ECDC41514
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1856CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB882339D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E083D22DBF
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:10:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="UGwCFRV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfICKKS (ORCPT
+        id S1728653AbfICKKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:10:18 -0400
-Received: from mga18.intel.com ([134.134.136.126]:13332 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfICKKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:10:17 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 03:10:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
-   d="scan'208";a="198739312"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 03:10:14 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 03 Sep 2019 13:10:13 +0300
-Date:   Tue, 3 Sep 2019 13:10:13 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 05/11] device property: Add fwnode_get_name for
- returning the name of a node
-Message-ID: <20190903101013.GA23603@kuha.fi.intel.com>
-References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
- <20190902135732.23455-6-sakari.ailus@linux.intel.com>
+        Tue, 3 Sep 2019 06:10:42 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19248 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfICKKl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:10:41 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d6e3c210000>; Tue, 03 Sep 2019 03:10:41 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 03 Sep 2019 03:10:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 03 Sep 2019 03:10:40 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Sep
+ 2019 10:10:38 +0000
+Subject: Re: [PATCH v2] merge_config.sh: ignore unwanted grep errors
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@collabora.com>, <linux-tegra@vger.kernel.org>
+References: <a60fe77a1475ba960ad9fc851f1ace2196b661b8.1567436778.git.guillaume.tucker@collabora.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <3f5df041-ae53-8719-41f4-7b56a49a8bbc@nvidia.com>
+Date:   Tue, 3 Sep 2019 11:10:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902135732.23455-6-sakari.ailus@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <a60fe77a1475ba960ad9fc851f1ace2196b661b8.1567436778.git.guillaume.tucker@collabora.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567505441; bh=yP6lqyVaco/w8M3HPHrreEiKuBrDXd5RtrVC6WjwWEc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=UGwCFRV0Ly2PlBdVSpRr7afLSTbHcab2B7bfyl79fab/T7BNnoy+vQnPz0bX1ckfn
+         PSUPZalh4PZwiZakqR4lzs+LcCU5b5YaxdZRX3C3REDmqa98VOmD2eAQTd1QoGBqsi
+         1SjQjmtki2yOkbidr8U6z/PEzCnE4Dx/pDXUri52W509E7wpR5yFEROE1YvEesxAiB
+         hdJHcssoRksOKUTQzTBSKH4JkaEQN2wXOlPeg95ZNr9TdcFyH4EvNlbMzECBEQS7gf
+         8Ny30rGUJ50mhG4XiVbQyAltLtnA+NxCX4lK0sacxmFpjPWyBIncyR7JzOMLYYBd67
+         9Ot0b4PMKXSEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sakari,
 
-On Mon, Sep 02, 2019 at 04:57:26PM +0300, Sakari Ailus wrote:
-> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-> index 951e7efd47c23..a4a0f5b80bad3 100644
-> --- a/drivers/base/swnode.c
-> +++ b/drivers/base/swnode.c
-> @@ -515,6 +515,25 @@ static int software_node_read_string_array(const struct fwnode_handle *fwnode,
->  						propname, val, nval);
->  }
+On 02/09/2019 16:18, Guillaume Tucker wrote:
+> The merge_config.sh script verifies that all the config options have
+> their expected value in the resulting file and prints any issues as
+> warnings.  These checks aren't intended to be treated as errors given
+> the current implementation.  However, since "set -e" was added, if the
+> grep command to look for a config option does not find it the script
+> will then abort prematurely.
+> 
+> Handle the case where the grep exit status is non-zero by setting
+> ACTUAL_VAL to an empty string to restore previous functionality.
+> 
+> Fixes: cdfca821571d ("merge_config.sh: Check error codes from make")
+> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> Cc: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> 
+> Notes:
+>     v2: use true rather than echo as per Jon Hunter's suggestion
+> 
+>  scripts/kconfig/merge_config.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/scripts/kconfig/merge_config.sh b/scripts/kconfig/merge_config.sh
+> index d924c51d28b7..f2cc10b1d404 100755
+> --- a/scripts/kconfig/merge_config.sh
+> +++ b/scripts/kconfig/merge_config.sh
+> @@ -177,7 +177,7 @@ make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
+>  for CFG in $(sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" $TMP_FILE); do
 >  
-> +static const char *
-> +software_node_get_name(const struct fwnode_handle *fwnode)
-> +{
-> +	const struct software_node *softnode = to_software_node(fwnode);
-> +	const struct swnode *swnode = software_node_to_swnode(softnode);
+>  	REQUESTED_VAL=$(grep -w -e "$CFG" $TMP_FILE)
+> -	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG")
+> +	ACTUAL_VAL=$(grep -w -e "$CFG" "$KCONFIG_CONFIG" || true)
+>  	if [ "x$REQUESTED_VAL" != "x$ACTUAL_VAL" ] ; then
+>  		echo "Value requested for $CFG not in final .config"
+>  		echo "Requested value:  $REQUESTED_VAL"
+> 
 
-Why not just:
+Thanks for fixing! Great if we could get this into -next as soon as
+possible!
 
-        struct swnode *swnode = to_swnode(fwnode);
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-> +	struct fwnode_handle *parent;
-> +
-> +	if (!swnode)
-> +		return "(null)";
-> +
-> +	parent = fwnode_get_parent(&swnode->fwnode);
-> +	if (!parent)
-> +		return "";
-
-Please note that there is no root software node object (the kset is
-the root), so you will get "" with most nodes. I'm assuming that is
-not the intention, or is it?
-
-> +	fwnode_handle_put(parent);
-> +
-> +	return kobject_name(&swnode->kobj);
-> +}
-> +
->  static struct fwnode_handle *
->  software_node_get_parent(const struct fwnode_handle *fwnode)
->  {
-> @@ -615,6 +634,7 @@ static const struct fwnode_operations software_node_ops = {
->  	.property_present = software_node_property_present,
->  	.property_read_int_array = software_node_read_int_array,
->  	.property_read_string_array = software_node_read_string_array,
-> +	.get_name = software_node_get_name,
->  	.get_parent = software_node_get_parent,
->  	.get_next_child_node = software_node_get_next_child,
->  	.get_named_child_node = software_node_get_named_child_node,
-
-thanks,
+Cheers
+Jon
 
 -- 
-heikki
+nvpublic
