@@ -6,195 +6,187 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE897C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204D6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E3A22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF54217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbfICKuT (ORCPT
+        id S1728731AbfICKwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:50:19 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49671 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbfICKuT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:50:19 -0400
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1i56O5-0005Th-MY; Tue, 03 Sep 2019 12:50:13 +0200
-Subject: Re: [PATCH] ACPI: support for NXP i2c controller
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Chuanhua Han <chuanhua.han@nxp.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
-        Udit Kumar <udit.kumar@nxp.com>
-References: <20190711102601.20582-1-chuanhua.han@nxp.com>
- <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <31e7c1bb-d153-5feb-0b86-946caca5206c@pengutronix.de>
-Date:   Tue, 3 Sep 2019 12:50:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 3 Sep 2019 06:52:25 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52775 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbfICKwZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:52:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 03:52:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
+   d="scan'208";a="333800237"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 03 Sep 2019 03:52:24 -0700
+Received: from [10.226.38.16] (vramuthx-mobl1.gar.corp.intel.com [10.226.38.16])
+        by linux.intel.com (Postfix) with ESMTP id A4FB7580105;
+        Tue,  3 Sep 2019 03:52:22 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com
+References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190902033716.GA18092@bogus>
+ <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
+ <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com>
+ <39d6fe60-e9f5-d205-ec6c-4a3143fe1e13@linux.intel.com>
+ <CAL_Jsq+f27t5Wu+qtynDd_O9vBVZFKHCrgCP7WhyGo+W1y-XAA@mail.gmail.com>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <a7aa3ae0-b8b6-5199-468f-f282fdff15cf@linux.intel.com>
+Date:   Tue, 3 Sep 2019 18:52:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+f27t5Wu+qtynDd_O9vBVZFKHCrgCP7WhyGo+W1y-XAA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One more question,
+Hi Rob,
 
-On 02.09.19 22:56, Rafael J. Wysocki wrote:
-> On Thu, Jul 11, 2019 at 12:35 PM Chuanhua Han <chuanhua.han@nxp.com> wrote:
->>
->> Enable NXP i2c controller to boot with ACPI
->>
->> Signed-off-by: Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>
->> Signed-off-by: Udit Kumar <udit.kumar@nxp.com>
->> Signed-off-by: Chuanhua Han <chuanhua.han@nxp.com>
-> 
-> Wolfram, any objections to this from the i2c side?
-> 
->> ---
->>   drivers/acpi/acpi_apd.c      |  6 ++++++
->>   drivers/i2c/busses/i2c-imx.c | 15 +++++++++++++++
->>   2 files changed, 21 insertions(+)
->>
->> diff --git a/drivers/acpi/acpi_apd.c b/drivers/acpi/acpi_apd.c
->> index ff47317..cf8566c 100644
->> --- a/drivers/acpi/acpi_apd.c
->> +++ b/drivers/acpi/acpi_apd.c
->> @@ -165,6 +165,11 @@ static const struct apd_device_desc thunderx2_i2c_desc = {
->>          .fixed_clk_rate = 125000000,
->>   };
->>
->> +static const struct apd_device_desc nxp_i2c_desc = {
->> +       .setup = acpi_apd_setup,
->> +       .fixed_clk_rate = 350000000,
->> +};
+    Thank you for your suggestions and clarifications.
 
-I'm not ACPI expert, so need here some help for understanding. Here is ACPI table for 
-NXP0001 id (found on the internet):
-+  Device(I2C0) {
-+    Name(_HID, "NXP0001")
-+    Name(_UID, 0)
-+    Name(_CRS, ResourceTemplate() {
-+      Memory32Fixed(ReadWrite, I2C0_BASE, I2C_LEN)
-+      Interrupt(ResourceConsumer, Level, ActiveHigh, Shared) { I2C0_IT }
-+    }) // end of _CRS for i2c0 device
-+    Name (_DSD, Package () {
-+      ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-+      Package () {
-+         Package () {"clock-frequency", DEFAULT_PLAT_FREQ}, //This is device specific 
-data, Need to see how to pass clk stuff
-+      }
-+    })
-
-Should kernel some how get proper clock-frequency from the ACPI? Or we still need to use 
-hard coded .fixed_clk_rate in the kernel?
-
-
->>   static const struct apd_device_desc hip08_spi_desc = {
->>          .setup = acpi_apd_setup,
->>          .fixed_clk_rate = 250000000,
->> @@ -238,6 +243,7 @@ static const struct acpi_device_id acpi_apd_device_ids[] = {
->>          { "HISI02A1", APD_ADDR(hip07_i2c_desc) },
->>          { "HISI02A2", APD_ADDR(hip08_i2c_desc) },
->>          { "HISI0173", APD_ADDR(hip08_spi_desc) },
->> +       { "NXP0001", APD_ADDR(nxp_i2c_desc) },
->>   #endif
->>          { }
->>   };
->> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
->> index b1b8b93..99f9b96 100644
->> --- a/drivers/i2c/busses/i2c-imx.c
->> +++ b/drivers/i2c/busses/i2c-imx.c
->> @@ -44,6 +44,7 @@
->>   #include <linux/pm_runtime.h>
->>   #include <linux/sched.h>
->>   #include <linux/slab.h>
->> +#include <linux/acpi.h>
+On 3/9/2019 6:34 PM, Rob Herring wrote:
+> On Tue, Sep 3, 2019 at 11:08 AM Ramuthevar, Vadivel MuruganX
+> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>> Hi Rob,
 >>
->>   /* This will be the driver name the kernel reports */
->>   #define DRIVER_NAME "imx-i2c"
->> @@ -255,6 +256,12 @@ static const struct of_device_id i2c_imx_dt_ids[] = {
->>   };
->>   MODULE_DEVICE_TABLE(of, i2c_imx_dt_ids);
+>>    Thank you so much for prompt reply.
 >>
->> +static const struct acpi_device_id i2c_imx_acpi_ids[] = {
->> +       {"NXP0001", .driver_data = (kernel_ulong_t)&vf610_i2c_hwdata},
->> +       { }
->> +};
->> +MODULE_DEVICE_TABLE(acpi, i2c_imx_acpi_ids);
->> +
->>   static inline int is_imx1_i2c(struct imx_i2c_struct *i2c_imx)
->>   {
->>          return i2c_imx->hwdata->devtype == IMX1_I2C;
->> @@ -1052,6 +1059,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
->>   {
->>          const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
->>                                                             &pdev->dev);
->> +       const struct acpi_device_id *acpi_id =
->> +                       acpi_match_device(i2c_imx_acpi_ids,
->> +                                         &pdev->dev);
->>          struct imx_i2c_struct *i2c_imx;
->>          struct resource *res;
->>          struct imxi2c_platform_data *pdata = dev_get_platdata(&pdev->dev);
->> @@ -1079,6 +1089,9 @@ static int i2c_imx_probe(struct platform_device *pdev)
+>> On 3/9/2019 5:19 PM, Rob Herring wrote:
+>>> On Tue, Sep 3, 2019 at 2:57 AM Ramuthevar, Vadivel MuruganX
+>>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>>>> Hi Rob,
+>>>>
+>>>> Thank you for review comments.
+>>>>
+>>>> On 2/9/2019 9:38 PM, Rob Herring wrote:
+>>>>> On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>>>>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>>>>
+>>>>>> Add a YAML schema to use the host controller driver with the
+>>>>>> SDXC PHY on Intel's Lightning Mountain SoC.
+>>>>>>
+>>>>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>>>> ---
+>>>>>>     .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
+>>>>>>     .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
+>>>>>>     2 files changed, 85 insertions(+)
+>>>>>>     create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>>>>>>     create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..99647207b414
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+>>>>>> @@ -0,0 +1,52 @@
+>>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>>> +%YAML 1.2
+>>>>>> +---
+>>>>>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+>>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>>> +
+>>>>>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+>>>>>> +
+>>>>>> +maintainers:
+>>>>>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>>>>>> +
+>>>>>> +allOf:
+>>>>>> +  - $ref: "intel,syscon.yaml"
+>>>>> You don't need this. It should be selected and applied by the compatible
+>>>>> string matching.
+>>>> Agreed, fix it in the next patch.
+>>>>>> +
+>>>>>> +description: Binding for SDXC PHY
+>>>>>> +
+>>>>>> +properties:
+>>>>>> +  compatible:
+>>>>>> +    const: intel,lgm-sdxc-phy
+>>>>>> +
+>>>>>> +  intel,syscon:
+>>>>>> +    description: phandle to the sdxc through syscon
+>>>>>> +
+>>>>>> +  clocks:
+>>>>>> +    maxItems: 1
+>>>>>> +
+>>>>>> +  clock-names:
+>>>>>> +    maxItems: 1
+>>>>>> +
+>>>>>> +  "#phy-cells":
+>>>>>> +    const: 0
+>>>>>> +
+>>>>>> +required:
+>>>>>> +  - "#phy-cells"
+>>>>>> +  - compatible
+>>>>>> +  - intel,syscon
+>>>>>> +  - clocks
+>>>>>> +  - clock-names
+>>>>>> +
+>>>>>> +additionalProperties: false
+>>>>>> +
+>>>>>> +examples:
+>>>>>> +  - |
+>>>>>> +    sdxc_phy: sdxc_phy {
+>>>>>> +        compatible = "intel,lgm-sdxc-phy";
+>>>>>> +        intel,syscon = <&sysconf>;
+>>>>> Make this a child of the below node and then you don't need this.
+>>>>>
+>>>>> If there's a register address range associated with this, then add a reg
+>>>>> property.
+>>>> Thanks for comments,  I have defined herewith example
+>>>>
+>>>> sysconf: chiptop@e0020000 {
+>>>>                compatible = "intel,syscon";
+>>> Needs to be SoC specific value.
+>> Agreed! it should be "intel, lgm-syscon"
+>>>>                reg = <0xe0020000 0x100>;
+>>>>
+>>>>                emmc_phy: emmc_phy {
+>>>>                    compatible = "intel,lgm-emmc-phy";
+>>>>                    intel,syscon = <&sysconf>;
+>>> This is redundant because you can just get the parent node.
+>>>
+>>> If there's a defined register range within the 'intel,syscon' block
+>>> then define it here with 'reg'.
+>> Agreed!, avoided redundant
 >>
->>          if (of_id)
->>                  i2c_imx->hwdata = of_id->data;
->> +       else if (acpi_id)
->> +               i2c_imx->hwdata = (struct imx_i2c_hwdata *)
->> +                               acpi_id->driver_data;
->>          else
->>                  i2c_imx->hwdata = (struct imx_i2c_hwdata *)
->>                                  platform_get_device_id(pdev)->driver_data;
->> @@ -1091,6 +1104,7 @@ static int i2c_imx_probe(struct platform_device *pdev)
->>          i2c_imx->adapter.nr             = pdev->id;
->>          i2c_imx->adapter.dev.of_node    = pdev->dev.of_node;
->>          i2c_imx->base                   = base;
->> +       ACPI_COMPANION_SET(&i2c_imx->adapter.dev, ACPI_COMPANION(&pdev->dev));
->>
->>          /* Get I2C clock */
->>          i2c_imx->clk = devm_clk_get(&pdev->dev, NULL);
->> @@ -1253,6 +1267,7 @@ static struct platform_driver i2c_imx_driver = {
->>                  .name = DRIVER_NAME,
->>                  .pm = &i2c_imx_pm_ops,
->>                  .of_match_table = i2c_imx_dt_ids,
->> +               .acpi_match_table = ACPI_PTR(i2c_imx_acpi_ids),
->>          },
->>          .id_table = imx_i2c_devtype,
->>   };
->> --
->> 2.9.5
->>
-> 
+>> sysconf: chiptop@e0020000 {
+>>               compatible = "intel,lgm-syscon";
+>>               emmc_phy: emmc_phy {
+>>                   compatible = "intel,lgm-emmc-phy";
+>>                   reg = <0xe0020000 0x100>;
+> This is the same addresses you had for the parent, so that doesn't
+> seem right. The parent should have the entire range and then the child
+> nodes only the addresses for their functions. However, if the
+> registers are all interleaved then you can really put 'reg' in the
+> child nodes and just have it only in the parent. We don't want to have
+> overlapping addresses in DT.
+syscon is parent node, which has the base address for all the peripheral 
+registers and used by child nodes.
+child nodes have only offsets, we do not specify in device tree.
 
-Kind regards,
-Oleksij Rempel
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best Regards
+vadivel
+> Rob
