@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E15C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EFCC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BBA215EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD1C215EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567528278;
-	bh=DC2/254MyIulsavyqOQkDxVwwmDUGlRmSLs26nF3vxU=;
+	s=default; t=1567528287;
+	bh=69HaPlmuyFK7cykVSPEjEiFOabnH7gqUReKQ5BDCWys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mQUegUK8Y1LJZy/1uLcPNMmY9s2T6tiVpi+3maF/SW0h5Coq/zjk63NHLAuR9wzc/
-	 mxOUCTlaCX5PYL8SdOdvfuMruqRLG24PBjo2Vcl4G1QKtWmB4l6op74bAHCclrjZai
-	 N+9Do/PppPtYkG69GYbnvH3erar/J7GRGgrm3Ty8=
+	b=F62/D0lzHrWO4WKVNXfcWk0cdoY8k1pJ1Uv/MJj0j1i0NRGFtKQgtRKcEIE94I6mE
+	 huC6p3vhfakf2WcifUIMdwmTRyUj3y9WZ/9LLe6hqnpQhSIwW4ybNkXDrj+oXyeZ9G
+	 z+cM/Sm3lY6fcGMVBNpyS8Se3+/hFyw7TGWUJce8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbfICQbR (ORCPT
+        id S1731151AbfICQbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:31:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50434 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:31:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731130AbfICQ21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:27 -0400
+        id S1731109AbfICQ2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:28:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CD6F2343A;
-        Tue,  3 Sep 2019 16:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 530EF238C5;
+        Tue,  3 Sep 2019 16:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528107;
-        bh=DC2/254MyIulsavyqOQkDxVwwmDUGlRmSLs26nF3vxU=;
+        s=default; t=1567528102;
+        bh=69HaPlmuyFK7cykVSPEjEiFOabnH7gqUReKQ5BDCWys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrLJzsjJP4sPkToIIHDZ7T59roi/9DKNDl5+LbzpiqfhtAQJdc6Vcs3TS3cd13yUt
-         ++70f8kyCuood1emHhGEw8NnwLu21t+RUQe1nsMAToVCHbSyHUMIZlg9O2PSZAZoVk
-         6D6Eda13ZI20HwBp85MTNyVduzKbF6k4+L/VNHTs=
+        b=Qpj5ADqudtknxFPtWlYJkAQYyFOq97jww+vTytjFZWVGGyMXegUA2CqUiXKZtP88I
+         av/l5MPs00/geAQf3aacJOTUVii0rM7h4tAItndqoTiUgGH8qOxgtI5z3SdvEfgRWt
+         jPmmFIYzg91hoMoj+DEE4h3IjQq0ShaVKkc6lMOw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 112/167] ARC: mm: fix uninitialised signal code in do_page_fault
-Date:   Tue,  3 Sep 2019 12:24:24 -0400
-Message-Id: <20190903162519.7136-112-sashal@kernel.org>
+Cc:     Milan Broz <gmazyland@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 110/167] dm crypt: move detailed message into debug level
+Date:   Tue,  3 Sep 2019 12:24:22 -0400
+Message-Id: <20190903162519.7136-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -60,35 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Milan Broz <gmazyland@gmail.com>
 
-[ Upstream commit 121e38e5acdc8e1e4cdb750fcdcc72f94e420968 ]
+[ Upstream commit 7a1cd7238fde6ab367384a4a2998cba48330c398 ]
 
-Commit 15773ae938d8 ("signal/arc: Use force_sig_fault where
-appropriate") introduced undefined behaviour by leaving si_code
-unitiailized and leaking random kernel values to user space.
+The information about tag size should not be printed without debug info
+set. Also print device major:minor in the error message to identify the
+device instance.
 
-Fixes: 15773ae938d8 ("signal/arc: Use force_sig_fault where appropriate")
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Also use rate limiting and debug level for info about used crypto API
+implementaton.  This is important because during online reencryption
+the existing message saturates syslog (because we are moving hotzone
+across the whole device).
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Milan Broz <gmazyland@gmail.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/mm/fault.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-crypt.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
-index a0366f9dca051..535cf18e8bf2c 100644
---- a/arch/arc/mm/fault.c
-+++ b/arch/arc/mm/fault.c
-@@ -66,7 +66,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
- 	struct vm_area_struct *vma = NULL;
- 	struct task_struct *tsk = current;
- 	struct mm_struct *mm = tsk->mm;
--	int si_code;
-+	int si_code = 0;
- 	int ret;
- 	vm_fault_t fault;
- 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index f3dcc7640319e..34f5de13a93d1 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -949,6 +949,7 @@ static int crypt_integrity_ctr(struct crypt_config *cc, struct dm_target *ti)
+ {
+ #ifdef CONFIG_BLK_DEV_INTEGRITY
+ 	struct blk_integrity *bi = blk_get_integrity(cc->dev->bdev->bd_disk);
++	struct mapped_device *md = dm_table_get_md(ti->table);
+ 
+ 	/* From now we require underlying device with our integrity profile */
+ 	if (!bi || strcasecmp(bi->profile->name, "DM-DIF-EXT-TAG")) {
+@@ -968,7 +969,7 @@ static int crypt_integrity_ctr(struct crypt_config *cc, struct dm_target *ti)
+ 
+ 	if (crypt_integrity_aead(cc)) {
+ 		cc->integrity_tag_size = cc->on_disk_tag_size - cc->integrity_iv_size;
+-		DMINFO("Integrity AEAD, tag size %u, IV size %u.",
++		DMDEBUG("%s: Integrity AEAD, tag size %u, IV size %u.", dm_device_name(md),
+ 		       cc->integrity_tag_size, cc->integrity_iv_size);
+ 
+ 		if (crypto_aead_setauthsize(any_tfm_aead(cc), cc->integrity_tag_size)) {
+@@ -976,7 +977,7 @@ static int crypt_integrity_ctr(struct crypt_config *cc, struct dm_target *ti)
+ 			return -EINVAL;
+ 		}
+ 	} else if (cc->integrity_iv_size)
+-		DMINFO("Additional per-sector space %u bytes for IV.",
++		DMDEBUG("%s: Additional per-sector space %u bytes for IV.", dm_device_name(md),
+ 		       cc->integrity_iv_size);
+ 
+ 	if ((cc->integrity_tag_size + cc->integrity_iv_size) != bi->tag_size) {
 -- 
 2.20.1
 
