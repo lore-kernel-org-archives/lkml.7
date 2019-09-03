@@ -2,309 +2,193 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA87DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F5AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A00232168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDABD2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 10:34:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567506870;
+	bh=hptEnLPHuH30TwmUN0YADeJBNKeIbZ4C9q8fPG5LnOI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EV26qLuv0ibCuqFmTQlAaV/tAquJ5TbD0LROgal4puMq2UYTLKR1j5SrB6qplcCv9
+	 z3FSsX7zTuCciLr0lcOy2XP9M3rixtKYLAFF/aJzI7yIIYkK1lvFojSMO8t3Ege+7y
+	 YpXwsdCSZp11aAk/W6w0ofUphjo6qANJXdknrGxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfICKdh (ORCPT
+        id S1728691AbfICKea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 06:33:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:35486 "EHLO foss.arm.com"
+        Tue, 3 Sep 2019 06:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbfICKdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 06:33:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE77128;
-        Tue,  3 Sep 2019 03:33:36 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73CAE3F59C;
-        Tue,  3 Sep 2019 03:33:35 -0700 (PDT)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Alessio Balsini <balsini@android.com>,
-        linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH] sched: rt: Make RT capacity aware
-Date:   Tue,  3 Sep 2019 11:33:29 +0100
-Message-Id: <20190903103329.24961-1-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726936AbfICKe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 06:34:29 -0400
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F5322D6D;
+        Tue,  3 Sep 2019 10:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567506868;
+        bh=hptEnLPHuH30TwmUN0YADeJBNKeIbZ4C9q8fPG5LnOI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=P8gMUP3mOTh+x/n5rjAdPdIv3JqWqM7gpfd6mKlV+wayBfTlMzcMwJNo2BTDxXyqa
+         SdHvfzG9+5poUJXXVDEsJ6hlHJAOZfK3c89sD1ALfTf1mk8b12rF4pxNQTLmM4/VsY
+         KLUMd725nc4wCgTfcPx4fqW1nFRqbnBS6pql7pqY=
+Received: by mail-qk1-f182.google.com with SMTP id s18so4280761qkj.3;
+        Tue, 03 Sep 2019 03:34:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAUFPP0S4ccnqxcJX+CfPT3ZnirUXuJKsOTKO+UmY/RxOi+ab5Pl
+        SDoH4Hjrvld2jzS4xHSuTeUdayNKwI34slkTFg==
+X-Google-Smtp-Source: APXvYqy/wDpCQldglZhQIwwac8erR9ogXJI6jQq+VxbfwZS3PcAb20qYGTM2Kk1Wv4zRF23m6EeaT4rkCagdzKQ0HCg=
+X-Received: by 2002:ae9:e212:: with SMTP id c18mr27120739qkc.254.1567506867330;
+ Tue, 03 Sep 2019 03:34:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190828124315.48448-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190828124315.48448-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190902033716.GA18092@bogus> <9f4d6bdd-072a-ab71-1ef1-1d00c22bd064@linux.intel.com>
+ <CAL_JsqKm=-5F-Ej1mzRaygJnjS2Lec6uJF4J3vfCnqdkQNNbug@mail.gmail.com> <39d6fe60-e9f5-d205-ec6c-4a3143fe1e13@linux.intel.com>
+In-Reply-To: <39d6fe60-e9f5-d205-ec6c-4a3143fe1e13@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 3 Sep 2019 11:34:16 +0100
+X-Gmail-Original-Message-ID: <CAL_Jsq+f27t5Wu+qtynDd_O9vBVZFKHCrgCP7WhyGo+W1y-XAA@mail.gmail.com>
+Message-ID: <CAL_Jsq+f27t5Wu+qtynDd_O9vBVZFKHCrgCP7WhyGo+W1y-XAA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: intel-sdxc-phy: Add YAML schema
+ for LGM SDXC PHY
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Capacity Awareness refers to the fact that on heterogeneous systems
-(like Arm big.LITTLE), the capacity of the CPUs is not uniform, hence
-when placing tasks we need to be aware of this difference of CPU
-capacities.
+On Tue, Sep 3, 2019 at 11:08 AM Ramuthevar, Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> Hi Rob,
+>
+>   Thank you so much for prompt reply.
+>
+> On 3/9/2019 5:19 PM, Rob Herring wrote:
+> > On Tue, Sep 3, 2019 at 2:57 AM Ramuthevar, Vadivel MuruganX
+> > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+> >> Hi Rob,
+> >>
+> >> Thank you for review comments.
+> >>
+> >> On 2/9/2019 9:38 PM, Rob Herring wrote:
+> >>> On Wed, Aug 28, 2019 at 08:43:14PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+> >>>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>>>
+> >>>> Add a YAML schema to use the host controller driver with the
+> >>>> SDXC PHY on Intel's Lightning Mountain SoC.
+> >>>>
+> >>>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>>> ---
+> >>>>    .../bindings/phy/intel,lgm-sdxc-phy.yaml           | 52 ++++++++++++++++++++++
+> >>>>    .../devicetree/bindings/phy/intel,syscon.yaml      | 33 ++++++++++++++
+> >>>>    2 files changed, 85 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>>>    create mode 100644 Documentation/devicetree/bindings/phy/intel,syscon.yaml
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..99647207b414
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-sdxc-phy.yaml
+> >>>> @@ -0,0 +1,52 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/phy/intel,lgm-sdxc-phy.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: Intel Lightning Mountain(LGM) SDXC PHY Device Tree Bindings
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> >>>> +
+> >>>> +allOf:
+> >>>> +  - $ref: "intel,syscon.yaml"
+> >>> You don't need this. It should be selected and applied by the compatible
+> >>> string matching.
+> >> Agreed, fix it in the next patch.
+> >>>> +
+> >>>> +description: Binding for SDXC PHY
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    const: intel,lgm-sdxc-phy
+> >>>> +
+> >>>> +  intel,syscon:
+> >>>> +    description: phandle to the sdxc through syscon
+> >>>> +
+> >>>> +  clocks:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clock-names:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  "#phy-cells":
+> >>>> +    const: 0
+> >>>> +
+> >>>> +required:
+> >>>> +  - "#phy-cells"
+> >>>> +  - compatible
+> >>>> +  - intel,syscon
+> >>>> +  - clocks
+> >>>> +  - clock-names
+> >>>> +
+> >>>> +additionalProperties: false
+> >>>> +
+> >>>> +examples:
+> >>>> +  - |
+> >>>> +    sdxc_phy: sdxc_phy {
+> >>>> +        compatible = "intel,lgm-sdxc-phy";
+> >>>> +        intel,syscon = <&sysconf>;
+> >>> Make this a child of the below node and then you don't need this.
+> >>>
+> >>> If there's a register address range associated with this, then add a reg
+> >>> property.
+> >> Thanks for comments,  I have defined herewith example
+> >>
+> >> sysconf: chiptop@e0020000 {
+> >>               compatible = "intel,syscon";
+> > Needs to be SoC specific value.
+> Agreed! it should be "intel, lgm-syscon"
+> >>               reg = <0xe0020000 0x100>;
+> >>
+> >>               emmc_phy: emmc_phy {
+> >>                   compatible = "intel,lgm-emmc-phy";
+> >>                   intel,syscon = <&sysconf>;
+> > This is redundant because you can just get the parent node.
+> >
+> > If there's a defined register range within the 'intel,syscon' block
+> > then define it here with 'reg'.
+>
+> Agreed!, avoided redundant
+>
+> sysconf: chiptop@e0020000 {
+>              compatible = "intel,lgm-syscon";
+>              emmc_phy: emmc_phy {
+>                  compatible = "intel,lgm-emmc-phy";
+>                  reg = <0xe0020000 0x100>;
 
-In such scenarios we want to ensure that the selected CPU has enough
-capacity to meet the requirement of the running task. Enough capacity
-means here that capacity_orig_of(cpu) >= task.requirement.
+This is the same addresses you had for the parent, so that doesn't
+seem right. The parent should have the entire range and then the child
+nodes only the addresses for their functions. However, if the
+registers are all interleaved then you can really put 'reg' in the
+child nodes and just have it only in the parent. We don't want to have
+overlapping addresses in DT.
 
-The definition of task.requirement is dependent on the scheduling class.
-
-For CFS, utilization is used to select a CPU that has >= capacity value
-than the cfs_task.util.
-
-	capacity_orig_of(cpu) >= cfs_task.util
-
-DL isn't capacity aware at the moment but can make use of the bandwidth
-reservation to implement that in a similar manner CFS uses utilization.
-The following patchset implements that:
-
-https://lore.kernel.org/lkml/20190506044836.2914-1-luca.abeni@santannapisa.it/
-
-	capacity_orig_of(cpu)/SCHED_CAPACITY >= dl_deadline/dl_runtime
-
-For RT we don't have a per task utilization signal and we lack any
-information in general about what performance requirement the RT task
-needs. But with the introduction of uclamp, RT tasks can now control
-that by setting uclamp_min to guarantee a minimum performance point.
-
-ATM the uclamp value are only used for frequency selection; but on
-heterogeneous systems this is not enough and we need to ensure that the
-capacity of the CPU is >= uclamp_min. Which is what implemented here.
-
-	capacity_orig_of(cpu) >= rt_task.uclamp_min
-
-Note that by default uclamp.min is 1024, which means that RT tasks will
-always be biased towards the big CPUs, which make for a better more
-predictable behavior for the default case.
-
-Must stress that the bias acts as a hint rather than a definite
-placement strategy. For example, if all big cores are busy executing
-other RT tasks we can't guarantee that a new RT task will be placed
-there.
-
-On non-heterogeneous systems the original behavior of RT should be
-retained. Similarly if uclamp is not selected in the config.
-
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
----
-
-The logic is not perfect. For example if a 'small' task is occupying a big CPU
-and another big task wakes up; we won't force migrate the small task to clear
-the big cpu for the big task that woke up.
-
-IOW, the logic is best effort and can't give hard guarantees. But improves the
-current situation where a task can randomly end up on any CPU regardless of
-what it needs. ie: without this patch an RT task can wake up on a big or small
-CPU, but with this it will always wake up on a big CPU (assuming the big CPUs
-aren't overloaded) - hence provide a consistent performance.
-
-I'm looking at ways to improve this best effort, but this patch should be
-a good start to discuss our Capacity Awareness requirement. There's a trade-off
-of complexity to be made here and I'd like to keep things as simple as
-possible and build on top as needed.
-
-
- kernel/sched/rt.c | 112 +++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 92 insertions(+), 20 deletions(-)
-
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index a532558a5176..7c3bcbef692b 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -436,6 +436,45 @@ static inline int on_rt_rq(struct sched_rt_entity *rt_se)
- 	return rt_se->on_rq;
- }
- 
-+#ifdef CONFIG_UCLAMP_TASK
-+/*
-+ * Verify the fitness of task @p to run on @cpu taking into account the uclamp
-+ * settings.
-+ *
-+ * This check is only important for heterogeneous systems where uclamp_min value
-+ * is higher than the capacity of a @cpu. For non-heterogeneous system this
-+ * function will always return true.
-+ *
-+ * The function will return true if the capacity of the @cpu is >= the
-+ * uclamp_min and false otherwise.
-+ *
-+ * Note that uclamp_min will be clamped to uclamp_max if uclamp_min
-+ * > uclamp_max.
-+ */
-+static inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
-+{
-+	unsigned int min_cap;
-+	unsigned int max_cap;
-+	unsigned int cpu_cap;
-+
-+	/* Only heterogeneous systems can benefit from this check */
-+	if (!static_branch_unlikely(&sched_asym_cpucapacity))
-+		return true;
-+
-+	min_cap = uclamp_eff_value(p, UCLAMP_MIN);
-+	max_cap = uclamp_eff_value(p, UCLAMP_MAX);
-+
-+	cpu_cap = capacity_orig_of(cpu);
-+
-+	return cpu_cap >= min(min_cap, max_cap);
-+}
-+#else
-+static inline bool rt_task_fits_capacity(struct task_struct *p, int cpu)
-+{
-+	return true;
-+}
-+#endif
-+
- #ifdef CONFIG_RT_GROUP_SCHED
- 
- static inline u64 sched_rt_runtime(struct rt_rq *rt_rq)
-@@ -1390,6 +1429,7 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
- {
- 	struct task_struct *curr;
- 	struct rq *rq;
-+	bool test;
- 
- 	/* For anything but wake ups, just return the task_cpu */
- 	if (sd_flag != SD_BALANCE_WAKE && sd_flag != SD_BALANCE_FORK)
-@@ -1421,10 +1461,16 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
- 	 *
- 	 * This test is optimistic, if we get it wrong the load-balancer
- 	 * will have to sort it out.
-+	 *
-+	 * We take into account the capacity of the cpu to ensure it fits the
-+	 * requirement of the task - which is only important on heterogeneous
-+	 * systems like big.LITTLE.
- 	 */
--	if (curr && unlikely(rt_task(curr)) &&
--	    (curr->nr_cpus_allowed < 2 ||
--	     curr->prio <= p->prio)) {
-+	test = curr &&
-+	       unlikely(rt_task(curr)) &&
-+	       (curr->nr_cpus_allowed < 2 || curr->prio <= p->prio);
-+
-+	if (test || !rt_task_fits_capacity(p, cpu)) {
- 		int target = find_lowest_rq(p);
- 
- 		/*
-@@ -1614,7 +1660,8 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
- static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
- {
- 	if (!task_running(rq, p) &&
--	    cpumask_test_cpu(cpu, p->cpus_ptr))
-+	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
-+	    rt_task_fits_capacity(p, cpu))
- 		return 1;
- 
- 	return 0;
-@@ -1648,6 +1695,7 @@ static int find_lowest_rq(struct task_struct *task)
- 	struct cpumask *lowest_mask = this_cpu_cpumask_var_ptr(local_cpu_mask);
- 	int this_cpu = smp_processor_id();
- 	int cpu      = task_cpu(task);
-+	bool test;
- 
- 	/* Make sure the mask is initialized first */
- 	if (unlikely(!lowest_mask))
-@@ -1666,16 +1714,23 @@ static int find_lowest_rq(struct task_struct *task)
- 	 *
- 	 * We prioritize the last CPU that the task executed on since
- 	 * it is most likely cache-hot in that location.
-+	 *
-+	 * Assuming the task still fits the capacity of the last CPU.
- 	 */
--	if (cpumask_test_cpu(cpu, lowest_mask))
-+	if (cpumask_test_cpu(cpu, lowest_mask) &&
-+	    rt_task_fits_capacity(task, cpu)) {
- 		return cpu;
-+	}
- 
- 	/*
- 	 * Otherwise, we consult the sched_domains span maps to figure
- 	 * out which CPU is logically closest to our hot cache data.
- 	 */
--	if (!cpumask_test_cpu(this_cpu, lowest_mask))
--		this_cpu = -1; /* Skip this_cpu opt if not among lowest */
-+	if (!cpumask_test_cpu(this_cpu, lowest_mask) ||
-+	    !rt_task_fits_capacity(task, this_cpu)) {
-+		/* Skip this_cpu opt if not among lowest or doesn't fit */
-+		this_cpu = -1;
-+	}
- 
- 	rcu_read_lock();
- 	for_each_domain(cpu, sd) {
-@@ -1692,11 +1747,15 @@ static int find_lowest_rq(struct task_struct *task)
- 				return this_cpu;
- 			}
- 
--			best_cpu = cpumask_first_and(lowest_mask,
--						     sched_domain_span(sd));
--			if (best_cpu < nr_cpu_ids) {
--				rcu_read_unlock();
--				return best_cpu;
-+			for_each_cpu_and(best_cpu, lowest_mask,
-+					 sched_domain_span(sd)) {
-+				if (best_cpu >= nr_cpu_ids)
-+					break;
-+
-+				if (rt_task_fits_capacity(task, best_cpu)) {
-+					rcu_read_unlock();
-+					return best_cpu;
-+				}
- 			}
- 		}
- 	}
-@@ -1711,7 +1770,15 @@ static int find_lowest_rq(struct task_struct *task)
- 		return this_cpu;
- 
- 	cpu = cpumask_any(lowest_mask);
--	if (cpu < nr_cpu_ids)
-+
-+	/*
-+	 * Make sure that the fitness on @cpu doesn't change compared to the
-+	 * cpu we're currently running on.
-+	 */
-+	test = rt_task_fits_capacity(task, cpu) ==
-+	       rt_task_fits_capacity(task, task_cpu(task));
-+
-+	if (cpu < nr_cpu_ids && test)
- 		return cpu;
- 
- 	return -1;
-@@ -2160,12 +2227,14 @@ static void pull_rt_task(struct rq *this_rq)
-  */
- static void task_woken_rt(struct rq *rq, struct task_struct *p)
- {
--	if (!task_running(rq, p) &&
--	    !test_tsk_need_resched(rq->curr) &&
--	    p->nr_cpus_allowed > 1 &&
--	    (dl_task(rq->curr) || rt_task(rq->curr)) &&
--	    (rq->curr->nr_cpus_allowed < 2 ||
--	     rq->curr->prio <= p->prio))
-+	bool need_to_push = !task_running(rq, p) &&
-+			    !test_tsk_need_resched(rq->curr) &&
-+			    p->nr_cpus_allowed > 1 &&
-+			    (dl_task(rq->curr) || rt_task(rq->curr)) &&
-+			    (rq->curr->nr_cpus_allowed < 2 ||
-+			     rq->curr->prio <= p->prio);
-+
-+	if (need_to_push || !rt_task_fits_capacity(p, cpu_of(rq)))
- 		push_rt_tasks(rq);
- }
- 
-@@ -2237,7 +2306,10 @@ static void switched_to_rt(struct rq *rq, struct task_struct *p)
- 	 */
- 	if (task_on_rq_queued(p) && rq->curr != p) {
- #ifdef CONFIG_SMP
--		if (p->nr_cpus_allowed > 1 && rq->rt.overloaded)
-+		bool need_to_push = rq->rt.overloaded ||
-+				    !rt_task_fits_capacity(p, cpu_of(rq));
-+
-+		if (p->nr_cpus_allowed > 1 && need_to_push)
- 			rt_queue_push_tasks(rq);
- #endif /* CONFIG_SMP */
- 		if (p->prio < rq->curr->prio && cpu_online(cpu_of(rq)))
--- 
-2.17.1
-
+Rob
