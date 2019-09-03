@@ -2,117 +2,94 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAE4C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB25C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2032E2343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E942343A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:38:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XO1qSstP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I6HEaAHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbfICNin (ORCPT
+        id S1729451AbfICNiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 3 Sep 2019 09:38:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50744 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbfICNin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 09:38:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45138 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725782AbfICNin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:38:43 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8EBF5B633;
-        Tue,  3 Sep 2019 13:38:41 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 15:38:41 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
- modifier
-Message-ID: <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-12-sakari.ailus@linux.intel.com>
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8B9BD6025A; Tue,  3 Sep 2019 13:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567517922;
+        bh=ej069zxmm9FbOAIunXcS+l57Bk7LOELm9ibfNx23sA8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=XO1qSstPVykmMPstFDLagfancdpch3VXv9ZMCWrmcVBcRrlb67aQmoKMwDKSnWklo
+         xgOMyq98tKll+8Znge4Ucp2/9uRAih0i3QsnawRjUNIOywW4iSkxG0hKYxjxmnbwYW
+         PosY9fzlT7tsWhdAHcjWlZLBldR8NKZyONwLkCA0=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 45E496025A;
+        Tue,  3 Sep 2019 13:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567517922;
+        bh=ej069zxmm9FbOAIunXcS+l57Bk7LOELm9ibfNx23sA8=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=I6HEaAHYPOzMcZJ3O/nnMRCvNnXSrYspLAyfEsxmP/ZKHtEdWjzsEdE4D82iXe/3u
+         Rfe43h+jZf8Hoci4A4dTcmbM1MiDKFcgwdA5OoxS8IuPXEo91NS+tM8FStk4LyYkrd
+         Pi7FCUBTj5PTqRjKiyhDCY6SCRap+Y/6ww82jVLo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 45E496025A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902083240.20367-12-sakari.ailus@linux.intel.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] brcmfmac: remove redundant assignment to pointer hash
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190809172217.1809-1-colin.king@canonical.com>
+References: <20190809172217.1809-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190903133842.8B9BD6025A@smtp.codeaurora.org>
+Date:   Tue,  3 Sep 2019 13:38:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-09-02 11:32:40, Sakari Ailus wrote:
-> Add a test for the %pfw printk modifier using software nodes.
+Colin King <colin.king@canonical.com> wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
+> The pointer hash is being initialized with a value that is never read
+> and is being re-assigned a little later on. The assignment is
+> redundant and hence can be removed.
 > 
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 944eb50f38625..9c6d716979fb1 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -22,6 +22,8 @@
->  #include <linux/gfp.h>
->  #include <linux/mm.h>
->  
-> +#include <linux/property.h>
-> +
->  #include "../tools/testing/selftests/kselftest_module.h"
->  
->  #define BUF_SIZE 256
-> @@ -588,6 +590,40 @@ flags(void)
->  	kfree(cmp_buffer);
->  }
->  
-> +static void __init fwnode_pointer(void)
-> +{
-> +	const struct software_node softnodes[] = {
-> +		{ .name = "first", },
-> +		{ .name = "second", .parent = &softnodes[0], },
-> +		{ .name = "third", .parent = &softnodes[1], },
-> +		{ NULL /* Guardian */ },
-> +	};
-> +	const char * const full_name = "/second/third";
-> +	const char * const full_name_second = "/second";
-> +	const char * const second_name = "second";
-> +	const char * const third_name = "third";
-> +	int rval;
-> +
-> +	rval = software_node_register_nodes(softnodes);
-> +	if (rval) {
-> +		pr_warn("cannot register softnodes; rval %d\n", rval);
-> +		return;
-> +	}
-> +
-> +	test(full_name_second, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-"ARRAY_SIZE(softnodes) - 3" is quite cryptic.
-Is there any particular reason to use it instead of &softnodes[1] ?
+Patch applied to wireless-drivers-next.git, thanks.
 
-And is it expected that it does not print the "/first" parent?
+73c742bb9c9b brcmfmac: remove redundant assignment to pointer hash
 
-> +	test(full_name, "%pfw",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(full_name, "%pfwf",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +	test(second_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
-> +	test(third_name, "%pfwP",
-> +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
-> +
-> +	software_node_unregister_nodes(softnodes);
-> +}
+-- 
+https://patchwork.kernel.org/patch/11087385/
 
-Anyway, thanks for the tests.
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-Best Regards,
-Petr
