@@ -2,105 +2,94 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506F9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA3EC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 325B123402
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD02722D6D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfICORt (ORCPT
+        id S1729477AbfICOTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:17:49 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:53512 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728122AbfICORr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:17:47 -0400
-Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x83EGqUX026941;
-        Tue, 3 Sep 2019 14:17:28 GMT
-Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
-        by mx0a-002e3701.pphosted.com with ESMTP id 2us2nfgyk2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 14:17:28 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 5D61B4F;
-        Tue,  3 Sep 2019 14:17:27 +0000 (UTC)
-Received: from [16.116.163.9] (unknown [16.116.163.9])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 4F5EE45;
-        Tue,  3 Sep 2019 14:17:26 +0000 (UTC)
-Subject: Re: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
- <20190903074717.GA34890@gmail.com>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <481b2921-760a-c0f3-489b-2b9c5f792883@hpe.com>
-Date:   Tue, 3 Sep 2019 07:17:56 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 10:19:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46866 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbfICOTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:19:00 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 87477302C060;
+        Tue,  3 Sep 2019 14:19:00 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E858060CCE;
+        Tue,  3 Sep 2019 14:18:51 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 762BB220292; Tue,  3 Sep 2019 10:18:51 -0400 (EDT)
+Date:   Tue, 3 Sep 2019 10:18:51 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual
+ machines
+Message-ID: <20190903141851.GC10983@redhat.com>
+References: <20190821173742.24574-1-vgoyal@redhat.com>
+ <CAJfpegvPTxkaNhXWhiQSprSJqyW1cLXeZEz6x_f0PxCd-yzHQg@mail.gmail.com>
+ <20190903041507-mutt-send-email-mst@kernel.org>
+ <20190903140752.GA10983@redhat.com>
+ <20190903101001-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190903074717.GA34890@gmail.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-03_02:2019-09-03,2019-09-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 adultscore=0 mlxscore=0 impostorscore=0 clxscore=1011
- spamscore=0 bulkscore=0 phishscore=0 mlxlogscore=996 priorityscore=1501
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909030150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903101001-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 03 Sep 2019 14:19:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 03, 2019 at 10:12:16AM -0400, Michael S. Tsirkin wrote:
+> On Tue, Sep 03, 2019 at 10:07:52AM -0400, Vivek Goyal wrote:
+> > On Tue, Sep 03, 2019 at 04:31:38AM -0400, Michael S. Tsirkin wrote:
+> > 
+> > [..]
+> > > +	/* TODO lock */
+> > > give me pause.
+> > > 
+> > > Cleanup generally seems broken to me - what pauses the FS
+> > 
+> > I am looking into device removal aspect of it now. Thinking of adding
+> > a reference count to virtiofs device and possibly also a bit flag to
+> > indicate if device is still alive. That way, we should be able to cleanup
+> > device more gracefully.
+> 
+> Generally, the way to cleanup things is to first disconnect device from
+> linux so linux won't send new requests, wait for old ones to finish.
 
+I was thinking of following.
 
-On 9/3/2019 12:47 AM, Ingo Molnar wrote:
-> 
-> * Mike Travis <mike.travis@hpe.com> wrote:
-> 
->>
->> These patches support upcoming UV systems that do not have a UV HUB.
->>
->> 	* Save OEM_ID from ACPI MADT probe
->> 	* Return UV Hubless System Type
->> 	* Add return code to UV BIOS Init function
->> 	* Setup UV functions for Hubless UV Systems
->> 	* Add UV Hubbed/Hubless Proc FS Files
->> 	* Decode UVsystab Info
->> 	* Account for UV Hubless in is_uvX_hub Ops
-> 
-> Beyond addressing Christoph's feedback, please also make sure the series
-> applies cleanly to tip:master, because right now it doesn't.
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
+- Set a flag on device to indicate device is dead and not queue new
+  requests. Device removal call can set this flag.
 
-I will do this, and retest.  Currently we are using the latest upstream
-version but obviously that thinking is flawed, since we are hoping to
-get into the next merge period.
+- Return errors when fs code tries to queue new request.
 
-I also noticed that the MAINTAINERS list for UV is out of date, I will 
-tend to that too.
+- Drop device creation reference in device removal path. If device is
+  mounted at the time of removal, that reference will still be active
+  and device state will not be cleaned up in kernel yet.
 
-Thanks,
-Mike
+- User unmounts the fs, and that will drop last reference to device and
+  will lead to cleanup of in kernel state of the device.
+
+Does that sound reasonable.
+
+Vivek
