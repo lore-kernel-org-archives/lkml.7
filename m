@@ -2,142 +2,171 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5C9C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B891AC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1439A22CF8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="IClJ3jwz"
+	by mail.kernel.org (Postfix) with ESMTP id 9054322DCC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567503446;
+	bh=1pvNoYETXZHOaryWxGlz7vAjmxKlkKa4yKwwHuSZMVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GcUAEgjUNZ5pzfs9XMP1ipSe0bXm2VfNHqNAxmcZY/iXmPkQQRFf5xe1L+z1CLSFq
+	 eJK7VJ7p4l6ZcMgvTfNo+e/v0wKo9Nm48a8goUWtjElUI9W90N9LWr+zSj/9vzFuD9
+	 GdcZOccaXtUsR3UODu0dCejFTdLKb3JsUGfum6DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbfICJhF (ORCPT
+        id S1728599AbfICJhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:37:05 -0400
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:39853 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728438AbfICJhE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:37:04 -0400
-Received: by mail-wm1-f43.google.com with SMTP id n2so15986553wmk.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=qI/msxsXqWRFdL3aN3sjsVskSGThrgClxOqJ+yrbiFg=;
-        b=IClJ3jwzE0/tSlHhR/nSMgACWjFl7gf80AbtmZBxCUHLt/Jcojva+3rM9j+rrDNmZ6
-         LnL2oaZMOHls872SeyCum8/euj+LPM3aKsfWkOJYmKQMLEeAbBu1wVvhImNp0G92PVyC
-         la/HV8FTjwVgupmRNGrmxzC25ZN+cYXk4vKmetNrGxzVjnnxYvzxh5zAd87UNXEDEVTs
-         8aXDBns9TE/og3A1VyIrvgzraaj0SVG9v2nSlkh7w3QOM9m27GCuQ1GtLWs5hBbh0a6e
-         aTn4P54W6Bk4f2g1l0ZAyg3Orv7gPfEhYiBnkNJCdjkDn8uijF6ha1eEWe9LytiiyFfe
-         ntjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=qI/msxsXqWRFdL3aN3sjsVskSGThrgClxOqJ+yrbiFg=;
-        b=Ik6ALNbhtI3YgluHoA6JZSH6TbkCjv6KIatN2deexyEqjfnz4TSwcfXW9iJOfY2FEw
-         NDV3KYR0swp/Gm22Pirbq8MLWY8nLF/5ztYRNUqxKi5J/+cn8JS+MfJxHevTnbbyKbNn
-         fuOSghuawf6cpwosrecYXS0CJCsfhazhB8WmCN8ePwwbgO1cm1ZpAIxmOcRdaJprSX8l
-         GnZpifWiN8UfujpFe9GqMZZh8xmTrAn/6knj8dVKwdC1YO+WF56dJKmxiwsH1gwfcbbN
-         S5gWb2K28gAm8BTb1y6DcW6CU1p4C2jdyziOGDe5zGHoMQ70Mz1zumAMnq1T1XprWMRN
-         U6LQ==
-X-Gm-Message-State: APjAAAVNBKgv6fQodUIR6noFjnokw57DeKNguBuH5+tEJjPTGQZ4gcmk
-        e+CTxoLXc61As8INXbL6wKabug==
-X-Google-Smtp-Source: APXvYqwKeqWbkYsTbb1bHmCDBrDdZ4xi2S+xJY3fjb1VnljLf2QDsUv581Cs/3vKfnrmdnIVUqLZUg==
-X-Received: by 2002:a1c:658a:: with SMTP id z132mr42363159wmb.98.1567503422825;
-        Tue, 03 Sep 2019 02:37:02 -0700 (PDT)
-Received: from [10.32.50.252] ([185.149.63.251])
-        by smtp.gmail.com with ESMTPSA id v11sm29740643wrv.54.2019.09.03.02.37.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 02:37:02 -0700 (PDT)
-Subject: Re: [v3,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
-To:     Biwen Li <biwen.li@nxp.com>, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, leoyang.li@nxp.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
-References: <20190903061853.19793-1-biwen.li@nxp.com>
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-Message-ID: <2374870a-a728-b046-9ec6-bd7773411f50@flowbird.group>
-Date:   Tue, 3 Sep 2019 11:37:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 3 Sep 2019 05:37:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728188AbfICJhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:37:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A07C2173E;
+        Tue,  3 Sep 2019 09:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567503443;
+        bh=1pvNoYETXZHOaryWxGlz7vAjmxKlkKa4yKwwHuSZMVI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TIdtFNVUgfs39r6OrFh5h/UU5nqUa+osiFIglZDVzLqzeVKvAKQOY4uo4MrQ3wTOR
+         iktWgzpMbsenQo1lKN/dw/zbemJ6jAUs1Oh5lHJg1SB++AKnnmuLbc8joRxdOquJR+
+         +77Rc4gc37ehaPRXnNk0T6OmffvNqIU6xQdYT1so=
+Date:   Tue, 3 Sep 2019 11:37:20 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        "nicolas.dichtel@6wind.com" <nicolas.dichtel@6wind.com>,
+        "raven@themaw.net" <raven@themaw.net>,
+        Christian Brauner <christian@brauner.io>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 08/11] usb: Add USB subsystem notifications [ver #7]
+Message-ID: <20190903093720.GD12325@kroah.com>
+References: <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
+ <156717350329.2204.7056537095039252263.stgit@warthog.procyon.org.uk>
+ <TYAPR01MB4544829484474FC61E850F32D8B90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190903061853.19793-1-biwen.li@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB4544829484474FC61E850F32D8B90@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/09/2019 08:18, Biwen Li wrote:
-> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> index 94adc1cf93d9..588f688b30d1 100644
-> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> @@ -8,10 +8,39 @@ Required properties:
->   Optional properties:
->   - interrupts: IRQ line for the RTC (not implemented).
->   
-> +- interrupt-output-pin: The interrupt output pin must be
-> +  "INTA" or "INTB", default value is "INTA"
-> +
+On Tue, Sep 03, 2019 at 08:53:31AM +0000, Yoshihiro Shimoda wrote:
+> Hi,
+> 
+> > From: David Howells, Sent: Friday, August 30, 2019 10:58 PM
+> <snip>
+> > diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+> > index 9063ede411ae..b8572e4d6a1b 100644
+> > --- a/drivers/usb/core/devio.c
+> > +++ b/drivers/usb/core/devio.c
+> > @@ -41,6 +41,7 @@
+> >  #include <linux/dma-mapping.h>
+> >  #include <asm/byteorder.h>
+> >  #include <linux/moduleparam.h>
+> > +#include <linux/watch_queue.h>
+> > 
+> >  #include "usb.h"
+> > 
+> > @@ -2660,13 +2661,68 @@ static void usbdev_remove(struct usb_device *udev)
+> >  	}
+> >  }
+> > 
+> > +#ifdef CONFIG_USB_NOTIFICATIONS
+> > +static noinline void post_usb_notification(const char *devname,
+> > +					   enum usb_notification_type subtype,
+> > +					   u32 error)
+> > +{
+> > +	unsigned int gran = WATCH_LENGTH_GRANULARITY;
+> > +	unsigned int name_len, n_len;
+> > +	u64 id = 0; /* Might want to put a dev# here. */
+> > +
+> > +	struct {
+> > +		struct usb_notification n;
+> > +		char more_name[USB_NOTIFICATION_MAX_NAME_LEN -
+> > +			       (sizeof(struct usb_notification) -
+> > +				offsetof(struct usb_notification, name))];
+> > +	} n;
+> > +
+> > +	name_len = strlen(devname);
+> > +	name_len = min_t(size_t, name_len, USB_NOTIFICATION_MAX_NAME_LEN);
+> > +	n_len = round_up(offsetof(struct usb_notification, name) + name_len,
+> > +			 gran) / gran;
+> > +
+> > +	memset(&n, 0, sizeof(n));
+> > +	memcpy(n.n.name, devname, n_len);
+> > +
+> > +	n.n.watch.type		= WATCH_TYPE_USB_NOTIFY;
+> > +	n.n.watch.subtype	= subtype;
+> > +	n.n.watch.info		= n_len;
+> > +	n.n.error		= error;
+> > +	n.n.name_len		= name_len;
+> > +
+> > +	post_device_notification(&n.n.watch, id);
+> > +}
+> > +
+> > +void post_usb_device_notification(const struct usb_device *udev,
+> > +				  enum usb_notification_type subtype, u32 error)
+> > +{
+> > +	post_usb_notification(dev_name(&udev->dev), subtype, error);
+> > +}
+> > +
+> > +void post_usb_bus_notification(const struct usb_bus *ubus,
+> 
+> This function's argument is struct usb_bus *, but ...
+> 
+> > +			       enum usb_notification_type subtype, u32 error)
+> > +{
+> > +	post_usb_notification(ubus->bus_name, subtype, error);
+> > +}
+> > +#endif
+> > +
+> >  static int usbdev_notify(struct notifier_block *self,
+> >  			       unsigned long action, void *dev)
+> >  {
+> >  	switch (action) {
+> >  	case USB_DEVICE_ADD:
+> > +		post_usb_device_notification(dev, NOTIFY_USB_DEVICE_ADD, 0);
+> >  		break;
+> >  	case USB_DEVICE_REMOVE:
+> > +		post_usb_device_notification(dev, NOTIFY_USB_DEVICE_REMOVE, 0);
+> > +		usbdev_remove(dev);
+> > +		break;
+> > +	case USB_BUS_ADD:
+> > +		post_usb_bus_notification(dev, NOTIFY_USB_BUS_ADD, 0);
+> > +		break;
+> > +	case USB_BUS_REMOVE:
+> > +		post_usb_bus_notification(dev, NOTIFY_USB_BUS_REMOVE, 0);
+> >  		usbdev_remove(dev);
+> 
+> this function calls usbdev_remove() with incorrect argument if the action
+> is USB_BUS_REMOVE. So, this seems to cause the following issue [1] on
+> my environment (R-Car H3 / r8a7795 on next-20190902) [2]. However, I have
+> no idea how to fix the issue, so I report this issue at the first step.
 
+As a few of us just discussed this on IRC, these bus notifiers should
+probably be dropped as these are the incorrect structure type as you
+found out.  Thanks for the report.
 
-The hardware has 2 interrupt pins which can be mapped to various 
-interrupt sources (alarm1, alarm2, periodic, ...)
-
-Currently the driver only supports alarm1.
-
-It is even possible to use both pins for the same interrupt (eg if INTA 
-were wired to the SoC, INTB to a PMIC and both used for alarm...)
-
-
-So maybe it would be better to have
-
-alarm1-interrupt-output-pin: The interrupt output pin used for the alarm 
-function. Must be "INTA", "INTB" or "BOTH"
-
-Then, if and when other types of interrupts are supported by the driver 
-new properties could be added for them.
-
-
-
-> +- quartz-load-femtofarads: The internal capacitor to select for the quartz:
-> +	PCF85263_QUARTZCAP_7pF		[0]
-> +	PCF85263_QUARTZCAP_6pF		[1]
-> +	PCF85263_QUARTZCAP_12p5pF	[2] DEFAULT
-> +
-
-
-The standard DT property "quartz-load-femtofarads" takes the real 
-physical value in femto Farads ie values should be 7000, 6000, 12500 
-without defines.
-
-
-> +- nxp,quartz-drive-strength: Drive strength for the quartz:
-> +	PCF85263_QUARTZDRIVE_100ko	[0] DEFAULT
-> +	PCF85263_QUARTZDRIVE_60ko	[1]
-> +	PCF85263_QUARTZDRIVE_500ko	[2]
-> +
-
-
-Not sure about this.
-
-Wouldn't it be better to either use a real impedence value in ohms (like 
-load property above, even though it is a vendor specific value) rather 
-than a define, or defines for "Low, Medium, High"?
-
-
-Martin
-
-
+greg k-h
