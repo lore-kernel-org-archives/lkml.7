@@ -2,127 +2,142 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F7DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0479BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3716423431
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:29:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="UJfpyNDi"
+	by mail.kernel.org (Postfix) with ESMTP id D220323697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567517374;
+	bh=NLqCL4CDXLU3XgXKCj95PxujHWeCjp562H7YUcMntWI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cB4UePEAD2Pg+y1slx+NjCQRv0kn1vFotxtlPIMiUwhKT9ad7iZLva1AmJooq9Z+I
+	 ebVCJTrlBknWK4UakesHzq3GuAeqf8JNeIx7bmQd28C52lE2Fvz1wCx0MGhYmuwTO7
+	 Oy1LLWQ3ZZpUmPEnugWXpgJfkcH/9ehgSJwrPD8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbfICN3R (ORCPT
+        id S1729307AbfICN3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:29:17 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37690 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbfICN3R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:29:17 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y26so19911815qto.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 06:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vSCrsgtUDOrdMKexctcYwvLETgiF3cYlWaBb3HHaSbs=;
-        b=UJfpyNDiEYeIfGsfuZHqmN1M22/sY3oHMoq+94AImqFUbIcEiMK18AUSiub89oF0DN
-         6alIfIUEzABH9P29i54S9c3HRjoxEIWUFZlSXn4tbCzFtVnTtRGU7OBvWeVQ0Hz/vLW2
-         Tmx0uTCD10/Uj09DGFmNsi70AorIqlmW9DvsbfINv9kmPzpQUm8VRfoeZaOpk7bkLtTz
-         h7Qpp4kKpuHv5wS+X7ftnyS0ZTPad3uWxrg1KwoY5mKrAuIhyqWtjDxOwCdT9HKigZnY
-         yV0mCdAJv0zY+I5VRRo5JeIQ90Bzn0cDW9nHSkv1dQjo6yHt6EC1UWUFAozXkCAPGQ0h
-         hTUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vSCrsgtUDOrdMKexctcYwvLETgiF3cYlWaBb3HHaSbs=;
-        b=Cmx3B6kH+KlEs7f456RMqtGS0XG1KhczBV9b0ELcvBrYgopytQOuCS94QAQPPyJ32H
-         c1+4B7yPRPFWyXX8HKambx33b+b1wfI7Sh4i0tkSA0QvAjhri8n0QvwLwtHtPnG6v1+8
-         imNPkT9XDLgRf7vPL4XNMPWK7w+vvGhCZN31zHdaRYcMPBm2e54WNChugpz7tNkVxlSV
-         VkKaBZVcgBkhjtUpjz+tuXtCM3LRB3UyzzWdVcgwEH7DyeqlQspfcQFguXiXveTlRS6J
-         x225OpvzWjg8cJziadNC3TTZ4ekD87dTHHUcKIeQDZ2Q9f/2nkX8q8njEc6o+n1eSPTN
-         k5uQ==
-X-Gm-Message-State: APjAAAVT/yhKgiz33MwlrZMEVywvUb2Fep/HWmh2yb2fLUG5AmYlTfGj
-        BFdonyOiQeY0pIQCyWdw3+PASDyqMFk=
-X-Google-Smtp-Source: APXvYqw/yxe4cj3zPsPpC0WLlYfi8qeZk7SV9W2df+c/k7Ixec4IezKnFBb6gQSOI8MGlLhcGrN34A==
-X-Received: by 2002:ac8:7b99:: with SMTP id p25mr33996117qtu.243.1567517356351;
-        Tue, 03 Sep 2019 06:29:16 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id f34sm9330397qtc.19.2019.09.03.06.29.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 06:29:15 -0700 (PDT)
-Message-ID: <1567517354.5576.45.camel@lca.pw>
-Subject: Re: [PATCH] powerpc/powernv: fix a W=1 compilation warning
-From:   Qian Cai <cai@lca.pw>
-To:     benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        Christoph Hellwig <hch@lst.de>
-Cc:     aik@ozlabs.ru, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>
-Date:   Tue, 03 Sep 2019 09:29:14 -0400
-In-Reply-To: <1558541369-8263-1-git-send-email-cai@lca.pw>
-References: <1558541369-8263-1-git-send-email-cai@lca.pw>
+        Tue, 3 Sep 2019 09:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729066AbfICN3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:29:33 -0400
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 498CA23402;
+        Tue,  3 Sep 2019 13:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567517372;
+        bh=NLqCL4CDXLU3XgXKCj95PxujHWeCjp562H7YUcMntWI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qaXN86v6cIyTWdnvtaZOQQfBuuLThLlMRA/EJyQNgmyoLCjT/75zE/M4mRQeArqAE
+         q4YgAkDS6yIyQVA1WxKIVB7rtdCigj9Sz0V6NzXh5PlLXZooECitbVO6sWthzskktB
+         K+ItPCsbY4BLi25J8cwa71OUpyPJxZShfeyXk83Q=
+Received: by mail-lf1-f44.google.com with SMTP id r134so12000449lff.12;
+        Tue, 03 Sep 2019 06:29:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAXceZ1F0VtCGnv9s3brmXuw2bEDDN7WCQ0LhshmWuK9GoK3nIy0
+        07jSwK7TNhywRrFEtPhPHXfCyUK6Y2dMkQXBWdw=
+X-Google-Smtp-Source: APXvYqxqbuDcNwZVBZKdEn/yqco/nPvJHxybzLgeR8t1/wyDoTImujg8oF2KZNPIWeHPuUNFUp5BwgTKED9vOoaznqs=
+X-Received: by 2002:ac2:41c2:: with SMTP id d2mr6978921lfi.24.1567517370489;
+ Tue, 03 Sep 2019 06:29:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190902150336.3600-1-krzk@kernel.org> <CAL_JsqK_O+7zQDGxAhAHDW=AkMy+RtyijTXUuRStOgu8CYXe0g@mail.gmail.com>
+ <CAJKOXPfO0yBzGFPvF_WwsGGJBZSBGMLsFi2CQ2Eg5RVfyfW3nA@mail.gmail.com>
+ <CAL_JsqJUfGBRAv=StPyavQU1DiHnFwUseNCvP6Ce_ZMohJXTXQ@mail.gmail.com>
+ <CAJKOXPcjF9nERQxDdSVBLsfc2V_M1_BPZ6iM6EXvEx4tdr3rDQ@mail.gmail.com> <CAL_Jsq+1NEcmvrKPp9N=07CbxT3ZUsViXk7GGb1v0NzsxvWEdg@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+1NEcmvrKPp9N=07CbxT3ZUsViXk7GGb1v0NzsxvWEdg@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 3 Sep 2019 15:29:19 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcGWuW7HP-_kj_OjpPyHtj9gr36bpVUeT5VF2V9wTZY9Q@mail.gmail.com>
+Message-ID: <CAJKOXPcGWuW7HP-_kj_OjpPyHtj9gr36bpVUeT5VF2V9wTZY9Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: power: syscon-reboot: Convert bindings
+ to json-schema
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I saw Christ start to remove npu-dma.c code [1]
+On Tue, 3 Sep 2019 at 15:12, Rob Herring <robh+dt@kernel.org> wrote:
+> > arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: syscon-reboot:
+> > {'regmap': [[9]], 'mask': [[1]], '$nodename': ['syscon-reboot'],
+> > 'value': [[1]], 'offset': [[1024]], 'compatible': ['syscon-reboot']}
+> > is valid under each of {'required': ['mask']}, {'required': ['value',
+> > 'mask']}, {'required': ['value']}
+>
+> Ahh, right. 'anyOf' is what we want:
+>
+> anyOf:
+>   - required: [ value ]
+>   - required: [ mask ]
 
-[1] https://lore.kernel.org/linuxppc-dev/20190625145239.2759-4-hch@lst.de/
+This triggers meta-schema error:
 
-Should pnv_npu_dma_set_32() be removed too?
+  SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+Traceback (most recent call last):
+  File "/home/kozik/.local/lib/python3.5/site-packages/dtschema/lib.py",
+line 429, in process_schema
+    DTValidator.check_schema(schema)
+  File "/home/kozik/.local/lib/python3.5/site-packages/dtschema/lib.py",
+line 575, in check_schema
+    raise jsonschema.SchemaError.create_from(error)
+jsonschema.exceptions.SchemaError: Additional properties are not
+allowed ('anyOf' was unexpected)
 
-It was only called by pnv_npu_try_dma_set_bypass() but the later is not used
-anywhere in the kernel tree. If that is a case, I don't need to bother fixing
-the warning here.
+Failed validating 'additionalProperties' in metaschema['allOf'][0]:
+    {'$id': 'http://devicetree.org/meta-schemas/base.yaml#',
+     '$schema': 'http://json-schema.org/draft-07/schema#',
+     'additionalProperties': False,
+     'allOf': [{'$ref': 'http://json-schema.org/draft-07/schema#'}],
+     'description': 'Metaschema for devicetree binding documentation',
+     'properties': {'$id': {'pattern':
+'http://devicetree.org/schemas/.*\\.yaml#'},
+                    '$schema': {'enum':
+['http://devicetree.org/meta-schemas/core.yaml#',
 
-On Wed, 2019-05-22 at 12:09 -0400, Qian Cai wrote:
-> The commit b575c731fe58 ("powerpc/powernv/npu: Add set/unset window
-> helpers") called pnv_npu_set_window() in a void function
-> pnv_npu_dma_set_32(), but the return code from pnv_npu_set_window() has
-> no use there as all the error logging happen in pnv_npu_set_window(),
-> so just remove the unused variable to avoid a compilation warning,
-> 
-> arch/powerpc/platforms/powernv/npu-dma.c: In function
-> 'pnv_npu_dma_set_32':
-> arch/powerpc/platforms/powernv/npu-dma.c:198:10: warning: variable ‘rc’
-> set but not used [-Wunused-but-set-variable]
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/powerpc/platforms/powernv/npu-dma.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/npu-dma.c
-> b/arch/powerpc/platforms/powernv/npu-dma.c
-> index 495550432f3d..035208ed591f 100644
-> --- a/arch/powerpc/platforms/powernv/npu-dma.c
-> +++ b/arch/powerpc/platforms/powernv/npu-dma.c
-> @@ -195,7 +195,6 @@ static void pnv_npu_dma_set_32(struct pnv_ioda_pe *npe)
->  {
->  	struct pci_dev *gpdev;
->  	struct pnv_ioda_pe *gpe;
-> -	int64_t rc;
->  
->  	/*
->  	 * Find the assoicated PCI devices and get the dma window
-> @@ -208,8 +207,8 @@ static void pnv_npu_dma_set_32(struct pnv_ioda_pe *npe)
->  	if (!gpe)
->  		return;
->  
-> -	rc = pnv_npu_set_window(&npe->table_group, 0,
-> -			gpe->table_group.tables[0]);
-> +	pnv_npu_set_window(&npe->table_group, 0,
-> +			   gpe->table_group.tables[0]);
->  
->  	/*
->  	 * NVLink devices use the same TCE table configuration as
+'http://devicetree.org/meta-schemas/base.yaml#']},
+                    'additionalProperties': {'type': 'boolean'},
+                    'allOf': {'items': {'propertyNames': {'enum': ['$ref',
+                                                                   'if',
+                                                                   'then',
+                                                                   'else']}}},
+                    'definitions': True,
+                    'dependencies': True,
+                    'description': True,
+                    'else': True,
+                    'examples': {'items': {'type': 'string'},
+                                 'type': 'array'},
+                    'if': True,
+                    'maintainers': {'items': {'format': 'email',
+                                              'type': 'string'},
+                                    'type': 'array'},
+                    'oneOf': True,
+                    'patternProperties': True,
+                    'properties': True,
+                    'required': True,
+                    'select': {'allOf': [{'$ref':
+'http://json-schema.org/draft-07/schema#'},
+                                         {'oneOf': [{'properties':
+{'properties': True,
+
+'required': True},
+                                                     'type': 'object'},
+                                                    {'type': 'boolean'}]}]},
+                    'then': True,
+                    'title': {'maxLength': 100},
+                    'unevaluatedProperties': {'type': 'boolean'}},
+     'required': ['$id', '$schema', 'title', 'maintainers']}
+
+Best regards,
+Krzysztof
