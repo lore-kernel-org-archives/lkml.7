@@ -2,70 +2,85 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12ADAC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E7C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7A4523878
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0812341F
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:22:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M+u/sdgR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="arZrudyL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbfICOWL (ORCPT
+        id S1729566AbfICOWO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:22:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43369 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbfICOWL (ORCPT
+        Tue, 3 Sep 2019 10:22:14 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42856 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729113AbfICOWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 10:22:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d15so1371820pfo.10;
-        Tue, 03 Sep 2019 07:22:10 -0700 (PDT)
+Received: by mail-qk1-f195.google.com with SMTP id f13so16039109qkm.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 07:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=WJT8mC+y7rk6LxADX+jcP4QHKshWYtsWFcHsDWvCv6o=;
-        b=M+u/sdgRp7BmBOgRDTVflFNf8pslru3t4U8MOJsazOLz96FhHuJqREwKSNd2A4H3Qj
-         LCQklPPReXTVNLVqiLtzRmHgIoNTZkK+7QCbdijkP+Kg7ecSw0ImPFwvrdM6HqIU/oPz
-         CjrAyNl0Ouj9u4OrwnbW+qzp5NEtaMZgmRQ79YhiQQNIs3LGA3q0OOnDy6IXXPnBgmUu
-         9iHG+seZireoepKI+rf5cvnLbnIef/2/MmsHK9sWKqWIWJBmxQOQ4+zj7Fds8vMFH0Vj
-         gjYG4BEm3RTySymgotlC2z3Ch/Hh37lZeboHjijeS7rBbCEPybeoadbph9rPy2Zg3vws
-         x7+w==
+        bh=zXvrHc8bIlM8VodivjNDsnx6+oAEFk8HI08Pi/PdZy0=;
+        b=arZrudyLT8vTBXeGc+RzCc8cTYEs3iyuTYalOAK8Glv1IOK+eWWBNQWyvS8kFPmvs8
+         cXIvmXi+hJkM1FOJpx5IPOjfYvPRIzhid3fb2nB/JrVWSTaqecT2VZSSzQiT3GLBEhVD
+         smanZ/a5pgEUewoLHRsTzIMv9ved1r7kbjWXhXrjDyLyY7rPLZf0ySFrYu7mKpvQJxkF
+         6zkSA2MEAIopfNY5Ll0n+vlI8Z1hVWLGrtAY/KyJTTp+EipIkSMRL9vg7B0zT/2F6vW+
+         GLuEGCAkw1KhNkAUKZ5Qs8nmOqIqiZ993sMb4VYDVKWNLkoIjdzO2woNnmAnCXfVizng
+         kRPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WJT8mC+y7rk6LxADX+jcP4QHKshWYtsWFcHsDWvCv6o=;
-        b=tNG5He9yKZ70o4MIVXgouAqCRWy1O09lgXloM393MgjS+7v+/jszrWsWBiBNM8T3/9
-         r5INa29QsRpvtQwaRxHJMcyuZl+gdl0yX/qY/0mJxHfWCtxR2drWwKhpr/ORC2D6nQn+
-         hV8d7dWlflEtmrbQ0HTgn3rEOb/CWGdZuDV0j/1eQGXOq1yKqVKwUEtoHmA87tYOPgFZ
-         iwclX5jhea1/qkRCyJzjZAF3/++ZHLqy2FEdRG9ViN44Hmp6Pxy3c85RPGPlogo7ZkSx
-         3X9udGdRQU3xgyiXsdOE1UlLmSe5lQRfOVno0d20loX4BbOY523JufNWGOiCOWj2O+lP
-         ffzA==
-X-Gm-Message-State: APjAAAVHmQl3QqRKoTXnWIJOdZq4ebOnEdabjhCvlbjIUw9iMM9gam7s
-        9+tTDNKIpJ9tt40tOy2TW1TnOZMCcSGvTlDq/hU=
-X-Google-Smtp-Source: APXvYqxuEwoU+wUljRNwFRrt6A6UXzHB5I57vI9aPFbbX5bo7O6q/UxKyoT4oApqBKsFT1w0vVKqknvyDeSu6QYclRc=
-X-Received: by 2002:a63:505a:: with SMTP id q26mr29702007pgl.18.1567520530332;
+        bh=zXvrHc8bIlM8VodivjNDsnx6+oAEFk8HI08Pi/PdZy0=;
+        b=Wxc5T0dy+G30uE2yM2uUj9eMscNRZ7EnVc/sgyKC8jjVCnDWOHPgBpzCOl9oVgYsTj
+         jGpKIsdKuzam9fiG6vm/b6NiDji2AMMPc6N/UVlWO6sNoxd/WVDX0nJfYw5S5mcgx5FX
+         gJSsQmRIvmTcFVAHqmdmhBhSLxu+m/M1x3kmMOg/dHCylVvNtEss2OMllg1N6oBHwkbj
+         QLZQBMAGKmjyg+YKcGXEP2FFNabcN6mdHDRele9wWOq5kE7azneHeYICz7E0zQ8boohY
+         UkdlhNkE0Z0mRsEGHswitXDCWxUKt7KI4A9BpOwA+CMOnJpUVInPuGFxD9vlxXzJPbNJ
+         VHDg==
+X-Gm-Message-State: APjAAAXupm6sDzLrDzTm8y1UBOEY8W/B3P2PC2IQuglvQNzEsebApyVn
+        AHnmmF0eOE/YvH/aU+frPs8AKonulBCBvblF+6dnhw==
+X-Google-Smtp-Source: APXvYqzRj6Qy94zXxM718BMGrBx7jps9qVb8rKF7Cps40w/i6I9cXmMkiicMdflzzRvbKZLV3AfkOSAorVEoJeh+BqA=
+X-Received: by 2002:a05:620a:1367:: with SMTP id d7mr12839832qkl.20.1567520530372;
  Tue, 03 Sep 2019 07:22:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <1567090164-6819-1-git-send-email-akinobu.mita@gmail.com>
- <6ebeedab-4a7f-14ea-d62e-9184e911047f@gmail.com> <20190902181207.GA18577@kroah.com>
- <1cd468a3-b6e5-a93b-739a-f30288318356@gmail.com> <20190902190843.GB25019@kroah.com>
- <CAC5umyjTJSMdKMtZbF8Uxky6nOrAHesTHmZRV5VA1uPwX2rtxA@mail.gmail.com> <20190903140719.GA9506@kroah.com>
-In-Reply-To: <20190903140719.GA9506@kroah.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Tue, 3 Sep 2019 23:21:59 +0900
-Message-ID: <CAC5umyhApkfo+-7+nPFn20MLpG7dxrSE1+1FPhZp+p=hCsopeg@mail.gmail.com>
-Subject: Re: [PATCH] leds: remove PAGE_SIZE limit of /sys/class/leds/<led>/trigger
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        linux-leds@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+References: <20190822132811.31294-1-patrick.bellasi@arm.com>
+ <20190822132811.31294-2-patrick.bellasi@arm.com> <CAJuCfpGWtrg02LNE3PJZag9-LLVT=by2v+9x_tm1PyoXwZ8DqQ@mail.gmail.com>
+ <20190903085248.GB8756@blackbody.suse.cz>
+In-Reply-To: <20190903085248.GB8756@blackbody.suse.cz>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Tue, 3 Sep 2019 10:21:59 -0400
+Message-ID: <CAJWu+opnNT3bQwe+SsdR0Q+PSt7DA=JAQ_5sbZ6h2DXd4ZqwHA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/6] sched/core: uclamp: Extend CPU's cgroup controller
+To:     =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Alessio Balsini <balsini@android.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Paul Turner <pjt@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        cgroups mailinglist <cgroups@vger.kernel.org>,
+        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,107 +88,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B49=E6=9C=883=E6=97=A5(=E7=81=AB) 23:07 Greg KH <gregkh@linuxfou=
-ndation.org>:
+On Tue, Sep 3, 2019 at 4:53 AM Michal Koutn=C3=BD <mkoutny@suse.com> wrote:
 >
-> On Tue, Sep 03, 2019 at 10:55:40PM +0900, Akinobu Mita wrote:
-> > 2019=E5=B9=B49=E6=9C=883=E6=97=A5(=E7=81=AB) 4:08 Greg KH <gregkh@linux=
-foundation.org>:
-> > >
-> > > On Mon, Sep 02, 2019 at 08:47:02PM +0200, Jacek Anaszewski wrote:
-> > > > On 9/2/19 8:12 PM, Greg KH wrote:
-> > > > > On Sun, Sep 01, 2019 at 06:53:34PM +0200, Jacek Anaszewski wrote:
-> > > > >> Hi Akinobu,
-> > > > >>
-> > > > >> Thank you for the patch.
-> > > > >>
-> > > > >> I have one nit below but in general it looks good to me.
-> > > > >> I've tested it with 2000 mtd triggers (~14kB file size)
-> > > > >> and it worked flawlessly.
-> > > > >>
-> > > > >> Still, I would like to have ack from Greg for it.
-> > > > >>
-> > > > >> Adding Greg on Cc.
-> > > > >>
-> > > > >> On 8/29/19 4:49 PM, Akinobu Mita wrote:
-> > > > >>> Reading /sys/class/leds/<led>/trigger returns all available LED=
- triggers.
-> > > > >>> However, the size of this file is limited to PAGE_SIZE because =
-of the
-> > > > >>> limitation for sysfs attribute.
-> > > > >>>
-> > > > >>> Enabling LED CPU trigger on systems with thousands of CPUs easi=
-ly hits
-> > > > >>> PAGE_SIZE limit, and makes it impossible to see all available L=
-ED triggers
-> > > > >>> and which trigger is currently activated.
-> > > > >>>
-> > > > >>> This converts /sys/class/leds/<led>/trigger to bin attribute an=
-d removes
-> > > > >>> the PAGE_SIZE limitation.
-> > > > >
-> > > > > But this is NOT a binary file.  A sysfs binary file is used for w=
-hen the
-> > > > > kernel passes data to or from hardware without any parsing of the=
- data
-> > > > > by the kernel.
-> > > > >
-> > > > > You are not doing that here, you are abusing the "one value per f=
-ile"
-> > > > > rule of sysfs so much that you are forced to work around the limi=
-tation
-> > > > > it put in place on purpose to keep you from doing stuff like this=
-.
-> > > > >
-> > > > > Please fix this "correctly" by creating a new api that works prop=
-erly
-> > > > > and just live with the fact that this file will never work correc=
-tly and
-> > > > > move everyone to use the new api instead.
-> > > > >
-> > > > > Don't keep on abusing the interface by workarounds like this, it =
-is not
-> > > > > ok.
-> > > >
-> > > > In the message [0] you pledged to give us exception for that, provi=
-ded
-> > > > it will be properly documented in the code. I suppose you now objec=
-t
-> > > > because the patch does not meet that condition.
-> > >
-> > > Well, I honestly don't remember writing that email, but it was 5 mont=
-hs
-> > > and many thousands of emails ago :)
-> > >
-> > > Also, you all didn't document the heck out of this.  So no, I really =
-do
-> > > not want to see this patch accepted as-is.
-> > >
-> > > > Provided that will be fixed, can we count on your ack for the
-> > > > implementation of the solution you proposed? :-)
-> > >
-> > > Let's see the patch that actually implements what I suggested first :=
-)
+> On Mon, Sep 02, 2019 at 04:02:57PM -0700, Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > > +static inline void cpu_uclamp_print(struct seq_file *sf,
+> > > +                                   enum uclamp_id clamp_id)
+> > > [...]
+> > > +       rcu_read_lock();
+> > > +       tg =3D css_tg(seq_css(sf));
+> > > +       util_clamp =3D tg->uclamp_req[clamp_id].value;
+> > > +       rcu_read_unlock();
+> > > +
+> > > +       if (util_clamp =3D=3D SCHED_CAPACITY_SCALE) {
+> > > +               seq_puts(sf, "max\n");
+> > > +               return;
+> > > +       }
+> > > +
+> > > +       percent =3D tg->uclamp_pct[clamp_id];
 > >
-> > I'd propose introducing a new procfs file (/proc/led-triggers) and new
-> > /sys/class/leds/<led>/current-trigger api.
-> >
-> > Reading /proc/led-triggers file shows all available triggers.
-> > This violates "one value per file", but it's a procfs file.
+> > You are taking RCU lock when accessing tg->uclamp_req but not when
+> > accessing tg->uclamp_pct.
+> Good point.
 >
-> No, procfs files are ONLY for process-related things.  Don't keep the
-> insanity of this file format by just moving it out of sysfs and into
-> procfs :)
+> > Is that intentional? Can tg be destroyed under you?
+> Actually, the rcu_read{,un}lock should be unnecessary in the context of
+> the kernfs file op handler -- the tg/css won't go away as long as its
+> kernfs file is being worked with.
+>
 
-I see.
+Also, add to that the fact that there is no rcu_dereference() call to
+access any of the pointers in the reader or any of its callers. And, I
+don't see any "wait for completion" type of pattern here so that
+rcu_read_{lock, unlock}() pair does seem useless.
 
-How about creating one file or directory for each led-trigger in
-/sys/kernel/led-triggers directory?
+thanks,
 
-e.g.
-
-$ ls /sys/kernel/led-triggers
-audio-micmute                              ide-disk        phy0assoc
-audio-mute                                 kbd-altgrlock   phy0radio
-...
-hidpp_battery_3-full                       panic
+ - Joel
