@@ -2,83 +2,220 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F99C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058FFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0BD22CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C799922CF8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 11:31:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rxQ0A7gL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbfICL2E (ORCPT
+        id S1728837AbfICLbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 07:28:04 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11167 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728270AbfICL2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 07:28:04 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 04:28:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
-   d="scan'208";a="266262707"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 03 Sep 2019 04:28:01 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i56ye-0008GR-7d; Tue, 03 Sep 2019 14:28:00 +0300
-Date:   Tue, 3 Sep 2019 14:28:00 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v5 09/11] lib/vsprintf: OF nodes are first and foremost,
- struct device_nodes
-Message-ID: <20190903112800.GW2680@smile.fi.intel.com>
-References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
- <20190902135732.23455-10-sakari.ailus@linux.intel.com>
- <20190903085233.oksjcwqwdxb53eig@pathway.suse.cz>
- <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
+        Tue, 3 Sep 2019 07:31:05 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40188 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726631AbfICLbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 07:31:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t9so17802760wmi.5;
+        Tue, 03 Sep 2019 04:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2Ekc0W7zJk5w+9GqjfFzhlAJ4FiN+oEvkKnq/TUY/UA=;
+        b=rxQ0A7gL/rvUTRgFS/x6Jhz66KR/9EtqdUj00Gi6qx2X2kvUeehgUkd8+p67o1zAdh
+         jhHPTILE48XYrnwg8UBBO258FnM17/u/jy7Djy7SpVAb0P8pFAoTW1qOfpfAwfNjhJAT
+         DgMvezl32n1VEXVXQNQbjeAq4GqCIpmC++6kN/xbkwj+u+PUgbKIgQ1Llm24sLydd5ao
+         LKeszXIV4Hr0QQP3BUctE8YxTL4jz9rRJTA4f8AjNqEOacNNW1CVAeZAN2slkCI5Hcqh
+         2/OS+iB6IzU6RSZYWkyMRuB5kD1XX6OEaiVdFvsFPUttT5lL/m20kyhe/Hpi4gYMB5ti
+         fqDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=2Ekc0W7zJk5w+9GqjfFzhlAJ4FiN+oEvkKnq/TUY/UA=;
+        b=tDxBYroz5O57qM5WaSrjNVg1DVHNtNoxn4coX1hza0V+YMxqRBI+1jUNy1WRa8tAy5
+         JJOy1tK3MQ4uisSzvX3K4QBSxMWbTbqsmdRctHGbRCOv53fyMM+1JCqkz+BnrVzGstX3
+         WTTul8zMefWMMcYnSUWbvaexcRl+EBzNf5GSK5dOX3pNHG2E2ZkBhbqKXbzpdzDiUGxV
+         AVp4E/xKMZM5KNZi9lO/Qb5UOvedjWFAhrqmAXKjvb2RU77aj5R+jPtTsrqW6B8eCSZt
+         nqlnIXfhlp/aN+hCuTaXzH8HymZZxV+cARc5DgTDsKIbjgHwbK4w6CJzYnWcMVFOtgnQ
+         YmVQ==
+X-Gm-Message-State: APjAAAUTkOj5utBNld4ujSBjBsQYT/KRzA/HzPnKzkAGNIRIOfRrR1yn
+        0YH17IVIbEvB68Tum4CG6xMtVLV3QZa0iA==
+X-Google-Smtp-Source: APXvYqziAyX3arV2k8bnfEcXOZ1Bh4SmqiEN1nono5tsDY7ufXY/SqE/5xUTbeQQ6Nd5YaemyR+OCQ==
+X-Received: by 2002:a1c:1d85:: with SMTP id d127mr29102252wmd.14.1567510261446;
+        Tue, 03 Sep 2019 04:31:01 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id l2sm19455074wme.36.2019.09.03.04.31.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 04:31:00 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>, Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        iommu@lists.linux-foundation.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v2] PCI: Remove unused includes and superfluous struct declaration
+Date:   Tue,  3 Sep 2019 13:30:59 +0200
+Message-Id: <20190903113059.2901-1-kw@linux.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190901112506.8469-1-kw@linux.com>
+References: <20190901112506.8469-1-kw@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903092816.qutqnjba7okcauim@pathway.suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 11:28:16AM +0200, Petr Mladek wrote:
-> On Tue 2019-09-03 10:52:33, Petr Mladek wrote:
-> > On Mon 2019-09-02 16:57:30, Sakari Ailus wrote:
-> > > Factor out static kobject_string() function that simply calls
-> > > device_node_string(), and thus remove references to kobjects (as these are
-> > > struct device_node).
+Remove <linux/pci.h> and <linux/msi.h> from being included
+directly as part of the include/linux/of_pci.h, and remove
+superfluous declaration of struct of_phandle_args.
 
-> > > -		return kobject_string(buf, end, ptr, spec, fmt);
-> > > +		return device_node_string(buf, end, ptr, spec, fmt + 1);
-> > 
-> > I know that this come from from kobject_string(). But please, modify
-> > it to follow the style used by other %p modifiers. I mean to pass
-> > "fmt" as is and then use:
-> > 
-> > 	if (fmt[1] != 'F')
-> 
-> Ah, I see that it would need more changes in device_node_string().
-> OK, let's leave the patch as is. I am sorry for the noise.
+Move users of include <linux/of_pci.h> to include <linux/pci.h>
+and <linux/msi.h> directly rather than rely on both being
+included transitively through <linux/of_pci.h>.
 
-I came to the same conclusions, though can we consider to drop this patch?
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+ drivers/iommu/of_iommu.c                          | 2 ++
+ drivers/irqchip/irq-gic-v2m.c                     | 1 +
+ drivers/irqchip/irq-gic-v3-its-pci-msi.c          | 1 +
+ drivers/pci/controller/dwc/pcie-designware-host.c | 1 +
+ drivers/pci/controller/pci-aardvark.c             | 1 +
+ drivers/pci/controller/pci-thunder-pem.c          | 1 +
+ drivers/pci/pci.c                                 | 1 +
+ drivers/pci/probe.c                               | 1 +
+ include/linux/of_pci.h                            | 5 ++---
+ 9 files changed, 11 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 614a93aa5305..026ad2b29dcd 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -8,6 +8,8 @@
+ #include <linux/export.h>
+ #include <linux/iommu.h>
+ #include <linux/limits.h>
++#include <linux/pci.h>
++#include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_iommu.h>
+ #include <linux/of_pci.h>
+diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+index e88e75c22b6a..fbec07d634ad 100644
+--- a/drivers/irqchip/irq-gic-v2m.c
++++ b/drivers/irqchip/irq-gic-v2m.c
+@@ -17,6 +17,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
++#include <linux/pci.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+diff --git a/drivers/irqchip/irq-gic-v3-its-pci-msi.c b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+index 229d586c3d7a..87711e0f8014 100644
+--- a/drivers/irqchip/irq-gic-v3-its-pci-msi.c
++++ b/drivers/irqchip/irq-gic-v3-its-pci-msi.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <linux/acpi_iort.h>
++#include <linux/pci.h>
+ #include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d3156446ff27..7a9bef993e57 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci_regs.h>
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index fc0fe4d4de49..3a05f6ca95b0 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -16,6 +16,7 @@
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
++#include <linux/msi.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ 
+diff --git a/drivers/pci/controller/pci-thunder-pem.c b/drivers/pci/controller/pci-thunder-pem.c
+index f127ce8bd4ef..9491e266b1ea 100644
+--- a/drivers/pci/controller/pci-thunder-pem.c
++++ b/drivers/pci/controller/pci-thunder-pem.c
+@@ -6,6 +6,7 @@
+ #include <linux/bitfield.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
++#include <linux/pci.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci-acpi.h>
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 484e35349565..571e7e00984b 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/dmi.h>
+ #include <linux/init.h>
++#include <linux/msi.h>
+ #include <linux/of.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci.h>
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 169943f17a4c..11b11a652d18 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -7,6 +7,7 @@
+ #include <linux/delay.h>
+ #include <linux/init.h>
+ #include <linux/pci.h>
++#include <linux/msi.h>
+ #include <linux/of_device.h>
+ #include <linux/of_pci.h>
+ #include <linux/pci_hotplug.h>
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 21a89c4880fa..29658c0ee71f 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -2,11 +2,10 @@
+ #ifndef __OF_PCI_H
+ #define __OF_PCI_H
+ 
+-#include <linux/pci.h>
+-#include <linux/msi.h>
++#include <linux/types.h>
++#include <linux/errno.h>
+ 
+ struct pci_dev;
+-struct of_phandle_args;
+ struct device_node;
+ 
+ #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_PCI)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.23.0
 
