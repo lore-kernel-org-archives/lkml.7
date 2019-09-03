@@ -6,149 +6,104 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49709C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D237C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271DD20449
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FBB22077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 15:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbfICPhq (ORCPT
+        id S1729870AbfICPiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 11:37:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1970 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 11:38:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47816 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbfICPho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727107AbfICPho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Sep 2019 11:37:44 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E2818190C012;
-        Tue,  3 Sep 2019 15:37:43 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id A21FD3081CFF;
+        Tue,  3 Sep 2019 15:37:44 +0000 (UTC)
 Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 508B119C78;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 102CB19C78;
         Tue,  3 Sep 2019 15:37:43 +0000 (UTC)
 From:   Prarit Bhargava <prarit@redhat.com>
 To:     platform-driver-x86@vger.kernel.org
 Cc:     Prarit Bhargava <prarit@redhat.com>,
         Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] tools/power/x86/intel-speed-select: Switch output to MHz
-Date:   Tue,  3 Sep 2019 11:37:31 -0400
-Message-Id: <20190903153734.11904-6-prarit@redhat.com>
+Subject: [PATCH 6/8] tools/power/x86/intel-speed-select: Change turbo ratio output to maximum turbo frequency
+Date:   Tue,  3 Sep 2019 11:37:32 -0400
+Message-Id: <20190903153734.11904-7-prarit@redhat.com>
 In-Reply-To: <20190903153734.11904-1-prarit@redhat.com>
 References: <20190903153734.11904-1-prarit@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 03 Sep 2019 15:37:43 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 03 Sep 2019 15:37:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These features are introduced on new processors that will never operate
-in the KHz range.
-
-Save some zeros and switch the output to MHz.
+The intel-speed-select tool currently outputs the turbo ratio for every
+bucket.  Make the output more user-friendly by changing the output to the
+maximum turbo frequency.
 
 Signed-off-by: Prarit Bhargava <prarit@redhat.com>
 Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Cc: David Arcari <darcari@redhat.com>
 Cc: linux-kernel@vger.kernel.org
 ---
- .../x86/intel-speed-select/isst-display.c     | 20 +++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ .../x86/intel-speed-select/isst-display.c      | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
 diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 3ae693efceaa..4ec1924ff7a9 100644
+index 4ec1924ff7a9..cfeee0beb78d 100644
 --- a/tools/power/x86/intel-speed-select/isst-display.c
 +++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -6,7 +6,7 @@
+@@ -336,9 +336,11 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			snprintf(value, sizeof(value), "%d", j);
+ 			format_and_print(outf, base_level + 6, header, value);
  
- #include "isst.h"
- 
--#define DISP_FREQ_MULTIPLIER 100000
-+#define DISP_FREQ_MULTIPLIER 100
- 
- static void printcpumask(int str_len, char *str, int mask_size,
- 			 cpu_set_t *cpu_mask)
-@@ -156,7 +156,7 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
- 	snprintf(header, sizeof(header), "speed-select-base-freq");
- 	format_and_print(outf, disp_level, header, NULL);
- 
--	snprintf(header, sizeof(header), "high-priority-base-frequency(KHz)");
-+	snprintf(header, sizeof(header), "high-priority-base-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 pbf_info->p1_high * DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, disp_level + 1, header, value);
-@@ -166,7 +166,7 @@ static void _isst_pbf_display_information(int cpu, FILE *outf, int level,
- 		     pbf_info->core_cpumask);
- 	format_and_print(outf, disp_level + 1, header, value);
- 
--	snprintf(header, sizeof(header), "low-priority-base-frequency(KHz)");
-+	snprintf(header, sizeof(header), "low-priority-base-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 pbf_info->p1_low * DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, disp_level + 1, header, value);
-@@ -209,7 +209,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
- 
- 		if (fact_avx & 0x01) {
- 			snprintf(header, sizeof(header),
--				 "high-priority-max-frequency(KHz)");
-+				 "high-priority-max-frequency(MHz)");
+-			snprintf(header, sizeof(header), "turbo-ratio");
++			snprintf(header, sizeof(header),
++				"max-turbo-frequency(MHz)");
  			snprintf(value, sizeof(value), "%d",
- 				 bucket_info[j].sse_trl * DISP_FREQ_MULTIPLIER);
- 			format_and_print(outf, base_level + 2, header, value);
-@@ -217,7 +217,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+-				 ctdp_level->trl_sse_active_cores[j]);
++				 ctdp_level->trl_sse_active_cores[j] *
++				  DISP_FREQ_MULTIPLIER);
+ 			format_and_print(outf, base_level + 6, header, value);
+ 		}
+ 		snprintf(header, sizeof(header), "turbo-ratio-limits-avx");
+@@ -351,9 +353,11 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			snprintf(value, sizeof(value), "%d", j);
+ 			format_and_print(outf, base_level + 6, header, value);
  
- 		if (fact_avx & 0x02) {
- 			snprintf(header, sizeof(header),
--				 "high-priority-max-avx2-frequency(KHz)");
-+				 "high-priority-max-avx2-frequency(MHz)");
+-			snprintf(header, sizeof(header), "turbo-ratio");
++			snprintf(header, sizeof(header),
++				"max-turbo-frequency(MHz)");
  			snprintf(value, sizeof(value), "%d",
- 				 bucket_info[j].avx_trl * DISP_FREQ_MULTIPLIER);
- 			format_and_print(outf, base_level + 2, header, value);
-@@ -225,7 +225,7 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
+-				 ctdp_level->trl_avx_active_cores[j]);
++				 ctdp_level->trl_avx_active_cores[j] *
++				  DISP_FREQ_MULTIPLIER);
+ 			format_and_print(outf, base_level + 6, header, value);
+ 		}
  
- 		if (fact_avx & 0x04) {
- 			snprintf(header, sizeof(header),
--				 "high-priority-max-avx512-frequency(KHz)");
-+				 "high-priority-max-avx512-frequency(MHz)");
+@@ -367,9 +371,11 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
+ 			snprintf(value, sizeof(value), "%d", j);
+ 			format_and_print(outf, base_level + 6, header, value);
+ 
+-			snprintf(header, sizeof(header), "turbo-ratio");
++			snprintf(header, sizeof(header),
++				"max-turbo-frequency(MHz)");
  			snprintf(value, sizeof(value), "%d",
- 				 bucket_info[j].avx512_trl *
- 					 DISP_FREQ_MULTIPLIER);
-@@ -235,19 +235,19 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
- 	snprintf(header, sizeof(header),
- 		 "speed-select-turbo-freq-clip-frequencies");
- 	format_and_print(outf, base_level + 1, header, NULL);
--	snprintf(header, sizeof(header), "low-priority-max-frequency(KHz)");
-+	snprintf(header, sizeof(header), "low-priority-max-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 fact_info->lp_clipping_ratio_license_sse *
- 			 DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, base_level + 2, header, value);
- 	snprintf(header, sizeof(header),
--		 "low-priority-max-avx2-frequency(KHz)");
-+		 "low-priority-max-avx2-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 fact_info->lp_clipping_ratio_license_avx2 *
- 			 DISP_FREQ_MULTIPLIER);
- 	format_and_print(outf, base_level + 2, header, value);
- 	snprintf(header, sizeof(header),
--		 "low-priority-max-avx512-frequency(KHz)");
-+		 "low-priority-max-avx512-frequency(MHz)");
- 	snprintf(value, sizeof(value), "%d",
- 		 fact_info->lp_clipping_ratio_license_avx512 *
- 			 DISP_FREQ_MULTIPLIER);
-@@ -291,7 +291,7 @@ void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 		snprintf(value, sizeof(value), "%d", ctdp_level->tdp_ratio);
- 		format_and_print(outf, base_level + 4, header, value);
- 
--		snprintf(header, sizeof(header), "base-frequency(KHz)");
-+		snprintf(header, sizeof(header), "base-frequency(MHz)");
- 		snprintf(value, sizeof(value), "%d",
- 			 ctdp_level->tdp_ratio * DISP_FREQ_MULTIPLIER);
- 		format_and_print(outf, base_level + 4, header, value);
+-				 ctdp_level->trl_avx_512_active_cores[j]);
++				 ctdp_level->trl_avx_512_active_cores[j] *
++				  DISP_FREQ_MULTIPLIER);
+ 			format_and_print(outf, base_level + 6, header, value);
+ 		}
+ 		if (ctdp_level->pbf_support)
 -- 
 2.21.0
 
