@@ -2,95 +2,142 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9F3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68577C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212842087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:22:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sdAJgqyO"
+	by mail.kernel.org (Postfix) with ESMTP id 40AB52087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfICMWK (ORCPT
+        id S1728679AbfICM0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:22:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40434 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfICMWK (ORCPT
+        Tue, 3 Sep 2019 08:26:11 -0400
+Received: from mx0b-00176a03.pphosted.com ([67.231.157.48]:3230 "EHLO
+        mx0a-00176a03.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726631AbfICM0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:22:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ccUGFVNxssVWDcbI4ftnmg58MbgKoeWD8Ifd/JsATGA=; b=sdAJgqyOjMVv5fGaTpFicA5RP
-        0MALv5u8khHy2K9Yl7P37X5h9KAHJlerdtdvJhnb3lJKI4pzP9dQt487I46HmBIrgC7njktl3YgWa
-        SQWOLRQhasxNetbiJq1YJk4ow8C0kTd+vCWMFmUZ6CEBLYUz/expOYSTwdf+ImbTf9OT3sMVRk3t6
-        djywTV4fdBXWnWMXlOtU+Cat+AE2NfVI1wgF9MBF2jwWESybVK2yGLv3CBrmVVHgms+SvUPg8M7I3
-        iEbvurEHnm0jQ2rV1vxDYUqKxI+1SX8YNQGuHQUesSirCQB4QGmdBwrzX3+BvYyxkIGXP6l3GDVH7
-        QA3EPd7bg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i57p2-0006Fn-RW; Tue, 03 Sep 2019 12:22:08 +0000
-Date:   Tue, 3 Sep 2019 05:22:08 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>
-Subject: Re: [PATCH v5 2/2] mm,thp: Add experimental config option
- RO_EXEC_FILEMAP_HUGE_FAULT_THP
-Message-ID: <20190903122208.GE29434@bombadil.infradead.org>
-References: <20190902092341.26712-1-william.kucharski@oracle.com>
- <20190902092341.26712-3-william.kucharski@oracle.com>
- <20190903121424.GT14028@dhcp22.suse.cz>
+        Tue, 3 Sep 2019 08:26:11 -0400
+Received: from pps.filterd (m0048300.ppops.net [127.0.0.1])
+        by m0048300.ppops.net-00176a03. (8.16.0.27/8.16.0.27) with SMTP id x83C8PdG037956;
+        Tue, 3 Sep 2019 08:26:09 -0400
+From:   "Safford, David (GE Global Research, US)" <david.safford@ge.com>
+To:     Seunghun Han <kkamagui@gmail.com>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Thread-Topic: Re: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping
+ mechanism for supporting AMD's fTPM
+Thread-Index: AQHVXxlOrNmKX2KHXEaevQ/odv4D9acT5e0AgAAT9ID//79NoIAAcvSA///KVoCABgn4gP//4Hww
+Date:   Tue, 3 Sep 2019 12:26:00 +0000
+Message-ID: <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CF04@ALPMBAPA12.e2k.ad.ge.com>
+References: <20190830095639.4562-1-kkamagui@gmail.com>
+ <20190830095639.4562-3-kkamagui@gmail.com> <20190830124334.GA10004@ziepe.ca>
+ <CAHjaAcQ0MrPCZUit7s0Rmqpwpp0w5jiYjNUNEEm2yc1AejZ3ng@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CC59@ALPMBAPA12.e2k.ad.ge.com>
+ <CAHjaAcQu3jOSj0QV3u4GSgnhpkTmJTMqckY_cnuzeTY-HNUWcA@mail.gmail.com>
+ <BCA04D5D9A3B764C9B7405BBA4D4A3C035F1CD06@ALPMBAPA12.e2k.ad.ge.com>
+ <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
+In-Reply-To: <CAHjaAcRPg9-9MXiLH7AfJO6P1k25CSwJrSiuUwzFLwN5Ynr0DQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jTWpFeU5EY3pPVFV3WEdGd2NHUmhkR0ZjY205aGJXbHVaMXd3T1dRNE5E?=
+ =?utf-8?B?bGlOaTB6TW1RekxUUmhOREF0T0RWbFpTMDJZamcwWW1FeU9XVXpOV0pjYlhO?=
+ =?utf-8?B?bmMxeHRjMmN0Wm1JMFpEVmtZemt0WTJVME5TMHhNV1U1TFRobE16Z3RZVFJq?=
+ =?utf-8?B?TTJZd1lqVTVPR0UyWEdGdFpTMTBaWE4wWEdaaU5HUTFaR05oTFdObE5EVXRN?=
+ =?utf-8?B?VEZsT1MwNFpUTTRMV0UwWXpObU1HSTFPVGhoTm1KdlpIa3VkSGgwSWlCemVq?=
+ =?utf-8?B?MGlNalE1TVNJZ2REMGlNVE15TVRFNU9EY3hOVGc1TURBNE1ETTVJaUJvUFNK?=
+ =?utf-8?B?MmFEZFBjRUZRWldWRFdFSjZhbUZtWkhsNk1rMUdVazVqZUdjOUlpQnBaRDBp?=
+ =?utf-8?B?SWlCaWJEMGlNQ0lnWW04OUlqRWlJR05wUFNKalFVRkJRVVZTU0ZVeFVsTlNW?=
+ =?utf-8?B?VVpPUTJkVlFVRkZiME5CUVVOdVVYUlhPVlZ0VEZaQlpVZzVUbXgzUjBaVVNG?=
+ =?utf-8?B?RTBaakF5V0VGWlZrMWtRVVJCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJTRUZCUVVGRVlVRlJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlJVRkJVVUZDUVVGQlFVWjBSMlZSZDBGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VW8wUVVGQlFtNUJSMVZCV0hkQ2FrRkhPRUZpWjBKdFFVZHJRVnBCUW14QlJ6?=
+ =?utf-8?B?UkJaRUZDY0VGSFJVRmlRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFXZEJRVUZCUVVGdVowRkJRVWRqUVZwUlFtWkJSMmRCWVZGQ2JrRkhaMEZp?=
+ =?utf-8?B?UVVJMVFVZE5RV0ozUW5WQlIxbEJZVkZDYTBGSFZVRmlaMEl3UVVkclFWbFJR?=
+ =?utf-8?B?bk5CUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJV?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVU5CUVVGQlFVRkRaVUZCUVVGYWQwSnNRVVk0UVdKblFu?=
+ =?utf-8?B?WkJSelJCWTBGQ01VRkhTVUZpUVVKd1FVZE5RVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUWtGQlFVRkJRVUZCUVVGSlFVRkJRVUZCUVQwOUlpOCtQQzl0?=
+ =?utf-8?B?WlhSaFBnPT0=?=
+x-dg-rorf: 
+x-originating-ip: [3.159.19.191]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903121424.GT14028@dhcp22.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Subject: [PATCH 2/2] tpm: tpm_crb: enhance resource mapping mechanism for supporting
+ AMD's fTPM
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909030129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 02:14:24PM +0200, Michal Hocko wrote:
-> On Mon 02-09-19 03:23:41, William Kucharski wrote:
-> > Add filemap_huge_fault() to attempt to satisfy page
-> > faults on memory-mapped read-only text pages using THP when possible.
-> 
-> This deserves much more description of how the thing is implemented and
-> expected to work. For one thing it is not really clear to me why you
-> need CONFIG_RO_EXEC_FILEMAP_HUGE_FAULT_THP at all. You need a support
-> from the filesystem anyway. So who is going to enable/disable this
-> config?
-
-There are definitely situations in which enabling this code will crash
-the kernel.  But we want to get filesystems to a point where they can
-start working on their support for large pages.  So our workaround is
-to try to get the core pieces merged under a CONFIG_I_KNOW_WHAT_IM_DOING
-flag and let people play with it.  Then continue to work on the core
-to eliminate those places that are broken.
-
-> I cannot really comment on fs specific parts but filemap_huge_fault
-> sounds convoluted so much I cannot wrap my head around it. One thing
-> stand out though. The generic filemap_huge_fault depends on ->readpage
-> doing the right thing which sounds quite questionable to me. If nothing
-> else  I would expect ->readpages to do the job.
-
-Ah, that's because you're not a filesystem person ;-)  ->readpages is
-really ->readahead.  It's a crappy interface and should be completely
-redesigned.
-
-Thanks for looking!
+PiA+ID4gPiBGaXJzdCwgeW91IG9ubHkgZm9yY2UgdGhlIHJlbWFwIGlmIHRoZSBvdmVybGFwIGlz
+IHdpdGggTlZTLCBidXQgSQ0KPiA+ID4gPiBoYXZlIHN5c3RlbXMgd2hlcmUgdGhlIG92ZXJsYXAg
+aXMgd2l0aCBvdGhlciByZXNlcnZlZCByZWdpb25zLiBZb3UNCj4gPiA+ID4gc2hvdWxkIGZvcmNl
+IHRoZSByZW1hcCByZWdhcmRsZXNzLCBidXQgaWYgaXQgaXMgTlZTLCBncmFiIHRoZSBzcGFjZSBi
+YWNrDQo+ID4gPiA+IGZyb20gTlZTLg0KPiA+ID4NCj4gPiA+IEkgZGlkbid0IGtub3cgYWJvdXQg
+dGhhdC4gSSBqdXN0IGZvdW5kIHRoZSBjYXNlIGZyb20geW91ciB0aHJlYWQNCj4gPiA+IHRoYXQg
+QU1EIHN5c3RlbSBhc3NpZ25lZCBUUE0gcmVnaW9uIGludG8gdGhlIHJlc2VydmVkIGFyZWEuIEhv
+d2V2ZXIsDQo+ID4gPiBhcyBJIGtub3csIHRoZSByZXNlcnZlZCBhcmVhIGhhcyBubyBidXN5IGJp
+dCBzbyB0aGF0IFRQTSBDUkIgZHJpdmVyDQo+ID4gPiBjb3VsZCBhc3NpZ24gYnVmZmVyIHJlc291
+cmNlcyBpbiBpdC4gUmlnaHQ/IEluIG15IHZpZXcsIGlmIHlvdQ0KPiA+ID4gcGF0Y2hlZCB5b3Vy
+IFRQTSBkcml2ZXIgd2l0aCBteSBwYXRjaCBzZXJpZXMsIHRoZW4gaXQgY291bGQgd29yay4NCj4g
+PiA+IFdvdWxkIHlvdSBleHBsYWluIHdoYXQgaGFwcGVuZWQgaW4gVFBNIENSQiBkcml2ZXIgYW5k
+IHJlc2VydmVkIGFyZWE/DQo+ID4NCj4gPiBHb29kIHF1ZXN0aW9uLiBJJ2xsIHRyeSBpdCBvdXQg
+dGhpcyB3ZWVrZW5kLg0KPiANCj4gVGhhbmsgeW91IGZvciB5b3VyIGhlbHAuDQogDQpJIHRyaWVk
+IHlvdXIgcGF0Y2ggb3V0IG9uIG15IHN5c3RlbXMgd2l0aCBhICJyZXNlcnZlZCIgYnV0IG5vdCAi
+TlZTIg0KcmVnaW9uIGNvbmZsaWN0LCBhbmQgeW91IGFyZSBjb3JyZWN0IC0gdGhlIHJlZ2lvbiBp
+cyBub3QgYnVzeSwgYW5kDQp0aGUgZHJpdmVyIGlzIGFibGUgdG8gbWFwIHRoZSBidWZmZXJzIHdp
+dGggeW91ciBwYXRjaC4NCg0KPiBGaXJzdCBvZiBhbGwsIEkgbWlzdW5kZXJzdG9vZCB5b3VyIG1l
+c3NhZ2UuDQo+IEkgaGF2ZSB0byB0ZWxsIHlvdSBhYm91dCB0aGUgYnVmZmVyIHNpemUgZXhhY3Rs
+eS4gVGhlIGNvbW1hbmQgYW5kIHJlc3BvbnNlDQo+IGJ1ZmZlciBzaXplcyBpbiBBQ1BJIHRhYmxl
+IHdlcmUgMHgxMDAwIGFuZCB0aGlzIHdhcyA0Sywgbm90IDFLLiBUaGUgc2l6ZXMgaW4NCj4gdGhl
+IGNvbnRyb2wgcmVnaXN0ZXIgd2VyZSAweDQwMDAgYW5kIHRoaXMgd2FzIDE2SyAobGFyZ2UgYnVm
+ZmVyIHNpemUpLCBub3QgNEsuDQo+IEkgaGF2ZSBiZWVuIHVzaW5nIHRoZSBUUE0gZm9yIG15IHJl
+c2VhcmNoIGFuZCB0aGUgdHlwaWNhbCBjYXNlcyBsaWtlIGNyZWF0aW5nDQo+IHB1YmxpYy9wcml2
+YXRlIGtleXMsIGVuY3J5cHRpbmcvZGVjcnlwdGluZyBkYXRhLCBzZWFsaW5nL3Vuc2VhbGluZyBh
+IHNlY3JldGUsDQo+IGFuZCBnZXR0aW5nIHJhbmRvbSBudW1iZXJzIGFyZSBub3Qgb3ZlciA0SyBi
+dWZmZXIuIFNvLCBhcyB5b3Uga25vdywgSSB0aGluaw0KPiB0aGUgNEsgYnVmZmVyIGNhbiBoYW5k
+bGUgdGhlIG1vc3QgY2FzZXMgYW5kIHRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIG9mDQo+IGNy
+Yl9maXh1cF9jbWRfc2l6ZSgpIHdvcmtzIHdlbGwuIElmIHlvdSBjb25jZXJuIHRoZSBzcGVjaWZp
+YyBjYXNlIHRoYXQgdXNlcw0KPiBvdmVyIDRLIGJ1ZmZlciwgcGxlYXNlIGxldCBtZSBrbm93Lg0K
+DQpJIGhhdmUgcmVhZCBwb3N0aW5ncyBvZiBzb21lIHN5c3RlbXMgd2hlcmUgQUNQSSBzYXlzIDFL
+LCBidXQgaW4gYWxsIG9mIG15IGNhc2VzDQp0aGF0IEkgY2FuIHRlc3QsICB5b3UgYXJlIGNvcnJl
+Y3QgdGhhdCBBQ1BJIGlzIHNheWluZyA0SyBpbnN0ZWFkIG9mIHRoZSBkZXZpY2UncyAxNksuDQpJ
+IHRyaWVkIHJlYWxseSBoYXJkLCBidXQgY291bGRuJ3Qgc2VuZCBhbnkgdmFsaWQgcmVxdWVzdHMg
+b3ZlciA0SywgKEkgYmVsaWV2ZSB0aGF0J3MNCmFjdHVhbGx5IHRoZSBtYXggYnkgdGhlIHNwZWMp
+LCBhbmQgdGhlcmVmb3JlIG5ldmVyIHNhdyBhbnkgZmFpbHVyZXMgb24gbXkNCnN5c3RlbXMuIEkg
+dGhpbmsgdGhlIGRyaXZlciBiZWhhdmlvciBpcyB3cm9uZyBmb3IgdGhvc2Ugb3RoZXIgY2FzZXMs
+IGJ1dCBwZXJoYXBzDQp0aGlzIHNob3VsZCB3YWl0IHVudGlsIHNvbWVvbmUgY2FuIGdldCBhY2Nl
+c3MgYW5kIGRvIHRoZSB0ZXN0aW5nLg0KDQpTbyBJJ20gaGFwcHkgd2l0aCB5b3VyIHBhdGNoZXMs
+IG90aGVyIHRoYW4gd2hhdCBpcyBkZWNpZGVkIGZvciB0aGUgbnZzIGRyaXZlcg0KY29uZmxpY3Qu
+IEknbSB0ZXN0aW5nIHRoZW0gb24gc29tZSBwcm9kdWN0aW9uIHN5c3RlbXMsIGFuZCBoYXZlIHNl
+ZW4gbm8gb3RoZXINCmlzc3Vlcy4NCg0KZGF2ZQ0K
