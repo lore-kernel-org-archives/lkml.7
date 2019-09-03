@@ -2,167 +2,155 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D440C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61129C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6400A23402
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:16:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R15SjI+P"
+	by mail.kernel.org (Postfix) with ESMTP id 2765D2377D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfICOQA (ORCPT
+        id S1729486AbfICOQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:16:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37010 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727941AbfICOQA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:16:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bZzsxHgBhfruo8NfOXSLVXf4HiHbSYZxKvfXaibsApY=; b=R15SjI+PFpJK2EUbvANcNuRtZ
-        rnBJMG8lvaI9Thjaf95zfAgTxVjx7qLSW8XGrs9b2NP4lkiYsl6oG6FF3c56docyVkvyBCG7aFRxl
-        KX+EDWVpEW1n8l+TvqMNnzNDSVYP03HWmyM9BujnX8WmehbpBiMC/krzMk3H4+gAXpGjzm0UxPAeC
-        QNLZncyyj26Ap8jkVJTqvHlznaWoVbXNmrALiS1nw4CVVXp/EzTThK0mZIkV2ISnT+gDznJ+hgE/d
-        j74LSA0URczYHGeW8mf+kLoxAzDLMX2SKmmPSH6jlwbEXOUc7+MA7ZP3djZdWoHERdYZmnZPu7Vjj
-        aRi63ktJw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i59bA-0008Kk-BL; Tue, 03 Sep 2019 14:15:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0A47730116F;
-        Tue,  3 Sep 2019 16:15:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2D7342097776B; Tue,  3 Sep 2019 16:15:54 +0200 (CEST)
-Date:   Tue, 3 Sep 2019 16:15:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     mingo@redhat.com, bsegall@google.com, chiluk+linux@indeed.com,
-        pauld@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] sched/fair: fix -Wunused-but-set-variable
- warnings
-Message-ID: <20190903141554.GS2349@hirez.programming.kicks-ass.net>
-References: <1566326455-8038-1-git-send-email-cai@lca.pw>
- <1567515806.5576.41.camel@lca.pw>
+        Tue, 3 Sep 2019 10:16:44 -0400
+Received: from sauhun.de ([88.99.104.3]:54462 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbfICOQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:16:44 -0400
+Received: from localhost (p54B3348D.dip0.t-ipconnect.de [84.179.52.141])
+        by pokefinder.org (Postfix) with ESMTPSA id B2EF72C4F2F;
+        Tue,  3 Sep 2019 16:16:40 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 16:16:40 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-media@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC,v2 3/6] media: dt-bindings: add DS90UB954-Q1 video
+ deserializer
+Message-ID: <20190903141640.GA6718@kunai>
+References: <20190723203723.11730-1-luca@lucaceresoli.net>
+ <20190723203723.11730-4-luca@lucaceresoli.net>
+ <20190902204841.GB7253@kunai>
+ <63d99d6d-ecdd-7dd8-0dcb-126bfd89b258@lucaceresoli.net>
+ <20190903093455.GD1020@kunai>
+ <f3640020-0291-f837-8639-c3ba39800ead@lucaceresoli.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
 Content-Disposition: inline
-In-Reply-To: <1567515806.5576.41.camel@lca.pw>
+In-Reply-To: <f3640020-0291-f837-8639-c3ba39800ead@lucaceresoli.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 09:03:26AM -0400, Qian Cai wrote:
-> Ingo or Peter, please take a look at this trivial patch. Still see the warning
-> in linux-next every day.
-> 
-> On Tue, 2019-08-20 at 14:40 -0400, Qian Cai wrote:
-> > The linux-next commit "sched/fair: Fix low cpu usage with high
-> > throttling by removing expiration of cpu-local slices" [1] introduced a
-> > few compilation warnings,
-> > 
-> > kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-> > kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used
-> > [-Wunused-but-set-variable]
-> > kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-> > kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used
-> > [-Wunused-but-set-variable]
-> > 
-> > Also, __refill_cfs_bandwidth_runtime() does no longer update the
-> > expiration time, so fix the comments accordingly.
-> > 
-> > [1] https://lore.kernel.org/lkml/1558121424-2914-1-git-send-email-chiluk+linux
-> > @indeed.com/
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
 
-Rewrote the Changelog like so:
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-Subject: sched/fair: Fix -Wunused-but-set-variable warnings
-From: Qian Cai <cai@lca.pw>
-Date: Tue, 20 Aug 2019 14:40:55 -0400
+Hi Luca,
 
-Commit de53fd7aedb1 ("sched/fair: Fix low cpu usage with high
-throttling by removing expiration of cpu-local slices") introduced a
-few compilation warnings:
+> Now I got what you mean: the aliases in a pool are reserved to an ATR
+> and not available to another ATR. What about hoisting the pool one level
+> up in DT, to the adapter where the ATRs are connected?
 
-  kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-  kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used [-Wunused-but-set-variable]
-  kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-  kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not used [-Wunused-but-set-variable]
+Frankly, it sounds error prone to keep them in sync.
 
-Also, __refill_cfs_bandwidth_runtime() does no longer update the
-expiration time, so fix the comments accordingly.
+> As I understand it, we are referring to the same use case:
+>=20
+> .---------------.       .-----.   .-------------------.
+> | adapter (SoC) |---+---| ATR |---| remote slave 0x10 |
+> '---------------'   |   '-----'   '-------------------'
+>                     |
+>               .----------.
+>               | device X |
+>               '----------'
+>=20
+> Here device X with hard-coded address 0x20 is plugged in at runtime.
 
-Fixes: de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-Cc: mingo@redhat.com
-Cc: pauld@redhat.com
-Link: https://lkml.kernel.org/r/1566326455-8038-1-git-send-email-cai@lca.pw
----
- kernel/sched/fair.c |   19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+Yes. For the generic case, it doesn't even need to be plugged at
+runtime. A baseboard can have various additional modules with various
+requirements. Hot-plugging (not a favourite topic for I2C) adds to it.
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4386,21 +4386,16 @@ static inline u64 sched_cfs_bandwidth_sl
- }
- 
- /*
-- * Replenish runtime according to assigned quota and update expiration time.
-- * We use sched_clock_cpu directly instead of rq->clock to avoid adding
-- * additional synchronization around rq->lock.
-+ * Replenish runtime according to assigned quota. We use sched_clock_cpu
-+ * directly instead of rq->clock to avoid adding additional synchronization
-+ * around rq->lock.
-  *
-  * requires cfs_b->lock
-  */
- void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
- {
--	u64 now;
--
--	if (cfs_b->quota == RUNTIME_INF)
--		return;
--
--	now = sched_clock_cpu(smp_processor_id());
--	cfs_b->runtime = cfs_b->quota;
-+	if (cfs_b->quota != RUNTIME_INF)
-+		cfs_b->runtime = cfs_b->quota;
- }
- 
- static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-@@ -5021,15 +5016,13 @@ static void init_cfs_rq_runtime(struct c
- 
- void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- {
--	u64 overrun;
--
- 	lockdep_assert_held(&cfs_b->lock);
- 
- 	if (cfs_b->period_active)
- 		return;
- 
- 	cfs_b->period_active = 1;
--	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-+	hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
- 	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
- }
- 
+> As you say it, if 0x20 is in the ATR pool we have a problem.
+
+Right.
+
+> But even without an explicit pool, initially 0x20 is unused and the ATR
+> can use it for remote slave 0x10. Then at some point device X is
+> connected, and suddenly 0x20 conflicts.
+
+I haven't considered hot-plugging so far, but you are right here.
+
+> To a limited extend the explicit pool could help if the list of possible
+> addons is known: one can put in the pool only address that will never
+> appear in addons.
+
+And this is why I kinda accepted the all-unoccupied-addresses-are-free
+approach. For a generic solution, the list of possible add-ons is
+unknown and we should expect "the worst".
+
+> Hey, wait, the no-pool solution could have a way to handle this
+> conflict. When device X is connected, the adapter can look for a new
+> alias (0x21), call the i2c_atr_deconfigure_hw() and i2c_atr_setup_hw()
+> callbacks to stop using 0x20 and start using 0x21. Doesn't look very
+> lovely, but may be worth considering.
+
+Thanks for also thinking about the other approach! Everything combining
+I2C and hot-plugging is likely to not be lovely, so this may be OK given
+it really works in practice.
+
+Another note: I was hoping we could keep the number of callbacks to one.
+E.g. if i2c_atr_setup_hw() has the same values for 'address' and 'alias'
+(or one of them is zero), then we unregister an alias, otherwise we
+register. Not sure if this will work out in the end, but only one
+callback is what I'd like to have. (It could be put into the
+i2c_algorithm struct maybe)
+
+
+> Definitely.  And having a list of use cases would help a lot IMO. I had
+> never considered the use case described above, for example.
+
+Yes. I hope to see some new faces in the room giving us their cases.
+
+Kind regards,
+
+   Wolfram
+
+
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1udcQACgkQFA3kzBSg
+KbZpAg/9Gh9b/97cajkwIM4pDZ/Ydmmg/fCcK5W881WBEIGo+/koAd7kK+tPvGqp
+XXgxCbaDnhVoQ2PmX/gHXajbUAmDV87onHjpH8e48bukT+TYs2kbdXPtCmbfNVkr
+JlNFU2PWVBVjxfNmTZFFnAxHrRLErHoxVtuPklt9Kn3FuWjnt7LqAqIoH0J0MTmf
+I/vpan16szG29cbC2rraahfkidYHjeJuZno63fdnBH/3hcajorY0xknznG9AB74t
+EmCUAMYJUe/9NGTm3I9Xdsa166dx+nW6xmNxxHz6qo7uT9lkUG0iQOk6W/yedVlX
+cJ2P9/2G2Q4d/bnb9AFXBNiI/sYkmOcKjeN9iMpN8aZ6ZI2AeP9M+73zhHE1OXIw
+a7sGFiwyTVY4YWK/FH82HGgCmMwu4YXTDuUxXIfbwSUPDJx1pcICl9UECl/c0WGp
+8NSVrLr/avYRHHU3fB0Hs4kl//DZRX1PcFn9Lqc68zIVwWUb/es1VXoyeUnRBBXv
+oZF9V0rDr/EPBLl7yayABh3Y4fFrBz9WCcLBcrUw46NPZwgDlU0rSYRodcCXQ+It
+SguamGKS7cb1WP21kC+K6UR7WoDtap9Tddx4DwwQpu/SjTs2M24B46E7lVnM2HkF
+pL8LHxSX74qE4a7sqA5kQX6fTY3z1oLOBXM/Z2W1wUnmthQXXmM=
+=1p1g
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
