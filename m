@@ -2,87 +2,91 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A422C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD382C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4980C22D6D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OsS7d9R1"
+	by mail.kernel.org (Postfix) with ESMTP id 8B6A223401
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 13:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729220AbfICNE7 (ORCPT
+        id S1729264AbfICNFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 09:04:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54940 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728576AbfICNE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 09:04:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WDdubMT5F5wNmO/6JU13bpheGre0HSUXt5GjH/gJ15c=; b=OsS7d9R1kVXGcZlxE+BK17GPxl
-        ECD96UxW6oR8oCSyjbUqwjWgX3h3Hcfz/FtaJ/vNu9+Z16baaBRrJa59L7UctjpQxEe0eoepQyerY
-        aTBF3VoVFu2fkyE4hIII3EVKZSqucpwPwVZiFs0OGJgfmffNlBTBwMMD605VUXtCiuqKHBJX4ansg
-        atpx8D2c0IldrYaVbf91H9eko4VsVwChMMvewJK6Y23r0eogVkTYZ5kvhj9apFx4oWfFvr3F/Y6oV
-        0a5wEBP4WNbNder7E+/ELmVz1HmrySoTS2Q/IBsyX56FlYd2rUpNhSZnC1G4OoS8xhQ5aHy+63GcU
-        PsKmhvvA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i58US-0003yD-6f; Tue, 03 Sep 2019 13:04:56 +0000
-Date:   Tue, 3 Sep 2019 06:04:56 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Qian Cai <cai@lca.pw>, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot
- panic
-Message-ID: <20190903130456.GA9567@infradead.org>
-References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
- <20190903123719.GF1131@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Tue, 3 Sep 2019 09:05:23 -0400
+Received: from gate.crashing.org ([63.228.1.57]:32926 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728576AbfICNFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 09:05:23 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x83D4XqU001876;
+        Tue, 3 Sep 2019 08:04:33 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x83D4VSl001875;
+        Tue, 3 Sep 2019 08:04:31 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 3 Sep 2019 08:04:31 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     alastair@d-silva.org, David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Qian Cai <cai@lca.pw>, Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Allison Randal <allison@lohutok.net>
+Subject: Re: [PATCH v2 3/6] powerpc: Convert flush_icache_range & friends to C
+Message-ID: <20190903130430.GC31406@gate.crashing.org>
+References: <20190903052407.16638-1-alastair@au1.ibm.com> <20190903052407.16638-4-alastair@au1.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190903123719.GF1131@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190903052407.16638-4-alastair@au1.ibm.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 01:37:19PM +0100, Al Viro wrote:
-> On Tue, Sep 03, 2019 at 12:21:36AM -0400, Qian Cai wrote:
-> > The linux-next commit "fs/namei.c: keep track of nd->root refcount status” [1] causes boot panic on all
-> > architectures here on today’s linux-next (0902). Reverted it will fix the issue.
-> 
-> <swearing>
-> 
-> OK, I see what's going on.  Incremental to be folded in:
-> 
-> diff --git a/include/linux/namei.h b/include/linux/namei.h
-> index 20ce2f917ef4..2ed0942a67f8 100644
-> --- a/include/linux/namei.h
-> +++ b/include/linux/namei.h
-> @@ -20,8 +20,8 @@ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
->  #define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
->  #define LOOKUP_DIRECTORY	0x0002	/* require a directory */
->  #define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
-> -#define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
-> -#define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
-> +#define LOOKUP_EMPTY		0x8000	/* accept empty path [user_... only] */
-> +#define LOOKUP_DOWN		0x10000	/* follow mounts in the starting point */
->  
->  #define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
->  #define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
+Hi!
 
-Any chance to keep these ordered numerically to avoid someone else
-introdcing this kind of bug again later on?
+On Tue, Sep 03, 2019 at 03:23:57PM +1000, Alastair D'Silva wrote:
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+
+> +#if !defined(CONFIG_PPC_8xx) & !defined(CONFIG_PPC64)
+
+Please write that as &&?  That is more usual, and thus, easier to read.
+
+> +static void flush_dcache_icache_phys(unsigned long physaddr)
+
+> +	asm volatile(
+> +		"   mtctr %2;"
+> +		"   mtmsr %3;"
+> +		"   isync;"
+> +		"0: dcbst   0, %0;"
+> +		"   addi    %0, %0, %4;"
+> +		"   bdnz    0b;"
+> +		"   sync;"
+> +		"   mtctr %2;"
+> +		"1: icbi    0, %1;"
+> +		"   addi    %1, %1, %4;"
+> +		"   bdnz    1b;"
+> +		"   sync;"
+> +		"   mtmsr %5;"
+> +		"   isync;"
+> +		: "+r" (loop1), "+r" (loop2)
+> +		: "r" (nb), "r" (msr), "i" (bytes), "r" (msr0)
+> +		: "ctr", "memory");
+
+This outputs as one huge assembler statement, all on one line.  That's
+going to be fun to read or debug.
+
+loop1 and/or loop2 can be assigned the same register as msr0 or nb.  They
+need to be made earlyclobbers.  (msr is fine, all of its reads are before
+any writes to loop1 or loop2; and bytes is fine, it's not a register).
+
+
+Segher
