@@ -2,112 +2,87 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3E5C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1C6C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A0322CF7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567513195;
-	bh=gy2k+ayPstiUzF5KHYPAs7oIf7QQ300nAgZ9+m7L5pg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qo0AqLskhVMGxn0J+KzoORN5xfg5UMehJhxBSsr21UxJXEZXribxsR44p0pzussr3
-	 1KwjoII76D3pqkdvrYG0eh20lGmn1tbUIpzVGOAd6MtReeJuxv+bay+xwytpv3es3h
-	 JeDBfzOoNNN79ESxhln+0CFb1oX/MvNO8qASwqmg=
+	by mail.kernel.org (Postfix) with ESMTP id F3BBA21881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 12:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbfICMTy (ORCPT
+        id S1728958AbfICMVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 08:19:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44152 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728490AbfICMTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 08:19:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 21EA5B009;
-        Tue,  3 Sep 2019 12:19:53 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 14:19:52 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     William Kucharski <william.kucharski@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Bob Kasten <robert.a.kasten@intel.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Chad Mynhier <chad.mynhier@oracle.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <jweiner@fb.com>
-Subject: Re: [PATCH v5 1/2] mm: Allow the page cache to allocate large pages
-Message-ID: <20190903121952.GU14028@dhcp22.suse.cz>
-References: <20190902092341.26712-1-william.kucharski@oracle.com>
- <20190902092341.26712-2-william.kucharski@oracle.com>
- <20190903115748.GS14028@dhcp22.suse.cz>
- <20190903121155.GD29434@bombadil.infradead.org>
+        Tue, 3 Sep 2019 08:21:53 -0400
+Received: from mga03.intel.com ([134.134.136.65]:22708 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbfICMVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 08:21:53 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 05:21:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
+   d="scan'208";a="198760161"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 03 Sep 2019 05:21:49 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 03 Sep 2019 15:21:49 +0300
+Date:   Tue, 3 Sep 2019 15:21:49 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] usb: typec: tps6598x: Fix build error without
+ CONFIG_REGMAP_I2C
+Message-ID: <20190903122149.GB23603@kuha.fi.intel.com>
+References: <20190903121026.22148-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903121155.GD29434@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190903121026.22148-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03-09-19 05:11:55, Matthew Wilcox wrote:
-> On Tue, Sep 03, 2019 at 01:57:48PM +0200, Michal Hocko wrote:
-> > On Mon 02-09-19 03:23:40, William Kucharski wrote:
-> > > Add an 'order' argument to __page_cache_alloc() and
-> > > do_read_cache_page(). Ensure the allocated pages are compound pages.
-> > 
-> > Why do we need to touch all the existing callers and change them to use
-> > order 0 when none is actually converted to a different order? This just
-> > seem to add a lot of code churn without a good reason. If anything I
-> > would simply add __page_cache_alloc_order and make __page_cache_alloc
-> > call it with order 0 argument.
+On Tue, Sep 03, 2019 at 08:10:26PM +0800, YueHaibing wrote:
+> If CONFIG_REGMAP_I2C is not set, building fails:
 > 
-> Patch 2/2 uses a non-zero order.
-
-It is a new caller and it can use a new function right?
-
-> I agree it's a lot of churn without
-> good reason; that's why I tried to add GFP_ORDER flags a few months ago.
-> Unfortunately, you didn't like that approach either.
-
-Is there any future plan that all/most __page_cache_alloc will get a
-non-zero order argument?
-
-> > Also is it so much to ask callers to provide __GFP_COMP explicitly?
+> drivers/usb/typec/tps6598x.o: In function `tps6598x_probe':
+> tps6598x.c:(.text+0x5f0): undefined reference to `__devm_regmap_init_i2c'
 > 
-> Yes, it's an unreasonable burden on the callers.
-
-Care to exaplain why? __GFP_COMP tends to be used in the kernel quite
-extensively.
-
-> Those that pass 0 will
-> have the test optimised away by the compiler (for the non-NUMA case).
-> For the NUMA case, passing zero is going to be only a couple of extra
-> instructions to not set the GFP_COMP flag.
+> Select REGMAP_I2C to fix this.
 > 
-> > >  #ifdef CONFIG_NUMA
-> > > -extern struct page *__page_cache_alloc(gfp_t gfp);
-> > > +extern struct page *__page_cache_alloc(gfp_t gfp, unsigned int order);
-> > >  #else
-> > > -static inline struct page *__page_cache_alloc(gfp_t gfp)
-> > > +static inline struct page *__page_cache_alloc(gfp_t gfp, unsigned int order)
-> > >  {
-> > > -	return alloc_pages(gfp, 0);
-> > > +	if (order > 0)
-> > > +		gfp |= __GFP_COMP;
-> > > +	return alloc_pages(gfp, order);
-> > >  }
-> > >  #endif
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 0a4c005bd171 ("usb: typec: driver for TI TPS6598x USB Power Delivery controllers")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+>  drivers/usb/typec/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+> index 89d9193..895e241 100644
+> --- a/drivers/usb/typec/Kconfig
+> +++ b/drivers/usb/typec/Kconfig
+> @@ -53,6 +53,7 @@ source "drivers/usb/typec/ucsi/Kconfig"
+>  config TYPEC_TPS6598X
+>  	tristate "TI TPS6598x USB Power Delivery controller driver"
+>  	depends on I2C
+> +	select REGMAP_I2C
+>  	help
+>  	  Say Y or M here if your system has TI TPS65982 or TPS65983 USB Power
+>  	  Delivery controller.
+> -- 
+> 2.7.4
+> 
+
+thanks,
 
 -- 
-Michal Hocko
-SUSE Labs
+heikki
