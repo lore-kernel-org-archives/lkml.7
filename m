@@ -2,310 +2,209 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2205AC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16DFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D834321881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:53:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="mC+xMiAS"
+	by mail.kernel.org (Postfix) with ESMTP id A2C5921881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:54:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfICJxn (ORCPT
+        id S1728638AbfICJyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:53:43 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37973 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfICJxn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:53:43 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l11so7925931wrx.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:53:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MgXnM5PtLLeZR4goT8pEjOEmDwznieCs/oR5Oy3fuSo=;
-        b=mC+xMiASacXX5Uk14z3V94sf/GweT8FVxSnDjFgNxflc+SESaM+kJtWD7A4gHXeOVw
-         IS4nM7LmLSn0eMs4n6RyWTsiB5dYrRpod1s9zlnwBlH+SYDW3H6mAyUd+GskjPPjDYg/
-         aoy79/mGZRoMqacGUmZyfZu9zd/QaWVrWzZiQ1Td4pz7gcUbVI9Nbf6H8yf75QYrcLfg
-         JLcXAe8v45vL2Udit4uIwMGnC8Zr6LOuIgXi3uoKdum4/dJo114l4ya5YCY68jAKkQI0
-         d1yQcFMKTB+q4eWM05V/8lVB0V9eACtMUlJ9aPvcYN2H46Dk5vkMBJbteUZ871iJvfOF
-         O6RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MgXnM5PtLLeZR4goT8pEjOEmDwznieCs/oR5Oy3fuSo=;
-        b=CuUNmXQ8wB5v6cQZVcBJ03FdLKYp+qvJ6TJWrRAdCyfbf+XC2eSip56AxE7Hy0AEfs
-         +FkG8oKHX5RhVYRMK/a21k8cURIqJufzl7jMlu+SAt/MQBYalaR+Qdgm2YayQVGb3RQi
-         Y/cxLyjIIWfT1hzdXxmvUVtOHN8CgTxACJUDhCAJ8EgHqCp2M8aJhuWUOjr9u3KKgcUK
-         sjAutM//37dtA0/ygCyfER7y1bp0VGdmf4q290RjrtF34Qvmu8sNUrVw+VAPd1JSdXJc
-         Em75E72XwjV3lLPB+XiOMKZn5SmZS7f5ylbfG7FRkVUz5KHslQ7BJlXXkv2tzYY7z2Je
-         cVyg==
-X-Gm-Message-State: APjAAAWwkv5pJvwuxCQeyd28yABdYeUEUthgtDTr+FbWH9HqLduypwEJ
-        z6LKmHDXS28FoWz7w/koTuS6OX9saSnvzYQKYAkDOg==
-X-Google-Smtp-Source: APXvYqycePSqD+xZkUq3liN2M817pw47hXAQodFDEYagVeYhgTTX3a0PlLUiIzLP1hWxxrx++aWFnSwGmEJ5WYAkNl8=
-X-Received: by 2002:a5d:5444:: with SMTP id w4mr26076311wrv.180.1567504420046;
- Tue, 03 Sep 2019 02:53:40 -0700 (PDT)
+        Tue, 3 Sep 2019 05:54:54 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48656 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726631AbfICJyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 05:54:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 02:54:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,462,1559545200"; 
+   d="scan'208";a="211934702"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Sep 2019 02:54:52 -0700
+Received: from [10.226.38.83] (rtanwar-mobl.gar.corp.intel.com [10.226.38.83])
+        by linux.intel.com (Postfix) with ESMTP id 59C1858043A;
+        Tue,  3 Sep 2019 02:54:49 -0700 (PDT)
+Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com,
+        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, yixin.zhu@linux.intel.com
+References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
+ <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <d9e96dab-96be-0c14-b7af-e1f2dc07ebd2@linux.intel.com>
+Date:   Tue, 3 Sep 2019 17:54:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190829135427.47808-1-anup.patel@wdc.com> <20190829135427.47808-20-anup.patel@wdc.com>
-In-Reply-To: <20190829135427.47808-20-anup.patel@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Tue, 3 Sep 2019 15:23:29 +0530
-Message-ID: <CAAhSdy2jd79-=bPN0gwm8iTg2BqzLgamTqO5TDXswPc29VPrCQ@mail.gmail.com>
-Subject: Re: [PATCH v6 19/21] RISC-V: KVM: Document RISC-V specific parts of
- KVM API.
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 7:27 PM Anup Patel <Anup.Patel@wdc.com> wrote:
->
-> Document RISC-V specific parts of the KVM API, such as:
->  - The interrupt numbers passed to the KVM_INTERRUPT ioctl.
->  - The states supported by the KVM_{GET,SET}_MP_STATE ioctls.
->  - The registers supported by the KVM_{GET,SET}_ONE_REG interface
->    and the encoding of those register ids.
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  Documentation/virt/kvm/api.txt | 140 +++++++++++++++++++++++++++++++--
->  1 file changed, 133 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-> index 2d067767b617..80c4ffad8bd7 100644
-> --- a/Documentation/virt/kvm/api.txt
-> +++ b/Documentation/virt/kvm/api.txt
-> @@ -471,7 +471,7 @@ struct kvm_translation {
->  4.16 KVM_INTERRUPT
->
->  Capability: basic
-> -Architectures: x86, ppc, mips
-> +Architectures: x86, ppc, mips, riscv
->  Type: vcpu ioctl
->  Parameters: struct kvm_interrupt (in)
->  Returns: 0 on success, negative on failure.
-> @@ -531,6 +531,22 @@ interrupt number dequeues the interrupt.
->
->  This is an asynchronous vcpu ioctl and can be invoked from any thread.
->
-> +RISC-V:
-> +
-> +Queues an external interrupt to be injected into the virutal CPU. This ioctl
-> +is overloaded with 2 different irq values:
-> +
-> +a) KVM_INTERRUPT_SET
-> +
-> +  This sets external interrupt for a virtual CPU and it will receive
-> +  once it is ready.
-> +
-> +b) KVM_INTERRUPT_UNSET
-> +
-> +  This clears pending external interrupt for a virtual CPU.
-> +
-> +This is an asynchronous vcpu ioctl and can be invoked from any thread.
-> +
->
->  4.17 KVM_DEBUG_GUEST
->
-> @@ -1206,7 +1222,7 @@ for vm-wide capabilities.
->  4.38 KVM_GET_MP_STATE
->
->  Capability: KVM_CAP_MP_STATE
-> -Architectures: x86, s390, arm, arm64
-> +Architectures: x86, s390, arm, arm64, riscv
->  Type: vcpu ioctl
->  Parameters: struct kvm_mp_state (out)
->  Returns: 0 on success; -1 on error
-> @@ -1220,7 +1236,8 @@ uniprocessor guests).
->
->  Possible values are:
->
-> - - KVM_MP_STATE_RUNNABLE:        the vcpu is currently running [x86,arm/arm64]
-> + - KVM_MP_STATE_RUNNABLE:        the vcpu is currently running
-> +                                 [x86,arm/arm64,riscv]
->   - KVM_MP_STATE_UNINITIALIZED:   the vcpu is an application processor (AP)
->                                   which has not yet received an INIT signal [x86]
->   - KVM_MP_STATE_INIT_RECEIVED:   the vcpu has received an INIT signal, and is
-> @@ -1229,7 +1246,7 @@ Possible values are:
->                                   is waiting for an interrupt [x86]
->   - KVM_MP_STATE_SIPI_RECEIVED:   the vcpu has just received a SIPI (vector
->                                   accessible via KVM_GET_VCPU_EVENTS) [x86]
-> - - KVM_MP_STATE_STOPPED:         the vcpu is stopped [s390,arm/arm64]
-> + - KVM_MP_STATE_STOPPED:         the vcpu is stopped [s390,arm/arm64,riscv]
->   - KVM_MP_STATE_CHECK_STOP:      the vcpu is in a special error state [s390]
->   - KVM_MP_STATE_OPERATING:       the vcpu is operating (running or halted)
->                                   [s390]
-> @@ -1240,7 +1257,7 @@ On x86, this ioctl is only useful after KVM_CREATE_IRQCHIP. Without an
->  in-kernel irqchip, the multiprocessing state must be maintained by userspace on
->  these architectures.
->
-> -For arm/arm64:
-> +For arm/arm64/riscv:
->
->  The only states that are valid are KVM_MP_STATE_STOPPED and
->  KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
-> @@ -1248,7 +1265,7 @@ KVM_MP_STATE_RUNNABLE which reflect if the vcpu is paused or not.
->  4.39 KVM_SET_MP_STATE
->
->  Capability: KVM_CAP_MP_STATE
-> -Architectures: x86, s390, arm, arm64
-> +Architectures: x86, s390, arm, arm64, riscv
->  Type: vcpu ioctl
->  Parameters: struct kvm_mp_state (in)
->  Returns: 0 on success; -1 on error
-> @@ -1260,7 +1277,7 @@ On x86, this ioctl is only useful after KVM_CREATE_IRQCHIP. Without an
->  in-kernel irqchip, the multiprocessing state must be maintained by userspace on
->  these architectures.
->
-> -For arm/arm64:
-> +For arm/arm64/riscv:
->
->  The only states that are valid are KVM_MP_STATE_STOPPED and
->  KVM_MP_STATE_RUNNABLE which reflect if the vcpu should be paused or not.
-> @@ -2269,6 +2286,115 @@ following id bit patterns:
->    0x7020 0000 0003 02 <0:3> <reg:5>
->
->
-> +RISC-V registers are mapped using the lower 32 bits. The upper 8 bits of
-> +that is the register group type.
-> +
-> +RISC-V config registers are meant for configuring a Guest VCPU and it has
-> +the following id bit patterns:
-> +  0x8020 0000 01 <index into the kvm_riscv_config struct:24> (32bit Host)
-> +  0x8030 0000 01 <index into the kvm_riscv_config struct:24> (64bit Host)
-> +
-> +Following are the RISC-V config registers:
-> +
-> +    Encoding            Register  Description
-> +------------------------------------------------------------------
-> +  0x80x0 0000 0100 0000 isa       ISA feature bitmap of Guest VCPU
-> +  0x80x0 0000 0100 0001 tbfreq    Time base frequency
-> +
-> +The isa config register can be read anytime but can only be written before
-> +a Guest VCPU runs. It will have ISA feature bits matching underlying host
-> +set by default. The tbfreq config register is a read-only register and it
-> +will return host timebase frequenc.
-> +
-> +RISC-V core registers represent the general excution state of a Guest VCPU
-> +and it has the following id bit patterns:
-> +  0x8020 0000 02 <index into the kvm_regs struct:24> (32bit Host)
-> +  0x8030 0000 02 <index into the kvm_regs struct:24> (64bit Host)
-> +
-> +Following are the RISC-V core registers:
-> +
-> +    Encoding            Register  Description
-> +------------------------------------------------------------------
-> +  0x80x0 0000 0200 0000 regs.pc   Program counter
-> +  0x80x0 0000 0200 0001 regs.ra   Return address
-> +  0x80x0 0000 0200 0002 regs.sp   Stack pointer
-> +  0x80x0 0000 0200 0003 regs.gp   Global pointer
-> +  0x80x0 0000 0200 0004 regs.tp   Task pointer
-> +  0x80x0 0000 0200 0005 regs.t0   Caller saved register 0
-> +  0x80x0 0000 0200 0006 regs.t1   Caller saved register 1
-> +  0x80x0 0000 0200 0007 regs.t2   Caller saved register 2
-> +  0x80x0 0000 0200 0008 regs.s0   Callee saved register 0
-> +  0x80x0 0000 0200 0009 regs.s1   Callee saved register 1
-> +  0x80x0 0000 0200 000a regs.a0   Function argument (or return value) 0
-> +  0x80x0 0000 0200 000b regs.a1   Function argument (or return value) 1
-> +  0x80x0 0000 0200 000c regs.a2   Function argument 2
-> +  0x80x0 0000 0200 000d regs.a3   Function argument 3
-> +  0x80x0 0000 0200 000e regs.a4   Function argument 4
-> +  0x80x0 0000 0200 000f regs.a5   Function argument 5
-> +  0x80x0 0000 0200 0010 regs.a6   Function argument 6
-> +  0x80x0 0000 0200 0011 regs.a7   Function argument 7
-> +  0x80x0 0000 0200 0012 regs.s2   Callee saved register 2
-> +  0x80x0 0000 0200 0013 regs.s3   Callee saved register 3
-> +  0x80x0 0000 0200 0014 regs.s4   Callee saved register 4
-> +  0x80x0 0000 0200 0015 regs.s5   Callee saved register 5
-> +  0x80x0 0000 0200 0016 regs.s6   Callee saved register 6
-> +  0x80x0 0000 0200 0017 regs.s7   Callee saved register 7
-> +  0x80x0 0000 0200 0018 regs.s8   Callee saved register 8
-> +  0x80x0 0000 0200 0019 regs.s9   Callee saved register 9
-> +  0x80x0 0000 0200 001a regs.s10  Callee saved register 10
-> +  0x80x0 0000 0200 001b regs.s11  Callee saved register 11
-> +  0x80x0 0000 0200 001c regs.t3   Caller saved register 3
-> +  0x80x0 0000 0200 001d regs.t4   Caller saved register 4
-> +  0x80x0 0000 0200 001e regs.t5   Caller saved register 5
-> +  0x80x0 0000 0200 001f regs.t6   Caller saved register 6
 
-I missed documenting "mode" register here. I will update it in v7.
+Hi Martin,
+
+On 3/9/2019 6:20 AM, Martin Blumenstingl wrote:
+> Hello,
+>
+> I only noticed this patchset today and I don't have much time left.
+> Here's my initial impressions without going through the code in detail.
+> I'll continue my review in the next days (as time permits).
+>
+> As with all other Intel LGM patches: I don't have access to the
+> datasheets, so it's possible that I don't understand <insert topic here>
+> feel free to correct me in this case (I appreciate an explanation where
+> I was wrong, so I can learn from it)
+>
+>
+> [...]
+> --- /dev/null
+> +++ b/drivers/clk/intel/Kconfig
+> @@ -0,0 +1,13 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +config INTEL_LGM_CGU_CLK
+> +	depends on COMMON_CLK
+> +	select MFD_SYSCON
+> can you please explain the reason why you need to use syscon?
+> also please see [0] for a comment from Rob on another LGM dt-binding
+> regarding syscon
+
+
+Actually, there is no need to use syscon for CGU in LGM. It got carried
+
+over from older SoCs (Falcon Mountain) where CGU was a MFD device
+
+because it included PHY registers as well. And PHY drivers were using
+
+syscon node to access CGU regmap. But for LGM, this is not the case.
+
+My understanding is that if we do not use syscon, then there is no
+
+point in using regmap because this driver uses simple 32 bit register
+
+access. Can directly read/write registers using readl() & writel().
+
+Would you agree ?
+
+
+Yi Xin, please correct me if you think i am mistaken anywhere. If not,
+
+i will change the driver to not use regmap & instead use readl() &
+
+writel().
+
+
+> +	select OF_EARLY_FLATTREE
+> there's not a single other "select OF_EARLY_FLATTREE" in driver/clk
+> I'm not saying this is wrong but it makes me curious why you need this
+
+
+We need OF_EARLY_FLATTREE for LGM. But adding a new x86
+
+platform for LGM is discouraged because that would lead to too
+
+many platforms. Only differentiating factor for LGM is CPU model
+
+ID but it can differentiate only at run time. So i had no option
+
+other then enabling it with some LGM specific core system module
+
+driver and CGU seemed perfect for this purpose.
+
+
+> [...]
+> diff --git a/drivers/clk/intel/clk-cgu.h b/drivers/clk/intel/clk-cgu.h
+> new file mode 100644
+> index 000000000000..e44396b4aad7
+> --- /dev/null
+> +++ b/drivers/clk/intel/clk-cgu.h
+> @@ -0,0 +1,278 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + *  Copyright(c) 2018 Intel Corporation.
+> + *  Zhu YiXin <Yixin.zhu@intel.com>
+> + */
+> +
+> +#ifndef __INTEL_CLK_H
+> +#define __INTEL_CLK_H
+> +
+> +struct intel_clk_mux {
+> +	struct clk_hw hw;
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	unsigned int reg;
+> +	u8 shift;
+> +	u8 width;
+> +	unsigned long flags;
+> +};
+> +
+> +struct intel_clk_divider {
+> +	struct clk_hw hw;
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	unsigned int reg;
+> +	u8 shift;
+> +	u8 width;
+> +	unsigned long flags;
+> +	const struct clk_div_table *table;
+> +};
+> +
+> +struct intel_clk_ddiv {
+> +	struct clk_hw hw;
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	unsigned int reg;
+> +	u8 shift0;
+> +	u8 width0;
+> +	u8 shift1;
+> +	u8 width1;
+> +	u8 shift2;
+> +	u8 width2;
+> +	unsigned int mult;
+> +	unsigned int div;
+> +	unsigned long flags;
+> +};
+> +
+> +struct intel_clk_gate {
+> +	struct clk_hw hw;
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	unsigned int reg;
+> +	u8 shift;
+> +	unsigned long flags;
+> +};
+> I know at least two existing regmap clock implementations:
+> - drivers/clk/qcom/clk-regmap*
+> - drivers/clk/meson/clk-regmap*
+>
+> it would be great if we could decide to re-use one of those for the
+> "generic" clock types (mux, divider and gate).
+> Stephen, do you have any preference here?
+> personally I like the meson one, but I'm biased because I've used it
+> a lot in the past and I haven't used the qcom one at all.
+
+
+I went through meson & qcom regmap clock code. Agree, it can be
+
+reused for mux, divider and gate. But as mentioned above, i am now
+
+considering to move away from using regmap.
 
 Regards,
-Anup
 
-> +
-> +RISC-V csr registers represent the supervisor mode control/status registers
-> +of a Guest VCPU and it has the following id bit patterns:
-> +  0x8020 0000 03 <index into the kvm_sregs struct:24> (32bit Host)
-> +  0x8030 0000 03 <index into the kvm_sregs struct:24> (64bit Host)
-> +
-> +Following are the RISC-V csr registers:
-> +
-> +    Encoding            Register  Description
-> +------------------------------------------------------------------
-> +  0x80x0 0000 0300 0000 sstatus   Supervisor status
-> +  0x80x0 0000 0300 0001 sie       Supervisor interrupt enable
-> +  0x80x0 0000 0300 0002 stvec     Supervisor trap vector base
-> +  0x80x0 0000 0300 0003 sscratch  Supervisor scratch register
-> +  0x80x0 0000 0300 0004 sepc      Supervisor exception program counter
-> +  0x80x0 0000 0300 0005 scause    Supervisor trap cause
-> +  0x80x0 0000 0300 0006 stval     Supervisor bad address or instruction
-> +  0x80x0 0000 0300 0007 sip       Supervisor interrupt pending
-> +  0x80x0 0000 0300 0008 satp      Supervisor address translation and protection
-> +
-> +RISC-V F extension registers represent the single precision floating point
-> +state of a Guest VCPU and it has the following id bit patterns:
-> +  0x8020 0000 04 <index into the __riscv_f_ext_state struct:24>
-> +
-> +Following are the RISC-V F extension registers:
-> +
-> +    Encoding            Register  Description
-> +------------------------------------------------------------------
-> +  0x8020 0000 0400 0000 f[0]      Floating point register 0
-> +  ...
-> +  0x8020 0000 0400 001f f[31]     Floating point register 31
-> +  0x8020 0000 0400 0020 fcsr      Floating point control and status register
-> +
-> +RISC-V D extension registers represent the double precision floating point
-> +state of a Guest VCPU and it has the following id bit patterns:
-> +  0x8020 0000 05 <index into the __riscv_d_ext_state struct:24> (fcsr)
-> +  0x8030 0000 05 <index into the __riscv_d_ext_state struct:24> (non-fcsr)
-> +
-> +Following are the RISC-V D extension registers:
-> +
-> +    Encoding            Register  Description
-> +------------------------------------------------------------------
-> +  0x8030 0000 0500 0000 f[0]      Floating point register 0
-> +  ...
-> +  0x8030 0000 0500 001f f[31]     Floating point register 31
-> +  0x8020 0000 0500 0020 fcsr      Floating point control and status register
-> +
-> +
->  4.69 KVM_GET_ONE_REG
->
->  Capability: KVM_CAP_ONE_REG
-> --
-> 2.17.1
->
+Rahul
+
