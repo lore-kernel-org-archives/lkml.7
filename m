@@ -2,136 +2,144 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E635AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6351CC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8C8023711
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C56206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 14:30:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vfmCkPa9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfICOaa (ORCPT
+        id S1729828AbfICOaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 10:30:30 -0400
-Received: from mga18.intel.com ([134.134.136.126]:34159 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727667AbfICOa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 10:30:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 07:30:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="182139440"
-Received: from vkuppusa-mobl2.ger.corp.intel.com (HELO localhost) ([10.252.39.67])
-  by fmsmga008.fm.intel.com with ESMTP; 03 Sep 2019 07:30:20 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v22 21/24] selftests/x86: Recurse into subdirectories
-Date:   Tue,  3 Sep 2019 17:26:52 +0300
-Message-Id: <20190903142655.21943-22-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+        Tue, 3 Sep 2019 10:30:39 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:30282 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727667AbfICOai (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 10:30:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1567521037; x=1599057037;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=TsVQ4YmQUOxpHUFBpHr6G7zfIEU+Q8EKLJiiqblwGRM=;
+  b=vfmCkPa9b2A9Jz4PsTGp2yQ+T2ucJ4f6CmAb7GiZkUhXOI8Zqv6YTXne
+   RFUQIXq/ToQiRX/KcQHY31bPy8QLBIGsGWGfQOjmZ8Yafg2NGltqn1vbk
+   3GPpnhYiVsUx2sQDKpQYUAPF0bCg0Q5UXMhk+VEyR8hOJgK6H0IP6ogNu
+   o=;
+X-IronPort-AV: E=Sophos;i="5.64,463,1559520000"; 
+   d="scan'208";a="748773588"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 03 Sep 2019 14:30:35 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-538b0bfb.us-west-2.amazon.com (Postfix) with ESMTPS id 3294EA2DEE;
+        Tue,  3 Sep 2019 14:30:34 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Sep 2019 14:30:11 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.162.242) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Sep 2019 14:30:08 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     <kvm@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 2/2] KVM: SVM: Disable posted interrupts for odd IRQs
+Date:   Tue, 3 Sep 2019 16:29:54 +0200
+Message-ID: <20190903142954.3429-3-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190903142954.3429-1-graf@amazon.com>
+References: <20190903142954.3429-1-graf@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.242]
+X-ClientProxiedBy: EX13D27UWA002.ant.amazon.com (10.43.160.30) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Recurse into a list of subdirectories defined by SUBDIRS when running
-x86 selftests. Override run_tests, install, emit_tests and clean
-targets to implement this behaviour.
+We can easily route hardware interrupts directly into VM context when
+they target the "Fixed" or "LowPriority" delivery modes.
 
-A possible alternative would be to add "x86/sgx" to TARGETS. However,
-this would be problematic because detecting 64-bit build would have
-to duplicated.
+However, on modes such as "SMI" or "Init", we need to go via KVM code
+to actually put the vCPU into a different mode of operation, so we can
+not post the interrupt
 
-The implementation is derived from the makefiles of powerpc and sparc64
-selftests.
+Add code in the SVM PI logic to explicitly refuse to establish posted
+mappings for advanced IRQ deliver modes.
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+This fixes a bug I have with code which configures real hardware to
+inject virtual SMIs into my guest.
+
+Signed-off-by: Alexander Graf <graf@amazon.com>
 ---
- tools/testing/selftests/x86/Makefile | 44 ++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ arch/x86/kvm/svm.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/testing/selftests/x86/Makefile b/tools/testing/selftests/x86/Makefile
-index fa07d526fe39..80571bac8ed5 100644
---- a/tools/testing/selftests/x86/Makefile
-+++ b/tools/testing/selftests/x86/Makefile
-@@ -10,6 +10,8 @@ CAN_BUILD_I386 := $(shell ./check_cc.sh $(CC) trivial_32bit_program.c -m32)
- CAN_BUILD_X86_64 := $(shell ./check_cc.sh $(CC) trivial_64bit_program.c)
- CAN_BUILD_WITH_NOPIE := $(shell ./check_cc.sh $(CC) trivial_program.c -no-pie)
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 1f220a85514f..9a6ea78c3239 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5266,6 +5266,21 @@ get_pi_vcpu_info(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
+ 		return -1;
+ 	}
  
-+SUBDIRS := sgx
++	switch (irq.delivery_mode) {
++	case dest_Fixed:
++	case dest_LowestPrio:
++		break;
++	default:
++		/*
++		 * For non-trivial interrupt events, we need to go
++		 * through the full KVM IRQ code, so refuse to take
++		 * any direct PI assignments here.
++		 */
++		pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
++			 __func__, irq.vector);
++		return -1;
++	}
 +
- TARGETS_C_BOTHBITS := single_step_syscall sysret_ss_attrs syscall_nt test_mremap_vdso \
- 			check_initial_reg_state sigreturn iopl mpx-mini-test ioperm \
- 			protection_keys test_vdso test_vsyscall mov_ss_trap \
-@@ -59,6 +61,48 @@ endif
- 
- ifeq ($(CAN_BUILD_X86_64),1)
- all: all_64
-+	@for DIR in $(SUBDIRS); do \
-+		BUILD_TARGET=$(OUTPUT)/$$DIR; \
-+		mkdir $$BUILD_TARGET  -p; \
-+		make OUTPUT=$$BUILD_TARGET -C $$DIR $@; \
-+	done
-+
-+DEFAULT_RUN_TESTS := $(RUN_TESTS)
-+override define RUN_TESTS
-+	$(DEFAULT_RUN_TESTS)
-+	@for TARGET in $(SUBDIRS); do \
-+		BUILD_TARGET=$(OUTPUT)/$$TARGET; \
-+		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET run_tests; \
-+	done;
-+endef
-+
-+DEFAULT_INSTALL_RULE := $(INSTALL_RULE)
-+override define INSTALL_RULE
-+	$(DEFAULT_INSTALL_RULE)
-+	@for TARGET in $(SUBDIRS); do \
-+		BUILD_TARGET=$(OUTPUT)/$$TARGET; \
-+		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET install; \
-+	done;
-+endef
-+
-+DEFAULT_EMIT_TESTS := $(EMIT_TESTS)
-+override define EMIT_TESTS
-+	$(DEFAULT_EMIT_TESTS)
-+	@for TARGET in $(SUBDIRS); do \
-+		BUILD_TARGET=$(OUTPUT)/$$TARGET; \
-+		$(MAKE) OUTPUT=$$BUILD_TARGET -s -C $$TARGET emit_tests; \
-+	done;
-+endef
-+
-+DEFAULT_CLEAN := $(CLEAN)
-+override define CLEAN
-+	$(DEFAULT_CLEAN)
-+	@for TARGET in $(SUBDIRS); do \
-+		BUILD_TARGET=$(OUTPUT)/$$TARGET; \
-+		$(MAKE) OUTPUT=$$BUILD_TARGET -C $$TARGET clean; \
-+	done;
-+endef
-+
- TEST_PROGS += $(BINARIES_64)
- EXTRA_CFLAGS += -DCAN_BUILD_64
- $(foreach t,$(TARGETS_C_64BIT_ALL),$(eval $(call gen-target-rule-64,$(t))))
+ 	pr_debug("SVM: %s: use GA mode for irq %u\n", __func__,
+ 		 irq.vector);
+ 	*svm = to_svm(vcpu);
+@@ -5314,6 +5329,7 @@ static int svm_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
+ 		 * 1. When cannot target interrupt to a specific vcpu.
+ 		 * 2. Unsetting posted interrupt.
+ 		 * 3. APIC virtialization is disabled for the vcpu.
++		 * 4. IRQ has extended delivery mode (SMI, INIT, etc)
+ 		 */
+ 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
+ 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
 -- 
-2.20.1
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
