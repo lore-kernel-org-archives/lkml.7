@@ -2,134 +2,149 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0AFC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD81FC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831DD217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DF52077B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 09:18:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Od7NQm+x"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="UoK2bbD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfICJRt (ORCPT
+        id S1728409AbfICJSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 05:17:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46374 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfICJRt (ORCPT
+        Tue, 3 Sep 2019 05:18:53 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:53806 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726936AbfICJSx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 05:17:49 -0400
-Received: by mail-io1-f66.google.com with SMTP id x4so34173358iog.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 02:17:48 -0700 (PDT)
+        Tue, 3 Sep 2019 05:18:53 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8398Fe8010804;
+        Tue, 3 Sep 2019 05:18:14 -0400
+Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2055.outbound.protection.outlook.com [104.47.44.55])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2uqnh5cqh4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 05:18:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C24mB7ln/01aRT3jSmT/X2a+01AdNa7pR6tGLaRHehr9NJJ5rMfd8lX2Cau9Ooma8rjbMdnoS5v8AHg0dhZM0wp3Th+s/el+evhojJWzsJIJhQ4wLrZGKNBymA8lb0LPcmByXEAOuQZu4I3EzUKsLRvh1ZWMy6sz3RIP6JiACTsmG9731KrXV85n0xcmWAKLvTtvQ9h+tGMIVR0itbSph3Evaq05bvu4G441j5Od+e3Nw2v2VGRaseQrObjq+18us74hv4QXMeUPuYgncFjpXpH6WB40dVebTCRMyPLmtJlTE1hjFzMiJRHGgmDbxeB+Lmpmq+Y6fFB+Cuz0J3L8iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U4SbAbb/5ac23tfajDupE2sj7N1q54dXurpgP+cOvos=;
+ b=mSQjUflZaT6ALjyVu08PA6MrY6/W7G+0JuIIdDgvpWdQG3ZKQTx7Go0XEcvgibXldyLVMbXJX1RMI4lAB/h7ZV5AO8LCwu2aO1KgqZq+yiP7YdjxQCPFl2nNlqVhgnF6gx7BBf4nWIXiUmRc4k002HHGmytO/r4f6QUZtIDrXxFfTplxVxaRLgm0JKc0bY/gi7tbY9usUdt6cfysgKWzODluuQHSj2bXW7eKy8lzNeD+58PY/m3fNwrUrsENfSdTJYLBPqe6ogEaDsNoPPkjVrPWteXxU9MN9iniafUEZ5WS65hW+wDSCrFoMTZRPAwXVdSbEreG2YYswtl2LEqzCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=gmx.de smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EuENc7crj8rqhon/s/3YCSFArTMbg3aHshy4WFfnKAI=;
-        b=Od7NQm+xjFA01cLuFmHtQg+5TCm8UxKX2tGkiw8Mr4ix+wsAC5OqGe+z4RAxvjqQg/
-         hOmmsMGgfL9ALOuzShRamJV28nj5bc9nAX+IVwfcCIvdcYByCAo2CXCt3AMWA49czLno
-         sGMa721iOqpXpP31sm3p2t8tpiPNVDM2tg89o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EuENc7crj8rqhon/s/3YCSFArTMbg3aHshy4WFfnKAI=;
-        b=ZKu4bWaSCadU9MpiSQ5+yKl63xAfRSfIYrkxoJHtL/YCrArCvmVVCXetukXVmBMxns
-         5btcOhoiETI4nO0JV4eVj4/OacBThHoh0Cu/ykZshpiEJqcSHUNFh0a/VaH67+EBu2vu
-         T597QyKBdcZ9OEk51n9i4RaTQzy6n2P9T3Nypq8EiLVUDzuzpMOGgalbx/JHVvOCq/9T
-         HF/JMxp18jYRz+kTUms8zqtlm6fLrnTRYoMF7ulOLSylyQGM2Mfg9hm48WSdRwDtQsbJ
-         7xieCSSzDjlkx3x482zL+4bb7WVIGyRVRt/T7TScpYYP08CmIv+lIrASiSe0zSPcPhcV
-         WqNw==
-X-Gm-Message-State: APjAAAWnC2FW6K3khphYsSpNiHG0jZczgf54QhToSa7YiwcXMYbZSNS5
-        8WDtSf3iGodWj5XRuv1tXBK8h0+7EtnaN+qzbppfSA==
-X-Google-Smtp-Source: APXvYqzSAqgiAZOGqKdxa2ybdBypwTKeZ7jt6jzTE8fFeVXwQ2aRbTvX6cO5BVl/b39XJh9PglydDRoEYuNDaq5h9II=
-X-Received: by 2002:a02:c94b:: with SMTP id u11mr34398002jao.35.1567502266965;
- Tue, 03 Sep 2019 02:17:46 -0700 (PDT)
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U4SbAbb/5ac23tfajDupE2sj7N1q54dXurpgP+cOvos=;
+ b=UoK2bbD6uWNSG9VA96Y3tPFAsfzdr18DokWYZnFwN84BhdDuGhrrEobIZeCDq/R+FggUxsa2uU9MWrLo2TN+1BL+O77AUiswEtEx3/j8e/1R7Q4xvO6gIXow4e/izO2x+zckiJOfQT1ORZfYAhT18hleRBrSogy3k4jVduqSIro=
+Received: from BN3PR03CA0052.namprd03.prod.outlook.com
+ (2a01:111:e400:7a4d::12) by CY4PR03MB3223.namprd03.prod.outlook.com
+ (2603:10b6:910:51::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.21; Tue, 3 Sep
+ 2019 09:18:12 +0000
+Received: from BL2NAM02FT056.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::206) by BN3PR03CA0052.outlook.office365.com
+ (2a01:111:e400:7a4d::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.19 via Frontend
+ Transport; Tue, 3 Sep 2019 09:18:12 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT056.mail.protection.outlook.com (10.152.77.221) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2220.16
+ via Frontend Transport; Tue, 3 Sep 2019 09:18:12 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x839I7NB003244
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 3 Sep 2019 02:18:07 -0700
+Received: from linux.ad.analog.com (10.32.226.41) by NWD2HUBCAS7.ad.analog.com
+ (10.64.69.107) with Microsoft SMTP Server id 14.3.408.0; Tue, 3 Sep 2019
+ 05:18:11 -0400
+From:   Stefan Popa <stefan.popa@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <stefan.popa@analog.com>
+Subject: [PATCH 1/3] iio: accel: adxl372: Fix/remove limitation for FIFO samples
+Date:   Tue, 3 Sep 2019 12:18:07 +0300
+Message-ID: <1567502287-10199-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190821173742.24574-1-vgoyal@redhat.com> <CAJfpegvPTxkaNhXWhiQSprSJqyW1cLXeZEz6x_f0PxCd-yzHQg@mail.gmail.com>
- <20190903041507-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190903041507-mutt-send-email-mst@kernel.org>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 3 Sep 2019 11:17:35 +0200
-Message-ID: <CAJfpeguB6fFhghuFS420ZQ+JuQvTLc5TgsGjoB_RvFrSVf+v5w@mail.gmail.com>
-Subject: Re: [PATCH v3 00/13] virtio-fs: shared file system for virtual machines
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtio-fs@redhat.com, Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(136003)(39860400002)(376002)(396003)(2980300002)(189003)(199004)(5660300002)(50466002)(51416003)(486006)(126002)(107886003)(478600001)(70586007)(48376002)(4326008)(70206006)(316002)(336012)(44832011)(186003)(47776003)(7696005)(6916009)(50226002)(356004)(6666004)(16586007)(8936002)(2616005)(476003)(8676002)(54906003)(246002)(36756003)(2906002)(106002)(2351001)(305945005)(426003)(26005)(7636002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB3223;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2f12e936-502e-4949-bce6-08d7304fa508
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:CY4PR03MB3223;
+X-MS-TrafficTypeDiagnostic: CY4PR03MB3223:
+X-Microsoft-Antispam-PRVS: <CY4PR03MB3223C9134F417A2BEC1ABA409DB90@CY4PR03MB3223.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-Forefront-PRVS: 01494FA7F7
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: x9TH+ypzILRiZ4j5vq263OwwmxZ9H4Yg0J0BG4hNNaHyL2riwElyEZhbPKgz5jqKCyHhZHD6KrcJJ8KLW6Y5Xm7E+/M/1WXX8Z0zpTgc5YQB6XRrBsPRLtXAkjJcqMda22Fp082kuQX2KrbSIje1EggMahtuFkQxRnpm9TO+tQGnbSU/D/Ud3MxFOjoIIgqM5P4hxSCe3Q9dhsS1IFOB8TZ+wWtVIGBSIIguvLdK7la+rq7q+CycLCHvcuUeYeuRNyb6T8vOpWuzMXFTgroqyTj4XBe7D3n86DRmJiePPzx0BBtGU4TNewrtNYmFd4C8aBC2sa0VqzAvM0QCrwrR5Ql3EweOaAXMcMnQEikmOvbYCnBRq2jaZi4fqqzypazCSNd0DzAdvTY5F04qFxRSeJ6Uhs94Mks+EcKXHbPdCK8=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2019 09:18:12.4656
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f12e936-502e-4949-bce6-08d7304fa508
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB3223
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-03_01:2019-09-03,2019-09-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=1
+ mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
+ mlxlogscore=772 spamscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1909030097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 10:31 AM Michael S. Tsirkin <mst@redhat.com> wrote:
+Currently, the driver sets the FIFO_SAMPLES register with the number of
+sample sets (maximum of 170 for 3 axis data, 256 for 2-axis and 512 for
+single axis). However, the FIFO_SAMPLES register should store the number
+of samples, regardless of how the FIFO format is configured.
 
-> Can the patches themselves be posted to the relevant list(s) please?
-> If possible, please also include "v3" in all patches so they are
-> easier to find.
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ drivers/iio/accel/adxl372.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-I'll post a v4.
+diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+index 055227cb..adec37b 100644
+--- a/drivers/iio/accel/adxl372.c
++++ b/drivers/iio/accel/adxl372.c
+@@ -805,15 +805,6 @@ static int adxl372_buffer_postenable(struct iio_dev *indio_dev)
+ 	st->fifo_format = adxl372_axis_lookup_table[i].fifo_format;
+ 	st->fifo_set_size = bitmap_weight(indio_dev->active_scan_mask,
+ 					  indio_dev->masklength);
+-	/*
+-	 * The 512 FIFO samples can be allotted in several ways, such as:
+-	 * 170 sample sets of concurrent 3-axis data
+-	 * 256 sample sets of concurrent 2-axis data (user selectable)
+-	 * 512 sample sets of single-axis data
+-	 */
+-	if ((st->watermark * st->fifo_set_size) > ADXL372_FIFO_SIZE)
+-		st->watermark = (ADXL372_FIFO_SIZE  / st->fifo_set_size);
+-
+ 	st->fifo_mode = ADXL372_FIFO_STREAMED;
+ 
+ 	ret = adxl372_configure_fifo(st);
+-- 
+2.7.4
 
-> I poked at
-> https://lwn.net/ml/linux-kernel/20190821173742.24574-1-vgoyal@redhat.com/
-> specifically
-> https://lwn.net/ml/linux-kernel/20190821173742.24574-12-vgoyal@redhat.com/
-> and things like:
-> +       /* TODO lock */
-> give me pause.
->
-> Cleanup generally seems broken to me - what pauses the FS
->
-> What about the rest of TODOs in that file?
-
-AFAICS, some of those are QOI issues, and some are long term
-performance items.  I see no blockers or things that would pose a
-security concern.
-
-That said, it would be nice to get rid of them at some point.
-
-> use of usleep is hacky - can't we do better e.g. with a
-> completion?
-
-Yes.  I have a different implementation, but was planning to leave
-this one in until the dust settles.
-
-> Some typos - e.g. "reuests".
-
-Fixed.
-
-> > >  fs/fuse/Kconfig                 |   11 +
-> > >  fs/fuse/Makefile                |    1 +
-> > >  fs/fuse/control.c               |    4 +-
-> > >  fs/fuse/cuse.c                  |    4 +-
-> > >  fs/fuse/dev.c                   |   89 ++-
-> > >  fs/fuse/dir.c                   |   26 +-
-> > >  fs/fuse/file.c                  |   15 +-
-> > >  fs/fuse/fuse_i.h                |  120 +++-
-> > >  fs/fuse/inode.c                 |  203 +++---
-> > >  fs/fuse/virtio_fs.c             | 1061 +++++++++++++++++++++++++++++++
-> > >  fs/splice.c                     |    3 +-
-> > >  include/linux/fs.h              |    2 +
-> > >  include/uapi/linux/virtio_fs.h  |   41 ++
-> > >  include/uapi/linux/virtio_ids.h |    1 +
-> > >  init/do_mounts.c                |   10 +
-> > >  15 files changed, 1462 insertions(+), 129 deletions(-)
-> > >  create mode 100644 fs/fuse/virtio_fs.c
-> > >  create mode 100644 include/uapi/linux/virtio_fs.h
->
-> Don't the new files need a MAINTAINERS entry?
-> I think we want virtualization@lists.linux-foundation.org to be
-> copied.
-
-Yep.
-
-Stefan, do you want to formally maintain this file?
-
-Thanks,
-Miklos
