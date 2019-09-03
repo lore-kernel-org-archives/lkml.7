@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC3C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8E9C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603842343A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF1323717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527931;
-	bh=y6jv+OHUHxEmn5hA5V/b/pfb8RWdE4SDWdiWC+3AyFY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=XGVFd3sRlCNvCNQTk9RMFDGrEwnG63Nja1JUP0kg+N65i7rFEySf/LULz04LLFYFL
-	 nYo4WlJj7KN6eJLJxSw8wqHNVi9FMUydQgmeYi+rVJst2eFpizHVrjukJ7WXd3rGtL
-	 STu57EUovyhCiDVqviRnCAIX9tJiO97ij/Z61hTk=
+	s=default; t=1567527937;
+	bh=ebni2Q/ND9c27z/FRRPtQ6XbVmW0cE2YmgCn70MAkkQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o6KcLnIdTRVx/pD2wQ7fc3bUpOCrV79NpfBDW7BX0kOjV4+MDtV64hlgo5D8J7TOi
+	 6OW1R+2d05ZKTnuwWc/YODLWAgc4twMeM96eUqzvxVtq7xA1SSQdzlwQUCN836acai
+	 S/N3hAESEl0cKquD0BZ0QV8avIEVa5UX4m0aYkFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730400AbfICQZa (ORCPT
+        id S1730424AbfICQZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:25:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbfICQZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:22 -0400
+        id S1730395AbfICQZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11F432343A;
-        Tue,  3 Sep 2019 16:25:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0485923717;
+        Tue,  3 Sep 2019 16:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527921;
-        bh=y6jv+OHUHxEmn5hA5V/b/pfb8RWdE4SDWdiWC+3AyFY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fktxo9kwQhwWMFXoU7eQDyn04xa/nB5bfIOAislXbhxWTJ4g9LGpF9cmGc6rq2ps0
-         VRB42Q6W2KyfuaY0P5a7TblDJND6KmCI2kShRIn+DhNumBMSbcO1I8AwQm2Rz6g+5W
-         LJqybxcRH3j1hlbMqPd97dqhlnP+Lg263ri59lSU=
+        s=default; t=1567527928;
+        bh=ebni2Q/ND9c27z/FRRPtQ6XbVmW0cE2YmgCn70MAkkQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hVbRpHGI1/6Nts9d2y+iYuRvfT+4n55028mT7D2TMxuAYR6qVt1zCxd7pfYtjoiHr
+         J9W9IEeCrXC7/u3Qdoc7RXnzCGcBhh2lOrzp84HvgjaEMfwCLV2ftrcu8skuQQYDAW
+         sPtqBWlCNMauj1MzDGI4BqDM/JQV05Xkk3eqwWjU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan-Marek Glogowski <glogow@fbihome.de>,
-        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 001/167] drm/i915: Re-apply "Perform link quality check, unconditionally during long pulse"
-Date:   Tue,  3 Sep 2019 12:22:33 -0400
-Message-Id: <20190903162519.7136-1-sashal@kernel.org>
+Cc:     Giridhar Malavali <giridhar.malavali@cavium.com>,
+        "Ewan D . Milne" <emilne@redhat.com>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 004/167] scsi: qla2xxx: Move log messages before issuing command to firmware
+Date:   Tue,  3 Sep 2019 12:22:36 -0400
+Message-Id: <20190903162519.7136-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,57 +61,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan-Marek Glogowski <glogow@fbihome.de>
+From: Giridhar Malavali <giridhar.malavali@cavium.com>
 
-[ Upstream commit 3cf71bc9904d7ee4a25a822c5dcb54c7804ea388 ]
+[ Upstream commit 9fe278f44b4bc06cc61e33b2af65f87d507d13d0 ]
 
-This re-applies the workaround for "some DP sinks, [which] are a
-little nuts" from commit 1a36147bb939 ("drm/i915: Perform link
-quality check unconditionally during long pulse").
-It makes the secondary AOC E2460P monitor connected via DP to an
-acer Veriton N4640G usable again.
+There is a probability that the SRB structure might have been released by the
+time the debug log message dereferences it.  This patch moved the log messages
+before the command is issued to the firmware to prevent unknown behavior and
+kernel crash
 
-This hunk was dropped in commit c85d200e8321 ("drm/i915: Move SST
-DP link retraining into the ->post_hotplug() hook")
-
-Fixes: c85d200e8321 ("drm/i915: Move SST DP link retraining into the ->post_hotplug() hook")
-[Cleaned up commit message, added stable cc]
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Signed-off-by: Jan-Marek Glogowski <glogow@fbihome.de>
-Cc: stable@vger.kernel.org
-Link: https://patchwork.freedesktop.org/patch/msgid/20180825191035.3945-1-lyude@redhat.com
+Fixes: 726b85487067 ("qla2xxx: Add framework for async fabric discovery")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Giridhar Malavali <giridhar.malavali@cavium.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_dp.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/scsi/qla2xxx/qla_gs.c   | 15 ++++++-----
+ drivers/scsi/qla2xxx/qla_init.c | 48 +++++++++++++++++----------------
+ 2 files changed, 33 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_dp.c b/drivers/gpu/drm/i915/intel_dp.c
-index f92079e19de8d..20cd4c8acecc3 100644
---- a/drivers/gpu/drm/i915/intel_dp.c
-+++ b/drivers/gpu/drm/i915/intel_dp.c
-@@ -4739,6 +4739,22 @@ intel_dp_long_pulse(struct intel_connector *connector,
- 		 */
- 		status = connector_status_disconnected;
- 		goto out;
-+	} else {
-+		/*
-+		 * If display is now connected check links status,
-+		 * there has been known issues of link loss triggering
-+		 * long pulse.
-+		 *
-+		 * Some sinks (eg. ASUS PB287Q) seem to perform some
-+		 * weird HPD ping pong during modesets. So we can apparently
-+		 * end up with HPD going low during a modeset, and then
-+		 * going back up soon after. And once that happens we must
-+		 * retrain the link to get a picture. That's in case no
-+		 * userspace component reacted to intermittent HPD dip.
-+		 */
-+		struct intel_encoder *encoder = &dp_to_dig_port(intel_dp)->base;
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index 1f1a05a90d3d7..fc08e46a93ca9 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -3360,15 +3360,15 @@ int qla24xx_async_gpsc(scsi_qla_host_t *vha, fc_port_t *fcport)
+ 	sp->u.iocb_cmd.timeout = qla2x00_async_iocb_timeout;
+ 	sp->done = qla24xx_async_gpsc_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_disc, vha, 0x205e,
+ 	    "Async-%s %8phC hdl=%x loopid=%x portid=%02x%02x%02x.\n",
+ 	    sp->name, fcport->port_name, sp->handle,
+ 	    fcport->loop_id, fcport->d_id.b.domain,
+ 	    fcport->d_id.b.area, fcport->d_id.b.al_pa);
 +
-+		intel_dp_retrain_link(encoder, ctx);
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	return rval;
+ 
+ done_free_sp:
+@@ -3729,13 +3729,14 @@ int qla24xx_async_gpnid(scsi_qla_host_t *vha, port_id_t *id)
+ 	sp->u.iocb_cmd.timeout = qla2x00_async_iocb_timeout;
+ 	sp->done = qla2x00_async_gpnid_sp_done;
+ 
++	ql_dbg(ql_dbg_disc, vha, 0x2067,
++	    "Async-%s hdl=%x ID %3phC.\n", sp->name,
++	    sp->handle, ct_req->req.port_id.port_id);
++
+ 	rval = qla2x00_start_sp(sp);
+ 	if (rval != QLA_SUCCESS)
+ 		goto done_free_sp;
+ 
+-	ql_dbg(ql_dbg_disc, vha, 0x2067,
+-	    "Async-%s hdl=%x ID %3phC.\n", sp->name,
+-	    sp->handle, ct_req->req.port_id.port_id);
+ 	return rval;
+ 
+ done_free_sp:
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index ddce32fe0513a..39a8f4a671aaa 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -247,6 +247,12 @@ qla2x00_async_login(struct scsi_qla_host *vha, fc_port_t *fcport,
+ 
  	}
  
- 	/*
++	ql_dbg(ql_dbg_disc, vha, 0x2072,
++	    "Async-login - %8phC hdl=%x, loopid=%x portid=%02x%02x%02x "
++		"retries=%d.\n", fcport->port_name, sp->handle, fcport->loop_id,
++	    fcport->d_id.b.domain, fcport->d_id.b.area, fcport->d_id.b.al_pa,
++	    fcport->login_retry);
++
+ 	rval = qla2x00_start_sp(sp);
+ 	if (rval != QLA_SUCCESS) {
+ 		fcport->flags |= FCF_LOGIN_NEEDED;
+@@ -254,11 +260,6 @@ qla2x00_async_login(struct scsi_qla_host *vha, fc_port_t *fcport,
+ 		goto done_free_sp;
+ 	}
+ 
+-	ql_dbg(ql_dbg_disc, vha, 0x2072,
+-	    "Async-login - %8phC hdl=%x, loopid=%x portid=%02x%02x%02x "
+-		"retries=%d.\n", fcport->port_name, sp->handle, fcport->loop_id,
+-	    fcport->d_id.b.domain, fcport->d_id.b.area, fcport->d_id.b.al_pa,
+-	    fcport->login_retry);
+ 	return rval;
+ 
+ done_free_sp:
+@@ -303,15 +304,16 @@ qla2x00_async_logout(struct scsi_qla_host *vha, fc_port_t *fcport)
+ 	qla2x00_init_timer(sp, qla2x00_get_async_timeout(vha) + 2);
+ 
+ 	sp->done = qla2x00_async_logout_sp_done;
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+ 
+ 	ql_dbg(ql_dbg_disc, vha, 0x2070,
+ 	    "Async-logout - hdl=%x loop-id=%x portid=%02x%02x%02x %8phC.\n",
+ 	    sp->handle, fcport->loop_id, fcport->d_id.b.domain,
+ 		fcport->d_id.b.area, fcport->d_id.b.al_pa,
+ 		fcport->port_name);
++
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	return rval;
+ 
+ done_free_sp:
+@@ -489,13 +491,15 @@ qla2x00_async_adisc(struct scsi_qla_host *vha, fc_port_t *fcport,
+ 	sp->done = qla2x00_async_adisc_sp_done;
+ 	if (data[1] & QLA_LOGIO_LOGIN_RETRIED)
+ 		lio->u.logio.flags |= SRB_LOGIN_RETRIED;
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+ 
+ 	ql_dbg(ql_dbg_disc, vha, 0x206f,
+ 	    "Async-adisc - hdl=%x loopid=%x portid=%06x %8phC.\n",
+ 	    sp->handle, fcport->loop_id, fcport->d_id.b24, fcport->port_name);
++
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
++
+ 	return rval;
+ 
+ done_free_sp:
+@@ -1161,14 +1165,13 @@ int qla24xx_async_gpdb(struct scsi_qla_host *vha, fc_port_t *fcport, u8 opt)
+ 
+ 	sp->done = qla24xx_async_gpdb_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_disc, vha, 0x20dc,
+ 	    "Async-%s %8phC hndl %x opt %x\n",
+ 	    sp->name, fcport->port_name, sp->handle, opt);
+ 
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	return rval;
+ 
+ done_free_sp:
+@@ -1698,15 +1701,14 @@ qla2x00_async_tm_cmd(fc_port_t *fcport, uint32_t flags, uint32_t lun,
+ 	tm_iocb->u.tmf.data = tag;
+ 	sp->done = qla2x00_tmf_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_taskm, vha, 0x802f,
+ 	    "Async-tmf hdl=%x loop-id=%x portid=%02x%02x%02x.\n",
+ 	    sp->handle, fcport->loop_id, fcport->d_id.b.domain,
+ 	    fcport->d_id.b.area, fcport->d_id.b.al_pa);
+ 
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
+ 	wait_for_completion(&tm_iocb->u.tmf.comp);
+ 
+ 	rval = tm_iocb->u.tmf.data;
+@@ -1790,14 +1792,14 @@ qla24xx_async_abort_cmd(srb_t *cmd_sp, bool wait)
+ 
+ 	sp->done = qla24xx_abort_sp_done;
+ 
+-	rval = qla2x00_start_sp(sp);
+-	if (rval != QLA_SUCCESS)
+-		goto done_free_sp;
+-
+ 	ql_dbg(ql_dbg_async, vha, 0x507c,
+ 	    "Abort command issued - hdl=%x, target_id=%x\n",
+ 	    cmd_sp->handle, fcport->tgt_id);
+ 
++	rval = qla2x00_start_sp(sp);
++	if (rval != QLA_SUCCESS)
++		goto done_free_sp;
++
+ 	if (wait) {
+ 		wait_for_completion(&abt_iocb->u.abt.comp);
+ 		rval = abt_iocb->u.abt.comp_status == CS_COMPLETE ?
 -- 
 2.20.1
 
