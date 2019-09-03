@@ -2,114 +2,115 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44203C3A59E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DBAC3A59E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2533E217D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942ED217D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 02:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SbBlLox6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfICCdg convert rfc822-to-8bit (ORCPT
+        id S1726889AbfICCgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Sep 2019 22:33:36 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:35595 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfICCdf (ORCPT
+        Mon, 2 Sep 2019 22:36:40 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45115 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbfICCgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Sep 2019 22:33:35 -0400
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="32010530"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with SMTP; 03 Sep 2019 10:33:34 +0800
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(122352:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Tue, 03 Sep 2019 10:33:33 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        =?big5?B?J1NUUkQyLb2ytGa8YCc=?= <jennifer.tsai@emc.com.tw>,
-        =?big5?B?J1NUUkQyLbOvsVKp+rhnsnon?= <james.chen@emc.com.tw>,
-        =?big5?B?J7Hns9W1vic=?= <paul.liang@emc.com.tw>,
-        "'jeff'" <jeff.chuang@emc.com.tw>
-References: <1566958886-25756-1-git-send-email-johnny.chuang@emc.com.tw> <000601d55d49$05878160$10968420$@emc.com.tw> <20190829182933.GD187474@dtor-ws>
-In-Reply-To: <20190829182933.GD187474@dtor-ws>
-Subject: RE: [PATCH] Input: elants_i2c - return real value of elants_i2c_initialize()
-Date:   Tue, 3 Sep 2019 10:33:33 +0800
-Message-ID: <001e01d561ff$fb3d7000$f1b85000$@emc.com.tw>
+        Mon, 2 Sep 2019 22:36:39 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 4so4712273pgm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Sep 2019 19:36:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=L9Qi+M+Wfaf1U8TRjwibswLZOw9HB36cymbwC0eqfSM=;
+        b=SbBlLox6VA5lo4QBdr7EU4IFmOK2wkdOlrWpX7rp7b9z98JDKFr7jhYSu8cxHUtira
+         OqDRPL3hGazDnfm4h20+t3Pc4ReRfwZ1JFu9ghUwLMIX3L7sUeXiDKLyUcrAZqNnZ+V2
+         OQSWhAUkgOwoBHjULG3L6Qdc5badxLcR5lPbwRlDxlqFMUuRAi1MlSLwbN9U1oOQ/3An
+         /SnJt7U3iNRvLnu7Zp47rNwZMGfC2Xp/jQHckUlqYUhWV/WEHxrddQn0+mevJ71kM9Ht
+         1DLWgBy1SNMIxpQcBNpDVs2ZtBf5nwOLE75A9MVOcRM4HX+wdVEdkZhV6rOuBn5CKIPV
+         so7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L9Qi+M+Wfaf1U8TRjwibswLZOw9HB36cymbwC0eqfSM=;
+        b=T5ocaUT3T5hSPqEjUujWaD1o+TX6UuiPRFXSIchy0h3MlhAHbUvmHG1FrK673A+nrk
+         JMjCYMLEaXv43/Ts/libprSA8Ow+3qhGoNpQmbcbZM2KdADoE/2cKs7/NRBHSuWCu+FK
+         vi5JbF3ImqE8Kb/7oTODooJ2t/Qsrbuk8mpk5dhq9J5m0xEFTuwU4HMTnyiwPL0jU9dq
+         kc0ehIeYrrSb5wU55e3uaFvBhWZKtRBSPvCXSHhpWasG3MvI/Qfjwj63Y2v8LecbnTV0
+         BkGcpumBfrG7Ly65WMhKxGdhXGM2dz+aHWlVPzgmtsPRdK2rwJlNCKlC3g75zSSI4Cm4
+         u5KA==
+X-Gm-Message-State: APjAAAXzNvGiZl+3/nhwKhIR/ngPnqF5P8VbWp4O9IdWCxnHbDwxen7l
+        DaaLHzgIGINB2i0o3WVlJwPQjA==
+X-Google-Smtp-Source: APXvYqxlVJJFchhXvA7ONZh5xaAIKIOegPi+eS0D1SpN4NtSB++8Z6ZMtzODFP5s2vBGYS9FoZrlHA==
+X-Received: by 2002:a65:6401:: with SMTP id a1mr27925656pgv.42.1567478199018;
+        Mon, 02 Sep 2019 19:36:39 -0700 (PDT)
+Received: from localhost ([122.167.132.221])
+        by smtp.gmail.com with ESMTPSA id x2sm9925510pfa.89.2019.09.02.19.36.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 19:36:37 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 08:06:35 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [RFC 4/5] ARM: dts: omap3-n950-n9: remove opp-v1 table
+Message-ID: <20190903023635.44yf32jowpm3hgfp@vireshk-i7>
+References: <cover.1567421750.git.hns@goldelico.com>
+ <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="big5"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQFmeLP5IfQOHpOgOs9iM2bs2d5OHQE/UdUoAQf8D7yn5NEZcA==
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0zOGM2Yjg0MC1jZGYzLTExZTktODBkYy03YzVjZjg3NDk0NzhcYW1lLXRlc3RcMzhjNmI4NDItY2RmMy0xMWU5LTgwZGMtN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIxODA4IiB0PSIxMzIxMTk1MTYxMzU0MzUxODQiIGg9InkzM0pvY3p4U0UrSWVVMGRYdEIwWUU0aHhBND0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f978667c1533e46e3a5df58871e9048f3eb74e9.1567421751.git.hns@goldelico.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
-
-Thanks for your explanation.
-If I want to abandon this patch, what's step I need to do?
-
-Many thanks,
-Johnny
------Original Message-----
-From: 'Dmitry Torokhov' [mailto:dmitry.torokhov@gmail.com] 
-Sent: Friday, August 30, 2019 2:30 AM
-To: Johnny.Chuang
-Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; STRD2-蔡惠嬋;
-STRD2-陳崇明經理; '梁博翔'; 'jeff'
-Subject: Re: [PATCH] Input: elants_i2c - return real value of
-elants_i2c_initialize()
-
-Hi Johnny,
-
-On Wed, Aug 28, 2019 at 10:33:46AM +0800, Johnny.Chuang wrote:
-> The return value of elants_i2c_initialize() was always 0.
-> It maybe register input device when initialize fail.
-
-We do not want to return error here, because it will abort probe, and then
-we will not be able to initiate firmware flash flow so we can attempt to
-recover the device.
-
-If you want to try you can change the ts->iap_mode before trying to register
-input device, but then you need to be very careful about registering and
-unregistering it later, after flashing or re-flashing firmware.
-
+On 02-09-19, 12:55, H. Nikolaus Schaller wrote:
+> With opp-v2 in omap36xx.dtsi and ti-cpufreq driver the
+> 1GHz capability is automatically detected.
 > 
-> Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 > ---
->  drivers/input/touchscreen/elants_i2c.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm/boot/dts/omap3-n950-n9.dtsi | 7 -------
+>  1 file changed, 7 deletions(-)
 > 
-> diff --git a/drivers/input/touchscreen/elants_i2c.c
-> b/drivers/input/touchscreen/elants_i2c.c
-> index d4ad24e..9c9816f 100644
-> --- a/drivers/input/touchscreen/elants_i2c.c
-> +++ b/drivers/input/touchscreen/elants_i2c.c
-> @@ -571,7 +571,7 @@ static int elants_i2c_initialize(struct elants_data
-*ts)
->  	if (error)
->  		ts->iap_mode = ELAN_IAP_RECOVERY;
->  
-> -	return 0;
-> +	return error;
->  }
->  
->  /*
-> --
-> 2.7.4
-> 
+> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> index 5441e9ffdbb4..e98b0c615f19 100644
+> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> @@ -11,13 +11,6 @@
+>  	cpus {
+>  		cpu@0 {
+>  			cpu0-supply = <&vcc>;
+> -			operating-points = <
+> -				/* kHz    uV */
+> -				300000  1012500
+> -				600000  1200000
+> -				800000  1325000
+> -				1000000	1375000
+> -			>;
+>  		};
+>  	};
 
-Thanks.
+This should be merged with 2/5 ?
 
 -- 
-Dmitry
-
+viresh
