@@ -2,91 +2,134 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE2CC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F57C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3841321881
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:47:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567540041;
-	bh=u8oGsza9gJmw72Q+gBCjR4WxraGtmr0E2rtxlvf3ehc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kEAsCZTuIzyVRgXk9F7fXxZx3NrHLGnVDkIoenQvLzkjQDgw6r5J3hfRE2rBUJx2l
-	 aP65eBIYf50bbxlERfYf7BGneSRC/rnUzPQN4B63STfXWsRnTx1q0njJNFokfbLcVN
-	 WHEmByatiKgwxYyVnczkqac/CzCqirYjF9RuVeEg=
+	by mail.kernel.org (Postfix) with ESMTP id D035621881
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 19:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfICTrU (ORCPT
+        id S1727001AbfICTr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 15:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfICTrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 15:47:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C81C21881;
-        Tue,  3 Sep 2019 19:47:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567540039;
-        bh=u8oGsza9gJmw72Q+gBCjR4WxraGtmr0E2rtxlvf3ehc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bsGlApp3fczlJAlN0YdyWIWKCWy9F6SSscBxVOOan8wHCg23Ij/rvzYlcqaMvALlL
-         5W3aBF/VI3Kv+xxtmCODZUTCQTUfuDX4L1PDiz6TDva0DCHAdBnC5aESyE/aCaI8dD
-         6ZnEaPNQBq7HWdz1ed9fLBfseSPlWgbcgkc2b94g=
-Date:   Tue, 3 Sep 2019 21:46:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chanwoo Choi (chanwoo@kernel.org)" <chanwoo@kernel.org>,
-        =?utf-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>
-Subject: Re: [GIT PULL] extcon next for v5.4
-Message-ID: <20190903194657.GA13390@kroah.com>
-References: <CGME20190826025109epcas1p2add5354e4989028cd942b2121447dfd8@epcas1p2.samsung.com>
- <4c61ce13-69c7-f6ce-ae37-722f370371f4@samsung.com>
+        Tue, 3 Sep 2019 15:47:26 -0400
+Received: from mail-oln040092068043.outbound.protection.outlook.com ([40.92.68.43]:3531
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725994AbfICTrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 15:47:25 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h9+dZxpAw8V2ttg8idaWBKcM2L30pPBM6Y/aaNqZoNm+beC/iXKOflNAfu36csPFJQV1uUu2dzP+YeE9w+qM22y8eHPLWqkdP/+pb0Azps3ocuzEOXRH8a9qWn1EwYhwnn/CsUi3F1kZXNv2I+kL8F9XBkSis+ReJmjuKg0u5viUerC8vQQMOUinAEKP/6gm6z+oLJuq80x9xn05Zjp2KpJbAID2PRIb/0YwCrvG0vQGmGybiHjFbzFbR1AFnsR4eo9B5v9Daap62FIH8LumFyexjMGw0o2lDAzE2aYvcDmG3A0wLatUIPh5GaHqf4tc/9jpruWMOFD2bllwLTwD+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cl1OXlmmrsJ2YDkl5Z0ssofFqBYMWQdd8Lkby8mKeMA=;
+ b=B/SOMva7aMKQhh381QL/FUrf5kaxgY5Gc3OpxMSNmmX+a3nRDSDJUW/VkX9772mb6C1fhecTdR4fsZa9rDDJMEMx8sxO2V85W7vY0ay/SlXliJ7pbckU7sveehE8tS5u5jnvz7sFM8AcPLVEOFXHlpvCiojmKDP/yV1ckSWqr1EWXCGqZoTQwNvXh4VQE4zjUO2fpjM1Ax1IJmOXYKE91Z0jViEse2KZGYin+7xoQxx2RB8duP9kddRg0JC97IfVT73qt4BNRJU9/zXFqrO/UOHUq8UEFA2WuhcFEERWbPsIZJarYBiJP0yFs4k6aWSiOJCbB3DMseT7L5aOaXe/aQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from VE1EUR02FT042.eop-EUR02.prod.protection.outlook.com
+ (10.152.12.59) by VE1EUR02HT179.eop-EUR02.prod.protection.outlook.com
+ (10.152.13.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2220.16; Tue, 3 Sep
+ 2019 19:47:20 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.12.60) by
+ VE1EUR02FT042.mail.protection.outlook.com (10.152.13.70) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2220.16 via Frontend Transport; Tue, 3 Sep 2019 19:47:20 +0000
+Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::59e6:329d:5fc7:5181]) by HE1PR06MB4011.eurprd06.prod.outlook.com
+ ([fe80::59e6:329d:5fc7:5181%5]) with mapi id 15.20.2241.014; Tue, 3 Sep 2019
+ 19:47:20 +0000
+From:   Jonas Karlman <jonas@kwiboo.se>
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 08/12] media: hantro: Fix H264 decoding of field encoded
+ content
+Thread-Topic: [RFC 08/12] media: hantro: Fix H264 decoding of field encoded
+ content
+Thread-Index: AQHVYMMtmxM+aDjHykiwJVJ++y1ATacZ840AgAALdwCAABCDAIAAT7qA
+Date:   Tue, 3 Sep 2019 19:47:20 +0000
+Message-ID: <HE1PR06MB4011B532327D629753FDDAC1ACB90@HE1PR06MB4011.eurprd06.prod.outlook.com>
+References: <HE1PR06MB40117D0EE96E6FA638A04B78ACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <20190901124531.23645-1-jonas@kwiboo.se>
+ <HE1PR06MB4011EA39133818A85768B91FACBF0@HE1PR06MB4011.eurprd06.prod.outlook.com>
+ <1567516908.5229.7.camel@pengutronix.de>
+ <DB6PR06MB4007C0F89BAEC6F9F1F2AA18ACB90@DB6PR06MB4007.eurprd06.prod.outlook.com>
+ <1567522916.5229.11.camel@pengutronix.de>
+In-Reply-To: <1567522916.5229.11.camel@pengutronix.de>
+Accept-Language: sv-SE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0701CA0076.eurprd07.prod.outlook.com
+ (2603:10a6:3:64::20) To HE1PR06MB4011.eurprd06.prod.outlook.com
+ (2603:10a6:7:9c::32)
+x-incomingtopheadermarker: OriginalChecksum:D53387E6826E5AF0FA56790C2CBA3BACE09CE5526C135CD1E4C55E3AA1665949;UpperCasedChecksum:AB48C5586087F8077F1CEC97158477431274A375D420079B40355BEDBF107EED;SizeAsReceived:8134;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [2gyRvBEhlEh4hznG3I6TgOsrpeZcnVXD]
+x-microsoft-original-message-id: <b009afbc-a744-91de-831e-05f564169977@kwiboo.se>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:VE1EUR02HT179;
+x-ms-traffictypediagnostic: VE1EUR02HT179:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-message-info: GG6H0U3iXZf21heWY7qLMoYZAR3PZFI+XKs8rQh/W35f5huy4jR/o306pwYFqwOohVZ4buvwxi8LPfI/It7b2p9/VBsAieyOgfAxiFBn0q8qESKbvlj1q4pqIPQRzJQ8xRu7vnwwOzsf6sQpYlE+CmR9m1DnXboZ5O+ytSQoKDaA+rvgoiz7BLmD5eMzFhK/
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8B9B4FC940397F45B2963825C07C19B1@eurprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c61ce13-69c7-f6ce-ae37-722f370371f4@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae754e25-ee48-46b0-493e-08d730a7881a
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2019 19:47:20.1437
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1EUR02HT179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 11:55:13AM +0900, Chanwoo Choi wrote:
-> Dear Greg,
-> 
-> This is extcon-next pull request for v5.4. I add detailed description of
-> this pull request on below. Please pull extcon with following updates.
-> 
-> 
-> Detailed description for this pull request:
-> 1. Clean up the and fix the minor issue of extcon provider driver
-> - extcon-arizona/max77843 replace the helper function
->   with more correct helper function without operation changes.
-> - extcon-fsa9480 supports the FSA880 variant by adding the compatible name.
-> - extcon-arizona updates the dt-binding file for the readability.
-> - extcon-gpio initializes the interrupt flags according to active-low state.
-> - Clean up extcon-sm5502/axp288/adc-jack
-> 
-> Best Regards,
-> Chanwoo Choi
-> 
-> 
-> The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-> 
->   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-> 
-> are available in the git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/extcon.git tags/extcon-next-for-5.4
-
-Pulled and pushed out, thanks.
-
-greg k-h
+T24gMjAxOS0wOS0wMyAxNzowMSwgUGhpbGlwcCBaYWJlbCB3cm90ZToNCj4gT24gVHVlLCAyMDE5
+LTA5LTAzIGF0IDE0OjAyICswMDAwLCBKb25hcyBLYXJsbWFuIHdyb3RlOg0KPj4gT24gMjAxOS0w
+OS0wMyAxNToyMSwgUGhpbGlwcCBaYWJlbCB3cm90ZToNCj4+PiBPbiBTdW4sIDIwMTktMDktMDEg
+YXQgMTI6NDUgKzAwMDAsIEpvbmFzIEthcmxtYW4gd3JvdGU6DQo+Pj4+IFRoaXMgbmVlZCBjb2Rl
+IGNsZWFudXAgYW5kIGZvcm1hdHRpbmcNCj4+Pj4NCj4+Pj4gU2lnbmVkLW9mZi1ieTogSm9uYXMg
+S2FybG1hbiA8am9uYXNAa3dpYm9vLnNlPg0KPj4+IFRoZSBwcmV2aW91cyBwYXRjaGVzIGFsbCB3
+b3JrLCBidXQgdGhpcyBwYXRjaCBicmVha3MgZGVjb2Rpbmcgb2YNCj4+PiBwcm9ncmVzc2l2ZSBj
+b250ZW50IGZvciBtZSAoaS5NWDhNUSB3aXRoIEZGbXBlZyBiYXNlZCBvbiBFemVxdWllbCdzDQo+
+Pj4gYnJhbmNoKS4NCj4+IFBsZWFzZSB0cnkgd2l0aCBmZm1wZWcgYmFzZWQgb24gbXkgdjRsMi1y
+ZXF1ZXN0LWh3YWNjZWwtNC4wLjQtaGFudHJvIGJyYW5jaCBhdCBbMV0sDQo+PiB1cCB0byBhbmQg
+aW5jbHVkaW5nIHRoZSBjb21taXQgIkhBQ0s6IGFkZCBkcGIgZmxhZ3MgZm9yIHJlZmVyZW5jZSB1
+c2FnZSBhbmQgZmllbGQgcGljdHVyZSIuDQo+PiBUaGF0IGNvbW1pdCBhZGRzIGNvZGUgdG8gc2V0
+IHJlZmVyZW5jZSBmbGFncyBuZWVkZWQgYnkgdGhlIGNoYW5nZXMgaW4gdGhpcyBwYXRjaC4NCj4+
+DQo+PiBUaGVyZSBpcyBwcm9iYWJseSBhbHNvIHNvbWUgb3RoZXIgbWlub3IgZGlmZmVyZW5jZSBi
+ZXR3ZWVuIG91ciB0d28gZmZtcGVnIGJyYW5jaGVzLg0KPj4gSSBoYXZlIG5vdCBvYnNlcnZlZCBh
+bnkgaXNzdWVzIHdpdGggcHJvZ3Jlc3NpdmUgY29udGVudCB3aXRoIHRoaXMgcGF0Y2ggYW5kIG15
+IGZmbXBlZyBicmFuY2ggKG9uIGEgUkszMjg4IGRldmljZSkuDQo+PiBTb21lIEgyNjQgcmVmZXJl
+bmNlIHNhbXBsZXMgZG8gaGF2ZSB2aXN1YWwgaXNzdWVzIGFmdGVyIHRoaXMgcGF0Y2gsIGhvd2V2
+ZXIgYWxsIG15IHJlYWwgd29ybGQgc2FtcGxlcyBkb2VzIHNlZW0gdG8gd29yay4NCj4+DQo+PiBN
+eSBicmFuY2ggdXNlIGxpYnVkZXYgdG8gcHJvYmUgbWVkaWEvdmlkZW8gZGV2aWNlcyBhbmQgbmVl
+ZHMgdG8gYmUgY29uZmlndXJlZCB3aXRoOg0KPj4gLS1lbmFibGUtdjRsMi1yZXF1ZXN0IC0tZW5h
+YmxlLWxpYnVkZXYgLS1lbmFibGUtbGliZHJtDQo+Pg0KPj4gWzFdIGh0dHBzOi8vZ2l0aHViLmNv
+bS9Ld2lib28vRkZtcGVnL2NvbW1pdHMvdjRsMi1yZXF1ZXN0LWh3YWNjZWwtNC4wLjQtaGFudHJv
+DQo+IEkgaGFkbid0IHJlYWxpemVkIHRoYXQgdGhpcyBpcyBhIGJhY2t3YXJkcyBpbmNvbXBhdGli
+bGUgY2hhbmdlLiBXaXRoDQo+IHlvdXIgYnJhbmNoIHJlYmFzZWQgb250byBuNC4yLCBhbmQgdGhp
+cyBwYXRjaCBhcHBsaWVkLCBkZWNvZGluZyBzZWVtcyB0bw0KPiB3b3JrLg0KDQpOb3IgZGlkIEks
+IHRoYW5rcyBmb3IgdGVzdGluZyBhbmQgdmVyaWZ5aW5nLCBJIHdpbGwgdHJ5IHRvIHJlZHVjZSBi
+cmVha2luZyBjaGFuZ2VzIGluIGEgdjIuDQoNClJlZ2FyZHMsDQpKb25hcw0KDQo+DQo+IHJlZ2Fy
+ZHMNCj4gUGhpbGlwcA0KDQo=
