@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A273C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE12C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE4B2377F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4CC123697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567527945;
-	bh=QtwAhnKweYbhl+8N4DbYb10qSghZcG2hPSpk/IvtYCw=;
+	s=default; t=1567527954;
+	bh=RfQVQt92+3Wv3MPrBbg81D1UzAB3v3En6KOZI/CkvAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zoXYpYmno2crpKbhvobfU+PMPwvXY+5HqHBreS9HYNtaToNRGLUScT/sj3Sj3kqOb
-	 62Wjzqp42PXsLy0Mfq7ETwIOZ4d5VeFPYb9uHMVKcSLlRdAxes3XoEJdNVy0bGkGxp
-	 dsBURwh/tes4mEFdcZT5ZorddpzDDzGGQs5j3tP8=
+	b=UcPP1URO7gfoFLxB61zJ56gKdzqxprCTdMbeGTuhRlzVp0J8LmJ8PEKRG4K7gSDsb
+	 1kJ1bjgZ+I7IaUzOmr+H9/qo/ijJt1YJgLpmUydmxBaWTO5e43L0WSVUNo6umvCCgu
+	 bUumdBX+v1u+SLI7mYp+kTA/XH49htk9MY2nMujA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbfICQZo (ORCPT
+        id S1730507AbfICQZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45762 "EHLO mail.kernel.org"
+        Tue, 3 Sep 2019 12:25:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729978AbfICQZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:35 -0400
+        id S1730453AbfICQZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95AC82343A;
-        Tue,  3 Sep 2019 16:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FC4923697;
+        Tue,  3 Sep 2019 16:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527934;
-        bh=QtwAhnKweYbhl+8N4DbYb10qSghZcG2hPSpk/IvtYCw=;
+        s=default; t=1567527945;
+        bh=RfQVQt92+3Wv3MPrBbg81D1UzAB3v3En6KOZI/CkvAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I61pLkgqYGgPrjnlyMTXgILzhyQ1BVfm+AePvaAxG7ysIn2sMjCLH6zyYGDkZLH0m
-         w4dc6cby1MpylOdUTcid7FuKqOS6OEfnKqez1lHEh3yf01iQmKlGyJI4MfZXDZ1HWX
-         06PcylgAWk1unbgqG5nxaW+eTc+QUYbamhmlEeEI=
+        b=fYdT/c4E8pr/RZ/I4TtJRJloeasxmeCvt2Irjr4TU6/l6+EFL2ubaXN7gxt1VnZlg
+         V+sw6OjWSFh2IgwmNiMGjGL62V4De90Ex3gJqdl4zdXz6wuH9npIfflV1KVQ8EYXhz
+         3Wwvod4hYbpwI8ffrwtQqoHHF24LQ8bWGR4R2Ksc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhimin Gu <kookoo.gu@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 007/167] x86, hibernate: Fix nosave_regions setup for hibernation
-Date:   Tue,  3 Sep 2019 12:22:39 -0400
-Message-Id: <20190903162519.7136-7-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 013/167] KVM: x86: hyperv: keep track of mismatched VP indexes
+Date:   Tue,  3 Sep 2019 12:22:45 -0400
+Message-Id: <20190903162519.7136-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -61,85 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhimin Gu <kookoo.gu@intel.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit cc55f7537db6af371e9c1c6a71161ee40f918824 ]
+[ Upstream commit 87ee613d076351950b74383215437f841ebbeb75 ]
 
-On 32bit systems, nosave_regions(non RAM areas) located between
-max_low_pfn and max_pfn are not excluded from hibernation snapshot
-currently, which may result in a machine check exception when
-trying to access these unsafe regions during hibernation:
+In most common cases VP index of a vcpu matches its vcpu index. Userspace
+is, however, free to set any mapping it wishes and we need to account for
+that when we need to find a vCPU with a particular VP index. To keep search
+algorithms optimal in both cases introduce 'num_mismatched_vp_indexes'
+counter showing how many vCPUs with mismatching VP index we have. In case
+the counter is zero we can assume vp_index == vcpu_idx.
 
-[  612.800453] Disabling lock debugging due to kernel taint
-[  612.805786] mce: [Hardware Error]: CPU 0: Machine Check Exception: 5 Bank 6: fe00000000801136
-[  612.814344] mce: [Hardware Error]: RIP !INEXACT! 60:<00000000d90be566> {swsusp_save+0x436/0x560}
-[  612.823167] mce: [Hardware Error]: TSC 1f5939fe276 ADDR dd000000 MISC 30e0000086
-[  612.830677] mce: [Hardware Error]: PROCESSOR 0:306c3 TIME 1529487426 SOCKET 0 APIC 0 microcode 24
-[  612.839581] mce: [Hardware Error]: Run the above through 'mcelog --ascii'
-[  612.846394] mce: [Hardware Error]: Machine check: Processor context corrupt
-[  612.853380] Kernel panic - not syncing: Fatal machine check
-[  612.858978] Kernel Offset: 0x18000000 from 0xc1000000 (relocation range: 0xc0000000-0xf7ffdfff)
-
-This is because on 32bit systems, pages above max_low_pfn are regarded
-as high memeory, and accessing unsafe pages might cause expected MCE.
-On the problematic 32bit system, there are reserved memory above low
-memory, which triggered the MCE:
-
-e820 memory mapping:
-[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009d7ff] usable
-[    0.000000] BIOS-e820: [mem 0x000000000009d800-0x000000000009ffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000000e0000-0x00000000000fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x00000000d160cfff] usable
-[    0.000000] BIOS-e820: [mem 0x00000000d160d000-0x00000000d1613fff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x00000000d1614000-0x00000000d1a44fff] usable
-[    0.000000] BIOS-e820: [mem 0x00000000d1a45000-0x00000000d1ecffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000d1ed0000-0x00000000d7eeafff] usable
-[    0.000000] BIOS-e820: [mem 0x00000000d7eeb000-0x00000000d7ffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000d8000000-0x00000000d875ffff] usable
-[    0.000000] BIOS-e820: [mem 0x00000000d8760000-0x00000000d87fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000d8800000-0x00000000d8fadfff] usable
-[    0.000000] BIOS-e820: [mem 0x00000000d8fae000-0x00000000d8ffffff] ACPI data
-[    0.000000] BIOS-e820: [mem 0x00000000d9000000-0x00000000da71bfff] usable
-[    0.000000] BIOS-e820: [mem 0x00000000da71c000-0x00000000da7fffff] ACPI NVS
-[    0.000000] BIOS-e820: [mem 0x00000000da800000-0x00000000dbb8bfff] usable
-[    0.000000] BIOS-e820: [mem 0x00000000dbb8c000-0x00000000dbffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000dd000000-0x00000000df1fffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000f8000000-0x00000000fbffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fed00000-0x00000000fed03fff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
-[    0.000000] BIOS-e820: [mem 0x00000000ff000000-0x00000000ffffffff] reserved
-[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000041edfffff] usable
-
-Fix this problem by changing pfn limit from max_low_pfn to max_pfn.
-This fix does not impact 64bit system because on 64bit max_low_pfn
-is the same as max_pfn.
-
-Signed-off-by: Zhimin Gu <kookoo.gu@intel.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Roman Kagan <rkagan@virtuozzo.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h |  3 +++
+ arch/x86/kvm/hyperv.c           | 26 +++++++++++++++++++++++---
+ 2 files changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index b4866badb235a..90ecc108bc8a5 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1251,7 +1251,7 @@ void __init setup_arch(char **cmdline_p)
- 	x86_init.hyper.guest_late_init();
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 3245b95ad2d97..b6417454a9d79 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -784,6 +784,9 @@ struct kvm_hv {
+ 	u64 hv_reenlightenment_control;
+ 	u64 hv_tsc_emulation_control;
+ 	u64 hv_tsc_emulation_status;
++
++	/* How many vCPUs have VP index != vCPU index */
++	atomic_t num_mismatched_vp_indexes;
+ };
  
- 	e820__reserve_resources();
--	e820__register_nosave_regions(max_low_pfn);
-+	e820__register_nosave_regions(max_pfn);
+ enum kvm_irqchip_mode {
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 3f2775aac5545..2bb554b90b3c2 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1045,11 +1045,31 @@ static int kvm_hv_set_msr(struct kvm_vcpu *vcpu, u32 msr, u64 data, bool host)
+ 	struct kvm_vcpu_hv *hv_vcpu = &vcpu->arch.hyperv;
  
- 	x86_init.resources.reserve_resources();
- 
+ 	switch (msr) {
+-	case HV_X64_MSR_VP_INDEX:
+-		if (!host || (u32)data >= KVM_MAX_VCPUS)
++	case HV_X64_MSR_VP_INDEX: {
++		struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
++		int vcpu_idx = kvm_vcpu_get_idx(vcpu);
++		u32 new_vp_index = (u32)data;
++
++		if (!host || new_vp_index >= KVM_MAX_VCPUS)
+ 			return 1;
+-		hv_vcpu->vp_index = (u32)data;
++
++		if (new_vp_index == hv_vcpu->vp_index)
++			return 0;
++
++		/*
++		 * The VP index is initialized to vcpu_index by
++		 * kvm_hv_vcpu_postcreate so they initially match.  Now the
++		 * VP index is changing, adjust num_mismatched_vp_indexes if
++		 * it now matches or no longer matches vcpu_idx.
++		 */
++		if (hv_vcpu->vp_index == vcpu_idx)
++			atomic_inc(&hv->num_mismatched_vp_indexes);
++		else if (new_vp_index == vcpu_idx)
++			atomic_dec(&hv->num_mismatched_vp_indexes);
++
++		hv_vcpu->vp_index = new_vp_index;
+ 		break;
++	}
+ 	case HV_X64_MSR_VP_ASSIST_PAGE: {
+ 		u64 gfn;
+ 		unsigned long addr;
 -- 
 2.20.1
 
