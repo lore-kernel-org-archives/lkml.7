@@ -2,104 +2,146 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED682C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF383C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDCF323400
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877E62339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567528803;
+	bh=wwerqmC3bXh4Yc8fQeoW4IUNyVQ9Cmz2XuGCLkZv53M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Vq0gY6V5ryKvbPrNJmHAJI9ZmffZK544wA9UO7tuDvWklR/tHrMLOmMDa0SbANH3y
+	 KjmOo46xft0KK1z6jCgJOrhT3X4usvSLK/gU74odR5RRSvi9H3QpjKCI377d3IRPU0
+	 5SZ2zGsBz6t5Fc5nNQAnMtLCNBGTxOXNAjx+wNEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731475AbfICQj7 (ORCPT
+        id S1731469AbfICQjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:39:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:46920 "EHLO mga18.intel.com"
+        Tue, 3 Sep 2019 12:39:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729953AbfICQj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:39:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 09:39:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,463,1559545200"; 
-   d="scan'208";a="183621162"
-Received: from vkuppusa-mobl2.ger.corp.intel.com ([10.252.39.67])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2019 09:39:52 -0700
-Message-ID: <a950f3986375ee4893dff156dc2f9554338c27d8.camel@linux.intel.com>
-Subject: Re: [PATCH v6 4/4] tpm: tpm_tis_spi: Support cr50 devices
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stephen Boyd <swboyd@chromium.org>, Peter Huewe <peterhuewe@gmx.de>
-Cc:     Andrey Pronin <apronin@chromium.org>, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Alexander Steffen <Alexander.Steffen@infineon.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Date:   Tue, 03 Sep 2019 19:39:51 +0300
-In-Reply-To: <20190829224110.91103-5-swboyd@chromium.org>
-References: <20190829224110.91103-1-swboyd@chromium.org>
-         <20190829224110.91103-5-swboyd@chromium.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2-1 
+        id S1730389AbfICQZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:28 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8A7D2343A;
+        Tue,  3 Sep 2019 16:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567527927;
+        bh=wwerqmC3bXh4Yc8fQeoW4IUNyVQ9Cmz2XuGCLkZv53M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C4OzAUV2zqefL4HTF9sHrIicZgmhZa2xwebA4QB8yiD/b/4QxULp9ro2u9DXqUCFw
+         2xjLrVFBScUpeiPsZkLB2YySZ76CbIOq7+K6p9SjnC1Oju6bXv4dtTh4rJAVvEASct
+         ezvfU/hUI2qwgD8eqGVYGRz+0zc663CnReKMUeA0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 003/167] media: cec: remove cec-edid.c
+Date:   Tue,  3 Sep 2019 12:22:35 -0400
+Message-Id: <20190903162519.7136-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 15:41 -0700, Stephen Boyd wrote:
-> From: Andrey Pronin <apronin@chromium.org>
-> 
-> Add TPM2.0 PTP FIFO compatible SPI interface for chips with Cr50
-> firmware. The firmware running on the currently supported H1 Secure
-> Microcontroller requires a special driver to handle its specifics:
-> 
->  - need to ensure a certain delay between SPI transactions, or else
->    the chip may miss some part of the next transaction
->  - if there is no SPI activity for some time, it may go to sleep,
->    and needs to be waken up before sending further commands
->  - access to vendor-specific registers
-> 
-> Cr50 firmware has a requirement to wait for the TPM to wakeup before
-> sending commands over the SPI bus. Otherwise, the firmware could be in
-> deep sleep and not respond. The method to wait for the device to wakeup
-> is slightly different than the usual flow control mechanism described in
-> the TCG SPI spec. Add a completion to tpm_tis_spi_transfer() before we
-> start a SPI transfer so we can keep track of the last time the TPM
-> driver accessed the SPI bus to support the flow control mechanism.
-> 
-> Split the cr50 logic off into a different file to keep it out of the
-> normal code flow of the existing SPI driver while making it all part of
-> the same module when the code is optionally compiled into the same
-> module. Export a new function, tpm_tis_spi_init(), and the associated
-> read/write/transfer APIs so that we can do this. Make the cr50 code wrap
-> the tpm_tis_spi_phy struct with its own struct to override the behavior
-> of tpm_tis_spi_transfer() by supplying a custom flow control hook. This
-> shares the most code between the core driver and the cr50 support
-> without combining everything into the core driver or exporting module
-> symbols.
-> 
-> Signed-off-by: Andrey Pronin <apronin@chromium.org>
-> Cc: Andrey Pronin <apronin@chromium.org>
-> Cc: Duncan Laurie <dlaurie@chromium.org>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: Alexander Steffen <Alexander.Steffen@infineon.com>
-> Cc: Heiko Stuebner <heiko@sntech.de>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Had to time to look at this patch set after all before LPC. I just
-realized that the kconfig has taken away. Not sure why is that
-because there's been only request to not have a new LKM. There
-still should be ability opt-out to have Cr50 support in vmlinux.
+[ Upstream commit f94d463f1b7f83d465ed77521821583dbcdaa3c5 ]
 
-/Jarkko
+Move cec_get_edid_phys_addr() to cec-adap.c. It's not worth keeping
+a separate source for this.
+
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: <stable@vger.kernel.org>      # for v4.17 and up
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/cec/Makefile   |  2 +-
+ drivers/media/cec/cec-adap.c | 13 +++++++++++++
+ drivers/media/cec/cec-edid.c | 24 ------------------------
+ 3 files changed, 14 insertions(+), 25 deletions(-)
+ delete mode 100644 drivers/media/cec/cec-edid.c
+
+diff --git a/drivers/media/cec/Makefile b/drivers/media/cec/Makefile
+index 29a2ab9e77c5d..ad8677d8c8967 100644
+--- a/drivers/media/cec/Makefile
++++ b/drivers/media/cec/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-cec-objs := cec-core.o cec-adap.o cec-api.o cec-edid.o
++cec-objs := cec-core.o cec-adap.o cec-api.o
+ 
+ ifeq ($(CONFIG_CEC_NOTIFIER),y)
+   cec-objs += cec-notifier.o
+diff --git a/drivers/media/cec/cec-adap.c b/drivers/media/cec/cec-adap.c
+index a7ea27d2aa8ef..4a15d53f659ec 100644
+--- a/drivers/media/cec/cec-adap.c
++++ b/drivers/media/cec/cec-adap.c
+@@ -62,6 +62,19 @@ static unsigned int cec_log_addr2dev(const struct cec_adapter *adap, u8 log_addr
+ 	return adap->log_addrs.primary_device_type[i < 0 ? 0 : i];
+ }
+ 
++u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
++			   unsigned int *offset)
++{
++	unsigned int loc = cec_get_edid_spa_location(edid, size);
++
++	if (offset)
++		*offset = loc;
++	if (loc == 0)
++		return CEC_PHYS_ADDR_INVALID;
++	return (edid[loc] << 8) | edid[loc + 1];
++}
++EXPORT_SYMBOL_GPL(cec_get_edid_phys_addr);
++
+ /*
+  * Queue a new event for this filehandle. If ts == 0, then set it
+  * to the current time.
+diff --git a/drivers/media/cec/cec-edid.c b/drivers/media/cec/cec-edid.c
+deleted file mode 100644
+index e2f54eec08294..0000000000000
+--- a/drivers/media/cec/cec-edid.c
++++ /dev/null
+@@ -1,24 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+-/*
+- * cec-edid - HDMI Consumer Electronics Control EDID & CEC helper functions
+- *
+- * Copyright 2016 Cisco Systems, Inc. and/or its affiliates. All rights reserved.
+- */
+-
+-#include <linux/module.h>
+-#include <linux/kernel.h>
+-#include <linux/types.h>
+-#include <media/cec.h>
+-
+-u16 cec_get_edid_phys_addr(const u8 *edid, unsigned int size,
+-			   unsigned int *offset)
+-{
+-	unsigned int loc = cec_get_edid_spa_location(edid, size);
+-
+-	if (offset)
+-		*offset = loc;
+-	if (loc == 0)
+-		return CEC_PHYS_ADDR_INVALID;
+-	return (edid[loc] << 8) | edid[loc + 1];
+-}
+-EXPORT_SYMBOL_GPL(cec_get_edid_phys_addr);
+-- 
+2.20.1
 
