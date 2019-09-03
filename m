@@ -2,95 +2,129 @@ Return-Path: <SRS0=TDKO=W6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38773C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14640C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDBE2377B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06FE2339D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Sep 2019 16:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567528654;
+	bh=CtmaAsWwoZNRqt4zv2q01+SAMp6zV/HtcJVWUSCftAM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=t3RWWnz8G4skm/GTC8LMrhnq1B0fCqJWFAK6LvYX+LaZhJIBM/HL4cfFIwdJVESay
+	 nTwwzItbJO/DPIERyvUOIWx8CYQcsJYUK+gHBnUaOBzuDyy0q/CZBKYfoyHqlyNece
+	 UugiMTbv6fDy23p1wyS5Rb/s7bRwHT1oG3kmhQu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731375AbfICQhW (ORCPT
+        id S1730972AbfICQhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 12:37:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45328 "EHLO mx1.redhat.com"
+        Tue, 3 Sep 2019 12:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730717AbfICQhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:37:14 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730681AbfICQ0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 08C61308FC22;
-        Tue,  3 Sep 2019 16:37:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EED7E608AB;
-        Tue,  3 Sep 2019 16:37:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190903085706.7700-1-hdanton@sina.com>
-References: <20190903085706.7700-1-hdanton@sina.com> <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] General notification queue with user mmap()'able ring buffer [ver #7]
+        by mail.kernel.org (Postfix) with ESMTPSA id D1C95238CD;
+        Tue,  3 Sep 2019 16:26:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567527999;
+        bh=CtmaAsWwoZNRqt4zv2q01+SAMp6zV/HtcJVWUSCftAM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ic2JiOQPcqIEQEZ0YjDuEQUMveZhrfqz6n9swfKlx4pCr76LmWUVAPcvzFWmezygT
+         0EKoBEU5HBRo3PVh0TN4Em6gcYoZAqyQxiMVYuJR+HuNR1TPAt/iKabTt82qAFedtI
+         R2wOadfLF+tsvOfgKB4Nh4cyLUqMkyNuqQYHOo8E=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qu Wenruo <wqu@suse.com>, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 047/167] btrfs: Use real device structure to verify dev extent
+Date:   Tue,  3 Sep 2019 12:23:19 -0400
+Message-Id: <20190903162519.7136-47-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27532.1567528630.1@warthog.procyon.org.uk>
-Date:   Tue, 03 Sep 2019 17:37:10 +0100
-Message-ID: <27533.1567528630@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 03 Sep 2019 16:37:14 +0000 (UTC)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hillf Danton <hdanton@sina.com> wrote:
+From: Qu Wenruo <wqu@suse.com>
 
-> > +	for (i = 0; i < wf->nr_filters; i++) {
-> > +		wt = &wf->filters[i];
-> > +		if (n->type == wt->type &&
-> > +		    (wt->subtype_filter[n->subtype >> 5] &
-> > +		     (1U << (n->subtype & 31))) &&
-> 
-> Replace the pure numbers with something easier to understand.
+[ Upstream commit 1b3922a8bc74231f9a767d1be6d9a061a4d4eeab ]
 
-How about the following:
+[BUG]
+Linux v5.0-rc1 will fail fstests/btrfs/163 with the following kernel
+message:
 
-static bool filter_watch_notification(const struct watch_filter *wf,
-				      const struct watch_notification *n)
-{
-	const struct watch_type_filter *wt;
-	unsigned int st_bits = sizeof(wt->subtype_filter[0]) * 8;
-	unsigned int st_index = n->subtype / st_bits;
-	unsigned int st_bit = 1U << (n->subtype % st_bits);
-	int i;
+  BTRFS error (device dm-6): dev extent devid 1 physical offset 13631488 len 8388608 is beyond device boundary 0
+  BTRFS error (device dm-6): failed to verify dev extents against chunks: -117
+  BTRFS error (device dm-6): open_ctree failed
 
-	if (!test_bit(n->type, wf->type_filter))
-		return false;
+[CAUSE]
+Commit cf90d884b347 ("btrfs: Introduce mount time chunk <-> dev extent
+mapping check") introduced strict check on dev extents.
 
-	for (i = 0; i < wf->nr_filters; i++) {
-		wt = &wf->filters[i];
-		if (n->type == wt->type &&
-		    (wt->subtype_filter[st_index] & st_bit) &&
-		    (n->info & wt->info_mask) == wt->info_filter)
-			return true;
-	}
+We use btrfs_find_device() with dev uuid and fs uuid set to NULL, and
+only dependent on @devid to find the real device.
 
-	return false; /* If there is a filter, the default is to reject. */
-}
+For seed devices, we call clone_fs_devices() in open_seed_devices() to
+allow us search seed devices directly.
 
-David
+However clone_fs_devices() just populates devices with devid and dev
+uuid, without populating other essential members, like disk_total_bytes.
+
+This makes any device returned by btrfs_find_device(fs_info, devid,
+NULL, NULL) is just a dummy, with 0 disk_total_bytes, and any dev
+extents on the seed device will not pass the device boundary check.
+
+[FIX]
+This patch will try to verify the device returned by btrfs_find_device()
+and if it's a dummy then re-search in seed devices.
+
+Fixes: cf90d884b347 ("btrfs: Introduce mount time chunk <-> dev extent mapping check")
+CC: stable@vger.kernel.org # 4.19+
+Reported-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/volumes.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index c20708bfae561..a8297e7489d98 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -7469,6 +7469,18 @@ static int verify_one_dev_extent(struct btrfs_fs_info *fs_info,
+ 		ret = -EUCLEAN;
+ 		goto out;
+ 	}
++
++	/* It's possible this device is a dummy for seed device */
++	if (dev->disk_total_bytes == 0) {
++		dev = find_device(fs_info->fs_devices->seed, devid, NULL);
++		if (!dev) {
++			btrfs_err(fs_info, "failed to find seed devid %llu",
++				  devid);
++			ret = -EUCLEAN;
++			goto out;
++		}
++	}
++
+ 	if (physical_offset + physical_len > dev->disk_total_bytes) {
+ 		btrfs_err(fs_info,
+ "dev extent devid %llu physical offset %llu len %llu is beyond device boundary %llu",
+-- 
+2.20.1
+
