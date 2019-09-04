@@ -6,98 +6,144 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B00C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0CFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD9622DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E78B22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JVZzJAjU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="NnMLvqmS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfIDITf (ORCPT
+        id S1729269AbfIDIUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:19:35 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60244 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfIDITe (ORCPT
+        Wed, 4 Sep 2019 04:20:02 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:51786 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfIDIUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:19:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZZNaQ4LXZ7GAaOEQI0TFwLUNueXowwuFXVaKHgUrpds=; b=JVZzJAjUvutqZpA1EnnBt9GSj
-        1vU07aD4olQmFJMlHFncSfHnFBFUZddMJgyxs5PuIiezj62SySgFxPrjzX4kprKH4tMALw1CpHfuj
-        E0oBNAIlJbjBAfgFq0Pf+jmZD4CBAxzqyuAnft9BaMhVwCRTQYP5YVYT/nEm2jQHo9Dv8SCogafOu
-        LdBM3fHdbJA5YSK/+uYMih9402exK8oHkprbbLoZATYd1CfT286VwSUnr0YqUSm0bigG6qRmIqYlx
-        tgxJC2lLYrMBjBi1G88zbIjti3mWYEG15IYBq0b27IMkjXlrC3NJEktYCU2mxy9smDAGdYtvOJl83
-        ENZ5pQphA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5QVd-0002GX-1w; Wed, 04 Sep 2019 08:19:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 92453306027;
-        Wed,  4 Sep 2019 10:18:42 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 139E429D882FB; Wed,  4 Sep 2019 10:19:19 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 10:19:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Viktor Rosendahl <viktor.rosendahl@gmail.com>, paulmck@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] ftrace: Implement fs notification for
- tracing_max_latency
-Message-ID: <20190904081919.GA2349@hirez.programming.kicks-ass.net>
-References: <20190903132602.3440-1-viktor.rosendahl@gmail.com>
- <20190903132602.3440-2-viktor.rosendahl@gmail.com>
- <20190904040039.GB150430@google.com>
+        Wed, 4 Sep 2019 04:20:02 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 9AFA03F670;
+        Wed,  4 Sep 2019 10:19:59 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=NnMLvqmS;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id z0xEnIk568vo; Wed,  4 Sep 2019 10:19:58 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 9B82A3F367;
+        Wed,  4 Sep 2019 10:19:50 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id DBCBD36117F;
+        Wed,  4 Sep 2019 10:19:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1567585190; bh=aAKUc1d8so5bVj7uOzEQsEKgmHbL9Y6J7AB2rLBUQOQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NnMLvqmSERGsQWz4m9ga766nvuJfd3Ow/tZkPs7cy9NTLSwGSJ9Wc/1sfOr4X6++X
+         QPalbhsqNYj7w1RLw+cA4mM5kbKtJKagoVpQGFebCup77Vhz25DH1GvlnT5ZXDamG3
+         +Y1AFe4mTpNoTVc9G14umlpmJw8cAPkKgvpczc1E=
+Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
+ memory encryption
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190903131504.18935-1-thomas_os@shipmail.org>
+ <20190903131504.18935-4-thomas_os@shipmail.org>
+ <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
+ <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
+ <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com>
+ <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+ <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com>
+ <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+ <cfe46eda-66b5-b40d-6721-84e6e0e1f5de@amd.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <94113acc-1f99-2386-1d42-4b9930b04f73@shipmail.org>
+Date:   Wed, 4 Sep 2019 10:19:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904040039.GB150430@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cfe46eda-66b5-b40d-6721-84e6e0e1f5de@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 12:00:39AM -0400, Joel Fernandes wrote:
-> [ Resending since I messed up my last email's headers! ]
-> 
-> On Tue, Sep 03, 2019 at 03:25:59PM +0200, Viktor Rosendahl wrote:
-> > This patch implements the feature that the tracing_max_latency file,
-> > e.g. /sys/kernel/debug/tracing/tracing_max_latency will receive
-> > notifications through the fsnotify framework when a new latency is
-> > available.
-> > 
-> > One particularly interesting use of this facility is when enabling
-> > threshold tracing, through /sys/kernel/debug/tracing/tracing_thresh,
-> > together with the preempt/irqsoff tracers. This makes it possible to
-> > implement a user space program that can, with equal probability,
-> > obtain traces of latencies that occur immediately after each other in
-> > spite of the fact that the preempt/irqsoff tracers operate in overwrite
-> > mode.
-> 
-> Adding Paul since RCU faces similar situations, i.e. raising softirq risks
-> scheduler deadlock in rcu_read_unlock_special() -- but RCU's solution is to
-> avoid raising the softirq and instead use irq_work.
+Hi, Christian,
 
-Which is right.
+On 9/4/19 9:33 AM, Koenig, Christian wrote:
+> Am 03.09.19 um 23:05 schrieb Thomas Hellström (VMware):
+>> On 9/3/19 10:51 PM, Dave Hansen wrote:
+>>> On 9/3/19 1:36 PM, Thomas Hellström (VMware) wrote:
+>>>> So the question here should really be, can we determine already at mmap
+>>>> time whether backing memory will be unencrypted and adjust the *real*
+>>>> vma->vm_page_prot under the mmap_sem?
+>>>>
+>>>> Possibly, but that requires populating the buffer with memory at mmap
+>>>> time rather than at first fault time.
+>>> I'm not connecting the dots.
+>>>
+>>> vma->vm_page_prot is used to create a VMA's PTEs regardless of if they
+>>> are created at mmap() or fault time.  If we establish a good
+>>> vma->vm_page_prot, can't we just use it forever for demand faults?
+>> With SEV I think that we could possibly establish the encryption flags
+>> at vma creation time. But thinking of it, it would actually break with
+>> SME where buffer content can be moved between encrypted system memory
+>> and unencrypted graphics card PCI memory behind user-space's back.
+>> That would imply killing all user-space encrypted PTEs and at fault
+>> time set up new ones pointing to unencrypted PCI memory..
+> Well my problem is where do you see encrypted system memory here?
+>
+> At least for AMD GPUs all memory accessed must be unencrypted and that
+> counts for both system as well as PCI memory.
 
-> I was wondering, if we can rename __raise_softirq_irqoff() to
-> raise_softirq_irqoff_no_wake() and call that from places where there is risk
-> of scheduler related deadlocks. Then I think this can be used from Viktor's
-> code.  Let us discuss - what would happen if the softirq is raised, but
-> ksoftirqd is not awakened for this latency notification path? Is this really
-> an issue considering the softirq will execute during the next interrupt exit?
+We're talking SME now right?
 
-You'd get unbounded latency for processing the softirq and warnings on
-going idle with softirqs pending.
+The current SME setup is that if a device's DMA mask says it's capable 
+of addressing the encryption bit, coherent memory will be encrypted. The 
+memory controllers will decrypt for the device on the fly. Otherwise 
+coherent memory will be decrypted.
 
-I really don't see why we should/want to be using softirq here.
+>
+> So I don't get why we can't assume always unencrypted and keep it like that.
+
+I see two reasons. First, it would break with a real device that signals 
+it's capable of addressing the encryption bit.
+
+Second I can imagine unaccelerated setups (something like vkms using 
+prime feeding a VNC connection) where we actually want the TTM buffers 
+encrypted to protect data.
+
+But at least the latter reason is way far out in the future.
+
+So for me I'm ok with that if that works for you?
+
+/Thomas
+
+
+>
+> Regards,
+> Christian.
+
+
