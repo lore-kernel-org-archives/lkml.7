@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B546C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A047FC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 280662053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0BD2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613541;
-	bh=qmsEjHrRZCpwx/XrFU4kSpvkC/FoRbT7gOt7GZYWx0I=;
+	s=default; t=1567613548;
+	bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYLHH0qlZvFGvTNO5ftJPAhUvpQBkci68ynms/cKtFyFiwXFnkWN5p376WN78RKIw
-	 Tw07vF+ruFATTZa8sXvz1KgwFGFI0aIiL+iduHRf5a3IaZReQM7nwQkQitjPKElpZa
-	 Jt8DEQKNveTagIAUNYQF/5k5DcYdQWiX7K2amiZU=
+	b=hqg2cH2ZfpyP7vlqAoXnReecFc3b1cXUvMb0vK9lb2MzB2eMg66ibGt1kYDJRIbMt
+	 3v91cT6OwTv9sZHhcH4oyMJC/HAH6dASu0gyA6Ea2FxcDOz7k+SoSCs7jVZpnW79Tc
+	 vA9+uTryKFqQUMcuyU3TCszSCLZZcqFZDObKPtjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732967AbfIDQMU (ORCPT
+        id S1732594AbfIDQAO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35010 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732598AbfIDQAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:15 -0400
+        id S1731786AbfIDP75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:59:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 403E52087E;
-        Wed,  4 Sep 2019 16:00:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D22D20820;
+        Wed,  4 Sep 2019 15:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612814;
-        bh=qmsEjHrRZCpwx/XrFU4kSpvkC/FoRbT7gOt7GZYWx0I=;
+        s=default; t=1567612796;
+        bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4SQLB89Ymt5uVGjZohcPr0zvPO1MrlrnsYKYkxmd/OpuU3IYLlSXNH3abYEQawsX
-         ijMHYurAIrrLdcHoptWrxP9gHBP4QK82UP9fdXMcIJNMMji7lOl0Ap1e1AHcx7bSK8
-         D8iih6vy2VvurDqaXwu7fZU0X26Z0W9ozsTK5oVs=
+        b=I2dlvUFgJ705ofWZRwh7B4+2D+wPTFJHOV6b0PQn1H5Bfib4CNDnehFcoasA3gkuO
+         ch3kibbMGPtYlE6n6pA/Tjg153NTw1ESye0Tk5ZeR8XuT7ZBAGmyDmSEPCFN16JQ+N
+         /6xmphQFZoCpEgB8gNBiIRu8pMVhISgara7H2IMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/52] ARM: OMAP2+: Fix omap4 errata warning on other SoCs
-Date:   Wed,  4 Sep 2019 11:59:19 -0400
-Message-Id: <20190904160004.3671-7-sashal@kernel.org>
+Cc:     Igor Russkikh <Igor.Russkikh@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        Michael Symolkin <Michael.Symolkin@aquantia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 90/94] net: aquantia: linkstate irq should be oneshot
+Date:   Wed,  4 Sep 2019 11:57:35 -0400
+Message-Id: <20190904155739.2816-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
-References: <20190904160004.3671-1-sashal@kernel.org>
+In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
+References: <20190904155739.2816-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,43 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Igor Russkikh <Igor.Russkikh@aquantia.com>
 
-[ Upstream commit 45da5e09dd32fa98c32eaafe2513db6bd75e2f4f ]
+[ Upstream commit 5c47e3ba6fe52465603cf9d816b3371e6881d649 ]
 
-We have errata i688 workaround produce warnings on SoCs other than
-omap4 and omap5:
+Declaring threaded irq handler should also indicate the irq is
+oneshot. It is oneshot indeed, because HW implements irq automasking
+on trigger.
 
-omap4_sram_init:Unable to allocate sram needed to handle errata I688
-omap4_sram_init:Unable to get sram pool needed to handle errata I688
+Not declaring this causes some kernel configurations to fail
+on interface up, because request_threaded_irq returned an err code.
 
-This is happening because there is no ti,omap4-mpu node, or no SRAM
-to configure for the other SoCs, so let's remove the warning based
-on the SoC revision checks.
+The issue was originally hidden on normal x86_64 configuration with
+latest kernel, because depending on interrupt controller, irq driver
+added ONESHOT flag on its own.
 
-As nobody has complained it seems that the other SoC variants do not
-need this workaround.
+Issue was observed on older kernels (4.14) where no such logic exists.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 4c83f170b3ac ("net: aquantia: link status irq handling")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Reported-by: Michael Symolkin <Michael.Symolkin@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap4-common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
-index b226c8aaf8b1c..7074cfd1ff413 100644
---- a/arch/arm/mach-omap2/omap4-common.c
-+++ b/arch/arm/mach-omap2/omap4-common.c
-@@ -131,6 +131,9 @@ static int __init omap4_sram_init(void)
- 	struct device_node *np;
- 	struct gen_pool *sram_pool;
- 
-+	if (!soc_is_omap44xx() && !soc_is_omap54xx())
-+		return 0;
-+
- 	np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
- 	if (!np)
- 		pr_warn("%s:Unable to allocate sram needed to handle errata I688\n",
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+index 41172fbebddd3..1a2b090652930 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -390,7 +390,7 @@ int aq_nic_start(struct aq_nic_s *self)
+ 						   self->aq_nic_cfg.link_irq_vec);
+ 			err = request_threaded_irq(irqvec, NULL,
+ 						   aq_linkstate_threaded_isr,
+-						   IRQF_SHARED,
++						   IRQF_SHARED | IRQF_ONESHOT,
+ 						   self->ndev->name, self);
+ 			if (err < 0)
+ 				goto err_exit;
 -- 
 2.20.1
 
