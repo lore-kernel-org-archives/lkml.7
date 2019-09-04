@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA3CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D1CC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773122087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD415206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620591;
-	bh=W8jWZrIP4nls6690SdpvJQ9PHShmPuv0LulpY5M0YrQ=;
+	s=default; t=1567620595;
+	bh=bDUqGV5JzXUfjzIyjKnGcEd3QLuWzA8BwTnGFxkzJZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSeEWgNYmwR1s6flzMl2xOLSOFF0HPjvR/a1+v5utGQHJNQQql/3dCyt+8LJ63AwC
-	 7Pm1VB5TLCf3iliTjVFcmmx7bJvPoxmggFZm0UqWPXqi6N0sXwghLqGzQIEP7sLpVj
-	 dhs8VFoSrwvX5ctwXRqHLiwWYyYkuDBxX2FDcHPI=
+	b=XlMuVd6gk8A8qOONud0sD8yI8C1R2joE+yCs59Mxqud3hcCI/K42ddM3r+FAclWuw
+	 3V7Pm0/JBVWfOqpPa76nzKxzZvS4QxIoxaVN5MLjqyg/uojXCyIoiRdgca4WHtfD1q
+	 dATY4tWMHRYcNGy7zbWn8YLNbgFJNclDbqL38Ku0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389996AbfIDSJv (ORCPT
+        id S2390006AbfIDSJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53102 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389429AbfIDSJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:46 -0400
+        id S1732902AbfIDSJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D93E722DBF;
-        Wed,  4 Sep 2019 18:09:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 840F5206BA;
+        Wed,  4 Sep 2019 18:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620585;
-        bh=W8jWZrIP4nls6690SdpvJQ9PHShmPuv0LulpY5M0YrQ=;
+        s=default; t=1567620588;
+        bh=bDUqGV5JzXUfjzIyjKnGcEd3QLuWzA8BwTnGFxkzJZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s+VHT1tWW5EwWMhtKgZMNNtb2d1Qrgj6TkpBIbULcw6otYBYu/05Y4DQT0NpXahVu
-         NL3GTlHILo54547gR293pUaWBV6o16Sp2x6Um2brYqcrVUM5bSmRYnTrqyk2K7XCDY
-         NoSeR53P+F+mYeNLkTkUfr1AztknlWA7jSuPAJZ8=
+        b=2pfIFhyNjrlcEYUUOINOZtGU/vTPL9R/911B7dFLGtO4o1NFZZ2KM7xS+k4q4JMvX
+         Jcjbz4LDP5YuEpF8g0j85Ma+PPHcivQ52r0th18t1Z5JNAqBd5YWeC3uW9crpvU8mj
+         PxQb1wzsqw33GNLbum2fZg8TUOjt+eCCKbufgIrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 012/143] nvme-core: Fix extra device_put() call on error path
-Date:   Wed,  4 Sep 2019 19:52:35 +0200
-Message-Id: <20190904175314.585509612@linuxfoundation.org>
+Subject: [PATCH 5.2 021/143] IB/mlx5: Fix implicit MR release flow
+Date:   Wed,  4 Sep 2019 19:52:44 +0200
+Message-Id: <20190904175314.898759822@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,143 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8c36e66fb407ce076535a7db98ab9f6d720b866a ]
+[ Upstream commit f591822c3cf314442819486f45ff7dc1f690e0c0 ]
 
-In the error path for nvme_init_subsystem(), nvme_put_subsystem()
-will call device_put(), but it will get called again after the
-mutex_unlock().
+Once implicit MR is being called to be released by
+ib_umem_notifier_release() its leaves were marked as "dying".
 
-The device_put() only needs to be called if device_add() fails.
+However, when dereg_mr()->mlx5_ib_free_implicit_mr()->mr_leaf_free() is
+called, it skips running the mr_leaf_free_action (i.e. umem_odp->work)
+when those leaves were marked as "dying".
 
-This bug caused a KASAN use-after-free error when adding and
-removing subsytems in a loop:
+As such ib_umem_release() for the leaves won't be called and their MRs
+will be leaked as well.
 
-  BUG: KASAN: use-after-free in device_del+0x8d9/0x9a0
-  Read of size 8 at addr ffff8883cdaf7120 by task multipathd/329
+When an application exits/killed without calling dereg_mr we might hit the
+above flow.
 
-  CPU: 0 PID: 329 Comm: multipathd Not tainted 5.2.0-rc6-vmlocalyes-00019-g70a2b39005fd-dirty #314
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-  Call Trace:
-   dump_stack+0x7b/0xb5
-   print_address_description+0x6f/0x280
-   ? device_del+0x8d9/0x9a0
-   __kasan_report+0x148/0x199
-   ? device_del+0x8d9/0x9a0
-   ? class_release+0x100/0x130
-   ? device_del+0x8d9/0x9a0
-   kasan_report+0x12/0x20
-   __asan_report_load8_noabort+0x14/0x20
-   device_del+0x8d9/0x9a0
-   ? device_platform_notify+0x70/0x70
-   nvme_destroy_subsystem+0xf9/0x150
-   nvme_free_ctrl+0x280/0x3a0
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   nvme_free_ns+0xc4/0x100
-   nvme_release+0xb3/0xe0
-   __blkdev_put+0x549/0x6e0
-   ? kasan_check_write+0x14/0x20
-   ? bd_set_size+0xb0/0xb0
-   ? kasan_check_write+0x14/0x20
-   ? mutex_lock+0x8f/0xe0
-   ? __mutex_lock_slowpath+0x20/0x20
-   ? locks_remove_file+0x239/0x370
-   blkdev_put+0x72/0x2c0
-   blkdev_close+0x8d/0xd0
-   __fput+0x256/0x770
-   ? _raw_read_lock_irq+0x40/0x40
-   ____fput+0xe/0x10
-   task_work_run+0x10c/0x180
-   ? filp_close+0xf7/0x140
-   exit_to_usermode_loop+0x151/0x170
-   do_syscall_64+0x240/0x2e0
-   ? prepare_exit_to_usermode+0xd5/0x190
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f5a79af05d7
-  Code: 00 00 0f 05 48 3d 00 f0 ff ff 77 3f c3 66 0f 1f 44 00 00 53 89 fb 48 83 ec 10 e8 c4 fb ff ff 89 df 89 c2 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 2b 89 d7 89 44 24 0c e8 06 fc ff ff 8b 44 24
-  RSP: 002b:00007f5a7799c810 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-  RAX: 0000000000000000 RBX: 0000000000000008 RCX: 00007f5a79af05d7
-  RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000008
-  RBP: 00007f5a58000f98 R08: 0000000000000002 R09: 00007f5a7935ee80
-  R10: 0000000000000000 R11: 0000000000000293 R12: 000055e432447240
-  R13: 0000000000000000 R14: 0000000000000001 R15: 000055e4324a9cf0
+This fatal scenario is reported by WARN_ON() upon
+mlx5_ib_dealloc_ucontext() as ibcontext->per_mm_list is not empty, the
+call trace can be seen below.
 
-  Allocated by task 1236:
-   save_stack+0x21/0x80
-   __kasan_kmalloc.constprop.6+0xab/0xe0
-   kasan_kmalloc+0x9/0x10
-   kmem_cache_alloc_trace+0x102/0x210
-   nvme_init_identify+0x13c3/0x3820
-   nvme_loop_configure_admin_queue+0x4fa/0x5e0
-   nvme_loop_create_ctrl+0x469/0xf40
-   nvmf_dev_write+0x19a3/0x21ab
-   __vfs_write+0x66/0x120
-   vfs_write+0x154/0x490
-   ksys_write+0x104/0x240
-   __x64_sys_write+0x73/0xb0
-   do_syscall_64+0xa5/0x2e0
+Originally the "dying" mark as part of ib_umem_notifier_release() was
+introduced to prevent pagefault_mr() from returning a success response
+once this happened. However, we already have today the completion
+mechanism so no need for that in those flows any more.  Even in case a
+success response will be returned the firmware will not find the pages and
+an error will be returned in the following call as a released mm will
+cause ib_umem_odp_map_dma_pages() to permanently fail mmget_not_zero().
+
+Fix the above issue by dropping the "dying" from the above flows.  The
+other flows that are using "dying" are still needed it for their
+synchronization purposes.
+
+   WARNING: CPU: 1 PID: 7218 at
+   drivers/infiniband/hw/mlx5/main.c:2004
+		  mlx5_ib_dealloc_ucontext+0x84/0x90 [mlx5_ib]
+   CPU: 1 PID: 7218 Comm: ibv_rc_pingpong Tainted: G     E
+	       5.2.0-rc6+ #13
+   Call Trace:
+   uverbs_destroy_ufile_hw+0xb5/0x120 [ib_uverbs]
+   ib_uverbs_close+0x1f/0x80 [ib_uverbs]
+   __fput+0xbe/0x250
+   task_work_run+0x88/0xa0
+   do_exit+0x2cb/0xc30
+   ? __fput+0x14b/0x250
+   do_group_exit+0x39/0xb0
+   get_signal+0x191/0x920
+   ? _raw_spin_unlock_bh+0xa/0x20
+   ? inet_csk_accept+0x229/0x2f0
+   do_signal+0x36/0x5e0
+   ? put_unused_fd+0x5b/0x70
+   ? __sys_accept4+0x1a6/0x1e0
+   ? inet_hash+0x35/0x40
+   ? release_sock+0x43/0x90
+   ? _raw_spin_unlock_bh+0xa/0x20
+   ? inet_listen+0x9f/0x120
+   exit_to_usermode_loop+0x5c/0xc6
+   do_syscall_64+0x182/0x1b0
    entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  Freed by task 329:
-   save_stack+0x21/0x80
-   __kasan_slab_free+0x129/0x190
-   kasan_slab_free+0xe/0x10
-   kfree+0xa7/0x200
-   nvme_release_subsystem+0x49/0x60
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   klist_class_dev_put+0x31/0x40
-   klist_put+0x8f/0xf0
-   klist_del+0xe/0x10
-   device_del+0x3a7/0x9a0
-   nvme_destroy_subsystem+0xf9/0x150
-   nvme_free_ctrl+0x280/0x3a0
-   device_release+0x72/0x1d0
-   kobject_put+0x144/0x410
-   put_device+0x13/0x20
-   nvme_free_ns+0xc4/0x100
-   nvme_release+0xb3/0xe0
-   __blkdev_put+0x549/0x6e0
-   blkdev_put+0x72/0x2c0
-   blkdev_close+0x8d/0xd0
-   __fput+0x256/0x770
-   ____fput+0xe/0x10
-   task_work_run+0x10c/0x180
-   exit_to_usermode_loop+0x151/0x170
-   do_syscall_64+0x240/0x2e0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: 32fd90c40768 ("nvme: change locking for the per-subsystem controller list")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 81713d3788d2 ("IB/mlx5: Add implicit MR support")
+Link: https://lore.kernel.org/r/20190805083010.21777-1-leon@kernel.org
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/umem_odp.c |  4 ----
+ drivers/infiniband/hw/mlx5/odp.c   | 24 +++++++++---------------
+ 2 files changed, 9 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index ab1a2b1ec3637..dfbd5872f4422 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2440,6 +2440,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 		if (ret) {
- 			dev_err(ctrl->device,
- 				"failed to register subsystem device.\n");
-+			put_device(&subsys->dev);
- 			goto out_unlock;
+diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+index e4b13a32692a9..5e5f7dd82c50d 100644
+--- a/drivers/infiniband/core/umem_odp.c
++++ b/drivers/infiniband/core/umem_odp.c
+@@ -114,10 +114,6 @@ static int ib_umem_notifier_release_trampoline(struct ib_umem_odp *umem_odp,
+ 	 * prevent any further fault handling on this MR.
+ 	 */
+ 	ib_umem_notifier_start_account(umem_odp);
+-	umem_odp->dying = 1;
+-	/* Make sure that the fact the umem is dying is out before we release
+-	 * all pending page faults. */
+-	smp_wmb();
+ 	complete_all(&umem_odp->notifier_completion);
+ 	umem->context->invalidate_range(umem_odp, ib_umem_start(umem),
+ 					ib_umem_end(umem));
+diff --git a/drivers/infiniband/hw/mlx5/odp.c b/drivers/infiniband/hw/mlx5/odp.c
+index f6e5351ba4d50..fda3dfd6f87b6 100644
+--- a/drivers/infiniband/hw/mlx5/odp.c
++++ b/drivers/infiniband/hw/mlx5/odp.c
+@@ -581,7 +581,6 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
+ 			u32 flags)
+ {
+ 	int npages = 0, current_seq, page_shift, ret, np;
+-	bool implicit = false;
+ 	struct ib_umem_odp *odp_mr = to_ib_umem_odp(mr->umem);
+ 	bool downgrade = flags & MLX5_PF_FLAGS_DOWNGRADE;
+ 	bool prefetch = flags & MLX5_PF_FLAGS_PREFETCH;
+@@ -596,7 +595,6 @@ static int pagefault_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr,
+ 		if (IS_ERR(odp))
+ 			return PTR_ERR(odp);
+ 		mr = odp->private;
+-		implicit = true;
+ 	} else {
+ 		odp = odp_mr;
+ 	}
+@@ -684,19 +682,15 @@ next_mr:
+ 
+ out:
+ 	if (ret == -EAGAIN) {
+-		if (implicit || !odp->dying) {
+-			unsigned long timeout =
+-				msecs_to_jiffies(MMU_NOTIFIER_TIMEOUT);
+-
+-			if (!wait_for_completion_timeout(
+-					&odp->notifier_completion,
+-					timeout)) {
+-				mlx5_ib_warn(dev, "timeout waiting for mmu notifier. seq %d against %d. notifiers_count=%d\n",
+-					     current_seq, odp->notifiers_seq, odp->notifiers_count);
+-			}
+-		} else {
+-			/* The MR is being killed, kill the QP as well. */
+-			ret = -EFAULT;
++		unsigned long timeout = msecs_to_jiffies(MMU_NOTIFIER_TIMEOUT);
++
++		if (!wait_for_completion_timeout(&odp->notifier_completion,
++						 timeout)) {
++			mlx5_ib_warn(
++				dev,
++				"timeout waiting for mmu notifier. seq %d against %d. notifiers_count=%d\n",
++				current_seq, odp->notifiers_seq,
++				odp->notifiers_count);
  		}
- 		ida_init(&subsys->ns_ida);
-@@ -2462,7 +2463,6 @@ out_put_subsystem:
- 	nvme_put_subsystem(subsys);
- out_unlock:
- 	mutex_unlock(&nvme_subsystems_lock);
--	put_device(&subsys->dev);
- 	return ret;
- }
+ 	}
  
 -- 
 2.20.1
