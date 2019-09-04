@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0AFFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC28C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0BF23400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE7122CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620571;
-	bh=F5X2Tw6fGwcM5GWIJCsXtZMbUmjKCSlTq9VUSvzj8tE=;
+	s=default; t=1567620573;
+	bh=XKweCFyL7ghejKz6PgYizflGJfkUSeuizgmoG3uHyw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1alJ4Ub6EiFqC57OG1VND8/DLKCCc3m6c+woZwy/cwSDeeghgsEsBVnyzGT/YdSq2
-	 WDRjf/G0TBVnWN5jFexceg8hQV8ulG6tU3tIJMRnPLCFumoOillsNtntNv3bBk5xXV
-	 3uLmDwnNPatXgevHd+uXGtDHCFfI+QE0orjZOmRo=
+	b=yQhYPuYnQLkCdnqUXjtPwJaAM6R+WY3nXA+tgLzM3rO82oZY+0+DvvNc0eo0npkgt
+	 cNJpQNT2QvkguZ8uKY8TlFAuiQSk/DcqqCcCa2fjMMVyb2ZJmPENRjwguAd+8FQLL5
+	 3vfFAW1lMTKjjG9ZhSU7/hV1k73AkFDnE0oU8OCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfIDSJ0 (ORCPT
+        id S2389619AbfIDSJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52586 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389928AbfIDSJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:21 -0400
+        id S2389131AbfIDSJa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67F28208E4;
-        Wed,  4 Sep 2019 18:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8884222DBF;
+        Wed,  4 Sep 2019 18:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620560;
-        bh=F5X2Tw6fGwcM5GWIJCsXtZMbUmjKCSlTq9VUSvzj8tE=;
+        s=default; t=1567620569;
+        bh=XKweCFyL7ghejKz6PgYizflGJfkUSeuizgmoG3uHyw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hjpm6zjXQQA2hQKmhzUTllGFwsv9foCXcu85ncN4gvHUqmQrlnmxWrvUpG9IwkWXB
-         gugKblYx3TflzgiAdk4EKjET6taerZika1994oF+Pi5oIMWV+QEFBIZ8sRRZ3UfeW6
-         tVcinv15iMoB7aIQkqSkbszJECFBAHJd/r7JNCk8=
+        b=M4kIf5CG3MMiNay5VABVIgUZPXqcVYHMA//fPhEjIBEbfIumK8DLYTdMZkkYfNHnW
+         CxfMYQx3kU4kzSw28Ee+Ua5YQl1O3/0CU6IzI2oLHvm0CH6ICzBOzl2gEvjt8I2gbv
+         8dy24q5MARUhr85kJRSq3BdUzlXGW/bqnek/hSYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Iliopoulos <ailiopoulos@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 002/143] nvme-multipath: revalidate nvme_ns_head gendisk in nvme_validate_ns
-Date:   Wed,  4 Sep 2019 19:52:25 +0200
-Message-Id: <20190904175314.293360423@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 005/143] fs: afs: Fix a possible null-pointer dereference in afs_put_read()
+Date:   Wed,  4 Sep 2019 19:52:28 +0200
+Message-Id: <20190904175314.378925004@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,42 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fab7772bfbcfe8fb8e3e352a6a8fcaf044cded17 ]
+[ Upstream commit a6eed4ab5dd4bfb696c1a3f49742b8d1846a66a0 ]
 
-When CONFIG_NVME_MULTIPATH is set, only the hidden gendisk associated
-with the per-controller ns is run through revalidate_disk when a
-rescan is triggered, while the visible blockdev never gets its size
-(bdev->bd_inode->i_size) updated to reflect any capacity changes that
-may have occurred.
+In afs_read_dir(), there is an if statement on line 255 to check whether
+req->pages is NULL:
+	if (!req->pages)
+		goto error;
 
-This prevents online resizing of nvme block devices and in extension of
-any filesystems atop that will are unable to expand while mounted, as
-userspace relies on the blockdev size for obtaining the disk capacity
-(via BLKGETSIZE/64 ioctls).
+If req->pages is NULL, afs_put_read() on line 337 is executed.
+In afs_put_read(), req->pages[i] is used on line 195.
+Thus, a possible null-pointer dereference may occur in this case.
 
-Fix this by explicitly revalidating the actual namespace gendisk in
-addition to the per-controller gendisk, when multipath is enabled.
+To fix this possible bug, an if statement is added in afs_put_read() to
+check req->pages.
 
-Signed-off-by: Anthony Iliopoulos <ailiopoulos@suse.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+This bug is found by a static analysis tool STCheck written by us.
+
+Fixes: f3ddee8dc4e2 ("afs: Fix directory handling")
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/afs/file.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 5deb4deb38209..ab1a2b1ec3637 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1668,6 +1668,7 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
- 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
-+		revalidate_disk(ns->head->disk);
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index 8fd7d3b9a1b1f..87beabc7114ee 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -191,11 +191,13 @@ void afs_put_read(struct afs_read *req)
+ 	int i;
+ 
+ 	if (refcount_dec_and_test(&req->usage)) {
+-		for (i = 0; i < req->nr_pages; i++)
+-			if (req->pages[i])
+-				put_page(req->pages[i]);
+-		if (req->pages != req->array)
+-			kfree(req->pages);
++		if (req->pages) {
++			for (i = 0; i < req->nr_pages; i++)
++				if (req->pages[i])
++					put_page(req->pages[i]);
++			if (req->pages != req->array)
++				kfree(req->pages);
++		}
+ 		kfree(req);
  	}
- #endif
  }
 -- 
 2.20.1
