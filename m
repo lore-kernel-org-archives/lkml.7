@@ -2,51 +2,56 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329AAC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002C222CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B160206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620949;
-	bh=UbwxphCkJgqkkmqkEGI327ZtsTfNouQD7+qWRvtcpI0=;
+	s=default; t=1567620959;
+	bh=91bzfqjuA0AykFYNiVsjGg8ity7Xp6cKp0uQxd9sGB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IVfUQsvD2Q97xz5vHH4lUXiS62r2DGjKud29uLIW5Rgt8iFFVctU2kZ3LHw+wToUW
-	 Wcf7kBPQ4g1ARUkJaybA9X0xFgucoTnuB7nihWv5o+7HTRtDb7yENViRN33p3uZ7/7
-	 Na6CETj86ERKAUcCRKcPge0SnydmcO25+UEksUg8=
+	b=BGsUCkHseil87i+ovOV9KUISFlcCEUyBt54O/o14p8QNNVkJcLUK9+KYlk14oy8cz
+	 zw0rPEVkZkBgz6D0LJ7TZjOCrW5F6qmJwEXl3oih273OGEwsm7l1LPEELSRtiyonvt
+	 F7P8blNzniN9MN8zOFNUJfLHMFxtsbh8xKeE8yJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391012AbfIDSPs (ORCPT
+        id S2390454AbfIDSP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:15:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32824 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:15:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390393AbfIDSP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:15:29 -0400
+        id S2390424AbfIDSPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:15:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E44F2087E;
-        Wed,  4 Sep 2019 18:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5E7422DBF;
+        Wed,  4 Sep 2019 18:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620929;
-        bh=UbwxphCkJgqkkmqkEGI327ZtsTfNouQD7+qWRvtcpI0=;
+        s=default; t=1567620910;
+        bh=91bzfqjuA0AykFYNiVsjGg8ity7Xp6cKp0uQxd9sGB8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LJATrdsI1qtyD4e0xUfQIx7wwktQ+SgtFjUUKeEQv+hGmdLcIyL7zmhzjIgHQ0oPv
-         XfLqRclFriEhK0NbzqydTIW92eADE5dhR1vlZa6fHXKNqYhkT6Er/3BgD3nwuNsk3f
-         QzY87z+Rl2R2j2MJdQDCCqAcxp9xTdhQJs9zf6cM=
+        b=N98X+QH5nILcbdJTqf6S2xEBc1maiKFdCV/d+YQQKI5Q2EsB9baZvrpOJ6WnsvbvP
+         ZiHDTEsZFiQEwgs9A3udWwjAlO9/1tGyZ7AuTYy3NyrsXCPu6y6Cj1+X+pfFS4Qlss
+         8nby828UVy4aUz5x+RHIA5K/ut4OazjVndL1hL2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Subject: [PATCH 5.2 108/143] lib: logic_pio: Avoid possible overlap for unregistering regions
-Date:   Wed,  4 Sep 2019 19:54:11 +0200
-Message-Id: <20190904175318.625979109@linuxfoundation.org>
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        sunpeng.li@amd.com, Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <sean@poorly.run>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 139/143] drm/i915: Do not create a new max_bpc prop for MST connectors
+Date:   Wed,  4 Sep 2019 19:54:42 +0200
+Message-Id: <20190904175319.881236425@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,66 +64,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+[ Upstream commit 1b9bd09630d4db4827cc04d358a41a16a6bc2cb0 ]
 
-commit 0a27142bd1ee259e24a0be2b0133e5ca5df8da91 upstream.
+We're not allowed to create new properties after device registration
+so for MST connectors we need to either create the max_bpc property
+earlier, or we reuse one we already have. Let's do the latter apporach
+since the corresponding SST connector already has the prop and its
+min/max are correct also for the MST connector.
 
-The code was originally written to not support unregistering logical PIO
-regions.
-
-To accommodate supporting unregistering logical PIO regions, subtly modify
-LOGIC_PIO_CPU_MMIO region registration code, such that the "end" of the
-registered regions is the "end" of the last region, and not the sum of
-the sizes of all the registered regions.
+The problem was highlighted by commit 4f5368b5541a ("drm/kms:
+Catch mode_object lifetime errors") which results in the following
+spew:
+[ 1330.878941] WARNING: CPU: 2 PID: 1554 at drivers/gpu/drm/drm_mode_object.c:45 __drm_mode_object_add+0xa0/0xb0 [drm]
+...
+[ 1330.879008] Call Trace:
+[ 1330.879023]  drm_property_create+0xba/0x180 [drm]
+[ 1330.879036]  drm_property_create_range+0x15/0x30 [drm]
+[ 1330.879048]  drm_connector_attach_max_bpc_property+0x62/0x80 [drm]
+[ 1330.879086]  intel_dp_add_mst_connector+0x11f/0x140 [i915]
+[ 1330.879094]  drm_dp_add_port.isra.20+0x20b/0x440 [drm_kms_helper]
+...
 
 Cc: stable@vger.kernel.org
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: sunpeng.li@amd.com
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sean Paul <sean@poorly.run>
+Fixes: 5ca0ef8a56b8 ("drm/i915: Add max_bpc property for DP MST")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190820161657.9658-1-ville.syrjala@linux.intel.com
+Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/logic_pio.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/i915/intel_dp_mst.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -35,7 +35,7 @@ int logic_pio_register_range(struct logi
- 	struct logic_pio_hwaddr *range;
- 	resource_size_t start;
- 	resource_size_t end;
--	resource_size_t mmio_sz = 0;
-+	resource_size_t mmio_end = 0;
- 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
- 	int ret = 0;
+diff --git a/drivers/gpu/drm/i915/intel_dp_mst.c b/drivers/gpu/drm/i915/intel_dp_mst.c
+index 8839eaea83715..d89120dcac67d 100644
+--- a/drivers/gpu/drm/i915/intel_dp_mst.c
++++ b/drivers/gpu/drm/i915/intel_dp_mst.c
+@@ -535,7 +535,15 @@ static struct drm_connector *intel_dp_add_mst_connector(struct drm_dp_mst_topolo
  
-@@ -56,7 +56,7 @@ int logic_pio_register_range(struct logi
- 			/* for MMIO ranges we need to check for overlap */
- 			if (start >= range->hw_start + range->size ||
- 			    end < range->hw_start) {
--				mmio_sz += range->size;
-+				mmio_end = range->io_start + range->size;
- 			} else {
- 				ret = -EFAULT;
- 				goto end_register;
-@@ -69,16 +69,16 @@ int logic_pio_register_range(struct logi
+ 	intel_attach_force_audio_property(connector);
+ 	intel_attach_broadcast_rgb_property(connector);
+-	drm_connector_attach_max_bpc_property(connector, 6, 12);
++
++	/*
++	 * Reuse the prop from the SST connector because we're
++	 * not allowed to create new props after device registration.
++	 */
++	connector->max_bpc_property =
++		intel_dp->attached_connector->base.max_bpc_property;
++	if (connector->max_bpc_property)
++		drm_connector_attach_max_bpc_property(connector, 6, 12);
  
- 	/* range not registered yet, check for available space */
- 	if (new_range->flags == LOGIC_PIO_CPU_MMIO) {
--		if (mmio_sz + new_range->size - 1 > MMIO_UPPER_LIMIT) {
-+		if (mmio_end + new_range->size - 1 > MMIO_UPPER_LIMIT) {
- 			/* if it's too big check if 64K space can be reserved */
--			if (mmio_sz + SZ_64K - 1 > MMIO_UPPER_LIMIT) {
-+			if (mmio_end + SZ_64K - 1 > MMIO_UPPER_LIMIT) {
- 				ret = -E2BIG;
- 				goto end_register;
- 			}
- 			new_range->size = SZ_64K;
- 			pr_warn("Requested IO range too big, new size set to 64K\n");
- 		}
--		new_range->io_start = mmio_sz;
-+		new_range->io_start = mmio_end;
- 	} else if (new_range->flags == LOGIC_PIO_INDIRECT) {
- 		if (iio_sz + new_range->size - 1 > IO_SPACE_LIMIT) {
- 			ret = -E2BIG;
+ 	return connector;
+ 
+-- 
+2.20.1
+
 
 
