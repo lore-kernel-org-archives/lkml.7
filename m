@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249CCC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C80C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F176B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7294C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620435;
-	bh=YhZYuhnmS9tdig3xXuI3dsas3LT8WuW+r+Q0IcMXP2k=;
+	s=default; t=1567620437;
+	bh=lm2ggu0B+hEIa5s9zRmKIf6P8oQ23BeKtocwhGD3hxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xd7/G2bRPglQGoLjK1cHUBx+6dRhxt1N7zilGjg079YSqpXgX7Po2mHPSzgqSrAwI
-	 6qhfNKtmX6sWTWR5Y819BxrPCm8jPbeS7VxbR7VYj3qW29pU/7CKrXHe/lbUTPAyKb
-	 NukGyQd/taktOSuNxa0jzmLwSqfzmunCH1eTF3/s=
+	b=x8+VazblAEylyTOr5+PnrUGZimbofXFpxqYCheGWbZevBgMLHMk+akGQK5Eqo4uSG
+	 y9OUm/3WAVt/AaGeSCnCrv7Hn+6cs7353KzeZYOmzv7MkWZTLQgFESmLiVS9P3KWkU
+	 YjG/BfBalsQ7cyqypQdAeqBZ5K5r8ejl6wgBIxC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389029AbfIDSHN (ORCPT
+        id S2389603AbfIDSHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389583AbfIDSHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:11 -0400
+        id S2389171AbfIDSHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:07:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1BF72339E;
-        Wed,  4 Sep 2019 18:07:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B4652087E;
+        Wed,  4 Sep 2019 18:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620430;
-        bh=YhZYuhnmS9tdig3xXuI3dsas3LT8WuW+r+Q0IcMXP2k=;
+        s=default; t=1567620432;
+        bh=lm2ggu0B+hEIa5s9zRmKIf6P8oQ23BeKtocwhGD3hxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OvNkWZZTkOIfr8mC8brCEg4jKbSoSSuKtHJCQ6vV3e7QAcHHlx5RUxRRJqP0yFAcN
-         0kkyW37c2t6w1zQlitEEMDlveHPv/PFUltc6KOC2CB+HXYkeOi1B+ly5fSKSa8kBtG
-         /BLHVFDYT/jHVeSK2cR//5msxR9bcqBm8rMJs8wE=
+        b=eaw+6ce7VZjDWm5oBfOwzZIkpaYZDB70ezNUlWMuR64h2Do9EWwNM7LKNaVsfbJge
+         0OKrsfAxM9puCYHOG+pyyTzVcErur2WiQr80ihBCG+z+Vt2hjFUyDqR5U63nHS4BvL
+         j3B2/XBJQyyepYfNN4AjObH0tWIR2AJ2sSZTEeHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Carsten Schmid <carsten_schmid@mentor.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 56/93] usb: hcd: use managed device resources
-Date:   Wed,  4 Sep 2019 19:53:58 +0200
-Message-Id: <20190904175307.950136275@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.19 57/93] usb: chipidea: udc: dont do hardware access if gadget has stopped
+Date:   Wed,  4 Sep 2019 19:53:59 +0200
+Message-Id: <20190904175308.051011622@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,110 +58,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Schmid, Carsten <Carsten_Schmid@mentor.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit 76da906ad727048a74bb8067031ee99fc070c7da upstream.
+commit cbe85c88ce80fb92956a0793518d415864dcead8 upstream.
 
-Using managed device resources in usb_hcd_pci_probe() allows devm usage for
-resource subranges, such as the mmio resource for the platform device
-created to control host/device mode mux, which is a xhci extended
-capability, and sits inside the xhci mmio region.
+After _gadget_stop_activity is executed, we can consider the hardware
+operation for gadget has finished, and the udc can be stopped and enter
+low power mode. So, any later hardware operations (from usb_ep_ops APIs
+or usb_gadget_ops APIs) should be considered invalid, any deinitializatons
+has been covered at _gadget_stop_activity.
 
-If managed device resources are not used then "parent" resource
-is released before subrange at driver removal as .remove callback is
-called before the devres list of resources for this device is walked
-and released.
+I meet this problem when I plug out usb cable from PC using mass_storage
+gadget, my callstack like: vbus interrupt->.vbus_session->
+composite_disconnect ->pm_runtime_put_sync(&_gadget->dev),
+the composite_disconnect will call fsg_disable, but fsg_disable calls
+usb_ep_disable using async way, there are register accesses for
+usb_ep_disable. So sometimes, I get system hang due to visit register
+without clock, sometimes not.
 
-This has been observed with the xhci extended capability driver causing a
-use-after-free which is now fixed.
+The Linux Kernel USB maintainer Alan Stern suggests this kinds of solution.
+See: http://marc.info/?l=linux-usb&m=138541769810983&w=2.
 
-An additional nice benefit is that error handling on driver initialisation
-is simplified much.
-
-Signed-off-by: Carsten Schmid <carsten_schmid@mentor.com>
-Tested-by: Carsten Schmid <carsten_schmid@mentor.com>
-Reviewed-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Fixes: fa31b3cb2ae1 ("xhci: Add Intel extended cap / otg phy mux handling")
-Cc: <stable@vger.kernel.org> # v4.19+
-Link: https://lore.kernel.org/r/1566569488679.31808@mentor.com
+Cc: <stable@vger.kernel.org> #v4.9+
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20190820020503.27080-2-peter.chen@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/hcd-pci.c |   30 ++++++++----------------------
- 1 file changed, 8 insertions(+), 22 deletions(-)
+ drivers/usb/chipidea/udc.c |   32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/core/hcd-pci.c
-+++ b/drivers/usb/core/hcd-pci.c
-@@ -216,17 +216,18 @@ int usb_hcd_pci_probe(struct pci_dev *de
- 		/* EHCI, OHCI */
- 		hcd->rsrc_start = pci_resource_start(dev, 0);
- 		hcd->rsrc_len = pci_resource_len(dev, 0);
--		if (!request_mem_region(hcd->rsrc_start, hcd->rsrc_len,
--				driver->description)) {
-+		if (!devm_request_mem_region(&dev->dev, hcd->rsrc_start,
-+				hcd->rsrc_len, driver->description)) {
- 			dev_dbg(&dev->dev, "controller already in use\n");
- 			retval = -EBUSY;
- 			goto put_hcd;
- 		}
--		hcd->regs = ioremap_nocache(hcd->rsrc_start, hcd->rsrc_len);
-+		hcd->regs = devm_ioremap_nocache(&dev->dev, hcd->rsrc_start,
-+				hcd->rsrc_len);
- 		if (hcd->regs == NULL) {
- 			dev_dbg(&dev->dev, "error mapping memory\n");
- 			retval = -EFAULT;
--			goto release_mem_region;
-+			goto put_hcd;
- 		}
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -708,12 +708,6 @@ static int _gadget_stop_activity(struct
+ 	struct ci_hdrc    *ci = container_of(gadget, struct ci_hdrc, gadget);
+ 	unsigned long flags;
  
- 	} else {
-@@ -240,8 +241,8 @@ int usb_hcd_pci_probe(struct pci_dev *de
- 
- 			hcd->rsrc_start = pci_resource_start(dev, region);
- 			hcd->rsrc_len = pci_resource_len(dev, region);
--			if (request_region(hcd->rsrc_start, hcd->rsrc_len,
--					driver->description))
-+			if (devm_request_region(&dev->dev, hcd->rsrc_start,
-+					hcd->rsrc_len, driver->description))
- 				break;
- 		}
- 		if (region == PCI_ROM_RESOURCE) {
-@@ -275,20 +276,13 @@ int usb_hcd_pci_probe(struct pci_dev *de
+-	spin_lock_irqsave(&ci->lock, flags);
+-	ci->gadget.speed = USB_SPEED_UNKNOWN;
+-	ci->remote_wakeup = 0;
+-	ci->suspended = 0;
+-	spin_unlock_irqrestore(&ci->lock, flags);
+-
+ 	/* flush all endpoints */
+ 	gadget_for_each_ep(ep, gadget) {
+ 		usb_ep_fifo_flush(ep);
+@@ -731,6 +725,12 @@ static int _gadget_stop_activity(struct
+ 		ci->status = NULL;
  	}
  
- 	if (retval != 0)
--		goto unmap_registers;
-+		goto put_hcd;
- 	device_wakeup_enable(hcd->self.controller);
- 
- 	if (pci_dev_run_wake(dev))
- 		pm_runtime_put_noidle(&dev->dev);
- 	return retval;
- 
--unmap_registers:
--	if (driver->flags & HCD_MEMORY) {
--		iounmap(hcd->regs);
--release_mem_region:
--		release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
--	} else
--		release_region(hcd->rsrc_start, hcd->rsrc_len);
- put_hcd:
- 	usb_put_hcd(hcd);
- disable_pci:
-@@ -347,14 +341,6 @@ void usb_hcd_pci_remove(struct pci_dev *
- 		dev_set_drvdata(&dev->dev, NULL);
- 		up_read(&companions_rwsem);
- 	}
--
--	if (hcd->driver->flags & HCD_MEMORY) {
--		iounmap(hcd->regs);
--		release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
--	} else {
--		release_region(hcd->rsrc_start, hcd->rsrc_len);
--	}
--
- 	usb_put_hcd(hcd);
- 	pci_disable_device(dev);
++	spin_lock_irqsave(&ci->lock, flags);
++	ci->gadget.speed = USB_SPEED_UNKNOWN;
++	ci->remote_wakeup = 0;
++	ci->suspended = 0;
++	spin_unlock_irqrestore(&ci->lock, flags);
++
+ 	return 0;
  }
+ 
+@@ -1302,6 +1302,10 @@ static int ep_disable(struct usb_ep *ep)
+ 		return -EBUSY;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return 0;
++	}
+ 
+ 	/* only internal SW should disable ctrl endpts */
+ 
+@@ -1391,6 +1395,10 @@ static int ep_queue(struct usb_ep *ep, s
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return 0;
++	}
+ 	retval = _ep_queue(ep, req, gfp_flags);
+ 	spin_unlock_irqrestore(hwep->lock, flags);
+ 	return retval;
+@@ -1414,8 +1422,8 @@ static int ep_dequeue(struct usb_ep *ep,
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
+-
+-	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
++	if (hwep->ci->gadget.speed != USB_SPEED_UNKNOWN)
++		hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
+ 
+ 	list_for_each_entry_safe(node, tmpnode, &hwreq->tds, td) {
+ 		dma_pool_free(hwep->td_pool, node->ptr, node->dma);
+@@ -1486,6 +1494,10 @@ static void ep_fifo_flush(struct usb_ep
+ 	}
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return;
++	}
+ 
+ 	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
+ 
+@@ -1558,6 +1570,10 @@ static int ci_udc_wakeup(struct usb_gadg
+ 	int ret = 0;
+ 
+ 	spin_lock_irqsave(&ci->lock, flags);
++	if (ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(&ci->lock, flags);
++		return 0;
++	}
+ 	if (!ci->remote_wakeup) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
 
 
