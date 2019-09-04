@@ -2,73 +2,86 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A45BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741FEC41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7631522CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5683722CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbfIDPiJ (ORCPT
+        id S1731303AbfIDPjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:38:09 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:50193 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731421AbfIDPiI (ORCPT
+        Wed, 4 Sep 2019 11:39:46 -0400
+Received: from smtprelay0134.hostedemail.com ([216.40.44.134]:34192 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729316AbfIDPjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:38:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id 15so27864980ioo.17
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 08:38:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=0k3qV3xaQgjB90yqypxStujSAob81gXbGHRySZeZj6g=;
-        b=K7P+Udc3OkCh/huA5xZ6+6YuGGkaLA9iaHEBtoz+0wXsq1OI4t2ZwzpXvX7cF2138c
-         MXgcBmpQvwvLkkUZw5jkVHeA6C3LO/ciEtrOUyvaa1ZFEFxyw1RL8spm+MhmzNLPMooB
-         xBhMx6J+wpIEYZ4tyFpX6IMmRPdt6ubWjW+j9rDx8FNSDOwB4SJzo8+KYe4SwwzNvGdR
-         GdAdj2B4fKwGtMUtcRRLnaQly18LRJdpEkzD/qfJBVyvD2SEyYQr/iHAM7M5Y8ZC3z/g
-         HcsCFfwewGkWAp3dYStZ7Lpz5DECPdHSD8H9vtm/TLiVe/PLKQK2yyJWjFrliPOGVlBF
-         oyyQ==
-X-Gm-Message-State: APjAAAUqseADKgSGMqSLuSlLNB4Vm29m/U2ulxpGMxqOo0TALYge2XGT
-        mkoUOVX9YgdmRiViaUxhrWPvgs5XmBdP5eaavqbQrKaw+0Jv
-X-Google-Smtp-Source: APXvYqzYfwE0aX841BI9ig17iaQn0xyKjbt9nyuB3czN7cN/I/IiWjwE6X6Vku+lcLw4NwADB6I2ii6+88oi5vn0AjWXPpyjnYfp
+        Wed, 4 Sep 2019 11:39:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id C03B518224D9C;
+        Wed,  4 Sep 2019 15:39:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: soap07_54e0b1fef1704
+X-Filterd-Recvd-Size: 2744
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  4 Sep 2019 15:39:43 +0000 (UTC)
+Message-ID: <f62dd153a23bfbe580aee9e50d87c0ff59f4d0ec.camel@perches.com>
+Subject: Re: [PATCH v4 10/11] lib/vsprintf: Add %pfw conversion specifier
+ for printing fwnode names
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Date:   Wed, 04 Sep 2019 08:39:42 -0700
+In-Reply-To: <20190904151759.GS2680@smile.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+         <20190902083240.20367-11-sakari.ailus@linux.intel.com>
+         <20190903130607.cf2qv3s3evobbd5g@pathway.suse.cz>
+         <20190904150413.GU5475@paasikivi.fi.intel.com>
+         <20190904151759.GS2680@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9b06:: with SMTP id y6mr5883532ion.77.1567611487843;
- Wed, 04 Sep 2019 08:38:07 -0700 (PDT)
-Date:   Wed, 04 Sep 2019 08:38:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e100dc0591bbfdd7@google.com>
-Subject: linux-next build error (5)
-From:   syzbot <syzbot+5d7739bb829b8f3b47fa@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgMzUzOTRkMDMgQWRkIGxpbnV4LW5leHQgc3BlY2lmaWMgZmlsZXMgZm9yIDIwMTkw
-OTA0DQpnaXQgdHJlZTogICAgICAgbGludXgtbmV4dA0KY29uc29sZSBvdXRwdXQ6IGh0dHBzOi8v
-c3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvbG9nLnR4dD94PTEwYTRiMWZlNjAwMDAwDQprZXJuZWwg
-Y29uZmlnOiAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC8uY29uZmlnP3g9NzQzZTY0
-ZWNiMGQ5Y2U0ZQ0KZGFzaGJvYXJkIGxpbms6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29t
-L2J1Zz9leHRpZD01ZDc3MzliYjgyOWI4ZjNiNDdmYQ0KY29tcGlsZXI6ICAgICAgIGdjYyAoR0ND
-KSA5LjAuMCAyMDE4MTIzMSAoZXhwZXJpbWVudGFsKQ0KDQpVbmZvcnR1bmF0ZWx5LCBJIGRvbid0
-IGhhdmUgYW55IHJlcHJvZHVjZXIgZm9yIHRoaXMgY3Jhc2ggeWV0Lg0KDQpJTVBPUlRBTlQ6IGlm
-IHlvdSBmaXggdGhlIGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29t
-bWl0Og0KUmVwb3J0ZWQtYnk6IHN5emJvdCs1ZDc3MzliYjgyOWI4ZjNiNDdmYUBzeXprYWxsZXIu
-YXBwc3BvdG1haWwuY29tDQoNCi4vaW5jbHVkZS9saW51eC9ncGlvL2RyaXZlci5oOjcyMjoxOTog
-ZXJyb3I6IHN0YXRpYyBkZWNsYXJhdGlvbiBvZiAgDQrigJhncGlvY2hpcF9sb2NrX2FzX2lyceKA
-mSBmb2xsb3dzIG5vbi1zdGF0aWMgZGVjbGFyYXRpb24NCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5l
-cmF0ZWQgYnkgYSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5n
-bC90cHNtRUogZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2lu
-ZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6
-Ym90IHdpbGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29v
-LmdsL3Rwc21FSiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCg==
+On Wed, 2019-09-04 at 18:17 +0300, Andy Shevchenko wrote:
+> On Wed, Sep 04, 2019 at 06:04:13PM +0300, Sakari Ailus wrote:
+> > On Tue, Sep 03, 2019 at 03:06:07PM +0200, Petr Mladek wrote:
+> > > On Mon 2019-09-02 11:32:39, Sakari Ailus wrote:
+> > > > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> > > > support printing full path of the node, including its name ("f") and only
+> > > > the node's name ("P") in the printk family of functions. The two flags
+> > > > have equivalent functionality to existing %pOF with the same two modifiers
+> > > > ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> > > > based systems is added by this patch.
+> > > > --- a/scripts/checkpatch.pl
+> > > > +++ b/scripts/checkpatch.pl
+> > > > @@ -5995,7 +5995,8 @@ sub process {
+> > > >  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+> > > >  					$specifier = $1;
+> > > >  					$extension = $2;
+> > > > -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
+> > > > +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
+> > > > +					    $extension =~ /^f[^w]/) {
+> > > 
+> > > This does not work. $extension seems to have only one character.
+> > 
+> > Good catch. \w indeed matches a single letter; I'll change that to \w+ and
+> > change the other uses accordingly.
+> 
+> It's weird. \w stands for word matching. How can it match one letter only?
+
+\w 	matches any single character classified as a “word” character (alphanumeric or “_”)
+
