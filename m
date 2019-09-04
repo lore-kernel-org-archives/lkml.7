@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55706C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77302C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3064F2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E82A2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620502;
-	bh=DijnZdRPcdk9JsC7rgLM1IovA8+oMht19M88SdgiVuw=;
+	s=default; t=1567620505;
+	bh=ZpgqCahdWLjUGrJzsstly2a0tcnXBJqNHV38YJRzlYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kktnt2TeEao9FPd+lEKC3x8pnbDkOXojp2FaE3oFyLN7rdczy5Rte65McseEpz9El
-	 Ltocziz5gjb8DGKjnV/IjsWO4UhXbRL7S9i+LwOk82BKOWfE50T/Bgn7NYl3UeKthZ
-	 dze130MXK6ZY10TWVKJ6OHE1ODfVVtfJWtci1Lxo=
+	b=1F1xfM6pP9lm5RXplsoYFvU/UmsAKZ13GRHD0YVTSpvFvAq201pw48KVxnwF2UNZ0
+	 yj35TmiHTdDEe9nqGt5sB8jnxBnB9ZUDaWn642KMVQM450DXsCFHHfuMSoL1KlIpc1
+	 7C6IqJXo6gfJ3eeE/lUdlpcdhXYB229G8djBgw44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389780AbfIDSIV (ORCPT
+        id S2389785AbfIDSIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:08:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51168 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:08:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389749AbfIDSIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:20 -0400
+        id S2389179AbfIDSIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E84C420870;
-        Wed,  4 Sep 2019 18:08:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97B9120870;
+        Wed,  4 Sep 2019 18:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620499;
-        bh=DijnZdRPcdk9JsC7rgLM1IovA8+oMht19M88SdgiVuw=;
+        s=default; t=1567620502;
+        bh=ZpgqCahdWLjUGrJzsstly2a0tcnXBJqNHV38YJRzlYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uffc4vSbK6uILyEhIpKU+68COLnSbn1DpEzMq9gyqFmKQGgiNi4uz1YDpORtEjNX4
-         e4XaaY1H7HCMCNXQKEl4Mer8SkHKc7U31NKhkWzXftaWR8739OacBA4qpAlRZ/h2go
-         jmrlhZH3xS64NI/ZHXvOr1FjY8aPxRl/pDNhj+as=
+        b=J9PRUl3fpvc05OdW1z6veWcS6iV7BU/Y4FITxPtYegpYD7L4mn/PZmig/5JbLcZe+
+         77S1RhBoq1bUPxczwR9D+KO+JWjrdia8N0sKUwWj1nm/QvgijYOe3f17kBLdxyNYjm
+         YN64LuPfF8oLUzj3awg5+xK2z3+IuElaXVjDOqnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hodaszi <robert.hodaszi@digi.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 80/93] Revert "cfg80211: fix processing world regdomain when non modular"
-Date:   Wed,  4 Sep 2019 19:54:22 +0200
-Message-Id: <20190904175310.006575906@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 45/93] ALSA: usb-audio: Add implicit fb quirk for Behringer UFX1604
+Date:   Wed,  4 Sep 2019 19:53:47 +0200
+Message-Id: <20190904175307.085988364@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,63 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hodaszi, Robert <Robert.Hodaszi@digi.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 0d31d4dbf38412f5b8b11b4511d07b840eebe8cb upstream.
+commit 1a15718b41df026cffd0e42cfdc38a1384ce19f9 upstream.
 
-This reverts commit 96cce12ff6e0 ("cfg80211: fix processing world
-regdomain when non modular").
+Behringer UFX1604 requires the similar quirk to apply implicit fb like
+another Behringer model UFX1204 in order to fix the noisy playback.
 
-Re-triggering a reg_process_hint with the last request on all events,
-can make the regulatory domain fail in case of multiple WiFi modules. On
-slower boards (espacially with mdev), enumeration of the WiFi modules
-can end up in an intersected regulatory domain, and user cannot set it
-with 'iw reg set' anymore.
-
-This is happening, because:
-- 1st module enumerates, queues up a regulatory request
-- request gets processed by __reg_process_hint_driver():
-  - checks if previous was set by CORE -> yes
-    - checks if regulator domain changed -> yes, from '00' to e.g. 'US'
-      -> sends request to the 'crda'
-- 2nd module enumerates, queues up a regulator request (which triggers
-  the reg_todo() work)
-- reg_todo() -> reg_process_pending_hints() sees, that the last request
-  is not processed yet, so it tries to process it again.
-  __reg_process_hint driver() will run again, and:
-  - checks if the last request's initiator was the core -> no, it was
-    the driver (1st WiFi module)
-  - checks, if the previous initiator was the driver -> yes
-    - checks if the regulator domain changed -> yes, it was '00' (set by
-      core, and crda call did not return yet), and should be changed to 'US'
-
-------> __reg_process_hint_driver calls an intersect
-
-Besides, the reg_process_hint call with the last request is meaningless
-since the crda call has a timeout work. If that timeout expires, the
-first module's request will lost.
-
-Cc: stable@vger.kernel.org
-Fixes: 96cce12ff6e0 ("cfg80211: fix processing world regdomain when non modular")
-Signed-off-by: Robert Hodaszi <robert.hodaszi@digi.com>
-Link: https://lore.kernel.org/r/20190614131600.GA13897@a1-hr
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204631
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/reg.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/pcm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2777,7 +2777,7 @@ static void reg_process_pending_hints(vo
- 
- 	/* When last_request->processed becomes true this will be rescheduled */
- 	if (lr && !lr->processed) {
--		reg_process_hint(lr);
-+		pr_debug("Pending regulatory request, waiting for it to be processed...\n");
- 		return;
- 	}
- 
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -350,6 +350,7 @@ static int set_sync_ep_implicit_fb_quirk
+ 		ep = 0x81;
+ 		ifnum = 2;
+ 		goto add_sync_ep_from_ifnum;
++	case USB_ID(0x1397, 0x0001): /* Behringer UFX1604 */
+ 	case USB_ID(0x1397, 0x0002): /* Behringer UFX1204 */
+ 		ep = 0x81;
+ 		ifnum = 1;
 
 
