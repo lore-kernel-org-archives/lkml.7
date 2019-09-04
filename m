@@ -2,125 +2,65 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02CAC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF465C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A34F2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Ctf67tOB"
+	by mail.kernel.org (Postfix) with ESMTP id D39662339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfIDOGS (ORCPT
+        id S1730701AbfIDOG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:06:18 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:60220 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730462AbfIDOGS (ORCPT
+        Wed, 4 Sep 2019 10:06:57 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:34727 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfIDOG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:06:18 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x84E65FQ012074;
-        Wed, 4 Sep 2019 23:06:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x84E65FQ012074
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567605966;
-        bh=EIcW7nuR2BwIgm+8fvmv+3/OtKATqWDtbykL5X1yVEI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ctf67tOBMnzuIGRVtw7qPYg87jOjmZTf9vdUjarlrSrcrPC2pYi/twYuqrhQBYtgP
-         pt0NB0gigDE2jQbTGoQHX4/5V3ELKocKEC+gvE/K2fbUTsmj35x02tpHmTCVTKAePi
-         8Zc+S9nQtNbWlsfRq/huhIh/9ScT4+96hDLOuAYbv8h/jh/0UXUbfhTweA5uTA0EFj
-         pPYOEQIM8aF6MaV8EdYmfT9Xs5hXT3n1M+LO/cJ958Ga2INt0bxig9/uwJhQVRVcI2
-         knVovMKLNQL7J21XGPRIMwV/BN6WufKxGQelj3/blPczhZMs7jxcYDmDtJRTi4ouhZ
-         Zhn0s5/R3subg==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id h23so2703851uao.10;
-        Wed, 04 Sep 2019 07:06:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAWphMMClKxjHmWFpQ+IBr5I4tc04w0F4qWaOsKyjEyr90knVDQI
-        qeonlTO9FZRjNz92EQmAz5yvhk/oXVwrn8s1GbU=
-X-Google-Smtp-Source: APXvYqyDmWQLlXmtoyVyouREoqmPaMLGw1tPpcxgighXpcAcoFK3ScNooPQI4LTe/+po0y7FdOnWYKnxlyKUaYtiwFY=
-X-Received: by 2002:ab0:32d8:: with SMTP id f24mr19579922uao.121.1567605964838;
- Wed, 04 Sep 2019 07:06:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
- <20190831162555.31887-2-yamada.masahiro@socionext.com> <CAKwvOdm0zcyaBLdSVc7PmjUa-wyVuCaN=6qZoPLvnoJC1ammog@mail.gmail.com>
- <CA+icZUWzSsFXLmrO2G7ochE62e=kByEV6UKregcJqZrJN1WJxQ@mail.gmail.com>
- <CA+icZUXboR-0TzpSHf7a8MSjxPWxdC13Oudu8D+b+umtvWCCkg@mail.gmail.com> <CA+icZUVN1zRi5P8PPWMjXoXwtSCkbzTFNreYXi+0HtTjPnfkTQ@mail.gmail.com>
-In-Reply-To: <CA+icZUVN1zRi5P8PPWMjXoXwtSCkbzTFNreYXi+0HtTjPnfkTQ@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 4 Sep 2019 23:05:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ28VedOdiHX-tKatT1ebzDNXM8b5CxcxKek3b271PgzA@mail.gmail.com>
-Message-ID: <CAK7LNAQ28VedOdiHX-tKatT1ebzDNXM8b5CxcxKek3b271PgzA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to KBUILD_EXTRA_WARN
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Sep 2019 10:06:56 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id E3037CEC82;
+        Wed,  4 Sep 2019 16:15:41 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v1] bluetooth: hci_qca: disable irqs when spinlock is
+ acquired
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <1567571656-32403-1-git-send-email-c-hbandi@codeaurora.org>
+Date:   Wed, 4 Sep 2019 16:06:53 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <6F34A9CD-7C8F-4E5D-9A22-9F05CC2CF9BC@holtmann.org>
+References: <1567571656-32403-1-git-send-email-c-hbandi@codeaurora.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 6:58 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Wed, Sep 4, 2019 at 10:07 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > On Wed, Sep 4, 2019 at 8:58 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> > >
-> > > On Tue, Sep 3, 2019 at 11:50 PM Nick Desaulniers
-> > > <ndesaulniers@google.com> wrote:
-> > > >
-> > > > On Sat, Aug 31, 2019 at 9:26 AM Masahiro Yamada
-> > > > <yamada.masahiro@socionext.com> wrote:
-> > > > >
-> > > > > KBUILD_ENABLE_EXTRA_GCC_CHECKS started as a switch to add extra warning
-> > > > > options for GCC, but now it is a historical misnomer since we use it
-> > > > > also for Clang, DTC, and even kernel-doc.
-> > > >
-> > > > Thanks for the patch!
-> > > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > >
-> > >
-> > > Thanks for the patch.
-> > > I like the backward compatibility and am OK with pointing to 'make
-> > > --help' for the documentation part (KISS - Keep It Simple and
-> > > Short/Stupid).
-> > >
-> > > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-> >
-> > If you will do a next version...
-> >
-> > - @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
-> > + @echo  '  make W=n   [targets] Enable extra checks, n=1,2,3 where'
-> >
-> > ...clarify on extra checks for compiler...
-> >
-> > + @echo  '  make W=n   [targets] Enable extra *compiler* checks, n=1,2,3 where'
-> >
->
-> +KBUILD_EXTRA_WARN
-> +-----------------
-> +Specify the extra build checks. The same value can be assigned by passing
-> +W=... from the command line.
->
-> For consistency reasons might be better:
->
-> - @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
-> + @echo  '  make W=n   [targets] Enable extra build checks, n=1,2,3 where'
->
+Hi Harish,
 
-OK, I will squash this. Thanks.
+> Looks like Deadlock is observed in hci_qca while performing
+> stress and stability tests. Since same lock is getting
+> acquired from qca_wq_awake_rx and hci_ibs_tx_idle_timeout
+> seeing spinlock recursion, irqs should be disable while
+> acquiring the spinlock always.
+> 
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+> drivers/bluetooth/hci_qca.c | 10 ++++++----
+> 1 file changed, 6 insertions(+), 4 deletions(-)
 
+patch has been applied to bluetooth-stable tree.
 
--- 
-Best Regards
-Masahiro Yamada
+Regards
+
+Marcel
+
