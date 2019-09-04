@@ -2,142 +2,137 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B56C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADF2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFFCA22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF98622CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:19:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CztmP3Vr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfIDDTB (ORCPT
+        id S1728093AbfIDDT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 23:19:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:47146 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfIDDTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 23:19:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A44F337;
-        Tue,  3 Sep 2019 20:19:00 -0700 (PDT)
-Received: from [10.162.41.129] (p8cg001049571a15.blr.arm.com [10.162.41.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0D7053F718;
-        Tue,  3 Sep 2019 20:18:55 -0700 (PDT)
-Subject: Re: [PATCH] mm: fix double page fault on arm64 if PTE_AF is cleared
-To:     Jia He <justin.he@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Airlie <airlied@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190904005831.153934-1-justin.he@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <fd22d787-3240-fe42-3ca3-9e8a98f86fce@arm.com>
-Date:   Wed, 4 Sep 2019 08:49:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 3 Sep 2019 23:19:26 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33572 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbfIDDT0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 23:19:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so7224852pfl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 20:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=02+eBEQJWm6NHimkROpVhmoHyIo4/pLc4YR1Y2rVwOA=;
+        b=CztmP3VrmOz2/mU3Ni+FHnjEZCeJ2OyXfo8+ajDcZ79r5MxkWd3rA4/inLzPD+RhqT
+         G65tPOsl5mK/jUAMnnKUdXSuWwlD0EwrbbcevxYgEMrozddxtZpG38f2rD/pBHqu7oXj
+         c4SIl4FK3haHY+7szeZAjmoG5DCsVHlOwdGVnBAAYn85mmhN35dlKeUKlU0V0uY2+4Gy
+         sz80PAgfCcGbm83OjFv88AIjBatvvSx2zv+3Wzo62LaTgEwZKc9aDH+PM+luetMoRCpZ
+         qMeyqHf2BuUAkkFuqNrWDU2PpD0b/cvL4gy5vXGj5BnyTLSLC7A6gWk8AevGxappaTEB
+         vA9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=02+eBEQJWm6NHimkROpVhmoHyIo4/pLc4YR1Y2rVwOA=;
+        b=lL/GKDQhf9hggf/XjnL+ElVfdv2gJaWQgqhfeZEisQQ2Q3GkKfPTyozys6UKjUmg5f
+         uo6dRBfDA7iGnGhDR85DyMsYJRqeyjURgri1xODbey3i4zLr1UXAxTDVZ+vf7cOQjQlz
+         PNGHGo9BurQtckB5qDymYbvABj1cUDdInilMhde39LcyKN520tE/xq7JtdHJ1r/L00RG
+         2fjw3OWZnKJIx/8AlPgZVjUNM1PuNlpcj0EN+u/NvNgcfl/BO+a1KdTcG64DS95F8o+m
+         NzmhfyGEN7cXnMOuYWRj6I/VtNB5Qfaomp2F/BlO0WpuNxtDJe0kOKkE3I6aeyNpkBmR
+         +eMw==
+X-Gm-Message-State: APjAAAUiuqwxEShlW3jT6K/zQ3OfxVig4WsnBEAm0tA6jKxDvjrbdhmq
+        WpFylE8lwXdmnZPgaYe1ECFK2A==
+X-Google-Smtp-Source: APXvYqxYWfllLFvx+G/2hfqNwK0phBdw0yYAbUV1JDKDDrpF5Cmiadx1YRaxQl3l2TCyAI6O/wjG9Q==
+X-Received: by 2002:aa7:84d2:: with SMTP id x18mr5859554pfn.250.1567567165787;
+        Tue, 03 Sep 2019 20:19:25 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 185sm21836340pfd.125.2019.09.03.20.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 20:19:25 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 20:19:22 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     agross@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
+Message-ID: <20190904031922.GC574@tuxbook-pro>
+References: <20190903135052.13827-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190904005831.153934-1-justin.he@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903135052.13827-1-lee.jones@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 06:28 AM, Jia He wrote:
-> When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
-> will be a double page fault in __copy_from_user_inatomic of cow_user_page.
-> 
-> Below call trace is from arm64 do_page_fault for debugging purpose
-> [  110.016195] Call trace:
-> [  110.016826]  do_page_fault+0x5a4/0x690
-> [  110.017812]  do_mem_abort+0x50/0xb0
-> [  110.018726]  el1_da+0x20/0xc4
-> [  110.019492]  __arch_copy_from_user+0x180/0x280
-> [  110.020646]  do_wp_page+0xb0/0x860
-> [  110.021517]  __handle_mm_fault+0x994/0x1338
-> [  110.022606]  handle_mm_fault+0xe8/0x180
-> [  110.023584]  do_page_fault+0x240/0x690
-> [  110.024535]  do_mem_abort+0x50/0xb0
-> [  110.025423]  el0_da+0x20/0x24
-> 
-> The pte info before __copy_from_user_inatomic is(PTE_AF is cleared):
-> [ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
-> 
-> The keypoint is: we don't always have a hardware-managed access flag on
-> arm64.
-> 
-> The root cause is in copy_one_pte, it will clear the PTE_AF for COW
-> pages. Generally, when it is accessed by user, the COW pages will be set
-> as accessed(PTE_AF bit on arm64) by hardware if hardware feature is
-> supported. But on some arm64 platforms, the PTE_AF needs to be set by
-> software.
-> 
-> This patch fix it by calling pte_mkyoung. Also, the parameter is
-> changed because vmf should be passed to cow_user_page()
-> 
-> [1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
-> 
-> Reported-by: Yibo Cai <Yibo.Cai@arm.com>
-> Signed-off-by: Jia He <justin.he@arm.com>
-> ---
->  mm/memory.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index e2bb51b6242e..b1f9ace2e943 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -2140,7 +2140,8 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
->  	return same;
->  }
->  
-> -static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
-> +static inline void cow_user_page(struct page *dst, struct page *src,
-> +				struct vm_fault *vmf)
->  {
->  	debug_dma_assert_idle(src);
->  
-> @@ -2152,20 +2153,30 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
->  	 */
->  	if (unlikely(!src)) {
->  		void *kaddr = kmap_atomic(dst);
-> -		void __user *uaddr = (void __user *)(va & PAGE_MASK);
-> +		void __user *uaddr = (void __user *)(vmf->address & PAGE_MASK);
-> +		pte_t entry;
->  
->  		/*
->  		 * This really shouldn't fail, because the page is there
->  		 * in the page tables. But it might just be unreadable,
->  		 * in which case we just give up and fill the result with
-> -		 * zeroes.
-> +		 * zeroes. If PTE_AF is cleared on arm64, it might
-> +		 * cause double page fault here. so makes pte young here
->  		 */
-> +		if (!pte_young(vmf->orig_pte)) {
-> +			entry = pte_mkyoung(vmf->orig_pte);
-> +			if (ptep_set_access_flags(vmf->vma, vmf->address,
-> +				vmf->pte, entry, vmf->flags & FAULT_FLAG_WRITE))
-> +				update_mmu_cache(vmf->vma, vmf->address,
-> +						vmf->pte);
-> +		}
-> +
->  		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
+On Tue 03 Sep 06:50 PDT 2019, Lee Jones wrote:
 
-Should not page fault be disabled when doing this ? Ideally it should
-have also called access_ok() on the user address range first. The point
-is that the caller of __copy_from_user_inatomic() must make sure that
-there cannot be any page fault while doing the actual copy. But also it
-should be done in generic way, something like in access_ok(). The current
-proposal here seems very specific to arm64 case.
+> When booting with ACPI, the Geni Serial Engine is not set as the I2C/SPI
+> parent and thus, the wrapper (parent device) is unassigned.  This causes
+> the kernel to crash with a null dereference error.
+> 
+
+Now I see what you did in 8bc529b25354; i.e. stubbed all the other calls
+between the SE and wrapper.
+
+Do you think it would be possible to resolve the _DEP link to QGP[01]
+somehow? For the clocks workarounds this could be resolved by us
+representing that relationship using device_link and just rely on
+pm_runtime to propagate the clock state.
+
+For the DMA operation, iiuc it's the wrapper that implements the DMA
+engine involved, but I'm guessing the main reason for mapping buffers on
+the wrapper is so that it ends up being associated with the iommu
+context of the wrapper.
+
+Are the SMMU contexts at all represented in the ACPI world and if so do
+you know how the wrapper vs SEs are bound to contexts? Can we map on
+se->dev when wrapper is NULL (or perhaps always?)?
+
+Regards,
+Bjorn
+
+> Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+> Since we are already at -rc7 this patch should be processed ASAP - thank you.
+> 
+> drivers/soc/qcom/qcom-geni-se.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+> index d5cf953b4337..7d622ea1274e 100644
+> --- a/drivers/soc/qcom/qcom-geni-se.c
+> +++ b/drivers/soc/qcom/qcom-geni-se.c
+> @@ -630,6 +630,9 @@ int geni_se_tx_dma_prep(struct geni_se *se, void *buf, size_t len,
+>  	struct geni_wrapper *wrapper = se->wrapper;
+>  	u32 val;
+>  
+> +	if (!wrapper)
+> +		return -EINVAL;
+> +
+>  	*iova = dma_map_single(wrapper->dev, buf, len, DMA_TO_DEVICE);
+>  	if (dma_mapping_error(wrapper->dev, *iova))
+>  		return -EIO;
+> @@ -663,6 +666,9 @@ int geni_se_rx_dma_prep(struct geni_se *se, void *buf, size_t len,
+>  	struct geni_wrapper *wrapper = se->wrapper;
+>  	u32 val;
+>  
+> +	if (!wrapper)
+> +		return -EINVAL;
+> +
+>  	*iova = dma_map_single(wrapper->dev, buf, len, DMA_FROM_DEVICE);
+>  	if (dma_mapping_error(wrapper->dev, *iova))
+>  		return -EIO;
+> -- 
+> 2.17.1
+> 
