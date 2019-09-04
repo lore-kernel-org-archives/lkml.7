@@ -2,133 +2,118 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4DAC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 390E1C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9369F22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:53:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567598026;
-	bh=6yE3IUv7qBSVFJ6+Mf00UxE1PnKsLJ0VJifYwWdQq1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XVlgIiuGXGos/FHPE7D8MVEhX1zDEKG47AYT7aI/V5l/30KZxyji8kRdFaY0vpNT/
-	 QHOnTIHEGKrbP59+Bm+6TMUhEdA+JpJFKxSg6On4oMMZLOrR2rvEMueZdWS7MgM/uT
-	 0f2zS0AFcRzD7Z1iiOWjgREj2NinSkCTdExzRmH4=
+	by mail.kernel.org (Postfix) with ESMTP id 17CBD22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:54:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729597AbfIDLxp (ORCPT
+        id S1729804AbfIDLyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 07:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfIDLxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 07:53:45 -0400
-Received: from localhost (unknown [122.182.201.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C20722CF5;
-        Wed,  4 Sep 2019 11:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567598024;
-        bh=6yE3IUv7qBSVFJ6+Mf00UxE1PnKsLJ0VJifYwWdQq1Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bINwaOQTuFOWx7V12YuIGe2FCJ+xjHqhhW3BE3LSzwuFSEyTJsQ1SW8/5NIU8zUQy
-         DpAM0NqtkKvoWpvFGBSP9qhjJlOM834TBGmJpNbdMCItmQx0hKRfmQN5iU9krCQYkh
-         rSM7PF0SdS00ITRfSqCIRGCPqVzc+Dc7JDvuXR9I=
-Date:   Wed, 4 Sep 2019 17:22:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Message-ID: <20190904115234.GV2672@vkoul-mobl>
-References: <20190904113917.15223-1-lee.jones@linaro.org>
+        Wed, 4 Sep 2019 07:54:08 -0400
+Received: from mail-oi1-f174.google.com ([209.85.167.174]:38532 "EHLO
+        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfIDLyH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 07:54:07 -0400
+Received: by mail-oi1-f174.google.com with SMTP id 7so7402187oip.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 04:54:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T69bo+UrOlt2glBHGVe76qsO1FE/ClOTc1fP/qn3ly4=;
+        b=W3ap7cN9ijp/DkBSlnKcYR6YPGQF1UeiamznjEyKcPhlnz3WWsIuadKeEzWUbetwB8
+         SrElHTCgQ6b5XbPmFOMYPN7T/Wia3nazVs+2X/fPTVW7QSFx+WznPjBjUL+Q7lXiLrmd
+         cPQAO+s5kyICH5JHj96AqkPDy6WStjjXCJIRxfpsBa1WNEEEM/1ldKgmX/98n9DQARbW
+         g5tta/DsMJacUt1pqkshVSIUsMDmM3K5ynitGA9vYw6507A+axhu3/ebBr8jkgAG8ej3
+         W//uelN+Q8MPcCzw1UzWqF270eiAARQp42zHEwjk3HSC8Do3RA8uKkatEIHb5z9K8Zfp
+         1edA==
+X-Gm-Message-State: APjAAAUPXfR4b6p9nPKTJFPYfpFoJ9E5rbFLpRXQB4OcJGVwrOunJkxD
+        eUiziFKNTcBxvTNMbtOvw3ULOIwhaP324DRfREQ=
+X-Google-Smtp-Source: APXvYqwmRo6Essn/dIx2ugiIINngyVTsRr8G0kgxKgSD/D0rdmTTJq3MCnTl1RvAdyabnhGii94Sh7c+PeENUo3O4mI=
+X-Received: by 2002:aca:f305:: with SMTP id r5mr2841597oih.131.1567598046606;
+ Wed, 04 Sep 2019 04:54:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904113917.15223-1-lee.jones@linaro.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190827145102.p7lmkpytf3mngxbj@treble> <CAHFW8PRsmmCR6TWoXpQ9gyTA7azX9YOerPErCMggcQX-=fAqng@mail.gmail.com>
+ <CAK8P3a2TeaMc_tWzzjuqO-eQjZwJdpbR1yH8yzSQbbVKdWCwSg@mail.gmail.com>
+ <20190827192255.wbyn732llzckmqmq@treble> <CAK8P3a2DWh54eroBLXo+sPgJc95aAMRWdLB2n-pANss1RbLiBw@mail.gmail.com>
+ <CAKwvOdnD1mEd-G9sWBtnzfe9oGTeZYws6zNJA7opS69DN08jPg@mail.gmail.com>
+ <CAK8P3a0nJL+3hxR0U9kT_9Y4E86tofkOnVzNTEvAkhOFxOEA3Q@mail.gmail.com>
+ <CAK8P3a0bY9QfamCveE3P4H+Nrs1e6CTqWVgiY+MCd9hJmgMQZg@mail.gmail.com>
+ <20190828152226.r6pl64ij5kol6d4p@treble> <CAK8P3a2ATzqRSqVeeKNswLU74+bjvwK_GmG0=jbMymVaSp2ysw@mail.gmail.com>
+ <20190829173458.skttfjlulbiz5s25@treble> <CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com>
+In-Reply-To: <CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 4 Sep 2019 13:53:55 +0200
+Message-ID: <CAMuHMdWvD37CQmDcDQAFtxSGv+vXw_dzPMOv_mLVpiQ3EniFtg@mail.gmail.com>
+Subject: Re: objtool warning "uses BP as a scratch register" with clang-9
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-09-19, 12:39, Lee Jones wrote:
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+Hi Linus,
 
-Can we keep this sorted, so before mtp.
+On Thu, Aug 29, 2019 at 8:31 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+> On Thu, Aug 29, 2019 at 10:35 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > Peter suggested to try WRITE_ONCE for the two zero writes to see if that
+> > "fixes" it.
+>
+> I'm sure it "fixes" it.
+>
+> .. and then where else will we hit this?
+>
+> It's one thing to turn a structure zeroing into "memset()", but some
+> places really can't do it.
+>
+> We use "-ffreestanding" in some places to make sure that gcc doesn't
+> start calling random libc routines. I wonder if we need to make it a
+> general rule that it's done unconditionally.
+>
+> Sadly, I think that ends up also disabling things like
+> "__builtin_memcpy()" and friends. Which we _do_ want to have access
+> to, because then gcc can inline the memcpy() when we _do_ use
+> memcpy().
+>
+> We used to do all of those heuristics by hand, but wanted to let the
+> compiler do them for us.
+>
+> So:
+>
+>  - we do want "memcpy()" to become "__builtin_memcpy()" which can then
+> be optimized to either individual inlined assignments _or_ to an
+> out-of-line call to memcpy().
 
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> new file mode 100644
-> index 000000000000..ad160c718b33
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -0,0 +1,454 @@
-> +// SPDX-License-Identifier: GPL-2.0
+You can do
 
-Are we going to make this dual? or BSD..
+    #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
 
-> +&apps_rsc {
-> +	pm8998-rpmh-regulators {
-> +		compatible = "qcom,pm8998-rpmh-regulators";
-> +		qcom,pmic-id = "a";
-> +
-> +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
-> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
-> +
-> +		vreg_s2a_1p125: smps2 {
-> +		};
-> +
-> +		vreg_s3a_1p35: smps3 {
-> +			regulator-min-microvolt = <1352000>;
-> +			regulator-max-microvolt = <1352000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s4a_1p8: smps4 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s5a_2p04: smps5 {
-> +			regulator-min-microvolt = <2040000>;
-> +			regulator-max-microvolt = <2040000>;
-> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> +		};
-> +
-> +		vreg_s7a_1p025: smps7 {
+Alpha, m68k, sparc, and x86 already do.
 
-Any reason why we dont specify the mode and min/max voltage for this
-and few others below..?
+Gr{oetje,eeting}s,
 
-> +&i2c1 {
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +	qcom,geni-se-fifo;
-> +
-> +	battery@70 {
-> +		compatible = "some,battery";
-
-some,battery ..?
-
-> +&qup_i2c12_default {
-
-Please move the qup nodes up so that nodes are sorted alphabetically
+                        Geert
 
 -- 
-~Vinod
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
