@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F90C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E8BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABEAA2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AED6920820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612776;
-	bh=Z+KQzhdzjhI9w2EO9udNs4Ojp3yxUcr7VScQuI1wTeM=;
+	s=default; t=1567612781;
+	bh=ogNCz7KeuQSuQwt1JQpiR7OKnj0Zgec1T27hcVBDLco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQ02WDfW6q2BmDmRIQliSz7Y6DOEmvuI/81Zy2+n2OshXu2R1PHjZugeXCYSBznGD
-	 lii9YFqha24viwzVmVmwB7CGLTnWV3xAZATfLzJwhacC2L8vCqjvoEim4ne+Pv6/fn
-	 pljUXbUad2Mwz0RhQD3I3Pno1nF26dW2SKJ2vdLc=
+	b=kPU2mi9h8xeOSyAbLnGlc4d1F3byKdZAUCpp9vQrYPLzK7SJyS8I/NSd4BDyzn8h9
+	 UvqFePEYECJxFCVkY42KbfIob8PT/Kn1neKPHo4lupF0fXOUI5RTr0hiJNBXbnHF4l
+	 /FU7jtt2/IYgc08QjLufsoDIdiIgva0/ismXSSsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732431AbfIDP7f (ORCPT
+        id S1732452AbfIDP7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731650AbfIDP7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:59:32 -0400
+        id S1732435AbfIDP7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:59:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6543622CED;
-        Wed,  4 Sep 2019 15:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F30342070C;
+        Wed,  4 Sep 2019 15:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612771;
-        bh=Z+KQzhdzjhI9w2EO9udNs4Ojp3yxUcr7VScQuI1wTeM=;
+        s=default; t=1567612776;
+        bh=ogNCz7KeuQSuQwt1JQpiR7OKnj0Zgec1T27hcVBDLco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zqpxw0blLtMnDbmBbZOoynw9EUm9K80M59viv4Vbzb6mqfcNlpzoQHD155QTPs1jM
-         kOzEJSjfwH1r5Z8JmtWlZD8Y8kExZfp7VQ+yGAm0y+19xs8G6J3xuFUMjEdGu5em31
-         lpSecPg20SCnbuZJwC5tF1AiO/b+j38eqkc5eRho=
+        b=0MZxWIuLiBXEFEoFM3v/66RFHvS4tdrXFMh8oDpgi7WAeMfKNS/rEdJtDpVCEbnY5
+         5SqoJCOCT9/LuhM+E+nM26vJ1VKHWAplix1lGOykH+R6G2PdHFHYxWhm5B/1oQyU4G
+         Pu8FHIHvylkQdatF6R6XcWp8aOTm9lzgOYGihwSY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Arnaldo Carvalho de Melo" <acme@kernel.org>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 72/94] perf/x86/amd/ibs: Fix sample bias for dispatched micro-ops
-Date:   Wed,  4 Sep 2019 11:57:17 -0400
-Message-Id: <20190904155739.2816-72-sashal@kernel.org>
+Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Alexandru M Stan <amstan@chromium.org>,
+        Qii Wang <qii.wang@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 74/94] i2c: mediatek: disable zero-length transfers for mt8183
+Date:   Wed,  4 Sep 2019 11:57:19 -0400
+Message-Id: <20190904155739.2816-74-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -67,141 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
 
-[ Upstream commit 0f4cd769c410e2285a4e9873a684d90423f03090 ]
+[ Upstream commit abf4923e97c3abbbd1e59f0e13c7c214c93c6aaa ]
 
-When counting dispatched micro-ops with cnt_ctl=1, in order to prevent
-sample bias, IBS hardware preloads the least significant 7 bits of
-current count (IbsOpCurCnt) with random values, such that, after the
-interrupt is handled and counting resumes, the next sample taken
-will be slightly perturbed.
+Quoting from mt8183 datasheet, the number of transfers to be
+transferred in one transaction should be set to bigger than 1,
+so we should forbid zero-length transfer and update functionality.
 
-The current count bitfield is in the IBS execution control h/w register,
-alongside the maximum count field.
-
-Currently, the IBS driver writes that register with the maximum count,
-leaving zeroes to fill the current count field, thereby overwriting
-the random bits the hardware preloaded for itself.
-
-Fix the driver to actually retain and carry those random bits from the
-read of the IBS control register, through to its write, instead of
-overwriting the lower current count bits with zeroes.
-
-Tested with:
-
-perf record -c 100001 -e ibs_op/cnt_ctl=1/pp -a -C 0 taskset -c 0 <workload>
-
-'perf annotate' output before:
-
- 15.70  65:   addsd     %xmm0,%xmm1
- 17.30        add       $0x1,%rax
- 15.88        cmp       %rdx,%rax
-              je        82
- 17.32  72:   test      $0x1,%al
-              jne       7c
-  7.52        movapd    %xmm1,%xmm0
-  5.90        jmp       65
-  8.23  7c:   sqrtsd    %xmm1,%xmm0
- 12.15        jmp       65
-
-'perf annotate' output after:
-
- 16.63  65:   addsd     %xmm0,%xmm1
- 16.82        add       $0x1,%rax
- 16.81        cmp       %rdx,%rax
-              je        82
- 16.69  72:   test      $0x1,%al
-              jne       7c
-  8.30        movapd    %xmm1,%xmm0
-  8.13        jmp       65
-  8.24  7c:   sqrtsd    %xmm1,%xmm0
-  8.39        jmp       65
-
-Tested on Family 15h and 17h machines.
-
-Machines prior to family 10h Rev. C don't have the RDWROPCNT capability,
-and have the IbsOpCurCnt bitfield reserved, so this patch shouldn't
-affect their operation.
-
-It is unknown why commit db98c5faf8cb ("perf/x86: Implement 64-bit
-counter support for IBS") ignored the lower 4 bits of the IbsOpCurCnt
-field; the number of preloaded random bits has always been 7, AFAICT.
-
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: <x86@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "Borislav Petkov" <bp@alien8.de>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: "Namhyung Kim" <namhyung@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Link: https://lkml.kernel.org/r/20190826195730.30614-1-kim.phillips@amd.com
+Reported-by: Alexandru M Stan <amstan@chromium.org>
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+Reviewed-by: Qii Wang <qii.wang@mediatek.com>
+[wsa: shortened commit message a little]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/ibs.c         | 13 ++++++++++---
- arch/x86/include/asm/perf_event.h | 12 ++++++++----
- 2 files changed, 18 insertions(+), 7 deletions(-)
+ drivers/i2c/busses/i2c-mt65xx.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 62f317c9113af..5b35b7ea5d728 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -661,10 +661,17 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+index 252edb433fdfb..29eae1bf4f861 100644
+--- a/drivers/i2c/busses/i2c-mt65xx.c
++++ b/drivers/i2c/busses/i2c-mt65xx.c
+@@ -234,6 +234,10 @@ static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
+ 	.max_num_msgs = 255,
+ };
  
- 	throttle = perf_event_overflow(event, &data, &regs);
- out:
--	if (throttle)
-+	if (throttle) {
- 		perf_ibs_stop(event, 0);
--	else
--		perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
-+	} else {
-+		period >>= 4;
++static const struct i2c_adapter_quirks mt8183_i2c_quirks = {
++	.flags = I2C_AQ_NO_ZERO_LEN,
++};
 +
-+		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
-+		    (*config & IBS_OP_CNT_CTL))
-+			period |= *config & IBS_OP_CUR_CNT_RAND;
-+
-+		perf_ibs_enable_event(perf_ibs, hwc, period);
-+	}
+ static const struct mtk_i2c_compatible mt2712_compat = {
+ 	.regs = mt_i2c_regs_v1,
+ 	.pmic_i2c = 0,
+@@ -298,6 +302,7 @@ static const struct mtk_i2c_compatible mt8173_compat = {
+ };
  
- 	perf_event_update_userpage(event);
+ static const struct mtk_i2c_compatible mt8183_compat = {
++	.quirks = &mt8183_i2c_quirks,
+ 	.regs = mt_i2c_regs_v2,
+ 	.pmic_i2c = 0,
+ 	.dcm = 0,
+@@ -870,7 +875,11 @@ static irqreturn_t mtk_i2c_irq(int irqno, void *dev_id)
  
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 1392d5e6e8d67..ee26e9215f187 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -252,16 +252,20 @@ struct pebs_lbr {
- #define IBSCTL_LVT_OFFSET_VALID		(1ULL<<8)
- #define IBSCTL_LVT_OFFSET_MASK		0x0F
+ static u32 mtk_i2c_functionality(struct i2c_adapter *adap)
+ {
+-	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
++	if (adap->quirks->flags & I2C_AQ_NO_ZERO_LEN)
++		return I2C_FUNC_I2C |
++			(I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
++	else
++		return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+ }
  
--/* ibs fetch bits/masks */
-+/* IBS fetch bits/masks */
- #define IBS_FETCH_RAND_EN	(1ULL<<57)
- #define IBS_FETCH_VAL		(1ULL<<49)
- #define IBS_FETCH_ENABLE	(1ULL<<48)
- #define IBS_FETCH_CNT		0xFFFF0000ULL
- #define IBS_FETCH_MAX_CNT	0x0000FFFFULL
- 
--/* ibs op bits/masks */
--/* lower 4 bits of the current count are ignored: */
--#define IBS_OP_CUR_CNT		(0xFFFF0ULL<<32)
-+/*
-+ * IBS op bits/masks
-+ * The lower 7 bits of the current count are random bits
-+ * preloaded by hardware and ignored in software
-+ */
-+#define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
-+#define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
- #define IBS_OP_CNT_CTL		(1ULL<<19)
- #define IBS_OP_VAL		(1ULL<<18)
- #define IBS_OP_ENABLE		(1ULL<<17)
+ static const struct i2c_algorithm mtk_i2c_algorithm = {
 -- 
 2.20.1
 
