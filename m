@@ -2,136 +2,90 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A0AC3A5AB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF70CC3A5AB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F97220828
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LjvjwT5o"
+	by mail.kernel.org (Postfix) with ESMTP id 9DBDB22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:20:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567632045;
+	bh=Ojqy8ivmyKF5BkwEZLUHZkZNdboqGhLpouawdNXUclQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y8ouqwFOxUxm97iXf+420AxXNhc+TlqhcOJgT3itAkY24ZRXUzlZ//A5sbDuZk8RW
+	 fkzERUg8KwslOa1wxa/VGW4Pl6B+UlVimDSDAKuazbS230OyuvG90NLg85ZbzRvnDZ
+	 jxMxQgkUcPHiQfONtzTKFoBlmipLNF94tLGX+vfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfIDVP4 (ORCPT
+        id S1729863AbfIDVUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 17:15:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51260 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfIDVP4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 17:15:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k1so316214wmi.1;
-        Wed, 04 Sep 2019 14:15:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Dxs4Xmn14Ti3jSgpkVxzxzwg3rZgGyhdBRyDXWQ1X6k=;
-        b=LjvjwT5oZwcFzZGrEpF0CjtQsd3HtOKG/33/xQR71ZQPwHOoTe774LhAF84EkQS4m0
-         tpC8rlsKBJKRELBRH//hru/A6+MI1oS4uxB+0Hzl2NvpWLL5ff8rfnw60mjY+8NRbUVW
-         wyMUQS3Yfy6EQn4YQFaa6iV3NK2cxGYd2V61dkWUdMcKy/gb2HdmcLrzoZxqYhb8DZ15
-         fKnEm2OcVI6vpGIqE6aEcB/WVQ5Jr+uEM7jiDaDzVdZGzEXLevuBBsqFV1Dq6jMElZ5u
-         JRrQsjHB0ps1F874d62Mf14JCYIvL5LMH1TGRmgouegKZdEW5AU6YlmVyC/lgVpsjCuK
-         JyBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Dxs4Xmn14Ti3jSgpkVxzxzwg3rZgGyhdBRyDXWQ1X6k=;
-        b=DTKSdofL4mm7d/fZhY85NjWPULtSJytQO3azdN5kWQVasJMjQhAADBq12ptrZE7vmA
-         qk99RW/o0yAPWhoQ31MKAQ1m05hRIkcYphfB8B7zuhUhR9JeXNvM/rEYZ9srrrRGnoPM
-         djd7vAuMdKQ4DF/ig0jPH8yea7bSC//qk2uAsBWzL2Np33e/QaBrTB+2XWSsiPPBsoFx
-         XdxlhyglCFdceQ/l5sz+WKGny7R4qMiiPDS0/EelkgGwyB2a7L6LHDdKVdpx4jwgDwYX
-         cZfuJNMs4C6wf+P2ERgIOC0c6mA6wSHOGdrlJR1x1LMjJSJAGKGb6oEPCmkhSWalCOLN
-         4B/A==
-X-Gm-Message-State: APjAAAVg0htJzi2Qdia8xreBDTQiH94IiQ2v1ThpMJ2TyRrYIlUj3K0N
-        zQZLggSH/Tc6CQMB9Cfkrec=
-X-Google-Smtp-Source: APXvYqzrb9vggbAwpQr2Dks5C0st9n10mD88uNXH+VICsMg+OfF85dbySpily4o4x8blq3AEb63FBA==
-X-Received: by 2002:a05:600c:214:: with SMTP id 20mr234250wmi.112.1567631754197;
-        Wed, 04 Sep 2019 14:15:54 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id u83sm5822743wme.0.2019.09.04.14.15.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 14:15:53 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm/dsi: Move static keyword to the front of declarations
-Date:   Wed,  4 Sep 2019 23:15:51 +0200
-Message-Id: <20190904211551.10381-1-kw@linux.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 4 Sep 2019 17:20:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726358AbfIDVUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 17:20:44 -0400
+Received: from localhost (unknown [209.117.102.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C354F20828;
+        Wed,  4 Sep 2019 21:20:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567632043;
+        bh=Ojqy8ivmyKF5BkwEZLUHZkZNdboqGhLpouawdNXUclQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=To9BkXo/HIhtWlCLEliRLzA2HuJEM6u4Mxb8PHP8wPNMzVKs9a+iU650d2oxPR7aV
+         J2/LL4Tx9YRHFlGHovgPjTlm17Rd0axoECwDoSveJpTfOHePAfJJPOjy+X/rlV1S1p
+         /YrWcJgOY5A00o4poMoD5XjBXIZHZJMLNgSpEVm4=
+Date:   Wed, 4 Sep 2019 17:20:40 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+c6167ec3de7def23d1e8@syzkaller.appspotmail.com,
+        Arvid Brodin <arvid.brodin@alten.se>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 5.2 143/143] hsr: implement dellink to clean up resources
+Message-ID: <20190904212040.GA1616@sasha-vm>
+References: <20190904175314.206239922@linuxfoundation.org>
+ <20190904175320.090038891@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190904175320.090038891@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declarations
-of msm_dsi_v2_host_ops, msm_dsi_6g_host_ops and
-msm_dsi_6g_v2_host_ops, and resolve the following
-compiler warnings that can be seen when building
-with warnings enabled (W=1):
+On Wed, Sep 04, 2019 at 07:54:46PM +0200, Greg Kroah-Hartman wrote:
+>From: Cong Wang <xiyou.wangcong@gmail.com>
+>
+>commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668 upstream.
+>
+>hsr_link_ops implements ->newlink() but not ->dellink(),
+>which leads that resources not released after removing the device,
+>particularly the entries in self_node_db and node_db.
+>
+>So add ->dellink() implementation to replace the priv_destructor.
+>This also makes the code slightly easier to understand.
+>
+>Reported-by: syzbot+c6167ec3de7def23d1e8@syzkaller.appspotmail.com
+>Cc: Arvid Brodin <arvid.brodin@alten.se>
+>Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+>Signed-off-by: David S. Miller <davem@davemloft.net>
+>Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-drivers/gpu/drm/msm/dsi/dsi_cfg.c:150:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+If the airport gods cooperate, I'm going to queue:
 
-drivers/gpu/drm/msm/dsi/dsi_cfg.c:161:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+edf070a0fb45a ("hsr: fix a NULL pointer deref in hsr_dev_xmit()")
+311633b604063 ("hsr: switch ->dellink() to ->ndo_uninit()")
 
-drivers/gpu/drm/msm/dsi/dsi_cfg.c:172:1: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
+as fixes for this commit.
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
-Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
-
- drivers/gpu/drm/msm/dsi/dsi_cfg.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_cfg.c b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-index b7b7c1a9164a..e74dc8cc904b 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_cfg.c
-@@ -147,7 +147,7 @@ static const struct msm_dsi_config sdm845_dsi_cfg = {
- 	.num_dsi = 2,
- };
- 
--const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
-+static const struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
- 	.link_clk_enable = dsi_link_clk_enable_v2,
- 	.link_clk_disable = dsi_link_clk_disable_v2,
- 	.clk_init_ver = dsi_clk_init_v2,
-@@ -158,7 +158,7 @@ const static struct msm_dsi_host_cfg_ops msm_dsi_v2_host_ops = {
- 	.calc_clk_rate = dsi_calc_clk_rate_v2,
- };
- 
--const static struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
-+static const struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
- 	.link_clk_enable = dsi_link_clk_enable_6g,
- 	.link_clk_disable = dsi_link_clk_disable_6g,
- 	.clk_init_ver = NULL,
-@@ -169,7 +169,7 @@ const static struct msm_dsi_host_cfg_ops msm_dsi_6g_host_ops = {
- 	.calc_clk_rate = dsi_calc_clk_rate_6g,
- };
- 
--const static struct msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
-+static const struct msm_dsi_host_cfg_ops msm_dsi_6g_v2_host_ops = {
- 	.link_clk_enable = dsi_link_clk_enable_6g,
- 	.link_clk_disable = dsi_link_clk_disable_6g,
- 	.clk_init_ver = dsi_clk_init_6g_v2,
--- 
-2.22.1
-
+--
+Thanks,
+Sasha
