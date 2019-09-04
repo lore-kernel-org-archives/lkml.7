@@ -2,148 +2,82 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE469C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68684C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D572339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:10:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PhmTOOul"
+	by mail.kernel.org (Postfix) with ESMTP id 428A02339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567591805;
+	bh=Aw79mLTqa2kwkYl2YhNG5h7HCrO6r1u9MxIbyMHIMGQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=D1/5PL4sqyzNfVX82RVdD9C8ScgFhiHX58gkbOP4Eo7vU5Cp9NaGg5U1E5rI5TO7Z
+	 fPbvoSaqs2to3trEYXQcYjrZWbfKdvNvVAFCZdsg02+RsjZoBK16o6xp+lgIoqNDr/
+	 kf7ikkg8IE8ZUBomFk6Kf8dMSBCxwwrZasFRuJKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfIDKKA (ORCPT
+        id S1729296AbfIDKKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:10:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58977 "EHLO ozlabs.org"
+        Wed, 4 Sep 2019 06:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbfIDKKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:10:00 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726528AbfIDKKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:10:03 -0400
+Received: from localhost.localdomain (unknown [122.182.201.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Nfh30l95z9s7T;
-        Wed,  4 Sep 2019 20:09:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567591796;
-        bh=BDpKG3X1Zx+1VEa2ayRW84C1/Z2abJbdoRgSEZObzXc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PhmTOOulcTWedCl8xCPMFBfoWO4ziFKArLOqPtSqIf6dfKBwLEBnJLnVJ0VfOfJ1A
-         Y8MvP0jx/LE21TZCLcYWUsINj0py1uxWZnQ33nzBf/q2HgctP8JpTsceOEPjjQfdI2
-         jvoAqhOnplMoMd2Mh3yUR1wU9BztGTfacYvQLTsaP/lnQ/2TJqZ7/LRV+I0jyPHehM
-         JDp5iStSYXREYiDKGnM1BhRuRXLp097+CGn4u9nAVZ8K/BZLSTHjyt1aq8wC5XNIkL
-         n7az/PWPpK7MP07AMffbhCJ7rgXPItCOvUxEC4RBboiFNMooBYOUAWWpDw89/wLCBt
-         wGL03ggAzkbpw==
-Date:   Wed, 4 Sep 2019 20:09:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Saranya Gopal <saranya.gopal@intel.com>,
-        Balaji Manoharan <m.balaji@intel.com>
-Subject: linux-next: manual merge of the usb tree with the pm tree
-Message-ID: <20190904200929.00cfb98a@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id A466221881;
+        Wed,  4 Sep 2019 10:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567591802;
+        bh=Aw79mLTqa2kwkYl2YhNG5h7HCrO6r1u9MxIbyMHIMGQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ouggbG2sksRb3hDfkIcZCU2V/9FmlXAZRgl+X+p35vZPVJNXzp5JYq7AJ2xm7488V
+         eDavLnbEw+ugBjndvzO3yXtUd1s7DXNDCriLfH8FWuHrHQC/50G4Ruto9kGfVviL/8
+         bOohPunHHdQVWMs5mSUwBCiFed/Aj6y9tfoBweS8=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Can Guo <cang@codeaurora.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 0/3] UFS: Add support for SM8150 UFS
+Date:   Wed,  4 Sep 2019 15:38:32 +0530
+Message-Id: <20190904100835.6099-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/7+AVZsp_crtAvikF==gzmFR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/7+AVZsp_crtAvikF==gzmFR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This series adds compatible strings for ufs hc and ufs qmp phy found in
+Qualcomm SM8150 SoC. Also update the qmp phy driver with version 4 and
+support for ufs phy.
 
-Hi all,
+Vinod Koul (3):
+  dt-bindings: ufs: Add sm8150 compatible string
+  dt-bindings: phy-qcom-qmp: Add sm8150 UFS phy compatible string
+  phy: qcom-qmp: Add SM8150 QMP UFS PHY support
 
-Today's linux-next merge of the usb tree got a conflict in:
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt  |   7 +-
+ .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |   1 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c           | 125 ++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h           |  96 ++++++++++++++
+ 4 files changed, 228 insertions(+), 1 deletion(-)
 
-  drivers/usb/roles/intel-xhci-usb-role-switch.c
+-- 
+2.20.1
 
-between commit:
-
-  d2a90ebb6553 ("usb: roles: intel_xhci: Supplying software node for the ro=
-le mux")
-
-from the pm tree and commit:
-
-  2be1fb64dfeb ("usb: roles: intel: Enable static DRD mode for role switch")
-
-from the usb tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/usb/roles/intel-xhci-usb-role-switch.c
-index 7325a84dd1c8,88d041601c51..000000000000
---- a/drivers/usb/roles/intel-xhci-usb-role-switch.c
-+++ b/drivers/usb/roles/intel-xhci-usb-role-switch.c
-@@@ -37,12 -44,9 +44,13 @@@
-  struct intel_xhci_usb_data {
-  	struct usb_role_switch *role_sw;
-  	void __iomem *base;
-+ 	bool enable_sw_switch;
-  };
- =20
- +static const struct software_node intel_xhci_usb_node =3D {
- +	"intel-xhci-usb-sw",
- +};
- +
-  static int intel_xhci_usb_set_role(struct device *dev, enum usb_role role)
-  {
-  	struct intel_xhci_usb_data *data =3D dev_get_drvdata(dev);
-@@@ -147,20 -167,12 +167,22 @@@ static int intel_xhci_usb_probe(struct=20
- =20
-  	platform_set_drvdata(pdev, data);
- =20
-+ 	data->enable_sw_switch =3D !device_property_read_bool(dev,
-+ 						"sw_switch_disable");
- +	ret =3D software_node_register(&intel_xhci_usb_node);
- +	if (ret)
- +		return ret;
- +
- +	sw_desc.set =3D intel_xhci_usb_set_role,
- +	sw_desc.get =3D intel_xhci_usb_get_role,
- +	sw_desc.allow_userspace_control =3D true,
- +	sw_desc.fwnode =3D software_node_fwnode(&intel_xhci_usb_node);
- =20
-  	data->role_sw =3D usb_role_switch_register(dev, &sw_desc);
- -	if (IS_ERR(data->role_sw))
- +	if (IS_ERR(data->role_sw)) {
- +		fwnode_handle_put(sw_desc.fwnode);
-  		return PTR_ERR(data->role_sw);
- +	}
- =20
-  	pm_runtime_set_active(dev);
-  	pm_runtime_enable(dev);
-
---Sig_/7+AVZsp_crtAvikF==gzmFR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1vjVkACgkQAVBC80lX
-0Gz7/AgAmTqmsoURHX0krQpnNFikKhjGPJMOn85YKgoXLha4XJbZ8ZdQ0Ui24xFM
-Wr+ATUqdAuByABYi+7W2cqrYLndlgekS4LQ92wdtXAh95Ff9vm7ffZDlRpWFz5qr
-SUVcG+CANtY7h1lmHo1ir4XuNi/oZ9AkPHaORvtuMaoNIOOTBdNebbpRctaOhgya
-/9/dFrDftks9ERiXuooJXz9Ty1bZhUsKOjIW0UFCQlBpiZsqV9ve5f9PX/TllehW
-e+Ov98Tgw2AwyCxBOLMEIgE0IgII/9n0Z7nMwKFFnLnjPfFef3Bf5fZCj1PEe6Ah
-6gSbm9SRIjPd1CymMlqDTPE1peZY+g==
-=jWUC
------END PGP SIGNATURE-----
-
---Sig_/7+AVZsp_crtAvikF==gzmFR--
