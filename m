@@ -2,151 +2,207 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6175C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F79C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F43233A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:27:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBpZ6A+8"
+	by mail.kernel.org (Postfix) with ESMTP id 34577233A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbfIDH1Q (ORCPT
+        id S1729083AbfIDH10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:27:16 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33148 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfIDH1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:27:16 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n190so10758803pgn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 00:27:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-description:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=9Et9BlRt+SMSDP1Q6IJeQ3vF/J+SFCi5Hqn0dALv4Fc=;
-        b=NBpZ6A+8AN7oxcEXEc9nIbW6FJSXHK3UU5N0RJjm+KHzTpjtuxFTvGUJBa8Eswyp8Q
-         LExWBIQplJX/7J0ailAW0WYmXrfrR0DnRd8OhbGVZa83Bhp85xasVCxvWh3UYGGbufHv
-         /iu0w0YwOMpFeWCLHCoESpzHxsGfbEvzX7hS0roRhT8dt+7q3Xp4oSfWPiODpH+IQWPg
-         +S1SDcNwPeC7phcGvbIg/c9QRgi+sRCfofKlup3tpyDNesNYlqbK6VLrHvapgqpbXsh6
-         ZLy1IXUKl4OEdg1cqFlFORiMgyHGVkEEJiHXL/1LoFbqVUeHNpR4OFUIBg1DK19zTCK1
-         yP1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-description:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=9Et9BlRt+SMSDP1Q6IJeQ3vF/J+SFCi5Hqn0dALv4Fc=;
-        b=EqxLPKAFp9JdUrNwKF2q/zy9eUcC5sQgxq08ZZK0E3HSOLaln3oD9p7UHlULgDDz+/
-         pL5cfnGAC3VtnG3VVnavg82709AMfbW73crf4ab9oatgtWooAq1JDEBK6feGbeI4gDE7
-         28CeAJUH7nkNYzLadGPfMhcPSROPK9PtlW0L2hRyR5NOKJ1nAY2//X1DEX1lm45IhAoo
-         FDzRimlE7Mwnps5WJTNFySTjWDFtdxjCcH9j4l6oPcbhjg45WQV7RmHagXBzCEiFJvAQ
-         HuLPWeb+9yxsYiujSLlRXQDXDiEEx5WjFdAAD72kAp831Qxpg5Yk5vPN2Yl8KKFBeO6i
-         Km9g==
-X-Gm-Message-State: APjAAAWa2///vZ5ogLPDjAs8zv88ft/RtQpFZ8HiUd9O+Yd+5hvBaZcb
-        hHwBAvmNdOrsldiPtQJ2gqE=
-X-Google-Smtp-Source: APXvYqwkQ5SISgCkfFL+sDJH0M8PJaVzOA5OiyCjQZB/W197lTkysqAIIuyoI3KzZxUXpS/uPgFEcw==
-X-Received: by 2002:a63:1310:: with SMTP id i16mr33404702pgl.187.1567582035511;
-        Wed, 04 Sep 2019 00:27:15 -0700 (PDT)
-Received: from raspberrypi ([61.83.141.141])
-        by smtp.gmail.com with ESMTPSA id s76sm19416340pgc.92.2019.09.04.00.27.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 00:27:14 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 08:27:07 +0100
-From:   Sidong Yang <realwakka@gmail.com>
-To:     Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/vkms: Use alpha value to blend values.
-Message-ID: <20190904072707.GA29211@raspberrypi>
-References: <20190831172546.GA1972@raspberrypi>
- <20190902122858.GU7482@intel.com>
+        Wed, 4 Sep 2019 03:27:26 -0400
+Received: from mga05.intel.com ([192.55.52.43]:1839 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbfIDH1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:27:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 00:27:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
+   d="scan'208";a="198965380"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Sep 2019 00:27:21 -0700
+Subject: Re: [PATCH v5] perf machine: arm/arm64: Improve completeness for
+ kernel address space
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+References: <20190815082521.16885-1-leo.yan@linaro.org>
+ <d874e6b3-c115-6c8c-bb12-160cfd600505@intel.com>
+ <20190815113242.GA28881@leoy-ThinkPad-X240s>
+ <e0919e39-7607-815b-3a12-96f098e45a5f@intel.com>
+ <20190816014541.GA17960@leoy-ThinkPad-X240s>
+ <363577f1-097e-eddd-a6ca-b23f644dd8ce@intel.com>
+ <20190826125105.GA3288@leoy-ThinkPad-X240s>
+ <20190902141511.GF4931@leoy-ThinkPad-X240s>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <c16ee888-73cc-588d-6156-bb5528d635cf@intel.com>
+Date:   Wed, 4 Sep 2019 10:26:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Description: ri-devel@lists.freedesktop.org,
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190902122858.GU7482@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190902141511.GF4931@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 03:28:58PM +0300, Ville Syrjälä wrote:
-> On Sat, Aug 31, 2019 at 06:25:46PM +0100, Sidong Yang wrote:
-> > Use alpha value to blend source value and destination value Instead of
-> > just overwrite with source value.
-> > 
-> > Signed-off-by: Sidong Yang <realwakka@gmail.com>
-> > ---
-> >  drivers/gpu/drm/vkms/vkms_composer.c | 13 +++++++++++--
-> >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> > index d5585695c64d..b776185e5cb5 100644
-> > --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> > @@ -75,6 +75,9 @@ static void blend(void *vaddr_dst, void *vaddr_src,
-> >  	int y_limit = y_src + h_dst;
-> >  	int x_limit = x_src + w_dst;
-> >  
-> > +	u8 *src, *dst;
-> > +	u32 alpha, inv_alpha;
+On 2/09/19 5:15 PM, Leo Yan wrote:
+> Hi Adrian,
 > 
-> These could all live in a tighter scope.
+> On Mon, Aug 26, 2019 at 08:51:05PM +0800, Leo Yan wrote:
+>> Hi Adrian,
+>>
+>> On Fri, Aug 16, 2019 at 04:00:02PM +0300, Adrian Hunter wrote:
+>>> On 16/08/19 4:45 AM, Leo Yan wrote:
+>>>> Hi Adrian,
+>>>>
+>>>> On Thu, Aug 15, 2019 at 02:45:57PM +0300, Adrian Hunter wrote:
+>>>>
+>>>> [...]
+>>>>
+>>>>>>> How come you cannot use kallsyms to get the information?
+>>>>>>
+>>>>>> Thanks for pointing out this.  Sorry I skipped your comment "I don't
+>>>>>> know how you intend to calculate ARM_PRE_START_SIZE" when you reviewed
+>>>>>> the patch v3, I should use that chance to elaborate the detailed idea
+>>>>>> and so can get more feedback/guidance before procceed.
+>>>>>>
+>>>>>> Actually, I have considered to use kallsyms when worked on the previous
+>>>>>> patch set.
+>>>>>>
+>>>>>> As mentioned in patch set v4's cover letter, I tried to implement
+>>>>>> machine__create_extra_kernel_maps() for arm/arm64, the purpose is to
+>>>>>> parse kallsyms so can find more kernel maps and thus also can fixup
+>>>>>> the kernel start address.  But I found the 'perf script' tool directly
+>>>>>> calls machine__get_kernel_start() instead of running into the flow for
+>>>>>> machine__create_extra_kernel_maps();
+>>>>>
+>>>>> Doesn't it just need to loop through each kernel map to find the lowest
+>>>>> start address?
+>>>>
+>>>> Based on your suggestion, I worked out below change and verified it
+>>>> can work well on arm64 for fixing up start address; please let me know
+>>>> if the change works for you?
+>>>
+>>> How does that work if take a perf.data file to a machine with a different
+>>> architecture?
+>>
+>> Sorry I delayed so long to respond to your question; I didn't have
+>> confidence to give out very reasonale answer and this is the main reason
+>> for delaying.
+> 
+> Could you take chance to review my below replying?  I'd like to get
+> your confirmation before I send out offical patch.
 
-Hi, Ville.
+It is not necessary to do kallsyms__parse for x86_64, so it would be better
+to check the arch before calling that.
 
-Thank you for reviewing my patch.
-I think that's good idea and I'll do that in next version.
-I found some patch in mailing list that is similar with this patch.
-So should I drop this patch and find other thing?
-
-Sidong.
+However in general, having to copy and use kallsyms with perf.data if on a
+different arch does not seem very user friendly.  But really that is up to
+Arnaldo.
 
 > 
-> Apart from that lgtm
-> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+> Thanks,
+> Leo Yan
 > 
-> > +
-> >  	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
-> >  		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
-> >  			offset_dst = dest_composer->offset
-> > @@ -84,8 +87,14 @@ static void blend(void *vaddr_dst, void *vaddr_src,
-> >  				     + (i * src_composer->pitch)
-> >  				     + (j * src_composer->cpp);
-> >  
-> > -			memcpy(vaddr_dst + offset_dst,
-> > -			       vaddr_src + offset_src, sizeof(u32));
-> > +			src = vaddr_src + offset_src;
-> > +			dst = vaddr_dst + offset_dst;
-> > +			alpha = src[3] + 1;
-> > +			inv_alpha = 256 - src[3];
-> > +			dst[0] = (alpha * src[0] + inv_alpha * dst[0]) >> 8;
-> > +			dst[1] = (alpha * src[1] + inv_alpha * dst[1]) >> 8;
-> > +			dst[2] = (alpha * src[2] + inv_alpha * dst[2]) >> 8;
-> > +			dst[3] = 0xff;
-> >  		}
-> >  		i_dst++;
-> >  	}
-> > -- 
-> > 2.20.1
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>
+>> For your question for taking a perf.data file to a machine with a
+>> different architecture, we can firstly use command 'perf buildid-list'
+>> to print out the buildid for kallsyms, based on the dumped buildid we
+>> can find out the location for the saved kallsyms file; then we can use
+>> option '--kallsyms' to specify the offline kallsyms file and use the
+>> offline kallsyms to fixup kernel start address.  The detailed commands
+>> are listed as below:
+>>
+>> root@debian:~# perf buildid-list
+>> 7b36dfca8317ef74974ebd7ee5ec0a8b35c97640 [kernel.kallsyms]
+>> 56b84aa88a1bcfe222a97a53698b92723a3977ca /usr/lib/systemd/systemd
+>> 0956b952e9cd673d48ff2cfeb1a9dbd0c853e686 /usr/lib/aarch64-linux-gnu/libm-2.28.so
+>> [...]
+>>
+>> root@debian:~# perf script --kallsyms ~/.debug/\[kernel.kallsyms\]/7b36dfca8317ef74974ebd7ee5ec0a8b35c97640/kallsyms
+>>
+>> The amended patch is as below, please review and always welcome
+>> any suggestions or comments!
+>>
+>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+>> index 5734460fc89e..593f05cc453f 100644
+>> --- a/tools/perf/util/machine.c
+>> +++ b/tools/perf/util/machine.c
+>> @@ -2672,9 +2672,26 @@ int machine__nr_cpus_avail(struct machine *machine)
+>>  	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
+>>  }
+>>  
+>> +static int machine__fixup_kernel_start(void *arg,
+>> +				       const char *name __maybe_unused,
+>> +				       char type,
+>> +				       u64 start)
+>> +{
+>> +	struct machine *machine = arg;
+>> +
+>> +	type = toupper(type);
+>> +
+>> +	/* Fixup for text, weak, data and bss sections. */
+>> +	if (type == 'T' || type == 'W' || type == 'D' || type == 'B')
+>> +		machine->kernel_start = min(machine->kernel_start, start);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  int machine__get_kernel_start(struct machine *machine)
+>>  {
+>>  	struct map *map = machine__kernel_map(machine);
+>> +	char filename[PATH_MAX];
+>>  	int err = 0;
+>>  
+>>  	/*
+>> @@ -2696,6 +2713,22 @@ int machine__get_kernel_start(struct machine *machine)
+>>  		if (!err && !machine__is(machine, "x86_64"))
+>>  			machine->kernel_start = map->start;
+>>  	}
+>> +
+>> +	if (symbol_conf.kallsyms_name != NULL) {
+>> +		strncpy(filename, symbol_conf.kallsyms_name, PATH_MAX);
+>> +	} else {
+>> +		machine__get_kallsyms_filename(machine, filename, PATH_MAX);
+>> +
+>> +		if (symbol__restricted_filename(filename, "/proc/kallsyms"))
+>> +			goto out;
+>> +	}
+>> +
+>> +	if (kallsyms__parse(filename, machine, machine__fixup_kernel_start))
+>> +		pr_warning("Fail to fixup kernel start address. skipping...\n");
+>> +
+>> +out:
+>>  	return err;
+>>  }
+>>  
+>>
+>> Thanks,
+>> Leo Yan
 > 
-> -- 
-> Ville Syrjälä
-> Intel
+
