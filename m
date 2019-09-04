@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5CEC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAAAAC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C412339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8615122DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619906;
-	bh=fLPibfJ42aAIHABvPctEZANEfg5uArP9JzQqEn9pGTk=;
+	s=default; t=1567619908;
+	bh=bcEIU991a6u56vkFQDroBatGmE701cverPNcKCh/w6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0aJu49fHUyvGQogqOLAO45Ruehw/QDFOC2lBbiYRMEyDH4mZu22I7TCfVJIVAJY4v
-	 GytFHB4P0Wo5bt9V2bFsAu1dEUh+h9u4w2+t5AHQN5xYDkq1AWDos9+d22QStyDfGI
-	 i/hQ7xoCQR7zg2CaBWDYTV8rzMvUJkfSsLHRBr0g=
+	b=SYQvJTFJ6YO1WIUgqPfH/u6/MNMPMIPQvAaEKjm+aDABabsgsjpHfl0MgJNc27w7U
+	 TOYt9bIk1fGFEx4YkSnAcQ/68nNfcqASn4qOUL8QY61M9Pt6w04m9ukChQH1n4rRKO
+	 SPphJIH5jgtxvbS4CzFwHFpvTP4YO3UEasgngEck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbfIDR6Z (ORCPT
+        id S2388060AbfIDR61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36790 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732748AbfIDR6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:23 -0400
+        id S1731727AbfIDR60 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2DB022CF5;
-        Wed,  4 Sep 2019 17:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51E7D21883;
+        Wed,  4 Sep 2019 17:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619903;
-        bh=fLPibfJ42aAIHABvPctEZANEfg5uArP9JzQqEn9pGTk=;
+        s=default; t=1567619905;
+        bh=bcEIU991a6u56vkFQDroBatGmE701cverPNcKCh/w6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u+ysG/ukT8Ta8DPV3eHmyROB4u65FPRO+uUFzi75W7+Cmp6rXx4EUbLQ8fpiM4TUI
-         CvdnfsEyItmyd7h6E9bXrHKn0zSNVQxy6UN4aCz9/1NbhKT0lCI9NaS1oZzg25rnKU
-         Uc/j1ZOF6/xv9Oboo50AvM9tPpO1bhLkbFBeOMqg=
+        b=Wab2qmTlZgjvym+1BnijIGEhe9RKCtK0K1wfO971V5jf05AYbJ/ciqVe1Mnu1Kbcx
+         kzG/sK7g5VlrVCbuxhMCsZxUxkw1Ehuuw3xJTjmSv3iTT0CXQP96/kVR8FqPWNoh7P
+         3faFHBBRZMS6y5dPxlS0P0N8GlgKEE0MV3Wfe/nM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Spengler <spender@grsecurity.net>,
-        Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 4.4 77/77] x86/ptrace: fix up botched merge of spectrev1 fix
-Date:   Wed,  4 Sep 2019 19:54:04 +0200
-Message-Id: <20190904175310.513008739@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 60/77] ALSA: seq: Fix potential concurrent access to the deleted pool
+Date:   Wed,  4 Sep 2019 19:53:47 +0200
+Message-Id: <20190904175308.968275603@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -61,40 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-I incorrectly merged commit 31a2fbb390fe ("x86/ptrace: Fix possible
-spectre-v1 in ptrace_get_debugreg()") when backporting it, as was
-graciously pointed out at
-https://grsecurity.net/teardown_of_a_failed_linux_lts_spectre_fix.php
+commit 75545304eba6a3d282f923b96a466dc25a81e359 upstream.
 
-Resolve the upstream difference with the stable kernel merge to properly
-protect things.
+The input pool of a client might be deleted via the resize ioctl, the
+the access to it should be covered by the proper locks.  Currently the
+only missing place is the call in snd_seq_ioctl_get_client_pool(), and
+this patch papers over it.
 
-Reported-by: Brad Spengler <spender@grsecurity.net>
-Cc: Dianzhang Chen <dianzhangchen0@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <bp@alien8.de>
-Cc: <hpa@zytor.com>
+Reported-by: syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kernel/ptrace.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -698,11 +698,10 @@ static unsigned long ptrace_get_debugreg
- {
- 	struct thread_struct *thread = &tsk->thread;
- 	unsigned long val = 0;
--	int index = n;
+---
+ sound/core/seq/seq_clientmgr.c |    3 +--
+ sound/core/seq/seq_fifo.c      |   17 +++++++++++++++++
+ sound/core/seq/seq_fifo.h      |    2 ++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
+
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1906,8 +1906,7 @@ static int snd_seq_ioctl_get_client_pool
+ 	if (cptr->type == USER_CLIENT) {
+ 		info.input_pool = cptr->data.user.fifo_pool_size;
+ 		info.input_free = info.input_pool;
+-		if (cptr->data.user.fifo)
+-			info.input_free = snd_seq_unused_cells(cptr->data.user.fifo->pool);
++		info.input_free = snd_seq_fifo_unused_cells(cptr->data.user.fifo);
+ 	} else {
+ 		info.input_pool = 0;
+ 		info.input_free = 0;
+--- a/sound/core/seq/seq_fifo.c
++++ b/sound/core/seq/seq_fifo.c
+@@ -278,3 +278,20 @@ int snd_seq_fifo_resize(struct snd_seq_f
  
- 	if (n < HBP_NUM) {
-+		int index = array_index_nospec(n, HBP_NUM);
- 		struct perf_event *bp = thread->ptrace_bps[index];
--		index = array_index_nospec(index, HBP_NUM);
+ 	return 0;
+ }
++
++/* get the number of unused cells safely */
++int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f)
++{
++	unsigned long flags;
++	int cells;
++
++	if (!f)
++		return 0;
++
++	snd_use_lock_use(&f->use_lock);
++	spin_lock_irqsave(&f->lock, flags);
++	cells = snd_seq_unused_cells(f->pool);
++	spin_unlock_irqrestore(&f->lock, flags);
++	snd_use_lock_free(&f->use_lock);
++	return cells;
++}
+--- a/sound/core/seq/seq_fifo.h
++++ b/sound/core/seq/seq_fifo.h
+@@ -68,5 +68,7 @@ int snd_seq_fifo_poll_wait(struct snd_se
+ /* resize pool in fifo */
+ int snd_seq_fifo_resize(struct snd_seq_fifo *f, int poolsize);
  
- 		if (bp)
- 			val = bp->hw.info.address;
++/* get the number of unused cells safely */
++int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f);
+ 
+ #endif
 
 
