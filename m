@@ -2,197 +2,342 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14BCC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99775C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94A0D22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6013D2339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WS+J8Ykb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731239AbfIDPEg (ORCPT
+        id S1731250AbfIDPFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:04:36 -0400
-Received: from mga04.intel.com ([192.55.52.120]:5161 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730135AbfIDPEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:04:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 08:04:19 -0700
-X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="358127318"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 08:04:16 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id E8AAF204A6; Wed,  4 Sep 2019 18:04:13 +0300 (EEST)
-Date:   Wed, 4 Sep 2019 18:04:13 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v4 10/11] lib/vsprintf: Add %pfw conversion specifier for
- printing fwnode names
-Message-ID: <20190904150413.GU5475@paasikivi.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
- <20190902083240.20367-11-sakari.ailus@linux.intel.com>
- <20190903130607.cf2qv3s3evobbd5g@pathway.suse.cz>
+        Wed, 4 Sep 2019 11:05:01 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22286 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730135AbfIDPFB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:05:01 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x84F0vtA013269;
+        Wed, 4 Sep 2019 17:04:43 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=dNUukUDNlrngzjB224KnsIWFvzpNxNKzPZCl7nlhcig=;
+ b=WS+J8YkbiP28erHXV+1OKyFn6iMaW66L642WJAaVr/Lk1ISu1mSRRL5jIheUfIkYT4xu
+ 6GLuOcTaf7VIrTRRwgk88Q+OeASJLduRnKVHHi9UphfuC5cfv77QknSNSh1nW961BgGw
+ ECsBlbtiZcAUn603wMrZle5bBInPS19KrUkHf7WBLS3unw0hapznWGXhU9BCpSJ/mEHM
+ DOtjK1LJM02YFNo0eycYH/lge26LemN+dJjQuAfD+rvS+iAgfV7nFmq8KXmrZ3M6B7AE
+ FVkqsDgvMsyKZ/vGzYVfN2Or+0mcvzQEhQw5fKuqUPD+Z2I3JiuoY8sjhjlgf3VMwg4r 9w== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2uqec3243e-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 04 Sep 2019 17:04:43 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9BCDF4E;
+        Wed,  4 Sep 2019 15:04:32 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EE9D52C2A0D;
+        Wed,  4 Sep 2019 17:04:31 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 4 Sep 2019
+ 17:04:31 +0200
+Received: from lmecxl0923.lme.st.com (10.48.0.237) by Webmail-ga.st.com
+ (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 4 Sep 2019
+ 17:04:31 +0200
+Subject: Re: [PATCH V5 1/3] mmc: mmci: add hardware busy timeout feature
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20190813095951.26275-1-ludovic.Barre@st.com>
+ <20190813095951.26275-2-ludovic.Barre@st.com>
+ <CAPDyKFpOj8g+eY-vTxW4Sk+wVYTP1-4jDJB=nE=24eSubBvN-g@mail.gmail.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <87d0ea00-0410-ba40-fec5-4dd7f0d7a0dc@st.com>
+Date:   Wed, 4 Sep 2019 17:04:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903130607.cf2qv3s3evobbd5g@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPDyKFpOj8g+eY-vTxW4Sk+wVYTP1-4jDJB=nE=24eSubBvN-g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.48.0.237]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-04_04:2019-09-04,2019-09-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Petr,
+hi Ulf
 
-On Tue, Sep 03, 2019 at 03:06:07PM +0200, Petr Mladek wrote:
-> On Mon 2019-09-02 11:32:39, Sakari Ailus wrote:
-> > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> > support printing full path of the node, including its name ("f") and only
-> > the node's name ("P") in the printk family of functions. The two flags
-> > have equivalent functionality to existing %pOF with the same two modifiers
-> > ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> > based systems is added by this patch.
-> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> > index 922a29eb70e6c..abba210f67567 100644
-> > --- a/Documentation/core-api/printk-formats.rst
-> > +++ b/Documentation/core-api/printk-formats.rst
-> > @@ -418,6 +418,30 @@ Examples::
-> >  
-> >  Passed by reference.
-> >  
-> > +Fwnode handles
-> > +--------------
-> > +
-> > +::
-> > +
-> > +	%pfw[fP]
-> > +
-> > +For printing information on fwnode handles. The default is to print the full
-> > +node name, including the path. The modifiers are functionally equivalent to
-> > +%pOF above.
-> > +
-> > +	- f - full name of the node, including the path
-> > +	- P - the name of the node including an address (if there is one)
-> > +
-> > +Examples (ACPI):
+On 8/26/19 1:39 PM, Ulf Hansson wrote:
+> On Tue, 13 Aug 2019 at 12:00, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> In some variants, the data timer starts and decrements
+>> when the DPSM enters in Wait_R or Busy state
+>> (while data transfer or MMC_RSP_BUSY), and generates a
+>> data timeout error if the counter reach 0.
 > 
-> s/:/::/ for the .rst formar.
-
-Fixed both.
-
+> I don't quite follow here, sorry. Can you please try to elaborate on
+> the use case(s) more exactly?
 > 
-> > +
-> > +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
-> > +	%pfwP	endpoint@0				- Node name
-> > +
-> > +Examples (OF):
+> For example, what happens when a data transfer has just finished (for
+> example when MCI_DATAEND has been received) and we are going to send a
+> CMD12 to stop it? In this case the CMD12 has the MMC_RSP_BUSY flag
+> set.
+>
+
+example with cmd25 (write multi block)
+mmci_request
+     - mmci_start_data
+	set MMCIDATATIMER, MMCIDATALENGTH, MMCIMASK0
+     - mmci_start_command:
+	set MMCIARGUMENT, MMCICOMMAND (cmd25)
+
+mmci_irq:
+     - irq MCI_CMDRESPEND
+     - irq MCI_DATAEND
+     - send cmd12 => mmci_start_command(host->stop_abort or data->stop)
+     these cmds have flag rsp_busy and no data associate
+     host->cmd = cmd (host->stop_abort or data->stop) for next irq
+
+mmci_irq:
+     - irq MCI_CMDRESPEND
+     - irq BUSYD0END
+     - mmci_request_end
+
+> Another example is the CMD5, which has no data with it.
 > 
-> Same here.
+>>
+>> -Define max_busy_timeout (in ms) according to clock.
+>> -Set data timer register if the command has rsp_busy flag.
+>>   If busy_timeout is not defined by framework, the busy
+>>   length after Data Burst is defined as 1 second
+>>   (refer: 4.6.2.2 Write of sd specification part1 v6-0).
 > 
-> > +
-> > +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
-> > +	%pfwP	endpoint				- Node name
-> > +
-> >  Time and date (struct rtc_time)
-> >  -------------------------------
-> >  
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index 4ad9332d54ba6..b9b4c835db063 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -1981,6 +1981,36 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
-> >  	return widen_string(buf, buf - buf_start, end, spec);
-> >  }
-> >  
-> > +static noinline_for_stack
-> > +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
-> > +		    struct printf_spec spec, const char *fmt)
-> > +{
-> > +	struct printf_spec str_spec = spec;
-> > +	char *buf_start = buf;
-> > +
-> > +	str_spec.field_width = -1;
-> > +
-> > +	if (*fmt != 'w')
-> > +		return error_string(buf, end, "(%pfw?)", spec);
+> One second is not sufficient for all operations, like ERASE for
+> example. However, I understand that you want to pick some value, as a
+> safety. I guess that's fine.
+> 
+> I am thinking that if the command has the MMC_RSP_BUSY flag set, the
+> core should really provide a busy timeout for it. That said, maybe the
+> host driver should splat a WARN in case there is not busy timeout
+> specified.
 
-This should have been:
-
-		return error_string(buf, end, "(%pf?)", spec);
-
-I'll address that for v6.
+Today, I just see a busy_timeout not defined on write request.
+On erase request, the timeout is defined in function mmc_do_erase.
+In core, there are several paths to done a write request, and I not
+be sure to fix all. For safety, I preferred fix with the max value of
+write request.
 
 > 
-> This means that only "%pfw" will dereference the pointer by
-> fwnode_full_name_string() or fwnode_get_name(). All the other
-> eventual misuses of the obsolete %pf format will result in this
-> error message.
+>> -Add MCI_DATATIMEOUT error management in mmci_cmd_irq.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.c | 37 ++++++++++++++++++++++++++++++++-----
+>>   drivers/mmc/host/mmci.h |  3 +++
+>>   2 files changed, 35 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index c37e70dbe250..c50586540765 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -1075,6 +1075,7 @@ static void
+>>   mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+>>   {
+>>          void __iomem *base = host->base;
+>> +       unsigned long long clks = 0;
+>>
+>>          dev_dbg(mmc_dev(host->mmc), "op %02x arg %08x flags %08x\n",
+>>              cmd->opcode, cmd->arg, cmd->flags);
+>> @@ -1097,6 +1098,19 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
+>>                  else
+>>                          c |= host->variant->cmdreg_srsp;
+>>          }
+>> +
+>> +       if (host->variant->busy_timeout && !host->mrq->data) {
 > 
-> OK, it is hard to imagine using "%pf" to get symbol name and always add
-> 'w' suffix. Therefore it looks that reusing the obsolete %pf format
-> modifier is pretty safe after all.
-> 
-> 
-> > +	if (check_pointer(&buf, end, fwnode, spec))
-> > +		return buf;
-> > +
-> > +	fmt++;
-> > +
-> > +	switch (*fmt) {
-> > +	case 'f':	/* full_name */
-> > +	default:
-> 
-> Using default: in the middle of switch might cause a lot of confusion.
-> Please, make it the last label.
+> Suppose this is a CMD12 command, having the MMC_RSP_BUSY flag set. The
+> command would then be sent to stop the transmission and then
+> host->mrq->data would also be set.
 
-Fixed.
+Sorry, it's a mistake introduce by v5.
+I would keep the clear of datatimer when is not needed
+(no data & no rsp busy, see below). But on cmd23 (set_block_count) with 
+datactrl_first variant property the datatimer should be protected.
+
+To simplify and fix the code, I will remove the clear of datatimer
+when there is no data & no rsp busy.
+
+- if (host->variant->busy_timeout && !host->mrq->data) {
++ if (host->variant->busy_timeout && !cmd->flags & MMC_RSP_BUSY) {
++         ....
++         writel_relaxed(clks, host->base + MMCIDATATIMER);
++ }
 
 > 
+> If I recall earlier what you stated about the new sdmmc variant, the
+> CMD12 is needed to exit the DPSM. Hence don't you need to re-program a
+> new value for the MMCIDATATIMER register for this scenario?
 > 
-> > +		buf = fwnode_full_name_string(fwnode, buf, end);
-> > +		break;
-> > +	case 'P':	/* name */
-> > +		buf = string(buf, end, fwnode_get_name(fwnode), str_spec);
-> > +		break;
-> > +	}
-> > +
-> > +	return widen_string(buf, buf - buf_start, end, spec);
-> > +}
-> > +
-> >  /*
-> >   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
-> >   * by an extra set of alphanumeric characters that are extended format
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > index a60c241112cd4..8df50911ff4e9 100755
-> > --- a/scripts/checkpatch.pl
-> > +++ b/scripts/checkpatch.pl
-> > @@ -5995,7 +5995,8 @@ sub process {
-> >  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
-> >  					$specifier = $1;
-> >  					$extension = $2;
-> > -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
-> > +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
-> > +					    $extension =~ /^f[^w]/) {
+>> +               if (cmd->flags & MMC_RSP_BUSY) {
+>> +                       if (!cmd->busy_timeout)
+>> +                               cmd->busy_timeout = 1000;
+>> +
+>> +                       clks = (unsigned long long)cmd->busy_timeout;
+>> +                       clks *= host->cclk;
 > 
-> This does not work. $extension seems to have only one character.
+> Any problems with putting the above on one line?
 
-Good catch. \w indeed matches a single letter; I'll change that to \w+ and
-change the other uses accordingly.
+No, it was just to not exceed 80 characters.
 
--- 
-Regards,
+> 
+>> +                       do_div(clks, MSEC_PER_SEC);
+>> +               }
+>> +               writel_relaxed(clks, host->base + MMCIDATATIMER);
+> 
+> This is writing zero to MMCIDATATIMER in case the MMC_RSP_BUSY isn't
+> set, is that on purpose?
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+It was to clear the datatimer when the command has
+no data & no rsp_busy. This allowed to look if the datatimer
+was used and not correctly set with the right value (with datatimeout).
+
+Like said above, I will remove this and set datatimer only
+on rsp_busy flag.
+
+> 
+>> +       }
+>> +
+>>          if (/*interrupt*/0)
+>>                  c |= MCI_CPSM_INTERRUPT;
+>>
+>> @@ -1203,6 +1217,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>   {
+>>          void __iomem *base = host->base;
+>>          bool sbc, busy_resp;
+>> +       u32 err_msk;
+>>
+>>          if (!cmd)
+>>                  return;
+>> @@ -1215,8 +1230,12 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>           * handling. Note that we tag on any latent IRQs postponed
+>>           * due to waiting for busy status.
+>>           */
+>> -       if (!((status|host->busy_status) &
+>> -             (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT|MCI_CMDSENT|MCI_CMDRESPEND)))
+>> +       err_msk = MCI_CMDCRCFAIL | MCI_CMDTIMEOUT;
+> 
+> You might as well move the initial assignment of err_msk to the its
+> declaration above.
+> 
+
+OK, thx
+
+>> +       if (host->variant->busy_timeout && busy_resp)
+>> +               err_msk |= MCI_DATATIMEOUT;
+>> +
+>> +       if (!((status | host->busy_status) &
+>> +             (err_msk | MCI_CMDSENT | MCI_CMDRESPEND)))
+>>                  return;
+>>
+>>          /* Handle busy detection on DAT0 if the variant supports it. */
+>> @@ -1235,8 +1254,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>                   * while, to allow it to be set, but tests indicates that it
+>>                   * isn't needed.
+>>                   */
+>> -               if (!host->busy_status &&
+>> -                   !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
+>> +               if (!host->busy_status && !(status & err_msk) &&
+>>                      (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
+>>
+>>                          writel(readl(base + MMCIMASK0) |
+>> @@ -1290,6 +1308,9 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>                  cmd->error = -ETIMEDOUT;
+>>          } else if (status & MCI_CMDCRCFAIL && cmd->flags & MMC_RSP_CRC) {
+>>                  cmd->error = -EILSEQ;
+>> +       } else if (host->variant->busy_timeout && busy_resp &&
+>> +                  status & MCI_DATATIMEOUT) {
+>> +               cmd->error = -ETIMEDOUT;
+>>          } else {
+>>                  cmd->resp[0] = readl(base + MMCIRESPONSE0);
+>>                  cmd->resp[1] = readl(base + MMCIRESPONSE1);
+>> @@ -1948,6 +1969,8 @@ static int mmci_probe(struct amba_device *dev,
+>>           * Enable busy detection.
+>>           */
+>>          if (variant->busy_detect) {
+>> +               u32 max_busy_timeout = 0;
+>> +
+>>                  mmci_ops.card_busy = mmci_card_busy;
+>>                  /*
+>>                   * Not all variants have a flag to enable busy detection
+>> @@ -1957,7 +1980,11 @@ static int mmci_probe(struct amba_device *dev,
+>>                          mmci_write_datactrlreg(host,
+>>                                                 host->variant->busy_dpsm_flag);
+>>                  mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
+>> -               mmc->max_busy_timeout = 0;
+>> +
+>> +               if (variant->busy_timeout)
+>> +                       max_busy_timeout = ~0UL / (mmc->f_max / MSEC_PER_SEC);
+> 
+> It looks like the max busy timeout is depending on the current picked
+> clock rate, right?
+> 
+> In such case, perhaps it's better to update mmc->max_busy_timeout as
+> part of the ->set_ios() callback, as it's from there the clock rate
+> gets updated. Or what do you think?
+
+yes, it's possible
+
+> 
+>> +
+>> +               mmc->max_busy_timeout = max_busy_timeout;
+>>          }
+>>
+>>          /* Prepare a CMD12 - needed to clear the DPSM on some variants. */
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 833236ecb31e..d8b7f6774e8f 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -287,6 +287,8 @@ struct mmci_host;
+>>    * @signal_direction: input/out direction of bus signals can be indicated
+>>    * @pwrreg_clkgate: MMCIPOWER register must be used to gate the clock
+>>    * @busy_detect: true if the variant supports busy detection on DAT0.
+>> + * @busy_timeout: true if the variant starts data timer when the DPSM
+>> + *               enter in Wait_R or Busy state.
+>>    * @busy_dpsm_flag: bitmask enabling busy detection in the DPSM
+>>    * @busy_detect_flag: bitmask identifying the bit in the MMCISTATUS register
+>>    *                   indicating that the card is busy
+>> @@ -333,6 +335,7 @@ struct variant_data {
+>>          u8                      signal_direction:1;
+>>          u8                      pwrreg_clkgate:1;
+>>          u8                      busy_detect:1;
+>> +       u8                      busy_timeout:1;
+>>          u32                     busy_dpsm_flag;
+>>          u32                     busy_detect_flag;
+>>          u32                     busy_detect_mask;
+>> --
+>> 2.17.1
+>>
+> 
+> Kind regards
+> Uffe
+> 
