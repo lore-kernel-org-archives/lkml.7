@@ -2,138 +2,110 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4EEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652C9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18E922CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3918E22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="H69Yl7Md"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YAWN4s0W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfIDOUo (ORCPT
+        id S1730960AbfIDOVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:20:44 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33128 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729993AbfIDOUo (ORCPT
+        Wed, 4 Sep 2019 10:21:21 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37145 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729993AbfIDOVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:20:44 -0400
-Received: by mail-qt1-f195.google.com with SMTP id r5so19315230qtd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 07:20:44 -0700 (PDT)
+        Wed, 4 Sep 2019 10:21:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id r195so4020393wme.2;
+        Wed, 04 Sep 2019 07:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FqKo9AIGflfwe+nTOQbNK48Ono8rjC9vrryTFd757pg=;
-        b=H69Yl7MdXX1X8aGR/Rpg8MdYTCNSKGXy9pVbcMfXsr7L2a0aDmcpaeHqy4GNr7NOsA
-         Jw3APKJnYiiHhamaHUMB7yvwCeC+OgirN/UZBSyAj1rwFC6z8t27zjebWUe+DcYOctNo
-         EVT9yWtbndHZiIfdoa8cvob9H9KQS6DxJSOHU=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aVkZQqOuZnmw6j0QSgYaya0CSEyCvqv8Llmj2i2rC7o=;
+        b=YAWN4s0W76Y7PAvCuk9fzZEwQho+kNNc2lnHVPIaK1fpUCKN08UfUbAQnLLotYAdrm
+         CdI4ytIXTFFIlqxMjej8vpyjn4Z1t0Qp+dWz+k/eewhxkoOaWTeUWx+G+c3wIZ5WjosQ
+         lDz/qiVrLoxjPvQ6mLKw0OWXul3EFhS5fVh9ln8K30I97tG+t2MrqHAoDCqP38isfxqU
+         rActlDMdJr2Cjx0kjx3YEFa0ljrZolRsHagvyXta8s75mCTHogXIwQU1erqz4QHShR8X
+         gWHAth2Eo/LK41XxyjJKCQn22vjGHQsVYlc0b+x5EmAkTtmC0CwDrOuITo6sOaRdk6TR
+         fMIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FqKo9AIGflfwe+nTOQbNK48Ono8rjC9vrryTFd757pg=;
-        b=VyCAmCtzPIcBMESBSYVYjVo2IL+t9aAbs72iOTPgRjfdxphQHMza8FwRTbuHK+L1gx
-         UmGgydZ48YyUX5Qb/ypI3eJ3C7mxsrrTm9JPrTx/KTP9ZDeX3fdISVWPUnQmRhcO/tQe
-         fLxg4jogPz/lyG3PBJxpa9ppBYacfx1KyDIzVPfP0ARJBEcLWB4k0yVgRJ9iwnhIgHIW
-         r6eHMSbZiKtymKcDj/i5D3awXByc2TvVM82YnrEnhROlw7mBlShXSu/fvkF4q2P11WJa
-         CcFJL5yHbmIWHO5WsHT6u5/9rHmekW7fifrNmBxJ28+lLSFI68hdvkknqDK8YgWwTghv
-         tvUA==
-X-Gm-Message-State: APjAAAVRhaSAxw55eNmA6YVBhYvKlnZ3yBB7K5lVrsSUFQKt4kNpfeIu
-        XBnwPxE3fTQvsTkWs6tFLfWO03eiQCOrOsskH8s6sg==
-X-Google-Smtp-Source: APXvYqyoXwCJDcZaJ682D0SOtzeHM9+dJjmS5gdSpkrAzHTec9g5Q6F/pbofuoqsHy2yOosIA0EC/QLsJHG91rGp+7o=
-X-Received: by 2002:a0c:99ee:: with SMTP id y46mr25823587qve.54.1567606843395;
- Wed, 04 Sep 2019 07:20:43 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=aVkZQqOuZnmw6j0QSgYaya0CSEyCvqv8Llmj2i2rC7o=;
+        b=YWRBG6kblAcd5TGskfZ87x6h5ikJ+gQ1fu+QwhXKeynozCg6lJ+9YTkI3JPuarEVRl
+         BMXn18QK63STZol1u4QOtFm/LTCxxjm4iSuVjiXlWf0dwPDw4bTK7ssfqqbTDWpE3/Fh
+         CGvTs/SWs5MiGu9nh3fYvnE0X9HpNn5ISTFsOlr4xWgfEoNEmklnHL2wlieT9tXvODpR
+         TUqP57B1zpBjR0XRo/3HytGzxR2Xf1u1NWp7f4c0KKo0aBJ+Zt7a77XtCFeYEEQFLRe3
+         OrJWuXiJxA3s70wFqx8J39RZi4nQ4eh3klQXgGEr4l2tu8TsXYztv8CZfUC9HL3JQ5rt
+         yNVg==
+X-Gm-Message-State: APjAAAU3JEEXG4E9qQ05zoRR+cV2chxLk4wQD1k6y+ttFohwdacCfyg/
+        b0PtKLWlC39ZXK72/XR/Nc0=
+X-Google-Smtp-Source: APXvYqyzvgDjB54xrywRGdsKRfpeyKScXMU6k5GFXvDSArzUzuLnIZFXN8gCsazBi74dmbo38aFq2A==
+X-Received: by 2002:a1c:3cc3:: with SMTP id j186mr4454404wma.119.1567606878094;
+        Wed, 04 Sep 2019 07:21:18 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id j1sm15056618wrg.24.2019.09.04.07.21.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 07:21:17 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Huang Zijiang <huang.zijiang@zte.com.cn>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: hns: Move static keyword to the front of declaration
+Date:   Wed,  4 Sep 2019 16:21:16 +0200
+Message-Id: <20190904142116.31884-1-kw@linux.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <20190903161655.107408-1-hridya@google.com> <20190904111934.ya37tlzqjqvt7h6a@wittgenstein>
-In-Reply-To: <20190904111934.ya37tlzqjqvt7h6a@wittgenstein>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Wed, 4 Sep 2019 10:20:32 -0400
-Message-ID: <CAEXW_YSj5tdykM8txae66zd0jX_aJujrnS4jG=fHWRvCH7aR7w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] Add binder state and statistics to binderfs
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Hridya Valsaraju <hridya@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On September 4, 2019 7:19:35 AM EDT, Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->On Tue, Sep 03, 2019 at 09:16:51AM -0700, Hridya Valsaraju wrote:
->> Currently, the only way to access binder state and
->> statistics is through debugfs. We need a way to
->> access the same even when debugfs is not mounted.
->> These patches add a mount option to make this
->> information available in binderfs without affecting
->> its presence in debugfs. The following debugfs nodes
->> will be made available in a binderfs instance when
->> mounted with the mount option 'stats=global' or 'stats=local'.
->>
->>  /sys/kernel/debug/binder/failed_transaction_log
->>  /sys/kernel/debug/binder/proc
->>  /sys/kernel/debug/binder/state
->>  /sys/kernel/debug/binder/stats
->>  /sys/kernel/debug/binder/transaction_log
->>  /sys/kernel/debug/binder/transactions
->
->Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
->
->Btw, I think your counting is off-by-one. :) We usually count the
->initial send of a series as 0 and the first rework of that series as
->v1.
->I think you counted your initial send as v1 and the first rework as v2.
+Move the static keyword to the front of declaration of g_dsaf_mode_match,
+and resolve the following compiler warning that can be seen when building
+with warnings enabled (W=1):
 
-Which is fine. I have done it both ways. Is this a rule written somewhere?
+drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c:27:1: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
->:)
->
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
 
-If I am not mistaken, this is Hridya's first set of kernel patches.
-Congrats on landing it upstream and to everyone for reviews! (assuming
-nothing falls apart on the way to Linus tree).
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+index c1eba421ba82..3a14bbc26ea2 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+@@ -24,7 +24,7 @@
+ #include "hns_dsaf_rcb.h"
+ #include "hns_dsaf_misc.h"
+ 
+-const static char *g_dsaf_mode_match[DSAF_MODE_MAX] = {
++static const char *g_dsaf_mode_match[DSAF_MODE_MAX] = {
+ 	[DSAF_MODE_DISABLE_2PORT_64VM] = "2port-64vf",
+ 	[DSAF_MODE_DISABLE_6PORT_0VM] = "6port-16rss",
+ 	[DSAF_MODE_DISABLE_6PORT_16VM] = "6port-16vf",
+-- 
+2.22.1
 
-- Joel
-
-[TLDR]
-My first kernel patch was 10 years ago to a WiFi driver when I was an
-intern at University. I was thrilled to have fixed a bug in network
-bridging code in the 802.11s stack. This is always a special moment so
-congrats again! ;-)
-
-
-
-
-
->Christian
->
->>
->> Hridya Valsaraju (4):
->>   binder: add a mount option to show global stats
->>   binder: Add stats, state and transactions files
->>   binder: Make transaction_log available in binderfs
->>   binder: Add binder_proc logging to binderfs
->>
->>  drivers/android/binder.c          |  95 ++++++-----
->>  drivers/android/binder_internal.h |  84 ++++++++++
->>  drivers/android/binderfs.c        | 255
->++++++++++++++++++++++++++----
->>  3 files changed, 362 insertions(+), 72 deletions(-)
->>
->> --
->> 2.23.0.187.g17f5b7556c-goog
->>
