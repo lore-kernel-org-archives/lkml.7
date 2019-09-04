@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25C4C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F3FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECD520882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD3920870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621391;
-	bh=3M5ixd/WOK2yddgQVzoxlVi3ZV7hybbQmQGDd2w2B8M=;
+	s=default; t=1567621397;
+	bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dNAKEiVpKTJwxUiHsSq9jk67E/OzZbicTLk6KgWt5lAtPkJHu5IAisu0/z40J/V93
-	 b4wrpa7zaeKrP48D5bpz434gUBZkF34dkIzcqZu9YWqBZtJY9V99LSu9ktbH6qQYyZ
-	 OXcIpZjAjdsvxwUI/f1C8G+VxLeTTQhmjR4KFuCA=
+	b=nr/QaJAEU7v3TvTdv4WnkEOmaE4wjAso7dVIE89sAU44698Na42po7yWmUpuLEjcu
+	 46Pl9wkB4dmOQ7yWwG0m6JvTwZJx2lnyNzZmAQ8PwmX1+vHyxg+90MvIw6U2NiG6+3
+	 VHqx+6PguSCcT1n8wmK8RVSoRFm7UJcdJ/9euqZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388890AbfIDSDO (ORCPT
+        id S2388871AbfIDSDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:03:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43562 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388316AbfIDSDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:03:11 -0400
+        id S2388284AbfIDSDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:03:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9F4522CEA;
-        Wed,  4 Sep 2019 18:03:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD26523697;
+        Wed,  4 Sep 2019 18:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620190;
-        bh=3M5ixd/WOK2yddgQVzoxlVi3ZV7hybbQmQGDd2w2B8M=;
+        s=default; t=1567620182;
+        bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A7YCm8PtMpAC7oDwnA2axl9NGoXVvPiVUYCFZpcn01sUAnFP64giwzH3Y5TMZtpF8
-         Lf4fcnet7Wsv3TCVyTmYfBaMMdNzs4Wn0n0BImdgMvowAHYKPSUIHlJ3g40JK4DJmr
-         49beiVQvcjHjipO4fDrUNO6EkVWMo3+RoQy9qlLc=
+        b=NmSzNQyDtqVGvNqZYW5PBcJAZWI7fp+WFSZ805mhM5R2/X0WJHQbrW/xiMluwgqpm
+         xVKZVygGYATmDHbKCNA55xV+t6aB5hLGeJH7sDhSsGs1wDSa7cla0xcltZ1F4x4coW
+         aB2SDaY4KeHpGxtGRFXt5WncGNvC1GGD3lYETpJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 23/57] ALSA: seq: Fix potential concurrent access to the deleted pool
-Date:   Wed,  4 Sep 2019 19:53:51 +0200
-Message-Id: <20190904175304.218543213@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Vladimir Rutsky <rutsky@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 20/57] tcp: make sure EPOLLOUT wont be missed
+Date:   Wed,  4 Sep 2019 19:53:48 +0200
+Message-Id: <20190904175303.918854334@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,70 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 75545304eba6a3d282f923b96a466dc25a81e359 upstream.
+[ Upstream commit ef8d8ccdc216f797e66cb4a1372f5c4c285ce1e4 ]
 
-The input pool of a client might be deleted via the resize ioctl, the
-the access to it should be covered by the proper locks.  Currently the
-only missing place is the call in snd_seq_ioctl_get_client_pool(), and
-this patch papers over it.
+As Jason Baron explained in commit 790ba4566c1a ("tcp: set SOCK_NOSPACE
+under memory pressure"), it is crucial we properly set SOCK_NOSPACE
+when needed.
 
-Reported-by: syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+However, Jason patch had a bug, because the 'nonblocking' status
+as far as sk_stream_wait_memory() is concerned is governed
+by MSG_DONTWAIT flag passed at sendmsg() time :
+
+    long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
+
+So it is very possible that tcp sendmsg() calls sk_stream_wait_memory(),
+and that sk_stream_wait_memory() returns -EAGAIN with SOCK_NOSPACE
+cleared, if sk->sk_sndtimeo has been set to a small (but not zero)
+value.
+
+This patch removes the 'noblock' variable since we must always
+set SOCK_NOSPACE if -EAGAIN is returned.
+
+It also renames the do_nonblock label since we might reach this
+code path even if we were in blocking mode.
+
+Fixes: 790ba4566c1a ("tcp: set SOCK_NOSPACE under memory pressure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Reported-by: Vladimir Rutsky  <rutsky@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/core/seq/seq_clientmgr.c |    3 +--
- sound/core/seq/seq_fifo.c      |   17 +++++++++++++++++
- sound/core/seq/seq_fifo.h      |    2 ++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+ net/core/stream.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1821,8 +1821,7 @@ static int snd_seq_ioctl_get_client_pool
- 	if (cptr->type == USER_CLIENT) {
- 		info->input_pool = cptr->data.user.fifo_pool_size;
- 		info->input_free = info->input_pool;
--		if (cptr->data.user.fifo)
--			info->input_free = snd_seq_unused_cells(cptr->data.user.fifo->pool);
-+		info->input_free = snd_seq_fifo_unused_cells(cptr->data.user.fifo);
- 	} else {
- 		info->input_pool = 0;
- 		info->input_free = 0;
---- a/sound/core/seq/seq_fifo.c
-+++ b/sound/core/seq/seq_fifo.c
-@@ -280,3 +280,20 @@ int snd_seq_fifo_resize(struct snd_seq_f
+--- a/net/core/stream.c
++++ b/net/core/stream.c
+@@ -120,7 +120,6 @@ int sk_stream_wait_memory(struct sock *s
+ 	int err = 0;
+ 	long vm_wait = 0;
+ 	long current_timeo = *timeo_p;
+-	bool noblock = (*timeo_p ? false : true);
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
  
- 	return 0;
- }
-+
-+/* get the number of unused cells safely */
-+int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f)
-+{
-+	unsigned long flags;
-+	int cells;
-+
-+	if (!f)
-+		return 0;
-+
-+	snd_use_lock_use(&f->use_lock);
-+	spin_lock_irqsave(&f->lock, flags);
-+	cells = snd_seq_unused_cells(f->pool);
-+	spin_unlock_irqrestore(&f->lock, flags);
-+	snd_use_lock_free(&f->use_lock);
-+	return cells;
-+}
---- a/sound/core/seq/seq_fifo.h
-+++ b/sound/core/seq/seq_fifo.h
-@@ -68,5 +68,7 @@ int snd_seq_fifo_poll_wait(struct snd_se
- /* resize pool in fifo */
- int snd_seq_fifo_resize(struct snd_seq_fifo *f, int poolsize);
+ 	if (sk_stream_memory_free(sk))
+@@ -133,11 +132,8 @@ int sk_stream_wait_memory(struct sock *s
  
-+/* get the number of unused cells safely */
-+int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f);
- 
- #endif
+ 		if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
+ 			goto do_error;
+-		if (!*timeo_p) {
+-			if (noblock)
+-				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+-			goto do_nonblock;
+-		}
++		if (!*timeo_p)
++			goto do_eagain;
+ 		if (signal_pending(current))
+ 			goto do_interrupted;
+ 		sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+@@ -169,7 +165,13 @@ out:
+ do_error:
+ 	err = -EPIPE;
+ 	goto out;
+-do_nonblock:
++do_eagain:
++	/* Make sure that whenever EAGAIN is returned, EPOLLOUT event can
++	 * be generated later.
++	 * When TCP receives ACK packets that make room, tcp_check_space()
++	 * only calls tcp_new_space() if SOCK_NOSPACE is set.
++	 */
++	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+ 	err = -EAGAIN;
+ 	goto out;
+ do_interrupted:
 
 
