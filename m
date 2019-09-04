@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464DDC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C3AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0128D2070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E86F2070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613113;
-	bh=bP67rUnQuQQMO/vk4mRw7dPx0htZlKaooFSF+6uvFV8=;
+	s=default; t=1567613116;
+	bh=ZRhVAY8poZIYQ3cm+G/7kvP4iN1cLutesGG83mvRrbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Kq857aegoA9DL5t9B0mzOE274Ud6z0yQVhMFF3MW2O+iv1BQvJmfjxIXiFCFMPbm
-	 sg4BHwK/kV1e+PY9YQyxX0am5u7M1ONB86SZA4mxXviEPUlfCtGzYbvvC5YedYOeFQ
-	 EbQ4jdZeDTL7fZKZqcgZfhqvHdUW5JyVvyFkoPWs=
+	b=M94V1N8TbrlOQ0UGKzGj3Jqz7lGlTpCSMGxJjDre10RAkA3pLC4pKWzwyNa62sq8C
+	 HLEETz1IAbC5XtZTgXIWQjM17Jx/+GVR1F/VBvpSLwu9Mhj3St6f66ESk5BeQn/YGM
+	 WIuvJrmJlZAOrvsAM971MfTFE+fTaDDOB6UGku98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387528AbfIDQCz (ORCPT
+        id S1733071AbfIDQFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39090 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387508AbfIDQCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:53 -0400
+        id S2387525AbfIDQCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EDF52070C;
-        Wed,  4 Sep 2019 16:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9ACC22CF7;
+        Wed,  4 Sep 2019 16:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612972;
-        bh=bP67rUnQuQQMO/vk4mRw7dPx0htZlKaooFSF+6uvFV8=;
+        s=default; t=1567612974;
+        bh=ZRhVAY8poZIYQ3cm+G/7kvP4iN1cLutesGG83mvRrbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RH6fW2dWkPXC3riDhkk4SBT9/5EUYMUCrEdlGME8zry0pvBAARjXWPE6REIckFcHA
-         t8MXaiGdVDoag6xpp+6no01Jcb6h9Bh/Y9vG4I+5kLYh1QDoMTGYJ2OTBIOGgl5wKE
-         zbnAeBy4ZTtbaRPFG6VVzsMacuHhHFDGpWH6IcH8=
+        b=EPaF8gbjphHwqlcahtja0n5eT8uBH3H0wGUOFr3DDWEbdih72C5xezO1+xv1VUrjW
+         ihU0C6ALni+zhoUs1fVpymFyyX+ra15Q8nRy+w/DUD5leQPR25D7QcOEnp7zKBg+FV
+         UwVpgsB6VnqV/ukKxsCfZ0Re2OGaHy/vcDAjUNoM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhaoyang <huangzhaoyang@gmail.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 21/27] ARM: 8901/1: add a criteria for pfn_valid of arm
-Date:   Wed,  4 Sep 2019 12:02:14 -0400
-Message-Id: <20190904160220.4545-21-sashal@kernel.org>
+Cc:     Josh Hunt <johunt@akamai.com>,
+        Peter Zijlstra <peterz@infradead.org>, acme@kernel.org,
+        bpuranda@akamai.com, mingo@redhat.com, jolsa@redhat.com,
+        tglx@linutronix.de, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 23/27] perf/x86/intel: Restrict period on Nehalem
+Date:   Wed,  4 Sep 2019 12:02:16 -0400
+Message-Id: <20190904160220.4545-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160220.4545-1-sashal@kernel.org>
 References: <20190904160220.4545-1-sashal@kernel.org>
@@ -60,48 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhaoyang <huangzhaoyang@gmail.com>
+From: Josh Hunt <johunt@akamai.com>
 
-[ Upstream commit 5b3efa4f1479c91cb8361acef55f9c6662feba57 ]
+[ Upstream commit 44d3bbb6f5e501b873218142fe08cdf62a4ac1f3 ]
 
-pfn_valid can be wrong when parsing a invalid pfn whose phys address
-exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
+We see our Nehalem machines reporting 'perfevents: irq loop stuck!' in
+some cases when using perf:
 
-The issue originally arise from bellowing call stack, which corresponding to
-an access of the /proc/kpageflags from userspace with a invalid pfn parameter
-and leads to kernel panic.
-
-[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
-[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
-[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
-[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
-[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
-[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
-(ret_fast_syscall+0x0/0x28)
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+perfevents: irq loop stuck!
+WARNING: CPU: 0 PID: 3485 at arch/x86/events/intel/core.c:2282 intel_pmu_handle_irq+0x37b/0x530
+...
+RIP: 0010:intel_pmu_handle_irq+0x37b/0x530
+...
+Call Trace:
+<NMI>
+? perf_event_nmi_handler+0x2e/0x50
+? intel_pmu_save_and_restart+0x50/0x50
+perf_event_nmi_handler+0x2e/0x50
+nmi_handle+0x6e/0x120
+default_do_nmi+0x3e/0x100
+do_nmi+0x102/0x160
+end_repeat_nmi+0x16/0x50
+...
+? native_write_msr+0x6/0x20
+? native_write_msr+0x6/0x20
+</NMI>
+intel_pmu_enable_event+0x1ce/0x1f0
+x86_pmu_start+0x78/0xa0
+x86_pmu_enable+0x252/0x310
+__perf_event_task_sched_in+0x181/0x190
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+finish_task_switch+0x158/0x260
+__schedule+0x2f6/0x840
+? hrtimer_start_range_ns+0x153/0x210
+schedule+0x32/0x80
+schedule_hrtimeout_range_clock+0x8a/0x100
+? hrtimer_init+0x120/0x120
+ep_poll+0x2f7/0x3a0
+? wake_up_q+0x60/0x60
+do_epoll_wait+0xa9/0xc0
+__x64_sys_epoll_wait+0x1a/0x20
+do_syscall_64+0x4e/0x110
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fdeb1e96c03
+...
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: acme@kernel.org
+Cc: Josh Hunt <johunt@akamai.com>
+Cc: bpuranda@akamai.com
+Cc: mingo@redhat.com
+Cc: jolsa@redhat.com
+Cc: tglx@linutronix.de
+Cc: namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com
+Link: https://lkml.kernel.org/r/1566256411-18820-1-git-send-email-johunt@akamai.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/events/intel/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 4fb1474141a61..0fe4a7025e467 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -192,6 +192,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
- #ifdef CONFIG_HAVE_ARCH_PFN_VALID
- int pfn_valid(unsigned long pfn)
- {
-+	phys_addr_t addr = __pfn_to_phys(pfn);
-+
-+	if (__phys_to_pfn(addr) != pfn)
-+		return 0;
-+
- 	return memblock_is_map_memory(__pfn_to_phys(pfn));
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index e98e238d37750..55e362f9dbfaa 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3075,6 +3075,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
+ 	return left;
  }
- EXPORT_SYMBOL(pfn_valid);
+ 
++static u64 nhm_limit_period(struct perf_event *event, u64 left)
++{
++	return max(left, 32ULL);
++}
++
+ PMU_FORMAT_ATTR(event,	"config:0-7"	);
+ PMU_FORMAT_ATTR(umask,	"config:8-15"	);
+ PMU_FORMAT_ATTR(edge,	"config:18"	);
+@@ -3734,6 +3739,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
+ 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
+ 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
++		x86_pmu.limit_period = nhm_limit_period;
+ 
+ 		x86_pmu.cpu_events = nhm_events_attrs;
+ 
 -- 
 2.20.1
 
