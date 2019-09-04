@@ -2,83 +2,93 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A059C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E722C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44F4023431
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B6623402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:10:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="B/p8cViO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="htTJrfdL";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nJ/czpos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfIDGIz (ORCPT
+        id S1728745AbfIDGKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:08:55 -0400
-Received: from forward104p.mail.yandex.net ([77.88.28.107]:45293 "EHLO
-        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726045AbfIDGIz (ORCPT
+        Wed, 4 Sep 2019 02:10:06 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53470 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfIDGKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:08:55 -0400
-Received: from mxback17g.mail.yandex.net (mxback17g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:317])
-        by forward104p.mail.yandex.net (Yandex) with ESMTP id 64ECB4B00823;
-        Wed,  4 Sep 2019 09:08:52 +0300 (MSK)
-Received: from smtp4o.mail.yandex.net (smtp4o.mail.yandex.net [2a02:6b8:0:1a2d::28])
-        by mxback17g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id scxRs21PbP-8pVObtAP;
-        Wed, 04 Sep 2019 09:08:52 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567577332;
-        bh=63Nzj/rJTv0SfwKp8FEmdqXh2tkTmqjb4gPgRgauuok=;
-        h=In-Reply-To:From:To:Subject:Cc:Date:References:Message-ID;
-        b=B/p8cViOIU2zBkr/CTbNzQckT+zJkChO2PFAjVr/3f9mP+ejuRllVo84y/NuiegVn
-         q5yYttng5pI6A2l331sNJ1N7xSAmHImdwa+ofNWQzvsiJ7pqwD2I1NhrnzyaZYs4ZO
-         G68ack765oywHhfBiF1LQyAHxWR0Y+Zy1tFK40X0=
-Authentication-Results: mxback17g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp4o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id aVxXNVqQqQ-8WeaTxpo;
-        Wed, 04 Sep 2019 09:08:40 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v1 14/18] MIPS: Loongson64: Add generic dts
-To:     =?UTF-8?B?6ZmI5Y2O5omN?= <chenhc@lemote.com>,
-        linux-mips <linux-mips@vger.kernel.org>
-Cc:     "paul.burton" <paul.burton@mips.com>, tglx <tglx@linutronix.de>,
-        jason <jason@lakedaemon.net>, maz <maz@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        robh+dt <robh+dt@kernel.org>,
-        "mark.rutland" <mark.rutland@arm.co>,
-        devicetree <devicetree@vger.kernel.org>,
-        Huacai Chen <chenhuacai@gmail.com>
-References: <20190830043232.20191-1-jiaxun.yang@flygoat.com>
- <20190830043232.20191-9-jiaxun.yang@flygoat.com>
- <tencent_1942EDDF41E4786E357A4E9D@qq.com>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <afdce123-385c-96b9-de78-e3a4dee23b29@flygoat.com>
-Date:   Wed, 4 Sep 2019 14:08:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Wed, 4 Sep 2019 02:10:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D482D6119D; Wed,  4 Sep 2019 06:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567577404;
+        bh=F5sXdp2HFRFRyPdk3dQOYFx1vtSHFJAa+zl8mZ6v0h4=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=htTJrfdL5OwahU2sPxDzyDGV1iMmr/gZDBwkllEEJXHHe65vm2SuHAIOhfaqnstmy
+         6/FItbcyATdK+zkAcLN1tVr/mthZqDdocDAE+hOfNsE+9HueUbux0Jn+uQoMGo/krS
+         EffivWzjqWW1UhnSuqgL/RA4iyZ3NJc2+Xu65nTk=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B36460C72;
+        Wed,  4 Sep 2019 06:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567577403;
+        bh=F5sXdp2HFRFRyPdk3dQOYFx1vtSHFJAa+zl8mZ6v0h4=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=nJ/czposdCMZLkxI+okMPpLMVuHBf8ktvL36/tn0cjGJ8I1Vgam0SlnDZ8utv2HCZ
+         gqLDeXrI3rXsnih23LLPDT/xrcK9K54wpM5GR9zjwcPGnAZBj/hR9X/6kyZWaq22Z6
+         Sf/qV/A2YDPj1rJg0zwViE3VDq/wnjFXqwVQTI4Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B36460C72
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <tencent_1942EDDF41E4786E357A4E9D@qq.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH -next] carl9170: remove set but not used variable 'udev'
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190702141207.47552-1-yuehaibing@huawei.com>
+References: <20190702141207.47552-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <chunkeey@googlemail.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <davem@davemloft.net>, YueHaibing <yuehaibing@huawei.com>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190904061004.D482D6119D@smtp.codeaurora.org>
+Date:   Wed,  4 Sep 2019 06:10:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-在 2019/9/4 11:44, 陈华才 写道:
-> Hi, Jiaxun,
->
-> 1, There are too many dts files (all cputype/boardtype/n-ways combinations), in my opinon we don't need to distinguish 1way/2way/4way. In this way we can largely reduce dts files.
->
-> 2, Please don't use "ls" to stand-for loongson, at least in file names.
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/net/wireless/ath/carl9170/usb.c: In function carl9170_usb_disconnect:
+> drivers/net/wireless/ath/carl9170/usb.c:1110:21:
+>  warning: variable udev set but not used [-Wunused-but-set-variable]
+> 
+> It is not use since commit feb09b293327 ("carl9170:
+> fix misuse of device driver API")
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Acked-by: Christian Lamparter <chunkeey@gmail.com>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-Thanks, I'm going to drop cpu node in v2.
+Patch applied to ath-next branch of ath.git, thanks.
 
-Renaming files seems meaningless, but I'm going to do that too.
+68092f9cf932 carl9170: remove set but not used variable 'udev'
 
 -- 
+https://patchwork.kernel.org/patch/11027909/
 
-Jiaxun Yang
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
