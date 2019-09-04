@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18637C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BCBC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24BB2070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E1120820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613299;
-	bh=GoxAEzNMR5z8osRHkwO6EZg8c+PsNlMxhxDqKZwGVP8=;
+	s=default; t=1567613302;
+	bh=dLATFpVow7aojoKfxCGuwrnTgzpLrr1z4QSTjwV1B5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PkMsyyQS21JKN4gaC26Mi3skE1I6GIjvaRoKxcIPGo2Pb9x165NSK4+0PgAvy5JPK
-	 fnmkX6OyqFq55JU+wy+m8G1jx2Nk7IbWNh7P80iIVp9Apznux0a33MUYAlFolgG7rl
-	 Q1mUOz43r78/aTJt1M7CEKRdmXdotzk+cjHsg7QE=
+	b=WAsUUq/1YsF1+EV86DJVK7J6u4o8ENSV2Iy051Uv6Mh1BS/ovp9srz5fERIEujy/n
+	 C6j4DJGkAy3cTrkvA4VYkCorsTKYaJXnOOPXkCTNP7hmxc7SosAxSJRAL8lnqBHnN/
+	 a1kO6P2DAXVCHPdoLBdiSBO4oPc2okZatF3Zln4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733033AbfIDQBf (ORCPT
+        id S1732711AbfIDQIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732404AbfIDQBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:01:31 -0400
+        id S1733029AbfIDQBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10EB02070C;
-        Wed,  4 Sep 2019 16:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBB072341D;
+        Wed,  4 Sep 2019 16:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612889;
-        bh=GoxAEzNMR5z8osRHkwO6EZg8c+PsNlMxhxDqKZwGVP8=;
+        s=default; t=1567612894;
+        bh=dLATFpVow7aojoKfxCGuwrnTgzpLrr1z4QSTjwV1B5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ls4LWQEqSM99EXOd8TwPgCet9yMx1Nj6aPxT2Zsg8/m0+Q9jfGfsSkh3itKwUMIfm
-         aYkvi54Q5S3cYKOQ0i5OKfnH8cx6/8NFkzb2As1zN24rQocE0OhPM0T6H6jTcAuZLO
-         fELJ9Y6taSLQ1jvRpd0GdCq4xpvvxSQtLSwpNrII=
+        b=q9wfPacHIjCoBoR1lgTLIN1o9mviO5Y/YDa+sYtKLZFBzz1pEMDWyLPob1LS5Hvxq
+         1KVRRvOeBde5DnI7AxVcTIBfLqEhA963vxQ9461HTfyOtJsAjptnaXFmkRQbG3LIrj
+         T8pU3Fz5o6W9M8I2MI7zcXCmXYOHMR3J3t6xe/DQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/36] batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
-Date:   Wed,  4 Sep 2019 12:00:52 -0400
-Message-Id: <20190904160122.4179-6-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 10/36] NFSv4: Fix return value in nfs_finish_open()
+Date:   Wed,  4 Sep 2019 12:00:56 -0400
+Message-Id: <20190904160122.4179-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -61,67 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3ee1bb7aae97324ec9078da1f00cb2176919563f ]
+[ Upstream commit 9821421a291b548ef4369c6998745baa36ddecd5 ]
 
-batadv_netlink_get_ifindex() needs to make sure user passed
-a correct u32 attribute.
+If the file turns out to be of the wrong type after opening, we want
+to revalidate the path and retry, so return EOPENSTALE rather than
+ESTALE.
 
-syzbot reported :
-BUG: KMSAN: uninit-value in batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
-CPU: 1 PID: 11705 Comm: syz-executor888 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x191/0x1f0 lib/dump_stack.c:113
- kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
- __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
- batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
- genl_lock_dumpit+0xc6/0x130 net/netlink/genetlink.c:482
- netlink_dump+0xa84/0x1ab0 net/netlink/af_netlink.c:2253
- __netlink_dump_start+0xa3a/0xb30 net/netlink/af_netlink.c:2361
- genl_family_rcv_msg net/netlink/genetlink.c:550 [inline]
- genl_rcv_msg+0xfc1/0x1a40 net/netlink/genetlink.c:627
- netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2486
- genl_rcv+0x63/0x80 net/netlink/genetlink.c:638
- netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
- netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1337
- netlink_sendmsg+0x127e/0x12f0 net/netlink/af_netlink.c:1926
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg net/socket.c:661 [inline]
- ___sys_sendmsg+0xcc6/0x1200 net/socket.c:2260
- __sys_sendmsg net/socket.c:2298 [inline]
- __do_sys_sendmsg net/socket.c:2307 [inline]
- __se_sys_sendmsg+0x305/0x460 net/socket.c:2305
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2305
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x440209
-
-Fixes: b60620cf567b ("batman-adv: netlink: hardif query")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/netlink.c | 2 +-
+ fs/nfs/dir.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/netlink.c b/net/batman-adv/netlink.c
-index ab13b4d587338..edb35bcc046d4 100644
---- a/net/batman-adv/netlink.c
-+++ b/net/batman-adv/netlink.c
-@@ -110,7 +110,7 @@ batadv_netlink_get_ifindex(const struct nlmsghdr *nlh, int attrtype)
- {
- 	struct nlattr *attr = nlmsg_find_attr(nlh, GENL_HDRLEN, attrtype);
- 
--	return attr ? nla_get_u32(attr) : 0;
-+	return (attr && nla_len(attr) == sizeof(u32)) ? nla_get_u32(attr) : 0;
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 85a6fdd76e20b..50c181fa00251 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1470,7 +1470,7 @@ static int nfs_finish_open(struct nfs_open_context *ctx,
+ 	if (S_ISREG(file->f_path.dentry->d_inode->i_mode))
+ 		nfs_file_set_open_context(file, ctx);
+ 	else
+-		err = -ESTALE;
++		err = -EOPENSTALE;
+ out:
+ 	return err;
  }
- 
- /**
 -- 
 2.20.1
 
