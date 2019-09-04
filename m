@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0A3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0192208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5226A2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619952;
-	bh=/vl8O0bc9Wc17DWin3Bn7d3rT4P4Ss6k0ItKG2xe9Bg=;
+	s=default; t=1567619955;
+	bh=szNqJgC9d5Ndna8YoKeMJQN4lU7/tFfd7KS/NIiUoh4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GDb2BXoiaqVyioiFDabsvJm6S24GtTCO4wFIJtOyxkfOS5vUDG8hfwIpYlfNL61S7
-	 VpuJKpnKfRxau9lT1fMWmfvZ8LoCFdudhejtpQXRs13eCivp+ZnNpoU+rrP/C39iii
-	 rqyW8StQvx0HQRwrPCechM9WjeDdk2Nax4vkzstM=
+	b=KaUYX5JSYjcRihQGYDnihwJgXE+p+IUm0/Cl6uY4g+csh0MtHAgX7oIHciJFtrl1U
+	 uZ0CggW6VxyMwRatXVehaTnefP2GvS0bOXzs4cp3jKUIDDjBa7HKX8G9hA0nfPSlCt
+	 /BeMYUEugjSL91SJf942tbNieGQ/fG+5WuEKzbT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388200AbfIDR7L (ORCPT
+        id S2388207AbfIDR7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37900 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733180AbfIDR7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:09 -0400
+        id S1733102AbfIDR7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:59:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AB72208E4;
-        Wed,  4 Sep 2019 17:59:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5AC62339E;
+        Wed,  4 Sep 2019 17:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619948;
-        bh=/vl8O0bc9Wc17DWin3Bn7d3rT4P4Ss6k0ItKG2xe9Bg=;
+        s=default; t=1567619951;
+        bh=szNqJgC9d5Ndna8YoKeMJQN4lU7/tFfd7KS/NIiUoh4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KOtvTi/3xa1x3W2aaey5/aaonzSfWbyhWb/eEVLYH/pkpFQ1R/Qb+dROVm1rS+fm8
-         H430hU28lCWdd5IAKIWKJ0TvhBBl+49VcKTMP91T//ZPjXadNO1bCYk0qvhokzFbOu
-         iUv24QG7/hhA8O6BcsEvKmGdIDxNORpFBh+28EVA=
+        b=rGol/AB5Ja/qoZ8a748MgbF8+E/fTFSHYnjtRN4aSWStVkVdvlm8mfWIWBRrE+IHv
+         I+Tn4j+NpkRjEUDk59bkFW5d5a339hzKqXgsGaXSQFLJ/0EeRsDl32fdWG5Q9MKstR
+         GihtMrCuTcP1t29G+3Ij24f54aNaX2NXA47i83EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 17/83] NFSv4: Fix a potential sleep while atomic in nfs4_do_reclaim()
-Date:   Wed,  4 Sep 2019 19:53:09 +0200
-Message-Id: <20190904175305.430416704@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 18/83] HID: input: fix a4tech horizontal wheel custom usage
+Date:   Wed,  4 Sep 2019 19:53:10 +0200
+Message-Id: <20190904175305.548719888@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,140 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c77e22834ae9a11891cb613bd9a551be1b94f2bc ]
+[ Upstream commit 1c703b53e5bfb5c2205c30f0fb157ce271fd42fb ]
 
-John Hubbard reports seeing the following stack trace:
+Some a4tech mice use the 'GenericDesktop.00b8' usage to inform whether
+the previous wheel report was horizontal or vertical. Before
+c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key") this
+usage was being mapped to 'Relative.Misc'. After the patch it's simply
+ignored (usage->type == 0 & usage->code == 0). Which ultimately makes
+hid-a4tech ignore the WHEEL/HWHEEL selection event, as it has no
+usage->type.
 
-nfs4_do_reclaim
-   rcu_read_lock /* we are now in_atomic() and must not sleep */
-       nfs4_purge_state_owners
-           nfs4_free_state_owner
-               nfs4_destroy_seqid_counter
-                   rpc_destroy_wait_queue
-                       cancel_delayed_work_sync
-                           __cancel_work_timer
-                               __flush_work
-                                   start_flush_work
-                                       might_sleep:
-                                        (kernel/workqueue.c:2975: BUG)
+We shouldn't rely on a mapping for that usage as it's nonstandard and
+doesn't really map to an input event. So we bypass the mapping and make
+sure the custom event handling properly handles both reports.
 
-The solution is to separate out the freeing of the state owners
-from nfs4_purge_state_owners(), and perform that outside the atomic
-context.
-
-Reported-by: John Hubbard <jhubbard@nvidia.com>
-Fixes: 0aaaf5c424c7f ("NFS: Cache state owners after files are closed")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: c01908a14bf73 ("HID: input: add mapping for "Toggle Display" key")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4_fs.h    |  3 ++-
- fs/nfs/nfs4client.c |  5 ++++-
- fs/nfs/nfs4state.c  | 27 ++++++++++++++++++++++-----
- 3 files changed, 28 insertions(+), 7 deletions(-)
+ drivers/hid/hid-a4tech.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 1452177c822db..c719389381dc4 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -434,7 +434,8 @@ static inline void nfs4_schedule_session_recovery(struct nfs4_session *session,
+diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
+index 9428ea7cdf8a0..c52bd163abb3e 100644
+--- a/drivers/hid/hid-a4tech.c
++++ b/drivers/hid/hid-a4tech.c
+@@ -26,12 +26,36 @@
+ #define A4_2WHEEL_MOUSE_HACK_7	0x01
+ #define A4_2WHEEL_MOUSE_HACK_B8	0x02
  
- extern struct nfs4_state_owner *nfs4_get_state_owner(struct nfs_server *, struct rpc_cred *, gfp_t);
- extern void nfs4_put_state_owner(struct nfs4_state_owner *);
--extern void nfs4_purge_state_owners(struct nfs_server *);
-+extern void nfs4_purge_state_owners(struct nfs_server *, struct list_head *);
-+extern void nfs4_free_state_owners(struct list_head *head);
- extern struct nfs4_state * nfs4_get_open_state(struct inode *, struct nfs4_state_owner *);
- extern void nfs4_put_open_state(struct nfs4_state *);
- extern void nfs4_close_state(struct nfs4_state *, fmode_t);
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 43f42cc30a606..1ec6dd4f3e2e4 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -781,9 +781,12 @@ found:
- 
- static void nfs4_destroy_server(struct nfs_server *server)
- {
-+	LIST_HEAD(freeme);
++#define A4_WHEEL_ORIENTATION	(HID_UP_GENDESK | 0x000000b8)
 +
- 	nfs_server_return_all_delegations(server);
- 	unset_pnfs_layoutdriver(server);
--	nfs4_purge_state_owners(server);
-+	nfs4_purge_state_owners(server, &freeme);
-+	nfs4_free_state_owners(&freeme);
- }
+ struct a4tech_sc {
+ 	unsigned long quirks;
+ 	unsigned int hw_wheel;
+ 	__s32 delayed_value;
+ };
  
- /*
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 6f474b0670323..4e63daeef6339 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -611,24 +611,39 @@ void nfs4_put_state_owner(struct nfs4_state_owner *sp)
- /**
-  * nfs4_purge_state_owners - Release all cached state owners
-  * @server: nfs_server with cached state owners to release
-+ * @head: resulting list of state owners
-  *
-  * Called at umount time.  Remaining state owners will be on
-  * the LRU with ref count of zero.
-+ * Note that the state owners are not freed, but are added
-+ * to the list @head, which can later be used as an argument
-+ * to nfs4_free_state_owners.
-  */
--void nfs4_purge_state_owners(struct nfs_server *server)
-+void nfs4_purge_state_owners(struct nfs_server *server, struct list_head *head)
- {
- 	struct nfs_client *clp = server->nfs_client;
- 	struct nfs4_state_owner *sp, *tmp;
--	LIST_HEAD(doomed);
- 
- 	spin_lock(&clp->cl_lock);
- 	list_for_each_entry_safe(sp, tmp, &server->state_owners_lru, so_lru) {
--		list_move(&sp->so_lru, &doomed);
-+		list_move(&sp->so_lru, head);
- 		nfs4_remove_state_owner_locked(sp);
- 	}
- 	spin_unlock(&clp->cl_lock);
-+}
- 
--	list_for_each_entry_safe(sp, tmp, &doomed, so_lru) {
-+/**
-+ * nfs4_purge_state_owners - Release all cached state owners
-+ * @head: resulting list of state owners
-+ *
-+ * Frees a list of state owners that was generated by
-+ * nfs4_purge_state_owners
-+ */
-+void nfs4_free_state_owners(struct list_head *head)
++static int a4_input_mapping(struct hid_device *hdev, struct hid_input *hi,
++			    struct hid_field *field, struct hid_usage *usage,
++			    unsigned long **bit, int *max)
 +{
-+	struct nfs4_state_owner *sp, *tmp;
++	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
 +
-+	list_for_each_entry_safe(sp, tmp, head, so_lru) {
- 		list_del(&sp->so_lru);
- 		nfs4_free_state_owner(sp);
- 	}
-@@ -1764,12 +1779,13 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
- 	struct nfs4_state_owner *sp;
- 	struct nfs_server *server;
- 	struct rb_node *pos;
-+	LIST_HEAD(freeme);
- 	int status = 0;
++	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8 &&
++	    usage->hid == A4_WHEEL_ORIENTATION) {
++		/*
++		 * We do not want to have this usage mapped to anything as it's
++		 * nonstandard and doesn't really behave like an HID report.
++		 * It's only selecting the orientation (vertical/horizontal) of
++		 * the previous mouse wheel report. The input_events will be
++		 * generated once both reports are recorded in a4_event().
++		 */
++		return -1;
++	}
++
++	return 0;
++
++}
++
+ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
+ 		struct hid_field *field, struct hid_usage *usage,
+ 		unsigned long **bit, int *max)
+@@ -53,8 +77,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
+ 	struct input_dev *input;
  
- restart:
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
--		nfs4_purge_state_owners(server);
-+		nfs4_purge_state_owners(server, &freeme);
- 		spin_lock(&clp->cl_lock);
- 		for (pos = rb_first(&server->state_owners);
- 		     pos != NULL;
-@@ -1798,6 +1814,7 @@ restart:
- 		spin_unlock(&clp->cl_lock);
- 	}
- 	rcu_read_unlock();
-+	nfs4_free_state_owners(&freeme);
- 	return 0;
- }
+-	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput ||
+-			!usage->type)
++	if (!(hdev->claimed & HID_CLAIMED_INPUT) || !field->hidinput)
+ 		return 0;
  
+ 	input = field->hidinput->input;
+@@ -65,7 +88,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
+ 			return 1;
+ 		}
+ 
+-		if (usage->hid == 0x000100b8) {
++		if (usage->hid == A4_WHEEL_ORIENTATION) {
+ 			input_event(input, EV_REL, value ? REL_HWHEEL :
+ 					REL_WHEEL, a4->delayed_value);
+ 			return 1;
+@@ -129,6 +152,7 @@ MODULE_DEVICE_TABLE(hid, a4_devices);
+ static struct hid_driver a4_driver = {
+ 	.name = "a4tech",
+ 	.id_table = a4_devices,
++	.input_mapping = a4_input_mapping,
+ 	.input_mapped = a4_input_mapped,
+ 	.event = a4_event,
+ 	.probe = a4_probe,
 -- 
 2.20.1
 
