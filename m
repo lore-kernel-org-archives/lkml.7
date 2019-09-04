@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3019DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5977BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08304206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3301C22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620347;
-	bh=lnqkE3M+BQ/GONSwSD8tujzQUyv67os8UdwOV/de+ZY=;
+	s=default; t=1567620349;
+	bh=KjgzAgObt+LH3gTEUmL2iFES4O6uq6NbqBIm2PA4h/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o3v+JIKfQZHEusclXcFClkKEsuZBuRtepU00fNmhoa20SMrDFdtDBVItfyPzqwIVN
-	 kZJrnkXR9j+6kLKjGfqfC9yVBpdw65M8JilW9hq5eGNQHL9vh2ByylXLstm+nXPN5C
-	 TMCKitt69KwN1sIvVVuk6WzJr0yssDuxzvd034XE=
+	b=aEva+QoesVNxdC0qt2ZeKGaSWHjg0sJRAomdqii18oig5nX4n0td/1Fw7sjd/BXxp
+	 iqYzwH2oKgPDwOJOL3q2t//j73du6JriM9/zZ2j8ULilfzgfi5diL5ViT/KFDEJjMa
+	 36gHOgBbQw3D9VXEvpnmlg237WcEoPKQPCHVqKSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389314AbfIDSFq (ORCPT
+        id S2388973AbfIDSFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:05:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47334 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388958AbfIDSFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:05:43 -0400
+        id S2389315AbfIDSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:05:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0734206B8;
-        Wed,  4 Sep 2019 18:05:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAAD9206B8;
+        Wed,  4 Sep 2019 18:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620342;
-        bh=lnqkE3M+BQ/GONSwSD8tujzQUyv67os8UdwOV/de+ZY=;
+        s=default; t=1567620345;
+        bh=KjgzAgObt+LH3gTEUmL2iFES4O6uq6NbqBIm2PA4h/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geo/HNizvHCsAREb8DPmL7WITOInMURROOUqCzZ0xRVc/+x9FGvqPm3LFUJk5XJRH
-         0c86GQFzbRn1uac7TlPxou8fMbwZKaP3y2/dPRQSPCXFu7cgX4NMtNA7uQqYulgDVN
-         ZInzYegZxsVu2NG8pcfbztrSRJ5XG17wRVulgHgc=
+        b=YAAd1h1nKpJ1RyCBNtpSXwMnX5yAJO/pUvzhGsESebnqosorzLwuJV5lEVibroHI5
+         /h5YURmNYrcMXBJXj8vga73wUMFmLEtF1GYxcVlziuMrpb15dgxJh16CqY/flvDxfn
+         VDPUcPG7fIJ6dpcdQ2lx3BeGpv3Z9zBrgJOsLP00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Airlie <airlied@redhat.com>,
+        stable@vger.kernel.org,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/93] drm/ast: Fixed reboot test may cause system hanged
-Date:   Wed,  4 Sep 2019 19:53:24 +0200
-Message-Id: <20190904175305.218878328@linuxfoundation.org>
+Subject: [PATCH 4.19 23/93] usb: host: fotg2: restart hcd after port reset
+Date:   Wed,  4 Sep 2019 19:53:25 +0200
+Message-Id: <20190904175305.292139421@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -61,72 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05b439711f6ff8700e8660f97a1179650778b9cb ]
+[ Upstream commit 777758888ffe59ef754cc39ab2f275dc277732f4 ]
 
-There is another thread still access standard VGA I/O while loading drm driver.
-Disable standard VGA I/O decode to avoid this issue.
+On the Gemini SoC the FOTG2 stalls after port reset
+so restart the HCD after each port reset.
 
-Signed-off-by: Y.C. Chen <yc_chen@aspeedtech.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1523410059-18415-1-git-send-email-yc_chen@aspeedtech.com
+Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190810150458.817-1-linus.walleij@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ast/ast_main.c | 5 ++++-
- drivers/gpu/drm/ast/ast_mode.c | 2 +-
- drivers/gpu/drm/ast/ast_post.c | 2 +-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/usb/host/fotg210-hcd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index 373700c05a00f..224fa1ef87ff9 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -131,8 +131,8 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
- 
- 
- 	/* Enable extended register access */
--	ast_enable_mmio(dev);
- 	ast_open_key(ast);
-+	ast_enable_mmio(dev);
- 
- 	/* Find out whether P2A works or whether to use device-tree */
- 	ast_detect_config_mode(dev, &scu_rev);
-@@ -576,6 +576,9 @@ void ast_driver_unload(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
-+	/* enable standard VGA decode */
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x04);
+diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+index e64eb47770c8b..2d5a72c15069e 100644
+--- a/drivers/usb/host/fotg210-hcd.c
++++ b/drivers/usb/host/fotg210-hcd.c
+@@ -1627,6 +1627,10 @@ static int fotg210_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			/* see what we found out */
+ 			temp = check_reset_complete(fotg210, wIndex, status_reg,
+ 					fotg210_readl(fotg210, status_reg));
 +
- 	ast_release_firmware(dev);
- 	kfree(ast->dp501_fw_addr);
- 	ast_mode_fini(dev);
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 8bb355d5d43d8..9d92d2d2fcfc7 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -600,7 +600,7 @@ static int ast_crtc_mode_set(struct drm_crtc *crtc,
- 		return -EINVAL;
- 	ast_open_key(ast);
++			/* restart schedule */
++			fotg210->command |= CMD_RUN;
++			fotg210_writel(fotg210, fotg210->command, &fotg210->regs->command);
+ 		}
  
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
- 
- 	ast_set_std_reg(crtc, adjusted_mode, &vbios_mode);
- 	ast_set_crtc_reg(crtc, adjusted_mode, &vbios_mode);
-diff --git a/drivers/gpu/drm/ast/ast_post.c b/drivers/gpu/drm/ast/ast_post.c
-index f7d421359d564..c1d1ac51d1c20 100644
---- a/drivers/gpu/drm/ast/ast_post.c
-+++ b/drivers/gpu/drm/ast/ast_post.c
-@@ -46,7 +46,7 @@ void ast_enable_mmio(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
- }
- 
- 
+ 		if (!(temp & (PORT_RESUME|PORT_RESET))) {
 -- 
 2.20.1
 
