@@ -2,276 +2,145 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B25C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAB1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EB32339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:14:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+b4Fp2a"
+	by mail.kernel.org (Postfix) with ESMTP id 7DFC721670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729594AbfIDJON (ORCPT
+        id S1729609AbfIDJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:14:13 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:37493 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728537AbfIDJON (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:14:13 -0400
-Received: by mail-vs1-f65.google.com with SMTP id q9so7185982vsl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 02:14:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MN0b6OvKnXZr8uGhWjmCrGTXb1h5H1L7qagdNg+S1sg=;
-        b=U+b4Fp2al576XCFXnzNH1lWT0u9Rlzbc5/BCXDYtfPEfL1w+DTyq4kDUJXYVvy2RMv
-         5IUy877oizgwz2GMU72ADTgzpmexHkRBrQ9l0hZ3GsdV/Fpue2ESv+qkSnf9pJXNV8u3
-         MJ1eRzLaZcdq5uLHh0A+1OJ77a4mqchZ12yKI=
+        Wed, 4 Sep 2019 05:14:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43272 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727768AbfIDJOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:14:44 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0196B91760
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Sep 2019 09:14:44 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id x1so6395567wrn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 02:14:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MN0b6OvKnXZr8uGhWjmCrGTXb1h5H1L7qagdNg+S1sg=;
-        b=Bb+Q0XIB8dZpVQ1JC2TOlIFtlUbnI1n7tz0MDHMBGKyHKBiZLjLGnHaPQzhfCzJRLe
-         vCxsc3uOivETCSKFwfGGbDpBw/ie0npUhO587hBa4yYQyuHy68gL0bTq5YtuHkkA+uzB
-         EzGA3UOoXJg89d/aC6L/MbRsUlFnMAOFrV3IMiebL9qCcwDtgHzmT0E3QhEFJdFdGeL9
-         wbJA3fK1GiNSpRqvdl2Tj229dahWcJ1g0IzQKrSdGTv5JQv70kDXRun/pPvNV/Bep5nx
-         qrj3vFazWL8zr8yqYiSHTVsfLwGUVWidkqayY7CF2dtoQAVKJqkLB+BzZOO6R+oE7af8
-         kGYg==
-X-Gm-Message-State: APjAAAUb2CHTNUyOe6LiFVooeuDwgMg6lF22af56m1m9fNjWll3HjgsA
-        iF9Dee7nm1hOiTq2Ow7aGDxBw6j2j3+MnU+uh9rAlQ==
-X-Google-Smtp-Source: APXvYqykSGETqss+CbHmnsZe1fTUP4pEHpX6xPKY5VZ2TjYX0n59XRPduBG0rpnAbraIcYajXzkHkvwwXMNo38IzQGQ=
-X-Received: by 2002:a05:6102:7d5:: with SMTP id y21mr21284524vsg.9.1567588451598;
- Wed, 04 Sep 2019 02:14:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WulsqcUDqGAlte0XT35jyBuHqWE16gY7+JD//6GJ8LE=;
+        b=jlCdOjI/kPTyURSfwDK5cuZvl7eBVDTlCYqc6Y1w7z7tdWlsgFmnnKs7bKHVTpf5B1
+         xRRwTkq69Sq31Z7ByE9NbGA582gUZS3kPbEetvwa16XalwtIKMAC/WPGDBWSsBujE1FS
+         Dy83yHeqcXv+tnc6pU6i1HXRwlQhSwoIGecfmIV1NmNX9Dnvmtn5VQ12ENQH5NgjxNbw
+         eOtdLOxgRGYjPD/5yBgoLOXSq+e9jiasNS8Q0kwRkxhCEHYqWimfV+g8oTzF0XZBlPxr
+         Z3/aEmS7mExZF8aRXHYMUC0bvLKXJ/ap2b6+LbLuDdcsNgpa3eWRo4u00i4H30VsdbHk
+         o54w==
+X-Gm-Message-State: APjAAAXXzNAorpUQDTFQjbWx6hHY+pJRbaLTUEdXhqUq4LbD8a7zibN5
+        8Pv00mczRZpiw/lWJbctnzuBuY9366vGKKIKV/8v4mhU8oyCdfFIQ4s6rbYpw4uKb4ytSYCBz3h
+        wRqP7KbDX8wm0gt5urXHaNCwv
+X-Received: by 2002:a1c:9e03:: with SMTP id h3mr3545579wme.112.1567588482666;
+        Wed, 04 Sep 2019 02:14:42 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyWE7W0esSMrtACJMfgH6u7NS92/HwtNgSGZHmvycxF9VRjYlNRFA/kgpbIhqo36d95tm0xTQ==
+X-Received: by 2002:a1c:9e03:: with SMTP id h3mr3545568wme.112.1567588482495;
+        Wed, 04 Sep 2019 02:14:42 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id b1sm2455532wmj.4.2019.09.04.02.14.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 02:14:41 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 05:14:33 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Matt Lupfer <mlupfer@ddn.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scsi: virtio_scsi: unplug LUNs when events missed
+Message-ID: <20190904051230-mutt-send-email-mst@kernel.org>
+References: <20190903170408.32286-1-mlupfer@ddn.com>
 MIME-Version: 1.0
-References: <20190903055103.134764-1-cychiang@chromium.org>
- <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com> <d8a80ba5-dd2b-f84d-bbfc-9dd5ccbc26e9@baylibre.com>
-In-Reply-To: <d8a80ba5-dd2b-f84d-bbfc-9dd5ccbc26e9@baylibre.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Wed, 4 Sep 2019 17:13:45 +0800
-Message-ID: <CAFv8NwJz9gbdjqcNNxBzvzoOWGu4MeFjp=OKcfH=wCPksQc8Zw@mail.gmail.com>
-Subject: Re: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status setting
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, tzungbi@chromium.org,
-        Xing Zheng <zhengxing@rock-chips.com>,
-        kuninori.morimoto.gx@renesas.com,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>, kuankuan.y@gmail.com,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Doug Anderson <dianders@chromium.org>, cain.cai@rock-chips.com,
-        linux-rockchip@lists.infradead.org,
-        =?UTF-8?B?6JSh5p6r?= <eddie.cai@rock-chips.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Dylan Reid <dgreid@chromium.org>, sam@ravnborg.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903170408.32286-1-mlupfer@ddn.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 2:00 AM Neil Armstrong <narmstrong@baylibre.com> wro=
-te:
->
-> Hi,
->
-> Le 03/09/2019 =C3=A0 11:53, Neil Armstrong a =C3=A9crit :
-> > Hi,
-> >
-> > On 03/09/2019 07:51, Cheng-Yi Chiang wrote:
-> >> From: Yakir Yang <ykk@rock-chips.com>
-> >>
-> >> When transmitting IEC60985 linear PCM audio, we configure the
-> >> Audio Sample Channel Status information of all the channel
-> >> status bits in the IEC60958 frame.
-> >> Refer to 60958-3 page 10 for frequency, original frequency, and
-> >> wordlength setting.
-> >>
-> >> This fix the issue that audio does not come out on some monitors
-> >> (e.g. LG 22CV241)
-> >>
-> >> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> >> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> >> ---
-> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 59 ++++++++++++++++++++++=
-+
-> >>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 20 ++++++++
-> >>  2 files changed, 79 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/d=
-rm/bridge/synopsys/dw-hdmi.c
-> >> index bd65d0479683..34d46e25d610 100644
-> >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> >> @@ -582,6 +582,63 @@ static unsigned int hdmi_compute_n(unsigned int f=
-req, unsigned long pixel_clk)
-> >>      return n;
-> >>  }
-> >>
-> >> +static void hdmi_set_schnl(struct dw_hdmi *hdmi)
-> >> +{
-> >> +    u8 aud_schnl_samplerate;
-> >> +    u8 aud_schnl_8;
-> >> +
-> >> +    /* These registers are on RK3288 using version 2.0a. */
-> >> +    if (hdmi->version !=3D 0x200a)
-> >> +            return;
-> >
-> > Are these limited to the 2.0a version *in* RK3288, or 2.0a version on a=
-ll
-> > SoCs ?
->
-> After investigations, Amlogic sets these registers on their 2.0a version
-> aswell, and Jernej (added in Cc) reported me Allwinner sets them on their
-> < 2.0a and > 2.0a IPs versions.
->
-> Can you check on the Rockchip IP versions in RK3399 ?
->
-Sorry, the RK3399 board I am using is using DP, not HDMI.
-But I found that on rockchip's tree at
-
-https://github.com/rockchip-linux/kernel/commit/924f480383c982da9908fb96d6b=
-bb580b25545a5#diff-f74b4cfb23436a137a9338a5af3fbb3dR172
-
-There is such register setting, so I think RK3399 should have the same regi=
-ster.
+On Tue, Sep 03, 2019 at 05:04:20PM +0000, Matt Lupfer wrote:
+> The event handler calls scsi_scan_host() when events are missed, which
+> will hotplug new LUNs.  However, this function won't remove any
+> unplugged LUNs.  The result is that hotunplug doesn't work properly when
+> the number of unplugged LUNs exceeds the event queue size (currently 8).
+> 
+> Scan existing LUNs when events are missed to check if they are still
+> present.  If not, remove them.
+> 
+> Signed-off-by: Matt Lupfer <mlupfer@ddn.com>
+> ---
+>  drivers/scsi/virtio_scsi.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
+> index 297e1076e571..18df77bf371b 100644
+> --- a/drivers/scsi/virtio_scsi.c
+> +++ b/drivers/scsi/virtio_scsi.c
+> @@ -324,6 +324,36 @@ static void virtscsi_handle_param_change(struct virtio_scsi *vscsi,
+>  	scsi_device_put(sdev);
+>  }
+>  
+> +static void virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
+> +{
+> +	struct scsi_device *sdev;
+> +	struct Scsi_Host *shost = virtio_scsi_host(vscsi->vdev);
+> +	unsigned char scsi_cmd[MAX_COMMAND_SIZE];
+> +	int result, inquiry_len, inq_result_len = 256;
+> +	char *inq_result = kmalloc(inq_result_len, GFP_KERNEL);
+> +
+> +	shost_for_each_device(sdev, shost) {
+> +		inquiry_len = sdev->inquiry_len ? sdev->inquiry_len : 36;
+> +
+> +		memset(scsi_cmd, 0, sizeof(scsi_cmd));
+> +		scsi_cmd[0] = INQUIRY;
+> +		scsi_cmd[4] = (unsigned char) inquiry_len;
+> +
+> +		memset(inq_result, 0, inq_result_len);
+> +
+> +		result = scsi_execute_req(sdev, scsi_cmd, DMA_FROM_DEVICE,
+> +					  inq_result, inquiry_len, NULL,
+> +					  2, 3, NULL);
 
 
-> For reference, the HDMI 1.4a IP version allwinner setups is:
-> https://github.com/Allwinner-Homlet/H3-BSP4.4-linux/blob/master/drivers/v=
-ideo/fbdev/sunxi/disp2/hdmi/hdmi_bsp_sun8iw7.c#L531-L539
-> (registers a "scrambled" but a custom bit can reset to the original mappi=
-ng,
-> 0x1066 ... 0x106f)
+Where do the weird 2 and 3 values come from?
 
-I see.. so 1.4 has this register.
-I can modify the check to be >=3D 1.4 then.
-Will fix in v2.
+Most callers seem to use SD_TIMEOUT, SD_MAX_RETRIES...
 
-Thanks!
-
->
-> Neil
->
-> >
-> >> +
-> >> +    switch (hdmi->sample_rate) {
-> >> +    case 32000:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
-> >> +            break;
-> >> +    case 44100:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
-> >> +            break;
-> >> +    case 48000:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
-> >> +            break;
-> >> +    case 88200:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
-> >> +            break;
-> >> +    case 96000:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
-> >> +            break;
-> >> +    case 176400:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_176K4=
-;
-> >> +            break;
-> >> +    case 192000:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
-> >> +            break;
-> >> +    case 768000:
-> >> +            aud_schnl_samplerate =3D HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
-> >> +            break;
-> >> +    default:
-> >> +            dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)\n=
-",
-> >> +                     hdmi->sample_rate);
-> >> +            return;
-> >> +    }
-> >> +
-> >> +    /* set channel status register */
-> >> +    hdmi_modb(hdmi, aud_schnl_samplerate, HDMI_FC_AUDSCHNLS7_SMPRATE_=
-MASK,
-> >> +              HDMI_FC_AUDSCHNLS7);
-> >> +
-> >> +    /*
-> >> +     * Set original frequency to be the same as frequency.
-> >> +     * Use one-complement value as stated in IEC60958-3 page 13.
-> >> +     */
-> >> +    aud_schnl_8 =3D (~aud_schnl_samplerate) <<
-> >> +                    HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
-> >> +
-> >> +    /* This means word length is 16 bit. Refer to IEC60958-3 page 12.=
- */
-> >> +    aud_schnl_8 |=3D 2 << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
-> >> +
-> >> +    hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
-> >> +}
-> >> +
-> >>  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
-> >>      unsigned long pixel_clk, unsigned int sample_rate)
-> >>  {
-> >> @@ -620,6 +677,8 @@ static void hdmi_set_clk_regenerator(struct dw_hdm=
-i *hdmi,
-> >>      hdmi->audio_cts =3D cts;
-> >>      hdmi_set_cts_n(hdmi, cts, hdmi->audio_enable ? n : 0);
-> >>      spin_unlock_irq(&hdmi->audio_lock);
-> >> +
-> >> +    hdmi_set_schnl(hdmi);
-> >>  }
-> >>
-> >>  static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
-> >> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/d=
-rm/bridge/synopsys/dw-hdmi.h
-> >> index 6988f12d89d9..619ebc1c8354 100644
-> >> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> >> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> >> @@ -158,6 +158,17 @@
-> >>  #define HDMI_FC_SPDDEVICEINF                    0x1062
-> >>  #define HDMI_FC_AUDSCONF                        0x1063
-> >>  #define HDMI_FC_AUDSSTAT                        0x1064
-> >> +#define HDMI_FC_AUDSV                           0x1065
-> >> +#define HDMI_FC_AUDSU                           0x1066
-> >> +#define HDMI_FC_AUDSCHNLS0                      0x1067
-> >> +#define HDMI_FC_AUDSCHNLS1                      0x1068
-> >> +#define HDMI_FC_AUDSCHNLS2                      0x1069
-> >> +#define HDMI_FC_AUDSCHNLS3                      0x106a
-> >> +#define HDMI_FC_AUDSCHNLS4                      0x106b
-> >> +#define HDMI_FC_AUDSCHNLS5                      0x106c
-> >> +#define HDMI_FC_AUDSCHNLS6                      0x106d
-> >> +#define HDMI_FC_AUDSCHNLS7                      0x106e
-> >> +#define HDMI_FC_AUDSCHNLS8                      0x106f
-> >>  #define HDMI_FC_DATACH0FILL                     0x1070
-> >>  #define HDMI_FC_DATACH1FILL                     0x1071
-> >>  #define HDMI_FC_DATACH2FILL                     0x1072
-> >> @@ -706,6 +717,15 @@ enum {
-> >>  /* HDMI_FC_AUDSCHNLS7 field values */
-> >>      HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET =3D 4,
-> >>      HDMI_FC_AUDSCHNLS7_ACCURACY_MASK =3D 0x30,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_MASK =3D 0x0f,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_192K =3D 0xe,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 =3D 0xc,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_96K =3D 0xa,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_768K =3D 0x9,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 =3D 0x8,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_32K =3D 0x3,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_48K =3D 0x2,
-> >> +    HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 =3D 0x0,
-> >>
-> >>  /* HDMI_FC_AUDSCHNLS8 field values */
-> >>      HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK =3D 0xf0,
-> >>
-> >
+> +
+> +		if (result == 0 && inq_result[0] >> 5) {
+> +			/* PQ indicates the LUN is not attached */
+> +			scsi_remove_device(sdev);
+> +		}
+> +	}
+> +
+> +	kfree(inq_result);
+> +}
+> +
+>  static void virtscsi_handle_event(struct work_struct *work)
+>  {
+>  	struct virtio_scsi_event_node *event_node =
+> @@ -335,6 +365,7 @@ static void virtscsi_handle_event(struct work_struct *work)
+>  	    cpu_to_virtio32(vscsi->vdev, VIRTIO_SCSI_T_EVENTS_MISSED)) {
+>  		event->event &= ~cpu_to_virtio32(vscsi->vdev,
+>  						   VIRTIO_SCSI_T_EVENTS_MISSED);
+> +		virtscsi_rescan_hotunplug(vscsi);
+>  		scsi_scan_host(virtio_scsi_host(vscsi->vdev));
+>  	}
+>  
+> -- 
+> 2.23.0
