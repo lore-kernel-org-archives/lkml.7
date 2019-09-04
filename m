@@ -2,415 +2,410 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A17C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A997C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D08320674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hev-cc.20150623.gappssmtp.com header.i=@hev-cc.20150623.gappssmtp.com header.b="qXVuspQJ"
+	by mail.kernel.org (Postfix) with ESMTP id C1D9420674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbfIDOCy (ORCPT
+        id S1730971AbfIDOC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:02:54 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33563 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730528AbfIDOCx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:02:53 -0400
-Received: by mail-lj1-f195.google.com with SMTP id a22so2600143ljd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 07:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hev-cc.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PNoDx7fLvh74hebBREwxpllmhOCLYXj7kn6FrqXucok=;
-        b=qXVuspQJdftcYeloY0gBUAnJGch3IynSsFaRHtueekTIKarOdA8qD9Fnv2pwvBCJAp
-         uGaIFpPxmNjVlTYIU/w1HGGbCmHJwM9h9wt9CiqS6XxaJg1CTsJFDwvwMQ9jKChI1qPv
-         bVp+xKxabmzzXfypsjcmGiuqy6eEJfvUEZi5hL+L+uhB3iARYERj9vR/y49Aa5GZr102
-         bmmwM3JMSEsVTWjISCYJYmyCTnsspudfWkBj09ksfw0egU0K/VwGYCGFuTftsyYpQ39k
-         ZOQCdgJIm/gN2l2AFm55Y8LJbD3OhvkcAENPLvuY/bv8m9uBsUtpJjFG6BAebbmGvWIn
-         qHkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PNoDx7fLvh74hebBREwxpllmhOCLYXj7kn6FrqXucok=;
-        b=SSst9kvxibnk5HaeofTaQ8TNh/vA/ZIPEf4PDcgRkmPsCKbILxAlVPcsVxDVr8/pef
-         GwDAkzDn+pSHGPAikKLIaNXnJ92GwIYxrShRi78jDhQiBUjN9p3j2CWSGlg5nu/KB/wX
-         OMWRyRi0wJgmJRk3KclLkoh+l3TSeltzKnpx3wIs8poKZZz5+EPDTMU6c4uIZYr0hufp
-         njYqBYgjF8IldYdy13wNnq1cxpnNWx1Rzm/8N4MBLBTVR/01D2vX3c2MU9hwwdPlzBFh
-         Fuf9X8Mye4g3BKJAolUTCz++MpnID74gRtt4AdMMQZoIRXMDq4Bq+qWcKyml8hg/A1oe
-         yDmw==
-X-Gm-Message-State: APjAAAW0K5oK/1g0017kNeWB+l4WLptQzIyXqMuO/3hfwvRgO5CazPz7
-        pbo5q/OP7IGiA+px3Qsdqeqol/3TwgZuAGICzYWm2g==
-X-Google-Smtp-Source: APXvYqwSFab5bKz0pl4pxoMm7hM8PlhqrcXElcLtMC0TSi135ieQkqWAr6Jhd7wPQwTQEDTntWH+b04Zkw+4ZDyNryI=
-X-Received: by 2002:a2e:96da:: with SMTP id d26mr13980025ljj.7.1567605770657;
- Wed, 04 Sep 2019 07:02:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190902052034.16423-1-r@hev.cc> <0cdc9905efb9b77b159e09bee17d3ad4@suse.de>
- <7075dd44-feea-a52f-ddaa-087d7bb2c4f6@akamai.com> <23659bc3e5f80efe9746aefd4d6791e8@suse.de>
- <341df9eb-7e8e-98c8-5183-402bdfff7d59@akamai.com>
-In-Reply-To: <341df9eb-7e8e-98c8-5183-402bdfff7d59@akamai.com>
-From:   Heiher <r@hev.cc>
-Date:   Wed, 4 Sep 2019 22:02:11 +0800
-Message-ID: <CAHirt9hra2tA_OPNSow+CgD_CF2Z11ZqGG=1P45noqtdMtWuJw@mail.gmail.com>
-Subject: Re: [PATCH RESEND] fs/epoll: fix the edge-triggered mode for nested epoll
-To:     Jason Baron <jbaron@akamai.com>, linux-fsdevel@vger.kernel.org,
-        Roman Penyaev <rpenyaev@suse.de>
-Cc:     Eric Wong <e@80x24.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Sep 2019 10:02:59 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18936 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730533AbfIDOC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:02:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 07:02:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="382522930"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Sep 2019 07:02:55 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH v2 net-next] net: stmmac: Add support for MDIO interrupts
+Date:   Wed,  4 Sep 2019 22:02:54 +0800
+Message-Id: <1567605774-5500-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
 
-On Wed, Sep 4, 2019 at 8:02 PM Jason Baron <jbaron@akamai.com> wrote:
->
->
->
-> On 9/4/19 5:57 AM, Roman Penyaev wrote:
-> > On 2019-09-03 23:08, Jason Baron wrote:
-> >> On 9/2/19 11:36 AM, Roman Penyaev wrote:
-> >>> Hi,
-> >>>
-> >>> This is indeed a bug. (quick side note: could you please remove efd[1]
-> >>> from your test, because it is not related to the reproduction of a
-> >>> current bug).
-> >>>
-> >>> Your patch lacks a good description, what exactly you've fixed.  Let
-> >>> me speak out loud and please correct me if I'm wrong, my understanding
-> >>> of epoll internals has become a bit rusty: when epoll fds are nested
-> >>> an attempt to harvest events (ep_scan_ready_list() call) produces a
-> >>> second (repeated) event from an internal fd up to an external fd:
-> >>>
-> >>>      epoll_wait(efd[0], ...):
-> >>>        ep_send_events():
-> >>>           ep_scan_ready_list(depth=0):
-> >>>             ep_send_events_proc():
-> >>>                 ep_item_poll():
-> >>>                   ep_scan_ready_list(depth=1):
-> >>>                     ep_poll_safewake():
-> >>>                       ep_poll_callback()
-> >>>                         list_add_tail(&epi, &epi->rdllist);
-> >>>                         ^^^^^^
-> >>>                         repeated event
-> >>>
-> >>>
-> >>> In your patch you forbid wakeup for the cases, where depth != 0, i.e.
-> >>> for all nested cases. That seems clear.  But what if we can go further
-> >>> and remove the whole chunk, which seems excessive:
-> >>>
-> >>> @@ -885,26 +886,11 @@ static __poll_t ep_scan_ready_list(struct
-> >>> eventpoll *ep,
-> >>>
-> >>> -
-> >>> -       if (!list_empty(&ep->rdllist)) {
-> >>> -               /*
-> >>> -                * Wake up (if active) both the eventpoll wait list and
-> >>> -                * the ->poll() wait list (delayed after we release the
-> >>> lock).
-> >>> -                */
-> >>> -               if (waitqueue_active(&ep->wq))
-> >>> -                       wake_up(&ep->wq);
-> >>> -               if (waitqueue_active(&ep->poll_wait))
-> >>> -                       pwake++;
-> >>> -       }
-> >>>         write_unlock_irq(&ep->lock);
-> >>>
-> >>>         if (!ep_locked)
-> >>>                 mutex_unlock(&ep->mtx);
-> >>>
-> >>> -       /* We have to call this outside the lock */
-> >>> -       if (pwake)
-> >>> -               ep_poll_safewake(&ep->poll_wait);
-> >>>
-> >>>
-> >>> I reason like that: by the time we've reached the point of scanning events
-> >>> for readiness all wakeups from ep_poll_callback have been already fired and
-> >>> new events have been already accounted in ready list (ep_poll_callback()
-> >>> calls
-> >>> the same ep_poll_safewake()). Here, frankly, I'm not 100% sure and probably
-> >>> missing some corner cases.
-> >>>
-> >>> Thoughts?
-> >>
-> >> So the: 'wake_up(&ep->wq);' part, I think is about waking up other
-> >> threads that may be in waiting in epoll_wait(). For example, there may
-> >> be multiple threads doing epoll_wait() on the same epoll fd, and the
-> >> logic above seems to say thread 1 may have processed say N events and
-> >> now its going to to go off to work those, so let's wake up thread 2 now
-> >> to handle the next chunk.
-> >
-> > Not quite. Thread which calls ep_scan_ready_list() processes all the
-> > events, and while processing those, removes them one by one from the
-> > ready list.  But if event mask is !0 and event belongs to
-> > Level Triggered Mode descriptor (let's say default mode) it tails event
-> > again back to the list (because we are in level mode, so event should
-> > be there).  So at the end of this traversing loop ready list is likely
-> > not empty, and if so, wake up again is called for nested epoll fds.
-> > But, those nested epoll fds should get already all the notifications
-> > from the main event callback ep_poll_callback(), regardless any thread
-> > which traverses events.
-> >
-> > I suppose this logic exists for decades, when Davide (the author) was
-> > reshuffling the code here and there.
-> >
-> > But I do not feel confidence to state that this extra wakeup is bogus,
-> > I just have a gut feeling that it looks excessive.
->
-> Note that I was talking about the wakeup done on ep->wq not ep->poll_wait.
-> The path that I'm concerned about is let's say that there are N events
-> queued on the ready list. A thread that was woken up in epoll_wait may
-> decide to only process say N/2 of then. Then it will call wakeup on ep->wq
-> and this will wakeup another thread to process the remaining N/2. Without
-> the wakeup, the original thread isn't going to process the events until
-> it finishes with the original N/2 and gets back to epoll_wait(). So I'm not
-> sure how important that path is but I wanted to at least note the change
-> here would impact that behavior.
->
-> Thanks,
->
-> -Jason
->
->
-> >
-> >> So I think removing all that even for the
-> >> depth 0 case is going to change some behavior here. So perhaps, it
-> >> should be removed for all depths except for 0? And if so, it may be
-> >> better to make 2 patches here to separate these changes.
-> >>
-> >> For the nested wakeups, I agree that the extra wakeups seem unnecessary
-> >> and it may make sense to remove them for all depths. I don't think the
-> >> nested epoll semantics are particularly well spelled out, and afaict,
-> >> nested epoll() has behaved this way for quite some time. And the current
-> >> behavior is not bad in the way that a missing wakeup or false negative
-> >> would be.
-> >
-> > That's 100% true! For edge mode extra wake up is not a bug, not optimal
-> > for userspace - yes, but that can't lead to any lost wakeups.
-> >
-> > --
-> > Roman
-> >
+DW EQoS v5.xx controllers added capability for interrupt generation
+when MDIO interface is done (GMII Busy bit is cleared).
+This patch adds support for this interrupt on supported HW to avoid
+polling on GMII Busy bit.
 
-I tried to remove the whole chunk of code that Roman said, and it
-seems that there
-are no obvious problems with the two test programs below:
+stmmac_mdio_read() & stmmac_mdio_write() will sleep until wake_up() is
+called by the interrupt handler.
 
-Test case 1:
-           t0
-            |
-           e0
-            |
-           e1 (et)
-            |
-           s0 (lt)
+Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
+Reviewed-by: Kweh, Hock Leong <hock.leong.kweh@intel.com>
+Reviewed-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Chuah, Kim Tatt <kim.tatt.chuah@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
 
-When s0 is readable, the thread 0 can only read once event from e0.
-
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/epoll.h>
-#include <sys/socket.h>
-
-int main(int argc, char *argv[])
-{
-    int sfd[2];
-    int efd[2];
-    int nfds;
-    struct epoll_event e;
-
-    if (socketpair(AF_UNIX, SOCK_STREAM, 0, sfd) < 0)
-        goto out;
-
-    efd[0] = epoll_create(1);
-    if (efd[0] < 0)
-        goto out;
-
-    efd[1] = epoll_create(1);
-    if (efd[1] < 0)
-        goto out;
-
-    e.events = EPOLLIN;
-    if (epoll_ctl(efd[1], EPOLL_CTL_ADD, sfd[0], &e) < 0)
-        goto out;
-
-    e.events = EPOLLIN | EPOLLET;
-    if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
-        goto out;
-
-    if (write(sfd[1], "w", 1) != 1)
-        goto out;
-
-    nfds = epoll_wait(efd[0], &e, 1, 0);
-    if (nfds != 1)
-        goto out;
-
-    nfds = epoll_wait(efd[0], &e, 1, 0);
-    if (nfds != 0)
-        goto out;
-
-    nfds = epoll_wait(efd[1], &e, 1, 0);
-    if (nfds != 1)
-        goto out;
-
-    nfds = epoll_wait(efd[1], &e, 1, 0);
-    if (nfds != 1)
-        goto out;
-
-    close(efd[1]);
-    close(efd[0]);
-    close(sfd[0]);
-    close(sfd[1]);
-
-    printf("PASS\n");
-    return 0;
-
-out:
-    printf("FAIL\n");
-    return -1;
-}
-
-Test case 2:
-           t0  t1
-            \   /
-             e0
-            /   \
-    (et) e1   e2 (et)
-           |      |
-     (lt) s0    s2 (lt)
-
-When s0 and s2 are readable, both thread 0 and thread 1 can read an
-event from e0.
-
-#include <stdio.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <sys/epoll.h>
-#include <sys/socket.h>
-
-static int efd[3];
-static int sfd[4];
-static int count;
-
-static void *
-thread_handler(void *data)
-{
-    struct epoll_event e;
-
-    if (epoll_wait(efd[0], &e, 1, -1) == 1)
-        count++;
-
-    return NULL;
-}
-
-static void *
-emit_handler(void *data)
-{
-    usleep (100000);
-
-    write(sfd[1], "w", 1);
-    write(sfd[3], "w", 1);
-
-    return NULL;
-}
-
-int main(int argc, char *argv[])
-{
-    struct epoll_event e;
-    pthread_t tw, te;
-
-    if (socketpair(AF_UNIX, SOCK_STREAM, 0, &sfd[0]) < 0)
-        goto out;
-
-    if (socketpair(AF_UNIX, SOCK_STREAM, 0, &sfd[2]) < 0)
-        goto out;
-
-    efd[0] = epoll_create(1);
-    if (efd[0] < 0)
-        goto out;
-
-    efd[1] = epoll_create(1);
-    if (efd[1] < 0)
-        goto out;
-
-    efd[2] = epoll_create(1);
-    if (efd[2] < 0)
-        goto out;
-
-    e.events = EPOLLIN;
-    if (epoll_ctl(efd[1], EPOLL_CTL_ADD, sfd[0], &e) < 0)
-        goto out;
-
-    e.events = EPOLLIN;
-    if (epoll_ctl(efd[2], EPOLL_CTL_ADD, sfd[2], &e) < 0)
-        goto out;
-
-    e.events = EPOLLIN | EPOLLET;
-    if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[1], &e) < 0)
-        goto out;
-
-    e.events = EPOLLIN | EPOLLET;
-    if (epoll_ctl(efd[0], EPOLL_CTL_ADD, efd[2], &e) < 0)
-        goto out;
-
-    if (pthread_create(&tw, NULL, thread_handler, NULL) < 0)
-        goto out;
-
-    if (pthread_create(&te, NULL, emit_handler, NULL) < 0)
-        goto out;
-
-    if (epoll_wait(efd[0], &e, 1, -1) == 1)
-        count++;
-
-    if (pthread_join(tw, NULL) < 0)
-        goto out;
-
-    if (count != 2)
-        goto out;
-
-    close(efd[0]);
-    close(efd[1]);
-    close(efd[2]);
-    close(sfd[0]);
-    close(sfd[1]);
-    close(sfd[2]);
-    close(sfd[3]);
-
-    printf ("PASS\n");
-    return 0;
-
-out:
-    printf("FAIL\n");
-    return -1;
-}
-
-t0: thread0
-t1: thread1
-e0: epoll0 (efd[0])
-e1: epoll1 (efd[1])
-e2: epoll2 (efd[2])
-s0: socket0 (sfd[0])
-s2: socket2 (sfd[2])
-
-Is it possible to prove that this modification is correct, or any
-other corner cases are missing?
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 49aa56ca09cc..775a1c114b1a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -448,6 +448,8 @@ struct mac_device_info {
+ 	unsigned int pcs;
+ 	unsigned int pmt;
+ 	unsigned int ps;
++	bool mdio_intr_en;
++	wait_queue_head_t mdio_busy_wait;
+ };
+ 
+ struct stmmac_rx_routing {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index 2ed11a581d80..1be6a8a88b8f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -106,6 +106,7 @@ enum dwmac4_irq_status {
+ 	mmc_irq = 0x00000100,
+ 	lpi_irq = 0x00000020,
+ 	pmt_irq = 0x00000010,
++	mdio_irq = 0x00040000,
+ };
+ 
+ /* MAC PMT bitmap */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index fc9954e4a772..97fca6d65141 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -59,6 +59,9 @@ static void dwmac4_core_init(struct mac_device_info *hw,
+ 	if (hw->pcs)
+ 		value |= GMAC_PCS_IRQ_DEFAULT;
+ 
++	if (hw->mdio_intr_en)
++		value |= GMAC_INT_MDIO_EN;
++
+ 	writel(value, ioaddr + GMAC_INT_EN);
+ }
+ 
+@@ -629,6 +632,9 @@ static int dwmac4_irq_status(struct mac_device_info *hw,
+ 			x->irq_rx_path_exit_lpi_mode_n++;
+ 	}
+ 
++	if (intr_status & mdio_irq)
++		wake_up(&hw->mdio_busy_wait);
++
+ 	dwmac_pcs_isr(ioaddr, GMAC_PCS_BASE, intr_status, x);
+ 	if (intr_status & PCS_RGSMIIIS_IRQ)
+ 		dwmac4_phystatus(ioaddr, x);
+@@ -836,6 +842,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
+ 	.rxp_config = dwmac5_rxp_config,
+ 	.flex_pps_config = dwmac5_flex_pps_config,
+ 	.set_mac_loopback = dwmac4_set_mac_loopback,
++	.mdio_intr_dis = dwmac5_mdio_intr_dis,
+ };
+ 
+ int dwmac4_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+index 3f4f3132e16b..c58751e1dcb6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+@@ -549,3 +549,11 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
+ 	writel(val, ioaddr + MAC_PPS_CONTROL);
+ 	return 0;
+ }
++
++void dwmac5_mdio_intr_dis(void __iomem *ioaddr)
++{
++	u32 val = readl(ioaddr + GMAC_INT_EN);
++
++	val &= ~GMAC_INT_MDIO_EN;
++	writel(val, ioaddr + GMAC_INT_EN);
++}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
+index 775db776b3cc..a56511a4c97d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
+@@ -72,6 +72,9 @@
+ #define TCEIE				BIT(0)
+ #define DMA_ECC_INT_STATUS		0x00001088
+ 
++/* MDIO interrupt enable in MAC_Interrupt_Enable register */
++#define GMAC_INT_MDIO_EN		BIT(18)
++
+ int dwmac5_safety_feat_config(void __iomem *ioaddr, unsigned int asp);
+ int dwmac5_safety_feat_irq_status(struct net_device *ndev,
+ 		void __iomem *ioaddr, unsigned int asp,
+@@ -83,5 +86,6 @@ int dwmac5_rxp_config(void __iomem *ioaddr, struct stmmac_tc_entry *entries,
+ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
+ 			   struct stmmac_pps_cfg *cfg, bool enable,
+ 			   u32 sub_second_inc, u32 systime_flags);
++void dwmac5_mdio_intr_dis(void __iomem *ioaddr);
+ 
+ #endif /* __DWMAC5_H__ */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+index 3af2e5015245..7127efe652db 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+@@ -73,6 +73,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 	bool gmac;
+ 	bool gmac4;
+ 	bool xgmac;
++	bool mdio_intr_en;
+ 	u32 min_id;
+ 	const struct stmmac_regs_off regs;
+ 	const void *desc;
+@@ -90,6 +91,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = false,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC3_X_OFFSET,
+@@ -108,6 +110,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = true,
+ 		.gmac4 = false,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC3_X_OFFSET,
+@@ -126,6 +129,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -144,6 +148,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = DWMAC_CORE_4_00,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -162,6 +167,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = DWMAC_CORE_4_10,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -180,6 +186,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = true,
+ 		.min_id = DWMAC_CORE_5_10,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -198,6 +205,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = false,
+ 		.xgmac = true,
++		.mdio_intr_en = false,
+ 		.min_id = DWXGMAC_CORE_2_10,
+ 		.regs = {
+ 			.ptp_off = PTP_XGMAC_OFFSET,
+@@ -276,6 +284,7 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
+ 		mac->mode = mac->mode ? : entry->mode;
+ 		mac->tc = mac->tc ? : entry->tc;
+ 		mac->mmc = mac->mmc ? : entry->mmc;
++		mac->mdio_intr_en = mac->mdio_intr_en ? : entry->mdio_intr_en;
+ 
+ 		priv->hw = mac;
+ 		priv->ptpaddr = priv->ioaddr + entry->regs.ptp_off;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index 9435b312495d..d42885426e78 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -363,6 +363,8 @@ struct stmmac_ops {
+ 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
+ 	/* Source Address Insertion / Replacement */
+ 	void (*sarc_configure)(void __iomem *ioaddr, int val);
++	/* Disable mdio interrupt */
++	void (*mdio_intr_dis)(void __iomem *ioaddr);
+ };
+ 
+ #define stmmac_core_init(__priv, __args...) \
+@@ -443,6 +445,8 @@ struct stmmac_ops {
+ 	stmmac_do_callback(__priv, mac, get_mac_tx_timestamp, __args)
+ #define stmmac_sarc_configure(__priv, __args...) \
+ 	stmmac_do_void_callback(__priv, mac, sarc_configure, __args)
++#define stmmac_mdio_intr_dis(__priv, __args...) \
++	stmmac_do_void_callback(__priv, mac, mdio_intr_dis, __args)
+ 
+ /* PTP and HW Timer helpers */
+ struct stmmac_hwtimestamp {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 06ccd216ae90..2557a2beb03d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2768,6 +2768,8 @@ static int stmmac_release(struct net_device *dev)
+ 	phylink_stop(priv->phylink);
+ 	phylink_disconnect_phy(priv->phylink);
+ 
++	stmmac_mdio_intr_dis(priv, priv->ioaddr);
++
+ 	stmmac_stop_all_queues(priv);
+ 
+ 	stmmac_disable_all_queues(priv);
+@@ -4463,6 +4465,9 @@ int stmmac_dvr_probe(struct device *device,
+ 	if (ret)
+ 		goto error_hw_init;
+ 
++	/* mdio intr wait queue */
++	init_waitqueue_head(&priv->hw->mdio_busy_wait);
++
+ 	stmmac_check_ether_addr(priv);
+ 
+ 	/* Configure real RX and TX queues */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index 40c42637ad75..625e1fde0c86 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -19,6 +19,8 @@
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ 
++#include "dwmac4.h"
++#include "dwmac5.h"
+ #include "dwxgmac2.h"
+ #include "stmmac.h"
+ 
+@@ -142,6 +144,18 @@ static int stmmac_xgmac2_mdio_write(struct mii_bus *bus, int phyaddr,
+ 				  !(tmp & MII_XGMAC_BUSY), 100, 10000);
+ }
+ 
++static bool stmmac_mdio_intr_done(struct mii_bus *bus)
++{
++	struct net_device *ndev = bus->priv;
++	struct stmmac_priv *priv;
++	unsigned int mii_address;
++
++	priv = netdev_priv(ndev);
++	mii_address = priv->hw->mii.addr;
++
++	return !(readl(priv->ioaddr + mii_address) & MII_BUSY);
++}
++
+ /**
+  * stmmac_mdio_read
+  * @bus: points to the mii_bus structure
+@@ -159,9 +173,11 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+ 	u32 value = MII_BUSY;
++	u32 mdio_intr_en = 0;
+ 	int data = 0;
+ 	u32 v;
+ 
++	mdio_intr_en = readl(priv->ioaddr + GMAC_INT_EN) & GMAC_INT_MDIO_EN;
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+ 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+@@ -181,16 +197,26 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 		}
+ 	}
+ 
+-	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-			       100, 10000))
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
+ 		return -EBUSY;
++	}
+ 
+ 	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+-	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-			       100, 10000))
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
+ 		return -EBUSY;
++	}
+ 
+ 	/* Read the data from the MII data register */
+ 	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+@@ -214,9 +240,11 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+ 	u32 value = MII_BUSY;
++	u32 mdio_intr_en = 0;
+ 	int data = phydata;
+ 	u32 v;
+ 
++	mdio_intr_en = readl(priv->ioaddr + GMAC_INT_EN) & GMAC_INT_MDIO_EN;
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+ 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+@@ -240,17 +268,30 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 	}
+ 
+ 	/* Wait until any existing MII operation is complete */
+-	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-			       100, 10000))
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
+ 		return -EBUSY;
++	}
+ 
+ 	/* Set the MII address register to write */
+ 	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	/* Wait until any existing MII operation is complete */
+-	return readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-				  100, 10000);
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
++		return -EBUSY;
++	}
++
++	return 0;
+ }
+ 
+ /**
 -- 
-Best regards!
-Hev
-https://hev.cc
+Changelog v2
+*mdio interrupt mode or polling mode will depends on mdio interrupt enable bit
+*Disable the mdio interrupt enable bit in stmmac_release
+*Remove the condition for initialize wait queues
+*Applied reverse Christmas tree
+1.9.1
+
