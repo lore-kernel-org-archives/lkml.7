@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA50C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6107AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8C420820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEFD2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613039;
-	bh=cF3MtTz0nl54vr9qdfCWKaugfJ7HGXcCO4z5/TrMAv4=;
+	s=default; t=1567613044;
+	bh=d9E8e5Yl/LVurahZOx39SNiiMA2U+50O6/6d+nmjWBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MQx70DGV65nUHPFkcUVUwzlwA9JAQR6Oa0YNrv2TA5gUAUSxUnc2y2tQSTiDAxKVD
-	 POc/HQ43osoMIzDalTysHp8ORUv5SQgcMniZCGgtkfZmtIAf2DWQJr6XW8PMTw6E+p
-	 RNsaB6A0TbEzPFFwqp8ZBmgL4v9xnNdn/AFFNqSk=
+	b=SLm0jtioludoxzq5jFfWG8A+7SlkSF8Deo9vYkWvhS6F+XQEVXsHLcDbxrtHUEY0y
+	 AysNZxts+B9DIW/v0CLqMyV99nSIEoG5vhuRuL7nuQKAsAHNw9pwwY40zr0Mqb24oe
+	 waFE1E0xevCa51mrZJ9unN6Rf3fHyiV0m2oa0/as=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387680AbfIDQD3 (ORCPT
+        id S1733102AbfIDQEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39860 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:04:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733009AbfIDQDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:23 -0400
+        id S2387674AbfIDQD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7B622DBF;
-        Wed,  4 Sep 2019 16:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F181923431;
+        Wed,  4 Sep 2019 16:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567613002;
-        bh=cF3MtTz0nl54vr9qdfCWKaugfJ7HGXcCO4z5/TrMAv4=;
+        s=default; t=1567613007;
+        bh=d9E8e5Yl/LVurahZOx39SNiiMA2U+50O6/6d+nmjWBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LlmFNHemSOJh5psaJh1RC2PMaI8TbbGOoC1AQS6gSO0Ut62Ag3IJ4inHlIUBQeb2M
-         2qEocYm2z6ZeHhQwltnmDJUMPU94qJ0JdoBwiRQKgA1JnRdC/ksDFpdITqQkbTn2Pj
-         q//fE8Rc1X40RPA33LQswYb6rcUw/Jv8xruJmSIY=
+        b=G96vgdEls5rlYp7lpw1cRbe5SkGCBdcbwLg/um03ZXkQqveoULUf8+zjv9mmBbXma
+         wRoYYBbHAtGb0VrCF0cMdCS3vG77eJtTjfa068R7OicepgoMefbTXGP1NEIfQAf9Sg
+         CvTCbfNcGnFgCtHQAdgi9VwpevPtte/fBWPovmBQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/20] NFSv2: Fix eof handling
-Date:   Wed,  4 Sep 2019 12:02:54 -0400
-Message-Id: <20190904160303.5062-11-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, SteveM <swm@swm1.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 16/20] sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
+Date:   Wed,  4 Sep 2019 12:02:59 -0400
+Message-Id: <20190904160303.5062-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
 References: <20190904160303.5062-1-sashal@kernel.org>
@@ -58,33 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
+[ Upstream commit 189308d5823a089b56e2299cd96589507dac7319 ]
 
-If we received a reply from the server with a zero length read and
-no error, then that implies we are at eof.
+A similar workaround for the suspend/resume problem is needed for yet
+another ASUS machines, P6X models.  Like the previous fix, the BIOS
+doesn't provide the standard DMI_SYS_* entry, so again DMI_BOARD_*
+entries are used instead.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reported-and-tested-by: SteveM <swm@swm1.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/sky2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index b417bbcd97046..80ecdf2ec8b6a 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -588,7 +588,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- 		/* Emulate the eof flag, which isn't normally needed in NFSv2
- 		 * as it is guaranteed to always return the file attributes
- 		 */
--		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
-+		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
-+		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
- 			hdr->res.eof = 1;
- 	}
- 	return 0;
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index dcd72b2a37150..8ba9eadc20791 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -4946,6 +4946,13 @@ static const struct dmi_system_id msi_blacklist[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
+ 		},
+ 	},
++	{
++		.ident = "ASUS P6X",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "P6X"),
++		},
++	},
+ 	{}
+ };
+ 
 -- 
 2.20.1
 
