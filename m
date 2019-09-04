@@ -2,102 +2,85 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF44EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C8DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60C920449
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:25:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fTLS4AC5"
+	by mail.kernel.org (Postfix) with ESMTP id 986F9208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfIDVZB (ORCPT
+        id S1729503AbfIDVee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 17:25:01 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36946 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIDVY7 (ORCPT
+        Wed, 4 Sep 2019 17:34:34 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34297 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfIDVed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 17:24:59 -0400
-Received: by mail-io1-f68.google.com with SMTP id r4so32444906iop.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:24:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=gpnxUOC87Hy/bQFTjChPoPUmVY9m9l5TllB0pP0NeVk=;
-        b=fTLS4AC5Y3ATB96yfTaa7NNHIOTrZhvDflTG9Orv7lWVtnUCwEpcmP20IMPHHfbAo4
-         8IZUu4m/TmyBzD4IkRERocaj62+YgKlCnp0UnS9rfQgWahlhEFwbtw+h7L7OoNv6+ap+
-         RJudWwoFvJWcbxdoKoVd/Td0s4qFhYYQFo5RvC7qc4TKPMc3MftX/S71qdKw2PGFipAO
-         nIux+yq5b0aZNpSAGSZID8kbRRvqRopQ2NLanjEh0XZx17D9feHuYXCD+G3JbySlMwSq
-         wlTIM/KfezSMBzPmjTFMtfGCmlA465gjVqqLLGaudRkH6Z3C1ADjcKPc1Em1eTAFMHrl
-         oBYg==
+        Wed, 4 Sep 2019 17:34:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a13so283820qtj.1;
+        Wed, 04 Sep 2019 14:34:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=gpnxUOC87Hy/bQFTjChPoPUmVY9m9l5TllB0pP0NeVk=;
-        b=qO5l6o4VbwmeMyc/T0ONlhNm+o0Dhh6YS3zlI93+kNGWbiHT0C5/slsgUvJMOaYGjY
-         J7uBGkYYt83mqcqDAk/wowTJWrzp3dDg7RpYeTgr0ewuOwsSHZJIfE/aKxaqMdBPp33x
-         XIMo/2yLU6Z1y4XOTp9fNO8hbOvY+MXW9YnGpMrmm9+hJeGn3CwskPcVsIv1+yNKYfHy
-         ulOj2mleoZYiLh1WGLIUU3Tzi6XmzHk2H3A3fXoAdUAzA1PUg6nvkJNyKxGEjOPcb4Fa
-         EMSyTltbvWzCROd2MpLdDEinjS8uEQxZe+flMyMyDf8KaY0K4K3euJIwN1P+tnE89RIB
-         doDg==
-X-Gm-Message-State: APjAAAX+qORQcKXbDGICXGCOjTXsqbfU377s5dCyd5Ob4AewhW5By2OK
-        9zGDSeNxQhpmN8/zR5/Qi+WSL4UTscQ=
-X-Google-Smtp-Source: APXvYqxjjM03c8YncfiKMgSDvfLe10vnXrh6O5z7tHl/a/2REfqzPMyznieZD1T0RCpHILA7wU/D0g==
-X-Received: by 2002:a02:cad1:: with SMTP id f17mr333310jap.18.1567632299044;
-        Wed, 04 Sep 2019 14:24:59 -0700 (PDT)
-Received: from localhost (75-161-11-128.albq.qwest.net. [75.161.11.128])
-        by smtp.gmail.com with ESMTPSA id r2sm66211ioh.61.2019.09.04.14.24.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 14:24:58 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 14:24:57 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Mao Han <han_mao@c-sky.com>
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, Greentime Hu <green.hu@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH V6 3/3] riscv: Add support for libdw
-In-Reply-To: <4cba2dfb6b1ef0df01185c6bce78a0a2867d0a7d.1567060834.git.han_mao@c-sky.com>
-Message-ID: <alpine.DEB.2.21.9999.1909041422220.13502@viisi.sifive.com>
-References: <cover.1567060834.git.han_mao@c-sky.com> <4cba2dfb6b1ef0df01185c6bce78a0a2867d0a7d.1567060834.git.han_mao@c-sky.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0WY8Z7uuOkp45B0a2fjL2sapn2BwsYXAe9J2wXt4+wc=;
+        b=KJSOevCeUCfrzTEmkOtFx4hiSyIXXOzGZgFcaE8P6ZVlvrJQIPjS2r/XlCNdHbHLAx
+         +S1M47Riu4q6eTb+oFzVocWBwjgOP60V2b8a6QX23wAwp35Lnwqqkp0T0uj5OFe8uWy6
+         rRaL3St9XLRffQGhP8c5mpnkIP8DsJyTx3u6LHoAf4RGnJDruLP1pA3eRbOhopDUhFhO
+         RGmXGSdkNEl0pTs69iAXVTds0/WlA0WEeuwyT3+kdcxNQ7MHKe+9KMP+yJEeu0hrTOHb
+         yXTUMxb6oeqm9IOcf9zn83edOnKZYP07xpOhLiFejlx3LdJH0PcTzrjeWrayg60dH6iz
+         Fiow==
+X-Gm-Message-State: APjAAAVMcRzafKRfeOuPbexGhPdqKiCxEe0IN1/hOrr872Vo68hAoxRB
+        m5wUXM7BMdhGUh/FNMReiHDC6LqMlxEzOsSJZ9c=
+X-Google-Smtp-Source: APXvYqyBgE2BrQfpBEN90032uCmlKJX7a6NLdsfC6RJ7xoQxmmxWloFIzA7IYr+hVhQLxc7wq5bsrlYRVweKvZHkviQ=
+X-Received: by 2002:ac8:32ec:: with SMTP id a41mr249797qtb.18.1567632872584;
+ Wed, 04 Sep 2019 14:34:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190904204427.1e1a064f@canb.auug.org.au>
+In-Reply-To: <20190904204427.1e1a064f@canb.auug.org.au>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 4 Sep 2019 23:34:16 +0200
+Message-ID: <CAK8P3a306wrT5A7BEnL9BM47Si+0ooVxKy47qiMCjNAiuAN2xA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the slave-dma tree with the arm-soc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Vinod Koul <vkoul@kernel.org>, Olof Johansson <olof@lixom.net>,
+        ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mao Han,
+On Wed, Sep 4, 2019 at 12:44 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> diff --cc drivers/dma/iop-adma.c
+> index 03f4a588cf7f,003b753e4604..000000000000
+> --- a/drivers/dma/iop-adma.c
+> +++ b/drivers/dma/iop-adma.c
+> @@@ -116,9 -116,9 +116,9 @@@ static void __iop_adma_slot_cleanup(str
+>         list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
+>                                         chain_node) {
+>                 pr_debug("\tcookie: %d slot: %d busy: %d "
+> -                       "this_desc: %#x next_desc: %#llx ack: %d\n",
+>  -                      "this_desc: %pad next_desc: %#x ack: %d\n",
+> ++                      "this_desc: %pad next_desc: %#llx ack: %d\n",
+>                         iter->async_tx.cookie, iter->idx, busy,
+> -                       iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
+>  -                      &iter->async_tx.phys, iop_desc_get_next_desc(iter),
+> ++                      &iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
+>                         async_tx_test_ack(&iter->async_tx));
+>                 prefetch(_iter);
+>                 prefetch(&_iter->async_tx);
 
-On Thu, 29 Aug 2019, Mao Han wrote:
+The resolution looks correct to me. I had to research how I missed this,
+and it turns out that the problem is me testing with clang-9 rather than gcc
+at the moment. While clang is perfectly capable of warning about this
+issue, the kernel turns off -Wno-format when building with clang.
 
-> This patch add support for DWARF register mappings and libdw registers
-> initialization, which is used by perf callchain analyzing when
-> --call-graph=dwarf is given.
-
-> diff --git a/tools/arch/riscv/include/uapi/asm/perf_regs.h b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-> new file mode 100644
-> index 0000000..df1a581
-> --- /dev/null
-> +++ b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-> @@ -0,0 +1,42 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-
-As with 
-
-https://lore.kernel.org/linux-riscv/CAJF2gTRXH_bx0rwsTZMTnX+umZfVTL_iVnewPtVM50sLaqJPTg@mail.gmail.com/T/#t
-
-is it possible to change this license string to "GPL-2.0 WITH 
-Linux-syscall-note" to match the other Linux architectures? 
-
-
-- Paul
+       Arnd
