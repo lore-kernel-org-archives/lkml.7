@@ -2,155 +2,136 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BCCC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E5DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A17923402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BAA23404
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="sw34W2ei"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rVpRcpMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfIDGYi (ORCPT
+        id S1728532AbfIDG0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:24:38 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]:39197 "EHLO
-        mail-qk1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbfIDGYi (ORCPT
+        Wed, 4 Sep 2019 02:26:14 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:33045 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfIDG0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:24:38 -0400
-Received: by mail-qk1-f170.google.com with SMTP id 4so18582464qki.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 23:24:37 -0700 (PDT)
+        Wed, 4 Sep 2019 02:26:13 -0400
+Received: by mail-pg1-f202.google.com with SMTP id a21so12550433pgv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 23:26:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Di+GnDQ2TnjFeODH4tBfbLUz3tcQ/aVDZSgnwbe0+G4=;
-        b=sw34W2eiN25sNXFeN8XcPZRfTjzJ9WiqbXI5QElU4GEHV0DY73/iysR6tIrZ5bj+ru
-         N1q/jf5kMqw1WKASyIXUaNZmXjxynGDYh2Ps/g/K65gB3aoqH0etGpva9cEuTEZ9yAmL
-         NPOFGy1sTDIIhwkCChDz+AZG+gQs2aoBKoC9JPUXzhDVN9R665r3rFtmQAALZfJcG7Qr
-         /A0utUCvrMzmh5iGkW4tB+Rp0DujmxCblXA6pAePmnQUNM7SdsoWZEmv4/fWk3qK933a
-         bxA5GdJt2LonHiE+xKiv16/eHTalLMFJryARg1fN1GCrBkj/NmB1vVbHQuY2q/MMXd5m
-         pBMQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Tbk9iHA1BcIv4CnYIU8mmP8LfRBc9qlMqqjj2iAmjRM=;
+        b=rVpRcpMywls/Rm6WnSUx4nLg8V3ztZoD8XZiwDNwzQ+pBlG3Dt8lGxRb+HXjSp4vB1
+         e+huemO29QOZ84dq1PbhwJGO5BwlRo7cjeZFiwfKGraZF2g+nhjVLCugyeDn8ciR+8s5
+         80YTsOla4s0Dqn9kPQtwgtzrUL8k5MtZxymPaB73lHHSqZyqTXMcF/kH3gxER/1qvomw
+         ElWP4Iy7No2Ns/DHp2hOCqrg89DG5LISSyqjsuQac/1enLT8yusovFDWPJhFIpT+Ahax
+         A2SmETEYGoJ0inQeSk6rC5HWu8mTf48Wcs0VImtA9WKvUFdViey0xBNoNzP8f8/gb1nX
+         gLWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Di+GnDQ2TnjFeODH4tBfbLUz3tcQ/aVDZSgnwbe0+G4=;
-        b=DWNQh+7eTs0nsEKzTFYfRPKdFfW6h0cMB+l1mGJbSiHosqGDUgUUrE9hE1IzOBpBrK
-         IjCWy90BE5v8zWfQbzJSg/Q9EwFwqXBhRuWYCmyEtfKc3VqBQkoBrTP+lz0Dvs3WssmE
-         dj36lIVpPjT1K+HyPxMq/5gFWxGNEyXbFesIYOfL+h5pXLVh4qhRvfMqxMhIdGReNv39
-         aIStRJqqxLMTEHDWtJwzsVDFGUW67FRXoAC6GIMJG+DkQHITcIkclA/WJNFxEu43xyEC
-         /xC1N57j3P8R4n+smtM7/N0WiB93tMJHKHxd73qsvZc4dQNSrvJZQkeYDrX5PZ9tm/Wb
-         iUQQ==
-X-Gm-Message-State: APjAAAVunWUnEKhvR3Q7G256ItIVZ/YlCVqPNjQXp2hTFszabOKcx2wT
-        buPBXxUbcWGsYZRyzijD0CWHhFkwXYapXWI7VmspqQ==
-X-Google-Smtp-Source: APXvYqxS1H9FjbQL3VVWe5xB1by8z85l6KZ7J60TlCoh93QflHXIg7dBFhDVhv8EoQH7f7qbB5SuHzjqsX9n1naG3xo=
-X-Received: by 2002:a05:620a:5ad:: with SMTP id q13mr20244042qkq.297.1567578276980;
- Tue, 03 Sep 2019 23:24:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAB4CAwdo7H3QNEHLgG-h1Z_eRYkb+pc=V3Wvrmeju8fBByYJzw@mail.gmail.com>
- <20190903081858.GA2691@lahna.fi.intel.com> <3141a819-5964-4082-6f05-1926e16468b4@linux.intel.com>
- <CAB4CAwdRHQOiqrK5utgCzZKB-X+mDcJePBLa7o0rTWzAogo5vw@mail.gmail.com> <63364b2f-dc55-4fcb-5de5-d09c9622943a@linux.intel.com>
-In-Reply-To: <63364b2f-dc55-4fcb-5de5-d09c9622943a@linux.intel.com>
-From:   Chris Chiu <chiu@endlessm.com>
-Date:   Wed, 4 Sep 2019 14:24:26 +0800
-Message-ID: <CAB4CAweM7BHkE_GmKYwQtXQbctfhXUn2fYrL_3C+tyt-NQZNDg@mail.gmail.com>
-Subject: Re: Tweak I2C SDA hold time on GemniLake to make touchpad work
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        lee.jones@linaro.org, Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Tbk9iHA1BcIv4CnYIU8mmP8LfRBc9qlMqqjj2iAmjRM=;
+        b=a1OPfkFRqugds1gH70BtUL4wpDIvRmIknBhw8WYHohajLT2vsseTv6ymfpkD4yV8qF
+         UUYlK9f6i73RFg1QWhrveWBPeRD0I0ox6N04TYPoAvLOdPyRgZjTlaMd/f0x7jRJdyID
+         IV0ZoZ45z6KXwRlAMXMlQoMNUWz25Tq03GvWWPdLwo9SBwurSrikR/9gCni1Hz31J7IA
+         zTvrQb7c1UzGKIQ7qLu+udU9pjA4TvRnaac0hYj1QYnV0wUVBFEN418fnJ+qiRyD/bqg
+         bN6sbSVr1WVQslz5EmQb/VnOz9AXBgdI6jm1j6gyAap02X9fw5AJCIiOhDaDRp026RFS
+         9Y/Q==
+X-Gm-Message-State: APjAAAW9BJH+qgrHZ3PF9RMU6P00imYaJ5lVyifJlg9XEoo+up2sZSS+
+        Kk1fWhJ8Tt1XbTGUU84J9Mu1ttc2hpea4maCEQWCyvEOdTwUC6dX9AzsIh0mNqIfXlrk4Sit+h7
+        PU2TLurtX9wXcPuHlZjV5Ollsg5okP0xg4uaclqmnL31+IH/nyNZ84n5N5J+2Rlpzv9v8w2Fl
+X-Google-Smtp-Source: APXvYqwREzUtZa4URF4lsqMSMCWWK3rzX0c/OfatcmGyCU1PoQuoCPxtSSeFbR9Ab6VGufHarx/lUd1xAmyx
+X-Received: by 2002:a63:711c:: with SMTP id m28mr31760438pgc.396.1567578372659;
+ Tue, 03 Sep 2019 23:26:12 -0700 (PDT)
+Date:   Tue,  3 Sep 2019 23:26:03 -0700
+Message-Id: <20190904062603.90165-1-eranian@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH] perf record: fix priv level with branch sampling for paranoid=2
+From:   Stephane Eranian <eranian@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@elte.hu, acme@redhat.com,
+        jolsa@redhat.com, namhyung@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 1:54 PM Jarkko Nikula
-<jarkko.nikula@linux.intel.com> wrote:
->
-> On 9/4/19 7:38 AM, Chris Chiu wrote:
-> > On Tue, Sep 3, 2019 at 8:03 PM Jarkko Nikula
-> > <jarkko.nikula@linux.intel.com> wrote:
-> >>
-> >> Hi Chris
-> >>
-> >> On 9/3/19 11:18 AM, Mika Westerberg wrote:
-> >>> +Jarkko
-> >>>
-> >>> On Tue, Sep 03, 2019 at 04:10:27PM +0800, Chris Chiu wrote:
-> >>>> Hi,
-> >>>>
-> >>>> We're working on the acer Gemnilake laptop TravelMate B118-M for
-> >>>> touchpad not working issue. The touchpad fails to bring up and the
-> >>>> i2c-hid ouput the message as follows
-> >>>>       [    8.317293] i2c_hid i2c-ELAN0502:00: hid_descr_cmd failed
-> >>>> We tried on latest linux kernel 5.3.0-rc6 and it reports the same.
-> >>>>
-> >>>> We then look into I2C signal level measurement to find out why.
-> >>>> The following is the signal output from LA for the SCL/SDA.
-> >>>> https://imgur.com/sKcpvdo
-> >>>> The SCL frequency is ~400kHz from the SCL period, but the SDA
-> >>>> transition is quite weird. Per the I2C spec, the data on the SDA line
-> >>>> must be stable during the high period of the clock. The HIGH or LOW
-> >>>> state of the data line can only change when the clock signal on the
-> >>>> SCL line is LOW. The SDA period span across 2 SCL high, I think
-> >>>> that's the reason why the I2C read the wrong data and fail to initialize.
-> >>>>
-> >>>> Thus, we treak the SDA hold time by the following modification.
-> >>>>
-> >>>> --- a/drivers/mfd/intel-lpss-pci.c
-> >>>> +++ b/drivers/mfd/intel-lpss-pci.c
-> >>>> @@ -97,7 +97,8 @@ static const struct intel_lpss_platform_info bxt_uart_info = {
-> >>>>    };
-> >>>>
-> >>>>    static struct property_entry bxt_i2c_properties[] = {
-> >>>> -       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 42),
-> >>>> +       PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 230),
-> >>>>           PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
-> >>>>           PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 208),
-> >>>>           { },
-> >>>>
-> >>>> The reason why I choose sda hold time is by the Table 10 of
-> >>>> https://www.nxp.com/docs/en/user-guide/UM10204.pdf, the device
-> >>>> must provide a hold time at lease 300ns and and 42 here is relatively
-> >>>> too small. The signal measurement result for the same pin on Windows
-> >>>> is as follows.
-> >>>> https://imgur.com/BtKUIZB
-> >>>> Comparing to the same result running Linux
-> >>>> https://imgur.com/N4fPTYN
-> >>>>
-> >>>> After applying the sda hold time tweak patch above, the touchpad can
-> >>>> be correctly initialized and work. The LA signal is shown as down below.
-> >>>> https://imgur.com/B3PmnIp
-> >>>>
-> >> Could you try does attached patch work for you?
-> >>
-> >> It's from last year for another related issue but there platform was
-> >> actually Apollo Lake instead of Gemini Lake but anyway it was found out
-> >> that Windows uses different timing parameters than Linux on Gemini Lake.
-> >>
-> >> I didn't take patch forward back then due known Gemini Lake machines
-> >> were working with the Broxton I2C timing parameters but now it's time if
-> >> attached patch fixes the issue on your machine.
-> >>
-> >> Patch is from top of v5.3-rc7 but should probably apply also to older
-> >> kernels.
-> >>
-> >> --
-> >> Jarkko
-> >
-> > Thanks, Jarkko, the patche works on my acer laptops.
-> >
-> Thanks. I'll send the patch out with Cc'ing you. I took the freedom to
-> add your Tested-by tag if you don't mind :-)
->
-> --
-> Jarkko
+Now that the default perf_events paranoid level is set to 2, a regular user
+cannot monitor kernel level activity anymore. As such, with the following
+cmdline:
 
-No problem. Thanks
+$ perf record -e cycles date
+
+The perf tool first tries cycles:uk but then falls back to cycles:u
+as can be seen in the perf report --header-only output:
+
+  cmdline : /export/hda3/tmp/perf.tip record -e cycles ls
+  event : name = cycles:u, , id = { 436186, ... }
+
+This is okay as long as there is way to learn the priv level was changed
+internally by the tool.
+
+But consider a similar example:
+
+$ perf record -b -e cycles date
+Error:
+You may not have permission to collect stats.
+
+Consider tweaking /proc/sys/kernel/perf_event_paranoid,
+which controls use of the performance events system by
+unprivileged users (without CAP_SYS_ADMIN).
+...
+
+Why is that treated differently given that the branch sampling inherits the
+priv level of the first event in this case, i.e., cycles:u? It turns out
+that the branch sampling code is more picky and also checks exclude_hv.
+
+In the fallback path, perf record is setting exclude_kernel = 1, but it
+does not change exclude_hv. This does not seem to match the restriction
+imposed by paranoid = 2.
+
+This patch fixes the problem by forcing exclude_hv = 1 in the fallback
+for paranoid=2. With this in place:
+
+$ perf record -b -e cycles date
+  cmdline : /export/hda3/tmp/perf.tip record -b -e cycles ls
+  event : name = cycles:u, , id = { 436847, ... }
+
+And the command succeeds as expected.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+---
+ tools/perf/util/evsel.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 85825384f9e8..3cbe06fdf7f7 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2811,9 +2811,11 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
+ 		if (evsel->name)
+ 			free(evsel->name);
+ 		evsel->name = new_name;
+-		scnprintf(msg, msgsize,
+-"kernel.perf_event_paranoid=%d, trying to fall back to excluding kernel samples", paranoid);
++		scnprintf(msg, msgsize, "kernel.perf_event_paranoid=%d, trying "
++			  "to fall back to excluding kernel and hypervisor "
++			  " samples", paranoid);
+ 		evsel->core.attr.exclude_kernel = 1;
++		evsel->core.attr.exclude_hv     = 1;
+ 
+ 		return true;
+ 	}
+-- 
+2.23.0.187.g17f5b7556c-goog
+
