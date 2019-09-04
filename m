@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D9CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923D8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3020A206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6120D206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620664;
-	bh=zdgH72ya1dL2WshHd/bMi1BX7Kc3ulLxtT8YqhWU8rc=;
+	s=default; t=1567620668;
+	bh=PzqeueoE6W0jH8ZAn7V6GTCB6qOAVp98CDXFEjW9JAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uY7cLJRG20DwUxIjICnkNGCrvOqzy6/rTl8b0Rz/rFr37qceaiQcKE1eEN5zIrdsG
-	 V5XXCKhgF9N2n0YbHCFVJ0f6/od88GNdTGFdSgCEbojIGYPNaP2ys4iCVLccoRrkuy
-	 4D1mtuXsnt238fUMEWyjK9VtZYFUDCTBNiI0HtyY=
+	b=TTIQ1oWR1oFAppk5QdZHMN109ZeS3os1p0ZfXlLaZC8SNiNJpONAwZ/o8LFN8XB+3
+	 XHAJBPcsymLPXKJLnIAQLYI7E68uK+IZ8Q8qSo6i5X9S95aX0JNySIMnvnNp9Ik2Ug
+	 lrFRVluLBjx81SxEy+6F++9j7B9tZ7J2PIO+uB/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390220AbfIDSLD (ORCPT
+        id S2389684AbfIDSLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:11:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54852 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389449AbfIDSLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:00 -0400
+        id S2390218AbfIDSLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61BA32339E;
-        Wed,  4 Sep 2019 18:10:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0632222CEA;
+        Wed,  4 Sep 2019 18:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620659;
-        bh=zdgH72ya1dL2WshHd/bMi1BX7Kc3ulLxtT8YqhWU8rc=;
+        s=default; t=1567620662;
+        bh=PzqeueoE6W0jH8ZAn7V6GTCB6qOAVp98CDXFEjW9JAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e1d8YR/mj4M6Osk6X1jtYiui09zainnptukIfZobhB3ZX/xzRPClszAsDVHB6KoVk
-         daQE9qlRjLLB20hKwfT7fCH/aRjai1EHQkobGHwq76Kq9fqKSV0s2JieyhU/kgOjjn
-         S/kfIJ81V3zJtzc+NkzC0QdgXsT4jYK/+CcE7WVY=
+        b=PUo6hFHWNKXQd2RtseXwmYEFj2xniTBA1LxGssKa8q4tP5k3YfjFfibGFCAtr7ojY
+         HkyF56amqfOv0ElGR7pZlX7hHALsODMifZqZw25paeKOzBbyj76VVcKlPlXPEvr5hd
+         l8JmWXxr+g1dv7AS9+yHa9jJxERCh1VfTO9yVksM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Jesper Dangaard Brouer <jbrouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 046/143] selftests/bpf: install files test_xdp_vlan.sh
-Date:   Wed,  4 Sep 2019 19:53:09 +0200
-Message-Id: <20190904175315.871092488@linuxfoundation.org>
+Subject: [PATCH 5.2 047/143] drm/bridge: tfp410: fix memleak in get_modes()
+Date:   Wed,  4 Sep 2019 19:53:10 +0200
+Message-Id: <20190904175315.910263027@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,41 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3035bb72ee47d494c041465b4add9c6407c832ed ]
+[ Upstream commit c08f99c39083ab55a9c93b3e93cef48711294dad ]
 
-When ./test_xdp_vlan_mode_generic.sh runs it complains that it can't
-find file test_xdp_vlan.sh.
+We don't free the edid blob allocated by the call to drm_get_edid(),
+causing a memleak. Fix this by calling kfree(edid) at the end of the
+get_modes().
 
- # selftests: bpf: test_xdp_vlan_mode_generic.sh
- # ./test_xdp_vlan_mode_generic.sh: line 9: ./test_xdp_vlan.sh: No such
- file or directory
-
-Rework so that test_xdp_vlan.sh gets installed, added to the variable
-TEST_PROGS_EXTENDED.
-
-Fixes: d35661fcf95d ("selftests/bpf: add wrapper scripts for test_xdp_vlan.sh")
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Acked-by: Jesper Dangaard Brouer <jbrouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190610135739.6077-1-tomi.valkeinen@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/ti-tfp410.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index b9e88ccc289ba..adced69d026e5 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -61,7 +61,8 @@ TEST_PROGS := test_kmod.sh \
- TEST_PROGS_EXTENDED := with_addr.sh \
- 	with_tunnels.sh \
- 	tcp_client.py \
--	tcp_server.py
-+	tcp_server.py \
-+	test_xdp_vlan.sh
+diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
+index 3a8af9978ebdf..791f164bdadc8 100644
+--- a/drivers/gpu/drm/bridge/ti-tfp410.c
++++ b/drivers/gpu/drm/bridge/ti-tfp410.c
+@@ -66,7 +66,12 @@ static int tfp410_get_modes(struct drm_connector *connector)
  
- # Compile but not part of 'make run_tests'
- TEST_GEN_PROGS_EXTENDED = test_libbpf_open test_sock_addr test_skb_cgroup_id_user \
+ 	drm_connector_update_edid_property(connector, edid);
+ 
+-	return drm_add_edid_modes(connector, edid);
++	ret = drm_add_edid_modes(connector, edid);
++
++	kfree(edid);
++
++	return ret;
++
+ fallback:
+ 	/* No EDID, fallback on the XGA standard modes */
+ 	ret = drm_add_modes_noedid(connector, 1920, 1200);
 -- 
 2.20.1
 
