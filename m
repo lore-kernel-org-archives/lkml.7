@@ -2,128 +2,171 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F4DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6DFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C823721881
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:24:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CpC1Uemg"
+	by mail.kernel.org (Postfix) with ESMTP id 7C6A922CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:26:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731569AbfIDQYx (ORCPT
+        id S1731643AbfIDQ0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:24:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45772 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729890AbfIDQYw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:24:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y72so5982366pfb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=500EAXypmcyMGKBYWd2w5eyXzyKNNSw+MVc9qIH+qt4=;
-        b=CpC1Uemg8Vp3yPAXWEZ+YhZHrHbduCTfFit9lvBYiWGi9czs6h+AHvy94Lw4JZs5g/
-         iOoDGxCkAI7McyDzGNINbgBRODlkJrAH4ioeJsdMAVV41xGmgFZ+gdGfSRAPTzDNNOZk
-         lBE7ksqRgn8qXmTngB+4j4896ClNWHLwaALm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=500EAXypmcyMGKBYWd2w5eyXzyKNNSw+MVc9qIH+qt4=;
-        b=LZFuBBjVYdHhYwLCZvcRTf8Dgnb7RCRTDCvva+i02Bu6RREh4FUngfNplUG2cragTu
-         b3WkoPxS4Q0o43iSNVAJ/zIjy5h/FiN4k1xdbE9Ja6MPm/0jYczhTt3o/l5Y0CGQ6vRf
-         QWLEmMch421HjK5jYvl5m3m/yQax415GhH1PvEQFbXuqU2jyXJN9hG5wBctM4eIqJxEm
-         KEz0D4iXwRaE7d64Hc0QAE6KczSCak1bTrkKz0Xu9avIxg7SWHhJQujMCBsD4u9I1PJv
-         YP4UsrBVqxzY1EIGNU1f4Y1Zr1Av1/vwzjobpD+xrBg/yCUc7s8d9Q01IA2H7Z37vIYe
-         NYbg==
-X-Gm-Message-State: APjAAAXReZHs3p6Q1bjKw1sekavwIa92SdXCjPQ/RlBmhZJswloA6M1y
-        O5Z18T+BBtlHsjhMMECBoNtcuQ==
-X-Google-Smtp-Source: APXvYqzMB1y4zOK8LbQK+a/EfvyNa3p5unTYVWzWPoWeZFczGzCkoU5hsg2D+SGb0mrvSzf2IwK+Pw==
-X-Received: by 2002:aa7:998f:: with SMTP id k15mr33565950pfh.203.1567614291796;
-        Wed, 04 Sep 2019 09:24:51 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a13sm21863347pfn.104.2019.09.04.09.24.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 09:24:50 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 09:24:49 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Matt Linton <amuse@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation/process: Add Google contact for embargoed
- hardware issues
-Message-ID: <201909040922.56496BF70@keescook>
+        Wed, 4 Sep 2019 12:26:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60646 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730299AbfIDQ0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:26:54 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A464585A03;
+        Wed,  4 Sep 2019 16:26:53 +0000 (UTC)
+Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E1C035D6D0;
+        Wed,  4 Sep 2019 16:26:52 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+To:     Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>
+Cc:     jikos@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+References: <20190728200427.dbrojgu7hafphia7@treble>
+ <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
+ <20190814151244.5xoaxib5iya2qjco@treble>
+ <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
+ <20190822223649.ptg6e7qyvosrljqx@treble>
+ <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
+ <20190826145449.wyo7avwpqyriem46@treble>
+ <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
+ <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
+ <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+ <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <72b5e7b6-4c8d-4211-01ee-96c219f93807@redhat.com>
+Date:   Wed, 4 Sep 2019 12:26:52 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 04 Sep 2019 16:26:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds myself as the Google contact for embargoed hardware security
-issues and fixes some small typos.
+On 9/4/19 4:49 AM, Petr Mladek wrote:
+> On Tue 2019-09-03 15:02:34, Miroslav Benes wrote:
+>> On Mon, 2 Sep 2019, Joe Lawrence wrote:
+>>
+>>> On 9/2/19 12:13 PM, Miroslav Benes wrote:
+>>>>> I can easily foresee more problems like those in the future.  Going
+>>>>> forward we have to always keep track of which special sections are
+>>>>> needed for which architectures.  Those special sections can change over
+>>>>> time, or can simply be overlooked for a given architecture.  It's
+>>>>> fragile.
+>>>>
+>>>> Indeed. It bothers me a lot. Even x86 "port" is not feature complete in
+>>>> this regard (jump labels, alternatives,...) and who knows what lurks in
+>>>> the corners of the other architectures we support.
+>>>>
+>>>> So it is in itself reason enough to do something about late module
+>>>> patching.
+>>>>
+>>>
+>>> Hi Miroslav,
+>>>
+>>> I was tinkering with the "blue-sky" ideas that I mentioned to Josh the other
+>>> day.
+>>
+>>> I dunno if you had a chance to look at what removing that code looks
+>>> like, but I can continue to flesh out that idea if it looks interesting:
+>>
+>> Unfortunately no and I don't think I'll come up with something useful
+>> before LPC, so anything is really welcome.
+>>
+>>>
+>>>    https://github.com/joe-lawrence/linux/tree/blue-sky
+>>>
+>>> A full demo would require packaging up replacement .ko's with a livepatch, as
+>>> well as "blacklisting" those deprecated .kos, etc.  But that's all I had time
+>>> to cook up last week before our holiday weekend here.
+>>
+>> Frankly, I'm not sure about this approach. I'm kind of torn. The current
+>> solution is far from ideal, but I'm not excited about the other options
+>> either. It seems like the choice is basically between "general but
+>> technically complicated fragile solution with nontrivial maintenance
+>> burden", or "something safer and maybe cleaner, but limiting for
+>> users/distros". Of course it depends on whether the limitation is even
+>> real and how big it is. Unfortunately we cannot quantify it much and that
+>> is probably why our opinions (in the email thread) differ.
+> 
+> I wonder what is necessary for a productive discussion on Plumbers:
+> 
 
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Matt Linton <amuse@google.com>
-Cc: Matthew Garrett <mjg59@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- Documentation/process/embargoed-hardware-issues.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Pre-planning this part of the miniconf is a great idea.
 
-diff --git a/Documentation/process/embargoed-hardware-issues.rst b/Documentation/process/embargoed-hardware-issues.rst
-index d37cbc502936..1c1ad684d753 100644
---- a/Documentation/process/embargoed-hardware-issues.rst
-+++ b/Documentation/process/embargoed-hardware-issues.rst
-@@ -5,7 +5,7 @@ Scope
- -----
- 
- Hardware issues which result in security problems are a different category
--of security bugs than pure software bugs which  only affect the Linux
-+of security bugs than pure software bugs which only affect the Linux
- kernel.
- 
- Hardware issues like Meltdown, Spectre, L1TF etc. must be treated
-@@ -159,7 +159,7 @@ Mitigation development
- 
- The initial response team sets up an encrypted mailing-list or repurposes
- an existing one if appropriate. The disclosing party should provide a list
--of contacts for all other parties who have already been, or should be
-+of contacts for all other parties who have already been, or should be,
- informed about the issue. The response team contacts these parties so they
- can name experts who should be subscribed to the mailing-list.
- 
-@@ -230,8 +230,8 @@ an involved disclosed party. The current ambassadors list:
-   SUSE		Jiri Kosina <jkosina@suse.cz>
- 
-   Amazon
--  Google
--  ============== ========================================================
-+  Google	Kees Cook <keescook@chromium.org>
-+  ============= ========================================================
- 
- If you want your organization to be added to the ambassadors list, please
- contact the hardware security team. The nominated ambassador has to
--- 
-2.17.1
+>    + Josh would like to see what code can get removed when late
+>      handling of modules gets removed. I think that it might be
+>      partially visible from Joe's blue-sky patches.
+> 
+> 
+>    + I would like to better understand the scope of the current
+>      problems. It is about modifying code in the livepatch that
+>      depends on position of the related code:
+> 
+>        + relocations are rather clear; we will need them anyway
+> 	to access non-public (static) API from the original code.
+> 
+>        + What are the other changes?
+> 
+>        + Do we use them in livepatches? How often?
+> 
+>        + How often new problematic features appear?
+> 
+>        + Would be possible to detect potential problems, for example
+> 	by comparing the code in the binary and in memory when
+> 	the module is loaded the normal way?
+> 
+>        + Would be possible to reset the livepatch code in memory
+> 	when the related module is unloaded and safe us half
+> 	of the troubles?
+> 
+> 
+>      + It might be useful to prepare overview of the existing proposals
+>        and agree on the positives and negatives. I am afraid that some
+>        of them might depend on the customer base and
+>        use cases. Sometimes we might not have enough information.
+>        But it might be good to get on the same page where possible.
+> 
+>        Anyway, it might rule out some variants so that we could better
+>        concentrate on the acceptable ones. Or come with yet another
+>        proposal that would avoid the real blockers.
+> 
+> 
+> Any other ideas?
 
+I'll just add to your list that late module patching introduces 
+complexity for klp-convert / livepatch style relocation support. 
+Without worrying about unloaded modules, I *think* klp-convert might 
+already be able to handle relocations in special sections (altinsts, 
+parainst, etc.).
 
--- 
-Kees Cook
+I've put the current klp-convert patchset on top of the blue-sky branch 
+to see if this indeed the case, but I'm not sure if I'll get through 
+that experiment before LPC.
+
+> 
+> Would it be better to discuss this in a separate room with
+> a whiteboard or paperboard?
+> 
+
+Whiteboard would probably be ideal, but paper would work and be more 
+transportable than the former.
+
+-- Joe
