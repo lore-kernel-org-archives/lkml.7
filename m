@@ -2,118 +2,98 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30845C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6E8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE57B21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567616194;
-	bh=/PClAjiL1I36PVpeMuFaSLb4sjjsS6Cd5FfGsDw5IzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Svl47eEwE9F96niUFBg/G8pqf8I/vvLTOKJmz5sxFi40PC+gL13OdwZKU71WEiMsx
-	 l9f3oi1oJiMhgx5NjFD+m6cOAJU4oMRGGLqy2XZrBpVFMOrQFi6jOT+eYaluraka6m
-	 hNT8a5VWQQRfxhtqbw8qm+JwTktqa9Xr+4YsJE9E=
+	by mail.kernel.org (Postfix) with ESMTP id B2D2721670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:58:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asWc2sqI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbfIDQ4d (ORCPT
+        id S1732402AbfIDQ6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfIDQ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:56:32 -0400
-Received: from localhost (unknown [122.182.201.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B16A21670;
-        Wed,  4 Sep 2019 16:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567616191;
-        bh=/PClAjiL1I36PVpeMuFaSLb4sjjsS6Cd5FfGsDw5IzU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JdmbD9LVQPoKI53zMWAA3IwYish6qxu2qRdAaqk8p8XEvQFLoTyYLgPdIJgHn0NyX
-         ttE6Up4kR0Sikt83zDFqOWaidpp9aRf/hCT+zGqTw6iMq4djQhr/fTyuARnGgDGRr6
-         wZbQ2hwwuBLdi6tSHnepGrkr31MSRE8m80GYyzAY=
-Date:   Wed, 4 Sep 2019 22:25:22 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [alsa-devel] [RFC PATCH 4/5] ASoC: SOF: Intel: hda: add
- SoundWire stream config/free callbacks
-Message-ID: <20190904165522.GC2672@vkoul-mobl>
-References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
- <20190821201720.17768-5-pierre-louis.bossart@linux.intel.com>
- <20190822071835.GA30262@ubuntu>
- <f73796d6-fcfa-97c8-69ae-0a183edbbd97@linux.intel.com>
- <20190904073549.GL2672@vkoul-mobl>
- <4de9613c-2da4-8d39-6f99-3039811673b8@linux.intel.com>
+        Wed, 4 Sep 2019 12:58:05 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34104 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731564AbfIDQ6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:58:04 -0400
+Received: by mail-io1-f68.google.com with SMTP id s21so45824338ioa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I4AEVHZWDKj5M3XNGlUJpNgGM5Z1l9AtMPF1Hqde4DM=;
+        b=asWc2sqIHddJtfzpGPSflNT5pALrlHIbgF4I0kHpFB1oZPYM9gDBwVZGGi7OtxWdXG
+         PPLjQaihV0MOd2qP3s+pRow5caaVDzoXH65KvyTmbH6UL6DMpMt+2d17Z1AfLZjo8ep3
+         hMdZZxJELA2F5afBUr10xth92mqJc8bLt5d+nWpYIUhxfUurKK4W4Emy+SQnkZRhYi4G
+         hjZKiEtB39XoumJNkg1WOWUEmIA6i+ZwBZtg7rStpIivhqv8ekIGDdUZmtoLo/uQshqW
+         SgwZHF7mgB/lRouNZ4D25erP6OjzyBkkz78zvxvjAEX6cR1uHIpXgziTDvHHsZpY0+ny
+         O8Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I4AEVHZWDKj5M3XNGlUJpNgGM5Z1l9AtMPF1Hqde4DM=;
+        b=ex4B+GDqieMOWMS3ku+HmPNAH/vOxvcMJS6yQRr2NxBRfBS8EGtjS7gQTm6kJraOwb
+         e2ukJG42bOPTyxoad5MP/tMJLsqMwAw4dTvFQRJA8Bb26+rvBS+EBIevc3DmVqAE4QJR
+         N/SKIWpRg+6RgthvjKtW+kFhOpvMrJq4co2z53dHI9BOV/aveM9EFW93+XLd5RgmiLuO
+         KFBWu8ElDAu2ho13cLs3vZBJbQcwNfH5oaQmooJDmb7O3FkGirUyr03XDhjvnnByRW+X
+         qQ686MAAidq3vztiVMuZYuDEBI8oc6MqWsSudffNr+CBHQeYsO92G2i8D6T+a/OvvZJ0
+         vl4Q==
+X-Gm-Message-State: APjAAAWVpwndjYL1c1Rg4jMC8TEZaNWeks8XFf63AJ59+TFkR5RlzQLI
+        rGhGACiyOBcj+/JaJ6W4JHYli4F16JI16v8Rpp35sQ==
+X-Google-Smtp-Source: APXvYqzIbsuE/yut9DVBnXppG4ta1mqNva3WuZnN1oWipNNP7O4N/45Gr53DC/XHb8eNNMFecqOhTbvf220xSgyYutU=
+X-Received: by 2002:a02:354b:: with SMTP id y11mr17856473jae.53.1567616283414;
+ Wed, 04 Sep 2019 09:58:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4de9613c-2da4-8d39-6f99-3039811673b8@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190820001805.241928-1-matthewgarrett@google.com>
+ <20190820001805.241928-5-matthewgarrett@google.com> <3638.1567182673@warthog.procyon.org.uk>
+In-Reply-To: <3638.1567182673@warthog.procyon.org.uk>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 4 Sep 2019 09:57:52 -0700
+Message-ID: <CACdnJuuTRQM9SQvLMqW+C=6ukQPpvkwqFZ6U+wnL4uYxcG14Ww@mail.gmail.com>
+Subject: Re: [PATCH V40 04/29] lockdown: Enforce module signatures if the
+ kernel is locked down
+To:     David Howells <dhowells@redhat.com>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-09-19, 08:31, Pierre-Louis Bossart wrote:
-> On 9/4/19 2:35 AM, Vinod Koul wrote:
-> > On 22-08-19, 08:53, Pierre-Louis Bossart wrote:
-> > > Thanks for the review Guennadi
-> > > 
-> > > > > +static int sdw_config_stream(void *arg, void *s, void *dai,
-> > > > > +			     void *params, int link_id, int alh_stream_id)
-> > > > 
-> > > > I realise, that these function prototypes aren't being introduced by these
-> > > > patches, but just wondering whether such overly generic prototype is really
-> > > > a good idea here, whether some of those "void *" pointers could be given
-> > > > real types. The first one could be "struct device *" etc.
-> > > 
-> > > In this case the 'arg' parameter is actually a private 'struct snd_sof_dev',
-> > > as shown below [1]. We probably want to keep this relatively opaque, this is
-> > > a context that doesn't need to be exposed to the SoundWire code.
-> > 
-> > This does look bit ugly.
-> > 
-> > > The dai and params are indeed cases where we could use stronger types, they
-> > > are snd_soc_dai and hw_params respectively. I don't recall why the existing
-> > > code is this way, Vinod and Sanyog may have the history of this.
-> > 
-> > Yes we wanted to decouple the sdw and audio bits that is the reason why
-> > none of the audio types are used here, but I think it should be revisited
-> > and perhaps made as:
-> > 
-> > sdw_config_stream(struct device *sdw, struct sdw_callback_ctx *ctx)
-> > 
-> > where the callback context contains all the other args. That would make
-> > it look lot neater too and of course use real structs if possible
-> 
-> the suggested sdw_callbback_ctx is really intel-specific at the moment, e.g.
-> the notion of link_id and alh_stream_id are due to the hardware, it's not
-> generic at all. And in the latest code we also pass the dai->id.
+On Fri, Aug 30, 2019 at 9:31 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Matthew Garrett <matthewgarrett@google.com> wrote:
+>
+> >  enum lockdown_reason {
+> >       LOCKDOWN_NONE,
+> > +     LOCKDOWN_MODULE_SIGNATURE,
+> >       LOCKDOWN_INTEGRITY_MAX,
+> >       LOCKDOWN_CONFIDENTIALITY_MAX,
+> >  };
+>
+> Aren't you mixing disjoint sets?
 
-s/sdw_callback_ctx/intel_sdw_callback_ctx
+The goal is to be able to check whether any given lockdown reason is a
+matter of integrity or confidentiality in a straightforward way.
 
-Yes this code is intel specific and this would be intel specific too
+> > +     [LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
+>
+> Wouldn't it be better to pass this string as a parameter to
+> security_locked_down()?
 
--- 
-~Vinod
+I thought about that, but it's not how any other LSM hooks behave. I
+think it's probably easier to revisit that when we see how other LSMs
+want to make use of the data.
