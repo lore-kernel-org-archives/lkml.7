@@ -2,118 +2,122 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D46EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783D2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EA421726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DEDE22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="WGF7By/r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mogqm3X+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbfIDTtX (ORCPT
+        id S1730112AbfIDTti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:49:23 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36380 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbfIDTtV (ORCPT
+        Wed, 4 Sep 2019 15:49:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36853 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbfIDTtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:49:21 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g24so157383edu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 12:49:20 -0700 (PDT)
+        Wed, 4 Sep 2019 15:49:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so8329618pfr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 12:49:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=p3ti1HdGzDfG7e4V9OD2Hs5bYpayMdTpXw6CUesGjzU=;
-        b=WGF7By/r82zxfwrvtxjIPqHi7WfUP2SSSKagzTSy+zsrpZjjA68hjPiI7CwjD+Z/tL
-         0uARq2xzla325ykv1nr3LVnwf+XLmkEi5FoeCnLEk3+nTuzgzQwe47r03gz5i8+5o3Zz
-         pYaM0Z0+pq5+kQMiuR0UqZ1dg3Pk1BRY48uOCfiwiLnqVHeJ1CKmJrCy5jAtm1iZn43w
-         ZcDJojQHU5VHjdC9LyY63gcpBrDNh9M9kvZgvQJhgaNXTGcgvXqD6ODARSiasycL8HRZ
-         XyTvj9fAjKSic0JHctTEOxObx9S6dg8HHwVEhSJ2fwOrV+8MCzlOcbOaQSo9lTDOANj6
-         /xMg==
+        d=linaro.org; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=MJZ59OzDe/mWiaBLP8jVMpUtkGX1PofiwqpjWM71xRs=;
+        b=mogqm3X+Rch8sVC/xusY+3xSkTL37ezlnaM47EZw9OfMVezEYCUSs/FG5vdl7MUPX7
+         QmQEzuiCg8Lry0hMmkMejJqeKcbfGDsB746Aj1Shx4mVe770eFR0kRiVJzcRSlW5mDuj
+         jY7mARh/mZmxyceKWn0NobxwgLKC3+U36hKiQsrHSq5uSsvyfFjvkXvR4Ifl5ZI6R+/z
+         KgI1dK5KqRpOkuSJ9NeHS5EAOas0i22dkvkVlruesul/iriYXoFZpojSIlRAKnb/oVTe
+         eF1MQRe+xAh1ciyZkbcGnY0l+gG01QLHYV5D8pKCQvJ3pq0acnOmh355G37ucRU7Ltzm
+         v5lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p3ti1HdGzDfG7e4V9OD2Hs5bYpayMdTpXw6CUesGjzU=;
-        b=RzZTv2WagvEjjmFffMSvo6WoV64ugquiNG7OUZGNGe9G8hkHJb577x99JBCiPIxERQ
-         zWdpewyBjTiDwI9gEm+1mEKDeIGvnKZsLIxDNOopG6nhCqpeTQ/LZGz3X0quviochDgg
-         9mkwlr+FHy/u9TiDUiitwac/aG9jBRv3cAuZblknzcj4BkrNUQY0cgct8UrRMc90eyhp
-         UQhvAop7zIceyl5AvSD6rh1a5HDcU9VrfKBCIA08gFQ+pbb3s01b7b4ScG9K0Lllfm49
-         4/6/LyB4k2E+6oEExJYvqPvPg/oCpxY7naX4dP+dv2/jFtixKEa8DEbWyJCvdt/2Qe5F
-         wkwQ==
-X-Gm-Message-State: APjAAAXxIdCKTic7n+DuwbGGwX8k6g/heGcq8Kzg5ECd1gpN+APQNBu8
-        0ApE6hMtvTzVlKBps6nNL4LQaw==
-X-Google-Smtp-Source: APXvYqxtAzvSc/H2oP33RR3xHp2NnQqFDwRCw+eWBFQQXARvNRyRV1QmaEMsX1Gcij/9cfDb+50tjg==
-X-Received: by 2002:a50:e04b:: with SMTP id g11mr15269701edl.302.1567626559684;
-        Wed, 04 Sep 2019 12:49:19 -0700 (PDT)
-Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
-        by smtp.gmail.com with ESMTPSA id i1sm11137edi.13.2019.09.04.12.49.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 12:49:18 -0700 (PDT)
-From:   Martijn Coenen <maco@android.com>
-To:     axboe@kernel.dk, hch@infradead.org, ming.lei@redhat.com
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, kernel-team@android.com,
-        narayan@google.com, dariofreni@google.com, ioffe@google.com,
-        jiyong@google.com, maco@google.com,
-        Martijn Coenen <maco@android.com>
-Subject: [PATCH v2] loop: change queue block size to match when using DIO.
-Date:   Wed,  4 Sep 2019 21:49:01 +0200
-Message-Id: <20190904194901.165883-1-maco@android.com>
-X-Mailer: git-send-email 2.23.0.162.g0b9fbb3734-goog
-In-Reply-To: <20190828103229.191853-1-maco@android.com>
-References: <20190828103229.191853-1-maco@android.com>
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=MJZ59OzDe/mWiaBLP8jVMpUtkGX1PofiwqpjWM71xRs=;
+        b=Q33NOAvt/nirwXdZY9p4zZC4lIB/hh+XhU1e75WL2xf6jluOov80wh5fYh0poGC76M
+         p9NKk+YAwEXPz5tprHosECKd6RbVz1Slfaa4PsAwA4sRDWre+I6kUF2oU1pNmox/XfDG
+         lKXPzE5o3cLnMvuxC18RW51m7Olh2EAs+Q8OBYqdV0P6Umd7fDIklj8QYJf87YUKDVOB
+         Ow2PNeel6C4LUe3HJRxhdzR8ntyulbS8sOJglX5M4YUFlY7CmnloSNHC4vt0C0P0VPux
+         8PFsO3g4wpzTWXSzEsLzlL/Z9i+nDeF0hnlfOs/sxwbKL2LzfXm7JBNQOvTzwJXrzLA9
+         +phA==
+X-Gm-Message-State: APjAAAX2DQDnXJX0/P93Zhe9XL2sjuIkoufbVdu88shP2tRE0Cn+UusN
+        4RHVBSo7IPi7xIdsxxSy7HwC
+X-Google-Smtp-Source: APXvYqwmOdnog1Tt35IIPB+oPdZuaX+clxfT0GSE87X07y62HoChl0HSmZq2tosZO3IAaK0o3gSTCA==
+X-Received: by 2002:a17:90a:8911:: with SMTP id u17mr6973459pjn.128.1567626574655;
+        Wed, 04 Sep 2019 12:49:34 -0700 (PDT)
+Received: from ?IPv6:2409:4072:994:cdd3:65d0:8a4e:9992:92e2? ([2409:4072:994:cdd3:65d0:8a4e:9992:92e2])
+        by smtp.gmail.com with ESMTPSA id y194sm613378pfg.186.2019.09.04.12.49.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 12:49:33 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 01:19:27 +0530
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20190904130457.24744-1-yuehaibing@huawei.com>
+References: <20190904130457.24744-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH -next] scsi: ufs-hisi: use devm_platform_ioremap_resource() to simplify code
+To:     YueHaibing <yuehaibing@huawei.com>, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, liwei213@huawei.com,
+        dimitrysh@google.com, kjlu@umn.edu, tglx@linutronix.de,
+        yuehaibing@huawei.com, stanley.chu@mediatek.com, arnd@arndb.de
+CC:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Message-ID: <56F1F139-26BD-42D6-8C24-118DEC0D0B97@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The loop driver assumes that if the passed in fd is opened with
-O_DIRECT, the caller wants to use direct I/O on the loop device.
-However, if the underlying block device has a different block size than
-the loop block queue, direct I/O can't be enabled. Instead of requiring
-userspace to manually change the blocksize and re-enable direct I/O,
-just change the queue block sizes to match, as well as the io_min size.
 
-Signed-off-by: Martijn Coenen <maco@android.com>
----
-v2 changes:
-- Fixed commit message to say the block size must match the underlying
-  block device, not the underlying filesystem.
-- Also set physical blocksize and minimal io size correspondingly.
 
- drivers/block/loop.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On 4 September 2019 6:34:57 PM IST, YueHaibing <yuehaibing@huawei=2Ecom> w=
+rote:
+>Use devm_platform_ioremap_resource() to simplify the code a bit=2E
+>This is detected by coccinelle=2E
+>
+>Reported-by: Hulk Robot <hulkci@huawei=2Ecom>
+>Signed-off-by: YueHaibing <yuehaibing@huawei=2Ecom>
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index ab7ca5989097a..b547182037af2 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -994,6 +994,16 @@ static int loop_set_fd(struct loop_device *lo, fmode_t mode,
- 	if (!(lo_flags & LO_FLAGS_READ_ONLY) && file->f_op->fsync)
- 		blk_queue_write_cache(lo->lo_queue, true, false);
- 
-+	if (io_is_direct(lo->lo_backing_file) && inode->i_sb->s_bdev) {
-+		/* In case of direct I/O, match underlying block size */
-+		unsigned short bsize = bdev_logical_block_size(
-+			inode->i_sb->s_bdev);
-+
-+		blk_queue_logical_block_size(lo->lo_queue, bsize);
-+		blk_queue_physical_block_size(lo->lo_queue, bsize);
-+		blk_queue_io_min(lo->lo_queue, bsize);
-+	}
-+
- 	loop_update_rotational(lo);
- 	loop_update_dio(lo);
- 	set_capacity(lo->lo_disk, size);
--- 
-2.23.0.187.g17f5b7556c-goog
+Acked-by: Manivannan Sadhasivam <manivannan=2Esadhasivam@linaro=2Eorg>
 
+Thanks,=20
+Mani
+>---
+> drivers/scsi/ufs/ufs-hisi=2Ec | 4 +---
+> 1 file changed, 1 insertion(+), 3 deletions(-)
+>
+>diff --git a/drivers/scsi/ufs/ufs-hisi=2Ec b/drivers/scsi/ufs/ufs-hisi=2E=
+c
+>index f4d1dca=2E=2E6bbb167 100644
+>--- a/drivers/scsi/ufs/ufs-hisi=2Ec
+>+++ b/drivers/scsi/ufs/ufs-hisi=2Ec
+>@@ -447,13 +447,11 @@ static int ufs_hisi_resume(struct ufs_hba *hba,
+>enum ufs_pm_op pm_op)
+>=20
+> static int ufs_hisi_get_resource(struct ufs_hisi_host *host)
+> {
+>-	struct resource *mem_res;
+> 	struct device *dev =3D host->hba->dev;
+> 	struct platform_device *pdev =3D to_platform_device(dev);
+>=20
+> 	/* get resource of ufs sys ctrl */
+>-	mem_res =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>-	host->ufs_sys_ctrl =3D devm_ioremap_resource(dev, mem_res);
+>+	host->ufs_sys_ctrl =3D devm_platform_ioremap_resource(pdev, 1);
+> 	if (IS_ERR(host->ufs_sys_ctrl))
+> 		return PTR_ERR(host->ufs_sys_ctrl);
+>=20
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
