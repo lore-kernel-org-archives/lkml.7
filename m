@@ -2,71 +2,120 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516CAC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E28AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C1722CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8E922CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbfIDPmU (ORCPT
+        id S1731116AbfIDPqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:42:20 -0400
-Received: from verein.lst.de ([213.95.11.211]:40375 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727967AbfIDPmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:42:19 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 08E65227A8A; Wed,  4 Sep 2019 17:42:16 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 17:42:15 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-Message-ID: <20190904154215.GA20422@lst.de>
-References: <20190831000139.7662-1-logang@deltatee.com> <20190831152910.GA29439@localhost.localdomain> <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com> <20190903164620.GA20847@localhost.localdomain> <20190904060558.GA10849@lst.de> <20190904144426.GB21302@localhost.localdomain>
+        Wed, 4 Sep 2019 11:46:05 -0400
+Received: from www1102.sakura.ne.jp ([219.94.129.142]:18121 "EHLO
+        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729316AbfIDPqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:46:05 -0400
+Received: from fsav404.sakura.ne.jp (fsav404.sakura.ne.jp [133.242.250.103])
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x84Fk2VD072180;
+        Thu, 5 Sep 2019 00:46:02 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Received: from www1102.sakura.ne.jp (219.94.129.142)
+ by fsav404.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav404.sakura.ne.jp);
+ Thu, 05 Sep 2019 00:46:02 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav404.sakura.ne.jp)
+Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
+        (authenticated bits=0)
+        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x84Fk2oG072177
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 5 Sep 2019 00:46:02 +0900 (JST)
+        (envelope-from katsuhiro@katsuster.net)
+Subject: Re: [PATCH v3 2/4] ASoC: es8316: add clock control of MCLK
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        David Yang <yangxiaohua@everest-semi.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190903165322.20791-1-katsuhiro@katsuster.net>
+ <20190903165322.20791-2-katsuhiro@katsuster.net>
+ <CAHp75Vcm0yus5GpZEttdr_C07gmQXeNJ16gb_TFLUTvGkc164w@mail.gmail.com>
+From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
+Message-ID: <23e51463-1d95-59dd-c449-d4245aadcab5@katsuster.net>
+Date:   Thu, 5 Sep 2019 00:46:02 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904144426.GB21302@localhost.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CAHp75Vcm0yus5GpZEttdr_C07gmQXeNJ16gb_TFLUTvGkc164w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:44:27AM -0600, Keith Busch wrote:
-> Let me step through an example:
-> 
->   Ctrl A gets instance 0.
-> 
->   Its subsystem gets the same instance, and takes ref count on it:
->   all namespaces in this subsystem will use '0'.
-> 
->   Ctrl B gets instance 1, and it's in the same subsystem as Ctrl A so
->   no new subsytem is allocated.
-> 
->   Ctrl A is disconnected, dropping its ref on instance 0, but the
->   subsystem still has its refcount, making it unavailable.
-> 
->   Ctrl A is reconnected, and allocates instance 2 because 0 is still in
->   use.
-> 
-> Now all the namespaces in this subsystem are prefixed with nvme0, but no
-> controller exists with the same prefix. We still have inevitable naming
-> mismatch, right?
+Hello Andy,
 
-I think th major confusion was that we can use the same handle for
-and unrelated subsystem vs controller, and that would avoid it.
+Thank you for reviewing.
 
-I don't see how we can avoid the controller is entirely different
-from namespace problem ever.
+On 2019/09/04 23:37, Andy Shevchenko wrote:
+> On Tue, Sep 3, 2019 at 7:54 PM Katsuhiro Suzuki <katsuhiro@katsuster.net> wrote:
+>>
+>> This patch introduce clock property for MCLK master freq control.
+>> Driver will set rate of MCLK master if set_sysclk is called and
+>> changing sysclk by board driver.
+>>
+>> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
+> 
+> 
+>> +       if (es8316->mclk) {
+> 
+> You don't need this if clock has been requested as optional
+> (clk_get_optional() or so).
+> 
+>> +               ret = clk_set_rate(es8316->mclk, freq);
+>> +               if (ret)
+>> +                       return ret;
+>> +       }
+> 
+>> +       es8316->mclk = devm_clk_get(component->dev, "mclk");
+>> +       if (PTR_ERR(es8316->mclk) == -EPROBE_DEFER)
+>> +               return -EPROBE_DEFER;
+>> +       if (IS_ERR(es8316->mclk)) {
+>> +               dev_err(component->dev, "clock is invalid, ignored\n");
+>> +               es8316->mclk = NULL;
+>> +       }
+> 
+> devm_clk_get_optional()
+> 
+>> +       if (es8316->mclk) {
+> 
+> Ditto as above.
+> 
+>> +               ret = clk_prepare_enable(es8316->mclk);
+>> +               if (ret) {
+>> +                       dev_err(component->dev, "unable to enable clock\n");
+>> +                       return ret;
+>> +               }
+>> +       }
+> 
+>> +       if (es8316->mclk)
+> 
+> Ditto.
+> 
+>> +               clk_disable_unprepare(es8316->mclk);
+>> +}
+> 
+> 
+
+Indeed, NULL check of MCLK is not needed.
+I'll make and send fixup patch.
+
+Best Regards,
+Katsuhiro Suzuki
