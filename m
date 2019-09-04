@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4576C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F6C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0FEC2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B5662087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620984;
-	bh=XWQBgoLY4BuOh4fxWyMIoplPF5D+67TJ2badyDWx9f4=;
+	s=default; t=1567620988;
+	bh=QS2EO+bz72QZXczxXVN/e5/PS+AuqMibVBLItVH+2uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BH0rc0RKhGlbAnSW0lbph9zgf7rEVJLqLBBuDtZRzJY7b/FiV1Dmirz8N+kzTq0yT
-	 A5xkbPjIAvEVWlgFLehgT4baSHDnELQe4z13owtBRqy6zojzDhjmYrpu05U7kE+36a
-	 8LY5uF/pMwW8vkzpNzuXk5M0IZj/qrpQYZLIghao=
+	b=OBuHvRw2zkBpU15MBJ4s7a+6F4QeyBq037KW15uZYTI2uQyr6g/zp+yMSXD4B+gcl
+	 zuLL6Wy69w8DwSH0RJsEWOoahdm5dwOv5bYHT1SugLu+oEGawyH3Nsq6mJJqCtWvOo
+	 v7pU+LAHhzLYMYErT7vPf/PblZ7zyzNxWgege6eU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390814AbfIDSOc (ORCPT
+        id S2390803AbfIDSOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390784AbfIDSO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:26 -0400
+        id S1732094AbfIDSO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C2022CF7;
-        Wed,  4 Sep 2019 18:14:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A29BB208E4;
+        Wed,  4 Sep 2019 18:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620865;
-        bh=XWQBgoLY4BuOh4fxWyMIoplPF5D+67TJ2badyDWx9f4=;
+        s=default; t=1567620868;
+        bh=QS2EO+bz72QZXczxXVN/e5/PS+AuqMibVBLItVH+2uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9+njK2HsHgWznjKqHbbvc4UZRp/vjqJIQItNcTILZeYH8iAqxwVIHuW3uVIqHbc8
-         xjRyKB/bWUm5mPT7v+9PHCsS3Q4hGEkjWcU0LogiS8hEyVJkfDo88gH8+yrRWw0ycN
-         x948ljxfO8rrUBunwmziExtwDz89cy1MRdu7h3iE=
+        b=cwDWkr5zK4HVV++Awmn03bzHkHfNJNteIP9qkUQo8bzY9rDAu3+KzDtIVcRHACEjC
+         WpIS8OC1/30V0uyqYwzg+jmEostpFTe6NRT1TV6fWtIsb5MkZJEecm4IDexpfL1RaQ
+         ol/LWBOgsTlNnfg/8zlOwjQAs6lM38k3SxmAAq1Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hodaszi <robert.hodaszi@digi.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.2 124/143] Revert "cfg80211: fix processing world regdomain when non modular"
-Date:   Wed,  4 Sep 2019 19:54:27 +0200
-Message-Id: <20190904175319.259723212@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.2 125/143] mac80211: fix possible sta leak
+Date:   Wed,  4 Sep 2019 19:54:28 +0200
+Message-Id: <20190904175319.298497697@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,63 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hodaszi, Robert <Robert.Hodaszi@digi.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 0d31d4dbf38412f5b8b11b4511d07b840eebe8cb upstream.
+commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 upstream.
 
-This reverts commit 96cce12ff6e0 ("cfg80211: fix processing world
-regdomain when non modular").
-
-Re-triggering a reg_process_hint with the last request on all events,
-can make the regulatory domain fail in case of multiple WiFi modules. On
-slower boards (espacially with mdev), enumeration of the WiFi modules
-can end up in an intersected regulatory domain, and user cannot set it
-with 'iw reg set' anymore.
-
-This is happening, because:
-- 1st module enumerates, queues up a regulatory request
-- request gets processed by __reg_process_hint_driver():
-  - checks if previous was set by CORE -> yes
-    - checks if regulator domain changed -> yes, from '00' to e.g. 'US'
-      -> sends request to the 'crda'
-- 2nd module enumerates, queues up a regulator request (which triggers
-  the reg_todo() work)
-- reg_todo() -> reg_process_pending_hints() sees, that the last request
-  is not processed yet, so it tries to process it again.
-  __reg_process_hint driver() will run again, and:
-  - checks if the last request's initiator was the core -> no, it was
-    the driver (1st WiFi module)
-  - checks, if the previous initiator was the driver -> yes
-    - checks if the regulator domain changed -> yes, it was '00' (set by
-      core, and crda call did not return yet), and should be changed to 'US'
-
-------> __reg_process_hint_driver calls an intersect
-
-Besides, the reg_process_hint call with the last request is meaningless
-since the crda call has a timeout work. If that timeout expires, the
-first module's request will lost.
+If TDLS station addition is rejected, the sta memory is leaked.
+Avoid this by moving the check before the allocation.
 
 Cc: stable@vger.kernel.org
-Fixes: 96cce12ff6e0 ("cfg80211: fix processing world regdomain when non modular")
-Signed-off-by: Robert Hodaszi <robert.hodaszi@digi.com>
-Link: https://lore.kernel.org/r/20190614131600.GA13897@a1-hr
+Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
+Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/reg.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/cfg.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2788,7 +2788,7 @@ static void reg_process_pending_hints(vo
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1543,6 +1543,11 @@ static int ieee80211_add_station(struct
+ 	if (is_multicast_ether_addr(mac))
+ 		return -EINVAL;
  
- 	/* When last_request->processed becomes true this will be rescheduled */
- 	if (lr && !lr->processed) {
--		reg_process_hint(lr);
-+		pr_debug("Pending regulatory request, waiting for it to be processed...\n");
- 		return;
- 	}
++	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
++	    sdata->vif.type == NL80211_IFTYPE_STATION &&
++	    !sdata->u.mgd.associated)
++		return -EINVAL;
++
+ 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
+ 	if (!sta)
+ 		return -ENOMEM;
+@@ -1550,10 +1555,6 @@ static int ieee80211_add_station(struct
+ 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
+ 		sta->sta.tdls = true;
  
+-	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
+-	    !sdata->u.mgd.associated)
+-		return -EINVAL;
+-
+ 	err = sta_apply_parameters(local, sta, params);
+ 	if (err) {
+ 		sta_info_free(local, sta);
 
 
