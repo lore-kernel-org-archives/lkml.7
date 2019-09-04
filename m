@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEECC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8287BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2853F22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FE9208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619721;
-	bh=uSIP8u8DY++aF/wMqdAfQwS0BjIVacNJen3OVr0tJrY=;
+	s=default; t=1567619724;
+	bh=FQO7S9zt4UksaJM+rOEg8LEV/s2u9nRoyNG8F12x3Vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kZ8p06K2Dha1dP+1m2ICR7VpjBlMfVGaFrGyhVBtbRSzdvO/sZtTXmxaF10EZd3BP
-	 BzW9tTHFlR3OFd3gu4twtRmAET2o4OtOEU4Fxk1ZWo3GERCF6/EesFJz+Ybun/YRAH
-	 084P810ovA1bQ0gvQTxY63hnXoWTe8XY2Q9gFdyc=
+	b=vbLzsIJWJdqgW8dxLXLCXgbf4DU/SpMUJAPEIWosnhiWi2yuJuTbXVb7eFcO9vFgx
+	 s68eY5SG6GMlPbiU4TPkCt4OmgRlgxszjs+YF4Iswb+ggDpc5kbo//T54S07hQICLO
+	 13/bVFihnWIvsMbyiLor+a8sTbp6xzYy+YS9NkYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbfIDRzU (ORCPT
+        id S1732580AbfIDRzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:55:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731852AbfIDRzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:20 -0400
+        id S1731852AbfIDRzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:55:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72EA822CED;
-        Wed,  4 Sep 2019 17:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27C7922CEA;
+        Wed,  4 Sep 2019 17:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619719;
-        bh=uSIP8u8DY++aF/wMqdAfQwS0BjIVacNJen3OVr0tJrY=;
+        s=default; t=1567619721;
+        bh=FQO7S9zt4UksaJM+rOEg8LEV/s2u9nRoyNG8F12x3Vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FWN3x2sCvHyJc4wkLw/cCb1s7X8JaHzLzYCbmNsLDT0caIMLkauQGHQIuNCF3h+Bb
-         hr711Yr8B/Ar2DAKMS4g6cYbJ0ghmLXu4r8q2bxXEqp+X0vnAD4e+RAC9aB/JqQzZ5
-         nwZSSBQwvImtv45GC1Q9LSBM4WCUhVame25YSv8k=
+        b=V8Y1ZsX2VGfH1pnbWCnmtngg5CODsjnQ/qBLwYlTxc+23NP6iKZAWxCZNiktIaAZm
+         9laqfatYD1EKp0Za/OgigJOg+r8zCO1CaIy4CRNASu154uRe5C5mBUMUZsgTk5ofJM
+         Uv1YOdxpWS1GBOhPwaHDvka2ZmFwwtSbESeEQ7i4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Trukhanov <lahvuun@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/77] HID: Add 044f:b320 ThrustMaster, Inc. 2 in 1 DT
-Date:   Wed,  4 Sep 2019 19:52:48 +0200
-Message-Id: <20190904175303.454565485@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Ham <bob.ham@puri.sm>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 10/77] net: usb: qmi_wwan: Add the BroadMobi BM818 card
+Date:   Wed,  4 Sep 2019 19:52:57 +0200
+Message-Id: <20190904175304.464800325@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,63 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 65f11c72780fa9d598df88def045ccb6a885cf80 ]
+[ Upstream commit 9a07406b00cdc6ec689dc142540739575c717f3c ]
 
-Enable force feedback for the Thrustmaster Dual Trigger 2 in 1 Rumble Force
-gamepad. Compared to other Thrustmaster devices, left and right rumble
-motors here are swapped.
+The BroadMobi BM818 M.2 card uses the QMI protocol
 
-Signed-off-by: Ilya Trukhanov <lahvuun@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Bob Ham <bob.ham@puri.sm>
+Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-tmff.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hid/hid-tmff.c b/drivers/hid/hid-tmff.c
-index b83376077d722..cfa0cb22c9b3c 100644
---- a/drivers/hid/hid-tmff.c
-+++ b/drivers/hid/hid-tmff.c
-@@ -34,6 +34,8 @@
- 
- #include "hid-ids.h"
- 
-+#define THRUSTMASTER_DEVICE_ID_2_IN_1_DT	0xb320
-+
- static const signed short ff_rumble[] = {
- 	FF_RUMBLE,
- 	-1
-@@ -88,6 +90,7 @@ static int tmff_play(struct input_dev *dev, void *data,
- 	struct hid_field *ff_field = tmff->ff_field;
- 	int x, y;
- 	int left, right;	/* Rumbling */
-+	int motor_swap;
- 
- 	switch (effect->type) {
- 	case FF_CONSTANT:
-@@ -112,6 +115,13 @@ static int tmff_play(struct input_dev *dev, void *data,
- 					ff_field->logical_minimum,
- 					ff_field->logical_maximum);
- 
-+		/* 2-in-1 strong motor is left */
-+		if (hid->product == THRUSTMASTER_DEVICE_ID_2_IN_1_DT) {
-+			motor_swap = left;
-+			left = right;
-+			right = motor_swap;
-+		}
-+
- 		dbg_hid("(left,right)=(%08x, %08x)\n", left, right);
- 		ff_field->value[0] = left;
- 		ff_field->value[1] = right;
-@@ -238,6 +248,8 @@ static const struct hid_device_id tm_devices[] = {
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb304),   /* FireStorm Dual Power 2 (and 3) */
- 		.driver_data = (unsigned long)ff_rumble },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, THRUSTMASTER_DEVICE_ID_2_IN_1_DT),   /* Dual Trigger 2-in-1 */
-+		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb323),   /* Dual Trigger 3-in-1 (PC Mode) */
- 		.driver_data = (unsigned long)ff_rumble },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_THRUSTMASTER, 0xb324),   /* Dual Trigger 3-in-1 (PS3 Mode) */
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index ee6fefe92af43..4391430e25273 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -719,6 +719,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
+ 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
+ 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
++	{QMI_FIXED_INTF(0x2020, 0x2060, 4)},	/* BroadMobi BM818 */
+ 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
+ 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
+ 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
 -- 
 2.20.1
 
