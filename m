@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0E3C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615F0C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E2BD22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C04C22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620841;
-	bh=0qnFdWszRctW5Yc3OLMs8/do88zi4L5hr+8kWol5ZO4=;
+	s=default; t=1567620843;
+	bh=yYpBrXSse8jC7Y/RgIAkCtAYzAY7Kh8rMxaOmj2tflY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oqU0AtcTvDe+jFcN0PeWbBIgMOAxnVNAQZj2USty4ggqwH7itGLIp5pB82UEMnFjG
-	 rbUC4bkEuk5MOycSdmQkCN0BXGHirLz2wmXQbIm1v+TsSGYdk9Djdxhy7qChIzLF3B
-	 ELiajn21oJivR64I2i+yWGpHfP9cAFcb1KC3cSy4=
+	b=FGQ9kouJkCiB2KmBaManbB2bKc1TYMjwWIDOT2XWWUm9FfP+ADT3dbuPuPhwuXtgi
+	 v3zjGIBEE5U1Grh/pFHrLdv/1VT0t+mG1gOUzLZTv5CBV1iKHa8z+4ljLCIFipomwP
+	 f6pDa3QZ/tXbBYQeUYsgvz6Q7a+vCd4egHEjBfbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390423AbfIDSOA (ORCPT
+        id S2390715AbfIDSOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389036AbfIDSN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:56 -0400
+        id S2390143AbfIDSN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54BEE22DBF;
-        Wed,  4 Sep 2019 18:13:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 022A2206BA;
+        Wed,  4 Sep 2019 18:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620835;
-        bh=0qnFdWszRctW5Yc3OLMs8/do88zi4L5hr+8kWol5ZO4=;
+        s=default; t=1567620838;
+        bh=yYpBrXSse8jC7Y/RgIAkCtAYzAY7Kh8rMxaOmj2tflY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xot1CW3TRfr9SfDvPVzGG/hO3payEFwe2TE8rRRbdewt3CO76XfhBljMWJE0KEH+V
-         wu8UqI8iiVt93lKWIV6SjzEskBfi8CaPxwl623TNEEa1KNmgjlzX4zpubwWm5Z8EcY
-         iPeR4ZylB0lgIVJ3uXKpv4xoQ8o1CzYl5E1fCcG4=
+        b=CfBl6UNS5dY0DSVUMxAX4vpYAGA/5Af+9ogpxSly5JicV/YgqqZjbkacNOq+lv79b
+         08/Jjjv/WOtgQJtJQsjM+picOBeuvMuohkhsFjzD7HcbdxJOZXC9QBUihUfl8vbvDf
+         2pXcuCyAeYgVDePmmfDys1T2DwtS7oB0KUE5zCsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Cooks <andrew.cooks@opengear.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.2 114/143] i2c: piix4: Fix port selection for AMD Family 16h Model 30h
-Date:   Wed,  4 Sep 2019 19:54:17 +0200
-Message-Id: <20190904175318.855124160@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH 5.2 115/143] bus: hisi_lpc: Unregister logical PIO range to avoid potential use-after-free
+Date:   Wed,  4 Sep 2019 19:54:18 +0200
+Message-Id: <20190904175318.893845918@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,93 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Cooks <andrew.cooks@opengear.com>
+From: John Garry <john.garry@huawei.com>
 
-commit c7c06a1532f3fe106687ac82a13492c6a619ff1c upstream.
+commit 1b15a5632a809ab57d403fd972ca68785363b654 upstream.
 
-Family 16h Model 30h SMBus controller needs the same port selection fix
-as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
-selection for AMD Family 17h chips")
+If, after registering a logical PIO range, the driver probe later fails,
+the logical PIO range memory will be released automatically.
 
-commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
-register") also fixed the port selection for Hudson2, but unfortunately
-this is not the exact same device and the AMD naming and PCI Device IDs
-aren't particularly helpful here.
+This causes an issue, in that the logical PIO range is not unregistered
+and the released range memory may be later referenced.
 
-The SMBus port selection register is common to the following Families
-and models, as documented in AMD's publicly available BIOS and Kernel
-Developer Guides:
+Fix by unregistering the logical PIO range.
 
- 50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
- 55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
- 52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
+And since we now unregister the logical PIO range for probe failure, avoid
+the special ordering of setting logical PIO range ops, which was the
+previous (poor) attempt at a safeguard against this.
 
-The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
-between Bolton FCH and Family 16h Model 30h, but the location of the
-SmBus0Sel port selection bits are different:
-
- 51192 - Bolton Register Reference Guide
-
-We distinguish between Bolton and Family 16h Model 30h using the PCI
-Revision ID:
-
-  Bolton is device 0x780b, revision 0x15
-  Family 16h Model 30h is device 0x780b, revision 0x1F
-  Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
-
-The following additional public AMD BKDG documents were checked and do
-not share the same port selection register:
-
- 42301 - Family 15h Model 00h-0Fh doesn't mention any
- 42300 - Family 15h Model 10h-1Fh doesn't mention any
- 49125 - Family 15h Model 30h-3Fh doesn't mention any
-
- 48751 - Family 16h Model 00h-0Fh uses the previously supported
-         index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
-
-Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: stable@vger.kernel.org [v4.6+]
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@vger.kernel.org
+Fixes: adf38bb0b595 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-piix4.c |   12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/bus/hisi_lpc.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -91,7 +91,7 @@
- #define SB800_PIIX4_PORT_IDX_MASK	0x06
- #define SB800_PIIX4_PORT_IDX_SHIFT	1
+--- a/drivers/bus/hisi_lpc.c
++++ b/drivers/bus/hisi_lpc.c
+@@ -606,24 +606,25 @@ static int hisi_lpc_probe(struct platfor
+ 	range->fwnode = dev->fwnode;
+ 	range->flags = LOGIC_PIO_INDIRECT;
+ 	range->size = PIO_INDIRECT_SIZE;
++	range->hostdata = lpcdev;
++	range->ops = &hisi_lpc_ops;
++	lpcdev->io_host = range;
  
--/* On kerncz, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
-+/* On kerncz and Hudson2, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
- #define SB800_PIIX4_PORT_IDX_KERNCZ		0x02
- #define SB800_PIIX4_PORT_IDX_MASK_KERNCZ	0x18
- #define SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ	3
-@@ -358,18 +358,16 @@ static int piix4_setup_sb800(struct pci_
- 	/* Find which register is used for port selection */
- 	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
- 	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
--		switch (PIIX4_dev->device) {
--		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
-+		if (PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
-+		    (PIIX4_dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
-+		     PIIX4_dev->revision >= 0x1F)) {
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
- 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK_KERNCZ;
- 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ;
--			break;
--		case PCI_DEVICE_ID_AMD_HUDSON2_SMBUS:
--		default:
-+		} else {
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_ALT;
- 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK;
- 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT;
--			break;
- 		}
- 	} else {
- 		if (!request_muxed_region(SB800_PIIX4_SMB_IDX, 2,
+ 	ret = logic_pio_register_range(range);
+ 	if (ret) {
+ 		dev_err(dev, "register IO range failed (%d)!\n", ret);
+ 		return ret;
+ 	}
+-	lpcdev->io_host = range;
+ 
+ 	/* register the LPC host PIO resources */
+ 	if (acpi_device)
+ 		ret = hisi_lpc_acpi_probe(dev);
+ 	else
+ 		ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
+-	if (ret)
++	if (ret) {
++		logic_pio_unregister_range(range);
+ 		return ret;
+-
+-	lpcdev->io_host->hostdata = lpcdev;
+-	lpcdev->io_host->ops = &hisi_lpc_ops;
++	}
+ 
+ 	io_end = lpcdev->io_host->io_start + lpcdev->io_host->size;
+ 	dev_info(dev, "registered range [%pa - %pa]\n",
 
 
