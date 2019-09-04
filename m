@@ -2,72 +2,149 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5172EC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982FCC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AF022CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8BA2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567598857;
-	bh=W8204uRk38GPqCiR1KdVEb1ORO35v8ANNp4XVX3RkaQ=;
+	s=default; t=1567598907;
+	bh=QbYO5xJQGT1Uu94hWScBCp6qWdp8GydhSptk7yOPeHE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=b/H86tOXv5gqa6w0GCLdV2ldyqAI5vTGTa5Bcj72wW4pIYoM+/GEpv15wcNA5rc4X
-	 zz0BETtSN+yn4FW1JeP8TSPPCkorDuVSyg17quQZ8tDnkWUwQKMlKuesGwK2BWaPQu
-	 VrBst7fPYVMOVC5hwrqDVo4eAgoxNrwnv+1WW2c0=
+	b=qMLOO3OfK3C0wScjshSshxsLmbecbia2zMWgFrRut7PYsJAvWSBUSx4UYGbDuhUtH
+	 mTr61M6c4UGNZBMQLN2tQXvfkqJxGAVkGH0hemBZHsjOWEpzAae1Aq5rysT0Rb6oqs
+	 WeXl75VBWJ6Wkm4rng/mjxoqCSgyceErbRwxbir4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfIDMHg (ORCPT
+        id S1729871AbfIDMI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 08:08:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDMHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:07:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726943AbfIDMI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:08:26 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C539822CF5;
-        Wed,  4 Sep 2019 12:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E189922CED;
+        Wed,  4 Sep 2019 12:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567598855;
-        bh=W8204uRk38GPqCiR1KdVEb1ORO35v8ANNp4XVX3RkaQ=;
+        s=default; t=1567598905;
+        bh=QbYO5xJQGT1Uu94hWScBCp6qWdp8GydhSptk7yOPeHE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KIy+MIJXphpu2Xj2+jrhMIr3nLXnch3D38RnAqupW2JRTMz0Ni0MJ74Ba/DpyBUWb
-         LNjlLqtck1HnMy9jazFnNh1SGRQ6H8knTMuJ9Lzrvs4tcKY3ZYHkhQCSZXKEQF9Ypn
-         naTZJxI75zGkEYFZ1gObdKOd+IQ6ORiXUZp4zprA=
-Date:   Wed, 4 Sep 2019 14:07:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH v3 2/2] software node: Initialize the return value in
- software_node_find_by_name()
-Message-ID: <20190904120732.GB15829@kroah.com>
-References: <20190830075156.76873-1-heikki.krogerus@linux.intel.com>
- <20190830075156.76873-3-heikki.krogerus@linux.intel.com>
+        b=HLOwcXn29+BdSWFL3qKDpEDbLdF51Ww2YAF6klsvOok5k1oQ1Lee8fRjgoP40Z3hD
+         XXrM2fR7PuHQwR72a2MJS+DqWYtl7VMLoDnalEiQgicy4dE8KYwGP7ehYl2uyJ/Dva
+         xKoaEHfjepJkgmsXpJhskZPwPDGL0hrKIhAaKrZY=
+Date:   Wed, 4 Sep 2019 08:08:23 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@linux.ie>,
+        Yu Zhao <yuzhao@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH AUTOSEL 4.19 044/167] drm/amdgpu: validate user pitch
+ alignment
+Message-ID: <20190904120823.GW5281@sasha-vm>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-44-sashal@kernel.org>
+ <7957107d-634f-4771-327e-99fdd5e6474e@daenzer.net>
+ <20190903170347.GA24357@kroah.com>
+ <20190903200139.GJ5281@sasha-vm>
+ <CAKMK7uFpBnkF4xABdkDMZ8TYhL4jg6ZuGyHGyVeBxc9rkyUtXQ@mail.gmail.com>
+ <829c5912-cf80-81d0-7400-d01d286861fc@daenzer.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190830075156.76873-3-heikki.krogerus@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <829c5912-cf80-81d0-7400-d01d286861fc@daenzer.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 10:51:56AM +0300, Heikki Krogerus wrote:
-> The software node is searched from a list that may be empty
-> when the function is called. This makes sure that the
-> function returns NULL if the list is empty.
-> 
-> Fixes: 1666faedb567 ("software node: Add software_node_get_reference_args()")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On Wed, Sep 04, 2019 at 10:55:10AM +0200, Michel Dänzer wrote:
+>On 2019-09-03 10:16 p.m., Daniel Vetter wrote:
+>> On Tue, Sep 3, 2019 at 10:01 PM Sasha Levin <sashal@kernel.org> wrote:
+>>> On Tue, Sep 03, 2019 at 07:03:47PM +0200, Greg KH wrote:
+>>>> On Tue, Sep 03, 2019 at 06:40:43PM +0200, Michel Dänzer wrote:
+>>>>> On 2019-09-03 6:23 p.m., Sasha Levin wrote:
+>>>>>> From: Yu Zhao <yuzhao@google.com>
+>>>>>>
+>>>>>> [ Upstream commit 89f23b6efef554766177bf51aa754bce14c3e7da ]
+>>>>>
+>>>>> Hold your horses!
+>>>>>
+>>>>> This commit and c4a32b266da7bb702e60381ca0c35eaddbc89a6c had to be
+>>>>> reverted, as they caused regressions. See commits
+>>>>> 25ec429e86bb790e40387a550f0501d0ac55a47c &
+>>>>> 92b0730eaf2d549fdfb10ecc8b71f34b9f472c12 .
+>>>>>
+>>>>>
+>>>>> This isn't bolstering confidence in how these patches are selected...
+>>>>
+>>>> The patch _itself_ said to be backported to the stable trees from 4.2
+>>>> and newer.  Why wouldn't we be confident in doing this?
+>>>>
+>>>> If the patch doesn't want to be backported, then do not add the cc:
+>>>> stable line to it...
+>>>
+>>> This patch was picked because it has a stable tag, which you presumably
+>>> saw as your Reviewed-by tag is in the patch. This is why it was
+>>> backported; it doesn't take AI to backport patches tagged for stable...
+>
+>The patches did point to gaps in validation of ioctl parameters passed
+>in by userspace. Unfortunately, they turned out to be too strict,
+>causing valid parameters to spuriously fail. If that wasn't the case,
+>and the patches didn't have stable tags, maybe we'd be having a
+>discussion about why they didn't have the tags now...
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+That's fair, and we're definitely not complaining that these patches had
+a stable tag, my comment was directed more towards the "This isn't
+bolstering confidence in how these patches are selected" comment you've
+made - we basically did what we were told to do and for some reason you
+got upset :)
+
+>>> The revert of this patch, however:
+>>>
+>>>  1. Didn't have a stable tag.
+>
+>I guess it didn't occur to me that was necessary, as the patches got
+>reverted within days.
+
+Since the original stable tagged patch made it upstream, we're bound to
+try and select it for stable branches even if there are more changes or
+reverts later on. We'll try to detect further fixes and reverts, but
+we're limited by the metadata in the commit message.
+
+>>>  2. Didn't have a "Fixes:" tag.
+>>>  3. Didn't have the usual "the reverts commit ..." string added by git
+>>>  when one does a revert.
+>
+>I suspect that's because there were no stable commit hashes to
+>reference, see below.
+>
+>
+>>> Which is why we still kick patches for review, even though they had a
+>>> stable tag, just so people could take a look and confirm we're not
+>>> missing anything - like we did here.
+>>>
+>>> I'm not sure what you expected me to do differently here.
+>
+>Yeah, sorry, I didn't realize it's tricky for scripts to recognize that
+>the patches have been reverted in this case.
+
+FWIW, I've added another test to my scripts to try and catch these cases
+(Revert "%s"). It'll slow down the scripts a bit but it's better to get
+it right rather than to be done quickly :)
+
+--
+Thanks,
+Sasha
