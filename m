@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D326C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3172DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6466B22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E52022CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620819;
-	bh=A2LNTAbowGHYsvP0o7t9CSW2UkgGnnhpFRXPYW18W8U=;
+	s=default; t=1567620822;
+	bh=ynBtC09Evgr3eVUFBLyZhJcRTnkYVtUlu6SMzMg/fKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02Jzz77l4yE2LzOe/kXyl6pRbmxbtac+Bw5X+Kgh8d/KgkyWV3hCBn4sz7gVJ5vDA
-	 7TwJk3EKN9DYXM1AzyBqAiAgW0kmkX96vbYyskaFouiZiMt+BeXbALivWdY3TKG3+l
-	 h/w44DnPs6BsmF2qkDFn4CM/6HuO6LDhF7MYsUi0=
+	b=Rp6aHd8DV3T0feRCR9xmTR0tYippKygM29qi0hftekBVrgHve4kC6t2ixPKmibQ8s
+	 4RxQ5/3TChIS+LVdtV4oTjTtgttjC/1kNJLDt2c8m9Msbxu36lSOE4znW9xIWw55P/
+	 r2gm7xrejh9Vii/QamdQSZubsVE+/pzgyNXnXZJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389561AbfIDSNi (ORCPT
+        id S2390314AbfIDSNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58484 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390705AbfIDSNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:35 -0400
+        id S2388984AbfIDSNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C41502339E;
-        Wed,  4 Sep 2019 18:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7884E208E4;
+        Wed,  4 Sep 2019 18:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620814;
-        bh=A2LNTAbowGHYsvP0o7t9CSW2UkgGnnhpFRXPYW18W8U=;
+        s=default; t=1567620817;
+        bh=ynBtC09Evgr3eVUFBLyZhJcRTnkYVtUlu6SMzMg/fKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g/MouZNsdau//ViHEeeebnp/BaB2Z0RlFD+TlAbM2LBDRqcZvdTndhH4xzELAg4UK
-         NodVBqhYdHWXl9nhtkToHcu12mxx94OZ8XfGT4wLxGQUrHYnYPwWjHyVyPpn2S1GGF
-         i1ZRFvYngvPT/ztonw3qGAT10HGe/Legf7V+MMwc=
+        b=vQDWHfjwGTCiIfRkVQW+AGVIyr4Na0rzeTneufJKX6LQfa+YJW64imj/2AU9+F3Fx
+         VOWpx9SItVEeI1MSuIMMhtZdYXWpEkiSCoqAz7O3grLo01VrxzESUguZbstgekMR9/
+         0leoVJoHV9PY5ErwXSGNJ3+qBlRZNA/4YqpT1IdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 064/143] ALSA: seq: Fix potential concurrent access to the deleted pool
-Date:   Wed,  4 Sep 2019 19:53:27 +0200
-Message-Id: <20190904175316.576668488@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kodanev <alexey.kodanev@oracle.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 055/143] ipv4: mpls: fix mpls_xmit for iptunnel
+Date:   Wed,  4 Sep 2019 19:53:18 +0200
+Message-Id: <20190904175316.228828422@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,70 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Alexey Kodanev <alexey.kodanev@oracle.com>
 
-commit 75545304eba6a3d282f923b96a466dc25a81e359 upstream.
+[ Upstream commit 803f3e22ae10003a83c781498c0ac34cfe3463ff ]
 
-The input pool of a client might be deleted via the resize ioctl, the
-the access to it should be covered by the proper locks.  Currently the
-only missing place is the call in snd_seq_ioctl_get_client_pool(), and
-this patch papers over it.
+When using mpls over gre/gre6 setup, rt->rt_gw4 address is not set, the
+same for rt->rt_gw_family.  Therefore, when rt->rt_gw_family is checked
+in mpls_xmit(), neigh_xmit() call is skipped. As a result, such setup
+doesn't work anymore.
 
-Reported-by: syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This issue was found with LTP mpls03 tests.
+
+Fixes: 1550c171935d ("ipv4: Prepare rtable for IPv6 gateway")
+Signed-off-by: Alexey Kodanev <alexey.kodanev@oracle.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/core/seq/seq_clientmgr.c |    3 +--
- sound/core/seq/seq_fifo.c      |   17 +++++++++++++++++
- sound/core/seq/seq_fifo.h      |    2 ++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+ net/mpls/mpls_iptunnel.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1835,8 +1835,7 @@ static int snd_seq_ioctl_get_client_pool
- 	if (cptr->type == USER_CLIENT) {
- 		info->input_pool = cptr->data.user.fifo_pool_size;
- 		info->input_free = info->input_pool;
--		if (cptr->data.user.fifo)
--			info->input_free = snd_seq_unused_cells(cptr->data.user.fifo->pool);
-+		info->input_free = snd_seq_fifo_unused_cells(cptr->data.user.fifo);
- 	} else {
- 		info->input_pool = 0;
- 		info->input_free = 0;
---- a/sound/core/seq/seq_fifo.c
-+++ b/sound/core/seq/seq_fifo.c
-@@ -263,3 +263,20 @@ int snd_seq_fifo_resize(struct snd_seq_f
+--- a/net/mpls/mpls_iptunnel.c
++++ b/net/mpls/mpls_iptunnel.c
+@@ -133,12 +133,12 @@ static int mpls_xmit(struct sk_buff *skb
+ 	mpls_stats_inc_outucastpkts(out_dev, skb);
  
- 	return 0;
- }
-+
-+/* get the number of unused cells safely */
-+int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f)
-+{
-+	unsigned long flags;
-+	int cells;
-+
-+	if (!f)
-+		return 0;
-+
-+	snd_use_lock_use(&f->use_lock);
-+	spin_lock_irqsave(&f->lock, flags);
-+	cells = snd_seq_unused_cells(f->pool);
-+	spin_unlock_irqrestore(&f->lock, flags);
-+	snd_use_lock_free(&f->use_lock);
-+	return cells;
-+}
---- a/sound/core/seq/seq_fifo.h
-+++ b/sound/core/seq/seq_fifo.h
-@@ -53,5 +53,7 @@ int snd_seq_fifo_poll_wait(struct snd_se
- /* resize pool in fifo */
- int snd_seq_fifo_resize(struct snd_seq_fifo *f, int poolsize);
- 
-+/* get the number of unused cells safely */
-+int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f);
- 
- #endif
+ 	if (rt) {
+-		if (rt->rt_gw_family == AF_INET)
+-			err = neigh_xmit(NEIGH_ARP_TABLE, out_dev, &rt->rt_gw4,
+-					 skb);
+-		else if (rt->rt_gw_family == AF_INET6)
++		if (rt->rt_gw_family == AF_INET6)
+ 			err = neigh_xmit(NEIGH_ND_TABLE, out_dev, &rt->rt_gw6,
+ 					 skb);
++		else
++			err = neigh_xmit(NEIGH_ARP_TABLE, out_dev, &rt->rt_gw4,
++					 skb);
+ 	} else if (rt6) {
+ 		if (ipv6_addr_v4mapped(&rt6->rt6i_gateway)) {
+ 			/* 6PE (RFC 4798) */
 
 
