@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C73AC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65085C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3630E21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5752053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567614011;
-	bh=ZUPeU7rXEE9Ft3yii0aStiNyiPcuIWemP1F9qsfU3JI=;
+	s=default; t=1567614026;
+	bh=HG04MnMtyHZXAlO8F+WuIQp+1U7sG5+8U7kCHEbHDaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7QkFtvWarE8jTk9nyBVXwy3QNkXKbtynpCZVPDJiJBDQ8Zm0TT9Bzxpx1rxbLyGF
-	 aM8mGA9swN9R+GgHk24lZLhPyi7WS7uGxE0PjDIFvTwXnTH6c0ZpozvTLmcwpEiXsT
-	 wqzA9mVanMucuKNwsWKNBD5MAaFoTSC668Z/zmwA=
+	b=BYUwLA8Y/ToQRiKb67Bt/nJrG2sQetJyc66NeYMuVmH5Jdg+UngvhbWYbc/E/kE0N
+	 tzK+8P0SB1+i9CM4GDCaolPBm5ARgloH2n/vOddc91UPfbc3g1cmZPqzetNSz8erB0
+	 uLJjw0Rt585J2nQSWW7qlKCT8kz14ZOBxr//jn1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbfIDP6O (ORCPT
+        id S1732107AbfIDQUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60076 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:20:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731780AbfIDP6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:10 -0400
+        id S1731717AbfIDP6G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AAE422CF5;
-        Wed,  4 Sep 2019 15:58:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3E0723400;
+        Wed,  4 Sep 2019 15:58:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612689;
-        bh=ZUPeU7rXEE9Ft3yii0aStiNyiPcuIWemP1F9qsfU3JI=;
+        s=default; t=1567612685;
+        bh=HG04MnMtyHZXAlO8F+WuIQp+1U7sG5+8U7kCHEbHDaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGvMmWJ/t9Gxtw8X7al5rHm4TV4DwxnaiHyVWbF0aUiTqgUc7axzKDYXJQAzKjrNQ
-         S5sr0Aqq3CclxbRvVw8e+jrfPdF1DWIFFR3QYXyOYG6ZOQOzKP5L7JIrdryhHvo3Ml
-         eh5cQv4TVosfUBdzG2Mus+5nwJp/lzd9lKqUzXMc=
+        b=1pJCnAR3liQo/U29tnGQsDUU+DE38RJHlvo9eeaHcT45ISZ2utxM5qLTKlYc7OPv9
+         LUWtEPCS/aXkL60sAShF2geW4B8UlwDY24EODaA/ydvJsK6w9PD7XyTYCIkyQg3aj/
+         tNt6BHUc07fgIBKOVJYzPrI3wLvrpDl2b26Iznng=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 19/94] selftests/bpf: fix "bind{4, 6} deny specific IP & port" on s390
-Date:   Wed,  4 Sep 2019 11:56:24 -0400
-Message-Id: <20190904155739.2816-19-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        David Lechner <david@lechnology.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 16/94] ARM: dts: Fix incomplete dts data for am3 and am4 mmc
+Date:   Wed,  4 Sep 2019 11:56:21 -0400
+Message-Id: <20190904155739.2816-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -61,59 +60,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 27df5c7068bf23cab282dc64b1c9894429b3b8a0 ]
+[ Upstream commit 5b63fb90adb95a178ad403e1703f59bf1ff2c16b ]
 
-"bind4 allow specific IP & port" and "bind6 deny specific IP & port"
-fail on s390 because of endianness issue: the 4 IP address bytes are
-loaded as a word and compared with a constant, but the value of this
-constant should be different on big- and little- endian machines, which
-is not the case right now.
+Commit 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and
+am43xx") dropped legacy mmc platform data for am3 and am4, but missed the
+fact that we never updated the dts files for mmc3 that is directly on l3
+interconnect instead of l4 interconnect. This leads to a situation with
+no legacy platform data and incomplete dts data.
 
-Use __bpf_constant_ntohl to generate proper value based on machine
-endianness.
+Let's update the mmc instances on l3 interconnect to probe properly with
+ti-sysc interconnect target module driver to make mmc3 work again. Let's
+still keep legacy "ti,hwmods" property around for v5.2 kernel and only
+drop it later on.
 
-Fixes: 1d436885b23b ("selftests/bpf: Selftest for sys_bind post-hooks.")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Note that there is no need to use property status = "disabled" for mmc3.
+The default for dts is enabled, and runtime PM will idle unused instances
+just fine.
+
+Fixes: 4e27f752ab8c ("ARM: OMAP2+: Drop mmc platform data for am330x and am43xx")
+Reported-by: David Lechner <david@lechnology.com>
+Tested-by: David Lechner <david@lechnology.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_sock.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am33xx.dtsi | 32 ++++++++++++++++++++++++++------
+ arch/arm/boot/dts/am4372.dtsi | 32 ++++++++++++++++++++++++++------
+ 2 files changed, 52 insertions(+), 12 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_sock.c b/tools/testing/selftests/bpf/test_sock.c
-index fb679ac3d4b07..0e66527334623 100644
---- a/tools/testing/selftests/bpf/test_sock.c
-+++ b/tools/testing/selftests/bpf/test_sock.c
-@@ -13,6 +13,7 @@
- #include <bpf/bpf.h>
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index e5c2f71a7c77d..fb6b8aa12cc56 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -234,13 +234,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
  
- #include "cgroup_helpers.h"
-+#include "bpf_endian.h"
- #include "bpf_rlimit.h"
- #include "bpf_util.h"
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <29>;
+-			reg = <0x47810000 0x1000>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM3_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <29>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
  
-@@ -232,7 +233,8 @@ static struct sock_test tests[] = {
- 			/* if (ip == expected && port == expected) */
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_ip6[3])),
--			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x01000000, 4),
-+			BPF_JMP_IMM(BPF_JNE, BPF_REG_7,
-+				    __bpf_constant_ntohl(0x00000001), 4),
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_port)),
- 			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x2001, 2),
-@@ -261,7 +263,8 @@ static struct sock_test tests[] = {
- 			/* if (ip == expected && port == expected) */
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_ip4)),
--			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x0100007F, 4),
-+			BPF_JMP_IMM(BPF_JNE, BPF_REG_7,
-+				    __bpf_constant_ntohl(0x7F000001), 4),
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_port)),
- 			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x1002, 2),
+ 		usb: usb@47400000 {
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 55aff4db9c7c2..848e2a8884e2c 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -228,13 +228,33 @@
+ 			interrupt-names = "edma3_tcerrint";
+ 		};
+ 
+-		mmc3: mmc@47810000 {
+-			compatible = "ti,omap4-hsmmc";
+-			reg = <0x47810000 0x1000>;
++		target-module@47810000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
+ 			ti,hwmods = "mmc3";
+-			ti,needs-special-reset;
+-			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+-			status = "disabled";
++			reg = <0x478102fc 0x4>,
++			      <0x47810110 0x4>,
++			      <0x47810114 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
++					 SYSC_OMAP2_ENAWAKEUP |
++					 SYSC_OMAP2_SOFTRESET |
++					 SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>,
++					<SYSC_IDLE_SMART>;
++			ti,syss-mask = <1>;
++			clocks = <&l3s_clkctrl AM4_L3S_MMC3_CLKCTRL 0>;
++			clock-names = "fck";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x47810000 0x1000>;
++
++			mmc3: mmc@0 {
++				compatible = "ti,omap4-hsmmc";
++				ti,needs-special-reset;
++				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++				reg = <0x0 0x1000>;
++			};
+ 		};
+ 
+ 		sham: sham@53100000 {
 -- 
 2.20.1
 
