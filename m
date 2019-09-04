@@ -2,136 +2,192 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 773E8C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9804C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4639421670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD29A2168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="k/GibsdI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="herM5rmY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbfIDXiQ (ORCPT
+        id S1730412AbfIDXnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:38:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37476 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfIDXiP (ORCPT
+        Wed, 4 Sep 2019 19:43:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37301 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729919AbfIDXnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:38:15 -0400
-Received: by mail-wr1-f68.google.com with SMTP id z11so556515wrt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:38:14 -0700 (PDT)
+        Wed, 4 Sep 2019 19:43:47 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y9so455200pfl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=+cQEKFH8HrxoD2GgI2D5PxiBEsa3yF83dOCqARH/zII=;
-        b=k/GibsdIhhVJpYu8KrTOATmi0Y4MBefLjJhnp+PyeSOTaI8sUa8ZwKu/eWSvuKH+eb
-         gXQJ2VX5pVEcMRWK5DgOp3HfiGh4yI4D5GlbbYb8WI5y+IBQEIqksBM/xrPxIAQ040aP
-         pr7ky3onVMaT3h3Nymzk3MI62C/6duJaxpUDBFZa/sAIT9+57yriLQf23/0vl8Qk4lBA
-         o2O2Oo6ORHBm8GDRo/TUeLcPBlK9d/TBOfeB8DdgDFAwYA4SmPJcWP/fZiQ9TDtgRNg+
-         0AwsrmAz6KnVtXe4rJcQLW3840jj956Pk57U0JbtRlKLIgJAoPaYqegOwrVu0FccUphp
-         OXjg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=20yt+YNZ1L9RG1o4wcjzf4KRuf7yK7zvoTIvG7LJ5dY=;
+        b=herM5rmY9dTySIiWkNtCKws+S32Q+KNr9KnA+p+QMqgbvsrsie5gRriffPC8sA/dvK
+         C++NJPm6cH/IV68xM7a5W3/bTfJlMUFX7BletVHvCCULvYeZu48DdlxbAwoy94COPeAO
+         BGcpaMHSHj2EEV0RFEg9nPnaQpxL9D/QuBcIcCpiVGxTDNkmNzGk6ekHCJIXmsrYr3oQ
+         YJGXuZA5OUqyclRL9oYjNGwSjgNYxHO4R881eXHiHVeOEN8PHtpeAaICunkMrmOE2uSY
+         wPBwMv1qHNKI62tT1HPe5QAamvEIjeMaPx6S3IT+eKQr1aYnFZDUzwx++38b90NXxpXS
+         paJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=+cQEKFH8HrxoD2GgI2D5PxiBEsa3yF83dOCqARH/zII=;
-        b=av4QNg7ZTgBRBp383gq1lZ78yQvoeEF8DU2Q6AjEDmc+lPkKGkYq4bV6jlh6l+kAxC
-         8cYqmOooIWma5GK8DWsfHSu2iQjRm2Voo7TW00UE9sd467Ntzmc08sWSzg5kw2eQoO/e
-         Et3wKyHBHxGnsXaKWCOV8PZwndl3t9+Qdd/rkfOnTDR40OOWQm6lgbz6hLFC1SLsxieq
-         nSlTOOTWXFQG9GflY44H16YZvZyGHjadAopkprwT+jzcrLGI5nXAfaM2XpYxvdTFAZ6g
-         5WlpyR18L6+FRn3iRkTVPkqwmUDCFrmShZNTUQA5oqw3TPs2/19eWwh3LE39vvQgVR8/
-         HZ2A==
-X-Gm-Message-State: APjAAAWILTsCmqBO4x3rs6EO0/R8ozoWNEsuTEiVE+m9d4Eden+/LnWE
-        YuLuImyeQzXWuhLqD3kL7HdTQg==
-X-Google-Smtp-Source: APXvYqzxnRChZHDXLR6JASjqAO5XncEr7cP5/xJfBRHyUcGpoxINw1o6DY8aNCq7iSpFJKYOwB4IYw==
-X-Received: by 2002:a05:6000:12c9:: with SMTP id l9mr139898wrx.163.1567640293942;
-        Wed, 04 Sep 2019 16:38:13 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id 5sm424433wmg.42.2019.09.04.16.38.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 16:38:13 -0700 (PDT)
-Message-ID: <5d704ae5.1c69fb81.821af.21a1@mx.google.com>
-Date:   Wed, 04 Sep 2019 16:38:13 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=20yt+YNZ1L9RG1o4wcjzf4KRuf7yK7zvoTIvG7LJ5dY=;
+        b=U/SthBk7tnmbu68mD5GF4zK+y/egf6T+q+TYr1asHPuR+E/5JWo3Vs5GhI0bmXOLJX
+         mdqRj6wUYgOUFxoq/DMJxVLj48Vkos9XRDN0KSDsoXAovLwYrYn5Y8ODCNPc6bhHxqjt
+         OimsiLfe9SR60sodaxMboQKaP/EO1HKI5XoKe0Bwie1qZQ0W841O5jT/3g0ZJtQ2QWGZ
+         7UDcopYJs9d1eRpktZvefNVHFkit42e9p+vVoJsb15VJ//pAUR6XoDHfB91+eXN9p7uW
+         UA0aY76+aYKT8hNZ737qqS5HIiFmfBFxez91Ee2oOb/inL2loinXffOdT1dqirR/omSj
+         k3HA==
+X-Gm-Message-State: APjAAAXrQvksw1HDgVU5kuw2yWgGj3Q37QzXLZM0pEM5VNQDEorgwBES
+        42RI2TD8aDpc224kCWDT2q5RY6hj4GWxZgCScBpfcA==
+X-Google-Smtp-Source: APXvYqwb6a9JvgIsY537fvx0QmcGGFZpP9NmS0y0s0rFiAJs9NR6meGRExFTHKlaBQgpKv098lpoKduJkhchy366fA4=
+X-Received: by 2002:a65:690b:: with SMTP id s11mr596069pgq.10.1567640625488;
+ Wed, 04 Sep 2019 16:43:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.2.11-144-gb6eedcb8cf66
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Branch: linux-5.2.y
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-References: <20190904175314.206239922@linuxfoundation.org>
-Subject: Re: [PATCH 5.2 000/143] 5.2.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+References: <20190904164622.57f69595@canb.auug.org.au>
+In-Reply-To: <20190904164622.57f69595@canb.auug.org.au>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 4 Sep 2019 16:43:34 -0700
+Message-ID: <CAKwvOdkxgNJ_KW3M4DW-VnMk9_Vst8yPTheELTrMDK14bb+L+w@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the drm tree with the kbuild tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.2.y boot: 157 boots: 4 failed, 145 passed with 8 offline =
-(v5.2.11-144-gb6eedcb8cf66)
+On Tue, Sep 3, 2019 at 11:46 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the drm tree got conflicts in:
+>
+>   drivers/gpu/drm/amd/display/dc/calcs/Makefile
+>   drivers/gpu/drm/amd/display/dc/dml/Makefile
+>   drivers/gpu/drm/amd/display/dc/dsc/Makefile
+>
+> between commit:
+>
+>   30851871d5ab ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
+>
+> from the kbuild tree and commit:
+>
+>   0f0727d971f6 ("drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines")
+>
+> from the drm tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.2.y/kernel/v5.2.11-144-gb6eedcb8cf66/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.2.y=
-/kernel/v5.2.11-144-gb6eedcb8cf66/
+My changes LGTM, thanks!
 
-Tree: stable-rc
-Branch: linux-5.2.y
-Git Describe: v5.2.11-144-gb6eedcb8cf66
-Git Commit: b6eedcb8cf6670234e137d277a5ae1cdf5cd141c
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 85 unique boards, 27 SoC families, 17 builds out of 209
+>
+> --
+> Cheers,
+> Stephen Rothwell
+>
+> diff --cc drivers/gpu/drm/amd/display/dc/calcs/Makefile
+> index d930df63772c,16614d73a5fc..000000000000
+> --- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
+> @@@ -32,9 -32,13 +32,13 @@@ endi
+>
+>   calcs_ccflags := -mhard-float -msse $(cc_stack_align)
+>
+> + ifdef CONFIG_CC_IS_CLANG
+> + calcs_ccflags += -msse2
+> + endif
+> +
+>  -CFLAGS_dcn_calcs.o := $(calcs_ccflags)
+>  -CFLAGS_dcn_calc_auto.o := $(calcs_ccflags)
+>  -CFLAGS_dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
+>  +CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calcs.o := $(calcs_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calc_auto.o := $(calcs_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
+>
+>   BW_CALCS = dce_calcs.o bw_fixed.o custom_float.o
+>
+> diff --cc drivers/gpu/drm/amd/display/dc/dml/Makefile
+> index 83792e2c0f0e,95fd2beca80c..000000000000
+> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> @@@ -32,16 -32,25 +32,20 @@@ endi
+>
+>   dml_ccflags := -mhard-float -msse $(cc_stack_align)
+>
+> + ifdef CONFIG_CC_IS_CLANG
+> + dml_ccflags += -msse2
+> + endif
+> +
+>  -CFLAGS_display_mode_lib.o := $(dml_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o := $(dml_ccflags)
+>
+>   ifdef CONFIG_DRM_AMD_DC_DCN2_0
+>  -CFLAGS_display_mode_vba.o := $(dml_ccflags)
+>  -CFLAGS_display_mode_vba_20.o := $(dml_ccflags)
+>  -CFLAGS_display_rq_dlg_calc_20.o := $(dml_ccflags)
+>  -CFLAGS_display_mode_vba_20v2.o := $(dml_ccflags)
+>  -CFLAGS_display_rq_dlg_calc_20v2.o := $(dml_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o := $(dml_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o := $(dml_ccflags)
+>   endif
+>  -ifdef CONFIG_DRM_AMD_DCN3AG
+>  -CFLAGS_display_mode_vba_3ag.o := $(dml_ccflags)
+>  -endif
+>  -CFLAGS_dml1_display_rq_dlg_calc.o := $(dml_ccflags)
+>  -CFLAGS_display_rq_dlg_helpers.o := $(dml_ccflags)
+>  -CFLAGS_dml_common_defs.o := $(dml_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dml/dml1_display_rq_dlg_calc.o := $(dml_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dml/display_rq_dlg_helpers.o := $(dml_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dml/dml_common_defs.o := $(dml_ccflags)
+>
+>   DML = display_mode_lib.o display_rq_dlg_helpers.o dml1_display_rq_dlg_calc.o \
+>         dml_common_defs.o
+> diff --cc drivers/gpu/drm/amd/display/dc/dsc/Makefile
+> index c3922d6e7696,17db603f2d1f..000000000000
+> --- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
+> @@@ -9,9 -9,14 +9,13 @@@ endi
+>
+>   dsc_ccflags := -mhard-float -msse $(cc_stack_align)
+>
+> + ifdef CONFIG_CC_IS_CLANG
+> + dsc_ccflags += -msse2
+> + endif
+> +
+>  -CFLAGS_rc_calc.o := $(dsc_ccflags)
+>  -CFLAGS_rc_calc_dpi.o := $(dsc_ccflags)
+>  -CFLAGS_codec_main_amd.o := $(dsc_ccflags)
+>  -CFLAGS_dc_dsc.o := $(dsc_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc.o := $(dsc_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc_dpi.o := $(dsc_ccflags)
+>  +CFLAGS_$(AMDDALPATH)/dc/dsc/dc_dsc.o := $(dsc_ccflags)
+>
+>   DSC = dc_dsc.o rc_calc.o rc_calc_dpi.o
+>
 
-Boot Failures Detected:
 
-arm:
-    vexpress_defconfig:
-        gcc-8:
-            qemu_arm-virt-gicv3: 4 failed labs
-
-Offline Platforms:
-
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            qcom-apq8064-ifc6410: 1 offline lab
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+-- 
+Thanks,
+~Nick Desaulniers
