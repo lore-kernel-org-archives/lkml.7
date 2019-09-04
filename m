@@ -2,124 +2,151 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA557C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC77EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 826902070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N8gFXNfw"
+	by mail.kernel.org (Postfix) with ESMTP id A2A7D22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567613035;
+	bh=fiKGESYRd6UnogUEPjWbYQThK5Vjrm0ffLD3laRnlHE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Zfn8121nw6SARcDld/u6XpVjtZPV3U+C141hhKKMFkxtYfW6k38a9/KDv/S3AUhq8
+	 GjbGjSjRbxA2xuZhH7On2Mq+c69KE9L0jyFikHKI9qye9RdtpqzOnyRgM7JY2d5xF0
+	 btZbkqa5HDwE5WyyIGbkQ8XFlJeYz9UAG1p+F26c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733117AbfIDQDw (ORCPT
+        id S1732185AbfIDQDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:03:52 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46576 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731541AbfIDQDt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:49 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t8so3927783lfc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:03:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qdkpjv/bZ2lIEk5X+tFdEgL+mJhBRPFpnDdvWwMX9Xc=;
-        b=N8gFXNfwqngfpITkERemx7Ltu0Dlkimbs/trkm5uy96D6tIWPHX+pNnCgQH1JxBihu
-         IUrf7jLBw1JFSWWDRnalf9mB+yNxxdG069bZzIjwJ4zwb/qe7WxIcKRgxPPfGKgR6AGk
-         4cnEy7ibBSOP6zo70HU5OxGp7HUKh81yvJsJ2YsMSEHK6/LXkPSokNqCrVMYSD3+bB4e
-         kS75lVIGNArGDrvZt0feVALLQxuzWS+xVJQxen3vpDfiaItT/4Y+cy1RBN1sxFZ96kAI
-         E9/nkH2UsoZHaIdiXJmDlCysFakZHUVnixHRNlY6m99sKIXP1K2Iej7CxYqjC5k4ZoQJ
-         d98g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qdkpjv/bZ2lIEk5X+tFdEgL+mJhBRPFpnDdvWwMX9Xc=;
-        b=Qa80BenDG4+gBaDdLh8e1waXmm3zptqv149IY3bLsGs43n3lWxUFBimAluIaKjSvhD
-         /Z92eC/JKuRATcj3yp/5730aq0Veaq4iBa/LJ3OOXdQH4W5ZkR+WrzG3anj+vIsitR5g
-         F+AmvsRlRipfsxyfPZj1KbBFEN1Mu8kv7eHhkLZM71BDb+sK2QDrKeE3yy5KxGLxzCs1
-         O6KwqZvxAAtu46erw9k5+OcV60U/GSpaOQhcWVzPvpySg67whoMr6/Idr8s07H6SxSOp
-         wTMagVXhHwVWitUA1xgaQPfCBE4CGM6zpUd8hVLQFbM83ueRBZMGSn1tysG9vBhpNGWd
-         5NdQ==
-X-Gm-Message-State: APjAAAUna2PIO4IoK6TppRgT04EGYRq0eL0b83ScTn0KXMyrj+cZuPKH
-        xZf2dH/kuBVpOcSQlrm/xSY+FA==
-X-Google-Smtp-Source: APXvYqxcl6N2Os+hsM2CmBabXDD2UjVXYfZOm8va/9JhvYkTJcOmfYODnBTLkrUxHpBd/2Gc/balpg==
-X-Received: by 2002:a19:6549:: with SMTP id c9mr3188567lfj.99.1567613027790;
-        Wed, 04 Sep 2019 09:03:47 -0700 (PDT)
-Received: from localhost.localdomain (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
-        by smtp.gmail.com with ESMTPSA id r8sm556064lfm.71.2019.09.04.09.03.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 09:03:47 -0700 (PDT)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: dwc: fix find_next_bit() usage
-Date:   Wed,  4 Sep 2019 18:03:38 +0200
-Message-Id: <20190904160339.2800-1-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 4 Sep 2019 12:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732823AbfIDQDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:30 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DFAA2087E;
+        Wed,  4 Sep 2019 16:03:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567613009;
+        bh=fiKGESYRd6UnogUEPjWbYQThK5Vjrm0ffLD3laRnlHE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bU0GvfHZ674cAZC+/lreOYadfXhqY1eQTy3aREqD/ipe12nLek32YQnx5hRKFt+aS
+         27QVwAdUS+hiVAJyqhvdPwBIMjsmU3Bp/bSOuZUYM1ZmcBewrVWwmIDXf36Mori1yg
+         0iDofCwJ9cSuWzVhovhXyFERf0u0UkQMFc38Qdio=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Josh Hunt <johunt@akamai.com>,
+        Peter Zijlstra <peterz@infradead.org>, acme@kernel.org,
+        bpuranda@akamai.com, mingo@redhat.com, jolsa@redhat.com,
+        tglx@linutronix.de, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 17/20] perf/x86/intel: Restrict period on Nehalem
+Date:   Wed,  4 Sep 2019 12:03:00 -0400
+Message-Id: <20190904160303.5062-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
+References: <20190904160303.5062-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-find_next_bit() takes a parameter of size long, and performs arithmetic
-that assumes that the argument is of size long.
+From: Josh Hunt <johunt@akamai.com>
 
-Therefore we cannot pass a u32, since this will cause find_next_bit()
-to read outside the stack buffer and will produce the following print:
-BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
+[ Upstream commit 44d3bbb6f5e501b873218142fe08cdf62a4ac1f3 ]
 
-Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+We see our Nehalem machines reporting 'perfevents: irq loop stuck!' in
+some cases when using perf:
+
+perfevents: irq loop stuck!
+WARNING: CPU: 0 PID: 3485 at arch/x86/events/intel/core.c:2282 intel_pmu_handle_irq+0x37b/0x530
+...
+RIP: 0010:intel_pmu_handle_irq+0x37b/0x530
+...
+Call Trace:
+<NMI>
+? perf_event_nmi_handler+0x2e/0x50
+? intel_pmu_save_and_restart+0x50/0x50
+perf_event_nmi_handler+0x2e/0x50
+nmi_handle+0x6e/0x120
+default_do_nmi+0x3e/0x100
+do_nmi+0x102/0x160
+end_repeat_nmi+0x16/0x50
+...
+? native_write_msr+0x6/0x20
+? native_write_msr+0x6/0x20
+</NMI>
+intel_pmu_enable_event+0x1ce/0x1f0
+x86_pmu_start+0x78/0xa0
+x86_pmu_enable+0x252/0x310
+__perf_event_task_sched_in+0x181/0x190
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+finish_task_switch+0x158/0x260
+__schedule+0x2f6/0x840
+? hrtimer_start_range_ns+0x153/0x210
+schedule+0x32/0x80
+schedule_hrtimeout_range_clock+0x8a/0x100
+? hrtimer_init+0x120/0x120
+ep_poll+0x2f7/0x3a0
+? wake_up_q+0x60/0x60
+do_epoll_wait+0xa9/0xc0
+__x64_sys_epoll_wait+0x1a/0x20
+do_syscall_64+0x4e/0x110
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fdeb1e96c03
+...
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: acme@kernel.org
+Cc: Josh Hunt <johunt@akamai.com>
+Cc: bpuranda@akamai.com
+Cc: mingo@redhat.com
+Cc: jolsa@redhat.com
+Cc: tglx@linutronix.de
+Cc: namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com
+Link: https://lkml.kernel.org/r/1566256411-18820-1-git-send-email-johunt@akamai.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/x86/kernel/cpu/perf_event_intel.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d3156446ff27..45f21640c977 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
- irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
- {
- 	int i, pos, irq;
--	u32 val, num_ctrls;
-+	unsigned long val;
-+	u32 status, num_ctrls;
- 	irqreturn_t ret = IRQ_NONE;
+diff --git a/arch/x86/kernel/cpu/perf_event_intel.c b/arch/x86/kernel/cpu/perf_event_intel.c
+index 3572434a73cb7..c26c3e3357834 100644
+--- a/arch/x86/kernel/cpu/perf_event_intel.c
++++ b/arch/x86/kernel/cpu/perf_event_intel.c
+@@ -2721,6 +2721,11 @@ static unsigned bdw_limit_period(struct perf_event *event, unsigned left)
+ 	return left;
+ }
  
- 	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-@@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
- 	for (i = 0; i < num_ctrls; i++) {
- 		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
- 					(i * MSI_REG_CTRL_BLOCK_SIZE),
--				    4, &val);
--		if (!val)
-+				    4, &status);
-+		if (!status)
- 			continue;
++static u64 nhm_limit_period(struct perf_event *event, u64 left)
++{
++	return max(left, 32ULL);
++}
++
+ PMU_FORMAT_ATTR(event,	"config:0-7"	);
+ PMU_FORMAT_ATTR(umask,	"config:8-15"	);
+ PMU_FORMAT_ATTR(edge,	"config:18"	);
+@@ -3326,6 +3331,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
+ 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
+ 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
++		x86_pmu.limit_period = nhm_limit_period;
  
- 		ret = IRQ_HANDLED;
-+		val = status;
- 		pos = 0;
--		while ((pos = find_next_bit((unsigned long *) &val,
--					    MAX_MSI_IRQS_PER_CTRL,
-+		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
- 					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
- 			irq = irq_find_mapping(pp->irq_domain,
- 					       (i * MAX_MSI_IRQS_PER_CTRL) +
+ 		x86_pmu.cpu_events = nhm_events_attrs;
+ 
 -- 
-2.21.0
+2.20.1
 
