@@ -2,145 +2,142 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5298BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB60C41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D39C21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C650422CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:35:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IoH/Dtjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730352AbfIDUcq (ORCPT
+        id S1730156AbfIDUfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:32:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:55227 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbfIDUcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:32:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 13:32:45 -0700
-X-IronPort-AV: E=Sophos;i="5.64,468,1559545200"; 
-   d="scan'208";a="177069505"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 13:32:44 -0700
-Message-ID: <a6a0770adc5c5d593e407e26589cb2bc552f4cbb.camel@linux.intel.com>
-Subject: Re: [virtio-dev] Re: [PATCH v7 5/6] virtio-balloon: Pull page
- poisoning config out of free page hinting
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org,
-        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        riel@surriel.com, konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com
-Date:   Wed, 04 Sep 2019 13:32:44 -0700
-In-Reply-To: <20190904152244-mutt-send-email-mst@kernel.org>
-References: <20190904150920.13848.32271.stgit@localhost.localdomain>
-         <20190904151055.13848.27351.stgit@localhost.localdomain>
-         <20190904152244-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 4 Sep 2019 16:35:53 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41535 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729316AbfIDUfw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 16:35:52 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b13so13394pfo.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y9dPfxiGVl9B5eQCHDgsbYOLG2ykYyi/7SM+jtLAnog=;
+        b=IoH/DtjsZSHeuM5ZH1ZL9Fy+rFnrY2sGhJTxYoxekXhLlmUNBAwbZWtGkaZWeLkrWB
+         p/OHUOdc3ZVgXUSWEXgPCdOxzHj6ou+8a/ZlebDKFUrcBI8Zk36WiZ7RUbG2Hn1T5Xy6
+         q4NVyGK9q203NBKeABXcjGCfEhXMgChZweccIQ+Inc7zwHL8h+V9H4Eoo0tWROMxKNck
+         zeuF2Fq/ec/RE8H+zHbNtYl55DYiCg2BVdGE41d25DtwtA1Bl1qs11JMSGCNhXZoNW7G
+         GszHlkzz1S81UpO64iP8lHJFTqcYhkcuFgvYXx6J8GUw8BLi/FgP2ITaAvZ2KhBllLib
+         M6nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y9dPfxiGVl9B5eQCHDgsbYOLG2ykYyi/7SM+jtLAnog=;
+        b=Eb2KMwgKOTINqPZphCrJOpT7ID/KnIryt5/ZF5LXIk2+OtwUWyZyTkWM6DPlqlnGKX
+         bzK5QcSJ1P8HwZuksMqc/RILfdftIeUUBm2iRRSTPi/5WzmDuFlkf2v2d/mNjbWGz57Q
+         fsyZk+wJ93ID1fZwkm4u4qJ8d5V1LUgMqBwDyd0ypR8QR0+TxYkgVSKsD88Ik7eBgfK2
+         I1sXGUev+0yPlW941tHoIXvnovOPKvSDtJT9WxgpCn5HIlimzVDsF4evf4uZjbUcfSk8
+         QNPwkk8bDIr3Cxt4FrxcPd2Dgqf1Oxgx16WqL86VCpjqT5HkqtzTBHzaq+V2EH8EKOit
+         Ei2Q==
+X-Gm-Message-State: APjAAAXN0dXYlUvmmfU6Yec6orgVqGPCRFiXKgdEUm0GxWPQxEpb9WAg
+        0yK3egnRfNVePK0M3ETFUmto4Q==
+X-Google-Smtp-Source: APXvYqyNUCdVh4CrjvfM5UYakm4eAZf3UXsz8CmJ1f360GpgwL9mGAfC1CL0i304toSE0+cTRHBGxA==
+X-Received: by 2002:a63:6a81:: with SMTP id f123mr38808pgc.348.1567629351901;
+        Wed, 04 Sep 2019 13:35:51 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id h70sm14724pgc.36.2019.09.04.13.35.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 13:35:51 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 13:35:48 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-i2c@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
+ processing
+Message-ID: <20190904203548.GC580@tuxbook-pro>
+References: <20190904113613.14997-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904113613.14997-1-lee.jones@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 15:28 -0400, Michael S. Tsirkin wrote:
-> On Wed, Sep 04, 2019 at 08:10:55AM -0700, Alexander Duyck wrote:
-> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > 
-> > Currently the page poisoning setting wasn't being enabled unless free page
-> > hinting was enabled. However we will need the page poisoning tracking logic
-> > as well for unused page reporting. As such pull it out and make it a
-> > separate bit of config in the probe function.
-> > 
-> > In addition we can actually wrap the code in a check for NO_SANITY. If we
-> > don't care what is actually in the page we can just default to 0 and leave
-> > it there.
-> > 
-> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > ---
-> >  drivers/virtio/virtio_balloon.c |   19 +++++++++++++------
-> >  mm/page_reporting.c             |    4 ++++
-> >  2 files changed, 17 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> > index 226fbb995fb0..2c19457ab573 100644
-> > --- a/drivers/virtio/virtio_balloon.c
-> > +++ b/drivers/virtio/virtio_balloon.c
-> > @@ -842,7 +842,6 @@ static int virtio_balloon_register_shrinker(struct virtio_balloon *vb)
-> >  static int virtballoon_probe(struct virtio_device *vdev)
-> >  {
-> >  	struct virtio_balloon *vb;
-> > -	__u32 poison_val;
-> >  	int err;
-> >  
-> >  	if (!vdev->config->get) {
-> > @@ -909,11 +908,19 @@ static int virtballoon_probe(struct virtio_device *vdev)
-> >  						  VIRTIO_BALLOON_CMD_ID_STOP);
-> >  		spin_lock_init(&vb->free_page_list_lock);
-> >  		INIT_LIST_HEAD(&vb->free_page_list);
-> > -		if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
-> > -			memset(&poison_val, PAGE_POISON, sizeof(poison_val));
-> > -			virtio_cwrite(vb->vdev, struct virtio_balloon_config,
-> > -				      poison_val, &poison_val);
-> > -		}
-> > +	}
-> > +	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
-> > +		__u32 poison_val = 0;
-> > +
-> > +#if !defined(CONFIG_PAGE_POISONING_NO_SANITY)
-> > +		/*
-> > +		 * Let hypervisor know that we are expecting a specific
-> > +		 * value to be written back in unused pages.
-> > +		 */
-> > +		memset(&poison_val, PAGE_POISON, sizeof(poison_val));
-> > +#endif
-> > +		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
-> > +			      poison_val, &poison_val);
-> >  	}
-> >  	/*
-> >  	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
+On Wed 04 Sep 04:36 PDT 2019, Lee Jones wrote:
+
+The subject implies that we select FIFO mode instead of DMA, but that's
+not really true, because with DMA enabled we still fall back to FIFO for
+messages below 32 bytes. 
+
+So what this does it to disable DMA, which neither the subject or the DT
+property describes.
+
+Also missing is a description of why this is needed.
+
+Regards,
+Bjorn
+
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> I'm a bit confused by this part. Should we not just clear
-> VIRTIO_BALLOON_F_PAGE_POISON completely?
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index a89bfce5388e..dfdbce067827 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
+>  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>  				u32 m_param)
+>  {
+> +	struct device_node *np = gi2c->se.dev->of_node;
+>  	dma_addr_t rx_dma;
+>  	unsigned long time_left;
+> -	void *dma_buf;
+> +	void *dma_buf = NULL;
+>  	struct geni_se *se = &gi2c->se;
+>  	size_t len = msg->len;
+>  
+> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
+> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> +
+>  	if (dma_buf)
+>  		geni_se_select_mode(se, GENI_SE_DMA);
+>  	else
+> @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>  				u32 m_param)
+>  {
+> +	struct device_node *np = gi2c->se.dev->of_node;
+>  	dma_addr_t tx_dma;
+>  	unsigned long time_left;
+> -	void *dma_buf;
+> +	void *dma_buf = NULL;
+>  	struct geni_se *se = &gi2c->se;
+>  	size_t len = msg->len;
+>  
+> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
+> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> +
+>  	if (dma_buf)
+>  		geni_se_select_mode(se, GENI_SE_DMA);
+>  	else
+> -- 
+> 2.17.1
 > 
-> In my mind the value written should be what guest puts in
-> free pages - and possibly what it expects to find there later.
-
-I thought it better to err on the side of more information rather than
-less. With this the host knows that page poisoning is enabled, but that 0
-is an acceptable value.
-
-> If it doesn't expect anything there then it makes sense
-> to clear VIRTIO_BALLOON_F_PAGE_POISON so that host does
-> not try to put the poison value there.
-
-That makes sense.
-
-> But I think that it does not make sense to lie to host about the poison
-> value - I think that if we do send poison value to
-> host it's reasonable for host to expect free pages
-> have that value - and even possibly to validate that.
-> 
-> So I think that the hack belongs in virtballoon_validate,
-> near the page_poisoning_enabled check.
-
-Yeah, I will move that for v8. I will just add an IS_ENABLED check to the
-!page_poisoning_enabled check in virtballoon_validate and can drop the
-#ifdef check.
-
-Thanks.
-
-- Alex
-
