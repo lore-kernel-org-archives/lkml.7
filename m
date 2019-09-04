@@ -2,90 +2,98 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F59AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B4A6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA7123401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDCC23400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:05:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="STRjU44N";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W9orP2b1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfIDGET (ORCPT
+        id S1728648AbfIDGFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:04:19 -0400
-Received: from mga06.intel.com ([134.134.136.31]:58605 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfIDGES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:04:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 23:04:17 -0700
-X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
-   d="scan'208";a="334095759"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 03 Sep 2019 23:04:16 -0700
-Subject: Re: [PATCH] doc: kvm: fix return description of KVM_SET_MSRS
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190902101214.77833-1-xiaoyao.li@intel.com>
- <20190903163332.GF10768@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <2354b729-eed6-df82-64bb-4643beccdc80@intel.com>
-Date:   Wed, 4 Sep 2019 14:04:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 02:05:46 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51536 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfIDGFp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 02:05:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C65D96115D; Wed,  4 Sep 2019 06:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567577144;
+        bh=aShqyN0Qd6KXTO9xyxybPT3f0jnGflZlYOUa5dN9MtI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=STRjU44NdPfHLvhvJf59rfO2e+otP8z8kz7owHCPYKbhNJD6kNnp2DrfGWorpSh1t
+         I1JiwOMCTQBW98xr/+B/SExCmicLYymGmvUS6Nk8XZWy5+GcT/VJP37gyEtPoXOtrd
+         W6yLQol5a4whNtPxMs2CZmDuDnDRQYlhs6UOsD0Q=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3BFF160863;
+        Wed,  4 Sep 2019 06:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567577144;
+        bh=aShqyN0Qd6KXTO9xyxybPT3f0jnGflZlYOUa5dN9MtI=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=W9orP2b1CDYEo1ik0R2sfFMCtfiUjF4z+YuTqKHcozs+wahtDFaobbukAxKr3uHWu
+         wHcl/fCHKSkMxy39qXSlncnhtPFbWu54g5NvLTJbrgIHb0gaMeSc6cXPSSXQ2eJ5ok
+         kddufNvugFu6k6heCmNPZBF5Wos26rzTvyuy6uW8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3BFF160863
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190903163332.GF10768@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wil6210: fix wil_cid_valid with negative cid values
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20190702144026.13013-1-colin.king@canonical.com>
+References: <20190702144026.13013-1-colin.king@canonical.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Maya Erez <merez@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190904060544.C65D96115D@smtp.codeaurora.org>
+Date:   Wed,  4 Sep 2019 06:05:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/2019 12:33 AM, Sean Christopherson wrote:
-> On Mon, Sep 02, 2019 at 06:12:14PM +0800, Xiaoyao Li wrote:
-> 
-> It may seem silly, but a proper changelog would be helpful even here,
-> e.g. to explain how and when a positive return value can diverge from the
-> number of MSRs specific in struct kvm_msrs.
-> 
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   Documentation/virt/kvm/api.txt | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
->> index 2d067767b617..a2efc19e0f4e 100644
->> --- a/Documentation/virt/kvm/api.txt
->> +++ b/Documentation/virt/kvm/api.txt
->> @@ -586,7 +586,7 @@ Capability: basic
->>   Architectures: x86
->>   Type: vcpu ioctl
->>   Parameters: struct kvm_msrs (in)
->> -Returns: 0 on success, -1 on error
->> +Returns: number of msrs successfully set, -1 on error
-> 
-> Similar to the changelong comment, it'd be helpful to elaborate on the
-> positive return value, e.g.:
-> 
->    Returns: number of msrs successfully set (see below), -1 on error
-> 
-> and then something in the free form text explaining how the ioctl stops
-> processing MSRs if setting an MSR fails.
->
+Colin King <colin.king@canonical.com> wrote:
 
-Do it in v2, thanks!
+> There are several occasions where a negative cid value is passed
+> into wil_cid_valid and this is converted into a u8 causing the
+> range check of cid >= 0 to always succeed.  Fix this by making
+> the cid argument an int to handle any -ve error value of cid.
+> 
+> An example of this behaviour is in wil_cfg80211_dump_station,
+> where cid is assigned -ENOENT if the call to wil_find_cid_by_idx
+> fails, and this -ve value is passed to wil_cid_valid.  I believe
+> that the conversion of -ENOENT to the u8 value 254 which is
+> greater than wil->max_assoc_sta causes wil_find_cid_by_idx to
+> currently work fine, but I think is by luck and not the
+> intended behaviour.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Reviewed-by: Maya Erez <merez@codeaurora.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
->>   Writes model-specific registers to the vcpu.  See KVM_GET_MSRS for the
->>   data structures.
->> -- 
->> 2.19.1
->>
+Patch applied to ath-next branch of ath.git, thanks.
+
+23bb9f692b66 wil6210: fix wil_cid_valid with negative cid values
+
+-- 
+https://patchwork.kernel.org/patch/11027989/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
