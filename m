@@ -2,115 +2,127 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07227C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F85DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B1720820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C94521883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567613252;
+	bh=aw9Ccs93FdRhCdFHunJR7zrEHuMOFb3DevjX4PIvUr0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RDasgPgTA4uUvalyX7lDA0EQmkdDSXUcF8yjfseXm/5GMpuJB8BpaeFxWWLjZHQJu
+	 z0XUGnDkmtJJgrLk1lAkr8DarZ+/cVWG5cSN4Fb/F13lImW5OxgVvO35rLgbd9vBA6
+	 Gu8mGqWc36h7I6m4HlGHKibxgs0RJhWz8zn//yrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387412AbfIDQH1 (ORCPT
+        id S2387445AbfIDQHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:07:27 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:57316 "EHLO ale.deltatee.com"
+        Wed, 4 Sep 2019 12:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbfIDQHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:07:20 -0400
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1i5XoS-0006yr-3P; Wed, 04 Sep 2019 10:07:17 -0600
-To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@fb.com>, Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>
-References: <20190831000139.7662-1-logang@deltatee.com>
- <20190831152910.GA29439@localhost.localdomain>
- <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
- <20190903164620.GA20847@localhost.localdomain>
- <20190904060558.GA10849@lst.de>
- <20190904144426.GB21302@localhost.localdomain>
- <20190904154215.GA20422@lst.de>
- <20190904155445.GD21302@localhost.localdomain>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <ef3bf93b-cb47-95c5-7d96-f81d9acfdb55@deltatee.com>
-Date:   Wed, 4 Sep 2019 10:07:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731751AbfIDQCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:00 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8215D23402;
+        Wed,  4 Sep 2019 16:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567612919;
+        bh=aw9Ccs93FdRhCdFHunJR7zrEHuMOFb3DevjX4PIvUr0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=egSuezYsEF+86S87JdyTa8Xure/GV4M3t5HMaNlNDZbzHrK86HhfW9/cbsjKT/hII
+         YDoNCAIQ0+8icUjZ2C87JeVljt4vXuS6iIQuURvEKeLTwjabqZc8LNI6tm5i4bCRl2
+         6jsSy6Otdoh8o5P8XYra855hHuCWa0uQxx1RomZc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 23/36] cifs: set domainName when a domain-key is used in multiuser
+Date:   Wed,  4 Sep 2019 12:01:09 -0400
+Message-Id: <20190904160122.4179-23-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
+References: <20190904160122.4179-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190904155445.GD21302@localhost.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: keith.busch@intel.com, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, martin.petersen@oracle.com, sagi@grimberg.me, hare@suse.com, axboe@fb.com, hch@lst.de, kbusch@kernel.org
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
+[ Upstream commit f2aee329a68f5a907bcff11a109dfe17c0b41aeb ]
 
-On 2019-09-04 9:54 a.m., Keith Busch wrote:
-> On Wed, Sep 04, 2019 at 05:42:15PM +0200, Christoph Hellwig wrote:
->> On Wed, Sep 04, 2019 at 08:44:27AM -0600, Keith Busch wrote:
->>> Let me step through an example:
->>>
->>>   Ctrl A gets instance 0.
->>>
->>>   Its subsystem gets the same instance, and takes ref count on it:
->>>   all namespaces in this subsystem will use '0'.
->>>
->>>   Ctrl B gets instance 1, and it's in the same subsystem as Ctrl A so
->>>   no new subsytem is allocated.
->>>
->>>   Ctrl A is disconnected, dropping its ref on instance 0, but the
->>>   subsystem still has its refcount, making it unavailable.
->>>
->>>   Ctrl A is reconnected, and allocates instance 2 because 0 is still in
->>>   use.
->>>
->>> Now all the namespaces in this subsystem are prefixed with nvme0, but no
->>> controller exists with the same prefix. We still have inevitable naming
->>> mismatch, right?
->>
->> I think th major confusion was that we can use the same handle for
->> and unrelated subsystem vs controller, and that would avoid it.
->>
->> I don't see how we can avoid the controller is entirely different
->> from namespace problem ever.
+RHBZ: 1710429
 
+When we use a domain-key to authenticate using multiuser we must also set
+the domainnmame for the new volume as it will be used and passed to the server
+in the NTLMSSP Domain-name.
 
-Yes, I agree, we can't solve the mismatch problem in the general case:
-with sequences of hot plug events there will always be a case that
-mismatches. I just think we can do better in the simple common default case.
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/cifs/connect.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 57c62ff4e8d6d..699e763ea671a 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2542,6 +2542,7 @@ static int
+ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ {
+ 	int rc = 0;
++	int is_domain = 0;
+ 	const char *delim, *payload;
+ 	char *desc;
+ 	ssize_t len;
+@@ -2589,6 +2590,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 			rc = PTR_ERR(key);
+ 			goto out_err;
+ 		}
++		is_domain = 1;
+ 	}
+ 
+ 	down_read(&key->sem);
+@@ -2646,6 +2648,26 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 		goto out_key_put;
+ 	}
+ 
++	/*
++	 * If we have a domain key then we must set the domainName in the
++	 * for the request.
++	 */
++	if (is_domain && ses->domainName) {
++		vol->domainname = kstrndup(ses->domainName,
++					   strlen(ses->domainName),
++					   GFP_KERNEL);
++		if (!vol->domainname) {
++			cifs_dbg(FYI, "Unable to allocate %zd bytes for "
++				 "domain\n", len);
++			rc = -ENOMEM;
++			kfree(vol->username);
++			vol->username = NULL;
++			kfree(vol->password);
++			vol->password = NULL;
++			goto out_key_put;
++		}
++	}
++
+ out_key_put:
+ 	up_read(&key->sem);
+ 	key_put(key);
+-- 
+2.20.1
 
-> Can we just ensure there is never a matching controller then? This
-> patch will accomplish that and simpler than wrapping the instance in a
-> refcount'ed object:
-> 
-> http://lists.infradead.org/pipermail/linux-nvme/2019-May/024142.html
-
-I don't really like that idea. It reduces the confusion caused by
-mismatching numbers, but causes the controller to never match the
-namespace, which is also confusing but in a different way.
-
-I like the nvme_instance idea. It's not going to be perfect but it has
-some nice properties: the subsystem will try to match the controller's
-instance whenever possible, but in cases where it doesn't, the instance
-number of the subsystem will never be the same as an existing controller.
-
-I'll see if I can work up a quick patch set and see what people think.
-
-Logan
