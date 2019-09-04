@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65745C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2BDC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E2D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850442053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613888;
-	bh=d5uaYS9gM3soHszTjTVFuR9hBYYxU5cMWBxXdZnzURQ=;
+	s=default; t=1567613891;
+	bh=mwSawzqvGepzHhzYcW+mOuWO/xbS9HzV7XVFuIbeqYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uxpP7hbbf1SC05eHx9kCA6sfG/RAeLFNlthsN1HnCjsA4/p+5W2HGgkOtvTFWJQCJ
-	 Q4fcllXPk4ypuUFqqDpxgs8CCLdzhLOPcx90aln/hdfQy91O9Ydut4dZpFaIrdYjxt
-	 PAUhjv8H9l+K6sTgMQt1j37oN+8edthMFwnbERh8=
+	b=IJGhmvSp5E/VGPmBNpxnfGuLgSdO9ofnZH+BpOTmL9NM97h81Bs2nB5EIRPQ+1pPy
+	 86QVzJ5gboHZyLna9mroG2PZT91r8Al/d9p3GpjnopVZb/hirzuXe1Is4jrFfWxf2B
+	 Gjt/RcL7tVMgKvakvWMKsvFYBDVbY/8UYK6AFCQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732159AbfIDP6z (ORCPT
+        id S1733293AbfIDQSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731540AbfIDP6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:52 -0400
+        id S1732147AbfIDP6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 599FE22CF7;
-        Wed,  4 Sep 2019 15:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AB1A22CF7;
+        Wed,  4 Sep 2019 15:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612731;
-        bh=d5uaYS9gM3soHszTjTVFuR9hBYYxU5cMWBxXdZnzURQ=;
+        s=default; t=1567612733;
+        bh=mwSawzqvGepzHhzYcW+mOuWO/xbS9HzV7XVFuIbeqYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tC0E/pTygzPdnM5KTooOdg/7kVVAJpxavFZWzrMgrBV3NrsSKUBHXKSSTU7WHX3Bu
-         UAWFdiKDoijDBByIFsVGG8eGxMRltqZpva5mN18FmacGbbI4DU4deE74ERy5wYklX3
-         22y500/YVV3sYF9hiPyVtQcMmxMbLD8IgWpWaZCo=
+        b=q+oLNgIiPDygsj5VYVysVCrjMZPhzAQLrGeqrS9FEKeYdKwmb87Ax0muAmhLwyHC+
+         /OGq+kCmfJjs+08/ZpMsEiLv0aRd5Koqp5C/q4K6k90RKi86JiqHqxPi9VJrnsVtS6
+         owAVrhMQ6g8vP5t1Qfc2qIy4Oo144cWBLEQPqOYI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 47/94] pNFS/flexfiles: Don't time out requests on hard mounts
-Date:   Wed,  4 Sep 2019 11:56:52 -0400
-Message-Id: <20190904155739.2816-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 49/94] NFS: Fix writepage(s) error handling to not report errors twice
+Date:   Wed,  4 Sep 2019 11:56:54 -0400
+Message-Id: <20190904155739.2816-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -60,65 +60,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 7af46292dadcf8870946916f79fdddf79bd7267f ]
+[ Upstream commit 96c4145599b30c0eb6cbeaa24207802452dd1872 ]
 
-If the mount is hard, we should ignore the 'io_maxretrans' module
-parameter so that we always keep retrying.
+If writepage()/writepages() saw an error, but handled it without
+reporting it, we should not be re-reporting that error on exit.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/nfs/write.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index bcff3bf5ae09e..e7d365ccc258b 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -8,6 +8,7 @@
-  */
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index f15dda5efb741..0d6d7beb85053 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -621,12 +621,12 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
+ 	WARN_ON_ONCE(test_bit(PG_CLEAN, &req->wb_flags));
  
- #include <linux/nfs_fs.h>
-+#include <linux/nfs_mount.h>
- #include <linux/nfs_page.h>
- #include <linux/module.h>
- #include <linux/sched/mm.h>
-@@ -928,7 +929,9 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 	pgm = &pgio->pg_mirrors[0];
- 	pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
+ 	/* If there is a fatal error that covers this write, just exit */
+-	ret = 0;
+ 	mapping = page_file_mapping(page);
+-	if (test_bit(AS_ENOSPC, &mapping->flags) ||
+-	    test_bit(AS_EIO, &mapping->flags))
++	ret = pgio->pg_error;
++	if (nfs_error_is_fatal_on_server(ret))
+ 		goto out_launder;
  
--	pgio->pg_maxretrans = io_maxretrans;
-+	if (NFS_SERVER(pgio->pg_inode)->flags &
-+			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
-+		pgio->pg_maxretrans = io_maxretrans;
- 	return;
- out_nolseg:
- 	if (pgio->pg_error < 0)
-@@ -936,6 +939,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- out_mds:
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
-+	pgio->pg_maxretrans = 0;
- 	nfs_pageio_reset_read_mds(pgio);
- }
- 
-@@ -996,12 +1000,15 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 		pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].wsize;
++	ret = 0;
+ 	if (!nfs_pageio_add_request(pgio, req)) {
+ 		ret = pgio->pg_error;
+ 		/*
+@@ -638,6 +638,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
+ 		} else
+ 			ret = -EAGAIN;
+ 		nfs_redirty_request(req);
++		pgio->pg_error = 0;
+ 	} else
+ 		nfs_add_stats(page_file_mapping(page)->host,
+ 				NFSIOS_WRITEPAGES, 1);
+@@ -657,7 +658,7 @@ static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
+ 	ret = nfs_page_async_flush(pgio, page);
+ 	if (ret == -EAGAIN) {
+ 		redirty_page_for_writepage(wbc, page);
+-		ret = 0;
++		ret = AOP_WRITEPAGE_ACTIVATE;
  	}
+ 	return ret;
+ }
+@@ -676,10 +677,11 @@ static int nfs_writepage_locked(struct page *page,
+ 	nfs_pageio_init_write(&pgio, inode, 0,
+ 				false, &nfs_async_write_completion_ops);
+ 	err = nfs_do_writepage(page, wbc, &pgio);
++	pgio.pg_error = 0;
+ 	nfs_pageio_complete(&pgio);
+ 	if (err < 0)
+ 		return err;
+-	if (pgio.pg_error < 0)
++	if (nfs_error_is_fatal(pgio.pg_error))
+ 		return pgio.pg_error;
+ 	return 0;
+ }
+@@ -689,7 +691,8 @@ int nfs_writepage(struct page *page, struct writeback_control *wbc)
+ 	int ret;
  
--	pgio->pg_maxretrans = io_maxretrans;
-+	if (NFS_SERVER(pgio->pg_inode)->flags &
-+			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
-+		pgio->pg_maxretrans = io_maxretrans;
- 	return;
- 
- out_mds:
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
-+	pgio->pg_maxretrans = 0;
- 	nfs_pageio_reset_write_mds(pgio);
+ 	ret = nfs_writepage_locked(page, wbc);
+-	unlock_page(page);
++	if (ret != AOP_WRITEPAGE_ACTIVATE)
++		unlock_page(page);
+ 	return ret;
  }
  
+@@ -698,7 +701,8 @@ static int nfs_writepages_callback(struct page *page, struct writeback_control *
+ 	int ret;
+ 
+ 	ret = nfs_do_writepage(page, wbc, data);
+-	unlock_page(page);
++	if (ret != AOP_WRITEPAGE_ACTIVATE)
++		unlock_page(page);
+ 	return ret;
+ }
+ 
+@@ -725,6 +729,7 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 				&nfs_async_write_completion_ops);
+ 	pgio.pg_io_completion = ioc;
+ 	err = write_cache_pages(mapping, wbc, nfs_writepages_callback, &pgio);
++	pgio.pg_error = 0;
+ 	nfs_pageio_complete(&pgio);
+ 	nfs_io_completion_put(ioc);
+ 
+@@ -733,7 +738,7 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 	if (err < 0)
+ 		goto out_err;
+ 	err = pgio.pg_error;
+-	if (err < 0)
++	if (nfs_error_is_fatal(err))
+ 		goto out_err;
+ 	return 0;
+ out_err:
 -- 
 2.20.1
 
