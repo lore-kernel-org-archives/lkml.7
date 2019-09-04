@@ -2,152 +2,113 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2874EC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24F2C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AEB20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621219;
-	bh=yOuuWbnzDzrVFrx19MYF+nHUQbpLTEStOdeaKYBpv9I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VBBgk3dgEq+vZnDPgMRUKC6wIcEW+SYCcW66OW1AJkGLSdTQUw9OOHzT2P6CSo7wY
-	 ba6T+vXqs5Tm/a2csq3ODvt7PGDEoqS7rIGXLtB8c+atbe5d8j0D00GZoUXb1XBsMR
-	 6JuKop0lzzGg31DLwv6fC8coOW/b8/8sPQkD7EuE=
+	by mail.kernel.org (Postfix) with ESMTP id 9DF232087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dFPK7v0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389761AbfIDSIR (ORCPT
+        id S2389966AbfIDSUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:08:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51042 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:20:24 -0400
+Received: from mout.gmx.net ([212.227.15.15]:44349 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389738AbfIDSIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98DF522CF7;
-        Wed,  4 Sep 2019 18:08:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620494;
-        bh=yOuuWbnzDzrVFrx19MYF+nHUQbpLTEStOdeaKYBpv9I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h02Ij7fSvwrQ7rKE+Yqv71L2AbErKJHKYR84atldlzwYo5DP3Mqev2vfVC7tzzyne
-         Mplcj/UX9vmxVNsS74+9tdByPGC7NV9QUp1WDcnImhPM47pMghVNPJwZLbB43LJHvD
-         9TTe2NSEfQdk3OGW4FsfqsBW+Gt1y7nzQ1JOBxd8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Francois Rigault <rigault.francois@gmail.com>,
-        Jorgen Hansen <jhansen@vmware.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Vishnu DASA <vdasa@vmware.com>, Nadav Amit <namit@vmware.com>
-Subject: [PATCH 4.19 78/93] VMCI: Release resource if the work is already queued
-Date:   Wed,  4 Sep 2019 19:54:20 +0200
-Message-Id: <20190904175309.832604859@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
-References: <20190904175302.845828956@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S2388701AbfIDSIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1567620473;
+        bh=uSFdeY18J73GEbur7/f5eGY33e2+gZfGIbg70oqM+2E=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=dFPK7v0eikK//IWvKaPDuTF8vPd9O/aKmO1DDSUY2K3IC2bxnVQ5PIk2EJhGM27kR
+         +lY+G9BNhgaiYDLaUrJX9F/2f1aIQsTNuq3ya5rD0AT7g8CjigqFQwromeihBXHSXC
+         O/uuMoGto9MJPLXCEM44QVkN4nCV3sTM8MJWrjW4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([84.118.159.3]) by mail.gmx.com
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MhlGk-1ij1B310yG-00dqYX; Wed, 04 Sep 2019 20:07:53 +0200
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        =?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
+Date:   Wed,  4 Sep 2019 20:07:36 +0200
+Message-Id: <20190904180736.29009-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:abXNHvOQi/p7CEIzoPWMQ9XFYpp4Z25ZscYRNbtDcb67ZH0vqAE
+ CCaWYLtBMzVUoZZj3DLLIFWRozpR+tYvr63KEw05ujxgzzI7iN0g+dgjei45TpxWlugdsiF
+ hLqcNFs7qc6B5xKFTZBxgoGdWkp6vsuL+qhmsf9GozxhZ5IUyUHXZk7+SsU37eCbQpoyn4O
+ c/fcxp1MYFQRPvj2y1OVw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JozR6u9JImk=:9BlOOIijgEVJQxytK0x9tx
+ ffPR1NDnISmrIyzczzP11cywtaAFP9aCT0RxToSFNkToJSnm4aAHE/S7sSOhgAIyxz/MiIr75
+ KcPkdb6fnx23AA/KWNlaSRurYgMgazJ/6IuexrQBTdxaFm90ZlBzRLL3K8ywN/CV7JZtvH6z7
+ aFhqnENeGY04kiL4Zvg4gvZ4OW0XCYjI/FqU9AbtXKdBObedSvwR72zNEd05U37t9+x8zKk6j
+ LTJizGn7PHI8EuNOQLdKg0IXFjG8dPDYe8z7wgn2qlKGBjBeAawjfNp3Epb6kUw9213ZNGLMo
+ fh1gBhdrooRdaj1tEiGAhterenwoPCIM9X+VRYi8DAQbb70yGSicPAYEljE/k+/rJofxOuT+q
+ CxwkoHsuZ4mqi5+NhnaTJl4e36SNg28WzHRxDYOvL2igXBERcU6bsBTitDCccbufyP+5dPxOQ
+ uPyjZfdAVfzt20K85FboUwnZkpWJ8PAiIrQaJZXInThEl1hlhcQZBHzYzyhU5Hr0vT7U4bguC
+ Jk1d4iShpWENsqgl5/YyR1EpmrUUZyiBRo01uDGlt9hLy/RC6f3F7rSjihjY1zPvYJb9r26zl
+ sjKm0HwdyniWypblwzX1tidPLcBPHVc7xLlAQB9Amxfrap8J5aIaJV9ncupkKh9lDp1SMA7bi
+ bbFb7ydvnEj9BvWA7m7P9G3rJBACZN+IByS9r2paS2gmJORze++SF7xMJ4CapGqMPhm0Uh0+m
+ NWRh4c0s58AB0LRR0FnqR0vIkZjw58tSrhrZpQ+i3HGvS9U73dI9u74NpBU/UtPNAl1M2oC33
+ lU0fo9l6DRWSvRYhpvM+2DLbV2udzosMeRZaicEkLQuVPBWNFtqfE6GjW4KVEbg3EftIIKjKR
+ 0gT3EfIIZdht5LApSOvcoT70CR06LPLNQ0o3DEzr2ake3RZ2x6ItWyyJD2cf+MIMsBa7xKluS
+ cRnSMqgtb9PkRlVbNFar+V/OJ3yKgF04Ay4K/3PiP3AygXGBXLaN2SaDOnbm+6BsN8XXZNLGJ
+ wEJbpsOVJ8RM0sLV8X2HpOgJy77cP3gLkngJ3OQ0+ziAetElq+4QoVGQHvzzIc37WuWuUj672
+ HV4zT7/BsxTmuoCUoNd2qwOf/vWbcWNHRuTTY+ujEDs0+SybO+LhCZ8r+WlBFZgejj7NXq+RE
+ cgxieGDxbNjHstwJ68ra7rk37gfXEY/CDV3xk1cGtH89pLOT4mYhLPJ/CAin64ctNsznLUIXM
+ 81exZsNAov/vsxqph
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nadav Amit <namit@vmware.com>
+If an application tries to access memory that is not mapped, an error
+ENOSYS, "load/store instruction decoding not implemented" may occur.
+QEMU will hang with a register dump.
 
-commit ba03a9bbd17b149c373c0ea44017f35fc2cd0f28 upstream.
+Instead create a data abort that can be handled gracefully by the
+application running in the virtual environment.
 
-Francois reported that VMware balloon gets stuck after a balloon reset,
-when the VMCI doorbell is removed. A similar error can occur when the
-balloon driver is removed with the following splat:
+Now the virtual machine can react to the event in the most appropriate
+way - by recovering, by writing an informative log, or by rebooting.
 
-[ 1088.622000] INFO: task modprobe:3565 blocked for more than 120 seconds.
-[ 1088.622035]       Tainted: G        W         5.2.0 #4
-[ 1088.622087] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-[ 1088.622205] modprobe        D    0  3565   1450 0x00000000
-[ 1088.622210] Call Trace:
-[ 1088.622246]  __schedule+0x2a8/0x690
-[ 1088.622248]  schedule+0x2d/0x90
-[ 1088.622250]  schedule_timeout+0x1d3/0x2f0
-[ 1088.622252]  wait_for_completion+0xba/0x140
-[ 1088.622320]  ? wake_up_q+0x80/0x80
-[ 1088.622370]  vmci_resource_remove+0xb9/0xc0 [vmw_vmci]
-[ 1088.622373]  vmci_doorbell_destroy+0x9e/0xd0 [vmw_vmci]
-[ 1088.622379]  vmballoon_vmci_cleanup+0x6e/0xf0 [vmw_balloon]
-[ 1088.622381]  vmballoon_exit+0x18/0xcc8 [vmw_balloon]
-[ 1088.622394]  __x64_sys_delete_module+0x146/0x280
-[ 1088.622408]  do_syscall_64+0x5a/0x130
-[ 1088.622410]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 1088.622415] RIP: 0033:0x7f54f62791b7
-[ 1088.622421] Code: Bad RIP value.
-[ 1088.622421] RSP: 002b:00007fff2a949008 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
-[ 1088.622426] RAX: ffffffffffffffda RBX: 000055dff8b55d00 RCX: 00007f54f62791b7
-[ 1088.622426] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055dff8b55d68
-[ 1088.622427] RBP: 000055dff8b55d00 R08: 00007fff2a947fb1 R09: 0000000000000000
-[ 1088.622427] R10: 00007f54f62f5cc0 R11: 0000000000000206 R12: 000055dff8b55d68
-[ 1088.622428] R13: 0000000000000001 R14: 000055dff8b55d68 R15: 00007fff2a94a3f0
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ virt/kvm/arm/mmio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The cause for the bug is that when the "delayed" doorbell is invoked, it
-takes a reference on the doorbell entry and schedules work that is
-supposed to run the appropriate code and drop the doorbell entry
-reference. The code ignores the fact that if the work is already queued,
-it will not be scheduled to run one more time. As a result one of the
-references would not be dropped. When the code waits for the reference
-to get to zero, during balloon reset or module removal, it gets stuck.
-
-Fix it. Drop the reference if schedule_work() indicates that the work is
-already queued.
-
-Note that this bug got more apparent (or apparent at all) due to
-commit ce664331b248 ("vmw_balloon: VMCI_DOORBELL_SET does not check status").
-
-Fixes: 83e2ec765be03 ("VMCI: doorbell implementation.")
-Reported-by: Francois Rigault <rigault.francois@gmail.com>
-Cc: Jorgen Hansen <jhansen@vmware.com>
-Cc: Adit Ranadive <aditr@vmware.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Vishnu DASA <vdasa@vmware.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Nadav Amit <namit@vmware.com>
-Reviewed-by: Vishnu Dasa <vdasa@vmware.com>
-Link: https://lore.kernel.org/r/20190820202638.49003-1-namit@vmware.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/misc/vmw_vmci/vmci_doorbell.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
---- a/drivers/misc/vmw_vmci/vmci_doorbell.c
-+++ b/drivers/misc/vmw_vmci/vmci_doorbell.c
-@@ -318,7 +318,8 @@ int vmci_dbell_host_context_notify(u32 s
- 
- 	entry = container_of(resource, struct dbell_entry, resource);
- 	if (entry->run_delayed) {
--		schedule_work(&entry->work);
-+		if (!schedule_work(&entry->work))
-+			vmci_resource_put(resource);
+diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
+index a8a6a0c883f1..0cbed7d6a0f4 100644
+=2D-- a/virt/kvm/arm/mmio.c
++++ b/virt/kvm/arm/mmio.c
+@@ -161,8 +161,8 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run=
+ *run,
+ 		if (ret)
+ 			return ret;
  	} else {
- 		entry->notify_cb(entry->client_data);
- 		vmci_resource_put(resource);
-@@ -366,7 +367,8 @@ static void dbell_fire_entries(u32 notif
- 		    atomic_read(&dbell->active) == 1) {
- 			if (dbell->run_delayed) {
- 				vmci_resource_get(&dbell->resource);
--				schedule_work(&dbell->work);
-+				if (!schedule_work(&dbell->work))
-+					vmci_resource_put(&dbell->resource);
- 			} else {
- 				dbell->notify_cb(dbell->client_data);
- 			}
+-		kvm_err("load/store instruction decoding not implemented\n");
+-		return -ENOSYS;
++		kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
++		return 1;
+ 	}
 
+ 	rt =3D vcpu->arch.mmio_decode.rt;
+=2D-
+2.23.0.rc1
 
