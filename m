@@ -2,147 +2,96 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DB8C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8061C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91D122CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567615964;
-	bh=9Zah+m6g12D31+MzrxQoEJQmTT36fHIV8yCjlTJUYRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mFtd5bSpQ9lLXP87qdCux9aFV5UqbdzDpwoJC3YSKZ99BYRg2U9+7O2UPB/4kqZQm
-	 M+EYLQDgv1CJWJE/xX4DceLhpM0g0zN/43jFvRb1wKmit2ik7tigLHhvRv2xT1Lj1M
-	 FTXztUh1qFvuwzNWtIXZjPe2fdB4N0kPaDKh8mTU=
+	by mail.kernel.org (Postfix) with ESMTP id C6E8D206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:52:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732389AbfIDQwn (ORCPT
+        id S1732449AbfIDQwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:52:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:52:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:58866 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731599AbfIDQwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:52:43 -0400
-Received: from localhost (unknown [122.182.201.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 716E5208E4;
-        Wed,  4 Sep 2019 16:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567615962;
-        bh=9Zah+m6g12D31+MzrxQoEJQmTT36fHIV8yCjlTJUYRo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tJaMPrEvqYdcFCsj9zN3yGuNDA1WKW9qulsgPM92qSQ7297jZ3IMkP2oHx2bW1KYu
-         yz/UOTF6a68RmkfsyScEyejzz/A2k08WwRRT0PncYqsp1R/wFyw1cTruHXyo6YiW8/
-         uPby00yqAgComZOg2HG/QCkkXaPC9Qtc2p0yaqio=
-Date:   Wed, 4 Sep 2019 22:21:29 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Fred Oh <fred.oh@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [alsa-devel] [RFC PATCH 3/5] ASoC: SOF: Intel: hda: add
- SoundWire IP support
-Message-ID: <20190904165129.GB2672@vkoul-mobl>
-References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
- <20190821201720.17768-4-pierre-louis.bossart@linux.intel.com>
- <20190904072131.GK2672@vkoul-mobl>
- <1897e21f-b086-8233-e96e-6024e75a2153@linux.intel.com>
+        id S1731599AbfIDQwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:52:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D0A7337;
+        Wed,  4 Sep 2019 09:52:54 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 370E33F67D;
+        Wed,  4 Sep 2019 09:52:53 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 17:52:47 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Message-ID: <20190904165246.GA25356@bogus>
+References: <20190904121606.17474-1-lee.jones@linaro.org>
+ <20190904141257.GB6144@bogus>
+ <20190904161247.GP26880@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1897e21f-b086-8233-e96e-6024e75a2153@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190904161247.GP26880@dell>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-09-19, 08:25, Pierre-Louis Bossart wrote:
-> On 9/4/19 2:21 AM, Vinod Koul wrote:
-> > On 21-08-19, 15:17, Pierre-Louis Bossart wrote:
-> > > The Core0 needs to be powered before the SoundWire IP is initialized.
-> > > 
-> > > Call sdw_intel_init/exit and store the context. We only have one
-> > > context, but depending on the hardware capabilities and BIOS settings
-> > > may enable multiple SoundWire links.
-> > > 
-> > > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> > > ---
-> > >   sound/soc/sof/intel/hda.c | 40 +++++++++++++++++++++++++++++++++------
-> > >   sound/soc/sof/intel/hda.h |  5 +++++
-> > >   2 files changed, 39 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
-> > > index a968890d0754..e754058e3679 100644
-> > > --- a/sound/soc/sof/intel/hda.c
-> > > +++ b/sound/soc/sof/intel/hda.c
-> > > @@ -57,6 +57,8 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
-> > >   {
-> > >   	acpi_handle handle;
-> > >   	struct sdw_intel_res res;
-> > > +	struct sof_intel_hda_dev *hdev;
-> > > +	void *sdw;
-> > >   	handle = ACPI_HANDLE(sdev->dev);
-> > > @@ -66,23 +68,32 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
-> > >   	res.irq = sdev->ipc_irq;
-> > >   	res.parent = sdev->dev;
-> > > -	hda_sdw_int_enable(sdev, true);
-> > > -
-> > > -	sdev->sdw = sdw_intel_init(handle, &res);
-> > > -	if (!sdev->sdw) {
-> > > +	sdw = sdw_intel_init(handle, &res);
-> > 
-> > should this be called for platforms without sdw, I was hoping that some
-> > checks would be performed.. For example how would skl deal with this?
-> 
-> Good point. For now we rely on CONFIG_SOUNDWIRE_INTEL to use a fallback, but
-> if the kernel defines this config and we run on an older platform the only
-> safety would be the hardware capabilities and BIOS dependencies, I need to
-> test if it works.
+On Wed, Sep 04, 2019 at 05:12:47PM +0100, Lee Jones wrote:
+> On Wed, 04 Sep 2019, Sudeep Holla wrote:
+>
+> > On Wed, Sep 04, 2019 at 01:16:06PM +0100, Lee Jones wrote:
+> > > From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > >
+> > > The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
+> > > to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
+> > >
+> > > Supported by this patch is: keyboard, battery monitoring, UFS storage,
+> > > USB host and Bluetooth.
+> > >
+> >
+> > Just curious to know if the idea of booting using ACPI is completely
+> > dropped as it's extremely difficult(because the firmware is so hacked
+> > up and may violate spec, just my opinion) for whatever reasons.
+>
+> Once [0] is applied, we can boot Mainline using ACPI.
+>
 
-Yes I am not sure given the experience with BIOS relying on that is a
-great idea ! But if that works, that would be better.
+Good to know.
 
+> > We just made ACPI table version checking more lenient for this platform
+> > and would be good to know if we continue to run ACPI on that or will
+> > abandon and just use DT.
+>
+> Which patch are you referring to?  If you mean the ACPI v5.0 vs v5.1
+> patch authored by Ard, then yes I know, I instigated it's existence
+> due to these devices.
+>
 
-> > > diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
-> > > index c8f93317aeb4..48e09b7daf0a 100644
-> > > --- a/sound/soc/sof/intel/hda.h
-> > > +++ b/sound/soc/sof/intel/hda.h
-> > > @@ -399,6 +399,11 @@ struct sof_intel_hda_dev {
-> > >   	/* DMIC device */
-> > >   	struct platform_device *dmic_dev;
-> > > +
-> > > +#if IS_ENABLED(CONFIG_SOUNDWIRE_INTEL)
-> > 
-> > is this really required, context is a void pointer
+Yes exactly that one.
 
-??
+> DT will *always* be more enabled than ACPI, so it's advised that you
+> use DT for anything useful.  ACPI booting is ideal for things like
+> installing distros however, since they do not tend to provide DTBs in
+> their installers.
+>
 
-> > > +	/* sdw context */
-> > > +	void *sdw;
-> > 
-> > > +#endif
+OK, as along as it gets tested/used in some form, that's fine. I do agree
+that DT will be more useful on that platform as it was derived from mobile
+based SoC SDM845 rather than solely designed for Laptops and with more
+alignment with ACPI spec. The way whole power/clock management is done
+with ACPI on this pulls me towards DT ;)
 
--- 
-~Vinod
+--
+Regards,
+Sudeep
