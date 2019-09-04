@@ -2,99 +2,71 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C06DC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B052BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CF722CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9whrDCQ"
+	by mail.kernel.org (Postfix) with ESMTP id 83DF922CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfIDDIm (ORCPT
+        id S1728045AbfIDDMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 23:08:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34110 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfIDDIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 23:08:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n9so10394692pgc.1;
-        Tue, 03 Sep 2019 20:08:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=dfA6U+IJyyy9kC1t5JV8/mlZA71sQY4hs9JHXN0VII8=;
-        b=W9whrDCQTi29K2svnEOO7Jm/Lv0CwQfhVCFntQRReI554NV2ECeg9cqzqpzL9/Nhbi
-         Iv0RcqfQ2lWyHzLQ1CQULUOMva0gc2k7G3Ur52T0WVNSBRjlQqaMvnUWi3APN3y1TqvB
-         uWRQEIBdDTX7NZBOHQXu5IKlsbInvKveKB1F20SeGFsxOGslUzaxv1m40RqwBPwz6z77
-         V7v5fqyWJRiFFnaU1A8EM0KEDI3gqgvzDFGEtcpQZi0BR4agMSz/tF7f3HkUg9hu1LFS
-         eojHLfH8lzmIm8gj9YNoP8x4tRrgZ8z6zSZPFGRLJu9QlEhBcrld4eUxvQtnMz3HWTS9
-         Z63Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=dfA6U+IJyyy9kC1t5JV8/mlZA71sQY4hs9JHXN0VII8=;
-        b=chrpaCnH/ewt8Pq/CK5pC7dnCFNp2NdmIjzqOd1eBqzBW8q7VCOx99errxQDuY5C6Z
-         AjuogZmTsb+of3++CCc6+CDZtLNyprT4t/7gLbqUde89IySM7az5TBFqTFl+H0YzLwX5
-         2bE3N7kjuvHDkl9JME4HA6dBkYT0Prm+ZhE6PClUosD0tspn9CoA9RG7AkXJRAgP4lS7
-         F3nWCBg+iNgAMrcQfXgxcpgJjDpqfraPdDBU4cu4eyTiTe1g2D9hXLqmSxsQm17vC9Po
-         3NH7NdlNfl2DsvuO9IdxzOwKsIoXKjgE017GC1DwBFJs/mec7p8VrgTXzQ7dOoXe8Hrk
-         Fm+Q==
-X-Gm-Message-State: APjAAAUEM8RVsDhJarEBjurJvg0pIE3oAt2r+cKZ5SzeaOyoaKjXYvyt
-        2mBjUsjNJbJ7g3eXoQFrh02j/fEsreZXkQ==
-X-Google-Smtp-Source: APXvYqyN3ZttcnW79XW08fIqU8Zbo+MeMpKouUCVa9iane7nR/SvDbr7IE7cE9B+HX3JNUfNaq/O6g==
-X-Received: by 2002:a17:90a:650c:: with SMTP id i12mr2673118pjj.11.1567566520959;
-        Tue, 03 Sep 2019 20:08:40 -0700 (PDT)
-Received: from ?IPv6:2601:641:c100:83a0:559:28ce:4564:4221? ([2601:641:c100:83a0:559:28ce:4564:4221])
-        by smtp.gmail.com with ESMTPSA id g20sm8741631pfh.184.2019.09.03.20.08.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Sep 2019 20:08:39 -0700 (PDT)
-Subject: Re: [PATCH 2/3] kbuild, arc: add
- CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3 for ARC
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>
-References: <20190820170941.26193-1-yamada.masahiro@socionext.com>
- <20190820170941.26193-2-yamada.masahiro@socionext.com>
- <ed251c63-10e0-bd8a-1a9b-be9ade5cad3f@gmail.com>
- <CAK7LNARd1KFq=GRYQUr16KaiiRzh4ARX5eOpcRcUrZSVgHdhJA@mail.gmail.com>
-From:   Vineet Gupta <vineetg76@gmail.com>
-Message-ID: <c9ff7cad-d3bb-1367-e7c1-0d22fd542903@gmail.com>
-Date:   Tue, 3 Sep 2019 20:08:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 23:12:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5750 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727709AbfIDDMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 23:12:21 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9368273DDC4D110DB424;
+        Wed,  4 Sep 2019 11:12:18 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Sep 2019 11:12:12 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <davem@davemloft.net>, <arvid.brodin@alten.se>
+CC:     <zhongjiang@huawei.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] net: hsr: remove an redundant null check before kfree_skb
+Date:   Wed, 4 Sep 2019 11:09:18 +0800
+Message-ID: <1567566558-7764-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARd1KFq=GRYQUr16KaiiRzh4ARX5eOpcRcUrZSVgHdhJA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/19 8:08 AM, Masahiro Yamada wrote:
->> So if you could please split out the Wmaybe-uninitialized change
-> I could not understand your request.
->
-> I added 'imply CC_DISABLE_WARN_MAYBE_UNINITIALIZED'
-> for CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3.
->
-> I cannot split it out. Otherwise, you will see false-positive
-> maybe-uninitialized warnings.
+kfree_skb has taken the null pointer into account. Hence just remove
+the null check before kfree_skb.
 
-Sorry I must have overlooked this part. So no issues now !
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+---
+ net/hsr/hsr_forward.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Thx,
--Vineet
+diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+index ddd9605..0c9e5b0 100644
+--- a/net/hsr/hsr_forward.c
++++ b/net/hsr/hsr_forward.c
+@@ -367,10 +367,8 @@ void hsr_forward_skb(struct sk_buff *skb, struct hsr_port *port)
+ 		port->dev->stats.tx_bytes += skb->len;
+ 	}
+ 
+-	if (frame.skb_hsr)
+-		kfree_skb(frame.skb_hsr);
+-	if (frame.skb_std)
+-		kfree_skb(frame.skb_std);
++	kfree_skb(frame.skb_hsr);
++	kfree_skb(frame.skb_std);
+ 	return;
+ 
+ out_drop:
+-- 
+1.7.12.4
+
