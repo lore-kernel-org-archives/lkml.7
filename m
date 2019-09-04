@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128E3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584A2C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD7822DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2331722CF8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uA7W+0Qu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KlNICeLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbfIDCfr (ORCPT
+        id S1728358AbfIDCf5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 22:35:47 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35250 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbfIDCfo (ORCPT
+        Tue, 3 Sep 2019 22:35:57 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42210 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728203AbfIDCfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 22:35:44 -0400
-Received: by mail-pl1-f193.google.com with SMTP id gn20so8847652plb.2;
-        Tue, 03 Sep 2019 19:35:43 -0700 (PDT)
+        Tue, 3 Sep 2019 22:35:48 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y1so8822828plp.9;
+        Tue, 03 Sep 2019 19:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BhpxphdWBSz1L2B9ZesztRoMGvUE4getK82ZLPQsGtU=;
-        b=uA7W+0QuGo4CfSUGJFtcIxVBeJHAXQr7NMTxwWhTSHPmEft7Y50uESN5XZhyYSvskD
-         oLnz4yfwXPto9dDkaWqTVvzzJUy3Kmmw3se8i7TQvlkspqQMwoWaFXCVmf29+AEV8xg/
-         7jQip18Y1VLk4UJ6QKxt1zcNzeCTkJ0acHsZzy2Sdlk6/RYB759lxDFLga4VVeRfJ0pr
-         CQ+ARLxflLHfqZ0/nCXGxuG2cv31mKP7PCAU4q6tJEazGiWpapEklyNL4WYWqPxNx/kw
-         /puwtHk/f+Dv4VCACQ84nCZ/avvUws7kWue0JTFoC9PKONA25/8abUOnG7gpJnp3JVa6
-         JYYA==
+        bh=8qVYauEaF289x3cMhI4s/1Faayix+NfSLUGn8z2s1l8=;
+        b=KlNICeLzni8606fHeBg3p2Gs7jsz8W0wYZD1eNpKr8RBpEsnEK6/Vl97FcoRSEuixK
+         JOhlFlN7UKvbN/xLzPQYke6bGEvG788Raxy0rUnH5evklIc6LeWgbX0N0+oMVBXE+fpj
+         VbVPcBKlCaWo7xdZE5L+SmPCrDBbn0U5yAa2twIsEcAXRgsK/bpD54U4vnBIs0nSMtp0
+         hPBNidHIMqeF2sG4rcKjAnxFpAoDjivJZnDfYN7g71tYc6nuW67W9a0+Lx9dW+TykGLm
+         ytdI/PPaUBKWb9+xvDkNMvjDeate6YydpvgqlB997iKrl8Nye0rQkrAfj+/qiCNfypeq
+         sd8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BhpxphdWBSz1L2B9ZesztRoMGvUE4getK82ZLPQsGtU=;
-        b=OvrqDSUcdcLz9yen0WoVAHFVpZubaktRSqfDychewGORT4GkPmf+i5RwIjJHoF6ShD
-         9YBcJQCUQ8YdkEvqQXI3nmpJwuXkSVrgFD+R1u3CLbUzpzmk/XYGndBKbRNMOVQNPwzk
-         OHMjAHuGQYm7Iz1BKnqPs5c5Zau3MWdvT3S/Roz+IMnR1wn4uQyogrgi55ADonQ/0V/s
-         I/Y9wh/77B3RaWx7qeTRa5qj5mbWy6tZFuHOqZMfpq6GrDqctAtnE+fH9YCI/F0ZUvi8
-         0EqAsWQlZ629QOOXbCevfcmFCBsvWHHGywpcGFTGogpKf2Y5fKgnLIAz2kSWaF2XJ5xp
-         hTDg==
-X-Gm-Message-State: APjAAAUHZxRwcrmPe/6VR+FQGfUogAZlT8WcpEo6c2IAqnhrDa/JkGV3
-        ZBTU93CMSI1d1vLnw05MnKMM6XoYck8=
-X-Google-Smtp-Source: APXvYqw6FnMQh0U7BoqICAUQEf+gIXACPri+NLjJWx1LxnWK07lqcBLU657h8PWLnw8GSL5FgkQMPg==
-X-Received: by 2002:a17:902:758a:: with SMTP id j10mr31127712pll.233.1567564543249;
-        Tue, 03 Sep 2019 19:35:43 -0700 (PDT)
+        bh=8qVYauEaF289x3cMhI4s/1Faayix+NfSLUGn8z2s1l8=;
+        b=rgFPqiyDIui5ZuMhEvDVAmkVrx0Dn2mDqL0E6dqrLQk2HywIYPeZ9+mni4i6HBb2GP
+         Mjki1wMp8JsP2WESEj+1UFwRqCHxLARvHuzKygprWAzl9w33j+aXyCeTtgPKYKWKMqAg
+         Ovvprv+P1I+2w0uIKZX3JjHUOt7W3LGEgJaBRmINr2HoUi4FCSitrIdXJXJyXBCVy+Rx
+         U5yJTJl+24Up97/VMsw6+egMMbPJLOPUTl7iNEdhUyRBrTO6PEAg2soBF0lXXy8j/wbG
+         RMcwZErQW+vMOfhS7rb8fO0BhtbsaqvCzQz0ycEXcGYbl2ujTOn4q+M4h3HdWlaJqaCg
+         CUGQ==
+X-Gm-Message-State: APjAAAX2WVmW5jKLP4pug9/GAy04TcorOQ0fPO0cwxdRrvtItwUiYM39
+        nS1DnLtw8rtE2MtSbK/jfH22s43XBz0=
+X-Google-Smtp-Source: APXvYqwnAGnhH5o46xWifKgP2jXR/QyoQk1BhIrYvTTHKZS9rgDcSS9ehbi5TqfWaCTe+QkEBvIwjw==
+X-Received: by 2002:a17:902:7886:: with SMTP id q6mr39191212pll.78.1567564546864;
+        Tue, 03 Sep 2019 19:35:46 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id i74sm7480250pfe.28.2019.09.03.19.35.41
+        by smtp.gmail.com with ESMTPSA id i74sm7480250pfe.28.2019.09.03.19.35.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 19:35:42 -0700 (PDT)
+        Tue, 03 Sep 2019 19:35:46 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -66,9 +66,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Iuliana Prodan <iuliana.prodan@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 09/12] crypto: caam - user devres to populate platform devices
-Date:   Tue,  3 Sep 2019 19:35:12 -0700
-Message-Id: <20190904023515.7107-10-andrew.smirnov@gmail.com>
+Subject: [PATCH 12/12] crypto: caam - change JR device ownership scheme
+Date:   Tue,  3 Sep 2019 19:35:15 -0700
+Message-Id: <20190904023515.7107-13-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190904023515.7107-1-andrew.smirnov@gmail.com>
 References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
@@ -80,8 +80,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devres to de-initialize the RNG and drop explicit de-initialization
-code in caam_remove().
+Returning -EBUSY from platform device's .remove() callback won't stop
+the removal process, so the code in caam_jr_remove() is not going to
+have the desired effect of preventing JR from being removed.
+
+In order to be able to deal with removal of the JR device, change the
+code as follows:
+
+  1. To make sure that underlying struct device remains valid for as
+     long as we have a reference to it, add appropriate device
+     refcount management to caam_jr_alloc() and caam_jr_free()
+
+  2. To make sure that device removal doesn't happen in parallel to
+      use using the device in caam_jr_enqueue() augment the latter to
+      acquire/release device lock for the duration of the subroutine
+
+  3. In order to handle the case when caam_jr_enqueue() is executed
+     right after corresponding caam_jr_remove(), add code to check
+     that driver data has not been set to NULL.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -92,81 +108,105 @@ Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/caam/ctrl.c | 26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+ drivers/crypto/caam/jr.c | 36 +++++++++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index 37cd04f8ddb1..4a84c2701311 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -322,20 +322,6 @@ static int instantiate_rng(struct device *ctrldev, int state_handle_mask,
- 	return ret;
+diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+index 47b389cb1c62..8a30bbd7f2aa 100644
+--- a/drivers/crypto/caam/jr.c
++++ b/drivers/crypto/caam/jr.c
+@@ -124,14 +124,6 @@ static int caam_jr_remove(struct platform_device *pdev)
+ 	jrdev = &pdev->dev;
+ 	jrpriv = dev_get_drvdata(jrdev);
+ 
+-	/*
+-	 * Return EBUSY if job ring already allocated.
+-	 */
+-	if (atomic_read(&jrpriv->tfm_count)) {
+-		dev_err(jrdev, "Device is busy\n");
+-		return -EBUSY;
+-	}
+-
+ 	/* Unregister JR-based RNG & crypto algorithms */
+ 	unregister_algs();
+ 
+@@ -300,7 +292,7 @@ struct device *caam_jr_alloc(void)
+ 
+ 	if (min_jrpriv) {
+ 		atomic_inc(&min_jrpriv->tfm_count);
+-		dev = min_jrpriv->dev;
++		dev = get_device(min_jrpriv->dev);
+ 	}
+ 	spin_unlock(&driver_data.jr_alloc_lock);
+ 
+@@ -318,13 +310,16 @@ void caam_jr_free(struct device *rdev)
+ 	struct caam_drv_private_jr *jrpriv = dev_get_drvdata(rdev);
+ 
+ 	atomic_dec(&jrpriv->tfm_count);
++	put_device(rdev);
  }
+ EXPORT_SYMBOL(caam_jr_free);
  
--static int caam_remove(struct platform_device *pdev)
--{
--	struct device *ctrldev;
--	struct caam_drv_private *ctrlpriv;
--
--	ctrldev = &pdev->dev;
--	ctrlpriv = dev_get_drvdata(ctrldev);
--
--	/* Remove platform devices under the crypto node */
--	of_platform_depopulate(ctrldev);
--
--	return 0;
--}
--
- /*
-  * kick_trng - sets the various parameters for enabling the initialization
-  *	       of the RNG4 block in CAAM
-@@ -762,7 +748,7 @@ static int caam_probe(struct platform_device *pdev)
- #endif
+ /**
+  * caam_jr_enqueue() - Enqueue a job descriptor head. Returns 0 if OK,
+  * -EBUSY if the queue is full, -EIO if it cannot map the caller's
+- * descriptor.
++ * descriptor, -ENODEV if given device was removed and is no longer
++ * valid
++ *
+  * @dev:  device of the job ring to be used. This device should have
+  *        been assigned prior by caam_jr_register().
+  * @desc: points to a job descriptor that execute our request. All
+@@ -354,15 +349,32 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
+ 				u32 status, void *areq),
+ 		    void *areq)
+ {
+-	struct caam_drv_private_jr *jrp = dev_get_drvdata(dev);
++	struct caam_drv_private_jr *jrp;
+ 	struct caam_jrentry_info *head_entry;
+ 	int head, tail, desc_size;
+ 	dma_addr_t desc_dma;
+ 
++	/*
++	 * Lock the device to prevent it from being removed while we
++	 * are using it
++	 */
++	device_lock(dev);
++
++	/*
++	 * If driver data is NULL, it is very likely that this device
++	 * was removed already. Nothing we can do here but bail out.
++	 */
++	jrp = dev_get_drvdata(dev);
++	if (!jrp) {
++		device_unlock(dev);
++		return -ENODEV;
++	}
++
+ 	desc_size = (caam32_to_cpu(*desc) & HDR_JD_LENGTH_MASK) * sizeof(u32);
+ 	desc_dma = dma_map_single(dev, desc, desc_size, DMA_TO_DEVICE);
+ 	if (dma_mapping_error(dev, desc_dma)) {
+ 		dev_err(dev, "caam_jr_enqueue(): can't map jobdesc\n");
++		device_unlock(dev);
+ 		return -EIO;
  	}
  
--	ret = of_platform_populate(nprop, caam_match, NULL, dev);
-+	ret = devm_of_platform_populate(dev);
- 	if (ret) {
- 		dev_err(dev, "JR platform devices creation error\n");
- 		return ret;
-@@ -784,8 +770,7 @@ static int caam_probe(struct platform_device *pdev)
- 	/* If no QI and no rings specified, quit and go home */
- 	if ((!ctrlpriv->qi_present) && (!ctrlpriv->total_jobrs)) {
- 		dev_err(dev, "no queues configured, terminating\n");
--		ret = -ENOMEM;
--		goto caam_remove;
-+		return -ENOMEM;
+@@ -375,6 +387,7 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
+ 	    CIRC_SPACE(head, tail, JOBR_DEPTH) <= 0) {
+ 		spin_unlock_bh(&jrp->inplock);
+ 		dma_unmap_single(dev, desc_dma, desc_size, DMA_TO_DEVICE);
++		device_unlock(dev);
+ 		return -EBUSY;
  	}
  
- 	if (ctrlpriv->era < 10)
-@@ -848,7 +833,7 @@ static int caam_probe(struct platform_device *pdev)
- 		} while ((ret == -EAGAIN) && (ent_delay < RTSDCTL_ENT_DLY_MAX));
- 		if (ret) {
- 			dev_err(dev, "failed to instantiate RNG");
--			goto caam_remove;
-+			return ret;
- 		}
- 		/*
- 		 * Set handles init'ed by this module as the complement of the
-@@ -922,10 +907,6 @@ static int caam_probe(struct platform_device *pdev)
- 			    &ctrlpriv->ctl_tdsk_wrap);
- #endif
+@@ -411,6 +424,7 @@ int caam_jr_enqueue(struct device *dev, u32 *desc,
+ 		jrp->inpring_avail = rd_reg32(&jrp->rregs->inpring_avail);
+ 
+ 	spin_unlock_bh(&jrp->inplock);
++	device_unlock(dev);
+ 
  	return 0;
--
--caam_remove:
--	caam_remove(pdev);
--	return ret;
  }
- 
- static struct platform_driver caam_driver = {
-@@ -934,7 +915,6 @@ static struct platform_driver caam_driver = {
- 		.of_match_table = caam_match,
- 	},
- 	.probe       = caam_probe,
--	.remove      = caam_remove,
- };
- 
- module_platform_driver(caam_driver);
 -- 
 2.21.0
 
