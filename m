@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D30CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AA0C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0755A23401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D026320820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613012;
-	bh=/rmc9NLfm/pz4W0O5meL4AxVK3L8eJHMTEIcV7QNcSA=;
+	s=default; t=1567613013;
+	bh=yx3NuZ2IIf9E6pMH2Ag2YDTHyO0z815AA/8i5DWjOXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QHpax7+jRnvdn6EnC18FKVglgIAdjSjDjqn6z5zuhySDMOYOEPAnLAnxNm9qR8de/
-	 0s8Crzy4jZGFvFFbndEAv3QqKUVQx94L8C9x/aWD6I/DoMWVPG0Z7AH9VgvpdjzTjP
-	 ZsPJnW4IhTqj1HDfA/NfF7osfYCoNJAifx9SIp20=
+	b=U2rsdwM3n8GSgjiyGFhzZEIXJ9u+9P8+yal2HbfHnGLTKV5vCgYgfgTJr9zvSUmA3
+	 bR2Wuj7UFv5vF5OwPE5gCpr89VTYm/Iwee5VjtM3lS5Rw/bKsh2pSf7RKJptjQRWpW
+	 evUH17tOgQK/z/aS3fzEMS/8Dx92qkxRkXTmQMnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387700AbfIDQDb (ORCPT
+        id S2387711AbfIDQDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39960 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732982AbfIDQD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:26 -0400
+        id S2387697AbfIDQDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4AD62070C;
-        Wed,  4 Sep 2019 16:03:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4B6A20820;
+        Wed,  4 Sep 2019 16:03:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567613005;
-        bh=/rmc9NLfm/pz4W0O5meL4AxVK3L8eJHMTEIcV7QNcSA=;
+        s=default; t=1567613010;
+        bh=yx3NuZ2IIf9E6pMH2Ag2YDTHyO0z815AA/8i5DWjOXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PsUsSnKOcVxiXacPdHYUr/YDlQv1XJpEJb8CwbhI97UWVAvpcfq8ay+PFKhG8RF1B
-         TM65B+30+v1ByOkkXrJ+7fVhrFgwGENckhHB9C6nA+SO7GtEtCU/GEN67V3zZlpZyB
-         2v2+pqYsNBWG6OBfaBcFzARMCJ3Fq5Q9Qk42Wae8=
+        b=RDHlubuiuVIPJvdtlJCq/nrSJFd3KyALruqE8VkefMZcfq425byXhhFeuONWhki7P
+         Cso84jZTuv5cVBQwoTZzNf3oaw46DXGKmnAEiCISoq/u+vSwLuRkgXCXnxAqO5e8F6
+         7UVcnNdI4yPikwJeG4tlDCi2Ntlag0Uch6fCMmqQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 14/20] cifs: Use kzfree() to zero out the password
-Date:   Wed,  4 Sep 2019 12:02:57 -0400
-Message-Id: <20190904160303.5062-14-sashal@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 18/20] net: stmmac: dwmac-rk: Don't fail if phy regulator is absent
+Date:   Wed,  4 Sep 2019 12:03:01 -0400
+Message-Id: <20190904160303.5062-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
 References: <20190904160303.5062-1-sashal@kernel.org>
@@ -59,33 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit 478228e57f81f6cb60798d54fc02a74ea7dd267e ]
+[ Upstream commit 3b25528e1e355c803e73aa326ce657b5606cda73 ]
 
-It's safer to zero out the password so that it can never be disclosed.
+The devicetree binding lists the phy phy as optional. As such, the
+driver should not bail out if it can't find a regulator. Instead it
+should just skip the remaining regulator related code and continue
+on normally.
 
-Fixes: 0c219f5799c7 ("cifs: set domainName when a domain-key is used in multiuser")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Skip the remainder of phy_power_on() if a regulator supply isn't
+available. This also gets rid of the bogus return code.
+
+Fixes: 2e12f536635f ("net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 90e0c51ac0450..63108343124af 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2586,7 +2586,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 			rc = -ENOMEM;
- 			kfree(vol->username);
- 			vol->username = NULL;
--			kfree(vol->password);
-+			kzfree(vol->password);
- 			vol->password = NULL;
- 			goto out_key_put;
- 		}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index 398b08e07149b..68a58333bd740 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -429,10 +429,8 @@ static int phy_power_on(struct rk_priv_data *bsp_priv, bool enable)
+ 	int ret;
+ 	struct device *dev = &bsp_priv->pdev->dev;
+ 
+-	if (!ldo) {
+-		dev_err(dev, "no regulator found\n");
+-		return -1;
+-	}
++	if (!ldo)
++		return 0;
+ 
+ 	if (enable) {
+ 		ret = regulator_enable(ldo);
 -- 
 2.20.1
 
