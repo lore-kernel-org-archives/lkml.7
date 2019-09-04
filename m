@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45DAC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A158FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A332070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E67D2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613270;
-	bh=ig1QAX5ew4WFIw7Z0NgMyjHLCTDINWuxaWZVyI6TGbQ=;
+	s=default; t=1567613277;
+	bh=p2hz8CsxOtKjMFjWYf+OeJ8x6dbXGx3AXbvfK4f5nHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vsJK8Dpo8oOdd7HyIs4uF4pn7MA/dz7WV6yy4QPUTUnShUDiiKqwaYoic/ohRaLYg
-	 nDS3/FEIlHgfv26Jqzrr0a32bcZaLkAYYcZOCafiiehSBA/28o7vcpctRiZO3YJ7lN
-	 ue0qlmY0cFVaMT+j8s1BGbu+gEH5Bfh9QzTlAK8g=
+	b=QDjpDUGvJb9dPEsfCSSUoeeFHiI4C9kKW/hjRLdt2te8vHegAdn/nbnzoyFet0JvK
+	 b6z/uSImPdIo5VLmycfxc7ZNiWo8TQp+v21i4AnxqMoXyBt5EnMDiKe5RSelca61Fy
+	 VEelBpwoL9RF14hy8WQ0yG6CwWPP3GF7zDaEaX80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733165AbfIDQHt (ORCPT
+        id S1733082AbfIDQBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37470 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:01:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729563AbfIDQBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:01:52 -0400
+        id S1733061AbfIDQBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBD4922CF5;
-        Wed,  4 Sep 2019 16:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08BCA22CF5;
+        Wed,  4 Sep 2019 16:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612911;
-        bh=ig1QAX5ew4WFIw7Z0NgMyjHLCTDINWuxaWZVyI6TGbQ=;
+        s=default; t=1567612897;
+        bh=p2hz8CsxOtKjMFjWYf+OeJ8x6dbXGx3AXbvfK4f5nHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pgwzlk352wYr5D1U4t8ZDstYnGRCMwldAYpnDYPmFNehcwh52a6ycE3Cz0ba5FMgv
-         fCe2zEL3GFx7L1gVlHlvIBXMEreiNzljMtcXbeC9I5nIoVrYC8GI0Uopf508XvBDVj
-         H7Gv9I3xvtFXckLz3IlqkH1BSeyHBboIxtlopkzw=
+        b=ipdcNy3wV6k8HClyBA1zXDaDGP/pHCJejuk/Gpro87XQZ4weTwWQfk1zrex2M4XOA
+         c2ewjJ+MGC+LwEvNShf61CHiKC/XPkJ3WvNRDnp3lm5uzRz6+87Zi8OY8owESCjW03
+         wP7X5UqIVpV34qxSDUuamVA2IVxxcwgYaVLFkVJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, alan@linux.intel.com,
-        bp@alien8.de, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar@intel.com, rppt@linux.ibm.com, tony.luck@intel.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 18/36] x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
-Date:   Wed,  4 Sep 2019 12:01:04 -0400
-Message-Id: <20190904160122.4179-18-sashal@kernel.org>
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/36] qed: Add cleanup in qed_slowpath_start()
+Date:   Wed,  4 Sep 2019 12:00:59 -0400
+Message-Id: <20190904160122.4179-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -65,69 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit 3e5bedc2c258341702ddffbd7688c5e6eb01eafa ]
+[ Upstream commit de0e4fd2f07ce3bbdb69dfb8d9426b7227451b69 ]
 
-Rahul Tanwar reported the following bug on DT systems:
+If qed_mcp_send_drv_version() fails, no cleanup is executed, leading to
+memory leaks. To fix this issue, introduce the label 'err4' to perform the
+cleanup work before returning the error.
 
-> 'ioapic_dynirq_base' contains the virtual IRQ base number. Presently, it is
-> updated to the end of hardware IRQ numbers but this is done only when IOAPIC
-> configuration type is IOAPIC_DOMAIN_LEGACY or IOAPIC_DOMAIN_STRICT. There is
-> a third type IOAPIC_DOMAIN_DYNAMIC which applies when IOAPIC configuration
-> comes from devicetree.
->
-> See dtb_add_ioapic() in arch/x86/kernel/devicetree.c
->
-> In case of IOAPIC_DOMAIN_DYNAMIC (DT/OF based system), 'ioapic_dynirq_base'
-> remains to zero initialized value. This means that for OF based systems,
-> virtual IRQ base will get set to zero.
-
-Such systems will very likely not even boot.
-
-For DT enabled machines ioapic_dynirq_base is irrelevant and not
-updated, so simply map the IRQ base 1:1 instead.
-
-Reported-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Tested-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: alan@linux.intel.com
-Cc: bp@alien8.de
-Cc: cheol.yong.kim@intel.com
-Cc: qi-ming.wu@intel.com
-Cc: rahul.tanwar@intel.com
-Cc: rppt@linux.ibm.com
-Cc: tony.luck@intel.com
-Link: http://lkml.kernel.org/r/20190821081330.1187-1-rahul.tanwar@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/io_apic.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index 96a8a68f9c793..566b7bc5deaa0 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2342,7 +2342,13 @@ unsigned int arch_dynirq_lower_bound(unsigned int from)
- 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
- 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
- 	 */
--	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
-+	if (!ioapic_initialized)
-+		return gsi_top;
-+	/*
-+	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
-+	 * updated. So simply return @from if ioapic_dynirq_base == 0.
-+	 */
-+	return ioapic_dynirq_base ? : from;
- }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index ecc2d42965260..557332f1f886c 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -1081,7 +1081,7 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 					      &drv_version);
+ 		if (rc) {
+ 			DP_NOTICE(cdev, "Failed sending drv version command\n");
+-			return rc;
++			goto err4;
+ 		}
+ 	}
  
- #ifdef CONFIG_X86_32
+@@ -1089,6 +1089,8 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 
+ 	return 0;
+ 
++err4:
++	qed_ll2_dealloc_if(cdev);
+ err3:
+ 	qed_hw_stop(cdev);
+ err2:
 -- 
 2.20.1
 
