@@ -2,125 +2,166 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610F6C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4D2C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31857208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA85622CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EPNAMO1W"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r4bC4okD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730378AbfIDUm4 (ORCPT
+        id S1730473AbfIDUnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:42:56 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37452 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfIDUmz (ORCPT
+        Wed, 4 Sep 2019 16:43:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43202 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729806AbfIDUnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:42:55 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84KTD4g119045;
-        Wed, 4 Sep 2019 20:42:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=YfUnnnukundqVWrsSoidbyt5s7i0paUP66hvP8DLVF4=;
- b=EPNAMO1WMRlBc0rAzIdbStwfyIM4z36/PQ1vUYL/sYPIEGqh2Cp7jiM7ZyH0KM5y8AYn
- f5fCflVucD9hfItpBzwRK934lg/CYfFgDDylXT7Dmbsa6GgIt4kXFNWMh2DdSvALMJRa
- 96eETO25c08U37qoM8zoYCI8ZV0Qmaq74rpdFEMIMWdWKWr3UsNegYFk8XVseJdehmBh
- 92e78MASI/2JTIyrJLYun+Fl6VJ1F6cTzgo1gPP+IK4UK/cyGD2y52/RfJ4p/gpT1gdZ
- n80wbht6mrFl/4r1QZghCuNLDloUiOcCAon/q64AnMioZoILAFFL4p4HvaIAT+U8l40L xg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2utm8sr30n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 20:42:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84KXCRu047799;
-        Wed, 4 Sep 2019 20:42:47 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2usu529ue5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 20:42:47 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x84Kgkjd005697;
-        Wed, 4 Sep 2019 20:42:46 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Sep 2019 13:42:45 -0700
-Date:   Wed, 4 Sep 2019 16:42:41 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Florian Schmidt <florian.schmidt@nutanix.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH 0/2] trace-vmscan-postprocess: fix parsing and output
-Message-ID: <20190904204241.y6c335djr3bwm6xo@ca-dmjordan1.us.oracle.com>
-References: <20190903111342.17731-1-florian.schmidt@nutanix.com>
+        Wed, 4 Sep 2019 16:43:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id u72so54752pgb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:43:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/wsxDOtmnb9U/NekdAlLR4oeHJRU38Z5gPTM6QnO4F4=;
+        b=r4bC4okD7CNuq9BuMebOgwrGDybFlvfFhLFBIwlpf42JHRLdahnasXWiz4T5LA99LU
+         2szH87RezwOyOLL9EKUyVa4cjjqAl3XmySbxKqHUVyRPiF3VPP8pbC2fnxjPwEpjPo3z
+         mAP1Bb7s4IzTsQWgfoTAoq0LYVSYizde92oVBaCmSzJ/uMC5MhTyNcm36CPMUESC8SQh
+         CzxQP/cXwFySn9hLysmCRG0wT+4dXwIXoMn6W+H7H0LSiR1YdbUd9xG+wNjXxxzzkJNu
+         2m9P0Mfc6Hxbf08Gg13Ikkma+OvDXYSEQGdrXHpyG26aWe0JoK/8eZGHmzMpZPSKgDQU
+         vy1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/wsxDOtmnb9U/NekdAlLR4oeHJRU38Z5gPTM6QnO4F4=;
+        b=pUM6ln+qmuIyI0kj2t43/OnRjMuhV0vhIoDjZQnvhmNMz5GO9AfJa6Fguqul4lIdpx
+         +PbZss1qB504FR0jLi7r9YToCIl6qzbdrsK4YQA/2GUd/YZ30t2bDPlM6wojFqbtBdNs
+         RJ4OBSi3JCZj7vKM99AbbaOFSHYXkxG7iUS2dlIrUGENt+nL9afG0rCHnxV5unvhMPQb
+         NaFRkA/xswqkqjq7uu3X+gOvEdO9/Q9nyv6mTmUiqQnv7YQwyyEvS4WhMANjew6Zs0Ot
+         rB433R8pC6NR/ofFWDo3nUKIPP6u4YmJP7afk8RIbsVZZ8d3gwFtTtAhO7CllSX+1Dmf
+         gt9A==
+X-Gm-Message-State: APjAAAUBHcZ2Dgj0FLaTWaPCAA3/ZVrdagC1hDLkMjPnUjYN8V2B1okh
+        FmQ5pw8BquJ+bydf1YJeh6MlGg==
+X-Google-Smtp-Source: APXvYqz1x8IyyymHXIXgIk+a+BK4sSercU90VrV9KeSyLBl4ibAmtDI9sBm/qrTJHr7/y8s0AMFyaA==
+X-Received: by 2002:a17:90a:fc89:: with SMTP id ci9mr168674pjb.48.1567629785147;
+        Wed, 04 Sep 2019 13:43:05 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b3sm29860352pfp.65.2019.09.04.13.43.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 13:43:04 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 13:43:02 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, agross@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Message-ID: <20190904204302.GD580@tuxbook-pro>
+References: <20190904113917.15223-1-lee.jones@linaro.org>
+ <20190904115234.GV2672@vkoul-mobl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903111342.17731-1-florian.schmidt@nutanix.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909040204
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909040204
+In-Reply-To: <20190904115234.GV2672@vkoul-mobl>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 11:14:07AM +0000, Florian Schmidt wrote:
-> This patch series updates trace-vmscan-postprocess.pl to work without
-> throwing warnings and errors which stem from updates to several trace
-> points.
+On Wed 04 Sep 04:52 PDT 2019, Vinod Koul wrote:
 
-Cc Yafang, who made (most of?) these updates.
+> On 04-09-19, 12:39, Lee Jones wrote:
+> > --- a/arch/arm64/boot/dts/qcom/Makefile
+> > +++ b/arch/arm64/boot/dts/qcom/Makefile
+> > @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+> > +dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+> 
+> Can we keep this sorted, so before mtp.
+> 
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> > new file mode 100644
+> > index 000000000000..ad160c718b33
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> > @@ -0,0 +1,454 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> Are we going to make this dual? or BSD..
+> 
 
-> 3481c37ffa1d ("mm/vmscan: drop may_writepage and classzone_idx from
-> direct reclaim begin template") removed "may_writepage" from
-> mm_vmscan_direct_reclaim_begin, and 3b775998eca7
-> ("include/trace/events/vmscan.h: drop zone id from kswapd tracepoints")
-> removed "zid" from mm_vmscan_wakeup_kswapd. The output of
-> mm_vmscan_lru_isolate and mm_vmscan_lru_shrink_active seems to never
-> have matched the format of the trace point output since they were
-> created, or at least for as long as I can tell. Patch 1 aligns the
-> format parsing of the perl script with the current output of the trace
-> points.
+Sounds good, Rob wants dual license so lets flag it as such.
 
-Thanks, patch 1 fixes the script for me for all tracepoints you touched.
+> > +&apps_rsc {
+> > +	pm8998-rpmh-regulators {
+> > +		compatible = "qcom,pm8998-rpmh-regulators";
+> > +		qcom,pmic-id = "a";
+> > +
+> > +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
+> > +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+> > +
+> > +		vreg_s2a_1p125: smps2 {
+> > +		};
+> > +
+> > +		vreg_s3a_1p35: smps3 {
+> > +			regulator-min-microvolt = <1352000>;
+> > +			regulator-max-microvolt = <1352000>;
+> > +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> > +		};
+> > +
+> > +		vreg_s4a_1p8: smps4 {
+> > +			regulator-min-microvolt = <1800000>;
+> > +			regulator-max-microvolt = <1800000>;
+> > +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> > +		};
+> > +
+> > +		vreg_s5a_2p04: smps5 {
+> > +			regulator-min-microvolt = <2040000>;
+> > +			regulator-max-microvolt = <2040000>;
+> > +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> > +		};
+> > +
+> > +		vreg_s7a_1p025: smps7 {
+> 
+> Any reason why we dont specify the mode and min/max voltage for this
+> and few others below..?
+> 
 
-> In addition, the tables that are printed by the script were not properly
-> aligned any more, so patch 2 fixes the spacing.
+Iirc these values are not known from the tables provided by the
+firmware. Label names are just "borrowed" from the MTP, so we can't
+derive anything from there either.
 
-Nit, not for Pages Scanned.  With your series I get
+I intended to review and clean this up before it was posted...
 
-Kswapd          Kswapd      Order      Pages     Pages    Pages    Pages
-Instance       Wakeups  Re-wakeup    Scanned    Rclmed  Sync-IO ASync-IO
-kswapd0-175          1          0    253694     253691        3   129896               wake-0=1
+Regards,
+Bjorn
 
-> A side remark: parsing the trace output for mm_vmscan_lru_shrink_active
-> has been in the script ever since it was created in 2010, but at no
-> point the parsed output was ever used for anything. I updated the
-> parsing code now, but I wonder if we could just get rid of that part...
-
-I wonder if we shouldn't just get rid of the whole script, it's hard to
-remember to keep in sync with vmscan changes and I can't think of a way to
-remedy that short of having mm regression tests that run this.  But your
-patches are an improvement for now.
+> > +&i2c1 {
+> > +	status = "okay";
+> > +	clock-frequency = <400000>;
+> > +	qcom,geni-se-fifo;
+> > +
+> > +	battery@70 {
+> > +		compatible = "some,battery";
+> 
+> some,battery ..?
+> 
+> > +&qup_i2c12_default {
+> 
+> Please move the qup nodes up so that nodes are sorted alphabetically
+> 
+> -- 
+> ~Vinod
