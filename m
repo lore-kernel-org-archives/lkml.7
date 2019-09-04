@@ -2,130 +2,161 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610B9C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2048CC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EDD22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567607325;
-	bh=L76A2ZvdZ49vwh9gPyzYANOjIS9WVsZyi57kx5mf8cQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=c7bknzQ5Yq1a5AolvcnG31ichyzYa3sraKbAXsQbcNvVTJx6zIdqX2qGSt/Hbrpd/
-	 agTHb+7cpfk9Ia5ciLvnThnKJQ1lkUdV/LtCO77pRa2ML895rtGUf+fnW3IxlfkFM9
-	 2fAKxntCLFzl524Fjwg2gVmyLQRpxMTy91McUAFU=
+	by mail.kernel.org (Postfix) with ESMTP id 035522077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730846AbfIDO2o (ORCPT
+        id S1730879AbfIDOdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:28:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfIDO2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:28:44 -0400
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C1F2341D;
-        Wed,  4 Sep 2019 14:28:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567607322;
-        bh=L76A2ZvdZ49vwh9gPyzYANOjIS9WVsZyi57kx5mf8cQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=szOhtdy3pm0hmLpuZGMow2vaeDvOjEj/9NcUKl3Ye865Ae8MB/Tl+Sip/dXvPxb9B
-         72hiCdJ/0l/oVbxrbyiOYabDzUdSAJFpf80udg8QExAsVR84ISBvUwLj6bCfquTzob
-         rRp/OA3BeXbrfH/12rQnn4/Hm5WjoM800DRgrq64=
-Received: by mail-lf1-f49.google.com with SMTP id r134so15222441lff.12;
-        Wed, 04 Sep 2019 07:28:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAXKsHSWA8QBIvUCi2NhiaW9xiys6xDkf8a0nO3ITrHh+iN4Xd9T
-        jvAfLq8FBPhlkyKV666hx0eZp2YqKOel4DQWN5Y=
-X-Google-Smtp-Source: APXvYqycXOQpNE+apc0JPS11KQSp+RmtxHn6Ng9LQDVcy4lQi5wxS8ZrsQ1N6swmH4iFFIYS5iVQwDmEz/WmDjOTj6U=
-X-Received: by 2002:a19:c649:: with SMTP id w70mr24808672lff.33.1567607320399;
- Wed, 04 Sep 2019 07:28:40 -0700 (PDT)
+        Wed, 4 Sep 2019 10:33:55 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6209 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727083AbfIDOdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:33:55 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 88FECCA4B544D53707B2;
+        Wed,  4 Sep 2019 22:33:53 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 22:33:52 +0800
+Subject: Re: PCI: Add stub pci_irq_vector and others
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-pci@vger.kernel.org>
+References: <20190902141910.1080-1-yuehaibing@huawei.com>
+ <20190903014518.20880-1-yuehaibing@huawei.com>
+ <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
+ <20190904122600.GA28660@gondor.apana.org.au>
+CC:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <d5178f1e-0436-9d57-12c9-563e9bac82e2@huawei.com>
+Date:   Wed, 4 Sep 2019 22:33:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <20190904135918.25352-1-yuehaibing@huawei.com> <20190904135918.25352-26-yuehaibing@huawei.com>
-In-Reply-To: <20190904135918.25352-26-yuehaibing@huawei.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 4 Sep 2019 16:28:29 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPdq4as1Oe3U+9znkvP0RA=sxUoiWVBCSbzf_wq_um2t=w@mail.gmail.com>
-Message-ID: <CAJKOXPdq4as1Oe3U+9znkvP0RA=sxUoiWVBCSbzf_wq_um2t=w@mail.gmail.com>
-Subject: Re: [PATCH -next 25/36] spi: s3c24xx: use devm_platform_ioremap_resource()
- to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     broonie@kernel.org, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, eric@anholt.net, wahrenst@gmx.net,
-        shc_work@mail.ru, agross@kernel.org, khilman@baylibre.com,
-        matthias.bgg@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, avifishman70@gmail.com, tmaimon77@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, kgene@kernel.org,
-        Andi Shyti <andi@etezian.org>, palmer@sifive.com,
-        paul.walmsley@sifive.com, baohua@kernel.org, mripard@kernel.org,
-        wens@csie.org, ldewangan@nvidia.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, yamada.masahiro@socionext.com,
-        michal.simek@xilinx.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-spi@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190904122600.GA28660@gondor.apana.org.au>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 at 16:00, YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
+On 2019/9/4 20:26, Herbert Xu wrote:
+> On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
+>>
+>> This is the reason we have so many empty static inline functions in
+>> header files - it ensures that the symbols are declared even if the
+>> only invocations are from dead code.
+> 
+> Does this patch work?
 
-This tag does not look real... First of all where is the report?
-Second, it was reported by coccinelle.
-Reported-by should be use to give real credits.
+It works, Thanks.
 
-Best regards,
-Krzysztof
+Tested-by: YueHaibing <yuehaibing@huawei.com>
 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/spi/spi-s3c24xx.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
-> index aea8fd9..2d6e37f 100644
-> --- a/drivers/spi/spi-s3c24xx.c
-> +++ b/drivers/spi/spi-s3c24xx.c
-> @@ -487,7 +487,6 @@ static int s3c24xx_spi_probe(struct platform_device *pdev)
->         struct s3c2410_spi_info *pdata;
->         struct s3c24xx_spi *hw;
->         struct spi_master *master;
-> -       struct resource *res;
->         int err = 0;
->
->         master = spi_alloc_master(&pdev->dev, sizeof(struct s3c24xx_spi));
-> @@ -536,8 +535,7 @@ static int s3c24xx_spi_probe(struct platform_device *pdev)
->         dev_dbg(hw->dev, "bitbang at %p\n", &hw->bitbang);
->
->         /* find and map our resources */
-> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       hw->regs = devm_ioremap_resource(&pdev->dev, res);
-> +       hw->regs = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(hw->regs)) {
->                 err = PTR_ERR(hw->regs);
->                 goto err_no_pdata;
-> --
-> 2.7.4
->
->
+> 
+> ---8<---
+> This patch adds stub functions pci_alloc_irq_vectors_affinity and
+> pci_irq_vector when CONFIG_PCI is off so that drivers can use them
+> without resorting to ifdefs.
+> 
+> It also moves the PCI_IRQ_* macros outside of the ifdefs so that
+> they are always available.
+> 
+> Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 9e700d9f9f28..74415ee62211 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -925,6 +925,11 @@ enum {
+>  	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
+>  };
+>  
+> +#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> +#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> +#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> +#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> +
+>  /* These external functions are only available when PCI support is enabled */
+>  #ifdef CONFIG_PCI
+>  
+> @@ -1408,11 +1413,6 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+>  int pci_set_vga_state(struct pci_dev *pdev, bool decode,
+>  		      unsigned int command_bits, u32 flags);
+>  
+> -#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
+> -#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
+> -#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> -#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> -
+>  /*
+>   * Virtual interrupts allow for more interrupts to be allocated
+>   * than the device has interrupts for. These are not programmed
+> @@ -1517,14 +1517,6 @@ static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
+>  }
+>  #endif
+>  
+> -static inline int
+> -pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> -		      unsigned int max_vecs, unsigned int flags)
+> -{
+> -	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> -					      NULL);
+> -}
+> -
+>  /**
+>   * pci_irqd_intx_xlate() - Translate PCI INTx value to an IRQ domain hwirq
+>   * @d: the INTx IRQ domain
+> @@ -1780,8 +1772,29 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
+>  							 struct pci_dev *dev)
+>  { return NULL; }
+>  static inline bool pci_ats_disabled(void) { return true; }
+> +
+> +static inline int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static inline int
+> +pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+> +			       unsigned int max_vecs, unsigned int flags,
+> +			       struct irq_affinity *aff_desc)
+> +{
+> +	return -ENOSPC;
+> +}
+>  #endif /* CONFIG_PCI */
+>  
+> +static inline int
+> +pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+> +		      unsigned int max_vecs, unsigned int flags)
+> +{
+> +	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
+> +					      NULL);
+> +}
+> +
+>  #ifdef CONFIG_PCI_ATS
+>  /* Address Translation Service */
+>  void pci_ats_init(struct pci_dev *dev);
+> 
+
