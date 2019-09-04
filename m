@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03497C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28755C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C793A20820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB96520820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613487;
-	bh=au813PDI6FI9tO98w4fyc/QYGAA9QqrIDbR/WbIjSdY=;
+	s=default; t=1567613493;
+	bh=g+8gN4To4ZyjBJu5S9PnPsLOBXeOcULykk1z9+yLU+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WBebe/jYcKUd29uTthXI6LLn0nNLVJEbXsckSBKB3FNRi2QxnJglWaA4ywDptZLpx
-	 DCxaKOGZbpZxS6iOzBY2VIqKUgbYuYeF5CDV8/WUGs/EqJmvbLitgwaoWl9ktqhGNK
-	 P5feccvSbHDPqOiPNSyWnfbnv9EakV/xNRXOF2J8=
+	b=fkTKRn7Tmo/87fGMPO9tOw1c8GM7Vr6ES3wlPXT7QSwfo6cQ8I0QQZ+JGnFymqTHu
+	 tLnj5eR9kjfIxNjADN9y88wp4GSPweapERxgxP0rPTG0owsvDECBi62jS3pyM4PZKt
+	 G7bzmJiwQDXvPf0qrHrNa9MIYCrCrZxY+1p/L9rE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732736AbfIDQAc (ORCPT
+        id S1732060AbfIDQAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732712AbfIDQAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 12:00:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732697AbfIDQA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA1582339E;
-        Wed,  4 Sep 2019 16:00:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69F7B2087E;
+        Wed,  4 Sep 2019 16:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612829;
-        bh=au813PDI6FI9tO98w4fyc/QYGAA9QqrIDbR/WbIjSdY=;
+        s=default; t=1567612827;
+        bh=g+8gN4To4ZyjBJu5S9PnPsLOBXeOcULykk1z9+yLU+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2IAVE3QjME5GQyNqUs+aRlXYj5lYZvrmfXHDwWTqWwiCJtfBWFH6tYEKuhytiXrUV
-         6r6XvJ7Oy9ZXNCcbBfWFaZxmUefyK4xXJ/FfE/5UGoxiSucyw6nKziaBLvmxrA18TX
-         WgImdtzSu0IPHoIUs+jwIxu6C4ozyAcQLgnOD/CQ=
+        b=zsT4LfP+88Ex4RM/k99J3AGpB7sqmYvLX8GiPsZDWDvZupFRZXKt7d0i0sUJPpp7n
+         y6ifqQ84bxzLeIfR7bWJsWeUG61agnZksrK/KXito2BHSFI/MT0LCV51pzw5Vd5AZq
+         4Q3/6FU88yDLoBIkAa1nx3PTz0wEbH6uk24BFosE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 17/52] netfilter: nft_flow_offload: missing netlink attribute policy
-Date:   Wed,  4 Sep 2019 11:59:29 -0400
-Message-Id: <20190904160004.3671-17-sashal@kernel.org>
+Cc:     Phil Reid <preid@electromag.com.au>,
+        Moritz Fischer <mdf@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fpga@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/52] fpga: altera-ps-spi: Fix getting of optional confd gpio
+Date:   Wed,  4 Sep 2019 11:59:27 -0400
+Message-Id: <20190904160004.3671-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -60,43 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Phil Reid <preid@electromag.com.au>
 
-[ Upstream commit 14c415862c0630e01712a4eeaf6159a2b1b6d2a4 ]
+[ Upstream commit dec43da46f63eb71f519d963ba6832838e4262a3 ]
 
-The netlink attribute policy for NFTA_FLOW_TABLE_NAME is missing.
+Currently the driver does not handle EPROBE_DEFER for the confd gpio.
+Use devm_gpiod_get_optional() instead of devm_gpiod_get() and return
+error codes from altera_ps_probe().
 
-Fixes: a3c90f7a2323 ("netfilter: nf_tables: flow offload expression")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 5692fae0742d ("fpga manager: Add altera-ps-spi driver for Altera FPGAs")
+Signed-off-by: Phil Reid <preid@electromag.com.au>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_flow_offload.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/fpga/altera-ps-spi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
-index 6e0c26025ab13..5a838f12052fb 100644
---- a/net/netfilter/nft_flow_offload.c
-+++ b/net/netfilter/nft_flow_offload.c
-@@ -146,6 +146,11 @@ static int nft_flow_offload_validate(const struct nft_ctx *ctx,
- 	return nft_chain_validate_hooks(ctx->chain, hook_mask);
- }
+diff --git a/drivers/fpga/altera-ps-spi.c b/drivers/fpga/altera-ps-spi.c
+index 24b25c6260366..4925cae7dcdde 100644
+--- a/drivers/fpga/altera-ps-spi.c
++++ b/drivers/fpga/altera-ps-spi.c
+@@ -207,7 +207,7 @@ static int altera_ps_write_complete(struct fpga_manager *mgr,
+ 		return -EIO;
+ 	}
  
-+static const struct nla_policy nft_flow_offload_policy[NFTA_FLOW_MAX + 1] = {
-+	[NFTA_FLOW_TABLE_NAME]	= { .type = NLA_STRING,
-+				    .len = NFT_NAME_MAXLEN - 1 },
-+};
-+
- static int nft_flow_offload_init(const struct nft_ctx *ctx,
- 				 const struct nft_expr *expr,
- 				 const struct nlattr * const tb[])
-@@ -204,6 +209,7 @@ static const struct nft_expr_ops nft_flow_offload_ops = {
- static struct nft_expr_type nft_flow_offload_type __read_mostly = {
- 	.name		= "flow_offload",
- 	.ops		= &nft_flow_offload_ops,
-+	.policy		= nft_flow_offload_policy,
- 	.maxattr	= NFTA_FLOW_MAX,
- 	.owner		= THIS_MODULE,
- };
+-	if (!IS_ERR(conf->confd)) {
++	if (conf->confd) {
+ 		if (!gpiod_get_raw_value_cansleep(conf->confd)) {
+ 			dev_err(&mgr->dev, "CONF_DONE is inactive!\n");
+ 			return -EIO;
+@@ -265,10 +265,13 @@ static int altera_ps_probe(struct spi_device *spi)
+ 		return PTR_ERR(conf->status);
+ 	}
+ 
+-	conf->confd = devm_gpiod_get(&spi->dev, "confd", GPIOD_IN);
++	conf->confd = devm_gpiod_get_optional(&spi->dev, "confd", GPIOD_IN);
+ 	if (IS_ERR(conf->confd)) {
+-		dev_warn(&spi->dev, "Not using confd gpio: %ld\n",
+-			 PTR_ERR(conf->confd));
++		dev_err(&spi->dev, "Failed to get confd gpio: %ld\n",
++			PTR_ERR(conf->confd));
++		return PTR_ERR(conf->confd);
++	} else if (!conf->confd) {
++		dev_warn(&spi->dev, "Not using confd gpio");
+ 	}
+ 
+ 	/* Register manager with unique name */
 -- 
 2.20.1
 
