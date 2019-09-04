@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91663C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9698DC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632E622CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC6822CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620799;
-	bh=mA2DhB+6Rg5ByISkbf4esgGtUUyDXFyVrivqcA2XaVU=;
+	s=default; t=1567620802;
+	bh=Lp65w8bCVFRZzhKlFfy8mS7sxj3+157WDvruDBBU3Y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGf7FUt/uYQruAEIT0Ugtbm8BGlYTA6Ic41nxzc/QB6kPhE4OO2mVdrsEPtNVGoYk
-	 rZML11RX4esSehf/cfmBuzNrcYs24mCXzek6D29hTr6UvPK+tREU/LdBpyZcH/TAem
-	 1zIJ/5ikb9W/TVgVbv70ShZRcTBsUSST4EerPQPs=
+	b=1qrDJtUl+sRzANwszpc9XhDujPETFQI8tE/ykDNg/JNgrpV9DAyJqpxkWjJf513eF
+	 gTVcl9xRJwV4D/NGuUD+1VEu3xXFWJuysFax67x34YeP4cADwvx5kSDHNrhQwdE6Wx
+	 rT02CMOE45rJ4aT0m9xYRaFHsZlm0vjIqzCsNd+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390658AbfIDSNS (ORCPT
+        id S2390670AbfIDSNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389686AbfIDSNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:16 -0400
+        id S2389686AbfIDSNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C9F206BA;
-        Wed,  4 Sep 2019 18:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEBDE23400;
+        Wed,  4 Sep 2019 18:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620795;
-        bh=mA2DhB+6Rg5ByISkbf4esgGtUUyDXFyVrivqcA2XaVU=;
+        s=default; t=1567620798;
+        bh=Lp65w8bCVFRZzhKlFfy8mS7sxj3+157WDvruDBBU3Y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mv0LiCylzZkpc5xm36f3Bc8OpWI/xVTpUNMNjBwRiQ9Cx3+icPbq9Xm31O8yaeN8T
-         3/+8UcMH2GABtYjnhibpEsTO5UZPkWaOd0cm29pH6IwRHSSRm/dfuhXHahvAAircw5
-         qNqmQTspJiT8iYFfsRgb3+tYyICIuYOM0zslZFqQ=
+        b=Yix90NLIOxf4tBNE0SIaHNZGvxJv5QRpnTj7ZgqSobWK/dfphibzS3m/GuB0LF5iS
+         OxHsvfsGTxI7oe1cW6dYCmUtqp1vUynRQidMrp7P30yTRi9yOOxWHJ0UFLj2kIkheE
+         T/mB6Uc0u8iNwKKqss+50oKH42+omfht7jqHOrig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Baolin Wang <baolin.wang@linaro.org>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.2 096/143] mmc: sdhci-sprd: fixed incorrect clock divider
-Date:   Wed,  4 Sep 2019 19:53:59 +0200
-Message-Id: <20190904175317.933325229@linuxfoundation.org>
+Subject: [PATCH 5.2 097/143] mmc: sdhci-sprd: add SDHCI_QUIRK2_PRESET_VALUE_BROKEN
+Date:   Wed,  4 Sep 2019 19:54:00 +0200
+Message-Id: <20190904175317.989209856@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -63,11 +63,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-commit efdaf27517a892238e0dfa046cd91184b039d681 upstream.
+commit 6a526f66ab1494b63c71cd6639d9d96fd7216add upstream.
 
-The register SDHCI_CLOCK_CONTROL should be cleared before config clock
-divider, otherwise the frequency configured maybe lower than we
-expected.
+The bit of PRESET_VAL_ENABLE in HOST_CONTROL2 register is reserved on
+sprd's sd host controller, set quirk2 to disable configuring this.
 
 Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
@@ -79,25 +78,20 @@ Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-sprd.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-sprd.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/drivers/mmc/host/sdhci-sprd.c
 +++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -174,10 +174,11 @@ static inline void _sdhci_sprd_set_clock
- 	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
- 	u32 div, val, mask;
+@@ -321,7 +321,8 @@ static void sdhci_sprd_request(struct mm
+ static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
+ 	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
+ 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
+-		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT,
++		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
++		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+ 	.ops = &sdhci_sprd_ops,
+ };
  
--	div = sdhci_sprd_calc_div(sprd_host->base_rate, clk);
-+	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
- 
--	clk |= ((div & 0x300) >> 2) | ((div & 0xFF) << 8);
--	sdhci_enable_clk(host, clk);
-+	div = sdhci_sprd_calc_div(sprd_host->base_rate, clk);
-+	div = ((div & 0x300) >> 2) | ((div & 0xFF) << 8);
-+	sdhci_enable_clk(host, div);
- 
- 	/* enable auto gate sdhc_enable_auto_gate */
- 	val = sdhci_readl(host, SDHCI_SPRD_REG_32_BUSY_POSI);
 
 
