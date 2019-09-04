@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D224C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156F4C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788FD206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0ECC22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620418;
-	bh=sNp1iCWqqSjNHRiC6wD9vtQxe8Rg2SduOCPRQX4RkrQ=;
+	s=default; t=1567620420;
+	bh=Aonhen+Hf0IKqypzw6q6wfDZU0CswYTHcylXX+4eS8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dez1354fLotMMN3LtyjdTA1gr3D6l8V771sG42DYRBA4I8izCARNxokphKRk7eDL5
-	 xNT2Jx9LBTChISFyvRWhUjo3fzZINRLF/rkgx6FW3s2kAQVha431LYK/X+owuYUSre
-	 NbM84i2pPVgiIhgOqszq28YZZDgiSIsaZvBgrUgM=
+	b=p7wJtz6s41iDC0uYE9oFrd4a08XbyoW7+jfCRKWPNBRQCD/An6umghDGIM/jGWMIl
+	 RY42Wjo/sIKyGRq6hqueINTj3DJO0sdRTq0/Xr3OlVQU1l4+X6SaRKy49Zv9WeXsGY
+	 7SZnEMrHZUmZohl42ETp5MglmuuPpEoMU364TpQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389551AbfIDSG5 (ORCPT
+        id S2388983AbfIDSHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49160 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389530AbfIDSGz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:55 -0400
+        id S2389118AbfIDSG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B47F222CF7;
-        Wed,  4 Sep 2019 18:06:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 673C022CEA;
+        Wed,  4 Sep 2019 18:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620414;
-        bh=sNp1iCWqqSjNHRiC6wD9vtQxe8Rg2SduOCPRQX4RkrQ=;
+        s=default; t=1567620416;
+        bh=Aonhen+Hf0IKqypzw6q6wfDZU0CswYTHcylXX+4eS8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dY8CTduXzT/eWGEYP6qimZIvF5yAvjl4dzCt+E5yVtfd8rSgWA92fwEkiH78eo6YW
-         p44dtz6bv+/Hql1+CQOeJfB/3aS/i2HfpmCJtu1Wbp9zE3zL1S0m6/pvgukUhcCp9p
-         FhsDRmSmYLHWmu/3SEofwEzJfvAHK7+ACvgavEwU=
+        b=Jr9WFpX1qup9H7n+9CZuuVzmc8uhY4+8J6PK2g3ICbo1jVWzXRmAee+PPtQwuqBUd
+         tXVC7veMrBYWRO1JREeHnf8hs6PMmULTjlVx23h0NdUmRqxPfxKDk+LLR1D0LD5QwA
+         4S/Yy9QVWM/MkwzGu6atypy7SuWvUme+VOLFuWN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Jeronimo Borque <jeronimo@borque.com.ar>
-Subject: [PATCH 4.19 42/93] ALSA: hda - Fixes inverted Conexant GPIO mic mute led
-Date:   Wed,  4 Sep 2019 19:53:44 +0200
-Message-Id: <20190904175306.808754513@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 51/93] ftrace: Fix NULL pointer dereference in t_probe_next()
+Date:   Wed,  4 Sep 2019 19:53:53 +0200
+Message-Id: <20190904175307.427412338@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,75 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeronimo Borque <jeronimo@borque.com.ar>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-commit f9ef724d4896763479f3921afd1ee61552fc9836 upstream.
+commit 7bd46644ea0f6021dc396a39a8bfd3a58f6f1f9f upstream.
 
-"enabled" parameter historically referred to the device input or
-output, not to the led indicator. After the changes added with the led
-helper functions the mic mute led logic refers to the led and not to
-the mic input which caused led indicator to be negated.
-Fixing logic in cxt_update_gpio_led and updated
-cxt_fixup_gpio_mute_hook
-Also updated debug messages to ease further debugging if necessary.
+LTP testsuite on powerpc results in the below crash:
 
-Fixes: 184e302b46c9 ("ALSA: hda/conexant - Use the mic-mute LED helper")
-Suggested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Jeronimo Borque <jeronimo@borque.com.ar>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+  Unable to handle kernel paging request for data at address 0x00000000
+  Faulting instruction address: 0xc00000000029d800
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE SMP NR_CPUS=2048 NUMA PowerNV
+  ...
+  CPU: 68 PID: 96584 Comm: cat Kdump: loaded Tainted: G        W
+  NIP:  c00000000029d800 LR: c00000000029dac4 CTR: c0000000001e6ad0
+  REGS: c0002017fae8ba10 TRAP: 0300   Tainted: G        W
+  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 28022422  XER: 20040000
+  CFAR: c00000000029d90c DAR: 0000000000000000 DSISR: 40000000 IRQMASK: 0
+  ...
+  NIP [c00000000029d800] t_probe_next+0x60/0x180
+  LR [c00000000029dac4] t_mod_start+0x1a4/0x1f0
+  Call Trace:
+  [c0002017fae8bc90] [c000000000cdbc40] _cond_resched+0x10/0xb0 (unreliable)
+  [c0002017fae8bce0] [c0000000002a15b0] t_start+0xf0/0x1c0
+  [c0002017fae8bd30] [c0000000004ec2b4] seq_read+0x184/0x640
+  [c0002017fae8bdd0] [c0000000004a57bc] sys_read+0x10c/0x300
+  [c0002017fae8be30] [c00000000000b388] system_call+0x5c/0x70
+
+The test (ftrace_set_ftrace_filter.sh) is part of ftrace stress tests
+and the crash happens when the test does 'cat
+$TRACING_PATH/set_ftrace_filter'.
+
+The address points to the second line below, in t_probe_next(), where
+filter_hash is dereferenced:
+  hash = iter->probe->ops.func_hash->filter_hash;
+  size = 1 << hash->size_bits;
+
+This happens due to a race with register_ftrace_function_probe(). A new
+ftrace_func_probe is created and added into the func_probes list in
+trace_array under ftrace_lock. However, before initializing the filter,
+we drop ftrace_lock, and re-acquire it after acquiring regex_lock. If
+another process is trying to read set_ftrace_filter, it will be able to
+acquire ftrace_lock during this window and it will end up seeing a NULL
+filter_hash.
+
+Fix this by just checking for a NULL filter_hash in t_probe_next(). If
+the filter_hash is NULL, then this probe is just being added and we can
+simply return from here.
+
+Link: http://lkml.kernel.org/r/05e021f757625cbbb006fad41380323dbe4e3b43.1562249521.git.naveen.n.rao@linux.vnet.ibm.com
+
+Cc: stable@vger.kernel.org
+Fixes: 7b60f3d876156 ("ftrace: Dynamically create the probe ftrace_ops for the trace_array")
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_conexant.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ kernel/trace/ftrace.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -624,18 +624,20 @@ static void cxt_fixup_hp_gate_mic_jack(s
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3112,6 +3112,10 @@ t_probe_next(struct seq_file *m, loff_t
+ 		hnd = &iter->probe_entry->hlist;
  
- /* update LED status via GPIO */
- static void cxt_update_gpio_led(struct hda_codec *codec, unsigned int mask,
--				bool enabled)
-+				bool led_on)
- {
- 	struct conexant_spec *spec = codec->spec;
- 	unsigned int oldval = spec->gpio_led;
+ 	hash = iter->probe->ops.func_hash->filter_hash;
++
++	if (!hash)
++		return NULL;
++
+ 	size = 1 << hash->size_bits;
  
- 	if (spec->mute_led_polarity)
--		enabled = !enabled;
-+		led_on = !led_on;
- 
--	if (enabled)
--		spec->gpio_led &= ~mask;
--	else
-+	if (led_on)
- 		spec->gpio_led |= mask;
-+	else
-+		spec->gpio_led &= ~mask;
-+	codec_dbg(codec, "mask:%d enabled:%d gpio_led:%d\n",
-+			mask, led_on, spec->gpio_led);
- 	if (spec->gpio_led != oldval)
- 		snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_GPIO_DATA,
- 				    spec->gpio_led);
-@@ -646,8 +648,8 @@ static void cxt_fixup_gpio_mute_hook(voi
- {
- 	struct hda_codec *codec = private_data;
- 	struct conexant_spec *spec = codec->spec;
--
--	cxt_update_gpio_led(codec, spec->gpio_mute_led_mask, enabled);
-+	/* muted -> LED on */
-+	cxt_update_gpio_led(codec, spec->gpio_mute_led_mask, !enabled);
- }
- 
- /* turn on/off mic-mute LED via GPIO per capture hook */
-@@ -669,7 +671,6 @@ static void cxt_fixup_mute_led_gpio(stru
- 		{ 0x01, AC_VERB_SET_GPIO_DIRECTION, 0x03 },
- 		{}
- 	};
--	codec_info(codec, "action: %d gpio_led: %d\n", action, spec->gpio_led);
- 
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
- 		spec->gen.vmaster_mute.hook = cxt_fixup_gpio_mute_hook;
+  retry:
 
 
