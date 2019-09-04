@@ -2,144 +2,125 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E40AC3A5AB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610F6C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD7E022CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31857208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZGqEH+6G"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EPNAMO1W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfIDUmW (ORCPT
+        id S1730378AbfIDUm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:42:22 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40753 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727562AbfIDUmW (ORCPT
+        Wed, 4 Sep 2019 16:42:56 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37452 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbfIDUmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:42:22 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g4so62216qtq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:42:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eWOicZgj5Of+wSfvuMxF3nPebfxOImDgPFtP2TA8Hig=;
-        b=ZGqEH+6G7pAd8jrzjuGDhWkoWvtaL64D3AW2jvc0zj1/oUJplf2IrF6gHKD5s2FsPw
-         Adfze0hKG7/rv+15yzEJjiUX6og3ZyANLD8D4ERpNzpK9YlV6uONlh9xQeKTGv+ZrquI
-         hSKMreZSUi810Y6ZWKEeb9LD1PXnDKImDqVZgjLKigfeMpRxfjBMo9OZoosRbYdu8/79
-         bC/LvgoUb75NX3rr7WrL9taazuGhCpGAeDkOOoK6nNbcPd9ea3wqJdnrB3QlTAQjQaHv
-         uAIhyBb8pqdsGUBbUJ1GvBMJDm22LpVbJdi/xMfxcFKEw56+qyPT7o3odV4a7QNQbRiw
-         /B9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eWOicZgj5Of+wSfvuMxF3nPebfxOImDgPFtP2TA8Hig=;
-        b=cTQJwQF+KFvZu7AvV1tB6nsZEgQubyXOWqfBfeK+AYADGH8aMp/Z0A/SzYU8grX8X0
-         09pvFyXPBymFj3qz45KiMgVlfF7WMYoIV2OccuOhoh6w8u63sUGmEg7S+806OQl+f3rv
-         9kPP1iZ7jqzFQIZUbI+HfaIDDyqP6WMhM+srm7z3qmvRE3Bz5/KEMEvmWi047RY56N3d
-         ByNskzrOdcx3nl9L2n0hNj8tTDATxeYpzPUl5xpO28auvnyfgQZvJ/2qT5tbrRVThvon
-         PFUTywFoq1OMiguUbuQVGP1GQGVQTwZi+wTIC4ebdiv7Y61GZrV9q3nRBpkDmzq+abVR
-         scDg==
-X-Gm-Message-State: APjAAAWglMlfp0YmsvOqHDvAxzbj7DlQ1T9kzeGTkZWK3ivFA9F3sP+Q
-        z8adfYWR1F5YHhhIgr9Uifab4w==
-X-Google-Smtp-Source: APXvYqzrVP6ndOunjL/GKt4iRlQLcQKI3XbQbJtOPG0ryuO40Hl4uyz7HZzI+zOrG63rLQ5vi9A3iw==
-X-Received: by 2002:a0c:8c0b:: with SMTP id n11mr26275353qvb.66.1567629741114;
-        Wed, 04 Sep 2019 13:42:21 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z200sm87656qkb.5.2019.09.04.13.42.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 13:42:20 -0700 (PDT)
-Message-ID: <1567629737.5576.87.camel@lca.pw>
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-From:   Qian Cai <cai@lca.pw>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Date:   Wed, 04 Sep 2019 16:42:17 -0400
-In-Reply-To: <20190904144850.GA8296@tigerII.localdomain>
-References: <20190903132231.GC18939@dhcp22.suse.cz>
-         <1567525342.5576.60.camel@lca.pw> <20190903185305.GA14028@dhcp22.suse.cz>
-         <1567546948.5576.68.camel@lca.pw> <20190904061501.GB3838@dhcp22.suse.cz>
-         <20190904064144.GA5487@jagdpanzerIV> <20190904065455.GE3838@dhcp22.suse.cz>
-         <20190904071911.GB11968@jagdpanzerIV> <20190904074312.GA25744@jagdpanzerIV>
-         <1567599263.5576.72.camel@lca.pw>
-         <20190904144850.GA8296@tigerII.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 4 Sep 2019 16:42:55 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84KTD4g119045;
+        Wed, 4 Sep 2019 20:42:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=YfUnnnukundqVWrsSoidbyt5s7i0paUP66hvP8DLVF4=;
+ b=EPNAMO1WMRlBc0rAzIdbStwfyIM4z36/PQ1vUYL/sYPIEGqh2Cp7jiM7ZyH0KM5y8AYn
+ f5fCflVucD9hfItpBzwRK934lg/CYfFgDDylXT7Dmbsa6GgIt4kXFNWMh2DdSvALMJRa
+ 96eETO25c08U37qoM8zoYCI8ZV0Qmaq74rpdFEMIMWdWKWr3UsNegYFk8XVseJdehmBh
+ 92e78MASI/2JTIyrJLYun+Fl6VJ1F6cTzgo1gPP+IK4UK/cyGD2y52/RfJ4p/gpT1gdZ
+ n80wbht6mrFl/4r1QZghCuNLDloUiOcCAon/q64AnMioZoILAFFL4p4HvaIAT+U8l40L xg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2utm8sr30n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Sep 2019 20:42:48 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84KXCRu047799;
+        Wed, 4 Sep 2019 20:42:47 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2usu529ue5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Sep 2019 20:42:47 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x84Kgkjd005697;
+        Wed, 4 Sep 2019 20:42:46 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Sep 2019 13:42:45 -0700
+Date:   Wed, 4 Sep 2019 16:42:41 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Florian Schmidt <florian.schmidt@nutanix.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH 0/2] trace-vmscan-postprocess: fix parsing and output
+Message-ID: <20190904204241.y6c335djr3bwm6xo@ca-dmjordan1.us.oracle.com>
+References: <20190903111342.17731-1-florian.schmidt@nutanix.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903111342.17731-1-florian.schmidt@nutanix.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909040204
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909040204
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 23:48 +0900, Sergey Senozhatsky wrote:
-> On (09/04/19 08:14), Qian Cai wrote:
-> > > Plus one more check - waitqueue_active(&log_wait). printk() adds
-> > > pending irq_work only if there is a user-space process sleeping on
-> > > log_wait and irq_work is not already scheduled. If the syslog is
-> > > active or there is noone to wakeup then we don't queue irq_work.
-> > 
-> > Another possibility for this potential livelock is that those printk() from
-> > warn_alloc(), dump_stack() and show_mem() increase the time it needs to
-> > process
-> > build_skb() allocation failures significantly under memory pressure. As the
-> > result, ksoftirqd() could be rescheduled during that time via a different
-> > CPU
-> > (this is a large x86 NUMA system anyway),
-> > 
-> > [83605.577256][   C31]  run_ksoftirqd+0x1f/0x40
-> > [83605.577256][   C31]  smpboot_thread_fn+0x255/0x440
-> > [83605.577256][   C31]  kthread+0x1df/0x200
-> > [83605.577256][   C31]  ret_from_fork+0x35/0x40
-> 
-> Hum hum hum...
-> 
-> So I can, _probably_, think of several patches.
-> 
-> First, move wake_up_klogd() back to console_unlock().
-> 
-> Second, move `printk_pending' out of per-CPU region and make it global.
-> So we will have just one printk irq_work scheduled across all CPUs;
-> currently we have one irq_work per CPU. I think I sent a patch a long
-> long time ago, but we never discussed it, as far as I remember.
-> 
-> > In addition, those printk() will deal with console drivers or even a
-> > networking
-> > console, so it is probably not unusual that it could call irq_exit()-
-> > __do_softirq() at one point and then this livelock.
-> 
-> Do you use netcon? Because this, theoretically, can open up one more
-> vector. netcon allocates skbs from ->write() path. We call con drivers'
-> ->write() from printk_safe context, so should netcon skb allocation
-> warn we will scedule one more irq_work on that CPU to flush per-CPU
-> printk_safe buffer.
-> 
-> If this is the case, then we can stop calling console_driver() under
-> printk_safe. I sent a patch a while ago, but we agreed to keep the
-> things the way they are, fot the time being.
-> 
-> Let me think more.
+On Tue, Sep 03, 2019 at 11:14:07AM +0000, Florian Schmidt wrote:
+> This patch series updates trace-vmscan-postprocess.pl to work without
+> throwing warnings and errors which stem from updates to several trace
+> points.
 
-To summary, those look to me are all good long-term improvement that would
-reduce the likelihood of this kind of livelock in general especially for other
-unknown allocations that happen while processing softirqs, but it is still up to
-the air if it fixes it 100% in all situations as printk() is going to take more
-time and could deal with console hardware that involve irq_exit() anyway.
+Cc Yafang, who made (most of?) these updates.
 
-On the other hand, adding __GPF_NOWARN in the build_skb() allocation will fix
-this known NET_TX_SOFTIRQ case which is common when softirqd involved at least
-in short-term. It even have a benefit to reduce the overall warn_alloc() noise
-out there.
+> 3481c37ffa1d ("mm/vmscan: drop may_writepage and classzone_idx from
+> direct reclaim begin template") removed "may_writepage" from
+> mm_vmscan_direct_reclaim_begin, and 3b775998eca7
+> ("include/trace/events/vmscan.h: drop zone id from kswapd tracepoints")
+> removed "zid" from mm_vmscan_wakeup_kswapd. The output of
+> mm_vmscan_lru_isolate and mm_vmscan_lru_shrink_active seems to never
+> have matched the format of the trace point output since they were
+> created, or at least for as long as I can tell. Patch 1 aligns the
+> format parsing of the perl script with the current output of the trace
+> points.
 
-I can resubmit with an update changelog. Does it make any sense?
+Thanks, patch 1 fixes the script for me for all tracepoints you touched.
+
+> In addition, the tables that are printed by the script were not properly
+> aligned any more, so patch 2 fixes the spacing.
+
+Nit, not for Pages Scanned.  With your series I get
+
+Kswapd          Kswapd      Order      Pages     Pages    Pages    Pages
+Instance       Wakeups  Re-wakeup    Scanned    Rclmed  Sync-IO ASync-IO
+kswapd0-175          1          0    253694     253691        3   129896               wake-0=1
+
+> A side remark: parsing the trace output for mm_vmscan_lru_shrink_active
+> has been in the script ever since it was created in 2010, but at no
+> point the parsed output was ever used for anything. I updated the
+> parsing code now, but I wonder if we could just get rid of that part...
+
+I wonder if we shouldn't just get rid of the whole script, it's hard to
+remember to keep in sync with vmscan changes and I can't think of a way to
+remedy that short of having mm regression tests that run this.  But your
+patches are an improvement for now.
