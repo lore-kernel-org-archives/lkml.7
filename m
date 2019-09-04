@@ -2,55 +2,53 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2D9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBADFC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687F720870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA4D8208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621550;
-	bh=HnfORa65omEf3PVNuM+1N1Dl3qOV6wAD00tUc5HBvgA=;
+	s=default; t=1567621577;
+	bh=VvHYiusNWtxqIFbpFY8rvWugSCdZoy++9ObtJ4TOP6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1AZZAKLPG6vTacyUX3eDnChpBc/pRUFXPXCgDpoIFk0asuWk5M1uUnfa53zDyfwx
-	 DU+reD4mRPUdPEhbJWZreKqUGgPCRrcHG+LFan3n0jLsp2b2sK1Sofd/8Kh5KsaMuv
-	 hKWgeyrw/wiX8/qNiA2MogV/Jp/r7P0N1qPIgKLM=
+	b=YGok3fXQyMzBudzRm7ZFU2OQkP2L4sj2fT1eEmt2VnlOxr+GqAf4g1VzdTA1q6Da2
+	 eL0zzcs9sbHuFUCGMYags70IBUSiSU7EC+QsyYWtzTsP/llWU07EqZjs3brEVDGnAf
+	 yiX3mVmhewdEFh8j0YuEHAUvZPTaykIX3vm1D6mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388675AbfIDSZt (ORCPT
+        id S2387541AbfIDR6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38222 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbfIDR7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:22 -0400
+        id S2388023AbfIDR6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6339922CEA;
-        Wed,  4 Sep 2019 17:59:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A9FE21883;
+        Wed,  4 Sep 2019 17:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619961;
-        bh=HnfORa65omEf3PVNuM+1N1Dl3qOV6wAD00tUc5HBvgA=;
+        s=default; t=1567619897;
+        bh=VvHYiusNWtxqIFbpFY8rvWugSCdZoy++9ObtJ4TOP6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=as9PE2u5Cdbpb7uQcj+6xy5amBUe7I85cJI7lNC8U0ZmyEMuMCTtLaVE35CaFcT47
-         efZE39g/M0SAnMdkC8j+vKijsFtvGV6VTykKobFmAUEuK/1KS+Y5P/vrePKGZy4FDZ
-         4seRvrX/jmb8VOHWBGfjWk5Q4XWhTJvml/w+TAlY=
+        b=kBG3pFThHC/PSY6p5Q+pjV3+5jLqrTHT1iE31Ref9ApiKJ90e48+cSAGxzZvEudp2
+         UcEAL3QMyLCREUsL3EgnP6iyHXAfpgu+Ya3ShLIKr/OkwAEPQlI6lk/SwyJ0CkXzez
+         lLvJEJgeTrqM5dQYlkIBduAK1J+ZVjg8hwjditBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 21/83] net: hisilicon: fix hip04-xmit never return TX_BUSY
-Date:   Wed,  4 Sep 2019 19:53:13 +0200
-Message-Id: <20190904175305.739945720@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 76/77] mac80211: fix possible sta leak
+Date:   Wed,  4 Sep 2019 19:54:03 +0200
+Message-Id: <20190904175310.427013886@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
-References: <20190904175303.488266791@linuxfoundation.org>
+In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
+References: <20190904175303.317468926@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,41 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
+From: Johannes Berg <johannes.berg@intel.com>
 
-TX_DESC_NUM is 256, in tx_count, the maximum value of
-mod(TX_DESC_NUM - 1) is 254, the variable "count" in
-the hip04_mac_start_xmit function is never equal to
-(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
-return NETDEV_TX_BUSY.
+commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 upstream.
 
-tx_count is modified to mod(TX_DESC_NUM) so that
-the maximum value of tx_count can reach
-(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
-NETDEV_TX_BUSY.
+If TDLS station addition is rejected, the sta memory is leaked.
+Avoid this by moving the check before the allocation.
 
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
+Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/cfg.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index 1fabbbd4544e7..c7e0b246cfdca 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -185,7 +185,7 @@ struct hip04_priv {
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1211,6 +1211,11 @@ static int ieee80211_add_station(struct
+ 	if (is_multicast_ether_addr(mac))
+ 		return -EINVAL;
  
- static inline unsigned int tx_count(unsigned int head, unsigned int tail)
- {
--	return (head - tail) % (TX_DESC_NUM - 1);
-+	return (head - tail) % TX_DESC_NUM;
- }
++	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
++	    sdata->vif.type == NL80211_IFTYPE_STATION &&
++	    !sdata->u.mgd.associated)
++		return -EINVAL;
++
+ 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
+ 	if (!sta)
+ 		return -ENOMEM;
+@@ -1228,10 +1233,6 @@ static int ieee80211_add_station(struct
+ 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
+ 		sta->sta.tdls = true;
  
- static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
--- 
-2.20.1
-
+-	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
+-	    !sdata->u.mgd.associated)
+-		return -EINVAL;
+-
+ 	err = sta_apply_parameters(local, sta, params);
+ 	if (err) {
+ 		sta_info_free(local, sta);
 
 
