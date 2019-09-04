@@ -2,94 +2,98 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D325C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6C7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8E52053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF13F2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567613364;
+	bh=klpVdtEgbv3eGiHfTAl0evw55doOwNY6qnhkyJYVt7I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YMko8aOnlnAorG5L5BOEFmet54WgmjKT+QvGb2zEv/F7qtF/OHrEjwtugDHJjvd5R
+	 +TgxLM27n/9bkt0fRJ+qMPpH0dtsO4rlwI8lKWiHr3RRGnCFedbGWd7YsQNimDo12T
+	 56EBiyWUxkhcQnnxlruj/vBYkPctZpuqDprCJtu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbfIDQJP (ORCPT
+        id S1732960AbfIDQBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:09:15 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:43958 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731423AbfIDQJN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:09:13 -0400
-Received: by mail-pf1-f181.google.com with SMTP id d15so4026951pfo.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:09:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XErXDQUXB06HtDTOiYRG9XmArU9bvhEptkEPoC0URcA=;
-        b=JyYw4PHfiayDaITAV/QBm2/ef9+99NMsvZSXHuHM2u0slzTaz6BGwNQ3YQgDueFh6J
-         ypuwcQmQlg9/yNSLetqHVSOA5fZKyaYEGcyHoqLpG2n0WiwrfwzlgDb6jY1ULC0G5ifq
-         r02go+r+97mcHcMCBgEuA3Gdenja/6TEh9v8tz30VPqbP9XievN97vTWaUQnjFCR2CM6
-         8kh7qV3RDEXZ7zNXDkBsvhS72pKMlWv0djVW5/ukPRIF0i35plO14mmn/RCgDUloprCT
-         K1Ow+zXY5p5lOWQdSCoB3d2docwgrgPR7XWa5mp4vCIeYr4bYL9qdoFY0bYPpwm1tm3d
-         5a5g==
-X-Gm-Message-State: APjAAAVIzKy72HjJpn5ffUnzdw0Gs/N1JlwKPPIFllhU9nCf9OP6swaM
-        /9++3jkUYdqNKbyUN33X4dH7TOaX
-X-Google-Smtp-Source: APXvYqw0Ks9MUXGu/5Cf6iBSADywOoWtDQLLDbxBDQ8d9toYPzgTjAcQLLN0ef2hdNAfHtQzc/Ct/A==
-X-Received: by 2002:a65:4546:: with SMTP id x6mr35120577pgr.266.1567613351999;
-        Wed, 04 Sep 2019 09:09:11 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id v12sm19059248pgr.86.2019.09.04.09.09.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2019 09:09:10 -0700 (PDT)
-Subject: Re: lockdep warning while booting POWER9 PowerNV
-To:     Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <1567199630.5576.39.camel@lca.pw>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <9b8b287a-4ae1-ca9b-cff1-6d93672b6893@acm.org>
-Date:   Wed, 4 Sep 2019 09:09:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 12:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732887AbfIDQBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:05 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6948523400;
+        Wed,  4 Sep 2019 16:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567612865;
+        bh=klpVdtEgbv3eGiHfTAl0evw55doOwNY6qnhkyJYVt7I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1xCM5uErdhgh3KkCnHuTjspnyUe8M/476sr18hA09JXCGYVoxh+60l8wAjqXQaHwU
+         pHH6oH5vfscuT7usi1JIdMeYc7LUx9YWkf3ZdCZKGUqa1umDU9ih9evCHodVfvvrDV
+         iZWluAvdjVJSxBb6rbShRYvgLALN5hlGodq3bcek=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Takashi Iwai <tiwai@suse.de>, SteveM <swm@swm1.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 42/52] sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
+Date:   Wed,  4 Sep 2019 11:59:54 -0400
+Message-Id: <20190904160004.3671-42-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
+References: <20190904160004.3671-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1567199630.5576.39.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/30/19 2:13 PM, Qian Cai wrote:
-> https://raw.githubusercontent.com/cailca/linux-mm/master/powerpc.config
-> 
-> Once in a while, booting an IBM POWER9 PowerNV system (8335-GTH) would generate
-> a warning in lockdep_register_key() at,
-> 
-> if (WARN_ON_ONCE(static_obj(key)))
-> 
-> because
-> 
-> key = 0xc0000000019ad118
-> &_stext = 0xc000000000000000
-> &_end = 0xc0000000049d0000
-> 
-> i.e., it will cause static_obj() returns 1.
+From: Takashi Iwai <tiwai@suse.de>
 
-(back from a trip)
+[ Upstream commit 189308d5823a089b56e2299cd96589507dac7319 ]
 
-Hi Qian,
+A similar workaround for the suspend/resume problem is needed for yet
+another ASUS machines, P6X models.  Like the previous fix, the BIOS
+doesn't provide the standard DMI_SYS_* entry, so again DMI_BOARD_*
+entries are used instead.
 
-Does this mean that on POWER9 it can happen that a dynamically allocated 
-object has an address that falls between &_stext and &_end? Since I am 
-not familiar with POWER9 nor have access to such a system, can you 
-propose a patch?
+Reported-and-tested-by: SteveM <swm@swm1.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/marvell/sky2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Thanks,
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index 4ade864c8d531..d013f30019b69 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -4954,6 +4954,13 @@ static const struct dmi_system_id msi_blacklist[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
+ 		},
+ 	},
++	{
++		.ident = "ASUS P6X",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "P6X"),
++		},
++	},
+ 	{}
+ };
+ 
+-- 
+2.20.1
 
-Bart.
