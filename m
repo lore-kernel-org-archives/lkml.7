@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEE9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B417C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE9A2070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4731E2070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613282;
-	bh=RyzVyb+HNFmSAWdPhzQLJ9XT7+dnehaK6Y49l04LutM=;
+	s=default; t=1567613290;
+	bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkk0BBb83e9kO+C3uGbT54vnpdYkfWWVhvTVRM0TRsiy7X0GFUnDxtHEYDQfOjqtD
-	 gLo8UHfixKRYw4ExoJJ4mW4jiiKoO5/oNrjQduDJqfzkI26L/sImpIOfcbgoE/0q5f
-	 p0HqHnwCNTNQt+kniJb9KTm/2Qkg9CbIfF3jV+Ns=
+	b=ixvum7gm1vl/NRx/EpfSeSGYmIhNUWNlepuL2i6Nxc/0WPf92UHUUdhG/sH+Uch1w
+	 nfOPT34EPAG7fRfE/s5Uq2h06uTs1/faiGpezlC/LpgF47Qy4SpNv1i5te9KwfkBge
+	 jn8uVSPs6Qci4i9dF6gQlDUAJkE3vJHk0TXx+8vs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733271AbfIDQIB (ORCPT
+        id S1732887AbfIDQIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:08:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37304 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732041AbfIDQBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:01:43 -0400
+        id S1733048AbfIDQBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9611F22DBF;
-        Wed,  4 Sep 2019 16:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E535823402;
+        Wed,  4 Sep 2019 16:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612902;
-        bh=RyzVyb+HNFmSAWdPhzQLJ9XT7+dnehaK6Y49l04LutM=;
+        s=default; t=1567612896;
+        bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qwRT73kyoFG8SytbYFY2lFIpJ5bCgYYebowXEJMQDJDkATYeLLRs+2cyesnxxrNUg
-         gIvFHZPDw/DovRXD349vTb1k6cewLWT8Z3PoPEmWtPly+ueLrImsfi/sTfCgBbKzIz
-         trp+64FjmLuVGsZeVoLu8nLrKt8yDOq3GMnGqRpY=
+        b=fDy1wvTygzZo6z9wqNY4waAwM4lmxBFxDlKu5MgK4VchnfFVyQrSO7Ot/LNIY+moB
+         B7SeRZKcpmT4PmMNYNDQtR93qZOD9nWN5QCF55pvYPBFI9N+9vYzCuIhoF/U535UN+
+         6Pym3y1tFpFyKC/9y6380KrK3KfwdRasGy4hzGSE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/36] batman-adv: Only read OGM tvlv_len after buffer len check
-Date:   Wed,  4 Sep 2019 12:01:01 -0400
-Message-Id: <20190904160122.4179-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 12/36] Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
+Date:   Wed,  4 Sep 2019 12:00:58 -0400
+Message-Id: <20190904160122.4179-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -61,83 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 ]
+[ Upstream commit cd9d4ff9b78fcd0fc4708900ba3e52e71e1a7690 ]
 
-Multiple batadv_ogm_packet can be stored in an skbuff. The functions
-batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
-batadv_iv_ogm_aggr_packet() to check if there is another additional
-batadv_ogm_packet in the skb or not before they continue processing the
-packet.
+This should be IDT77105, not IDT77015.
 
-The length for such an OGM is BATADV_OGM_HLEN +
-batadv_ogm_packet->tvlv_len. The check must first check that at least
-BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
-part of the header. Otherwise it might try read outside of the currently
-available skbuff to get the content of tvlv_len.
-
-Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
-Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_iv_ogm.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ drivers/atm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
-index 5bd9b389f8c98..8b3f9441b3a01 100644
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -450,17 +450,23 @@ static u8 batadv_hop_penalty(u8 tq, const struct batadv_priv *bat_priv)
-  * batadv_iv_ogm_aggr_packet - checks if there is another OGM attached
-  * @buff_pos: current position in the skb
-  * @packet_len: total length of the skb
-- * @tvlv_len: tvlv length of the previously considered OGM
-+ * @ogm_packet: potential OGM in buffer
-  *
-  * Return: true if there is enough space for another OGM, false otherwise.
-  */
--static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
--				      __be16 tvlv_len)
-+static bool
-+batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
-+			  const struct batadv_ogm_packet *ogm_packet)
- {
- 	int next_buff_pos = 0;
+diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
+index 2e2efa577437e..8c37294f1d1ee 100644
+--- a/drivers/atm/Kconfig
++++ b/drivers/atm/Kconfig
+@@ -200,7 +200,7 @@ config ATM_NICSTAR_USE_SUNI
+ 	  make the card work).
  
--	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
--	next_buff_pos += ntohs(tvlv_len);
-+	/* check if there is enough space for the header */
-+	next_buff_pos += buff_pos + sizeof(*ogm_packet);
-+	if (next_buff_pos > packet_len)
-+		return false;
-+
-+	/* check if there is enough space for the optional TVLV */
-+	next_buff_pos += ntohs(ogm_packet->tvlv_len);
- 
- 	return (next_buff_pos <= packet_len) &&
- 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
-@@ -488,7 +494,7 @@ static void batadv_iv_ogm_send_to_if(struct batadv_forw_packet *forw_packet,
- 
- 	/* adjust all flags and log packets */
- 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
--					 batadv_ogm_packet->tvlv_len)) {
-+					 batadv_ogm_packet)) {
- 		/* we might have aggregated direct link packets with an
- 		 * ordinary base packet
- 		 */
-@@ -1838,7 +1844,7 @@ static int batadv_iv_ogm_receive(struct sk_buff *skb,
- 
- 	/* unpack the aggregated packets and process them one by one */
- 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
--					 ogm_packet->tvlv_len)) {
-+					 ogm_packet)) {
- 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
- 
- 		ogm_offset += BATADV_OGM_HLEN;
+ config ATM_NICSTAR_USE_IDT77105
+-	bool "Use IDT77015 PHY driver (25Mbps)"
++	bool "Use IDT77105 PHY driver (25Mbps)"
+ 	depends on ATM_NICSTAR
+ 	help
+ 	  Support for the PHYsical layer chip in ForeRunner LE25 cards. In
 -- 
 2.20.1
 
