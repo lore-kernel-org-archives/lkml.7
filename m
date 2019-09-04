@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC0DC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB59C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E819F2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5B923401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbfIDOAC (ORCPT
+        id S1730691AbfIDOAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:00:02 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6650 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:00:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6652 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730606AbfIDOAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:00:00 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5AC0B9810AA2A1D82DEB;
-        Wed,  4 Sep 2019 21:59:51 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 21:59:43 +0800
+        id S1730648AbfIDOAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:00:03 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8E759E7B11A11781131B;
+        Wed,  4 Sep 2019 21:59:55 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 21:59:48 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -51,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 05/36] spi: bcm2835aux: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:58:47 +0800
-Message-ID: <20190904135918.25352-6-yuehaibing@huawei.com>
+Subject: [PATCH -next 07/36] spi: bcm63xx-hsspi: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:58:49 +0800
+Message-ID: <20190904135918.25352-8-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -72,31 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-bcm2835aux.c | 4 +---
+ drivers/spi/spi-bcm63xx-hsspi.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835aux.c b/drivers/spi/spi-bcm2835aux.c
-index b18ce69..a2162ff 100644
---- a/drivers/spi/spi-bcm2835aux.c
-+++ b/drivers/spi/spi-bcm2835aux.c
-@@ -491,7 +491,6 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
+diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
+index 373cb53..c6836a9 100644
+--- a/drivers/spi/spi-bcm63xx-hsspi.c
++++ b/drivers/spi/spi-bcm63xx-hsspi.c
+@@ -330,7 +330,6 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
  {
  	struct spi_master *master;
- 	struct bcm2835aux_spi *bs;
--	struct resource *res;
- 	unsigned long clk_hz;
- 	int err;
+ 	struct bcm63xx_hsspi *bs;
+-	struct resource *res_mem;
+ 	void __iomem *regs;
+ 	struct device *dev = &pdev->dev;
+ 	struct clk *clk, *pll_clk = NULL;
+@@ -341,8 +340,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+ 	if (irq < 0)
+ 		return irq;
  
-@@ -524,8 +523,7 @@ static int bcm2835aux_spi_probe(struct platform_device *pdev)
- 	bs = spi_master_get_devdata(master);
+-	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	regs = devm_ioremap_resource(dev, res_mem);
++	regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
  
- 	/* the main area */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	bs->regs = devm_ioremap_resource(&pdev->dev, res);
-+	bs->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(bs->regs)) {
- 		err = PTR_ERR(bs->regs);
- 		goto out_master_put;
 -- 
 2.7.4
 
