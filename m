@@ -2,73 +2,112 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6911BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AF1C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0C92339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567600387;
-	bh=iuK4+h4YFFTVKBy7pPD8lTU3pbW/2NrPyHqI2eq7oMw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fijjPBoMaYXLjk2njYcSj6Up/4HSCqc7mwBBZNTMs/CWN2tM6zDsu/nrsrjqS5KOs
-	 0RPa6u6c65DVjj+r5kTEefX8P+iMApzEnroi2om9OYT5ZYdTnfkiKelILMbRL8OqJi
-	 Z3WQCYl1VysLC+9knvv1yIeDZLs9joCcBh3USCj8=
+	by mail.kernel.org (Postfix) with ESMTP id C0E0421670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:33:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ctJf2UJZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbfIDMdG (ORCPT
+        id S1730016AbfIDMdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53884 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 08:33:20 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44273 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfIDMdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:33:06 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729020AbfIDMdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:33:19 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F33721670;
-        Wed,  4 Sep 2019 12:33:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567600385;
-        bh=iuK4+h4YFFTVKBy7pPD8lTU3pbW/2NrPyHqI2eq7oMw=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=F0Az6iIBAvsG7fsXxY/+AWi2NV2/m2GV8hoAIXjALmOOhlgKr3IMmRG/798rn7MC1
-         QmfDfBFx2xHXK6IyGww1Lh5rbkb1IIK3ZlKABmktrMPS3D+v1p7Kkf9m0xtuZjmGov
-         xwwkP4calS2qlzvRpmN06gFLWxUNhgONLwyndb+Q=
-Date:   Wed, 4 Sep 2019 14:32:39 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     hn.chen@weidahitech.com
-cc:     linux-input@vger.kernel.org, benjamin.tissoires@redhat.com,
-        linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com
-Subject: Re: [PATCH] HID: modify quirks of i2c-hid driver for weida's
- devices
-In-Reply-To: <1567151910-3819-1-git-send-email-hn.chen@weidahitech.com>
-Message-ID: <nycvar.YFH.7.76.1909041432310.31470@cbobk.fhfr.pm>
-References: <1567151910-3819-1-git-send-email-hn.chen@weidahitech.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46NjsS1WsDz9s3Z;
+        Wed,  4 Sep 2019 22:33:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567600396;
+        bh=a/mNy3vFL2sGvNnyv4QB+peLbEbQk2/RU44v9YYnnYw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ctJf2UJZai/Q/BMgL6XG64zvmVlzWFPybkAQbPJj7zWSi+CFtJyV5Ws9E71uPNjE0
+         V+pwCmSejvbk/8ncAS2hpcjpO36PavmyB0CHsiRXgWJrZmjGLWRcl+K9cDwR97A+6p
+         EfeKgdZ2GMKtOlzQ+VGxpdmZtkpqQa/cfKoik8HyI3ML20nkqUnrhmOuhFkE2DfYcy
+         D2SJgCHeXgmfzOWtoxsBaQP2DlCFHP4/dONI6hLI+DO3bEVZsiAmzrYmK/+T2AO9wb
+         srBVpS7tscndl2G6dRCAnfPAlG24vXhOyNJjeN/c8U+5cr0mJzZxyDRkec2brcPAzj
+         /x5M6i41BKY5w==
+Date:   Wed, 4 Sep 2019 22:33:12 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: linux-next: build warnings after merge of the kbuild tree
+Message-ID: <20190904223312.553a7660@canb.auug.org.au>
+In-Reply-To: <CAK7LNAQ8VJz8fxecnEWmbFCpD0rgt4tjoipOX0g3oY0xU8xt5w@mail.gmail.com>
+References: <20190904101259.2687cea4@canb.auug.org.au>
+        <CAK7LNAT=qUi76cF776GcT=UYce5QBo+_24gLwXH7ra15=1xLvQ@mail.gmail.com>
+        <CAK7LNAQ8VJz8fxecnEWmbFCpD0rgt4tjoipOX0g3oY0xU8xt5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/uDkxajeQp+GefRpMSunwwHd";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 30 Aug 2019, hn.chen@weidahitech.com wrote:
+--Sig_/uDkxajeQp+GefRpMSunwwHd
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> From: HungNien Chen <hn.chen@weidahitech.com>
-> 
-> This 'SET_PWR_WAKEUP_DEV' quirk only works for weida's devices with pid
-> 0xC300 & 0xC301. Some weida's devices with other pids also need this quirk
-> now. Use 'HID_ANY_ID' instead of 0xC300 to make all of weida's devices can be
-> fixed on the power on issue. This modification should be safe since devices
-> without power on issue will send the power on command only once.
+Hi Masahiro,
 
-Applied, thanks.
+On Wed, 4 Sep 2019 15:22:09 +0900 Masahiro Yamada <yamada.masahiro@socionex=
+t.com> wrote:
+>
+> For today's linux-next, please squash the following too.
+>=20
+> (This is my fault, since scripts/mkuboot.sh is a bash script)
+>=20
+>=20
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 41c50f9461e5..2d72327417a9 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -374,7 +374,7 @@ UIMAGE_ENTRYADDR ?=3D $(UIMAGE_LOADADDR)
+>  UIMAGE_NAME ?=3D 'Linux-$(KERNELRELEASE)'
+>=20
+>  quiet_cmd_uimage =3D UIMAGE  $@
+> -      cmd_uimage =3D $(CONFIG_SHELL) $(MKIMAGE) -A $(UIMAGE_ARCH) -O lin=
+ux \
+> +      cmd_uimage =3D $(BASE) $(MKIMAGE) -A $(UIMAGE_ARCH) -O linux \
+>                         -C $(UIMAGE_COMPRESSION) $(UIMAGE_OPTS-y) \
+>                         -T $(UIMAGE_TYPE) \
+>                         -a $(UIMAGE_LOADADDR) -e $(UIMAGE_ENTRYADDR) \
 
--- 
-Jiri Kosina
-SUSE Labs
+Umm, that seems to have already been done.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/uDkxajeQp+GefRpMSunwwHd
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1vrwgACgkQAVBC80lX
+0Gxn3wgAheU3D4MTpR5mBwg7WtQxEJ9dSVn+mwjS4jwsoXc2fOPWF1HlbNTFgCLx
+ANh5n+G0IMBTWfkjIqrrvRafd/9+obXEQIFrouVF8c1sGUgSZno7x+fPKXDrPcDM
+v7ruhgry00bPAHQpvvkDqEOXbpvjIPurfU5ElkwGQR1npb0099o4Ivf/xyfh268m
+wnFAf3BRnxVY7ioK4rcDgB5hqmZIsmpHb9hzIlH2IYVYDjMXnKJMYS0YtABGfRbN
+5Xf1YxeuGSIOiwaNKye8+Gx40f0qE2bIxExW7eklxvQPPuWoFUj7C3Ah5fRQ4Gfq
+BUgpdoSoFyUggJRQJJTk8wLSdFA4jg==
+=DYTL
+-----END PGP SIGNATURE-----
+
+--Sig_/uDkxajeQp+GefRpMSunwwHd--
