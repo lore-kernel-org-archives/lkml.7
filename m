@@ -2,139 +2,182 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E140BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56324C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF0512339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB19233A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ee5A1aWL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbfIDJvj convert rfc822-to-8bit (ORCPT
+        id S1729305AbfIDJxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:51:39 -0400
-Received: from emcscan.emc.com.tw ([192.72.220.5]:14931 "EHLO
-        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfIDJvi (ORCPT
+        Wed, 4 Sep 2019 05:53:37 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45734 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfIDJxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:51:38 -0400
-X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
-   d="scan'208";a="32035647"
-Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
-  by emcscan.emc.com.tw with ESMTP; 04 Sep 2019 17:51:34 +0800
-Received: from 192.168.10.23
-        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(65864:0:AUTH_RELAY)
-        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 04 Sep 2019 17:51:32 +0800 (CST)
-Received: from 192.168.55.71
-        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(122355:0:AUTH_LOGIN)
-        (envelope-from <johnny.chuang@emc.com.tw>); Wed, 04 Sep 2019 17:51:29 +0800 (CST)
-From:   "Johnny.Chuang" <johnny.chuang@emc.com.tw>
-To:     "'Dmitry Torokhov'" <dmitry.torokhov@gmail.com>
-Cc:     <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        =?UTF-8?B?J1NUUkQyLeiUoeaDoOWsiyc=?= <jennifer.tsai@emc.com.tw>,
-        =?UTF-8?B?J1NUUkQyLemZs+W0h+aYjue2k+eQhic=?= 
-        <james.chen@emc.com.tw>,
-        =?UTF-8?B?J+aigeWNmue/lCc=?= <paul.liang@emc.com.tw>,
-        "'jeff'" <jeff.chuang@emc.com.tw>
-References: <1566958886-25756-1-git-send-email-johnny.chuang@emc.com.tw> <000601d55d49$05878160$10968420$@emc.com.tw> <20190829182933.GD187474@dtor-ws> <001e01d561ff$fb3d7000$f1b85000$@emc.com.tw> <20190903155514.GL187474@dtor-ws>
-In-Reply-To: <20190903155514.GL187474@dtor-ws>
-Subject: RE: [PATCH] Input: elants_i2c - return real value of elants_i2c_initialize()
-Date:   Wed, 4 Sep 2019 17:51:29 +0800
-Message-ID: <002d01d56306$534df830$f9e9e890$@emc.com.tw>
+        Wed, 4 Sep 2019 05:53:37 -0400
+Received: by mail-vs1-f68.google.com with SMTP id j25so13303352vsq.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 02:53:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0EBgbCuBQmwJw3c0KzWyXPiGxZ+LZk1J5Qq98Q0y1Rg=;
+        b=Ee5A1aWLCsbyGGzkjTb7nQ4sGxkRejpT4vfKZOuLJ/fuCfE+m4T4xfRzOnHFpJfUJo
+         yXW8KuknGFoCW003Yuj0MppGtZwyJekuDJ26xLfmX8nM/SPLqDSUOZC+ABOykmulOwpS
+         Xl/jFXKX4N+UF5D2PujYQZ7kX6IwbsLtjoCEfaOWZnfIxM7ecq/6yLHfJjZ8unWhk/+j
+         43QK1fmeHeWyk0+5DRYV6gzf30cCDAx4MRDcRwVDHBhfdmrlWJv64aWjbBWubr/t4+ta
+         Hj2AZMerNI9W4bPajbr7JdpRknfFTsqR9r6mQ27qWDw1HnvA4hz03fnVj0JaeIqXOsqB
+         iKug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0EBgbCuBQmwJw3c0KzWyXPiGxZ+LZk1J5Qq98Q0y1Rg=;
+        b=YbSuPpD65D6hJX9vqOju7qfyjHeePRRxVHe3ogKLgmfWdmDeZKw8K54+KN15c4y8RZ
+         ygiAMBH8Kd6oK/2kOlRiKxg07uV/47djf8zqx18rvF6Yjop1ct2kLdW2E40xFGssWj/b
+         evxgbSDuGA5OhF7VtDEmZ6p/YAy4vjeG1mmkdQlQDbeHyYrIDidlQCUIGOwrRFuneONT
+         rGtPyhHo/khZSexrMOtxz84U6tSA5pgODvic2OK2VeRJa0usL/MeZRo+OSMyHUgZRYtF
+         vo9x6k57TSV6FUjFrcoreujBijYu6PxrExiiXLrR9tV+SZzYfFV73A/GPbjDJS5Cvacw
+         rIDg==
+X-Gm-Message-State: APjAAAXqtDs12vI5ZAQ0FUefQ+yXE3JlemE6qCU/Hzchgmz0h/ZDiSZs
+        /TuXb0oW4Pp/BKIQR3FM88T7zbafpBYCI53wbmBtRw==
+X-Google-Smtp-Source: APXvYqxYyISYJgjAKMkK5Km5L6Ab6HlnxxbR4PPKBd9SqnHm+XzalIf+meWw+dqgWRxR8g/79cmNXgnbmFHnKeC3gAI=
+X-Received: by 2002:a67:e2cf:: with SMTP id i15mr9188834vsm.165.1567590815885;
+ Wed, 04 Sep 2019 02:53:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQFmeLP5IfQOHpOgOs9iM2bs2d5OHQE/UdUoAQf8D7wCDKPyGQG42CZlp8i0v4A=
-Content-Language: zh-tw
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcMDUwMTBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy05MDg5ZWUzMS1jZWY5LTExZTktODg3Mi03YzVjZjg3NDk0NzhcYW1lLXRlc3RcOTA4OWVlMzMtY2VmOS0xMWU5LTg4NzItN2M1Y2Y4NzQ5NDc4Ym9keS50eHQiIHN6PSIyNDk4IiB0PSIxMzIxMjA2NDI4ODk5MTg0OTIiIGg9ImIyYnMwazEyUE03V1llVWh6T1locHMzL2g4TT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: true
+References: <1566412708-6130-1-git-send-email-shirley.her@bayhubtech.com>
+In-Reply-To: <1566412708-6130-1-git-send-email-shirley.her@bayhubtech.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 4 Sep 2019 11:52:58 +0200
+Message-ID: <CAPDyKFouaWGBa8TjBRR78U5=gind7Ku2cqZ4fx-Hz5-O+ytjPQ@mail.gmail.com>
+Subject: Re: [PATCH V8 1/3] mmc: sdhci-pci-o2micro: Change O2 Host PLL and DLL
+ register name
+To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>
+Cc:     "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
+        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+On Wed, 21 Aug 2019 at 20:38, Shirley Her (SC)
+<shirley.her@bayhubtech.com> wrote:
+>
+> Change O2 Host PLL and DLL register name
+>
+> Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
 
-Got it, let it dropped.
+Applied for next, thanks!
 
-Many thanks,
-Johnny
------Original Message-----
-From: 'Dmitry Torokhov' [mailto:dmitry.torokhov@gmail.com] 
-Sent: Tuesday, September 03, 2019 11:55 PM
-To: Johnny.Chuang
-Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; 'STRD2-蔡惠嬋'; 'STRD2-陳崇明經理'; '梁博翔'; 'jeff'
-Subject: Re: [PATCH] Input: elants_i2c - return real value of elants_i2c_initialize()
+Kind regards
+Uffe
 
-On Tue, Sep 03, 2019 at 10:33:33AM +0800, Johnny.Chuang wrote:
-> Hi Dmitry,
-> 
-> Thanks for your explanation.
-> If I want to abandon this patch, what's step I need to do?
 
-Absolutely nothing ;) Consider it dropped.
-
-> 
-> Many thanks,
-> Johnny
-> -----Original Message-----
-> From: 'Dmitry Torokhov' [mailto:dmitry.torokhov@gmail.com] 
-> Sent: Friday, August 30, 2019 2:30 AM
-> To: Johnny.Chuang
-> Cc: linux-kernel@vger.kernel.org; linux-input@vger.kernel.org; STRD2-蔡惠嬋;
-> STRD2-陳崇明經理; '梁博翔'; 'jeff'
-> Subject: Re: [PATCH] Input: elants_i2c - return real value of
-> elants_i2c_initialize()
-> 
-> Hi Johnny,
-> 
-> On Wed, Aug 28, 2019 at 10:33:46AM +0800, Johnny.Chuang wrote:
-> > The return value of elants_i2c_initialize() was always 0.
-> > It maybe register input device when initialize fail.
-> 
-> We do not want to return error here, because it will abort probe, and then
-> we will not be able to initiate firmware flash flow so we can attempt to
-> recover the device.
-> 
-> If you want to try you can change the ts->iap_mode before trying to register
-> input device, but then you need to be very careful about registering and
-> unregistering it later, after flashing or re-flashing firmware.
-> 
-> > 
-> > Signed-off-by: Johnny Chuang <johnny.chuang@emc.com.tw>
-> > ---
-> >  drivers/input/touchscreen/elants_i2c.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/input/touchscreen/elants_i2c.c
-> > b/drivers/input/touchscreen/elants_i2c.c
-> > index d4ad24e..9c9816f 100644
-> > --- a/drivers/input/touchscreen/elants_i2c.c
-> > +++ b/drivers/input/touchscreen/elants_i2c.c
-> > @@ -571,7 +571,7 @@ static int elants_i2c_initialize(struct elants_data
-> *ts)
-> >  	if (error)
-> >  		ts->iap_mode = ELAN_IAP_RECOVERY;
-> >  
-> > -	return 0;
-> > +	return error;
-> >  }
-> >  
-> >  /*
-> > --
-> > 2.7.4
-> > 
-> 
-> Thanks.
-> 
-> -- 
-> Dmitry
-> 
-
--- 
-Dmitry
-
+> ---
+> change in V8:
+>  1. fix patch format error
+>
+> change in V7:
+>  1. change subject
+>
+> change in V6:
+>  1. change subject and commit message to match the patch
+>  2. change register name O2_PLL_WDT_CONTROL1 to O2_PLL_DLL_WDT_CONTROL1
+>
+> change in V5:
+>  1. split 2 patches into 3 patches
+>  2. make dll_adjust_count start from 0
+>  3. fix ret overwritten issue
+>  4. use break instead of goto
+>
+> change in V4:
+>  1. add a bug fix for V3
+>
+> change in V3:
+>  1. add more explanation in dll_recovery and execute_tuning function
+>  2. move dll_adjust_count to O2_host struct
+>  3. fix some coding style error
+>  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
+>
+> change in V2:
+>  1. use usleep_range instead of udelay
+>  2. move dll_adjust_count to sdhci-pci-o2micro.c
+>
+> chagne in V1:
+>  1. add error recovery function to relock DLL with correct phase
+>  2. retuning HS200 after DLL locked
+> ---
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index 9dc4548..b3a33d9 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -51,7 +51,7 @@
+>  #define O2_SD_VENDOR_SETTING2  0x1C8
+>  #define O2_SD_HW_TUNING_DISABLE        BIT(4)
+>
+> -#define O2_PLL_WDT_CONTROL1    0x1CC
+> +#define O2_PLL_DLL_WDT_CONTROL1        0x1CC
+>  #define  O2_PLL_FORCE_ACTIVE   BIT(18)
+>  #define  O2_PLL_LOCK_STATUS    BIT(14)
+>  #define  O2_PLL_SOFT_RESET     BIT(12)
+> @@ -316,23 +316,23 @@ static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+>         u32 scratch32;
+>
+>         /* PLL software reset */
+> -       scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
+> +       scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+>         scratch32 |= O2_PLL_SOFT_RESET;
+> -       sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +       sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>         udelay(1);
+>         scratch32 &= ~(O2_PLL_SOFT_RESET);
+> -       sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +       sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>
+>         /* PLL force active */
+>         scratch32 |= O2_PLL_FORCE_ACTIVE;
+> -       sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +       sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>
+>         /* Wait max 20 ms */
+>         timeout = ktime_add_ms(ktime_get(), 20);
+>         while (1) {
+>                 bool timedout = ktime_after(ktime_get(), timeout);
+>
+> -               scratch = sdhci_readw(host, O2_PLL_WDT_CONTROL1);
+> +               scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+>                 if (scratch & O2_PLL_LOCK_STATUS)
+>                         break;
+>                 if (timedout) {
+> @@ -350,9 +350,9 @@ static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+>
+>  out:
+>         /* Cancel PLL force active */
+> -       scratch32 = sdhci_readl(host, O2_PLL_WDT_CONTROL1);
+> +       scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+>         scratch32 &= ~O2_PLL_FORCE_ACTIVE;
+> -       sdhci_writel(host, scratch32, O2_PLL_WDT_CONTROL1);
+> +       sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+>  }
+>
+>  static int sdhci_o2_get_cd(struct mmc_host *mmc)
+> --
+> 2.7.4
+>
