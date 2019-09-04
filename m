@@ -2,133 +2,213 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B89C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45C8C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B6122CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:24:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="gHS5vyos"
+	by mail.kernel.org (Postfix) with ESMTP id 839062168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfIDNYW (ORCPT
+        id S1730102AbfIDNZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:24:22 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46476 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730195AbfIDNYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:24:20 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m3so11226531pgv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 06:24:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Aipic7kZT8U3QOmK6fS5cVJddmjAxbkLMJFp/Z/WmYk=;
-        b=gHS5vyosv1QQ0qa7hnIX2wZUmcdWOVwnp7DosWzNsjm6ALC3U8rEN2kG7T7rde5TLA
-         bbZnZkhwP/ZcvAxDRzQVXYxjDbptzvTr5oPhUCILohQbKUuyfcPqSpx0846k546TCgyo
-         gShuGXqILXzJCZ1TQHcuTZfWWqpu4buWYnvD0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Aipic7kZT8U3QOmK6fS5cVJddmjAxbkLMJFp/Z/WmYk=;
-        b=EpmWjM5yehJC3HKa5r2hPOh160VHYGGSgUcmV3JRaEieYHUq3vDRaokNO5JCXejMiw
-         s348RC8gfT+aTkoxxFfQ0hOiqujSaeUxgDxPH3AdFC1l150M5cwQCXnDoX3KIOFxGKmf
-         C0I486IM/Xrvwi3EDA927nk2d46+u8ALbuNnv8wvFbyrpcbFsCIzLwZsidU/Xh553f9q
-         60kO75hJsy7O5HgLkkGirvTopz2Pz4k/ZR+/hC2VesvcyhUSRgRNuPHS+fnZUPQ68PF5
-         4SrRplO2kFwPxgKGa7Dq4JX89tYtPoKZcvh5o4Bs+KHJbu5JOriDHaERaoVVlpebUMs7
-         LBMg==
-X-Gm-Message-State: APjAAAX2J+CxZBbxgSNSD5MGRuRnf4JOGjGBQJbku28nHKJWXHT3yp0R
-        bR2QcKtn66v5QIeYjNNTQc3ghg==
-X-Google-Smtp-Source: APXvYqxOBWyhCwfcL7ptQaTTPWzJ8GBg6AwZpE035nT/ILBjMIRzb+Q+lvaYSONZ2bKrOmwzD8+fGg==
-X-Received: by 2002:a63:5c1a:: with SMTP id q26mr18009584pgb.19.1567603459881;
-        Wed, 04 Sep 2019 06:24:19 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id f6sm18453162pga.50.2019.09.04.06.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 06:24:19 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 09:24:18 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Alessio Balsini <balsini@android.com>, mingo@kernel.org,
-        juri.lelli@redhat.com, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
-        bristot@redhat.com, dvyukov@google.com, tglx@linutronix.de,
-        vpillai@digitalocean.com, kernel-team@android.com,
-        will.deacon@arm.com
-Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
- sched_attr::sched_period
-Message-ID: <20190904132418.GA237277@google.com>
-References: <20190726145409.947503076@infradead.org>
- <20190726161357.397880775@infradead.org>
- <20190802172104.GA134279@google.com>
- <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
- <20190822122949.GA245353@google.com>
- <20190822165125.GW2369@hirez.programming.kicks-ass.net>
- <20190831144117.GA133727@google.com>
- <20190902091623.GQ2349@hirez.programming.kicks-ass.net>
- <20190904061616.25ce79e1@oasis.local.home>
- <20190904113038.GE2349@hirez.programming.kicks-ass.net>
+        Wed, 4 Sep 2019 09:25:53 -0400
+Received: from mga02.intel.com ([134.134.136.20]:3279 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727900AbfIDNZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 09:25:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 06:25:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="212390886"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Sep 2019 06:25:51 -0700
+Received: from ravisha1-mobl1.amr.corp.intel.com (unknown [10.255.36.89])
+        by linux.intel.com (Postfix) with ESMTP id 4EF17580105;
+        Wed,  4 Sep 2019 06:25:48 -0700 (PDT)
+Subject: Re: [alsa-devel] [RFC PATCH 3/5] ASoC: SOF: Intel: hda: add SoundWire
+ IP support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Fred Oh <fred.oh@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
+ <20190821201720.17768-4-pierre-louis.bossart@linux.intel.com>
+ <20190904072131.GK2672@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <1897e21f-b086-8233-e96e-6024e75a2153@linux.intel.com>
+Date:   Wed, 4 Sep 2019 08:25:47 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904113038.GE2349@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190904072131.GK2672@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 01:30:38PM +0200, Peter Zijlstra wrote:
-> On Wed, Sep 04, 2019 at 06:16:16AM -0400, Steven Rostedt wrote:
-> > On Mon, 2 Sep 2019 11:16:23 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > in sched_dl_period_handler(). And do:
-> > > 
-> > > +	preempt_disable();
-> > > 	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
-> > > 	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
-> > > +	preempt_enable();
-> > 
-> > Hmm, I'm curious. Doesn't the preempt_disable/enable() also add
-> > compiler barriers which would remove the need for the READ_ONCE()s here?
+On 9/4/19 2:21 AM, Vinod Koul wrote:
+> On 21-08-19, 15:17, Pierre-Louis Bossart wrote:
+>> The Core0 needs to be powered before the SoundWire IP is initialized.
+>>
+>> Call sdw_intel_init/exit and store the context. We only have one
+>> context, but depending on the hardware capabilities and BIOS settings
+>> may enable multiple SoundWire links.
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   sound/soc/sof/intel/hda.c | 40 +++++++++++++++++++++++++++++++++------
+>>   sound/soc/sof/intel/hda.h |  5 +++++
+>>   2 files changed, 39 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+>> index a968890d0754..e754058e3679 100644
+>> --- a/sound/soc/sof/intel/hda.c
+>> +++ b/sound/soc/sof/intel/hda.c
+>> @@ -57,6 +57,8 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
+>>   {
+>>   	acpi_handle handle;
+>>   	struct sdw_intel_res res;
+>> +	struct sof_intel_hda_dev *hdev;
+>> +	void *sdw;
+>>   
+>>   	handle = ACPI_HANDLE(sdev->dev);
+>>   
+>> @@ -66,23 +68,32 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
+>>   	res.irq = sdev->ipc_irq;
+>>   	res.parent = sdev->dev;
+>>   
+>> -	hda_sdw_int_enable(sdev, true);
+>> -
+>> -	sdev->sdw = sdw_intel_init(handle, &res);
+>> -	if (!sdev->sdw) {
+>> +	sdw = sdw_intel_init(handle, &res);
 > 
-> They do add compiler barriers; but they do not avoid the compiler
-> tearing stuff up.
+> should this be called for platforms without sdw, I was hoping that some
+> checks would be performed.. For example how would skl deal with this?
 
-Neither does WRITE_ONCE() on some possibly buggy but currently circulating
-compilers :(
+Good point. For now we rely on CONFIG_SOUNDWIRE_INTEL to use a fallback, 
+but if the kernel defines this config and we run on an older platform 
+the only safety would be the hardware capabilities and BIOS 
+dependencies, I need to test if it works.
+Thanks for the feedback.
 
-As Will said in:
-https://lore.kernel.org/lkml/20190821103200.kpufwtviqhpbuv2n@willie-the-truck/
+> 
+>> +	if (!sdw) {
+>>   		dev_err(sdev->dev, "SDW Init failed\n");
+>>   		return -EIO;
+>>   	}
+>>   
+>> +	hda_sdw_int_enable(sdev, true);
+>> +
+>> +	/* save context */
+>> +	hdev = sdev->pdata->hw_pdata;
+>> +	hdev->sdw = sdw;
+>> +
+>>   	return 0;
+>>   }
+>>   
+>>   static int hda_sdw_exit(struct snd_sof_dev *sdev)
+>>   {
+>> +	struct sof_intel_hda_dev *hdev;
+>> +
+>> +	hdev = sdev->pdata->hw_pdata;
+>> +
+>>   	hda_sdw_int_enable(sdev, false);
+>>   
+>> -	if (sdev->sdw)
+>> -		sdw_intel_exit(sdev->sdw);
+> 
+> this looks suspect, you are adding sdw calls here so how is this getting
+> removed? Did I miss something...
 
-void bar(u64 *x)
-{
-	*(volatile u64 *)x = 0xabcdef10abcdef10;
-}
+That must be a squash/tick-tock error, we moved the 'sdw' field from the 
+top-level 'sdev' structure to an intel-specific one. In the latest code 
+I have a single patch to add the helper and all dependencies in one shot.
 
-gives:
-
-bar:
-	mov	w1, 61200
-	movk	w1, 0xabcd, lsl 16
-	str	w1, [x0]
-	str	w1, [x0, 4]
-	ret
-
-Speaking of which, Will, is there a plan to have compiler folks address this
-tearing issue and are bugs filed somewhere? I believe aarch64 gcc is buggy,
-and clang is better but is still buggy?
-
-thanks,
-
- - Joel
+> 
+>> +	if (hdev->sdw)
+>> +		sdw_intel_exit(hdev->sdw);
+>> +	hdev->sdw = NULL;
+>>   
+>>   	return 0;
+>>   }
+>> @@ -713,6 +724,21 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
+>>   	/* set default mailbox offset for FW ready message */
+>>   	sdev->dsp_box.offset = HDA_DSP_MBOX_UPLINK_OFFSET;
+>>   
+>> +	/* need to power-up core before setting-up capabilities */
+>> +	ret = hda_dsp_core_power_up(sdev, HDA_DSP_CORE_MASK(0));
+>> +	if (ret < 0) {
+>> +		dev_err(sdev->dev, "error: could not power-up DSP subsystem\n");
+>> +		goto free_ipc_irq;
+>> +	}
+>> +
+>> +	/* initialize SoundWire capabilities */
+>> +	ret = hda_sdw_init(sdev);
+>> +	if (ret < 0) {
+>> +		dev_err(sdev->dev, "error: SoundWire get caps error\n");
+>> +		hda_dsp_core_power_down(sdev, HDA_DSP_CORE_MASK(0));
+>> +		goto free_ipc_irq;
+>> +	}
+>> +
+>>   	return 0;
+>>   
+>>   free_ipc_irq:
+>> @@ -744,6 +770,8 @@ int hda_dsp_remove(struct snd_sof_dev *sdev)
+>>   	snd_hdac_ext_bus_device_remove(bus);
+>>   #endif
+>>   
+>> +	hda_sdw_exit(sdev);
+>> +
+>>   	if (!IS_ERR_OR_NULL(hda->dmic_dev))
+>>   		platform_device_unregister(hda->dmic_dev);
+>>   
+>> diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
+>> index c8f93317aeb4..48e09b7daf0a 100644
+>> --- a/sound/soc/sof/intel/hda.h
+>> +++ b/sound/soc/sof/intel/hda.h
+>> @@ -399,6 +399,11 @@ struct sof_intel_hda_dev {
+>>   
+>>   	/* DMIC device */
+>>   	struct platform_device *dmic_dev;
+>> +
+>> +#if IS_ENABLED(CONFIG_SOUNDWIRE_INTEL)
+> 
+> is this really required, context is a void pointer
+> 
+>> +	/* sdw context */
+>> +	void *sdw;
+> 
+>> +#endif
+>>   };
+>>   
+>>   static inline struct hdac_bus *sof_to_bus(struct snd_sof_dev *s)
+>> -- 
+>> 2.20.1
+> 
 
