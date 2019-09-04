@@ -2,153 +2,88 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1BEC41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D19C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:06:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2602122DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FCE20820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="sSX9+LYS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PTrUWPSL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfIDFEW (ORCPT
+        id S1727994AbfIDFG6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 01:04:22 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43951 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfIDFEW (ORCPT
+        Wed, 4 Sep 2019 01:06:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41404 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfIDFG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 01:04:22 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u72so6352020pgb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 22:04:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lsq82oNvBEQIeF0WKJ+0h4DDWoEVAOmpOmGGWPrimjg=;
-        b=sSX9+LYSky7pVINOhuiSGCpzJfa3HJmKQK2ENjGQS8trcc5Ge/BA3AImBjV67Btlly
-         kXba3zW5GwwxPfXhf+29/2SxuIHn1gx3Cd8o0O+kEF8wXV0j5ORhJBc3n9a9III/2ZFr
-         H5L2KmnULH1LaMxIRXIgMGl8+6walA0wD4LSE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lsq82oNvBEQIeF0WKJ+0h4DDWoEVAOmpOmGGWPrimjg=;
-        b=OUf1Z/KLhK317H32DIk8U1jfB5hEVNtvrxkNWIhwJvzFJsBTm5CboK2uE0NePUGxHK
-         PMVquk+mMJCUnJHKINAtrRGs3CJKbSy/bFYqUil+PX5jsDyiuDEvdUxRn+BX8GB7wG3c
-         zzWqZtuh9OJrQFgcqQnFKZZIhz9Y1GzYu+3FLtm0I/OOo1hnd4kO3rh6M5AD0WNfa85A
-         lECHzDJ3JUZcHnjBITE7Jiemb3T2UOZjRkquGXp07vlhQgS7NbPxdP6L3xbLXHwMJreh
-         VvXbwzDsIz8L6jfW/DoEVyFqgaP88O7fnVkAiM/E857p8hUAz+8MM1JAuJ5SeZ6rNTXk
-         u/mw==
-X-Gm-Message-State: APjAAAXLzrAsMSNf9vrGwxwRV/+DcUZN9A3Exq6zEituVueoUCBhz2GE
-        uSybQ9UCxdYZfwdCWZ0UuXBeIg==
-X-Google-Smtp-Source: APXvYqx8+aLwpBI+yL/JAJGP3WN6LgZfckQim9p28+3ijWVor59if0jY7IKKr1PZPerfiDio+JKCdA==
-X-Received: by 2002:a17:90a:b292:: with SMTP id c18mr3042247pjr.1.1567573461329;
-        Tue, 03 Sep 2019 22:04:21 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id b13sm1185776pjz.10.2019.09.03.22.04.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 22:04:20 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 01:04:19 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 1/2] pci: Convert to use built-in RCU list checking
-Message-ID: <20190904050419.GA102582@google.com>
-References: <20190830231817.76862-1-joel@joelfernandes.org>
- <201909041108.RSjNvfDL%lkp@intel.com>
+        Wed, 4 Sep 2019 01:06:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lwHlR6eguspixxjLORsTnTfmknSIrxvTGGWnsAn8wsM=; b=PTrUWPSLkpi9CLCTxbgljWi3X
+        j/aUDFm7nCsehr2HZK1+y+5VPv4WRZ78mFYJskr1n3rdSrSwmGrc7gB0pL1EvW03wpD488H2MkMVv
+        M+QHz9iFmqfb5gUi5F1b3SZWSsTITUwbcjtd+6cOmCFNVB6NYs0/gZunNgGdiek3FQbQk66cK/bSw
+        UzbisnNvUnWBbGjwZCzllw/Pfxwn51PWDmTwUR9CvZytp6l71EE+qqqoTzLtvRAWS+eyyfZ7oapUe
+        7xxW3ODDuKwtnwkbScq0d8yQJblsFkbYfCpxOy82syPHetc3Mmwbj4AEboSShlG4bnZYssmJwY79d
+        UAVfpVPRA==;
+Received: from [2601:1c0:6200:6e8::e2a8]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5NVR-0001zX-W7; Wed, 04 Sep 2019 05:06:58 +0000
+To:     Vinod Koul <vkoul@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc:     Dan Williams <dan.j.williams@intel.co>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] dma: iop-adma.c: fix printk format warning
+Message-ID: <1803541f-98a6-7cce-b050-ff1e9a333ab2@infradead.org>
+Date:   Tue, 3 Sep 2019 22:06:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909041108.RSjNvfDL%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 12:06:43PM +0800, kbuild test robot wrote:
-> Hi "Joel,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.3-rc7 next-20190903]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/pci-Convert-to-use-built-in-RCU-list-checking/20190901-211013
-> config: x86_64-rhel-7.6 (attached as .config)
-> compiler: gcc-7 (Debian 7.4.0-11) 7.4.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64 
+From: Randy Dunlap <rdunlap@infradead.org>
 
-This error seems bogus. I pulled -next and applied this patch and it builds
-fine. I am not sure what is wrong with the 0day tree, and the above 0day link
-is also dead.
+Fix printk format warning in iop-adma.c (seen on x86_64) by using
+%pad:
 
-What's going on with 0day ?!
+../drivers/dma/iop-adma.c:118:12: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 6 has type ‘dma_addr_t {aka long long unsigned int}’ [-Wformat=]
 
-thanks,
+Fixes: c211092313b9 ("dmaengine: driver for the iop32x, iop33x, and iop13xx raid engines")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
+---
+v2: add Ack from Dan and update to current linux-next;
 
- - Joel
+ drivers/dma/iop-adma.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    drivers/pci/controller/vmd.c: In function 'vmd_irq':
-> >> drivers/pci/controller/vmd.c:722:37: error: macro "list_for_each_entry_rcu" passed 4 arguments, but takes just 3
->         srcu_read_lock_held(&irqs->srcu))
->                                         ^
-> >> drivers/pci/controller/vmd.c:721:2: error: unknown type name 'list_for_each_entry_rcu'
->      list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
->      ^~~~~~~~~~~~~~~~~~~~~~~
-> >> drivers/pci/controller/vmd.c:723:28: error: expected ')' before '->' token
->       generic_handle_irq(vmdirq->virq);
->                                ^~
-> >> drivers/pci/controller/vmd.c:721:2: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
->      list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
->      ^~~~~~~~~~~~~~~~~~~~~~~
->    drivers/pci/controller/vmd.c:717:18: warning: unused variable 'vmdirq' [-Wunused-variable]
->      struct vmd_irq *vmdirq;
->                      ^~~~~~
-> 
-> vim +/list_for_each_entry_rcu +722 drivers/pci/controller/vmd.c
-> 
->    713	
->    714	static irqreturn_t vmd_irq(int irq, void *data)
->    715	{
->    716		struct vmd_irq_list *irqs = data;
->    717		struct vmd_irq *vmdirq;
->    718		int idx;
->    719	
->    720		idx = srcu_read_lock(&irqs->srcu);
->  > 721		list_for_each_entry_rcu(vmdirq, &irqs->irq_list, node,
->  > 722					srcu_read_lock_held(&irqs->srcu))
->  > 723			generic_handle_irq(vmdirq->virq);
->    724		srcu_read_unlock(&irqs->srcu, idx);
->    725	
->    726		return IRQ_HANDLED;
->    727	}
->    728	
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
+--- linux-next-20190903.orig/drivers/dma/iop-adma.c
++++ linux-next-20190903/drivers/dma/iop-adma.c
+@@ -116,9 +116,9 @@ static void __iop_adma_slot_cleanup(stru
+ 	list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
+ 					chain_node) {
+ 		pr_debug("\tcookie: %d slot: %d busy: %d "
+-			"this_desc: %#x next_desc: %#llx ack: %d\n",
++			"this_desc: %pad next_desc: %#llx ack: %d\n",
+ 			iter->async_tx.cookie, iter->idx, busy,
+-			iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
++			&iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
+ 			async_tx_test_ack(&iter->async_tx));
+ 		prefetch(_iter);
+ 		prefetch(&_iter->async_tx);
 
