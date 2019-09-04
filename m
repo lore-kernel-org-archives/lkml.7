@@ -2,125 +2,73 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C12AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70EBC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E989F21881
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:40:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567622446;
-	bh=QjKB4n4ji78iVovIXcpUQDOwQmi9i+Rbr54MnfBrpFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I6IP/1xKLLw6Apv2XShb7v0C8XEXmkQCXN2YFwOoDaWCPWroDkKlKMU1WYMS9SXlJ
-	 9iFxyQhobyc8/7dmNmUCJMHOJZmOtDLBe+lKf8NsjuWmB+c3KDc6lkQVbrCl/Drljq
-	 dTf7XDTWsjnYtQtqN1bB3fdk3S3iGxrtINHh753k=
+	by mail.kernel.org (Postfix) with ESMTP id A47482077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387720AbfIDSkp (ORCPT
+        id S2387676AbfIDSpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:40:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46231 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732798AbfIDSko (ORCPT
+        Wed, 4 Sep 2019 14:45:20 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34160 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731813AbfIDSpU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:40:44 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h7so21041859wrt.13;
-        Wed, 04 Sep 2019 11:40:42 -0700 (PDT)
+        Wed, 4 Sep 2019 14:45:20 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a13so25616740qtj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:45:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wDpdMlMCF5UrovGjF4Va2FMMy9gFIfRsLeQXmXiaV3g=;
-        b=D+mkB834o7u+D0K5/oNHvDZV8qN0Zb/HFP2C86d8N0wIao+bRF75NBPZ7cKvvoghVn
-         y0iqo8dKIhruiSDxrGIz+/A906I7wGUK7LkTce54qrFc7n61jqnuIlgy5lhZo1d3b/el
-         IsVm6gUImJPr8bczueedN8Inpwd8pJ3BRo99SUfywj/mthRVZd8C3B9Wt+lNnasfy8JV
-         R0ZQ8KfZDJDw/kLEy7GhlSOsxWxb7Pgfu2ra45DzARcF4LjZCssmgb1Sh+h6L6UWY6fL
-         m6FYyqiYA7+mh1FlgFaowliQPZJ9vj2oj19IEm4riNNq9/EFYFVNneqHijeVw8uyk2oA
-         RQLg==
-X-Gm-Message-State: APjAAAU8pwDVbJegRqsiDHxDj3APuxkxLHbZrX9igNGJ/mwdyQNYbl9Q
-        G5Aft1/TifixRH8TYi/MUEM=
-X-Google-Smtp-Source: APXvYqxvtG9kHPmcaKLv3d1DsMI6LazeZbKqnHU6FsxKP7huILUBq0jw4mH4+uhsH812Uk0oEnJa9g==
-X-Received: by 2002:adf:c613:: with SMTP id n19mr29554578wrg.109.1567622441839;
-        Wed, 04 Sep 2019 11:40:41 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.145])
-        by smtp.googlemail.com with ESMTPSA id 207sm6841451wme.17.2019.09.04.11.40.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 11:40:41 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 20:40:37 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
-        willy.mh.wolff.ml@gmail.com
-Subject: Re: [PATCH v13 0/8] Exynos5 Dynamic Memory Controller driver
-Message-ID: <20190904184037.GD12918@kozik-lap>
-References: <CGME20190821104316eucas1p2ecd715f3105921ec83e0acf1291201f8@eucas1p2.samsung.com>
- <20190821104303.32079-1-l.luba@partner.samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GzPtnoZKBXej/mlgs8PtbOknEj9n3Us0gAfYmyqSvjw=;
+        b=VdlMxU2Og1meLhN3mybLTe3Z8QrknnLkvmd5oiDCaC5TdU0TciUe8RsrkaULjcbiIv
+         PgCfv2o7h/AAF/A10Cqif9bj9DqzD5OGQYoSRPiu1/TR5xFfzKYFeTqqD3mhxqVkCW9e
+         eSn+a/17Hz06iEh2Q89xQ7DBbc9C5c0bxU8n/odE6sNjHVBIIZaTYXnUwpB2/0/c1CQ2
+         iFQl2cMqQR1aIt20J4/M1O1p+5ngrULs+maNx+Vi+t4VF1vnBAbHljdR9ePTnWWZbBVe
+         cAPFrrUy0mX3O+iQV1yjcqLo48rvi+DYuqVSfNBG2QWgYMvpIZY9MxIt1JPKHmAAkmV5
+         FVxA==
+X-Gm-Message-State: APjAAAU5pMx/vEzMVWOOk0dfWdqLxDxtjjLOGHcbECuFLq3jDLplu+6l
+        ZdPkocXjaUpkpBRLUkUG4G8L5TILRFBru/8ZDJg=
+X-Google-Smtp-Source: APXvYqx7VEb6qlalpWvOqPpVbV9Zbwk6y655ZqijP1UIaRUoQEo5Zrlg2JVRl5ZF1ZBXcdAB8GtncAVL/LandToRpWI=
+X-Received: by 2002:ac8:5306:: with SMTP id t6mr27338812qtn.204.1567622719308;
+ Wed, 04 Sep 2019 11:45:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190821104303.32079-1-l.luba@partner.samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1566875507-8067-1-git-send-email-santosh.shilimkar@oracle.com>
+ <CAK8P3a3_NWWBFrpNpbPH9+47Segi_EaYx2jx5jvPhYJJqR+a7A@mail.gmail.com> <3af4da24-2246-ff94-b83d-2b6ada4fc362@oracle.com>
+In-Reply-To: <3af4da24-2246-ff94-b83d-2b6ada4fc362@oracle.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 4 Sep 2019 20:45:03 +0200
+Message-ID: <CAK8P3a2cM+DCGX80otq5y37qMPtuM7jz=Gocz41b6=fOkEiXQg@mail.gmail.com>
+Subject: Re: [GIT PULL] SOC: TI soc updates for 5.4
+To:     Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc:     arm-soc <arm@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 21, 2019 at 12:42:55PM +0200, Lukasz Luba wrote:
-> Hi all,
-> 
-> This is v13 which makes cosmetic changes. It is based on current mainline
-> (v5.3-rc5) with with devfreq/for-next where there is a PPMU patch [1].
-> 
-> The patch set adds support of Dynamic Memory Controller for Exynos5422 SoC.
-> The driver supports Dynamic Voltage and Frequency Scaling
-> for the DMC and DRAM. It also provides needed timings for different
-> speed operations of the DRAM memory.
-> There is also new generic code in of_memory and headers which allows to parse
-> LPDDR3 memories defined in device-tree.
-> 
-> Here are the last changes suggested by Krzysztof during his review.
-> For the previous changes in older revisions please refer to [2], there is
-> more detailed change log.
-> 
-> changes:
-> v13:
-> - skipped patch with chipID changes in DT, since it is not used anymore,
-> - removed license comment in of_memory.c since SPDX has been merged,
-> - aligned comment to the current fields in the structure,
-> - changed printed warning when timings are not found,
-> 
-> Regards,
-> Lukasz Luba
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=b617376df8f01c975dee66802f4da16291f92079
-> [2] https://lkml.org/lkml/2019/7/22/251
-> 
+On Wed, Sep 4, 2019 at 7:35 PM <santosh.shilimkar@oracle.com> wrote:
+> On 9/4/19 6:13 AM, Arnd Bergmann wrote:
+> > On Tue, Aug 27, 2019 at 5:12 AM Santosh Shilimkar
+> >
+> > Do you have any dependencies on -rc2 in your changes? If not,
+> > could you please resubmit after rebasing? I can also just
+> > cherry-pick those three commits if that's easier.
+> >
+> No dependencies. Can you please cherry pick them this time ?
+> Will use rc1 for future pull request(s). Thanks !!
 
-Thanks, applied entire set (except last defconfig patch) to two topic
-branches, either for v5.4 or for v5.5 (it is quite late). I'll take the
-last defconfig separately.
+Ok, done.
 
-Automated tools found few issues to fix, please send incremental
-patches.
-
-In general, for new drivers always run automated checks - Smatch and
-Sparse. Coccinelle is also recommended. Checkpatch pointed missing
-compatible documentation - need to be fixed (see
-https://elixir.bootlin.com/linux/v5.3-rc7/source/Documentation/devicetree/bindings/eeprom/at25.txt
-as an example).
-
-Best regards,
-Krzysztof
-
+      Arnd
