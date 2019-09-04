@@ -2,52 +2,51 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3735FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7300BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 130AB22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3E122CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619761;
-	bh=/zz8r7EZO+1IMMn/392TYhPu1fvB5TNuOucyXPt4Zrc=;
+	s=default; t=1567619763;
+	bh=C+g5dJThEkiTnCwufBUzsevaiuznZHmKFpkm824y7JI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQ7n8/9O606Aq8tPzIhwZubb6jkjao2xH6/QMlPfO0Aj48PjxgpwROm9fEgLFzbuj
-	 0+fbRlxB/rdxpDSM3QE/M8TgF3pFd3V392c4mwbdVd7LH/rbzGXRMe1xf8xQWava+x
-	 WFYtUStKbRE/tQZToXSF2Fm0kVukQ5/YFdjbR2KI=
+	b=lqhRMuNivulBqXAvQ4HpgR3qFT+svQWemZaVIBRyJRJKIKyXILn/HDwg8BBJr13YR
+	 aiBIC9p6Lcnbh7EK0GQHni4jM/gh63vUgbMehKFGaklzHpVB+WDqgOLocX/oxuOxLZ
+	 9+V5IrusXrYVEIJ5+27u+mh9XVJxZDAwWCu7HC6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733082AbfIDR4A (ORCPT
+        id S1733118AbfIDR4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:56:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733000AbfIDRz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:56 -0400
+        id S1733059AbfIDRz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:55:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CABD522CED;
-        Wed,  4 Sep 2019 17:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7601822CF5;
+        Wed,  4 Sep 2019 17:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619756;
-        bh=/zz8r7EZO+1IMMn/392TYhPu1fvB5TNuOucyXPt4Zrc=;
+        s=default; t=1567619759;
+        bh=C+g5dJThEkiTnCwufBUzsevaiuznZHmKFpkm824y7JI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FsphpiBbzwGW5HsFwkgQOK4u/jWDOGESBakwC18lTeTYv78SXOPzQxc0reEl7WeAH
-         NA9BKtsaKb7dslCKYX0d9Z0oyiKYAHrtPgfNV7jEYp+NRw788J8zfaZLFvBeJuiNxR
-         rdNqmG1KhhGiycuIgsZOTPL1EPeIBVPpZ/LGEufk=
+        b=h+dATPTpUNbLbAAETdToKomv/2S5rqlul0sUQgr47KKIDXvxpNxbBwQIVoJbGz8HU
+         BUzQl8sXj8+MNxAtkBNJ0fPbBlhnPBBUKfsDF6XFq0myJaUYWeSbB+ym74zR9Otz29
+         3Lu5nV/x3uG02Ze3tF4yPZD5IFYtnY7jUARRDFdA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/77] can: peak_usb: force the string buffer NULL-terminated
-Date:   Wed,  4 Sep 2019 19:53:02 +0200
-Message-Id: <20190904175305.089206368@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.4 24/77] Revert "dm bufio: fix deadlock with loop device"
+Date:   Wed,  4 Sep 2019 19:53:11 +0200
+Message-Id: <20190904175305.820812068@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,38 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e787f19373b8a5fa24087800ed78314fd17b984a ]
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-strncpy() does not ensure NULL-termination when the input string size
-equals to the destination buffer size IFNAMSIZ. The output string is
-passed to dev_info() which relies on the NULL-termination.
+commit cf3591ef832915892f2499b7e54b51d4c578b28c upstream.
 
-Use strlcpy() instead.
+Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
+fix has been made available with commit d0a255e795ab ("loop: set
+PF_MEMALLOC_NOIO for the worker thread").
 
-This issue is identified by a Coccinelle script.
+Note that the fix offered by commit bd293d071ffe doesn't really prevent
+the deadlock from occuring - if we look at the stacktrace reported by
+Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
+i.e. it has already successfully taken the mutex. Changing the mutex
+from mutex_lock to mutex_trylock won't help with deadlocks that happen
+afterwards.
 
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
+   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
+   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
+   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
+   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
+   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
+   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
+   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
+   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
+   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
+   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
+  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
+  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
+  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
+  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
+  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
+Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-bufio.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-index e13bc27b42911..b1d68f49b3989 100644
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -881,7 +881,7 @@ static void peak_usb_disconnect(struct usb_interface *intf)
+--- a/drivers/md/dm-bufio.c
++++ b/drivers/md/dm-bufio.c
+@@ -1561,7 +1561,9 @@ dm_bufio_shrink_scan(struct shrinker *sh
+ 	unsigned long freed;
  
- 		dev_prev_siblings = dev->prev_siblings;
- 		dev->state &= ~PCAN_USB_STATE_CONNECTED;
--		strncpy(name, netdev->name, IFNAMSIZ);
-+		strlcpy(name, netdev->name, IFNAMSIZ);
+ 	c = container_of(shrink, struct dm_bufio_client, shrinker);
+-	if (!dm_bufio_trylock(c))
++	if (sc->gfp_mask & __GFP_FS)
++		dm_bufio_lock(c);
++	else if (!dm_bufio_trylock(c))
+ 		return SHRINK_STOP;
  
- 		unregister_netdev(netdev);
- 
--- 
-2.20.1
-
+ 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
 
 
