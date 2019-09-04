@@ -2,106 +2,76 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F17C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676CCC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF792070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613227;
-	bh=ahnRj9CrAKKpZqt1LnrLdaVtCpkOtW2N/SPvWQjSWnM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U8gocIKJW/Yb32vQhJP+7J0hVLXuP6YX5+2mJ/SCVF5QT9PbmjIY+/4a8am68R4hh
-	 dTTe6X93uQjk1la+iiIEQP3/45ULu2tFbCNRYBygkXriepeXcaKtjrrHOTJNZAVjU7
-	 vy8qbwosRYw8w0ZofXGGyWWPlJxf0AkuN3qizCSY=
+	by mail.kernel.org (Postfix) with ESMTP id 3E0CC20820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbfIDQCH (ORCPT
+        id S1732781AbfIDQHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:07:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:57812 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733153AbfIDQCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:04 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D2E82087E;
-        Wed,  4 Sep 2019 16:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612923;
-        bh=ahnRj9CrAKKpZqt1LnrLdaVtCpkOtW2N/SPvWQjSWnM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3QJQwdzXnbt6yLUmtGlcZP/iBQzd4bjKDXGKK4+J1gXi9sZJGkZ4E9Nwc5Q2eBQj
-         oZc7Rz22vlNcSH2R2pg/rAcTEjLbBUf45iE6aCkq1xQCW2KOtDY8Rq7b4xINUSTrt2
-         MKrbaqzR0LlX9wx+te8V0jo1ARW77fUkA1hH0zQo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhaoyang <huangzhaoyang@gmail.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 26/36] ARM: 8901/1: add a criteria for pfn_valid of arm
-Date:   Wed,  4 Sep 2019 12:01:12 -0400
-Message-Id: <20190904160122.4179-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
-References: <20190904160122.4179-1-sashal@kernel.org>
+        id S1733172AbfIDQCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7813828;
+        Wed,  4 Sep 2019 09:02:06 -0700 (PDT)
+Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 40F573F246;
+        Wed,  4 Sep 2019 09:02:04 -0700 (PDT)
+Subject: Re: [PATCH v4 00/10] arm64: Stolen time support
+To:     Andrew Jones <drjones@redhat.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190830084255.55113-1-steven.price@arm.com>
+ <20190903080348.5whavgrjki7zrtmd@kamzik.brq.redhat.com>
+ <20190903084921.zikiucdruymfgfsq@kamzik.brq.redhat.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <6c68dd0c-5103-cd2d-4162-b37c6d10460b@arm.com>
+Date:   Wed, 4 Sep 2019 17:02:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903084921.zikiucdruymfgfsq@kamzik.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhaoyang <huangzhaoyang@gmail.com>
+On 03/09/2019 09:49, Andrew Jones wrote:
+> On Tue, Sep 03, 2019 at 10:03:48AM +0200, Andrew Jones wrote:
+>> Hi Steven,
+>>
+>> I had some fun testing this series with the KVM selftests framework. It
+>> looks like it works to me, so you may add
+>>
+>> Tested-by: Andrew Jones <drjones@redhat.com>
+>>
+> 
+> Actually, I probably shouldn't be quite so generous with this tag yet,
+> because I haven't yet tested the guest-side changes. To do that I'll
+> need to start prototyping something for QEMU. I need to finish some other
+> stuff first, but then I can do that.
 
-[ Upstream commit 5b3efa4f1479c91cb8361acef55f9c6662feba57 ]
+Thanks for the testing, I'll wait for your other testing before adding
+your Tested-by tag.
 
-pfn_valid can be wrong when parsing a invalid pfn whose phys address
-exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
-
-The issue originally arise from bellowing call stack, which corresponding to
-an access of the /proc/kpageflags from userspace with a invalid pfn parameter
-and leads to kernel panic.
-
-[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
-[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
-[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
-[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
-[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
-[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
-(ret_fast_syscall+0x0/0x28)
-
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mm/init.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 4fa12fcf1f5d8..27a40101dd3a7 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -195,6 +195,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
- #ifdef CONFIG_HAVE_ARCH_PFN_VALID
- int pfn_valid(unsigned long pfn)
- {
-+	phys_addr_t addr = __pfn_to_phys(pfn);
-+
-+	if (__phys_to_pfn(addr) != pfn)
-+		return 0;
-+
- 	return memblock_is_map_memory(__pfn_to_phys(pfn));
- }
- EXPORT_SYMBOL(pfn_valid);
--- 
-2.20.1
-
+Steve
