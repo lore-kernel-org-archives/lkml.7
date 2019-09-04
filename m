@@ -2,123 +2,132 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DFDC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53C7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A15423402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621237;
-	bh=UbwxphCkJgqkkmqkEGI327ZtsTfNouQD7+qWRvtcpI0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVMsjPLTIMn5WuOyXBUykVdnbCGxQ57r3TF8uiZwDzisSoPV8Ofb1CzI9j590M2ZP
-	 XTOoAvS/OmFLc5Vcglw3/gL/0QTrvVlhoh6q42ry8ce15efcYrodK8C0fi+YPKQnVm
-	 Oe15vFI/j0FcEP/SlX7JGRErTSptLPFEOkGgZtwY=
+	by mail.kernel.org (Postfix) with ESMTP id C163D2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FA9r/2CC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389698AbfIDSH7 (ORCPT
+        id S2389502AbfIDSHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389302AbfIDSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8BA520870;
-        Wed,  4 Sep 2019 18:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620475;
-        bh=UbwxphCkJgqkkmqkEGI327ZtsTfNouQD7+qWRvtcpI0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stARnLWN+RtRq81hHYa2OulY7q8ZKiMxoo3ABQxJRfDDRAdTgFduGi5WKCs4D0yY0
-         wBdiW/2W7hTfpofjgBFhmZbensHnq+aGr7q+iws+c5ByfNiaK5WeIf4ebfTlMLHbi+
-         ftnEcKLDIAZ9vw+LpycL16+7cciiPGrzalWOtC0o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Subject: [PATCH 4.19 71/93] lib: logic_pio: Avoid possible overlap for unregistering regions
-Date:   Wed,  4 Sep 2019 19:54:13 +0200
-Message-Id: <20190904175309.207549490@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
-References: <20190904175302.845828956@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 4 Sep 2019 14:07:37 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35269 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389066AbfIDSHf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:07:35 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g7so22308921wrx.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0pNxF1eREpDVfAwH6P4Jz2ZR6a4tSQss5fAPg9xipcU=;
+        b=FA9r/2CC69zrS4nHuU7/ZJsIVHzlYShr6fmJ9cEc28SsCM0dUkvafTdZzwpdBAt2UJ
+         jgxR/dmssZ0xRcjzo8HoyhLmr8+B211eJV67GRxLPu86Kh08UJ1M1p+lCItWU9YBYMaP
+         APb5itG0fZ19ZkUDqEPz9SJpJu/LnXye6hZ5ZtVEqo8WP/O4eoRmU/L14TfW3+/K1Iaw
+         JTJFif5NJ9zgEIzRwPA2gZGm20IFW/hWZHk4qoXyXrYt3I5F4HQvmvCA10jlLa8lk3Vp
+         2MEc68xp6S66OT+1IObXV0L3CeWimjP7T92glaYZ4xeielSt4PxHZK5WPz9JnXCHmnLB
+         bDvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0pNxF1eREpDVfAwH6P4Jz2ZR6a4tSQss5fAPg9xipcU=;
+        b=oDsbi08iNejWDrNUyVWbiO4JQaTj4cekjFIfkAnqQONqAPmlTROmwudvqMuHUuRzTJ
+         KYy/2ZcvaBeJQfdn8mguM/DZ04a5iNZmoiSJDmgIqSliC8vz3QSnZ8lovaUatb5FOLp4
+         UjVfrJCIXbJecStKeb85Sbrg4NfLAUCrVHU21+mqxc+HiuG2o0kkgYRpLqALVgx8CCAj
+         FNcOp187n51Wt89PVM7UYA8gXllXmS55tMMqU9W1GvxEfvyRvOkQgmhGGtdJ0ZE5Fxi8
+         Nw2TG+m13uWza0FOvFXakzk+KXjz7XCNHCRs6YGZtZU6Oai+zE4ooxux4L9I3zQgcvc8
+         T2tg==
+X-Gm-Message-State: APjAAAWmnKbjXgvULAlOtreY5ABhFC/8WjQ6NwKBcWt7PXAcZ95QbpDS
+        9KLWFKK1FCx31CG2zJwk96vPHfI7wXMTe9m3sV4hzA==
+X-Google-Smtp-Source: APXvYqw1PiXtVVva1gwnaGI3eyRH6HOU+Beb+APJ8gT0kJZ5PRbpcdwK3VG10lRtE7999s45H+XmUEwn8pdTuluQXVU=
+X-Received: by 2002:a5d:6703:: with SMTP id o3mr10511544wru.335.1567620453261;
+ Wed, 04 Sep 2019 11:07:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190904180045.138513-1-irogers@google.com>
+In-Reply-To: <20190904180045.138513-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 4 Sep 2019 11:07:21 -0700
+Message-ID: <CAP-5=fXdZudoPWGASVVB0YKAok9hTBKAY43h7prSX7=1PPoR3w@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Fix include paths in ui
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+Apologies, this was an accidental resend of a patch that's already
+merged fa37bab6d7154658d8a35920513f9396587754cc.
 
-commit 0a27142bd1ee259e24a0be2b0133e5ca5df8da91 upstream.
+Ian
 
-The code was originally written to not support unregistering logical PIO
-regions.
-
-To accommodate supporting unregistering logical PIO regions, subtly modify
-LOGIC_PIO_CPU_MMIO region registration code, such that the "end" of the
-registered regions is the "end" of the last region, and not the sum of
-the sizes of all the registered regions.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- lib/logic_pio.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -35,7 +35,7 @@ int logic_pio_register_range(struct logi
- 	struct logic_pio_hwaddr *range;
- 	resource_size_t start;
- 	resource_size_t end;
--	resource_size_t mmio_sz = 0;
-+	resource_size_t mmio_end = 0;
- 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
- 	int ret = 0;
- 
-@@ -56,7 +56,7 @@ int logic_pio_register_range(struct logi
- 			/* for MMIO ranges we need to check for overlap */
- 			if (start >= range->hw_start + range->size ||
- 			    end < range->hw_start) {
--				mmio_sz += range->size;
-+				mmio_end = range->io_start + range->size;
- 			} else {
- 				ret = -EFAULT;
- 				goto end_register;
-@@ -69,16 +69,16 @@ int logic_pio_register_range(struct logi
- 
- 	/* range not registered yet, check for available space */
- 	if (new_range->flags == LOGIC_PIO_CPU_MMIO) {
--		if (mmio_sz + new_range->size - 1 > MMIO_UPPER_LIMIT) {
-+		if (mmio_end + new_range->size - 1 > MMIO_UPPER_LIMIT) {
- 			/* if it's too big check if 64K space can be reserved */
--			if (mmio_sz + SZ_64K - 1 > MMIO_UPPER_LIMIT) {
-+			if (mmio_end + SZ_64K - 1 > MMIO_UPPER_LIMIT) {
- 				ret = -E2BIG;
- 				goto end_register;
- 			}
- 			new_range->size = SZ_64K;
- 			pr_warn("Requested IO range too big, new size set to 64K\n");
- 		}
--		new_range->io_start = mmio_sz;
-+		new_range->io_start = mmio_end;
- 	} else if (new_range->flags == LOGIC_PIO_INDIRECT) {
- 		if (iio_sz + new_range->size - 1 > IO_SPACE_LIMIT) {
- 			ret = -E2BIG;
-
-
+On Wed, Sep 4, 2019 at 11:01 AM Ian Rogers <irogers@google.com> wrote:
+>
+> These paths point to the wrong location but still work because they
+> get picked up by a -I flag that happens to direct to the correct
+> file. Fix paths to point to the correct location without -I flags.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/ui/browser.c      | 9 +++++----
+>  tools/perf/ui/tui/progress.c | 2 +-
+>  2 files changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+> index f80c51d53565..d227d74b28f8 100644
+> --- a/tools/perf/ui/browser.c
+> +++ b/tools/perf/ui/browser.c
+> @@ -1,7 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#include "../string2.h"
+> -#include "../config.h"
+> -#include "../../perf.h"
+> +#include "../util/util.h"
+> +#include "../util/string2.h"
+> +#include "../util/config.h"
+> +#include "../perf.h"
+>  #include "libslang.h"
+>  #include "ui.h"
+>  #include "util.h"
+> @@ -14,7 +15,7 @@
+>  #include "browser.h"
+>  #include "helpline.h"
+>  #include "keysyms.h"
+> -#include "../color.h"
+> +#include "../util/color.h"
+>  #include <linux/ctype.h>
+>  #include <linux/zalloc.h>
+>
+> diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
+> index bc134b82829d..5a24dd3ce4db 100644
+> --- a/tools/perf/ui/tui/progress.c
+> +++ b/tools/perf/ui/tui/progress.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/kernel.h>
+> -#include "../cache.h"
+> +#include "../../util/cache.h"
+>  #include "../progress.h"
+>  #include "../libslang.h"
+>  #include "../ui.h"
+> --
+> 2.22.0.770.g0f2c4a37fd-goog
+>
