@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F44CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3071C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B402070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C21F2070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613214;
-	bh=mxeu4uLj13ZdTwyKcHula4thozA5vnCkalosJXisIRE=;
+	s=default; t=1567613217;
+	bh=Ksqe3NDg25bLGQn4HvEUkUjA5d3U/fd0Y9B9lr3sPnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mdtZl5s1LX+ZrDGzt1BGI1eC5rfG7kcyt6lCCmeEtscIKJZ7dvSJ/6ebhGQhsq4Dj
-	 qLYlomdsEkEMhEXbVr2yw5ObSTdUCocADT5dMOxF7JlPahol/yS52vTrVqcvI/fNcm
-	 0wvOWckDKNj29IJGwUNK+N/jTFR7LLVai5FwVk04=
+	b=UA80EhFhJk/nu5p2YQuE3IBjH9DgYP1igJkx0ftKKH0KRp28hfb7zbdo5gZ0EFzy3
+	 J3vlRWhWvmNLyT24vwjXfCqxPwOMkRR98W3LiSm9ZS/3FT2j2vp3HNNgpIyAK1dmVC
+	 Y3WS5paJ6t1RWFXoo1mLnpsPIbI52Qyz6sU1azE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732519AbfIDQGw (ORCPT
+        id S1731564AbfIDQCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731726AbfIDQCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:15 -0400
+        id S1732546AbfIDQCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C26122DBF;
-        Wed,  4 Sep 2019 16:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B44323402;
+        Wed,  4 Sep 2019 16:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612934;
-        bh=mxeu4uLj13ZdTwyKcHula4thozA5vnCkalosJXisIRE=;
+        s=default; t=1567612927;
+        bh=Ksqe3NDg25bLGQn4HvEUkUjA5d3U/fd0Y9B9lr3sPnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ha6S5afEjT0N0FVJTdLU7kpyRkSctTP2P4ei+I/SnGXCqGsFfwQWND2Et/VOVPwoK
-         6GEIL61LWYnRE+WWrvobXwAI2uS26vA+MhjL6Fp0CJci45JgRQOY1Geh/tnwIAsFPT
-         4gHIyGZGLR7Ji8w96TC02D0pMTp47Oi+9TQ0+yOo=
+        b=m+gYSEzfPM5v69r6pP6ZVf0h2k8Ehr0mGi82gUylBBKvP3jMLPhH9HAwoFyyyG/8y
+         MY7WnbzNg8t/nRvfC/iXIezVHrxvDW9AwItSDV0Yk03NSWV0zoxaElDbVx5+KcTHT8
+         j+e+B5pALugJXzf6hdOY/XPf7KieAJaq99piHD4Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        Len Brown <len.brown@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 33/36] tools/power x86_energy_perf_policy: Fix "uninitialized variable" warnings at -O2
-Date:   Wed,  4 Sep 2019 12:01:19 -0400
-Message-Id: <20190904160122.4179-33-sashal@kernel.org>
+Cc:     Josh Hunt <johunt@akamai.com>,
+        Peter Zijlstra <peterz@infradead.org>, acme@kernel.org,
+        bpuranda@akamai.com, mingo@redhat.com, jolsa@redhat.com,
+        tglx@linutronix.de, namhyung@kernel.org,
+        alexander.shishkin@linux.intel.com, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 29/36] perf/x86/intel: Restrict period on Nehalem
+Date:   Wed,  4 Sep 2019 12:01:15 -0400
+Message-Id: <20190904160122.4179-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -59,102 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Josh Hunt <johunt@akamai.com>
 
-[ Upstream commit adb8049097a9ec4acd09fbd3aa8636199a78df8a ]
+[ Upstream commit 44d3bbb6f5e501b873218142fe08cdf62a4ac1f3 ]
 
-x86_energy_perf_policy first uses __get_cpuid() to check the maximum
-CPUID level and exits if it is too low.  It then assumes that later
-calls will succeed (which I think is architecturally guaranteed).  It
-also assumes that CPUID works at all (which is not guaranteed on
-x86_32).
+We see our Nehalem machines reporting 'perfevents: irq loop stuck!' in
+some cases when using perf:
 
-If optimisations are enabled, gcc warns about potentially
-uninitialized variables.  Fix this by adding an exit-on-error after
-every call to __get_cpuid() instead of just checking the maximum
-level.
-
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Len Brown <len.brown@intel.com>
+perfevents: irq loop stuck!
+WARNING: CPU: 0 PID: 3485 at arch/x86/events/intel/core.c:2282 intel_pmu_handle_irq+0x37b/0x530
+...
+RIP: 0010:intel_pmu_handle_irq+0x37b/0x530
+...
+Call Trace:
+<NMI>
+? perf_event_nmi_handler+0x2e/0x50
+? intel_pmu_save_and_restart+0x50/0x50
+perf_event_nmi_handler+0x2e/0x50
+nmi_handle+0x6e/0x120
+default_do_nmi+0x3e/0x100
+do_nmi+0x102/0x160
+end_repeat_nmi+0x16/0x50
+...
+? native_write_msr+0x6/0x20
+? native_write_msr+0x6/0x20
+</NMI>
+intel_pmu_enable_event+0x1ce/0x1f0
+x86_pmu_start+0x78/0xa0
+x86_pmu_enable+0x252/0x310
+__perf_event_task_sched_in+0x181/0x190
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+? __switch_to_asm+0x41/0x70
+? __switch_to_asm+0x35/0x70
+finish_task_switch+0x158/0x260
+__schedule+0x2f6/0x840
+? hrtimer_start_range_ns+0x153/0x210
+schedule+0x32/0x80
+schedule_hrtimeout_range_clock+0x8a/0x100
+? hrtimer_init+0x120/0x120
+ep_poll+0x2f7/0x3a0
+? wake_up_q+0x60/0x60
+do_epoll_wait+0xa9/0xc0
+__x64_sys_epoll_wait+0x1a/0x20
+do_syscall_64+0x4e/0x110
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fdeb1e96c03
+...
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: acme@kernel.org
+Cc: Josh Hunt <johunt@akamai.com>
+Cc: bpuranda@akamai.com
+Cc: mingo@redhat.com
+Cc: jolsa@redhat.com
+Cc: tglx@linutronix.de
+Cc: namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com
+Link: https://lkml.kernel.org/r/1566256411-18820-1-git-send-email-johunt@akamai.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../x86_energy_perf_policy.c                  | 26 +++++++++++--------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ arch/x86/events/intel/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-index 65bbe627a425f..bbef8bcf44d6d 100644
---- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-+++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-@@ -1260,6 +1260,15 @@ void probe_dev_msr(void)
- 		if (system("/sbin/modprobe msr > /dev/null 2>&1"))
- 			err(-5, "no /dev/cpu/0/msr, Try \"# modprobe msr\" ");
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index d44bb077c6cfd..4a60ed8c44133 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3297,6 +3297,11 @@ static u64 bdw_limit_period(struct perf_event *event, u64 left)
+ 	return left;
  }
-+
-+static void get_cpuid_or_exit(unsigned int leaf,
-+			     unsigned int *eax, unsigned int *ebx,
-+			     unsigned int *ecx, unsigned int *edx)
+ 
++static u64 nhm_limit_period(struct perf_event *event, u64 left)
 +{
-+	if (!__get_cpuid(leaf, eax, ebx, ecx, edx))
-+		errx(1, "Processor not supported\n");
++	return max(left, 32ULL);
 +}
 +
- /*
-  * early_cpuid()
-  * initialize turbo_is_enabled, has_hwp, has_epb
-@@ -1267,15 +1276,10 @@ void probe_dev_msr(void)
-  */
- void early_cpuid(void)
- {
--	unsigned int eax, ebx, ecx, edx, max_level;
-+	unsigned int eax, ebx, ecx, edx;
- 	unsigned int fms, family, model;
+ PMU_FORMAT_ATTR(event,	"config:0-7"	);
+ PMU_FORMAT_ATTR(umask,	"config:8-15"	);
+ PMU_FORMAT_ATTR(edge,	"config:18"	);
+@@ -4092,6 +4097,7 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.pebs_constraints = intel_nehalem_pebs_event_constraints;
+ 		x86_pmu.enable_all = intel_pmu_nhm_enable_all;
+ 		x86_pmu.extra_regs = intel_nehalem_extra_regs;
++		x86_pmu.limit_period = nhm_limit_period;
  
--	__get_cpuid(0, &max_level, &ebx, &ecx, &edx);
--
--	if (max_level < 6)
--		errx(1, "Processor not supported\n");
--
--	__get_cpuid(1, &fms, &ebx, &ecx, &edx);
-+	get_cpuid_or_exit(1, &fms, &ebx, &ecx, &edx);
- 	family = (fms >> 8) & 0xf;
- 	model = (fms >> 4) & 0xf;
- 	if (family == 6 || family == 0xf)
-@@ -1289,7 +1293,7 @@ void early_cpuid(void)
- 		bdx_highest_ratio = msr & 0xFF;
- 	}
+ 		x86_pmu.cpu_events = nhm_events_attrs;
  
--	__get_cpuid(0x6, &eax, &ebx, &ecx, &edx);
-+	get_cpuid_or_exit(0x6, &eax, &ebx, &ecx, &edx);
- 	turbo_is_enabled = (eax >> 1) & 1;
- 	has_hwp = (eax >> 7) & 1;
- 	has_epb = (ecx >> 3) & 1;
-@@ -1307,7 +1311,7 @@ void parse_cpuid(void)
- 
- 	eax = ebx = ecx = edx = 0;
- 
--	__get_cpuid(0, &max_level, &ebx, &ecx, &edx);
-+	get_cpuid_or_exit(0, &max_level, &ebx, &ecx, &edx);
- 
- 	if (ebx == 0x756e6547 && edx == 0x49656e69 && ecx == 0x6c65746e)
- 		genuine_intel = 1;
-@@ -1316,7 +1320,7 @@ void parse_cpuid(void)
- 		fprintf(stderr, "CPUID(0): %.4s%.4s%.4s ",
- 			(char *)&ebx, (char *)&edx, (char *)&ecx);
- 
--	__get_cpuid(1, &fms, &ebx, &ecx, &edx);
-+	get_cpuid_or_exit(1, &fms, &ebx, &ecx, &edx);
- 	family = (fms >> 8) & 0xf;
- 	model = (fms >> 4) & 0xf;
- 	stepping = fms & 0xf;
-@@ -1341,7 +1345,7 @@ void parse_cpuid(void)
- 		errx(1, "CPUID: no MSR");
- 
- 
--	__get_cpuid(0x6, &eax, &ebx, &ecx, &edx);
-+	get_cpuid_or_exit(0x6, &eax, &ebx, &ecx, &edx);
- 	/* turbo_is_enabled already set */
- 	/* has_hwp already set */
- 	has_hwp_notify = eax & (1 << 8);
 -- 
 2.20.1
 
