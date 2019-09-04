@@ -2,58 +2,191 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=AD_PREFS,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC3AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55793C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD0B2168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 196E62168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:27:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sOU7Av1J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730579AbfIDW0u (ORCPT
+        id S1730630AbfIDW1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 18:26:50 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:38702 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfIDW0t (ORCPT
+        Wed, 4 Sep 2019 18:27:02 -0400
+Received: from mail-io1-f51.google.com ([209.85.166.51]:42391 "EHLO
+        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfIDW1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 18:26:49 -0400
-Received: from localhost (unknown [62.21.130.100])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8271615286006;
-        Wed,  4 Sep 2019 15:26:48 -0700 (PDT)
-Date:   Wed, 04 Sep 2019 15:26:46 -0700 (PDT)
-Message-Id: <20190904.152646.1973211125417119901.davem@davemloft.net>
-To:     hayeswang@realtek.com
-Cc:     netdev@vger.kernel.org, nic_swsd@realtek.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] r8152: modify rtl8152_set_speed function
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1394712342-15778-326-Taiwan-albertk@realtek.com>
-References: <1394712342-15778-326-Taiwan-albertk@realtek.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Sep 2019 15:26:49 -0700 (PDT)
+        Wed, 4 Sep 2019 18:27:01 -0400
+Received: by mail-io1-f51.google.com with SMTP id n197so99455iod.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 15:27:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v80n4rXbkShFgebQ5FICTxVnnlRSUULZ8/gy7pHLeh8=;
+        b=sOU7Av1JfUZVGNSUO8hYl2UV5cekBaoLdvH9Jj9Dpf2HwWXaidWa0dZm4JIYsixbEk
+         obLF3hcaSy1wrxU73q8L85ND+K3Ckv18SPO0z+MIDjPew1BND3+BIxErgT6hhn/HkwoW
+         uGqM3dPWHuLcPHu8hOi/bu6U8sqFQ2Hx8B/qIIgvAJ4fagjRK2oP+eiSGAPBMXAYieAv
+         JTC8VPNLd4/o1+K2kCxN4aET4e09C9+Q1OfNJt+C6DwKewDn2vfgqX2wFmK0lVKQWVqo
+         vrI/tnVUTxkNfYwNPn44C/XTGV5bhIpsFOpUKrUY3zcfAbPiC9wzA4LJbQzL7AJYaaoH
+         M7jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v80n4rXbkShFgebQ5FICTxVnnlRSUULZ8/gy7pHLeh8=;
+        b=nPAiszwDEwZeZAQlENJTzjCq0ouMslCXT1najIxSDt63rIDefLeHUUi+cq6RdaYrRm
+         /IH2ajiGbZMDd2AhuCPmkXGq9FThLnzQMiNE+XrPuo6fJpW0Q/4NxzOrWQoV81rl6I28
+         gmOmET+PIAtbFhO1Vc3EWisLSqoPS0ATbH+zuU/SqFx/nqzJsauMawN7i81kYD2FIO/t
+         cJr0Ccicc4eloYZyHO9QXgoWdiXC2LnOj7xJDL+cJ4nVd4Apuj58zqKNoJATbdutvKdw
+         NOcFGx68BApon9OvCknYgKO/BUOM+nmjt2fchdf2DVP7X263w+2wn1Gq7sVU/RfXLL3Q
+         IppQ==
+X-Gm-Message-State: APjAAAW5sakU/mUHjpjLRsPdfITQE1JrUQ63XcLYz0Wrh/dQVw4n2l3w
+        W2/+sZUXCRM9P2pvcDQO/7/mNKyYIdX7Tt0UE5w=
+X-Google-Smtp-Source: APXvYqxACw1EXq4uIdOI7CJyO7UyP+1ZXGBZQYOvghT0n0Tbuenh4J7du10svLvKeNIA9o3Pc5CticXAL6o0zcY2MIg=
+X-Received: by 2002:a6b:8d84:: with SMTP id p126mr375199iod.111.1567636020233;
+ Wed, 04 Sep 2019 15:27:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190830032948.13516-1-hdanton@sina.com> <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
+ <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
+ <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
+ <CAKMK7uH9q09XadTV5Ezm=9aODErD=w_+8feujviVnF5LO_fggA@mail.gmail.com>
+ <5d6f10a6.1c69fb81.6b104.af73SMTPIN_ADDED_MISSING@mx.google.com> <20190904083747.GE2112@phenom.ffwll.local>
+In-Reply-To: <20190904083747.GE2112@phenom.ffwll.local>
+From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date:   Thu, 5 Sep 2019 03:26:49 +0500
+Message-ID: <CABXGCsMEjP-UQ5A1xpL-xWHxtFEsOUO14+cmWJUS1ff1hgReFA@mail.gmail.com>
+Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
+To:     Hillf Danton <hdanton@sina.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux kernel <linux-kernel@vger.kernel.org>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Harry Wentland <hwentlan@amd.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hayes Wang <hayeswang@realtek.com>
-Date: Mon, 2 Sep 2019 19:52:28 +0800
+On Wed, 4 Sep 2019 at 13:37, Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> Extend your backtrac warning slightly like
+>
+>         WARN(r, "we're stuck on fence %pS\n", fence->ops);
+>
+> Also adding Harry and Alex, I'm not really working on amdgpu ...
 
-> First, for AUTONEG_DISABLE, we only need to modify MII_BMCR.
-> 
-> Second, add advertising parameter for rtl8152_set_speed(). Add
-> RTL_ADVERTISED_xxx for advertising parameter of rtl8152_set_speed().
-> Then, the advertising settings from ethtool could be saved.
-> 
-> Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+[ 3511.998320] ------------[ cut here ]------------
+[ 3511.998714] we're stuck on fence
+amdgpu_fence_ops+0x0/0xffffffffffffc220 [amdgpu]
+[ 3511.998991] WARNING: CPU: 10 PID: 1811 at
+drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c:332
+amdgpu_fence_wait_empty+0x1c6/0x240 [amdgpu]
+[ 3511.999009] Modules linked in: rfcomm fuse xt_CHECKSUM
+xt_MASQUERADE nf_nat_tftp nf_conntrack_tftp tun bridge stp llc
+nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_REJECT
+nf_reject_ipv6 ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack
+ebtable_nat ip6table_nat ip6table_mangle ip6table_raw
+ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw
+iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c
+ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables
+iptable_filter cmac bnep sunrpc vfat fat edac_mce_amd kvm_amd
+snd_hda_codec_realtek rtwpci snd_hda_codec_generic kvm ledtrig_audio
+snd_hda_codec_hdmi uvcvideo rtw88 videobuf2_vmalloc snd_hda_intel
+videobuf2_memops videobuf2_v4l2 irqbypass snd_usb_audio snd_hda_codec
+videobuf2_common crct10dif_pclmul snd_usbmidi_lib crc32_pclmul
+mac80211 snd_rawmidi videodev snd_hda_core ghash_clmulni_intel btusb
+snd_hwdep btrtl snd_seq btbcm btintel snd_seq_device eeepc_wmi
+bluetooth xpad joydev mc snd_pcm
+[ 3511.999076]  asus_wmi ff_memless cfg80211 sparse_keymap video
+wmi_bmof ecdh_generic snd_timer ecc sp5100_tco k10temp snd i2c_piix4
+ccp rfkill soundcore libarc4 gpio_amdpt gpio_generic acpi_cpufreq
+binfmt_misc ip_tables hid_logitech_hidpp hid_logitech_dj amdgpu
+amd_iommu_v2 gpu_sched ttm drm_kms_helper drm crc32c_intel igb dca
+nvme i2c_algo_bit nvme_core wmi pinctrl_amd
+[ 3511.999126] CPU: 10 PID: 1811 Comm: Xorg Not tainted
+5.3.0-0.rc6.git2.1c.fc32.x86_64 #1
+[ 3511.999131] Hardware name: System manufacturer System Product
+Name/ROG STRIX X470-I GAMING, BIOS 2703 08/20/2019
+[ 3511.999253] RIP: 0010:amdgpu_fence_wait_empty+0x1c6/0x240 [amdgpu]
+[ 3511.999278] Code: fe ff ff 31 c0 c3 48 89 ef e8 36 29 04 cb 84 c0
+74 08 48 89 ef e8 8a a9 21 cb 48 8b 75 08 48 c7 c7 2c 16 86 c0 e8 82
+b8 b9 ca <0f> 0b b8 ea ff ff ff 5d c3 e8 ec 57 c3 ca 84 c0 0f 85 6f ff
+ff ff
+[ 3511.999282] RSP: 0018:ffffb9c04170f798 EFLAGS: 00210282
+[ 3511.999288] RAX: 0000000000000000 RBX: ffff8d2ce5205a80 RCX: 0000000000000006
+[ 3511.999292] RDX: 0000000000000007 RSI: ffff8d2c5bea4070 RDI: ffff8d2cfb5d9e00
+[ 3511.999296] RBP: ffff8d28becae480 R08: 00000331b36fd503 R09: 0000000000000000
+[ 3511.999299] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8d2ce5200000
+[ 3511.999303] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8d2ce1540000
+[ 3511.999308] FS:  00007f59a5bc6f00(0000) GS:ffff8d2cfb400000(0000)
+knlGS:0000000000000000
+[ 3511.999311] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3511.999315] CR2: 00001108bc475960 CR3: 000000075bf32000 CR4: 00000000003406e0
+[ 3511.999319] Call Trace:
+[ 3511.999394]  amdgpu_pm_compute_clocks+0x70/0x5f0 [amdgpu]
+[ 3511.999503]  dm_pp_apply_display_requirements+0x1a8/0x1c0 [amdgpu]
+[ 3511.999609]  dce12_update_clocks+0xd8/0x110 [amdgpu]
+[ 3511.999712]  dc_commit_state+0x414/0x590 [amdgpu]
+[ 3511.999725]  ? find_held_lock+0x32/0x90
+[ 3511.999832]  amdgpu_dm_atomic_commit_tail+0xd18/0x1cf0 [amdgpu]
+[ 3511.999844]  ? reacquire_held_locks+0xed/0x210
+[ 3511.999859]  ? ttm_eu_backoff_reservation+0xa5/0x160 [ttm]
+[ 3511.999866]  ? find_held_lock+0x32/0x90
+[ 3511.999872]  ? find_held_lock+0x32/0x90
+[ 3511.999881]  ? __lock_acquire+0x247/0x1910
+[ 3511.999893]  ? find_held_lock+0x32/0x90
+[ 3511.999901]  ? mark_held_locks+0x50/0x80
+[ 3511.999907]  ? _raw_spin_unlock_irq+0x29/0x40
+[ 3511.999913]  ? lockdep_hardirqs_on+0xf0/0x180
+[ 3511.999919]  ? _raw_spin_unlock_irq+0x29/0x40
+[ 3511.999924]  ? wait_for_completion_timeout+0x75/0x190
+[ 3511.999952]  ? commit_tail+0x3c/0x70 [drm_kms_helper]
+[ 3511.999966]  commit_tail+0x3c/0x70 [drm_kms_helper]
+[ 3511.999979]  drm_atomic_helper_commit+0xe3/0x150 [drm_kms_helper]
+[ 3512.000002]  drm_mode_atomic_ioctl+0x793/0x9b0 [drm]
+[ 3512.000014]  ? __lock_acquire+0x247/0x1910
+[ 3512.000044]  ? drm_atomic_set_property+0xa50/0xa50 [drm]
+[ 3512.000066]  drm_ioctl_kernel+0xaa/0xf0 [drm]
+[ 3512.000088]  drm_ioctl+0x208/0x390 [drm]
+[ 3512.000108]  ? drm_atomic_set_property+0xa50/0xa50 [drm]
+[ 3512.000120]  ? lockdep_hardirqs_on+0xf0/0x180
+[ 3512.000205]  amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+[ 3512.000216]  do_vfs_ioctl+0x411/0x750
+[ 3512.000229]  ksys_ioctl+0x5e/0x90
+[ 3512.000237]  __x64_sys_ioctl+0x16/0x20
+[ 3512.000242]  do_syscall_64+0x5c/0xb0
+[ 3512.000249]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 3512.000254] RIP: 0033:0x7f59a603d00b
+[ 3512.000259] Code: 0f 1e fa 48 8b 05 7d 9e 0c 00 64 c7 00 26 00 00
+00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00
+00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4d 9e 0c 00 f7 d8 64 89
+01 48
+[ 3512.000263] RSP: 002b:00007ffc493bcc08 EFLAGS: 00000246 ORIG_RAX:
+0000000000000010
+[ 3512.000267] RAX: ffffffffffffffda RBX: 00007ffc493bcc50 RCX: 00007f59a603d00b
+[ 3512.000271] RDX: 00007ffc493bcc50 RSI: 00000000c03864bc RDI: 000000000000000e
+[ 3512.000275] RBP: 00000000c03864bc R08: 000055aa62e41d00 R09: 0000000000000001
+[ 3512.000278] R10: 0000000000000001 R11: 0000000000000246 R12: 000055aa61a99d00
+[ 3512.000282] R13: 000000000000000e R14: 000055aa628f7430 R15: 000055aa62e34540
+[ 3512.000297] irq event stamp: 258283232
+[ 3512.000303] hardirqs last  enabled at (258283231):
+[<ffffffff8b170beb>] console_unlock+0x46b/0x5d0
+[ 3512.000309] hardirqs last disabled at (258283232):
+[<ffffffff8b0038da>] trace_hardirqs_off_thunk+0x1a/0x20
+[ 3512.000314] softirqs last  enabled at (258282448):
+[<ffffffff8be0035d>] __do_softirq+0x35d/0x45d
+[ 3512.000319] softirqs last disabled at (258282413):
+[<ffffffff8b0f1e57>] irq_exit+0xf7/0x100
+[ 3512.000323] ---[ end trace 55ed0c80b95aef99 ]---
 
-Applied.
+https://pastebin.com/DfqVGDgc
