@@ -2,129 +2,132 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481D1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3688C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232B62073F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 735EC22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:33:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567614813;
+	bh=uT+zUrKTqBOhThqy5vYGxCDBdsj46DFexxnMteSFboU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=E9s9fhEriKGxHT5gg/U4K7DeTqvsjJJPDqg6hfvZY8qr4jdREm8MeXdYGjjcm4P0Z
+	 1E2IOEEeusRS6XWkbWVlkvVCbG8Ms/3NdkMjeknIcfDIDiP/XWVnHX/aOm2MSej7fm
+	 vms4oHS4P9cgNtvQzOgbaoDaqhzxRjeaspHylN6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731782AbfIDQdU (ORCPT
+        id S1731866AbfIDQdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:33:20 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51104 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731520AbfIDQdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:33:20 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A280621E8953A5A2F875;
-        Thu,  5 Sep 2019 00:33:15 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 5 Sep 2019 00:33:06 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <xuwei5@hisilicon.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <olof@lixom.net>, <arnd@arndb.de>, <bhelgaas@google.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH] lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
-Date:   Thu, 5 Sep 2019 00:30:33 +0800
-Message-ID: <1567614633-210580-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Wed, 4 Sep 2019 12:33:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731628AbfIDQdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:33:32 -0400
+Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2076421881;
+        Wed,  4 Sep 2019 16:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567614811;
+        bh=uT+zUrKTqBOhThqy5vYGxCDBdsj46DFexxnMteSFboU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QJXodasdv/n5F5EkrhDzmG6BtON4YrTNN4uqVWUc2iWqRGnlgiwb3EyX5Lmg3lk7z
+         G2tjfpBhvB4nmCGgHDsBbLhXPEliyqqXXfwJdr3Iv+aAZBmacauMvF/zPKh+7i/+Au
+         w18N3iU92Aqv0qfdEZXJlUvbACro84qPxZpCqcgc=
+Date:   Wed, 4 Sep 2019 18:33:28 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 1/3] task: Add a count of task rcu users
+Message-ID: <20190904163325.GA22421@lenoir>
+References: <20190830160957.GC2634@redhat.com>
+ <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org>
+ <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <87ef0yt221.fsf_-_@x220.int.ebiederm.org>
+ <20190904144415.GB20391@lenoir>
+ <20190904153245.GF24568@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904153245.GF24568@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the only LOGIC_PIO_INDIRECT host (hisi-lpc) now sets the accessors
-ops prior to registration, enforce the check for these ops at registration
-instead of in the IO port accessors, to simplify and marginally optimise
-the code.
+On Wed, Sep 04, 2019 at 05:32:46PM +0200, Oleg Nesterov wrote:
+> On 09/04, Frederic Weisbecker wrote:
+> >
+> > So what happens if, say:
+> >
+> >
+> >            CPU 1                         CPU 2
+> >    --------------------------------------------------------------
+> >    rcu_read_lock()
+> >    p = rcu_dereference(rq->task)
+> >    if (refcount_inc_not_zero(p->rcu_users)) {
+> >        .....
+> >                                          release_task() {
+> >                                              put_task_struct_rcu_user() {
+> >                                                  call_rcu() {
+> >                                                      queue rcu_head
+> 
+> in this particular case call_rcu() won't be called, so
 
-A slight misalignment is also tidied.
+Yeah I confused myself in finding the scenario but like you say below, release_task()
+can simply happen between the p = rcu_dereference() and the refcount_inc to break things.
 
-Also add myself as an author.
+I thought the point of these rcu_users was to be able to do:
 
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
-I hope that the soc maintainers don't mind taking this patch through their
-tree, as it is relevant to the HiSilicon LPC bus driver. Thanks
+rcu_read_lock()
+p = rcu_dereference(task)
+if (!refcount_inc_not_zero(p->rcu_users)) {
+    rcu_read_unlock();
+    return -1;
+}
+rcu_read_unlock();
 
-diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-index 905027574e5d..f511a99bb389 100644
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2017 HiSilicon Limited, All Rights Reserved.
-  * Author: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-  * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
-+ * Author: John Garry <john.garry@huawei.com>
-  */
- 
- #define pr_fmt(fmt)	"LOGIC PIO: " fmt
-@@ -39,7 +40,8 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
- 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
- 	int ret = 0;
- 
--	if (!new_range || !new_range->fwnode || !new_range->size)
-+	if (!new_range || !new_range->fwnode || !new_range->size ||
-+	    (new_range->flags == LOGIC_PIO_INDIRECT && !new_range->ops))
- 		return -EINVAL;
- 
- 	start = new_range->hw_start;
-@@ -237,7 +239,7 @@ type logic_in##bw(unsigned long addr)					\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
--		if (entry && entry->ops)				\
-+		if (entry)						\
- 			ret = entry->ops->in(entry->hostdata,		\
- 					addr, sizeof(type));		\
- 		else							\
-@@ -253,7 +255,7 @@ void logic_out##bw(type value, unsigned long addr)			\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
--		if (entry && entry->ops)				\
-+		if (entry)						\
- 			entry->ops->out(entry->hostdata,		\
- 					addr, value, sizeof(type));	\
- 		else							\
-@@ -261,7 +263,7 @@ void logic_out##bw(type value, unsigned long addr)			\
- 	}								\
- }									\
- 									\
--void logic_ins##bw(unsigned long addr, void *buffer,		\
-+void logic_ins##bw(unsigned long addr, void *buffer,			\
- 		   unsigned int count)					\
- {									\
- 	if (addr < MMIO_UPPER_LIMIT) {					\
-@@ -269,7 +271,7 @@ void logic_ins##bw(unsigned long addr, void *buffer,		\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
--		if (entry && entry->ops)				\
-+		if (entry)						\
- 			entry->ops->ins(entry->hostdata,		\
- 				addr, buffer, sizeof(type), count);	\
- 		else							\
-@@ -286,7 +288,7 @@ void logic_outs##bw(unsigned long addr, const void *buffer,		\
- 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
- 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
- 									\
--		if (entry && entry->ops)				\
-+		if (entry)						\
- 			entry->ops->outs(entry->hostdata,		\
- 				addr, buffer, sizeof(type), count);	\
- 		else							\
--- 
-2.17.1
+//do stuff with task
 
+put_task_struct_rcu_user(p);
+
+Thanks.
+
+> 
+> >                                                  }
+> >                                              }
+> >                                          }
+> >        put_task_struct_rcu_user(); //here rcu_users has been overwritten
+> 
+> rcu_users won't be overwritten.
+> 
+> But nobody should try to increment ->rcu_users,
+> 
+> 	rcu_read_lock();
+> 	p = rcu_dereference(rq->task);
+> 	refcount_inc_not_zero(p->rcu_users);
+> 
+> is already wrong because both release_task/last-schedule can happen in
+> between, before refcount_inc_not_zero().
+> 
+> Oleg.
+> 
