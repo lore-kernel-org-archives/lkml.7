@@ -2,111 +2,79 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0593C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B034C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A261C21670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C78A620820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1kzHrrh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ehzHlgOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbfIDWLP (ORCPT
+        id S1729640AbfIDWMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 18:11:15 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38814 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbfIDWLP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 18:11:15 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h195so255977pfe.5;
-        Wed, 04 Sep 2019 15:11:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=g+6XpI5kpbmJFvx+kn5E+7tLpc2ZjDJn4kNPVnStE2E=;
-        b=e1kzHrrhLu3H38c3RIvFv3KFtEH9I0ixuhaalyVNjtJ9R9aUU9517BP85uBp4c3dZa
-         6DzLL79w3ZVR5oUpFF/Hw+HQ2RxOZQDPC4namhjt2TAkIKilTLiQFyR+o1Yj1In2zXDy
-         9561wWBcfEh/Zda6ZBhNy8ZYUbEjDEGuuVxdntn6eA19ptbxtScB4jIDbgcIcsKHJIZ1
-         6opBQ9JuYPHFhzVctBZsgYo4yGvrC/82132vAGrfZQnOnHxDOQVUV1WH8OPdd1L0DUNY
-         WmBC0oBFQP6xLAELnWxBOYfrAUFMrzCd0Yz/tso+7YQkzY4u3U6ofekBVa0W6M1OSYGG
-         qZoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=g+6XpI5kpbmJFvx+kn5E+7tLpc2ZjDJn4kNPVnStE2E=;
-        b=fFXaeSowFzFKieC96Y+qeHGi2+JWVDwI+nIInjR/Iotw4FsZvgF1bWwZvxVLyaejSY
-         z3QR0TplrKjRSL5qtpRyJsnKML/PdTP3crxXPM8wdp+Dmg63BeASDTrliIEKZTZTlJHa
-         A2wfAxwvkCfmE0Yel+ivtuO7vMXJ66dPPyhebQZn4rNtnMwA/yRlPLZI15CMB5GTS/Q6
-         lBDIzEUphrq8ribwGnc0WFqlpWTpYRM3juh9099S0Svq7P3Q3kWcL0Nmn0JTtPuSE5eb
-         L/xqs1K8DXY76Dr/VwDFkYN19cagN62L022Hm/io7tGRXXcDHTfuoeSl5s0Kcya4NJey
-         YvCw==
-X-Gm-Message-State: APjAAAVg8rk1MGVaaNRt79TVdiO8/hnON+TG1sf4Wb3yN6meGVjWiq1r
-        qC41cZMvJ+atC/zc5kXWTbh0pbF8MWo=
-X-Google-Smtp-Source: APXvYqzpBWtpxdm0bH8OBicigR1zPs24mRFeZDv7CLPJ6+TDtcXf9xj9XjfGvwWIe6hpB9xzS3uiMw==
-X-Received: by 2002:a63:7a01:: with SMTP id v1mr330595pgc.310.1567635073535;
-        Wed, 04 Sep 2019 15:11:13 -0700 (PDT)
-Received: from [10.230.7.147] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id e192sm55781pfh.83.2019.09.04.15.11.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 15:11:12 -0700 (PDT)
-Subject: Re: [PATCH -next 07/36] spi: bcm63xx-hsspi: use
- devm_platform_ioremap_resource() to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>, broonie@kernel.org,
-        rjui@broadcom.com, sbranden@broadcom.com, eric@anholt.net,
-        wahrenst@gmx.net, shc_work@mail.ru, agross@kernel.org,
-        khilman@baylibre.com, matthias.bgg@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        linux-imx@nxp.com, avifishman70@gmail.com, tmaimon77@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, kgene@kernel.org, krzk@kernel.org,
-        andi@etezian.org, palmer@sifive.com, paul.walmsley@sifive.com,
-        baohua@kernel.org, mripard@kernel.org, wens@csie.org,
-        ldewangan@nvidia.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, yamada.masahiro@socionext.com,
-        michal.simek@xilinx.com
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
-        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-tegra@vger.kernel.org
-References: <20190904135918.25352-1-yuehaibing@huawei.com>
- <20190904135918.25352-8-yuehaibing@huawei.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Message-ID: <d36f7e5f-d629-dcad-61c5-fcf896cbd91e@gmail.com>
-Date:   Wed, 4 Sep 2019 15:10:57 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 18:12:33 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47490 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727125AbfIDWMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 18:12:33 -0400
+Received: from [10.161.240.246] (unknown [46.114.32.246])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 390121EC0A91;
+        Thu,  5 Sep 2019 00:12:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567635152;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2BxOUiVFKBguy8GJUpMo0HYnSyrRDVPrj1TOB9eE+5U=;
+        b=ehzHlgOlVn+qrPzzS4Sb59NWJXXd80ZgghcMes/MhXG5CknE2QbijAAJKEK0H6SHgTYC9s
+        Pa35ATuKJYpiBtByl10zMD4JczRljKGPcILLGmj4yq0NMNG1BdPULFdTvY6i5hJXKyK9hP
+        4y0tA7cyJlBEpE5vfzRoHkbIPU+B+GQ=
+Date:   Thu, 05 Sep 2019 00:12:29 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <41cee473-321c-2758-032a-ccf0f01359dc@oracle.com>
+References: <1567056803-6640-1-git-send-email-ashok.raj@intel.com> <20190829060942.GA1312@zn.tnic> <20190829130213.GA23510@araj-mobl1.jf.intel.com> <20190903164630.GF11641@zn.tnic> <41cee473-321c-2758-032a-ccf0f01359dc@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20190904135918.25352-8-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if revision is unchanged
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+CC:     Mihai Carabas <mihai.carabas@oracle.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, patrick.colp@oracle.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
+From:   Boris Petkov <bp@alien8.de>
+Message-ID: <D8A3D2BD-1FD4-4183-8663-3EF02A6099F3@alien8.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On September 5, 2019 12:06:54 AM GMT+02:00, Boris Ostrovsky <boris=2Eostrov=
+sky@oracle=2Ecom> wrote:
+>Why do we need to taint kernel here? We are not making any changes=2E
 
+Because this is not a normal operation we want users to do=2E This is only=
+ for testing microcode quicker=2E
 
-On 9/4/2019 6:58 AM, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>This won't allow people to load from new microcode blob which I thought
+>was one of the objectives behind this new feature=2E
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+You load a new blob the usual way: echo 1 > =2E=2E=2E
+
+This is the "unusual" way where you reload an already loaded revision only=
+=2E
+
+--=20
+Sent from a small device: formatting sux and brevity is inevitable=2E 
