@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B00FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CC5C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDE252339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819C422CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619739;
-	bh=PJ7TrG4ut12kBlFZF+g0Rh64lgOq705udYvt5reIFUE=;
+	s=default; t=1567619741;
+	bh=JdSjEyUhh5TbeyQIPddKuF11nDjV/fdzbvCoRy3LNR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6b19a88cY/WhXSaBCEZxyeax5dghwxSg7UuNoZ1fzlEWsu3PyHCjIB/fV+NBgNxB
-	 wCf6nahkcvadwOiAUMQUO/yUVARges/Ya4tFtl9NkSa7D137JxabPlu7TQZplWnv71
-	 ZlwCOnx3r+RlgoDGUGf49qrg33VeEieLwJtZAfCk=
+	b=nW05BMw399fzZ4R2YOso/MCfj88JpcWfIb/V0c1tJBg8PEmHuNAdM3bOdDRtBURuv
+	 VUdDjvwHhGESHijPkRu3l0BnTroqaZjDfbZVh9zEPxqRsiFQw5EXnw/7rtxyWM3VcS
+	 l15SA69ZU2n3jbirdX/LWahfbJRjQrVW8FSajYnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732771AbfIDRzi (ORCPT
+        id S1732803AbfIDRzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:55:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732715AbfIDRzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:35 -0400
+        id S1732749AbfIDRzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:55:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58C2422CF7;
-        Wed,  4 Sep 2019 17:55:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 068B82339D;
+        Wed,  4 Sep 2019 17:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619734;
-        bh=PJ7TrG4ut12kBlFZF+g0Rh64lgOq705udYvt5reIFUE=;
+        s=default; t=1567619737;
+        bh=JdSjEyUhh5TbeyQIPddKuF11nDjV/fdzbvCoRy3LNR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0yhGFP1PZRzmOUuopoUP5BEplN+vZF6vzRiPPnyjFX3YuNIn1UShVbGktuSc4WAw
-         /i8r0RNNU7PS/MPxzZiJtM665Haz/AKWYR1OoeSauaP5gP7oqZfkpy8jh4+kCywi5P
-         jNUn5toBz8UY17jnaVCKSHxPOZP5k+qbnmchVnJk=
+        b=X52XV70I36HvaUQ/hZlkvlWhsKrcIDMhyTGLHkiPR3SqvDiQ2RHnjqG6bb6xLFu/U
+         OkQSweF40LtbCkYRMbWdONXCGLwL1Qbz1Wvz0jC4jviF+GK1ZedKYNL0Uncl6n6Qp0
+         UAYK+Zl5q536pdr6LeH86xgONyc3p4AKnsfGGfZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 03/77] netfilter: ebtables: fix a memory leak bug in compat
-Date:   Wed,  4 Sep 2019 19:52:50 +0200
-Message-Id: <20190904175303.700985315@linuxfoundation.org>
+Subject: [PATCH 4.4 04/77] bonding: Force slave speed check after link state recovery for 802.3ad
+Date:   Wed,  4 Sep 2019 19:52:51 +0200
+Message-Id: <20190904175303.815046169@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -61,42 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 15a78ba1844a8e052c1226f930133de4cef4e7ad ]
+[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
 
-In compat_do_replace(), a temporary buffer is allocated through vmalloc()
-to hold entries copied from the user space. The buffer address is firstly
-saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
-the entries in this temporary buffer is copied to the internal kernel
-structure through compat_copy_entries(). If this copy process fails,
-compat_do_replace() should be terminated. However, the allocated temporary
-buffer is not freed on this path, leading to a memory leak.
+The following scenario was encountered during testing of logical
+partition mobility on pseries partitions with bonded ibmvnic
+adapters in LACP mode.
 
-To fix the bug, free the buffer before returning from compat_do_replace().
+1. Driver receives a signal that the device has been
+   swapped, and it needs to reset to initialize the new
+   device.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+2. Driver reports loss of carrier and begins initialization.
+
+3. Bonding driver receives NETDEV_CHANGE notifier and checks
+   the slave's current speed and duplex settings. Because these
+   are unknown at the time, the bond sets its link state to
+   BOND_LINK_FAIL and handles the speed update, clearing
+   AD_PORT_LACP_ENABLE.
+
+4. Driver finishes recovery and reports that the carrier is on.
+
+5. Bond receives a new notification and checks the speed again.
+   The speeds are valid but miimon has not altered the link
+   state yet.  AD_PORT_LACP_ENABLE remains off.
+
+Because the slave's link state is still BOND_LINK_FAIL,
+no further port checks are made when it recovers. Though
+the slave devices are operational and have valid speed
+and duplex settings, the bond will not send LACPDU's. The
+simplest fix I can see is to force another speed check
+in bond_miimon_commit. This way the bond will update
+AD_PORT_LACP_ENABLE if needed when transitioning from
+BOND_LINK_FAIL to BOND_LINK_UP.
+
+CC: Jarod Wilson <jarod@redhat.com>
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 1a87cf78fadc4..d9471e3ef2161 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2280,8 +2280,10 @@ static int compat_do_replace(struct net *net, void __user *user,
- 	state.buf_kern_len = size64;
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 168f2331194ff..fd6aff9f0052e 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2081,6 +2081,15 @@ static void bond_miimon_commit(struct bonding *bond)
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		switch (slave->new_link) {
+ 		case BOND_LINK_NOCHANGE:
++			/* For 802.3ad mode, check current slave speed and
++			 * duplex again in case its port was disabled after
++			 * invalid speed/duplex reporting but recovered before
++			 * link monitoring could make a decision on the actual
++			 * link status
++			 */
++			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
++			    slave->link == BOND_LINK_UP)
++				bond_3ad_adapter_speed_duplex_changed(slave);
+ 			continue;
  
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
--	if (WARN_ON(ret < 0))
-+	if (WARN_ON(ret < 0)) {
-+		vfree(entries_tmp);
- 		goto out_unlock;
-+	}
- 
- 	vfree(entries_tmp);
- 	tmp.entries_size = size64;
+ 		case BOND_LINK_UP:
 -- 
 2.20.1
 
