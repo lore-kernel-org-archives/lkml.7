@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D838C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B32C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A83F208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CF9122CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620066;
-	bh=isNUUNz+CtV1YBtlcUly8NZkwfoyz1BR7ymRXL9XGlo=;
+	s=default; t=1567620068;
+	bh=7LvryOPVQ85u9ljKGUfOFG5GY5a76heXj07kDXgMsf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YzUtS/dmxAkAh8t6tHqawHmC3MBIwXkQYSkeutcqla7r244nlJclIP9eGiR4j5f22
-	 NokxcNJqH/w1gwRgWlGw+yZ7+i2saR7bYnAEh24OCxqb6ZyCn0QDcfcJvWj/lzr1Cp
-	 QqqIl3DKK5f6tks0TgiT2Xphb6ZU+gw05hlrJIrA=
+	b=X9zK0DYEs95XHaMU6XAksXgA95VSb5Z4fIvpJiQDKBqkS7gny2kJibs9ktrv39mYc
+	 CiexU1FXcpmrZ842Mtvatitorh+J9nsFZo+JKRD/etI5BHJfLx5zoakETs6SEu0Uf0
+	 JBjSkv6Bm4ZXgUh1xiA2Ea7UeIm5fCW2w3IvGbV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388497AbfIDSBF (ORCPT
+        id S2388509AbfIDSBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40434 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:01:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388490AbfIDSBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:01 -0400
+        id S2387794AbfIDSBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E555F21883;
-        Wed,  4 Sep 2019 18:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A148B21883;
+        Wed,  4 Sep 2019 18:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620060;
-        bh=isNUUNz+CtV1YBtlcUly8NZkwfoyz1BR7ymRXL9XGlo=;
+        s=default; t=1567620063;
+        bh=7LvryOPVQ85u9ljKGUfOFG5GY5a76heXj07kDXgMsf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dGT2lXidf/WfWhx5+BFQaU8PotybdI1d0hlxCDID4fXVqT8wu+wYy2Lw8CzT4dOT8
-         JdvWoCEkI+KZ9fi6vUlLlZ+w7hU6Gy+dWVxzQEALokhP3o4jR/F2R6lq1zCwaCbnjc
-         zDckIN+2YL6mxCiU+R7Mjw0Xw0ieCRV/28f/WRvg=
+        b=mVVtJDVV2CTN7A8tNqGs9Qq5POJ6PWAlFO7dchN/pDID8LSbGrsf73UjDh330KmKp
+         SmgblSsuCVFGBn8zpFXFACbCQMNjm+pws93HZuVydC9Mhdxs3QuLjLMvw84Ao24Tuk
+         rl4Q7gzRXhWbdATX7W2DpkoiUZhmIx0YGSbbtqas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.9 31/83] gpiolib: never report open-drain/source lines as input to user-space
-Date:   Wed,  4 Sep 2019 19:53:23 +0200
-Message-Id: <20190904175306.615495708@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Vladimir Rutsky <rutsky@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 58/83] tcp: make sure EPOLLOUT wont be missed
+Date:   Wed,  4 Sep 2019 19:53:50 +0200
+Message-Id: <20190904175308.674735011@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,50 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 2c60e6b5c9241b24b8b523fefd3e44fb85622cda upstream.
+[ Upstream commit ef8d8ccdc216f797e66cb4a1372f5c4c285ce1e4 ]
 
-If the driver doesn't support open-drain/source config options, we
-emulate this behavior when setting the direction by calling
-gpiod_direction_input() if the default value is 0 (open-source) or
-1 (open-drain), thus not actively driving the line in those cases.
+As Jason Baron explained in commit 790ba4566c1a ("tcp: set SOCK_NOSPACE
+under memory pressure"), it is crucial we properly set SOCK_NOSPACE
+when needed.
 
-This however clears the FLAG_IS_OUT bit for the GPIO line descriptor
-and makes the LINEINFO ioctl() incorrectly report this line's mode as
-'input' to user-space.
+However, Jason patch had a bug, because the 'nonblocking' status
+as far as sk_stream_wait_memory() is concerned is governed
+by MSG_DONTWAIT flag passed at sendmsg() time :
 
-This commit modifies the ioctl() to always set the GPIOLINE_FLAG_IS_OUT
-bit in the lineinfo structure's flags field. Since it's impossible to
-use the input mode and open-drain/source options at the same time, we
-can be sure the reported information will be correct.
+    long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
 
-Fixes: 521a2ad6f862 ("gpio: add userspace ABI for GPIO line information")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Link: https://lore.kernel.org/r/20190806114151.17652-1-brgl@bgdev.pl
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+So it is very possible that tcp sendmsg() calls sk_stream_wait_memory(),
+and that sk_stream_wait_memory() returns -EAGAIN with SOCK_NOSPACE
+cleared, if sk->sk_sndtimeo has been set to a small (but not zero)
+value.
+
+This patch removes the 'noblock' variable since we must always
+set SOCK_NOSPACE if -EAGAIN is returned.
+
+It also renames the do_nonblock label since we might reach this
+code path even if we were in blocking mode.
+
+Fixes: 790ba4566c1a ("tcp: set SOCK_NOSPACE under memory pressure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Reported-by: Vladimir Rutsky  <rutsky@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpio/gpiolib.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/core/stream.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -953,9 +953,11 @@ static long gpio_ioctl(struct file *filp
- 		if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
- 			lineinfo.flags |= GPIOLINE_FLAG_ACTIVE_LOW;
- 		if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_OPEN_DRAIN;
-+			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_DRAIN |
-+					   GPIOLINE_FLAG_IS_OUT);
- 		if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
--			lineinfo.flags |= GPIOLINE_FLAG_OPEN_SOURCE;
-+			lineinfo.flags |= (GPIOLINE_FLAG_OPEN_SOURCE |
-+					   GPIOLINE_FLAG_IS_OUT);
+--- a/net/core/stream.c
++++ b/net/core/stream.c
+@@ -118,7 +118,6 @@ int sk_stream_wait_memory(struct sock *s
+ 	int err = 0;
+ 	long vm_wait = 0;
+ 	long current_timeo = *timeo_p;
+-	bool noblock = (*timeo_p ? false : true);
+ 	DEFINE_WAIT(wait);
  
- 		if (copy_to_user(ip, &lineinfo, sizeof(lineinfo)))
- 			return -EFAULT;
+ 	if (sk_stream_memory_free(sk))
+@@ -131,11 +130,8 @@ int sk_stream_wait_memory(struct sock *s
+ 
+ 		if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
+ 			goto do_error;
+-		if (!*timeo_p) {
+-			if (noblock)
+-				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+-			goto do_nonblock;
+-		}
++		if (!*timeo_p)
++			goto do_eagain;
+ 		if (signal_pending(current))
+ 			goto do_interrupted;
+ 		sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+@@ -167,7 +163,13 @@ out:
+ do_error:
+ 	err = -EPIPE;
+ 	goto out;
+-do_nonblock:
++do_eagain:
++	/* Make sure that whenever EAGAIN is returned, EPOLLOUT event can
++	 * be generated later.
++	 * When TCP receives ACK packets that make room, tcp_check_space()
++	 * only calls tcp_new_space() if SOCK_NOSPACE is set.
++	 */
++	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+ 	err = -EAGAIN;
+ 	goto out;
+ do_interrupted:
 
 
