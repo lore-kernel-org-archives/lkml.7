@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 094F8C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65745C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2ED2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E2D2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613884;
-	bh=0dd297o4/giydwwbHGYujD6FY22aEiS50RVYkQurEz0=;
+	s=default; t=1567613888;
+	bh=d5uaYS9gM3soHszTjTVFuR9hBYYxU5cMWBxXdZnzURQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UsdG1zR9/Cub+z/INe3VlVcCduBlifa9Lwy2/NCcLM5LwWY/+MFTFnX+jsP6hKijL
-	 pSucF05y+Yweb/sxs7eoRHndC+P/Tnc0gUQQqNyV2k6zY3T7wEWhfGlpUUxK0BoKr7
-	 UrZn7RhhtsJUnoyi6943fQM146BkjGOuqwlzf6/g=
+	b=uxpP7hbbf1SC05eHx9kCA6sfG/RAeLFNlthsN1HnCjsA4/p+5W2HGgkOtvTFWJQCJ
+	 Q4fcllXPk4ypuUFqqDpxgs8CCLdzhLOPcx90aln/hdfQy91O9Ydut4dZpFaIrdYjxt
+	 PAUhjv8H9l+K6sTgMQt1j37oN+8edthMFwnbERh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732184AbfIDP66 (ORCPT
+        id S1732159AbfIDP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732131AbfIDP65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:57 -0400
+        id S1731540AbfIDP6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B20D322CF7;
-        Wed,  4 Sep 2019 15:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 599FE22CF7;
+        Wed,  4 Sep 2019 15:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612736;
-        bh=0dd297o4/giydwwbHGYujD6FY22aEiS50RVYkQurEz0=;
+        s=default; t=1567612731;
+        bh=d5uaYS9gM3soHszTjTVFuR9hBYYxU5cMWBxXdZnzURQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+EhOXYjAiUuTgvYtBcaGc3ta3aDHkuIgJWOpa9MAxpwnRRLMEfnilxSJyTxrwO+H
-         na5hxpefIEglS8ZkcDQSvlEpOo/B+pHjqGMjjtnnlRmy+DIZNiBxEkjkcByQqBKEEb
-         K8IR2CSi/OEvJiemN1Om2tUIJfst22PNwrvFtBWA=
+        b=tC0E/pTygzPdnM5KTooOdg/7kVVAJpxavFZWzrMgrBV3NrsSKUBHXKSSTU7WHX3Bu
+         UAWFdiKDoijDBByIFsVGG8eGxMRltqZpva5mN18FmacGbbI4DU4deE74ERy5wYklX3
+         22y500/YVV3sYF9hiPyVtQcMmxMbLD8IgWpWaZCo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <david1.zhou@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 50/94] drm/amdgpu: fix dma_fence_wait without reference
-Date:   Wed,  4 Sep 2019 11:56:55 -0400
-Message-Id: <20190904155739.2816-50-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 47/94] pNFS/flexfiles: Don't time out requests on hard mounts
+Date:   Wed,  4 Sep 2019 11:56:52 -0400
+Message-Id: <20190904155739.2816-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,61 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian König <christian.koenig@amd.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 42068e1ef961c719f967dbbb4ddcb394a0ba7917 ]
+[ Upstream commit 7af46292dadcf8870946916f79fdddf79bd7267f ]
 
-We need to grab a reference to the fence we wait for.
+If the mount is hard, we should ignore the 'io_maxretrans' module
+parameter so that we always keep retrying.
 
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c | 27 ++++++++++++++-----------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
-index a28a3d722ba29..62298ae5c81c0 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
-@@ -535,21 +535,24 @@ int amdgpu_ctx_wait_prev_fence(struct amdgpu_ctx *ctx,
- 			       struct drm_sched_entity *entity)
- {
- 	struct amdgpu_ctx_entity *centity = to_amdgpu_ctx_entity(entity);
--	unsigned idx = centity->sequence & (amdgpu_sched_jobs - 1);
--	struct dma_fence *other = centity->fences[idx];
-+	struct dma_fence *other;
-+	unsigned idx;
-+	long r;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index bcff3bf5ae09e..e7d365ccc258b 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -8,6 +8,7 @@
+  */
  
--	if (other) {
--		signed long r;
--		r = dma_fence_wait(other, true);
--		if (r < 0) {
--			if (r != -ERESTARTSYS)
--				DRM_ERROR("Error (%ld) waiting for fence!\n", r);
-+	spin_lock(&ctx->ring_lock);
-+	idx = centity->sequence & (amdgpu_sched_jobs - 1);
-+	other = dma_fence_get(centity->fences[idx]);
-+	spin_unlock(&ctx->ring_lock);
+ #include <linux/nfs_fs.h>
++#include <linux/nfs_mount.h>
+ #include <linux/nfs_page.h>
+ #include <linux/module.h>
+ #include <linux/sched/mm.h>
+@@ -928,7 +929,9 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ 	pgm = &pgio->pg_mirrors[0];
+ 	pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].rsize;
  
--			return r;
--		}
--	}
-+	if (!other)
-+		return 0;
- 
--	return 0;
-+	r = dma_fence_wait(other, true);
-+	if (r < 0 && r != -ERESTARTSYS)
-+		DRM_ERROR("Error (%ld) waiting for fence!\n", r);
-+
-+	dma_fence_put(other);
-+	return r;
+-	pgio->pg_maxretrans = io_maxretrans;
++	if (NFS_SERVER(pgio->pg_inode)->flags &
++			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
++		pgio->pg_maxretrans = io_maxretrans;
+ 	return;
+ out_nolseg:
+ 	if (pgio->pg_error < 0)
+@@ -936,6 +939,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
+ out_mds:
+ 	pnfs_put_lseg(pgio->pg_lseg);
+ 	pgio->pg_lseg = NULL;
++	pgio->pg_maxretrans = 0;
+ 	nfs_pageio_reset_read_mds(pgio);
  }
  
- void amdgpu_ctx_mgr_init(struct amdgpu_ctx_mgr *mgr)
+@@ -996,12 +1000,15 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
+ 		pgm->pg_bsize = mirror->mirror_ds->ds_versions[0].wsize;
+ 	}
+ 
+-	pgio->pg_maxretrans = io_maxretrans;
++	if (NFS_SERVER(pgio->pg_inode)->flags &
++			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
++		pgio->pg_maxretrans = io_maxretrans;
+ 	return;
+ 
+ out_mds:
+ 	pnfs_put_lseg(pgio->pg_lseg);
+ 	pgio->pg_lseg = NULL;
++	pgio->pg_maxretrans = 0;
+ 	nfs_pageio_reset_write_mds(pgio);
+ }
+ 
 -- 
 2.20.1
 
