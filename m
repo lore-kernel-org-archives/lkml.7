@@ -2,116 +2,81 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740ADC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B564BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579E222CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881B622CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:49:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbfIDJsR (ORCPT
+        id S1729525AbfIDJto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:48:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:13728 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbfIDJsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:48:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 02:48:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
-   d="scan'208";a="334155828"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.130.107]) ([10.249.130.107])
-  by orsmga004.jf.intel.com with ESMTP; 04 Sep 2019 02:48:14 -0700
-Subject: Re: [PATCH v2] cpuidle-haltpoll: Enable kvm guest polling when
- dedicated physical CPUs are available
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Linux PM <linux-pm@vger.kernel.org>
-References: <1567068597-22419-1-git-send-email-wanpengli@tencent.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <a70aeec2-1572-ea09-a0c5-299cd70ddc8a@intel.com>
-Date:   Wed, 4 Sep 2019 11:48:13 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 05:49:44 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36168 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727722AbfIDJto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:49:44 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 03AD6568DDFD3012E604;
+        Wed,  4 Sep 2019 17:49:43 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 17:49:33 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <yoshihiro.shimoda.uh@renesas.com>,
+        <fabrizio.castro@bp.renesas.com>, <colin.king@canonical.com>,
+        <biju.das@bp.renesas.com>, <swboyd@chromium.org>,
+        <yuehaibing@huawei.com>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] usb: gadget: renesas_usb3: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 17:48:36 +0800
+Message-ID: <20190904094836.18532-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <1567068597-22419-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/29/2019 10:49 AM, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> The downside of guest side polling is that polling is performed even
-> with other runnable tasks in the host. However, even if poll in kvm
-> can aware whether or not other runnable tasks in the same pCPU, it
-> can still incur extra overhead in over-subscribe scenario. Now we can
-> just enable guest polling when dedicated pCPUs are available.
->
-> Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-As stated before, I'm going to queue up this change for 5.4, with the 
-Paolo's ACK.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/usb/gadget/udc/renesas_usb3.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-BTW, in the future please CC power management changes to 
-linux-pm@vger.kernel.org for easier handling.
-
-> --
-> v1 -> v2:
->   * export kvm_arch_para_hints to fix haltpoll driver build as module error
->   * just disable haltpoll driver instead of both driver and governor
->     since KVM_HINTS_REALTIME is not defined in other arches, and governor
->     doesn't depend on x86, to fix the warning on powerpc
->
->   arch/x86/kernel/kvm.c              | 1 +
->   drivers/cpuidle/cpuidle-haltpoll.c | 3 ++-
->   2 files changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index f48401b..68463c1 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -711,6 +711,7 @@ unsigned int kvm_arch_para_hints(void)
->   {
->   	return cpuid_edx(kvm_cpuid_base() | KVM_CPUID_FEATURES);
->   }
-> +EXPORT_SYMBOL_GPL(kvm_arch_para_hints);
->   
->   static uint32_t __init kvm_detect(void)
->   {
-> diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> index 9ac093d..7aee38a 100644
-> --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> @@ -53,7 +53,8 @@ static int __init haltpoll_init(void)
->   
->   	cpuidle_poll_state_init(drv);
->   
-> -	if (!kvm_para_available())
-> +	if (!kvm_para_available() ||
-> +		!kvm_para_has_hint(KVM_HINTS_REALTIME))
->   		return 0;
->   
->   	ret = cpuidle_register(&haltpoll_driver, NULL);
+diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+index e098f16..922a19b 100644
+--- a/drivers/usb/gadget/udc/renesas_usb3.c
++++ b/drivers/usb/gadget/udc/renesas_usb3.c
+@@ -2732,7 +2732,6 @@ static struct usb_role_switch_desc renesas_usb3_role_switch_desc = {
+ static int renesas_usb3_probe(struct platform_device *pdev)
+ {
+ 	struct renesas_usb3 *usb3;
+-	struct resource *res;
+ 	int irq, ret;
+ 	const struct renesas_usb3_priv *priv;
+ 	const struct soc_device_attribute *attr;
+@@ -2751,8 +2750,7 @@ static int renesas_usb3_probe(struct platform_device *pdev)
+ 	if (!usb3)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	usb3->reg = devm_ioremap_resource(&pdev->dev, res);
++	usb3->reg = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(usb3->reg))
+ 		return PTR_ERR(usb3->reg);
+ 
+-- 
+2.7.4
 
 
