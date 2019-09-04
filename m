@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0FAAC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44463C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C516233FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146AC2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620322;
-	bh=eaFXrCHdxRehy3DRRm0c0PWEReDn+Qc490dsaJmCIr0=;
+	s=default; t=1567620325;
+	bh=XnvH6o0Rl557Wo2DardOGKkFMZFDIAy9WaKXsHFwfoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QIXtY71F/RLQxbgWLw5GBoeNeifr5XP0SROKbUhTsrOdwMY1GFgc/G+MpqameRxt0
-	 EhINnXQMIhr7AZXclbNfKmrUVGPUwhkFxoZN78B7e4DJzWYiVqBx299LNskMCbWZyZ
-	 4jxLZG9ktMq/7Q5xjLuOgtF1MKYjkGF/wbFrjFgY=
+	b=gfdu00pwwlUfbkkjC/eQ1x9KCY8M5S5jyhIIL+GQ5LtdqQc4puZaXqo2JyMK4pPxw
+	 66Ce3oyuYJcU1foapXLaYDrCx+OdJosfHcubQAZ/LPlZ7YiL6m6bta7XY+QCXW4LAk
+	 MRgJT9QvX0pDAAKKS2ziI1cYCEedZwCk/1VKKpy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389241AbfIDSFV (ORCPT
+        id S2389252AbfIDSFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:05:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389229AbfIDSFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:05:19 -0400
+        id S2388893AbfIDSFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E990D206BA;
-        Wed,  4 Sep 2019 18:05:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DE852339E;
+        Wed,  4 Sep 2019 18:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620318;
-        bh=eaFXrCHdxRehy3DRRm0c0PWEReDn+Qc490dsaJmCIr0=;
+        s=default; t=1567620321;
+        bh=XnvH6o0Rl557Wo2DardOGKkFMZFDIAy9WaKXsHFwfoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sGTb1YpRoWxdqaNStjV8FXoGtr3Q8NPZi8q5BKA8VS7gD2dcBH78Z0auuwVpLdf9E
-         7Cn/T1RAV1Y19VOySx3WE5d8Zbju8S+07Akwyx8mswx8TRf8ARt8WPDSZ+9PWo/KyZ
-         L/kKurUIcq0kzQ3i3Rv74qFX4zlMb3FTLpY7At7A=
+        b=wILye/DVJAG1X8AUL6vHj9PJTk+si7kH+0qT6LuYg3JrRU5zDx/UWGydp2D/BMtz4
+         LtYeDPEBumieGOwoOBYy1dP3M10noHplI9ig682dIQVC4uDdAjbCiZqKCOyPzZRDcT
+         gD5iHR2UXB7dLs3FQilzOii8TIdAPjO7BxPHdabk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/93] omap-dma/omap_vout_vrfb: fix off-by-one fi value
-Date:   Wed,  4 Sep 2019 19:53:16 +0200
-Message-Id: <20190904175304.369838883@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 15/93] iommu/dma: Handle SG length overflow better
+Date:   Wed,  4 Sep 2019 19:53:17 +0200
+Message-Id: <20190904175304.464031756@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -62,76 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d555c34338cae844b207564c482e5a3fb089d25e ]
+[ Upstream commit ab2cbeb0ed301a9f0460078e91b09f39958212ef ]
 
-The OMAP 4 TRM specifies that when using double-index addressing
-the address increases by the ES plus the EI value minus 1 within
-a frame. When a full frame is transferred, the address increases
-by the ES plus the frame index (FI) value minus 1.
+Since scatterlist dimensions are all unsigned ints, in the relatively
+rare cases where a device's max_segment_size is set to UINT_MAX, then
+the "cur_len + s_length <= max_len" check in __finalise_sg() will always
+return true. As a result, the corner case of such a device mapping an
+excessively large scatterlist which is mergeable to or beyond a total
+length of 4GB can lead to overflow and a bogus truncated dma_length in
+the resulting segment.
 
-The omap-dma code didn't account for the 'minus 1' in the FI register.
-To get correct addressing, add 1 to the src_icg value.
+As we already assume that any single segment must be no longer than
+max_len to begin with, this can easily be addressed by reshuffling the
+comparison.
 
-This was found when testing a hacked version of the media m2m-deinterlace.c
-driver on a Pandaboard.
-
-The only other source that uses this feature is omap_vout_vrfb.c,
-and that adds a + 1 when setting the dst_icg. This is a workaround
-for the broken omap-dma.c behavior. So remove the workaround at the
-same time that we fix omap-dma.c.
-
-I tested the omap_vout driver with a Beagle XM board to check that
-the '+ 1' in omap_vout_vrfb.c was indeed a workaround for the omap-dma
-bug.
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Link: https://lore.kernel.org/r/952e7f51-f208-9333-6f58-b7ed20d2ea0b@xs4all.nl
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
+Reported-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Tested-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/omap-dma.c                    | 4 ++--
- drivers/media/platform/omap/omap_vout_vrfb.c | 3 +--
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/iommu/dma-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index a4a931ddf6f69..aeb9c29e52554 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1237,7 +1237,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	if (src_icg) {
- 		d->ccr |= CCR_SRC_AMODE_DBLIDX;
- 		d->ei = 1;
--		d->fi = src_icg;
-+		d->fi = src_icg + 1;
- 	} else if (xt->src_inc) {
- 		d->ccr |= CCR_SRC_AMODE_POSTINC;
- 		d->fi = 0;
-@@ -1252,7 +1252,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_dma_interleaved(
- 	if (dst_icg) {
- 		d->ccr |= CCR_DST_AMODE_DBLIDX;
- 		sg->ei = 1;
--		sg->fi = dst_icg;
-+		sg->fi = dst_icg + 1;
- 	} else if (xt->dst_inc) {
- 		d->ccr |= CCR_DST_AMODE_POSTINC;
- 		sg->fi = 0;
-diff --git a/drivers/media/platform/omap/omap_vout_vrfb.c b/drivers/media/platform/omap/omap_vout_vrfb.c
-index 29e3f5da59c1f..11ec048929e80 100644
---- a/drivers/media/platform/omap/omap_vout_vrfb.c
-+++ b/drivers/media/platform/omap/omap_vout_vrfb.c
-@@ -253,8 +253,7 @@ int omap_vout_prepare_vrfb(struct omap_vout_device *vout,
- 	 */
- 
- 	pixsize = vout->bpp * vout->vrfb_bpp;
--	dst_icg = ((MAX_PIXELS_PER_LINE * pixsize) -
--		  (vout->pix.width * vout->bpp)) + 1;
-+	dst_icg = MAX_PIXELS_PER_LINE * pixsize - vout->pix.width * vout->bpp;
- 
- 	xt->src_start = vout->buf_phy_addr[vb->i];
- 	xt->dst_start = vout->vrfb_context[vb->i].paddr[0];
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 511ff9a1d6d94..f9dbb064f9571 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -675,7 +675,7 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+ 		 * - and wouldn't make the resulting output segment too long
+ 		 */
+ 		if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
+-		    (cur_len + s_length <= max_len)) {
++		    (max_len - cur_len >= s_length)) {
+ 			/* ...then concatenate it with the previous one */
+ 			cur_len += s_length;
+ 		} else {
 -- 
 2.20.1
 
