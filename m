@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEC9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8454C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD6823401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3DA2341D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbfIDOAa (ORCPT
+        id S1730853AbfIDOAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 4 Sep 2019 10:00:30 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6202 "EHLO huawei.com"
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6655 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730801AbfIDOAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:00:25 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D4191445C12FDC6D27F1;
-        Wed,  4 Sep 2019 22:00:22 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 22:00:15 +0800
+        id S1730251AbfIDOAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:00:30 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 85C1B5AFB946AC7BB17C;
+        Wed,  4 Sep 2019 22:00:26 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 22:00:18 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -51,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 16/36] spi: spi-meson-spifc: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:58:58 +0800
-Message-ID: <20190904135918.25352-17-yuehaibing@huawei.com>
+Subject: [PATCH -next 17/36] spi: mt7621: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:58:59 +0800
+Message-ID: <20190904135918.25352-18-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -72,31 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-meson-spifc.c | 4 +---
+ drivers/spi/spi-mt7621.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-meson-spifc.c b/drivers/spi/spi-meson-spifc.c
-index f7fe9b1..c7b0399 100644
---- a/drivers/spi/spi-meson-spifc.c
-+++ b/drivers/spi/spi-meson-spifc.c
-@@ -286,7 +286,6 @@ static int meson_spifc_probe(struct platform_device *pdev)
- {
- 	struct spi_master *master;
- 	struct meson_spifc *spifc;
--	struct resource *res;
+diff --git a/drivers/spi/spi-mt7621.c b/drivers/spi/spi-mt7621.c
+index ff85982..2c3b7a2 100644
+--- a/drivers/spi/spi-mt7621.c
++++ b/drivers/spi/spi-mt7621.c
+@@ -327,7 +327,6 @@ static int mt7621_spi_probe(struct platform_device *pdev)
+ 	struct spi_controller *master;
+ 	struct mt7621_spi *rs;
  	void __iomem *base;
- 	unsigned int rate;
- 	int ret = 0;
-@@ -300,8 +299,7 @@ static int meson_spifc_probe(struct platform_device *pdev)
- 	spifc = spi_master_get_devdata(master);
- 	spifc->dev = &pdev->dev;
+-	struct resource *r;
+ 	int status = 0;
+ 	struct clk *clk;
+ 	int ret;
+@@ -336,8 +335,7 @@ static int mt7621_spi_probe(struct platform_device *pdev)
+ 	if (!match)
+ 		return -EINVAL;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(spifc->dev, res);
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, r);
 +	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base)) {
- 		ret = PTR_ERR(base);
- 		goto out_err;
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
 -- 
 2.7.4
 
