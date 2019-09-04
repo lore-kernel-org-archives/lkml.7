@@ -2,142 +2,162 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB60C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DAAC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C650422CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C7F206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IoH/Dtjs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EVu2/qM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfIDUfx (ORCPT
+        id S1730135AbfIDUiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:35:53 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41535 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729316AbfIDUfw (ORCPT
+        Wed, 4 Sep 2019 16:38:07 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34390 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727125AbfIDUiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:35:52 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b13so13394pfo.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:35:52 -0700 (PDT)
+        Wed, 4 Sep 2019 16:38:06 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so74809pgc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:38:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Y9dPfxiGVl9B5eQCHDgsbYOLG2ykYyi/7SM+jtLAnog=;
-        b=IoH/DtjsZSHeuM5ZH1ZL9Fy+rFnrY2sGhJTxYoxekXhLlmUNBAwbZWtGkaZWeLkrWB
-         p/OHUOdc3ZVgXUSWEXgPCdOxzHj6ou+8a/ZlebDKFUrcBI8Zk36WiZ7RUbG2Hn1T5Xy6
-         q4NVyGK9q203NBKeABXcjGCfEhXMgChZweccIQ+Inc7zwHL8h+V9H4Eoo0tWROMxKNck
-         zeuF2Fq/ec/RE8H+zHbNtYl55DYiCg2BVdGE41d25DtwtA1Bl1qs11JMSGCNhXZoNW7G
-         GszHlkzz1S81UpO64iP8lHJFTqcYhkcuFgvYXx6J8GUw8BLi/FgP2ITaAvZ2KhBllLib
-         M6nw==
+         :content-disposition:in-reply-to;
+        bh=Bk5pYovWj1N2NE+OOJaoyRA6cWmgvTKyUM/n3n02nPQ=;
+        b=EVu2/qM4dkFpjXBhv301WHW37bP6fyBlIs/gRq15bdIjJoMt6wfKjpMdCcxDV8HOM2
+         UguTb66swmlioFkQdeJH4/MnKxuoTGxU5p+4kVOniyj6OVDbHd1SkZoTYBQx3KHPe8XN
+         3G9Yy4DaGHQe46NHOUlg+hTOdrZ3CaSyEC104=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y9dPfxiGVl9B5eQCHDgsbYOLG2ykYyi/7SM+jtLAnog=;
-        b=Eb2KMwgKOTINqPZphCrJOpT7ID/KnIryt5/ZF5LXIk2+OtwUWyZyTkWM6DPlqlnGKX
-         bzK5QcSJ1P8HwZuksMqc/RILfdftIeUUBm2iRRSTPi/5WzmDuFlkf2v2d/mNjbWGz57Q
-         fsyZk+wJ93ID1fZwkm4u4qJ8d5V1LUgMqBwDyd0ypR8QR0+TxYkgVSKsD88Ik7eBgfK2
-         I1sXGUev+0yPlW941tHoIXvnovOPKvSDtJT9WxgpCn5HIlimzVDsF4evf4uZjbUcfSk8
-         QNPwkk8bDIr3Cxt4FrxcPd2Dgqf1Oxgx16WqL86VCpjqT5HkqtzTBHzaq+V2EH8EKOit
-         Ei2Q==
-X-Gm-Message-State: APjAAAXN0dXYlUvmmfU6Yec6orgVqGPCRFiXKgdEUm0GxWPQxEpb9WAg
-        0yK3egnRfNVePK0M3ETFUmto4Q==
-X-Google-Smtp-Source: APXvYqyNUCdVh4CrjvfM5UYakm4eAZf3UXsz8CmJ1f360GpgwL9mGAfC1CL0i304toSE0+cTRHBGxA==
-X-Received: by 2002:a63:6a81:: with SMTP id f123mr38808pgc.348.1567629351901;
-        Wed, 04 Sep 2019 13:35:51 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h70sm14724pgc.36.2019.09.04.13.35.50
+         :mime-version:content-disposition:in-reply-to;
+        bh=Bk5pYovWj1N2NE+OOJaoyRA6cWmgvTKyUM/n3n02nPQ=;
+        b=i7GAJZzs2Wp7qgwVZ0SuKEGu4/uNQ+9xRdcpSDTEbtkm9D9U/q+r6qF3gWQrto/r+j
+         97ZoIELvbo7dl5GFE5Hve8OhEtGyNkr5GWmSRnFLQ3DM752xTTQPXyUiYTDxherIh5hQ
+         MQteYjbj5+xDCkIe6WMJtU6Vt04JatQ14E7NE5nUfDlSB0uNRkaweSaUv2N3em1kmoXH
+         vhxf8IGkxMt6KXBeOPnJ74M2DPlF9I9YiOj53eSzGq0q1Isgps2rtPhNyRtxYIS39NTn
+         Zj3GXHUmuaC+3cPOMkz64iXvZyfaL24yh+7PCjUBsP7Wr5ePYPxKtbeaL+Ai4tPvoSz6
+         7/wQ==
+X-Gm-Message-State: APjAAAXx72RACoGknqY3rewUZDU9cxcP61cDkFH6YbNaKxGKZhR89RIx
+        hIryLieOKa4zt0iyQT/bJ5e7Ng==
+X-Google-Smtp-Source: APXvYqxBAXwOFmTw+wOpWeWmjPDDuL6B0POG2q8/5EaDnRs7jT8FbA4qXcZTsJJx0WPcTea4f0YBpw==
+X-Received: by 2002:a62:7a12:: with SMTP id v18mr4855828pfc.205.1567629485983;
+        Wed, 04 Sep 2019 13:38:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x22sm5737362pfi.139.2019.09.04.13.38.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 13:35:51 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 13:35:48 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-i2c@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
- processing
-Message-ID: <20190904203548.GC580@tuxbook-pro>
-References: <20190904113613.14997-1-lee.jones@linaro.org>
+        Wed, 04 Sep 2019 13:38:05 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 13:38:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] efi/libstub/arm64: Report meaningful relocation errors
+Message-ID: <201909041336.E6DE4B69@keescook>
+References: <201908141353.043EF60B@keescook>
+ <20190904103803.iv7agcw2suv6fcib@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904113613.14997-1-lee.jones@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190904103803.iv7agcw2suv6fcib@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 04 Sep 04:36 PDT 2019, Lee Jones wrote:
-
-The subject implies that we select FIFO mode instead of DMA, but that's
-not really true, because with DMA enabled we still fall back to FIFO for
-messages below 32 bytes. 
-
-So what this does it to disable DMA, which neither the subject or the DT
-property describes.
-
-Also missing is a description of why this is needed.
-
-Regards,
-Bjorn
-
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+On Wed, Sep 04, 2019 at 11:38:03AM +0100, Will Deacon wrote:
+> Hi Kees,
 > 
-> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> index a89bfce5388e..dfdbce067827 100644
-> --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
->  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->  				u32 m_param)
->  {
-> +	struct device_node *np = gi2c->se.dev->of_node;
->  	dma_addr_t rx_dma;
->  	unsigned long time_left;
-> -	void *dma_buf;
-> +	void *dma_buf = NULL;
->  	struct geni_se *se = &gi2c->se;
->  	size_t len = msg->len;
->  
-> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
-> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +
->  	if (dma_buf)
->  		geni_se_select_mode(se, GENI_SE_DMA);
->  	else
-> @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
->  				u32 m_param)
->  {
-> +	struct device_node *np = gi2c->se.dev->of_node;
->  	dma_addr_t tx_dma;
->  	unsigned long time_left;
-> -	void *dma_buf;
-> +	void *dma_buf = NULL;
->  	struct geni_se *se = &gi2c->se;
->  	size_t len = msg->len;
->  
-> -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
-> +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> +
->  	if (dma_buf)
->  		geni_se_select_mode(se, GENI_SE_DMA);
->  	else
-> -- 
-> 2.17.1
+> On Wed, Aug 14, 2019 at 01:55:50PM -0700, Kees Cook wrote:
+> > When UEFI booting, if allocate_pages() fails (either via KASLR or
+> > regular boot), efi_low_alloc() is used for fall back. If it, too, fails,
+> > it reports "Failed to relocate kernel". Then handle_kernel_image()
+> > reports the failure to its caller, which unhelpfully reports exactly
+> > the same string again:
+> > 
+> > EFI stub: ERROR: Failed to relocate kernel
+> > EFI stub: ERROR: Failed to relocate kernel
+> > 
+> > While debugging linker errors in the UEFI code that created insane memory
+> > sizes that all the allocation attempts would fail at, this was a cause
+> > for confusion. Knowing each allocation had failed would have helped me
+> > isolate the issue sooner. To that end, this improves the error messages
+> > to detail which specific allocations have failed.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/firmware/efi/libstub/arm64-stub.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
+> > index 1550d244e996..24022f956e01 100644
+> > --- a/drivers/firmware/efi/libstub/arm64-stub.c
+> > +++ b/drivers/firmware/efi/libstub/arm64-stub.c
+> > @@ -111,6 +111,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
+> >  		status = efi_random_alloc(sys_table_arg, *reserve_size,
+> >  					  MIN_KIMG_ALIGN, reserve_addr,
+> >  					  (u32)phys_seed);
+> > +		if (status != EFI_SUCCESS)
+> > +			pr_efi_err(sys_table_arg, "KASLR allocate_pages() failed\n");
+> >  
+> >  		*image_addr = *reserve_addr + offset;
+> >  	} else {
+> > @@ -135,6 +137,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
+> >  					EFI_LOADER_DATA,
+> >  					*reserve_size / EFI_PAGE_SIZE,
+> >  					(efi_physical_addr_t *)reserve_addr);
+> > +		if (status != EFI_SUCCESS)
+> > +			pr_efi_err(sys_table_arg, "regular allocate_pages() failed\n");
+> >  	}
 > 
+> Not sure I see the need to distinsuish the 'KASLR' case from the 'regular'
+> case -- only one should run, right?  That also didn't seem to be part of
+> the use-case in the commit, unless I'm missing something.
+
+I just did that to help with differentiating the cases. Maybe something
+was special about KASLR picking the wrong location that triggered the
+failure, etc.
+
+> Maybe combine the prints as per the diff below?
+
+That could work. If you're against the KASLR vs regular thing, I can
+respin the patch?
+
+-Kees
+
+> 
+> Will
+> 
+> --->8
+> 
+> diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
+> index 1550d244e996..820c58cc149e 100644
+> --- a/drivers/firmware/efi/libstub/arm64-stub.c
+> +++ b/drivers/firmware/efi/libstub/arm64-stub.c
+> @@ -143,13 +143,15 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
+>  				       MIN_KIMG_ALIGN, reserve_addr);
+>  
+>  		if (status != EFI_SUCCESS) {
+> -			pr_efi_err(sys_table_arg, "Failed to relocate kernel\n");
+> +			pr_efi_err(sys_table_arg, "efi_low_alloc() failed\n");
+>  			*reserve_size = 0;
+>  			return status;
+>  		}
+>  		*image_addr = *reserve_addr + TEXT_OFFSET;
+> +	} else {
+> +		pr_efi_err(sys_table_arg, "allocate_pages() failed\n");
+>  	}
+> -	memcpy((void *)*image_addr, old_image_addr, kernel_size);
+>  
+> +	memcpy((void *)*image_addr, old_image_addr, kernel_size);
+>  	return EFI_SUCCESS;
+>  }
+
+-- 
+Kees Cook
