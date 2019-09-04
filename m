@@ -2,44 +2,45 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199EEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F74C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52DF22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC4C92168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Ex1Hb+dm"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LrQLnL9T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbfIDNRT (ORCPT
+        id S1730482AbfIDNRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:17:19 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33472 "EHLO
+        Wed, 4 Sep 2019 09:17:20 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33520 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729296AbfIDNRO (ORCPT
+        by vger.kernel.org with ESMTP id S1729968AbfIDNRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:17:14 -0400
+        Wed, 4 Sep 2019 09:17:15 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 754F9C573D;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 7A880C5739;
         Wed,  4 Sep 2019 13:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567603034; bh=m0FKVlQ3LYmFjKrpFGWx405TxbxntEzWiK7CqLuD+Lo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ex1Hb+dmHc02GukpJLes2UZSljRIUwzCQcg0To9kjxphUB1VpAWd4NHLOsqQI+/HI
-         bObZ0RaFww1z1fQhWGcxh4YJCkEp3kCuJ1/F9wveAF15yQvXtQERByeM2LhXcb/HHt
-         UsXD2ZRg3nomsCzqG4qo9ZWhCus37Br8SXH1hReR11r+A+30zN396NUtAa3kIy2Klu
-         /miHONSZ9p767M57c9sHx+D5RRrmaLLhXGkjsQvrhHTD2IaxNzuxb63sqa7kVIQZoj
-         bTllNjRkKTUuztiSs1g8jPXcImygWx8RralUo6KVPA+8RNQ9rQtGcwZxJMUUTT32bp
-         UUOYNEyZk1O2Q==
+        t=1567603034; bh=KCQxzNKdPciLpCzMYFXS00/1ZDMQ64xO5mQOdoiRlGM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=LrQLnL9TNVB0sEP0RLSqKIC7mMIs7rPaXWeroMbywkEtXelwxhVPTgX4Wab2iqUIk
+         KZdprBXxNC3GrTv1XIV4iX0YUDZMgVZpGAxlHlQRSaplxKK0kU9/LNg6VjR2r7uVoD
+         Hcd8BBSD0EwmXvtatGjG7zvZP6GRWF/D2gdVxc5BO9pGIt6bAEfDj8rGsLjvVmM63S
+         ujfnhRBXBs08Zn7Jmaxw/h+RBZTqYW+4/MhGCb16NFACF+UMvCMXXY7l/bkF3dXK2q
+         HLtA8H81o9zNnMfq2ck/b3325Fa0CTyehjA1uRMmrbAVhbI/0zsr+l0t0fqoLo6KT+
+         2jIU9NlNWKjvw==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 7C9EEA005E;
-        Wed,  4 Sep 2019 13:17:11 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 3B957A0069;
+        Wed,  4 Sep 2019 13:17:12 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,16 +51,23 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 00/13] net: stmmac: Improvements for -next
-Date:   Wed,  4 Sep 2019 15:16:52 +0200
-Message-Id: <cover.1567602867.git.joabreu@synopsys.com>
+Subject: [PATCH v2 net-next 03/13] net: stmmac: Do not return error code in TC Initialization
+Date:   Wed,  4 Sep 2019 15:16:55 +0200
+Message-Id: <acfa0062f7bd087e3b80eaa87ff8dc1f058b5e61.1567602867.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
+References: <cover.1567602867.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
+References: <cover.1567602867.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Couple of improvements for -next tree. More info in commit logs.
+As we can still use the remaining TC callbacks, e.g. CBS. We should not
+fail in the initialization only because RX Parser is not available.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -72,35 +80,24 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Jose Abreu (13):
-  net: stmmac: selftests: Return proper error code to userspace
-  net: stmmac: xgmac: Add RBU handling in DMA interrupt
-  net: stmmac: Do not return error code in TC Initialization
-  net: stmmac: Implement L3/L4 Filters using TC Flower
-  net: stmmac: selftests: Add selftest for L3/L4 Filters
-  net: stmmac: xgmac: Implement ARP Offload
-  net: stmmac: selftests: Implement the ARP Offload test
-  net: stmmac: Only consider RX error when HW Timestamping is not
-    enabled
-  net: stmmac: ethtool: Let user configure TX coalesce without RIWT
-  net: stmmac: xgmac: Correct RAVSEL field interpretation
-  net: stmmac: Correctly assing MAX MTU in XGMAC cores case
-  net: stmmac: xgmac: Enable RX Jumbo frame support
-  net: stmmac: selftests: Add Jumbo Frame tests
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |   2 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  33 +-
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 205 ++++++++-
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |   8 +-
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  19 +
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  12 +
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |  21 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  18 +-
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 483 ++++++++++++++++++++-
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c    | 247 ++++++++++-
- 10 files changed, 1001 insertions(+), 47 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index 6c305b6ecad0..8dbbbf181ada 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -243,8 +243,9 @@ static int tc_init(struct stmmac_priv *priv)
+ 	struct dma_features *dma_cap = &priv->dma_cap;
+ 	unsigned int count;
+ 
++	/* Fail silently as we can still use remaining features, e.g. CBS */
+ 	if (!dma_cap->frpsel)
+-		return -EINVAL;
++		return 0;
+ 
+ 	switch (dma_cap->frpbs) {
+ 	case 0x0:
 -- 
 2.7.4
 
