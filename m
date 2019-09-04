@@ -2,71 +2,84 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC86AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D85C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BED82341E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FE32339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:25:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbfIDLWa (ORCPT
+        id S1729532AbfIDLZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 07:22:30 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44788 "EHLO huawei.com"
+        Wed, 4 Sep 2019 07:25:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55568 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725840AbfIDLWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 07:22:30 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DCEC4D621ABD64051DD3;
-        Wed,  4 Sep 2019 19:22:27 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 4 Sep 2019 19:22:17 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] phy: lantiq: vrx200-pcie: fix error return code in ltq_vrx200_pcie_phy_power_on()
-Date:   Wed, 4 Sep 2019 11:40:14 +0000
-Message-ID: <20190904114014.124099-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726010AbfIDLZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 07:25:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9693EB049;
+        Wed,  4 Sep 2019 11:24:59 +0000 (UTC)
+Subject: Re: [PATCH] mm: Unsigned 'nr_pages' always larger than zero
+To:     zhong jiang <zhongjiang@huawei.com>, akpm@linux-foundation.org,
+        mhocko@kernel.org
+Cc:     anshuman.khandual@arm.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+References: <1567592763-25282-1-git-send-email-zhongjiang@huawei.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <5505fa16-117e-8890-0f48-38555a61a036@suse.cz>
+Date:   Wed, 4 Sep 2019 13:24:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1567592763-25282-1-git-send-email-zhongjiang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix to return a negative error code from the error handling
-case instead of 0, as done elsewhere in this function.
+On 9/4/19 12:26 PM, zhong jiang wrote:
+> With the help of unsigned_lesser_than_zero.cocci. Unsigned 'nr_pages"'
+> compare with zero. And __get_user_pages_locked will return an long value.
+> Hence, Convert the long to compare with zero is feasible.
 
-Fixes: e52a632195bf ("phy: lantiq: vrx200-pcie: add a driver for the Lantiq VRX200 PCIe PHY")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+It would be nicer if the parameter nr_pages was long again instead of unsigned
+long (note there are two variants of the function, so both should be changed).
 
-diff --git a/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
-index 544d64a84cc0..6e457967653e 100644
---- a/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
-+++ b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
-@@ -323,7 +323,8 @@ static int ltq_vrx200_pcie_phy_power_on(struct phy *phy)
- 		goto err_disable_pdi_clk;
- 
- 	/* Check if we are in "startup ready" status */
--	if (ltq_vrx200_pcie_phy_wait_for_pll(phy) != 0)
-+	ret = ltq_vrx200_pcie_phy_wait_for_pll(phy);
-+	if (ret)
- 		goto err_disable_phy_clk;
- 
- 	ltq_vrx200_pcie_phy_apply_workarounds(phy);
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 
+Fixes: 932f4a630a69 ("mm/gup: replace get_user_pages_longterm() with FOLL_LONGTERM")
 
+(which changed long to unsigned long)
+
+AFAICS... stable shouldn't be needed as the only "risk" is that we goto
+check_again even when we fail, which should be harmless.
+
+Vlastimil
+
+> ---
+>  mm/gup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 23a9f9c..956d5a1 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1508,7 +1508,7 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
+>  						   pages, vmas, NULL,
+>  						   gup_flags);
+>  
+> -		if ((nr_pages > 0) && migrate_allow) {
+> +		if (((long)nr_pages > 0) && migrate_allow) {
+>  			drain_allow = true;
+>  			goto check_again;
+>  		}
+> 
 
