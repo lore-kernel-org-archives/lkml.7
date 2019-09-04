@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9B8C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC357C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4893822DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A0D22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620708;
-	bh=3PPlJtyaYmGB8nr08FGdGC9v13Bgstuekc9LvF+Trjs=;
+	s=default; t=1567620710;
+	bh=2+lDASw6thM+eORtmapA7D8758mNopZ9lXcWqgfi+5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d05IZJk+9t1zievT7o7wo4xeo3kW+k/EdG6nM9KI4dICcWP48rl0lbTR5HOx8QYwk
-	 M5tVMLQzi8xh+vv1y2vn/MCFNPHe0XSqNxopHeuC5VzU+w3WmOY22DNF9KpiNrrZDc
-	 2NJAzv+Qjvr48DK+D41FQmLy27jqbWYjiM9Ucyrc=
+	b=2Mqf01US/saZP3HdvL4NcnVelzQ0KMH8V3gOsU9aNi9G0rDqYB+7C1ZUdQ4l6C8Ia
+	 +iChZz9ggY7SZV+N2rzyAgigaoMHqrXoHp62jT1AdhKCEYUf21sHI0nqB5IXaOgNg8
+	 +zM3eRPtA4HIdItYiOgTQh0hgRPxTSbVArnnQ0qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390401AbfIDSLq (ORCPT
+        id S2390408AbfIDSLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55856 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389971AbfIDSLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:43 -0400
+        id S2389206AbfIDSLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D05352087E;
-        Wed,  4 Sep 2019 18:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4AD2087E;
+        Wed,  4 Sep 2019 18:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620702;
-        bh=3PPlJtyaYmGB8nr08FGdGC9v13Bgstuekc9LvF+Trjs=;
+        s=default; t=1567620707;
+        bh=2+lDASw6thM+eORtmapA7D8758mNopZ9lXcWqgfi+5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCvFUH0DPNmcZ7bglVOCS+IrzPUR0gNqL/OldegLB+NugUXNuOdEtFeVlPymZOIu8
-         yCaef7hmRVI1nGTAgL+c9jlCuW2fAvQvaJRqjbZo05vDX/C9aZCpv6z8cV33A726eg
-         e2SgXqf5Ae1qahsQc/OKn8ZpExDG4TwuHx51abcM=
+        b=LdhyAnDBdVMXztfBVDTzszZeBYQIp7CAfUJE/tQ1xTuivNYDGefXUO5wpobkRj4Yp
+         yo58Mp0ufjTGdLiSVUkePPW1MHer4yAwzKcul73HZHjiBaV/YW7HIaXWqcHxyGoqwp
+         +Y1yIoovGcVk56hTjuRAmerwNvJB7XgkWP8WgvLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Yi-Hung Wei <yihung.wei@gmail.com>,
-        Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 056/143] openvswitch: Fix conntrack cache with timeout
-Date:   Wed,  4 Sep 2019 19:53:19 +0200
-Message-Id: <20190904175316.266310168@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 066/143] ALSA: usb-audio: Add implicit fb quirk for Behringer UFX1604
+Date:   Wed,  4 Sep 2019 19:53:29 +0200
+Message-Id: <20190904175316.650655704@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,61 +58,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi-Hung Wei <yihung.wei@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 7177895154e6a35179d332f4a584d396c50d0612 ]
+commit 1a15718b41df026cffd0e42cfdc38a1384ce19f9 upstream.
 
-This patch addresses a conntrack cache issue with timeout policy.
-Currently, we do not check if the timeout extension is set properly in the
-cached conntrack entry.  Thus, after packet recirculate from conntrack
-action, the timeout policy is not applied properly.  This patch fixes the
-aforementioned issue.
+Behringer UFX1604 requires the similar quirk to apply implicit fb like
+another Behringer model UFX1204 in order to fix the noisy playback.
 
-Fixes: 06bd2bdf19d2 ("openvswitch: Add timeout support to ct action")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Yi-Hung Wei <yihung.wei@gmail.com>
-Acked-by: Pravin B Shelar <pshelar@ovn.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204631
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/openvswitch/conntrack.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
---- a/net/openvswitch/conntrack.c
-+++ b/net/openvswitch/conntrack.c
-@@ -67,6 +67,7 @@ struct ovs_conntrack_info {
- 	struct md_mark mark;
- 	struct md_labels labels;
- 	char timeout[CTNL_TIMEOUT_NAME_MAX];
-+	struct nf_ct_timeout *nf_ct_timeout;
- #if IS_ENABLED(CONFIG_NF_NAT)
- 	struct nf_nat_range2 range;  /* Only present for SRC NAT and DST NAT. */
- #endif
-@@ -697,6 +698,14 @@ static bool skb_nfct_cached(struct net *
- 		if (help && rcu_access_pointer(help->helper) != info->helper)
- 			return false;
- 	}
-+	if (info->nf_ct_timeout) {
-+		struct nf_conn_timeout *timeout_ext;
-+
-+		timeout_ext = nf_ct_timeout_find(ct);
-+		if (!timeout_ext || info->nf_ct_timeout !=
-+		    rcu_dereference(timeout_ext->timeout))
-+			return false;
-+	}
- 	/* Force conntrack entry direction to the current packet? */
- 	if (info->force && CTINFO2DIR(ctinfo) != IP_CT_DIR_ORIGINAL) {
- 		/* Delete the conntrack entry if confirmed, else just release
-@@ -1657,6 +1666,10 @@ int ovs_ct_copy_action(struct net *net,
- 				      ct_info.timeout))
- 			pr_info_ratelimited("Failed to associated timeout "
- 					    "policy `%s'\n", ct_info.timeout);
-+		else
-+			ct_info.nf_ct_timeout = rcu_dereference(
-+				nf_ct_timeout_find(ct_info.ct)->timeout);
-+
- 	}
- 
- 	if (helper) {
+---
+ sound/usb/pcm.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -339,6 +339,7 @@ static int set_sync_ep_implicit_fb_quirk
+ 		ep = 0x81;
+ 		ifnum = 2;
+ 		goto add_sync_ep_from_ifnum;
++	case USB_ID(0x1397, 0x0001): /* Behringer UFX1604 */
+ 	case USB_ID(0x1397, 0x0002): /* Behringer UFX1204 */
+ 		ep = 0x81;
+ 		ifnum = 1;
 
 
