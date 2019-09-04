@@ -2,134 +2,74 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C063BC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E056C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F5F02087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420692339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfIDHNP (ORCPT
+        id S1728936AbfIDHOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:13:15 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37176 "EHLO mx1.redhat.com"
+        Wed, 4 Sep 2019 03:14:12 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:47746 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDHNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:13:15 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D88157CBB1;
-        Wed,  4 Sep 2019 07:13:14 +0000 (UTC)
-Received: from thuth.com (ovpn-116-69.ams2.redhat.com [10.36.116.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0339D1001B1A;
-        Wed,  4 Sep 2019 07:13:12 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        id S1725938AbfIDHOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:14:12 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 85BFE1A0063;
+        Wed,  4 Sep 2019 09:14:10 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EC30A1A0194;
+        Wed,  4 Sep 2019 09:14:05 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 09A5540296;
+        Wed,  4 Sep 2019 15:13:59 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, daniel.baluta@nxp.com, aisheng.dong@nxp.com,
+        abel.vesa@nxp.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: s390: Disallow invalid bits in kvm_valid_regs and kvm_dirty_regs
-Date:   Wed,  4 Sep 2019 09:13:08 +0200
-Message-Id: <20190904071308.25683-1-thuth@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 04 Sep 2019 07:13:14 +0000 (UTC)
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] soc: imx: imx-scu: Getting UID from SCU should have response
+Date:   Wed,  4 Sep 2019 15:13:14 -0400
+Message-Id: <1567624394-25023-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If unknown bits are set in kvm_valid_regs or kvm_dirty_regs, this
-clearly indicates that something went wrong in the KVM userspace
-application. The x86 variant of KVM already contains a check for
-bad bits (and the corresponding kselftest checks this), so let's
-do the same on s390x now, too.
+The SCU firmware API for getting UID should have response,
+otherwise, the message stored in function stack could be
+released and then the response data received from SCU will be
+stored into that released stack and cause kernel NULL pointer
+dump.
 
-Signed-off-by: Thomas Huth <thuth@redhat.com>
+Fixes: 73feb4d0f8f1 ("soc: imx-scu: Add SoC UID(unique identifier) support")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/s390/include/uapi/asm/kvm.h              |  6 ++++
- arch/s390/kvm/kvm-s390.c                      |  4 +++
- .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++
- 3 files changed, 40 insertions(+)
+ drivers/soc/imx/soc-imx-scu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
-index 47104e5b47fd..436ec7636927 100644
---- a/arch/s390/include/uapi/asm/kvm.h
-+++ b/arch/s390/include/uapi/asm/kvm.h
-@@ -231,6 +231,12 @@ struct kvm_guest_debug_arch {
- #define KVM_SYNC_GSCB   (1UL << 9)
- #define KVM_SYNC_BPBC   (1UL << 10)
- #define KVM_SYNC_ETOKEN (1UL << 11)
-+
-+#define KVM_SYNC_S390_VALID_FIELDS \
-+	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
-+	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \
-+	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
-+
- /* length and alignment of the sdnx as a power of two */
- #define SDNXC 8
- #define SDNXL (1UL << SDNXC)
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 49d7722229ae..a7d7dedfe527 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3998,6 +3998,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
- 	if (kvm_run->immediate_exit)
- 		return -EINTR;
+diff --git a/drivers/soc/imx/soc-imx-scu.c b/drivers/soc/imx/soc-imx-scu.c
+index 50831eb..c68882e 100644
+--- a/drivers/soc/imx/soc-imx-scu.c
++++ b/drivers/soc/imx/soc-imx-scu.c
+@@ -46,7 +46,7 @@ static ssize_t soc_uid_show(struct device *dev,
+ 	hdr->func = IMX_SC_MISC_FUNC_UNIQUE_ID;
+ 	hdr->size = 1;
  
-+	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
-+	    kvm_run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
-+		return -EINVAL;
-+
- 	vcpu_load(vcpu);
- 
- 	if (guestdbg_exit_pending(vcpu)) {
-diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-index bbc93094519b..d5290b4ad636 100644
---- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-+++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-@@ -85,6 +85,36 @@ int main(int argc, char *argv[])
- 
- 	run = vcpu_state(vm, VCPU_ID);
- 
-+	/* Request reading invalid register set from VCPU. */
-+	run->kvm_valid_regs = INVALID_SYNC_FIELD;
-+	rv = _vcpu_run(vm, VCPU_ID);
-+	TEST_ASSERT(rv < 0 && errno == EINVAL,
-+		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d\n",
-+		    rv);
-+	vcpu_state(vm, VCPU_ID)->kvm_valid_regs = 0;
-+
-+	run->kvm_valid_regs = INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
-+	rv = _vcpu_run(vm, VCPU_ID);
-+	TEST_ASSERT(rv < 0 && errno == EINVAL,
-+		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d\n",
-+		    rv);
-+	vcpu_state(vm, VCPU_ID)->kvm_valid_regs = 0;
-+
-+	/* Request setting invalid register set into VCPU. */
-+	run->kvm_dirty_regs = INVALID_SYNC_FIELD;
-+	rv = _vcpu_run(vm, VCPU_ID);
-+	TEST_ASSERT(rv < 0 && errno == EINVAL,
-+		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d\n",
-+		    rv);
-+	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs = 0;
-+
-+	run->kvm_dirty_regs = INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
-+	rv = _vcpu_run(vm, VCPU_ID);
-+	TEST_ASSERT(rv < 0 && errno == EINVAL,
-+		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d\n",
-+		    rv);
-+	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs = 0;
-+
- 	/* Request and verify all valid register sets. */
- 	run->kvm_valid_regs = TEST_SYNC_FIELDS;
- 	rv = _vcpu_run(vm, VCPU_ID);
+-	ret = imx_scu_call_rpc(soc_ipc_handle, &msg, false);
++	ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
+ 	if (ret) {
+ 		pr_err("%s: get soc uid failed, ret %d\n", __func__, ret);
+ 		return ret;
 -- 
-2.18.1
+2.7.4
 
