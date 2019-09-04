@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D07CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E16C41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCC32087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C154720882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621251;
-	bh=umZgLcx4LyDobcUqiPkXfOxFI+Pw5k7wzlTFOTD1aLk=;
+	s=default; t=1567621258;
+	bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MjNQ2XrQNZ1NypOZFQVZm9uHXQpDfXPGmzFdv6algd9CHhUfe7lNlszTVjaLRAS3S
-	 MGgrnoIYn38+2Yhkgof9GQXRTPN541vQAKFq7Udi/s5/Aev4ApBGuMg/yyRRfoJxTM
-	 6wMnqfTtpUwbqN3xw7rjMrWQJft/cVsaQYA+mkxA=
+	b=ECj5/2Oksv7z9Kbraikh8PArwRlhrHbqVbCS8TAqerg2Qe2mi5sqxwF0B+t3dti00
+	 iPD1WycRGbNzSYs+hF5+71+l9PEs9P+yiX/9gZcVjZiXg9WHMUsZT/pKTfFk0/+n+x
+	 VE9+LX4rjR4U6Lze7A3C8HjBkLQtb6eIOOETKPZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390000AbfIDSUu (ORCPT
+        id S2389644AbfIDSH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:20:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389500AbfIDSHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:37 -0400
+        id S2389477AbfIDSG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 386F92087E;
-        Wed,  4 Sep 2019 18:07:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A00AA233FF;
+        Wed,  4 Sep 2019 18:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620456;
-        bh=umZgLcx4LyDobcUqiPkXfOxFI+Pw5k7wzlTFOTD1aLk=;
+        s=default; t=1567620385;
+        bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xv0QWF4EeKej/3gIDEyteIMtV52DrS6vuci6nSqHuvTYDmnPAGNSuo3cj7hpWAMZh
-         zIyzEN8fzG5P6B8MvqTD8ZqgNVHIxf7qx/z6UMDNTxrIifPAH0bpZ9tjFV2xzDyWNJ
-         UJm43juAwRS29SDG7MnPk8bbTM545R+Gv9zGrF80=
+        b=pH40xdQGvYvxey1I0kPWl4kgNYD2980j2UG1nq18jvlUzZGX+CzFxDAcjT7Wl57Z1
+         yyTYFy8R2N5xSIDeVmG6y3saeaKn8gB4vh7WI2lqGKKiE7fFskX59xtXgZC12cUQcC
+         G9WbJmQyPEepHCh7U3+Wqdf7x7MgsKvFrJ2Jrggg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.19 65/93] stm class: Fix a double free of stm_source_device
-Date:   Wed,  4 Sep 2019 19:54:07 +0200
-Message-Id: <20190904175308.602533755@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Vladimir Rutsky <rutsky@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 37/93] tcp: make sure EPOLLOUT wont be missed
+Date:   Wed,  4 Sep 2019 19:53:39 +0200
+Message-Id: <20190904175306.452580496@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,36 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 961b6ffe0e2c403b09a8efe4a2e986b3c415391a upstream.
+[ Upstream commit ef8d8ccdc216f797e66cb4a1372f5c4c285ce1e4 ]
 
-In the error path of stm_source_register_device(), the kfree is
-unnecessary, as the put_device() before it ends up calling
-stm_source_device_release() to free stm_source_device, leading to
-a double free at the outer kfree() call. Remove it.
+As Jason Baron explained in commit 790ba4566c1a ("tcp: set SOCK_NOSPACE
+under memory pressure"), it is crucial we properly set SOCK_NOSPACE
+when needed.
 
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 7bd1d4093c2fa ("stm class: Introduce an abstraction for System Trace Module devices")
-Link: https://lore.kernel.org/linux-arm-kernel/1563354988-23826-1-git-send-email-dingxiang@cmss.chinamobile.com/
-Cc: stable@vger.kernel.org # v4.4+
-Link: https://lore.kernel.org/r/20190821074955.3925-2-alexander.shishkin@linux.intel.com
+However, Jason patch had a bug, because the 'nonblocking' status
+as far as sk_stream_wait_memory() is concerned is governed
+by MSG_DONTWAIT flag passed at sendmsg() time :
+
+    long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
+
+So it is very possible that tcp sendmsg() calls sk_stream_wait_memory(),
+and that sk_stream_wait_memory() returns -EAGAIN with SOCK_NOSPACE
+cleared, if sk->sk_sndtimeo has been set to a small (but not zero)
+value.
+
+This patch removes the 'noblock' variable since we must always
+set SOCK_NOSPACE if -EAGAIN is returned.
+
+It also renames the do_nonblock label since we might reach this
+code path even if we were in blocking mode.
+
+Fixes: 790ba4566c1a ("tcp: set SOCK_NOSPACE under memory pressure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Reported-by: Vladimir Rutsky  <rutsky@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hwtracing/stm/core.c |    1 -
- 1 file changed, 1 deletion(-)
+ net/core/stream.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -1098,7 +1098,6 @@ int stm_source_register_device(struct de
+--- a/net/core/stream.c
++++ b/net/core/stream.c
+@@ -120,7 +120,6 @@ int sk_stream_wait_memory(struct sock *s
+ 	int err = 0;
+ 	long vm_wait = 0;
+ 	long current_timeo = *timeo_p;
+-	bool noblock = (*timeo_p ? false : true);
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
  
- err:
- 	put_device(&src->dev);
--	kfree(src);
+ 	if (sk_stream_memory_free(sk))
+@@ -133,11 +132,8 @@ int sk_stream_wait_memory(struct sock *s
  
- 	return err;
- }
+ 		if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
+ 			goto do_error;
+-		if (!*timeo_p) {
+-			if (noblock)
+-				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+-			goto do_nonblock;
+-		}
++		if (!*timeo_p)
++			goto do_eagain;
+ 		if (signal_pending(current))
+ 			goto do_interrupted;
+ 		sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+@@ -169,7 +165,13 @@ out:
+ do_error:
+ 	err = -EPIPE;
+ 	goto out;
+-do_nonblock:
++do_eagain:
++	/* Make sure that whenever EAGAIN is returned, EPOLLOUT event can
++	 * be generated later.
++	 * When TCP receives ACK packets that make room, tcp_check_space()
++	 * only calls tcp_new_space() if SOCK_NOSPACE is set.
++	 */
++	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+ 	err = -EAGAIN;
+ 	goto out;
+ do_interrupted:
 
 
