@@ -2,67 +2,95 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26731C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C6BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 080BF2073F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3645A2073F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:13:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbfIDONC (ORCPT
+        id S1730101AbfIDOLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:13:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:56038 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbfIDONC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:13:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64A5928;
-        Wed,  4 Sep 2019 07:13:01 -0700 (PDT)
-Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FE5A3F59C;
-        Wed,  4 Sep 2019 07:12:59 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 15:12:57 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v3 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
-Message-ID: <20190904141257.GB6144@bogus>
-References: <20190904121606.17474-1-lee.jones@linaro.org>
+        Wed, 4 Sep 2019 10:11:16 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:46894 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729877AbfIDOLP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:11:15 -0400
+Received: by mail-yb1-f193.google.com with SMTP id y194so7322951ybe.13;
+        Wed, 04 Sep 2019 07:11:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ndiu1qeyYiTsgd1IQKxLqytq07+6AvPDInzgXch1dx0=;
+        b=jG6sUMeGvrOa7y8hDzJRpMlJ0GH5PIveC8dv0iHURRSK7qWEeeJPOvWub6Yb+Jceb4
+         3fl9eRUIgX4OmqmA9ZqXB2SD0DZ/VghK/AkfF+qnFWyo0aSV/a7CEEN+meI1QaMS3GPo
+         T380Rtm5WLulWZ2fOV4udEFBaXG+uucMpf8FfN5euqnj2tEtVJLu5PzMls14PzlmOaEa
+         6m3LpvG0I2AKf6NgW90jqW1uqXhHhctz9bWKtcOejWqR6CzHwO2IG0hs34RjSJHFUvxE
+         m0YkNCoLdNK1gvQfnVg8ojDgIxgYYe6iquTDxySWhvFT3J8jMeEcDI6csZ4no1WNj6t8
+         ZuRQ==
+X-Gm-Message-State: APjAAAXAN5qGSvYNGANXbLIfHnq6sRQT0lG1Es4zOHObJzN6AdprPl49
+        avCDZF8YfSZYg8py1BvTd8s56Qksnl7Lph/jFuc=
+X-Google-Smtp-Source: APXvYqyhk8FpqdMml/U3tSJdYtK/Y+iACvELqeYDdxkjKbPkgsnecJqn3l9d6E1wpGWwXqCgqS5anjOZuA/G8EqrUKg=
+X-Received: by 2002:a5b:981:: with SMTP id c1mr27761719ybq.14.1567606274841;
+ Wed, 04 Sep 2019 07:11:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904121606.17474-1-lee.jones@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1564565779-29537-1-git-send-email-harini.katakam@xilinx.com>
+ <1564565779-29537-3-git-send-email-harini.katakam@xilinx.com>
+ <20190801040648.GJ2713@lunn.ch> <CAFcVEC+DyVhLzbMdSDsadivbnZJxSEg-0kUF5_Q+mtSbBnmhSA@mail.gmail.com>
+ <20190813132321.GF15047@lunn.ch> <CAFcVECKipjD9atgEJSf8j78q_1aOAX77nD6vVeytZ-M00qBt6A@mail.gmail.com>
+ <20190813153820.GY14290@lunn.ch>
+In-Reply-To: <20190813153820.GY14290@lunn.ch>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Wed, 4 Sep 2019 19:41:03 +0530
+Message-ID: <CAFcVECLucW=OXRnr1vVws2fswp0zHxBnMT-3JC2AOPXCLhDL1g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] net: gmii2rgmii: Switch priv field in mdio device structure
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Harini Katakam <harini.katakam@xilinx.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        radhey.shyam.pandey@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 01:16:06PM +0100, Lee Jones wrote:
-> From: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> The Lenovo Yoga C630 is built on the SDM850 from Qualcomm, but this seem
-> to be similar enough to the SDM845 that we can reuse the sdm845.dtsi.
->
-> Supported by this patch is: keyboard, battery monitoring, UFS storage,
-> USB host and Bluetooth.
->
+Hi Andrew,
 
-Just curious to know if the idea of booting using ACPI is completely
-dropped as it's extremely difficult(because the firmware is so hacked
-up and may violate spec, just my opinion) for whatever reasons.
+On Tue, Aug 13, 2019 at 9:40 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > > The kernel does have a few helper, spi_get_drvdata, pci_get_drvdata,
+> > > hci_get_drvdata. So maybe had add phydev_get_drvdata(struct phy_device
+> > > *phydev)?
+> >
+> > Maybe phydev_mdio_get_drvdata? Because the driver data member available is
+> > phydev->mdio.dev.driver_data.
+>
+> I still prefer phydev_get_drvdata(). It fits with the X_get_drvdata()
+> pattern, where X is the type of parameter passed to the call, spi,
+> pci, hci.
+>
+> We can also add mdiodev_get_drvdata(mdiodev). A few DSA drivers could
+> use that.
 
-We just made ACPI table version checking more lenient for this platform
-and would be good to know if we continue to run ACPI on that or will
-abandon and just use DT.
+Sorry for the late reply. I just sent a v2 adding
+mdiodev_get/set_drvdata helpers
+and using them in gmii2rgmii driver.
+I did not add a corresponding phydev helper because there is no "struct dev" in
+"struct phy_device" and I dint know if there were any users to add the member
+and then a helper for driver data. Also,
+strutct phy_device { struct mdio_device { struct device }}
+is already available and it seemed logical to use that field to
+set/get driver data
+for gmii2rgmii. Please let me know if v2 is okay.
 
---
 Regards,
-Sudeep
+Harini
