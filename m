@@ -3,117 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBDBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63B6C41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E566C23400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FFA2339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfIDFey (ORCPT
+        id S1728488AbfIDFf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 01:34:54 -0400
-Received: from mga12.intel.com ([192.55.52.136]:42742 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfIDFey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 01:34:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 22:34:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
-   d="scan'208";a="266537499"
-Received: from fyin-mobl.ccr.corp.intel.com (HELO [10.239.204.18]) ([10.239.204.18])
-  by orsmga001.jf.intel.com with ESMTP; 03 Sep 2019 22:34:52 -0700
-Subject: Re: About compiler memory barrier for atomic_set/atomic_read on x86
-From:   "Yin, Fengwei" <fengwei.yin@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, "He, Min" <min.he@intel.com>,
-        "Zhao, Yakui" <yakui.zhao@intel.com>
-References: <256e8ee2-a23c-28e9-3988-8b77307c001a@intel.com>
- <20190903140614.GR2349@hirez.programming.kicks-ass.net>
- <a9ea1348-b7cb-c589-1be4-51efadaf1271@intel.com>
-Message-ID: <d34411c5-526c-0d9b-0c10-525f871b5d2c@intel.com>
-Date:   Wed, 4 Sep 2019 13:34:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 01:35:26 -0400
+Received: from bmailout3.hostsharing.net ([176.9.242.62]:45307 "EHLO
+        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfIDFf0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 01:35:26 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6318A101C0753;
+        Wed,  4 Sep 2019 07:35:24 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 0BD23CDF; Wed,  4 Sep 2019 07:35:24 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 07:35:23 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, rafael.j.wysocki@intel.com,
+        keith.busch@intel.com
+Subject: Re: [PATCH 2/2] PCI: Unify pci_dev_is_disconnected() and
+ pci_dev_is_inaccessible()
+Message-ID: <20190904053523.7lmuoo5zempxtsdq@wunner.de>
+References: <20190904043633.65026-1-skunberg.kelsey@gmail.com>
+ <20190904043633.65026-3-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a9ea1348-b7cb-c589-1be4-51efadaf1271@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904043633.65026-3-skunberg.kelsey@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Tue, Sep 03, 2019 at 10:36:35PM -0600, Kelsey Skunberg wrote:
+> Change pci_dev_is_disconnected() call inside pci_dev_is_inaccessible() to:
+> 
+> 	pdev->error_state == pci_channel_io_perm_failure
+> 
+> Change remaining pci_dev_is_disconnected() calls to
+> pci_dev_is_inaccessible() calls.
 
-On 9/4/2019 7:38 AM, Yin, Fengwei wrote:
-> Hi Peter,
-> 
-> On 9/3/2019 10:06 PM, Peter Zijlstra wrote:
->> On Tue, Sep 03, 2019 at 09:23:41PM +0800, Yin, Fengwei wrote:
->>> Hi Peter,
->>> There is one question regarding following commit:
->>>
->>> commit 69d927bba39517d0980462efc051875b7f4db185
->>> Author: Peter Zijlstra <peterz@infradead.org>
->>> Date:   Wed Apr 24 13:38:23 2019 +0200
->>>
->>>      x86/atomic: Fix smp_mb__{before,after}_atomic()
->>>
->>>      Recent probing at the Linux Kernel Memory Model uncovered a
->>>      'surprise'. Strongly ordered architectures where the atomic RmW
->>>      primitive implies full memory ordering and
->>>      smp_mb__{before,after}_atomic() are a simple barrier() (such as 
->>> x86)
->>>
->>> This change made atomic RmW operations include compiler barrier. And 
->>> made
->>> __smp_mb__before_atomic/__smp_mb__after_atomic not include compiler
->>> barrier any more for x86.
->>>
->>> We face the issue to handle atomic_set/atomic_read which is mapped to
->>> WRITE_ONCE/READ_ONCE on x86. These two functions don't include compiler
->>> barrier actually (if operator size is less than 8 bytes).
->>>
->>> Before the commit 69d927bba39517d0980462efc051875b7f4db185, we could use
->>> __smp_mb__before_atomic/__smp_mb__after_atomic together with these two
->>> functions to make sure the memory order. It can't work after the commit
->>> 69d927bba39517d0980462efc051875b7f4db185. I am wandering whether
->>> we should make atomic_set/atomic_read also include compiler memory
->>> barrier on x86? Thanks.
->>
->> No; using smp_mb__{before,after}_atomic() with atomic_{set,read}() is
->> _wrong_! And it is documented as such; see Documentation/atomic_t.txt.
-> 
-> Thanks a lot for direct me to this doc. And yes, from this doc:
->     - smp_mb__{before,after}_atomic() only apply to the RMW atomic ops
->     - non-RMW operations are unordered;
-> 
-> I checked the /Documentation/memory-barriers.txt too. In section
-> "COMPILER BARRIER", "However, READ_ONCE() and WRITE_ONCE() can be
-> thought of as weak forms of barrier() that affect only the specific
-> accesses flagged by the READ_ONCE() or WRITE_ONCE()".
-> 
-> For x86 READ_ONCE/WRITE_ONCE doesn't have compiler barrier if the
-> operator size is less than 8 bytes. Should we update x86 code?
-> 
-> So, if I use atomic_set/read, to prevent the compiler from moving memory
-> access around, I should use compiler barrier explicitly. Right?
-It looks like atomic_set_release/read_acquire could be used in my case.
+I don't think that's a good idea because it introduces a config space read
+(for the vendor ID) in places where we don't want that.  E.g., after the
+check of pdev->error_state, a regular config space read may take place and
+if that returns all ones, we may already be able to determine that the
+device is inaccessible, obviating the need for a vendor ID check.
+Config space reads aren't for free.
 
-Regards
-Yin, Fengwei
+Thanks,
 
-> 
-> Regards
-> Yin, Fengwei
-> 
->>
-> 
-
+Lukas
