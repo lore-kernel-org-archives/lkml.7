@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C98C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB00FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B2EC22CF8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C223022CF8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:35:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ufvRrBj+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SMUxmMqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbfIDCfo (ORCPT
+        id S1728236AbfIDCft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 22:35:44 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46741 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbfIDCfh (ORCPT
+        Tue, 3 Sep 2019 22:35:49 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46463 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728151AbfIDCfp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 22:35:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m3so10307789pgv.13;
-        Tue, 03 Sep 2019 19:35:36 -0700 (PDT)
+        Tue, 3 Sep 2019 22:35:45 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t1so594139plq.13;
+        Tue, 03 Sep 2019 19:35:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RzbHrWIg0lBmbShcmgiv3bz+4va6hNwAkwxG7N3nZBA=;
-        b=ufvRrBj+X4/HCzkx/G0GmmmdwOwqBYJF3kBUUebp9LPIMk548rPc6wAJ6NqmcFzPZU
-         /6IKwQmbgBYpGtoSBgshWR5c499Lpr/BbJ/LhM1u3qKyLms1jtMmOETLC9vaOfoyAfsf
-         cRGjvTSDUz0HqtSVXPD5lGmd52VPAbBOF6kXm/w8jKmMB6uba7m9O8KkCcyylAKQ4sRe
-         Zn0m1CJnj5eAQkG17ftnKzsEvDX6CP4ulOgvJbnXnsyVgCAHuTxwVC3oz4QdGM3lwR7s
-         Nyt6X9/5gkcbv3USjWheep1tq4JCWfzPrnMzRi8Ew6xX0K77YJDWnmrZ3Tm2fTDk429s
-         Zmrw==
+        bh=+aCoTyAZq4seXeFgHdkNVujIOOXIGfZdUZjUTxRnOZM=;
+        b=SMUxmMqAIY1WN9/3k3mlL3l2Yzd7jJU5ppxBEG6GWDsenDmSo01JOxBFxRCSK5ahuT
+         zorODh4g8Ff4lDs+tV4BjCYQPoK3YRgnV+NQKJsUnyO367EI5EJA6tMKO352upN5KNyD
+         4/f1Hgu24ZwdZBLWCbihDXjyRhKV8DFHP5C19rUOpYwbj3U26Vu9en4exETIT6MpvZiy
+         f398GEo6QASN1nddxrFHjeeEqIlVlvvEowtbOAf/WSi59gZ3OrHrEEcRUE5QT63qhsIB
+         AznOzCQo5RX3YP4FwFMCaSe5h3jLgTVMZTHPMqGdbjGKXcstczSCPzEtCsWlcXHpGpm8
+         Sbaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RzbHrWIg0lBmbShcmgiv3bz+4va6hNwAkwxG7N3nZBA=;
-        b=qSIh85dvpVXUq9vVMh+EppTHFox4mnQb9L0w3CQhI43wWhDwsebpCyXw7SYvjqayQ/
-         r9pHkD06vwwLcsdGMeD8fA/8ICjzA2zUjxWm1aWVhJgGs5Hy3DfKCE/0zdT8TfMVPB5p
-         fu1HChP45m1clRCiHaFNeV7DOwt4crLokDAOHZYu7Alcrn1RM4leqpZyYap8/SkkjoZn
-         /J27qI7AKu/8AW4gJORJjVKOHUMwQ41E9jse9sLQb65mlj3CJes9gTdE81+2SIfI5xBD
-         sio+5U8Srmc2sr1jbJZMnNCo6eVr94vf7johdtoQp9J2CdJtNNBYulvZ4wO7Oc/6WgvZ
-         KTQg==
-X-Gm-Message-State: APjAAAW7pV1k+rA4Af+SMXrZfXlcgCrYcYp/AY7K/UflgwpfAlctXI1p
-        z9RXWT3crDnZVc1rln5pxQB/eZyIJnY=
-X-Google-Smtp-Source: APXvYqyyz1ppKDoCfLzcc42jJI63cCVNbyYUIXxpPJ8LP/vk3zxG1+L1pTb2r3pPJePVtvcp+2hZPA==
-X-Received: by 2002:a17:90a:24a1:: with SMTP id i30mr2729879pje.128.1567564536188;
-        Tue, 03 Sep 2019 19:35:36 -0700 (PDT)
+        bh=+aCoTyAZq4seXeFgHdkNVujIOOXIGfZdUZjUTxRnOZM=;
+        b=kpiBHlzdI+y2hFS/DudV54SACtuuP81ZrrQFlt8nTa0iEoK7tI9uk9361aSzQ+tTnk
+         GGHPAVSG1GuMcL/ZXNJNdq36hIX6PofWvx2R0K6qzbIbc5gRIGK0JEdW4hzX0xLDrYMb
+         T8sxvdyjosvK7rKj72ASDS1pc8GgUD+EsvCY5AtRptub0fAkvQ3qWOO+Rb9tpha62NUT
+         W6bexUWxBJ/SEJbgIdCN3IkglR68p6d9GRDXagFQA1P/6f+aAZBtMlhPt69HGbNO+OSc
+         fL+PtlMUYMCZYw1CfbheKdTDixzbgSrx5MtC87fQd+a79txNf9mJUUUlihiVACE7IcVg
+         c4Eg==
+X-Gm-Message-State: APjAAAUdrGRZWpo6AKME4p1WDUzCUhCnUffup/Xk7JAWubD0VrES2l12
+        kryOSrSEhWMRcRUZlU5gL5lOCUG9lAI=
+X-Google-Smtp-Source: APXvYqydA6JXAS/WhUxQ3k++ihkagpTBo4PkpFPjs+D1DpDP+ZvmTu8rQyRF7N6qvhN+KBr3FYuZAw==
+X-Received: by 2002:a17:902:9686:: with SMTP id n6mr37418102plp.113.1567564544354;
+        Tue, 03 Sep 2019 19:35:44 -0700 (PDT)
 Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id i74sm7480250pfe.28.2019.09.03.19.35.35
+        by smtp.gmail.com with ESMTPSA id i74sm7480250pfe.28.2019.09.03.19.35.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 19:35:35 -0700 (PDT)
+        Tue, 03 Sep 2019 19:35:43 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-crypto@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -66,9 +66,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         Iuliana Prodan <iuliana.prodan@nxp.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 04/12] crypto: caam - dispose of IRQ mapping only after IRQ is freed
-Date:   Tue,  3 Sep 2019 19:35:07 -0700
-Message-Id: <20190904023515.7107-5-andrew.smirnov@gmail.com>
+Subject: [PATCH 10/12] crypto: caam - populate platform devices last
+Date:   Tue,  3 Sep 2019 19:35:13 -0700
+Message-Id: <20190904023515.7107-11-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190904023515.7107-1-andrew.smirnov@gmail.com>
 References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
@@ -80,12 +80,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With IRQ requesting being managed by devres we need to make sure that
-we dispose of IRQ mapping after and not before it is free'd (otherwise
-we'll end up with a warning from the kernel). To achieve that simply
-convert IRQ mapping to rely on devres as well.
+Move the call to devm_of_platform_populate() at the end of
+caam_probe(), so we won't try to add any child devices until all of
+the initialization is finished successfully.
 
-Fixes: f314f12db65c ("crypto: caam - convert caam_jr_init() to use devres")
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Chris Healy <cphealy@gmail.com>
 Cc: Lucas Stach <l.stach@pengutronix.de>
@@ -95,51 +93,40 @@ Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
 Cc: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/crypto/caam/jr.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/crypto/caam/ctrl.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-index 2732f3a0725a..d11956bc358f 100644
---- a/drivers/crypto/caam/jr.c
-+++ b/drivers/crypto/caam/jr.c
-@@ -146,7 +146,6 @@ static int caam_jr_remove(struct platform_device *pdev)
- 	ret = caam_jr_shutdown(jrdev);
- 	if (ret)
- 		dev_err(jrdev, "Failed to shut down job ring\n");
--	irq_dispose_mapping(jrpriv->irq);
- 
- 	return ret;
- }
-@@ -487,6 +486,10 @@ static int caam_jr_init(struct device *dev)
- 	return error;
- }
- 
-+static void caam_jr_irq_dispose_mapping(void *data)
-+{
-+	irq_dispose_mapping((int)data);
-+}
- 
- /*
-  * Probe routine for each detected JobR subsystem.
-@@ -542,12 +545,15 @@ static int caam_jr_probe(struct platform_device *pdev)
- 		return -EINVAL;
+diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+index 4a84c2701311..d101c28d3d1f 100644
+--- a/drivers/crypto/caam/ctrl.c
++++ b/drivers/crypto/caam/ctrl.c
+@@ -748,12 +748,6 @@ static int caam_probe(struct platform_device *pdev)
+ #endif
  	}
  
-+	error = devm_add_action_or_reset(jrdev, caam_jr_irq_dispose_mapping,
-+					 (void *)jrpriv->irq);
-+	if (error)
-+		return error;
-+
- 	/* Now do the platform independent part */
- 	error = caam_jr_init(jrdev); /* now turn on hardware */
--	if (error) {
--		irq_dispose_mapping(jrpriv->irq);
-+	if (error)
- 		return error;
+-	ret = devm_of_platform_populate(dev);
+-	if (ret) {
+-		dev_err(dev, "JR platform devices creation error\n");
+-		return ret;
 -	}
+-
+ 	ring = 0;
+ 	for_each_available_child_of_node(nprop, np)
+ 		if (of_device_is_compatible(np, "fsl,sec-v4.0-job-ring") ||
+@@ -906,6 +900,13 @@ static int caam_probe(struct platform_device *pdev)
+ 	debugfs_create_blob("tdsk", S_IRUSR | S_IRGRP | S_IROTH, ctrlpriv->ctl,
+ 			    &ctrlpriv->ctl_tdsk_wrap);
+ #endif
++
++	ret = devm_of_platform_populate(dev);
++	if (ret) {
++		dev_err(dev, "JR platform devices creation error\n");
++		return ret;
++	}
++
+ 	return 0;
+ }
  
- 	jrpriv->dev = jrdev;
- 	spin_lock(&driver_data.jr_alloc_lock);
 -- 
 2.21.0
 
