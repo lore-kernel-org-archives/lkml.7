@@ -2,66 +2,122 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3867C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6049DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B722339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303DD21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567592227;
+	bh=2ey6sZwUX3qIGq8j1u1XlvD+weBFrsvta/y2/SgRYO8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QH0oIVR6OFdojRz4DbIAZixMcUK5nM13ALldpZFbzQp4dEWOAMq7sYWQFUMLs4N9/
+	 YAvqFFTMklffN/ftUVayIu4n6/XEboFMvgwhBuLwmXIJtW7G05YmZl+nYtCixXs/Fo
+	 L9UczaHt/gkPwBXhFc9L0FAp3x6y9oM9Cqp6GJTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfIDKQl (ORCPT
+        id S1729445AbfIDKRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:16:41 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:53517 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbfIDKQl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:16:41 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x84AGEi7062946;
-        Wed, 4 Sep 2019 19:16:14 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
- Wed, 04 Sep 2019 19:16:14 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x84AGEGF062937
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 4 Sep 2019 19:16:14 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Subject: Re: general protection fault in smack_socket_sendmsg
-To:     Casey Schaufler <casey@schaufler-ca.com>,
-        Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+5fd781d646d4fcbdfeb0@syzkaller.appspotmail.com>
-Cc:     jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com
-References: <20190831053311.15704-1-hdanton@sina.com>
- <5f34b914-ca5b-e527-9183-64dc0d83ec9f@schaufler-ca.com>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Message-ID: <b2a7cbb6-2243-d591-41e7-955e1e1e4785@I-love.SAKURA.ne.jp>
-Date:   Wed, 4 Sep 2019 19:16:14 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 06:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728402AbfIDKRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:17:06 -0400
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 758B023404;
+        Wed,  4 Sep 2019 10:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567592224;
+        bh=2ey6sZwUX3qIGq8j1u1XlvD+weBFrsvta/y2/SgRYO8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ExpbtXwSbOkrsScqxyE87tz7tqmgZLb2I90CCXpW7DgMs9twdX+SkUOWtBesX7NOR
+         K0QMCVtyQ4MEDsxy3zdAoDWl100jhhg4EfEAnlOVaGmVW2w7j2c63lQDLfvXUULcXo
+         tTNEhkGa6Bg2QuDejirO+Ver4giFQmYlU2cflQ3E=
+Received: by mail-lf1-f52.google.com with SMTP id c12so15442251lfh.5;
+        Wed, 04 Sep 2019 03:17:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAV7dg8YGnf35dE0X68d8hJBffbAJiaKOXV/JELe2fStdb0lDwcY
+        UGRp7A9pQHnBLAWoAV8yQX6mPLEPKRayD2BKLao=
+X-Google-Smtp-Source: APXvYqw/hwDzA5Mu4tWRBQjAR/A6Fp0eSBoYcr/oqkFnq3lt9L037MV1NoD9n2ZI6fGV9aSMAJqoKj9sszzXPIbkXyw=
+X-Received: by 2002:ac2:4853:: with SMTP id 19mr16737669lfy.69.1567592222558;
+ Wed, 04 Sep 2019 03:17:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5f34b914-ca5b-e527-9183-64dc0d83ec9f@schaufler-ca.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20190821104316eucas1p2ecd715f3105921ec83e0acf1291201f8@eucas1p2.samsung.com>
+ <20190821104303.32079-1-l.luba@partner.samsung.com>
+In-Reply-To: <20190821104303.32079-1-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 4 Sep 2019 12:16:51 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPehHNDasNQDgTC+WtVpb_h-s0iTxXiDQY1WT=+zEdB18A@mail.gmail.com>
+Message-ID: <CAJKOXPehHNDasNQDgTC+WtVpb_h-s0iTxXiDQY1WT=+zEdB18A@mail.gmail.com>
+Subject: Re: [PATCH v13 0/8] Exynos5 Dynamic Memory Controller driver
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/04 8:17, Casey Schaufler wrote:
-> On 8/30/2019 10:33 PM, Hillf Danton wrote:
->>> dashboard link: https://syzkaller.appspot.com/bug?extid=5fd781d646d4fcbdfeb0
-> If you want to add a description and signed-off-by I will take this.
+On Wed, 21 Aug 2019 at 12:43, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> Hi all,
+>
+> This is v13 which makes cosmetic changes. It is based on current mainline
+> (v5.3-rc5) with with devfreq/for-next where there is a PPMU patch [1].
+>
+> The patch set adds support of Dynamic Memory Controller for Exynos5422 SoC.
+> The driver supports Dynamic Voltage and Frequency Scaling
+> for the DMC and DRAM. It also provides needed timings for different
+> speed operations of the DRAM memory.
+> There is also new generic code in of_memory and headers which allows to parse
+> LPDDR3 memories defined in device-tree.
+>
+> Here are the last changes suggested by Krzysztof during his review.
+> For the previous changes in older revisions please refer to [2], there is
+> more detailed change log.
+>
+> changes:
+> v13:
+> - skipped patch with chipID changes in DT, since it is not used anymore,
+> - removed license comment in of_memory.c since SPDX has been merged,
+> - aligned comment to the current fields in the structure,
+> - changed printed warning when timings are not found,
+>
+> Regards,
+> Lukasz Luba
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git/commit/?h=for-next&id=b617376df8f01c975dee66802f4da16291f92079
+> [2] https://lkml.org/lkml/2019/7/22/251
+>
 
-Excuse me, but this bug was already closed as dup of "KASAN: use-after-free Read in rxrpc_send_keepalive".
+Hi Lukasz,
 
+Thanks for the effort and work on this patchset. The text-based
+bindings are slowly converted to JSON-schema but your patches were
+developed some time ago and have Rob's review. It would be nice if you
+or someone converted it to JSON schema later.
+Anyway, I'll pick up everything today evening either for this merge
+window or eventually postponed till next one. It is quite late in the
+cycle and I want the patches to sit in linux-next for some time.
+
+Best regards,
+Krzysztof
