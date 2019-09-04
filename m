@@ -2,76 +2,433 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22521C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18ABC3A5A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:01:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECD622CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567573200;
-	bh=caOcihlYyrWS+POv+MXF8ZbW/2HIEy/75fGVXPoQDsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T+0N1ssdm4wHl+n+23rKtv1PkcBvIw3OVtLszaQAwRl7W+LnPPe144xNeQgyxpgBP
-	 IyReyIzYzGg5XQMzyGe/h2y02lWVafi2PoHCWtJowudEwVt46BlA+e5nvl9g7BXqrg
-	 RMX51OuhDiqIBRC0MZLgbHhkC+d/5+tJQZWxi9Rc=
+	by mail.kernel.org (Postfix) with ESMTP id 9E6C522CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:01:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aQFs7BkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfIDE77 (ORCPT
+        id S1728488AbfIDFBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 00:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfIDE76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 00:59:58 -0400
-Received: from localhost (unknown [122.182.201.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EEE8207E0;
-        Wed,  4 Sep 2019 04:59:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567573198;
-        bh=caOcihlYyrWS+POv+MXF8ZbW/2HIEy/75fGVXPoQDsg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J8NVzEItHl8QLeR7aTaZCrzsZ5dhim3p04cVGT9L824+or+3w/nek10u2zcaRo2w6
-         o5pnpcbcb4zysu2u9jiTl5G/7W3BdH6wfNX12IiHUGQH40iO47gXHpHT49642GZYlL
-         tt5/OwizVnxOKWnC3kOI6P4AJ3D7dy8IWcMSoC/g=
-Date:   Wed, 4 Sep 2019 10:28:50 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org
-Subject: Re: [PATCH] IOAT: iop-adma.c: fix printk format warning
-Message-ID: <20190904045850.GA2672@vkoul-mobl>
-References: <138f82a9-08ad-2bb2-cfce-f3124ec502fc@infradead.org>
- <CAPcyv4hvPrkMhSKKWnqTs93=G7712j82jRw43tjoqJoqsZfzDg@mail.gmail.com>
+        Wed, 4 Sep 2019 01:01:07 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39819 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728215AbfIDFBH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 01:01:07 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so10531542pgi.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 22:01:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lP88Oq7al7PBW9u8uObARBFewmt5nawXVbYgCnhmgcw=;
+        b=aQFs7BkXwDJuV1ik953IOR1wWCX2nurSza5bS5jYIVI2sCbPXF+akThAh/Z3xWrc21
+         g8Kyoc88gEIgKCfJZFcJ+FBA4p8OoeX8C6qWU/mul4kBAiC5HmVLGqgHo7ibjE+W0R5U
+         OyR/ABcezgGd3PR3USsnne64F8tSn4bhlBvukvSO7ohvESals7geHyvwFINqUk13h87B
+         P6jkW4BaSiBjS66AqptBnovUsu1usKtdd2YR4IqVVYPTlF9QoqnTzsJBb7SJhd7ON6Ry
+         M2m5L9p/Pw/mPLahK/gw4jqumbg5yMysu5bx+W6H248SZCQ2J0kVD7kD8VH5WJib92zf
+         DhDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lP88Oq7al7PBW9u8uObARBFewmt5nawXVbYgCnhmgcw=;
+        b=IhkL26AE8/k1jlLi2LRViKPfs5eIPAYzp64WE0qEdMFm1kJ2bs5legV6AAPGe/YfpJ
+         VnbWGlMi5DrER1mlQHwZzD6dr/+VC9Z5Zz0J2VlLzGWfjPN5EWXeFkri54o20lFx45Qe
+         lm7bCUkjVkzgtioHXOHexIyUI2BlWpR3STA18yyFsxV2ThbJXpF8ShgyCnmk9zYXWNbJ
+         ki9POwMi4tqCW/oCeLnXP9CIo1YAb7nuOVz0DRotrGHiCLwDXuBoSyw81eo1bLj2TvAI
+         wgzM8moP/UbfPVSGgUWeu/KTRNfjcS1Amms1UZ1tQgF1l9/IEkQpa9f6pVUwvDHfwZj+
+         6UhA==
+X-Gm-Message-State: APjAAAXl68l1BF+TOMiMx2oKi/i6CwUR61F01DSCCWvQ2qqFeKbSOfP1
+        obd2OODA85BVP7JXh+0JVXilaQ==
+X-Google-Smtp-Source: APXvYqx/GqVjUT76KPVaabdbztCQ4ffzG1QXBDfRUnTq7vn7Vdl5H/I7GTHJvwGyI9sIh85YqwJ/5A==
+X-Received: by 2002:a63:4522:: with SMTP id s34mr33065155pga.362.1567573266199;
+        Tue, 03 Sep 2019 22:01:06 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e17sm1152021pjt.6.2019.09.03.22.01.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 22:01:05 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 22:01:03 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     georgi.djakov@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/2] dt-bindings: interconnect: qcom: add msm8974
+ bindings
+Message-ID: <20190904050103.GE3081@tuxbook-pro>
+References: <20190902211925.27169-1-masneyb@onstation.org>
+ <20190902211925.27169-2-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPcyv4hvPrkMhSKKWnqTs93=G7712j82jRw43tjoqJoqsZfzDg@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190902211925.27169-2-masneyb@onstation.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-08-19, 14:44, Dan Williams wrote:
-> [ add Vinod and dmaengine ]
+On Mon 02 Sep 14:19 PDT 2019, Brian Masney wrote:
+
+> Add device tree bindings for the Qualcomm MSM8974 interconnect providers
+> that support setting system bandwidth requirements between various
+> network-on-chip fabrics.
 > 
-> On Fri, Aug 30, 2019 at 2:32 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> >
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> >
-> > Fix printk format warning in iop-adma.c (seen on x86_64) by using
-> > %pad:
-> >
-> > ../drivers/dma/iop-adma.c:118:12: warning: format ‘%x’ expects argument of type ‘unsigned int’, but argument 6 has type ‘dma_addr_t {aka long long unsigned int}’ [-Wformat=]
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  .../bindings/interconnect/qcom,msm8974.yaml   | 163 ++++++++++++++++++
+>  .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++++++++++++++
+>  2 files changed, 309 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
+> 
+> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml b/Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+> new file mode 100644
+> index 000000000000..fbf440f5ffe0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
+> @@ -0,0 +1,163 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interconnect/qcom,msm8974.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm MSM8974 Network-On-Chip Interconnect
+> +
+> +maintainers:
+> +  - Brian Masney <masneyb@onstation.org>
+> +
+> +description: |
+> +   The Qualcomm MSM8974 interconnect providers support setting system
+> +   bandwidth requirements between various network-on-chip fabrics.
+> +
+> +properties:
+> +  reg:
+> +    maxItems: 1
+> +
+> +  compatible:
+> +    enum:
+> +      - qcom,msm8974-bimc
+> +      - qcom,msm8974-cnoc
+> +      - qcom,msm8974-mmssnoc
+> +      - qcom,msm8974-ocmemnoc
+> +      - qcom,msm8974-pnoc
+> +      - qcom,msm8974-snoc
+> +
+> +  '#interconnect-cells':
+> +    const: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: bus
+> +      - const: bus_a
+> +
+> +  clocks:
+> +    items:
+> +      - description: Bus Clock
+> +      - description: Bus A Clock
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#interconnect-cells'
+> +  - clock-names
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> +      #include <dt-bindings/clock/qcom,rpmcc.h>
+> +      #include <dt-bindings/interconnect/qcom,msm8974.h>
+> +      #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +      bimc: interconnect@fc380000 {
+> +              reg = <0xfc380000 0x6a000>;
+> +              compatible = "qcom,msm8974-bimc";
+> +              #interconnect-cells = <1>;
+> +              clock-names = "bus", "bus_a";
+> +              clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+> +                       <&rpmcc RPM_SMD_BIMC_A_CLK>;
+> +      };
+> +
+> +      cnoc: interconnect@fc480000 {
+> +              reg = <0xfc480000 0x4000>;
+> +              compatible = "qcom,msm8974-cnoc";
+> +              #interconnect-cells = <1>;
+> +              clock-names = "bus", "bus_a";
+> +              clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
+> +                       <&rpmcc RPM_SMD_CNOC_A_CLK>;
+> +      };
+> +
+> +      mmssnoc: interconnect@fc478000 {
+> +              reg = <0xfc478000 0x4000>;
+> +              compatible = "qcom,msm8974-mmssnoc";
+> +              #interconnect-cells = <1>;
+> +              clock-names = "bus", "bus_a";
+> +              clocks = <&rpmcc RPM_SMD_MMSSNOC_AHB_CLK>,
+> +                       <&rpmcc RPM_SMD_MMSSNOC_AHB_A_CLK>;
 
-This doesnt apply for me. Please rebase on next and resend with Dan's
-ack
+Isn't MMSS_S0_AXI_CLK the bus clock of the mmssnoc (which somehow seems
+to depend on mmssnoc_ahb_clk)?
 
--- 
-~Vinod
+> +      };
+> +
+> +      ocmemnoc: interconnect@fc470000 {
+> +              reg = <0xfc470000 0x4000>;
+> +              compatible = "qcom,msm8974-ocmemnoc";
+> +              #interconnect-cells = <1>;
+> +              clock-names = "bus", "bus_a";
+> +              clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +                       <&rpmcc RPM_SMD_OCMEMGX_A_CLK>;
+> +      };
+> +
+> +      pnoc: interconnect@fc468000 {
+> +              reg = <0xfc468000 0x4000>;
+> +              compatible = "qcom,msm8974-pnoc";
+> +              #interconnect-cells = <1>;
+> +              clock-names = "bus", "bus_a";
+> +              clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+> +                       <&rpmcc RPM_SMD_PNOC_A_CLK>;
+> +      };
+> +
+> +      snoc: interconnect@fc460000 {
+> +              reg = <0xfc460000 0x4000>;
+> +              compatible = "qcom,msm8974-snoc";
+> +              #interconnect-cells = <1>;
+> +              clock-names = "bus", "bus_a";
+> +              clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+> +                       <&rpmcc RPM_SMD_SNOC_A_CLK>;
+> +      };
+> +
+> +      mdss: mdss@fd900000 {
+
+I think you can omit the client, as this adheres to the standard binding
+for interconnect clients. And you don't need to have an example that
+covers all compatibles either...
+
+
+> +              compatible = "qcom,mdss";
+> +              reg = <0xfd900000 0x100>, <0xfd924000 0x1000>;
+> +              reg-names = "mdss_phys", "vbif_phys";
+> +
+> +              power-domains = <&mmcc MDSS_GDSC>;
+> +
+> +              clocks = <&mmcc MDSS_AHB_CLK>,
+> +                       <&mmcc MDSS_AXI_CLK>,
+> +                       <&mmcc MDSS_VSYNC_CLK>;
+> +              clock-names = "iface", "bus", "vsync";
+> +
+> +              interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +              interrupt-controller;
+> +              #interrupt-cells = <1>;
+> +
+> +              #address-cells = <1>;
+> +              #size-cells = <1>;
+> +              ranges;
+> +
+> +              mdp: mdp@fd900000 {
+> +                      compatible = "qcom,mdp5";
+> +                      reg = <0xfd900100 0x22000>;
+> +                      reg-names = "mdp_phys";
+> +
+> +                      interrupt-parent = <&mdss>;
+> +                      interrupts = <0 0>;
+> +
+> +                      clocks = <&mmcc MDSS_AHB_CLK>,
+> +                               <&mmcc MDSS_AXI_CLK>,
+> +                               <&mmcc MDSS_MDP_CLK>,
+> +                               <&mmcc MDSS_VSYNC_CLK>;
+> +                      clock-names = "iface", "bus", "core", "vsync";
+> +
+> +                      interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
+> +                                      <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
+> +                      interconnect-names = "mdp0-mem", "mdp1-mem";
+> +
+> +                      ports {
+> +                              #address-cells = <1>;
+> +                              #size-cells = <0>;
+> +
+> +                              port@0 {
+> +                                      reg = <0>;
+> +                                      mdp5_intf1_out: endpoint {
+> +                                              remote-endpoint = <&dsi0_in>;
+> +                                      };
+> +                              };
+> +                      };
+> +              };
+> +      };
+> diff --git a/include/dt-bindings/interconnect/qcom,msm8974.h b/include/dt-bindings/interconnect/qcom,msm8974.h
+> new file mode 100644
+> index 000000000000..58acf7196410
+> --- /dev/null
+> +++ b/include/dt-bindings/interconnect/qcom,msm8974.h
+> @@ -0,0 +1,146 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+
+Would you mind dual licensing this part as well?
+
+Apart from that, I think this binding looks good.
+
+Regards,
+Bjorn
+
+> +/*
+> + * Qualcomm msm8974 interconnect IDs
+> + *
+> + * Copyright (c) 2019 Brian Masney <masneyb@onstation.org>
+> + */
+> +
+> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_MSM8974_H
+> +#define __DT_BINDINGS_INTERCONNECT_QCOM_MSM8974_H
+> +
+> +#define BIMC_MAS_AMPSS_M0		0
+> +#define BIMC_MAS_AMPSS_M1		1
+> +#define BIMC_MAS_MSS_PROC		2
+> +#define BIMC_TO_MNOC			3
+> +#define BIMC_TO_SNOC			4
+> +#define BIMC_SLV_EBI_CH0		5
+> +#define BIMC_SLV_AMPSS_L2		6
+> +
+> +#define CNOC_MAS_RPM_INST		0
+> +#define CNOC_MAS_RPM_DATA		1
+> +#define CNOC_MAS_RPM_SYS		2
+> +#define CNOC_MAS_DEHR			3
+> +#define CNOC_MAS_QDSS_DAP		4
+> +#define CNOC_MAS_SPDM			5
+> +#define CNOC_MAS_TIC			6
+> +#define CNOC_SLV_CLK_CTL		7
+> +#define CNOC_SLV_CNOC_MSS		8
+> +#define CNOC_SLV_SECURITY		9
+> +#define CNOC_SLV_TCSR			10
+> +#define CNOC_SLV_TLMM			11
+> +#define CNOC_SLV_CRYPTO_0_CFG		12
+> +#define CNOC_SLV_CRYPTO_1_CFG		13
+> +#define CNOC_SLV_IMEM_CFG		14
+> +#define CNOC_SLV_MESSAGE_RAM		15
+> +#define CNOC_SLV_BIMC_CFG		16
+> +#define CNOC_SLV_BOOT_ROM		17
+> +#define CNOC_SLV_PMIC_ARB		18
+> +#define CNOC_SLV_SPDM_WRAPPER		19
+> +#define CNOC_SLV_DEHR_CFG		20
+> +#define CNOC_SLV_MPM			21
+> +#define CNOC_SLV_QDSS_CFG		22
+> +#define CNOC_SLV_RBCPR_CFG		23
+> +#define CNOC_SLV_RBCPR_QDSS_APU_CFG	24
+> +#define CNOC_TO_SNOC			25
+> +#define CNOC_SLV_CNOC_ONOC_CFG		26
+> +#define CNOC_SLV_CNOC_MNOC_MMSS_CFG	27
+> +#define CNOC_SLV_CNOC_MNOC_CFG		28
+> +#define CNOC_SLV_PNOC_CFG		29
+> +#define CNOC_SLV_SNOC_MPU_CFG		30
+> +#define CNOC_SLV_SNOC_CFG		31
+> +#define CNOC_SLV_EBI1_DLL_CFG		32
+> +#define CNOC_SLV_PHY_APU_CFG		33
+> +#define CNOC_SLV_EBI1_PHY_CFG		34
+> +#define CNOC_SLV_RPM			35
+> +#define CNOC_SLV_SERVICE_CNOC		36
+> +
+> +#define MNOC_MAS_GRAPHICS_3D		0
+> +#define MNOC_MAS_JPEG			1
+> +#define MNOC_MAS_MDP_PORT0		2
+> +#define MNOC_MAS_VIDEO_P0		3
+> +#define MNOC_MAS_VIDEO_P1		4
+> +#define MNOC_MAS_VFE			5
+> +#define MNOC_TO_CNOC			6
+> +#define MNOC_TO_BIMC			7
+> +#define MNOC_SLV_CAMERA_CFG		8
+> +#define MNOC_SLV_DISPLAY_CFG		9
+> +#define MNOC_SLV_OCMEM_CFG		10
+> +#define MNOC_SLV_CPR_CFG		11
+> +#define MNOC_SLV_CPR_XPU_CFG		12
+> +#define MNOC_SLV_MISC_CFG		13
+> +#define MNOC_SLV_MISC_XPU_CFG		14
+> +#define MNOC_SLV_VENUS_CFG		15
+> +#define MNOC_SLV_GRAPHICS_3D_CFG	16
+> +#define MNOC_SLV_MMSS_CLK_CFG		17
+> +#define MNOC_SLV_MMSS_CLK_XPU_CFG	18
+> +#define MNOC_SLV_MNOC_MPU_CFG		19
+> +#define MNOC_SLV_ONOC_MPU_CFG		20
+> +#define MNOC_SLV_SERVICE_MNOC		21
+> +
+> +#define OCMEM_NOC_TO_OCMEM_VNOC		0
+> +#define OCMEM_MAS_JPEG_OCMEM		1
+> +#define OCMEM_MAS_MDP_OCMEM		2
+> +#define OCMEM_MAS_VIDEO_P0_OCMEM	3
+> +#define OCMEM_MAS_VIDEO_P1_OCMEM	4
+> +#define OCMEM_MAS_VFE_OCMEM		5
+> +#define OCMEM_MAS_CNOC_ONOC_CFG		6
+> +#define OCMEM_SLV_SERVICE_ONOC		7
+> +#define OCMEM_VNOC_TO_SNOC		8
+> +#define OCMEM_VNOC_TO_OCMEM_NOC		9
+> +#define OCMEM_VNOC_MAS_GFX3D		10
+> +#define OCMEM_SLV_OCMEM			11
+> +
+> +#define PNOC_MAS_PNOC_CFG		0
+> +#define PNOC_MAS_SDCC_1			1
+> +#define PNOC_MAS_SDCC_3			2
+> +#define PNOC_MAS_SDCC_4			3
+> +#define PNOC_MAS_SDCC_2			4
+> +#define PNOC_MAS_TSIF			5
+> +#define PNOC_MAS_BAM_DMA		6
+> +#define PNOC_MAS_BLSP_2			7
+> +#define PNOC_MAS_USB_HSIC		8
+> +#define PNOC_MAS_BLSP_1			9
+> +#define PNOC_MAS_USB_HS			10
+> +#define PNOC_TO_SNOC			11
+> +#define PNOC_SLV_SDCC_1			12
+> +#define PNOC_SLV_SDCC_3			13
+> +#define PNOC_SLV_SDCC_2			14
+> +#define PNOC_SLV_SDCC_4			15
+> +#define PNOC_SLV_TSIF			16
+> +#define PNOC_SLV_BAM_DMA		17
+> +#define PNOC_SLV_BLSP_2			18
+> +#define PNOC_SLV_USB_HSIC		19
+> +#define PNOC_SLV_BLSP_1			20
+> +#define PNOC_SLV_USB_HS			21
+> +#define PNOC_SLV_PDM			22
+> +#define PNOC_SLV_PERIPH_APU_CFG		23
+> +#define PNOC_SLV_PNOC_MPU_CFG		24
+> +#define PNOC_SLV_PRNG			25
+> +#define PNOC_SLV_SERVICE_PNOC		26
+> +
+> +#define SNOC_MAS_LPASS_AHB		0
+> +#define SNOC_MAS_QDSS_BAM		1
+> +#define SNOC_MAS_SNOC_CFG		2
+> +#define SNOC_TO_BIMC			3
+> +#define SNOC_TO_CNOC			4
+> +#define SNOC_TO_PNOC			5
+> +#define SNOC_TO_OCMEM_VNOC		6
+> +#define SNOC_MAS_CRYPTO_CORE0		7
+> +#define SNOC_MAS_CRYPTO_CORE1		8
+> +#define SNOC_MAS_LPASS_PROC		9
+> +#define SNOC_MAS_MSS			10
+> +#define SNOC_MAS_MSS_NAV		11
+> +#define SNOC_MAS_OCMEM_DMA		12
+> +#define SNOC_MAS_WCSS			13
+> +#define SNOC_MAS_QDSS_ETR		14
+> +#define SNOC_MAS_USB3			15
+> +#define SNOC_SLV_AMPSS			16
+> +#define SNOC_SLV_LPASS			17
+> +#define SNOC_SLV_USB3			18
+> +#define SNOC_SLV_WCSS			19
+> +#define SNOC_SLV_OCIMEM			20
+> +#define SNOC_SLV_SNOC_OCMEM		21
+> +#define SNOC_SLV_SERVICE_SNOC		22
+> +#define SNOC_SLV_QDSS_STM		23
+> +
+> +#endif
+> -- 
+> 2.21.0
+> 
