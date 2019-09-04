@@ -2,123 +2,126 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A55FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B634C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F187322DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D376422CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="HcwA6HCP"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="cOrLS8VV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729658AbfIDLnM (ORCPT
+        id S1729680AbfIDLoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 07:43:12 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:46457 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729122AbfIDLnL (ORCPT
+        Wed, 4 Sep 2019 07:44:08 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36383 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726589AbfIDLoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 07:43:11 -0400
-X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Wed, 04 Sep 2019 07:43:10 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1567597390;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Py2ZD8CCSw/9B0rd6D03QDD9TGSgz5D84ZWXYCCdtq8=;
-  b=HcwA6HCPbB/1iVnFtUqzUlucAdDgvgwiGR+nadl55l/HoVIqjfW/6cnK
-   Kp0nLo0GFXKXOFbfv05Po6A8H3krhCeXWm6tJxltLUT6dI3R71j6NULIm
-   NKYB3ygq9k9hEC3lFyWJkz48pEh+kO7AOHXKUtKyuy6FXCnYnaZnMijjG
-   g=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=igor.druzhinin@citrix.com; spf=Pass smtp.mailfrom=igor.druzhinin@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  igor.druzhinin@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa2.hc3370-68.iphmx.com: domain of
-  igor.druzhinin@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="igor.druzhinin@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83 ~all"
-Received-SPF: None (esa2.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa2.hc3370-68.iphmx.com;
-  envelope-from="igor.druzhinin@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: 2PTu1kolVbKh7SpgBh5Drp1q5mHyou+YZiM+VEqUUyr78eZkRLs3AGIVi00rAA/BJKspJQfYBF
- 3GaJIe+PrYIECgWU8inhCmA2FqHQuR6bT2blqwD12xI7+Ex/yHfCghPkbiJdJQeGlW+lAF3+Tf
- P+TXL70gVl1Pfc+zaH3Qsns+LKZK5zKh3s4xAKoEOPAbSRWWHjSUkkTHA5TdlBVQPu8S+0+5gz
- K/l+8Z/vM4LGBuHVLdB2pl6V9xUjd+9AlnGcbL5Ldl/wr520/JWn1LfIvVmKmsZHASjVFg7yDg
- Fjc=
-X-SBRS: 2.7
-X-MesageID: 5111376
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.64,465,1559534400"; 
-   d="scan'208";a="5111376"
-Subject: Re: [PATCH] xen/pci: try to reserve MCFG areas earlier
-To:     Jan Beulich <jbeulich@suse.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-CC:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
-        <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>
-References: <1567556431-9809-1-git-send-email-igor.druzhinin@citrix.com>
- <52fe7f67-ffd0-2d22-90fb-f3462ea059cd@suse.com>
-From:   Igor Druzhinin <igor.druzhinin@citrix.com>
-Message-ID: <d5dd94c2-070e-b3ff-57cf-92893b3cca7b@citrix.com>
-Date:   Wed, 4 Sep 2019 12:36:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 07:44:08 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k20so9112475oih.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 04:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+j6qs7WQfu4dAUrdhez3m/4Ue+xLmyXGa3x2aGEysyw=;
+        b=cOrLS8VV/hmB7qdaVJRgYtWT5lCOR/hUsT57DW7q6z6LIS5TBoOE4yPL2XvAxV9t7B
+         OuVwOo0aQJVX5uzcIMcroh0aWTvvrk02+fOJB8SB75FOYuuXDVdVD9YWjT5yn4CyIQmp
+         qBNA9TyjJvMfKwF17RDqtObPuToCbHTcvTFNE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+j6qs7WQfu4dAUrdhez3m/4Ue+xLmyXGa3x2aGEysyw=;
+        b=J/nmAtClNFSWahZe9eTRhzMYEtVw/aUkVUqiiF/3V9RNQHQPHZzMpdJn8B4UnILC90
+         7ubukE9NVCFu7vIXQPPJbn7EkNwdeZLuXYabmdA1K72R2tQDyOekyvCBBq0t73AY11sL
+         hdkiL03tkcpEs405PAITK6fZVlNPRa3fah2qOBfV7BmPUbkvQ6PabXqTsw/hCiaNe0Tn
+         p2tJt6dDx4yBn80Iu24uC4fnr0aCfoUab8TGD0vyOLsrkMAlm0+qa3rIY5HS1t9Wv1dl
+         q0FND4gDp2jv8GCvOhYC+7y53VCy8SR5v1Td3amBoSyCZ50THT6L1AA5rj6LHQfERYOW
+         xBFQ==
+X-Gm-Message-State: APjAAAUDZXE3mYQibnqHfz2g9ZsHyK4mi2rSj/S37JJL4CSL5ILWcH23
+        39NPi3iBzMUiJ+LF4H1ywSZCQDSaUybcda23L7WtVQ==
+X-Google-Smtp-Source: APXvYqx2jqlv3dUQJsCCVgaOhAfgDv9rgsHFd3fDcbcS6XpqczhHB6lDb16xvUPJbP1/L4REmqwCaUtBgJqYnidviGY=
+X-Received: by 2002:aca:e182:: with SMTP id y124mr2872478oig.132.1567597447659;
+ Wed, 04 Sep 2019 04:44:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <52fe7f67-ffd0-2d22-90fb-f3462ea059cd@suse.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190903131504.18935-1-thomas_os@shipmail.org>
+ <20190903131504.18935-4-thomas_os@shipmail.org> <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
+ <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
+ <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com> <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+ <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com> <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+ <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
+ <44b094c8-63fe-d9e5-1bf4-7da0788caccf@shipmail.org> <6d122d62-9c96-4c29-8d06-02f7134e5e2a@shipmail.org>
+ <B3C5DD1B-A33C-417F-BDDC-73120A035EA5@amacapital.net> <3393108b-c7e3-c9be-b65b-5860c15ca228@shipmail.org>
+ <CAKMK7uH0jxaWJLxfXfGLyN-Rb=0ZKUFTkrEPdFCuGCh4ORCv9w@mail.gmail.com> <0fd10438-5da4-fb69-f40c-c9b4beea1977@shipmail.org>
+In-Reply-To: <0fd10438-5da4-fb69-f40c-c9b4beea1977@shipmail.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Wed, 4 Sep 2019 13:43:56 +0200
+Message-ID: <CAKMK7uGPWj8pU0FCV_2aR6sDQgw9VAimkG3hnGcQJsxE1-2_kQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
+ memory encryption
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        pv-drivers@vmware.com,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2019 10:08, Jan Beulich wrote:
-> On 04.09.2019 02:20, Igor Druzhinin wrote:
->> If MCFG area is not reserved in E820, Xen by default will defer its usage
->> until Dom0 registers it explicitly after ACPI parser recognizes it as
->> a reserved resource in DSDT. Having it reserved in E820 is not
->> mandatory according to "PCI Firmware Specification, rev 3.2" (par. 4.1.2)
->> and firmware is free to keep a hole E820 in that place. Xen doesn't know
->> what exactly is inside this hole since it lacks full ACPI view of the
->> platform therefore it's potentially harmful to access MCFG region
->> without additional checks as some machines are known to provide
->> inconsistent information on the size of the region.
-> 
-> Irrespective of this being a good change, I've had another thought
-> while reading this paragraph, for a hypervisor side control: Linux
-> has a "memopt=" command line option allowing fine grained control
-> over the E820 map. We could have something similar to allow
-> inserting an E820_RESERVED region into a hole (it would be the
-> responsibility of the admin to guarantee no other conflicts, i.e.
-> it should generally be used only if e.g. the MCFG is indeed known
-> to live at the specified place, and being properly represented in
-> the ACPI tables). Thoughts?
+On Wed, Sep 4, 2019 at 12:38 PM Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
+>
+> On 9/4/19 9:53 AM, Daniel Vetter wrote:
+> > On Wed, Sep 4, 2019 at 8:49 AM Thomas Hellstr=C3=B6m (VMware)
+> > <thomas_os@shipmail.org> wrote:
+> >> On 9/4/19 1:15 AM, Andy Lutomirski wrote:
+> >>> But, reading this, I have more questions:
+> >>>
+> >>> Can=E2=80=99t you get rid of cvma by using vmf_insert_pfn_prot()?
+> >> It looks like that, although there are comments in the code about
+> >> serious performance problems using VM_PFNMAP / vmf_insert_pfn() with
+> >> write-combining and PAT, so that would require some serious testing wi=
+th
+> >> hardware I don't have. But I guess there is definitely room for
+> >> improvement here. Ideally we'd like to be able to change the
+> >> vma->vm_page_prot within fault(). But we can
+> > Just a quick comment on this: It's the repeated (per-pfn/pte) lookup
+> > of the PAT tables, which are dead slow. If you have a struct
+> > io_mapping then that can be done once, and then just blindly inserted.
+> > See remap_io_mapping in i915.
+> > -Daniel
+>
+> Thanks, Daniel.
+>
+> Indeed looks a lot like remap_pfn_range(), but usable at fault time?
 
-What other use cases can you think of in case we'd have this option?
-From the top of my head, it might be providing a memmap for a second Xen
-after doing kexec from Xen to Xen.
-
-What benefits do you think it might have over just accepting a hole
-using "mcfg=relaxed" option from admin perspective?
-
-Igor
+Yeah we call it from our fault handler. It's essentially vm_insert_pfn
+except the pat track isn't there, but instead relies on the pat
+tracking io_mapping has done already.
+-Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
