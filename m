@@ -2,135 +2,257 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E069C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CCFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABF522CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620206;
-	bh=b+rBF7V5rIqgAolUvI7hLO0r5ZRszQitsSUesKsGlZ4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zx0RKe+M3zC31TgmSKFPu9GE5FyTdA8rWeR0r21xoDE4qZUOVMyE35hGsaagei/6X
-	 BMhYVaLMG9MxV2pEMiSR6FKryOGF8wZqmY5Fyq3mm0JJoOwBRl3kXQt9KnqeP8WgFH
-	 n/u9FRMYNtIl4zvzIJaUjG3eyxadHuUVSflVXS4Y=
+	by mail.kernel.org (Postfix) with ESMTP id C4DEC23402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TFD/Q00y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388929AbfIDSDZ (ORCPT
+        id S2388938AbfIDSD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 4 Sep 2019 14:03:27 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:34043 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733108AbfIDSDZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 14:03:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43896 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387960AbfIDSDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:03:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FFD92339E;
-        Wed,  4 Sep 2019 18:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620203;
-        bh=b+rBF7V5rIqgAolUvI7hLO0r5ZRszQitsSUesKsGlZ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oX6k8AYZcL/NseSQoPmfPGMsC+sYzSaFAXmDkEWxWsaHav24CebxRw0LRHng5zcJh
-         NoeNGAC7sGIsAT0NgM9bJin2S04mSuKQoZBd/KLY7XIKPEXcnMWAVjugVSf+PNHVQW
-         Du/YN+AavzOh5w47bKN1fIW7+qVm7mSOZ0QaZKZE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 28/57] ftrace: Fix NULL pointer dereference in t_probe_next()
-Date:   Wed,  4 Sep 2019 19:53:56 +0200
-Message-Id: <20190904175304.700046585@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
-References: <20190904175301.777414715@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by mail-pl1-f202.google.com with SMTP id gn3so1925210plb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:03:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=oFDPWtnZcsIRjip++nuzfzUjSSOG2uoVNeoKW0tuWlk=;
+        b=TFD/Q00yhlymHtyNkru4xJubi1H6gp/8m151NUWP31flDleLm0aTqRmOkUMy/b4CnB
+         wFVrr+tXekvLfmvq9FrAsyj4Wxjsez3oJ1+BOy8iXdSWRg1zBKpVktmApQEFgV2ukhwP
+         /JPe5fh1f/JP4swWAY5X/FARqtx4hc6HE0bxKIwQiDfwqpnNy5o/+yHn5JQFSEkAAdPD
+         TcY3S73Qqok9GA8/XYUekqKe/IC8kAhDBeRLZZB/Niutc8sB+dVYRPFXLffs24SzomnN
+         ag51kkQ9eEIHhLoirU7RCmnIOEhCl1opI79UyTNNPTS7dWf/k8p+KXFkFm28ykjLdx1F
+         X9Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=oFDPWtnZcsIRjip++nuzfzUjSSOG2uoVNeoKW0tuWlk=;
+        b=p52vjzbSHK+WSigqC45zQRsY20r06LZL9JWr/tby7WcpNmsba2N36tS1FOUp+cqNjG
+         abVq+B597WWgEgmsOHaPpjCy1jZ797HsIUrthSU8npdAkZ3Yt7ZtncQdVmeyFElazHPw
+         fBHrU3CdsQIBSFC3quCm2LltH5QcZL2BOkQBCR7c7P8LTWHCjEQFFb5LPIY4Wkp+gbgl
+         zlc4GUAq3khuqL0eQDA8zNxdbxIk3WT0G1uKC717d6oyqXnrc8CvirbbnAVWHcL44RXO
+         tht47lfCLVk6Xt05RVfHzzFmJTnfV0bHeMGUFSmrGxMcO9vkc8KUlCiUjlzOlneQc1M+
+         lLGw==
+X-Gm-Message-State: APjAAAXbV9yx6CwedmCx9kXNv3khNoNq+OUfejA5RUG3yB1nAjt+GoLc
+        pLa4KaQmkDDoCxb8UhH/WTuZX10b8Pdm
+X-Google-Smtp-Source: APXvYqy5hsfdCLrqd118LcLYJwChyjlmLHywSu6yp3nxvBcM+SLNaVvc4nEFN5xZvHKYYYla2obIbYVrvs/d
+X-Received: by 2002:a63:7b4d:: with SMTP id k13mr35328482pgn.182.1567620204023;
+ Wed, 04 Sep 2019 11:03:24 -0700 (PDT)
+Date:   Wed,  4 Sep 2019 11:03:16 -0700
+Message-Id: <20190904180316.139952-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH] perf tools: Fix paths in include statements
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+These paths point to the wrong location but still work because
+they get picked up by a -I flag that happens to direct to the correct
+file. Fix paths to lead to the actual file location without help from
+include flags.
 
-commit 7bd46644ea0f6021dc396a39a8bfd3a58f6f1f9f upstream.
-
-LTP testsuite on powerpc results in the below crash:
-
-  Unable to handle kernel paging request for data at address 0x00000000
-  Faulting instruction address: 0xc00000000029d800
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE SMP NR_CPUS=2048 NUMA PowerNV
-  ...
-  CPU: 68 PID: 96584 Comm: cat Kdump: loaded Tainted: G        W
-  NIP:  c00000000029d800 LR: c00000000029dac4 CTR: c0000000001e6ad0
-  REGS: c0002017fae8ba10 TRAP: 0300   Tainted: G        W
-  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 28022422  XER: 20040000
-  CFAR: c00000000029d90c DAR: 0000000000000000 DSISR: 40000000 IRQMASK: 0
-  ...
-  NIP [c00000000029d800] t_probe_next+0x60/0x180
-  LR [c00000000029dac4] t_mod_start+0x1a4/0x1f0
-  Call Trace:
-  [c0002017fae8bc90] [c000000000cdbc40] _cond_resched+0x10/0xb0 (unreliable)
-  [c0002017fae8bce0] [c0000000002a15b0] t_start+0xf0/0x1c0
-  [c0002017fae8bd30] [c0000000004ec2b4] seq_read+0x184/0x640
-  [c0002017fae8bdd0] [c0000000004a57bc] sys_read+0x10c/0x300
-  [c0002017fae8be30] [c00000000000b388] system_call+0x5c/0x70
-
-The test (ftrace_set_ftrace_filter.sh) is part of ftrace stress tests
-and the crash happens when the test does 'cat
-$TRACING_PATH/set_ftrace_filter'.
-
-The address points to the second line below, in t_probe_next(), where
-filter_hash is dereferenced:
-  hash = iter->probe->ops.func_hash->filter_hash;
-  size = 1 << hash->size_bits;
-
-This happens due to a race with register_ftrace_function_probe(). A new
-ftrace_func_probe is created and added into the func_probes list in
-trace_array under ftrace_lock. However, before initializing the filter,
-we drop ftrace_lock, and re-acquire it after acquiring regex_lock. If
-another process is trying to read set_ftrace_filter, it will be able to
-acquire ftrace_lock during this window and it will end up seeing a NULL
-filter_hash.
-
-Fix this by just checking for a NULL filter_hash in t_probe_next(). If
-the filter_hash is NULL, then this probe is just being added and we can
-simply return from here.
-
-Link: http://lkml.kernel.org/r/05e021f757625cbbb006fad41380323dbe4e3b43.1562249521.git.naveen.n.rao@linux.vnet.ibm.com
-
-Cc: stable@vger.kernel.org
-Fixes: 7b60f3d876156 ("ftrace: Dynamically create the probe ftrace_ops for the trace_array")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- kernel/trace/ftrace.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/arch/powerpc/util/perf_regs.c |  4 ++--
+ tools/perf/arch/x86/util/auxtrace.c      | 14 ++++++------
+ tools/perf/arch/x86/util/header.c        |  4 ++--
+ tools/perf/arch/x86/util/intel-bts.c     | 24 ++++++++++----------
+ tools/perf/arch/x86/util/intel-pt.c      | 28 ++++++++++++------------
+ tools/perf/arch/x86/util/perf_regs.c     |  8 +++----
+ tools/perf/arch/x86/util/pmu.c           |  6 ++---
+ 7 files changed, 44 insertions(+), 44 deletions(-)
 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3184,6 +3184,10 @@ t_probe_next(struct seq_file *m, loff_t
- 		hnd = &iter->probe_entry->hlist;
+diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
+index e9c436eeffc9..0a5242900248 100644
+--- a/tools/perf/arch/powerpc/util/perf_regs.c
++++ b/tools/perf/arch/powerpc/util/perf_regs.c
+@@ -4,8 +4,8 @@
+ #include <regex.h>
+ #include <linux/zalloc.h>
  
- 	hash = iter->probe->ops.func_hash->filter_hash;
-+
-+	if (!hash)
-+		return NULL;
-+
- 	size = 1 << hash->size_bits;
+-#include "../../util/perf_regs.h"
+-#include "../../util/debug.h"
++#include "../../../util/perf_regs.h"
++#include "../../../util/debug.h"
  
-  retry:
-
+ #include <linux/kernel.h>
+ 
+diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
+index 96f4a2c11893..330d03216b0e 100644
+--- a/tools/perf/arch/x86/util/auxtrace.c
++++ b/tools/perf/arch/x86/util/auxtrace.c
+@@ -7,13 +7,13 @@
+ #include <errno.h>
+ #include <stdbool.h>
+ 
+-#include "../../util/header.h"
+-#include "../../util/debug.h"
+-#include "../../util/pmu.h"
+-#include "../../util/auxtrace.h"
+-#include "../../util/intel-pt.h"
+-#include "../../util/intel-bts.h"
+-#include "../../util/evlist.h"
++#include "../../../util/header.h"
++#include "../../../util/debug.h"
++#include "../../../util/pmu.h"
++#include "../../../util/auxtrace.h"
++#include "../../../util/intel-pt.h"
++#include "../../../util/intel-bts.h"
++#include "../../../util/evlist.h"
+ 
+ static
+ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
+diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
+index 662ecf84a421..4a864a78241c 100644
+--- a/tools/perf/arch/x86/util/header.c
++++ b/tools/perf/arch/x86/util/header.c
+@@ -6,8 +6,8 @@
+ #include <string.h>
+ #include <regex.h>
+ 
+-#include "../../util/debug.h"
+-#include "../../util/header.h"
++#include "../../../util/debug.h"
++#include "../../../util/header.h"
+ 
+ static inline void
+ cpuid(unsigned int op, unsigned int *a, unsigned int *b, unsigned int *c,
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index d263430c045f..fde7a00a2d74 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -11,18 +11,18 @@
+ #include <linux/log2.h>
+ #include <linux/zalloc.h>
+ 
+-#include "../../util/cpumap.h"
+-#include "../../util/event.h"
+-#include "../../util/evsel.h"
+-#include "../../util/evlist.h"
+-#include "../../util/session.h"
+-#include "../../util/pmu.h"
+-#include "../../util/debug.h"
+-#include "../../util/record.h"
+-#include "../../util/tsc.h"
+-#include "../../util/auxtrace.h"
+-#include "../../util/intel-bts.h"
+-#include "../../util/util.h"
++#include "../../../util/cpumap.h"
++#include "../../../util/event.h"
++#include "../../../util/evsel.h"
++#include "../../../util/evlist.h"
++#include "../../../util/session.h"
++#include "../../../util/pmu.h"
++#include "../../../util/debug.h"
++#include "../../../util/record.h"
++#include "../../../util/tsc.h"
++#include "../../../util/auxtrace.h"
++#include "../../../util/intel-bts.h"
++#include "../../../util/util.h"
+ 
+ #define KiB(x) ((x) * 1024)
+ #define MiB(x) ((x) * 1024 * 1024)
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index cb7cf16af79c..71dcb91c7404 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -13,21 +13,21 @@
+ #include <linux/zalloc.h>
+ #include <cpuid.h>
+ 
+-#include "../../util/session.h"
+-#include "../../util/event.h"
+-#include "../../util/evlist.h"
+-#include "../../util/evsel.h"
+-#include "../../util/cpumap.h"
++#include "../../../util/session.h"
++#include "../../../util/event.h"
++#include "../../../util/evlist.h"
++#include "../../../util/evsel.h"
++#include "../../../util/cpumap.h"
+ #include <subcmd/parse-options.h>
+-#include "../../util/parse-events.h"
+-#include "../../util/pmu.h"
+-#include "../../util/debug.h"
+-#include "../../util/auxtrace.h"
+-#include "../../util/record.h"
+-#include "../../util/target.h"
+-#include "../../util/tsc.h"
+-#include "../../util/util.h"
+-#include "../../util/intel-pt.h"
++#include "../../../util/parse-events.h"
++#include "../../../util/pmu.h"
++#include "../../../util/debug.h"
++#include "../../../util/auxtrace.h"
++#include "../../../util/record.h"
++#include "../../../util/target.h"
++#include "../../../util/tsc.h"
++#include "../../../util/util.h"
++#include "../../../util/intel-pt.h"
+ 
+ #define KiB(x) ((x) * 1024)
+ #define MiB(x) ((x) * 1024 * 1024)
+diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+index c218b83e063b..fca81b39b09f 100644
+--- a/tools/perf/arch/x86/util/perf_regs.c
++++ b/tools/perf/arch/x86/util/perf_regs.c
+@@ -5,10 +5,10 @@
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+ 
+-#include "../../perf-sys.h"
+-#include "../../util/perf_regs.h"
+-#include "../../util/debug.h"
+-#include "../../util/event.h"
++#include "../../../perf-sys.h"
++#include "../../../util/perf_regs.h"
++#include "../../../util/debug.h"
++#include "../../../util/event.h"
+ 
+ const struct sample_reg sample_reg_masks[] = {
+ 	SMPL_REG(AX, PERF_REG_X86_AX),
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index e33ef5bc31c5..d48d608517fd 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -4,9 +4,9 @@
+ #include <linux/stddef.h>
+ #include <linux/perf_event.h>
+ 
+-#include "../../util/intel-pt.h"
+-#include "../../util/intel-bts.h"
+-#include "../../util/pmu.h"
++#include "../../../util/intel-pt.h"
++#include "../../../util/intel-bts.h"
++#include "../../../util/pmu.h"
+ 
+ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+ {
+-- 
+2.23.0.187.g17f5b7556c-goog
 
