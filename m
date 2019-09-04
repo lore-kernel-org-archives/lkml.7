@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D22DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94204C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B062087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D94A22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620490;
-	bh=UzcHAmeVGD68ESeG2+GzPUb01ujJEsRYWeCT0/a0gUk=;
+	s=default; t=1567620493;
+	bh=A6jqfQt1fU2Vf6DkHcpoLkmMml53rNnwKzLsF4280cs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnmUFZBqUWyktLQ0EGhh7lIO2Hwwct5ExdI1vdA4Gavaw9gcYIRESuspLLf1stky6
-	 Uri0IN1O4pEPSXjp8iJH5B9Ji1ruMwDDRmDkYkyeFsWscF/XCJ0eSwRCG82asry750
-	 kfYmjXhABrSozz7HRhI/8N5THUUznYC9OTu6hGH8=
+	b=QfZ2iQId6eCoJ25wx9FRoi2+7KKmD68FHOsedL6xFvLHvmtQRcD+B4+umVQ1hLRQX
+	 cLSZIw9R2mraamnYKScM0TBccqwBj8fPjCNz362H0Zpb8ihtzoHFJMsQp5EKV1G01C
+	 gNR/xM7w+/WGIbVg44wDA4arEw3zExXppdNbxvag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389727AbfIDSIJ (ORCPT
+        id S2389737AbfIDSIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50780 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389717AbfIDSIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:07 -0400
+        id S2388808AbfIDSIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FF312087E;
-        Wed,  4 Sep 2019 18:08:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A5F320870;
+        Wed,  4 Sep 2019 18:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620486;
-        bh=UzcHAmeVGD68ESeG2+GzPUb01ujJEsRYWeCT0/a0gUk=;
+        s=default; t=1567620488;
+        bh=A6jqfQt1fU2Vf6DkHcpoLkmMml53rNnwKzLsF4280cs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NBYabfAs3nSsLuaKoghOuJkBREcobNssa5K+cT1QWfFN23Yy1wrcPNdpEJdvssn/6
-         udBkAKg2tcr1Q7rrR3fsHIxn8vPwZh/OMpOLJ0YpteucTajowOSGnmU7T3/Wt0bkcJ
-         JCOdxXUEcmJaeIlwa8VldE56r9KMgxsKs88jSIgk=
+        b=Q1ru0Ivwjb31MqRzaO5nRNgD3x5U1NqwJ3f8oOgePsBv6c32YukftHAoMczdqnVap
+         CpjLNg+FEhRbDiT88xIh4qs1xOEVVU5f/GGcbU+lt2NX1EMcxstFDZJzCueQRl2nM0
+         GlSs1HzK8A/3VQfMQeqGmxVO/vwGPH68AmJhRKxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 4.19 75/93] drm/i915: Call dma_set_max_seg_size() in i915_driver_hw_probe()
-Date:   Wed,  4 Sep 2019 19:54:17 +0200
-Message-Id: <20190904175309.560645681@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH 4.19 76/93] bus: hisi_lpc: Unregister logical PIO range to avoid potential use-after-free
+Date:   Wed,  4 Sep 2019 19:54:18 +0200
+Message-Id: <20190904175309.655425948@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,85 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: John Garry <john.garry@huawei.com>
 
-commit 32f0a982650b123bdab36865617d3e03ebcacf3b upstream.
+commit 1b15a5632a809ab57d403fd972ca68785363b654 upstream.
 
-Currently, we don't call dma_set_max_seg_size() for i915 because we
-intentionally do not limit the segment length that the device supports.
-However, this results in a warning being emitted if we try to map
-anything larger than SZ_64K on a kernel with CONFIG_DMA_API_DEBUG_SG
-enabled:
+If, after registering a logical PIO range, the driver probe later fails,
+the logical PIO range memory will be released automatically.
 
-[    7.751926] DMA-API: i915 0000:00:02.0: mapping sg segment longer
-than device claims to support [len=98304] [max=65536]
-[    7.751934] WARNING: CPU: 5 PID: 474 at kernel/dma/debug.c:1220
-debug_dma_map_sg+0x20f/0x340
+This causes an issue, in that the logical PIO range is not unregistered
+and the released range memory may be later referenced.
 
-This was originally brought up on
-https://bugs.freedesktop.org/show_bug.cgi?id=108517 , and the consensus
-there was it wasn't really useful to set a limit (and that dma-debug
-isn't really all that useful for i915 in the first place). Unfortunately
-though, CONFIG_DMA_API_DEBUG_SG is enabled in the debug configs for
-various distro kernels. Since a WARN_ON() will disable automatic problem
-reporting (and cause any CI with said option enabled to start
-complaining), we really should just fix the problem.
+Fix by unregistering the logical PIO range.
 
-Note that as me and Chris Wilson discussed, the other solution for this
-would be to make DMA-API not make such assumptions when a driver hasn't
-explicitly set a maximum segment size. But, taking a look at the commit
-which originally introduced this behavior, commit 78c47830a5cb
-("dma-debug: check scatterlist segments"), there is an explicit mention
-of this assumption and how it applies to devices with no segment size:
+And since we now unregister the logical PIO range for probe failure, avoid
+the special ordering of setting logical PIO range ops, which was the
+previous (poor) attempt at a safeguard against this.
 
-	Conversely, devices which are less limited than the rather
-	conservative defaults, or indeed have no limitations at all
-	(e.g. GPUs with their own internal MMU), should be encouraged to
-	set appropriate dma_parms, as they may get more efficient DMA
-	mapping performance out of it.
-
-So unless there's any concerns (I'm open to discussion!), let's just
-follow suite and call dma_set_max_seg_size() with UINT_MAX as our limit
-to silence any warnings.
-
-Changes since v3:
-* Drop patch for enabling CONFIG_DMA_API_DEBUG_SG in CI. It looks like
-  just turning it on causes the kernel to spit out bogus WARN_ONs()
-  during some igt tests which would otherwise require teaching igt to
-  disable the various DMA-API debugging options causing this. This is
-  too much work to be worth it, since DMA-API debugging is useless for
-  us. So, we'll just settle with this single patch to squelch WARN_ONs()
-  during driver load for users that have CONFIG_DMA_API_DEBUG_SG turned
-  on for some reason.
-* Move dma_set_max_seg_size() call into i915_driver_hw_probe() - Chris
-  Wilson
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v4.18+
-Link: https://patchwork.freedesktop.org/patch/msgid/20190823205251.14298-1-lyude@redhat.com
-(cherry picked from commit acd674af95d3f627062007429b9c195c6b32361d)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Cc: stable@vger.kernel.org
+Fixes: adf38bb0b595 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_drv.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/bus/hisi_lpc.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -1120,6 +1120,12 @@ static int i915_driver_init_hw(struct dr
+--- a/drivers/bus/hisi_lpc.c
++++ b/drivers/bus/hisi_lpc.c
+@@ -607,24 +607,25 @@ static int hisi_lpc_probe(struct platfor
+ 	range->fwnode = dev->fwnode;
+ 	range->flags = LOGIC_PIO_INDIRECT;
+ 	range->size = PIO_INDIRECT_SIZE;
++	range->hostdata = lpcdev;
++	range->ops = &hisi_lpc_ops;
++	lpcdev->io_host = range;
  
- 	pci_set_master(pdev);
+ 	ret = logic_pio_register_range(range);
+ 	if (ret) {
+ 		dev_err(dev, "register IO range failed (%d)!\n", ret);
+ 		return ret;
+ 	}
+-	lpcdev->io_host = range;
  
-+	/*
-+	 * We don't have a max segment size, so set it to the max so sg's
-+	 * debugging layer doesn't complain
-+	 */
-+	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
-+
- 	/* overlay on gen2 is broken and can't address above 1G */
- 	if (IS_GEN2(dev_priv)) {
- 		ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(30));
+ 	/* register the LPC host PIO resources */
+ 	if (acpi_device)
+ 		ret = hisi_lpc_acpi_probe(dev);
+ 	else
+ 		ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
+-	if (ret)
++	if (ret) {
++		logic_pio_unregister_range(range);
+ 		return ret;
+-
+-	lpcdev->io_host->hostdata = lpcdev;
+-	lpcdev->io_host->ops = &hisi_lpc_ops;
++	}
+ 
+ 	io_end = lpcdev->io_host->io_start + lpcdev->io_host->size;
+ 	dev_info(dev, "registered range [%pa - %pa]\n",
 
 
