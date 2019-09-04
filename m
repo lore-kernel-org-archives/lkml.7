@@ -2,156 +2,67 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BA6C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9568FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881FE22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8B422DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567594184;
-	bh=h+s6rycvfFv+wyqebtBSZ8t6YMUsIyt3gS91EibrwU0=;
+	s=default; t=1567594220;
+	bh=0tkc2jStShXinGVSzG1SMj1S3e4mv0ZyVqBpJ3BnKSc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TSiNX2ulKcjBjjVTf0NU151HVm8odWs2VivLkCJeYrXiQeetP/cYGyDYAnRt2yBEs
-	 sd5a/gK8sQGZl+7vx4jaIgx7fPijwZg8RJoRo4f1/10FFK5wwEfzt4q0jR+p82v5B2
-	 8W9N7TN5mS/mrJs3FXchcqZaMyQkyDl72qIUyCug=
+	b=p2DgVMBcbmGtMctXKhxAQ2oVFj4CA7JmpVati3Wse0O2L7TbY74P3rFwgqpUvCfxl
+	 JmvwpDk09H8lqE2rpjROxOOVhCAjDDqu0tCMqT63TwEFXv6d8BhAqcjM4SYhLZlVeS
+	 wm4NYnVzRtDFYoKnzO/b8zwg+RQxI3i8N5Z5MqL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbfIDKtn (ORCPT
+        id S1729589AbfIDKuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:49:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60648 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 06:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfIDKtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:49:43 -0400
+        id S1726240AbfIDKuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:50:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC1722CED;
-        Wed,  4 Sep 2019 10:49:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0B5822CED;
+        Wed,  4 Sep 2019 10:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567594182;
-        bh=h+s6rycvfFv+wyqebtBSZ8t6YMUsIyt3gS91EibrwU0=;
+        s=default; t=1567594218;
+        bh=0tkc2jStShXinGVSzG1SMj1S3e4mv0ZyVqBpJ3BnKSc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lh29m8Rhm4/S3/XcyZKiIUv0BHjv0mwQ5/dx3HjRi9E8jmlAUc8OMNtAaDKPnemH8
-         9tXLJaD4IUl+tBnULHKh6AKAF9RBeej62vy+DC1P7nN0rLiglMjAp1HR0LkUPMQlRp
-         oGpFSEB86q9xi5FDe4lbfajVNfAwPcOUMnG2/3Us=
-Date:   Wed, 4 Sep 2019 12:49:39 +0200
+        b=ufhHy86DcEa4OgYPh1cNAq0rNmKo6v9+YtXdTsJ8TYeX643w5eIuYWco04QP9c0QX
+         3uHKFSjHM9hATDVq0EzRC6ow0ulmU3Q7goAKmM6ffz3OU4P1tBtQCUDFIYULz8qJ4I
+         bawUaSeb/3lNLyxendaa7YlFDdSsE/by9sSuKODo=
+Date:   Wed, 4 Sep 2019 12:50:15 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     devel@driverdev.osuosl.org, Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        linux-kernel@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Hridya Valsaraju <hridya@google.com>, kernel-team@android.com
-Subject: Re: [PATCH v3 2/2] binder: Validate the default binderfs device
- names.
-Message-ID: <20190904104939.GA20711@kroah.com>
-References: <20190808222727.132744-1-hridya@google.com>
- <20190808222727.132744-3-hridya@google.com>
- <20190809145508.GD16262@kroah.com>
- <20190809181439.qrs2k7l23ot4am4s@wittgenstein>
- <CA+wgaPPK0fY2a+pCEFHrw8p8WCb459yw41s_6xppWFfEa=P7Og@mail.gmail.com>
- <20190904071929.GA19830@kroah.com>
- <20190904104431.ehzyllugr6fr2vjz@wittgenstein>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+Subject: Re: [PATCH v3] /dev/mem: Bail out upon SIGKILL.
+Message-ID: <20190904105015.GA21698@kroah.com>
+References: <1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190826132916.GB12281@kroah.com>
+ <87bb0adb-1d36-6481-6845-a93e5a3e5d17@i-love.sakura.ne.jp>
+ <5ea28431-c677-0552-41aa-1c67779e2248@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904104431.ehzyllugr6fr2vjz@wittgenstein>
+In-Reply-To: <5ea28431-c677-0552-41aa-1c67779e2248@i-love.sakura.ne.jp>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 12:44:32PM +0200, Christian Brauner wrote:
-> On Wed, Sep 04, 2019 at 09:19:29AM +0200, Greg Kroah-Hartman wrote:
-> > On Fri, Aug 09, 2019 at 11:41:12AM -0700, Hridya Valsaraju wrote:
-> > > On Fri, Aug 9, 2019 at 11:14 AM Christian Brauner
-> > > <christian.brauner@ubuntu.com> wrote:
-> > > >
-> > > > On Fri, Aug 09, 2019 at 04:55:08PM +0200, Greg Kroah-Hartman wrote:
-> > > > > On Thu, Aug 08, 2019 at 03:27:26PM -0700, Hridya Valsaraju wrote:
-> > > > > > Length of a binderfs device name cannot exceed BINDERFS_MAX_NAME.
-> > > > > > This patch adds a check in binderfs_init() to ensure the same
-> > > > > > for the default binder devices that will be created in every
-> > > > > > binderfs instance.
-> > > > > >
-> > > > > > Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > > > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
-> > > > > > ---
-> > > > > >  drivers/android/binderfs.c | 12 ++++++++++++
-> > > > > >  1 file changed, 12 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-> > > > > > index aee46dd1be91..55c5adb87585 100644
-> > > > > > --- a/drivers/android/binderfs.c
-> > > > > > +++ b/drivers/android/binderfs.c
-> > > > > > @@ -570,6 +570,18 @@ static struct file_system_type binder_fs_type = {
-> > > > > >  int __init init_binderfs(void)
-> > > > > >  {
-> > > > > >     int ret;
-> > > > > > +   const char *name;
-> > > > > > +   size_t len;
-> > > > > > +
-> > > > > > +   /* Verify that the default binderfs device names are valid. */
-> > > > >
-> > > > > And by "valid" you only mean "not bigger than BINDERFS_MAX_NAME, right?
-> > > > >
-> > > > > > +   name = binder_devices_param;
-> > > > > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
-> > > > > > +           if (len > BINDERFS_MAX_NAME)
-> > > > > > +                   return -E2BIG;
-> > > > > > +           name += len;
-> > > > > > +           if (*name == ',')
-> > > > > > +                   name++;
-> > > > > > +   }
-> > > > >
-> > > > > We already tokenize the binderfs device names in binder_init(), why not
-> > > > > check this there instead?  Parsing the same string over and over isn't
-> > > > > the nicest.
-> > > >
-> > > > non-binderfs binder devices do not have their limit set to
-> > > > BINDERFS_NAME_MAX. That's why the check has likely been made specific to
-> > > > binderfs binder devices which do have that limit.
-> > > 
-> > > 
-> > > Thank you Greg and Christian, for taking another look. Yes,
-> > > non-binderfs binder devices not having this limitation is the reason
-> > > why the check was made specific to binderfs devices. Also, when
-> > > CONFIG_ANDROID_BINDERFS is set, patch 1/2 disabled the same string
-> > > being parsed in binder_init().
-> > > 
-> > > >
-> > > > But, in practice, 255 is the standard path-part limit that no-one really
-> > > > exceeds especially not for stuff such as device nodes which usually have
-> > > > rather standard naming schemes (e.g. binder, vndbinder, hwbinder, etc.).
-> > > > So yes, we can move that check before both the binderfs binder device
-> > > > and non-binderfs binder device parsing code and treat it as a generic
-> > > > check.
-> > > > Then we can also backport that check as you requested in the other mail.
-> > > > Unless Hridya or Todd have objections, of course.
-> > > 
-> > > I do not have any objections to adding a generic check in binder_init() instead.
-> > 
-> > Was this patchset going to be redone based on this?
-> 
-> No, we decided to leave this check specific to binderfs for now because
-> the length limit only applies to binderfs devices. If you really want to
-> have this check in binder we can send a follow-up. I would prefer to
-> take the series as is.
-> 
-> Btw, for the two binderfs series from Hridya, do you want me to get a
-> branch ready and send you a PR for both of them together?
+On Wed, Sep 04, 2019 at 07:19:47PM +0900, Tetsuo Handa wrote:
+> Ping? Syzbot is still reporting this problem.
 
-Patches in email is fine, but can someone resend this one as I no longer
-have this series in my queue anymore?
-
-thanks,
+It's in my queue, give me a chance :)
 
 greg k-h
