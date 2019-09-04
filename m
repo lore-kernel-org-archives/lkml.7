@@ -2,93 +2,115 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25865C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0834BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C0B23402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E5221883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:24:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hMmtYMXz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s823D9jM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbfIDANh (ORCPT
+        id S1727433AbfIDAYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 20:13:37 -0400
-Received: from ozlabs.org ([203.11.71.1]:53439 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725882AbfIDANg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 20:13:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46NPRx71w0z9sP3;
-        Wed,  4 Sep 2019 10:13:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567556014;
-        bh=9sKqcVmNPYcGRbL8j5mK/risVZPS130A9GxQFjJc+2w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hMmtYMXzvtmigmoLB8fOijNYtv0w5+23EcHc04CBtf7WVe1yOFljK8/8JBMv0QYYK
-         sj3vgnkfMV07qCWR2S11v+HEgAcxQiXVr2h7CBqCSoon2uSCqelyjObd3OHkACDdbq
-         TQ4jsVE5GPT7/F6jlmtINjBcCW64T4xw64tqMJU1TM9tfUkRWLVMe6pDEom1/9R2fZ
-         xRnuZE1vNZQWMPFf6lIYE8QRrqUt4SHTw39cJZK/ye9bNwlse+27i6lpiUefqlZRCF
-         mqOmFYYFQRIK56R+XSEQqfLtnuJdEmzpE29jGxuYiEN9PJ8jd6qM12eYrSCoVOzryg
-         N4W6fPgtzWARQ==
-Date:   Wed, 4 Sep 2019 10:13:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        PowerPC <linuxppc-dev@lists.ozlabs.org>
-Subject: linux-next: build warnings after merge of the kbuild tree
-Message-ID: <20190904101259.2687cea4@canb.auug.org.au>
+        Tue, 3 Sep 2019 20:24:06 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55854 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725882AbfIDAYG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 20:24:06 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g207so1287281wmg.5;
+        Tue, 03 Sep 2019 17:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+kGji0iEqvX2PbYbdW45C9GxA697L85/6dAAQKl+YqI=;
+        b=s823D9jMikjUnE0COKWdQm/5U4/NnfIueifeneGq16e97vNfIELcg2uISDJC5H8Osu
+         mkf7end+YfLLnME+nIbdTcGf8L3mr/WrKyX/l1DiTowgansH74ndS7WLYnhy0hQO9F0K
+         N8xC0HX2mYKW+Mkv4YnyZkRNwM5jTY+He1FfAeVw6hAI+S1FcM/X1C3HuOz+V1yyGQu5
+         HaphnnucdoJtfT4Ljfx7+pXTfb8COZztaEZ5RJ2wOavoaxjWqCx2lIYg/QA7gpTWlBYL
+         s820/Lyd8uH5qB7MhN1eK/MGWtG3lExath8vlfPqIsMpi25nX3PJgc9sv/129uVc+1Ia
+         tdIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+kGji0iEqvX2PbYbdW45C9GxA697L85/6dAAQKl+YqI=;
+        b=lxEJxRP7EiGueMwdk/mEJKDEWC2acTx1j8ORgpL56ozGCWv0bWK/FRXUyWYrG2V2fh
+         NiL9ZKx6/yt195TiADTnz8RTcCK7iAacbPCT/qYxzXfEsPXP+gWS4E9TvQD3vC//tzud
+         yIoG2weILq8wonUfcCVnGbsgtx/CacrJBDPWlKVO6T0WR6bpzvvTGDJDBtCOvwJzB5rN
+         xZsSZuCzXqCXWl3XFdLDsSioiEGqpsLwDCXbGGfC2LBuW+HmSbgRHWmVlyVbpibk+ryH
+         aNlcxy5O1fzLw2FdI0qgDCDHSEtGqi3lE3oWI/UJkPMKbIS6/Jvul49IuOlQLWUoP/7N
+         iwWQ==
+X-Gm-Message-State: APjAAAUeTS7GccTHNu9zH5iM2p3nuU8kiijASsYh4wAebkwWkrJnxStX
+        48x0pFVl7TYoIekW9r+Sp1EdXe9u5g8WaA==
+X-Google-Smtp-Source: APXvYqyRT9H5yO3lBr9uzkfqAogtNcUrdzoodQwtPgDJnVgYlLavOlowlxIb5ZUBH6+0p1L8IqP6Sg==
+X-Received: by 2002:a1c:4c06:: with SMTP id z6mr1965649wmf.47.1567556643727;
+        Tue, 03 Sep 2019 17:24:03 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id b26sm1242242wmj.14.2019.09.03.17.24.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 17:24:03 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 17:24:01 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
+Message-ID: <20190904002401.GA70635@archlinux-threadripper>
+References: <20190812023214.107817-1-natechancellor@gmail.com>
+ <878srdv206.fsf@mpe.ellerman.id.au>
+ <20190828175322.GA121833@archlinux-threadripper>
+ <CAKwvOdmXbYrR6n-cxKt3XxkE4Lmj0sSoZBUtHVb0V2LTUFHmug@mail.gmail.com>
+ <20190828184529.GC127646@archlinux-threadripper>
+ <6801a83ed6d54d95b87a41c57ef6e6b0@AcuMS.aculab.com>
+ <20190903055553.GC60296@archlinux-threadripper>
+ <20190903193128.GC9749@gate.crashing.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ssBCJi3mTERdd=v=ROJKrJr";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903193128.GC9749@gate.crashing.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ssBCJi3mTERdd=v=ROJKrJr
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Sep 03, 2019 at 02:31:28PM -0500, Segher Boessenkool wrote:
+> On Mon, Sep 02, 2019 at 10:55:53PM -0700, Nathan Chancellor wrote:
+> > On Thu, Aug 29, 2019 at 09:59:48AM +0000, David Laight wrote:
+> > > From: Nathan Chancellor
+> > > > Sent: 28 August 2019 19:45
+> > > ...
+> > > > However, I think that -fno-builtin-* would be appropriate here because
+> > > > we are providing our own setjmp implementation, meaning clang should not
+> > > > be trying to do anything with the builtin implementation like building a
+> > > > declaration for it.
+> > > 
+> > > Isn't implementing setjmp impossible unless you tell the compiler that
+> > > you function is 'setjmp-like' ?
+> > 
+> > No idea, PowerPC is the only architecture that does such a thing.
+> 
+> Since setjmp can return more than once, yes, exciting things can happen
+> if you do not tell the compiler about this.
+> 
+> 
+> Segher
+> 
 
-Hi all,
+Fair enough so I guess we are back to just outright disabling the
+warning.
 
-After merging the kbuild tree, today's linux-next build (powerpc
-ppc64_defconfig) produced these warnings:
-
-
-Presumably introduced by commit
-
-  1267f9d3047d ("kbuild: add $(BASH) to run scripts with bash-extension")
-
-and presumably arch/powerpc/tools/unrel_branch_check.sh (which has no
-#! line) is a bash script.  Yeah, is uses '((' and '))'.
-
---=20
 Cheers,
-Stephen Rothwell
-
---Sig_/ssBCJi3mTERdd=v=ROJKrJr
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1vAaYACgkQAVBC80lX
-0GxOmAf+IJwgmJGltVlvpa0v/AYyBNUCM/OMskna4gAT92XarZeed2UfoxwB0g/l
-hXnIdav7xtwj/Enz2jsOiomWSzBEAY+D2idUi2T8VMD+VVWdV5xFXFyFKL7+c0/N
-lxyYAXB/oKmyhNTOPMNJk8ThSr+hBZEgDSHX//j0iJ39+wfmf098N+RbvdVCUqXc
-jirj7RLWRrWA4LcUjMMPQMky3gp+CI5olpcFdVyGNKS4j+nE3BTR/DzQCGLPO31Y
-2XlhVtnbDGD18/aGnc8n0qBm5wqVexi939dCcXJDGmO2l+Jyb7iUAvPFD4Tev2u+
-0HyFqdbbIU5lqfTTQGgwcKlbePY3CQ==
-=l4Bs
------END PGP SIGNATURE-----
-
---Sig_/ssBCJi3mTERdd=v=ROJKrJr--
+Nathan
