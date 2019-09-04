@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FAFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C0FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6A423401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7C422CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620015;
-	bh=Ui+0UrEl6Wdi7CRb8+V3zC+O+5oPfmhX1x6ySkn9Rs0=;
+	s=default; t=1567620021;
+	bh=deVjjfaCeWmOjv0MfVPs/hd7Na32HAkwkj1M6fy46S4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hVs0edJY5ddV0r1pWcCtt4HOm8Y5NvBWjWFX/nAq22eZCJXqKLRGrh8fvNRUNlkYh
-	 OrSfPZX3w4Y0gii9LXAxoIZMxEKsrsqbrvObO0rvNXqfwQsNLUS3STndjKzHiChrSJ
-	 MvHBYmQ84QubYV5WCVio1+TfpuqQmwxOGbuTxSvs=
+	b=Vnzev8a1upv3Zf5Xu9QlWymYP+j1tdf8tpMKAhgqct3L/5eTHwZwV0qT2+2nb0OgN
+	 alwwr7SBcYv9IGviDfR2CTYFL3wrqQ0eZy5UTr1cpSGStEo3j7TsMZ9bjGELnqQOsU
+	 yh5rB5QiVaWkYpN9qehwseAfh/27vX5ANbBU3kHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388361AbfIDSAL (ORCPT
+        id S2388384AbfIDSAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:00:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39280 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388352AbfIDSAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:00:08 -0400
+        id S1731866AbfIDSAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:00:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF16A22CEA;
-        Wed,  4 Sep 2019 18:00:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5EAE2339E;
+        Wed,  4 Sep 2019 18:00:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620007;
-        bh=Ui+0UrEl6Wdi7CRb8+V3zC+O+5oPfmhX1x6ySkn9Rs0=;
+        s=default; t=1567620015;
+        bh=deVjjfaCeWmOjv0MfVPs/hd7Na32HAkwkj1M6fy46S4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZoWJPR0Izd8t6T219ZXxesPcP3VJLij6puVezaVZbiwCkrJD5fU8bRD0Hc3km9fH
-         DWAGvPI0N38/gstKU9n85hDBfSikdPOA5fls766iZmeXmP8r4uYoBQ1qtseXFWDtEY
-         v0cj0bprfE06vwbQ+VXKevzj/CWCJlCxPMwXS04I=
+        b=Ybq39GsVF8TRsVc4hh0gfb1lFR9l9rCMvK7IqBmG6h6ebYBbYc1NFK5mom+zEpG7d
+         F2RbAe089RAUdZgl/6OF+e1dL+PZbZx7L6EcdJCH05zA23C1xwGpomeIHrCDv8nizh
+         mSbBOMPHxaGIfIQISGOP56v34uNNSWbBRjCvYKds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Tao <kontais@zoho.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.9 39/83] dm table: fix invalid memory accesses with too high sector number
-Date:   Wed,  4 Sep 2019 19:53:31 +0200
-Message-Id: <20190904175307.275806394@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 42/83] mm/zsmalloc.c: migration can leave pages in ZS_EMPTY indefinitely
+Date:   Wed,  4 Sep 2019 19:53:34 +0200
+Message-Id: <20190904175307.501570321@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,52 +65,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Henry Burns <henryburns@google.com>
 
-commit 1cfd5d3399e87167b7f9157ef99daa0e959f395d upstream.
+commit 1a87aa03597efa9641e92875b883c94c7f872ccb upstream.
 
-If the sector number is too high, dm_table_find_target() should return a
-pointer to a zeroed dm_target structure (the caller should test it with
-dm_target_is_valid).
+In zs_page_migrate() we call putback_zspage() after we have finished
+migrating all pages in this zspage.  However, the return value is
+ignored.  If a zs_free() races in between zs_page_isolate() and
+zs_page_migrate(), freeing the last object in the zspage,
+putback_zspage() will leave the page in ZS_EMPTY for potentially an
+unbounded amount of time.
 
-However, for some table sizes, the code in dm_table_find_target() that
-performs btree lookup will access out of bound memory structures.
+To fix this, we need to do the same thing as zs_page_putback() does:
+schedule free_work to occur.
 
-Fix this bug by testing the sector number at the beginning of
-dm_table_find_target(). Also, add an "inline" keyword to the function
-dm_table_get_size() because this is a hot path.
+To avoid duplicated code, move the sequence to a new
+putback_zspage_deferred() function which both zs_page_migrate() and
+zs_page_putback() call.
 
-Fixes: 512875bd9661 ("dm: table detect io beyond device")
-Cc: stable@vger.kernel.org
-Reported-by: Zhang Tao <kontais@zoho.com>
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: http://lkml.kernel.org/r/20190809181751.219326-1-henryburns@google.com
+Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
+Signed-off-by: Henry Burns <henryburns@google.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Henry Burns <henrywolfeburns@gmail.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Jonathan Adams <jwadams@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-table.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ mm/zsmalloc.c |   19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1263,7 +1263,7 @@ void dm_table_event(struct dm_table *t)
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -1939,6 +1939,18 @@ static void dec_zspage_isolation(struct
+ 	zspage->isolated--;
  }
- EXPORT_SYMBOL(dm_table_event);
  
--sector_t dm_table_get_size(struct dm_table *t)
-+inline sector_t dm_table_get_size(struct dm_table *t)
- {
- 	return t->num_targets ? (t->highs[t->num_targets - 1] + 1) : 0;
- }
-@@ -1288,6 +1288,9 @@ struct dm_target *dm_table_find_target(s
- 	unsigned int l, n = 0, k = 0;
- 	sector_t *node;
- 
-+	if (unlikely(sector >= dm_table_get_size(t)))
-+		return &t->targets[t->num_targets];
++static void putback_zspage_deferred(struct zs_pool *pool,
++				    struct size_class *class,
++				    struct zspage *zspage)
++{
++	enum fullness_group fg;
 +
- 	for (l = 0; l < t->depth; l++) {
- 		n = get_child(n, k);
- 		node = get_node(t, l, n);
++	fg = putback_zspage(class, zspage);
++	if (fg == ZS_EMPTY)
++		schedule_work(&pool->free_work);
++
++}
++
+ static void replace_sub_page(struct size_class *class, struct zspage *zspage,
+ 				struct page *newpage, struct page *oldpage)
+ {
+@@ -2097,7 +2109,7 @@ int zs_page_migrate(struct address_space
+ 	 * the list if @page is final isolated subpage in the zspage.
+ 	 */
+ 	if (!is_zspage_isolated(zspage))
+-		putback_zspage(class, zspage);
++		putback_zspage_deferred(pool, class, zspage);
+ 
+ 	reset_page(page);
+ 	put_page(page);
+@@ -2144,14 +2156,13 @@ void zs_page_putback(struct page *page)
+ 	spin_lock(&class->lock);
+ 	dec_zspage_isolation(zspage);
+ 	if (!is_zspage_isolated(zspage)) {
+-		fg = putback_zspage(class, zspage);
+ 		/*
+ 		 * Due to page_lock, we cannot free zspage immediately
+ 		 * so let's defer.
+ 		 */
+-		if (fg == ZS_EMPTY)
+-			schedule_work(&pool->free_work);
++		putback_zspage_deferred(pool, class, zspage);
+ 	}
++
+ 	spin_unlock(&class->lock);
+ }
+ 
 
 
