@@ -7,54 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD70C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63EEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D3A622CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C31208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620560;
-	bh=mjhjiaq1QdfltCiZlfRzdCMexNftjOrnurhCTR9y43M=;
+	s=default; t=1567620564;
+	bh=eUxf5px/y/J3zPOxR6HS7sIp8nKji4J2U42kiNPMmoQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNteizZC6zwPSh+ZUoeQXm/UaXlyTaZeIuFpqeU7tYVyw3vc+gyn0ODP7NTgABLxb
-	 +dyQmwcjTT/5BulQjuD4eZbY4T0AD7C/etFQTBETfAVlU+49AGrch9cC7a6ewbGmV3
-	 Idg/5S6/R2pT3x75WP8XKTS5dArAE8VmDn7YtY34=
+	b=1df4RUilawa7Vx8x35RAjZgH47SttKA8KHbDlxvP/Y+b5u0Z+V/n+4/UJ76y58XEq
+	 jVkV59jwiKUsrvBFJ/3UO1rr+qZYoUoz7lqeAAnrx0ELae2vfYFIEqNZxD7qM++aSo
+	 atI+8oQf4f1lSXWJNhWujnqJU8v4pIneaJQmJ6MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389925AbfIDSJT (ORCPT
+        id S2389370AbfIDSJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52448 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389914AbfIDSJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:16 -0400
+        id S2389131AbfIDSJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60C22339E;
-        Wed,  4 Sep 2019 18:09:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8426208E4;
+        Wed,  4 Sep 2019 18:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620555;
-        bh=mjhjiaq1QdfltCiZlfRzdCMexNftjOrnurhCTR9y43M=;
+        s=default; t=1567620558;
+        bh=eUxf5px/y/J3zPOxR6HS7sIp8nKji4J2U42kiNPMmoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bta0XaXdY4PJgvsNxydrnlp+TjLZbFSgQ4ekwj5aZW0+9goZ5IFINYEI6mgctWG+7
-         j4Q4ALHMbu0Vzi0fMSgp0K+89DrdPp4bdPVL7PUusugNa5n+vDyBoQw4A2g/RJmsUB
-         XQpXqNRtU2JLKQr42ws74qYLilQCsHAFRpzDC0Iw=
+        b=X0ocKevPXfR/ycc6ef8ZYDheljQ1pKw2KQ2FxtiSYp6khO/n3GJlGJRacgymC6XFt
+         JwQCJkw7/tXjAnsoi2s4V9piGUNYJF3qg37o0oBbbIwFmh6HrO9ENIpIBluAoZ10FK
+         NYweqt+1f6PVGc7sZvmjlpGZyTRPeAz8rvklDFCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 001/143] dmaengine: ste_dma40: fix unneeded variable warning
-Date:   Wed,  4 Sep 2019 19:52:24 +0200
-Message-Id: <20190904175314.264270277@linuxfoundation.org>
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 010/143] nvmet-loop: Flush nvme_delete_wq when removing the port
+Date:   Wed,  4 Sep 2019 19:52:33 +0200
+Message-Id: <20190904175314.524009703@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,52 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d6fb560729a5d5554e23db8d00eb57cd0021083 ]
+[ Upstream commit 86b9a63e595ff03f9d0a7b92b6acc231fecefc29 ]
 
-clang-9 points out that there are two variables that depending on the
-configuration may only be used in an ARRAY_SIZE() expression but not
-referenced:
+After calling nvme_loop_delete_ctrl(), the controllers will not
+yet be deleted because nvme_delete_ctrl() only schedules work
+to do the delete.
 
-drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs[] = {
-           ^
-drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs_chan[] = {
+This means a race can occur if a port is removed but there
+are still active controllers trying to access that memory.
 
-Mark these __maybe_unused to shut up the warning.
+To fix this, flush the nvme_delete_wq before returning from
+nvme_loop_remove_port() so that any controllers that might
+be in the process of being deleted won't access a freed port.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190712091357.744515-1-arnd@arndb.de
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ste_dma40.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvme/target/loop.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index 89d710899010d..de8bfd9a76e9e 100644
---- a/drivers/dma/ste_dma40.c
-+++ b/drivers/dma/ste_dma40.c
-@@ -142,7 +142,7 @@ enum d40_events {
-  * when the DMA hw is powered off.
-  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
-  */
--static u32 d40_backup_regs[] = {
-+static __maybe_unused u32 d40_backup_regs[] = {
- 	D40_DREG_LCPA,
- 	D40_DREG_LCLA,
- 	D40_DREG_PRMSE,
-@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
+diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
+index 9e211ad6bdd3d..da9cd07461fbb 100644
+--- a/drivers/nvme/target/loop.c
++++ b/drivers/nvme/target/loop.c
+@@ -654,6 +654,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
+ 	mutex_lock(&nvme_loop_ports_mutex);
+ 	list_del_init(&port->entry);
+ 	mutex_unlock(&nvme_loop_ports_mutex);
++
++	/*
++	 * Ensure any ctrls that are in the process of being
++	 * deleted are in fact deleted before we return
++	 * and free the port. This is to prevent active
++	 * ctrls from using a port after it's freed.
++	 */
++	flush_workqueue(nvme_delete_wq);
+ }
  
- #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
- 
--static u32 d40_backup_regs_chan[] = {
-+static __maybe_unused u32 d40_backup_regs_chan[] = {
- 	D40_CHAN_REG_SSCFG,
- 	D40_CHAN_REG_SSELT,
- 	D40_CHAN_REG_SSPTR,
+ static const struct nvmet_fabrics_ops nvme_loop_ops = {
 -- 
 2.20.1
 
