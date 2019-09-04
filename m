@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3B7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16063C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506B1206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E14D62087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620637;
-	bh=nWGqu5LvfO5GpMioG9+wuNyHYM4Bt3PWimoGc8ZaEzI=;
+	s=default; t=1567620639;
+	bh=9d3XUrSeTaSLmwocDQ5m6ib+sKI74fEJgL3mfYS6ZAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lTYWrWq+IQ6MUP/joA3e3JXjhwcuywBPxzHlt4UVnoBV34KDNrwJia+xH99Ttkwkc
-	 njCUjvI0k0yh3P7UutWHF9Mn4aNSaltdcS+tPalaRXcYLHbpyCGzVufSNUyFLy2uS7
-	 WGc+4hFXzo4I8DpWAwcGhC6lnbGZ6nZZ77NAf3zU=
+	b=RGmgMmdyiM0C3GB0Sb0k2bnyJSG0BS4VPWj1GliF9PsWMKIR5rx/OyrGKCT1ry1iQ
+	 YMZ5D+0km6Y3UQLtCR/owKM/Z9dPVLTpraoeiONOlqCQKX+PR1HNm/YYgVmDQ+Ak3n
+	 skL8JiqnDaTqw6jVOtivF0Ox+tbzEp0s81iN3fN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390123AbfIDSKg (ORCPT
+        id S2390135AbfIDSKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:10:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390085AbfIDSKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:34 -0400
+        id S2390085AbfIDSKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5CEB206BA;
-        Wed,  4 Sep 2019 18:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88E9022CEA;
+        Wed,  4 Sep 2019 18:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620633;
-        bh=nWGqu5LvfO5GpMioG9+wuNyHYM4Bt3PWimoGc8ZaEzI=;
+        s=default; t=1567620636;
+        bh=9d3XUrSeTaSLmwocDQ5m6ib+sKI74fEJgL3mfYS6ZAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KP0tfkslv1eRztfuAl4VEbGQZqrxme9iSnD/3obP5QBz7c9t4ULDnVd2HL0zVH+pk
-         mDYg4P+vi57f8+Rw6mN0bVCweTgTl4zP1Iyl1VFiL3Kep7HOGcHjJo9O9zkDIW/y8m
-         1M6K1jATvubNXTAvsQ9UzT7XAxge60ZSZAQKzyaI=
+        b=fWAIV5m6UaUNZHtas6eX6UHxweV4ld8t9wEhGgp//oKJ/KNL5bcjW6PhuNQOhyOEc
+         E73aeqAT5uA2uIdlfQKw7IbDjudwOq+M86jVenM1LGYW/ASjCDmqO5xAxduxulCjRY
+         V69l8qt5/qDZTXTbHM+OqmKjVTyM/iJ0AM9k6/PE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Monk.liu@amd.com, Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 037/143] i2c: emev2: avoid race when unregistering slave client
-Date:   Wed,  4 Sep 2019 19:53:00 +0200
-Message-Id: <20190904175315.498967852@linuxfoundation.org>
+Subject: [PATCH 5.2 038/143] drm/scheduler: use job count instead of peek
+Date:   Wed,  4 Sep 2019 19:53:01 +0200
+Message-Id: <20190904175315.541114767@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -62,76 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7437fc0d8291181debe032671a289b6bd93f46f ]
+[ Upstream commit e1b4ce25dbc93ab0cb8ed0f236a3b9ff7b03802c ]
 
-After we disabled interrupts, there might still be an active one
-running. Sync before clearing the pointer to the slave device.
+The spsc_queue_peek function is accessing queue->head which belongs to
+the consumer thread and shouldn't be accessed by the producer
 
-Fixes: c31d0a00021d ("i2c: emev2: add slave support")
-Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This is fixing a rare race condition when destroying entities.
+
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Acked-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+Reviewed-by: Monk.liu@amd.com
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-emev2.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/scheduler/sched_entity.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-emev2.c b/drivers/i2c/busses/i2c-emev2.c
-index 35b302d983e0d..959d4912ec0d5 100644
---- a/drivers/i2c/busses/i2c-emev2.c
-+++ b/drivers/i2c/busses/i2c-emev2.c
-@@ -69,6 +69,7 @@ struct em_i2c_device {
- 	struct completion msg_done;
- 	struct clk *sclk;
- 	struct i2c_client *slave;
-+	int irq;
- };
+diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
+index 35ddbec1375ae..671c90f34ede6 100644
+--- a/drivers/gpu/drm/scheduler/sched_entity.c
++++ b/drivers/gpu/drm/scheduler/sched_entity.c
+@@ -95,7 +95,7 @@ static bool drm_sched_entity_is_idle(struct drm_sched_entity *entity)
+ 	rmb(); /* for list_empty to work without lock */
  
- static inline void em_clear_set_bit(struct em_i2c_device *priv, u8 clear, u8 set, u8 reg)
-@@ -339,6 +340,12 @@ static int em_i2c_unreg_slave(struct i2c_client *slave)
+ 	if (list_empty(&entity->list) ||
+-	    spsc_queue_peek(&entity->job_queue) == NULL)
++	    spsc_queue_count(&entity->job_queue) == 0)
+ 		return true;
  
- 	writeb(0, priv->base + I2C_OFS_SVA0);
- 
-+	/*
-+	 * Wait for interrupt to finish. New slave irqs cannot happen because we
-+	 * cleared the slave address and, thus, only extension codes will be
-+	 * detected which do not use the slave ptr.
-+	 */
-+	synchronize_irq(priv->irq);
- 	priv->slave = NULL;
- 
- 	return 0;
-@@ -355,7 +362,7 @@ static int em_i2c_probe(struct platform_device *pdev)
- {
- 	struct em_i2c_device *priv;
- 	struct resource *r;
--	int irq, ret;
-+	int ret;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -390,8 +397,8 @@ static int em_i2c_probe(struct platform_device *pdev)
- 
- 	em_i2c_reset(&priv->adap);
- 
--	irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(&pdev->dev, irq, em_i2c_irq_handler, 0,
-+	priv->irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_irq(&pdev->dev, priv->irq, em_i2c_irq_handler, 0,
- 				"em_i2c", priv);
- 	if (ret)
- 		goto err_clk;
-@@ -401,7 +408,8 @@ static int em_i2c_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk;
- 
--	dev_info(&pdev->dev, "Added i2c controller %d, irq %d\n", priv->adap.nr, irq);
-+	dev_info(&pdev->dev, "Added i2c controller %d, irq %d\n", priv->adap.nr,
-+		 priv->irq);
- 
- 	return 0;
- 
+ 	return false;
+@@ -281,7 +281,7 @@ void drm_sched_entity_fini(struct drm_sched_entity *entity)
+ 	/* Consumption of existing IBs wasn't completed. Forcefully
+ 	 * remove them here.
+ 	 */
+-	if (spsc_queue_peek(&entity->job_queue)) {
++	if (spsc_queue_count(&entity->job_queue)) {
+ 		if (sched) {
+ 			/* Park the kernel for a moment to make sure it isn't processing
+ 			 * our enity.
 -- 
 2.20.1
 
