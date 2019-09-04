@@ -2,52 +2,53 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7E1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB22C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4173220870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE2620882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621442;
-	bh=r3hHmwvr5gwac8HXyAhPmaX+ldpvoyfb/3IuCoowTQ4=;
+	s=default; t=1567621446;
+	bh=/wv3AgA7zMwW73GFBi8l04EhSvdtctzZwKdDe8/Y3uM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NMPY1ag7r/Xf3bFG+/IlZcW8qtKL6Szu6FHQn5i37H5vSxuzD6cq25Cf8ENTDUyKG
-	 yH0J0djHajwrKy2G6AlC4cWoHDJ71WbN6vbnEWjVMgK1685+zhqfSOceknAoKGz4AX
-	 U6qCS4BrsyPiJV3azAfGh1f0wMJRNqr0OYQS4LQY=
+	b=KWtrncdULuPRQuODxSCfiQOjSAoMHtfF7J4X6rBMHbfv9V0AG5Kdyy+NiYOcPxqnK
+	 vijr0ZGExZK+uxmbgH2ZbdvDQqUCAby6tyJ/208REtEZpi/AQ65yADGDQPmBBbc7zG
+	 BigTxbXROmhQSfm4W6b5lG4RzlzE3VmV0MZsCU8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbfIDSYB (ORCPT
+        id S1733266AbfIDSCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42026 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388696AbfIDSCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:12 -0400
+        id S2388676AbfIDSCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E3C521883;
-        Wed,  4 Sep 2019 18:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40BE722CF7;
+        Wed,  4 Sep 2019 18:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620132;
-        bh=r3hHmwvr5gwac8HXyAhPmaX+ldpvoyfb/3IuCoowTQ4=;
+        s=default; t=1567620121;
+        bh=/wv3AgA7zMwW73GFBi8l04EhSvdtctzZwKdDe8/Y3uM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UXqzTzgcQdP/PiOm2IAoMHKqBUt9VqEaktH+4bWr4xaznTecqAw3lkE9nXYD3Pjf4
-         wOrxPV/53pWnJwmjQjgno/WKyDJLn1B1amacE/PEx38MhfYnmGfBPfpNU/X3rGkn7N
-         Idx5Nz2NoyOJtPVzQ1zp9XZIZf9EcHosqcPoAb0Y=
+        b=W0xGmcCpu8ln/nHkF2vhwUXJ7cPHMtTN/GNaLT6+MB8qmVPb6zKmrTgji7+ama82e
+         edzXrq0LZAswgiTBFOeJ1JJNrkuhsTcjGwM37U/Bv+/quqcwPxOQTnNtchyhgqfYLP
+         TeZ/NMPCEkJPxLOMAVRNhUWAbnVhY5iiBMtDm7yM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.9 76/83] stm class: Fix a double free of stm_source_device
-Date:   Wed,  4 Sep 2019 19:54:08 +0200
-Message-Id: <20190904175310.312768172@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Cooks <andrew.cooks@opengear.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 82/83] i2c: piix4: Fix port selection for AMD Family 16h Model 30h
+Date:   Wed,  4 Sep 2019 19:54:14 +0200
+Message-Id: <20190904175310.865012524@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,36 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+[ Upstream commit c7c06a1532f3fe106687ac82a13492c6a619ff1c ]
 
-commit 961b6ffe0e2c403b09a8efe4a2e986b3c415391a upstream.
+Family 16h Model 30h SMBus controller needs the same port selection fix
+as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
+selection for AMD Family 17h chips")
 
-In the error path of stm_source_register_device(), the kfree is
-unnecessary, as the put_device() before it ends up calling
-stm_source_device_release() to free stm_source_device, leading to
-a double free at the outer kfree() call. Remove it.
+commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
+register") also fixed the port selection for Hudson2, but unfortunately
+this is not the exact same device and the AMD naming and PCI Device IDs
+aren't particularly helpful here.
 
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 7bd1d4093c2fa ("stm class: Introduce an abstraction for System Trace Module devices")
-Link: https://lore.kernel.org/linux-arm-kernel/1563354988-23826-1-git-send-email-dingxiang@cmss.chinamobile.com/
-Cc: stable@vger.kernel.org # v4.4+
-Link: https://lore.kernel.org/r/20190821074955.3925-2-alexander.shishkin@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The SMBus port selection register is common to the following Families
+and models, as documented in AMD's publicly available BIOS and Kernel
+Developer Guides:
 
+ 50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+ 55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+ 52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
+
+The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
+between Bolton FCH and Family 16h Model 30h, but the location of the
+SmBus0Sel port selection bits are different:
+
+ 51192 - Bolton Register Reference Guide
+
+We distinguish between Bolton and Family 16h Model 30h using the PCI
+Revision ID:
+
+  Bolton is device 0x780b, revision 0x15
+  Family 16h Model 30h is device 0x780b, revision 0x1F
+  Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
+
+The following additional public AMD BKDG documents were checked and do
+not share the same port selection register:
+
+ 42301 - Family 15h Model 00h-0Fh doesn't mention any
+ 42300 - Family 15h Model 10h-1Fh doesn't mention any
+ 49125 - Family 15h Model 30h-3Fh doesn't mention any
+
+ 48751 - Family 16h Model 00h-0Fh uses the previously supported
+         index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
+
+Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: stable@vger.kernel.org [v4.6+]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/stm/core.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/i2c/busses/i2c-piix4.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -1107,7 +1107,6 @@ int stm_source_register_device(struct de
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index 8f1c5f24c1df5..62785aa76b3fb 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -96,7 +96,7 @@
+ #define SB800_PIIX4_PORT_IDX_MASK	0x06
+ #define SB800_PIIX4_PORT_IDX_SHIFT	1
  
- err:
- 	put_device(&src->dev);
--	kfree(src);
+-/* On kerncz, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
++/* On kerncz and Hudson2, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
+ #define SB800_PIIX4_PORT_IDX_KERNCZ		0x02
+ #define SB800_PIIX4_PORT_IDX_MASK_KERNCZ	0x18
+ #define SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ	3
+@@ -355,18 +355,16 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
  
- 	return err;
- }
+ 	/* Find which register is used for port selection */
+ 	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
+-		switch (PIIX4_dev->device) {
+-		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
++		if (PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
++		    (PIIX4_dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
++		     PIIX4_dev->revision >= 0x1F)) {
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
+ 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK_KERNCZ;
+ 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ;
+-			break;
+-		case PCI_DEVICE_ID_AMD_HUDSON2_SMBUS:
+-		default:
++		} else {
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_ALT;
+ 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK;
+ 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT;
+-			break;
+ 		}
+ 	} else {
+ 		mutex_lock(&piix4_mutex_sb800);
+-- 
+2.20.1
+
 
 
