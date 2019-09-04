@@ -2,209 +2,392 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923B9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71447C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6282B21670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567614055;
-	bh=x4pvz7O8pF8aUNF3Co/a77ewOodvm2ER0JvB/S8Lq5A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gllJGY2f28wGa5nD3aqB4i7lXARtM8a1aVOlO/u3o5VLpnGsxSdrDU0rhvchv4Ev/
-	 KwJ5fgI970V40qDInuJHDJyH99rNyoq/uiDw62x324rY5R56r5Vdw+M8p9LeZFrh2v
-	 vns6YqGWI7NzVIZJpb4YpjsoYbdwlWUITo6Mi6Q4=
+	by mail.kernel.org (Postfix) with ESMTP id 3E45921670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731621AbfIDP5s (ORCPT
+        id S1731845AbfIDQWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59360 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:22:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:58498 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730355AbfIDP5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:57:45 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC2872339D;
-        Wed,  4 Sep 2019 15:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612664;
-        bh=x4pvz7O8pF8aUNF3Co/a77ewOodvm2ER0JvB/S8Lq5A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTsp0RPZrA/9J+BZSdJVTflAti3C7Pi72pp9AZ/jLwS8M9UO3KR9wuAoF0JHAEuhu
-         JWWbHHz0Vr3i3vwVxTR3bG26Mw/gxQyI7IowkB0r4/f+rV316QmvKMMWmnOlS/7ZTt
-         aixN9iWugCvgT2jHcIPbSt/FQ3htzYRyxuhIKlIQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Faiz Abbas <faiz_abbas@ti.com>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 03/94] ARM: dts: am57xx: Disable voltage switching for SD card
-Date:   Wed,  4 Sep 2019 11:56:08 -0400
-Message-Id: <20190904155739.2816-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
-References: <20190904155739.2816-1-sashal@kernel.org>
+        id S1730299AbfIDQWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:22:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7576337;
+        Wed,  4 Sep 2019 09:22:15 -0700 (PDT)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6C253F246;
+        Wed,  4 Sep 2019 09:22:10 -0700 (PDT)
+Subject: Re: [PATCH v18 15/15] selftests, arm64: add a selftest for passing
+ tagged pointers to kernel
+To:     Andrey Konovalov <andreyknvl@google.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1561386715.git.andreyknvl@google.com>
+ <0999c80cd639b78ae27c0674069d552833227564.1561386715.git.andreyknvl@google.com>
+ <6af3f619-4356-2f67-ed76-92beceb1e0a0@arm.com>
+ <CAAeHK+yhbUcuLhoetjGUbqM4j9fX84hbwmxzNPF+e1zXj6nKNw@mail.gmail.com>
+ <d6bc5c4b-68b5-0a58-0f52-8bce20986dcf@arm.com>
+ <CAAeHK+xXN_oHt0rAcWdTs0XhkYRhWqf3iv-n+dYmY075xosJnw@mail.gmail.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <92ca7fd1-2aa7-3bec-384d-52033b6496c1@arm.com>
+Date:   Wed, 4 Sep 2019 17:22:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <CAAeHK+xXN_oHt0rAcWdTs0XhkYRhWqf3iv-n+dYmY075xosJnw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Faiz Abbas <faiz_abbas@ti.com>
+Hi Andrey !
 
-[ Upstream commit fb59ee37cfe20d10d19568899d1458a58361246c ]
+On 04/09/2019 15:52, Andrey Konovalov wrote:
+> On Fri, Aug 23, 2019 at 7:49 PM Cristian Marussi
+> <cristian.marussi@arm.com> wrote:
+>>
+>>
+>> Hi
+>>
+>> On 23/08/2019 18:16, Andrey Konovalov wrote:
+>>> On Fri, Aug 23, 2019 at 3:56 PM Cristian Marussi
+>>> <cristian.marussi@arm.com> wrote:
+>>>>
+>>>> Hi Andrey
+>>>>
+>>>> On 24/06/2019 15:33, Andrey Konovalov wrote:
+>>>>> This patch is a part of a series that extends kernel ABI to allow to pass
+>>>>> tagged user pointers (with the top byte set to something else other than
+>>>>> 0x00) as syscall arguments.
+>>>>>
+>>>>> This patch adds a simple test, that calls the uname syscall with a
+>>>>> tagged user pointer as an argument. Without the kernel accepting tagged
+>>>>> user pointers the test fails with EFAULT.
+>>>>>
+>>>>> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+>>>>> ---
+>>>>>  tools/testing/selftests/arm64/.gitignore      |  1 +
+>>>>>  tools/testing/selftests/arm64/Makefile        | 11 +++++++
+>>>>>  .../testing/selftests/arm64/run_tags_test.sh  | 12 ++++++++
+>>>>>  tools/testing/selftests/arm64/tags_test.c     | 29 +++++++++++++++++++
+>>>>>  4 files changed, 53 insertions(+)
+>>>>>  create mode 100644 tools/testing/selftests/arm64/.gitignore
+>>>>>  create mode 100644 tools/testing/selftests/arm64/Makefile
+>>>>>  create mode 100755 tools/testing/selftests/arm64/run_tags_test.sh
+>>>>>  create mode 100644 tools/testing/selftests/arm64/tags_test.c
+>>>>
+>>>> After building a fresh Kernel from arm64/for-next-core from scratch at:
+>>>>
+>>>> commit 239ab658bea3b387424501e7c416640d6752dc0c
+>>>> Merge: 6bfa3134bd3a 42d038c4fb00 1243cb6a676f d55c5f28afaf d06fa5a118f1 34b5560db40d
+>>>> Author: Will Deacon <will@kernel.org>
+>>>> Date:   Thu Aug 22 18:23:53 2019 +0100
+>>>>
+>>>>     Merge branches 'for-next/error-injection', 'for-next/tbi', 'for-next/psci-cpuidle', 'for-next/cpu-topology' and 'for-next/52-bit-kva' into for-next/core
+>>>>
+>>>>
+>>>> KSFT arm64 tests build is broken for me, both setting or not KBUILD_OUTPUT=
+>>>>
+>>>> 13:30 $ make TARGETS=arm64 kselftest-clean
+>>>> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+>>>> rm -f -r /home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm64/tags_test
+>>>> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+>>>>
+>>>> ✔ ~/ARM/dev/src/pdsw/linux [arm64_for_next_core|…8⚑ 23]
+>>>>
+>>>> 13:30 $ make TARGETS=arm64 kselftest
+>>>> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+>>>> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
+>>>> make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
+>>>>         ARCH=arm64 -C ../../.. headers_install
+>>>>   HOSTCC  scripts/basic/fixdep
+>>>>   HOSTCC  scripts/unifdef
+>>>> ...
+>>>> ...
+>>>>   HDRINST usr/include/asm/msgbuf.h
+>>>>   HDRINST usr/include/asm/shmbuf.h
+>>>>   INSTALL /home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/usr/include
+>>>> /opt/toolchains/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc     tags_test.c  -o /home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm64/tags_test
+>>>> tags_test.c: In function ‘main’:
+>>>> tags_test.c:21:12: error: ‘PR_SET_TAGGED_ADDR_CTRL’ undeclared (first use in this function); did you mean ‘PR_GET_TID_ADDRESS’?
+>>>>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
+>>>>             ^~~~~~~~~~~~~~~~~~~~~~~
+>>>>             PR_GET_TID_ADDRESS
+>>>> tags_test.c:21:12: note: each undeclared identifier is reported only once for each function it appears in
+>>>> tags_test.c:21:37: error: ‘PR_TAGGED_ADDR_ENABLE’ undeclared (first use in this function); did you mean ‘PR_GET_DUMPABLE’?
+>>>>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
+>>>>                                      ^~~~~~~~~~~~~~~~~~~~~
+>>>>                                      PR_GET_DUMPABLE
+>>>> ../lib.mk:138: recipe for target '/home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm64/tags_test' failed
+>>>> make[3]: *** [/home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm64/tags_test] Error 1
+>>>> Makefile:136: recipe for target 'all' failed
+>>>> make[2]: *** [all] Error 2
+>>>> /home/crimar01/ARM/dev/src/pdsw/linux/Makefile:1237: recipe for target 'kselftest' failed
+>>>> make[1]: *** [kselftest] Error 2
+>>>> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+>>>> Makefile:179: recipe for target 'sub-make' failed
+>>>> make: *** [sub-make] Error 2
+>>>>
+>>>> Despite seeing KSFT installing Kernel Headers, they cannot be found.
+>>>>
+>>>> Fixing this patch like this make it work for me:
+>>>>
+>>>> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
+>>>> index a61b2e743e99..f9f79fb272f0 100644
+>>>> --- a/tools/testing/selftests/arm64/Makefile
+>>>> +++ b/tools/testing/selftests/arm64/Makefile
+>>>> @@ -4,6 +4,7 @@
+>>>>  ARCH ?= $(shell uname -m 2>/dev/null || echo not)
+>>>>
+>>>>  ifneq (,$(filter $(ARCH),aarch64 arm64))
+>>>> +CFLAGS += -I../../../../usr/include/
+>>>>  TEST_GEN_PROGS := tags_test
+>>>>  TEST_PROGS := run_tags_test.sh
+>>>>  endif
+>>>>
+>>>> but is not really a proper fix since it does NOT account for case in which you have
+>>>> installed the Kernel Headers in a non standard location like when you use KBUILD_OUTPUT.
+>>>>
+>>>> Am I missing something ?
+>>>
+>>> Hm, PR_SET_TAGGED_ADDR_CTRL is defined in include/uapi/linux/prctl.h,
+>>> and the test has #include <sys/prctl.h> so as long as you've updated
+>>> your kernel headers this should work.
+>>>
+>>> (I'm OOO next week, I'll see if I can reproduce this once I'm back).
+>>
+>> Ok. Thanks for the reply.
+>>
+>> I think I've got it in my local tree having cloned arm64/for-next-core:
+>>
+>> 18:32 $ egrep -A 10 PR_SET_TAG ./include/uapi/linux/prctl.h
+>> #define PR_SET_TAGGED_ADDR_CTRL         55
+>> #define PR_GET_TAGGED_ADDR_CTRL         56
+>> # define PR_TAGGED_ADDR_ENABLE          (1UL << 0)
+>>
+>> #endif /* _LINUX_PRCTL_H */
+>>
+>> and Kernel header are locally installed in my kernel src dir (by KSFT indeed)
+>>
+>> 18:34 $ egrep -RA 10 PR_SET_TAG usr/include/
+>> usr/include/linux/prctl.h:#define PR_SET_TAGGED_ADDR_CTRL               55
+>> usr/include/linux/prctl.h-#define PR_GET_TAGGED_ADDR_CTRL               56
+>> usr/include/linux/prctl.h-# define PR_TAGGED_ADDR_ENABLE                (1UL << 0)
+>> usr/include/linux/prctl.h-
+>> usr/include/linux/prctl.h-#endif /* _LINUX_PRCTL_H */
+>>
+>> but how are they supposed to be found if nor the test Makefile
+>> neither the KSFT Makefile who installs them pass any -I options to the
+>> compiler ?
+>> I suppose <sys/prctl.h> tries to include arch specific headers from the regular system path,
+>> but when you are cross-compiling ?
+>>
+>> 18:34 $ make TARGETS=arm64 kselftest
+>> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+>> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the compat vDSO will not be built
+>> make --no-builtin-rules INSTALL_HDR_PATH=$BUILD/usr \
+>>         ARCH=arm64 -C ../../.. headers_install
+>>   INSTALL /home/crimar01/ARM/dev/src/pdsw/out_linux/kselftest/usr/include
+>> /opt/toolchains/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin/aarch64-linux-gnu-gcc -Wall -O2 -g    tags_test.c  -o /home/crimar01/ARM/dev/src/pdsw/out_linux/kselftest/arm64/tags/tags_test
+>> tags_test.c: In function ‘main’:
+>> tags_test.c:20:12: error: ‘PR_SET_TAGGED_ADDR_CTRL’ undeclared (first use in this function); did you mean ‘PR_GET_TID_ADDRESS’?
+>>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
+>>             ^~~~~~~~~~~~~~~~~~~~~~~
+>>             PR_GET_TID_ADDRESS
+>> tags_test.c:20:12: note: each undeclared identifier is reported only once for each function it appears in
+>> tags_test.c:20:37: error: ‘PR_TAGGED_ADDR_ENABLE’ undeclared (first use in this function); did you mean ‘PR_GET_DUMPABLE’?
+>>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
+>>                                      ^~~~~~~~~~~~~~~~~~~~~
+>>                                      PR_GET_DUMPABLE
+>> ../../lib.mk:138: recipe for target '/home/crimar01/ARM/dev/src/pdsw/out_linux/kselftest/arm64/tags/tags_test' failed
+>> make[4]: *** [/home/crimar01/ARM/dev/src/pdsw/out_linux/kselftest/arm64/tags/tags_test] Error 1
+>> Makefile:19: recipe for target 'all' failed
+>> make[3]: *** [all] Error 2
+>> Makefile:137: recipe for target 'all' failed
+>> make[2]: *** [all] Error 2
+>> /home/crimar01/ARM/dev/src/pdsw/linux/Makefile:1236: recipe for target 'kselftest' failed
+>> make[1]: *** [kselftest] Error 2
+>> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
+>> Makefile:179: recipe for target 'sub-make' failed
+>> make: *** [sub-make] Error 2
+>>
+>>
+>> In fact many KSFT testcases seems to brutally add default headers path:
+>>
+>> tools/testing/selftests/memfd/Makefile:CFLAGS += -I../../../../include/uapi/
+>> tools/testing/selftests/memfd/Makefile:CFLAGS += -I../../../../include/
+>> tools/testing/selftests/memfd/Makefile:CFLAGS += -I../../../../usr/include/
+>> tools/testing/selftests/net/Makefile:CFLAGS += -I../../../../usr/include/
+>> tools/testing/selftests/membarrier/Makefile:CFLAGS += -g -I../../../../usr/include/
+>> ...
+> 
+> Hi Cristian!
+> 
+> Indeed, I can reproduce the issue. I don't know what's the proper way
+> to resolve this. Adding "CFLAGS += -I../../../../usr/include/" looks
+> good to me. AFAICS your series resolves this issue in a similar way,
+> but I think we should fix this before the current rc is released. Do
+> you want to submit a patch that adds this simple fix or should I do
+> that?
+> 
 
-If UHS speed modes are enabled, a compatible SD card switches down to
-1.8V during enumeration. If after this a software reboot/crash takes
-place and on-chip ROM tries to enumerate the SD card, the difference in
-IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
+Please feel free to post the single line patch above to quickly fix this before
+release, so we don't have a broken build straight away. (our CI is already beating me...:D)
 
-The fix for this is to have support for power cycling the card in
-hardware (with a PORz/soft-reset line causing a power cycle of the
-card). Because the beaglebone X15 (rev A,B and C), am57xx-idks and
-am57xx-evms don't have this capability, disable voltage switching for
-these boards.
+On my side (01/11) in the meantime I'll fix the top level KSFT arm64 makefile so as to calculate 
+and propagate once for all the headers search path down to all KSFT arm64/ in one go,
+trying to guess where they are; this is needed because the above fix works fine as long
+as you don't have KBUILD_OUTPUT set, once you set it, KSFT installs kheaders in a different
+place and the  above -I fix is fooled again....but this is a general problem also in other
+KSFT tests as I can see now so I think this fix is good enough for now
+(and the fix on my side, even if trivial, is not going to go into this release for sure)
 
-The major effect of this is that the maximum supported speed
-mode is now high speed(50 MHz) down from SDR104(200 MHz).
+Thanks !
 
-commit 88a748419b84 ("ARM: dts: am57xx-idk: Remove support for voltage
-switching for SD card") did this only for idk boards. Do it for all
-affected boards.
+Cheers
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/am571x-idk.dts                | 7 +------
- arch/arm/boot/dts/am572x-idk.dts                | 7 +------
- arch/arm/boot/dts/am574x-idk.dts                | 7 +------
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 1 +
- arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts   | 7 +------
- arch/arm/boot/dts/am57xx-beagle-x15-revc.dts    | 7 +------
- 6 files changed, 6 insertions(+), 30 deletions(-)
+Cristian
 
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 1d5e99964bbf8..0aaacea1d887b 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -175,14 +175,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50_rev20 &mmc1_iodelay_ddr50_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
-index c65d7f6d3b5a6..ea1c119feaa57 100644
---- a/arch/arm/boot/dts/am572x-idk.dts
-+++ b/arch/arm/boot/dts/am572x-idk.dts
-@@ -16,14 +16,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev20_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
-index dc5141c35610e..7935d70874ce2 100644
---- a/arch/arm/boot/dts/am574x-idk.dts
-+++ b/arch/arm/boot/dts/am574x-idk.dts
-@@ -24,14 +24,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_default>;
--	pinctrl-3 = <&mmc1_pins_hs>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_conf>;
--	pinctrl-6 = <&mmc1_pins_ddr50 &mmc1_iodelay_sdr104_conf>;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index d02f5fa61e5f5..d50de7a6ea6c5 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -430,6 +430,7 @@
- 
- 	bus-width = <4>;
- 	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
-+	no-1-8-v;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-index a374b5cd6db0e..7b113b52c3fb6 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-@@ -16,14 +16,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev11_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev11_conf>;
- 	vmmc-supply = <&vdd_3v3>;
- 	vqmmc-supply = <&ldo1_reg>;
- };
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-index 4badd2144db9a..30c500b15b219 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-@@ -16,14 +16,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev20_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
- 	vmmc-supply = <&vdd_3v3>;
- 	vqmmc-supply = <&ldo1_reg>;
- };
--- 
-2.20.1
+> Thanks!
+> 
+>>
+>> Cheers
+>>
+>> Cristian
+>>>
+>>>
+>>>
+>>>>
+>>>> Thanks
+>>>>
+>>>> Cristian
+>>>>
+>>>>>
+>>>>> diff --git a/tools/testing/selftests/arm64/.gitignore b/tools/testing/selftests/arm64/.gitignore
+>>>>> new file mode 100644
+>>>>> index 000000000000..e8fae8d61ed6
+>>>>> --- /dev/null
+>>>>> +++ b/tools/testing/selftests/arm64/.gitignore
+>>>>> @@ -0,0 +1 @@
+>>>>> +tags_test
+>>>>> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
+>>>>> new file mode 100644
+>>>>> index 000000000000..a61b2e743e99
+>>>>> --- /dev/null
+>>>>> +++ b/tools/testing/selftests/arm64/Makefile
+>>>>> @@ -0,0 +1,11 @@
+>>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>>> +
+>>>>> +# ARCH can be overridden by the user for cross compiling
+>>>>> +ARCH ?= $(shell uname -m 2>/dev/null || echo not)
+>>>>> +
+>>>>> +ifneq (,$(filter $(ARCH),aarch64 arm64))
+>>>>> +TEST_GEN_PROGS := tags_test
+>>>>> +TEST_PROGS := run_tags_test.sh
+>>>>> +endif
+>>>>> +
+>>>>> +include ../lib.mk
+>>>>> diff --git a/tools/testing/selftests/arm64/run_tags_test.sh b/tools/testing/selftests/arm64/run_tags_test.sh
+>>>>> new file mode 100755
+>>>>> index 000000000000..745f11379930
+>>>>> --- /dev/null
+>>>>> +++ b/tools/testing/selftests/arm64/run_tags_test.sh
+>>>>> @@ -0,0 +1,12 @@
+>>>>> +#!/bin/sh
+>>>>> +# SPDX-License-Identifier: GPL-2.0
+>>>>> +
+>>>>> +echo "--------------------"
+>>>>> +echo "running tags test"
+>>>>> +echo "--------------------"
+>>>>> +./tags_test
+>>>>> +if [ $? -ne 0 ]; then
+>>>>> +     echo "[FAIL]"
+>>>>> +else
+>>>>> +     echo "[PASS]"
+>>>>> +fi
+>>>>> diff --git a/tools/testing/selftests/arm64/tags_test.c b/tools/testing/selftests/arm64/tags_test.c
+>>>>> new file mode 100644
+>>>>> index 000000000000..22a1b266e373
+>>>>> --- /dev/null
+>>>>> +++ b/tools/testing/selftests/arm64/tags_test.c
+>>>>> @@ -0,0 +1,29 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>> +
+>>>>> +#include <stdio.h>
+>>>>> +#include <stdlib.h>
+>>>>> +#include <unistd.h>
+>>>>> +#include <stdint.h>
+>>>>> +#include <sys/prctl.h>
+>>>>> +#include <sys/utsname.h>
+>>>>> +
+>>>>> +#define SHIFT_TAG(tag)               ((uint64_t)(tag) << 56)
+>>>>> +#define SET_TAG(ptr, tag)    (((uint64_t)(ptr) & ~SHIFT_TAG(0xff)) | \
+>>>>> +                                     SHIFT_TAG(tag))
+>>>>> +
+>>>>> +int main(void)
+>>>>> +{
+>>>>> +     static int tbi_enabled = 0;
+>>>>> +     struct utsname *ptr, *tagged_ptr;
+>>>>> +     int err;
+>>>>> +
+>>>>> +     if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0)
+>>>>> +             tbi_enabled = 1;
+>>>>> +     ptr = (struct utsname *)malloc(sizeof(*ptr));
+>>>>> +     if (tbi_enabled)
+>>>>> +             tagged_ptr = (struct utsname *)SET_TAG(ptr, 0x42);
+>>>>> +     err = uname(tagged_ptr);
+>>>>> +     free(ptr);
+>>>>> +
+>>>>> +     return err;
+>>>>> +}
+>>>>>
+>>>>
+>>
 
