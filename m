@@ -2,170 +2,440 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEEFC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF66C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A0921670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976D221883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ddn.com header.i=@ddn.com header.b="p60g+dYR"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Mq3nb+BN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfIDRjj (ORCPT
+        id S1731841AbfIDRkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:39:39 -0400
-Received: from mail-eopbgr740042.outbound.protection.outlook.com ([40.107.74.42]:53760
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        Wed, 4 Sep 2019 13:40:31 -0400
+Received: from mail-eopbgr720057.outbound.protection.outlook.com ([40.107.72.57]:16274
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbfIDRji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:39:38 -0400
+        id S1726495AbfIDRkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:40:31 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kINiszOohR4rxFJh2L/+RKF/maJ2Vy7Ej91vMYTWEZqafzRfQljeTcUwJLStxMgC/jwil8v1wGRiQ16KmQXSXJZitml9DYSIxF/z8C2wt+Ue7HvmvRmfLw+3fIIwHnF+tjg7z0rtMEFSA97Nd1IIGl4d6yor+y3IPlfGD1OHtrwYIlqwdDxWxvhfJ0/53INOm5+DkDqy2JBTDXg8D/KtsodWd6f0+w7yILp7DzF67A89R4WQTuV4Q/b6W5BfS1jBOc9Ct/gpcPPkYANntg7fltaB0Oj7Oa+RMfbbz1QJNe8BqVHePtnUMD4Zntb7yArO85g9LiYwee5KlT+O4Q2UDg==
+ b=N3UK//YL2ExX2hOrYq3NYBmWEdNxB2QdKmDVfA4yTYAVOnd4nKAXyxhC1ao5kA/yxKtNHenJqVNTGlnMoYgnK89/1s22iT4kSEN5efMnjU4fbc4K63eYrHBwAEKqOnorZgdw+/Sl3glcsCK8XHWQSC25KucD/An/TeWtQXT1RQf+We7sWgESCNtNVvKETpXtHKrmUx+WTJa+OJmiNBSq4EiG72XjbIGP6oanGYiFJiRc6g78q3L54FEuHaRZmf3Qc5aPZXbGX7c409mIdQuIxFT5jxHieEbx/KJxroKg04ecIq5Ijel3Yae5UQkKWva5YkeQLuM8mTFGO6dJ3xUyEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e4SZnKkm+iwVgdPTz12B0Scz1ynBjcUNByi4NiB9+qE=;
- b=dxr6XOIhW1BJJ4z/NxlmBS0ql5dOQfOtg5qIAgDImA7zyG1Bu4OzZhSWMrVyVygvzQ9Qt8fMZk/yuX3LXNmSJwqnqem8JNj2TWZqb44wWx3OnBOR15S/9kYin7LhtCCaoFTjn0hPDCEK8WM/+p4Go2Cl2SVCdMFgM228e0GFpCmUpMGH0G38y5dCORg2xWQ6fLkTdti/j50ujC6rGdC5QDx5fIllHVj1rMtxCL2wji8gy0KFXMapY7Bacl8NDbRrgTbXpRiyzuT5gqF3yejojU8MjIXZKqLv/fLmPWUHX2EbOQUyvSDys6BJLJO4YR0UAIDPCVhETPDnvyhes8BBDA==
+ bh=i85fFXAnBchhgznVyV+0eqB+CiVIJURFYrpMfiXnFhg=;
+ b=JPCrBH9m25AvY1JW9CKg6QvOXHVhN7lL02B5GG8ceBTPxPfpTnydYfVTXGHYKMSaCrXYhvY4djdtvM8WfhMK1Y/la3eAFJzXGWTKHNhnu4wbZmjzIwHemE4e4RtDy4/peiVbCZAFm1D1rVJJOiIpctd4Gnz1H9lqBVB7MZpUiq23yUUJadSM1fzEWhMA59CXrCi+qccr8swdpPpbYZ2fX/ecCiryRk/Yw4jkGBjmUHr3gFPW9YxAjmjn6L+K37XJ/dw3fgs7sUfxn6Pga87YqFwZH3Zl5GHtXP6De3I/qumpowT/JbKdgot06JgbVExw+H3HIhJ+xbWUsajppt8FuA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ddn.com; dmarc=pass action=none header.from=ddn.com; dkim=pass
- header.d=ddn.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ddn.com; s=selector2;
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e4SZnKkm+iwVgdPTz12B0Scz1ynBjcUNByi4NiB9+qE=;
- b=p60g+dYRGohkwhqonJ3ekX9Tv2bemzfAtTpxmio+a1E8P5HlUyBo+KwaFLno4adAUu1pDMzK9mhbAJVrTL8O7HhD9UzlEOC8zsnOiy2xQoJ4IQw783uCz13aoRyHdOruxAAxc2c+F2bd+28nbLKoXJ80F19cRV2DyOKzp5uW1EY=
-Received: from BY5PR19MB3176.namprd19.prod.outlook.com (10.255.160.21) by
- BY5PR19MB3779.namprd19.prod.outlook.com (10.186.132.15) with Microsoft SMTP
+ bh=i85fFXAnBchhgznVyV+0eqB+CiVIJURFYrpMfiXnFhg=;
+ b=Mq3nb+BNGLv7qGYmA6R+g3/AsK5KnE1PePKJkU4Wvv2ZT4cPOI+FJTSq4swyaaLfqT8eTjTSsn+hyS5D5T7zyuTnT+1GrsaZeKYA07zp+jzd9GAYBIPFHNpNN9IN4espWU44HOZN+HEIk4FklFvSFg48RDW+EZ0EaeFwUbQMZNE=
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com (20.176.27.215) by
+ BN7PR02MB5204.namprd02.prod.outlook.com (20.176.176.150) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.14; Wed, 4 Sep 2019 17:38:54 +0000
-Received: from BY5PR19MB3176.namprd19.prod.outlook.com
- ([fe80::844f:102f:5181:c074]) by BY5PR19MB3176.namprd19.prod.outlook.com
- ([fe80::844f:102f:5181:c074%3]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
- 17:38:53 +0000
-From:   Matt Lupfer <mlupfer@ddn.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: virtio_scsi: unplug LUNs when events missed
-Thread-Topic: [PATCH] scsi: virtio_scsi: unplug LUNs when events missed
-Thread-Index: AQHVYnmgUCG1mM4ObEKGSGCIQ1xBzg==
-Date:   Wed, 4 Sep 2019 17:38:53 +0000
-Message-ID: <20190904173848.GD4571@tesla>
-References: <20190903170408.32286-1-mlupfer@ddn.com>
- <20190904051230-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190904051230-mutt-send-email-mst@kernel.org>
+ 15.20.2220.20; Wed, 4 Sep 2019 17:40:22 +0000
+Received: from BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::edff:8393:fe66:4a2d]) by BN7PR02MB5124.namprd02.prod.outlook.com
+ ([fe80::edff:8393:fe66:4a2d%5]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
+ 17:40:22 +0000
+From:   Kalyani Akula <kalyania@xilinx.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+CC:     "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pombredanne@nexb.com" <pombredanne@nexb.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Sarat Chand Savitala <saratcha@xilinx.com>
+Subject: RE: [PATCH V2 4/4] crypto: Add Xilinx AES driver
+Thread-Topic: [PATCH V2 4/4] crypto: Add Xilinx AES driver
+Thread-Index: AQHVYMzo8cSxnfDOFUGD/EQcibOxKqcX9ioAgAPJVCA=
+Date:   Wed, 4 Sep 2019 17:40:22 +0000
+Message-ID: <BN7PR02MB512445C31936CED70F02D15AAFB80@BN7PR02MB5124.namprd02.prod.outlook.com>
+References: <1567346098-27927-1-git-send-email-kalyani.akula@xilinx.com>
+ <1567346098-27927-5-git-send-email-kalyani.akula@xilinx.com>
+ <20190902065854.GA28750@Red>
+In-Reply-To: <20190902065854.GA28750@Red>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR13CA0040.namprd13.prod.outlook.com
- (2603:10b6:404:13e::26) To BY5PR19MB3176.namprd19.prod.outlook.com
- (2603:10b6:a03:184::21)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mlupfer@ddn.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [107.128.241.61]
+ smtp.mailfrom=kalyania@xilinx.com; 
+x-originating-ip: [183.83.134.59]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3ccc882e-40fa-49ef-a448-08d7315ec139
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BY5PR19MB3779;
-x-ms-traffictypediagnostic: BY5PR19MB3779:
-x-microsoft-antispam-prvs: <BY5PR19MB3779C0203D12908CBD9DE7A7AEB80@BY5PR19MB3779.namprd19.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-office365-filtering-correlation-id: 27d6cf81-d953-420c-0fa1-08d7315ef634
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BN7PR02MB5204;
+x-ms-traffictypediagnostic: BN7PR02MB5204:|BN7PR02MB5204:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN7PR02MB5204E2FC44CDAB5305C83A9EAFB80@BN7PR02MB5204.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0150F3F97D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(366004)(136003)(376002)(39850400004)(396003)(346002)(189003)(199004)(54906003)(316002)(86362001)(71200400001)(3846002)(6246003)(53936002)(66066001)(6436002)(6512007)(9686003)(6116002)(4326008)(71190400001)(2906002)(33656002)(25786009)(5660300002)(1076003)(305945005)(66946007)(66476007)(66556008)(64756008)(66446008)(256004)(8676002)(14454004)(81156014)(81166006)(102836004)(186003)(6486002)(11346002)(7736002)(6506007)(386003)(99286004)(6916009)(26005)(33716001)(476003)(52116002)(446003)(486006)(478600001)(76176011)(229853002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR19MB3779;H:BY5PR19MB3176.namprd19.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: ddn.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(396003)(136003)(346002)(376002)(13464003)(51914003)(189003)(199004)(256004)(486006)(14454004)(229853002)(11346002)(476003)(6436002)(52536014)(478600001)(6916009)(446003)(5660300002)(66066001)(81166006)(81156014)(33656002)(7696005)(76176011)(74316002)(53936002)(26005)(8676002)(186003)(8936002)(3846002)(6116002)(102836004)(6506007)(53546011)(86362001)(25786009)(4326008)(2906002)(54906003)(107886003)(316002)(66446008)(64756008)(66556008)(71200400001)(66946007)(6246003)(66476007)(55016002)(9686003)(305945005)(76116006)(7736002)(71190400001)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR02MB5204;H:BN7PR02MB5124.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KgnNTKc7uxlITf7XjJn00W5d2uCT+DRLTIcxH/MRcruxX4gDU6a7VXiSB+94MlVh2x1YZghUucnOY9EAy56mZVWNxHA0eVJ/+rkOK5CWWdOkIHA61z4SDl+XIBNr6Pc9jhN9MKIkyiZQjsjg+xpE3LOl4MOFqro2BPpn/sZ8MouBIzeua5jroSPJqB8CiDzKx26DI8xhPZg2IMxIDeEZhMNLmpGZ8N56zJn+fkudDKjAmdI4rTLdYx0nQPq+bnDcOLj0y1mGtb/WtNa+4SSC4nEVyabzDKkwJ0wlAAMTM8rVmvQsYdxns651Z/j3ggPMLmq7J6/32HfKrehVJBt0dGw9TkpM7JhJ2uNFAC0XqrYNkokhsL/S5IYl5QQzVgbCwnib+P4pQNVUnP81pV9Kq7yQrewQ2tRi3TEhfYVR59Q=
-x-ms-exchange-transport-forked: True
+x-microsoft-antispam-message-info: ueNiC358Wy8/t1+QbSNzcZ9fqEERGS5W+ppLzKx2eY1+vpwcEu5VDyidHjpgdAbJlnL2r9f8QTPq5glpNbAoOKeCydSndEfa8ZUiKYR4E9oLwsiVJ8391K8Lu/XYYjfmmWJlLT7/f2Q2U6z3f3dWbPqRmK2+uL3+23JWFv1+KofWtw9ZonKZXxjVW5KF8qYCxl0tgsmDcijRfYUsmaxdmHE4dxo7Zlk8zwzzhAQAcBcRjxOLZg2OZC71wOS81+jzLPmjR+EKvkQsqlW4D8iTz4xtIEgrz8R8XVN5azLimgF+h4K4tRVhVWecN37LIIJfyl/XVAy4ty3j6LXSD8dRRvppzgs3EYNoIjyk75wZjuShXdJ0JSF+pNUope7HixZub4vU9DO86+IbtCmFd3nplx3qx8Yex24KrufznW/G5Dg=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9E6EF2CD85D60640882F4949EBBE43CB@namprd19.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: ddn.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ccc882e-40fa-49ef-a448-08d7315ec139
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 17:38:53.8669
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27d6cf81-d953-420c-0fa1-08d7315ef634
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 17:40:22.1819
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 753b6e26-6fd3-43e6-8248-3f1735d59bb4
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y9gEUsjK3jKzRParRw274mw5ceHXydyv76bZjIEnhfec04QL205Swr6ees1Q1qPU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR19MB3779
+X-MS-Exchange-CrossTenant-userprincipalname: KtjHD5DYDtLKJep/E+FXgQMR/LzenhS8zCrwztOP4sL5RJK41lGvfXYfa1S92Oy1jE1BF/8T3eav/IMm09szow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR02MB5204
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 05:14:33AM -0400, Michael S. Tsirkin wrote:
-> On Tue, Sep 03, 2019 at 05:04:20PM +0000, Matt Lupfer wrote:
->> The event handler calls scsi_scan_host() when events are missed, which
->> will hotplug new LUNs.  However, this function won't remove any
->> unplugged LUNs.  The result is that hotunplug doesn't work properly when
->> the number of unplugged LUNs exceeds the event queue size (currently 8).
->>
->> Scan existing LUNs when events are missed to check if they are still
->> present.  If not, remove them.
->>
->> Signed-off-by: Matt Lupfer <mlupfer@ddn.com>
->> ---
->>  drivers/scsi/virtio_scsi.c | 31 +++++++++++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>
->> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
->> index 297e1076e571..18df77bf371b 100644
->> --- a/drivers/scsi/virtio_scsi.c
->> +++ b/drivers/scsi/virtio_scsi.c
->> @@ -324,6 +324,36 @@ static void virtscsi_handle_param_change(struct vir=
-tio_scsi *vscsi,
->>  	scsi_device_put(sdev);
->>  }
->>
->> +static void virtscsi_rescan_hotunplug(struct virtio_scsi *vscsi)
->> +{
->> +	struct scsi_device *sdev;
->> +	struct Scsi_Host *shost =3D virtio_scsi_host(vscsi->vdev);
->> +	unsigned char scsi_cmd[MAX_COMMAND_SIZE];
->> +	int result, inquiry_len, inq_result_len =3D 256;
->> +	char *inq_result =3D kmalloc(inq_result_len, GFP_KERNEL);
->> +
->> +	shost_for_each_device(sdev, shost) {
->> +		inquiry_len =3D sdev->inquiry_len ? sdev->inquiry_len : 36;
->> +
->> +		memset(scsi_cmd, 0, sizeof(scsi_cmd));
->> +		scsi_cmd[0] =3D INQUIRY;
->> +		scsi_cmd[4] =3D (unsigned char) inquiry_len;
->> +
->> +		memset(inq_result, 0, inq_result_len);
->> +
->> +		result =3D scsi_execute_req(sdev, scsi_cmd, DMA_FROM_DEVICE,
->> +					  inq_result, inquiry_len, NULL,
->> +					  2, 3, NULL);
->
->
-> Where do the weird 2 and 3 values come from?
->
-> Most callers seem to use SD_TIMEOUT, SD_MAX_RETRIES...
->
+Hi Corentin,
 
-The value of 3 retries is from scsi_probe_lun() in scsi_scan.c.
+Thanks for the review comments.
+Please find my response/queries inline.
 
-The value of 2 seconds is arbitrary, but equals SCSI_TIMEOUT.
-scsi_inq_timeout in scsi_scan.c is complicated for reasons unknown to
-me, but is quite a bit longer, more in line with SD_TIMEOUT.
+> -----Original Message-----
+> From: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Sent: Monday, September 2, 2019 12:29 PM
+> To: Kalyani Akula <kalyania@xilinx.com>
+> Cc: herbert@gondor.apana.org.au; kstewart@linuxfoundation.org;
+> gregkh@linuxfoundation.org; tglx@linutronix.de; pombredanne@nexb.com;
+> linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org;
+> netdev@vger.kernel.org; Kalyani Akula <kalyania@xilinx.com>
+> Subject: Re: [PATCH V2 4/4] crypto: Add Xilinx AES driver
+>=20
+> On Sun, Sep 01, 2019 at 07:24:58PM +0530, Kalyani Akula wrote:
+> > This patch adds AES driver support for the Xilinx ZynqMP SoC.
+> >
+> > Signed-off-by: Kalyani Akula <kalyani.akula@xilinx.com>
+> > ---
+>=20
+> Hello
+>=20
+> I have some comment below
+>=20
+> >  drivers/crypto/Kconfig          |  11 ++
+> >  drivers/crypto/Makefile         |   1 +
+> >  drivers/crypto/zynqmp-aes-gcm.c | 297
+> > ++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 309 insertions(+)
+> >  create mode 100644 drivers/crypto/zynqmp-aes-gcm.c
+> >
+> > diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig index
+> > 603413f..a0d058a 100644
+> > --- a/drivers/crypto/Kconfig
+> > +++ b/drivers/crypto/Kconfig
+> > @@ -677,6 +677,17 @@ config CRYPTO_DEV_ROCKCHIP
+> >  	  This driver interfaces with the hardware crypto accelerator.
+> >  	  Supporting cbc/ecb chainmode, and aes/des/des3_ede cipher mode.
+> >
+> > +config CRYPTO_DEV_ZYNQMP_AES
+> > +	tristate "Support for Xilinx ZynqMP AES hw accelerator"
+> > +	depends on ARCH_ZYNQMP || COMPILE_TEST
+> > +	select CRYPTO_AES
+> > +	select CRYPTO_SKCIPHER
+> > +	help
+> > +	  Xilinx ZynqMP has AES-GCM engine used for symmetric key
+> > +	  encryption and decryption. This driver interfaces with AES hw
+> > +	  accelerator. Select this if you want to use the ZynqMP module
+> > +	  for AES algorithms.
+> > +
+> >  config CRYPTO_DEV_MEDIATEK
+> >  	tristate "MediaTek's EIP97 Cryptographic Engine driver"
+> >  	depends on (ARM && ARCH_MEDIATEK) || COMPILE_TEST diff --git
+> > a/drivers/crypto/Makefile b/drivers/crypto/Makefile index
+> > afc4753..c99663a 100644
+> > --- a/drivers/crypto/Makefile
+> > +++ b/drivers/crypto/Makefile
+> > @@ -48,3 +48,4 @@ obj-$(CONFIG_CRYPTO_DEV_BCM_SPU) +=3D bcm/
+> >  obj-$(CONFIG_CRYPTO_DEV_SAFEXCEL) +=3D inside-secure/
+> >  obj-$(CONFIG_CRYPTO_DEV_ARTPEC6) +=3D axis/  obj-y +=3D hisilicon/
+> > +obj-$(CONFIG_CRYPTO_DEV_ZYNQMP_AES) +=3D zynqmp-aes-gcm.o
+> > diff --git a/drivers/crypto/zynqmp-aes-gcm.c
+> > b/drivers/crypto/zynqmp-aes-gcm.c new file mode 100644 index
+> > 0000000..d65f038
+> > --- /dev/null
+> > +++ b/drivers/crypto/zynqmp-aes-gcm.c
+> > @@ -0,0 +1,297 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Xilinx ZynqMP AES Driver.
+> > + * Copyright (c) 2019 Xilinx Inc.
+> > + */
+> > +
+> > +#include <crypto/aes.h>
+> > +#include <crypto/scatterwalk.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/scatterlist.h>
+> > +#include <linux/firmware/xlnx-zynqmp.h>
+> > +
+> > +#define ZYNQMP_AES_IV_SIZE			12
+> > +#define ZYNQMP_AES_GCM_SIZE			16
+> > +#define ZYNQMP_AES_KEY_SIZE			32
+> > +
+> > +#define ZYNQMP_AES_DECRYPT			0
+> > +#define ZYNQMP_AES_ENCRYPT			1
+> > +
+> > +#define ZYNQMP_AES_KUP_KEY			0
+> > +#define ZYNQMP_AES_DEVICE_KEY			1
+> > +#define ZYNQMP_AES_PUF_KEY			2
+> > +
+> > +#define ZYNQMP_AES_GCM_TAG_MISMATCH_ERR		0x01
+> > +#define ZYNQMP_AES_SIZE_ERR			0x06
+> > +#define ZYNQMP_AES_WRONG_KEY_SRC_ERR		0x13
+> > +#define ZYNQMP_AES_PUF_NOT_PROGRAMMED		0xE300
+> > +
+> > +#define ZYNQMP_AES_BLOCKSIZE			0x04
+> > +
+> > +static const struct zynqmp_eemi_ops *eemi_ops; struct zynqmp_aes_dev
+> > +*aes_dd;
+>=20
+> I still think that using a global variable for storing device driver data=
+ is bad.
 
-I will send a V2 patch with the SD_TIMEOUT and SD_MAX_RETRIES macros
-from drivers/scsi/sd.h.
+I think storing the list of dd's would solve up the issue with global varia=
+ble, but there is only one AES instance here.
+Please suggest
 
-Thanks for taking a look.
+>=20
+> > +
+> > +struct zynqmp_aes_dev {
+> > +	struct device *dev;
+> > +};
+> > +
+> > +struct zynqmp_aes_op {
+> > +	struct zynqmp_aes_dev *dd;
+> > +	void *src;
+> > +	void *dst;
+> > +	int len;
+> > +	u8 key[ZYNQMP_AES_KEY_SIZE];
+> > +	u8 *iv;
+> > +	u32 keylen;
+> > +	u32 keytype;
+> > +};
+> > +
+> > +struct zynqmp_aes_data {
+> > +	u64 src;
+> > +	u64 iv;
+> > +	u64 key;
+> > +	u64 dst;
+> > +	u64 size;
+> > +	u64 optype;
+> > +	u64 keysrc;
+> > +};
+> > +
+> > +static int zynqmp_setkey_blk(struct crypto_tfm *tfm, const u8 *key,
+> > +			     unsigned int len)
+> > +{
+> > +	struct zynqmp_aes_op *op =3D crypto_tfm_ctx(tfm);
+> > +
+> > +	if (((len !=3D 1) && (len !=3D  ZYNQMP_AES_KEY_SIZE)) || (!key))
+>=20
+> typo, two space
 
-Matt
+Will fix in the next version
+
+>=20
+> > +		return -EINVAL;
+> > +
+> > +	if (len =3D=3D 1) {
+> > +		op->keytype =3D *key;
+> > +
+> > +		if ((op->keytype < ZYNQMP_AES_KUP_KEY) ||
+> > +			(op->keytype > ZYNQMP_AES_PUF_KEY))
+> > +			return -EINVAL;
+> > +
+> > +	} else if (len =3D=3D ZYNQMP_AES_KEY_SIZE) {
+> > +		op->keytype =3D ZYNQMP_AES_KUP_KEY;
+> > +		op->keylen =3D len;
+> > +		memcpy(op->key, key, len);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+>=20
+> It seems your driver does not support AES keysize of 128/196, you need to
+> fallback in that case.
+
+[Kalyani] In case of 128/196 keysize, returning the error would suffice ?
+Or still algorithm need to work ?
+If error is enough, it is taken care by this condition=20
+if (((len !=3D 1) && (len !=3D  ZYNQMP_AES_KEY_SIZE)) || (!key))
+
+
+> You need to comment the keylen=3D1 usecase and use a define for this valu=
+e.
+>=20
+
+Will fix in next version
+
+> > +
+> > +static int zynqmp_aes_xcrypt(struct blkcipher_desc *desc,
+> > +			     struct scatterlist *dst,
+> > +			     struct scatterlist *src,
+> > +			     unsigned int nbytes,
+> > +			     unsigned int flags)
+> > +{
+> > +	struct zynqmp_aes_op *op =3D crypto_blkcipher_ctx(desc->tfm);
+> > +	struct zynqmp_aes_dev *dd =3D aes_dd;
+> > +	int err, ret, copy_bytes, src_data =3D 0, dst_data =3D 0;
+> > +	dma_addr_t dma_addr, dma_addr_buf;
+> > +	struct zynqmp_aes_data *abuf;
+> > +	struct blkcipher_walk walk;
+> > +	unsigned int data_size;
+> > +	size_t dma_size;
+> > +	char *kbuf;
+> > +
+> > +	if (!eemi_ops->aes)
+> > +		return -ENOTSUPP;
+> > +
+> > +	if (op->keytype =3D=3D ZYNQMP_AES_KUP_KEY)
+> > +		dma_size =3D nbytes + ZYNQMP_AES_KEY_SIZE
+> > +			+ ZYNQMP_AES_IV_SIZE;
+> > +	else
+> > +		dma_size =3D nbytes + ZYNQMP_AES_IV_SIZE;
+> > +
+> > +	kbuf =3D dma_alloc_coherent(dd->dev, dma_size, &dma_addr,
+> GFP_KERNEL);
+> > +	if (!kbuf)
+> > +		return -ENOMEM;
+> > +
+> > +	abuf =3D dma_alloc_coherent(dd->dev, sizeof(struct zynqmp_aes_data),
+> > +				  &dma_addr_buf, GFP_KERNEL);
+> > +	if (!abuf) {
+> > +		dma_free_coherent(dd->dev, dma_size, kbuf, dma_addr);
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	data_size =3D nbytes;
+> > +	blkcipher_walk_init(&walk, dst, src, data_size);
+> > +	err =3D blkcipher_walk_virt(desc, &walk);
+> > +	op->iv =3D walk.iv;
+> > +
+> > +	while ((nbytes =3D walk.nbytes)) {
+> > +		op->src =3D walk.src.virt.addr;
+> > +		memcpy(kbuf + src_data, op->src, nbytes);
+> > +		src_data =3D src_data + nbytes;
+> > +		nbytes &=3D (ZYNQMP_AES_BLOCKSIZE - 1);
+> > +		err =3D blkcipher_walk_done(desc, &walk, nbytes);
+> > +	}
+> > +	memcpy(kbuf + data_size, op->iv, ZYNQMP_AES_IV_SIZE);
+> > +	abuf->src =3D dma_addr;
+> > +	abuf->dst =3D dma_addr;
+> > +	abuf->iv =3D abuf->src + data_size;
+> > +	abuf->size =3D data_size - ZYNQMP_AES_GCM_SIZE;
+> > +	abuf->optype =3D flags;
+> > +	abuf->keysrc =3D op->keytype;
+> > +
+> > +	if (op->keytype =3D=3D ZYNQMP_AES_KUP_KEY) {
+> > +		memcpy(kbuf + data_size + ZYNQMP_AES_IV_SIZE,
+> > +		       op->key, ZYNQMP_AES_KEY_SIZE);
+> > +
+> > +		abuf->key =3D abuf->src + data_size + ZYNQMP_AES_IV_SIZE;
+> > +	} else {
+> > +		abuf->key =3D 0;
+> > +	}
+> > +	eemi_ops->aes(dma_addr_buf, &ret);
+> > +
+> > +	if (ret !=3D 0) {
+> > +		switch (ret) {
+> > +		case ZYNQMP_AES_GCM_TAG_MISMATCH_ERR:
+> > +			dev_err(dd->dev, "ERROR: Gcm Tag mismatch\n\r");
+> > +			break;
+> > +		case ZYNQMP_AES_SIZE_ERR:
+> > +			dev_err(dd->dev, "ERROR : Non word aligned
+> data\n\r");
+> > +			break;
+> > +		case ZYNQMP_AES_WRONG_KEY_SRC_ERR:
+> > +			dev_err(dd->dev, "ERROR: Wrong KeySrc, enable secure
+> mode\n\r");
+> > +			break;
+> > +		case ZYNQMP_AES_PUF_NOT_PROGRAMMED:
+> > +			dev_err(dd->dev, "ERROR: PUF is not registered\r\n");
+> > +			break;
+> > +		default:
+> > +			dev_err(dd->dev, "ERROR: Invalid");
+> > +			break;
+> > +		}
+> > +		goto END;
+> > +	}
+> > +	if (flags)
+> > +		copy_bytes =3D data_size;
+> > +	else
+> > +		copy_bytes =3D data_size - ZYNQMP_AES_GCM_SIZE;
+> > +
+> > +	blkcipher_walk_init(&walk, dst, src, copy_bytes);
+> > +	err =3D blkcipher_walk_virt(desc, &walk);
+> > +
+> > +	while ((nbytes =3D walk.nbytes)) {
+> > +		memcpy(walk.dst.virt.addr, kbuf + dst_data, nbytes);
+> > +		dst_data =3D dst_data + nbytes;
+> > +		nbytes &=3D (ZYNQMP_AES_BLOCKSIZE - 1);
+> > +		err =3D blkcipher_walk_done(desc, &walk, nbytes);
+> > +	}
+> > +END:
+> > +	memset(kbuf, 0, dma_size);
+> > +	memset(abuf, 0, sizeof(struct zynqmp_aes_data));
+> > +	dma_free_coherent(dd->dev, dma_size, kbuf, dma_addr);
+> > +	dma_free_coherent(dd->dev, sizeof(struct zynqmp_aes_data),
+> > +			  abuf, dma_addr_buf);
+> > +	return err;
+> > +}
+> > +
+> > +static int zynqmp_aes_decrypt(struct blkcipher_desc *desc,
+> > +			      struct scatterlist *dst,
+> > +			      struct scatterlist *src,
+> > +			      unsigned int nbytes)
+> > +{
+> > +	return zynqmp_aes_xcrypt(desc, dst, src, nbytes,
+> > +ZYNQMP_AES_DECRYPT); }
+> > +
+> > +static int zynqmp_aes_encrypt(struct blkcipher_desc *desc,
+> > +			      struct scatterlist *dst,
+> > +			      struct scatterlist *src,
+> > +			      unsigned int nbytes)
+> > +{
+> > +	return zynqmp_aes_xcrypt(desc, dst, src, nbytes,
+> > +ZYNQMP_AES_ENCRYPT); }
+> > +
+> > +static struct crypto_alg zynqmp_alg =3D {
+> > +	.cra_name		=3D	"xilinx-zynqmp-aes",
+> > +	.cra_driver_name	=3D	"zynqmp-aes-gcm",
+> > +	.cra_priority		=3D	400,
+> > +	.cra_flags		=3D	CRYPTO_ALG_TYPE_BLKCIPHER |
+> > +					CRYPTO_ALG_KERN_DRIVER_ONLY,
+> > +	.cra_blocksize		=3D	ZYNQMP_AES_BLOCKSIZE,
+> > +	.cra_ctxsize		=3D	sizeof(struct zynqmp_aes_op),
+> > +	.cra_alignmask		=3D	15,
+> > +	.cra_type		=3D	&crypto_blkcipher_type,
+> > +	.cra_module		=3D	THIS_MODULE,
+> > +	.cra_u			=3D	{
+> > +	.blkcipher	=3D	{
+> > +			.min_keysize	=3D	0,
+>=20
+> Are you sure to accept this a keysize of 0 ?
+>=20
+
+Will correct in next version=20
+
+Regards
+kalyani
+> Regards
