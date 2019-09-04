@@ -2,53 +2,54 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79165C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7495C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E07123401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C126F22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620883;
-	bh=6dayg8j17W750WERnfhipO/wQb9UhdVbw7Tjj3ZM8X4=;
+	s=default; t=1567620886;
+	bh=2yoVyZHUw19o1kpTAXlMkoYYOYXEkWT1PtvYSd40/5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2LCSV4AGcTJAGBU7TKq9tEAUV+GEcTOag1hG3WMT2O2VCW1CMD7FT6t0grwaD/Qli
-	 LyAhOeVMd/2lj3TDCqR8tp9Y2XYHEkrI9eoKb2zSj/PcTT5hEjhTJh8ynQ1U9z2o4r
-	 l2aO6G1D3uixY1mByCQK2FCfr+nAjZoCEFYJDuZA=
+	b=mVb2cF9hsxwa0R0y0C6JOnue+GDhJkSX4xwzTs09oWM8c/JfvUHXZrTUnljvCtVoS
+	 1PiJGRcfz2h7YKFj96vb4Gymv0vB8dqDvArcRIRpjD+RQHCC1o/mFKlLm2qfeM3ikA
+	 Nv410k6XhEG0qI4s0aGHZXwIZbnfPGDOL2Cp8nUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390855AbfIDSOm (ORCPT
+        id S2390319AbfIDSOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59978 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390835AbfIDSOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:39 -0400
+        id S2390568AbfIDSOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E0922087E;
-        Wed,  4 Sep 2019 18:14:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F38208E4;
+        Wed,  4 Sep 2019 18:14:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620878;
-        bh=6dayg8j17W750WERnfhipO/wQb9UhdVbw7Tjj3ZM8X4=;
+        s=default; t=1567620881;
+        bh=2yoVyZHUw19o1kpTAXlMkoYYOYXEkWT1PtvYSd40/5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TS2b0PkjJ9s8FStdEoCwa2L4uaEvj/RJt4dL0A1wBBh8nAPDx5OCzEg+dd6tMPTf8
-         o5ij3EZ3GRbooQSxnBFoB1oeVjRQx8nwfm+MYAQI4Bkvh0i4FCtuf0ZA5afksaEp8W
-         dkFgjifRDi0rvaB1bcRp6Rkhqc9Ho1idgCQm+zRI=
+        b=RC1Vp6dnuiCEE5kf4Juga0VnWi4NS2AFiA07slEp1C4MBDJVTDNmkthFJFP876gxi
+         cSArSQOOpHZa8hPp1xDUPqeDpQU6GCdTx5AAqX2ILJmWxVwSOqEorSdMiWRIE0OVAP
+         Dtq3S53m4ZBFy7ZQRajIxZ2H5avrz1NaKiny7O9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 5.2 102/143] fsi: scom: Dont abort operations for minor errors
-Date:   Wed,  4 Sep 2019 19:54:05 +0200
-Message-Id: <20190904175318.312486687@linuxfoundation.org>
+        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 129/143] mmc: sdhci-sprd: clear the UHS-I modes read from registers
+Date:   Wed,  4 Sep 2019 19:54:32 +0200
+Message-Id: <20190904175319.453014946@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,53 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+[ Upstream commit 2f765c175e1d1acae911f889e71e5933c6488929 ]
 
-commit 8919dfcb31161fae7d607bbef5247e5e82fd6457 upstream.
+sprd's sd host controller supports SDR50/SDR104/DDR50 though, the UHS-I
+mode used by the specific card can be selected via devicetree only.
 
-The scom driver currently fails out of operations if certain system
-errors are flagged in the status register; system checkstop, special
-attention, or recoverable error. These errors won't impact the ability
-of the scom engine to perform operations, so the driver should continue
-under these conditions.
-Also, don't do a PIB reset for these conditions, since it won't help.
-
-Fixes: 6b293258cded ("fsi: scom: Major overhaul")
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Link: https://lore.kernel.org/r/20190827041249.13381-1-jk@ozlabs.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
+Tested-by: Baolin Wang <baolin.wang@linaro.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fsi/fsi-scom.c |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/mmc/host/sdhci-sprd.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/drivers/fsi/fsi-scom.c
-+++ b/drivers/fsi/fsi-scom.c
-@@ -38,8 +38,7 @@
- #define SCOM_STATUS_PIB_RESP_MASK	0x00007000
- #define SCOM_STATUS_PIB_RESP_SHIFT	12
+diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+index dee30aa23cf72..9d0f58a665276 100644
+--- a/drivers/mmc/host/sdhci-sprd.c
++++ b/drivers/mmc/host/sdhci-sprd.c
+@@ -320,7 +320,8 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
  
--#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_ERR_SUMMARY | \
--					 SCOM_STATUS_PROTECTION | \
-+#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_PROTECTION | \
- 					 SCOM_STATUS_PARITY |	  \
- 					 SCOM_STATUS_PIB_ABORT | \
- 					 SCOM_STATUS_PIB_RESP_MASK)
-@@ -251,11 +250,6 @@ static int handle_fsi2pib_status(struct
- 	/* Return -EBUSY on PIB abort to force a retry */
- 	if (status & SCOM_STATUS_PIB_ABORT)
- 		return -EBUSY;
--	if (status & SCOM_STATUS_ERR_SUMMARY) {
--		fsi_device_write(scom->fsi_dev, SCOM_FSI2PIB_RESET_REG, &dummy,
--				 sizeof(uint32_t));
--		return -EIO;
--	}
- 	return 0;
- }
+ static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
+ 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
+-		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
++		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
++		  SDHCI_QUIRK_MISSING_CAPS,
+ 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
+ 		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
+ 		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+@@ -389,6 +390,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
  
+ 	sdhci_enable_v4_mode(host);
+ 
++	/*
++	 * Supply the existing CAPS, but clear the UHS-I modes. This
++	 * will allow these modes to be specified only by device
++	 * tree properties through mmc_of_parse().
++	 */
++	host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
++	host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
++	host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_SDR104 |
++			 SDHCI_SUPPORT_DDR50);
++
+ 	ret = sdhci_setup_host(host);
+ 	if (ret)
+ 		goto pm_runtime_disable;
+-- 
+2.20.1
+
 
 
