@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0731C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F44CC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07132070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B402070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613201;
-	bh=Gnb060WgRtLXs6JnHukAVdDIzLPHCh1bvcZjwA+WdiE=;
+	s=default; t=1567613214;
+	bh=mxeu4uLj13ZdTwyKcHula4thozA5vnCkalosJXisIRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iZ32KhQKLM62/eug1pZBQS+BMD3dSUwm7qJoCRmcYsiiAub1NtWLHlS9uTkPqgTo8
-	 SHL452tJ41knhsxEmnygGSuEJIJV5cv74gIdUyoafQ/T5Biz+4iuEeuQWTnOI1O/gT
-	 ttU5SesqONpucItTmk1C4w0oHWtWOq9egs5XusQo=
+	b=mdtZl5s1LX+ZrDGzt1BGI1eC5rfG7kcyt6lCCmeEtscIKJZ7dvSJ/6ebhGQhsq4Dj
+	 qLYlomdsEkEMhEXbVr2yw5ObSTdUCocADT5dMOxF7JlPahol/yS52vTrVqcvI/fNcm
+	 0wvOWckDKNj29IJGwUNK+N/jTFR7LLVai5FwVk04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733239AbfIDQCW (ORCPT
+        id S1732519AbfIDQGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38166 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731990AbfIDQCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:17 -0400
+        id S1731726AbfIDQCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6784822CF5;
-        Wed,  4 Sep 2019 16:02:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C26122DBF;
+        Wed,  4 Sep 2019 16:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612937;
-        bh=Gnb060WgRtLXs6JnHukAVdDIzLPHCh1bvcZjwA+WdiE=;
+        s=default; t=1567612934;
+        bh=mxeu4uLj13ZdTwyKcHula4thozA5vnCkalosJXisIRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KEKxKHfF9KlNYpruOaaAsSWD0coQo67VpHW3Z7tGk1AXsRMjs9H6UqoWqpXOMmZlt
-         aHtBGA0esfXpW4AqVy24thsB1ylIApmnXuQsWSdLUGfiaHLqNm+yuZjG8OIOYHy3TO
-         9JEhXXRsJMsQjUHuBgObkDb2DRjVpOw8LdRjkd7w=
+        b=Ha6S5afEjT0N0FVJTdLU7kpyRkSctTP2P4ei+I/SnGXCqGsFfwQWND2Et/VOVPwoK
+         6GEIL61LWYnRE+WWrvobXwAI2uS26vA+MhjL6Fp0CJci45JgRQOY1Geh/tnwIAsFPT
+         4gHIyGZGLR7Ji8w96TC02D0pMTp47Oi+9TQ0+yOo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+Cc:     Ben Hutchings <ben@decadent.org.uk>,
         Len Brown <len.brown@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 35/36] tools/power turbostat: fix buffer overrun
-Date:   Wed,  4 Sep 2019 12:01:21 -0400
-Message-Id: <20190904160122.4179-35-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 33/36] tools/power x86_energy_perf_policy: Fix "uninitialized variable" warnings at -O2
+Date:   Wed,  4 Sep 2019 12:01:19 -0400
+Message-Id: <20190904160122.4179-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -59,35 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+From: Ben Hutchings <ben@decadent.org.uk>
 
-[ Upstream commit eeb71c950bc6eee460f2070643ce137e067b234c ]
+[ Upstream commit adb8049097a9ec4acd09fbd3aa8636199a78df8a ]
 
-turbostat could be terminated by general protection fault on some latest
-hardwares which (for example) support 9 levels of C-states and show 18
-"tADDED" lines. That bloats the total output and finally causes buffer
-overrun.  So let's extend the buffer to avoid this.
+x86_energy_perf_policy first uses __get_cpuid() to check the maximum
+CPUID level and exits if it is too low.  It then assumes that later
+calls will succeed (which I think is architecturally guaranteed).  It
+also assumes that CPUID works at all (which is not guaranteed on
+x86_32).
 
-Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+If optimisations are enabled, gcc warns about potentially
+uninitialized variables.  Fix this by adding an exit-on-error after
+every call to __get_cpuid() instead of just checking the maximum
+level.
+
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/turbostat/turbostat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../x86_energy_perf_policy.c                  | 26 +++++++++++--------
+ 1 file changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 3e5f8b3db2720..19e345cf8193e 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -4488,7 +4488,7 @@ int initialize_counters(int cpu_id)
- 
- void allocate_output_buffer()
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index 65bbe627a425f..bbef8bcf44d6d 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -1260,6 +1260,15 @@ void probe_dev_msr(void)
+ 		if (system("/sbin/modprobe msr > /dev/null 2>&1"))
+ 			err(-5, "no /dev/cpu/0/msr, Try \"# modprobe msr\" ");
+ }
++
++static void get_cpuid_or_exit(unsigned int leaf,
++			     unsigned int *eax, unsigned int *ebx,
++			     unsigned int *ecx, unsigned int *edx)
++{
++	if (!__get_cpuid(leaf, eax, ebx, ecx, edx))
++		errx(1, "Processor not supported\n");
++}
++
+ /*
+  * early_cpuid()
+  * initialize turbo_is_enabled, has_hwp, has_epb
+@@ -1267,15 +1276,10 @@ void probe_dev_msr(void)
+  */
+ void early_cpuid(void)
  {
--	output_buffer = calloc(1, (1 + topo.num_cpus) * 1024);
-+	output_buffer = calloc(1, (1 + topo.num_cpus) * 2048);
- 	outp = output_buffer;
- 	if (outp == NULL)
- 		err(-1, "calloc output buffer");
+-	unsigned int eax, ebx, ecx, edx, max_level;
++	unsigned int eax, ebx, ecx, edx;
+ 	unsigned int fms, family, model;
+ 
+-	__get_cpuid(0, &max_level, &ebx, &ecx, &edx);
+-
+-	if (max_level < 6)
+-		errx(1, "Processor not supported\n");
+-
+-	__get_cpuid(1, &fms, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(1, &fms, &ebx, &ecx, &edx);
+ 	family = (fms >> 8) & 0xf;
+ 	model = (fms >> 4) & 0xf;
+ 	if (family == 6 || family == 0xf)
+@@ -1289,7 +1293,7 @@ void early_cpuid(void)
+ 		bdx_highest_ratio = msr & 0xFF;
+ 	}
+ 
+-	__get_cpuid(0x6, &eax, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(0x6, &eax, &ebx, &ecx, &edx);
+ 	turbo_is_enabled = (eax >> 1) & 1;
+ 	has_hwp = (eax >> 7) & 1;
+ 	has_epb = (ecx >> 3) & 1;
+@@ -1307,7 +1311,7 @@ void parse_cpuid(void)
+ 
+ 	eax = ebx = ecx = edx = 0;
+ 
+-	__get_cpuid(0, &max_level, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(0, &max_level, &ebx, &ecx, &edx);
+ 
+ 	if (ebx == 0x756e6547 && edx == 0x49656e69 && ecx == 0x6c65746e)
+ 		genuine_intel = 1;
+@@ -1316,7 +1320,7 @@ void parse_cpuid(void)
+ 		fprintf(stderr, "CPUID(0): %.4s%.4s%.4s ",
+ 			(char *)&ebx, (char *)&edx, (char *)&ecx);
+ 
+-	__get_cpuid(1, &fms, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(1, &fms, &ebx, &ecx, &edx);
+ 	family = (fms >> 8) & 0xf;
+ 	model = (fms >> 4) & 0xf;
+ 	stepping = fms & 0xf;
+@@ -1341,7 +1345,7 @@ void parse_cpuid(void)
+ 		errx(1, "CPUID: no MSR");
+ 
+ 
+-	__get_cpuid(0x6, &eax, &ebx, &ecx, &edx);
++	get_cpuid_or_exit(0x6, &eax, &ebx, &ecx, &edx);
+ 	/* turbo_is_enabled already set */
+ 	/* has_hwp already set */
+ 	has_hwp_notify = eax & (1 << 8);
 -- 
 2.20.1
 
