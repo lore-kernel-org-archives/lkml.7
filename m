@@ -6,82 +6,77 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CD9C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E698C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACE9922CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BB2E22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfIDJBS (ORCPT
+        id S1729379AbfIDJBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:01:18 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33978 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbfIDJBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:01:18 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 93A33200096;
-        Wed,  4 Sep 2019 11:01:16 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C5B312003B1;
-        Wed,  4 Sep 2019 11:01:12 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 28776402F0;
-        Wed,  4 Sep 2019 17:01:08 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: arm64: ls1028a-qds: correct bus of rtc
-Date:   Wed,  4 Sep 2019 16:51:04 +0800
-Message-Id: <20190904085104.44709-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 4 Sep 2019 05:01:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35298 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726045AbfIDJBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:01:49 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E6BE3B719FA4BBEAA3B2;
+        Wed,  4 Sep 2019 17:01:47 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 17:01:37 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <yoshihiro.shimoda.uh@renesas.com>,
+        <horms+renesas@verge.net.au>, <felipe.balbi@linux.intel.com>,
+        <chris.brandt@renesas.com>, <jarkko.nikula@linux.intel.com>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] usb: renesas_usbhs: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 16:50:45 +0800
+Message-ID: <20190904085045.24204-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The rtc is on i2c2 bus(hardware), not on i2c1 channel 3,
-so correct it
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/usb/renesas_usbhs/common.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index de6ef39f3118..6c0540ad9c59 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -133,11 +133,6 @@
- 				vcc-supply = <&sb_3v3>;
- 			};
+diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+index 4c3de77..18d5d1a 100644
+--- a/drivers/usb/renesas_usbhs/common.c
++++ b/drivers/usb/renesas_usbhs/common.c
+@@ -590,7 +590,7 @@ static int usbhs_probe(struct platform_device *pdev)
+ {
+ 	const struct renesas_usbhs_platform_info *info;
+ 	struct usbhs_priv *priv;
+-	struct resource *res, *irq_res;
++	struct resource *irq_res;
+ 	struct device *dev = &pdev->dev;
+ 	int ret, gpio;
+ 	u32 tmp;
+@@ -619,8 +619,7 @@ static int usbhs_probe(struct platform_device *pdev)
+ 	if (!priv)
+ 		return -ENOMEM;
  
--			rtc@51 {
--				compatible = "nxp,pcf2129";
--				reg = <0x51>;
--			};
--
- 			eeprom@56 {
- 				compatible = "atmel,24c512";
- 				reg = <0x56>;
-@@ -166,6 +161,14 @@
- 	};
- };
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
  
-+&i2c1 {
-+	status = "okay";
-+	rtc@51 {
-+		compatible = "nxp,pcf2129";
-+		reg = <0x51>;
-+	};
-+};
-+
- &sai1 {
- 	status = "okay";
- };
 -- 
-2.17.1
+2.7.4
+
 
