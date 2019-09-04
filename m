@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 080AEC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91158C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F4322CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D952339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620330;
-	bh=o8v/59dMpD3hbwbXaI/fTlLZKYDcekca9GCmq2L7z8Y=;
+	s=default; t=1567620335;
+	bh=0Fw/6tbnF5dPuAkSNbGV3kjnBEsH029C3qwRVjq48pA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Wx3fimS4DREFZYlNkXdkqwpvYHi9dLRDGo1+og4xW9AwSBlv2X3bRzxUSnEFjube
-	 gG/5JSD45/P26H+ij5MyeEw2xkynOAfbxwoKCTr+/NEDIpJ/SrCQoW7Cb5P3Yf+h9e
-	 Vjw4LBpRXXNp/pfo88xccBNWth2UlufCNPj8RT0s=
+	b=2qevRFM4gM2RsgCS3BY8NFh/9/SocBFdigteIMk4/HCAA89u0l+OtTzvaNh35SU9J
+	 1ps1Akgri5WBk2PQQwtTkBvZWEKDbghO0RZeoIRKPw9JCojaO54MOklf3yFQzXsCjk
+	 YtQv7/ClDuiYrJdanbgk/Z+lLYb/FcteDWilV9To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388548AbfIDSFa (ORCPT
+        id S2389269AbfIDSFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:05:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46900 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388895AbfIDSF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:05:28 -0400
+        id S2387532AbfIDSFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:05:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 076A5206BA;
-        Wed,  4 Sep 2019 18:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 401DE2339E;
+        Wed,  4 Sep 2019 18:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620326;
-        bh=o8v/59dMpD3hbwbXaI/fTlLZKYDcekca9GCmq2L7z8Y=;
+        s=default; t=1567620331;
+        bh=0Fw/6tbnF5dPuAkSNbGV3kjnBEsH029C3qwRVjq48pA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oUkp3gRmOdC9yOLhHu2k01J1M2hrGyLu4JdYPZvoPdPmOtxpMJKfBlYNdW8TiEbIE
-         If6LEsCG+OF5u9o3pq0n38eBEKdhaDzUEx/VBwVvhFsIFcedHs2JSmSHGUHzukeL9F
-         QL3zly5BLVr45tRfHHkQrXwOlba3Lu5O168k1T7Y=
+        b=c+4k6kKFgdgu2izGj1QiJaXdLvClq4WFDvQqzo2Pi8vfc4HP49g2Ayj4c4ObNLy8a
+         SaJrhGD9LBWdhI5+GuXtwAwjtA+g34pQlRVv7aNNf2NV4sxtB+fkClDpzQ6guVFaTd
+         86yyl3KMLzesy1s6F+wiZ6E9ZwDRQd5cO2NgOY+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/93] usb: gadget: mass_storage: Fix races between fsg_disable and fsg_set_alt
-Date:   Wed,  4 Sep 2019 19:53:19 +0200
-Message-Id: <20190904175304.746167206@linuxfoundation.org>
+Subject: [PATCH 4.19 19/93] arm64: cpufeature: Dont treat granule sizes as strict
+Date:   Wed,  4 Sep 2019 19:53:21 +0200
+Message-Id: <20190904175305.025246804@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -62,165 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4a56a478a525d6427be90753451c40e1327caa1a ]
+[ Upstream commit 5717fe5ab38f9ccb32718bcb03bea68409c9cce4 ]
 
-If fsg_disable() and fsg_set_alt() are called too closely to each
-other (for example due to a quick reset/reconnect), what can happen
-is that fsg_set_alt sets common->new_fsg from an interrupt while
-handle_exception is trying to process the config change caused by
-fsg_disable():
+If a CPU doesn't support the page size for which the kernel is
+configured, then we will complain and refuse to bring it online. For
+secondary CPUs (and the boot CPU on a system booting with EFI), we will
+also print an error identifying the mismatch.
 
-	fsg_disable()
-	...
-	handle_exception()
-		sets state back to FSG_STATE_NORMAL
-		hasn't yet called do_set_interface()
-		or is inside it.
+Consequently, the only time that the cpufeature code can detect a
+granule size mismatch is for a granule other than the one that is
+currently being used. Although we would rather such systems didn't
+exist, we've unfortunately lost that battle and Kevin reports that
+on his amlogic S922X (odroid-n2 board) we end up warning and taining
+with defconfig because 16k pages are not supported by all of the CPUs.
 
- ---> interrupt
-	fsg_set_alt
-		sets common->new_fsg
-		queues a new FSG_STATE_CONFIG_CHANGE
- <---
+In such a situation, we don't actually care about the feature mismatch,
+particularly now that KVM only exposes the sanitised view of the CPU
+registers (commit 93390c0a1b20 - "arm64: KVM: Hide unsupported AArch64
+CPU features from guests"). Treat the granule fields as non-strict and
+let Kevin run without a tainted kernel.
 
-Now, the first handle_exception can "see" the updated
-new_fsg, treats it as if it was a fsg_set_alt() response,
-call usb_composite_setup_continue() etc...
-
-But then, the thread sees the second FSG_STATE_CONFIG_CHANGE,
-and goes back down the same path, wipes and reattaches a now
-active fsg, and .. calls usb_composite_setup_continue() which
-at this point is wrong.
-
-Not only we get a backtrace, but I suspect the second set_interface
-wrecks some state causing the host to get upset in my case.
-
-This fixes it by replacing "new_fsg" by a "state argument" (same
-principle) which is set in the same lock section as the state
-update, and retrieved similarly.
-
-That way, there is never any discrepancy between the dequeued
-state and the observed value of it. We keep the ability to have
-the latest reconfig operation take precedence, but we guarantee
-that once "dequeued" the argument (new_fsg) will not be clobbered
-by any new event.
-
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Reported-by: Kevin Hilman <khilman@baylibre.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+[catalin.marinas@arm.com: changelog updated with KVM sanitised regs commit]
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_mass_storage.c | 28 +++++++++++++-------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
-index 1074cb82ec172..0b7b4d09785b6 100644
---- a/drivers/usb/gadget/function/f_mass_storage.c
-+++ b/drivers/usb/gadget/function/f_mass_storage.c
-@@ -261,7 +261,7 @@ struct fsg_common;
- struct fsg_common {
- 	struct usb_gadget	*gadget;
- 	struct usb_composite_dev *cdev;
--	struct fsg_dev		*fsg, *new_fsg;
-+	struct fsg_dev		*fsg;
- 	wait_queue_head_t	io_wait;
- 	wait_queue_head_t	fsg_wait;
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index bce06083685dc..94babc3d0ec2c 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -165,9 +165,17 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr0[] = {
+ };
  
-@@ -290,6 +290,7 @@ struct fsg_common {
- 	unsigned int		bulk_out_maxpacket;
- 	enum fsg_state		state;		/* For exception handling */
- 	unsigned int		exception_req_tag;
-+	void			*exception_arg;
- 
- 	enum data_direction	data_dir;
- 	u32			data_size;
-@@ -391,7 +392,8 @@ static int fsg_set_halt(struct fsg_dev *fsg, struct usb_ep *ep)
- 
- /* These routines may be called in process context or in_irq */
- 
--static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
-+static void __raise_exception(struct fsg_common *common, enum fsg_state new_state,
-+			      void *arg)
- {
- 	unsigned long		flags;
- 
-@@ -404,6 +406,7 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
- 	if (common->state <= new_state) {
- 		common->exception_req_tag = common->ep0_req_tag;
- 		common->state = new_state;
-+		common->exception_arg = arg;
- 		if (common->thread_task)
- 			send_sig_info(SIGUSR1, SEND_SIG_FORCED,
- 				      common->thread_task);
-@@ -411,6 +414,10 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
- 	spin_unlock_irqrestore(&common->lock, flags);
- }
- 
-+static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
-+{
-+	__raise_exception(common, new_state, NULL);
-+}
- 
- /*-------------------------------------------------------------------------*/
- 
-@@ -2285,16 +2292,16 @@ reset:
- static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
- {
- 	struct fsg_dev *fsg = fsg_from_func(f);
--	fsg->common->new_fsg = fsg;
--	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
+ static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
+-	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
+-	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
+-	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
++	/*
++	 * We already refuse to boot CPUs that don't support our configured
++	 * page size, so we can only detect mismatches for a page size other
++	 * than the one we're currently using. Unfortunately, SoCs like this
++	 * exist in the wild so, even though we don't like it, we'll have to go
++	 * along with it and treat them as non-strict.
++	 */
++	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
++	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
 +
-+	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, fsg);
- 	return USB_GADGET_DELAYED_STATUS;
- }
- 
- static void fsg_disable(struct usb_function *f)
- {
- 	struct fsg_dev *fsg = fsg_from_func(f);
--	fsg->common->new_fsg = NULL;
--	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+
-+	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
- }
- 
- 
-@@ -2307,6 +2314,7 @@ static void handle_exception(struct fsg_common *common)
- 	enum fsg_state		old_state;
- 	struct fsg_lun		*curlun;
- 	unsigned int		exception_req_tag;
-+	struct fsg_dev		*new_fsg;
- 
- 	/*
- 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
-@@ -2360,6 +2368,7 @@ static void handle_exception(struct fsg_common *common)
- 	common->next_buffhd_to_fill = &common->buffhds[0];
- 	common->next_buffhd_to_drain = &common->buffhds[0];
- 	exception_req_tag = common->exception_req_tag;
-+	new_fsg = common->exception_arg;
- 	old_state = common->state;
- 	common->state = FSG_STATE_NORMAL;
- 
-@@ -2413,8 +2422,8 @@ static void handle_exception(struct fsg_common *common)
- 		break;
- 
- 	case FSG_STATE_CONFIG_CHANGE:
--		do_set_interface(common, common->new_fsg);
--		if (common->new_fsg)
-+		do_set_interface(common, new_fsg);
-+		if (new_fsg)
- 			usb_composite_setup_continue(common->cdev);
- 		break;
- 
-@@ -2989,8 +2998,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
- 
- 	DBG(fsg, "unbind\n");
- 	if (fsg->common->fsg == fsg) {
--		fsg->common->new_fsg = NULL;
--		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
-+		__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
- 		/* FIXME: make interruptible or killable somehow? */
- 		wait_event(common->fsg_wait, common->fsg != fsg);
- 	}
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_BIGENDEL0_SHIFT, 4, 0),
+ 	/* Linux shouldn't care about secure memory */
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_SNSMEM_SHIFT, 4, 0),
 -- 
 2.20.1
 
