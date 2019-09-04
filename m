@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792A4C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B64C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5192C2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34712087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620874;
-	bh=Gv3o9jc/CWvLdaxVZ2vJNVBL76ADaBp67Nglqgg26R8=;
+	s=default; t=1567620877;
+	bh=rhf55IcYROlziFP28mrnnFn92oSViVrUFf7Fzn0oJRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0FRyB67ngt6dxvcqqmz5q7cpOL+AVHLrWk8eUE6x9kthpmmeolAKqi1wv2p+4rwlx
-	 c1Vh87gTFLGO9osFkKhn7RJLdoOmBrUkGnWoI9I64xyjh9yoU0IZnmZ8Pc6BzK7QL3
-	 Ll6fsvO6+ZB4KyRHd849fFIo7Wmo7HUwnT7wyJ4c=
+	b=zKwrwLJuDkwtRfESV8xi4EpW2FKAh9wz+OdcCLuBdmRUv/eddAZeaseVS8xjNbrVT
+	 2W42ETXz6/JLsQDF8K1Z9mwS3lTMgkAjbt+czLxIsbfg1Dzcrr5y+d45naTwwWFxrw
+	 +UQ5rliIG8H1ynXPvysqGPujYxtlDwiSrOzs43yI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390545AbfIDSOd (ORCPT
+        id S2389911AbfIDSOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59828 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390529AbfIDSOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:31 -0400
+        id S2390826AbfIDSOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 581DB22CF7;
-        Wed,  4 Sep 2019 18:14:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4E4B2087E;
+        Wed,  4 Sep 2019 18:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620870;
-        bh=Gv3o9jc/CWvLdaxVZ2vJNVBL76ADaBp67Nglqgg26R8=;
+        s=default; t=1567620873;
+        bh=rhf55IcYROlziFP28mrnnFn92oSViVrUFf7Fzn0oJRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfd520Jq6G91u7LACHuJf0GiA1tV5YnkgSSOuNeqdTepCjH7T4aVDMMQ2dNH37X06
-         3L8gz07to8wwaDS32ShWWhekrbsCygDKgn2TGCn7AzAphea4YwA9VMoNi73ryDQ16Y
-         lpdlgSScP8EGK5UbYkzatxOn4nXAYMZGfe+8a7Hg=
+        b=1VPKZE9EfZGyrvsxopcyv7BS438fD3+/alA0w2oy/g9eaClAqM37AewSuTlm08/ns
+         v75Tku2bnpiHmwSEvIhYTAq+x7WaUywjGYnaKurEVFtbIYqCxNaWfK3U+ufrhXPiV8
+         0RuCIwE5qRkES2zuhTR26pgV9rp/KVZCwtoIHwN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Wetzel <alexander@wetzel-home.de>,
+        stable@vger.kernel.org, Denis Kenzior <denkenz@gmail.com>,
         Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.2 126/143] cfg80211: Fix Extended Key ID key install checks
-Date:   Wed,  4 Sep 2019 19:54:29 +0200
-Message-Id: <20190904175319.336774224@linuxfoundation.org>
+Subject: [PATCH 5.2 127/143] mac80211: Dont memset RXCB prior to PAE intercept
+Date:   Wed,  4 Sep 2019 19:54:30 +0200
+Message-Id: <20190904175319.374648675@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,73 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Wetzel <alexander@wetzel-home.de>
+From: Denis Kenzior <denkenz@gmail.com>
 
-commit b67fd72e84a88cae64cea8ab47ccdaab3bb3094d upstream.
+commit c8a41c6afa27b8c3f61622dfd882b912da9d6721 upstream.
 
-Fix two shortcomings in the Extended Key ID API:
+In ieee80211_deliver_skb_to_local_stack intercepts EAPoL frames if
+mac80211 is configured to do so and forwards the contents over nl80211.
+During this process some additional data is also forwarded, including
+whether the frame was received encrypted or not.  Unfortunately just
+prior to the call to ieee80211_deliver_skb_to_local_stack, skb->cb is
+cleared, resulting in incorrect data being exposed over nl80211.
 
- 1) Allow the userspace to install pairwise keys using keyid 1 without
-    NL80211_KEY_NO_TX set. This allows the userspace to install and
-    activate pairwise keys with keyid 1 in the same way as for keyid 0,
-    simplifying the API usage for e.g. FILS and FT key installs.
-
- 2) IEEE 802.11 - 2016 restricts Extended Key ID usage to CCMP/GCMP
-    ciphers in IEEE 802.11 - 2016 "9.4.2.25.4 RSN capabilities".
-    Enforce that when installing a key.
-
-Cc: stable@vger.kernel.org # 5.2
-Fixes: 6cdd3979a2bd ("nl80211/cfg80211: Extended Key ID support")
-Signed-off-by: Alexander Wetzel <alexander@wetzel-home.de>
-Link: https://lore.kernel.org/r/20190805123400.51567-1-alexander@wetzel-home.de
+Fixes: 018f6fbf540d ("mac80211: Send control port frames over nl80211")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Kenzior <denkenz@gmail.com>
+Link: https://lore.kernel.org/r/20190827224120.14545-2-denkenz@gmail.com
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/util.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ net/mac80211/rx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -233,25 +233,30 @@ int cfg80211_validate_key_settings(struc
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -2452,6 +2452,8 @@ static void ieee80211_deliver_skb_to_loc
+ 		cfg80211_rx_control_port(dev, skb, noencrypt);
+ 		dev_kfree_skb(skb);
+ 	} else {
++		memset(skb->cb, 0, sizeof(skb->cb));
++
+ 		/* deliver to local stack */
+ 		if (rx->napi)
+ 			napi_gro_receive(rx->napi, skb);
+@@ -2546,8 +2548,6 @@ ieee80211_deliver_skb(struct ieee80211_r
  
- 	switch (params->cipher) {
- 	case WLAN_CIPHER_SUITE_TKIP:
-+		/* Extended Key ID can only be used with CCMP/GCMP ciphers */
-+		if ((pairwise && key_idx) ||
-+		    params->mode != NL80211_KEY_RX_TX)
-+			return -EINVAL;
-+		break;
- 	case WLAN_CIPHER_SUITE_CCMP:
- 	case WLAN_CIPHER_SUITE_CCMP_256:
- 	case WLAN_CIPHER_SUITE_GCMP:
- 	case WLAN_CIPHER_SUITE_GCMP_256:
--		/* IEEE802.11-2016 allows only 0 and - when using Extended Key
--		 * ID - 1 as index for pairwise keys.
-+		/* IEEE802.11-2016 allows only 0 and - when supporting
-+		 * Extended Key ID - 1 as index for pairwise keys.
- 		 * @NL80211_KEY_NO_TX is only allowed for pairwise keys when
- 		 * the driver supports Extended Key ID.
- 		 * @NL80211_KEY_SET_TX can't be set when installing and
- 		 * validating a key.
- 		 */
--		if (params->mode == NL80211_KEY_NO_TX) {
--			if (!wiphy_ext_feature_isset(&rdev->wiphy,
--						     NL80211_EXT_FEATURE_EXT_KEY_ID))
--				return -EINVAL;
--			else if (!pairwise || key_idx < 0 || key_idx > 1)
-+		if ((params->mode == NL80211_KEY_NO_TX && !pairwise) ||
-+		    params->mode == NL80211_KEY_SET_TX)
-+			return -EINVAL;
-+		if (wiphy_ext_feature_isset(&rdev->wiphy,
-+					    NL80211_EXT_FEATURE_EXT_KEY_ID)) {
-+			if (pairwise && (key_idx < 0 || key_idx > 1))
- 				return -EINVAL;
--		} else if ((pairwise && key_idx) ||
--			   params->mode == NL80211_KEY_SET_TX) {
-+		} else if (pairwise && key_idx) {
- 			return -EINVAL;
- 		}
- 		break;
+ 	if (skb) {
+ 		skb->protocol = eth_type_trans(skb, dev);
+-		memset(skb->cb, 0, sizeof(skb->cb));
+-
+ 		ieee80211_deliver_skb_to_local_stack(skb, rx);
+ 	}
+ 
 
 
