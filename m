@@ -2,72 +2,104 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAB9C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F81C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E332339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378722168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EPgCnv3/"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="lF5BSf3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbfIDNQj (ORCPT
+        id S1730397AbfIDNRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:16:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43778 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730188AbfIDNQj (ORCPT
+        Wed, 4 Sep 2019 09:17:15 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:33438 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727417AbfIDNRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:16:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ngepyp17twGTeYQ8Cw2V78KUkItUxdkjHkfPYs5tJiE=; b=EPgCnv3/3HMoDmVsbpFjvbyTDM
-        0neIHRURrGJEadkGkuEjNUD1pZiPkf4j+wRMTw/4qqa9FCC0XT9d8K1r9moXgys751vncLs835TX4
-        okmT3e8VY548HAPx1xrCQz/lrTC5V1mAmkfOTGQGOfbqhQvJHmm6t8YFCyRyqgDOdfticjqyeKmgn
-        aprsSCdziDmx/xCEXAIEo1LvYpFjlvJs7xLtZ/FuYxgMBrNCnsIVi2KcbG8dsXBlcgc0Fm5N2Uvmm
-        sf7DBwSRYPg0yaXJ0GPXLkTaNRd3qXnHAsE9h0BSjZmA2UVws5dm6VaOKye6MBJ5Gr8Gc1SMmr+IR
-        xaC9yM/Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5V9K-0000oJ-GN; Wed, 04 Sep 2019 13:16:38 +0000
-Date:   Wed, 4 Sep 2019 06:16:38 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: dma api errors with swiotlb
-Message-ID: <20190904131638.GA29164@infradead.org>
-References: <e3c4b2e1-7518-ab0e-a6ce-3fae9903dac0@shipmail.org>
- <20190904121722.GA15601@infradead.org>
- <4e21951d-025a-2b3d-14c8-878c6f237525@shipmail.org>
- <20190904125538.GA30177@infradead.org>
- <a78c4100-4f93-d96d-60d1-d965a7769fca@shipmail.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a78c4100-4f93-d96d-60d1-d965a7769fca@shipmail.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Wed, 4 Sep 2019 09:17:14 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D1938C5746;
+        Wed,  4 Sep 2019 13:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567603034; bh=i9xcnzMF9fbzhtXBItSqt+iaoB57JVPuXM/inApdYsw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=lF5BSf3ognWDbpb9rKbbvRKeABBqUR96yy347YohPDD0+KqST2zyX3ykA2QjaN8Ig
+         QRSb32FvBbAiee+WmG+Bp9IsUfs70rR5e/zxEKn93b9o2dWq80MB6DDOYAHAe32NQ0
+         ZnhvlpvpFjvGtWaVesiOQzvc5uMlel7QzRHMft48nuzTQ2dUdvCRcQlH1US0du0We8
+         7j5TkaaXuWO2JdOIpXD3Lc45sAHigBAMbgiA+PapLSq1gUjXT52p4lrk0nUxdWwMPl
+         m9lx8Gg1CxVMQlOIkZYBWSLOEtYRrmOgxgt4Ij72eXx2hbBN5fFBeICzBChRbRmunH
+         I7Vc3JyckIPsg==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 9B4BFA0078;
+        Wed,  4 Sep 2019 13:17:12 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 net-next 08/13] net: stmmac: Only consider RX error when HW Timestamping is not enabled
+Date:   Wed,  4 Sep 2019 15:17:00 +0200
+Message-Id: <2364def93b9712962bcd65569edbdae342f87bd2.1567602868.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
+References: <cover.1567602867.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
+References: <cover.1567602867.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 03:02:14PM +0200, Thomas Hellström (VMware) wrote:
-> It looks like it does that, although when we send it, the SWIOTLB error has
-> already occured and been printed out, and then the sequence starts again.
+Only consider that we have an error when HW Timestamping is not enabled
+as this can give false positives due to the fact the RX Timestamping in
+XGMAC and GMAC cores comes from context descriptors.
 
-Well, the only way to really find out is to try.  We also have a
-backoff algorithm in the SCSI midlayer, so it should not be much of
-an inpact.  If you care about the warnings they can be disabled using
-DMA_ATTR_NO_WARN.  I have to admit that I'm not even sure the warnings
-are all that useful, but that's something you need to take up with
-the swiotlb maintainer.
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index c59c232aca64..5271c6129f0e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3511,9 +3511,10 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 					&priv->xstats, rx_q->dma_erx + entry);
+ 		if (unlikely(status == discard_frame)) {
+ 			page_pool_recycle_direct(rx_q->page_pool, buf->page);
+-			priv->dev->stats.rx_errors++;
+ 			buf->page = NULL;
+ 			error = 1;
++			if (!priv->hwts_rx_en)
++				priv->dev->stats.rx_errors++;
+ 		}
+ 
+ 		if (unlikely(error && (status & rx_not_ls)))
+-- 
+2.7.4
+
