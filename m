@@ -2,105 +2,141 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C210C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26CEB22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567600436;
-	bh=NPSijeGSxbzXyxdkAUWe73NhTGQn1UKpLjx/1aIO0DQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D5PpeJh7b2krnsOyHhw4RWsK5BHNPWQuBK89HX3IWvVQiJumsnKAKKL2i/pNCHleV
-	 4e7whxpdz/EfIbEOreUaZjMUO4PTcKxOreu8/WjAeCxGYBYc6/LaOCQ66ekimBPMZu
-	 ru3RG7dYvsRX7MSR3BA5P1b6ukSl1Kuo/LKl08oE=
+	by mail.kernel.org (Postfix) with ESMTP id E166821670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbfIDMdz (ORCPT
+        id S1730052AbfIDMeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54064 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 08:34:24 -0400
+Received: from mga11.intel.com ([192.55.52.93]:4080 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729020AbfIDMdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:33:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87C1321670;
-        Wed,  4 Sep 2019 12:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567600434;
-        bh=NPSijeGSxbzXyxdkAUWe73NhTGQn1UKpLjx/1aIO0DQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2gbqjHerKowGZqJshDle9lbqVBpyHgPtd8XU4TlH2306OOdt0KSyWuEhR7+t9+l2h
-         youTFg9rT5xQXAa5RMoFWy/xkD0z+bBM+olMVqX6R1q5WRH4TqVIvCqW8GPBRGvdWs
-         FHcmZz3WSxrRNhbyyXWG/OwcEutQTN0HIqZBdvK8=
-Date:   Wed, 4 Sep 2019 14:33:51 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] w1: add 1-wire master driver for IP block found
- in SGI ASICs
-Message-ID: <20190904123351.GA15401@kroah.com>
-References: <20190831082623.15627-1-tbogendoerfer@suse.de>
- <20190831082623.15627-2-tbogendoerfer@suse.de>
- <20190904114837.GA9153@kroah.com>
- <20190904140134.698aaf5f5ec204a5305c1177@suse.de>
- <20190904120646.GA11400@kroah.com>
- <20190904141434.7d05c6bcd2852d2060ba91ce@suse.de>
+        id S1728878AbfIDMeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:34:24 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 05:34:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="194716420"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2019 05:34:21 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i5UUO-0000nP-7s; Wed, 04 Sep 2019 15:34:20 +0300
+Date:   Wed, 4 Sep 2019 15:34:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: of: fix fallback quirks handling
+Message-ID: <20190904123420.GK2680@smile.fi.intel.com>
+References: <20190903231856.GA165165@dtor-ws>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904141434.7d05c6bcd2852d2060ba91ce@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190903231856.GA165165@dtor-ws>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 02:14:34PM +0200, Thomas Bogendoerfer wrote:
-> On Wed, 4 Sep 2019 14:06:46 +0200
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+On Tue, Sep 03, 2019 at 04:18:56PM -0700, Dmitry Torokhov wrote:
+> We should only try to execute fallback quirks handling when previous
+> call returned -ENOENT, and not when we did not get -EPROBE_DEFER.
+> The other errors should be treated as hard errors: we did find the GPIO
+> description, but for some reason we failed to handle it properly.
 > 
-> > On Wed, Sep 04, 2019 at 02:01:34PM +0200, Thomas Bogendoerfer wrote:
-> > > On Wed, 4 Sep 2019 13:48:37 +0200
-> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > > On Sat, Aug 31, 2019 at 10:26:21AM +0200, Thomas Bogendoerfer wrote:
-> > > > > Starting with SGI Origin machines nearly every new SGI ASIC contains
-> > > > > an 1-Wire master. They are used for attaching One-Wire prom devices,
-> > > > > which contain information about part numbers, revision numbers,
-> > > > > serial number etc. and MAC addresses for ethernet interfaces.
-> > > > > This patch adds a master driver to support this IP block.
-> > > > > It also adds an extra field dev_id to struct w1_bus_master, which
-> > > > > could be in used in slave drivers for creating unique device names.
-> > > > > 
-> > > > > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> > > > > ---
-> > > > >  drivers/w1/masters/Kconfig           |   9 +++
-> > > > >  drivers/w1/masters/Makefile          |   1 +
-> > > > >  drivers/w1/masters/sgi_w1.c          | 130 +++++++++++++++++++++++++++++++++++
-> > > > >  include/linux/platform_data/sgi-w1.h |  13 ++++
-> > > > 
-> > > > Why platform data?  I thought that was the "old way", and the "proper
-> > > > way" now is to use device tree?
-> > > 
-> > > this machine is old and doesn't have device tree at all.
-> > 
-> > Your text says "every new SGI ASIC".  So new devices are being made for
-> > old systems?
-> > 
-> > confused,
+> The fallbacks should only be executed when previous handlers returned
+> -ENOENT, which means the mapping/description was not found.
 > 
-> ok, now I see where the confusion comes from. New in the meaning of latest
-> produced SGI MIPS system.
+> Also let's remove the explicit deferral handling when iterating through
+> GPIO suffixes: it is not needed anymore as we will not be calling
+> fallbacks for anything but -ENOENT.
 > 
-> Is it better, if I rephrase this to latest line of MIPS system ASICs ?
 
-Nah, I'll take this now, it's ok, thanks for the explanation.
+I would rather leave extra parenthesis and comments untouched,
+nevertheless, FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-greg k-h
+> Fixes: df451f83e1fc ("gpio: of: fix Freescale SPI CS quirk handling")
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 27 +++++++++------------------
+>  1 file changed, 9 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index b034abe59f28..b45b39c48a34 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -457,36 +457,27 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>  
+>  		desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
+>  						&of_flags);
+> -		/*
+> -		 * -EPROBE_DEFER in our case means that we found a
+> -		 * valid GPIO property, but no controller has been
+> -		 * registered so far.
+> -		 *
+> -		 * This means we don't need to look any further for
+> -		 * alternate name conventions, and we should really
+> -		 * preserve the return code for our user to be able to
+> -		 * retry probing later.
+> -		 */
+> -		if (IS_ERR(desc) && PTR_ERR(desc) == -EPROBE_DEFER)
+> -			return desc;
+>  
+> -		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
+> +		if (!IS_ERR(desc) || PTR_ERR(desc) != -ENOENT)
+>  			break;
+>  	}
+>  
+> -	/* Special handling for SPI GPIOs if used */
+> -	if (IS_ERR(desc))
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
+> +		/* Special handling for SPI GPIOs if used */
+>  		desc = of_find_spi_gpio(dev, con_id, &of_flags);
+> -	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER) {
+> +	}
+> +
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
+>  		/* This quirk looks up flags and all */
+>  		desc = of_find_spi_cs_gpio(dev, con_id, idx, flags);
+>  		if (!IS_ERR(desc))
+>  			return desc;
+>  	}
+>  
+> -	/* Special handling for regulator GPIOs if used */
+> -	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER)
+> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
+> +		/* Special handling for regulator GPIOs if used */
+>  		desc = of_find_regulator_gpio(dev, con_id, &of_flags);
+> +	}
+>  
+>  	if (IS_ERR(desc))
+>  		return desc;
+> -- 
+> 2.23.0.187.g17f5b7556c-goog
+> 
+> 
+> -- 
+> Dmitry
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
