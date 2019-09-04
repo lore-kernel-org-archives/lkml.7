@@ -2,168 +2,101 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2032AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15374C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A832339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NFYOBONJ"
+	by mail.kernel.org (Postfix) with ESMTP id D62562339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567577994;
+	bh=+xqUmCMNDYvLWUy++UUoGPGCLbUYeJcWoNYuROUEpzY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=UWpIfTgmzqqY5cw6efPWnHlbREUAx/ZsSShKMHAzhsQYeNCIEPsoMHzrzAp3UNvdo
+	 NzTiPZtgS/8UQvRDSspBdo1llR5gw9439YqKlkoyGhsA/qnsrRqk1WTWzdUHM3qztn
+	 hAzrGxCH2MextS3RfTsFV2PkbCSLVukDLRYqeZRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfIDGTm (ORCPT
+        id S1728827AbfIDGTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:19:42 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:55575 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfIDGTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:19:41 -0400
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x846JWTl031934;
-        Wed, 4 Sep 2019 15:19:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x846JWTl031934
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567577973;
-        bh=KcfNyd0d6qNZe5po5Im8NYxMh43Vdsb11cvHEmcz+PU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NFYOBONJGnDm89krh6tmh/c8NV0RUljxr598tyzlAbpSSOaVDb87+GVW4MsSfaON6
-         S4QKPqIosZT1KHKY8MdVlNwS55LxMR4DCI90fCS0H5aarqAFr0yAmBST3cp9kY9eHb
-         Xa3g6vPXnjryY96J0APPuerVKK1/HpwmCHvAJteKQb6SkTfFVRmYe24DG5K3lyDNhN
-         9/vTU0ppedz8raShu8Klo827RW2HKq98AZSReapijmt+7sXBRm9Pn4+aaCVYStEh88
-         TCVcGZYg+2emGCBdK24mzGhgjQeWKeJUo3GSIb7h3f5Al12Na2feckj29W9/6+ScKH
-         fZaxPHjZLqSaw==
-X-Nifty-SrcIP: [209.85.222.46]
-Received: by mail-ua1-f46.google.com with SMTP id w16so561374uap.9;
-        Tue, 03 Sep 2019 23:19:32 -0700 (PDT)
-X-Gm-Message-State: APjAAAVpRN4eZF+ZbilvY3pw16/WlpqiL48VzgqOeZc421+9uaaJV9Nd
-        ej0kqy3jBnZ7+s6Yx53neFMs47WPFDdP5Vd6Sz0=
-X-Google-Smtp-Source: APXvYqzoSSq06AWlxLOXNs6NXjP7RWzDcrzRDyOUl33juPGfn0YLfNVF/6LIYBBz8pfzQph1UskTHf1y0APVT0gkpOg=
-X-Received: by 2002:ab0:32d8:: with SMTP id f24mr18756941uao.121.1567577971564;
- Tue, 03 Sep 2019 23:19:31 -0700 (PDT)
+        Wed, 4 Sep 2019 02:19:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:38375 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725267AbfIDGTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 02:19:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 23:19:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
+   d="asc'?scan'208";a="207356287"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Sep 2019 23:19:51 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     "Kobayashi\, Kento \(Sony\)" <Kento.A.Kobayashi@sony.com>,
+        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Cao\, Jacky" <Jacky.Cao@sony.com>
+Subject: RE: [PATCH] USB: dummy-hcd: fix power budget for SuperSpeed mode
+In-Reply-To: <OSAPR01MB49300F8CA0956F031CA4B1ECC9B80@OSAPR01MB4930.jpnprd01.prod.outlook.com>
+References: <16EA1F625E922C43B00B9D8225022050086ECF6A@APYOKXMS108.ap.sony.com> <16EA1F625E922C43B00B9D8225022050086F86B4@APYOKXMS108.ap.sony.com> <OSAPR01MB49300F8CA0956F031CA4B1ECC9B80@OSAPR01MB4930.jpnprd01.prod.outlook.com>
+Date:   Wed, 04 Sep 2019 09:19:41 +0300
+Message-ID: <87v9u8mvlu.fsf@gmail.com>
 MIME-Version: 1.0
-References: <20190904160021.72d104f1@canb.auug.org.au>
-In-Reply-To: <20190904160021.72d104f1@canb.auug.org.au>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 4 Sep 2019 15:18:55 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQEU6uu-Z=VeR2KNa8ezCLA7VHtpvM2tvAKsWtUTi6Eug@mail.gmail.com>
-Message-ID: <CAK7LNAQEU6uu-Z=VeR2KNa8ezCLA7VHtpvM2tvAKsWtUTi6Eug@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the net-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 3:00 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+
+Hi,
+
+"Kobayashi, Kento (Sony)" <Kento.A.Kobayashi@sony.com> writes:
+
+> Hi,
 >
-> Hi all,
->
-> After merging the net-next tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
->
-> scripts/link-vmlinux.sh: 74: Bad substitution
->
-> Caused by commit
->
->   341dfcf8d78e ("btf: expose BTF info through sysfs")
->
-> interacting with commit
->
->   1267f9d3047d ("kbuild: add $(BASH) to run scripts with bash-extension")
->
-> from the kbuild tree.
+> My company's member, Mr.Jacky, sent patch in June 26th.
+> But we didn't receive comment about our patch.
+> Could you confirm and tell us this patch is needed or not?
 
+I can't find the original patch in my inbox, could you resend it using
+git send-email?
 
-I knew that they were using bash-extension
-in the #!/bin/sh script.  :-D
+Patch seems necessary, indeed.
 
+best regards
 
-In fact, I wrote my patch in order to break their code
-and  make btf people realize that they were doing wrong.
+=2D-=20
+balbi
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> The change in the net-next tree turned link-vmlinux.sh into a bash script
-> (I think).
->
-> I have applied the following patch for today:
-
-
-But, this is a temporary fix only for linux-next.
-
-scripts/link-vmlinux.sh does not need to use the
-bash-extension ${@:2} in the first place.
-
-I hope btf people will write the correct code.
-
-Thanks.
-
-
-
-
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Wed, 4 Sep 2019 15:43:41 +1000
-> Subject: [PATCH] link-vmlinux.sh is now a bash script
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  Makefile                | 4 ++--
->  scripts/link-vmlinux.sh | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index ac97fb282d99..523d12c5cebe 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1087,7 +1087,7 @@ ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
->
->  # Final link of vmlinux with optional arch pass after final link
->  cmd_link-vmlinux =                                                 \
-> -       $(CONFIG_SHELL) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
-> +       $(BASH) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
->         $(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
->
->  vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
-> @@ -1403,7 +1403,7 @@ clean: rm-files := $(CLEAN_FILES)
->  PHONY += archclean vmlinuxclean
->
->  vmlinuxclean:
-> -       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/link-vmlinux.sh clean
-> +       $(Q)$(BASH) $(srctree)/scripts/link-vmlinux.sh clean
->         $(Q)$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) clean)
->
->  clean: archclean vmlinuxclean
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index f7edb75f9806..ea1f8673869d 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -1,4 +1,4 @@
-> -#!/bin/sh
-> +#!/bin/bash
->  # SPDX-License-Identifier: GPL-2.0
->  #
->  # link vmlinux
-> --
-> 2.23.0.rc1
->
-> --
-> Cheers,
-> Stephen Rothwell
-
-
-
---
-Best Regards
-Masahiro Yamada
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1vV38ACgkQzL64meEa
+mQbnrRAAz0r8jcUBfL99Ca7PPl2wsF41zZW4+FepCIfSqfiPhDoMFuacv/JCc5ba
+jOUlfX9r65wY992hKAOR7htEEvAiR7eMJW0WyPSXB3LnL0QpHTbevBVZb1NT+1wk
+hkTLSVSV1vo24uBtxzw5HfmVXzUA995ZCRJONSUpuInEI8aeBSOz2bNNsXMAx8QU
+NMLL/kbrmbgPRKOpdzMH3jslpVYd+Ichmnufs/ERTepqGGefQOwRb7MYKvwVtZer
+3pvPmoh4mXEcV9fQuWbpRcelFQmWK1HMLnJ34hKvofcYDiWMcCDXmOzMpiq/62+B
+a5LKtXyU1rEvt2g+TZgH2MTAsQJDcsJRT3U5j53eClmsk9bjzOMr5BhzgH7J1BBV
+8zK3cvFUBZpUrpqcHjWugJZmSCiNsfascYLNM50L5esrOEi3jUMGblGHE1wkCh6a
+JPUX4qN6dMTi5KEjO8pWDHWl4KzM4Wlu59MozdtP45hszEtcoy5nnxoatRhqJlcS
+53Vl5ZJ+rBDin0IxX43866tm9AB3MSQriX+fGff86jfDpFDEml0iiPJ5LDKZsO2u
+Oua+czwSWuwZOTdS6n7ppCYBGFpLC5zxIxoJFH0xE7LfEVCFGJBfO845RGQq8E/X
+uaYTYadKUzIX7GVrP9/ya2bV1BHWH6Ve9Xpzmrb0d79W6ni62ls=
+=NyAQ
+-----END PGP SIGNATURE-----
+--=-=-=--
