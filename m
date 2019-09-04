@@ -7,54 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5222C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E97C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32D720870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402C420870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621412;
-	bh=Ux6mz4S4+0g54ti7S6WbeadakibflhW2g4qi+dAYFIY=;
+	s=default; t=1567621418;
+	bh=LSl5EebwU9GZ8EwUwdPQ4Pp10EScuAYKifAdEFMv2Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sHqgUGtii+OkBq5f5t1RXEv+/u0xR9UmdARcgZkOtqmEvPHR5MotT19FIUKE/Yb9H
-	 IKsyMA4UP/UhnljNldh3MrNS9ZaGw08l7obee7EUidfwiWEGB5HxcBQrpaP/2VnCKV
-	 T9AZW8N2wRhtGY0EVmwNl4KiDvQaOfs0uzy2XpDU=
+	b=O0nbMzVNoZzF4UeTT4ZGLdnyKYHSnN4qz/nN+8l+Yf+FaLGz2c2y/OlYwo7WhvpB9
+	 1HRvvRtBT1ZP60er0BacF8kQY8OWVu+jZ9aDJd9oZ2Dd+4tchQvSck0kZ3CuiYQltP
+	 P/aWg+GhsiEIJJbQ7PSTZLs7q7j/z4JZgJb9nYXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388805AbfIDSCm (ORCPT
+        id S2388766AbfIDSCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42646 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388061AbfIDSCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:36 -0400
+        id S2387513AbfIDSC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57610208E4;
-        Wed,  4 Sep 2019 18:02:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFED623402;
+        Wed,  4 Sep 2019 18:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620155;
-        bh=Ux6mz4S4+0g54ti7S6WbeadakibflhW2g4qi+dAYFIY=;
+        s=default; t=1567620145;
+        bh=LSl5EebwU9GZ8EwUwdPQ4Pp10EScuAYKifAdEFMv2Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ji0ybStQnxuZGOa+HJ+rU4w5pPf3RaDezsieGq3rjpMAHzLdmtVgNxMMXo/7tmTJG
-         4OaxVRdm+fIjL/xYova5jU4vv6XBrl53twLDjKCfvdpdDsxNiJkRzf4AvwX8gVuKqg
-         3/jG4Jt8oX4vtZ5n9CTU1ouZbfIQ1jESUOID1KHA=
+        b=eoRfj+Nm1EFBwa4xJ7WK55r9NRhIkHErdk/LsF7fZn6ELcdu5PvNN7g2MRhQG6m0v
+         aqE/1pJE9u99PD7ogvxpuiyyBPWAVVNw2XDvAlz82UwsYmd8HCx4Kp5vHLF34RdhO4
+         jV2jQS76RgAyfvQXdktlZ7k5lBaqD0UWnsfh7kCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Adrian Vladu <avladu@cloudbasesolutions.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
-Subject: [PATCH 4.14 11/57] tools: hv: fix KVP and VSS daemons exit code
-Date:   Wed,  4 Sep 2019 19:53:39 +0200
-Message-Id: <20190904175303.028531986@linuxfoundation.org>
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 81/83] KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI
+Date:   Wed,  4 Sep 2019 19:54:13 +0200
+Message-Id: <20190904175310.767573981@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
-References: <20190904175301.777414715@linuxfoundation.org>
+In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
+References: <20190904175303.488266791@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,50 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b0995156071b0ff29a5902964a9dc8cfad6f81c0 ]
+[ Upstream commit 82e40f558de566fdee214bec68096bbd5e64a6a4 ]
 
-HyperV KVP and VSS daemons should exit with 0 when the '--help'
-or '-h' flags are used.
+A guest is not allowed to inject a SGI (or clear its pending state)
+by writing to GICD_ISPENDR0 (resp. GICD_ICPENDR0), as these bits are
+defined as WI (as per ARM IHI 0048B 4.3.7 and 4.3.8).
 
-Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
+Make sure we correctly emulate the architecture.
 
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Fixes: 96b298000db4 ("KVM: arm/arm64: vgic-new: Add PENDING registers handlers")
+Cc: stable@vger.kernel.org # 4.7+
+Reported-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/hv/hv_kvp_daemon.c | 2 ++
- tools/hv/hv_vss_daemon.c | 2 ++
- 2 files changed, 4 insertions(+)
+ virt/kvm/arm/vgic/vgic-mmio.c | 18 ++++++++++++++++++
+ virt/kvm/arm/vgic/vgic-v2.c   |  5 ++++-
+ virt/kvm/arm/vgic/vgic-v3.c   |  5 ++++-
+ 3 files changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 62c9a503ae052..0ef215061fb50 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -1380,6 +1380,8 @@ int main(int argc, char *argv[])
- 			daemonize = 0;
- 			break;
- 		case 'h':
-+			print_usage(argv);
-+			exit(0);
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
-diff --git a/tools/hv/hv_vss_daemon.c b/tools/hv/hv_vss_daemon.c
-index 34031a297f024..514d29966ac67 100644
---- a/tools/hv/hv_vss_daemon.c
-+++ b/tools/hv/hv_vss_daemon.c
-@@ -172,6 +172,8 @@ int main(int argc, char *argv[])
- 			daemonize = 0;
- 			break;
- 		case 'h':
-+			print_usage(argv);
-+			exit(0);
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
+diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
+index 85814d1bad11e..87742c9803a75 100644
+--- a/virt/kvm/arm/vgic/vgic-mmio.c
++++ b/virt/kvm/arm/vgic/vgic-mmio.c
+@@ -120,6 +120,12 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
+ 	return value;
+ }
+ 
++static bool is_vgic_v2_sgi(struct kvm_vcpu *vcpu, struct vgic_irq *irq)
++{
++	return (vgic_irq_is_sgi(irq->intid) &&
++		vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2);
++}
++
+ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+ 			      gpa_t addr, unsigned int len,
+ 			      unsigned long val)
+@@ -130,6 +136,12 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+ 	for_each_set_bit(i, &val, len * 8) {
+ 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+ 
++		/* GICD_ISPENDR0 SGI bits are WI */
++		if (is_vgic_v2_sgi(vcpu, irq)) {
++			vgic_put_irq(vcpu->kvm, irq);
++			continue;
++		}
++
+ 		spin_lock(&irq->irq_lock);
+ 		irq->pending = true;
+ 		if (irq->config == VGIC_CONFIG_LEVEL)
+@@ -150,6 +162,12 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
+ 	for_each_set_bit(i, &val, len * 8) {
+ 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+ 
++		/* GICD_ICPENDR0 SGI bits are WI */
++		if (is_vgic_v2_sgi(vcpu, irq)) {
++			vgic_put_irq(vcpu->kvm, irq);
++			continue;
++		}
++
+ 		spin_lock(&irq->irq_lock);
+ 
+ 		if (irq->config == VGIC_CONFIG_LEVEL) {
+diff --git a/virt/kvm/arm/vgic/vgic-v2.c b/virt/kvm/arm/vgic/vgic-v2.c
+index 1ab58f7b5d749..4c2919cc13ca6 100644
+--- a/virt/kvm/arm/vgic/vgic-v2.c
++++ b/virt/kvm/arm/vgic/vgic-v2.c
+@@ -154,7 +154,10 @@ void vgic_v2_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
+ 		if (vgic_irq_is_sgi(irq->intid)) {
+ 			u32 src = ffs(irq->source);
+ 
+-			BUG_ON(!src);
++			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
++					   irq->intid))
++				return;
++
+ 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
+ 			irq->source &= ~(1 << (src - 1));
+ 			if (irq->source)
+diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
+index c7924718990e5..267b1cf88a7fe 100644
+--- a/virt/kvm/arm/vgic/vgic-v3.c
++++ b/virt/kvm/arm/vgic/vgic-v3.c
+@@ -137,7 +137,10 @@ void vgic_v3_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
+ 		    model == KVM_DEV_TYPE_ARM_VGIC_V2) {
+ 			u32 src = ffs(irq->source);
+ 
+-			BUG_ON(!src);
++			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
++					   irq->intid))
++				return;
++
+ 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
+ 			irq->source &= ~(1 << (src - 1));
+ 			if (irq->source)
 -- 
 2.20.1
 
