@@ -2,99 +2,96 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29042C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A89C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30FD21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r2Y7xKaR"
+	by mail.kernel.org (Postfix) with ESMTP id 879B821883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:06:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730195AbfIDUEI (ORCPT
+        id S1730224AbfIDUGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:04:08 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42461 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbfIDUEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:04:07 -0400
-Received: by mail-pf1-f195.google.com with SMTP id w22so5543420pfi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=vUq6q5rLq1rpkR2Aq011wdvO0ya+rjWQxpONqV3eZoc=;
-        b=r2Y7xKaRnaJsuxJ7d1X1sjgGndZKPqGSY4mHbfjimxEe/js2y0q5xwh5Ofo9PObnOH
-         jFpmg3gyfWrbsH37smwNTwt5mtQ7zZl4z1sWxsqmUyy5Mhvg3nE1P2qr78dtqaf+aBQj
-         cODk1OIu/HjuyGk/UREUeGXrMX/xOWcIvnAfoHJqX4x+wvkaPVeiOfqtjlNupPrMiCxb
-         jOyVP6fHwuS49HdTbhlntrWEDX+6trfxMOhCtErqNnkgNLk8eC/Rsa7iP/dAiUfhR6OI
-         YBgVwSjUP+XApsFL96rAT6NYMu7YH6hZXFSpuhRHm3viz0Gbre8xPWQE4PNP1rXjMxmY
-         A7HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=vUq6q5rLq1rpkR2Aq011wdvO0ya+rjWQxpONqV3eZoc=;
-        b=tSZNn9N89GHvz8ao3ZRsvy5CmL2Dm5kORTqGUNOzq6KVubsnQFW1DoEWnZpQlwbCet
-         M4JPR+yTmZzGS67UH8zJ232XcACSJVEvIRcA3dlniDDueg2uNNFkmJb5SeJ5AG/EK4dQ
-         Jh0GqKDXpMShF6PYgU8aopZEL3cLE1kPUzHgFRcv4PCxtoCOd7/BEwiLHjP6FdLMOcGk
-         Rlv8Kv1z1lJc76cqY82UfHlBi4PaYv+3RP67qKL0Kf8X9cn3ueJvT/W9j8n/TytMd5U+
-         fOOeORyHSSyiGEkU5qRnbnUSIzA6el0IupZzOzKC4nvxXme4C6csbzigesLn5DNEkCgE
-         /3yg==
-X-Gm-Message-State: APjAAAWWYupXfagGWf/4oGMAgUELU0qAI7HwjnVrn00NW6vb7f/xQptr
-        DvZYtOsE0ThoOIgbSCGuoK7mbA==
-X-Google-Smtp-Source: APXvYqyqELoTqEWKwQaumCgh6k1NrXvt9u9MsAHYP8pjOnJ1PHEhirUkRFSaBs5dgKx5iMe8RjiwPQ==
-X-Received: by 2002:a63:2a41:: with SMTP id q62mr36843166pgq.444.1567627446279;
-        Wed, 04 Sep 2019 13:04:06 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id m19sm3043700pjv.9.2019.09.04.13.04.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 13:04:05 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 13:04:04 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Michal Hocko <mhocko@kernel.org>
-cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
-In-Reply-To: <20190904054004.GA3838@dhcp22.suse.cz>
-Message-ID: <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
-References: <20190903144512.9374-1-mhocko@kernel.org> <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp> <20190904054004.GA3838@dhcp22.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 4 Sep 2019 16:06:31 -0400
+Received: from mga03.intel.com ([134.134.136.65]:46333 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727809AbfIDUGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 16:06:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 13:06:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,468,1559545200"; 
+   d="scan'208";a="184012957"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.31])
+  by fmsmga007.fm.intel.com with ESMTP; 04 Sep 2019 13:06:29 -0700
+Message-ID: <e6390a656dfd29b114b1e0659e3db169344cfa81.camel@linux.intel.com>
+Subject: Re: [PATCH 0/8] tools-power-x86-intel-speed-select: Fixes and
+ updates for output
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Prarit Bhargava <prarit@redhat.com>,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     David Arcari <darcari@redhat.com>, linux-kernel@vger.kernel.org
+Date:   Wed, 04 Sep 2019 13:06:29 -0700
+In-Reply-To: <20190903153734.11904-1-prarit@redhat.com>
+References: <20190903153734.11904-1-prarit@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-3.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019, Michal Hocko wrote:
-
-> > > It's primary purpose is
-> > > to help analyse oom victim selection decision.
-> > 
-> > I disagree, for I use the process list for understanding what / how many
-> > processes are consuming what kind of memory (without crashing the system)
-> > for anomaly detection purpose. Although we can't dump memory consumed by
-> > e.g. file descriptors, disabling dump_tasks() loose that clue, and is
-> > problematic for me.
+On Tue, 2019-09-03 at 11:37 -0400, Prarit Bhargava wrote:
+> Some general fixes and updates for intel-speed-select.  Fixes include
+> some
+> typos as well as an off-by-one cpu count reporting error.  Updates
+> for the
+> output are
 > 
-> Does anything really prevent you from enabling this by sysctl though? Or
-> do you claim that this is a general usage pattern and therefore the
-> default change is not acceptable or do you want a changelog to be
-> updated?
+> - switching to MHz as a standard
+> - reporting CPU frequencies instead of ratios as a standard
+> - viewing a human-readable CPU list.
+> - avoiding reporting "0|1" as success|fail as these can be confusing
+> for a
+>   user.
+Series looks fine, except 8/8.
+So please submit v2. Better to resubmit as a series as v2, unless Andy
+has other preference.
+
+Thanks,
+Srinivas
+
+> 
+> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Cc: David Arcari <darcari@redhat.com>
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Prarit Bhargava (8):
+>   tools/power/x86/intel-speed-select: Fix package typo
+>   tools/power/x86/intel-speed-select: Fix help option typo
+>   tools/power/x86/intel-speed-select: Fix cpu-count output
+>   tools/power/x86/intel-speed-select: Simplify output for turbo-freq
+> and
+>     base-freq
+>   tools/power/x86/intel-speed-select: Switch output to MHz
+>   tools/power/x86/intel-speed-select: Change turbo ratio output to
+>     maximum turbo frequency
+>   tools/power/x86/intel-speed-select: Output human readable CPU list
+>   tools/power/x86/intel-speed-select: Output success/failed for
+> command
+>     output
+> 
+>  .../x86/intel-speed-select/isst-config.c      |   4 +-
+>  .../x86/intel-speed-select/isst-display.c     | 116 ++++++++++++--
+> ----
+>  2 files changed, 83 insertions(+), 37 deletions(-)
 > 
 
-I think the motivation is that users don't want to need to reproduce an 
-oom kill to figure out why: they want to be able to figure out which 
-process had higher than normal memory usage.  If oom is the normal case 
-then they ceratinly have the ability to disable it by disabling the 
-sysctl, but that seems like something better to opt-out of rather than 
-need to opt-in to and reproduce.
