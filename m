@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CEFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33DFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27D72087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB9F20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:21:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621295;
-	bh=2gokYGvDNVOGFCA5l9cgQaxhaq26hTa3a9QSdELUcCw=;
+	s=default; t=1567621297;
+	bh=10SmcO7SscMmpFFI6wyywl1ZMi6GyIKfshtpKjOFLMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyrPdxJvVkRgpoJ8ORr3Sh7wQRHT1zM/yL1KNv/rCKpsVRoiGzFIhiY/BcT/YJC2p
-	 zznXy4pJPQJnOhidrJCO1S99MwbIujX+U/knKpG1hVncMeCRgHgWhLZqt4TnmSeDTG
-	 /AwQWSzxKmTJ4N88BLnbiuEuEdhpMjaJcRodVAt0=
+	b=Km2UESJ7wx6XsUKcjT1LQWTiJvBe6AyjALJgz27IDGZgP/7PVbsdm5OcWSuvk9EmJ
+	 SyYZNrXRlfDrwUGZfko4EggycsrNBX8VgrLl/7pbUtwXy3zcTeokWUIuprg+Ua4EYQ
+	 KjZ8INS6RMEVXpYpvyxG6yFixWWM7ixUCdRGqlGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387878AbfIDSVd (ORCPT
+        id S2389423AbfIDSGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389422AbfIDSGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:23 -0400
+        id S2389009AbfIDSGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F263822CF7;
-        Wed,  4 Sep 2019 18:06:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A27DC2341B;
+        Wed,  4 Sep 2019 18:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620382;
-        bh=2gokYGvDNVOGFCA5l9cgQaxhaq26hTa3a9QSdELUcCw=;
+        s=default; t=1567620377;
+        bh=10SmcO7SscMmpFFI6wyywl1ZMi6GyIKfshtpKjOFLMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xKymXiX8xuCYUO7UtB9MAOD9a8wFgfVRzMOU12O66m57/Jyf9C7WZtkPaqSBg6ani
-         ksFKXeB8FeYTELGsPLgWUP6w+U0T6o1FFtOLc6ebljqG9w9l6tzH8gV4D538wqouh1
-         8Bem6FJfSp5v67g72XxF49UsZPR/fsgi0KVmZK2M=
+        b=Ty3uHvett3K5ykwVcs8gp3bMiAKx10y6XWGUbRZWfdklvHsq3hwwNl/mdU/h2hrOF
+         ajNYQlA5A7N2ae/rLTK70J+rlZh95DJzdNhUru05/ZTbI2Cwgr21x8CzcjkFry6Grf
+         ASbBp+Yw78Xy4Vy9FrgMP+JuiEViLlCJMj+SK88E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 36/93] net/smc: make sure EPOLLOUT is raised
-Date:   Wed,  4 Sep 2019 19:53:38 +0200
-Message-Id: <20190904175306.383810983@linuxfoundation.org>
+Subject: [PATCH 4.19 34/93] ipv6/addrconf: allow adding multicast addr if IFA_F_MCAUTOJOIN is set
+Date:   Wed,  4 Sep 2019 19:53:36 +0200
+Message-Id: <20190904175306.241995841@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -62,53 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 4651d1802f7063e4d8c0bcad957f46ece0c04024 ]
+[ Upstream commit f17f7648a49aa6728649ddf79bdbcac4f1970ce4 ]
 
-Currently, we are only explicitly setting SOCK_NOSPACE on a write timeout
-for non-blocking sockets. Epoll() edge-trigger mode relies on SOCK_NOSPACE
-being set when -EAGAIN is returned to ensure that EPOLLOUT is raised.
-Expand the setting of SOCK_NOSPACE to non-blocking sockets as well that can
-use SO_SNDTIMEO to adjust their write timeout. This mirrors the behavior
-that Eric Dumazet introduced for tcp sockets.
+In commit 93a714d6b53d ("multicast: Extend ip address command to enable
+multicast group join/leave on") we added a new flag IFA_F_MCAUTOJOIN
+to make user able to add multicast address on ethernet interface.
 
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Ursula Braun <ubraun@linux.ibm.com>
-Cc: Karsten Graul <kgraul@linux.ibm.com>
+This works for IPv4, but not for IPv6. See the inet6_addr_add code.
+
+static int inet6_addr_add()
+{
+	...
+	if (cfg->ifa_flags & IFA_F_MCAUTOJOIN) {
+		ipv6_mc_config(net->ipv6.mc_autojoin_sk, true...)
+	}
+
+	ifp = ipv6_add_addr(idev, cfg, true, extack); <- always fail with maddr
+	if (!IS_ERR(ifp)) {
+		...
+	} else if (cfg->ifa_flags & IFA_F_MCAUTOJOIN) {
+		ipv6_mc_config(net->ipv6.mc_autojoin_sk, false...)
+	}
+}
+
+But in ipv6_add_addr() it will check the address type and reject multicast
+address directly. So this feature is never worked for IPv6.
+
+We should not remove the multicast address check totally in ipv6_add_addr(),
+but could accept multicast address only when IFA_F_MCAUTOJOIN flag supplied.
+
+v2: update commit description
+
+Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/smc/smc_tx.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/ipv6/addrconf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/smc/smc_tx.c
-+++ b/net/smc/smc_tx.c
-@@ -75,13 +75,11 @@ static int smc_tx_wait(struct smc_sock *
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
- 	struct smc_connection *conn = &smc->conn;
- 	struct sock *sk = &smc->sk;
--	bool noblock;
- 	long timeo;
- 	int rc = 0;
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -995,7 +995,8 @@ ipv6_add_addr(struct inet6_dev *idev, st
+ 	int err = 0;
  
- 	/* similar to sk_stream_wait_memory */
- 	timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
--	noblock = timeo ? false : true;
- 	add_wait_queue(sk_sleep(sk), &wait);
- 	while (1) {
- 		sk_set_bit(SOCKWQ_ASYNC_NOSPACE, sk);
-@@ -96,8 +94,8 @@ static int smc_tx_wait(struct smc_sock *
- 			break;
- 		}
- 		if (!timeo) {
--			if (noblock)
--				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
-+			/* ensure EPOLLOUT is subsequently generated */
-+			set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
- 			rc = -EAGAIN;
- 			break;
- 		}
+ 	if (addr_type == IPV6_ADDR_ANY ||
+-	    addr_type & IPV6_ADDR_MULTICAST ||
++	    (addr_type & IPV6_ADDR_MULTICAST &&
++	     !(cfg->ifa_flags & IFA_F_MCAUTOJOIN)) ||
+ 	    (!(idev->dev->flags & IFF_LOOPBACK) &&
+ 	     addr_type & IPV6_ADDR_LOOPBACK))
+ 		return ERR_PTR(-EADDRNOTAVAIL);
 
 
