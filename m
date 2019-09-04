@@ -2,103 +2,101 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE01AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95962C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC14F206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70900206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620602;
-	bh=bR2+xtafuPeElELYnLwr7/P4WCwNsYJIMMT6xdDju34=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o9EfQiZBl5BeBZvdcmKWdZIgUgbaqs7O9rHU84u2KrCKtHyntdyTffhfHI9D5/RTX
-	 36O+4qTiHUKJm9yjSX0m8w8kW5xGsFZXvAoUH4VsW9TBR9CbM7hU3xxPcLRzgF+mVG
-	 jeF0feFEkk4KVIKwIwgaATeqy0mHAkd0uMeUA2ZM=
+	s=default; t=1567620604;
+	bh=qG8opaR13yirPBMA3yYye/hgLEgoC/bD1fPgs2vYlls=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Tkcoa9L948yUR9gqxXE6Zt2WOrO/2h2dwa8QP21m6JtRIl5v5y9algSQ1vqVd4pMi
+	 vJM5xro4gk4QdG5mwqFHbtIvfw7VuYvFiHD6pcGHnDSJ/JVchClBMwo7cEroke82A2
+	 p3KkoxQmfNzbyyVlinmKqBnEj6EYt/IRV420r370=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390034AbfIDSKC (ORCPT
+        id S2390044AbfIDSKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53326 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389505AbfIDSJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B8CA22DBF;
-        Wed,  4 Sep 2019 18:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620596;
-        bh=bR2+xtafuPeElELYnLwr7/P4WCwNsYJIMMT6xdDju34=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sbxst4u1Y/5CfYK2aOgWW7ayWKjCmeFPp5Nm0u07/DT2FG8tiU3j22VcTFkrykGXn
-         mEYzfSaCKmbyXtNpFM8nU++QsHNgrgQsJPVJMUK8/OgC+g6w+zMl9jv8xdaUq4R8Q2
-         gJIZGbaPDPVM9ybAJmarBcWMvG/bqBTrjlcR90jA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 024/143] iommu/dma: Handle SG length overflow better
-Date:   Wed,  4 Sep 2019 19:52:47 +0200
-Message-Id: <20190904175315.013334397@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-References: <20190904175314.206239922@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 4 Sep 2019 14:10:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48994 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390015AbfIDSJ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qG8opaR13yirPBMA3yYye/hgLEgoC/bD1fPgs2vYlls=; b=tcKTv9BbRVRH/iPzWeSkE/GON
+        prBQwlWTEHaZnK6c6TzJcXVBYBE+6Tg3Y4wy59b0dAIbjfTVetoMDzoJAY4V59PDop8Ll3eoMuKDy
+        /w6UA939DApE/CTdpnonch76YIrsopcnSWPtID7bX6b/cW7BzlFlVDhDWQSQKuHu9PdyI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i5Zj7-0006o3-Fd; Wed, 04 Sep 2019 18:09:53 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id A864D2742B45; Wed,  4 Sep 2019 19:09:52 +0100 (BST)
+Date:   Wed, 4 Sep 2019 19:09:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ricard Wanderlof <ricardw@axis.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.4 06/77] ASoC: Fail card instantiation if DAI format
+ setup fails
+Message-ID: <20190904180952.GF4348@sirena.co.uk>
+References: <20190904175303.317468926@linuxfoundation.org>
+ <20190904175304.060004729@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QNDPHrPUIc00TOLW"
+Content-Disposition: inline
+In-Reply-To: <20190904175304.060004729@linuxfoundation.org>
+X-Cookie: Help fight continental drift.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ab2cbeb0ed301a9f0460078e91b09f39958212ef ]
 
-Since scatterlist dimensions are all unsigned ints, in the relatively
-rare cases where a device's max_segment_size is set to UINT_MAX, then
-the "cur_len + s_length <= max_len" check in __finalise_sg() will always
-return true. As a result, the corner case of such a device mapping an
-excessively large scatterlist which is mergeable to or beyond a total
-length of 4GB can lead to overflow and a bogus truncated dma_length in
-the resulting segment.
+--QNDPHrPUIc00TOLW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-As we already assume that any single segment must be no longer than
-max_len to begin with, this can easily be addressed by reshuffling the
-comparison.
+On Wed, Sep 04, 2019 at 07:52:53PM +0200, Greg Kroah-Hartman wrote:
+> [ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
+>=20
+> If the DAI format setup fails, there is no valid communication format
+> between CPU and CODEC, so fail card instantiation, rather than continue
+> with a card that will most likely not function properly.
 
-Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
-Reported-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Tested-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iommu/dma-iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I nacked this patch when Sasha posted it - it only improves diagnostics
+and might make systems that worked by accident break since it turns
+things into a hard failure, it won't make anything that didn't work
+previously work.
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index 379318266468c..8c02d2283d647 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -710,7 +710,7 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
- 		 * - and wouldn't make the resulting output segment too long
- 		 */
- 		if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
--		    (cur_len + s_length <= max_len)) {
-+		    (max_len - cur_len >= s_length)) {
- 			/* ...then concatenate it with the previous one */
- 			cur_len += s_length;
- 		} else {
--- 
-2.20.1
+--QNDPHrPUIc00TOLW
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1v/e8ACgkQJNaLcl1U
+h9Ca6gf9FecwK4D+h++8/eLeOkmItr1GGI6gIc+y8U68YlvJwqCZoirmrs2AO7b0
+CxHsQGBQadSEGVYWZ0WLm6uLxJZhseakmz4pOTYPuIT8zyy2LtITnhW7dEb6FGRS
+PrFB+VYWZEt5kydi7/5aHtiLxqflrRNO/i8HbN5dzOr55Kht+3MKt/FE+VTx1O8X
+fRSXXTCJNx6tujSlaGg35QDKl3GgSl0SNdNM1vP87csdZjUGRUSTQpU4vuAnsjV8
+eo43B83hgbF3hyQ444/MQ48QduTacy8wAdKv7s5YxTJKn2T6ePpRUOBv9Tca8BqJ
+kcC+YJ1RYt4kk3jWKPSWCN7fvST0hQ==
+=3qkM
+-----END PGP SIGNATURE-----
 
+--QNDPHrPUIc00TOLW--
