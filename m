@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEE2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDA7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD384208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098692339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620734;
-	bh=YlhfXH73FxayUwhM+ST/fbMumodBzl9+Y/ZyvlbGsks=;
+	s=default; t=1567620737;
+	bh=eI4hu126fYRh5Hr+mcgswRePFZWBv0CZeGJNpqBIEi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ajYvDopqVWfTBucKt+tG/KM9orOrSNeEECO/ffpv4rwnV48+4xZ2C4pvultUk4QOc
-	 x2vrMtOIMO+0S3TspgVFrZhxUjZB/109hsnC9ioi3gtYwKixhkdURGCdGsp5NQmZxx
-	 rmjV+c2nVyTpRUa1EAWTj657KzrOgKclUapFpDQ8=
+	b=ZWVDOEuLYEx9Mm4KnWcwSbSQo+7bPShzq57sSWEuVprKOYxJySfuVr+33N29a+lnO
+	 kVuLDlWS+AsyK/BQi2zpNMU/RnyolQn9LDtSnl3kDywmkfrgbFp80uQAlyCvgTuTEi
+	 ApfhFajg2iqUExZA/7k7ONx5A5XZaaTuzcAQon6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390467AbfIDSMN (ORCPT
+        id S2390477AbfIDSMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:12:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56520 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:12:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389430AbfIDSML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:12:11 -0400
+        id S2389430AbfIDSMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:12:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF31B206BA;
-        Wed,  4 Sep 2019 18:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90EFF206BA;
+        Wed,  4 Sep 2019 18:12:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620731;
-        bh=YlhfXH73FxayUwhM+ST/fbMumodBzl9+Y/ZyvlbGsks=;
+        s=default; t=1567620734;
+        bh=eI4hu126fYRh5Hr+mcgswRePFZWBv0CZeGJNpqBIEi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WVby9yfxRIFZajrGItZ6ANNI2Lwe8vWe7Zr50lzWBhijoFL6WTf6hEy/DGJW83r81
-         ChN/FLgoDujJA2FBeuLaTJCglZ+887OkVq61t4JdOcD7ayWaT77zLke18ak/NUXLm6
-         wbnKfjglp8MYa+4jj9aiAe6EAt3+wMM6nxKqHCco=
+        b=1775vYJMthaefgC91PVVRlaQNda5ru8rkpp/l8dYZEjfK3JTWw7UqjiqTgGZeyNv8
+         D+7IGEhnmRaRJYb6hWM2EXoUqJ9bDzK0M2YRst5NYoGDuSaxN0zW2HE95GRcZuFkWW
+         CBEXygmYH9qjuOXHMDpO8XIgzenN6vK0Lj707Hy8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 057/143] ipv4/icmp: fix rt dst dev null pointer dereference
-Date:   Wed,  4 Sep 2019 19:53:20 +0200
-Message-Id: <20190904175316.305229399@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.2 075/143] ftrace: Fix NULL pointer dereference in t_probe_next()
+Date:   Wed,  4 Sep 2019 19:53:38 +0200
+Message-Id: <20190904175316.987390600@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,61 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit e2c693934194fd3b4e795635934883354c06ebc9 ]
+commit 7bd46644ea0f6021dc396a39a8bfd3a58f6f1f9f upstream.
 
-In __icmp_send() there is a possibility that the rt->dst.dev is NULL,
-e,g, with tunnel collect_md mode, which will cause kernel crash.
-Here is what the code path looks like, for GRE:
+LTP testsuite on powerpc results in the below crash:
 
-- ip6gre_tunnel_xmit
-  - ip6gre_xmit_ipv4
-    - __gre6_xmit
-      - ip6_tnl_xmit
-        - if skb->len - t->tun_hlen - eth_hlen > mtu; return -EMSGSIZE
-    - icmp_send
-      - net = dev_net(rt->dst.dev); <-- here
+  Unable to handle kernel paging request for data at address 0x00000000
+  Faulting instruction address: 0xc00000000029d800
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE SMP NR_CPUS=2048 NUMA PowerNV
+  ...
+  CPU: 68 PID: 96584 Comm: cat Kdump: loaded Tainted: G        W
+  NIP:  c00000000029d800 LR: c00000000029dac4 CTR: c0000000001e6ad0
+  REGS: c0002017fae8ba10 TRAP: 0300   Tainted: G        W
+  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 28022422  XER: 20040000
+  CFAR: c00000000029d90c DAR: 0000000000000000 DSISR: 40000000 IRQMASK: 0
+  ...
+  NIP [c00000000029d800] t_probe_next+0x60/0x180
+  LR [c00000000029dac4] t_mod_start+0x1a4/0x1f0
+  Call Trace:
+  [c0002017fae8bc90] [c000000000cdbc40] _cond_resched+0x10/0xb0 (unreliable)
+  [c0002017fae8bce0] [c0000000002a15b0] t_start+0xf0/0x1c0
+  [c0002017fae8bd30] [c0000000004ec2b4] seq_read+0x184/0x640
+  [c0002017fae8bdd0] [c0000000004a57bc] sys_read+0x10c/0x300
+  [c0002017fae8be30] [c00000000000b388] system_call+0x5c/0x70
 
-The reason is __metadata_dst_init() init dst->dev to NULL by default.
-We could not fix it in __metadata_dst_init() as there is no dev supplied.
-On the other hand, the reason we need rt->dst.dev is to get the net.
-So we can just try get it from skb->dev when rt->dst.dev is NULL.
+The test (ftrace_set_ftrace_filter.sh) is part of ftrace stress tests
+and the crash happens when the test does 'cat
+$TRACING_PATH/set_ftrace_filter'.
 
-v4: Julian Anastasov remind skb->dev also could be NULL. We'd better
-still use dst.dev and do a check to avoid crash.
+The address points to the second line below, in t_probe_next(), where
+filter_hash is dereferenced:
+  hash = iter->probe->ops.func_hash->filter_hash;
+  size = 1 << hash->size_bits;
 
-v3: No changes.
+This happens due to a race with register_ftrace_function_probe(). A new
+ftrace_func_probe is created and added into the func_probes list in
+trace_array under ftrace_lock. However, before initializing the filter,
+we drop ftrace_lock, and re-acquire it after acquiring regex_lock. If
+another process is trying to read set_ftrace_filter, it will be able to
+acquire ftrace_lock during this window and it will end up seeing a NULL
+filter_hash.
 
-v2: fix the issue in __icmp_send() instead of updating shared dst dev
-in {ip_md, ip6}_tunnel_xmit.
+Fix this by just checking for a NULL filter_hash in t_probe_next(). If
+the filter_hash is NULL, then this probe is just being added and we can
+simply return from here.
 
-Fixes: c8b34e680a09 ("ip_tunnel: Add tnl_update_pmtu in ip_md_tunnel_xmit")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Julian Anastasov <ja@ssi.bg>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/05e021f757625cbbb006fad41380323dbe4e3b43.1562249521.git.naveen.n.rao@linux.vnet.ibm.com
+
+Cc: stable@vger.kernel.org
+Fixes: 7b60f3d876156 ("ftrace: Dynamically create the probe ftrace_ops for the trace_array")
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/icmp.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -582,7 +582,13 @@ void __icmp_send(struct sk_buff *skb_in,
+---
+ kernel/trace/ftrace.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3095,6 +3095,10 @@ t_probe_next(struct seq_file *m, loff_t
+ 		hnd = &iter->probe_entry->hlist;
  
- 	if (!rt)
- 		goto out;
--	net = dev_net(rt->dst.dev);
+ 	hash = iter->probe->ops.func_hash->filter_hash;
 +
-+	if (rt->dst.dev)
-+		net = dev_net(rt->dst.dev);
-+	else if (skb_in->dev)
-+		net = dev_net(skb_in->dev);
-+	else
-+		goto out;
++	if (!hash)
++		return NULL;
++
+ 	size = 1 << hash->size_bits;
  
- 	/*
- 	 *	Find the original header. It is expected to be valid, of course.
+  retry:
 
 
