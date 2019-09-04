@@ -2,52 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC07C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362D5C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A92208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F771208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620671;
-	bh=GCIkHpnTuD4C09Cw4jJmBv6F6eHMlnrCVJ4JE7VG5qM=;
+	s=default; t=1567620674;
+	bh=56xJezm7lAXrT8d3Ze0+Y4GyCi8LcSm62OVfEg/l9BY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TAT+LuT3XminsIzw9WuN0Q4WnH+R6YaogU3tRiHEWRz80iYHantfJqra+N021Z1kS
-	 D2gEB94MQIrS5jaN3nLHu+pZzO1wxDNbqUEe6H2bSMfSXWPD168nGo92yYgQoF7Znu
-	 kDs389evckHxFBXfBcmsC7GYFANyDkfiIYjKB7/E=
+	b=2DrReCja8F/BUcml9JQK54bOFCOyUoBG4xKlJke001KFJHNX42/c+c3+i5dA/t7Tc
+	 u7mjEFPk9ZWEUR1c0cS4dhBiMZKp590DTpqW6ouGpsB7ySbrzCSwXc5PWKSDxGOHPd
+	 kFaIpdxS4vT8mk5yXEzy+jcZdfsTqUpB2Vw2h7ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390228AbfIDSLK (ORCPT
+        id S2390236AbfIDSLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:11:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54982 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:11:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389078AbfIDSLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:05 -0400
+        id S2390218AbfIDSLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB9B23401;
-        Wed,  4 Sep 2019 18:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4849922CEA;
+        Wed,  4 Sep 2019 18:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620665;
-        bh=GCIkHpnTuD4C09Cw4jJmBv6F6eHMlnrCVJ4JE7VG5qM=;
+        s=default; t=1567620667;
+        bh=56xJezm7lAXrT8d3Ze0+Y4GyCi8LcSm62OVfEg/l9BY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VJkxSkpTKkzJjomULZb8DcPXiNex+IUC1HUhZi358n4M2x6DndWfEzrOhVEsfh43G
-         5SNV4qWAkRiVkQ0dJalPS3bwf1C2K/xhI2BDzk1O6xnDQAt2wVPryjX1qpOxbdvT1M
-         xEolTR3UIDzN4ar6rcYry+Wx3zPEeqkQdSV8+pdc=
+        b=J51wImASU42SVUzhdu4lCVUEQ7lKhr3ttJE4cLklKHJtNgJx+KDaBXn6jBZQhm+QJ
+         +ZgUbKLKJ854LG8PL1QnStLUea3lRYAkDT/aqxXsHjKjF7nEezcuGGI8TCQTd7cadv
+         mrvHOiQD3J+560rkon535VS1AO7UDxXMCvaF+mWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 048/143] mt76: usb: fix rx A-MSDU support
-Date:   Wed,  4 Sep 2019 19:53:11 +0200
-Message-Id: <20190904175315.950630952@linuxfoundation.org>
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 049/143] ipv6/addrconf: allow adding multicast addr if IFA_F_MCAUTOJOIN is set
+Date:   Wed,  4 Sep 2019 19:53:12 +0200
+Message-Id: <20190904175315.989326532@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,107 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2a92b08b18553c101115423bd34963b1a59a45a3 ]
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-Commit f8f527b16db5 ("mt76: usb: use EP max packet aligned buffer sizes
-for rx") breaks A-MSDU support. When A-MSDU is enable the device can
-receive frames up to q->buf_size but they will be discarded in
-mt76u_process_rx_entry since there is no enough room for
-skb_shared_info. Fix the issue reallocating the skb and copying in the
-linear area the first 128B of the received frames and in the frag_list
-the remaining part
+[ Upstream commit f17f7648a49aa6728649ddf79bdbcac4f1970ce4 ]
 
-Fixes: f8f527b16db5 ("mt76: usb: use EP max packet aligned buffer sizes for rx")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In commit 93a714d6b53d ("multicast: Extend ip address command to enable
+multicast group join/leave on") we added a new flag IFA_F_MCAUTOJOIN
+to make user able to add multicast address on ethernet interface.
+
+This works for IPv4, but not for IPv6. See the inet6_addr_add code.
+
+static int inet6_addr_add()
+{
+	...
+	if (cfg->ifa_flags & IFA_F_MCAUTOJOIN) {
+		ipv6_mc_config(net->ipv6.mc_autojoin_sk, true...)
+	}
+
+	ifp = ipv6_add_addr(idev, cfg, true, extack); <- always fail with maddr
+	if (!IS_ERR(ifp)) {
+		...
+	} else if (cfg->ifa_flags & IFA_F_MCAUTOJOIN) {
+		ipv6_mc_config(net->ipv6.mc_autojoin_sk, false...)
+	}
+}
+
+But in ipv6_add_addr() it will check the address type and reject multicast
+address directly. So this feature is never worked for IPv6.
+
+We should not remove the multicast address check totally in ipv6_add_addr(),
+but could accept multicast address only when IFA_F_MCAUTOJOIN flag supplied.
+
+v2: update commit description
+
+Fixes: 93a714d6b53d ("multicast: Extend ip address command to enable multicast group join/leave on")
+Reported-by: Jianlin Shi <jishi@redhat.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76.h |  1 +
- drivers/net/wireless/mediatek/mt76/usb.c  | 46 ++++++++++++++++++-----
- 2 files changed, 38 insertions(+), 9 deletions(-)
+ net/ipv6/addrconf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76.h b/drivers/net/wireless/mediatek/mt76/mt76.h
-index 8ecbf81a906f5..889b76deb7037 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76.h
-@@ -30,6 +30,7 @@
- #define MT_TX_RING_SIZE     256
- #define MT_MCU_RING_SIZE    32
- #define MT_RX_BUF_SIZE      2048
-+#define MT_SKB_HEAD_LEN     128
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -1045,7 +1045,8 @@ ipv6_add_addr(struct inet6_dev *idev, st
+ 	int err = 0;
  
- struct mt76_dev;
- struct mt76_wcid;
-diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
-index bbaa1365bbda2..dd90427b2d672 100644
---- a/drivers/net/wireless/mediatek/mt76/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/usb.c
-@@ -429,6 +429,42 @@ static int mt76u_get_rx_entry_len(u8 *data, u32 data_len)
- 	return dma_len;
- }
- 
-+static struct sk_buff *
-+mt76u_build_rx_skb(void *data, int len, int buf_size)
-+{
-+	struct sk_buff *skb;
-+
-+	if (SKB_WITH_OVERHEAD(buf_size) < MT_DMA_HDR_LEN + len) {
-+		struct page *page;
-+
-+		/* slow path, not enough space for data and
-+		 * skb_shared_info
-+		 */
-+		skb = alloc_skb(MT_SKB_HEAD_LEN, GFP_ATOMIC);
-+		if (!skb)
-+			return NULL;
-+
-+		skb_put_data(skb, data + MT_DMA_HDR_LEN, MT_SKB_HEAD_LEN);
-+		data += (MT_DMA_HDR_LEN + MT_SKB_HEAD_LEN);
-+		page = virt_to_head_page(data);
-+		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
-+				page, data - page_address(page),
-+				len - MT_SKB_HEAD_LEN, buf_size);
-+
-+		return skb;
-+	}
-+
-+	/* fast path */
-+	skb = build_skb(data, buf_size);
-+	if (!skb)
-+		return NULL;
-+
-+	skb_reserve(skb, MT_DMA_HDR_LEN);
-+	__skb_put(skb, len);
-+
-+	return skb;
-+}
-+
- static int
- mt76u_process_rx_entry(struct mt76_dev *dev, struct urb *urb)
- {
-@@ -446,19 +482,11 @@ mt76u_process_rx_entry(struct mt76_dev *dev, struct urb *urb)
- 		return 0;
- 
- 	data_len = min_t(int, len, data_len - MT_DMA_HDR_LEN);
--	if (MT_DMA_HDR_LEN + data_len > SKB_WITH_OVERHEAD(q->buf_size)) {
--		dev_err_ratelimited(dev->dev, "rx data too big %d\n", data_len);
--		return 0;
--	}
--
--	skb = build_skb(data, q->buf_size);
-+	skb = mt76u_build_rx_skb(data, data_len, q->buf_size);
- 	if (!skb)
- 		return 0;
- 
--	skb_reserve(skb, MT_DMA_HDR_LEN);
--	__skb_put(skb, data_len);
- 	len -= data_len;
--
- 	while (len > 0 && nsgs < urb->num_sgs) {
- 		data_len = min_t(int, len, urb->sg[nsgs].length);
- 		skb_add_rx_frag(skb, skb_shinfo(skb)->nr_frags,
--- 
-2.20.1
-
+ 	if (addr_type == IPV6_ADDR_ANY ||
+-	    addr_type & IPV6_ADDR_MULTICAST ||
++	    (addr_type & IPV6_ADDR_MULTICAST &&
++	     !(cfg->ifa_flags & IFA_F_MCAUTOJOIN)) ||
+ 	    (!(idev->dev->flags & IFF_LOOPBACK) &&
+ 	     !netif_is_l3_master(idev->dev) &&
+ 	     addr_type & IPV6_ADDR_LOOPBACK))
 
 
