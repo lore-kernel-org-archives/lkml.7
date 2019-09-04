@@ -2,183 +2,197 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5A6C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14BCC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D1D22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A0D22CE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbfIDPEF (ORCPT
+        id S1731239AbfIDPEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:04:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730604AbfIDPEE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:04:04 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x84Ev7JB059495;
-        Wed, 4 Sep 2019 11:03:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2utdmwwb89-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 11:03:50 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x84EwGKg064747;
-        Wed, 4 Sep 2019 11:03:50 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2utdmwwb7v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 11:03:50 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x84Exfgd030870;
-        Wed, 4 Sep 2019 15:03:49 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma05wdc.us.ibm.com with ESMTP id 2usa0mbcku-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 15:03:49 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x84F3nCV13435646
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Sep 2019 15:03:49 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EBCD2112062;
-        Wed,  4 Sep 2019 15:03:48 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB9AF112061;
-        Wed,  4 Sep 2019 15:03:47 +0000 (GMT)
-Received: from oc5348122405.ibm.com.austin.ibm.com (unknown [9.53.179.215])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Sep 2019 15:03:47 +0000 (GMT)
-From:   David Dai <zdai@linux.vnet.ibm.com>
-To:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     zdai@us.ibm.com, zdai@linux.vnet.ibm.com
-Subject: [v3] net_sched: act_police: add 2 new attributes to support police 64bit rate and peakrate
-Date:   Wed,  4 Sep 2019 10:03:43 -0500
-Message-Id: <1567609423-26826-1-git-send-email-zdai@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.7.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909040147
+        Wed, 4 Sep 2019 11:04:36 -0400
+Received: from mga04.intel.com ([192.55.52.120]:5161 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730135AbfIDPEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:04:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 08:04:19 -0700
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="358127318"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 08:04:16 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id E8AAF204A6; Wed,  4 Sep 2019 18:04:13 +0300 (EEST)
+Date:   Wed, 4 Sep 2019 18:04:13 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 10/11] lib/vsprintf: Add %pfw conversion specifier for
+ printing fwnode names
+Message-ID: <20190904150413.GU5475@paasikivi.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-11-sakari.ailus@linux.intel.com>
+ <20190903130607.cf2qv3s3evobbd5g@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903130607.cf2qv3s3evobbd5g@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For high speed adapter like Mellanox CX-5 card, it can reach upto
-100 Gbits per second bandwidth. Currently htb already supports 64bit rate
-in tc utility. However police action rate and peakrate are still limited
-to 32bit value (upto 32 Gbits per second). Add 2 new attributes
-TCA_POLICE_RATE64 and TCA_POLICE_RATE64 in kernel for 64bit support
-so that tc utility can use them for 64bit rate and peakrate value to
-break the 32bit limit, and still keep the backward binary compatibility.
+Hi Petr,
 
-Tested-by: David Dai <zdai@linux.vnet.ibm.com>
-Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
----
-Changelog:
-v1->v2:
- - Move 2 attributes TCA_POLICE_RATE64 TCA_POLICE_PEAKRATE64 after
-   TCA_POLICE_PAD in pkt_cls.h header.
-v2->v3:
- - Use TCA_POLICE_PAD instead of __TCA_POLICE_MAX as padding attr
-   in last parameter in nla_put_u64_64bit() routine.
----
- include/uapi/linux/pkt_cls.h |    2 ++
- net/sched/act_police.c       |   27 +++++++++++++++++++++++----
- 2 files changed, 25 insertions(+), 4 deletions(-)
+On Tue, Sep 03, 2019 at 03:06:07PM +0200, Petr Mladek wrote:
+> On Mon 2019-09-02 11:32:39, Sakari Ailus wrote:
+> > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
+> > support printing full path of the node, including its name ("f") and only
+> > the node's name ("P") in the printk family of functions. The two flags
+> > have equivalent functionality to existing %pOF with the same two modifiers
+> > ("f" and "P") on OF based systems. The ability to do the same on ACPI
+> > based systems is added by this patch.
+> > diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> > index 922a29eb70e6c..abba210f67567 100644
+> > --- a/Documentation/core-api/printk-formats.rst
+> > +++ b/Documentation/core-api/printk-formats.rst
+> > @@ -418,6 +418,30 @@ Examples::
+> >  
+> >  Passed by reference.
+> >  
+> > +Fwnode handles
+> > +--------------
+> > +
+> > +::
+> > +
+> > +	%pfw[fP]
+> > +
+> > +For printing information on fwnode handles. The default is to print the full
+> > +node name, including the path. The modifiers are functionally equivalent to
+> > +%pOF above.
+> > +
+> > +	- f - full name of the node, including the path
+> > +	- P - the name of the node including an address (if there is one)
+> > +
+> > +Examples (ACPI):
+> 
+> s/:/::/ for the .rst formar.
 
-diff --git a/include/uapi/linux/pkt_cls.h b/include/uapi/linux/pkt_cls.h
-index b057aee..a6aa466 100644
---- a/include/uapi/linux/pkt_cls.h
-+++ b/include/uapi/linux/pkt_cls.h
-@@ -160,6 +160,8 @@ enum {
- 	TCA_POLICE_RESULT,
- 	TCA_POLICE_TM,
- 	TCA_POLICE_PAD,
-+	TCA_POLICE_RATE64,
-+	TCA_POLICE_PEAKRATE64,
- 	__TCA_POLICE_MAX
- #define TCA_POLICE_RESULT TCA_POLICE_RESULT
- };
-diff --git a/net/sched/act_police.c b/net/sched/act_police.c
-index 49cec3e..425f2a3 100644
---- a/net/sched/act_police.c
-+++ b/net/sched/act_police.c
-@@ -40,6 +40,8 @@ static int tcf_police_walker(struct net *net, struct sk_buff *skb,
- 	[TCA_POLICE_PEAKRATE]	= { .len = TC_RTAB_SIZE },
- 	[TCA_POLICE_AVRATE]	= { .type = NLA_U32 },
- 	[TCA_POLICE_RESULT]	= { .type = NLA_U32 },
-+	[TCA_POLICE_RATE64]     = { .type = NLA_U64 },
-+	[TCA_POLICE_PEAKRATE64] = { .type = NLA_U64 },
- };
- 
- static int tcf_police_init(struct net *net, struct nlattr *nla,
-@@ -58,6 +60,7 @@ static int tcf_police_init(struct net *net, struct nlattr *nla,
- 	struct tcf_police_params *new;
- 	bool exists = false;
- 	u32 index;
-+	u64 rate64, prate64;
- 
- 	if (nla == NULL)
- 		return -EINVAL;
-@@ -155,14 +158,18 @@ static int tcf_police_init(struct net *net, struct nlattr *nla,
- 	}
- 	if (R_tab) {
- 		new->rate_present = true;
--		psched_ratecfg_precompute(&new->rate, &R_tab->rate, 0);
-+		rate64 = tb[TCA_POLICE_RATE64] ?
-+			 nla_get_u64(tb[TCA_POLICE_RATE64]) : 0;
-+		psched_ratecfg_precompute(&new->rate, &R_tab->rate, rate64);
- 		qdisc_put_rtab(R_tab);
- 	} else {
- 		new->rate_present = false;
- 	}
- 	if (P_tab) {
- 		new->peak_present = true;
--		psched_ratecfg_precompute(&new->peak, &P_tab->rate, 0);
-+		prate64 = tb[TCA_POLICE_PEAKRATE64] ?
-+			  nla_get_u64(tb[TCA_POLICE_PEAKRATE64]) : 0;
-+		psched_ratecfg_precompute(&new->peak, &P_tab->rate, prate64);
- 		qdisc_put_rtab(P_tab);
- 	} else {
- 		new->peak_present = false;
-@@ -313,10 +320,22 @@ static int tcf_police_dump(struct sk_buff *skb, struct tc_action *a,
- 				      lockdep_is_held(&police->tcf_lock));
- 	opt.mtu = p->tcfp_mtu;
- 	opt.burst = PSCHED_NS2TICKS(p->tcfp_burst);
--	if (p->rate_present)
-+	if (p->rate_present) {
- 		psched_ratecfg_getrate(&opt.rate, &p->rate);
--	if (p->peak_present)
-+		if ((police->params->rate.rate_bytes_ps >= (1ULL << 32)) &&
-+		    nla_put_u64_64bit(skb, TCA_POLICE_RATE64,
-+				      police->params->rate.rate_bytes_ps,
-+				      TCA_POLICE_PAD))
-+			goto nla_put_failure;
-+	}
-+	if (p->peak_present) {
- 		psched_ratecfg_getrate(&opt.peakrate, &p->peak);
-+		if ((police->params->peak.rate_bytes_ps >= (1ULL << 32)) &&
-+		    nla_put_u64_64bit(skb, TCA_POLICE_PEAKRATE64,
-+				      police->params->peak.rate_bytes_ps,
-+				      TCA_POLICE_PAD))
-+			goto nla_put_failure;
-+	}
- 	if (nla_put(skb, TCA_POLICE_TBF, sizeof(opt), &opt))
- 		goto nla_put_failure;
- 	if (p->tcfp_result &&
+Fixed both.
+
+> 
+> > +
+> > +	%pfwf	\_SB.PCI0.CIO2.port@1.endpoint@0	- Full node name
+> > +	%pfwP	endpoint@0				- Node name
+> > +
+> > +Examples (OF):
+> 
+> Same here.
+> 
+> > +
+> > +	%pfwf	/ocp@68000000/i2c@48072000/camera@10/port/endpoint - Full name
+> > +	%pfwP	endpoint				- Node name
+> > +
+> >  Time and date (struct rtc_time)
+> >  -------------------------------
+> >  
+> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> > index 4ad9332d54ba6..b9b4c835db063 100644
+> > --- a/lib/vsprintf.c
+> > +++ b/lib/vsprintf.c
+> > @@ -1981,6 +1981,36 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+> >  	return widen_string(buf, buf - buf_start, end, spec);
+> >  }
+> >  
+> > +static noinline_for_stack
+> > +char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
+> > +		    struct printf_spec spec, const char *fmt)
+> > +{
+> > +	struct printf_spec str_spec = spec;
+> > +	char *buf_start = buf;
+> > +
+> > +	str_spec.field_width = -1;
+> > +
+> > +	if (*fmt != 'w')
+> > +		return error_string(buf, end, "(%pfw?)", spec);
+
+This should have been:
+
+		return error_string(buf, end, "(%pf?)", spec);
+
+I'll address that for v6.
+
+> 
+> This means that only "%pfw" will dereference the pointer by
+> fwnode_full_name_string() or fwnode_get_name(). All the other
+> eventual misuses of the obsolete %pf format will result in this
+> error message.
+> 
+> OK, it is hard to imagine using "%pf" to get symbol name and always add
+> 'w' suffix. Therefore it looks that reusing the obsolete %pf format
+> modifier is pretty safe after all.
+> 
+> 
+> > +	if (check_pointer(&buf, end, fwnode, spec))
+> > +		return buf;
+> > +
+> > +	fmt++;
+> > +
+> > +	switch (*fmt) {
+> > +	case 'f':	/* full_name */
+> > +	default:
+> 
+> Using default: in the middle of switch might cause a lot of confusion.
+> Please, make it the last label.
+
+Fixed.
+
+> 
+> 
+> > +		buf = fwnode_full_name_string(fwnode, buf, end);
+> > +		break;
+> > +	case 'P':	/* name */
+> > +		buf = string(buf, end, fwnode_get_name(fwnode), str_spec);
+> > +		break;
+> > +	}
+> > +
+> > +	return widen_string(buf, buf - buf_start, end, spec);
+> > +}
+> > +
+> >  /*
+> >   * Show a '%p' thing.  A kernel extension is that the '%p' is followed
+> >   * by an extra set of alphanumeric characters that are extended format
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index a60c241112cd4..8df50911ff4e9 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -5995,7 +5995,8 @@ sub process {
+> >  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
+> >  					$specifier = $1;
+> >  					$extension = $2;
+> > -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
+> > +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
+> > +					    $extension =~ /^f[^w]/) {
+> 
+> This does not work. $extension seems to have only one character.
+
+Good catch. \w indeed matches a single letter; I'll change that to \w+ and
+change the other uses accordingly.
+
 -- 
-1.7.1
+Regards,
 
+Sakari Ailus
+sakari.ailus@linux.intel.com
