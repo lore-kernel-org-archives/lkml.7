@@ -2,87 +2,123 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40398C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A340C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B87022DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567572573;
-	bh=RYQZWS5hLfcr4O5kK1IFeMvLQwPkEx3NNbUeONqFX3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JwyT06KkKBPUCtDlKhyQ+nTqrDPl67bfkY3T4guF9O+iYxGp1G5aUUwg+wb7BMbIE
-	 /GBq1g/jM7LAwNLN910ZT4ldx0jGNmVRQn3R73UjaTbcFKXIzeiMNW/dKJIFOKvgE8
-	 MAiDcXyb3EdTVI6pGjdj51Q3ZFz6iT8PU5rGZsYY=
+	by mail.kernel.org (Postfix) with ESMTP id E2BF022CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:50:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drOTaSQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbfIDEtc (ORCPT
+        id S1728406AbfIDEuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 00:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDEtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 00:49:32 -0400
-Received: from localhost (unknown [122.182.201.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A32FD22CED;
-        Wed,  4 Sep 2019 04:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567572571;
-        bh=RYQZWS5hLfcr4O5kK1IFeMvLQwPkEx3NNbUeONqFX3o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ssDS0DU1XeYSG1mO+bd136PXrajZ/9hLDpCa8jw1UoALJgtf8mDfybn7yqyTiEKHg
-         BodLq3Ixe+2kcnGxiNCnVqYxx1CXfZLqelCQzWeo+5J96jr5g0NAWv3DdMGSxpfDz6
-         TdzBHzoTtjGYjrYEwUSyBE8JKevALla8afoRr0Zw=
-Date:   Wed, 4 Sep 2019 10:18:22 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ioat/dca: Use struct_size() helper
-Message-ID: <20190904044822.GX2672@vkoul-mobl>
-References: <20190828184015.GA4273@embeddedor>
+        Wed, 4 Sep 2019 00:50:23 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:36015 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfIDEuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 00:50:22 -0400
+Received: by mail-io1-f43.google.com with SMTP id b136so17202539iof.3;
+        Tue, 03 Sep 2019 21:50:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DqeeCLoOIocazJotBpO5DRxlEiowj7NIrvCPQiLSXaw=;
+        b=drOTaSQEZbU1qHaXGu/LzPQb1XjTStNTAsZenn0BsCKYusHP0I801i/Gbw4kw/BOp2
+         kLfZOlFv0f+4WLfQhMAntIeYdkAT9zdn97bPAkNF6NZAuz7yCYg7R8btHVj4b/7qXvAT
+         /u6BE4sWpuUWOF8fXujbwVPFRtXQrNCk8OA60tkzV6vWGYq2sb8b8CMHUkN/L7t5oXEK
+         qrcxj9602l0wpRQ620vtbERxyr0Lgrg39IKQSBzag2h2io9UWJXIbpxq4NrT6FqSq4JD
+         1Z78XrbYD6zv/2oJUVpeyTOmhxuXnJU4tIcP8iBXd60ZoiwY5l4nptT74BsTsT9uUf2m
+         VFpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DqeeCLoOIocazJotBpO5DRxlEiowj7NIrvCPQiLSXaw=;
+        b=k8y9z80vESXQZLW5UQJMwgJHX3F0W93p1Ky57jRDpkJZQhiVmMlwY4k1b/KtTTk8d3
+         P6M3yxSS9QTg9xJmVAp93w6Aqbl4YB1ZqORX1cpzXoB4mOeoGPpMFmvhJwneKPJfMTrH
+         B8q6WaesyOMNoFQ7IQKUU7qTUEHz4wIWufJkmlMXpJdM0bf6jA6ys44MYIZVq+dyTBBw
+         BCyIHw3thaKZeUScdlFngj3X7cYOU2xB3eSlTZSB6N6/uZKLkd37yU+NLqvAEH/9b5DP
+         PQzSZnFb/xmGAOhSVPfzaBpEkMASnN8CgyUrhX2Y7QZkmA4GgRVtjDP3Qp2wIriBeyAJ
+         nAyQ==
+X-Gm-Message-State: APjAAAWvc+AkHRwtOEDL7NnvkY6LdLostSHJxwH+uzJ28m//gIMxnMEL
+        rIqyQpDjWVXJZtG+QHyEbPzhBObYNbbu5knngXJbjw==
+X-Google-Smtp-Source: APXvYqyNitz863/kOuhy32iJr10suOM/+h76mNFkYoEe9iU3nWj+ABxHrmDcJGg4oprM0YdfCSzdKLR9KOKD2aJS4I8=
+X-Received: by 2002:a02:948c:: with SMTP id x12mr3507699jah.96.1567572621610;
+ Tue, 03 Sep 2019 21:50:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190828184015.GA4273@embeddedor>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <1567523922.5576.57.camel@lca.pw> <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
+ <20190903211747.GD2899@mit.edu> <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
+ <CAK8P3a0AcPzuGeNFMW=ymO0wH_cmgnynLGYXGjqyrQb65o6aOw@mail.gmail.com>
+In-Reply-To: <CAK8P3a0AcPzuGeNFMW=ymO0wH_cmgnynLGYXGjqyrQb65o6aOw@mail.gmail.com>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Tue, 3 Sep 2019 21:50:09 -0700
+Message-ID: <CABeXuvq0_YsyuFY509XmwFsX6tX5EVHmWGuzHnSyOEX=9X6TFg@mail.gmail.com>
+Subject: Re: "beyond 2038" warnings from loopback mount is noisy
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Qian Cai <cai@lca.pw>,
+        Jeff Layton <jlayton@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-08-19, 13:40, Gustavo A. R. Silva wrote:
-> One of the more common cases of allocation size calculations is finding
-> the size of a structure that has a zero-sized array at the end, along
-> with memory for some number of elements for that array. For example:
-> 
-> struct ioat_dca_priv {
-> 	...
->         struct ioat_dca_slot     req_slots[0];
-> };
-> 
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes.
-> 
-> So, replace the following form:
-> 
-> sizeof(*ioatdca) + (sizeof(struct ioat_dca_slot) * slots)
-> 
-> with:
-> 
-> struct_size(ioatdca, req_slots, slots)
-> 
-> This code was detected with the help of Coccinelle.
+If we don't care to warn about the timestamps that are clamped in
+memory, maybe we could just warn when they are being written out.
+Would something like this be more acceptable? I would also remove the
+warning in ext4.h. I think we don't have to check if the inode is 128
+bytes here (Please correct me if I am wrong). If this looks ok, I can
+post this.
 
-Please do not invent subsystem tags, git log should tell you the
-convention to be used!
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 9e3ae3be3de9..24b14bd3feab 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -833,10 +833,8 @@ do {
+                                 \
+                (raw_inode)->xtime ## _extra =
+         \
 
-Applied after fixing tags, thanks
+ext4_encode_extra_time(&(inode)->xtime);        \
+                }
+         \
+-       else    {\
++       else    \
+                (raw_inode)->xtime = cpu_to_le32(clamp_t(int32_t,
+(inode)->xtime.tv_sec, S32_MIN, S32_MAX));    \
+-               ext4_warning_inode(inode, "inode does not support
+timestamps beyond 2038"); \
+-       } \
+ } while (0)
 
--- 
-~Vinod
+ #define EXT4_EINODE_SET_XTIME(xtime, einode, raw_inode)
+                \
+diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+index 491f9ee4040e..cef5b87cc5a6 100644
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -2791,7 +2791,7 @@ int ext4_expand_extra_isize_ea(struct inode
+*inode, int new_extra_isize,
+
+ cleanup:
+        if (error && (mnt_count != le16_to_cpu(sbi->s_es->s_mnt_count))) {
+-               ext4_warning(inode->i_sb, "Unable to expand inode %lu.
+Delete some EAs or run e2fsck.",
++               ext4_warning(inode->i_sb, "Unable to expand inode %lu.
+Delete some EAs or run e2fsck. Timestamps on the inode expire beyond
+2038",
+                             inode->i_ino);
+                mnt_count = le16_to_cpu(sbi->s_es->s_mnt_count);
+        }
