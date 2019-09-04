@@ -2,168 +2,123 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD821C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A94C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE6C2339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1512339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:58:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Quwnzrze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbfIDJ5s (ORCPT
+        id S1729691AbfIDJ6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:57:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37556 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbfIDJ5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:57:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4AB52B647;
-        Wed,  4 Sep 2019 09:57:46 +0000 (UTC)
+        Wed, 4 Sep 2019 05:58:19 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35113 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfIDJ6T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:58:19 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n10so2929713wmj.0;
+        Wed, 04 Sep 2019 02:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=lkR2Ca+FaxVlWbFtmtut4HN81Y4TL/IiykdxaBdNlG0=;
+        b=QuwnzrzeBewqrpNyHGaKvRTyDkGOzIXzcyfOiCvBiJCs1ugvHmgM1uckgJJDM12US3
+         GjnAt/uKck5kjK0ndm5gk59EO1raWdStt2ghmrHmfNl8KGxshQfQrZuSyW7Z9wgEyes1
+         8zB7zMg7KHLwnBQhL/cQmZycl5Y69vQMAfy74wxdfKwBivxYWu0pWnAiHfuuOPbL2PFu
+         6oVDao+lxcmYwdQ157sx4b/QcjIGOoPvBqAfulfzIi4Akzs+WfxuUzAkunk6dXv8cOeZ
+         KQ0qwPnZF4B0Gsr7NYrcpZpyZjTqDRBk8SR3FZZdO+WyCVzmrv9Nr91hSg5ngSPkkyrF
+         EzPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=lkR2Ca+FaxVlWbFtmtut4HN81Y4TL/IiykdxaBdNlG0=;
+        b=le6hVlxqF+UVh9v1zDtPTCNfAZu1puSV3OsoVUlXAcnrLEuQC5eu8TOFezhzHosYU6
+         X//xRggVslhxdJpxjDnirXr1BJ1IRIg0bBpRUN+uozzLNG3ByzxxleZvYGyuGu1iFaVq
+         qQWZlx5335gY/PFEDlGnHiqdKKr/SDaAslgCOVSFb/aeXqEfRxpdGhgoADdFmVdavh+J
+         RDwNAr/6jJP9ZEN6iQOWOhnz8K/RZHjHTd8VQV2gf1sIBPyy/zXIP7uf1X4liDUA57dh
+         VglBhy+9CPLlaz+CTFE7XnGI9NZShrHycUj1isS+VoLrJ2fckNUHTaywOJxtD3UbJVL9
+         +FFA==
+X-Gm-Message-State: APjAAAW8jxoRND5oj9yzqB34YXjQljjJ8hX+cOriL2ZAbeVLpjahzdav
+        EHDoHAB9Nam0E1oGdue1Xqjn23UP2LKXZNecAVk=
+X-Google-Smtp-Source: APXvYqyfITegUY7/GGfU2Yb5L7f+Fc4UoA9mAMRhHsgK0IA3qxBFEzEtTJLYW1QDy1dULlmkGUCBwejmA83IPr3fQ2I=
+X-Received: by 2002:a7b:c8ca:: with SMTP id f10mr3477750wml.36.1567591097217;
+ Wed, 04 Sep 2019 02:58:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 04 Sep 2019 11:57:45 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     hev <r@hev.cc>, linux-fsdevel@vger.kernel.org, e@80x24.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] fs/epoll: fix the edge-triggered mode for nested
- epoll
-In-Reply-To: <7075dd44-feea-a52f-ddaa-087d7bb2c4f6@akamai.com>
-References: <20190902052034.16423-1-r@hev.cc>
- <0cdc9905efb9b77b159e09bee17d3ad4@suse.de>
- <7075dd44-feea-a52f-ddaa-087d7bb2c4f6@akamai.com>
-Message-ID: <23659bc3e5f80efe9746aefd4d6791e8@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
+ <20190831162555.31887-2-yamada.masahiro@socionext.com> <CAKwvOdm0zcyaBLdSVc7PmjUa-wyVuCaN=6qZoPLvnoJC1ammog@mail.gmail.com>
+ <CA+icZUWzSsFXLmrO2G7ochE62e=kByEV6UKregcJqZrJN1WJxQ@mail.gmail.com> <CA+icZUXboR-0TzpSHf7a8MSjxPWxdC13Oudu8D+b+umtvWCCkg@mail.gmail.com>
+In-Reply-To: <CA+icZUXboR-0TzpSHf7a8MSjxPWxdC13Oudu8D+b+umtvWCCkg@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 4 Sep 2019 11:58:05 +0200
+Message-ID: <CA+icZUVN1zRi5P8PPWMjXoXwtSCkbzTFNreYXi+0HtTjPnfkTQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to KBUILD_EXTRA_WARN
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-03 23:08, Jason Baron wrote:
-> On 9/2/19 11:36 AM, Roman Penyaev wrote:
->> Hi,
->> 
->> This is indeed a bug. (quick side note: could you please remove efd[1]
->> from your test, because it is not related to the reproduction of a
->> current bug).
->> 
->> Your patch lacks a good description, what exactly you've fixed.  Let
->> me speak out loud and please correct me if I'm wrong, my understanding
->> of epoll internals has become a bit rusty: when epoll fds are nested
->> an attempt to harvest events (ep_scan_ready_list() call) produces a
->> second (repeated) event from an internal fd up to an external fd:
->> 
->>      epoll_wait(efd[0], ...):
->>        ep_send_events():
->>           ep_scan_ready_list(depth=0):
->>             ep_send_events_proc():
->>                 ep_item_poll():
->>                   ep_scan_ready_list(depth=1):
->>                     ep_poll_safewake():
->>                       ep_poll_callback()
->>                         list_add_tail(&epi, &epi->rdllist);
->>                         ^^^^^^
->>                         repeated event
->> 
->> 
->> In your patch you forbid wakeup for the cases, where depth != 0, i.e.
->> for all nested cases. That seems clear.  But what if we can go further
->> and remove the whole chunk, which seems excessive:
->> 
->> @@ -885,26 +886,11 @@ static __poll_t ep_scan_ready_list(struct
->> eventpoll *ep,
->> 
->> -
->> -       if (!list_empty(&ep->rdllist)) {
->> -               /*
->> -                * Wake up (if active) both the eventpoll wait list 
->> and
->> -                * the ->poll() wait list (delayed after we release 
->> the
->> lock).
->> -                */
->> -               if (waitqueue_active(&ep->wq))
->> -                       wake_up(&ep->wq);
->> -               if (waitqueue_active(&ep->poll_wait))
->> -                       pwake++;
->> -       }
->>         write_unlock_irq(&ep->lock);
->> 
->>         if (!ep_locked)
->>                 mutex_unlock(&ep->mtx);
->> 
->> -       /* We have to call this outside the lock */
->> -       if (pwake)
->> -               ep_poll_safewake(&ep->poll_wait);
->> 
->> 
->> I reason like that: by the time we've reached the point of scanning 
->> events
->> for readiness all wakeups from ep_poll_callback have been already 
->> fired and
->> new events have been already accounted in ready list 
->> (ep_poll_callback()
->> calls
->> the same ep_poll_safewake()). Here, frankly, I'm not 100% sure and 
->> probably
->> missing some corner cases.
->> 
->> Thoughts?
-> 
-> So the: 'wake_up(&ep->wq);' part, I think is about waking up other
-> threads that may be in waiting in epoll_wait(). For example, there may
-> be multiple threads doing epoll_wait() on the same epoll fd, and the
-> logic above seems to say thread 1 may have processed say N events and
-> now its going to to go off to work those, so let's wake up thread 2 now
-> to handle the next chunk.
+On Wed, Sep 4, 2019 at 10:07 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Wed, Sep 4, 2019 at 8:58 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Tue, Sep 3, 2019 at 11:50 PM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > >
+> > > On Sat, Aug 31, 2019 at 9:26 AM Masahiro Yamada
+> > > <yamada.masahiro@socionext.com> wrote:
+> > > >
+> > > > KBUILD_ENABLE_EXTRA_GCC_CHECKS started as a switch to add extra warning
+> > > > options for GCC, but now it is a historical misnomer since we use it
+> > > > also for Clang, DTC, and even kernel-doc.
+> > >
+> > > Thanks for the patch!
+> > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> > >
+> >
+> > Thanks for the patch.
+> > I like the backward compatibility and am OK with pointing to 'make
+> > --help' for the documentation part (KISS - Keep It Simple and
+> > Short/Stupid).
+> >
+> > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+>
+> If you will do a next version...
+>
+> - @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
+> + @echo  '  make W=n   [targets] Enable extra checks, n=1,2,3 where'
+>
+> ...clarify on extra checks for compiler...
+>
+> + @echo  '  make W=n   [targets] Enable extra *compiler* checks, n=1,2,3 where'
+>
 
-Not quite. Thread which calls ep_scan_ready_list() processes all the
-events, and while processing those, removes them one by one from the
-ready list.  But if event mask is !0 and event belongs to
-Level Triggered Mode descriptor (let's say default mode) it tails event
-again back to the list (because we are in level mode, so event should
-be there).  So at the end of this traversing loop ready list is likely
-not empty, and if so, wake up again is called for nested epoll fds.
-But, those nested epoll fds should get already all the notifications
-from the main event callback ep_poll_callback(), regardless any thread
-which traverses events.
++KBUILD_EXTRA_WARN
++-----------------
++Specify the extra build checks. The same value can be assigned by passing
++W=... from the command line.
 
-I suppose this logic exists for decades, when Davide (the author) was
-reshuffling the code here and there.
+For consistency reasons might be better:
 
-But I do not feel confidence to state that this extra wakeup is bogus,
-I just have a gut feeling that it looks excessive.
+- @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
++ @echo  '  make W=n   [targets] Enable extra build checks, n=1,2,3 where'
 
-> So I think removing all that even for the
-> depth 0 case is going to change some behavior here. So perhaps, it
-> should be removed for all depths except for 0? And if so, it may be
-> better to make 2 patches here to separate these changes.
-> 
-> For the nested wakeups, I agree that the extra wakeups seem unnecessary
-> and it may make sense to remove them for all depths. I don't think the
-> nested epoll semantics are particularly well spelled out, and afaict,
-> nested epoll() has behaved this way for quite some time. And the 
-> current
-> behavior is not bad in the way that a missing wakeup or false negative
-> would be.
-
-That's 100% true! For edge mode extra wake up is not a bug, not optimal
-for userspace - yes, but that can't lead to any lost wakeups.
-
---
-Roman
-
+- Sedat -
