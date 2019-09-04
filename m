@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C96C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F827C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808F0208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E725122CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619998;
-	bh=V1T2FamzhMWmbIN+x5SXn0ar1Ks6oD9mnMmDqzKgv44=;
+	s=default; t=1567620001;
+	bh=QFhZUAq6CUY2ejbNoS/Xrn+mjYw8ZHmVgo0Cfwif+tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XegbA/joRMl4/ZXRyzK/jUpqLxUbKJQ0k3j8/BQnH0TC5S8CZoG/1gGXFa/340+0R
-	 yMK11jyrRLnyEI9laZWUxVJqvCHzjIUnU9DQVxe6dQ/iDIbI+m8lcixkQZwi2DEj5G
-	 s1/eh6Ce6VGpXW9RO5jFSOg5VVJPoasMl/PO3cvE=
+	b=FelDP5FNd0ACML/e2RHIA9Dz3ChlsjyGTgX6La5Is9bp5jbeHF9SjCKxCrm56E+G/
+	 D4oB+F/UfTY2NbWuPOc6+6iRtOl/vBiSNIbRG4sj23oSJ48TJiY26qI+jzMLet19hj
+	 VhOf/CJHQU2E00yDUl5HrEgyQybn+0jiygC0yumc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733123AbfIDR75 (ORCPT
+        id S2388330AbfIDR77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38928 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:59:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732467AbfIDR7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:54 -0400
+        id S2387925AbfIDR75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:59:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A692A208E4;
-        Wed,  4 Sep 2019 17:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E181208E4;
+        Wed,  4 Sep 2019 17:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619994;
-        bh=V1T2FamzhMWmbIN+x5SXn0ar1Ks6oD9mnMmDqzKgv44=;
+        s=default; t=1567619996;
+        bh=QFhZUAq6CUY2ejbNoS/Xrn+mjYw8ZHmVgo0Cfwif+tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wy0QXMzpxYzeEZYoqZTGWdi6vFyR4xjNOKRamVmOlgXlSvdo3az2soVvnSUOJ9qL5
-         86lPq2oz0z2xEBVzT7VBur0ceMdgtk+/4pEqsLtUi0ujLGuECQqorpLScuUsK9yLJ4
-         LLOy2w9R71tc8aKpJSZw5D3/BRnFagaRM0w+v8xc=
+        b=jpzvhgVyVPitBcqjpmm0gLV8fUGOAUle2JopEeuUb1fewHh8IB/uw3mM7Bke9wGTn
+         NVXI8+cFTc1jzXxjJdj3gGUvYXInYeLnpzvVjWivBc5/Wbo2k1HzBXyxggIlzcNq4N
+         ZGcVrPBFd90OTvBFr09xcviNuXDcqI2HbkCrelVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 08/83] st21nfca_connectivity_event_received: null check the allocation
-Date:   Wed,  4 Sep 2019 19:53:00 +0200
-Message-Id: <20190904175304.477118124@linuxfoundation.org>
+Subject: [PATCH 4.9 09/83] st_nci_hci_connectivity_event_received: null check the allocation
+Date:   Wed,  4 Sep 2019 19:53:01 +0200
+Message-Id: <20190904175304.671792079@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -61,30 +61,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9891d06836e67324c9e9c4675ed90fc8b8110034 ]
+[ Upstream commit 3008e06fdf0973770370f97d5f1fba3701d8281d ]
 
-devm_kzalloc may fail and return null. So the null check is needed.
+devm_kzalloc may fail and return NULL. So the null check is needed.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st21nfca/se.c | 2 ++
+ drivers/nfc/st-nci/se.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
-index 3a98563d4a121..eac608a457f03 100644
---- a/drivers/nfc/st21nfca/se.c
-+++ b/drivers/nfc/st21nfca/se.c
-@@ -326,6 +326,8 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
+index 56f2112e0cd84..85df2e0093109 100644
+--- a/drivers/nfc/st-nci/se.c
++++ b/drivers/nfc/st-nci/se.c
+@@ -344,6 +344,8 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
  
  		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
- 						   skb->len - 2, GFP_KERNEL);
+ 					    skb->len - 2, GFP_KERNEL);
 +		if (!transaction)
 +			return -ENOMEM;
  
  		transaction->aid_len = skb->data[1];
- 		memcpy(transaction->aid, &skb->data[2],
+ 		memcpy(transaction->aid, &skb->data[2], transaction->aid_len);
 -- 
 2.20.1
 
