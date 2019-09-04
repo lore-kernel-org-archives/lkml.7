@@ -2,124 +2,135 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CE2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773F6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6D622DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PZrcsQdv"
+	by mail.kernel.org (Postfix) with ESMTP id 5795522DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:44:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfIDKof (ORCPT
+        id S1729733AbfIDKok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:44:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:58695 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbfIDKoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:44:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46NgRy2ffgz9sDQ;
-        Wed,  4 Sep 2019 20:44:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567593871;
-        bh=q51v6jMKfuMMsSNQkaFTfC+YDlmgKQBdULryscFJ038=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PZrcsQdvrc9rYmb5r9Bk1LoYEA8tbrMSzxY1x3Q9nasSr9ar1TiKhiVvD29wyBWGp
-         Z/49E+ypr6HdyobnOBw9FanboRg9CnYE3hiNL5eX31EA2fpbG7AncidoL44kwne9aT
-         J4JrFOt1fAjd1xRajN9WL4t8gkHkw5SLPG5vHV/kKmrqVsLyT127l8Y1FdyuUJFQcC
-         l1L/qX6Vkr9YyV4xsMYNGJ7DZq5h4UN4rVtNpyx51SE2rHCd3YGz6EthJLB2lCE3V0
-         Jm/06Y5dvhBqDpALoeE8J9KPvbJfelPKjjizntlV5En4HHz6KBXKUcxGkL0OA70eZs
-         Hv0foYU83L7qw==
-Date:   Wed, 4 Sep 2019 20:44:27 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Vinod Koul <vkoul@kernel.org>, Olof Johansson <olof@lixom.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: linux-next: manual merge of the slave-dma tree with the arm-soc
- tree
-Message-ID: <20190904204427.1e1a064f@canb.auug.org.au>
+        Wed, 4 Sep 2019 06:44:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49509 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729644AbfIDKok (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:44:40 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i5SmA-0001Xk-H3; Wed, 04 Sep 2019 10:44:34 +0000
+Date:   Wed, 4 Sep 2019 12:44:32 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Hridya Valsaraju <hridya@google.com>, devel@driverdev.osuosl.org,
+        kernel-team@android.com, Todd Kjos <tkjos@android.com>,
+        linux-kernel@vger.kernel.org,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>
+Subject: Re: [PATCH v3 2/2] binder: Validate the default binderfs device
+ names.
+Message-ID: <20190904104431.ehzyllugr6fr2vjz@wittgenstein>
+References: <20190808222727.132744-1-hridya@google.com>
+ <20190808222727.132744-3-hridya@google.com>
+ <20190809145508.GD16262@kroah.com>
+ <20190809181439.qrs2k7l23ot4am4s@wittgenstein>
+ <CA+wgaPPK0fY2a+pCEFHrw8p8WCb459yw41s_6xppWFfEa=P7Og@mail.gmail.com>
+ <20190904071929.GA19830@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/j1zaefufpuug0qMHWw8wW3c";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190904071929.GA19830@kroah.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/j1zaefufpuug0qMHWw8wW3c
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Sep 04, 2019 at 09:19:29AM +0200, Greg Kroah-Hartman wrote:
+> On Fri, Aug 09, 2019 at 11:41:12AM -0700, Hridya Valsaraju wrote:
+> > On Fri, Aug 9, 2019 at 11:14 AM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
+> > >
+> > > On Fri, Aug 09, 2019 at 04:55:08PM +0200, Greg Kroah-Hartman wrote:
+> > > > On Thu, Aug 08, 2019 at 03:27:26PM -0700, Hridya Valsaraju wrote:
+> > > > > Length of a binderfs device name cannot exceed BINDERFS_MAX_NAME.
+> > > > > This patch adds a check in binderfs_init() to ensure the same
+> > > > > for the default binder devices that will be created in every
+> > > > > binderfs instance.
+> > > > >
+> > > > > Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> > > > > ---
+> > > > >  drivers/android/binderfs.c | 12 ++++++++++++
+> > > > >  1 file changed, 12 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> > > > > index aee46dd1be91..55c5adb87585 100644
+> > > > > --- a/drivers/android/binderfs.c
+> > > > > +++ b/drivers/android/binderfs.c
+> > > > > @@ -570,6 +570,18 @@ static struct file_system_type binder_fs_type = {
+> > > > >  int __init init_binderfs(void)
+> > > > >  {
+> > > > >     int ret;
+> > > > > +   const char *name;
+> > > > > +   size_t len;
+> > > > > +
+> > > > > +   /* Verify that the default binderfs device names are valid. */
+> > > >
+> > > > And by "valid" you only mean "not bigger than BINDERFS_MAX_NAME, right?
+> > > >
+> > > > > +   name = binder_devices_param;
+> > > > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> > > > > +           if (len > BINDERFS_MAX_NAME)
+> > > > > +                   return -E2BIG;
+> > > > > +           name += len;
+> > > > > +           if (*name == ',')
+> > > > > +                   name++;
+> > > > > +   }
+> > > >
+> > > > We already tokenize the binderfs device names in binder_init(), why not
+> > > > check this there instead?  Parsing the same string over and over isn't
+> > > > the nicest.
+> > >
+> > > non-binderfs binder devices do not have their limit set to
+> > > BINDERFS_NAME_MAX. That's why the check has likely been made specific to
+> > > binderfs binder devices which do have that limit.
+> > 
+> > 
+> > Thank you Greg and Christian, for taking another look. Yes,
+> > non-binderfs binder devices not having this limitation is the reason
+> > why the check was made specific to binderfs devices. Also, when
+> > CONFIG_ANDROID_BINDERFS is set, patch 1/2 disabled the same string
+> > being parsed in binder_init().
+> > 
+> > >
+> > > But, in practice, 255 is the standard path-part limit that no-one really
+> > > exceeds especially not for stuff such as device nodes which usually have
+> > > rather standard naming schemes (e.g. binder, vndbinder, hwbinder, etc.).
+> > > So yes, we can move that check before both the binderfs binder device
+> > > and non-binderfs binder device parsing code and treat it as a generic
+> > > check.
+> > > Then we can also backport that check as you requested in the other mail.
+> > > Unless Hridya or Todd have objections, of course.
+> > 
+> > I do not have any objections to adding a generic check in binder_init() instead.
+> 
+> Was this patchset going to be redone based on this?
 
-Hi all,
+No, we decided to leave this check specific to binderfs for now because
+the length limit only applies to binderfs devices. If you really want to
+have this check in binder we can send a follow-up. I would prefer to
+take the series as is.
 
-Today's linux-next merge of the slave-dma tree got a conflict in:
+Btw, for the two binderfs series from Hridya, do you want me to get a
+branch ready and send you a PR for both of them together?
 
-  drivers/dma/iop-adma.c
-
-between commit:
-
-  00c9755524fb ("dmaengine: iop-adma: use correct printk format strings")
-
-from the arm-soc tree and commit:
-
-  d17d9ea95727 ("dmaengine: iop-adma.c: fix printk format warning")
-
-from the slave-dma tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/dma/iop-adma.c
-index 03f4a588cf7f,003b753e4604..000000000000
---- a/drivers/dma/iop-adma.c
-+++ b/drivers/dma/iop-adma.c
-@@@ -116,9 -116,9 +116,9 @@@ static void __iop_adma_slot_cleanup(str
-  	list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
-  					chain_node) {
-  		pr_debug("\tcookie: %d slot: %d busy: %d "
-- 			"this_desc: %#x next_desc: %#llx ack: %d\n",
- -			"this_desc: %pad next_desc: %#x ack: %d\n",
-++			"this_desc: %pad next_desc: %#llx ack: %d\n",
-  			iter->async_tx.cookie, iter->idx, busy,
-- 			iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
- -			&iter->async_tx.phys, iop_desc_get_next_desc(iter),
-++			&iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
-  			async_tx_test_ack(&iter->async_tx));
-  		prefetch(_iter);
-  		prefetch(&_iter->async_tx);
-
---Sig_/j1zaefufpuug0qMHWw8wW3c
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1vlYsACgkQAVBC80lX
-0GyEsAf/Qnjvf6g+5SsGilNzTBLfT4HNlal2P85915JvP7smyeAL6gS6QYZMUm1h
-owyQdt/jEdTuxm1ICfrYoy/RgMr74rjpd9BpCpoXKOyc13o+pOhni819sL9B9kTP
-0uvJVqt3FXqYQHvGBhbikc1aRgG0Qzq1BnZBaju6GYTXDtc1zf2OlHwgHlgrkurx
-QjK13fMQBhLHVVHGUi2wMGDLCnc+4jDYYfV39FzXGtBOUT823/zMVKpsUe36l92q
-vgkmXWjSmmAR5+J6jioYvVK47sf2TJ7kAn/1BEutuBKCn/GdfDAyfmQz1cOS02pR
-v06nhsPXiUXb73XePYFYQFPDppbKFQ==
-=RjA1
------END PGP SIGNATURE-----
-
---Sig_/j1zaefufpuug0qMHWw8wW3c--
+Christian
