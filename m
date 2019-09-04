@@ -2,103 +2,99 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687F6C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319F0C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5662087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620988;
-	bh=QS2EO+bz72QZXczxXVN/e5/PS+AuqMibVBLItVH+2uw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OBuHvRw2zkBpU15MBJ4s7a+6F4QeyBq037KW15uZYTI2uQyr6g/zp+yMSXD4B+gcl
-	 zuLL6Wy69w8DwSH0RJsEWOoahdm5dwOv5bYHT1SugLu+oEGawyH3Nsq6mJJqCtWvOo
-	 v7pU+LAHhzLYMYErT7vPf/PblZ7zyzNxWgege6eU=
+	by mail.kernel.org (Postfix) with ESMTP id 080E0206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390803AbfIDSOb (ORCPT
+        id S2389898AbfIDSQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59728 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:16:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59088 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732094AbfIDSO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730269AbfIDSQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:16:41 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A29BB208E4;
-        Wed,  4 Sep 2019 18:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620868;
-        bh=QS2EO+bz72QZXczxXVN/e5/PS+AuqMibVBLItVH+2uw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cwDWkr5zK4HVV++Awmn03bzHkHfNJNteIP9qkUQo8bzY9rDAu3+KzDtIVcRHACEjC
-         WpIS8OC1/30V0uyqYwzg+jmEostpFTe6NRT1TV6fWtIsb5MkZJEecm4IDexpfL1RaQ
-         ol/LWBOgsTlNnfg/8zlOwjQAs6lM38k3SxmAAq1Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.2 125/143] mac80211: fix possible sta leak
-Date:   Wed,  4 Sep 2019 19:54:28 +0200
-Message-Id: <20190904175319.298497697@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-References: <20190904175314.206239922@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id A1812307D971;
+        Wed,  4 Sep 2019 18:16:40 +0000 (UTC)
+Received: from localhost (ovpn-116-88.ams2.redhat.com [10.36.116.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A8B505C22F;
+        Wed,  4 Sep 2019 18:16:31 +0000 (UTC)
+Date:   Wed, 4 Sep 2019 19:16:30 +0100
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v4 15/16] virtio-fs: add virtiofs filesystem
+Message-ID: <20190904181630.GB26826@stefanha-x1.localdomain>
+References: <20190903113640.7984-1-mszeredi@redhat.com>
+ <20190903114203.8278-10-mszeredi@redhat.com>
+ <20190903092222-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+Content-Disposition: inline
+In-Reply-To: <20190903092222-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 04 Sep 2019 18:16:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
 
-commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 upstream.
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If TDLS station addition is rejected, the sta memory is leaked.
-Avoid this by moving the check before the allocation.
+On Tue, Sep 03, 2019 at 09:55:49AM -0400, Michael S. Tsirkin wrote:
+> On Tue, Sep 03, 2019 at 01:42:02PM +0200, Miklos Szeredi wrote:
+> Endian-ness for fuse header also looks wrong.
+[...]
+> > +struct virtio_fs_forget {
+> > +	struct fuse_in_header ih;
+> > +	struct fuse_forget_in arg;
+>=20
+> These structures are all native endian.
+>=20
+> Passing them to host will make cross-endian setups painful to support,
+> and hardware implementations impossible.
+>=20
+> How about converting everything to LE?
 
-Cc: stable@vger.kernel.org
-Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
-Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The driver dictates the endianness of the FUSE protocol session.  The
+virtio-fs device specification states that the device looks at the first
+request's fuse_in_header::opcode field to detect the guest endianness.
 
----
- net/mac80211/cfg.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+If it sees FUSE_INIT in its native endianness then no byte-swapping is
+necessary.  If it sees FUSE_INIT in the opposite endianness then
+byte-swapping is necessary on the device side.
 
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1543,6 +1543,11 @@ static int ieee80211_add_station(struct
- 	if (is_multicast_ether_addr(mac))
- 		return -EINVAL;
- 
-+	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
-+	    sdata->vif.type == NL80211_IFTYPE_STATION &&
-+	    !sdata->u.mgd.associated)
-+		return -EINVAL;
-+
- 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
- 	if (!sta)
- 		return -ENOMEM;
-@@ -1550,10 +1555,6 @@ static int ieee80211_add_station(struct
- 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
- 		sta->sta.tdls = true;
- 
--	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
--	    !sdata->u.mgd.associated)
--		return -EINVAL;
--
- 	err = sta_apply_parameters(local, sta, params);
- 	if (err) {
- 		sta_info_free(local, sta);
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl1v/34ACgkQnKSrs4Gr
+c8i/Ngf/avxJID8kUoTNNjfyRoLArYmKGT1yBKp6x5LN822UCgyyHpur20MmX6XI
+zFrzqnp+AlNkaQu9P9RKeh2mhdnZNjHx9KSg/UezvIHG055WKJ2WTw2SQDhuAY5q
+Yz4+5Se2gV8OeNDIPoqBFXM+yLLJpXATZGrtKSoAQd5x8Q/ll6ctpzcM71rCDVla
+2kbcqDNOBo+A45A8cfHLJ8a4ppNOKoFbWPp+DLsyHPiifbdFAxxMbG4SgsnN6i59
+1n/+Y6Nz/92n6kL/czYdZ6kwovv9IUdO0DFzn/lQpgRYL3dLO/qS5G7/korqfnyf
+JUECay8lk+EPxVOJPt9HFaen8QA2xw==
+=sBLJ
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
