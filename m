@@ -2,410 +2,144 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A997C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225FFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1D9420674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076CC23401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfIDOC7 (ORCPT
+        id S1730665AbfIDOEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:02:59 -0400
-Received: from mga12.intel.com ([192.55.52.136]:18936 "EHLO mga12.intel.com"
+        Wed, 4 Sep 2019 10:04:05 -0400
+Received: from mga11.intel.com ([192.55.52.93]:11571 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730533AbfIDOC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:02:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1727417AbfIDOEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:04:05 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 07:02:58 -0700
-X-ExtLoop1: 1
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 07:04:03 -0700
 X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="382522930"
-Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Sep 2019 07:02:55 -0700
-From:   Voon Weifeng <weifeng.voon@intel.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        Voon Weifeng <weifeng.voon@intel.com>
-Subject: [PATCH v2 net-next] net: stmmac: Add support for MDIO interrupts
-Date:   Wed,  4 Sep 2019 22:02:54 +0800
-Message-Id: <1567605774-5500-1-git-send-email-weifeng.voon@intel.com>
-X-Mailer: git-send-email 1.9.1
+   d="scan'208";a="185122449"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 07:03:58 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 61906204A6; Wed,  4 Sep 2019 17:03:45 +0300 (EEST)
+Date:   Wed, 4 Sep 2019 17:03:45 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 11/11] lib/test_printf: Add tests for %pfw printk
+ modifier
+Message-ID: <20190904140345.GT5475@paasikivi.fi.intel.com>
+References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
+ <20190902083240.20367-12-sakari.ailus@linux.intel.com>
+ <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903133841.dhb6k2lwx2gglyjs@pathway.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
+Hi Petr,
 
-DW EQoS v5.xx controllers added capability for interrupt generation
-when MDIO interface is done (GMII Busy bit is cleared).
-This patch adds support for this interrupt on supported HW to avoid
-polling on GMII Busy bit.
+Thanks for the comments.
 
-stmmac_mdio_read() & stmmac_mdio_write() will sleep until wake_up() is
-called by the interrupt handler.
+On Tue, Sep 03, 2019 at 03:38:41PM +0200, Petr Mladek wrote:
+> On Mon 2019-09-02 11:32:40, Sakari Ailus wrote:
+> > Add a test for the %pfw printk modifier using software nodes.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  lib/test_printf.c | 37 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> > 
+> > diff --git a/lib/test_printf.c b/lib/test_printf.c
+> > index 944eb50f38625..9c6d716979fb1 100644
+> > --- a/lib/test_printf.c
+> > +++ b/lib/test_printf.c
+> > @@ -22,6 +22,8 @@
+> >  #include <linux/gfp.h>
+> >  #include <linux/mm.h>
+> >  
+> > +#include <linux/property.h>
+> > +
+> >  #include "../tools/testing/selftests/kselftest_module.h"
+> >  
+> >  #define BUF_SIZE 256
+> > @@ -588,6 +590,40 @@ flags(void)
+> >  	kfree(cmp_buffer);
+> >  }
+> >  
+> > +static void __init fwnode_pointer(void)
+> > +{
+> > +	const struct software_node softnodes[] = {
+> > +		{ .name = "first", },
+> > +		{ .name = "second", .parent = &softnodes[0], },
+> > +		{ .name = "third", .parent = &softnodes[1], },
+> > +		{ NULL /* Guardian */ },
+> > +	};
+> > +	const char * const full_name = "/second/third";
+> > +	const char * const full_name_second = "/second";
+> > +	const char * const second_name = "second";
+> > +	const char * const third_name = "third";
+> > +	int rval;
+> > +
+> > +	rval = software_node_register_nodes(softnodes);
+> > +	if (rval) {
+> > +		pr_warn("cannot register softnodes; rval %d\n", rval);
+> > +		return;
+> > +	}
+> > +
+> > +	test(full_name_second, "%pfw",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> 
+> "ARRAY_SIZE(softnodes) - 3" is quite cryptic.
+> Is there any particular reason to use it instead of &softnodes[1] ?
 
-Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
-Reviewed-by: Kweh, Hock Leong <hock.leong.kweh@intel.com>
-Reviewed-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Chuah, Kim Tatt <kim.tatt.chuah@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+I'm fine using a direct index, rather than refer to entries from the top
+downwards.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 49aa56ca09cc..775a1c114b1a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -448,6 +448,8 @@ struct mac_device_info {
- 	unsigned int pcs;
- 	unsigned int pmt;
- 	unsigned int ps;
-+	bool mdio_intr_en;
-+	wait_queue_head_t mdio_busy_wait;
- };
- 
- struct stmmac_rx_routing {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index 2ed11a581d80..1be6a8a88b8f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -106,6 +106,7 @@ enum dwmac4_irq_status {
- 	mmc_irq = 0x00000100,
- 	lpi_irq = 0x00000020,
- 	pmt_irq = 0x00000010,
-+	mdio_irq = 0x00040000,
- };
- 
- /* MAC PMT bitmap */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index fc9954e4a772..97fca6d65141 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -59,6 +59,9 @@ static void dwmac4_core_init(struct mac_device_info *hw,
- 	if (hw->pcs)
- 		value |= GMAC_PCS_IRQ_DEFAULT;
- 
-+	if (hw->mdio_intr_en)
-+		value |= GMAC_INT_MDIO_EN;
-+
- 	writel(value, ioaddr + GMAC_INT_EN);
- }
- 
-@@ -629,6 +632,9 @@ static int dwmac4_irq_status(struct mac_device_info *hw,
- 			x->irq_rx_path_exit_lpi_mode_n++;
- 	}
- 
-+	if (intr_status & mdio_irq)
-+		wake_up(&hw->mdio_busy_wait);
-+
- 	dwmac_pcs_isr(ioaddr, GMAC_PCS_BASE, intr_status, x);
- 	if (intr_status & PCS_RGSMIIIS_IRQ)
- 		dwmac4_phystatus(ioaddr, x);
-@@ -836,6 +842,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
- 	.rxp_config = dwmac5_rxp_config,
- 	.flex_pps_config = dwmac5_flex_pps_config,
- 	.set_mac_loopback = dwmac4_set_mac_loopback,
-+	.mdio_intr_dis = dwmac5_mdio_intr_dis,
- };
- 
- int dwmac4_setup(struct stmmac_priv *priv)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-index 3f4f3132e16b..c58751e1dcb6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
-@@ -549,3 +549,11 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
- 	writel(val, ioaddr + MAC_PPS_CONTROL);
- 	return 0;
- }
-+
-+void dwmac5_mdio_intr_dis(void __iomem *ioaddr)
-+{
-+	u32 val = readl(ioaddr + GMAC_INT_EN);
-+
-+	val &= ~GMAC_INT_MDIO_EN;
-+	writel(val, ioaddr + GMAC_INT_EN);
-+}
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
-index 775db776b3cc..a56511a4c97d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
-@@ -72,6 +72,9 @@
- #define TCEIE				BIT(0)
- #define DMA_ECC_INT_STATUS		0x00001088
- 
-+/* MDIO interrupt enable in MAC_Interrupt_Enable register */
-+#define GMAC_INT_MDIO_EN		BIT(18)
-+
- int dwmac5_safety_feat_config(void __iomem *ioaddr, unsigned int asp);
- int dwmac5_safety_feat_irq_status(struct net_device *ndev,
- 		void __iomem *ioaddr, unsigned int asp,
-@@ -83,5 +86,6 @@ int dwmac5_rxp_config(void __iomem *ioaddr, struct stmmac_tc_entry *entries,
- int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
- 			   struct stmmac_pps_cfg *cfg, bool enable,
- 			   u32 sub_second_inc, u32 systime_flags);
-+void dwmac5_mdio_intr_dis(void __iomem *ioaddr);
- 
- #endif /* __DWMAC5_H__ */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-index 3af2e5015245..7127efe652db 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
-@@ -73,6 +73,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 	bool gmac;
- 	bool gmac4;
- 	bool xgmac;
-+	bool mdio_intr_en;
- 	u32 min_id;
- 	const struct stmmac_regs_off regs;
- 	const void *desc;
-@@ -90,6 +91,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 		.gmac = false,
- 		.gmac4 = false,
- 		.xgmac = false,
-+		.mdio_intr_en = false,
- 		.min_id = 0,
- 		.regs = {
- 			.ptp_off = PTP_GMAC3_X_OFFSET,
-@@ -108,6 +110,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 		.gmac = true,
- 		.gmac4 = false,
- 		.xgmac = false,
-+		.mdio_intr_en = false,
- 		.min_id = 0,
- 		.regs = {
- 			.ptp_off = PTP_GMAC3_X_OFFSET,
-@@ -126,6 +129,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 		.gmac = false,
- 		.gmac4 = true,
- 		.xgmac = false,
-+		.mdio_intr_en = false,
- 		.min_id = 0,
- 		.regs = {
- 			.ptp_off = PTP_GMAC4_OFFSET,
-@@ -144,6 +148,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 		.gmac = false,
- 		.gmac4 = true,
- 		.xgmac = false,
-+		.mdio_intr_en = false,
- 		.min_id = DWMAC_CORE_4_00,
- 		.regs = {
- 			.ptp_off = PTP_GMAC4_OFFSET,
-@@ -162,6 +167,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 		.gmac = false,
- 		.gmac4 = true,
- 		.xgmac = false,
-+		.mdio_intr_en = false,
- 		.min_id = DWMAC_CORE_4_10,
- 		.regs = {
- 			.ptp_off = PTP_GMAC4_OFFSET,
-@@ -180,6 +186,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 		.gmac = false,
- 		.gmac4 = true,
- 		.xgmac = false,
-+		.mdio_intr_en = true,
- 		.min_id = DWMAC_CORE_5_10,
- 		.regs = {
- 			.ptp_off = PTP_GMAC4_OFFSET,
-@@ -198,6 +205,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
- 		.gmac = false,
- 		.gmac4 = false,
- 		.xgmac = true,
-+		.mdio_intr_en = false,
- 		.min_id = DWXGMAC_CORE_2_10,
- 		.regs = {
- 			.ptp_off = PTP_XGMAC_OFFSET,
-@@ -276,6 +284,7 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
- 		mac->mode = mac->mode ? : entry->mode;
- 		mac->tc = mac->tc ? : entry->tc;
- 		mac->mmc = mac->mmc ? : entry->mmc;
-+		mac->mdio_intr_en = mac->mdio_intr_en ? : entry->mdio_intr_en;
- 
- 		priv->hw = mac;
- 		priv->ptpaddr = priv->ioaddr + entry->regs.ptp_off;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 9435b312495d..d42885426e78 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -363,6 +363,8 @@ struct stmmac_ops {
- 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
- 	/* Source Address Insertion / Replacement */
- 	void (*sarc_configure)(void __iomem *ioaddr, int val);
-+	/* Disable mdio interrupt */
-+	void (*mdio_intr_dis)(void __iomem *ioaddr);
- };
- 
- #define stmmac_core_init(__priv, __args...) \
-@@ -443,6 +445,8 @@ struct stmmac_ops {
- 	stmmac_do_callback(__priv, mac, get_mac_tx_timestamp, __args)
- #define stmmac_sarc_configure(__priv, __args...) \
- 	stmmac_do_void_callback(__priv, mac, sarc_configure, __args)
-+#define stmmac_mdio_intr_dis(__priv, __args...) \
-+	stmmac_do_void_callback(__priv, mac, mdio_intr_dis, __args)
- 
- /* PTP and HW Timer helpers */
- struct stmmac_hwtimestamp {
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 06ccd216ae90..2557a2beb03d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2768,6 +2768,8 @@ static int stmmac_release(struct net_device *dev)
- 	phylink_stop(priv->phylink);
- 	phylink_disconnect_phy(priv->phylink);
- 
-+	stmmac_mdio_intr_dis(priv, priv->ioaddr);
-+
- 	stmmac_stop_all_queues(priv);
- 
- 	stmmac_disable_all_queues(priv);
-@@ -4463,6 +4465,9 @@ int stmmac_dvr_probe(struct device *device,
- 	if (ret)
- 		goto error_hw_init;
- 
-+	/* mdio intr wait queue */
-+	init_waitqueue_head(&priv->hw->mdio_busy_wait);
-+
- 	stmmac_check_ether_addr(priv);
- 
- 	/* Configure real RX and TX queues */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 40c42637ad75..625e1fde0c86 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -19,6 +19,8 @@
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-+#include "dwmac4.h"
-+#include "dwmac5.h"
- #include "dwxgmac2.h"
- #include "stmmac.h"
- 
-@@ -142,6 +144,18 @@ static int stmmac_xgmac2_mdio_write(struct mii_bus *bus, int phyaddr,
- 				  !(tmp & MII_XGMAC_BUSY), 100, 10000);
- }
- 
-+static bool stmmac_mdio_intr_done(struct mii_bus *bus)
-+{
-+	struct net_device *ndev = bus->priv;
-+	struct stmmac_priv *priv;
-+	unsigned int mii_address;
-+
-+	priv = netdev_priv(ndev);
-+	mii_address = priv->hw->mii.addr;
-+
-+	return !(readl(priv->ioaddr + mii_address) & MII_BUSY);
-+}
-+
- /**
-  * stmmac_mdio_read
-  * @bus: points to the mii_bus structure
-@@ -159,9 +173,11 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
- 	unsigned int mii_address = priv->hw->mii.addr;
- 	unsigned int mii_data = priv->hw->mii.data;
- 	u32 value = MII_BUSY;
-+	u32 mdio_intr_en = 0;
- 	int data = 0;
- 	u32 v;
- 
-+	mdio_intr_en = readl(priv->ioaddr + GMAC_INT_EN) & GMAC_INT_MDIO_EN;
- 	value |= (phyaddr << priv->hw->mii.addr_shift)
- 		& priv->hw->mii.addr_mask;
- 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
-@@ -181,16 +197,26 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
- 		}
- 	}
- 
--	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
--			       100, 10000))
-+	if (mdio_intr_en) {
-+		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
-+					stmmac_mdio_intr_done(bus), HZ / 100))
-+			return -EBUSY;
-+	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
-+				      !(v & MII_BUSY), 100, 10000)) {
- 		return -EBUSY;
-+	}
- 
- 	writel(data, priv->ioaddr + mii_data);
- 	writel(value, priv->ioaddr + mii_address);
- 
--	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
--			       100, 10000))
-+	if (mdio_intr_en) {
-+		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
-+					stmmac_mdio_intr_done(bus), HZ / 100))
-+			return -EBUSY;
-+	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
-+				      !(v & MII_BUSY), 100, 10000)) {
- 		return -EBUSY;
-+	}
- 
- 	/* Read the data from the MII data register */
- 	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
-@@ -214,9 +240,11 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 	unsigned int mii_address = priv->hw->mii.addr;
- 	unsigned int mii_data = priv->hw->mii.data;
- 	u32 value = MII_BUSY;
-+	u32 mdio_intr_en = 0;
- 	int data = phydata;
- 	u32 v;
- 
-+	mdio_intr_en = readl(priv->ioaddr + GMAC_INT_EN) & GMAC_INT_MDIO_EN;
- 	value |= (phyaddr << priv->hw->mii.addr_shift)
- 		& priv->hw->mii.addr_mask;
- 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
-@@ -240,17 +268,30 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
- 	}
- 
- 	/* Wait until any existing MII operation is complete */
--	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
--			       100, 10000))
-+	if (mdio_intr_en) {
-+		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
-+					stmmac_mdio_intr_done(bus), HZ / 100))
-+			return -EBUSY;
-+	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
-+				      !(v & MII_BUSY), 100, 10000)) {
- 		return -EBUSY;
-+	}
- 
- 	/* Set the MII address register to write */
- 	writel(data, priv->ioaddr + mii_data);
- 	writel(value, priv->ioaddr + mii_address);
- 
- 	/* Wait until any existing MII operation is complete */
--	return readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
--				  100, 10000);
-+	if (mdio_intr_en) {
-+		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
-+					stmmac_mdio_intr_done(bus), HZ / 100))
-+			return -EBUSY;
-+	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
-+				      !(v & MII_BUSY), 100, 10000)) {
-+		return -EBUSY;
-+	}
-+
-+	return 0;
- }
- 
- /**
+> 
+> And is it expected that it does not print the "/first" parent?
+
+Heikki actually commented on an issue related to the "root" nodes. I'll
+reply to his comment, on the 5th patch of the set.
+
+> 
+> > +	test(full_name, "%pfw",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +	test(full_name, "%pfwf",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +	test(second_name, "%pfwP",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> > +	test(third_name, "%pfwP",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +
+> > +	software_node_unregister_nodes(softnodes);
+> > +}
+> 
+> Anyway, thanks for the tests.
+
+You're welcome!
+
 -- 
-Changelog v2
-*mdio interrupt mode or polling mode will depends on mdio interrupt enable bit
-*Disable the mdio interrupt enable bit in stmmac_release
-*Remove the condition for initialize wait queues
-*Applied reverse Christmas tree
-1.9.1
+Kind regards,
 
+Sakari Ailus
+sakari.ailus@linux.intel.com
