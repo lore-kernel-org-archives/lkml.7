@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89266C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E874C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62CF822CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C9B22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620222;
-	bh=7gcbk8Hb7qI3OcjR0IAhn3L83PVuy6OklDmA1HXSEZ0=;
+	s=default; t=1567620224;
+	bh=Jqa7KwWv6RvHZOOVUnA2CoiUjZyNBa6w4CmiEFx6m84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=blAiMrVRv4cVD37Wr4mWPGSPo6y6SNFFUSlqCxpYjpR80oVutIcsHXwbfg8Km/Pgi
-	 j02hHyOVX9zfO28CpUEUMpNZyrN140OMabDYtz5bEuKc3d6xBFgv8kIS472BitT+vE
-	 ivBc2xseY/TaRrwkoydEKxRah17gca86J1Wyq+Gg=
+	b=H151FCQIMXk3UVmt1WlI8ASJvosagrfoMcnguu6sYHtxoCYett+hVBwmQlmy+gStt
+	 EdXrqibLCXqxX7IcvDvoRUVU3QpNx7I3BAohucZfLp5f5XL6ZKDtYa1+mdHbvIfY1s
+	 ln23oq+9+NZj+98l3+1GoytWjGlPl2RkupWs9v6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388977AbfIDSDl (ORCPT
+        id S2388616AbfIDSDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:03:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44268 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:03:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388616AbfIDSDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:03:38 -0400
+        id S2388190AbfIDSDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:03:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C5322CF7;
-        Wed,  4 Sep 2019 18:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4772322CEA;
+        Wed,  4 Sep 2019 18:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620217;
-        bh=7gcbk8Hb7qI3OcjR0IAhn3L83PVuy6OklDmA1HXSEZ0=;
+        s=default; t=1567620219;
+        bh=Jqa7KwWv6RvHZOOVUnA2CoiUjZyNBa6w4CmiEFx6m84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w3LZwnQngEDo3qQ8rMe1ZXdalY/vIDWq4U9/uCC5R5/7HitalZhH8f8Z5/UQYuPbe
-         AOasZOH3+OhTXh/9LLBXkhD9mh2mvD6jazfTwa/TvW8Y0ylPZYwJ7kLIl3ZAA5nzsj
-         kgl+/SsdXMhxYwXagHumtGS1b3rcyM0ZPlNGFICs=
+        b=UVBRu01R2eDQSXxrBobg6SCJ7ou8eJlIMtfSqM5vCEjO3ZpB9wRumy+sAvub4bIaq
+         oneFjK5o19Q8qjnr84EYBM2yttub627PIR2Y39KiRHnZmkrpAWLHbhWek/ZzvqNpRi
+         67lQKKjNbwXqbF+ncwava0EhQQwr+zGMxyEsYRos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 4.14 32/57] USB: cdc-wdm: fix race between write and disconnect due to flag abuse
-Date:   Wed,  4 Sep 2019 19:54:00 +0200
-Message-Id: <20190904175305.131702083@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.14 33/57] usb: chipidea: udc: dont do hardware access if gadget has stopped
+Date:   Wed,  4 Sep 2019 19:54:01 +0200
+Message-Id: <20190904175305.227271525@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,64 +58,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit 1426bd2c9f7e3126e2678e7469dca9fd9fc6dd3e upstream.
+commit cbe85c88ce80fb92956a0793518d415864dcead8 upstream.
 
-In case of a disconnect an ongoing flush() has to be made fail.
-Nevertheless we cannot be sure that any pending URB has already
-finished, so although they will never succeed, they still must
-not be touched.
-The clean solution for this is to check for WDM_IN_USE
-and WDM_DISCONNECTED in flush(). There is no point in ever
-clearing WDM_IN_USE, as no further writes make sense.
+After _gadget_stop_activity is executed, we can consider the hardware
+operation for gadget has finished, and the udc can be stopped and enter
+low power mode. So, any later hardware operations (from usb_ep_ops APIs
+or usb_gadget_ops APIs) should be considered invalid, any deinitializatons
+has been covered at _gadget_stop_activity.
 
-The issue is as old as the driver.
+I meet this problem when I plug out usb cable from PC using mass_storage
+gadget, my callstack like: vbus interrupt->.vbus_session->
+composite_disconnect ->pm_runtime_put_sync(&_gadget->dev),
+the composite_disconnect will call fsg_disable, but fsg_disable calls
+usb_ep_disable using async way, there are register accesses for
+usb_ep_disable. So sometimes, I get system hang due to visit register
+without clock, sometimes not.
 
-Fixes: afba937e540c9 ("USB: CDC WDM driver")
-Reported-by: syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190827103436.21143-1-oneukum@suse.com
+The Linux Kernel USB maintainer Alan Stern suggests this kinds of solution.
+See: http://marc.info/?l=linux-usb&m=138541769810983&w=2.
+
+Cc: <stable@vger.kernel.org> #v4.9+
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20190820020503.27080-2-peter.chen@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/cdc-wdm.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/usb/chipidea/udc.c |   32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -584,10 +584,20 @@ static int wdm_flush(struct file *file,
- {
- 	struct wdm_device *desc = file->private_data;
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -711,12 +711,6 @@ static int _gadget_stop_activity(struct
+ 	struct ci_hdrc    *ci = container_of(gadget, struct ci_hdrc, gadget);
+ 	unsigned long flags;
  
--	wait_event(desc->wait, !test_bit(WDM_IN_USE, &desc->flags));
-+	wait_event(desc->wait,
-+			/*
-+			 * needs both flags. We cannot do with one
-+			 * because resetting it would cause a race
-+			 * with write() yet we need to signal
-+			 * a disconnect
-+			 */
-+			!test_bit(WDM_IN_USE, &desc->flags) ||
-+			test_bit(WDM_DISCONNECTING, &desc->flags));
+-	spin_lock_irqsave(&ci->lock, flags);
+-	ci->gadget.speed = USB_SPEED_UNKNOWN;
+-	ci->remote_wakeup = 0;
+-	ci->suspended = 0;
+-	spin_unlock_irqrestore(&ci->lock, flags);
+-
+ 	/* flush all endpoints */
+ 	gadget_for_each_ep(ep, gadget) {
+ 		usb_ep_fifo_flush(ep);
+@@ -734,6 +728,12 @@ static int _gadget_stop_activity(struct
+ 		ci->status = NULL;
+ 	}
  
- 	/* cannot dereference desc->intf if WDM_DISCONNECTING */
--	if (desc->werr < 0 && !test_bit(WDM_DISCONNECTING, &desc->flags))
-+	if (test_bit(WDM_DISCONNECTING, &desc->flags))
-+		return -ENODEV;
-+	if (desc->werr < 0)
- 		dev_err(&desc->intf->dev, "Error in flush path: %d\n",
- 			desc->werr);
++	spin_lock_irqsave(&ci->lock, flags);
++	ci->gadget.speed = USB_SPEED_UNKNOWN;
++	ci->remote_wakeup = 0;
++	ci->suspended = 0;
++	spin_unlock_irqrestore(&ci->lock, flags);
++
+ 	return 0;
+ }
  
-@@ -955,8 +965,6 @@ static void wdm_disconnect(struct usb_in
- 	spin_lock_irqsave(&desc->iuspin, flags);
- 	set_bit(WDM_DISCONNECTING, &desc->flags);
- 	set_bit(WDM_READ, &desc->flags);
--	/* to terminate pending flushes */
--	clear_bit(WDM_IN_USE, &desc->flags);
- 	spin_unlock_irqrestore(&desc->iuspin, flags);
- 	wake_up_all(&desc->wait);
- 	mutex_lock(&desc->rlock);
+@@ -1305,6 +1305,10 @@ static int ep_disable(struct usb_ep *ep)
+ 		return -EBUSY;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return 0;
++	}
+ 
+ 	/* only internal SW should disable ctrl endpts */
+ 
+@@ -1394,6 +1398,10 @@ static int ep_queue(struct usb_ep *ep, s
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return 0;
++	}
+ 	retval = _ep_queue(ep, req, gfp_flags);
+ 	spin_unlock_irqrestore(hwep->lock, flags);
+ 	return retval;
+@@ -1417,8 +1425,8 @@ static int ep_dequeue(struct usb_ep *ep,
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
+-
+-	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
++	if (hwep->ci->gadget.speed != USB_SPEED_UNKNOWN)
++		hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
+ 
+ 	list_for_each_entry_safe(node, tmpnode, &hwreq->tds, td) {
+ 		dma_pool_free(hwep->td_pool, node->ptr, node->dma);
+@@ -1489,6 +1497,10 @@ static void ep_fifo_flush(struct usb_ep
+ 	}
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return;
++	}
+ 
+ 	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
+ 
+@@ -1557,6 +1569,10 @@ static int ci_udc_wakeup(struct usb_gadg
+ 	int ret = 0;
+ 
+ 	spin_lock_irqsave(&ci->lock, flags);
++	if (ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(&ci->lock, flags);
++		return 0;
++	}
+ 	if (!ci->remote_wakeup) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
 
 
