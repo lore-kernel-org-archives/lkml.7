@@ -2,142 +2,132 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF48C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA86BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6208C22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A472822CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567626388;
-	bh=C45AUngWHtNaVWGA8Rh6aD9tJ05Bcdujt4ucft/pUoY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHMUoCc51PgEQr3UCTrhFnvYaHiCMdIv+welKH73xqAIwPRD3mTPB0lwcJ2GvAoDB
-	 kRy8dwar6J8XPbRs1VvGKGSzK5evCsg/SHi/tBeCzf1jwJE/GNfjHOb33FRvHbkTXr
-	 MluXEAiU73org5h8zt7r/2xsZbllWc/h/3wB3fIM=
+	s=default; t=1567626392;
+	bh=sQq3C4ZrDYYBjTFdZT4vfoKJgrcBnng+l2Wy2NTfz+o=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=jZDmyyzG7u9cZj8fKz5W6kbgwHePYLSR9nqgpNnoVv4klZEMIzF6dJGVY7Yqjn91V
+	 VF6wYhao1yqNnMaDey+SRxR8GLnhahuJ117Rk8zVNPq2iKR8ZIRgKSAoZzyTjc4aMu
+	 InBzbLeHkRuAPc1fUX4ryUWhbQ+q/sIV0KuNKO5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730303AbfIDTq1 (ORCPT
+        id S1729848AbfIDTqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:46:27 -0400
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:38247 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730310AbfIDTqN (ORCPT
+        Wed, 4 Sep 2019 15:46:03 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43945 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbfIDTqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:46:13 -0400
-Received: by mail-qt1-f171.google.com with SMTP id b2so22337557qtq.5;
-        Wed, 04 Sep 2019 12:46:12 -0700 (PDT)
+        Wed, 4 Sep 2019 15:46:02 -0400
+Received: by mail-qt1-f196.google.com with SMTP id l22so13599370qtp.10;
+        Wed, 04 Sep 2019 12:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jL4d81pypGq7ODywNqxdQtdPeeIUOLBTqveh64eDASc=;
-        b=Z0oBR0eUEqPyun6hEblYCICjdKNvWRr+b29/35hl2k9IPCpnLWYk0YRY/8L5vtThT9
-         rqb7sJxaWR3X8K4fC+O5IkrzkOK1cnraVOQlHpbAUryTpGEd8x1V2MF9f4AKzgabbPN4
-         RURLEtu/yEDEf+b64CY/JEYDCcpg0DIRHptVcP+sl4fVElmdNupPsKEc1YTszbljredC
-         6QJXBlhEqOK2ua2rUmzwgc0UOAFR/+1fjYgDmuwXttlJgNlzx8QdHsY1mQ6Iq345qlJM
-         /UXcMmB/pCl4//OeGXfgwloUyMdpYFvINjlHOxBwvbqzG6c++Nio0VNFmvhBGqoSgXN2
-         FXyQ==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=PXmGfQo6neOlWgmykljZagbJmoHVSlvd5lTMWMsizwM=;
+        b=QCZLciyop0aVFo7y3eUWYwt/dAOgH9EHQhPsURPxfFrz963UhondyfnfVJlm5Irs0p
+         5SQHRH6fK7+gJHEIPCtM6fkDwAxAREkPGiiev0r3QCLM4aGH4PFydtMEw5T+1dm9B4Gh
+         PMPBoOUkKrisr6T/O7sRUGxemAeW+Fnsqb27SoTJUkCnpcdmU4kYbysvqhe5Jlk5EuZu
+         MIhCKiKHM7FYt91Ji8jdBoJTVuY1SdyTRsa6Hfyo2P1J21BaXOlpNJvO6aaOA2Osda1G
+         rbhVIz380w3pu+qKBZCUNTdf/IzfHFgQaEhvrxeOf+Z4NBKswArkr+tRU6ziV5xi8b2Z
+         ntfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=jL4d81pypGq7ODywNqxdQtdPeeIUOLBTqveh64eDASc=;
-        b=KGVq1t6PfGSA3cCiii1+KgvFKr18TEva/tAjDnPwEtwqeJkmuSUSJaU0v/kfTikWT4
-         9foY5q7JVd6itxIbOfFxhu+p0fXpicOHD6/dzuJ/hTi+fdSpJoxRJwOW9oaCA5wWG4Kw
-         3arNcom5km4tuaKTnt2sR3UuCbYmHRGOkUcXMfrlkHScaUp0sAx3jL4XbqJONZmpXKXU
-         wBytDpeMesyBjAO0+0L0QWPmnVEA3iGeABWVxjt5vmX+m1mGZFzfcPuGjIlZh97Zf258
-         WWddOhD/UosPLoja+Qllqd06q+O5qTuMnVVlzCgtVEQb74n4NWa8T8GZGc5T4LASKupy
-         wqLg==
-X-Gm-Message-State: APjAAAWWJgPxudWG6NSeTWJh3IpMB6QqTORGzHJGGU7uIlzy1x8sxdCx
-        slAJOOjcZre9wU+3Ye/zfwM=
-X-Google-Smtp-Source: APXvYqy3B8uCoovpU+dggZaKK6MmRowSu3/rxq1PqkkYanMHQXH3mw68IiIC36wBDFPsVTXt4ivzVA==
-X-Received: by 2002:a0c:d084:: with SMTP id z4mr17865362qvg.63.1567626371193;
-        Wed, 04 Sep 2019 12:46:11 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=PXmGfQo6neOlWgmykljZagbJmoHVSlvd5lTMWMsizwM=;
+        b=YGt4+5K7P8HkUODtZoyLIeefAyqmz91F+8TQm0pIsCairO3Ux2LTJQJCp/NBwPxMO6
+         CeAJtZe7Rjl+eFmHSbJsWB/0URN4AAfpVj9c+1HUNwFMy3Fj64k5AIhoXM5ZaFYZVv5g
+         ZY6y3ZS+Uyo70YQfoUNhw/oxQawkBHCxCTg/YJd3vf3axSI73dwICC3oJbtlNpJoZhh3
+         p02M0BLiI8Ksmf3nSeduSSfglYgvC0kAygeW9Nh+7iSwVdaewZ1x1CdLUJ6EFAZfUyL3
+         tTyU773mimIg2a7XKR0FtSB49wpG4ZtCei8XD+rorFyX+YU0Uz8Dyqet6xwqurFxZp9u
+         HYIg==
+X-Gm-Message-State: APjAAAWvfyznn5xAMeNhQ9CWyvfwqzmo5qGULm87btzYsr7B5iitmpMU
+        eCzgZaXBb9hDKw+oVOvy1es=
+X-Google-Smtp-Source: APXvYqzXHLxXvhP5kmx3bfAyp/4yIyN8kWaynGS9RpObYYtOCt6bYibi+Z2TbwTgtPNmSzEJeaLIhA==
+X-Received: by 2002:ac8:67d4:: with SMTP id r20mr40317147qtp.215.1567626360346;
+        Wed, 04 Sep 2019 12:46:00 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:500::3:33b1])
-        by smtp.gmail.com with ESMTPSA id w15sm107958qtt.71.2019.09.04.12.46.10
+        by smtp.gmail.com with ESMTPSA id n12sm2818589qkk.78.2019.09.04.12.45.59
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 12:46:10 -0700 (PDT)
+        Wed, 04 Sep 2019 12:45:59 -0700 (PDT)
 From:   Tejun Heo <tj@kernel.org>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel-team@vger.kernel.org, cgroups@vger.kernel.org,
-        newella@fb.com, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 5/5] iocost_monitor: Report debt
-Date:   Wed,  4 Sep 2019 12:45:56 -0700
-Message-Id: <20190904194556.2984857-6-tj@kernel.org>
+        newella@fb.com
+Subject: [PATCHSET block/for-next] blk-iocost: Implement absolute debt handling
+Date:   Wed,  4 Sep 2019 12:45:51 -0700
+Message-Id: <20190904194556.2984857-1-tj@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190904194556.2984857-1-tj@kernel.org>
-References: <20190904194556.2984857-1-tj@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Report debt and rename del_ms row to delay for consistency.
+Currently, when a given cgroup doesn't have enough budget, a forced or
+merged bio will advance the cgroup's vtime by the cost calculated
+according to the hierarchical weight at the time of issue.  Once vtime
+is advanced, how the cgroup's weight changes doesn't matter.  It has
+to wait until global vtime catches up with the cgroup's.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- block/blk-iocost.c             | 6 +++---
- tools/cgroup/iocost_monitor.py | 5 ++++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+This means that the cost is calculated based on the hweight at the
+time of issuing but may later be paid at the wrong hweight.  This, for
+example, can lead to a scenario like the following.
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 6000ce9b10bb..f0c5bfd4b4a8 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -161,9 +161,9 @@
-  * https://github.com/osandov/drgn.  The ouput looks like the following.
-  *
-  *  sdb RUN   per=300ms cur_per=234.218:v203.695 busy= +1 vrate= 62.12%
-- *                 active      weight      hweight% inflt% del_ms usages%
-- *  test/a              *    50/   50  33.33/ 33.33  27.65  0*041 033:033:033
-- *  test/b              *   100/  100  66.67/ 66.67  17.56  0*000 066:079:077
-+ *                 active      weight      hweight% inflt% dbt  delay usages%
-+ *  test/a              *    50/   50  33.33/ 33.33  27.65   2  0*041 033:033:033
-+ *  test/b              *   100/  100  66.67/ 66.67  17.56   0  0*000 066:079:077
-  *
-  * - per	: Timer period
-  * - cur_per	: Internal wall and device vtime clock
-diff --git a/tools/cgroup/iocost_monitor.py b/tools/cgroup/iocost_monitor.py
-index 5d8bac603ffa..f79b23582a1d 100644
---- a/tools/cgroup/iocost_monitor.py
-+++ b/tools/cgroup/iocost_monitor.py
-@@ -135,7 +135,7 @@ autop_names = {
- 
-     def table_header_str(self):
-         return f'{"":25} active {"weight":>9} {"hweight%":>13} {"inflt%":>6} ' \
--               f'{"del_ms":>6} {"usages%"}'
-+               f'{"dbt":>3} {"delay":>6} {"usages%"}'
- 
- class IocgStat:
-     def __init__(self, iocg):
-@@ -159,6 +159,7 @@ autop_names = {
-         else:
-             self.inflight_pct = 0
- 
-+        self.debt_ms = iocg.abs_vdebt.counter.value_() / VTIME_PER_USEC / 1000
-         self.use_delay = blkg.use_delay.counter.value_()
-         self.delay_ms = blkg.delay_nsec.counter.value_() / 1_000_000
- 
-@@ -181,6 +182,7 @@ autop_names = {
-                 'hweight_active_pct'    : str(self.hwa_pct),
-                 'hweight_inuse_pct'     : str(self.hwi_pct),
-                 'inflight_pct'          : str(self.inflight_pct),
-+                'debt_ms'               : str(self.debt_ms),
-                 'use_delay'             : str(self.use_delay),
-                 'delay_ms'              : str(self.delay_ms),
-                 'usage_pct'             : str(self.usage),
-@@ -195,6 +197,7 @@ autop_names = {
-               f'{self.inuse:5}/{self.active:5} ' \
-               f'{self.hwi_pct:6.2f}/{self.hwa_pct:6.2f} ' \
-               f'{self.inflight_pct:6.2f} ' \
-+              f'{min(math.ceil(self.debt_ms), 999):3} ' \
-               f'{min(self.use_delay, 99):2}*'\
-               f'{min(math.ceil(self.delay_ms), 999):03} '
-         for u in self.usages:
--- 
-2.17.1
+1. A cgroup with a very low hweight runs out of budget.
+
+2. A storm of swap-out happens on it.  All of them are scaled
+   according to the current low hweight and charged to vtime pushing
+   it to a far future.
+
+3. All other cgroups go idle and now the above cgroup has access to
+   the whole device.  However, because vtime is already wound using
+   the past low hweight, what its current hweight is doesn't matter
+   until global vtime catches up to the local vtime.
+
+4. As a result, either vrate gets ramped up extremely or the IOs stall
+   while the underlying device is idle.
+
+This patchset fixes the behavior by accounting the cost of forced or
+merged bios in absolute vtime rather than cgroup-relative.  This
+allows the cgroup to pay back the debt with whatever actual budget it
+has each period removing the hweight discrepancy.
+
+Note that !forced bios' costs are already accounted in absolute vtime.
+This patchset puts forced charges on the same ground.
+
+This patchset contains the following five patches and is on top of the
+current linux-block.git for-next 35e7ae82f62b ("Merge branch
+'for-5.4/block' into for-next").
+
+ 0001-blk-iocost-Account-force-charged-overage-in-absolute.patch
+ 0002-blk-iocost-Don-t-let-merges-push-vtime-into-the-futu.patch
+ 0003-iocost_monitor-Always-use-strings-for-json-values.patch
+ 0004-iocost_monitor-Report-more-info-with-higher-accuracy.patch
+ 0005-iocost_monitor-Report-debt.patch
+
+0001-0002 implement absolute debt handling.  0003-0005 improve the
+monitoring script and add debt reporting.
+
+This patchset is also available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git iocost-vdebt
+
+diffstat follows.  Thanks.
+
+ block/blk-iocost.c             |   93 +++++++++++++++++++++++++++++++++--------
+ tools/cgroup/iocost_monitor.py |   61 ++++++++++++++------------
+ 2 files changed, 110 insertions(+), 44 deletions(-)
+
+--
+tejun
 
