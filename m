@@ -4,211 +4,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45C8C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034B9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 839062168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84C922CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbfIDNZx (ORCPT
+        id S1729910AbfIDN2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:25:53 -0400
-Received: from mga02.intel.com ([134.134.136.20]:3279 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbfIDNZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:25:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 06:25:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="212390886"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Sep 2019 06:25:51 -0700
-Received: from ravisha1-mobl1.amr.corp.intel.com (unknown [10.255.36.89])
-        by linux.intel.com (Postfix) with ESMTP id 4EF17580105;
-        Wed,  4 Sep 2019 06:25:48 -0700 (PDT)
-Subject: Re: [alsa-devel] [RFC PATCH 3/5] ASoC: SOF: Intel: hda: add SoundWire
- IP support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Fred Oh <fred.oh@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
- <20190821201720.17768-4-pierre-louis.bossart@linux.intel.com>
- <20190904072131.GK2672@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <1897e21f-b086-8233-e96e-6024e75a2153@linux.intel.com>
-Date:   Wed, 4 Sep 2019 08:25:47 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190904072131.GK2672@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+        Wed, 4 Sep 2019 09:28:32 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37551 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfIDN2b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 09:28:31 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1i5VKj-0006iw-SU; Wed, 04 Sep 2019 15:28:25 +0200
+Message-ID: <1567603704.3041.10.camel@pengutronix.de>
+Subject: Re: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution
+ changes
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Wed, 04 Sep 2019 15:28:24 +0200
+In-Reply-To: <37bbd1b8ee7bb82c75aefb675e0c3ddd955dde0b.camel@collabora.com>
+References: <20190903171256.25052-1-ezequiel@collabora.com>
+         <1567592011.3041.1.camel@pengutronix.de>
+         <37bbd1b8ee7bb82c75aefb675e0c3ddd955dde0b.camel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 2:21 AM, Vinod Koul wrote:
-> On 21-08-19, 15:17, Pierre-Louis Bossart wrote:
->> The Core0 needs to be powered before the SoundWire IP is initialized.
->>
->> Call sdw_intel_init/exit and store the context. We only have one
->> context, but depending on the hardware capabilities and BIOS settings
->> may enable multiple SoundWire links.
->>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> ---
->>   sound/soc/sof/intel/hda.c | 40 +++++++++++++++++++++++++++++++++------
->>   sound/soc/sof/intel/hda.h |  5 +++++
->>   2 files changed, 39 insertions(+), 6 deletions(-)
->>
->> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
->> index a968890d0754..e754058e3679 100644
->> --- a/sound/soc/sof/intel/hda.c
->> +++ b/sound/soc/sof/intel/hda.c
->> @@ -57,6 +57,8 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
->>   {
->>   	acpi_handle handle;
->>   	struct sdw_intel_res res;
->> +	struct sof_intel_hda_dev *hdev;
->> +	void *sdw;
->>   
->>   	handle = ACPI_HANDLE(sdev->dev);
->>   
->> @@ -66,23 +68,32 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
->>   	res.irq = sdev->ipc_irq;
->>   	res.parent = sdev->dev;
->>   
->> -	hda_sdw_int_enable(sdev, true);
->> -
->> -	sdev->sdw = sdw_intel_init(handle, &res);
->> -	if (!sdev->sdw) {
->> +	sdw = sdw_intel_init(handle, &res);
+On Wed, 2019-09-04 at 10:01 -0300, Ezequiel Garcia wrote:
+> On Wed, 2019-09-04 at 12:13 +0200, Philipp Zabel wrote:
+> > Hi Ezequiel,
+> > 
+> > On Tue, 2019-09-03 at 14:12 -0300, Ezequiel Garcia wrote:
+> > > Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> > > changed the conditions under S_FMT was allowed for OUTPUT
+> > > CAPTURE buffers.
+> > > 
+> > > However, and according to the mem-to-mem stateless decoder specification,
+> > > in order to support dynamic resolution changes, S_FMT should be allowed
+> > > even if OUTPUT buffers have been allocated.
+> > > 
+> > > Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
+> > > modification, provided the pixel format stays the same.
+> > > 
+> > > Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
+> > > 
+> > > Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > ---
+> > >  drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
+> > >  1 file changed, 16 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
+> > > index 3dae52abb96c..d48b548842cf 100644
+> > > --- a/drivers/staging/media/hantro/hantro_v4l2.c
+> > > +++ b/drivers/staging/media/hantro/hantro_v4l2.c
+> > > @@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+> > >  {
+> > >  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+> > >  	struct hantro_ctx *ctx = fh_to_ctx(priv);
+> > > +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> > >  	const struct hantro_fmt *formats;
+> > >  	unsigned int num_fmts;
+> > > -	struct vb2_queue *vq;
+> > >  	int ret;
+> > >  
+> > > -	/* Change not allowed if queue is busy. */
+> > > -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> > > -	if (vb2_is_busy(vq))
+> > > -		return -EBUSY;
+> > > -
+> > >  	if (!hantro_is_encoder_ctx(ctx)) {
+> > >  		struct vb2_queue *peer_vq;
+> > >  
+> > > +		/*
+> > > +		 * In other to support dynamic resolution change,
+> > > +		 * the decoder admits a resolution change, as long
+> > > +		 * as the pixelformat remains. Can't be done if streaming.
+> > > +		 */
+> > > +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
+> > > +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
+> > 
+> > Before using contents of the v4l2_format f for comparison, we should run
+> > vidioc_try_fmt_out_mplane over it.
 > 
-> should this be called for platforms without sdw, I was hoping that some
-> checks would be performed.. For example how would skl deal with this?
+> Right, good catch.
+> 
+> >  Also, besides pixelformat, sizeimage
+> > shouldn't change either, at least if this is a VB2_MMAP queue.
+> > 
+> 
+> This is the OUTPUT queue, so I don't see why the sizeimage
+> of the coded buffers should stay the same. Maybe I'm missing
+> something? 
 
-Good point. For now we rely on CONFIG_SOUNDWIRE_INTEL to use a fallback, 
-but if the kernel defines this config and we run on an older platform 
-the only safety would be the hardware capabilities and BIOS 
-dependencies, I need to test if it works.
-Thanks for the feedback.
+If the OUTPUT vb2_queue is busy, we already have some buffers of the old
+size allocated. We can't change their size dynamically with just
+VIDIOC_S_FMT.
 
-> 
->> +	if (!sdw) {
->>   		dev_err(sdev->dev, "SDW Init failed\n");
->>   		return -EIO;
->>   	}
->>   
->> +	hda_sdw_int_enable(sdev, true);
->> +
->> +	/* save context */
->> +	hdev = sdev->pdata->hw_pdata;
->> +	hdev->sdw = sdw;
->> +
->>   	return 0;
->>   }
->>   
->>   static int hda_sdw_exit(struct snd_sof_dev *sdev)
->>   {
->> +	struct sof_intel_hda_dev *hdev;
->> +
->> +	hdev = sdev->pdata->hw_pdata;
->> +
->>   	hda_sdw_int_enable(sdev, false);
->>   
->> -	if (sdev->sdw)
->> -		sdw_intel_exit(sdev->sdw);
-> 
-> this looks suspect, you are adding sdw calls here so how is this getting
-> removed? Did I miss something...
+Maybe this should correct sizeimage to the old size instead of returning
+-EBUSY? Either way, if the old buffer size is too small to reasonably
+decode the new resolution, the OUTPUT buffers have to be reallocated.
 
-That must be a squash/tick-tock error, we moved the 'sdw' field from the 
-top-level 'sdev' structure to an intel-specific one. In the latest code 
-I have a single patch to add the helper and all dependencies in one shot.
-
-> 
->> +	if (hdev->sdw)
->> +		sdw_intel_exit(hdev->sdw);
->> +	hdev->sdw = NULL;
->>   
->>   	return 0;
->>   }
->> @@ -713,6 +724,21 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
->>   	/* set default mailbox offset for FW ready message */
->>   	sdev->dsp_box.offset = HDA_DSP_MBOX_UPLINK_OFFSET;
->>   
->> +	/* need to power-up core before setting-up capabilities */
->> +	ret = hda_dsp_core_power_up(sdev, HDA_DSP_CORE_MASK(0));
->> +	if (ret < 0) {
->> +		dev_err(sdev->dev, "error: could not power-up DSP subsystem\n");
->> +		goto free_ipc_irq;
->> +	}
->> +
->> +	/* initialize SoundWire capabilities */
->> +	ret = hda_sdw_init(sdev);
->> +	if (ret < 0) {
->> +		dev_err(sdev->dev, "error: SoundWire get caps error\n");
->> +		hda_dsp_core_power_down(sdev, HDA_DSP_CORE_MASK(0));
->> +		goto free_ipc_irq;
->> +	}
->> +
->>   	return 0;
->>   
->>   free_ipc_irq:
->> @@ -744,6 +770,8 @@ int hda_dsp_remove(struct snd_sof_dev *sdev)
->>   	snd_hdac_ext_bus_device_remove(bus);
->>   #endif
->>   
->> +	hda_sdw_exit(sdev);
->> +
->>   	if (!IS_ERR_OR_NULL(hda->dmic_dev))
->>   		platform_device_unregister(hda->dmic_dev);
->>   
->> diff --git a/sound/soc/sof/intel/hda.h b/sound/soc/sof/intel/hda.h
->> index c8f93317aeb4..48e09b7daf0a 100644
->> --- a/sound/soc/sof/intel/hda.h
->> +++ b/sound/soc/sof/intel/hda.h
->> @@ -399,6 +399,11 @@ struct sof_intel_hda_dev {
->>   
->>   	/* DMIC device */
->>   	struct platform_device *dmic_dev;
->> +
->> +#if IS_ENABLED(CONFIG_SOUNDWIRE_INTEL)
-> 
-> is this really required, context is a void pointer
-> 
->> +	/* sdw context */
->> +	void *sdw;
-> 
->> +#endif
->>   };
->>   
->>   static inline struct hdac_bus *sof_to_bus(struct snd_sof_dev *s)
->> -- 
->> 2.20.1
-> 
-
+regards
+Philipp
