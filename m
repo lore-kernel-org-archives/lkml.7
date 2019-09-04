@@ -2,201 +2,139 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9C3C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E40C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A321B21897
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1323B2073F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:55:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJoNsQJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfIDCuc (ORCPT
+        id S1728023AbfIDCzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 22:50:32 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28684 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727756AbfIDCub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 22:50:31 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 19:50:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
-   d="scan'208";a="183761055"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.71])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2019 19:50:28 -0700
-Date:   Wed, 4 Sep 2019 10:48:01 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     jasowang@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [RFC v3] vhost: introduce mdev based hardware vhost backend
-Message-ID: <20190904024801.GA5671@___>
-References: <20190828053712.26106-1-tiwei.bie@intel.com>
- <20190903043704-mutt-send-email-mst@kernel.org>
+        Tue, 3 Sep 2019 22:55:55 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36687 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbfIDCzy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 22:55:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id b136so16748839iof.3;
+        Tue, 03 Sep 2019 19:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7KAHv1e63QK9hCRccVZugLye8tI2fhDiGMo9YSU17+k=;
+        b=NJoNsQJFq84KLUFHY7UF2Gj+5i1DC2QrkkF3c2BI/l+/qelsHvd9IPqek+VF0v6pPH
+         a+Ftiz0FoLR3DtdpAUhM3w7unJ9XkpR25N7C+ICbsrvwwA6IATHtu8OMHizph2d446rH
+         I9N2zQgWCeHLsZ+T3GHmZwG1BzCSOqvxPGEDPCaxTZfXhZrX+CL0nAFVBZEpDtMX42ao
+         t8GztDVo3ciyEUIsv/Jz5ZAhpkhOj1Exwj0GOhi1tySoOjIL9nZelQNS1dwcTBc1fzkK
+         uW+XZ9N5gpT8Yry8dRcfiueZPc0Fqi4P1pCaJpqahIOqLSj1PtjSFRtS3ZV2oOhdHnk1
+         XBQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7KAHv1e63QK9hCRccVZugLye8tI2fhDiGMo9YSU17+k=;
+        b=ZfvSP2PYu4dYEfIZDxPZWUGsi47NiJNYuHkLB4kuzKYZqAqvh5xYagAc+QMOpfWM6G
+         tCKqsw+N1zHxeHW1gxabzstTsvLwEotN9DntxLzdSDWOR92h4aCrPRx6uo3ALxkMvTG/
+         BFvQPM25q+DHM3s8TpVaNEK8q6XpMq3a5y6eDzUgziZHshQD1N6oP0kKxRjxXX3QOoXR
+         r11EaVMfhfP8u+gNt1whZCBW9Sd+UoX+f++fpCJ5pG/0l+r0MmrDPymBxVKx/tmNse/6
+         Gt8yM98DjzDVBDbEe3kRdNr0Uazo9txWLeyNWCSQxXOz5b6ahZpKHmlGow81nY3lTsfp
+         8cJQ==
+X-Gm-Message-State: APjAAAXDhRtPrJKdnx4Hwh1tHToUASXYIp/PstnTvlprjQrOnTM4usH5
+        tVUeQroCTH6tIOazxC+pJuPe4Rx1Prnwiy2lR7c=
+X-Google-Smtp-Source: APXvYqy6DIeTsmKuzWXHD8W0nCChr0Alz2XaxQY19OH+kuUIfOdhhVc9KFZZeaXvRXwFufqw05eVIm+j3dVI5LKa8Ow=
+X-Received: by 2002:a5d:8502:: with SMTP id q2mr23512677ion.287.1567565753605;
+ Tue, 03 Sep 2019 19:55:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190903043704-mutt-send-email-mst@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-3-andrew.smirnov@gmail.com> <CAOMZO5DoaLkycXOfzYQv2CHKSRA9sri5igaVSNhQvxR06Gzv+g@mail.gmail.com>
+In-Reply-To: <CAOMZO5DoaLkycXOfzYQv2CHKSRA9sri5igaVSNhQvxR06Gzv+g@mail.gmail.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 3 Sep 2019 19:55:42 -0700
+Message-ID: <CAHQ1cqH+aoXVdfhDBmRNr=+NO6y82dXU2YRHWquJwPnunJH9gQ@mail.gmail.com>
+Subject: Re: [PATCH 02/12] crypto: caam - use devres to unmap JR's registers
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 07:26:03AM -0400, Michael S. Tsirkin wrote:
-> On Wed, Aug 28, 2019 at 01:37:12PM +0800, Tiwei Bie wrote:
-> > Details about this can be found here:
-> > 
-> > https://lwn.net/Articles/750770/
-> > 
-> > What's new in this version
-> > ==========================
-> > 
-> > There are three choices based on the discussion [1] in RFC v2:
-> > 
-> > > #1. We expose a VFIO device, so we can reuse the VFIO container/group
-> > >     based DMA API and potentially reuse a lot of VFIO code in QEMU.
-> > >
-> > >     But in this case, we have two choices for the VFIO device interface
-> > >     (i.e. the interface on top of VFIO device fd):
-> > >
-> > >     A) we may invent a new vhost protocol (as demonstrated by the code
-> > >        in this RFC) on VFIO device fd to make it work in VFIO's way,
-> > >        i.e. regions and irqs.
-> > >
-> > >     B) Or as you proposed, instead of inventing a new vhost protocol,
-> > >        we can reuse most existing vhost ioctls on the VFIO device fd
-> > >        directly. There should be no conflicts between the VFIO ioctls
-> > >        (type is 0x3B) and VHOST ioctls (type is 0xAF) currently.
-> > >
-> > > #2. Instead of exposing a VFIO device, we may expose a VHOST device.
-> > >     And we will introduce a new mdev driver vhost-mdev to do this.
-> > >     It would be natural to reuse the existing kernel vhost interface
-> > >     (ioctls) on it as much as possible. But we will need to invent
-> > >     some APIs for DMA programming (reusing VHOST_SET_MEM_TABLE is a
-> > >     choice, but it's too heavy and doesn't support vIOMMU by itself).
-> > 
-> > This version is more like a quick PoC to try Jason's proposal on
-> > reusing vhost ioctls. And the second way (#1/B) in above three
-> > choices was chosen in this version to demonstrate the idea quickly.
-> > 
-> > Now the userspace API looks like this:
-> > 
-> > - VFIO's container/group based IOMMU API is used to do the
-> >   DMA programming.
-> > 
-> > - Vhost's existing ioctls are used to setup the device.
-> > 
-> > And the device will report device_api as "vfio-vhost".
-> > 
-> > Note that, there are dirty hacks in this version. If we decide to
-> > go this way, some refactoring in vhost.c/vhost.h may be needed.
-> > 
-> > PS. The direct mapping of the notify registers isn't implemented
-> >     in this version.
-> > 
-> > [1] https://lkml.org/lkml/2019/7/9/101
-> > 
-> > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
-> 
-> ....
-> 
-> > +long vhost_mdev_ioctl(struct mdev_device *mdev, unsigned int cmd,
-> > +		      unsigned long arg)
-> > +{
-> > +	void __user *argp = (void __user *)arg;
-> > +	struct vhost_mdev *vdpa;
-> > +	unsigned long minsz;
-> > +	int ret = 0;
+On Tue, Sep 3, 2019 at 7:43 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Hi Andrey,
+>
+> On Tue, Sep 3, 2019 at 11:37 PM Andrey Smirnov <andrew.smirnov@gmail.com>=
+ wrote:
+> >
+> > Use devres to unmap memory and drop explicit de-initialization
+> > code.
+> >
+> > NOTE: There's no corresponding unmapping code in caam_jr_remove which
+> > seems like a resource leak.
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/crypto/caam/jr.c | 13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
+> > index 417ad52615c6..7947d61a25cf 100644
+> > --- a/drivers/crypto/caam/jr.c
+> > +++ b/drivers/crypto/caam/jr.c
+> > @@ -498,6 +498,7 @@ static int caam_jr_probe(struct platform_device *pd=
+ev)
+> >         struct caam_job_ring __iomem *ctrl;
+> >         struct caam_drv_private_jr *jrpriv;
+> >         static int total_jobrs;
+> > +       struct resource *r;
+> >         int error;
+> >
+> >         jrdev =3D &pdev->dev;
+> > @@ -513,9 +514,15 @@ static int caam_jr_probe(struct platform_device *p=
+dev)
+> >         nprop =3D pdev->dev.of_node;
+> >         /* Get configuration properties from device tree */
+> >         /* First, get register page */
+> > -       ctrl =3D of_iomap(nprop, 0);
+> > +       r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       if (!r) {
+> > +               dev_err(jrdev, "platform_get_resource() failed\n");
+> > +               return -ENOMEM;
+> > +       }
 > > +
-> > +	if (!mdev)
-> > +		return -EINVAL;
-> > +
-> > +	vdpa = mdev_get_drvdata(mdev);
-> > +	if (!vdpa)
-> > +		return -ENODEV;
-> > +
-> > +	switch (cmd) {
-> > +	case VFIO_DEVICE_GET_INFO:
-> > +	{
-> > +		struct vfio_device_info info;
-> > +
-> > +		minsz = offsetofend(struct vfio_device_info, num_irqs);
-> > +
-> > +		if (copy_from_user(&info, (void __user *)arg, minsz)) {
-> > +			ret = -EFAULT;
-> > +			break;
-> > +		}
-> > +
-> > +		if (info.argsz < minsz) {
-> > +			ret = -EINVAL;
-> > +			break;
-> > +		}
-> > +
-> > +		info.flags = VFIO_DEVICE_FLAGS_VHOST;
-> > +		info.num_regions = 0;
-> > +		info.num_irqs = 0;
-> > +
-> > +		if (copy_to_user((void __user *)arg, &info, minsz)) {
-> > +			ret = -EFAULT;
-> > +			break;
-> > +		}
-> > +
-> > +		break;
-> > +	}
-> > +	case VFIO_DEVICE_GET_REGION_INFO:
-> > +	case VFIO_DEVICE_GET_IRQ_INFO:
-> > +	case VFIO_DEVICE_SET_IRQS:
-> > +	case VFIO_DEVICE_RESET:
-> > +		ret = -EINVAL;
-> > +		break;
-> > +
-> > +	case VHOST_MDEV_SET_STATE:
-> > +		ret = vhost_set_state(vdpa, argp);
-> > +		break;
-> > +	case VHOST_GET_FEATURES:
-> > +		ret = vhost_get_features(vdpa, argp);
-> > +		break;
-> > +	case VHOST_SET_FEATURES:
-> > +		ret = vhost_set_features(vdpa, argp);
-> > +		break;
-> > +	case VHOST_GET_VRING_BASE:
-> > +		ret = vhost_get_vring_base(vdpa, argp);
-> > +		break;
-> > +	default:
-> > +		ret = vhost_dev_ioctl(&vdpa->dev, cmd, argp);
-> > +		if (ret == -ENOIOCTLCMD)
-> > +			ret = vhost_vring_ioctl(&vdpa->dev, cmd, argp);
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL(vhost_mdev_ioctl);
-> 
-> 
-> I don't have a problem with this approach. A small question:
-> would it make sense to have two fds: send vhost ioctls
-> on one and vfio ioctls on another?
-> We can then pass vfio fd to the vhost fd with a
-> SET_BACKEND ioctl.
-> 
-> What do you think?
+> > +       ctrl =3D devm_ioremap(jrdev, r->start, resource_size(r));
+>
+> It seems that using devm_platform_ioremap_resource() could make the
+> code even smaller.
 
-I like this idea! I will give it a try.
-So we can introduce /dev/vhost-mdev to have the vhost fd, and let
-userspace pass vfio fd to the vhost fd with a SET_BACKEND ioctl.
+Unfortunately that function would do devm_ioremap_resource() under the
+hood and claim the ownership of the corresponding memory region.
+That's going to create a conflict with devm_of_iomap() used in
+"crypto: caam - use devres to unmap memory".
 
-Thanks a lot!
-Tiwei
-
-> 
-> -- 
-> MST
+Thanks,
+Andrey Smirnov
