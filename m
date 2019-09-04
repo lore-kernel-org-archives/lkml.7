@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12CAC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C23C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC727206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BE2206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620643;
-	bh=+kpJyF91rRJsDXidBspwhd2qYoEQQF+vrN2XtsvIEk0=;
+	s=default; t=1567620648;
+	bh=fPNZG9WKMOZtVaDyshIrE+uSyVM8MIhCmI3WBe5ukfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zp8mu5CL8OEc3URfLNevxWi8gGr70QA3uxFG60IHAioOa6xd7tKgGKItGvsUC+VWD
-	 2JJP4erLcLI2lpSsVbDxezVQiwTt/uJvUI1r4SIxwkc5g7zMrjq2A08AtDoyWzfvfM
-	 /EiB0mNOR/Ik+SMIsA68Fuw6qEEWU4jDOdtRve9g=
+	b=Fd8UNNE03MBGgW1/xokiqInkvNl0cH6UsBa/Z/DiDh8cCj1GND2O6S7cK/3j0PRZM
+	 vLV0kdN/5/1NiczpsgQbzRKdebdbicK2hrBhB/JxOIcKhBNrobf8yOzlvNUyIXk0i+
+	 UQcYCsoe18U2NsqIr00qEK5KOxcxooDp1qlL5EFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390142AbfIDSKm (ORCPT
+        id S2389816AbfIDSKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54350 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390134AbfIDSKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:39 -0400
+        id S2389617AbfIDSKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402D6206BA;
-        Wed,  4 Sep 2019 18:10:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 900A5206BA;
+        Wed,  4 Sep 2019 18:10:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620638;
-        bh=+kpJyF91rRJsDXidBspwhd2qYoEQQF+vrN2XtsvIEk0=;
+        s=default; t=1567620644;
+        bh=fPNZG9WKMOZtVaDyshIrE+uSyVM8MIhCmI3WBe5ukfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wxIfSVAfBm46vZyjhL/PybS5JCoSvu0MDZ6QJyvOvDgHb2NybagurZutz7NKtIMZh
-         3EEikQ0+rI5CGlQsZA0+/ffIeHSM92gC/qN4NpPvfrI7uojT1782SERkcmP2yk8iFw
-         wYs9Hs5YkOwiQwG7RAcpy6w9/9c38UprSfIiZJu8=
+        b=QyEGRJIyixC0xxUiQecBF/PRa7syajk2akSvd5x4Ck/GPH81r/cVQY6Q4yEnykd1P
+         CEvYeFFtS4FzAyVlxDMC4UFZGBdauMhc9E1vpBrrqZWE5nTzGUA0tu8xFWeJ3Ua7Q6
+         yji6Whp8uDbIu2qYUU0tRK5BGESlgvbufjlPunRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Airlie <airlied@redhat.com>,
+        stable@vger.kernel.org,
+        Nicolas Morey-Chaisemartin <NMoreyChaisemartin@suse.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 039/143] drm/ast: Fixed reboot test may cause system hanged
-Date:   Wed,  4 Sep 2019 19:53:02 +0200
-Message-Id: <20190904175315.582408856@linuxfoundation.org>
+Subject: [PATCH 5.2 014/143] nvme-rdma: fix possible use-after-free in connect error flow
+Date:   Wed,  4 Sep 2019 19:52:37 +0200
+Message-Id: <20190904175314.652104086@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,71 +63,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05b439711f6ff8700e8660f97a1179650778b9cb ]
+[ Upstream commit d94211b8bad3787e0655a67284105f57db728cb1 ]
 
-There is another thread still access standard VGA I/O while loading drm driver.
-Disable standard VGA I/O decode to avoid this issue.
+When start_queue fails, we need to make sure to drain the
+queue cq before freeing the rdma resources because we might
+still race with the completion path. Have start_queue() error
+path safely stop the queue.
 
-Signed-off-by: Y.C. Chen <yc_chen@aspeedtech.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1523410059-18415-1-git-send-email-yc_chen@aspeedtech.com
+--
+[30371.808111] nvme nvme1: Failed reconnect attempt 11
+[30371.808113] nvme nvme1: Reconnecting in 10 seconds...
+[...]
+[30382.069315] nvme nvme1: creating 4 I/O queues.
+[30382.257058] nvme nvme1: Connect Invalid SQE Parameter, qid 4
+[30382.257061] nvme nvme1: failed to connect queue: 4 ret=386
+[30382.305001] BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
+[30382.305022] IP: qedr_poll_cq+0x8a3/0x1170 [qedr]
+[30382.305028] PGD 0 P4D 0
+[30382.305037] Oops: 0000 [#1] SMP PTI
+[...]
+[30382.305153] Call Trace:
+[30382.305166]  ? __switch_to_asm+0x34/0x70
+[30382.305187]  __ib_process_cq+0x56/0xd0 [ib_core]
+[30382.305201]  ib_poll_handler+0x26/0x70 [ib_core]
+[30382.305213]  irq_poll_softirq+0x88/0x110
+[30382.305223]  ? sort_range+0x20/0x20
+[30382.305232]  __do_softirq+0xde/0x2c6
+[30382.305241]  ? sort_range+0x20/0x20
+[30382.305249]  run_ksoftirqd+0x1c/0x60
+[30382.305258]  smpboot_thread_fn+0xef/0x160
+[30382.305265]  kthread+0x113/0x130
+[30382.305273]  ? kthread_create_worker_on_cpu+0x50/0x50
+[30382.305281]  ret_from_fork+0x35/0x40
+--
+
+Reported-by: Nicolas Morey-Chaisemartin <NMoreyChaisemartin@suse.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ast/ast_main.c | 5 ++++-
- drivers/gpu/drm/ast/ast_mode.c | 2 +-
- drivers/gpu/drm/ast/ast_post.c | 2 +-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/nvme/host/rdma.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index 2854399856ba0..4aebe21e6ad9f 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -131,8 +131,8 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
- 
- 
- 	/* Enable extended register access */
--	ast_enable_mmio(dev);
- 	ast_open_key(ast);
-+	ast_enable_mmio(dev);
- 
- 	/* Find out whether P2A works or whether to use device-tree */
- 	ast_detect_config_mode(dev, &scu_rev);
-@@ -576,6 +576,9 @@ void ast_driver_unload(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
-+	/* enable standard VGA decode */
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x04);
-+
- 	ast_release_firmware(dev);
- 	kfree(ast->dp501_fw_addr);
- 	ast_mode_fini(dev);
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 97fed0627d1c8..74da15a3341a8 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -601,7 +601,7 @@ static int ast_crtc_mode_set(struct drm_crtc *crtc,
- 		return -EINVAL;
- 	ast_open_key(ast);
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
- 
- 	ast_set_std_reg(crtc, adjusted_mode, &vbios_mode);
- 	ast_set_crtc_reg(crtc, adjusted_mode, &vbios_mode);
-diff --git a/drivers/gpu/drm/ast/ast_post.c b/drivers/gpu/drm/ast/ast_post.c
-index f7d421359d564..c1d1ac51d1c20 100644
---- a/drivers/gpu/drm/ast/ast_post.c
-+++ b/drivers/gpu/drm/ast/ast_post.c
-@@ -46,7 +46,7 @@ void ast_enable_mmio(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 97f668a39ae1c..7b074323bcdf2 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -562,13 +562,17 @@ out_destroy_cm_id:
+ 	return ret;
  }
  
++static void __nvme_rdma_stop_queue(struct nvme_rdma_queue *queue)
++{
++	rdma_disconnect(queue->cm_id);
++	ib_drain_qp(queue->qp);
++}
++
+ static void nvme_rdma_stop_queue(struct nvme_rdma_queue *queue)
+ {
+ 	if (!test_and_clear_bit(NVME_RDMA_Q_LIVE, &queue->flags))
+ 		return;
+-
+-	rdma_disconnect(queue->cm_id);
+-	ib_drain_qp(queue->qp);
++	__nvme_rdma_stop_queue(queue);
+ }
+ 
+ static void nvme_rdma_free_queue(struct nvme_rdma_queue *queue)
+@@ -607,11 +611,13 @@ static int nvme_rdma_start_queue(struct nvme_rdma_ctrl *ctrl, int idx)
+ 	else
+ 		ret = nvmf_connect_admin_queue(&ctrl->ctrl);
+ 
+-	if (!ret)
++	if (!ret) {
+ 		set_bit(NVME_RDMA_Q_LIVE, &queue->flags);
+-	else
++	} else {
++		__nvme_rdma_stop_queue(queue);
+ 		dev_info(ctrl->ctrl.device,
+ 			"failed to connect queue: %d ret=%d\n", idx, ret);
++	}
+ 	return ret;
+ }
  
 -- 
 2.20.1
