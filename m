@@ -2,104 +2,251 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85A7C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2E2C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF678208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E5D20828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:33:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="o3gX50CZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731279AbfIDPcv (ORCPT
+        id S1731360AbfIDPdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:32:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36382 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729773AbfIDPcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:32:51 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0C799800DD4;
-        Wed,  4 Sep 2019 15:32:51 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.63])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2883C5D9C9;
-        Wed,  4 Sep 2019 15:32:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  4 Sep 2019 17:32:49 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 17:32:46 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: Re: [PATCH 1/3] task: Add a count of task rcu users
-Message-ID: <20190904153245.GF24568@redhat.com>
-References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
- <20190830160957.GC2634@redhat.com>
- <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
- <87o906wimo.fsf@x220.int.ebiederm.org>
- <20190902134003.GA14770@redhat.com>
- <87tv9uiq9r.fsf@x220.int.ebiederm.org>
- <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
- <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
- <87ef0yt221.fsf_-_@x220.int.ebiederm.org>
- <20190904144415.GB20391@lenoir>
+        Wed, 4 Sep 2019 11:33:00 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46616 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729773AbfIDPdA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:33:00 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so5615844pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 08:32:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pAF8NODS0IdeXYqZZg+qCkGRO2c4ppZNQniBzk4p2uM=;
+        b=o3gX50CZNu1DcMqR6yUhYk+TBr4cQghSccWX9D21vjjS4pqOig7pOsSJ7Th0chKLMA
+         Q5K2BYcdbPSYmNTdTv9lO6frE7SHY4Am/WMnRV9V6NGYEozg4P0/EjSGCX75HKt0cbWL
+         0Qb7sgxZr7mf5ls4lw9/gJk+/0KNS+kBDwYJg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pAF8NODS0IdeXYqZZg+qCkGRO2c4ppZNQniBzk4p2uM=;
+        b=CwGF3HEJngpuzMI6hSZ5A+htw4nfCapxFGMAEc7/jNjME+75LbasCaT/AE3lR7gYWv
+         oHEcpe1RlebB6ynU9sIp2W06Z0JKKOGdqBMNj2d5nUn/i0BfKKuBphrGFwv1r1jHyHHh
+         7DxDmq55Y/J1PeMtCZgBNxs2PES52VFxouUgYHYO2JO3LwgysLpyH5MdzNlzkwUgvALY
+         JCPnZsSgQa+UiDu+1iU7MGWDGs3Dl1es2pwm+4m7d4iZHME1s0I7WwVMwZyAog9ge2pc
+         42CQSvt3rLASma/6Qx/ypkOj+MVGIk+8h+IQZNWQnB9wuHOvnjDYly4KCPbmw5b7rLbK
+         vFPA==
+X-Gm-Message-State: APjAAAVEvCbcH6kdszJglQizBbdbqFXai1GnHVGWtBka3daf+vyEkDJQ
+        o7rRmdMCU+DQRtfrKS9Hm68rVw==
+X-Google-Smtp-Source: APXvYqwDY/pww7oE5JHhWC+Af1RbKQG4kccoKutskl3ln50kCRRet07PEFQe36UDmV0JH0Yan8OBIA==
+X-Received: by 2002:a62:e216:: with SMTP id a22mr15980395pfi.249.1567611179460;
+        Wed, 04 Sep 2019 08:32:59 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id o1sm2744305pjp.0.2019.09.04.08.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 08:32:58 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 11:32:58 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
+        carmenjackson@google.com, mayankgupta@google.com,
+        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
+        akpm@linux-foundation.org, kernel-team@android.com,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190904153258.GH240514@google.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904144415.GB20391@lenoir>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 04 Sep 2019 15:32:51 +0000 (UTC)
+In-Reply-To: <20190904084508.GL3838@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04, Frederic Weisbecker wrote:
->
-> So what happens if, say:
->
->
->            CPU 1                         CPU 2
->    --------------------------------------------------------------
->    rcu_read_lock()
->    p = rcu_dereference(rq->task)
->    if (refcount_inc_not_zero(p->rcu_users)) {
->        .....
->                                          release_task() {
->                                              put_task_struct_rcu_user() {
->                                                  call_rcu() {
->                                                      queue rcu_head
+On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
+> On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
+> > Useful to track how RSS is changing per TGID to detect spikes in RSS and
+> > memory hogs. Several Android teams have been using this patch in various
+> > kernel trees for half a year now. Many reported to me it is really
+> > useful so I'm posting it upstream.
+> > 
+> > Initial patch developed by Tim Murray. Changes I made from original patch:
+> > o Prevent any additional space consumed by mm_struct.
+> > o Keep overhead low by checking if tracing is enabled.
+> > o Add some noise reduction and lower overhead by emitting only on
+> >   threshold changes.
+> 
+> Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
+> the Linus tree (nor in linux-next).
 
-in this particular case call_rcu() won't be called, so
+No, this is generated automatically by the tracepoint infrastructure when a
+tracepoint is added.
 
->                                                  }
->                                              }
->                                          }
->        put_task_struct_rcu_user(); //here rcu_users has been overwritten
+> Besides that why do we need batching in the first place. Does this have a
+> measurable overhead? How does it differ from any other tracepoints that we
+> have in other hotpaths (e.g.  page allocator doesn't do any checks).
 
-rcu_users won't be overwritten.
+We do need batching not only for overhead reduction, but also for reducing
+tracing noise. Flooding the traces makes it less useful for long traces and
+post-processing of traces. IOW, the overhead reduction is a bonus.
 
-But nobody should try to increment ->rcu_users,
+I have not looked at the page allocator paths, we don't currently use that
+for the purposes of this rss_stat tracepoint.
 
-	rcu_read_lock();
-	p = rcu_dereference(rq->task);
-	refcount_inc_not_zero(p->rcu_users);
+> Other than that this looks reasonable to me.
 
-is already wrong because both release_task/last-schedule can happen in
-between, before refcount_inc_not_zero().
+Thanks!
 
-Oleg.
+ - Joel
 
+
+> 
+> > Co-developed-by: Tim Murray <timmurray@google.com>
+> > Signed-off-by: Tim Murray <timmurray@google.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > 
+> > ---
+> > 
+> > v1->v2: Added more commit message.
+> > 
+> > Cc: carmenjackson@google.com
+> > Cc: mayankgupta@google.com
+> > Cc: dancol@google.com
+> > Cc: rostedt@goodmis.org
+> > Cc: minchan@kernel.org
+> > Cc: akpm@linux-foundation.org
+> > Cc: kernel-team@android.com
+> > 
+> >  include/linux/mm.h          | 14 +++++++++++---
+> >  include/trace/events/kmem.h | 21 +++++++++++++++++++++
+> >  mm/memory.c                 | 20 ++++++++++++++++++++
+> >  3 files changed, 52 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 0334ca97c584..823aaf759bdb 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -1671,19 +1671,27 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+> >  	return (unsigned long)val;
+> >  }
+> >  
+> > +void mm_trace_rss_stat(int member, long count, long value);
+> > +
+> >  static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+> >  {
+> > -	atomic_long_add(value, &mm->rss_stat.count[member]);
+> > +	long count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
+> > +
+> > +	mm_trace_rss_stat(member, count, value);
+> >  }
+> >  
+> >  static inline void inc_mm_counter(struct mm_struct *mm, int member)
+> >  {
+> > -	atomic_long_inc(&mm->rss_stat.count[member]);
+> > +	long count = atomic_long_inc_return(&mm->rss_stat.count[member]);
+> > +
+> > +	mm_trace_rss_stat(member, count, 1);
+> >  }
+> >  
+> >  static inline void dec_mm_counter(struct mm_struct *mm, int member)
+> >  {
+> > -	atomic_long_dec(&mm->rss_stat.count[member]);
+> > +	long count = atomic_long_dec_return(&mm->rss_stat.count[member]);
+> > +
+> > +	mm_trace_rss_stat(member, count, -1);
+> >  }
+> >  
+> >  /* Optimized variant when page is already known not to be PageAnon */
+> > diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+> > index eb57e3037deb..8b88e04fafbf 100644
+> > --- a/include/trace/events/kmem.h
+> > +++ b/include/trace/events/kmem.h
+> > @@ -315,6 +315,27 @@ TRACE_EVENT(mm_page_alloc_extfrag,
+> >  		__entry->change_ownership)
+> >  );
+> >  
+> > +TRACE_EVENT(rss_stat,
+> > +
+> > +	TP_PROTO(int member,
+> > +		long count),
+> > +
+> > +	TP_ARGS(member, count),
+> > +
+> > +	TP_STRUCT__entry(
+> > +		__field(int, member)
+> > +		__field(long, size)
+> > +	),
+> > +
+> > +	TP_fast_assign(
+> > +		__entry->member = member;
+> > +		__entry->size = (count << PAGE_SHIFT);
+> > +	),
+> > +
+> > +	TP_printk("member=%d size=%ldB",
+> > +		__entry->member,
+> > +		__entry->size)
+> > +	);
+> >  #endif /* _TRACE_KMEM_H */
+> >  
+> >  /* This part must be outside protection */
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index e2bb51b6242e..9d81322c24a3 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -72,6 +72,8 @@
+> >  #include <linux/oom.h>
+> >  #include <linux/numa.h>
+> >  
+> > +#include <trace/events/kmem.h>
+> > +
+> >  #include <asm/io.h>
+> >  #include <asm/mmu_context.h>
+> >  #include <asm/pgalloc.h>
+> > @@ -140,6 +142,24 @@ static int __init init_zero_pfn(void)
+> >  }
+> >  core_initcall(init_zero_pfn);
+> >  
+> > +/*
+> > + * This threshold is the boundary in the value space, that the counter has to
+> > + * advance before we trace it. Should be a power of 2. It is to reduce unwanted
+> > + * trace overhead. The counter is in units of number of pages.
+> > + */
+> > +#define TRACE_MM_COUNTER_THRESHOLD 128
+> > +
+> > +void mm_trace_rss_stat(int member, long count, long value)
+> > +{
+> > +	long thresh_mask = ~(TRACE_MM_COUNTER_THRESHOLD - 1);
+> > +
+> > +	if (!trace_rss_stat_enabled())
+> > +		return;
+> > +
+> > +	/* Threshold roll-over, trace it */
+> > +	if ((count & thresh_mask) != ((count - value) & thresh_mask))
+> > +		trace_rss_stat(member, count);
+> > +}
+> >  
+> >  #if defined(SPLIT_RSS_COUNTING)
+> >  
+> > -- 
+> > 2.23.0.187.g17f5b7556c-goog
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
