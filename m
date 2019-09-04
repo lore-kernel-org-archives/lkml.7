@@ -2,96 +2,119 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B222C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BE3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5698322CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:46:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567583212;
-	bh=rEMdR7knPCpbyaPsNe8NkXOsK7TFTFWjjBIahM2FlVI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DXjdGvoRN5LNKEbUedd0XMm8QdYN2bBqRrqp1W17+z2FPMtAs6ztqtdg5Xin1Eo+f
-	 ZYoEuCfce9HZR+nLM60kA8Dx7aNt1CqeNK1IwWYwbCgT4mS61BNqh/lzDjpu9Pjqm9
-	 HIQe70LzzXjbcaoh7MiXa6jgDrdOB2Qp1S87P0Vk=
+	by mail.kernel.org (Postfix) with ESMTP id 39DBA22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:47:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="avLB/K+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbfIDHqv (ORCPT
+        id S1729197AbfIDHr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:46:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38298 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbfIDHqu (ORCPT
+        Wed, 4 Sep 2019 03:47:28 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26660 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727144AbfIDHr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:46:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o184so2368037wme.3;
-        Wed, 04 Sep 2019 00:46:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ALQJDHabIHIRVccnskz3EGkXYFFUSK5Bj/L/t8kK1RY=;
-        b=jmAXbqRh8aAZTEPJ4YqjRbQvcgIhoc67V9Y8KIpE+ugbtQtXtS/6ZPzecA5S0oKCbg
-         Q3n7D8gWrEtVYBvpL/fIGuDEADOI63DJfmWStYcp2+UWwK91rETmRHGh54Cr/yhymEOt
-         FWguz/ETf2zt0hveZ0glw3KtKkKCLStIlvszy8brliU4nKGDEQH8F8c7XRVxXkUDd+i0
-         f8mHaguh7+vncvEWmHg1iD2bqjm7VADXHNsUP00/vDpq2FIzBIKM5RUyjGTxkm0LVTVT
-         vXaz8Q/Qv0VSSQgPLzMXE/kehY/sVDq6WRyaaSd6EgES1LXW0n6zEJ7zK4IKQ+u/KHUF
-         HwaQ==
-X-Gm-Message-State: APjAAAXjopGUIs72oqzxFPvXA7SVbvZuNEdG56jTAb27GE+yTZ2vLMR0
-        U/U2rtYj8u6KyTqqgHzyXeyakqp48eHt9peQXBiAqhgW
-X-Google-Smtp-Source: APXvYqzrei7rUgXpBmUZ0+Wydv6tghQcHo02w8csqHAigBwWnK5qkd5y5qX2Pt0XShEryT9Xgb+Ny0I/xcdxP4uJk7g=
-X-Received: by 2002:a05:600c:2056:: with SMTP id p22mr2836990wmg.159.1567583208315;
- Wed, 04 Sep 2019 00:46:48 -0700 (PDT)
+        Wed, 4 Sep 2019 03:47:27 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x847bAmM000836;
+        Wed, 4 Sep 2019 09:47:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=4UyuBYEhSmaJWCoduBpGAY7jENPHNN3jaF8lnYU4bFY=;
+ b=avLB/K+6dY1CH0Jiwo9EBM5miectu4+Tap6y9Zoritd2dLPoZcLD1Dwpl8D9oCB3J2Db
+ ULwNIdfpicC7HVHo8X7839kHq/yt7EGMps7uItCDQFhABO5T6SM0VM/HE5tEvjtjdO9p
+ /3BU6I0Qkgfc/iYkWYvRFBsws+mOklltKTUGZzlqmiXGGtJUdUrx3RJdOjsFqrfh60Ur
+ SDLYlCTnRnBPUaVfoL81ZPNOg83zjEzLqE+B+iUi+5m/csvhwPx/ECXDhLx2k/TxaihG
+ uLnV0r/Ixi7nnpAKDgedAU6gZyF0pwLsBMmD914k4waeTETbLoP5koubBxysrtTNg/z4 jQ== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2uqe19r07v-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 04 Sep 2019 09:47:17 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7F74E54;
+        Wed,  4 Sep 2019 07:47:09 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 35A4A2BA693;
+        Wed,  4 Sep 2019 09:47:09 +0200 (CEST)
+Received: from [10.48.1.93] (10.75.127.45) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Sep
+ 2019 09:47:08 +0200
+Subject: Re: [PATCH] i2c: stm32f7: Make structure stm32f7_i2c_algo constant
+To:     Wolfram Sang <wsa@the-dreams.de>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190815055857.1944-1-nishkadg.linux@gmail.com>
+ <20190903180552.GI2171@ninjato>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <662b171f-37e2-f58e-3e05-41a52737b1f3@st.com>
+Date:   Wed, 4 Sep 2019 09:47:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <16EA1F625E922C43B00B9D82250220500871C7D7@APYOKXMS108.ap.sony.com>
-In-Reply-To: <16EA1F625E922C43B00B9D82250220500871C7D7@APYOKXMS108.ap.sony.com>
-From:   Felipe Balbi <balbi@kernel.org>
-Date:   Wed, 4 Sep 2019 10:46:37 +0300
-Message-ID: <CAH8TKc_XBksJHTue18O7jv7h0WjFSqQkJJ8Hc2aRNZaL3aRfVQ@mail.gmail.com>
-Subject: Re: [PATCH] USB: dummy-hcd: fix power budget for SuperSpeed mode
-To:     Jacky.Cao@sony.com
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Kento.A.Kobayashi@sony.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190903180552.GI2171@ninjato>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-04_01:2019-09-03,2019-09-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Wolfram
 
-On Wed, Sep 4, 2019 at 9:47 AM <Jacky.Cao@sony.com> wrote:
->
-> The power budget for SuperSpeed mode should be 900 mA
->
-> according to USB3.0 specification, so set the power
->
-> budget to 900 mA for dummy_start_ss which is only used
->
-> for SuperSpeed mode.
->
->
->
-> If the max power consumption of SuperSpeed device is
->
-> larger than 500 mA, insufficient available bus power
->
-> error happens in usb_choose_configuration function
->
-> when the device connects to dummy hcd.
->
->
->
-> Signed-off-by: Jacky Cao <Jacky.Cao@sony.com>
+Sorry for the delay.
 
-You must send plain/text emails. I'm not receiving this via the
-mailing list. Please, fix your
-email client or use git send-email
+Acked-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
--- 
-balbi
+BR
+
+On 9/3/19 8:05 PM, Wolfram Sang wrote:
+> On Thu, Aug 15, 2019 at 11:28:57AM +0530, Nishka Dasgupta wrote:
+>> Static structure stm32f7_i2c_algo, of type i2c_algorithm, is used only
+>> when it is assigned to constant field algo of a variable having type
+>> i2c_adapter. As stm32f7_i2c_algo is therefore never modified, make it
+>> const as well to protect it from unintended modification.
+>> Issue found with Coccinelle.
+>>
+>> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+>> ---
+> 
+> Are you guys okay with this patch?
+> 
+>>  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+>> index 266d1c269b83..d36cf08461f7 100644
+>> --- a/drivers/i2c/busses/i2c-stm32f7.c
+>> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+>> @@ -1809,7 +1809,7 @@ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
+>>  		I2C_FUNC_SMBUS_I2C_BLOCK;
+>>  }
+>>  
+>> -static struct i2c_algorithm stm32f7_i2c_algo = {
+>> +static const struct i2c_algorithm stm32f7_i2c_algo = {
+>>  	.master_xfer = stm32f7_i2c_xfer,
+>>  	.smbus_xfer = stm32f7_i2c_smbus_xfer,
+>>  	.functionality = stm32f7_i2c_func,
+>> -- 
+>> 2.19.1
+>>
