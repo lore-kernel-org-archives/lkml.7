@@ -2,149 +2,191 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27A7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3498AC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9837721670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:51:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="iJj9rIm7"
+	by mail.kernel.org (Postfix) with ESMTP id 0E5BC208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:53:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567619616;
+	bh=lBpyFDA5hZnbijuaJ6bRBDeCsLH10Lg896AGxn2kkVA=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=SE6sENlcblAgNbMrJ/UBycsgEn2o6O1QjQ9y8GzmU3sb7qIPAcVmTcLXkVTPlAWK1
+	 3S6qgiUuXyIudOpjnHwhD+ymKEnC5HrNm6dmL06slmCtZk84tDQTlB8gD8MmjQNki3
+	 Dr6LvpQ3aeWArCvNmLKV1NJiaowT6AmLX15HobHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfIDRvv (ORCPT
+        id S1732030AbfIDRxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:51:51 -0400
-Received: from mout.web.de ([212.227.15.14]:50521 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730495AbfIDRvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:51:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567619438;
-        bh=G25W7RRLJRgtXAsMRLwlickAdb7OyjUJ/3Iap6/WNqw=;
-        h=X-UI-Sender-Class:Cc:References:Subject:From:To:Date:In-Reply-To;
-        b=iJj9rIm7eePcfzdFbl34IXfGKSrL4W9OTrjK7kwQU+Th9jn2bhLqk7fzB2ckihwux
-         Sa9yXB1NM8iBeS7iKon/klTlV0AIWvJm88e4zm/qPxsP7LGYkWo+BJNuRQ8PItX6+v
-         Aay7M3aVu+KyAJAkyahQ/LO88Af8KXqFpqZW5CIA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.100.89]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MLg8p-1i4kLW3tHX-000sUZ; Wed, 04
- Sep 2019 19:50:38 +0200
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <1567491305-18320-1-git-send-email-zhongjiang@huawei.com>
-Subject: Re: drm/amdgpu: remove the redundant null check
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-To:     zhong jiang <zhongjiang@huawei.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org
-Message-ID: <62b33279-9ca9-5970-5336-a8511ce54197@web.de>
-Date:   Wed, 4 Sep 2019 19:50:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
-MIME-Version: 1.0
-In-Reply-To: <1567491305-18320-1-git-send-email-zhongjiang@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:J8L0lGxBrBNRQg97k+vO1uJZR0MohxQSAxwmBWvxNaOgt60XxLG
- AAUjYpmRE0Ga3uzJGOcO1Px25yjaGgIDtSyHaVRvW5pXkdDBRaWxv2S/2KpVtf1aI5OIsG4
- dzwrxkdHcwbXeYZTARkGxIMJHiqdmGO9/fWivhVzigQyNyO2RxiCN8xTVq79FExbuhFr8Ik
- 0qCkRykkCe7K/TND9dUKA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eM6TKP9RiSs=:iJnFXG1JRyXG6cNWofX/9r
- Pb+85q2/5fAsQ6EiARB+edrQ0uWoX+zmQxczJSu0ADjhCXcF8XQ7WnABh126lOUE0vAuTUsWK
- eIlUK+/MRDqhEZ1b+4nsPIS01Fh9viACklGXh12uU2BDRgIQJ8/w7TO9NyJt3O12rwwWJ7rSf
- GWYw7S1Dz9STQ0IKdDlP11l3ot3GP52FtJ7pqwyD1/Dyuq0DUSSsXAEjKISmo7or5FrnPJ+NG
- yUtHrPK6JthQB5otrnel1LsMUkQY+1x63H9oPk0jTzl7C2bt4ZEQKMU1x0YNGmD1LzkM66XfB
- U52U6L5Ye7yCnLszqvaieasN4xfq2AW0kYRsL/gHb5q1hcteyOLsAUNas6eRR11+unYfxeyj3
- wCdpk/6V7aljJvppdwXcnUGOW6/aqCGeBSNZFB/cI6aPxNQxppR/1Xjk2pQpCHNNXY6nNVK0Z
- z2BRL2JGZn7wbCGErtpBXodnyvi6E3SxWANknmzmLoWt63zLGj+0gfHpWVqlp49IehUV5RkxI
- sJm+Zyiq+Xn0frdALHLWiKtT4CL683jlq0dIQVARrqvx4YFY0L8oTI9JbbqW7BcMa8lIYrxO6
- 0GIUELW9/apvySua59d7BqOA6TUF17j1iOQEf3gYgVeqQCyifQZVItjqmGBKNvH2EKofyxMxp
- dFl/e6Hp+0Ro3Yv8IPm5tFHdXaIyxrCFx37wrXuKNIwDI6lHsHzvPL8JpyupjZmmfB5KHBaeQ
- UK1MEeQl9U3q6+NQ11oiJjVQR+DnX9MI+nN8XOBOaf3mOxIJpNpvl/5OgDPRLhB7gsAnoAMAK
- KSfUzBNcJlCAKoQ/nVKaEmrQNYH9WE/JUcUfbLfe1akd+j/cgPPL4YaY4KR3SxikKgML8WgHB
- RV6cjnDLgDu9xEreEeOVWuX2RDjUR7TJPJT9XtG7rZRB0ktG8PqHxz3a55e9RfBEcj9nFzl9E
- UwfrHKN9ylnJaoHZpls2bpO00uqSyL+MRIckfRuSivSYUmcAq9UXJVzPZ27dE9xiRVoYMvF/g
- IBChRh8kqwKXLKMHFdNr/aw0IMyJQUXf8d4Och1HMlaw6UvWnNwoDglJ0LVnhy2fF1JQXMl9+
- TDrwhVEKIJTvouL8CZ31rBXrnP2ovIQhA7tB0S9Qt0S94ZyEfku6C/azgEObyb+mfBJl8UDhN
- mRsjrIAXwd4+i7kE8yBxXtumtJl8BqaLIsShHpCCOLtcd9Oj+utDHpWcKWYdbhAZV+yZhZBne
- tVPZWo0gIYje0zm+S
+        Wed, 4 Sep 2019 13:53:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49464 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731633AbfIDRxf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:53:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=iYIeUpDrEBWiGCuNs3OXSzfuqXKPHDOYVNqEcIq84zI=; b=PHwYHOjtzvRy
+        nZxGXvdyTWw9rFtgYhq9c6Marg5F+Dxm4hwBNyc8vHMZviaHlawtuaXPDoALLdeL8HE+jyJKBbM/H
+        sfXh8EKYFdglj8vu2cJoXtu6oOfL36qvQojyRjbgcoCzM/lxki40QLi+7OIfTBVo9LHDUpd7ibuIj
+        GeZj0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i5ZTH-0006hY-MZ; Wed, 04 Sep 2019 17:53:31 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3ADAE2742B45; Wed,  4 Sep 2019 18:53:31 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Applied "regulator: Defer init completion for a while after late_initcall" to the regulator tree
+In-Reply-To: <20190904124250.25844-1-broonie@kernel.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190904175331.3ADAE2742B45@ypsilon.sirena.org.uk>
+Date:   Wed,  4 Sep 2019 18:53:31 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> debugfs_remove and kfree has taken the null check in account.
-> hence it is unnecessary to check it. Just remove the condition.
+The patch
 
-How do you think about a wording like the following?
+   regulator: Defer init completion for a while after late_initcall
 
-  The functions =E2=80=9Cdebugfs_remove=E2=80=9D and =E2=80=9Ckfree=E2=80=
-=9D tolerate the passing
-  of null pointers. Hence it is unnecessary to check such arguments
-  around the calls. Thus remove the extra condition check at two places.
+has been applied to the regulator tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
 
-> No functional change.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-I find this information questionable while it is partly reasonable
-according to the shown software refactoring.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Can a subject like =E2=80=9C[PATCH] drm/amdgpu: Remove two redundant
-null pointer checks=E2=80=9D be nicer here?
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Were any source code analysis tools involved for finding
-these update candidates?
+Thanks,
+Mark
 
-Regards,
-Markus
+From 55576cf1853798e86f620766e23b604c9224c19c Mon Sep 17 00:00:00 2001
+From: Mark Brown <broonie@kernel.org>
+Date: Wed, 4 Sep 2019 13:42:50 +0100
+Subject: [PATCH] regulator: Defer init completion for a while after
+ late_initcall
+
+The kernel has no way of knowing when we have finished instantiating
+drivers, between deferred probe and systems that build key drivers as
+modules we might be doing this long after userspace has booted. This has
+always been a bit of an issue with regulator_init_complete since it can
+power off hardware that's not had it's driver loaded which can result in
+user visible effects, the main case is powering off displays. Practically
+speaking it's not been an issue in real systems since most systems that
+use the regulator API are embedded and build in key drivers anyway but
+with Arm laptops coming on the market it's becoming more of an issue so
+let's do something about it.
+
+In the absence of any better idea just defer the powering off for 30s
+after late_initcall(), this is obviously a hack but it should mask the
+issue for now and it's no more arbitrary than late_initcall() itself.
+Ideally we'd have some heuristics to detect if we're on an affected
+system and tune or skip the delay appropriately, and there may be some
+need for a command line option to be added.
+
+Link: https://lore.kernel.org/r/20190904124250.25844-1-broonie@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Tested-by: Lee Jones <lee.jones@linaro.org>
+Cc: stable@vger.kernel.org
+---
+ drivers/regulator/core.c | 42 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 4a27a46ec6e7..340db986b67f 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5644,7 +5644,7 @@ static int __init regulator_init(void)
+ /* init early to allow our consumers to complete system booting */
+ core_initcall(regulator_init);
+ 
+-static int __init regulator_late_cleanup(struct device *dev, void *data)
++static int regulator_late_cleanup(struct device *dev, void *data)
+ {
+ 	struct regulator_dev *rdev = dev_to_rdev(dev);
+ 	const struct regulator_ops *ops = rdev->desc->ops;
+@@ -5693,17 +5693,8 @@ static int __init regulator_late_cleanup(struct device *dev, void *data)
+ 	return 0;
+ }
+ 
+-static int __init regulator_init_complete(void)
++static void regulator_init_complete_work_function(struct work_struct *work)
+ {
+-	/*
+-	 * Since DT doesn't provide an idiomatic mechanism for
+-	 * enabling full constraints and since it's much more natural
+-	 * with DT to provide them just assume that a DT enabled
+-	 * system has full constraints.
+-	 */
+-	if (of_have_populated_dt())
+-		has_full_constraints = true;
+-
+ 	/*
+ 	 * Regulators may had failed to resolve their input supplies
+ 	 * when were registered, either because the input supply was
+@@ -5721,6 +5712,35 @@ static int __init regulator_init_complete(void)
+ 	 */
+ 	class_for_each_device(&regulator_class, NULL, NULL,
+ 			      regulator_late_cleanup);
++}
++
++static DECLARE_DELAYED_WORK(regulator_init_complete_work,
++			    regulator_init_complete_work_function);
++
++static int __init regulator_init_complete(void)
++{
++	/*
++	 * Since DT doesn't provide an idiomatic mechanism for
++	 * enabling full constraints and since it's much more natural
++	 * with DT to provide them just assume that a DT enabled
++	 * system has full constraints.
++	 */
++	if (of_have_populated_dt())
++		has_full_constraints = true;
++
++	/*
++	 * We punt completion for an arbitrary amount of time since
++	 * systems like distros will load many drivers from userspace
++	 * so consumers might not always be ready yet, this is
++	 * particularly an issue with laptops where this might bounce
++	 * the display off then on.  Ideally we'd get a notification
++	 * from userspace when this happens but we don't so just wait
++	 * a bit and hope we waited long enough.  It'd be better if
++	 * we'd only do this on systems that need it, and a kernel
++	 * command line option might be useful.
++	 */
++	schedule_delayed_work(&regulator_init_complete_work,
++			      msecs_to_jiffies(30000));
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
