@@ -2,98 +2,125 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F76C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAACC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E217208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567622173;
-	bh=GTxG0x3SjW+AbBc6RPkuBbTYZAv5mi3uQJ0SdGnvY90=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZcoXi/xBNXn0zzLg/3n3G3PsdjBjmg+rgcG+pnKf1UCY+ouYs24EG1uWLq6mO4PUE
-	 +7XHwvfYhNit+/lSSrCl0+osiorJXNB+QxJu2kN9/7wgmH60D8JMRNt567ozaFej4y
-	 HzlnGM3c5GQj4f3xY3EHjEveGULzzoQIST1/4CI0=
+	by mail.kernel.org (Postfix) with ESMTP id DABDF208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:39:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="jv5RYYTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733267AbfIDSgM (ORCPT
+        id S1733159AbfIDSjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732177AbfIDSgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:36:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9626920820;
-        Wed,  4 Sep 2019 18:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567622171;
-        bh=GTxG0x3SjW+AbBc6RPkuBbTYZAv5mi3uQJ0SdGnvY90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SaJPgvwrSJOEr8Tx4SeFQoYiz5jz65bIH/yPBKFwv28VwoZjdgDd/uql/vdL2x9sD
-         Pmqjmhu8gw9MhxXe3DZzFBLKCRy5RNp0BEbReOgXRg1+eAhjW0K9wDm9E03raooKd2
-         OujkS4LC3/hC4XN2lVBBmscjvbchDFocJaMvvNW0=
-Date:   Wed, 4 Sep 2019 20:36:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
- Identifier
-Message-ID: <20190904183608.GA495@kroah.com>
-References: <20190831151147.GA7082@nishad>
- <20190904153432.7fb54f02@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904153432.7fb54f02@coco.lan>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 4 Sep 2019 14:39:25 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41448 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732887AbfIDSjY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:39:24 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m9so9973454pls.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:39:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=RFVxIo+Qn+D3l74R0gbfOnsQVErdkpTLqYjhLCUkAbw=;
+        b=jv5RYYTHFRDQwQoavPr+s26IndTLQO1TBV8cq+L3X/QMkeT0/ARB3rrjSwpb5wT7pf
+         HtAMic+J1yHXdWpxSKcqVbMIg1qIjlRvQrl2FC694er0m9eDz9r15q7fzqREYWveN3q/
+         INbD175q4V8GheY5yqsIeOAt2YahZu+uSA5DZVxnb+U2tUCevLqsvSO4ddZ8xDU8dwt1
+         xDID7Ea5A1yayF/lfUXOZ/7V8pNUnkbju8VHPFtEuCHaNyc+qDXu1EtssjenusvKOXof
+         R67M83ORZEZQVKvh8VIOJeFUUOkfriI2Q8FLCGJTLS4s7Df2JvUiqA4G8r1sJhp9runZ
+         yeOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=RFVxIo+Qn+D3l74R0gbfOnsQVErdkpTLqYjhLCUkAbw=;
+        b=n/9sT7cSving/h73O7+/6Edm98gjhFyXLBdSVBvz7EretyVdyZ+4nBXX8ofkvTEcFR
+         V2hIQkY80MIUaTgOgErxHMnozma+k2AqSouLPGZY5srZPdomi6VL2vwsPX4ft9OLGuj7
+         FkF+HU6Bt5pMtigzNjvNENj2ckJE7E539vKl1sS+VtFkIT8GZAlCOmf5Srt8tW488e7M
+         oqW4/zch8xT/W36iEn+0vO1TtTFR2AJuspZ7kvKPWduB8K7mZ7fuuUgkxDg8SDilkF9q
+         WFldLlHGiYEixXN38QsBHnVn34uCc+c7vR1QJYjgksNRX/QrWSWEX5SoPo2O/rsJy2d0
+         pZ4w==
+X-Gm-Message-State: APjAAAVJZmB5CWStYE/FLAhTgZq0M5RkZus0ZPPyIAS+4eczmP327HcT
+        pqplhV6gY1FfyjXJMaCH4NhbzErO5VhcKg==
+X-Google-Smtp-Source: APXvYqxW4kSbEq+gLWZofsFSTIckmnFnzgI+tc5jk4KG+Xa2V1PDira6ogt0MI+oocn1p8X2+FPZow==
+X-Received: by 2002:a17:902:b201:: with SMTP id t1mr8923386plr.144.1567622363810;
+        Wed, 04 Sep 2019 11:39:23 -0700 (PDT)
+Received: from [192.168.10.175] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
+        by smtp.gmail.com with ESMTPSA id k31sm6938153pjb.14.2019.09.04.11.39.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 11:39:23 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] ext4: Reduce ext4 timestamp warnings
+From:   Andreas Dilger <adilger@dilger.ca>
+X-Mailer: iPhone Mail (16G102)
+In-Reply-To: <20190904150251.27004-1-deepa.kernel@gmail.com>
+Date:   Wed, 4 Sep 2019 12:39:22 -0600
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, cai@lca.pw, jlayton@kernel.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        viro@zeniv.linux.org.uk
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <ECBC97E7-53C5-4B4C-BC4C-1FCDC4C371B9@dilger.ca>
+References: <31a671ea-a00b-37da-5f30-558c3ab6d690@thelounge.net> <20190904150251.27004-1-deepa.kernel@gmail.com>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 03:34:32PM -0300, Mauro Carvalho Chehab wrote:
-> Em Sat, 31 Aug 2019 20:41:51 +0530
-> Nishad Kamdar <nishadkamdar@gmail.com> escreveu:
-> 
-> > This patch corrects the SPDX License Identifier style
-> > in header file related to Siano Mobile Silicon Digital TV.
-> > For C header files Documentation/process/license-rules.rst
-> > mandates C-like comments (opposed to C source files where
-> > C++ style should be used)
-> > 
-> > Changes made by using a script provided by Joe Perches here:
-> > https://lkml.org/lkml/2019/2/7/46
-> > 
-> > Suggested-by: Joe Perches <joe@perches.com>
-> > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> > ---
-> >  drivers/media/common/siano/smsir.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/common/siano/smsir.h b/drivers/media/common/siano/smsir.h
-> > index b2c54c256e86..ada41d5c4e83 100644
-> > --- a/drivers/media/common/siano/smsir.h
-> > +++ b/drivers/media/common/siano/smsir.h
-> > @@ -1,5 +1,5 @@
-> > +/* SPDX-License-Identifier: GPL-2.0+ */
-> >  /*
-> > - * SPDX-License-Identifier: GPL-2.0+
-> >   *
-> >   * Siano Mobile Silicon, Inc.
-> >   * MDTV receiver kernel modules.
-> 
-> What's wrong with that? The above is a perfectly fine SPDX header.
+On Sep 4, 2019, at 09:02, Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+>=20
+> When ext4 file systems were created intentionally with 128 byte inodes,
+> the rate-limited warning of eventual possible timestamp overflow are
+> still emitted rather frequently.  Remove the warning for now.
+>=20
+> Discussion for whether any warning is needed,
+> and where it should be emitted, can be found at
+> https://lore.kernel.org/lkml/1567523922.5576.57.camel@lca.pw/.
+> I can post a separate follow-up patch after the conclusion.
+>=20
+> Reported-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
 
-It is not the first line of the file :(
+I'd be in favor of a severely rare-limited warning in the actual case
+that Y2038 timestamps cannot be stored, but the current message is
+too verbose for now and I agree it is better to remove it while discussions
+on the best solution are underway.=20
 
+Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+
+> ---
+> fs/ext4/ext4.h | 4 +---
+> 1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 9e3ae3be3de9..24b14bd3feab 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -833,10 +833,8 @@ do {                                        \
+>        (raw_inode)->xtime ## _extra =3D                    \
+>                ext4_encode_extra_time(&(inode)->xtime);    \
+>        }                                \
+> -    else    {\
+> +    else    \
+>        (raw_inode)->xtime =3D cpu_to_le32(clamp_t(int32_t, (inode)->xtime.=
+tv_sec, S32_MIN, S32_MAX));    \
+> -        ext4_warning_inode(inode, "inode does not support timestamps beyo=
+nd 2038"); \
+> -    } \
+> } while (0)
+>=20
+> #define EXT4_EINODE_SET_XTIME(xtime, einode, raw_inode)                   \=
+
+> --=20
+> 2.17.1
+>=20
