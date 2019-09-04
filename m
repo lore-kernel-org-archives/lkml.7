@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A274C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4409C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D38122CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8637C23400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620260;
-	bh=j6slQnB2uX1cLMO5glRZ80zlNukpq06xFmMrLsE6Dh0=;
+	s=default; t=1567620267;
+	bh=AHiHjcSpexHCfsm5AxLORu4CiMmROYrp9qEpv3KnMxI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1rYjwhjtwRh/VJhw+AA4dmde+SSq/Uvb65DLzcQ9bPYyPLlx9QrieSOOVUhvWGR5
-	 2/a1ceSd5FGwX3mzBSIb9phrw+ml9Q2nikVfg5g7BbIHThuwMfsyLWymexfFuHEGiW
-	 dD6jmHO5ItKpH63K+JB0kWO6kAkCBJ7KKn7H5Ufc=
+	b=nGCcFXHoRYUD/c8fNCIAm8KkE9iMw87iFkvMZcvlWrLe1HPh92PlDnoxU0hZoD7bz
+	 gBA8PzZ+LvIC1rXamzbig8wt9TKFZZAol9W9oX/lXGNQ3/BUV4RUuULNbClSdEbLBQ
+	 SOb5uo2nhIiLbtJ19KkxzJspu3+XpeDEEyC7lHS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389077AbfIDSET (ORCPT
+        id S2389089AbfIDSE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45224 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:04:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389065AbfIDSEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:15 -0400
+        id S2389082AbfIDSEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27B9C22CF7;
-        Wed,  4 Sep 2019 18:04:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C14222CEA;
+        Wed,  4 Sep 2019 18:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620254;
-        bh=j6slQnB2uX1cLMO5glRZ80zlNukpq06xFmMrLsE6Dh0=;
+        s=default; t=1567620262;
+        bh=AHiHjcSpexHCfsm5AxLORu4CiMmROYrp9qEpv3KnMxI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aRZaibZ2MUXljfSGixhx7L3eQvfvQaQWu5nF4L8bwkH/4V012XrKM9rnduTcSCeH5
-         8l9E8TEuIGw29waffIhYS8RbuF1CzgFmBbmspmCOZMINmU2jNZTkpfQtHtrq5ayXDL
-         ckrQQgqNu5u/a+lfXUJVv2zTekkigj7XzjoTXM4w=
+        b=dNXx2xtxG3VG9eJEGLqY7Kna1DIQ3X4fuoHzOmsqlOSoFZig5AvXQk7j7HcRS9lp5
+         L+mdWNLHkTJn+aUntu8a/E9tXmOzBHFa1tvpCC21MlmHa38CVE/IyXXSjtqIo4iaic
+         dfxriqMWoJgkGgmm3JNYG95JUmYR2zCPm9rDZ75g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Y.C. Chen" <yc_chen@aspeedtech.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Airlie <airlied@redhat.com>,
+        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/57] drm/ast: Fixed reboot test may cause system hanged
-Date:   Wed,  4 Sep 2019 19:53:37 +0200
-Message-Id: <20190904175302.858386534@linuxfoundation.org>
+Subject: [PATCH 4.14 51/57] KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI
+Date:   Wed,  4 Sep 2019 19:54:19 +0200
+Message-Id: <20190904175306.818216957@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -61,72 +60,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 05b439711f6ff8700e8660f97a1179650778b9cb ]
+[ Upstream commit 82e40f558de566fdee214bec68096bbd5e64a6a4 ]
 
-There is another thread still access standard VGA I/O while loading drm driver.
-Disable standard VGA I/O decode to avoid this issue.
+A guest is not allowed to inject a SGI (or clear its pending state)
+by writing to GICD_ISPENDR0 (resp. GICD_ICPENDR0), as these bits are
+defined as WI (as per ARM IHI 0048B 4.3.7 and 4.3.8).
 
-Signed-off-by: Y.C. Chen <yc_chen@aspeedtech.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/1523410059-18415-1-git-send-email-yc_chen@aspeedtech.com
+Make sure we correctly emulate the architecture.
+
+Fixes: 96b298000db4 ("KVM: arm/arm64: vgic-new: Add PENDING registers handlers")
+Cc: stable@vger.kernel.org # 4.7+
+Reported-by: Andre Przywara <andre.przywara@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ast/ast_main.c | 5 ++++-
- drivers/gpu/drm/ast/ast_mode.c | 2 +-
- drivers/gpu/drm/ast/ast_post.c | 2 +-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ virt/kvm/arm/vgic/vgic-mmio.c | 18 ++++++++++++++++++
+ virt/kvm/arm/vgic/vgic-v2.c   |  5 ++++-
+ virt/kvm/arm/vgic/vgic-v3.c   |  5 ++++-
+ 3 files changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/ast/ast_main.c b/drivers/gpu/drm/ast/ast_main.c
-index 373700c05a00f..224fa1ef87ff9 100644
---- a/drivers/gpu/drm/ast/ast_main.c
-+++ b/drivers/gpu/drm/ast/ast_main.c
-@@ -131,8 +131,8 @@ static int ast_detect_chip(struct drm_device *dev, bool *need_post)
- 
- 
- 	/* Enable extended register access */
--	ast_enable_mmio(dev);
- 	ast_open_key(ast);
-+	ast_enable_mmio(dev);
- 
- 	/* Find out whether P2A works or whether to use device-tree */
- 	ast_detect_config_mode(dev, &scu_rev);
-@@ -576,6 +576,9 @@ void ast_driver_unload(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
-+	/* enable standard VGA decode */
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x04);
-+
- 	ast_release_firmware(dev);
- 	kfree(ast->dp501_fw_addr);
- 	ast_mode_fini(dev);
-diff --git a/drivers/gpu/drm/ast/ast_mode.c b/drivers/gpu/drm/ast/ast_mode.c
-index 343867b182dd8..a09fafa270822 100644
---- a/drivers/gpu/drm/ast/ast_mode.c
-+++ b/drivers/gpu/drm/ast/ast_mode.c
-@@ -600,7 +600,7 @@ static int ast_crtc_mode_set(struct drm_crtc *crtc,
- 		return -EINVAL;
- 	ast_open_key(ast);
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
- 
- 	ast_set_std_reg(crtc, adjusted_mode, &vbios_mode);
- 	ast_set_crtc_reg(crtc, adjusted_mode, &vbios_mode);
-diff --git a/drivers/gpu/drm/ast/ast_post.c b/drivers/gpu/drm/ast/ast_post.c
-index f7d421359d564..c1d1ac51d1c20 100644
---- a/drivers/gpu/drm/ast/ast_post.c
-+++ b/drivers/gpu/drm/ast/ast_post.c
-@@ -46,7 +46,7 @@ void ast_enable_mmio(struct drm_device *dev)
- {
- 	struct ast_private *ast = dev->dev_private;
- 
--	ast_set_index_reg_mask(ast, AST_IO_CRTC_PORT, 0xa1, 0xff, 0x04);
-+	ast_set_index_reg(ast, AST_IO_CRTC_PORT, 0xa1, 0x06);
+diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
+index 36194c666814b..63c6b630174fd 100644
+--- a/virt/kvm/arm/vgic/vgic-mmio.c
++++ b/virt/kvm/arm/vgic/vgic-mmio.c
+@@ -123,6 +123,12 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
+ 	return value;
  }
  
++static bool is_vgic_v2_sgi(struct kvm_vcpu *vcpu, struct vgic_irq *irq)
++{
++	return (vgic_irq_is_sgi(irq->intid) &&
++		vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2);
++}
++
+ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+ 			      gpa_t addr, unsigned int len,
+ 			      unsigned long val)
+@@ -133,6 +139,12 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+ 	for_each_set_bit(i, &val, len * 8) {
+ 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
  
++		/* GICD_ISPENDR0 SGI bits are WI */
++		if (is_vgic_v2_sgi(vcpu, irq)) {
++			vgic_put_irq(vcpu->kvm, irq);
++			continue;
++		}
++
+ 		spin_lock(&irq->irq_lock);
+ 		irq->pending_latch = true;
+ 
+@@ -151,6 +163,12 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
+ 	for_each_set_bit(i, &val, len * 8) {
+ 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+ 
++		/* GICD_ICPENDR0 SGI bits are WI */
++		if (is_vgic_v2_sgi(vcpu, irq)) {
++			vgic_put_irq(vcpu->kvm, irq);
++			continue;
++		}
++
+ 		spin_lock(&irq->irq_lock);
+ 
+ 		irq->pending_latch = false;
+diff --git a/virt/kvm/arm/vgic/vgic-v2.c b/virt/kvm/arm/vgic/vgic-v2.c
+index a2273a5aaece9..7fe39de1ee334 100644
+--- a/virt/kvm/arm/vgic/vgic-v2.c
++++ b/virt/kvm/arm/vgic/vgic-v2.c
+@@ -142,7 +142,10 @@ void vgic_v2_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
+ 		if (vgic_irq_is_sgi(irq->intid)) {
+ 			u32 src = ffs(irq->source);
+ 
+-			BUG_ON(!src);
++			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
++					   irq->intid))
++				return;
++
+ 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
+ 			irq->source &= ~(1 << (src - 1));
+ 			if (irq->source)
+diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
+index 094f8ff8f7ba9..084edc9dc553b 100644
+--- a/virt/kvm/arm/vgic/vgic-v3.c
++++ b/virt/kvm/arm/vgic/vgic-v3.c
+@@ -124,7 +124,10 @@ void vgic_v3_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
+ 		    model == KVM_DEV_TYPE_ARM_VGIC_V2) {
+ 			u32 src = ffs(irq->source);
+ 
+-			BUG_ON(!src);
++			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
++					   irq->intid))
++				return;
++
+ 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
+ 			irq->source &= ~(1 << (src - 1));
+ 			if (irq->source)
 -- 
 2.20.1
 
