@@ -2,283 +2,130 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED72C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF8FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F271622CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E9222DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GobjYdq+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="h+wT/ZP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbfIDIOt (ORCPT
+        id S1728547AbfIDIPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:14:49 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13322 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725267AbfIDIOs (ORCPT
+        Wed, 4 Sep 2019 04:15:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55894 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfIDIPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:14:48 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x848D0Cm025011;
-        Wed, 4 Sep 2019 10:14:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=qHDlQXISSQQ5My5NGD9l2kv4AXQH0OENOlb9eePRyqw=;
- b=GobjYdq+I54X92tVPCAFnM+rkF8uXf4qMyTs6Jp5NdLk26/j7KjAmfwIm21SXP96SL3z
- VG5Rnzpk/NQVlQo/GOvbF26ZUm9i5TuaRv1ymjK8PtLkFPGDO/wmw0CQPRQEWdGWjOd6
- jq1mKC341plqfU1hQX1XPtjk3VpsbIeS91flEAbG15HrXOvHq92yGA5xd4iE2HlLv95p
- vRuI9AzhPWzh1VEZMajw/iiU8mUJGcZDrmriEanegbYGCmDxmW07B9/DB+aUFbQo6qsN
- X5QmEgh+K6rf/h6at8H671FKV7DQkNGs1eTQxhOyG4JR/5vZ6YWVfggdCALvqcUM9ERh Iw== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2uqe19r5hn-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 04 Sep 2019 10:14:30 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3893A24;
-        Wed,  4 Sep 2019 08:14:18 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 895022BC203;
-        Wed,  4 Sep 2019 10:14:17 +0200 (CEST)
-Received: from [10.48.0.131] (10.75.127.47) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Sep
- 2019 10:14:16 +0200
-Subject: Re: [PATCH v5 1/2] rpmsg: core: add API to get message length
-To:     Suman Anna <s-anna@ti.com>, Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        xiang xiao <xiaoxiang781216@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
-CC:     Fabien DESSENNE <fabien.dessenne@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-References: <1567005566-10986-1-git-send-email-arnaud.pouliquen@st.com>
- <1567005566-10986-2-git-send-email-arnaud.pouliquen@st.com>
- <7dc4d1cf-4f15-19ab-b8dd-424175f2a11a@ti.com>
- <f6f2ad3e-123a-268b-2586-544752c54db7@st.com>
- <2a81a04d-e4f9-b9c8-57ec-47f8e140235a@ti.com>
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Message-ID: <d38057ed-d6f6-6b21-263a-6b83d1380ec5@st.com>
-Date:   Wed, 4 Sep 2019 10:14:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 04:15:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8xiRs6NgS8fvd/+UV+w0Qzk1DQ616SFtyCDThl8RyjE=; b=h+wT/ZP+45fKgRqfPcAGvfyrfZ
+        NW5Xg5fDPpkjhEWhIGb/hGmNS0nv7/RG2H8FozYfhnnwxJhoSxTECbSD3at/Zjij5TBo5NxDiwRKa
+        5LpIDthafAwIpnrHU+5busxCo+Uk7Bjm2WKbFkQdnNVriGBDmIjswLzAzYXy3SoS5WTz8FbJSCazy
+        tjLkuTBhJrAK3h8D8sGLCCCc8MESAGbjxnCgi00QKNd8I+lL4TL1Wjr24SwAyv+UqzaaCF4xvQgvW
+        9u+qLFUu6rERGBQ/vnCfHj0HwlKvh/HrPBNXOxHLOvh2C0a+TfWT+fTFtZAdo+rkf6r9HkPHig623
+        UgF9wXvA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5QRH-0006tf-8p; Wed, 04 Sep 2019 08:14:51 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D0D1306024;
+        Wed,  4 Sep 2019 10:14:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CA79E29C349A6; Wed,  4 Sep 2019 10:14:48 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 10:14:48 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jirka =?iso-8859-1?Q?Hladk=FD?= <jhladky@redhat.com>,
+        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
+        x86@kernel.org, Qais Yousef <qais.yousef@arm.com>
+Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
+Message-ID: <20190904081448.GZ2349@hirez.programming.kicks-ass.net>
+References: <20190903154340.860299-1-rkrcmar@redhat.com>
+ <20190903154340.860299-3-rkrcmar@redhat.com>
+ <a2924d91-df68-42de-0709-af53649346d5@arm.com>
+ <20190904042310.GA159235@google.com>
 MIME-Version: 1.0
-In-Reply-To: <2a81a04d-e4f9-b9c8-57ec-47f8e140235a@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-04_01:2019-09-03,2019-09-04 signatures=0
+In-Reply-To: <20190904042310.GA159235@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suman
+On Wed, Sep 04, 2019 at 12:23:10AM -0400, Joel Fernandes wrote:
+> On Tue, Sep 03, 2019 at 05:05:47PM +0100, Valentin Schneider wrote:
+> > On 03/09/2019 16:43, Radim Krčmář wrote:
+> > > The paper "The Linux Scheduler: a Decade of Wasted Cores" used several
+> > > custom data gathering points to better understand what was going on in
+> > > the scheduler.
+> > > Red Hat adapted one of them for the tracepoint framework and created a
+> > > tool to plot a heatmap of nr_running, where the sched_update_nr_running
+> > > tracepoint is being used for fine grained monitoring of scheduling
+> > > imbalance.
+> > > The tool is available from https://github.com/jirvoz/plot-nr-running.
+> > > 
+> > > The best place for the tracepoints is inside the add/sub_nr_running,
+> > > which requires some shenanigans to make it work as they are defined
+> > > inside sched.h.
+> > > The tracepoints have to be included from sched.h, which means that
+> > > CREATE_TRACE_POINTS has to be defined for the whole header and this
+> > > might cause problems if tree-wide headers expose tracepoints in sched.h
+> > > dependencies, but I'd argue it's the other side's misuse of tracepoints.
+> > > 
+> > > Moving the import sched.h line lower would require fixes in s390 and ppc
+> > > headers, because they don't include dependecies properly and expect
+> > > sched.h to do it, so it is simpler to keep sched.h there and
+> > > preventively undefine CREATE_TRACE_POINTS right after.
+> > > 
+> > > Exports of the pelt tracepoints remain because they don't need to be
+> > > protected by CREATE_TRACE_POINTS and moving them closer would be
+> > > unsightly.
+> > > 
+> > 
+> > Pure trace events are frowned upon in scheduler world, try going with
+> > trace points. 
 
-On 9/3/19 6:06 PM, Suman Anna wrote:
-> Hi Arnaud,
-> 
-> On 9/3/19 4:49 AM, Arnaud Pouliquen wrote:
->> hi Suman
->>
->> On 8/29/19 12:34 AM, Suman Anna wrote:
->>> Hi Arnaud,
->>>
->>> On 8/28/19 10:19 AM, Arnaud Pouliquen wrote:
->>>> Return the rpmsg buffer size for sending message, so rpmsg users
->>>> can split a long message in several sub rpmsg buffers.
->>>
->>> Thanks for the patch, I also have a need for the same to be able to
->>> compute permissible payload size. Minor comments below.
->>
->> Thanks for your review. i will update it ASAP. Then if you need it and
->> ack it, i suppose that we could request Bjorn to integrate it in a first
->> step, if the rpmsg tty driver has not a level of quality sufficient to
->> be accepted...
-> 
-> Yeah, this patch can always be merged independently ahead of the rpmsg
-> tty driver. Anyways, the tty patch will have to be picked up by a
-> separate maintainer right. So, it would be nice to get the revised
-> version get into 5.4
+Quite; I hate tracepoints for the API constraints they impose. Been
+bitten by that, not want to ever have to deal with that again.
 
-Sure, I plan to send a new version of the series today.
-I would prefer not to split the series, just to simplify the review and 
-the tests. if this patch is cherry-picked and integrated independently 
-by Bjorn, I will simply sent a new version of the rpmsg tty driver 
-without it.
+> >  Qais did something very similar recently:
+> > 
+> > https://lore.kernel.org/lkml/20190604111459.2862-1-qais.yousef@arm.com/
+> > 
+> > You'll have to implement the associated trace events in a module, which
+> > lets you define your own event format and doesn't form an ABI :).
+> 
+> Is that really true? eBPF programs loaded from userspace can access
+> tracepoints through BPF_RAW_TRACEPOINT_OPEN, which is UAPI:
+> https://github.com/torvalds/linux/blob/master/include/uapi/linux/bpf.h#L103
+> 
+> I don't have a strong opinion about considering tracepoints as ABI / API or
+> not, but just want to get the facts straight :)
 
-Regards
-Arnaud
-
-> 
-> regards
-> Suman
-> 
->>
->> Regards
->> Arnaud
->>>
->>>>
->>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>> ---
->>>> V4 to V5 :
->>>>     - rename rpmsg_get_buf_payload_size to rpmsg_get_mtu
->>>>
->>>>    drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
->>>>    drivers/rpmsg/rpmsg_internal.h   |  2 ++
->>>>    drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
->>>>    include/linux/rpmsg.h            | 10 ++++++++++
->>>>    4 files changed, 43 insertions(+)
->>>>
->>>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
->>>> index 8122807db380..daca2e24fc71 100644
->>>> --- a/drivers/rpmsg/rpmsg_core.c
->>>> +++ b/drivers/rpmsg/rpmsg_core.c
->>>> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct
->>>> rpmsg_endpoint *ept, u32 src, u32 dst,
->>>>    }
->>>>    EXPORT_SYMBOL(rpmsg_trysend_offchannel);
->>>>    +/**
->>>> + * rpmsg_get_mtu() - get maximum transmission buffer size for
->>>> sending message.
->>>> + * @ept: the rpmsg endpoint
->>>> + *
->>>> + * This function returns maximum buffer size available for a single
->>>> message.
->>>> + *
->>>> + * Return: the maximum transmission size on success and an
->>>> appropriate error
->>>> + * value on failure.
->>>> + */
->>>> +
->>>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
->>>> +{
->>>> +    if (WARN_ON(!ept))
->>>> +        return -EINVAL;
->>>> +    if (!ept->ops->get_buf_mtu)
->>>
->>> How about calling the ops just get_mtu or rename the function to follow
->>> the ops name, like all the others.
->>>
->>>> +        return -ENXIO;
->>>
->>> Perhaps ENOTSUPP or EOPNOTSUPP.
->>>
->>>> +
->>>> +    return ept->ops->get_buf_mtu(ept);
->>>> +}
->>>> +EXPORT_SYMBOL(rpmsg_get_mtu);
->>>> +
->>>>    /*
->>>>     * match an rpmsg channel with a channel info struct.
->>>>     * this is used to make sure we're not creating rpmsg devices for
->>>> channels
->>>> diff --git a/drivers/rpmsg/rpmsg_internal.h
->>>> b/drivers/rpmsg/rpmsg_internal.h
->>>> index 0d791c30b7ea..645c402569ac 100644
->>>> --- a/drivers/rpmsg/rpmsg_internal.h
->>>> +++ b/drivers/rpmsg/rpmsg_internal.h
->>>> @@ -46,6 +46,7 @@ struct rpmsg_device_ops {
->>>>     * @trysend:        see @rpmsg_trysend(), required
->>>>     * @trysendto:        see @rpmsg_trysendto(), optional
->>>>     * @trysend_offchannel:    see @rpmsg_trysend_offchannel(), optional
->>>> + * @get_buf_payload_size: see @rpmsg_get_buf_payload_size(), optional
->>>
->>> Missed updating the kerneldoc to the new name.
->>>
->>>>     *
->>>>     * Indirection table for the operations that a rpmsg backend should
->>>> implement.
->>>>     * In addition to @destroy_ept, the backend must at least implement
->>>> @send and
->>>> @@ -65,6 +66,7 @@ struct rpmsg_endpoint_ops {
->>>>                     void *data, int len);
->>>>        __poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
->>>>                     poll_table *wait);
->>>> +    ssize_t (*get_buf_mtu)(struct rpmsg_endpoint *ept);
->>>>    };
->>>>      int rpmsg_register_device(struct rpmsg_device *rpdev);
->>>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c
->>>> b/drivers/rpmsg/virtio_rpmsg_bus.c
->>>> index e757f0038a1c..f80b1ad23e7e 100644
->>>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
->>>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
->>>> @@ -178,6 +178,7 @@ static int virtio_rpmsg_trysendto(struct
->>>> rpmsg_endpoint *ept, void *data,
->>>>                      int len, u32 dst);
->>>>    static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint
->>>> *ept, u32 src,
->>>>                           u32 dst, void *data, int len);
->>>> +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept);
->>>
->>> Minor nit, virtio_rpmsg_ prefix similar to all the other ops.
->>>
->>> regards
->>> Suman
->>>
->>>>      static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
->>>>        .destroy_ept = virtio_rpmsg_destroy_ept,
->>>> @@ -187,6 +188,7 @@ static const struct rpmsg_endpoint_ops
->>>> virtio_endpoint_ops = {
->>>>        .trysend = virtio_rpmsg_trysend,
->>>>        .trysendto = virtio_rpmsg_trysendto,
->>>>        .trysend_offchannel = virtio_rpmsg_trysend_offchannel,
->>>> +    .get_buf_mtu = virtio_get_buf_mtu,
->>>>    };
->>>>      /**
->>>> @@ -702,6 +704,14 @@ static int
->>>> virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
->>>>        return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len,
->>>> false);
->>>>    }
->>>>    +static ssize_t virtio_get_buf_mtu(struct rpmsg_endpoint *ept)
->>>> +{
->>>> +    struct rpmsg_device *rpdev = ept->rpdev;
->>>> +    struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
->>>> +
->>>> +    return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
->>>> +}
->>>> +
->>>>    static int rpmsg_recv_single(struct virtproc_info *vrp, struct
->>>> device *dev,
->>>>                     struct rpmsg_hdr *msg, unsigned int len)
->>>>    {
->>>> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
->>>> index 9fe156d1c018..9d638bf2bdce 100644
->>>> --- a/include/linux/rpmsg.h
->>>> +++ b/include/linux/rpmsg.h
->>>> @@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct
->>>> rpmsg_endpoint *ept, u32 src, u32 dst,
->>>>    __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
->>>>                poll_table *wait);
->>>>    +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
->>>> +
->>>>    #else
->>>>      static inline int register_rpmsg_device(struct rpmsg_device *dev)
->>>> @@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct
->>>> rpmsg_endpoint *ept,
->>>>        return 0;
->>>>    }
->>>>    +static ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
->>>> +{
->>>> +    /* This shouldn't be possible */
->>>> +    WARN_ON(1);
->>>> +
->>>> +    return -ENXIO;
->>>> +}
->>>> +
->>>>    #endif /* IS_ENABLED(CONFIG_RPMSG) */
->>>>      /* use a macro to avoid include chaining to get THIS_MODULE */
->>>>
->>>
-> 
+eBPF can access all sorts of kernel internals; if we were to deem eBPF
+and API we'd be fscked.
