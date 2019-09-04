@@ -2,129 +2,103 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5356FC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFECC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CDA21726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B32E421726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0hH/5KZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKGsaHbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfIDXP7 (ORCPT
+        id S1730251AbfIDXRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:15:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36606 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIDXP7 (ORCPT
+        Wed, 4 Sep 2019 19:17:50 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45453 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfIDXRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:15:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p13so585250wmh.1;
-        Wed, 04 Sep 2019 16:15:58 -0700 (PDT)
+        Wed, 4 Sep 2019 19:17:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 4so259672pgm.12;
+        Wed, 04 Sep 2019 16:17:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D+jh77ZLgNensDYPn2dN2wL4k27PJ6BpfuVV6pgmL7g=;
-        b=E0hH/5KZPUbuapqt3Z57/i+myQE/X/8+9T1h7ZwzooTZFrauoJKpwhyX2YG21HRAly
-         5ZPac6JEX2A0gPXuwBVMuX4LbTwVUws7ZdBidSR5KDozTQXQYfMwl88kRfMHS/OkTMq0
-         cotN8RM2UrUFC8JZpSkMJm6h4cCwj8lL0cZJF7Z+6vyPR9I2a5lHJ8ltH8gTtqM/a9qk
-         fUR4h3x3Nk03WFcUmF633tW7lJGnGNZx8EoMnrK/hphQ6mCIaQd/sURbEX/UdRfl47L8
-         6WAGON3hJk4HT+fv5HhYXo3BC/w9GTdUPEBETmCLkHQclpPvFkxikQQVE0EQk8MW3m4V
-         U6Eg==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=9R72raBBWXijV+vBxS2q3Hmwuxv9Ffre6Ti1aTb9Nhs=;
+        b=AKGsaHbLbruRWWZut5eEkFINbN1RAtp5Gc5P4ly1St6QoLFKbCCPMk1sCW6yIOJmU8
+         tgKoh4yl45sNzYiOglayAY5CL082kzY1Wz8BajqyKCYe1j0o1iBp/BhUdx4PkdtJovlo
+         gddskujNDf7UReyFhrKEXjpli2ejZeidxVi5sNsASu+MTUwt9s+GokTa7o04VKCCSNdO
+         iSW3KLaJcTPQwfTyiUfH3u2uJFmwy2eDCGEbwP3ASCSTqzfC6REQqGAEyEVeGHMcL673
+         sknyKtVLzla3A9W1v0ng4vS31x4w609YoumtFD6i0+aCcpwFyboKpck83kPrsJKNAGOV
+         mJ5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D+jh77ZLgNensDYPn2dN2wL4k27PJ6BpfuVV6pgmL7g=;
-        b=cWLBMsup3Tw5HLl2eyHuNFDrGSqYAbtPki5RyIs+IrRwKP5hRmNdXCxeYiSykuWoNm
-         Aan/YWRB/lrnvxM3YkB2L2l1YJGir88g41xhTgRY512p7p6Iel2c78shbFrnDVkLflqd
-         gnpRmH/fB3fA3NrqujvCd94k5jeQazK+UY07+uqwiBCaPNM9dlg37ak35iD8v2wKh0cS
-         LxXF2Sx+oITUuNStWHbJAcGK/eEpb48lUU491K5YWA0T33u5qysP0jXwwrMBBoiKNY4A
-         zBmfNFzlkAyh2VhnXvbyS2xj2krzBU51OCMGMvU8LG9N1i1760ShHexiyVl3S5TYoiYi
-         2TCw==
-X-Gm-Message-State: APjAAAWIm1vfPwgybhYhkLI4g6tQ+eTy+JX4nTZPBJmA4CMCHML+4Fz0
-        O6+NOvvwnZ8sqSfvq7jAH6E=
-X-Google-Smtp-Source: APXvYqznil+fqfMulqs43QZJNRB7vW35OcADELC0oZ/vgbpO2vg2C3b20RkPKZ41YzhNwbmyWSb20A==
-X-Received: by 2002:a7b:c766:: with SMTP id x6mr514054wmk.51.1567638957553;
-        Wed, 04 Sep 2019 16:15:57 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id z189sm788009wmc.25.2019.09.04.16.15.56
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=9R72raBBWXijV+vBxS2q3Hmwuxv9Ffre6Ti1aTb9Nhs=;
+        b=CfVjE7QlJsGvOYnlGrWCPp91AsC2ztzncB1UALERYoLysJz8zfIw53XWseCHOWC4AS
+         w9mLrVlYvD4DFaevkceqpzLgwdcnkQuZFBqY614qqm8b/1XxP++EUUoZQEx7wycIuizz
+         MZ5muyU1SUJmqCjS0U1HS71IscevTG3GIpyxaK+Mt7FERgPTFTlpHu8bpg0J1PctMMN0
+         4AENZ2w6KTCu6mCZvpAsSDO6eHfqluqYy/8jayAW69PEcfXPFFs0kFk2PqRPdHNdFNyt
+         5hTlXYTbv9/xR3ea7YNgOdj+BX4ONn+rFnCQVd8sA1tstXZsCJ6uf0hwe+8K1xjmD7Uu
+         nVKQ==
+X-Gm-Message-State: APjAAAWyubTOL1NFlI17XH4pZKb926dQPZ10LfhQh7wTfGQ65BhYn93u
+        TX/O7eZ2vEQQ3RGEEIG+/EQ=
+X-Google-Smtp-Source: APXvYqxL8pWcjEkEVw7JhxurqlWcxCeyoZCsxf01cpuezRH1sJw82JW4DIXFjVgtu+WiHE3w/hwa3A==
+X-Received: by 2002:a62:168e:: with SMTP id 136mr232320pfw.144.1567639069538;
+        Wed, 04 Sep 2019 16:17:49 -0700 (PDT)
+Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
+        by smtp.googlemail.com with ESMTPSA id r1sm177579pgv.70.2019.09.04.16.17.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 16:15:56 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 16:15:54 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
-Message-ID: <20190904231554.GA42450@archlinux-threadripper>
-References: <878srdv206.fsf@mpe.ellerman.id.au>
- <20190828175322.GA121833@archlinux-threadripper>
- <CAKwvOdmXbYrR6n-cxKt3XxkE4Lmj0sSoZBUtHVb0V2LTUFHmug@mail.gmail.com>
- <20190828184529.GC127646@archlinux-threadripper>
- <6801a83ed6d54d95b87a41c57ef6e6b0@AcuMS.aculab.com>
- <20190903055553.GC60296@archlinux-threadripper>
- <20190903193128.GC9749@gate.crashing.org>
- <20190904002401.GA70635@archlinux-threadripper>
- <1bcd7086f3d24dfa82eec03980f30fbc@AcuMS.aculab.com>
- <20190904130135.GN9749@gate.crashing.org>
+        Wed, 04 Sep 2019 16:17:48 -0700 (PDT)
+Message-ID: <dd62da5f10c06fae1823bf8338c2acc83fe40a40.camel@gmail.com>
+Subject: Re: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
+From:   Rashmica Gupta <rashmica.g@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Date:   Thu, 05 Sep 2019 09:17:43 +1000
+In-Reply-To: <CAHp75Vd_6Rpt5=BjzV8YFCiFP7qsRrYHHo7+=gWwnZH-zT9jNw@mail.gmail.com>
+References: <20190904061245.30770-1-rashmica.g@gmail.com>
+         <CAHp75Vd_6Rpt5=BjzV8YFCiFP7qsRrYHHo7+=gWwnZH-zT9jNw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904130135.GN9749@gate.crashing.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:01:35AM -0500, Segher Boessenkool wrote:
-> On Wed, Sep 04, 2019 at 08:16:45AM +0000, David Laight wrote:
-> > From: Nathan Chancellor [mailto:natechancellor@gmail.com]
-> > > Fair enough so I guess we are back to just outright disabling the
-> > > warning.
+On Wed, 2019-09-04 at 19:27 +0300, Andy Shevchenko wrote:
+> On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com>
+> wrote:
+> > Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
 > > 
-> > Just disabling the warning won't stop the compiler generating code
-> > that breaks a 'user' implementation of setjmp().
+> > Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> >         /* Allocate a cache of the output registers */
+> > -       banks = gpio->config->nr_gpios >> 5;
+> > +       banks = (gpio->config->nr_gpios >> 5) + 1;
 > 
-> Yeah.  I have a patch (will send in an hour or so) that enables the
-> "returns_twice" attribute for setjmp (in <asm/setjmp.h>).  In testing
-> (with GCC trunk) it showed no difference in code generation, but
-> better save than sorry.
+> Shouldn't be rather DIV_ROUND_UP(nr_gpios, sizeof(u32)) ?
+
+I agree that DIV_ROUND_UP is the right thing to use here, but wouldn't
+it be DIV_ROUND_UP(nr_gpios, 32)?
+
 > 
-> It also sets "noreturn" on longjmp, and that *does* help, it saves a
-> hundred insns or so (all in xmon, no surprise there).
+> >         gpio->dcache = devm_kcalloc(&pdev->dev,
+> >                                     banks, sizeof(u32),
+> > GFP_KERNEL);
 > 
-> I don't think this will make LLVM shut up about this though.  And
-> technically it is right: the C standard does say that in hosted mode
-> setjmp is a reserved name and you need to include <setjmp.h> to access
-> it (not <asm/setjmp.h>).
+> 
 
-It does not fix the warning, I tested your patch.
-
-> So why is the kernel compiled as hosted?  Does adding -ffreestanding
-> hurt anything?  Is that actually supported on LLVM, on all relevant
-> versions of it?  Does it shut up the warning there (if not, that would
-> be an LLVM bug)?
-
-It does fix this warning because -ffreestanding implies -fno-builtin,
-which also solves the warning. LLVM has supported -ffreestanding since
-at least 3.0.0. There are some parts of the kernel that are compiled
-with this and it probably should be used in more places but it sounds
-like there might be some good codegen improvements that are disabled
-with it:
-
-https://lore.kernel.org/lkml/CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com/
-
-Cheers,
-Nathan
