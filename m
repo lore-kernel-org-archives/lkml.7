@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6E0C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA126C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3349723402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE5523401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfIDOBk (ORCPT
+        id S1731206AbfIDOBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:01:40 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6661 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:01:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:54724 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729677AbfIDOBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:01:24 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2437272283B48D87E014;
-        Wed,  4 Sep 2019 22:01:19 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 22:01:11 +0800
+        id S1730995AbfIDOBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:01:07 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 131DF14E6B83A55738C4;
+        Wed,  4 Sep 2019 22:01:03 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 22:00:53 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -50,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 35/36] spi: zynq-qspi: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:59:17 +0800
-Message-ID: <20190904135918.25352-36-yuehaibing@huawei.com>
+Subject: [PATCH -next 29/36] spi: sun4i: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:59:11 +0800
+Message-ID: <20190904135918.25352-30-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -71,31 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-zynq-qspi.c | 4 +---
+ drivers/spi/spi-sun4i.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-zynq-qspi.c b/drivers/spi/spi-zynq-qspi.c
-index 4a5326c..5cf6993 100644
---- a/drivers/spi/spi-zynq-qspi.c
-+++ b/drivers/spi/spi-zynq-qspi.c
-@@ -620,7 +620,6 @@ static int zynq_qspi_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct zynq_qspi *xqspi;
--	struct resource *res;
- 	u32 num_cs;
+diff --git a/drivers/spi/spi-sun4i.c b/drivers/spi/spi-sun4i.c
+index 92e5c66..cbfac65 100644
+--- a/drivers/spi/spi-sun4i.c
++++ b/drivers/spi/spi-sun4i.c
+@@ -428,7 +428,6 @@ static int sun4i_spi_probe(struct platform_device *pdev)
+ {
+ 	struct spi_master *master;
+ 	struct sun4i_spi *sspi;
+-	struct resource	*res;
+ 	int ret = 0, irq;
  
- 	ctlr = spi_alloc_master(&pdev->dev, sizeof(*xqspi));
-@@ -630,8 +629,7 @@ static int zynq_qspi_probe(struct platform_device *pdev)
- 	xqspi = spi_controller_get_devdata(ctlr);
- 	xqspi->dev = dev;
- 	platform_set_drvdata(pdev, xqspi);
+ 	master = spi_alloc_master(&pdev->dev, sizeof(struct sun4i_spi));
+@@ -440,8 +439,7 @@ static int sun4i_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 	sspi = spi_master_get_devdata(master);
+ 
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	xqspi->regs = devm_ioremap_resource(&pdev->dev, res);
-+	xqspi->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(xqspi->regs)) {
- 		ret = PTR_ERR(xqspi->regs);
- 		goto remove_master;
+-	sspi->base_addr = devm_ioremap_resource(&pdev->dev, res);
++	sspi->base_addr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sspi->base_addr)) {
+ 		ret = PTR_ERR(sspi->base_addr);
+ 		goto err_free_master;
 -- 
 2.7.4
 
