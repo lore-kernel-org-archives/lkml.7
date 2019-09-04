@@ -2,114 +2,105 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C56C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716AAC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9767C22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613404;
-	bh=F5CQ1+YvvSFo1TXnBiXKLipZLDPWDY9aNPbQDEsQ2n0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gi8RkkjymgKx2r6olEtm5mzS/uAxfi1Ag7Ws2ypqxO5JUdB3ptQI66FOarDZ8wUmD
-	 R4yQzR7Exxk6YZU0j+IZxZoGxEAuQJMXUOt8KOujnXqfYhikVQmTAkhcXaCQ/zzREN
-	 R7P10i7GNdV01LVTWiI+F7MZy+6Zc9T9CW6Aahjw=
+	by mail.kernel.org (Postfix) with ESMTP id 4822622CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SuGvE/+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbfIDQKD (ORCPT
+        id S1733218AbfIDQKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:10:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732868AbfIDQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:01:01 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3E072341C;
-        Wed,  4 Sep 2019 16:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612860;
-        bh=F5CQ1+YvvSFo1TXnBiXKLipZLDPWDY9aNPbQDEsQ2n0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rGO/8ah+la9taMk6jwiEMxs3YA2GFORtg44hxnMU6+BEm2l1EdEYm6Yq6YwIfhvQ5
-         7TX0OTSVbb19hANC1oruMN4Q88kXSUOmNbut5OP7bkhaKxY+zwzuNXqCclintXDuUe
-         ShG33QjZDMnGmh40rbPNJ/cPsvBXgV54HMNx1X70=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nagarjuna Kristam <nkristam@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 39/52] usb: host: xhci-tegra: Set DMA mask correctly
-Date:   Wed,  4 Sep 2019 11:59:51 -0400
-Message-Id: <20190904160004.3671-39-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
-References: <20190904160004.3671-1-sashal@kernel.org>
+        Wed, 4 Sep 2019 12:10:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59818 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732989AbfIDQKI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:10:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/EDR4GvlJhkdLPR8kYkQGJ2qlMGAC0osrPMnnOYDBIg=; b=SuGvE/+zYB3jQ+kfZDnQwC7Wo
+        JeUwO3O/k3flaa2K4c95ijKzir0G0VZIUtveVY32G++8pFy+Gf/t0gvdOS7SsDPOQ8qLMHHc3bXss
+        +KHCuVIYwAEZmqReLHCigSc6/lMSH7GMXiLRXv/Of8zZZPt0Bk+QQhgIOy6NwWYvwTg2NoMPUbiMC
+        eK2/qz1LF3xsEpd3ui+WV4Ir2RPUP2TlY9SH5qW4l6s4jxNCtX2TNu9DbxsTlqUMKIH4mVshHHrZM
+        8IoGIjtooW76ukE2EZ2DXE0LtPyHGxSpN/NSjjaG5/T1RWCuP9kCP4hnO1hMOhLqntQp7bCbqHZT3
+        1k6uuxhpA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5Xr2-0006yh-CU; Wed, 04 Sep 2019 16:09:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C79AA3060CF;
+        Wed,  4 Sep 2019 18:09:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6037D20EFA5D9; Wed,  4 Sep 2019 18:09:53 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 18:09:53 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
+        Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
+ racy load
+Message-ID: <20190904160953.GU2332@hirez.programming.kicks-ass.net>
+References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com>
+ <20190903202434.GX2349@hirez.programming.kicks-ass.net>
+ <CAHk-=whfYb5RnJGqDV3W3093XGwOwePV-SxixaWcWM6hmidArg@mail.gmail.com>
+ <1604807537.1565.1567610340030.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1604807537.1565.1567610340030.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nagarjuna Kristam <nkristam@nvidia.com>
+On Wed, Sep 04, 2019 at 11:19:00AM -0400, Mathieu Desnoyers wrote:
+> ----- On Sep 3, 2019, at 4:36 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
 
-[ Upstream commit 993cc8753453fccfe060a535bbe21fcf1001b626 ]
+> > I wonder if the easiest model might be to just use a percpu variable
+> > instead for the membarrier stuff? It's not like it has to be in
+> > 'struct task_struct' at all, I think. We only care about the current
+> > runqueues, and those are percpu anyway.
+> 
+> One issue here is that membarrier iterates over all runqueues without
+> grabbing any runqueue lock. If we copy that state from mm to rq on
+> sched switch prepare, we would need to ensure we have the proper
+> memory barriers between:
+> 
+> prior user-space memory accesses  /  setting the runqueue membarrier state
+> 
+> and
+> 
+> setting the runqueue membarrier state / following user-space memory accesses
+> 
+> Copying the membarrier state into the task struct leverages the fact that
+> we have documented and guaranteed those barriers around the rq->curr update
+> in the scheduler.
 
-The Falcon microcontroller that runs the XUSB firmware and which is
-responsible for exposing the XHCI interface can address only 40 bits of
-memory. Typically that's not a problem because Tegra devices don't have
-enough system memory to exceed those 40 bits.
+Should be the same as the barriers we already rely on for rq->curr, no?
+That is, if we put this before switch_mm() then we have
+smp_mb__after_spinlock() and switch_mm() itself.
 
-However, if the ARM SMMU is enable on Tegra186 and later, the addresses
-passed to the XUSB controller can be anywhere in the 48-bit IOV address
-space of the ARM SMMU. Since the DMA/IOMMU API starts allocating from
-the top of the IOVA space, the Falcon microcontroller is not able to
-load the firmware successfully.
-
-Fix this by setting the DMA mask to 40 bits, which will force the DMA
-API to map the buffer for the firmware to an IOVA that is addressable by
-the Falcon.
-
-Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Link: https://lore.kernel.org/r/1566989697-13049-1-git-send-email-nkristam@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/host/xhci-tegra.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
-index b1cce989bd123..fe37dacc695fc 100644
---- a/drivers/usb/host/xhci-tegra.c
-+++ b/drivers/usb/host/xhci-tegra.c
-@@ -1148,6 +1148,16 @@ static int tegra_xusb_probe(struct platform_device *pdev)
- 
- 	tegra_xusb_ipfs_config(tegra, regs);
- 
-+	/*
-+	 * The XUSB Falcon microcontroller can only address 40 bits, so set
-+	 * the DMA mask accordingly.
-+	 */
-+	err = dma_set_mask_and_coherent(tegra->dev, DMA_BIT_MASK(40));
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "failed to set DMA mask: %d\n", err);
-+		goto put_rpm;
-+	}
-+
- 	err = tegra_xusb_load_firmware(tegra);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to load firmware: %d\n", err);
--- 
-2.20.1
-
+Also, if we place mm->membarrier_state in the same cacheline as mm->pgd
+(which switch_mm() is bound to load) then we should be fine, I think.
