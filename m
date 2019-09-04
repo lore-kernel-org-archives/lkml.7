@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A584C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41969C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C952720882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE8E20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621530;
-	bh=NVskeiPKyvwjOZ59iphJ2aRht2gkv7aHxNlQjBu7mic=;
+	s=default; t=1567621535;
+	bh=2w9cBEpuvv137vz55MidZCdZC8ewdK2WUXJtiTkff6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W1dSOdBq/Y4sQkDDufBgQs5zL9X3u9ImbOQyDzt7bzntM4Fdende059DoyaxRxbZd
-	 5inaTt47oxTAU+UxOeoZcLzRPGt/ovp8QJzEosUr4NFis7YQU7mNLirAarTjQlZCK4
-	 E2I5uH07NiQKWX0BgfQaepPHEw2f+10C6lYJi68I=
+	b=NE/ZFGA5xFdIhoeQJ89Ksy7RifWwcFaGQZvMOEfdAz+WXrGc7R096V4wC8RuKTwIl
+	 m2lQ55WO+v2ueWzyYOb06nw5USpYa22KuGxwxffPUJ1J3/wNFJ+JoxnvBmbAj8Bel4
+	 vNfZ7gkIrLRjeDyT/RuaJTNSsRsTLE6ADy53NDNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388310AbfIDR74 (ORCPT
+        id S2388290AbfIDR7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:59:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:59:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388288AbfIDR7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:52 -0400
+        id S2388265AbfIDR7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:59:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE6EA21883;
-        Wed,  4 Sep 2019 17:59:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C7C21883;
+        Wed,  4 Sep 2019 17:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619991;
-        bh=NVskeiPKyvwjOZ59iphJ2aRht2gkv7aHxNlQjBu7mic=;
+        s=default; t=1567619980;
+        bh=2w9cBEpuvv137vz55MidZCdZC8ewdK2WUXJtiTkff6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DnywrzOhfLqgR4FaKHIYNcyLbkyR7umd0+HrXgeMmV0oQgP7JNlN/tjThesPpdjZL
-         C4358FlxH/IsZVgLw7MEFgNZQOtUMmB7e8DLy4NqiAWJKzs/0gkbOSju8ewnI3hiNo
-         41ghTs6422VhLLCUgV6JLhTPYHkecWovZ8xqYODY=
+        b=HR47O7H6aPShCS7nTiS5nCpTBWGuIl1a2iCact3Eaw5sKDQfWmzb28MUIGWC0j6pe
+         53XqBTg5VFlZcye41WmT5Y/OQ2c8dzBseMN93h4Ucztxc2jqPSUedZx8GHY8/p48O9
+         oLvrg+oGxJwuQZz3PxqWGogUd7QYybwj0WAxV0Jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ricard Wanderlof <ricardw@axis.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/83] ASoC: Fail card instantiation if DAI format setup fails
-Date:   Wed,  4 Sep 2019 19:52:59 +0200
-Message-Id: <20190904175304.389271806@linuxfoundation.org>
+Subject: [PATCH 4.9 03/83] netfilter: ebtables: fix a memory leak bug in compat
+Date:   Wed,  4 Sep 2019 19:52:55 +0200
+Message-Id: <20190904175303.871150754@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,38 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
+[ Upstream commit 15a78ba1844a8e052c1226f930133de4cef4e7ad ]
 
-If the DAI format setup fails, there is no valid communication format
-between CPU and CODEC, so fail card instantiation, rather than continue
-with a card that will most likely not function properly.
+In compat_do_replace(), a temporary buffer is allocated through vmalloc()
+to hold entries copied from the user space. The buffer address is firstly
+saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
+the entries in this temporary buffer is copied to the internal kernel
+structure through compat_copy_entries(). If this copy process fails,
+compat_do_replace() should be terminated. However, the allocated temporary
+buffer is not freed on this path, leading to a memory leak.
 
-Signed-off-by: Ricard Wanderlof <ricardw@axis.com>
-Link: https://lore.kernel.org/r/alpine.DEB.2.20.1907241132350.6338@lnxricardw1.se.axis.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To fix the bug, free the buffer before returning from compat_do_replace().
+
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/bridge/netfilter/ebtables.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 168559b5e9f32..d4fb45710eec1 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -1632,8 +1632,11 @@ static int soc_probe_link_dais(struct snd_soc_card *card,
- 		}
- 	}
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index 142ccaae9c7b6..4a47918b504f8 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2288,8 +2288,10 @@ static int compat_do_replace(struct net *net, void __user *user,
+ 	state.buf_kern_len = size64;
  
--	if (dai_link->dai_fmt)
--		snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
-+	if (dai_link->dai_fmt) {
-+		ret = snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
-+		if (ret)
-+			return ret;
+ 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
+-	if (WARN_ON(ret < 0))
++	if (WARN_ON(ret < 0)) {
++		vfree(entries_tmp);
+ 		goto out_unlock;
 +	}
  
- 	ret = soc_post_component_init(rtd, dai_link->name);
- 	if (ret)
+ 	vfree(entries_tmp);
+ 	tmp.entries_size = size64;
 -- 
 2.20.1
 
