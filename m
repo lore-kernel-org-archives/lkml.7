@@ -2,137 +2,155 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AD2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE683C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6529521726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BCE21726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DLUsWH99"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="jvz/s0tN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbfIDU1A (ORCPT
+        id S1730404AbfIDU1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:27:00 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42317 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfIDU1A (ORCPT
+        Wed, 4 Sep 2019 16:27:15 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:14966 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729278AbfIDU1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:27:00 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p3so35825pgb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:26:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gHXopKFHzfE49twF88UvtmDlbMN38YDZW1AoH7082oE=;
-        b=DLUsWH99wenvPEpVvVSfF1d0qo3YVU2SKaU3twQDF4nwTd/7vJuMNynkyGX3R6VOse
-         SqIGJx0ao5UDaFQ6u8d4ybCAMVVZ2n0wH3v0tY2XkqWJGQeZ88YWs+8sexlyUHS9n4yx
-         t5FdYBhkD3lP1E7k+nc75Ex0NDzJZOplSjl6q9N9j9vQw/7jadVr9gXaNx7ff4cGoRf1
-         icrBkr3XgeQVMoU3SIm+i96fdWRSHRwOrGxip2CjAELbyoAm1wZM+E7YMSpkZ8PYwNoe
-         loRuEBKLEPVRn2BBWmx7mSyTi0uwGCrbIU91woKz9C8RpojEkGNN01LdP+ieI/H1QVxW
-         RpBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gHXopKFHzfE49twF88UvtmDlbMN38YDZW1AoH7082oE=;
-        b=eYu2edmDsO3gNm745Qrst1QzqC/TasTPxI3bCO6tF3ZhH+C7uekMJ48Rb5afQQPIPC
-         WYm+fGwGOgb/GTlGypozmJ9ivSfEf5wgFnt7sUVXte/XgtQGNmhTGooKpmyDGi66UaMW
-         YhD6sRzC18ABqLZo2LIbxYHEPg2pikCjzNTQ3GhyKdRSm8Ct3Qy+TPWq/DRjTgWSL89W
-         4b1s4P5mkuG37uXy/ptMUMjpuBkzc1T+6o+w0LNP3iQX4O0Q0JUSonjEIyzekO3N2P0V
-         SD9Vy5aNV67SU7Pasm5NVnnoOtfgQiuDcHyxC9d5fUDqDaVBnoocFoplnC7NzHMhI29S
-         egUA==
-X-Gm-Message-State: APjAAAXqMmMEgUwRBi01N1ARCsv1+rpO2v2UOjJ57P19GizVfKFhrKHe
-        8cLAHbkUP24ryHeynFOijmzMwg==
-X-Google-Smtp-Source: APXvYqxFPUmP/jYPMT2DzWP/8rdwbetVerpvv8p9rtrq4YREH6sU5CzRKastQRxLomV0nVAQjILaYw==
-X-Received: by 2002:a62:1955:: with SMTP id 82mr32346422pfz.256.1567628819360;
-        Wed, 04 Sep 2019 13:26:59 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y194sm660594pfg.186.2019.09.04.13.26.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 13:26:58 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 13:26:56 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     agross@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
-Message-ID: <20190904202656.GB580@tuxbook-pro>
-References: <20190903135052.13827-1-lee.jones@linaro.org>
- <20190904031922.GC574@tuxbook-pro>
- <20190904084554.GF26880@dell>
- <20190904182732.GE574@tuxbook-pro>
- <20190904200130.GT26880@dell>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904200130.GT26880@dell>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 4 Sep 2019 16:27:15 -0400
+Received: from pps.filterd (m0050093.ppops.net [127.0.0.1])
+        by m0050093.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id x84KGfBM000506;
+        Wed, 4 Sep 2019 21:27:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id; s=jan2016.eng;
+ bh=sTScJ+MvoLbTasFi50pyfuSYYe8RA8+16LS/ygjXpJs=;
+ b=jvz/s0tNxBSCyorI3Os1dfcxteIVgNBaARHQxxyrBQz80jNB7agCHpo6if6NfHNqt1To
+ e8N5Q5gFPu8CwubkdpDqZQtW1+4M6SJcDNvZoSDAe2TU+xjq2l7/lqXOtfjCNAEmkBwa
+ MillZk16v3X4EzjrThTdLJXdXiwocJpt5fVxd96LQUC/nk59bIqazfVJhiD/bSI3HqCr
+ Tl3sjz0eW12Z5HBBy6qbMOK77ME/nfRnUrK1vsbEcqV5j/3Ute7NpxRvfOX6MA26WoOy
+ ybtTyCKqbwQUHrj3yAYyxIrwazPgn8OKtcuMr2uqGHe840HgXr6pIFuKl6CiTdHf7nQs uA== 
+Received: from prod-mail-ppoint5 (prod-mail-ppoint5.akamai.com [184.51.33.60] (may be forged))
+        by m0050093.ppops.net-00190b01. with ESMTP id 2uqg5nvndq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Sep 2019 21:27:05 +0100
+Received: from pps.filterd (prod-mail-ppoint5.akamai.com [127.0.0.1])
+        by prod-mail-ppoint5.akamai.com (8.16.0.27/8.16.0.27) with SMTP id x84KHC3X028761;
+        Wed, 4 Sep 2019 13:27:04 -0700
+Received: from prod-mail-relay11.akamai.com ([172.27.118.250])
+        by prod-mail-ppoint5.akamai.com with ESMTP id 2uqpv8f67m-1;
+        Wed, 04 Sep 2019 13:27:04 -0700
+Received: from bos-lpjec.kendall.corp.akamai.com (bos-lpjec.kendall.corp.akamai.com [172.29.170.83])
+        by prod-mail-relay11.akamai.com (Postfix) with ESMTP id 702CB1FC6F;
+        Wed,  4 Sep 2019 20:27:04 +0000 (GMT)
+From:   Jason Baron <jbaron@akamai.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Wong <normalperson@yhbt.net>
+Subject: [PATCH] epoll: simplify ep_poll_safewake() for CONFIG_DEBUG_LOCK_ALLOC
+Date:   Wed,  4 Sep 2019 16:22:29 -0400
+Message-Id: <1567628549-11501-1-git-send-email-jbaron@akamai.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909040203
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-04_05:2019-09-04,2019-09-04 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=1 bulkscore=0 phishscore=0
+ spamscore=0 clxscore=1011 mlxscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1909040203
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 04 Sep 13:01 PDT 2019, Lee Jones wrote:
+Currently, ep_poll_safewake() in the CONFIG_DEBUG_LOCK_ALLOC case uses
+ep_call_nested() in order to pass the correct subclass argument to
+spin_lock_irqsave_nested(). However, ep_call_nested() adds unnecessary
+checks for epoll depth and loops that are already verified when doing
+EPOLL_CTL_ADD. This mirrors a conversion that was done for
+!CONFIG_DEBUG_LOCK_ALLOC in: commit 37b5e5212a44 ("epoll: remove
+ep_call_nested() from ep_eventpoll_poll()")
 
-> On Wed, 04 Sep 2019, Bjorn Andersson wrote:
-> 
-> > On Wed 04 Sep 01:45 PDT 2019, Lee Jones wrote:
-> > 
-> > > On Tue, 03 Sep 2019, Bjorn Andersson wrote:
-> > > 
-> > > > On Tue 03 Sep 06:50 PDT 2019, Lee Jones wrote:
-[..]
-> > > With this simple parameter checking patch, the SE falls back to using
-> > > FIFO mode to transmit data and continues to work flawlessly.  IMHO
-> > > this should be applied in the first instance, as it fixes a real (null
-> > > dereference) bug which currently resides in the Mainline kernel.
-> > > 
-> > 
-> > Per the current driver design the wrapper device is the parent of the
-> > SE, I should have seen that 8bc529b25354 was the beginning of a game of
-> > whac-a-mole circumventing this design. Sorry for not spotting this
-> > earlier.
-> 
-> Right, but that doesn't mean that the current driver design is
-> correct.  ACPI, which is in theory a description of the hardware
-> doesn't seem to think so.  It looks more like we do this in Linux as a
-> convenience function to link the devices.  Instead this 'parent' seems
-> to be represented as a very small register space at the end of the SE
-> banks.
-> 
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Roman Penyaev <rpenyaev@suse.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Wong <normalperson@yhbt.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+ fs/eventpoll.c | 36 +++++++++++++-----------------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
 
-There's a larger register window containing one block of common
-registers followed by register blocks for each serial engine.
+diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+index d7f1f50..a9b2737 100644
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -551,28 +551,23 @@ static int ep_call_nested(struct nested_calls *ncalls,
+  */
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
+ 
+-static struct nested_calls poll_safewake_ncalls;
+-
+-static int ep_poll_wakeup_proc(void *priv, void *cookie, int call_nests)
+-{
+-	unsigned long flags;
+-	wait_queue_head_t *wqueue = (wait_queue_head_t *)cookie;
+-
+-	spin_lock_irqsave_nested(&wqueue->lock, flags, call_nests + 1);
+-	wake_up_locked_poll(wqueue, EPOLLIN);
+-	spin_unlock_irqrestore(&wqueue->lock, flags);
+-
+-	return 0;
+-}
++static DEFINE_PER_CPU(int, wakeup_nest);
+ 
+ static void ep_poll_safewake(wait_queue_head_t *wq)
+ {
+-	int this_cpu = get_cpu();
+-
+-	ep_call_nested(&poll_safewake_ncalls,
+-		       ep_poll_wakeup_proc, NULL, wq, (void *) (long) this_cpu);
++	unsigned long flags;
++	int subclass;
+ 
+-	put_cpu();
++	local_irq_save(flags);
++	preempt_disable();
++	subclass = __this_cpu_read(wakeup_nest);
++	spin_lock_nested(&wq->lock, subclass + 1);
++	__this_cpu_inc(wakeup_nest);
++	wake_up_locked_poll(wq, POLLIN);
++	__this_cpu_dec(wakeup_nest);
++	spin_unlock(&wq->lock);
++	local_irq_restore(flags);
++	preempt_enable();
+ }
+ 
+ #else
+@@ -2370,11 +2365,6 @@ static int __init eventpoll_init(void)
+ 	 */
+ 	ep_nested_calls_init(&poll_loop_ncalls);
+ 
+-#ifdef CONFIG_DEBUG_LOCK_ALLOC
+-	/* Initialize the structure used to perform safe poll wait head wake ups */
+-	ep_nested_calls_init(&poll_safewake_ncalls);
+-#endif
+-
+ 	/*
+ 	 * We can have many thousands of epitems, so prevent this from
+ 	 * using an extra cache line on 64-bit (and smaller) CPUs
+-- 
+2.7.4
 
-I don't know if we will need more of the common registers in the future,
-but for now you at least have the requirement that in order to operate
-the SEs you need to clock the wrapper. So the current DT model
-represents the hardware and the power/clocking topology.
-
-The fact that you managed to boot the system with just ignoring all
-clocks is a surprise to me.
-
-> > But if this is the one whack left to get the thing to boot then I think
-> > we should merge it.
-> 
-> Amazing, thank you!
-> 
-> Do you know how we go about getting this merged?  We only potentially
-> have 0.5 weeks (1.5 weeks if there is an -rc8 [doubtful]), so we need
-> to move fast.  Would you be prepared to send it to Linus for -fixes?
-> I'd do it myself, but this is a little out of my remit.
-> 
-
-The "offending" commit was picked up mid June and no one noticed that it
-doesn't work until this week?
-
-Let's slap a Cc: stable@ on it and get it into v5.4-rc1 and it will show
-up in v5.3.1.
-
-Regards,
-Bjorn
