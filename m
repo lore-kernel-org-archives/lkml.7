@@ -2,123 +2,124 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F65C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CE2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF692339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6D622DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PZrcsQdv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbfIDKnj (ORCPT
+        id S1729691AbfIDKof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:43:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:51628 "EHLO foss.arm.com"
+        Wed, 4 Sep 2019 06:44:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:58695 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfIDKni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:43:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B573B337;
-        Wed,  4 Sep 2019 03:43:37 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE6D33F246;
-        Wed,  4 Sep 2019 03:43:35 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 11:43:33 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jirka =?utf-8?Q?Hladk=C3=BD?= <jhladky@redhat.com>,
-        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
-        x86@kernel.org
-Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
-Message-ID: <20190904104332.ogsjtbtuadhsglxh@e107158-lin.cambridge.arm.com>
-References: <20190903154340.860299-1-rkrcmar@redhat.com>
- <20190903154340.860299-3-rkrcmar@redhat.com>
- <a2924d91-df68-42de-0709-af53649346d5@arm.com>
- <20190904042310.GA159235@google.com>
+        id S1729644AbfIDKoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:44:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46NgRy2ffgz9sDQ;
+        Wed,  4 Sep 2019 20:44:30 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567593871;
+        bh=q51v6jMKfuMMsSNQkaFTfC+YDlmgKQBdULryscFJ038=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PZrcsQdvrc9rYmb5r9Bk1LoYEA8tbrMSzxY1x3Q9nasSr9ar1TiKhiVvD29wyBWGp
+         Z/49E+ypr6HdyobnOBw9FanboRg9CnYE3hiNL5eX31EA2fpbG7AncidoL44kwne9aT
+         J4JrFOt1fAjd1xRajN9WL4t8gkHkw5SLPG5vHV/kKmrqVsLyT127l8Y1FdyuUJFQcC
+         l1L/qX6Vkr9YyV4xsMYNGJ7DZq5h4UN4rVtNpyx51SE2rHCd3YGz6EthJLB2lCE3V0
+         Jm/06Y5dvhBqDpALoeE8J9KPvbJfelPKjjizntlV5En4HHz6KBXKUcxGkL0OA70eZs
+         Hv0foYU83L7qw==
+Date:   Wed, 4 Sep 2019 20:44:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vinod Koul <vkoul@kernel.org>, Olof Johansson <olof@lixom.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: linux-next: manual merge of the slave-dma tree with the arm-soc
+ tree
+Message-ID: <20190904204427.1e1a064f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904042310.GA159235@google.com>
-User-Agent: NeoMutt/20171215
+Content-Type: multipart/signed; boundary="Sig_/j1zaefufpuug0qMHWw8wW3c";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/19 00:23, Joel Fernandes wrote:
-> On Tue, Sep 03, 2019 at 05:05:47PM +0100, Valentin Schneider wrote:
-> > On 03/09/2019 16:43, Radim Krčmář wrote:
-> > > The paper "The Linux Scheduler: a Decade of Wasted Cores" used several
-> > > custom data gathering points to better understand what was going on in
-> > > the scheduler.
-> > > Red Hat adapted one of them for the tracepoint framework and created a
-> > > tool to plot a heatmap of nr_running, where the sched_update_nr_running
-> > > tracepoint is being used for fine grained monitoring of scheduling
-> > > imbalance.
-> > > The tool is available from https://github.com/jirvoz/plot-nr-running.
-> > > 
-> > > The best place for the tracepoints is inside the add/sub_nr_running,
-> > > which requires some shenanigans to make it work as they are defined
-> > > inside sched.h.
-> > > The tracepoints have to be included from sched.h, which means that
-> > > CREATE_TRACE_POINTS has to be defined for the whole header and this
-> > > might cause problems if tree-wide headers expose tracepoints in sched.h
-> > > dependencies, but I'd argue it's the other side's misuse of tracepoints.
-> > > 
-> > > Moving the import sched.h line lower would require fixes in s390 and ppc
-> > > headers, because they don't include dependecies properly and expect
-> > > sched.h to do it, so it is simpler to keep sched.h there and
-> > > preventively undefine CREATE_TRACE_POINTS right after.
-> > > 
-> > > Exports of the pelt tracepoints remain because they don't need to be
-> > > protected by CREATE_TRACE_POINTS and moving them closer would be
-> > > unsightly.
-> > > 
-> > 
-> > Pure trace events are frowned upon in scheduler world, try going with
-> > trace points. Qais did something very similar recently:
-> > 
-> > https://lore.kernel.org/lkml/20190604111459.2862-1-qais.yousef@arm.com/
-> > 
-> > You'll have to implement the associated trace events in a module, which
-> > lets you define your own event format and doesn't form an ABI :).
-> 
-> Is that really true? eBPF programs loaded from userspace can access
-> tracepoints through BPF_RAW_TRACEPOINT_OPEN, which is UAPI:
-> https://github.com/torvalds/linux/blob/master/include/uapi/linux/bpf.h#L103
-> 
-> I don't have a strong opinion about considering tracepoints as ABI / API or
-> not, but just want to get the facts straight :)
+--Sig_/j1zaefufpuug0qMHWw8wW3c
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-It is actually true. But you need to make the distinction between a tracepoint
-and a trace event first. What Valentin is talking about here is the *bare*
-tracepoint without any event associated with them like the one I added to the
-scheduler recently. These ones are not accessible via eBPF, unless something
-has changed since I last tried.
+Hi all,
 
-The current infrastructure needs to be expanded to allow eBPF to attach these
-bare tracepoints. Something similar to what I have in [1] is needed - but
-instead of creating a new macro it needs to expand the current macro. [2] might
-give full context of when I was trying to come up with alternatives to using
-trace events.
+Today's linux-next merge of the slave-dma tree got a conflict in:
 
-[1] https://github.com/qais-yousef/linux/commit/fb9fea29edb8af327e6b2bf3bc41469a8e66df8b
-[2] https://lore.kernel.org/lkml/20190415144945.tumeop4djyj45v6k@e107158-lin.cambridge.arm.com/
+  drivers/dma/iop-adma.c
 
-HTH
+between commit:
 
---
-Qais Yousef
+  00c9755524fb ("dmaengine: iop-adma: use correct printk format strings")
+
+from the arm-soc tree and commit:
+
+  d17d9ea95727 ("dmaengine: iop-adma.c: fix printk format warning")
+
+from the slave-dma tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/dma/iop-adma.c
+index 03f4a588cf7f,003b753e4604..000000000000
+--- a/drivers/dma/iop-adma.c
++++ b/drivers/dma/iop-adma.c
+@@@ -116,9 -116,9 +116,9 @@@ static void __iop_adma_slot_cleanup(str
+  	list_for_each_entry_safe(iter, _iter, &iop_chan->chain,
+  					chain_node) {
+  		pr_debug("\tcookie: %d slot: %d busy: %d "
+- 			"this_desc: %#x next_desc: %#llx ack: %d\n",
+ -			"this_desc: %pad next_desc: %#x ack: %d\n",
+++			"this_desc: %pad next_desc: %#llx ack: %d\n",
+  			iter->async_tx.cookie, iter->idx, busy,
+- 			iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
+ -			&iter->async_tx.phys, iop_desc_get_next_desc(iter),
+++			&iter->async_tx.phys, (u64)iop_desc_get_next_desc(iter),
+  			async_tx_test_ack(&iter->async_tx));
+  		prefetch(_iter);
+  		prefetch(&_iter->async_tx);
+
+--Sig_/j1zaefufpuug0qMHWw8wW3c
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1vlYsACgkQAVBC80lX
+0GyEsAf/Qnjvf6g+5SsGilNzTBLfT4HNlal2P85915JvP7smyeAL6gS6QYZMUm1h
+owyQdt/jEdTuxm1ICfrYoy/RgMr74rjpd9BpCpoXKOyc13o+pOhni819sL9B9kTP
+0uvJVqt3FXqYQHvGBhbikc1aRgG0Qzq1BnZBaju6GYTXDtc1zf2OlHwgHlgrkurx
+QjK13fMQBhLHVVHGUi2wMGDLCnc+4jDYYfV39FzXGtBOUT823/zMVKpsUe36l92q
+vgkmXWjSmmAR5+J6jioYvVK47sf2TJ7kAn/1BEutuBKCn/GdfDAyfmQz1cOS02pR
+v06nhsPXiUXb73XePYFYQFPDppbKFQ==
+=RjA1
+-----END PGP SIGNATURE-----
+
+--Sig_/j1zaefufpuug0qMHWw8wW3c--
