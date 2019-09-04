@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7FFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED19C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE62A22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE7722CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620043;
-	bh=eDi4c9RqkYDFcTPXhkbIIu8neFk087wFdjiOL5svrkQ=;
+	s=default; t=1567620048;
+	bh=iryYQO161VMi3ttZTGFDeTVGpdK1PfArdz98f7LOIok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxDs9Rx3Etedwnki7SISHBxeN8OFVYaSwL7D+fvKQQuMWouuCTSAmQwafzpDeCzue
-	 fLbNQFI+3uSapx2JzZxi/NEsnv5v7VRjLNhQtnGHya25x7lFzOpgx/O4gzm3Z24PiU
-	 1uCxat86fW685p+V+b/zg+mijFJzWb0NveuavNDA=
+	b=tbF+onxRGOKVcxQjQXyIvlNIcke9+k6HgEyIIsTJKgJbkMyn2elnZ2PaOJJgfj2Lv
+	 TQ6/aoa5Id4xt5X23whUJBGxrbpDvPdNiIq6NvB6K/WjeDN1KBMNytYlPby0TdZ2ZG
+	 vA0adTPXNdURCXyc8hd3GMJjjhwjjJi0IZo50Wzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388435AbfIDSAn (ORCPT
+        id S2388148AbfIDSAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:00:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39886 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731972AbfIDSAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:00:37 -0400
+        id S2388427AbfIDSAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:00:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29ABB22CF7;
-        Wed,  4 Sep 2019 18:00:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7071C22CF5;
+        Wed,  4 Sep 2019 18:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620036;
-        bh=eDi4c9RqkYDFcTPXhkbIIu8neFk087wFdjiOL5svrkQ=;
+        s=default; t=1567620041;
+        bh=iryYQO161VMi3ttZTGFDeTVGpdK1PfArdz98f7LOIok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=euIF6vacBCHzml0o2OFcd7xrSzRPzpXjlRBjuhaNQ5x/OSmeoQJOYmjwtMNfCjlgq
-         V5b/buXJYoOR0UA5kOCOMrLwAaFPGPsR6AV9CXZua50Iz7TOB1HoTo4C61ax1dC1vY
-         +2NUzCvnxh010QPBMgKDjXG3muJjWjkngY3MRFBo=
+        b=ycB7IOigvRd1f06mxFqwRgYfCZFdE60+wvfsTgMZJMrOpNRqpK9jdPAdR3cLVow47
+         Yv3VVxzTK1fZyKHuzqz7bfWjFqaDGf/Xh6u2v5c/kJkRKcEamRc9DTQz3UUGbX3kFt
+         8vp6oZbA/vimNULmUGJr/swWHy5uAGX0IyY/ORXE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Wenwen Wang <wenwen@cs.uga.edu>, Jens Axboe <axboe@kernel.dk>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 49/83] xen/blkback: fix memory leaks
-Date:   Wed,  4 Sep 2019 19:53:41 +0200
-Message-Id: <20190904175308.124080026@linuxfoundation.org>
+Subject: [PATCH 4.9 51/83] usb: host: fotg2: restart hcd after port reset
+Date:   Wed,  4 Sep 2019 19:53:43 +0200
+Message-Id: <20190904175308.222041811@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -62,54 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ae78ca3cf3d9e9f914bfcd0bc5c389ff18b9c2e0 ]
+[ Upstream commit 777758888ffe59ef754cc39ab2f275dc277732f4 ]
 
-In read_per_ring_refs(), after 'req' and related memory regions are
-allocated, xen_blkif_map() is invoked to map the shared frame, irq, and
-etc. However, if this mapping process fails, no cleanup is performed,
-leading to memory leaks. To fix this issue, invoke the cleanup before
-returning the error.
+On the Gemini SoC the FOTG2 stalls after port reset
+so restart the HCD after each port reset.
 
-Acked-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190810150458.817-1-linus.walleij@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/xen-blkback/xenbus.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/host/fotg210-hcd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index 5dfe6e8af1408..ad736d7de8383 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -967,6 +967,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 	}
- 	blkif->nr_ring_pages = nr_grefs;
- 
-+	err = -ENOMEM;
- 	for (i = 0; i < nr_grefs * XEN_BLKIF_REQS_PER_PAGE; i++) {
- 		req = kzalloc(sizeof(*req), GFP_KERNEL);
- 		if (!req)
-@@ -989,7 +990,7 @@ static int read_per_ring_refs(struct xen_blkif_ring *ring, const char *dir)
- 	err = xen_blkif_map(ring, ring_ref, nr_grefs, evtchn);
- 	if (err) {
- 		xenbus_dev_fatal(dev, err, "mapping ring-ref port %u", evtchn);
--		return err;
-+		goto fail;
- 	}
- 
- 	return 0;
-@@ -1009,8 +1010,7 @@ fail:
+diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+index 66efa9a676877..72853020a5426 100644
+--- a/drivers/usb/host/fotg210-hcd.c
++++ b/drivers/usb/host/fotg210-hcd.c
+@@ -1653,6 +1653,10 @@ static int fotg210_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			/* see what we found out */
+ 			temp = check_reset_complete(fotg210, wIndex, status_reg,
+ 					fotg210_readl(fotg210, status_reg));
++
++			/* restart schedule */
++			fotg210->command |= CMD_RUN;
++			fotg210_writel(fotg210, fotg210->command, &fotg210->regs->command);
  		}
- 		kfree(req);
- 	}
--	return -ENOMEM;
--
-+	return err;
- }
  
- static int connect_ring(struct backend_info *be)
+ 		if (!(temp & (PORT_RESUME|PORT_RESET))) {
 -- 
 2.20.1
 
