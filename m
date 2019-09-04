@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE51C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13863C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193952168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBB9C22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WPu1hgLL"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bSWsiHPf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730508AbfIDNRY (ORCPT
+        id S1730450AbfIDNRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:17:24 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33544 "EHLO
+        Wed, 4 Sep 2019 09:17:17 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:33460 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730238AbfIDNRP (ORCPT
+        by vger.kernel.org with ESMTP id S1726589AbfIDNRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:17:15 -0400
+        Wed, 4 Sep 2019 09:17:14 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 01C8CC5748;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id B6254C5744;
         Wed,  4 Sep 2019 13:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567603034; bh=QQfM47J/YIzK+69igm741pwDyJOTLmfonyo78bSHkBs=;
+        t=1567603034; bh=vkwFXbNgXpcsWIBymeTdbdI0d7HHjr+O5myQC7lgDrs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=WPu1hgLLHdUWepqQk4f7Ja7a387u+Rwwf/MURG6F9Lvd04EcXIqpjlxwSZw6zEwzW
-         7oU39TsaOa3ontkCb536SvdrwcLYGqM4iRqa2c3aQfNThK0eMaIG4Gz7qCYxNld7he
-         WObW4dzOuf61qHrOskqlOOgR1pK22LTPXs1AQpJS9fl8KdXlduK7Wi393KI86Wygwa
-         tcpGLazzHEa3qxLfoyBp5yY09z8DZyI/g5M/JY/N7gc3eNuYnSW64SBcjfwJDFTd1c
-         LueIT4V+O3xclMHfTdSScX2xEfcXMyNxkipGScxzoXcnfMc608BuVEpnY6flzMOQrU
-         8Q6cpB3brtUAQ==
+        b=bSWsiHPfZ0peEAD/q/zor6wVobBF6CzK/l4f6+j85hk0JZgqoaZI0YdEYAL3E2iBJ
+         J2t68SLVfnh1hOuOj3tAGoh6SjLfUjI5v5H3Q7GPsLEVNkGbj1IVgJ+qGTtc4s/dZv
+         K2TgXHnUvDwFjU6kMbft+9ku9Tc8ARAB8MKeiroRdbaCjYOEKfLoNsMQ9N8h3xS+ZI
+         eg76uXHG21o/mPxDKqkb7XO7lY2NzErYAlsLM1GjXs/Sdxti4/F/8kYR2ZXb2l7uDO
+         se0xIbfIEuuIuo67k3ytVVshGwM+jF/uuQIu7rtQl6pBMR+Uc0BOI4sN/Uh9Xp0kts
+         8zW6TF2qX6Eng==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id BEB35A0081;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 73A8CA0072;
         Wed,  4 Sep 2019 13:17:12 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 11/13] net: stmmac: Correctly assing MAX MTU in XGMAC cores case
-Date:   Wed,  4 Sep 2019 15:17:03 +0200
-Message-Id: <76deaf061fd37a1e46fd2ad59a0c83c56bc79de3.1567602868.git.joabreu@synopsys.com>
+Subject: [PATCH v2 net-next 06/13] net: stmmac: xgmac: Implement ARP Offload
+Date:   Wed,  4 Sep 2019 15:16:58 +0200
+Message-Id: <910ee66fffd0cfedc5f85973cbf717afce9d41ad.1567602868.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
 References: <cover.1567602867.git.joabreu@synopsys.com>
@@ -64,8 +64,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maximum MTU for XGMAC cores is 16k thus the check for presence of XGMAC
-shall be done first in order to assign correct value.
+Implement the ARP Offload feature in XGMAC cores.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -80,27 +79,92 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/common.h        |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 17 +++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c  |  1 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h          |  3 +++
+ 4 files changed, 22 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 5271c6129f0e..c3baca9f587b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4542,10 +4542,10 @@ int stmmac_dvr_probe(struct device *device,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 19538057c24e..912bbb6515b2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -361,6 +361,7 @@ struct dma_features {
+ 	unsigned int vlins;
+ 	unsigned int dvlan;
+ 	unsigned int l3l4fnum;
++	unsigned int arpoffsel;
+ };
  
- 	/* MTU range: 46 - hw-specific max */
- 	ndev->min_mtu = ETH_ZLEN - ETH_HLEN;
--	if ((priv->plat->enh_desc) || (priv->synopsys_id >= DWMAC_CORE_4_00))
--		ndev->max_mtu = JUMBO_LEN;
--	else if (priv->plat->has_xgmac)
-+	if (priv->plat->has_xgmac)
- 		ndev->max_mtu = XGMAC_JUMBO_LEN;
-+	else if ((priv->plat->enh_desc) || (priv->synopsys_id >= DWMAC_CORE_4_00))
-+		ndev->max_mtu = JUMBO_LEN;
- 	else
- 		ndev->max_mtu = SKB_MAX_HEAD(NET_SKB_PAD + NET_IP_ALIGN);
- 	/* Will not overwrite ndev->max_mtu if plat->maxmtu > ndev->max_mtu
+ /* GMAC TX FIFO is 8K, Rx FIFO is 16K */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index 9f568b54b339..36262ef8b70a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -1338,6 +1338,22 @@ static int dwxgmac2_config_l4_filter(struct mac_device_info *hw, u32 filter_no,
+ 	return 0;
+ }
+ 
++static void dwxgmac2_set_arp_offload(struct mac_device_info *hw, bool en,
++				     u32 addr)
++{
++	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
++
++	writel(addr, ioaddr + XGMAC_ARP_ADDR);
++
++	value = readl(ioaddr + XGMAC_RX_CONFIG);
++	if (en)
++		value |= XGMAC_CONFIG_ARPEN;
++	else
++		value &= ~XGMAC_CONFIG_ARPEN;
++	writel(value, ioaddr + XGMAC_RX_CONFIG);
++}
++
+ const struct stmmac_ops dwxgmac210_ops = {
+ 	.core_init = dwxgmac2_core_init,
+ 	.set_mac = dwxgmac2_set_mac,
+@@ -1380,6 +1396,7 @@ const struct stmmac_ops dwxgmac210_ops = {
+ 	.enable_vlan = dwxgmac2_enable_vlan,
+ 	.config_l3_filter = dwxgmac2_config_l3_filter,
+ 	.config_l4_filter = dwxgmac2_config_l4_filter,
++	.set_arp_offload = dwxgmac2_set_arp_offload,
+ };
+ 
+ int dwxgmac2_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index fb0283b15c77..fd60bf5e0a72 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -370,6 +370,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 	dma_cap->atime_stamp = (hw_cap & XGMAC_HWFEAT_TSSEL) >> 12;
+ 	dma_cap->av = (hw_cap & XGMAC_HWFEAT_AVSEL) >> 11;
+ 	dma_cap->av &= (hw_cap & XGMAC_HWFEAT_RAVSEL) >> 10;
++	dma_cap->arpoffsel = (hw_cap & XGMAC_HWFEAT_ARPOFFSEL) >> 9;
+ 	dma_cap->rmon = (hw_cap & XGMAC_HWFEAT_MMCSEL) >> 8;
+ 	dma_cap->pmt_magic_frame = (hw_cap & XGMAC_HWFEAT_MGKSEL) >> 7;
+ 	dma_cap->pmt_remote_wake_up = (hw_cap & XGMAC_HWFEAT_RWKSEL) >> 6;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index 47c8ad9ec671..ddb851d99618 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -370,6 +370,7 @@ struct stmmac_ops {
+ 	int (*config_l4_filter)(struct mac_device_info *hw, u32 filter_no,
+ 				bool en, bool udp, bool sa, bool inv,
+ 				u32 match);
++	void (*set_arp_offload)(struct mac_device_info *hw, bool en, u32 addr);
+ };
+ 
+ #define stmmac_core_init(__priv, __args...) \
+@@ -454,6 +455,8 @@ struct stmmac_ops {
+ 	stmmac_do_callback(__priv, mac, config_l3_filter, __args)
+ #define stmmac_config_l4_filter(__priv, __args...) \
+ 	stmmac_do_callback(__priv, mac, config_l4_filter, __args)
++#define stmmac_set_arp_offload(__priv, __args...) \
++	stmmac_do_void_callback(__priv, mac, set_arp_offload, __args)
+ 
+ /* PTP and HW Timer helpers */
+ struct stmmac_hwtimestamp {
 -- 
 2.7.4
 
