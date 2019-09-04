@@ -2,53 +2,53 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78E8C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F300EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4CE22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA243233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620280;
-	bh=1gz43MtbkLW9vDDQwtFpGHs8+iCwIumiNFT6QK+MqAo=;
+	s=default; t=1567620288;
+	bh=ovHGuXpziaMuM8GQ3V3dazv7Z54p5bDTPpOVQpyIElk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vrZogVjrAF9GTnJvJD00zM9f8ujVqze53jnVhyqHhpJ5BN16n4T8XHAVI1gwXACzw
-	 anMp+Hz8bZn8nKpopsZkGs7RhSvJUMy0A5F/sF/+M9GOKmpd2jHSyVE3JQuJA5cyhP
-	 cpbpw3N10dSyfq6mSXY7ZVVuCJBweKg3O1eAbKW0=
+	b=MQvDzXttvg0PTqaqhoKhplzjq5NRdUOgmKMk8qhIGbAs/ZbFnzE+14ovUCBbIra61
+	 ffclrQfQt2lKleOODJzWD/Hk/LOg0pwdgWztUmadcLu9dxMu5gVhnGLT/a+9+nj6MZ
+	 mKjisHfgZwrtCp3vcwVMCtRzNP0YaOLKEkH+2Tkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389124AbfIDSEk (ORCPT
+        id S2388780AbfIDSEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:04:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45702 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:04:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389110AbfIDSEh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:37 -0400
+        id S2389128AbfIDSEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F70D206BA;
-        Wed,  4 Sep 2019 18:04:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A4B322CEA;
+        Wed,  4 Sep 2019 18:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620276;
-        bh=1gz43MtbkLW9vDDQwtFpGHs8+iCwIumiNFT6QK+MqAo=;
+        s=default; t=1567620283;
+        bh=ovHGuXpziaMuM8GQ3V3dazv7Z54p5bDTPpOVQpyIElk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LwnruCRoP4j7jC6TKGL/gNGlNFKcfZWE25JSKv4RGBD+xZgD8uFEI+Hx88VR4KleP
-         cF0xAMLu4433WLTW9tU5On2vTHPFv/nfsYxT4QYfbb23Sgq1Jx96dKwF/mrKh/ZSuL
-         zlfEr9pHreX9Lm5EDU26auFZAjbqhKef6GVC79f8=
+        b=ez0Qi4zLTABs2QldD4JqkdZc1RXzVCzqq1/CGceCWdkcKXsE/o0qFmMODO87TpqIz
+         y3bQS77Koyuktv/y5NAwDbluHQBLtmMxTp3+2fk7JeRVjZ3WlaptW7wj/DlncbCQq4
+         vgm9ewMwSfhFctXNZokOvhij6IYfIwdTB3WeXtpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Cooks <andrew.cooks@opengear.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 56/57] i2c: piix4: Fix port selection for AMD Family 16h Model 30h
-Date:   Wed,  4 Sep 2019 19:54:24 +0200
-Message-Id: <20190904175307.476249941@linuxfoundation.org>
+        stable@vger.kernel.org, Xiong Zhang <xiong.y.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 4.14 44/57] drm/i915: Dont deballoon unused ggtt drm_mm_node in linux guest
+Date:   Wed,  4 Sep 2019 19:54:12 +0200
+Message-Id: <20190904175306.366483408@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -61,95 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c7c06a1532f3fe106687ac82a13492c6a619ff1c ]
+From: Xiong Zhang <xiong.y.zhang@intel.com>
 
-Family 16h Model 30h SMBus controller needs the same port selection fix
-as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
-selection for AMD Family 17h chips")
+commit 0a3dfbb5cd9033752639ef33e319c2f2863c713a upstream.
 
-commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
-register") also fixed the port selection for Hudson2, but unfortunately
-this is not the exact same device and the AMD naming and PCI Device IDs
-aren't particularly helpful here.
+The following call trace may exist in linux guest dmesg when guest i915
+driver is unloaded.
+[   90.776610] [drm:vgt_deballoon_space.isra.0 [i915]] deballoon space: range [0x0 - 0x0] 0 KiB.
+[   90.776621] BUG: unable to handle kernel NULL pointer dereference at 00000000000000c0
+[   90.776691] IP: drm_mm_remove_node+0x4d/0x320 [drm]
+[   90.776718] PGD 800000012c7d0067 P4D 800000012c7d0067 PUD 138e4c067 PMD 0
+[   90.777091] task: ffff9adab60f2f00 task.stack: ffffaf39c0fe0000
+[   90.777142] RIP: 0010:drm_mm_remove_node+0x4d/0x320 [drm]
+[   90.777573] Call Trace:
+[   90.777653]  intel_vgt_deballoon+0x4c/0x60 [i915]
+[   90.777729]  i915_ggtt_cleanup_hw+0x121/0x190 [i915]
+[   90.777792]  i915_driver_unload+0x145/0x180 [i915]
+[   90.777856]  i915_pci_remove+0x15/0x20 [i915]
+[   90.777890]  pci_device_remove+0x3b/0xc0
+[   90.777916]  device_release_driver_internal+0x157/0x220
+[   90.777945]  driver_detach+0x39/0x70
+[   90.777967]  bus_remove_driver+0x51/0xd0
+[   90.777990]  pci_unregister_driver+0x23/0x90
+[   90.778019]  SyS_delete_module+0x1da/0x240
+[   90.778045]  entry_SYSCALL_64_fastpath+0x24/0x87
+[   90.778072] RIP: 0033:0x7f34312af067
+[   90.778092] RSP: 002b:00007ffdea3da0d8 EFLAGS: 00000206
+[   90.778297] RIP: drm_mm_remove_node+0x4d/0x320 [drm] RSP: ffffaf39c0fe3dc0
+[   90.778344] ---[ end trace f4b1bc8305fc59dd ]---
 
-The SMBus port selection register is common to the following Families
-and models, as documented in AMD's publicly available BIOS and Kernel
-Developer Guides:
+Four drm_mm_node are used to reserve guest ggtt space, but some of them
+may be skipped and not initialised due to space constraints in
+intel_vgt_balloon(). If drm_mm_remove_node() is called with
+uninitialized drm_mm_node, the above call trace occurs.
 
- 50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
- 55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
- 52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
+This patch check drm_mm_node's validity before calling
+drm_mm_remove_node().
 
-The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
-between Bolton FCH and Family 16h Model 30h, but the location of the
-SmBus0Sel port selection bits are different:
+Fixes: ff8f797557c7("drm/i915: return the correct usable aperture size under gvt environment")
+Cc: stable@vger.kernel.org
+Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/1566279978-9659-1-git-send-email-xiong.y.zhang@intel.com
+(cherry picked from commit 4776f3529d6b1e47f02904ad1d264d25ea22b27b)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
- 51192 - Bolton Register Reference Guide
-
-We distinguish between Bolton and Family 16h Model 30h using the PCI
-Revision ID:
-
-  Bolton is device 0x780b, revision 0x15
-  Family 16h Model 30h is device 0x780b, revision 0x1F
-  Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
-
-The following additional public AMD BKDG documents were checked and do
-not share the same port selection register:
-
- 42301 - Family 15h Model 00h-0Fh doesn't mention any
- 42300 - Family 15h Model 10h-1Fh doesn't mention any
- 49125 - Family 15h Model 30h-3Fh doesn't mention any
-
- 48751 - Family 16h Model 00h-0Fh uses the previously supported
-         index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
-
-Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Cc: stable@vger.kernel.org [v4.6+]
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-piix4.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/i915/i915_vgpu.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-index 174579d32e5f3..4b81dc231b18f 100644
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -99,7 +99,7 @@
- #define SB800_PIIX4_PORT_IDX_MASK	0x06
- #define SB800_PIIX4_PORT_IDX_SHIFT	1
- 
--/* On kerncz, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
-+/* On kerncz and Hudson2, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
- #define SB800_PIIX4_PORT_IDX_KERNCZ		0x02
- #define SB800_PIIX4_PORT_IDX_MASK_KERNCZ	0x18
- #define SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ	3
-@@ -359,18 +359,16 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
- 
- 	/* Find which register is used for port selection */
- 	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
--		switch (PIIX4_dev->device) {
--		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
-+		if (PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
-+		    (PIIX4_dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
-+		     PIIX4_dev->revision >= 0x1F)) {
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
- 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK_KERNCZ;
- 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ;
--			break;
--		case PCI_DEVICE_ID_AMD_HUDSON2_SMBUS:
--		default:
-+		} else {
- 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_ALT;
- 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK;
- 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT;
--			break;
- 		}
- 	} else {
- 		mutex_lock(&piix4_mutex_sb800);
--- 
-2.20.1
-
+--- a/drivers/gpu/drm/i915/i915_vgpu.c
++++ b/drivers/gpu/drm/i915/i915_vgpu.c
+@@ -100,6 +100,9 @@ static struct _balloon_info_ bl_info;
+ static void vgt_deballoon_space(struct i915_ggtt *ggtt,
+ 				struct drm_mm_node *node)
+ {
++	if (!drm_mm_node_allocated(node))
++		return;
++
+ 	DRM_DEBUG_DRIVER("deballoon space: range [0x%llx - 0x%llx] %llu KiB.\n",
+ 			 node->start,
+ 			 node->start + node->size,
 
 
