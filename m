@@ -2,133 +2,82 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48B9C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54964C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FD321883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:34:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I6pw9B5r";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I2aSP4zU"
+	by mail.kernel.org (Postfix) with ESMTP id 3261022CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbfIDEee (ORCPT
+        id S1728203AbfIDEhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 00:34:34 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55088 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfIDEed (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 00:34:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 59917602EF; Wed,  4 Sep 2019 04:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567571672;
-        bh=yD7jddCeDQh/QLkdALenruhc6/Bis0ve+odm+lJNIpc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=I6pw9B5rr26zjf9F8xAcaV9hOA1N438qnSW6RXBSDF2vqmEqZw6tmqy0QALhuYHLj
-         O4sKsaEvGajDPBfDMWc81zdA/1YxO6y9C5kEysZ/G0IzEUwEeKL1n6jdPgeBmX0Aa0
-         32/OFYNYF8FAzDR2ENGUW9Z5zNiiPZEYXTs4f4o4=
-Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: c-hbandi@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2DFCE607EB;
-        Wed,  4 Sep 2019 04:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567571671;
-        bh=yD7jddCeDQh/QLkdALenruhc6/Bis0ve+odm+lJNIpc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=I2aSP4zUWyN5R+xWOmkIdddBX4q7VtpEp8StdzSVkyn8Yfe5BwBwf5HJVdRvViP94
-         +CnP44E9ZXvhH27gigVLcaGDTUaymlzH7W18sgqlXUtYuBc7hgKOTvFPpKAQtHRYR0
-         AA1zPgMsHJGmJ8rT14/Cy9JLfidd+zH6RuXDb2wA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2DFCE607EB
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
-From:   Harish Bandi <c-hbandi@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        anubhavg@codeaurora.org, Harish Bandi <c-hbandi@codeaurora.org>
-Subject: [PATCH v1] bluetooth: hci_qca: disable irqs when spinlock is acquired
-Date:   Wed,  4 Sep 2019 10:04:16 +0530
-Message-Id: <1567571656-32403-1-git-send-email-c-hbandi@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 4 Sep 2019 00:37:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:47466 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbfIDEhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 00:37:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 676E1337;
+        Tue,  3 Sep 2019 21:37:44 -0700 (PDT)
+Received: from [10.162.41.129] (p8cg001049571a15.blr.arm.com [10.162.41.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16C833F718;
+        Tue,  3 Sep 2019 21:37:39 -0700 (PDT)
+Subject: Re: [PATCH] mm: fix double page fault on arm64 if PTE_AF is cleared
+To:     Jia He <justin.he@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Airlie <airlied@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190904005831.153934-1-justin.he@arm.com>
+ <fd22d787-3240-fe42-3ca3-9e8a98f86fce@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <961889b3-ef08-2ee9-e3a1-6aba003f47c1@arm.com>
+Date:   Wed, 4 Sep 2019 10:07:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <fd22d787-3240-fe42-3ca3-9e8a98f86fce@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like Deadlock is observed in hci_qca while performing
-stress and stability tests. Since same lock is getting
-acquired from qca_wq_awake_rx and hci_ibs_tx_idle_timeout
-seeing spinlock recursion, irqs should be disable while
-acquiring the spinlock always.
 
-Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index d33828f..e3164c2 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -309,13 +309,14 @@ static void qca_wq_awake_device(struct work_struct *work)
- 					    ws_awake_device);
- 	struct hci_uart *hu = qca->hu;
- 	unsigned long retrans_delay;
-+	unsigned long flags;
- 
- 	BT_DBG("hu %p wq awake device", hu);
- 
- 	/* Vote for serial clock */
- 	serial_clock_vote(HCI_IBS_TX_VOTE_CLOCK_ON, hu);
- 
--	spin_lock(&qca->hci_ibs_lock);
-+	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
- 
- 	/* Send wake indication to device */
- 	if (send_hci_ibs_cmd(HCI_IBS_WAKE_IND, hu) < 0)
-@@ -327,7 +328,7 @@ static void qca_wq_awake_device(struct work_struct *work)
- 	retrans_delay = msecs_to_jiffies(qca->wake_retrans);
- 	mod_timer(&qca->wake_retrans_timer, jiffies + retrans_delay);
- 
--	spin_unlock(&qca->hci_ibs_lock);
-+	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
- 
- 	/* Actually send the packets */
- 	hci_uart_tx_wakeup(hu);
-@@ -338,12 +339,13 @@ static void qca_wq_awake_rx(struct work_struct *work)
- 	struct qca_data *qca = container_of(work, struct qca_data,
- 					    ws_awake_rx);
- 	struct hci_uart *hu = qca->hu;
-+	unsigned long flags;
- 
- 	BT_DBG("hu %p wq awake rx", hu);
- 
- 	serial_clock_vote(HCI_IBS_RX_VOTE_CLOCK_ON, hu);
- 
--	spin_lock(&qca->hci_ibs_lock);
-+	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
- 	qca->rx_ibs_state = HCI_IBS_RX_AWAKE;
- 
- 	/* Always acknowledge device wake up,
-@@ -354,7 +356,7 @@ static void qca_wq_awake_rx(struct work_struct *work)
- 
- 	qca->ibs_sent_wacks++;
- 
--	spin_unlock(&qca->hci_ibs_lock);
-+	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
- 
- 	/* Actually send the packets */
- 	hci_uart_tx_wakeup(hu);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 09/04/2019 08:49 AM, Anshuman Khandual wrote:
+>  		/*
+>  		 * This really shouldn't fail, because the page is there
+>  		 * in the page tables. But it might just be unreadable,
+>  		 * in which case we just give up and fill the result with
+> -		 * zeroes.
+> +		 * zeroes. If PTE_AF is cleared on arm64, it might
+> +		 * cause double page fault here. so makes pte young here
+>  		 */
+> +		if (!pte_young(vmf->orig_pte)) {
+> +			entry = pte_mkyoung(vmf->orig_pte);
+> +			if (ptep_set_access_flags(vmf->vma, vmf->address,
+> +				vmf->pte, entry, vmf->flags & FAULT_FLAG_WRITE))
+> +				update_mmu_cache(vmf->vma, vmf->address,
+> +						vmf->pte);
+> +		}
 
+This looks correct where it updates the pte entry with PTE_AF which
+will prevent a subsequent page fault. But I think what we really need
+here is to make sure 'uaddr' is mapped correctly at vma->pte. Probably
+a generic function arch_map_pte() when defined for arm64 should check
+CPU version and ensure continuance of PTE_AF if required. The comment
+above also need to be updated saying not only the page should be there
+in the page table, it needs to mapped appropriately as well.
