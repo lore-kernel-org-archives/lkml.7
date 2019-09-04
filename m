@@ -2,125 +2,115 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F8CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D297C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BBA2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rixIuGRs"
+	by mail.kernel.org (Postfix) with ESMTP id EC29F2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567613628;
+	bh=HaJIQUt1q4yjUOn3fBZcxEDzdsuOckbpaxjgOjv2+7k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fXkkFdJXWaQgb+LzCmFnl37/ZrzEtf5ZEhleXknKWT2jz8ztJyNP24tAYU4UmD43d
+	 if75+W1v0nGJq8zCYCxQ5NqrGDUPOwIQcTbiM1IS1Pq+D6tuvO6BnblJCvweR0Gx1Q
+	 VM+090YSm+wt1mN6AGgtrCi72ZoQwVG1aWFeXvYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733231AbfIDQNV (ORCPT
+        id S1733126AbfIDQNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:13:21 -0400
-Received: from mail.efficios.com ([167.114.142.138]:42534 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733110AbfIDQLU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:11:20 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 3B2232A7BDB;
-        Wed,  4 Sep 2019 12:11:19 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id WrxUKyOHNboE; Wed,  4 Sep 2019 12:11:18 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id B92512A7BD6;
-        Wed,  4 Sep 2019 12:11:18 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B92512A7BD6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1567613478;
-        bh=UvCTGqUCf4urIjnb3JtMZ9hbarJ4G87XaD/J1JfL2Sk=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=rixIuGRs3W8jXvPj13DrndaJXHwzFAXleVU6uHQ7aEkcBXVsSui0yny6uR/JL9o5i
-         XTT17NiofQOSaweia9Arc7eYXjqJgK6Ln79A0hJNTwT0kJQI4TQFcGmiF5IYHc/xjq
-         bekFPTzEbTz/H3uVi9odF/6UvG0ikUnj48ZYo+pWNzMgSjKdskh3xzfe6TSMKoGDxN
-         NFGWe3ok1JD00qZ4jbh6CQ9sxKU/I4cZFtKHJszfkOKOAy652Y3WoPXQec2fZqt7Uj
-         Ex6SnUMIIGG8O1Y009s37H7zG9J35F1dlQwzu6MAEMYzbsKmKHc+nL2qb0O0iTykGd
-         f29PGkg3up6vQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id R42Tsp5JXwDz; Wed,  4 Sep 2019 12:11:18 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 9E1712A7BBC;
-        Wed,  4 Sep 2019 12:11:18 -0400 (EDT)
-Date:   Wed, 4 Sep 2019 12:11:18 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     paulmck <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Message-ID: <1457548021.1684.1567613478460.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20190904111126.GB24568@redhat.com>
-References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com> <20190904111126.GB24568@redhat.com>
-Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
- racy load
+        Wed, 4 Sep 2019 12:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732510AbfIDP76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:59:58 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C39022CF5;
+        Wed,  4 Sep 2019 15:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567612797;
+        bh=HaJIQUt1q4yjUOn3fBZcxEDzdsuOckbpaxjgOjv2+7k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q8kONzCME8QJ/BftDjC9U9EP6cC0lTn+J+i5Ise8gr8W5/W+V4B2did/OSPPUojIP
+         PBFPpr8SCvCUoWnss7V9GQe9ET1iREeH+JN5bicO6Y155t0pDRT9vYhNvX5jr1u0vH
+         zkQfAoKFYbdVqz9+56Za6icOp7TGFMtLSKhTgFWE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        Igor Russkikh <igor.russkikh@aquantia.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 91/94] net: aquantia: fix out of memory condition on rx side
+Date:   Wed,  4 Sep 2019 11:57:36 -0400
+Message-Id: <20190904155739.2816-91-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
+References: <20190904155739.2816-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - FF68 (Linux)/8.8.15_GA_3829)
-Thread-Topic: sched/membarrier: p->mm->membarrier_state racy load
-Thread-Index: hfEVYLcRG2Y34JmTkaLiqVjU31tDtw==
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Sep 4, 2019, at 7:11 AM, Oleg Nesterov oleg@redhat.com wrote:
+From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 
-> with or without these changes...
-> 
-> Why do membarrier_register_*_expedited() check get_nr_threads() == 1?
-> This makes no sense to me, atomic_read(mm_users) == 1 should be enough.
+[ Upstream commit be6cef69ba570ebb327eba1ef6438f7af49aaf86 ]
 
-Indeed, if every thread within a process hold a mm_users refcount, then
-the get_nr_threads() == 1 check becomes redundant.
+On embedded environments with hard memory limits it is a normal although
+rare case when skb can't be allocated on rx part under high traffic.
 
-AFAIR, this check started out as "get_nr_threads() == 1", and then I changed
-the code to also cover the multi-process CLONE_VM use-case by adding the
-additional check.
+In such OOM cases napi_complete_done() was not called.
+So the napi object became in an invalid state like it is "scheduled".
+Kernel do not re-schedules the poll of that napi object.
 
-> And I am not sure I understand membarrier_mm_sync_core_before_usermode().
-> OK, membarrier_private_expedited() can race with user -> kernel -> user
-> transition, but we do not care unless both user's above have the same mm?
-> Shouldn't membarrier_mm_sync_core_before_usermode() do
-> 
->	if (current->mm != mm)
->		return;
-> 
-> at the start to make it more clear and avoid sync_core_before_usermode()
-> if possible?
+Consequently, kernel can not remove that object the system hangs on
+`ifconfig down` waiting for a poll.
 
-Indeed, if we have taskA -> kernel -> taskB, it implies that we go through
-switch_mm() when scheduling taskB, which provides the required core serializing
-guarantees.
+We are fixing this by gracefully closing napi poll routine with correct
+invocation of napi_complete_done.
 
-Moreover, if we look closely at the call to membarrier_mm_sync_core_before_usermode(),
-the mm it receives as parameter is the rq->prev_mm. So using the prev_mm membarrier
-state to decide whether we need to issue a sync_core before returning to a
-different next mm is not really relevant unless the next mm == rq->prev_mm.
+This was reproduced with artificially failing the allocation of skb to
+simulate an "out of memory" error case and check that traffic does
+not get stuck.
 
-Nothing there seem to be actively buggy, but those are indeed nice cleanups.
+Fixes: 970a2e9864b0 ("net: ethernet: aquantia: Vector operations")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/aquantia/atlantic/aq_vec.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-
-Mathieu
-
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+index 715685aa48c39..28892b8acd0e1 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_vec.c
+@@ -86,6 +86,7 @@ static int aq_vec_poll(struct napi_struct *napi, int budget)
+ 			}
+ 		}
+ 
++err_exit:
+ 		if (!was_tx_cleaned)
+ 			work_done = budget;
+ 
+@@ -95,7 +96,7 @@ static int aq_vec_poll(struct napi_struct *napi, int budget)
+ 					1U << self->aq_ring_param.vec_idx);
+ 		}
+ 	}
+-err_exit:
++
+ 	return work_done;
+ }
+ 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.20.1
+
