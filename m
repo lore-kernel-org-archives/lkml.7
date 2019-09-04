@@ -2,135 +2,211 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F58C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0323EC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BC921883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="d7+hNZWo"
+	by mail.kernel.org (Postfix) with ESMTP id D3EDE21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfIDEXM (ORCPT
+        id S1726302AbfIDEdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 00:23:12 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41748 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfIDEXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 00:23:12 -0400
-Received: by mail-pf1-f194.google.com with SMTP id b13so5744613pfo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 21:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Vgx/JXR+xsDdowArTuVaRCNwjOEb391A40/id0tFqc4=;
-        b=d7+hNZWo6qi/Ei1kERkoCd9yUP3jMZTGVpswBCXwELQ+V66Tq9qjqOahSovrSsqtw4
-         eqmDU/Fkj3aJDbzGf3w359r+7lQ0j3e/XpJzomoS7cMAxP1uBHotGcuG32W9nmnpqEQz
-         csKGqd6Nyjut44kghWQaw9W7wo0gDpKTmPOQ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Vgx/JXR+xsDdowArTuVaRCNwjOEb391A40/id0tFqc4=;
-        b=TR+y+EPl95P/ukTMAHUAOQjEvMFuPeHkBkuFPrsCQdVM2F17PwSRklfkl0lco+G3fU
-         IPn5m6VyqkAI2fdEmF4MSxaddCCMmIk+nGTrR8xSYF+vJ5knVR4sQcXCu3yZ8rXLyGbE
-         byfYxK1oPaBTW+4f+43dtdk/4ReoIuRm5UaNIXSNfwsnnIiNrWLbMjeOTXO6J0M3YsjH
-         PXoNCakntUOQ92H1pM2tjTrA+6lcgRm8yKVnDXn+V7a7af22PjXIjPv42kvEkYIdtoQ5
-         1qWOEefT7SZCXx3+AzCl0x0AE6p3E8tCzM3Qtvk96W+7jjwrIHlzezuP0VxJq7gk8mxq
-         A1Jw==
-X-Gm-Message-State: APjAAAVcUQINEaotDYmKLlUZTmgRkcpSexne1ErhkkKosv8jok4r/vHd
-        b1lDYD2p2ZujCrhVFlUqgWolrA==
-X-Google-Smtp-Source: APXvYqzyQeVMaZwCveC4tlMombFJKmyQ4R+pOzTSLE9Hwz74c7ky1wf6HzqSVLNs+gfymYrWyyVAKg==
-X-Received: by 2002:a62:d4:: with SMTP id 203mr13060737pfa.210.1567570991448;
-        Tue, 03 Sep 2019 21:23:11 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id j128sm17865153pfg.51.2019.09.03.21.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 21:23:11 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 00:23:10 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jirka =?iso-8859-1?Q?Hladk=FD?= <jhladky@redhat.com>,
-        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
-        x86@kernel.org, Qais Yousef <qais.yousef@arm.com>
-Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
-Message-ID: <20190904042310.GA159235@google.com>
-References: <20190903154340.860299-1-rkrcmar@redhat.com>
- <20190903154340.860299-3-rkrcmar@redhat.com>
- <a2924d91-df68-42de-0709-af53649346d5@arm.com>
+        Wed, 4 Sep 2019 00:33:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38924 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbfIDEdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 00:33:10 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 00CA43082E20;
+        Wed,  4 Sep 2019 04:33:10 +0000 (UTC)
+Received: from [10.72.12.87] (ovpn-12-87.pek2.redhat.com [10.72.12.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 95BC75C220;
+        Wed,  4 Sep 2019 04:32:58 +0000 (UTC)
+Subject: Re: [RFC v3] vhost: introduce mdev based hardware vhost backend
+To:     Tiwei Bie <tiwei.bie@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     alex.williamson@redhat.com, maxime.coquelin@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, lingshan.zhu@intel.com
+References: <20190828053712.26106-1-tiwei.bie@intel.com>
+ <20190903043704-mutt-send-email-mst@kernel.org> <20190904024801.GA5671@___>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <5972f30a-4f01-c953-0785-1c82b20cec58@redhat.com>
+Date:   Wed, 4 Sep 2019 12:32:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20190904024801.GA5671@___>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a2924d91-df68-42de-0709-af53649346d5@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 04 Sep 2019 04:33:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 05:05:47PM +0100, Valentin Schneider wrote:
-> On 03/09/2019 16:43, Radim Krčmář wrote:
-> > The paper "The Linux Scheduler: a Decade of Wasted Cores" used several
-> > custom data gathering points to better understand what was going on in
-> > the scheduler.
-> > Red Hat adapted one of them for the tracepoint framework and created a
-> > tool to plot a heatmap of nr_running, where the sched_update_nr_running
-> > tracepoint is being used for fine grained monitoring of scheduling
-> > imbalance.
-> > The tool is available from https://github.com/jirvoz/plot-nr-running.
-> > 
-> > The best place for the tracepoints is inside the add/sub_nr_running,
-> > which requires some shenanigans to make it work as they are defined
-> > inside sched.h.
-> > The tracepoints have to be included from sched.h, which means that
-> > CREATE_TRACE_POINTS has to be defined for the whole header and this
-> > might cause problems if tree-wide headers expose tracepoints in sched.h
-> > dependencies, but I'd argue it's the other side's misuse of tracepoints.
-> > 
-> > Moving the import sched.h line lower would require fixes in s390 and ppc
-> > headers, because they don't include dependecies properly and expect
-> > sched.h to do it, so it is simpler to keep sched.h there and
-> > preventively undefine CREATE_TRACE_POINTS right after.
-> > 
-> > Exports of the pelt tracepoints remain because they don't need to be
-> > protected by CREATE_TRACE_POINTS and moving them closer would be
-> > unsightly.
-> > 
-> 
-> Pure trace events are frowned upon in scheduler world, try going with
-> trace points. Qais did something very similar recently:
-> 
-> https://lore.kernel.org/lkml/20190604111459.2862-1-qais.yousef@arm.com/
-> 
-> You'll have to implement the associated trace events in a module, which
-> lets you define your own event format and doesn't form an ABI :).
 
-Is that really true? eBPF programs loaded from userspace can access
-tracepoints through BPF_RAW_TRACEPOINT_OPEN, which is UAPI:
-https://github.com/torvalds/linux/blob/master/include/uapi/linux/bpf.h#L103
+On 2019/9/4 上午10:48, Tiwei Bie wrote:
+> On Tue, Sep 03, 2019 at 07:26:03AM -0400, Michael S. Tsirkin wrote:
+>> On Wed, Aug 28, 2019 at 01:37:12PM +0800, Tiwei Bie wrote:
+>>> Details about this can be found here:
+>>>
+>>> https://lwn.net/Articles/750770/
+>>>
+>>> What's new in this version
+>>> ==========================
+>>>
+>>> There are three choices based on the discussion [1] in RFC v2:
+>>>
+>>>> #1. We expose a VFIO device, so we can reuse the VFIO container/group
+>>>>      based DMA API and potentially reuse a lot of VFIO code in QEMU.
+>>>>
+>>>>      But in this case, we have two choices for the VFIO device interface
+>>>>      (i.e. the interface on top of VFIO device fd):
+>>>>
+>>>>      A) we may invent a new vhost protocol (as demonstrated by the code
+>>>>         in this RFC) on VFIO device fd to make it work in VFIO's way,
+>>>>         i.e. regions and irqs.
+>>>>
+>>>>      B) Or as you proposed, instead of inventing a new vhost protocol,
+>>>>         we can reuse most existing vhost ioctls on the VFIO device fd
+>>>>         directly. There should be no conflicts between the VFIO ioctls
+>>>>         (type is 0x3B) and VHOST ioctls (type is 0xAF) currently.
+>>>>
+>>>> #2. Instead of exposing a VFIO device, we may expose a VHOST device.
+>>>>      And we will introduce a new mdev driver vhost-mdev to do this.
+>>>>      It would be natural to reuse the existing kernel vhost interface
+>>>>      (ioctls) on it as much as possible. But we will need to invent
+>>>>      some APIs for DMA programming (reusing VHOST_SET_MEM_TABLE is a
+>>>>      choice, but it's too heavy and doesn't support vIOMMU by itself).
+>>> This version is more like a quick PoC to try Jason's proposal on
+>>> reusing vhost ioctls. And the second way (#1/B) in above three
+>>> choices was chosen in this version to demonstrate the idea quickly.
+>>>
+>>> Now the userspace API looks like this:
+>>>
+>>> - VFIO's container/group based IOMMU API is used to do the
+>>>    DMA programming.
+>>>
+>>> - Vhost's existing ioctls are used to setup the device.
+>>>
+>>> And the device will report device_api as "vfio-vhost".
+>>>
+>>> Note that, there are dirty hacks in this version. If we decide to
+>>> go this way, some refactoring in vhost.c/vhost.h may be needed.
+>>>
+>>> PS. The direct mapping of the notify registers isn't implemented
+>>>      in this version.
+>>>
+>>> [1] https://lkml.org/lkml/2019/7/9/101
+>>>
+>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+>> ....
+>>
+>>> +long vhost_mdev_ioctl(struct mdev_device *mdev, unsigned int cmd,
+>>> +		      unsigned long arg)
+>>> +{
+>>> +	void __user *argp = (void __user *)arg;
+>>> +	struct vhost_mdev *vdpa;
+>>> +	unsigned long minsz;
+>>> +	int ret = 0;
+>>> +
+>>> +	if (!mdev)
+>>> +		return -EINVAL;
+>>> +
+>>> +	vdpa = mdev_get_drvdata(mdev);
+>>> +	if (!vdpa)
+>>> +		return -ENODEV;
+>>> +
+>>> +	switch (cmd) {
+>>> +	case VFIO_DEVICE_GET_INFO:
+>>> +	{
+>>> +		struct vfio_device_info info;
+>>> +
+>>> +		minsz = offsetofend(struct vfio_device_info, num_irqs);
+>>> +
+>>> +		if (copy_from_user(&info, (void __user *)arg, minsz)) {
+>>> +			ret = -EFAULT;
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		if (info.argsz < minsz) {
+>>> +			ret = -EINVAL;
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		info.flags = VFIO_DEVICE_FLAGS_VHOST;
+>>> +		info.num_regions = 0;
+>>> +		info.num_irqs = 0;
+>>> +
+>>> +		if (copy_to_user((void __user *)arg, &info, minsz)) {
+>>> +			ret = -EFAULT;
+>>> +			break;
+>>> +		}
+>>> +
+>>> +		break;
+>>> +	}
+>>> +	case VFIO_DEVICE_GET_REGION_INFO:
+>>> +	case VFIO_DEVICE_GET_IRQ_INFO:
+>>> +	case VFIO_DEVICE_SET_IRQS:
+>>> +	case VFIO_DEVICE_RESET:
+>>> +		ret = -EINVAL;
+>>> +		break;
+>>> +
+>>> +	case VHOST_MDEV_SET_STATE:
+>>> +		ret = vhost_set_state(vdpa, argp);
+>>> +		break;
+>>> +	case VHOST_GET_FEATURES:
+>>> +		ret = vhost_get_features(vdpa, argp);
+>>> +		break;
+>>> +	case VHOST_SET_FEATURES:
+>>> +		ret = vhost_set_features(vdpa, argp);
+>>> +		break;
+>>> +	case VHOST_GET_VRING_BASE:
+>>> +		ret = vhost_get_vring_base(vdpa, argp);
+>>> +		break;
+>>> +	default:
+>>> +		ret = vhost_dev_ioctl(&vdpa->dev, cmd, argp);
+>>> +		if (ret == -ENOIOCTLCMD)
+>>> +			ret = vhost_vring_ioctl(&vdpa->dev, cmd, argp);
+>>> +	}
+>>> +
+>>> +	return ret;
+>>> +}
+>>> +EXPORT_SYMBOL(vhost_mdev_ioctl);
+>>
+>> I don't have a problem with this approach. A small question:
+>> would it make sense to have two fds: send vhost ioctls
+>> on one and vfio ioctls on another?
+>> We can then pass vfio fd to the vhost fd with a
+>> SET_BACKEND ioctl.
+>>
+>> What do you think?
+> I like this idea! I will give it a try.
+> So we can introduce /dev/vhost-mdev to have the vhost fd,
 
-I don't have a strong opinion about considering tracepoints as ABI / API or
-not, but just want to get the facts straight :)
 
-thanks,
+You still need to think about how to connect it to current sysfs based 
+mdev management interface, or you want to invent another API, or just 
+use the /dev/vhost-net but pass vfio fd through ioctl to the file.
 
- - Joel
+Thanks
 
+
+>   and let
+> userspace pass vfio fd to the vhost fd with a SET_BACKEND ioctl.
+>
+> Thanks a lot!
+> Tiwei
+>
+>> -- 
+>> MST
