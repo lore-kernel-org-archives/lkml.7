@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB69C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E069C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A016E233FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABF522CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620203;
-	bh=/vVKWsKr8PHXAd2ZBVyb90mfEjgyJ4hEIGBSG27XaME=;
+	s=default; t=1567620206;
+	bh=b+rBF7V5rIqgAolUvI7hLO0r5ZRszQitsSUesKsGlZ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M2poWKNNCfyVqIMqRsAI2jv9KM6lx8RNh7Y3evJgdkJZO88i1uJnCsCcPyj3EQrqA
-	 JPQwmvCwr6xld3aXxnL3xbtAMyl0vRhUIDHrvBMQi9yl83elJV4Q2dkpVDFb2vuqX6
-	 J9A3WoeFn3RZokwpviQ0SyAvJPuedtwwVi9VTMus=
+	b=Zx0RKe+M3zC31TgmSKFPu9GE5FyTdA8rWeR0r21xoDE4qZUOVMyE35hGsaagei/6X
+	 BMhYVaLMG9MxV2pEMiSR6FKryOGF8wZqmY5Fyq3mm0JJoOwBRl3kXQt9KnqeP8WgFH
+	 n/u9FRMYNtIl4zvzIJaUjG3eyxadHuUVSflVXS4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388922AbfIDSDW (ORCPT
+        id S2388929AbfIDSDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43820 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:03:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733108AbfIDSDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:03:22 -0400
+        id S2387960AbfIDSDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:03:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4992339D;
-        Wed,  4 Sep 2019 18:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FFD92339E;
+        Wed,  4 Sep 2019 18:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620201;
-        bh=/vVKWsKr8PHXAd2ZBVyb90mfEjgyJ4hEIGBSG27XaME=;
+        s=default; t=1567620203;
+        bh=b+rBF7V5rIqgAolUvI7hLO0r5ZRszQitsSUesKsGlZ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QB6YRvpny1gWQcjTqkUgTNA0tiAoICVWPAzAfHJtMwGL3CRebtSoqE8UX7L3U+XHq
-         /mZ8pz5KBCSA9S6CXlBXrrId+W0HIqD01bEPx3Ts59tUR9GmPwnYDuCThFV6ZGWhL6
-         dKKEZZkNXFIo8wyaYs+c9dudxBD3xEJ+LXtQHB3o=
+        b=oX6k8AYZcL/NseSQoPmfPGMsC+sYzSaFAXmDkEWxWsaHav24CebxRw0LRHng5zcJh
+         NoeNGAC7sGIsAT0NgM9bJin2S04mSuKQoZBd/KLY7XIKPEXcnMWAVjugVSf+PNHVQW
+         Du/YN+AavzOh5w47bKN1fIW7+qVm7mSOZ0QaZKZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bandan Das <bsd@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 27/57] x86/apic: Include the LDR when clearing out APIC registers
-Date:   Wed,  4 Sep 2019 19:53:55 +0200
-Message-Id: <20190904175304.578424876@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 28/57] ftrace: Fix NULL pointer dereference in t_probe_next()
+Date:   Wed,  4 Sep 2019 19:53:56 +0200
+Message-Id: <20190904175304.700046585@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -59,49 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bandan Das <bsd@redhat.com>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-commit 558682b5291937a70748d36fd9ba757fb25b99ae upstream.
+commit 7bd46644ea0f6021dc396a39a8bfd3a58f6f1f9f upstream.
 
-Although APIC initialization will typically clear out the LDR before
-setting it, the APIC cleanup code should reset the LDR.
+LTP testsuite on powerpc results in the below crash:
 
-This was discovered with a 32-bit KVM guest jumping into a kdump
-kernel. The stale bits in the LDR triggered a bug in the KVM APIC
-implementation which caused the destination mapping for VCPUs to be
-corrupted.
+  Unable to handle kernel paging request for data at address 0x00000000
+  Faulting instruction address: 0xc00000000029d800
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE SMP NR_CPUS=2048 NUMA PowerNV
+  ...
+  CPU: 68 PID: 96584 Comm: cat Kdump: loaded Tainted: G        W
+  NIP:  c00000000029d800 LR: c00000000029dac4 CTR: c0000000001e6ad0
+  REGS: c0002017fae8ba10 TRAP: 0300   Tainted: G        W
+  MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 28022422  XER: 20040000
+  CFAR: c00000000029d90c DAR: 0000000000000000 DSISR: 40000000 IRQMASK: 0
+  ...
+  NIP [c00000000029d800] t_probe_next+0x60/0x180
+  LR [c00000000029dac4] t_mod_start+0x1a4/0x1f0
+  Call Trace:
+  [c0002017fae8bc90] [c000000000cdbc40] _cond_resched+0x10/0xb0 (unreliable)
+  [c0002017fae8bce0] [c0000000002a15b0] t_start+0xf0/0x1c0
+  [c0002017fae8bd30] [c0000000004ec2b4] seq_read+0x184/0x640
+  [c0002017fae8bdd0] [c0000000004a57bc] sys_read+0x10c/0x300
+  [c0002017fae8be30] [c00000000000b388] system_call+0x5c/0x70
 
-Note that this isn't intended to paper over the KVM APIC bug. The kernel
-has to clear the LDR when resetting the APIC registers except when X2APIC
-is enabled.
+The test (ftrace_set_ftrace_filter.sh) is part of ftrace stress tests
+and the crash happens when the test does 'cat
+$TRACING_PATH/set_ftrace_filter'.
 
-This lacks a Fixes tag because missing to clear LDR goes way back into pre
-git history.
+The address points to the second line below, in t_probe_next(), where
+filter_hash is dereferenced:
+  hash = iter->probe->ops.func_hash->filter_hash;
+  size = 1 << hash->size_bits;
 
-[ tglx: Made x2apic_enabled a function call as required ]
+This happens due to a race with register_ftrace_function_probe(). A new
+ftrace_func_probe is created and added into the func_probes list in
+trace_array under ftrace_lock. However, before initializing the filter,
+we drop ftrace_lock, and re-acquire it after acquiring regex_lock. If
+another process is trying to read set_ftrace_filter, it will be able to
+acquire ftrace_lock during this window and it will end up seeing a NULL
+filter_hash.
 
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Fix this by just checking for a NULL filter_hash in t_probe_next(). If
+the filter_hash is NULL, then this probe is just being added and we can
+simply return from here.
+
+Link: http://lkml.kernel.org/r/05e021f757625cbbb006fad41380323dbe4e3b43.1562249521.git.naveen.n.rao@linux.vnet.ibm.com
+
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190826101513.5080-3-bsd@redhat.com
+Fixes: 7b60f3d876156 ("ftrace: Dynamically create the probe ftrace_ops for the trace_array")
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/apic.c |    4 ++++
+ kernel/trace/ftrace.c |    4 ++++
  1 file changed, 4 insertions(+)
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1148,6 +1148,10 @@ void clear_local_APIC(void)
- 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
- 	v = apic_read(APIC_LVT1);
- 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
-+	if (!x2apic_enabled()) {
-+		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
-+		apic_write(APIC_LDR, v);
-+	}
- 	if (maxlvt >= 4) {
- 		v = apic_read(APIC_LVTPC);
- 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3184,6 +3184,10 @@ t_probe_next(struct seq_file *m, loff_t
+ 		hnd = &iter->probe_entry->hlist;
+ 
+ 	hash = iter->probe->ops.func_hash->filter_hash;
++
++	if (!hash)
++		return NULL;
++
+ 	size = 1 << hash->size_bits;
+ 
+  retry:
 
 
