@@ -2,114 +2,163 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D1EC41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B169DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C802923402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:38:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567600687;
-	bh=8RhsG85jcNMg6U4ayFkiWlCA5D7lmQsDEdfiybItXnI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k91Nw7WcDngfv0JqIzowR4P5vfFS8tW6w/tWsYmzSKrpTzsdA6bhscuYIs1J5sqv/
-	 PMEKtCk0s0zrzzmIeECzp/nUgM2+dRd6CNaoxrp1D6GRQk2FQvJHVJbChcxC6VGY5v
-	 +ujGyRPvJEhHBhSr/1FmEzULVXyHfX8MWfaENbBo=
+	by mail.kernel.org (Postfix) with ESMTP id 8966821883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:39:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RAmgutrt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbfIDMiH (ORCPT
+        id S1729950AbfIDMjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:38:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDMiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:38:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45E1121883;
-        Wed,  4 Sep 2019 12:38:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567600685;
-        bh=8RhsG85jcNMg6U4ayFkiWlCA5D7lmQsDEdfiybItXnI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qJAtL59U6k8VEX4++w4sf0SHJA6YrxPHa8H2pn290hOY3yKi7I/fQSdUNsl+ku+3l
-         Io4ArL+dkwRZRkJq2caxjpvffEXmL35SAYmUCS2M1UwfhfyyKEAXOH1DbgGprgJFz9
-         ygml1f1dtjWfXlSV6veFPfYiFxPvrcdpo1IJPLmU=
-Date:   Wed, 4 Sep 2019 14:38:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, jonathan.cameron@huawei.com,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        linux-accelerators@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-Subject: Re: [PATCH v3 2/2] uacce: add uacce driver
-Message-ID: <20190904123803.GC5043@kroah.com>
-References: <1567482778-5700-1-git-send-email-zhangfei.gao@linaro.org>
- <1567484087-8071-1-git-send-email-zhangfei.gao@linaro.org>
- <1567484087-8071-2-git-send-email-zhangfei.gao@linaro.org>
+        Wed, 4 Sep 2019 08:39:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45700 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfIDMjn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:39:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=46rtVsP+q58WyAZYY2K+ydWmL8S5cK07U6g6MAPCNAg=; b=RAmgutrtgnLTFmU9yGZ/SUWkB
+        LuClrQ2GLdcUPAHrPlGQc8x5ax11QVMddy8SGnoirlP2/dpb0qD9ZkpXkptm1pnHRHPMOaSoXP90u
+        h5JXbbIwtzrOEP60fS6+Q8qVTA/FiZ7XS9pKho16aRex4HUTyjfAXN3BoBBhgCoQ3IMA81ycOEzSQ
+        XF0SKVPlJvythOeYc2y9uPZYcN2evBnZFUVjEFZhKTLFkJSA7nRLXMdxnX6vYJkHC3hEsKrljiHc1
+        s6iN+3ehLT6ZSew4A5dohw1lhtPN4+vpCcXPHGYj4d6LWsKAXMYc9eBvqF4+XS32Dh3LJheT6rAn1
+        E+uQQ0dzg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5UZZ-0007Rw-1x; Wed, 04 Sep 2019 12:39:41 +0000
+Date:   Wed, 4 Sep 2019 05:39:41 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@infradead.org>, Qian Cai <cai@lca.pw>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: "fs/namei.c: keep track of nd->root refcount status" causes boot
+ panic
+Message-ID: <20190904123940.GA24520@infradead.org>
+References: <7C6CCE98-1E22-433C-BF70-A3CBCDED4635@lca.pw>
+ <20190903123719.GF1131@ZenIV.linux.org.uk>
+ <20190903130456.GA9567@infradead.org>
+ <20190903134832.GH1131@ZenIV.linux.org.uk>
+ <20190903135024.GA8274@infradead.org>
+ <20190903135354.GI1131@ZenIV.linux.org.uk>
+ <20190903153930.GA2791@infradead.org>
+ <20190903175610.GM1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567484087-8071-2-git-send-email-zhangfei.gao@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190903175610.GM1131@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 12:14:47PM +0800, Zhangfei Gao wrote:
-> From: Kenneth Lee <liguozhu@hisilicon.com>
+On Tue, Sep 03, 2019 at 06:56:10PM +0100, Al Viro wrote:
+> On Tue, Sep 03, 2019 at 08:39:30AM -0700, Christoph Hellwig wrote:
 > 
-> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
-> provide Shared Virtual Addressing (SVA) between accelerators and processes.
-> So accelerator can access any data structure of the main cpu.
-> This differs from the data sharing between cpu and io device, which share
-> data content rather than address.
-> Since unified address, hardware and user space of process can share the
-> same virtual address in the communication.
+> > > There's much nastier situation than "new upstream kernel released,
+> > > need to rebuild" - it's bisect in mainline trying to locate something...
+> > 
+> > I really don't get the point.  And it's not like we've card about
+> > this anywhere else.  And jumping wildly around with the numeric values
+> > for constants will lead to bugs like the one you added and fixed again
+> > and again.
 > 
-> Uacce create a chrdev for every registration, the queue is allocated to
-> the process when the chrdev is opened. Then the process can access the
-> hardware resource by interact with the queue file. By mmap the queue
-> file space to user space, the process can directly put requests to the
-> hardware without syscall to the kernel space.
+> The thing is, there are several groups - it's not as if all additions
+> were guaranteed to be at the end.  So either we play with renumbering
+> again and again, or we are back to the square one...
 > 
-> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
-> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
-> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  Documentation/ABI/testing/sysfs-driver-uacce |   47 ++
->  drivers/misc/Kconfig                         |    1 +
->  drivers/misc/Makefile                        |    1 +
->  drivers/misc/uacce/Kconfig                   |   13 +
->  drivers/misc/uacce/Makefile                  |    2 +
->  drivers/misc/uacce/uacce.c                   | 1096 ++++++++++++++++++++++++++
->  include/linux/uacce.h                        |  172 ++++
->  include/uapi/misc/uacce.h                    |   39 +
->  8 files changed, 1371 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-driver-uacce
->  create mode 100644 drivers/misc/uacce/Kconfig
->  create mode 100644 drivers/misc/uacce/Makefile
->  create mode 100644 drivers/misc/uacce/uacce.c
->  create mode 100644 include/linux/uacce.h
->  create mode 100644 include/uapi/misc/uacce.h
+> Is there any common trick that would allow to verify the lack of duplicates
+> at the build time?
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-driver-uacce b/Documentation/ABI/testing/sysfs-driver-uacce
-> new file mode 100644
-> index 0000000..ee0a66e
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-driver-uacce
-> @@ -0,0 +1,47 @@
-> +What:           /sys/class/uacce/hisi_zip-<n>/id
-> +Date:           Sep 2019
-> +KernelVersion:  5.3
+> Or we can reorder the list by constant value, with no grouping visible
+> anywhere...
 
-5.3 will be released in a week or so, without this file in it, so that's
-not ok here :(
+Here is what I'd do.  No validation of duplicates, but the 1 << bit
+notation makes them very easy to spot:
 
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index 397a08ade6a2..a9536f90936c 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -16,28 +16,47 @@ enum { MAX_NESTED_LINKS = 8 };
+  */
+ enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT, LAST_BIND};
+ 
+-/* pathwalk mode */
+-#define LOOKUP_FOLLOW		0x0001	/* follow links at the end */
+-#define LOOKUP_DIRECTORY	0x0002	/* require a directory */
+-#define LOOKUP_AUTOMOUNT	0x0004  /* force terminal automount */
+-#define LOOKUP_EMPTY		0x4000	/* accept empty path [user_... only] */
+-#define LOOKUP_DOWN		0x8000	/* follow mounts in the starting point */
+-
+-#define LOOKUP_REVAL		0x0020	/* tell ->d_revalidate() to trust no cache */
+-#define LOOKUP_RCU		0x0040	/* RCU pathwalk mode; semi-internal */
+-
+-/* These tell filesystem methods that we are dealing with the final component... */
+-#define LOOKUP_OPEN		0x0100	/* ... in open */
+-#define LOOKUP_CREATE		0x0200	/* ... in object creation */
+-#define LOOKUP_EXCL		0x0400	/* ... in exclusive creation */
+-#define LOOKUP_RENAME_TARGET	0x0800	/* ... in destination of rename() */
+-
+-/* internal use only */
+-#define LOOKUP_PARENT		0x0010
+-#define LOOKUP_NO_REVAL		0x0080
+-#define LOOKUP_JUMPED		0x1000
+-#define LOOKUP_ROOT		0x2000
+-#define LOOKUP_ROOT_GRABBED	0x0008
++/*
++ * Pathwalk mode:
++ */
++
++/* follow links at the end */
++#define LOOKUP_FOLLOW		(1 << 0)
++/* require a directory */
++#define LOOKUP_DIRECTORY	(1 << 1)
++/* force terminal automount */
++#define LOOKUP_AUTOMOUNT	(1 << 2)
++/* accept empty path [user_... only] */
++#define LOOKUP_EMPTY		(1 << 3)
++/* follow mounts in the starting point */
++#define LOOKUP_DOWN		(1 << 4)
++/* tell ->d_revalidate() to trust no cache */
++#define LOOKUP_REVAL		(1 << 5)
++/* RCU pathwalk mode; semi-internal */
++#define LOOKUP_RCU		(1 << 6)
++
++
++/*
++ * These tell filesystem methods that we are dealing with the final component:
++ */
++
++/* ... in open */
++#define LOOKUP_OPEN		(1 << 10)
++/* ... in object creation */
++#define LOOKUP_CREATE		(1 << 11)
++/* ... in exclusive creation */
++#define LOOKUP_EXCL		(1 << 12)
++/* ... in destination of rename() */
++#define LOOKUP_RENAME_TARGET	(1 << 13)
++
++/*
++ * Internal use only:
++ */
++#define LOOKUP_PARENT		(1 << 20)
++#define LOOKUP_NO_REVAL		(1 << 21)
++#define LOOKUP_JUMPED		(1 << 22)
++#define LOOKUP_ROOT		(1 << 23)
++#define LOOKUP_ROOT_GRABBED	(1 << 24)
+ 
+ extern int path_pts(struct path *path);
+ 
