@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C3FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7DEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E3522CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40BCB22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620168;
-	bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
+	s=default; t=1567620170;
+	bh=uUtTDLmE6A7J+WslKrqJN/mBaUTuWh4DOMBFskrszMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OVWD4KoET1CQeti+z/g/DQA4lZyHuy8+AMifef+s+IDCBAOruPuWkIew1toPAipoV
-	 4WBVBvAVF95s6b/SsE/cYmAt+NgPDtpAriC9VFYsvlD9Do4JSbkGyz7YKU9t6N/JRP
-	 dJq7DIx6rI4KuQ3eU/UwZ6418KN0WgEaZPLO3lMc=
+	b=ux5ZcKLxgjqwUgJgm2fiqy4aiD3yQY945528EKUOITk1ZVpCAO7d6MwT5G11EJmWZ
+	 gfOh9ffAAebQPyce1K3c4aQXQSqzaz8in426yPXNaTERtaPV1i1LMb42e2WT0nbPTR
+	 buUD0iJEp1yrOAVR/3Befu4Io0O7kLsMMD/USfvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388421AbfIDSCr (ORCPT
+        id S2388828AbfIDSCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42816 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388422AbfIDSCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:44 -0400
+        id S2388817AbfIDSCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E0B522CF5;
-        Wed,  4 Sep 2019 18:02:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F254A208E4;
+        Wed,  4 Sep 2019 18:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620163;
-        bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
+        s=default; t=1567620166;
+        bh=uUtTDLmE6A7J+WslKrqJN/mBaUTuWh4DOMBFskrszMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DlVQSHl3l8sPTSyaaqMM/pXLpmDtXNG4Ilrhyu28dUujhtENO7yuui5+b+Bn2lg21
-         C4KGvgA5tESyhC51bsBqYDKos0wkVxRqcYMQQVVxw7lLfF+AKFhnb02h4qTKEdySxX
-         z0rDiIiQZ5xZagfUkr5KZZnBOgfmUc39N8W+7xB0=
+        b=U8FoysfyFEH1yCd1+z51QPLHnekIf7yoR41vaA1qjEcA/KdF8vxIVuu6MBDPLQn/0
+         SV2HzZdJoB6mHVdoMKHln9jfMuiTBhkL1lPpWkLFnoH/WvpPdfEcc5ePV4rlM/Do61
+         A0EqR1nJUcrjgT7DA1cpchomg8aFRCUyUXX18HSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pedro Sousa <sousa@synopsys.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 14/57] scsi: ufs: Fix RX_TERMINATION_FORCE_ENABLE define value
-Date:   Wed,  4 Sep 2019 19:53:42 +0200
-Message-Id: <20190904175303.327466376@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jyri Sarha <jsarha@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 15/57] drm/tilcdc: Register cpufreq notifier after we have initialized crtc
+Date:   Wed,  4 Sep 2019 19:53:43 +0200
+Message-Id: <20190904175303.465167730@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,32 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ebcb8f8508c5edf428f52525cec74d28edea7bcb ]
+[ Upstream commit 432973fd3a20102840d5f7e61af9f1a03c217a4c ]
 
-Fix RX_TERMINATION_FORCE_ENABLE define value from 0x0089 to 0x00A9
-according to MIPI Alliance MPHY specification.
+Register cpufreq notifier after we have initialized the crtc and
+unregister it before we remove the ctrc. Receiving a cpufreq notify
+without crtc causes a crash.
 
-Fixes: e785060ea3a1 ("ufs: definitions for phy interface")
-Signed-off-by: Pedro Sousa <sousa@synopsys.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/unipro.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c | 34 ++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
-index 23129d7b2678d..c77e365264478 100644
---- a/drivers/scsi/ufs/unipro.h
-+++ b/drivers/scsi/ufs/unipro.h
-@@ -52,7 +52,7 @@
- #define RX_HS_UNTERMINATED_ENABLE		0x00A6
- #define RX_ENTER_HIBERN8			0x00A7
- #define RX_BYPASS_8B10B_ENABLE			0x00A8
--#define RX_TERMINATION_FORCE_ENABLE		0x0089
-+#define RX_TERMINATION_FORCE_ENABLE		0x00A9
- #define RX_MIN_ACTIVATETIME_CAPABILITY		0x008F
- #define RX_HIBERN8TIME_CAPABILITY		0x0092
- #define RX_REFCLKFREQ				0x00EB
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_drv.c b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+index b0d70f943cec5..56039897607c6 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_drv.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+@@ -189,6 +189,12 @@ static void tilcdc_fini(struct drm_device *dev)
+ {
+ 	struct tilcdc_drm_private *priv = dev->dev_private;
+ 
++#ifdef CONFIG_CPU_FREQ
++	if (priv->freq_transition.notifier_call)
++		cpufreq_unregister_notifier(&priv->freq_transition,
++					    CPUFREQ_TRANSITION_NOTIFIER);
++#endif
++
+ 	if (priv->crtc)
+ 		tilcdc_crtc_shutdown(priv->crtc);
+ 
+@@ -204,12 +210,6 @@ static void tilcdc_fini(struct drm_device *dev)
+ 	drm_mode_config_cleanup(dev);
+ 	tilcdc_remove_external_device(dev);
+ 
+-#ifdef CONFIG_CPU_FREQ
+-	if (priv->freq_transition.notifier_call)
+-		cpufreq_unregister_notifier(&priv->freq_transition,
+-					    CPUFREQ_TRANSITION_NOTIFIER);
+-#endif
+-
+ 	if (priv->clk)
+ 		clk_put(priv->clk);
+ 
+@@ -282,17 +282,6 @@ static int tilcdc_init(struct drm_driver *ddrv, struct device *dev)
+ 		goto init_failed;
+ 	}
+ 
+-#ifdef CONFIG_CPU_FREQ
+-	priv->freq_transition.notifier_call = cpufreq_transition;
+-	ret = cpufreq_register_notifier(&priv->freq_transition,
+-			CPUFREQ_TRANSITION_NOTIFIER);
+-	if (ret) {
+-		dev_err(dev, "failed to register cpufreq notifier\n");
+-		priv->freq_transition.notifier_call = NULL;
+-		goto init_failed;
+-	}
+-#endif
+-
+ 	if (of_property_read_u32(node, "max-bandwidth", &priv->max_bandwidth))
+ 		priv->max_bandwidth = TILCDC_DEFAULT_MAX_BANDWIDTH;
+ 
+@@ -369,6 +358,17 @@ static int tilcdc_init(struct drm_driver *ddrv, struct device *dev)
+ 	}
+ 	modeset_init(ddev);
+ 
++#ifdef CONFIG_CPU_FREQ
++	priv->freq_transition.notifier_call = cpufreq_transition;
++	ret = cpufreq_register_notifier(&priv->freq_transition,
++			CPUFREQ_TRANSITION_NOTIFIER);
++	if (ret) {
++		dev_err(dev, "failed to register cpufreq notifier\n");
++		priv->freq_transition.notifier_call = NULL;
++		goto init_failed;
++	}
++#endif
++
+ 	if (priv->is_componentized) {
+ 		ret = component_bind_all(dev, ddev);
+ 		if (ret < 0)
 -- 
 2.20.1
 
