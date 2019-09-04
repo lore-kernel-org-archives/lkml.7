@@ -2,54 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C66C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 398AFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FBAD2339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B994206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620173;
-	bh=VNSR+s2UWdt9kFnFDqoDOJhysEP2JUIFc0/oGR/GDGs=;
+	s=default; t=1567620176;
+	bh=xTGWqD+CPd4N1bD61EJqVR8BBD+YzMgcGg8fM/4Yz9c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AmgJvpNwKkmcE7Kpy8Nor2kSp6TnNnKmM+0GvzVux4n97m9Ij/bBB0e8/4XYqDkCY
-	 Wq/l/53xDR8ZRxkKJOgByMwTX3t8/7Ds0uNhDbIz7QugxKS1aFgXADaQyWA5haSHG5
-	 CZuSC8piBOYYxiiP5vwWVuqM/GlaX7Oxo9J/xqRY=
+	b=2T1nd9PtDB4kzvSNT3HtAiODVgsj/txyGJZvit0KJcHPIp0P63FcV5nsTFLxyobMG
+	 6jCS+JmoKklDfZejzvw6qMB1fb/mUW243LajUV+/adym76DcRiLEmKKFqnJrrhHLaV
+	 hR8Bk1kKJQKr0SsXX7F3BUoC5l2n77R+IUFgeCbA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388838AbfIDSCw (ORCPT
+        id S2388843AbfIDSCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42950 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388825AbfIDSCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:49 -0400
+        id S2388834AbfIDSCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1256208E4;
-        Wed,  4 Sep 2019 18:02:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3569D208E4;
+        Wed,  4 Sep 2019 18:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620169;
-        bh=VNSR+s2UWdt9kFnFDqoDOJhysEP2JUIFc0/oGR/GDGs=;
+        s=default; t=1567620171;
+        bh=xTGWqD+CPd4N1bD61EJqVR8BBD+YzMgcGg8fM/4Yz9c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A8yKUjdsINk7QK/O27o3tG/1dujSApZlgXYCNsR4GoFHn091vZ5E2B4cg11M0gDox
-         KObBQh/f2EUnqxoRq6QsE476jYo4elLGTAXwSjyyQ0iyoZ11MXr/LcQ/qzqawZ1DxB
-         NrFDMt1dLVaB5JObfFxZujEtFJCgPL5KUJ8U0YSs=
+        b=xyW652LaPfnGaF/blQFZK73zjP5FkcqzIxCGhjFJrpccuEqwk3UqnIGIYVYBOcGrt
+         /nlWf65p1CCThXwJ+/Kd/HUg4P5tO4qBLE9hh3gqu2XdQ2AZp+HKNOAGsBX66AyZhy
+         FVK9AwOjiFK/4NPzJwnNRkfGG9SRdgP40F380ER4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Christoph Paasch <cpaasch@apple.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/57] tcp: fix tcp_rtx_queue_tail in case of empty retransmit queue
-Date:   Wed,  4 Sep 2019 19:53:44 +0200
-Message-Id: <20190904175303.590821624@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 17/57] ALSA: usb-audio: Fix a stack buffer overflow bug in check_input_term
+Date:   Wed,  4 Sep 2019 19:53:45 +0200
+Message-Id: <20190904175303.653360419@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -62,88 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
-triggers following stack trace:
+From: Hui Peng <benquike@gmail.com>
 
-[25244.848046] kernel BUG at ./include/linux/skbuff.h:1406!
-[25244.859335] RIP: 0010:skb_queue_prev+0x9/0xc
-[25244.888167] Call Trace:
-[25244.889182]  <IRQ>
-[25244.890001]  tcp_fragment+0x9c/0x2cf
-[25244.891295]  tcp_write_xmit+0x68f/0x988
-[25244.892732]  __tcp_push_pending_frames+0x3b/0xa0
-[25244.894347]  tcp_data_snd_check+0x2a/0xc8
-[25244.895775]  tcp_rcv_established+0x2a8/0x30d
-[25244.897282]  tcp_v4_do_rcv+0xb2/0x158
-[25244.898666]  tcp_v4_rcv+0x692/0x956
-[25244.899959]  ip_local_deliver_finish+0xeb/0x169
-[25244.901547]  __netif_receive_skb_core+0x51c/0x582
-[25244.903193]  ? inet_gro_receive+0x239/0x247
-[25244.904756]  netif_receive_skb_internal+0xab/0xc6
-[25244.906395]  napi_gro_receive+0x8a/0xc0
-[25244.907760]  receive_buf+0x9a1/0x9cd
-[25244.909160]  ? load_balance+0x17a/0x7b7
-[25244.910536]  ? vring_unmap_one+0x18/0x61
-[25244.911932]  ? detach_buf+0x60/0xfa
-[25244.913234]  virtnet_poll+0x128/0x1e1
-[25244.914607]  net_rx_action+0x12a/0x2b1
-[25244.915953]  __do_softirq+0x11c/0x26b
-[25244.917269]  ? handle_irq_event+0x44/0x56
-[25244.918695]  irq_exit+0x61/0xa0
-[25244.919947]  do_IRQ+0x9d/0xbb
-[25244.921065]  common_interrupt+0x85/0x85
-[25244.922479]  </IRQ>
+commit 19bce474c45be69a284ecee660aa12d8f1e88f18 upstream.
 
-tcp_rtx_queue_tail() (called by tcp_fragment()) can call
-tcp_write_queue_prev() on the first packet in the queue, which will trigger
-the BUG in tcp_write_queue_prev(), because there is no previous packet.
+`check_input_term` recursively calls itself with input from
+device side (e.g., uac_input_terminal_descriptor.bCSourceID)
+as argument (id). In `check_input_term`, if `check_input_term`
+is called with the same `id` argument as the caller, it triggers
+endless recursive call, resulting kernel space stack overflow.
 
-This happens when the retransmit queue is empty, for example in case of a
-zero window.
+This patch fixes the bug by adding a bitmap to `struct mixer_build`
+to keep track of the checked ids and stop the execution if some id
+has been checked (similar to how parse_audio_unit handles unitid
+argument).
 
-Commit 8c3088f895a0 ("tcp: be more careful in tcp_fragment()") was not a
-simple cherry-pick of the original one from master (b617158dc096)
-because there is a specific TCP rtx queue only since v4.15. For more
-details, please see the commit message of b617158dc096 ("tcp: be more
-careful in tcp_fragment()").
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The BUG() is hit due to the specific code added to versions older than
-v4.15. The comment in skb_queue_prev() (include/linux/skbuff.h:1406),
-just before the BUG_ON() somehow suggests to add a check before using
-it, what Tim did.
 
-In master, this code path causing the issue will not be taken because
-the implementation of tcp_rtx_queue_tail() is different:
-
-    tcp_fragment() → tcp_rtx_queue_tail() → tcp_write_queue_prev() →
-skb_queue_prev() → BUG_ON()
-
-Fixes: 8c3088f895a0 ("tcp: be more careful in tcp_fragment()")
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Reviewed-by: Christoph Paasch <cpaasch@apple.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/tcp.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/usb/mixer.c |   29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 7994e569644e0..785c4ef4e1bf8 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -1702,6 +1702,10 @@ static inline struct sk_buff *tcp_rtx_queue_tail(const struct sock *sk)
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -82,6 +82,7 @@ struct mixer_build {
+ 	unsigned char *buffer;
+ 	unsigned int buflen;
+ 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
++	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
+ 	struct usb_audio_term oterm;
+ 	const struct usbmix_name_map *map;
+ 	const struct usbmix_selector_map *selector_map;
+@@ -716,15 +717,24 @@ static int get_term_name(struct mixer_bu
+  * parse the source unit recursively until it reaches to a terminal
+  * or a branched unit.
+  */
+-static int check_input_term(struct mixer_build *state, int id,
++static int __check_input_term(struct mixer_build *state, int id,
+ 			    struct usb_audio_term *term)
  {
- 	struct sk_buff *skb = tcp_send_head(sk);
+ 	int err;
+ 	void *p1;
++	unsigned char *hdr;
  
-+	/* empty retransmit queue, for example due to zero window */
-+	if (skb == tcp_write_queue_head(sk))
-+		return NULL;
+ 	memset(term, 0, sizeof(*term));
+-	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
+-		unsigned char *hdr = p1;
++	for (;;) {
++		/* a loop in the terminal chain? */
++		if (test_and_set_bit(id, state->termbitmap))
++			return -EINVAL;
 +
- 	return skb ? tcp_write_queue_prev(sk, skb) : tcp_write_queue_tail(sk);
++		p1 = find_audio_control_unit(state, id);
++		if (!p1)
++			break;
++
++		hdr = p1;
+ 		term->id = id;
+ 		switch (hdr[2]) {
+ 		case UAC_INPUT_TERMINAL:
+@@ -739,7 +749,7 @@ static int check_input_term(struct mixer
+ 
+ 				/* call recursively to verify that the
+ 				 * referenced clock entity is valid */
+-				err = check_input_term(state, d->bCSourceID, term);
++				err = __check_input_term(state, d->bCSourceID, term);
+ 				if (err < 0)
+ 					return err;
+ 
+@@ -771,7 +781,7 @@ static int check_input_term(struct mixer
+ 		case UAC2_CLOCK_SELECTOR: {
+ 			struct uac_selector_unit_descriptor *d = p1;
+ 			/* call recursively to retrieve the channel info */
+-			err = check_input_term(state, d->baSourceID[0], term);
++			err = __check_input_term(state, d->baSourceID[0], term);
+ 			if (err < 0)
+ 				return err;
+ 			term->type = d->bDescriptorSubtype << 16; /* virtual type */
+@@ -818,6 +828,15 @@ static int check_input_term(struct mixer
+ 	return -ENODEV;
  }
  
--- 
-2.20.1
-
++
++static int check_input_term(struct mixer_build *state, int id,
++			    struct usb_audio_term *term)
++{
++	memset(term, 0, sizeof(*term));
++	memset(state->termbitmap, 0, sizeof(state->termbitmap));
++	return __check_input_term(state, id, term);
++}
++
+ /*
+  * Feature Unit
+  */
 
 
