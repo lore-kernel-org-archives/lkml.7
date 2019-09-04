@@ -2,126 +2,116 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1069C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E7AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8588E20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:37:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567586247;
-	bh=hoAius6REhdbGBpQkFZpk5CeOOmO3Yn/3gIEtQoNWWg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jaoDXT9DQ9/FFDOlzfIbupWnVLVK8LWuKXK52tjOk9xaeO8IoFa1aRg/OO0rp2K0L
-	 fKm4iRaa5y4G1Zixk5M3F6idiVEBHPeqPBvkhGUuw+rGAOPD+pFQdz3dhDWR7daDqs
-	 0ZYTUaiwzUMpZiJB1cttc+nVXvT6VjGfELMOjqAo=
+	by mail.kernel.org (Postfix) with ESMTP id 692222339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:37:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="U9+zEmr/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbfIDIh0 (ORCPT
+        id S1728598AbfIDIhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:37:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfIDIh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:37:26 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9440823400;
-        Wed,  4 Sep 2019 08:37:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567586244;
-        bh=hoAius6REhdbGBpQkFZpk5CeOOmO3Yn/3gIEtQoNWWg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m8/PRsxKuktjjE9T7/5NZ0LBzGps6QBKzHzUtzjZnjv5htkPdHVQh8+sFQbJXM+oV
-         wJ9auiMz/imRsYyTJZzMVOUpYLK52y7ldef2H7SbULXf2DGzZeSjMAiHGgkwtzOxk2
-         m2m2Wt89goHMOd58PZStIh0ngFEFvAtWbIeFgFKk=
-Received: by mail-lf1-f41.google.com with SMTP id j4so15186608lfh.8;
-        Wed, 04 Sep 2019 01:37:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAXK37eov+qy74V/wuO7vUpgxIpcxH/ci7iiVqbfFdkRR4dTilma
-        p1SPmJI10/HsqXYfksUkBNJaHVQr0TsCjMkPKCI=
-X-Google-Smtp-Source: APXvYqynl8t4zpgSOSPhgXGm6urGPD6YD5RT2LviyIZz5LcMF3/ZNtjnIiHi6xBSeCZLQGGW5B0TO2IWt+JPxz/llZY=
-X-Received: by 2002:ac2:4853:: with SMTP id 19mr16484011lfy.69.1567586242704;
- Wed, 04 Sep 2019 01:37:22 -0700 (PDT)
+        Wed, 4 Sep 2019 04:37:52 -0400
+Received: from mail-ed1-f51.google.com ([209.85.208.51]:38254 "EHLO
+        mail-ed1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfIDIhw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:37:52 -0400
+Received: by mail-ed1-f51.google.com with SMTP id r12so21636536edo.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 01:37:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aVdFPGsO99fAHb0fDhq0jDs2yUdP0q6E5B82ILny3Mw=;
+        b=U9+zEmr/e91kEhC0hkj435zZ0gbXQfHEM0gCZI0xxo4dfi1ycr946w8RBp5Vp6dYmo
+         1jYryGWSSRgZGuKaXNbE87tsfEGHFZfP6KOuyMa/Vdl33wxKSdAn9aKG1BA0LvniT9DL
+         gKWayI2hSfYejDicvfILxoqr37c/e1/IqH6js=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=aVdFPGsO99fAHb0fDhq0jDs2yUdP0q6E5B82ILny3Mw=;
+        b=Zu5cKzcdGaJeOk46QL7y9+k1dfvr9yBK2YRKwusac+io1TyiyiKa8knZZ7D/XrHCOT
+         Z2g7cBQcBKRX4wcB5WUliNt4/6ZyeQHsWFnNo6+z69J+2tWVGykGO0P81U7v06gmnWzO
+         tUzrSd7XRmubh6Id6YulHM+KP9VSX4dxv5xCiu5yOCPRmbx+cYFiXn67YNfIOLlVrmn5
+         KWJpc8OTbC3lM07VFzxUsrZ3rrxlcu4UigTzWytVX8uep75jhYU2woNOkAO+6AS4Stqy
+         3JQtTlWQ1Co9+6N5p2U9Hw7z19FVW6IVLeR61vVhlupTXC6quw8nZhX18O0Xn+SSsdnj
+         NO3A==
+X-Gm-Message-State: APjAAAUlFi0Qtm7oVvkw3HK0MXUSCWQfMs+Q2EP9G60wIW13f8d49Hbx
+        4BbaCcEw1w8NiP0WSzjqYKWbvg==
+X-Google-Smtp-Source: APXvYqz0ChI/C22nVFm32NQ+8BGIvxKJ90yP02BZdljqxcx7QVaEp8goV21yUaH/pz+vZNJPQFlB9A==
+X-Received: by 2002:a17:906:7c55:: with SMTP id g21mr1482880ejp.177.1567586270115;
+        Wed, 04 Sep 2019 01:37:50 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id t16sm2638378ejj.48.2019.09.04.01.37.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 01:37:49 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 10:37:47 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux kernel <linux-kernel@vger.kernel.org>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Harry Wentland <hwentlan@amd.com>
+Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
+Message-ID: <20190904083747.GE2112@phenom.ffwll.local>
+Mail-Followup-To: Hillf Danton <hdanton@sina.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Linux kernel <linux-kernel@vger.kernel.org>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        Harry Wentland <hwentlan@amd.com>
+References: <20190830032948.13516-1-hdanton@sina.com>
+ <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
+ <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
+ <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
+ <CAKMK7uH9q09XadTV5Ezm=9aODErD=w_+8feujviVnF5LO_fggA@mail.gmail.com>
+ <5d6f10a6.1c69fb81.6b104.af73SMTPIN_ADDED_MISSING@mx.google.com>
 MIME-Version: 1.0
-References: <20190816163042.6604-1-krzk@kernel.org> <CAJKOXPcgZ2_ofZyAeTSxALkALaP-SFNfvNmNPYSPyLzuhpGZ0w@mail.gmail.com>
- <20190822183519.GA23735@kozik-lap> <CAK8P3a1_Qw=OB31yOCrpPs8Ys+=9tt4Pnyd=3+2JGzRXJV1KAw@mail.gmail.com>
-In-Reply-To: <CAK8P3a1_Qw=OB31yOCrpPs8Ys+=9tt4Pnyd=3+2JGzRXJV1KAw@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 4 Sep 2019 10:37:11 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfRMXkm_pT560Ry5k-zFWpkRDmFHSs2Fb3RL7d4h=ka9g@mail.gmail.com>
-Message-ID: <CAJKOXPfRMXkm_pT560Ry5k-zFWpkRDmFHSs2Fb3RL7d4h=ka9g@mail.gmail.com>
-Subject: Re: [GIT PULL 1/3] soc: samsung: Exynos for v5.4
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>,
-        SoC Team <soc@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d6f10a6.1c69fb81.6b104.af73SMTPIN_ADDED_MISSING@mx.google.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019 at 19:21, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Aug 22, 2019 at 8:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > On Wed, Aug 21, 2019 at 09:51:09AM +0200, Krzysztof Kozlowski wrote:
-> > > On Fri, 16 Aug 2019 at 18:30, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > >
-> > > > The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
-> > > >
-> > > >   Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-> > > >
-> > > > are available in the Git repository at:
-> > > >
-> > > >   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-5.4
-> > > >
-> > > > for you to fetch changes up to 40d8aff614f71ab3cab20785b4f213e3802d4e87:
-> > > >
-> > > >   soc: samsung: chipid: Convert exynos-chipid driver to use the regmap API (2019-08-15 20:25:25 +0200)
-> > > >
-> > > > ----------------------------------------------------------------
-> > > > Samsung soc drivers changes for v5.4
-> > > >
-> > > > Add Exynos Chipid driver for identification of product IDs and SoC
-> > > > revisions.  The driver also exposes chipid regmap, later to be used by
-> > > > Exynos Adaptive Supply Voltage driver (adjusting voltages to different
-> > > > revisions of same SoC).
-> > >
-> > > It turns out that it brings troubles (code is executed on every
-> > > platform polluting logs because it is an initcall, not a driver) so
-> > > Sylwester (submitter) asked to skip the submission.
-> > >
-> > > Please ignore the pull request.
+On Wed, Sep 04, 2019 at 09:17:16AM +0800, Hillf Danton wrote:
+> Daniel Vetter <daniel@ffwll.ch>
+> >>
+> >> Now 11:01pm and "gnome shell stuck warning" not appear since 19:17. So
+> >> looks like issue happens only when computer blocked and monitor in
+> >> power save mode.
 > >
-> > I talked with Sylwester and Bartlomiej who contributed the chipid driver
-> > and they provided small incremental fixes. The driver is still useful
-> > and in the future it will be expanded towards AVS. Therefore please pull
-> > it or optionally wait a week and I will send incremental pull request
-> > with fixes.
->
-> Pulled into arm/drivers for now.
->
-> I have drafted a related patch recently, regarding the related
-> arch/arm/plat-samsung/cpu.c file. This is part of a longer series
-> I'm working on, see https://pastebin.com/ZqeU3Mth for the
-> current version of this patch.
+> > I'd bet on runtime pm or some other power saving feature in amdgpu
+> > shutting the interrupt handling down before we've handled all the
+> > interrupts. That would then result in a stuck fence.
+> >
+> > Do we already know which fence is stuck?
+> 
+> It is welcomed to shed a thread of light on how to collect/print that info.
+> Say line:xxx-yyy in path/to/amdgpu/zzz.c
 
-You can then also adjust the include path in arch/arm/mach-exynos/Makefile.
+Extend your backtrac warning slightly like
 
-> The observation is that mach-exynos
-> is almost completely independent of plat-samsung these days, and my
-> patch removes the last obstacle from separating the two. I have
-> another set of patches to do the same for mach-s5pv210 (which shares
-> half of its pm.c with plat-samsung, but nothing else).
+	WARN(r, "we're stuck on fence %pS\n", fence->ops);
 
-Great!
-
-Best regards,
-Krzysztof
+Also adding Harry and Alex, I'm not really working on amdgpu ...
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
