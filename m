@@ -4,28 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F37C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B1BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FE022DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C78A23400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfIDMek (ORCPT
+        id S1730192AbfIDMem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:34:40 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5761 "EHLO huawei.com"
+        Wed, 4 Sep 2019 08:34:42 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5762 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729950AbfIDMei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:34:38 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9B836140E85BE5326D39;
-        Wed,  4 Sep 2019 20:34:35 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 20:34:27 +0800
+        id S1730156AbfIDMek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:34:40 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0C0D13D58C0B4DDFA8C4;
+        Wed,  4 Sep 2019 20:34:39 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 20:34:30 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <miquel.raynal@bootlin.com>, <rui.zhang@intel.com>,
         <edubezval@gmail.com>, <daniel.lezcano@linaro.org>,
@@ -48,9 +47,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-arm-msm@vger.kernel.org>,
         <linux-rockchip@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH -next 04/15] thermal: hisilicon: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 20:29:28 +0800
-Message-ID: <20190904122939.23780-5-yuehaibing@huawei.com>
+Subject: [PATCH -next 05/15] thermal: dove: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 20:29:29 +0800
+Message-ID: <20190904122939.23780-6-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904122939.23780-1-yuehaibing@huawei.com>
 References: <20190904122939.23780-1-yuehaibing@huawei.com>
@@ -69,31 +68,36 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/thermal/hisi_thermal.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/thermal/dove_thermal.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/thermal/hisi_thermal.c b/drivers/thermal/hisi_thermal.c
-index 2d26ae8..8c0e002 100644
---- a/drivers/thermal/hisi_thermal.c
-+++ b/drivers/thermal/hisi_thermal.c
-@@ -557,7 +557,6 @@ static int hisi_thermal_probe(struct platform_device *pdev)
+diff --git a/drivers/thermal/dove_thermal.c b/drivers/thermal/dove_thermal.c
+index 75901ce..e53ac71 100644
+--- a/drivers/thermal/dove_thermal.c
++++ b/drivers/thermal/dove_thermal.c
+@@ -122,20 +122,17 @@ static int dove_thermal_probe(struct platform_device *pdev)
  {
- 	struct hisi_thermal_data *data;
- 	struct device *dev = &pdev->dev;
+ 	struct thermal_zone_device *thermal = NULL;
+ 	struct dove_thermal_priv *priv;
 -	struct resource *res;
- 	int i, ret;
+ 	int ret;
  
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-@@ -568,8 +567,7 @@ static int hisi_thermal_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, data);
- 	data->ops = of_device_get_match_data(dev);
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	data->regs = devm_ioremap_resource(dev, res);
-+	data->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(data->regs)) {
- 		dev_err(dev, "failed to get io address\n");
- 		return PTR_ERR(data->regs);
+-	priv->sensor = devm_ioremap_resource(&pdev->dev, res);
++	priv->sensor = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->sensor))
+ 		return PTR_ERR(priv->sensor);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	priv->control = devm_ioremap_resource(&pdev->dev, res);
++	priv->control = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(priv->control))
+ 		return PTR_ERR(priv->control);
+ 
 -- 
 2.7.4
 
