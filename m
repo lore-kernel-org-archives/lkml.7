@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28755C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3989DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB96520820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136EC22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613493;
-	bh=g+8gN4To4ZyjBJu5S9PnPsLOBXeOcULykk1z9+yLU+w=;
+	s=default; t=1567613496;
+	bh=nQm9fmpxpPMRbefy42NAkue3FZlAfMV+pg0Kwb0mokM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fkTKRn7Tmo/87fGMPO9tOw1c8GM7Vr6ES3wlPXT7QSwfo6cQ8I0QQZ+JGnFymqTHu
-	 tLnj5eR9kjfIxNjADN9y88wp4GSPweapERxgxP0rPTG0owsvDECBi62jS3pyM4PZKt
-	 G7bzmJiwQDXvPf0qrHrNa9MIYCrCrZxY+1p/L9rE=
+	b=S25CmPV9D6Qn8wM/fh+1qhlueBhEK0c13XfMTc9VyVzKZNQ0twl4VNrGg0lmNEJz/
+	 ITrtlCfXto5XEnEXt25YjA4YxeILXEOro1h71Ec8tQD8k3OTLD2z06gxnepsWtfReT
+	 Z5SLDBBXvTUySP4KBMv7Si0LfOdrRlAJqz5y+Sac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732060AbfIDQAa (ORCPT
+        id S1732709AbfIDQA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732697AbfIDQA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:28 -0400
+        id S1732689AbfIDQA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69F7B2087E;
-        Wed,  4 Sep 2019 16:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F7F22070C;
+        Wed,  4 Sep 2019 16:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612827;
-        bh=g+8gN4To4ZyjBJu5S9PnPsLOBXeOcULykk1z9+yLU+w=;
+        s=default; t=1567612826;
+        bh=nQm9fmpxpPMRbefy42NAkue3FZlAfMV+pg0Kwb0mokM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zsT4LfP+88Ex4RM/k99J3AGpB7sqmYvLX8GiPsZDWDvZupFRZXKt7d0i0sUJPpp7n
-         y6ifqQ84bxzLeIfR7bWJsWeUG61agnZksrK/KXito2BHSFI/MT0LCV51pzw5Vd5AZq
-         4Q3/6FU88yDLoBIkAa1nx3PTz0wEbH6uk24BFosE=
+        b=Wi7iUWNmB83ZERmMX4lIOvYLltyn/wO1zkHV3WR2D0Fg2N/QXtujxBwvLP/StIdhq
+         Tli0hVywS0H2Mgh0nM284VXzClfiz486c3rczH+C9LYuj6fD5tH3YUyj76vU4aN1fW
+         pUn0g4izf5gt6Q4PEANS4BoJNHGcf/Yw9MwkY27g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Phil Reid <preid@electromag.com.au>,
-        Moritz Fischer <mdf@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fpga@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/52] fpga: altera-ps-spi: Fix getting of optional confd gpio
-Date:   Wed,  4 Sep 2019 11:59:27 -0400
-Message-Id: <20190904160004.3671-15-sashal@kernel.org>
+Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/52] tools: bpftool: close prog FD before exit on showing a single program
+Date:   Wed,  4 Sep 2019 11:59:26 -0400
+Message-Id: <20190904160004.3671-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -59,52 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Reid <preid@electromag.com.au>
+From: Quentin Monnet <quentin.monnet@netronome.com>
 
-[ Upstream commit dec43da46f63eb71f519d963ba6832838e4262a3 ]
+[ Upstream commit d34b044038bfb0e19caa8b019910efc465f41d5f ]
 
-Currently the driver does not handle EPROBE_DEFER for the confd gpio.
-Use devm_gpiod_get_optional() instead of devm_gpiod_get() and return
-error codes from altera_ps_probe().
+When showing metadata about a single program by invoking
+"bpftool prog show PROG", the file descriptor referring to the program
+is not closed before returning from the function. Let's close it.
 
-Fixes: 5692fae0742d ("fpga manager: Add altera-ps-spi driver for Altera FPGAs")
-Signed-off-by: Phil Reid <preid@electromag.com.au>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
+Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/altera-ps-spi.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/bpf/bpftool/prog.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/altera-ps-spi.c b/drivers/fpga/altera-ps-spi.c
-index 24b25c6260366..4925cae7dcdde 100644
---- a/drivers/fpga/altera-ps-spi.c
-+++ b/drivers/fpga/altera-ps-spi.c
-@@ -207,7 +207,7 @@ static int altera_ps_write_complete(struct fpga_manager *mgr,
- 		return -EIO;
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index bbba0d61570fe..4f9611af46422 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -381,7 +381,9 @@ static int do_show(int argc, char **argv)
+ 		if (fd < 0)
+ 			return -1;
+ 
+-		return show_prog(fd);
++		err = show_prog(fd);
++		close(fd);
++		return err;
  	}
  
--	if (!IS_ERR(conf->confd)) {
-+	if (conf->confd) {
- 		if (!gpiod_get_raw_value_cansleep(conf->confd)) {
- 			dev_err(&mgr->dev, "CONF_DONE is inactive!\n");
- 			return -EIO;
-@@ -265,10 +265,13 @@ static int altera_ps_probe(struct spi_device *spi)
- 		return PTR_ERR(conf->status);
- 	}
- 
--	conf->confd = devm_gpiod_get(&spi->dev, "confd", GPIOD_IN);
-+	conf->confd = devm_gpiod_get_optional(&spi->dev, "confd", GPIOD_IN);
- 	if (IS_ERR(conf->confd)) {
--		dev_warn(&spi->dev, "Not using confd gpio: %ld\n",
--			 PTR_ERR(conf->confd));
-+		dev_err(&spi->dev, "Failed to get confd gpio: %ld\n",
-+			PTR_ERR(conf->confd));
-+		return PTR_ERR(conf->confd);
-+	} else if (!conf->confd) {
-+		dev_warn(&spi->dev, "Not using confd gpio");
- 	}
- 
- 	/* Register manager with unique name */
+ 	if (argc)
 -- 
 2.20.1
 
