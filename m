@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F14DC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C2DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04A1B2377D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA8322CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612737;
-	bh=CJmj8ChZiWKMSqdu2DgTc6/pCt/Wdcyt/lnwzZtrHgc=;
+	s=default; t=1567612740;
+	bh=hg3v9mNCEl88hPyO4T2hxcD97UjdZDKcsaSktvnl8vA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WSdKEpPz2Q3v+MFx1F/aW52MQ3cDNRCIZx9EXDMWrLsMuX5y+sb9OfM+EzvIKPy1F
-	 YHc2eqY4xGdJtmZM7lvkvMyonZ2Ceyx6Dbwjo2jnN7pVPYkbmX1ARDbAiC8UZvnire
-	 aAGyG9ofH1I7/0pBIlgXjU6fWzETl+P7vQ1TBzBc=
+	b=DPksUympwxVdSk20hgn9OPjrP/SKr/axROVAsdc4osg48gHvvzEhEqRWq2mrb8Gzj
+	 NUTQx4hPmziWYEIsqscm2EZjXmAPlJNVqJ8lYvSmoLnSDHR6Ag0ZEgwaiPHnuSdAXW
+	 yr+d1hk07j8fjAiJ+8oq+OvCbkJqcnJ9y4H/n1lY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732169AbfIDP64 (ORCPT
+        id S1732205AbfIDP67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33080 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732131AbfIDP6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:53 -0400
+        id S1732170AbfIDP66 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6553C23400;
-        Wed,  4 Sep 2019 15:58:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C0A2377B;
+        Wed,  4 Sep 2019 15:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612733;
-        bh=CJmj8ChZiWKMSqdu2DgTc6/pCt/Wdcyt/lnwzZtrHgc=;
+        s=default; t=1567612737;
+        bh=hg3v9mNCEl88hPyO4T2hxcD97UjdZDKcsaSktvnl8vA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y8BXEpq1+krSGI16uOI/R+rGY0vl5ANrjFl7xOj34uPPuP3bTmjj4zVDi5BZ7nIkK
-         x8FYaxfXINmeDLCGdl+yMEymcaWQMhOQz4cytCXKv20aWLMfEhz988JXSG3zRvIDUI
-         RA8GgQmSTzRtLzHBmEZmdGlABtBvU3rL3GgaJDDg=
+        b=NL9qhQ2l9gQj1/YdGGGAswMh9omB5qQlUel54FkUkVirZ957Zqog4aXksHjSy3ool
+         Mj4bND+3k7aiG5mnwh4OQWS7cmnrRnsr47VdQbodc1+6VEwqtSIqmk5aUIvlMU8S0g
+         8cP/xPkO54X87Ii6zLrWh6KQqgHeJfU+0McfPYU0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 48/94] NFS: Fix spurious EIO read errors
-Date:   Wed,  4 Sep 2019 11:56:53 -0400
-Message-Id: <20190904155739.2816-48-sashal@kernel.org>
+Cc:     Todd Seidelmann <tseidelmann@linode.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 51/94] netfilter: xt_physdev: Fix spurious error message in physdev_mt_check
+Date:   Wed,  4 Sep 2019 11:56:56 -0400
+Message-Id: <20190904155739.2816-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -58,170 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Todd Seidelmann <tseidelmann@linode.com>
 
-[ Upstream commit 8f54c7a4babf58bbaf849e126f7ae9664bdc9e04 ]
+[ Upstream commit 3cf2f450fff304be9cf4868bf0df17f253bc5b1c ]
 
-If the client attempts to read a page, but the read fails due to some
-spurious error (e.g. an ACCESS error or a timeout, ...) then we need
-to allow other processes to retry.
-Also try to report errors correctly when doing a synchronous readpage.
+Simplify the check in physdev_mt_check() to emit an error message
+only when passed an invalid chain (ie, NF_INET_LOCAL_OUT).
+This avoids cluttering up the log with errors against valid rules.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+For large/heavily modified rulesets, current behavior can quickly
+overwhelm the ring buffer, because this function gets called on
+every change, regardless of the rule that was changed.
+
+Signed-off-by: Todd Seidelmann <tseidelmann@linode.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/internal.h | 10 ++++++++++
- fs/nfs/read.c     | 35 ++++++++++++++++++++++++++---------
- fs/nfs/write.c    | 12 ------------
- 3 files changed, 36 insertions(+), 21 deletions(-)
+ net/netfilter/xt_physdev.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 81e2fdff227ed..9ab9427405f3f 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -773,3 +773,13 @@ static inline bool nfs_error_is_fatal(int err)
- 	}
- }
- 
-+static inline bool nfs_error_is_fatal_on_server(int err)
-+{
-+	switch (err) {
-+	case 0:
-+	case -ERESTARTSYS:
-+	case -EINTR:
-+		return false;
-+	}
-+	return nfs_error_is_fatal(err);
-+}
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index c19841c82b6a3..cfe0b586eadd4 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -91,19 +91,25 @@ void nfs_pageio_reset_read_mds(struct nfs_pageio_descriptor *pgio)
- }
- EXPORT_SYMBOL_GPL(nfs_pageio_reset_read_mds);
- 
--static void nfs_readpage_release(struct nfs_page *req)
-+static void nfs_readpage_release(struct nfs_page *req, int error)
- {
- 	struct inode *inode = d_inode(nfs_req_openctx(req)->dentry);
-+	struct page *page = req->wb_page;
- 
- 	dprintk("NFS: read done (%s/%llu %d@%lld)\n", inode->i_sb->s_id,
- 		(unsigned long long)NFS_FILEID(inode), req->wb_bytes,
- 		(long long)req_offset(req));
- 
-+	if (nfs_error_is_fatal_on_server(error) && error != -ETIMEDOUT)
-+		SetPageError(page);
- 	if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE)) {
--		if (PageUptodate(req->wb_page))
--			nfs_readpage_to_fscache(inode, req->wb_page, 0);
-+		struct address_space *mapping = page_file_mapping(page);
- 
--		unlock_page(req->wb_page);
-+		if (PageUptodate(page))
-+			nfs_readpage_to_fscache(inode, page, 0);
-+		else if (!PageError(page) && !PagePrivate(page))
-+			generic_error_remove_page(mapping, page);
-+		unlock_page(page);
- 	}
- 	nfs_release_request(req);
- }
-@@ -131,7 +137,7 @@ int nfs_readpage_async(struct nfs_open_context *ctx, struct inode *inode,
- 			     &nfs_async_read_completion_ops);
- 	if (!nfs_pageio_add_request(&pgio, new)) {
- 		nfs_list_remove_request(new);
--		nfs_readpage_release(new);
-+		nfs_readpage_release(new, pgio.pg_error);
- 	}
- 	nfs_pageio_complete(&pgio);
- 
-@@ -153,6 +159,7 @@ static void nfs_page_group_set_uptodate(struct nfs_page *req)
- static void nfs_read_completion(struct nfs_pgio_header *hdr)
- {
- 	unsigned long bytes = 0;
-+	int error;
- 
- 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags))
- 		goto out;
-@@ -179,14 +186,19 @@ static void nfs_read_completion(struct nfs_pgio_header *hdr)
- 				zero_user_segment(page, start, end);
- 			}
- 		}
-+		error = 0;
- 		bytes += req->wb_bytes;
- 		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags)) {
- 			if (bytes <= hdr->good_bytes)
- 				nfs_page_group_set_uptodate(req);
-+			else {
-+				error = hdr->error;
-+				xchg(&nfs_req_openctx(req)->error, error);
-+			}
- 		} else
- 			nfs_page_group_set_uptodate(req);
- 		nfs_list_remove_request(req);
--		nfs_readpage_release(req);
-+		nfs_readpage_release(req, error);
- 	}
- out:
- 	hdr->release(hdr);
-@@ -213,7 +225,7 @@ nfs_async_read_error(struct list_head *head, int error)
- 	while (!list_empty(head)) {
- 		req = nfs_list_entry(head->next);
- 		nfs_list_remove_request(req);
--		nfs_readpage_release(req);
-+		nfs_readpage_release(req, error);
- 	}
- }
- 
-@@ -337,8 +349,13 @@ int nfs_readpage(struct file *file, struct page *page)
- 			goto out;
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index ead7c60222086..b92b22ce8abd3 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -101,11 +101,9 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 	if (info->bitmask & (XT_PHYSDEV_OP_OUT | XT_PHYSDEV_OP_ISOUT) &&
+ 	    (!(info->bitmask & XT_PHYSDEV_OP_BRIDGED) ||
+ 	     info->invert & XT_PHYSDEV_OP_BRIDGED) &&
+-	    par->hook_mask & ((1 << NF_INET_LOCAL_OUT) |
+-	    (1 << NF_INET_FORWARD) | (1 << NF_INET_POST_ROUTING))) {
++	    par->hook_mask & (1 << NF_INET_LOCAL_OUT)) {
+ 		pr_info_ratelimited("--physdev-out and --physdev-is-out only supported in the FORWARD and POSTROUTING chains with bridged traffic\n");
+-		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+-			return -EINVAL;
++		return -EINVAL;
  	}
  
-+	xchg(&ctx->error, 0);
- 	error = nfs_readpage_async(ctx, inode, page);
--
-+	if (!error) {
-+		error = wait_on_page_locked_killable(page);
-+		if (!PageUptodate(page) && !error)
-+			error = xchg(&ctx->error, 0);
-+	}
- out:
- 	put_nfs_open_context(ctx);
- 	return error;
-@@ -372,8 +389,8 @@ readpage_async_filler(void *data, struct page *page)
- 		zero_user_segment(page, len, PAGE_SIZE);
- 	if (!nfs_pageio_add_request(desc->pgio, new)) {
- 		nfs_list_remove_request(new);
--		nfs_readpage_release(new);
- 		error = desc->pgio->pg_error;
-+		nfs_readpage_release(new, error);
- 		goto out;
- 	}
- 	return 0;
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index bf3a3f5e1884e..f15dda5efb741 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -599,18 +599,6 @@ static void nfs_write_error(struct nfs_page *req, int error)
- 	nfs_release_request(req);
- }
- 
--static bool
--nfs_error_is_fatal_on_server(int err)
--{
--	switch (err) {
--	case 0:
--	case -ERESTARTSYS:
--	case -EINTR:
--		return false;
--	}
--	return nfs_error_is_fatal(err);
--}
--
- /*
-  * Find an associated nfs write request, and prepare to flush it out
-  * May return an error if the user signalled nfs_wait_on_request().
+ 	if (!brnf_probed) {
 -- 
 2.20.1
 
