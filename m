@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34010C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F17C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EC62070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF792070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613222;
-	bh=PAUG5iixFXxTPmQ6sxSR0YC0MClEKtce7SpzYuzozrE=;
+	s=default; t=1567613227;
+	bh=ahnRj9CrAKKpZqt1LnrLdaVtCpkOtW2N/SPvWQjSWnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfAwsTUqSxQTR8azPwW5QelQqSK3jiJm/dy+46hF53d8htxfgu6WC0C4OrbuKmqA6
-	 NLjfbEK+a7fkT5XwN3TiWE4UM93Hrk8rvJIQvNB++M8T9zd8qgfS4cGACtnzZxEKm7
-	 a7BBw6+NWVeURhhi8b68GlQhMKOc7dj0wdz3NT4s=
+	b=U8gocIKJW/Yb32vQhJP+7J0hVLXuP6YX5+2mJ/SCVF5QT9PbmjIY+/4a8am68R4hh
+	 dTTe6X93uQjk1la+iiIEQP3/45ULu2tFbCNRYBygkXriepeXcaKtjrrHOTJNZAVjU7
+	 vy8qbwosRYw8w0ZofXGGyWWPlJxf0AkuN3qizCSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732863AbfIDQHA (ORCPT
+        id S1732231AbfIDQCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:07:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38000 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733177AbfIDQCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:11 -0400
+        id S1733153AbfIDQCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1042123711;
-        Wed,  4 Sep 2019 16:02:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D2E82087E;
+        Wed,  4 Sep 2019 16:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612930;
-        bh=PAUG5iixFXxTPmQ6sxSR0YC0MClEKtce7SpzYuzozrE=;
+        s=default; t=1567612923;
+        bh=ahnRj9CrAKKpZqt1LnrLdaVtCpkOtW2N/SPvWQjSWnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qt5YkeD7hRKbDTFY2WGIYjvbK2vBI5PLl/A1Tw0b8esIpO0KIDYE4Whmv6KKMmrnB
-         T9B8HOfWMrwVA22ryRT168kVgTVCM5HXkorG/8M3kprp6F9sKbyMUOn2ZRmAuxfVjX
-         94jII+8+PHsf7NyiqUyuLgRktmvRGW1tanzjmUKY=
+        b=K3QJQwdzXnbt6yLUmtGlcZP/iBQzd4bjKDXGKK4+J1gXi9sZJGkZ4E9Nwc5Q2eBQj
+         oZc7Rz22vlNcSH2R2pg/rAcTEjLbBUf45iE6aCkq1xQCW2KOtDY8Rq7b4xINUSTrt2
+         MKrbaqzR0LlX9wx+te8V0jo1ARW77fUkA1hH0zQo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 31/36] amd-xgbe: Fix error path in xgbe_mod_init()
-Date:   Wed,  4 Sep 2019 12:01:17 -0400
-Message-Id: <20190904160122.4179-31-sashal@kernel.org>
+Cc:     zhaoyang <huangzhaoyang@gmail.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 26/36] ARM: 8901/1: add a criteria for pfn_valid of arm
+Date:   Wed,  4 Sep 2019 12:01:12 -0400
+Message-Id: <20190904160122.4179-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -59,48 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: zhaoyang <huangzhaoyang@gmail.com>
 
-[ Upstream commit b6b4dc4c1fa7f1c99398e7dc85758049645e9588 ]
+[ Upstream commit 5b3efa4f1479c91cb8361acef55f9c6662feba57 ]
 
-In xgbe_mod_init(), we should do cleanup if some error occurs
+pfn_valid can be wrong when parsing a invalid pfn whose phys address
+exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: efbaa828330a ("amd-xgbe: Add support to handle device renaming")
-Fixes: 47f164deab22 ("amd-xgbe: Add PCI device support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The issue originally arise from bellowing call stack, which corresponding to
+an access of the /proc/kpageflags from userspace with a invalid pfn parameter
+and leads to kernel panic.
+
+[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
+[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
+[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
+[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
+[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
+[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
+(ret_fast_syscall+0x0/0x28)
+
+Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/mm/init.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-main.c b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-index e31d9d1fb6a66..e4e632e025d31 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-@@ -487,13 +487,19 @@ static int __init xgbe_mod_init(void)
- 
- 	ret = xgbe_platform_init();
- 	if (ret)
--		return ret;
-+		goto err_platform_init;
- 
- 	ret = xgbe_pci_init();
- 	if (ret)
--		return ret;
-+		goto err_pci_init;
- 
- 	return 0;
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 4fa12fcf1f5d8..27a40101dd3a7 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -195,6 +195,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
+ #ifdef CONFIG_HAVE_ARCH_PFN_VALID
+ int pfn_valid(unsigned long pfn)
+ {
++	phys_addr_t addr = __pfn_to_phys(pfn);
 +
-+err_pci_init:
-+	xgbe_platform_exit();
-+err_platform_init:
-+	unregister_netdevice_notifier(&xgbe_netdev_notifier);
-+	return ret;
++	if (__phys_to_pfn(addr) != pfn)
++		return 0;
++
+ 	return memblock_is_map_memory(__pfn_to_phys(pfn));
  }
- 
- static void __exit xgbe_mod_exit(void)
+ EXPORT_SYMBOL(pfn_valid);
 -- 
 2.20.1
 
