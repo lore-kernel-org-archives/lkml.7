@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD99C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E46EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC8623400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D42223404
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbfIDMet (ORCPT
+        id S1730269AbfIDMev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:34:49 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60384 "EHLO huawei.com"
+        Wed, 4 Sep 2019 08:34:51 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60544 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730212AbfIDMes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:34:48 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 33425D06DACD2BBE5109;
-        Wed,  4 Sep 2019 20:34:46 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 20:34:35 +0800
+        id S1730197AbfIDMet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:34:49 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 80A6C828F4A9CBFC9278;
+        Wed,  4 Sep 2019 20:34:47 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 20:34:40 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <miquel.raynal@bootlin.com>, <rui.zhang@intel.com>,
         <edubezval@gmail.com>, <daniel.lezcano@linaro.org>,
@@ -47,9 +47,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-arm-msm@vger.kernel.org>,
         <linux-rockchip@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH -next 07/15] thermal: kirkwood: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 20:29:31 +0800
-Message-ID: <20190904122939.23780-8-yuehaibing@huawei.com>
+Subject: [PATCH -next 09/15] thermal: rockchip: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 20:29:33 +0800
+Message-ID: <20190904122939.23780-10-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904122939.23780-1-yuehaibing@huawei.com>
 References: <20190904122939.23780-1-yuehaibing@huawei.com>
@@ -68,28 +68,30 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/thermal/kirkwood_thermal.c | 4 +---
+ drivers/thermal/rockchip_thermal.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/thermal/kirkwood_thermal.c b/drivers/thermal/kirkwood_thermal.c
-index 189b675..762ef12 100644
---- a/drivers/thermal/kirkwood_thermal.c
-+++ b/drivers/thermal/kirkwood_thermal.c
-@@ -64,14 +64,12 @@ static int kirkwood_thermal_probe(struct platform_device *pdev)
- {
- 	struct thermal_zone_device *thermal = NULL;
- 	struct kirkwood_thermal_priv *priv;
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index 343c2f5..044e6eb 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -1219,7 +1219,6 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct rockchip_thermal_data *thermal;
+ 	const struct of_device_id *match;
 -	struct resource *res;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
+ 	int irq;
+ 	int i;
+ 	int error;
+@@ -1245,8 +1244,7 @@ static int rockchip_thermal_probe(struct platform_device *pdev)
+ 	if (!thermal->chip)
+ 		return -EINVAL;
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->sensor = devm_ioremap_resource(&pdev->dev, res);
-+	priv->sensor = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->sensor))
- 		return PTR_ERR(priv->sensor);
+-	thermal->regs = devm_ioremap_resource(&pdev->dev, res);
++	thermal->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(thermal->regs))
+ 		return PTR_ERR(thermal->regs);
  
 -- 
 2.7.4
