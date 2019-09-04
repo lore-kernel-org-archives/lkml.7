@@ -2,154 +2,108 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7003C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60691C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C146C2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:50:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oHsjX8yG"
+	by mail.kernel.org (Postfix) with ESMTP id 3A2912077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387863AbfIDSt7 (ORCPT
+        id S2387868AbfIDSvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:49:59 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:32820 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732885AbfIDSt7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:49:59 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so8752259pfl.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=dv4kjZQzOKcDKJtMMXuFfodnvyC/6cLAtve2XJNA6UA=;
-        b=oHsjX8yG3QpiipJ1imp1jZOpm0dc5Rw0OZi6IKwTFOnlCQY/tLXcgMsossXG4uDoxL
-         +McyzLHzQd1BMGZyx300rZbmFjBvNZbQoqXlZvCzTlvtHk4OCEjSA1LQOACarIoJFEcg
-         YK93AyGlgI/agaOocse1OJ6qSFkSHNbuyrqNQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=dv4kjZQzOKcDKJtMMXuFfodnvyC/6cLAtve2XJNA6UA=;
-        b=GUedMwhHizaLvvYShQXaXmfZgnmwxTKDy56lvK8fVYgdPt2MEuyQoh1SxhoDo9Hw1j
-         R2wUMXIZAQrWGpLzsl75MICuHoxva15t+YhEWkQ6gOoGgT5qdyehJ7fKcHk6QlRyFsKS
-         XhBuR7waKam9doqdOQeipxdVKbqexo3AosXq+OR95lmefne0wpW9G1HTloQZvu9weZ+y
-         XENxTwonx72lh6BxHnpA2cBATRxbpQ9Lj1qwrg6cEt7gzX7dDpaHP/fV5cnvAJjt1PWr
-         MOc41M/pJm1MNKxmu+CR9S5nkAHosEhaSx1/YefrQQYBK+TuGseZ50si4N9JDxdcQK8V
-         9V3Q==
-X-Gm-Message-State: APjAAAUqYRvFIjbyAM3XgqiL2PbAfODkSd1ZdsRpukhBPSCqmzCEjFI1
-        AYndXp5TOdRxS7AGjdxydyFSXRbGFN51ow==
-X-Google-Smtp-Source: APXvYqzwu62145L8GhAJeLFjGa8/7BYyg5VJS2UxCCGWWQXy7m7M+nVBfxxus3kX/ZIdiEKHERwdkA==
-X-Received: by 2002:a62:4e09:: with SMTP id c9mr21882592pfb.152.1567622998642;
-        Wed, 04 Sep 2019 11:49:58 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id y10sm3500713pjp.27.2019.09.04.11.49.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 11:49:58 -0700 (PDT)
-Message-ID: <5d700756.1c69fb81.77c08.9c82@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 4 Sep 2019 14:51:36 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33257 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732885AbfIDSvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:51:35 -0400
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 9F9DBE5733C3FE62F076;
+        Wed,  4 Sep 2019 19:51:33 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.37) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 4 Sep 2019 19:51:23 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <jarkko.sakkinen@linux.intel.com>, <zohar@linux.ibm.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v2] KEYS: trusted: correctly initialize digests and fix locking issue
+Date:   Wed, 4 Sep 2019 20:50:57 +0200
+Message-ID: <20190904185057.8400-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190904110038.2bx25byitrejlteu@flow>
-References: <20190904110038.2bx25byitrejlteu@flow>
-Cc:     linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
-        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
-        Keerthy <j-keerthy@ti.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] random: Support freezable kthreads in add_hwgenerator_randomness()
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 04 Sep 2019 11:49:57 -0700
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sebastian Andrzej Siewior (2019-09-04 04:00:38)
-> On 2019-08-22 15:55:19 [+1000], Herbert Xu wrote:
-> > Patch applied.  Thanks.
-> [ ff296293b3538 ("random: Support freezable kthreads in add_hwgenerator_r=
-andomness()") ]
->=20
-> and since kthread_freezable_should_stop() has might_sleep() in it, I get
-> this:
->=20
-> |: do not call blocking ops when !TASK_RUNNING; state=3D1 set at [<000000=
-00349d1489>] prepare_to_wait_event+0x5a/0x180
-> |: WARNING: CPU: 0 PID: 828 at kernel/sched/core.c:6741 __might_sleep+0x6=
-f/0x80
-> |: Modules linked in:
-> |:
-> |: CPU: 0 PID: 828 Comm: hwrng Not tainted 5.3.0-rc7-next-20190903+ #46
-> |: RIP: 0010:__might_sleep+0x6f/0x80
-> =E2=80=A6
-> |: Call Trace:
-> |:  kthread_freezable_should_stop+0x1b/0x60
-> |:  add_hwgenerator_randomness+0xdd/0x130
-> |:  hwrng_fillfn+0xbf/0x120
-> |:  kthread+0x10c/0x140
-> |:  ret_from_fork+0x27/0x50
->=20
+This patch fixes two issues introduced with commit 0b6cf6b97b7e ("tpm: pass
+an array of tpm_extend_digest structures to tpm_pcr_extend()").
 
-Ugh ok. Thanks for the report.
+It initializes the algorithm in init_digests() for trusted keys, and moves
+the algorithm check in tpm_pcr_extend() before locks are taken in
+tpm_find_get_ops().
 
-We're getting warnings because the task is in TASK_INTERRUPTIBLE state
-when we call kthread_freezable_should_stop() from deep within the wait
-event code. We shouldn't do that, and instead we should call
-wait_event_freezable() and kthread_should_stop() in the condition. This
-way we'll call into the freezer when the task is woken up by the suspend
-path.
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Fixes: 0b6cf6b97b7e ("tpm: pass an array of tpm_extend_digest structures to tpm_pcr_extend()")
+---
+ drivers/char/tpm/tpm-interface.c | 8 ++++----
+ security/keys/trusted.c          | 5 +++++
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-Can you try this?
-
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 9b54cdb301d3..d3beed084c0a 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -327,6 +327,7 @@
- #include <linux/percpu.h>
- #include <linux/cryptohash.h>
- #include <linux/fips.h>
-+#include <linux/freezer.h>
- #include <linux/ptrace.h>
- #include <linux/workqueue.h>
- #include <linux/irq.h>
-@@ -2429,7 +2430,6 @@ void add_hwgenerator_randomness(const char *buffer, s=
-ize_t count,
- 				size_t entropy)
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index 1b4f95c13e00..1fffa91fc148 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -316,14 +316,14 @@ int tpm_pcr_extend(struct tpm_chip *chip, u32 pcr_idx,
+ 	int rc;
+ 	int i;
+ 
+-	chip = tpm_find_get_ops(chip);
+-	if (!chip)
+-		return -ENODEV;
+-
+ 	for (i = 0; i < chip->nr_allocated_banks; i++)
+ 		if (digests[i].alg_id != chip->allocated_banks[i].alg_id)
+ 			return -EINVAL;
+ 
++	chip = tpm_find_get_ops(chip);
++	if (!chip)
++		return -ENODEV;
++
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+ 		rc = tpm2_pcr_extend(chip, pcr_idx, digests);
+ 		tpm_put_ops(chip);
+diff --git a/security/keys/trusted.c b/security/keys/trusted.c
+index ade699131065..1fbd77816610 100644
+--- a/security/keys/trusted.c
++++ b/security/keys/trusted.c
+@@ -1228,11 +1228,16 @@ static int __init trusted_shash_alloc(void)
+ 
+ static int __init init_digests(void)
  {
- 	struct entropy_store *poolp =3D &input_pool;
--	bool frozen =3D false;
-=20
- 	if (unlikely(crng_init =3D=3D 0)) {
- 		crng_fast_load(buffer, count);
-@@ -2440,13 +2440,11 @@ void add_hwgenerator_randomness(const char *buffer,=
- size_t count,
- 	 * We'll be woken up again once below random_write_wakeup_thresh,
- 	 * or when the calling thread is about to terminate.
- 	 */
--	wait_event_interruptible(random_write_wait,
--			kthread_freezable_should_stop(&frozen) ||
-+	wait_event_freezable(random_write_wait,
-+			kthread_should_stop() ||
- 			ENTROPY_BITS(&input_pool) <=3D random_write_wakeup_bits);
--	if (!frozen) {
--		mix_pool_bytes(poolp, buffer, count);
--		credit_entropy_bits(poolp, entropy);
--	}
-+	mix_pool_bytes(poolp, buffer, count);
-+	credit_entropy_bits(poolp, entropy);
++	int i;
++
+ 	digests = kcalloc(chip->nr_allocated_banks, sizeof(*digests),
+ 			  GFP_KERNEL);
+ 	if (!digests)
+ 		return -ENOMEM;
+ 
++	for (i = 0; i < chip->nr_allocated_banks; i++)
++		digests[i].alg_id = chip->allocated_banks[i].alg_id;
++
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
-=20
+ 
+-- 
+2.17.1
 
