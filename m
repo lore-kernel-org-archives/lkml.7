@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789A6C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E901C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E8C20820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25FFC2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613323;
-	bh=9msoC85KjAkTZ+3NyTfzwtqHQ+ihqnOm2jDZUcXZ8B4=;
+	s=default; t=1567613316;
+	bh=MDQ7rLMjvv0P66wPoli3ZPds3gzwj7sGjeX3LmqqTIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n6SAHVuOsWMhtmr5Asdsm+qCQUeL+PbEvZJl1yOl7U5CPjWmKyZxkDAUjmITk5fGD
-	 sniGKgvoSellM8X8fR5aiFnYiuFh3USdR6LwumJaN8MaB3e3QQJC6+H+Dv2kTu334k
-	 wyvefGlyuXh/1I5J9/qRYIkgEl33jCM01Mt1Jeys=
+	b=S6HMLnJ90NECEz3uFkV5WSQr3ojNdMPcXLJa3o9tWxr+1t7HhOdE446cy8Ll3dcOF
+	 6xME9bR4uOTrn3lucX14428sjb2Jco9VyPV8HZTVp3XLNhfSqR7RGNx7c73tGbqDRj
+	 QzJliQ4TCKaf3smdZ9JoH1QzjMIXSeOLJrtD7qNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733280AbfIDQIm (ORCPT
+        id S1732343AbfIDQIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:08:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36804 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:08:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732997AbfIDQB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:01:27 -0400
+        id S1731686AbfIDQB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964022339D;
-        Wed,  4 Sep 2019 16:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A937723400;
+        Wed,  4 Sep 2019 16:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612886;
-        bh=9msoC85KjAkTZ+3NyTfzwtqHQ+ihqnOm2jDZUcXZ8B4=;
+        s=default; t=1567612888;
+        bh=MDQ7rLMjvv0P66wPoli3ZPds3gzwj7sGjeX3LmqqTIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2bZZliP3fE9m9JvoCVD3qISjBMHpXGoYALxN6ltrKv4+3EYocxEi5fUrQm7plzUAE
-         Gu7iF4cJO1XEOiZJU6BKgJkn0VLGkF8+Sol3aBnM5DxGASkyiz7/2VahWNPwde/APV
-         8f5WFz8SJa2oIu5q7OMleOIZQhIAIsDxX3YDnQjY=
+        b=z9LhUln1QzFL0r3MwyLiJ7jjnDppFTmC7Ta+Ur52f+Eg0najaUMQukL/jDSCpJ+XB
+         AI5TI2e0sdAOGrCJseOw24m2g188hgVYzEf36pcGdnlzswROXKtyLTPIK8uKJ2qm2O
+         ZnF2z4uzAeRnYGY/4i5/qXJCZl1H+YpGjQ6lTHjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/36] ARM: OMAP2+: Fix omap4 errata warning on other SoCs
-Date:   Wed,  4 Sep 2019 12:00:49 -0400
-Message-Id: <20190904160122.4179-3-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/36] s390/bpf: use 32-bit index for tail calls
+Date:   Wed,  4 Sep 2019 12:00:51 -0400
+Message-Id: <20190904160122.4179-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -58,43 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 45da5e09dd32fa98c32eaafe2513db6bd75e2f4f ]
+[ Upstream commit 91b4db5313a2c793aabc2143efb8ed0cf0fdd097 ]
 
-We have errata i688 workaround produce warnings on SoCs other than
-omap4 and omap5:
+"p runtime/jit: pass > 32bit index to tail_call" fails when
+bpf_jit_enable=1, because the tail call is not executed.
 
-omap4_sram_init:Unable to allocate sram needed to handle errata I688
-omap4_sram_init:Unable to get sram pool needed to handle errata I688
+This in turn is because the generated code assumes index is 64-bit,
+while it must be 32-bit, and as a result prog array bounds check fails,
+while it should pass. Even if bounds check would have passed, the code
+that follows uses 64-bit index to compute prog array offset.
 
-This is happening because there is no ti,omap4-mpu node, or no SRAM
-to configure for the other SoCs, so let's remove the warning based
-on the SoC revision checks.
+Fix by using clrj instead of clgrj for comparing index with array size,
+and also by using llgfr for truncating index to 32 bits before using it
+to compute prog array offset.
 
-As nobody has complained it seems that the other SoC variants do not
-need this workaround.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 6651ee070b31 ("s390/bpf: implement bpf_tail_call() helper")
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap4-common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/s390/net/bpf_jit_comp.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
-index cf65ab8bb0046..e5dcbda20129d 100644
---- a/arch/arm/mach-omap2/omap4-common.c
-+++ b/arch/arm/mach-omap2/omap4-common.c
-@@ -131,6 +131,9 @@ static int __init omap4_sram_init(void)
- 	struct device_node *np;
- 	struct gen_pool *sram_pool;
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index fcb9e840727cd..b8bd841048434 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -1063,8 +1063,8 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		/* llgf %w1,map.max_entries(%b2) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0016, REG_W1, REG_0, BPF_REG_2,
+ 			      offsetof(struct bpf_array, map.max_entries));
+-		/* clgrj %b3,%w1,0xa,label0: if %b3 >= %w1 goto out */
+-		EMIT6_PCREL_LABEL(0xec000000, 0x0065, BPF_REG_3,
++		/* clrj %b3,%w1,0xa,label0: if (u32)%b3 >= (u32)%w1 goto out */
++		EMIT6_PCREL_LABEL(0xec000000, 0x0077, BPF_REG_3,
+ 				  REG_W1, 0, 0xa);
  
-+	if (!soc_is_omap44xx() && !soc_is_omap54xx())
-+		return 0;
-+
- 	np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
- 	if (!np)
- 		pr_warn("%s:Unable to allocate sram needed to handle errata I688\n",
+ 		/*
+@@ -1090,8 +1090,10 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		 *         goto out;
+ 		 */
+ 
+-		/* sllg %r1,%b3,3: %r1 = index * 8 */
+-		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, BPF_REG_3, REG_0, 3);
++		/* llgfr %r1,%b3: %r1 = (u32) index */
++		EMIT4(0xb9160000, REG_1, BPF_REG_3);
++		/* sllg %r1,%r1,3: %r1 *= 8 */
++		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, REG_1, REG_0, 3);
+ 		/* lg %r1,prog(%b2,%r1) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0004, REG_1, BPF_REG_2,
+ 			      REG_1, offsetof(struct bpf_array, ptrs));
 -- 
 2.20.1
 
