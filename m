@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490EBC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187A2C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214CE22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D851622CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620891;
-	bh=BVH+rLpmZ6neUJNJuRdO+TPWnwygrLavAPvcbkHC5iQ=;
+	s=default; t=1567620894;
+	bh=EoRj7FgkCiBnrJUTicKp82ERBoh1J142yQx1ayeVtRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ae/I6KGjuZOHYH/fOInpQ4pzVD3O4wqnLM1++ZWfgvLon8/SDT291BbOS6xGkcDAj
-	 2fqnwASu3XsTwe37PiTmEH+o5uBRsOxB6s1Q13urrgjEXV0MKOgLVE/MGCdNRMrEQo
-	 WvCxyo4PRIe1mzAUl5jnJE9ITAr/7Hsd1xnBi3Lg=
+	b=Kd2e66hgYs0z0M7FEYVwuL720dQTFhugSMvmUNkbZy8oDhVkbCJ0Nkjggzf7AK0nl
+	 2YuXJsJrMqa8gKzrT9kuepvz1Njn+IrnvInyrM1J5WwnYhh9vbCALbE/jN8O7h4IoO
+	 8d33HCVGldkfortLrW9bYw3ga442vDGXqTW+fTWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390873AbfIDSOt (ORCPT
+        id S2390881AbfIDSOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60126 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390861AbfIDSOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:47 -0400
+        id S2390871AbfIDSOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8FDF2087E;
-        Wed,  4 Sep 2019 18:14:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A71022CF7;
+        Wed,  4 Sep 2019 18:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620886;
-        bh=BVH+rLpmZ6neUJNJuRdO+TPWnwygrLavAPvcbkHC5iQ=;
+        s=default; t=1567620889;
+        bh=EoRj7FgkCiBnrJUTicKp82ERBoh1J142yQx1ayeVtRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mb6+fTKYUdxr7H88ZKVVOrM6/6Kf7KlCvvDFJqCfUlTPZ7HEspX7m03taCkA6/aXB
-         gyoDPaiGY4D8wj/ug5mKjMMRLMtgnkGD4KhYmwYmoePU8yM/Mug9+Dk3BiARbHmIdI
-         qnGZ7yngyNl4uWKkUOy7sStHhQOzOVTnwSlTKtPA=
+        b=k43o+pM7Js2yGfKhMiCN3copa7sSnrv9Bl4k4b/zz/FT/hb1EQms1/ONw4V44R/aL
+         6bjw8gCVmCePC7jFcwpAxBKjAVrp8K9/WbKCXz2REEVtsypNscvX9dF3sBF5jxU0Oo
+         vtY4QOiOFvWhKTTvyM9zMj1goKTOXH9Fpie+52z4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Ihab Zhaika <ihab.zhaika@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 131/143] mmc: sdhci-sprd: add get_ro hook function
-Date:   Wed,  4 Sep 2019 19:54:34 +0200
-Message-Id: <20190904175319.529783933@linuxfoundation.org>
+Subject: [PATCH 5.2 132/143] iwlwifi: add new cards for 22000 and fix struct name
+Date:   Wed,  4 Sep 2019 19:54:35 +0200
+Message-Id: <20190904175319.569202834@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -62,46 +61,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4eae8cbdff942a423926486be4e781a77d619966 ]
+[ Upstream commit d151b0a2efa128cb4f643b11baf54b1e4de2c528 ]
 
-sprd's sd host controller doesn't support write protect to sd card.
+add few PCI ID'S for 22000 and fix the wrong name for one
+of the structs
 
-Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-Tested-by: Baolin Wang <baolin.wang@linaro.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Ihab Zhaika <ihab.zhaika@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-sprd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../net/wireless/intel/iwlwifi/cfg/22000.c    | 20 ++++++++++++----
+ .../net/wireless/intel/iwlwifi/iwl-config.h   |  5 ++--
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 23 +++++++++++++------
+ .../net/wireless/intel/iwlwifi/pcie/trans.c   |  4 ++--
+ 4 files changed, 37 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index 1c5e6b77ca641..fc892a8d882fd 100644
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -291,6 +291,11 @@ static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
- 	return 1 << 31;
- }
- 
-+static unsigned int sdhci_sprd_get_ro(struct sdhci_host *host)
-+{
-+	return 0;
-+}
-+
- static struct sdhci_ops sdhci_sprd_ops = {
- 	.read_l = sdhci_sprd_readl,
- 	.write_l = sdhci_sprd_writel,
-@@ -303,6 +308,7 @@ static struct sdhci_ops sdhci_sprd_ops = {
- 	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
- 	.hw_reset = sdhci_sprd_hw_reset,
- 	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
-+	.get_ro = sdhci_sprd_get_ro,
+diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+index a9c846c59289e..650ca46efc48f 100644
+--- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
++++ b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+@@ -241,6 +241,18 @@ const struct iwl_cfg iwl_ax101_cfg_qu_hr = {
+ 	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
  };
  
- static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
++const struct iwl_cfg iwl_ax201_cfg_qu_hr = {
++	.name = "Intel(R) Wi-Fi 6 AX201 160MHz",
++	.fw_name_pre = IWL_22000_QU_B_HR_B_FW_PRE,
++	IWL_DEVICE_22500,
++	/*
++	 * This device doesn't support receiving BlockAck with a large bitmap
++	 * so we need to restrict the size of transmitted aggregation to the
++	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
++	 */
++	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
++};
++
+ const struct iwl_cfg iwl_ax101_cfg_quz_hr = {
+ 	.name = "Intel(R) Wi-Fi 6 AX101",
+ 	.fw_name_pre = IWL_QUZ_A_HR_B_FW_PRE,
+@@ -424,12 +436,12 @@ const struct iwl_cfg iwlax210_2ax_cfg_so_jf_a0 = {
+ };
+ 
+ const struct iwl_cfg iwlax210_2ax_cfg_so_hr_a0 = {
+-	.name = "Intel(R) Wi-Fi 6 AX201 160MHz",
++	.name = "Intel(R) Wi-Fi 7 AX210 160MHz",
+ 	.fw_name_pre = IWL_22000_SO_A_HR_B_FW_PRE,
+ 	IWL_DEVICE_AX210,
+ };
+ 
+-const struct iwl_cfg iwlax210_2ax_cfg_so_gf_a0 = {
++const struct iwl_cfg iwlax211_2ax_cfg_so_gf_a0 = {
+ 	.name = "Intel(R) Wi-Fi 7 AX211 160MHz",
+ 	.fw_name_pre = IWL_22000_SO_A_GF_A_FW_PRE,
+ 	.uhb_supported = true,
+@@ -443,8 +455,8 @@ const struct iwl_cfg iwlax210_2ax_cfg_ty_gf_a0 = {
+ 	IWL_DEVICE_AX210,
+ };
+ 
+-const struct iwl_cfg iwlax210_2ax_cfg_so_gf4_a0 = {
+-	.name = "Intel(R) Wi-Fi 7 AX210 160MHz",
++const struct iwl_cfg iwlax411_2ax_cfg_so_gf4_a0 = {
++	.name = "Intel(R) Wi-Fi 7 AX411 160MHz",
+ 	.fw_name_pre = IWL_22000_SO_A_GF4_A_FW_PRE,
+ 	IWL_DEVICE_AX210,
+ };
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-config.h b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+index f3e69edf89071..29aaf649c13c3 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-config.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+@@ -562,6 +562,7 @@ extern const struct iwl_cfg iwl_ax101_cfg_qu_hr;
+ extern const struct iwl_cfg iwl_ax101_cfg_quz_hr;
+ extern const struct iwl_cfg iwl22000_2ax_cfg_hr;
+ extern const struct iwl_cfg iwl_ax200_cfg_cc;
++extern const struct iwl_cfg iwl_ax201_cfg_qu_hr;
+ extern const struct iwl_cfg killer1650s_2ax_cfg_qu_b0_hr_b0;
+ extern const struct iwl_cfg killer1650i_2ax_cfg_qu_b0_hr_b0;
+ extern const struct iwl_cfg killer1650x_2ax_cfg;
+@@ -580,9 +581,9 @@ extern const struct iwl_cfg iwl9560_2ac_cfg_qnj_jf_b0;
+ extern const struct iwl_cfg iwl22000_2ax_cfg_qnj_hr_a0;
+ extern const struct iwl_cfg iwlax210_2ax_cfg_so_jf_a0;
+ extern const struct iwl_cfg iwlax210_2ax_cfg_so_hr_a0;
+-extern const struct iwl_cfg iwlax210_2ax_cfg_so_gf_a0;
++extern const struct iwl_cfg iwlax211_2ax_cfg_so_gf_a0;
+ extern const struct iwl_cfg iwlax210_2ax_cfg_ty_gf_a0;
+-extern const struct iwl_cfg iwlax210_2ax_cfg_so_gf4_a0;
++extern const struct iwl_cfg iwlax411_2ax_cfg_so_gf4_a0;
+ #endif /* CPTCFG_IWLMVM || CPTCFG_IWLFMAC */
+ 
+ #endif /* __IWL_CONFIG_H__ */
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index cd035061cdd55..2f3ee5769fdd3 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -897,6 +897,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
+ 	{IWL_PCI_DEVICE(0x02F0, 0x0310, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x02F0, 0x1651, killer1650s_2ax_cfg_qu_b0_hr_b0)},
+ 	{IWL_PCI_DEVICE(0x02F0, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
++	{IWL_PCI_DEVICE(0x02F0, 0x2074, iwl_ax201_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x02F0, 0x4070, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x06F0, 0x0070, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x06F0, 0x0074, iwl_ax101_cfg_qu_hr)},
+@@ -905,6 +906,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
+ 	{IWL_PCI_DEVICE(0x06F0, 0x0310, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x06F0, 0x1651, killer1650s_2ax_cfg_qu_b0_hr_b0)},
+ 	{IWL_PCI_DEVICE(0x06F0, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
++	{IWL_PCI_DEVICE(0x06F0, 0x2074, iwl_ax201_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x06F0, 0x4070, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x2720, 0x0000, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x2720, 0x0040, iwl_ax101_cfg_qu_hr)},
+@@ -918,6 +920,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
+ 	{IWL_PCI_DEVICE(0x2720, 0x1080, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x2720, 0x1651, killer1650s_2ax_cfg_qu_b0_hr_b0)},
+ 	{IWL_PCI_DEVICE(0x2720, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
++	{IWL_PCI_DEVICE(0x2720, 0x2074, iwl_ax201_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x2720, 0x4070, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x34F0, 0x0040, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x34F0, 0x0070, iwl_ax101_cfg_qu_hr)},
+@@ -927,6 +930,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
+ 	{IWL_PCI_DEVICE(0x34F0, 0x0310, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x34F0, 0x1651, killer1650s_2ax_cfg_qu_b0_hr_b0)},
+ 	{IWL_PCI_DEVICE(0x34F0, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
++	{IWL_PCI_DEVICE(0x34F0, 0x2074, iwl_ax201_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x34F0, 0x4070, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x43F0, 0x0040, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x43F0, 0x0070, iwl_ax101_cfg_qu_hr)},
+@@ -935,6 +939,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
+ 	{IWL_PCI_DEVICE(0x43F0, 0x007C, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x43F0, 0x1651, killer1650s_2ax_cfg_qu_b0_hr_b0)},
+ 	{IWL_PCI_DEVICE(0x43F0, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
++	{IWL_PCI_DEVICE(0x43F0, 0x2074, iwl_ax201_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0x43F0, 0x4070, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0xA0F0, 0x0000, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0xA0F0, 0x0040, iwl_ax101_cfg_qu_hr)},
+@@ -946,6 +951,7 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
+ 	{IWL_PCI_DEVICE(0xA0F0, 0x0A10, iwl_ax101_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0xA0F0, 0x1651, killer1650s_2ax_cfg_qu_b0_hr_b0)},
+ 	{IWL_PCI_DEVICE(0xA0F0, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
++	{IWL_PCI_DEVICE(0xA0F0, 0x2074, iwl_ax201_cfg_qu_hr)},
+ 	{IWL_PCI_DEVICE(0xA0F0, 0x4070, iwl_ax101_cfg_qu_hr)},
+ 
+ 	{IWL_PCI_DEVICE(0x2723, 0x0080, iwl_ax200_cfg_cc)},
+@@ -958,13 +964,16 @@ static const struct pci_device_id iwl_hw_card_ids[] = {
+ 	{IWL_PCI_DEVICE(0x2723, 0x4080, iwl_ax200_cfg_cc)},
+ 	{IWL_PCI_DEVICE(0x2723, 0x4088, iwl_ax200_cfg_cc)},
+ 
+-	{IWL_PCI_DEVICE(0x2725, 0x0090, iwlax210_2ax_cfg_so_hr_a0)},
+-	{IWL_PCI_DEVICE(0x7A70, 0x0090, iwlax210_2ax_cfg_so_hr_a0)},
+-	{IWL_PCI_DEVICE(0x7A70, 0x0310, iwlax210_2ax_cfg_so_hr_a0)},
+-	{IWL_PCI_DEVICE(0x2725, 0x0020, iwlax210_2ax_cfg_so_hr_a0)},
+-	{IWL_PCI_DEVICE(0x2725, 0x0310, iwlax210_2ax_cfg_so_hr_a0)},
+-	{IWL_PCI_DEVICE(0x2725, 0x0A10, iwlax210_2ax_cfg_so_hr_a0)},
+-	{IWL_PCI_DEVICE(0x2725, 0x00B0, iwlax210_2ax_cfg_so_hr_a0)},
++	{IWL_PCI_DEVICE(0x2725, 0x0090, iwlax211_2ax_cfg_so_gf_a0)},
++	{IWL_PCI_DEVICE(0x2725, 0x0020, iwlax210_2ax_cfg_ty_gf_a0)},
++	{IWL_PCI_DEVICE(0x2725, 0x0310, iwlax210_2ax_cfg_ty_gf_a0)},
++	{IWL_PCI_DEVICE(0x2725, 0x0510, iwlax210_2ax_cfg_ty_gf_a0)},
++	{IWL_PCI_DEVICE(0x2725, 0x0A10, iwlax210_2ax_cfg_ty_gf_a0)},
++	{IWL_PCI_DEVICE(0x2725, 0x00B0, iwlax411_2ax_cfg_so_gf4_a0)},
++	{IWL_PCI_DEVICE(0x7A70, 0x0090, iwlax211_2ax_cfg_so_gf_a0)},
++	{IWL_PCI_DEVICE(0x7A70, 0x0310, iwlax211_2ax_cfg_so_gf_a0)},
++	{IWL_PCI_DEVICE(0x7A70, 0x0510, iwlax211_2ax_cfg_so_gf_a0)},
++	{IWL_PCI_DEVICE(0x7A70, 0x0A10, iwlax211_2ax_cfg_so_gf_a0)},
+ 
+ #endif /* CONFIG_IWLMVM */
+ 
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index 199eddea82a9a..51a3f77474e66 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -3569,10 +3569,10 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 			trans->cfg = &iwlax210_2ax_cfg_so_jf_a0;
+ 		} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
+ 			   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_GF)) {
+-			trans->cfg = &iwlax210_2ax_cfg_so_gf_a0;
++			trans->cfg = &iwlax211_2ax_cfg_so_gf_a0;
+ 		} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
+ 			   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_GF4)) {
+-			trans->cfg = &iwlax210_2ax_cfg_so_gf4_a0;
++			trans->cfg = &iwlax411_2ax_cfg_so_gf4_a0;
+ 		}
+ 	} else if (cfg == &iwl_ax101_cfg_qu_hr) {
+ 		if ((CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
 -- 
 2.20.1
 
