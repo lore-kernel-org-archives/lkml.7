@@ -2,157 +2,107 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB2BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA55C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1662C20820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567632946;
-	bh=tgy971/fztqpwi8qOFwtwVHTIiYHicIXvVYLFwGHYnc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=k+Nqy62/H/kuwQRF6D7nZYn52ahHGNZWxRO7Rm5vScw5HIF1TrboGUbNsRH0bblNH
-	 acWkp4zNF2c2Lnm03jAoix7NYbf7JBYcJgckLQEaJEua8575xokHh4mZ4b5KnXgg7+
-	 sBsev+LsFXuuA45QaWVldXVrlohV3vLA3AfBiB7g=
+	by mail.kernel.org (Postfix) with ESMTP id 3A41520674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbfIDVfp (ORCPT
+        id S1730119AbfIDVhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 17:35:45 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39556 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727125AbfIDVfo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 17:35:44 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j16so217387ljg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uwuNMQc72pWyQK8TRg0HstY3l1Ai6DJhnuFaRewpYp4=;
-        b=UP6KagylPWKv8Byd7UP6AZwOW79kEJrWCRQxdYQs3r+rkYYHaRtzINkvSv7M05KzA6
-         ZrkfCbIxdXLJg806nwevShkWeJseq5zYukSmtR6H1DU8VX49HoqAiZNvCj+iW0/x6oAZ
-         eynsh3dcmA1ab+qwfUmxb81iuiDdfGEMPS8+s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uwuNMQc72pWyQK8TRg0HstY3l1Ai6DJhnuFaRewpYp4=;
-        b=OUHKKnYlJchfxiRAe4Vk0KnHPK+iMMfPKlfDHJo9i0OSJZuitIAnQ1P/97zHGBlY6W
-         INRv130U4jWGziDohC4lbJ0/OWdpQxt7gSKaehyMYtXVvc3VBhz4ZbIBYEVy390B7AKN
-         Ot2Dpe1dBG0aQCID6L2VVT4wl4CgTlhx5FVfiqbhLEvy/6+fCigCxdLCDcppOy6IO01u
-         dMZEqRxzmr+F43GkXZjSQ9wjkWBW1X+NeHxhJ0QZqHE+hq1pIynpZ3Q6YWTOqn5GqgMB
-         LqRFye13LudhbJGbr8A/0yVKEmYTLafkoBNtNDtNf3HIVE4GxAPp6rt1Jzhzdaweug2M
-         hAZA==
-X-Gm-Message-State: APjAAAUwTg4vFfh7ZHghrnOT4XfuTbDTSKe4Ts2FUIZyXC5HyVepu0P2
-        D+nFzeXiK/6aEUj/9iJLGppIKwrNCU8=
-X-Google-Smtp-Source: APXvYqz0wRC9MipQ2O4GW6Up13y1/zjjV8GGLmiMUUOt65S/AKuPeWutiBZIyy3o9gR6F1SLonSqpg==
-X-Received: by 2002:a2e:9086:: with SMTP id l6mr10467710ljg.120.1567632942733;
-        Wed, 04 Sep 2019 14:35:42 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id q26sm11380lfd.53.2019.09.04.14.35.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2019 14:35:41 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id 7so209361ljw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:35:40 -0700 (PDT)
-X-Received: by 2002:a2e:3c14:: with SMTP id j20mr10927110lja.84.1567632938615;
- Wed, 04 Sep 2019 14:35:38 -0700 (PDT)
+        Wed, 4 Sep 2019 17:37:48 -0400
+Received: from sauhun.de ([88.99.104.3]:46500 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727125AbfIDVhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 17:37:48 -0400
+Received: from localhost (p54B337F1.dip0.t-ipconnect.de [84.179.55.241])
+        by pokefinder.org (Postfix) with ESMTPSA id E8DCE2C08C3;
+        Wed,  4 Sep 2019 23:37:45 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 23:37:45 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lori Hikichi <lori.hikichi@broadcom.com>,
+        Icarus Chau <icarus.chau@broadcom.com>,
+        Shivaraj Shetty <sshetty1@broadcom.com>
+Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
+Message-ID: <20190904213745.GG23608@ninjato>
+References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <20190830125626.GC2870@ninjato>
+ <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
+ <20190831094940.GA1138@kunai>
+ <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
 MIME-Version: 1.0
-References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-11-cyphar@cyphar.com>
- <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com>
-In-Reply-To: <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 4 Sep 2019 14:35:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiHRW3Z9xPRiExi9jLjB0cdGhM=3vaW+b80mjuRcbORyw@mail.gmail.com>
-Message-ID: <CAHk-=wiHRW3Z9xPRiExi9jLjB0cdGhM=3vaW+b80mjuRcbORyw@mail.gmail.com>
-Subject: Re: [PATCH v12 10/12] namei: aggressively check for nd->root escape
- on ".." resolution
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="EDJsL2R9iCFAt7IV"
+Content-Disposition: inline
+In-Reply-To: <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 2:09 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So you'd have three stages:
->
->  1) ".." always returns -EXDEV
->
->  2) ".." returns -EXDEV if there was a concurrent rename/mount
->
->  3) ".." returns -EXDEV if there was a concurrent rename/mount and we
-> reset the sequence numbers and check if you escaped.
 
-In fact, I wonder if this should return -EAGAIN instead - to say that
-"retrying may work".
+--EDJsL2R9iCFAt7IV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Because then:
 
-> Also, I'm not 100% convinced that (3) is needed at all. I think the
-> retry could be done in user space instead, which needs to have a
-> fallback anyway. Yes? No?
+> I think you are right that the controller does not seem to support
+> additional I2C features in addition to SMBUS.
+>=20
+> However, my concern of switching to the smbus_xfer API is:
+>=20
+> 1) Some customers might have used I2C_RDWR based API from i2cdev. Changing
+> from master_xfer to smbus_xfer may break the existing applications that a=
+re
+> already developed.
 
-Any user mode fallback would want to know whether it's a final error
-or whether simply re-trying might make it work again.
+Well, given that you add new quirks in the original patch here, you are
+kind of breaking it already. Most transfers which are not SMBus-alike
+transfers would now be rejected. For SMBus-alike transfers which are
+sent via I2C_RDWR (which is ugly), I have to think about it.
 
-I think that re-try case is valid for any of the possible "races
-happened, we can't guarantee that it's safe", and retrying inside the
-kernel (or doing that re-validation) could have latency issues.
+> 2) The sound subsystem I2C regmap based implementation seems to be using
+> i2c_ based API instead of smbus_ based API. Does this mean this will also
+> break most of the audio codec drivers with I2C regmap API based usage?
 
-Maybe ".." is the only such case. I can't think of any other ones in
-your series, but at least conceptually they could happen. For example,
-we've had people who wanted pathname lookup without any IO happening,
-because if you have to wait for IO you could want to use another
-thread etc if you're doing some server in user space..
+I don't think so. If you check regmap_get_i2c_bus() then it checks the
+adapter functionality and chooses the best transfer option then. I may
+be missing something but I would wonder if the sound system does
+something special and different.
 
-                     Linus
+
+--EDJsL2R9iCFAt7IV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1wLqkACgkQFA3kzBSg
+KbbdPBAAsHYbJFSjXbArIzGj/6rYqzbUnvYeKqVHK/C1E7C1/89RAeVkba81NFsu
+PjHeTsrPaMQ6lK5Df79WK8I0EDf++K1Imv1edG64CamFTHqc60rVShO3ifPnQf8P
+XrOEAUxLEsoXjAqsUy9Nl2xU9roZxcglRdSSg+rlDsN6WRJ8bq0xg7I/7pPs0t/m
+DU+77rOjrqcj3mKJsMvcH/ay4tAYQGwXKalqLwkRuy6u5bQ98G/z9mPdGRwBXxx7
+2lg61m1t05rmuU8PQZnnD1xB8syyt3/ivq4VWVs/9ghtAoTirMGtkhWu0SIQ17M5
+KePWtCxia4A4rHQeEF6vdrbuZAcPqFy8ttnoccsUBBXLy4KYs2zguxiss0EXq95t
+QHW83RzcyxpPqqbVPAgtoQONVcFBLvJ3p5LDIHi/kgosLcTyyjTfre1vzRcG8j9S
+j/q++XaORKmfJ4evfK5AdbexTLnXGlUyXcRj0vQElOHxVOwk2PbjYAAq58XKsY9W
+95LmlBMR2kDB/GCdZWGdTt29hyyhLgde4temx2eBCAqafAhAsPdFp8sFA2mEkaC4
+h5rby01u7yD66c8hpI/4q5psgoj1j7fRctKsdtxb/S8P2sHcKZ6HygntSmmEb+WG
+BGd+gabtDbQBSHrOxqYrYBZVQFNf3YABNMFvC5LuvgMs3Ek59iM=
+=s2Lx
+-----END PGP SIGNATURE-----
+
+--EDJsL2R9iCFAt7IV--
