@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D181C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8571EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4255C22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58ADB22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620713;
-	bh=NGDQCyVycC9SA+WJSA2hJ2rHFe5sjCV3JCNMe92DowI=;
+	s=default; t=1567620717;
+	bh=BpPuqPHxIOMgt89UJ/TXoIb3kBwQeVR8aQkQ6MGWwbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mF3d034xfXN/hur3iew4S2NsJMqO5ENnPOvYNH4Ysjs78frsMVO3I6KRSK+b1+Pm1
-	 dXsL8916eKXfmEOZ0v7DENk491N8fgkKZtCRIJ+b/jIMIwJdk0hswALw3D1h+q+P85
-	 OWnMEi/v/m+YQWUzWxRIrM4Cl9AfWngL184h2X4M=
+	b=Gzonxw6HRfopUnFowCd6mypG4JPEsXGFSbY2QcnP6tyLRlwOa8H54X3b4OIZhtf6C
+	 iLaMTgmQoNIPge1/wL8XLzqxBPWaig2rhYnW0vXIyZ+pq/BmcbiMzvdWKocur8MN5p
+	 tAngwBNUq412GK70GGHumDUnmg/GfoKd21g3WGK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390417AbfIDSLw (ORCPT
+        id S2390421AbfIDSL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56036 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389206AbfIDSLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:51 -0400
+        id S2389206AbfIDSLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D68992087E;
-        Wed,  4 Sep 2019 18:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 872812087E;
+        Wed,  4 Sep 2019 18:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620710;
-        bh=NGDQCyVycC9SA+WJSA2hJ2rHFe5sjCV3JCNMe92DowI=;
+        s=default; t=1567620713;
+        bh=BpPuqPHxIOMgt89UJ/TXoIb3kBwQeVR8aQkQ6MGWwbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XD9Pu69NpTj5ahsxklOSmf1ChdECvOJUvL3zPk3ES0JVdIf6Y6XirfGvO89+Nye/R
-         ncV3PNGBRUudLMzrOHXnoL4hZK25/aMWMAhJo/hZwM/u7GzGLtnMHAcADRurPCxzqy
-         L0AvMgWvkRPffZvz+3gpoGNO9QEr9vnDxqcTN1lY=
+        b=zj9LpLe72WoLGGM/ki3T/dQwOlucyfj0QZnwH312OJjkAFB1PNdT7LBRQ0LsiEIQu
+         XKtUw5Is5NutdtvVDwAc+ZOQueCFg9pR8jHSvrQt1c4tZsP7P+1Iwz0h+DgqQzJuXW
+         UE3A/RWPThRCBOUh5Ufm3L5bxKwtwShL/BEz7+OE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Radim Krcmar <rkrcmar@redhat.com>,
-        Bandan Das <bsd@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.2 067/143] kvm: x86: skip populating logical dest map if apic is not sw enabled
-Date:   Wed,  4 Sep 2019 19:53:30 +0200
-Message-Id: <20190904175316.688032395@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH 5.2 068/143] KVM: x86: hyper-v: dont crash on KVM_GET_SUPPORTED_HV_CPUID when kvm_intel.nested is disabled
+Date:   Wed,  4 Sep 2019 19:53:31 +0200
+Message-Id: <20190904175316.724705875@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,53 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Radim Krcmar <rkrcmar@redhat.com>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-commit b14c876b994f208b6b95c222056e1deb0a45de0e upstream.
+commit ea1529873ab18c204688cf31746df851c098cbea upstream.
 
-recalculate_apic_map does not santize ldr and it's possible that
-multiple bits are set. In that case, a previous valid entry
-can potentially be overwritten by an invalid one.
+If kvm_intel is loaded with nested=0 parameter an attempt to perform
+KVM_GET_SUPPORTED_HV_CPUID results in OOPS as nested_get_evmcs_version hook
+in kvm_x86_ops is NULL (we assign it in nested_vmx_hardware_setup() and
+this only happens in case nested is enabled).
 
-This condition is hit when booting a 32 bit, >8 CPU, RHEL6 guest and then
-triggering a crash to boot a kdump kernel. This is the sequence of
-events:
-1. Linux boots in bigsmp mode and enables PhysFlat, however, it still
-writes to the LDR which probably will never be used.
-2. However, when booting into kdump, the stale LDR values remain as
-they are not cleared by the guest and there isn't a apic reset.
-3. kdump boots with 1 cpu, and uses Logical Destination Mode but the
-logical map has been overwritten and points to an inactive vcpu.
+Check that kvm_x86_ops->nested_get_evmcs_version is not NULL before
+calling it. With this, we can remove the stub from svm as it is no
+longer needed.
 
-Signed-off-by: Radim Krcmar <rkrcmar@redhat.com>
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Fixes: e2e871ab2f02 ("x86/kvm/hyper-v: Introduce nested_get_evmcs_version() helper")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kvm/hyperv.c  |    5 ++++-
+ arch/x86/kvm/svm.c     |    8 +-------
+ arch/x86/kvm/vmx/vmx.c |    1 +
+ 3 files changed, 6 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -212,6 +212,9 @@ static void recalculate_apic_map(struct
- 		if (!apic_x2apic_mode(apic) && !new->phys_map[xapic_id])
- 			new->phys_map[xapic_id] = apic;
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1783,7 +1783,7 @@ int kvm_vm_ioctl_hv_eventfd(struct kvm *
+ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+ 				struct kvm_cpuid_entry2 __user *entries)
+ {
+-	uint16_t evmcs_ver = kvm_x86_ops->nested_get_evmcs_version(vcpu);
++	uint16_t evmcs_ver = 0;
+ 	struct kvm_cpuid_entry2 cpuid_entries[] = {
+ 		{ .function = HYPERV_CPUID_VENDOR_AND_MAX_FUNCTIONS },
+ 		{ .function = HYPERV_CPUID_INTERFACE },
+@@ -1795,6 +1795,9 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct k
+ 	};
+ 	int i, nent = ARRAY_SIZE(cpuid_entries);
  
-+		if (!kvm_apic_sw_enabled(apic))
-+			continue;
++	if (kvm_x86_ops->nested_get_evmcs_version)
++		evmcs_ver = kvm_x86_ops->nested_get_evmcs_version(vcpu);
 +
- 		ldr = kvm_lapic_get_reg(apic, APIC_LDR);
- 
- 		if (apic_x2apic_mode(apic)) {
-@@ -254,6 +257,8 @@ static inline void apic_set_spiv(struct
- 			static_key_slow_dec_deferred(&apic_sw_disabled);
- 		else
- 			static_key_slow_inc(&apic_sw_disabled.key);
-+
-+		recalculate_apic_map(apic->vcpu->kvm);
- 	}
+ 	/* Skip NESTED_FEATURES if eVMCS is not supported */
+ 	if (!evmcs_ver)
+ 		--nent;
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -7107,12 +7107,6 @@ failed:
+ 	return ret;
  }
+ 
+-static uint16_t nested_get_evmcs_version(struct kvm_vcpu *vcpu)
+-{
+-	/* Not supported */
+-	return 0;
+-}
+-
+ static int nested_enable_evmcs(struct kvm_vcpu *vcpu,
+ 				   uint16_t *vmcs_version)
+ {
+@@ -7283,7 +7277,7 @@ static struct kvm_x86_ops svm_x86_ops __
+ 	.mem_enc_unreg_region = svm_unregister_enc_region,
+ 
+ 	.nested_enable_evmcs = nested_enable_evmcs,
+-	.nested_get_evmcs_version = nested_get_evmcs_version,
++	.nested_get_evmcs_version = NULL,
+ 
+ 	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+ };
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7733,6 +7733,7 @@ static struct kvm_x86_ops vmx_x86_ops __
+ 	.set_nested_state = NULL,
+ 	.get_vmcs12_pages = NULL,
+ 	.nested_enable_evmcs = NULL,
++	.nested_get_evmcs_version = NULL,
+ 	.need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
+ };
  
 
 
