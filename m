@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D749C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B160206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EADC206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620959;
-	bh=91bzfqjuA0AykFYNiVsjGg8ity7Xp6cKp0uQxd9sGB8=;
+	s=default; t=1567620963;
+	bh=LXKg3oRwXFfq4QULXEKSYJNlcgsED34lRHJFtuqjjY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BGsUCkHseil87i+ovOV9KUISFlcCEUyBt54O/o14p8QNNVkJcLUK9+KYlk14oy8cz
-	 zw0rPEVkZkBgz6D0LJ7TZjOCrW5F6qmJwEXl3oih273OGEwsm7l1LPEELSRtiyonvt
-	 F7P8blNzniN9MN8zOFNUJfLHMFxtsbh8xKeE8yJc=
+	b=tEZod4pjV0k44s+FOq6XAmLnZCc0pryBugaSgmKL3VWtqIU+wilPu5Yq/QiaIstsR
+	 rC8EiTtqS/NbKJuEfxiSzgFU1THOe/9Qvq0VhDgBrnUQVWIsBpcKNI6Z6Ebl6GzmEs
+	 ZHv1Y5KmLgWWBpwuJv/G3nw+JGSIfhHVQkobnDzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390454AbfIDSP6 (ORCPT
+        id S2390624AbfIDSPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:15:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60680 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:15:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390424AbfIDSPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:15:11 -0400
+        id S2389980AbfIDSPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:15:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E7422DBF;
-        Wed,  4 Sep 2019 18:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BBF52339E;
+        Wed,  4 Sep 2019 18:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620910;
-        bh=91bzfqjuA0AykFYNiVsjGg8ity7Xp6cKp0uQxd9sGB8=;
+        s=default; t=1567620899;
+        bh=LXKg3oRwXFfq4QULXEKSYJNlcgsED34lRHJFtuqjjY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N98X+QH5nILcbdJTqf6S2xEBc1maiKFdCV/d+YQQKI5Q2EsB9baZvrpOJ6WnsvbvP
-         ZiHDTEsZFiQEwgs9A3udWwjAlO9/1tGyZ7AuTYy3NyrsXCPu6y6Cj1+X+pfFS4Qlss
-         8nby828UVy4aUz5x+RHIA5K/ut4OazjVndL1hL2I=
+        b=KGLTxDgQqVYfSlwlLArzhKSM4l6WF54Zv05336POL6sCPQKdVBLPNdmJSluY90ROF
+         0wHni/MsNqrDcK83t9qU/tRiV/Y81pv0n1MEHxA7kqkhBenfYnu4gHoHh8X+BvlfAd
+         h00lFjndRhP3tkCqRoK17bSeD37rN0j21a6Fa6nA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        sunpeng.li@amd.com, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sean Paul <sean@poorly.run>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 139/143] drm/i915: Do not create a new max_bpc prop for MST connectors
-Date:   Wed,  4 Sep 2019 19:54:42 +0200
-Message-Id: <20190904175319.881236425@linuxfoundation.org>
+Subject: [PATCH 5.2 136/143] iwlwifi: pcie: add support for qu c-step devices
+Date:   Wed,  4 Sep 2019 19:54:39 +0200
+Message-Id: <20190904175319.734099360@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -64,63 +60,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b9bd09630d4db4827cc04d358a41a16a6bc2cb0 ]
+[ Upstream commit a7d544d63120061f89459585f06ca44d30842a22 ]
 
-We're not allowed to create new properties after device registration
-so for MST connectors we need to either create the max_bpc property
-earlier, or we reuse one we already have. Let's do the latter apporach
-since the corresponding SST connector already has the prop and its
-min/max are correct also for the MST connector.
-
-The problem was highlighted by commit 4f5368b5541a ("drm/kms:
-Catch mode_object lifetime errors") which results in the following
-spew:
-[ 1330.878941] WARNING: CPU: 2 PID: 1554 at drivers/gpu/drm/drm_mode_object.c:45 __drm_mode_object_add+0xa0/0xb0 [drm]
-...
-[ 1330.879008] Call Trace:
-[ 1330.879023]  drm_property_create+0xba/0x180 [drm]
-[ 1330.879036]  drm_property_create_range+0x15/0x30 [drm]
-[ 1330.879048]  drm_connector_attach_max_bpc_property+0x62/0x80 [drm]
-[ 1330.879086]  intel_dp_add_mst_connector+0x11f/0x140 [i915]
-[ 1330.879094]  drm_dp_add_port.isra.20+0x20b/0x440 [drm_kms_helper]
-...
+Add support for C-step devices.  Currently we don't have a nice way of
+matching the step and choosing the proper configuration, so we need to
+switch the config structs one by one.
 
 Cc: stable@vger.kernel.org
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: sunpeng.li@amd.com
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sean Paul <sean@poorly.run>
-Fixes: 5ca0ef8a56b8 ("drm/i915: Add max_bpc property for DP MST")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190820161657.9658-1-ville.syrjala@linux.intel.com
-Reviewed-by: José Roberto de Souza <jose.souza@intel.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/i915/intel_dp_mst.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ .../net/wireless/intel/iwlwifi/cfg/22000.c    | 53 +++++++++++++++++++
+ .../net/wireless/intel/iwlwifi/iwl-config.h   |  7 +++
+ drivers/net/wireless/intel/iwlwifi/iwl-csr.h  |  2 +
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c | 21 ++++++++
+ 4 files changed, 83 insertions(+)
 
-diff --git a/drivers/gpu/drm/i915/intel_dp_mst.c b/drivers/gpu/drm/i915/intel_dp_mst.c
-index 8839eaea83715..d89120dcac67d 100644
---- a/drivers/gpu/drm/i915/intel_dp_mst.c
-+++ b/drivers/gpu/drm/i915/intel_dp_mst.c
-@@ -535,7 +535,15 @@ static struct drm_connector *intel_dp_add_mst_connector(struct drm_dp_mst_topolo
+diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+index 93526dfaf7912..1f500cddb3a75 100644
+--- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
++++ b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+@@ -80,7 +80,9 @@
+ #define IWL_22000_QU_B_HR_B_FW_PRE	"iwlwifi-Qu-b0-hr-b0-"
+ #define IWL_22000_HR_B_FW_PRE		"iwlwifi-QuQnj-b0-hr-b0-"
+ #define IWL_22000_HR_A0_FW_PRE		"iwlwifi-QuQnj-a0-hr-a0-"
++#define IWL_QU_C_HR_B_FW_PRE		"iwlwifi-Qu-c0-hr-b0-"
+ #define IWL_QU_B_JF_B_FW_PRE		"iwlwifi-Qu-b0-jf-b0-"
++#define IWL_QU_C_JF_B_FW_PRE		"iwlwifi-Qu-c0-jf-b0-"
+ #define IWL_QUZ_A_HR_B_FW_PRE		"iwlwifi-QuZ-a0-hr-b0-"
+ #define IWL_QUZ_A_JF_B_FW_PRE		"iwlwifi-QuZ-a0-jf-b0-"
+ #define IWL_QNJ_B_JF_B_FW_PRE		"iwlwifi-QuQnj-b0-jf-b0-"
+@@ -109,6 +111,8 @@
+ 	IWL_QUZ_A_HR_B_FW_PRE __stringify(api) ".ucode"
+ #define IWL_QUZ_A_JF_B_MODULE_FIRMWARE(api) \
+ 	IWL_QUZ_A_JF_B_FW_PRE __stringify(api) ".ucode"
++#define IWL_QU_C_HR_B_MODULE_FIRMWARE(api) \
++	IWL_QU_C_HR_B_FW_PRE __stringify(api) ".ucode"
+ #define IWL_QU_B_JF_B_MODULE_FIRMWARE(api) \
+ 	IWL_QU_B_JF_B_FW_PRE __stringify(api) ".ucode"
+ #define IWL_QNJ_B_JF_B_MODULE_FIRMWARE(api)		\
+@@ -256,6 +260,30 @@ const struct iwl_cfg iwl_ax201_cfg_qu_hr = {
+ 	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
+ };
  
- 	intel_attach_force_audio_property(connector);
- 	intel_attach_broadcast_rgb_property(connector);
--	drm_connector_attach_max_bpc_property(connector, 6, 12);
++const struct iwl_cfg iwl_ax101_cfg_qu_c0_hr_b0 = {
++	.name = "Intel(R) Wi-Fi 6 AX101",
++	.fw_name_pre = IWL_QU_C_HR_B_FW_PRE,
++	IWL_DEVICE_22500,
++	/*
++	 * This device doesn't support receiving BlockAck with a large bitmap
++	 * so we need to restrict the size of transmitted aggregation to the
++	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
++	 */
++	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
++};
++
++const struct iwl_cfg iwl_ax201_cfg_qu_c0_hr_b0 = {
++	.name = "Intel(R) Wi-Fi 6 AX201 160MHz",
++	.fw_name_pre = IWL_QU_C_HR_B_FW_PRE,
++	IWL_DEVICE_22500,
++	/*
++	 * This device doesn't support receiving BlockAck with a large bitmap
++	 * so we need to restrict the size of transmitted aggregation to the
++	 * HT size; mac80211 would otherwise pick the HE max (256) by default.
++	 */
++	.max_tx_agg_size = IEEE80211_MAX_AMPDU_BUF_HT,
++};
++
+ const struct iwl_cfg iwl_ax101_cfg_quz_hr = {
+ 	.name = "Intel(R) Wi-Fi 6 AX101",
+ 	.fw_name_pre = IWL_QUZ_A_HR_B_FW_PRE,
+@@ -372,6 +400,30 @@ const struct iwl_cfg iwl9560_2ac_160_cfg_qu_b0_jf_b0 = {
+ 	IWL_DEVICE_22500,
+ };
+ 
++const struct iwl_cfg iwl9461_2ac_cfg_qu_c0_jf_b0 = {
++	.name = "Intel(R) Wireless-AC 9461",
++	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
++	IWL_DEVICE_22500,
++};
++
++const struct iwl_cfg iwl9462_2ac_cfg_qu_c0_jf_b0 = {
++	.name = "Intel(R) Wireless-AC 9462",
++	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
++	IWL_DEVICE_22500,
++};
++
++const struct iwl_cfg iwl9560_2ac_cfg_qu_c0_jf_b0 = {
++	.name = "Intel(R) Wireless-AC 9560",
++	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
++	IWL_DEVICE_22500,
++};
++
++const struct iwl_cfg iwl9560_2ac_160_cfg_qu_c0_jf_b0 = {
++	.name = "Intel(R) Wireless-AC 9560 160MHz",
++	.fw_name_pre = IWL_QU_C_JF_B_FW_PRE,
++	IWL_DEVICE_22500,
++};
++
+ const struct iwl_cfg iwl9560_2ac_cfg_qnj_jf_b0 = {
+ 	.name = "Intel(R) Wireless-AC 9560 160MHz",
+ 	.fw_name_pre = IWL_QNJ_B_JF_B_FW_PRE,
+@@ -590,6 +642,7 @@ MODULE_FIRMWARE(IWL_22000_HR_A_F0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
+ MODULE_FIRMWARE(IWL_22000_HR_B_F0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
+ MODULE_FIRMWARE(IWL_22000_HR_B_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
+ MODULE_FIRMWARE(IWL_22000_HR_A0_QNJ_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
++MODULE_FIRMWARE(IWL_QU_C_HR_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
+ MODULE_FIRMWARE(IWL_QU_B_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
+ MODULE_FIRMWARE(IWL_QUZ_A_HR_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
+ MODULE_FIRMWARE(IWL_QUZ_A_JF_B_MODULE_FIRMWARE(IWL_22000_UCODE_API_MAX));
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-config.h b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+index bc267bd2c3b0e..1c1bf1b281cd9 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-config.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-config.h
+@@ -565,10 +565,13 @@ extern const struct iwl_cfg iwl22000_2ac_cfg_hr;
+ extern const struct iwl_cfg iwl22000_2ac_cfg_hr_cdb;
+ extern const struct iwl_cfg iwl22000_2ac_cfg_jf;
+ extern const struct iwl_cfg iwl_ax101_cfg_qu_hr;
++extern const struct iwl_cfg iwl_ax101_cfg_qu_c0_hr_b0;
+ extern const struct iwl_cfg iwl_ax101_cfg_quz_hr;
+ extern const struct iwl_cfg iwl22000_2ax_cfg_hr;
+ extern const struct iwl_cfg iwl_ax200_cfg_cc;
+ extern const struct iwl_cfg iwl_ax201_cfg_qu_hr;
++extern const struct iwl_cfg iwl_ax201_cfg_qu_hr;
++extern const struct iwl_cfg iwl_ax201_cfg_qu_c0_hr_b0;
+ extern const struct iwl_cfg iwl_ax201_cfg_quz_hr;
+ extern const struct iwl_cfg iwl_ax1650i_cfg_quz_hr;
+ extern const struct iwl_cfg iwl_ax1650s_cfg_quz_hr;
+@@ -580,6 +583,10 @@ extern const struct iwl_cfg iwl9461_2ac_cfg_qu_b0_jf_b0;
+ extern const struct iwl_cfg iwl9462_2ac_cfg_qu_b0_jf_b0;
+ extern const struct iwl_cfg iwl9560_2ac_cfg_qu_b0_jf_b0;
+ extern const struct iwl_cfg iwl9560_2ac_160_cfg_qu_b0_jf_b0;
++extern const struct iwl_cfg iwl9461_2ac_cfg_qu_c0_jf_b0;
++extern const struct iwl_cfg iwl9462_2ac_cfg_qu_c0_jf_b0;
++extern const struct iwl_cfg iwl9560_2ac_cfg_qu_c0_jf_b0;
++extern const struct iwl_cfg iwl9560_2ac_160_cfg_qu_c0_jf_b0;
+ extern const struct iwl_cfg killer1550i_2ac_cfg_qu_b0_jf_b0;
+ extern const struct iwl_cfg killer1550s_2ac_cfg_qu_b0_jf_b0;
+ extern const struct iwl_cfg iwl22000_2ax_cfg_jf;
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-csr.h b/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
+index 93da96a7247c3..cb4c5514a5560 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-csr.h
+@@ -328,6 +328,8 @@ enum {
+ #define CSR_HW_REV_TYPE_NONE		(0x00001F0)
+ #define CSR_HW_REV_TYPE_QNJ		(0x0000360)
+ #define CSR_HW_REV_TYPE_QNJ_B0		(0x0000364)
++#define CSR_HW_REV_TYPE_QU_B0		(0x0000334)
++#define CSR_HW_REV_TYPE_QU_C0		(0x0000338)
+ #define CSR_HW_REV_TYPE_QUZ		(0x0000354)
+ #define CSR_HW_REV_TYPE_HR_CDB		(0x0000340)
+ #define CSR_HW_REV_TYPE_SO		(0x0000370)
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index fe645380bd2fa..ea2a03d4bf55c 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@ -1039,6 +1039,27 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		}
+ 		iwl_trans->cfg = cfg;
+ 	}
 +
 +	/*
-+	 * Reuse the prop from the SST connector because we're
-+	 * not allowed to create new props after device registration.
++	 * This is a hack to switch from Qu B0 to Qu C0.  We need to
++	 * do this for all cfgs that use Qu B0.  All this code is in
++	 * urgent need for a refactor, but for now this is the easiest
++	 * thing to do to support Qu C-step.
 +	 */
-+	connector->max_bpc_property =
-+		intel_dp->attached_connector->base.max_bpc_property;
-+	if (connector->max_bpc_property)
-+		drm_connector_attach_max_bpc_property(connector, 6, 12);
++	if (iwl_trans->hw_rev == CSR_HW_REV_TYPE_QU_C0) {
++		if (iwl_trans->cfg == &iwl_ax101_cfg_qu_hr)
++			iwl_trans->cfg = &iwl_ax101_cfg_qu_c0_hr_b0;
++		else if (iwl_trans->cfg == &iwl_ax201_cfg_qu_hr)
++			iwl_trans->cfg = &iwl_ax201_cfg_qu_c0_hr_b0;
++		else if (iwl_trans->cfg == &iwl9461_2ac_cfg_qu_b0_jf_b0)
++			iwl_trans->cfg = &iwl9461_2ac_cfg_qu_c0_jf_b0;
++		else if (iwl_trans->cfg == &iwl9462_2ac_cfg_qu_b0_jf_b0)
++			iwl_trans->cfg = &iwl9462_2ac_cfg_qu_c0_jf_b0;
++		else if (iwl_trans->cfg == &iwl9560_2ac_cfg_qu_b0_jf_b0)
++			iwl_trans->cfg = &iwl9560_2ac_cfg_qu_c0_jf_b0;
++		else if (iwl_trans->cfg == &iwl9560_2ac_160_cfg_qu_b0_jf_b0)
++			iwl_trans->cfg = &iwl9560_2ac_160_cfg_qu_c0_jf_b0;
++	}
+ #endif
  
- 	return connector;
- 
+ 	pci_set_drvdata(pdev, iwl_trans);
 -- 
 2.20.1
 
