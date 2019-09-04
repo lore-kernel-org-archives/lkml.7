@@ -2,97 +2,82 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9C2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5CFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6BA120674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oNH2euNP"
+	by mail.kernel.org (Postfix) with ESMTP id C293B21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567631051;
+	bh=CyG9oIoncMJdPIfESE/MwEc9Pop3vT18khg6HuUgdU4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=loxOINpLc4IT3qBAe3CEWXsLn3zh616wiEB9Ug6KFjIaS7wscNO4771WJ7awFmSEL
+	 WBK+YS6qjL81Y3msetMiwr3MX+wWXBYWX2oGCGciuIypDzIo1mlrGdozkbWO4sxtxa
+	 82KceMoVe2FrSGUcVwhNi5em1hQ2K5Y7q5dOwNjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730454AbfIDVDd (ORCPT
+        id S1730601AbfIDVEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 17:03:33 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40575 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfIDVDc (ORCPT
+        Wed, 4 Sep 2019 17:04:10 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33137 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbfIDVEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 17:03:32 -0400
-Received: by mail-qt1-f196.google.com with SMTP id g4so139970qtq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CzEDh/TsIq7upWl5Yv4giE6ogitNU/Rn6EYmhnKlYvk=;
-        b=oNH2euNPlkfsmgsbVWioFIdW/n5Zsqzl3Xc42ZsNtjCeEXUBg47otMMdcUkPnpAVeq
-         fSYRdgt/3W0BQMYCwvFNN88AczjtCFjXr4iMki7BjJk+cuGkWJytORNuhmWSNBVh7CGN
-         r1pPapMWW4MdJiPK45JbSB3idS16Kazwy6D+S7mhUIytq+2+zUAmksQjRzAMfe9xkmLt
-         +zZ/8NcM53m5NFTwk400QeODytz4F8l30idy13m6BbHs56HtLEzq/uYEWL79u6i+lNkk
-         RSbVGU0l3NARncpWYVOpRPerW03Ma9wvaOhOo/W+2eeufNqnodfid9F92qhWaubQl3b8
-         DiTg==
+        Wed, 4 Sep 2019 17:04:10 -0400
+Received: by mail-ot1-f65.google.com with SMTP id p23so22150835oto.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:04:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CzEDh/TsIq7upWl5Yv4giE6ogitNU/Rn6EYmhnKlYvk=;
-        b=OD/jrEtopg2PGxLZyHG40GcT0BvrUj7dR3d12TdoNWlh1xlqYq2nSD2ZfZ26WWpWqW
-         Au6fKxl/4QchA9HOHvQvp2TDoVFDiWjkarcA2AcYK2AXAkh+AVIYlp59UlF5F+BLEJvJ
-         Jbb1Ez3eEciSm930j4a9hkFcYrLkmOZS2QTyovdDzm951qXn1XbXPkt+LFFIBXgG+hFH
-         Kp5RWJe81weuelUmhGH+a/GtZKPishmxH280W4wlueL0MLBRMVrZsCavt/88Z0ejTcLJ
-         U1i3S7UXXE4qf/sjclzW9+k3218wMCDL69D6Z3bVmDHav3FhQWtxzVuXsMqk0uzrdujM
-         1yNQ==
-X-Gm-Message-State: APjAAAVRlYNbEGsLmOnEd40uoR9jjLp8mU2TprwlvtWNij9W2hxJ3zAM
-        Xbzst3jKJo+2f568PTAui6U=
-X-Google-Smtp-Source: APXvYqyiG8Lc/uvqk95Uzde1T+GxJ7uHvZpxs0K5bY6Y8JzN3eTEDKj2o6jwgMg/OfQN/pNR4g2eJA==
-X-Received: by 2002:ac8:2b82:: with SMTP id m2mr69263qtm.35.1567631011842;
-        Wed, 04 Sep 2019 14:03:31 -0700 (PDT)
-Received: from 657840b88179.ic.unicamp.br (wifi-177-220-84-123.wifi.ic.unicamp.br. [177.220.84.123])
-        by smtp.gmail.com with ESMTPSA id t55sm81669qth.6.2019.09.04.14.03.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 14:03:31 -0700 (PDT)
-From:   Beatriz Martins de Carvalho <martinsdecarvalhobeatriz@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lkcamp@lists.libreplanet.br.org
-Subject: [PATCH] staging: rtl8192e: remove unnecessary blank line
-Date:   Wed,  4 Sep 2019 21:03:26 +0000
-Message-Id: <20190904210326.17983-1-martinsdecarvalhobeatriz@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CyG9oIoncMJdPIfESE/MwEc9Pop3vT18khg6HuUgdU4=;
+        b=WbzaV9ot54E5yUV/nsJfU5IY6NHqUq7LLT4tI+nzs6a6PTcn23KwDySUvTHygecwnG
+         mVVa2kDrSsfakSJEX5oUsUmZHZiskaO2K4QGxi0iGD3sW5K0vsTXXwe8DCir5rOlw55i
+         FR0+abu4TaGsW7DY0ebPR9KhPqwmax7sxuweS3MM+4n7p+sJIhWgpx/zo/iZaX9HkKE5
+         tBNEZBGJ5lQzpAUrXMRLQR5SGU4JXeAsqF96sraELZIUDi2Rc1H8/V7UcS+Jmv9zjLBl
+         aprno+WaoaGf2U4FtzarLL8NW8+DH7H5PHR5rixzpNQ861YSfawHkCbiS1rjt7ngKcm6
+         G+gg==
+X-Gm-Message-State: APjAAAW5YsfePCXGn+3u/lhYB3AGuMAjrA0QKLtD8FLKiJ5kbPDubAc2
+        dmKZaiAQtVh+kqTZKXEV07zm3CATwG7FQHFs5Dw=
+X-Google-Smtp-Source: APXvYqyBMGW2epdCXylWthRx1+uM0fTlfSYq43Wm7TdlLx1yia7XV6qhCnZ4LrBFX3sXoy1P05M3+B8rf2pIKTypuWQ=
+X-Received: by 2002:a05:6830:154:: with SMTP id j20mr337999otp.266.1567631049639;
+ Wed, 04 Sep 2019 14:04:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190830075156.76873-1-heikki.krogerus@linux.intel.com>
+ <20190830075156.76873-2-heikki.krogerus@linux.intel.com> <20190904120725.GA15829@kroah.com>
+In-Reply-To: <20190904120725.GA15829@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 4 Sep 2019 23:03:58 +0200
+Message-ID: <CAJZ5v0gOnU60OEUex5mSR4=jeHowfY77HSCE8LmsLiiuU59j3g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] software node: Initialize the return value in software_node_to_swnode()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpath error "CHECK: Blank lines aren't necessary after an open
-brace '{'"
-in rtllib.h:482.
+On Wed, Sep 4, 2019 at 2:07 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Aug 30, 2019 at 10:51:55AM +0300, Heikki Krogerus wrote:
+> > The software node is searched from a list that may be empty
+> > when the function is called. This makes sure that the
+> > function returns NULL even if the list is empty.
+> >
+> > Fixes: 80488a6b1d3c ("software node: Add support for static node descriptors")
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Beatriz Martins de Carvalho <martinsdecarvalhobeatriz@gmail.com>
----
- drivers/staging/rtl8192e/rtllib.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
-index 7a0128815..328f410da 100644
---- a/drivers/staging/rtl8192e/rtllib.h
-+++ b/drivers/staging/rtl8192e/rtllib.h
-@@ -479,7 +479,6 @@ enum wireless_mode {
- #define P80211_OUI_LEN 3
- 
- struct rtllib_snap_hdr {
--
- 	u8    dsap;   /* always 0xAA */
- 	u8    ssap;   /* always 0xAA */
- 	u8    ctrl;   /* always 0x03 */
--- 
-2.20.1
-
+Applied, thanks!
