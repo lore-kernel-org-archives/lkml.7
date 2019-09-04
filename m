@@ -2,139 +2,99 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC10C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29042C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80D021883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30FD21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NdOKKqXL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r2Y7xKaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbfIDUDz (ORCPT
+        id S1730195AbfIDUEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:03:55 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:55190 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbfIDUDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:03:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=pV5Ja3nFmAXwbG0fo3pmv+berWnrf8+j3llPuWmXntY=; b=NdOKKqXL7uBDfZi9YtAuBOOTqZ
-        UmpwjXExDZeH140ZmCh3N1X7qI80oF3ksiqJeu0CIJEuRSNzT/HT1cd1j37vuZBMDl/wW3mCU7Vhc
-        C8W13+lU4Rupr4MMrzOxPL+7mNVqU50Wkj7A4YcPl/aJeEUjXHKDTSG0Ljcio/0NB3tI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i5bVO-0005tl-QP; Wed, 04 Sep 2019 22:03:50 +0200
-Date:   Wed, 4 Sep 2019 22:03:50 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net
-Subject: Re: [PATCH v2 2/2] net: phy: adin: implement Energy Detect Powerdown
- mode via phy-tunable
-Message-ID: <20190904200350.GB21264@lunn.ch>
-References: <20190904162322.17542-1-alexandru.ardelean@analog.com>
- <20190904162322.17542-3-alexandru.ardelean@analog.com>
+        Wed, 4 Sep 2019 16:04:08 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42461 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727809AbfIDUEH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 16:04:07 -0400
+Received: by mail-pf1-f195.google.com with SMTP id w22so5543420pfi.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:04:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=vUq6q5rLq1rpkR2Aq011wdvO0ya+rjWQxpONqV3eZoc=;
+        b=r2Y7xKaRnaJsuxJ7d1X1sjgGndZKPqGSY4mHbfjimxEe/js2y0q5xwh5Ofo9PObnOH
+         jFpmg3gyfWrbsH37smwNTwt5mtQ7zZl4z1sWxsqmUyy5Mhvg3nE1P2qr78dtqaf+aBQj
+         cODk1OIu/HjuyGk/UREUeGXrMX/xOWcIvnAfoHJqX4x+wvkaPVeiOfqtjlNupPrMiCxb
+         jOyVP6fHwuS49HdTbhlntrWEDX+6trfxMOhCtErqNnkgNLk8eC/Rsa7iP/dAiUfhR6OI
+         YBgVwSjUP+XApsFL96rAT6NYMu7YH6hZXFSpuhRHm3viz0Gbre8xPWQE4PNP1rXjMxmY
+         A7HA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=vUq6q5rLq1rpkR2Aq011wdvO0ya+rjWQxpONqV3eZoc=;
+        b=tSZNn9N89GHvz8ao3ZRsvy5CmL2Dm5kORTqGUNOzq6KVubsnQFW1DoEWnZpQlwbCet
+         M4JPR+yTmZzGS67UH8zJ232XcACSJVEvIRcA3dlniDDueg2uNNFkmJb5SeJ5AG/EK4dQ
+         Jh0GqKDXpMShF6PYgU8aopZEL3cLE1kPUzHgFRcv4PCxtoCOd7/BEwiLHjP6FdLMOcGk
+         Rlv8Kv1z1lJc76cqY82UfHlBi4PaYv+3RP67qKL0Kf8X9cn3ueJvT/W9j8n/TytMd5U+
+         fOOeORyHSSyiGEkU5qRnbnUSIzA6el0IupZzOzKC4nvxXme4C6csbzigesLn5DNEkCgE
+         /3yg==
+X-Gm-Message-State: APjAAAWWYupXfagGWf/4oGMAgUELU0qAI7HwjnVrn00NW6vb7f/xQptr
+        DvZYtOsE0ThoOIgbSCGuoK7mbA==
+X-Google-Smtp-Source: APXvYqyqELoTqEWKwQaumCgh6k1NrXvt9u9MsAHYP8pjOnJ1PHEhirUkRFSaBs5dgKx5iMe8RjiwPQ==
+X-Received: by 2002:a63:2a41:: with SMTP id q62mr36843166pgq.444.1567627446279;
+        Wed, 04 Sep 2019 13:04:06 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id m19sm3043700pjv.9.2019.09.04.13.04.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 13:04:05 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 13:04:04 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Michal Hocko <mhocko@kernel.org>
+cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
+In-Reply-To: <20190904054004.GA3838@dhcp22.suse.cz>
+Message-ID: <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
+References: <20190903144512.9374-1-mhocko@kernel.org> <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp> <20190904054004.GA3838@dhcp22.suse.cz>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904162322.17542-3-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 07:23:22PM +0300, Alexandru Ardelean wrote:
-> This driver becomes the first user of the kernel's `ETHTOOL_PHY_EDPD`
-> phy-tunable feature.
-> EDPD is also enabled by default on PHY config_init, but can be disabled via
-> the phy-tunable control.
-> 
-> When enabling EDPD, it's also a good idea (for the ADIN PHYs) to enable TX
-> periodic pulses, so that in case the other PHY is also on EDPD mode, there
-> is no lock-up situation where both sides are waiting for the other to
-> transmit.
-> 
-> Via the phy-tunable control, TX pulses can be disabled if specifying 0
-> `tx-interval` via ethtool.
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/net/phy/adin.c | 50 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-> index 4dec83df048d..742728ab2a5d 100644
-> --- a/drivers/net/phy/adin.c
-> +++ b/drivers/net/phy/adin.c
-> @@ -26,6 +26,11 @@
->  
->  #define ADIN1300_RX_ERR_CNT			0x0014
->  
-> +#define ADIN1300_PHY_CTRL_STATUS2		0x0015
-> +#define   ADIN1300_NRG_PD_EN			BIT(3)
-> +#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
-> +#define   ADIN1300_NRG_PD_STATUS		BIT(1)
-> +
->  #define ADIN1300_PHY_CTRL2			0x0016
->  #define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
->  #define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
-> @@ -328,12 +333,51 @@ static int adin_set_downshift(struct phy_device *phydev, u8 cnt)
->  			    ADIN1300_DOWNSPEEDS_EN);
->  }
->  
-> +static int adin_get_edpd(struct phy_device *phydev, u16 *tx_interval)
-> +{
-> +	int val;
-> +
-> +	val = phy_read(phydev, ADIN1300_PHY_CTRL_STATUS2);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	if (ADIN1300_NRG_PD_EN & val) {
-> +		if (val & ADIN1300_NRG_PD_TX_EN)
-> +			*tx_interval = 1;
+On Wed, 4 Sep 2019, Michal Hocko wrote:
 
-What does 1 mean? 1 pico second, one hour? Anything but zero seconds?
-Does the datasheet specify what it actually does? Maybe you should be
-using ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL here, to indicate you actually
-have no idea, but it is the default for this PHY?
+> > > It's primary purpose is
+> > > to help analyse oom victim selection decision.
+> > 
+> > I disagree, for I use the process list for understanding what / how many
+> > processes are consuming what kind of memory (without crashing the system)
+> > for anomaly detection purpose. Although we can't dump memory consumed by
+> > e.g. file descriptors, disabling dump_tasks() loose that clue, and is
+> > problematic for me.
+> 
+> Does anything really prevent you from enabling this by sysctl though? Or
+> do you claim that this is a general usage pattern and therefore the
+> default change is not acceptable or do you want a changelog to be
+> updated?
+> 
 
-> +		else
-> +			*tx_interval = ETHTOOL_PHY_EDPD_NO_TX;
-> +	} else {
-> +		*tx_interval = ETHTOOL_PHY_EDPD_DISABLE;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int adin_set_edpd(struct phy_device *phydev, u16 tx_interval)
-> +{
-> +	u16 val;
-> +
-> +	if (tx_interval == ETHTOOL_PHY_EDPD_DISABLE)
-> +		return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
-> +				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
-> +
-> +	val = ADIN1300_NRG_PD_EN;
-> +	if (tx_interval != ETHTOOL_PHY_EDPD_NO_TX)
-> +		val |= ADIN1300_NRG_PD_TX_EN;
-
-So you silently accept any interval? That sounds wrong. You really
-should be returning -EINVAL for any value other than, either 1, or
-maybe ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL, if you change the get
-function.
-
-      Andrew
+I think the motivation is that users don't want to need to reproduce an 
+oom kill to figure out why: they want to be able to figure out which 
+process had higher than normal memory usage.  If oom is the normal case 
+then they ceratinly have the ability to disable it by disabling the 
+sysctl, but that seems like something better to opt-out of rather than 
+need to opt-in to and reproduce.
