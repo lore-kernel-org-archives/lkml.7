@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726C1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 676D8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D25822DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFB12377D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612924;
-	bh=XoWVh8zkxqQBH7vyK96N6HQzgw676k1kvoxSzDKHeGA=;
+	s=default; t=1567612930;
+	bh=WoyyH/WhkP+nV+Xgh7izRnrD3GtpnV452JYFcLCroqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OW8FZkYETTtOVpf27v13DNm5ofHJiKDTsb5542KcNkfxqTvlIB/yVpFZdqW+lKXoz
-	 XVlwkIJqf/5RYsPUORn/GNE9aS5p8XRLtYJddO5yZ1tFY9g/WeGO/qSppkoujYjwUj
-	 /HEx+TK5dEskQMmv6ILiECQfhmIfNmquWW0+Vz64=
+	b=UlGg5KSh9cYIckastJzIvNYT3hLUu3UnYCnJgRqUcINNgYemT6lRBu5ViLZaVSzn7
+	 epj3W/mIdfGIjPoIovesflZGi4omN18S87RGr5Nqf0+6kogzyHntSGRZzGKgJrSTxg
+	 nUb9J6Vcba+xXX3th9kclZB1lu+dC0/j+34YuJvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733164AbfIDQCD (ORCPT
+        id S1733185AbfIDQCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:02:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733153AbfIDQCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:01 -0400
+        id S1733170AbfIDQCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8984C2087E;
-        Wed,  4 Sep 2019 16:01:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5717A22DBF;
+        Wed,  4 Sep 2019 16:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612920;
-        bh=XoWVh8zkxqQBH7vyK96N6HQzgw676k1kvoxSzDKHeGA=;
+        s=default; t=1567612926;
+        bh=WoyyH/WhkP+nV+Xgh7izRnrD3GtpnV452JYFcLCroqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZ/vjFM0tRAi22icgSD7JlfwngxZQm8hHFXfrNjhPULzcvHeicldm/ne8p+a1tALQ
-         b/mXc66CKXcPfi8ixKxkzKp0e0qf2glMsv6zW9siCE6Oj87hHiPNSJg4m7/+QYnY7b
-         DMBE7xMcH5hJsn9L8I5U9IlLrWmbMR6NJ3WPal+c=
+        b=lGjVky6fr7edf3L+cjTMs/R2JF8fytGhp53iHqpPOyKUMe10CpyLReJht5lk0Ucl9
+         mBY2OrvL7kIcV9m0U2ifyD6OgeS2PsVxhKqeKQ6crayUxGSMkcdPWUkEdoSK9Qzo2o
+         H+Qwk4l3CKq8qNLMxAyKdKPlUEtUUFOvoxluLYNg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 24/36] cifs: Use kzfree() to zero out the password
-Date:   Wed,  4 Sep 2019 12:01:10 -0400
-Message-Id: <20190904160122.4179-24-sashal@kernel.org>
+Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 28/36] i2c: designware: Synchronize IRQs when unregistering slave client
+Date:   Wed,  4 Sep 2019 12:01:14 -0400
+Message-Id: <20190904160122.4179-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -59,33 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
 
-[ Upstream commit 478228e57f81f6cb60798d54fc02a74ea7dd267e ]
+[ Upstream commit c486dcd2f1bbdd524a1e0149734b79e4ae329650 ]
 
-It's safer to zero out the password so that it can never be disclosed.
+Make sure interrupt handler i2c_dw_irq_handler_slave() has finished
+before clearing the the dev->slave pointer in i2c_dw_unreg_slave().
 
-Fixes: 0c219f5799c7 ("cifs: set domainName when a domain-key is used in multiuser")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+There is possibility for a race if i2c_dw_irq_handler_slave() is running
+on another CPU while clearing the dev->slave pointer.
+
+Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Reported-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-designware-slave.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 699e763ea671a..f523a9ca9574f 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2662,7 +2662,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 			rc = -ENOMEM;
- 			kfree(vol->username);
- 			vol->username = NULL;
--			kfree(vol->password);
-+			kzfree(vol->password);
- 			vol->password = NULL;
- 			goto out_key_put;
- 		}
+diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
+index ea9578ab19a15..fccf936f4b9b5 100644
+--- a/drivers/i2c/busses/i2c-designware-slave.c
++++ b/drivers/i2c/busses/i2c-designware-slave.c
+@@ -206,6 +206,7 @@ static int i2c_dw_unreg_slave(struct i2c_client *slave)
+ 
+ 	dev->disable_int(dev);
+ 	dev->disable(dev);
++	synchronize_irq(dev->irq);
+ 	dev->slave = NULL;
+ 	pm_runtime_put(dev->dev);
+ 
 -- 
 2.20.1
 
