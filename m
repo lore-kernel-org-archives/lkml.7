@@ -2,55 +2,101 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC70C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE05C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0659522CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B002341F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:00:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0ktxI2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfIDHAi (ORCPT
+        id S1728900AbfIDHAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:00:38 -0400
-Received: from verein.lst.de ([213.95.11.211]:36623 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727787AbfIDHAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:00:37 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 57523227A8A; Wed,  4 Sep 2019 09:00:33 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 09:00:33 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juergen Gross <jgross@suse.com>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/13] swiotlb-xen: always use dma-direct helpers to
- alloc coherent pages
-Message-ID: <20190904070033.GA11643@lst.de>
-References: <20190902130339.23163-1-hch@lst.de> <20190902130339.23163-9-hch@lst.de> <5799ca4b-7993-b1c5-73fa-396a560f58e8@oracle.com> <8a7f9e23-ef26-e83b-8d1e-dcd7d233642a@oracle.com>
+        Wed, 4 Sep 2019 03:00:48 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46739 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbfIDHAr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:00:47 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so4763436pfg.13;
+        Wed, 04 Sep 2019 00:00:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0jgAF8J58aWl0sjFxiXtsOlB308+Q67iE1jg4iTF8/A=;
+        b=c0ktxI2d6mLipekS0Gyb/pF9PPPM9kTMCdtTBrqZBmBoxhFgDHL83YHdISem/zmndi
+         fBr3HDDmvC8mM9PrN+jNEE/b7TQdwSH6nFsLgKiypVevSXBsgFhioq5L0YuMud4RK9pq
+         rLzDgafT+CKTGnz2+oMYSHtS7Chx2y3X0aA1JZL8qd7BfgqkpDHTKc6xfogU+w8mxAv+
+         ohessldjc/M4d0bn7Bvpz/dEzgLdiH7/QoPXMumNToUidXiX0sVXd9Vcxp7cA+reoZ3g
+         v9Egr9JYvBeb7/D3e4X9Qc0yZDXmzMwBo25ujSNXQKfiTjsmYQegHGBR+0qQJpSb1YVX
+         PByA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0jgAF8J58aWl0sjFxiXtsOlB308+Q67iE1jg4iTF8/A=;
+        b=Vp/xCK4HmbdbP5XYhbEFbXwCBJEOJ7PoSH3hZoGQzWBah4d0BqT8IYW8+gGCBlcXbe
+         JdcUyEGY3wXUX0elpRkoU8j0fsNjw2gSzI5n5CpNG4bZ/7pFDFvgb3uST3hDbVT9BotO
+         M8QT5iX09UZofu1k/1Sr+Yn9BApVq3WcA32asA6Zb88B4eaE+tKnoVKR+2H697Ua9nTd
+         4o8mwdypsC9hAxKAF40d2GfyyUB/6DfSt15s+CASnUQRB9mfQ87UO8QGKpDZqFGtglyp
+         16t8lgj1810nUIjRpQolCD0trKjsAyDtnpzonBAntumx/YSDeluKjB9LMe6UvAwYOvxj
+         ETjQ==
+X-Gm-Message-State: APjAAAWp2GqfGQ6r45VfEAJ56L8Jd0m8KMzSzAqEuobejRwDv+j6j2oB
+        WG95KOelgG/XwSH9+jo0IIQ=
+X-Google-Smtp-Source: APXvYqwzHahC/ZrTpolUl6fKkmnQKYzORYyELnj9JSN1bbSC7s7LQjrvvGR6/yrUpDLjvrNjP3jOyg==
+X-Received: by 2002:a62:7790:: with SMTP id s138mr42802476pfc.243.1567580447147;
+        Wed, 04 Sep 2019 00:00:47 -0700 (PDT)
+Received: from localhost ([175.223.23.37])
+        by smtp.gmail.com with ESMTPSA id v20sm18223934pfm.63.2019.09.04.00.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 00:00:46 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 16:00:42 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
+        davem@davemloft.net, netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190904070042.GA11968@jagdpanzerIV>
+References: <1567177025-11016-1-git-send-email-cai@lca.pw>
+ <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
+ <1567178728.5576.32.camel@lca.pw>
+ <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
+ <20190903132231.GC18939@dhcp22.suse.cz>
+ <1567525342.5576.60.camel@lca.pw>
+ <20190903185305.GA14028@dhcp22.suse.cz>
+ <1567546948.5576.68.camel@lca.pw>
+ <20190904061501.GB3838@dhcp22.suse.cz>
+ <20190904064144.GA5487@jagdpanzerIV>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8a7f9e23-ef26-e83b-8d1e-dcd7d233642a@oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190904064144.GA5487@jagdpanzerIV>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 06:25:54PM -0400, Boris Ostrovsky wrote:
-> > If I am reading __dma_direct_alloc_pages() correctly there is a path
-> > that will force us to use GFP_DMA32 and as Juergen pointed out in
-> > another message that may not be desirable.
+On (09/04/19 15:41), Sergey Senozhatsky wrote:
+> But the thing is different in case of dump_stack() + show_mem() +
+> some other output. Because now we ratelimit not a single printk() line,
+> but hundreds of them. The ratelimit becomes - 10 * $$$ lines in 5 seconds
+> (IOW, now we talk about thousands of lines).
 
-Yes, it will add GFP_DMA32.  So I guess for now we'll just keep the
-direct page allocator calls and resend.  I don't think this is the
-right thing to do long term, but I'd really like to get this series
-finished.
+And on devices with slow serial consoles this can be somewhat close to
+"no ratelimit". *Suppose* that warn_alloc() adds 700 lines each time.
+Within 5 seconds we can call warn_alloc() 10 times, which will add 7000
+lines to the logbuf. If printk() can evict only 6000 lines in 5 seconds
+then we have a growing number of pending logbuf messages.
+
+	-ss
