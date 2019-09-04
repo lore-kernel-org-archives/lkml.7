@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82498C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F22C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CC8E23402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50208233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620367;
-	bh=awKC4Bz62hBmNN8GYGsbiOOk001llEw8zxKsLuVc8Pg=;
+	s=default; t=1567620370;
+	bh=/7KlZoP8hNzFiMv4BzL0iY/0QUqS+oK8r4POagI9Ndo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9c/B6hW6awCiAxL9z3NL5UsKA+FzFPjr0rRZK6bLSvZd/JOxxiQtiH4Ig8rW/e2c
-	 Ycq0tPGx2cJTQ8KCQAu/urs5LFKkP6kxHl9b2HnO4Q2FSTCbftVLTR/H+M2ufzpMGv
-	 D/Itz59mY2LLhc9mqLzOTeW5frnuZ6jTfwzbI8WU=
+	b=MAYgcK7xuHVa7cfKnVsLoGcjm1DT2adnqH3FnItKI9AJ3/HE91L77XET7C4QkksDG
+	 hEjlb+H0FiGMAxK6452B3ZePBpQbWRDVg5qQA+S1xEwscLd+WvKyDJmEr9Tv1THQgc
+	 zxwRWG2vExVd8nJ5pkSqZ35A/xVIFFrAnYKkX4ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389384AbfIDSGG (ORCPT
+        id S2389394AbfIDSGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389007AbfIDSGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:04 -0400
+        id S2389007AbfIDSGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D52208E4;
-        Wed,  4 Sep 2019 18:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B243206B8;
+        Wed,  4 Sep 2019 18:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620364;
-        bh=awKC4Bz62hBmNN8GYGsbiOOk001llEw8zxKsLuVc8Pg=;
+        s=default; t=1567620366;
+        bh=/7KlZoP8hNzFiMv4BzL0iY/0QUqS+oK8r4POagI9Ndo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIkUXu//LOCuhBChLqOCYozJcFmUOkU+yGcNAqmJVsPkCHWfHOTzPGC/BUHdsRQ52
-         +1ltd5rXtlcBB/ccZT/G46lG1jSCyKHki8jSwTItBokINTdpXcu48W5ML/qUJmc65W
-         V84HdavP73TvRjEJwQjbwafsS6WXJfpunKxMecsg=
+        b=aDDQxr/tAD5tV+lK4212m5SOtVpGnxdK9Z6ZByyC1624sVy6UjS+kY6PO/8DlEi01
+         T7v7z9+gn1Jbjx3pEq2d4TIihmXa8w3mAZc4Wwa2hjsQMVPZQt2jmejbGQZ956ORdM
+         p3SuvcVP3MEE894HnMOyu/k2YZpq/8YsBdhszTls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Jeffrey Altman <jaltman@auristor.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/93] afs: Fix the CB.ProbeUuid service handler to reply correctly
-Date:   Wed,  4 Sep 2019 19:53:05 +0200
-Message-Id: <20190904175303.213488999@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Jyri Sarha <jsarha@ti.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 30/93] drm/tilcdc: Register cpufreq notifier after we have initialized crtc
+Date:   Wed,  4 Sep 2019 19:53:32 +0200
+Message-Id: <20190904175305.912604297@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,58 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2067b2b3f4846402a040286135f98f46f8919939 ]
+[ Upstream commit 432973fd3a20102840d5f7e61af9f1a03c217a4c ]
 
-Fix the service handler function for the CB.ProbeUuid RPC call so that it
-replies in the correct manner - that is an empty reply for success and an
-abort of 1 for failure.
+Register cpufreq notifier after we have initialized the crtc and
+unregister it before we remove the ctrc. Receiving a cpufreq notify
+without crtc causes a crash.
 
-Putting 0 or 1 in an integer in the body of the reply should result in the
-fileserver throwing an RX_PROTOCOL_ERROR abort and discarding its record of
-the client; older servers, however, don't necessarily check that all the
-data got consumed, and so might incorrectly think that they got a positive
-response and associate the client with the wrong host record.
-
-If the client is incorrectly associated, this will result in callbacks
-intended for a different client being delivered to this one and then, when
-the other client connects and responds positively, all of the callback
-promises meant for the client that issued the improper response will be
-lost and it won't receive any further change notifications.
-
-Fixes: 9396d496d745 ("afs: support the CB.ProbeUuid RPC op")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+Reported-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/cmservice.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/tilcdc/tilcdc_drv.c | 34 ++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
-index 9e51d6fe7e8f9..40c6860d4c632 100644
---- a/fs/afs/cmservice.c
-+++ b/fs/afs/cmservice.c
-@@ -423,18 +423,14 @@ static void SRXAFSCB_ProbeUuid(struct work_struct *work)
- 	struct afs_call *call = container_of(work, struct afs_call, work);
- 	struct afs_uuid *r = call->request;
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_drv.c b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+index 0fb300d41a09c..e1868776da252 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_drv.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_drv.c
+@@ -184,6 +184,12 @@ static void tilcdc_fini(struct drm_device *dev)
+ {
+ 	struct tilcdc_drm_private *priv = dev->dev_private;
  
--	struct {
--		__be32	match;
--	} reply;
++#ifdef CONFIG_CPU_FREQ
++	if (priv->freq_transition.notifier_call)
++		cpufreq_unregister_notifier(&priv->freq_transition,
++					    CPUFREQ_TRANSITION_NOTIFIER);
++#endif
++
+ 	if (priv->crtc)
+ 		tilcdc_crtc_shutdown(priv->crtc);
+ 
+@@ -198,12 +204,6 @@ static void tilcdc_fini(struct drm_device *dev)
+ 	drm_mode_config_cleanup(dev);
+ 	tilcdc_remove_external_device(dev);
+ 
+-#ifdef CONFIG_CPU_FREQ
+-	if (priv->freq_transition.notifier_call)
+-		cpufreq_unregister_notifier(&priv->freq_transition,
+-					    CPUFREQ_TRANSITION_NOTIFIER);
+-#endif
 -
- 	_enter("");
+ 	if (priv->clk)
+ 		clk_put(priv->clk);
  
- 	if (memcmp(r, &call->net->uuid, sizeof(call->net->uuid)) == 0)
--		reply.match = htonl(0);
-+		afs_send_empty_reply(call);
- 	else
--		reply.match = htonl(1);
-+		rxrpc_kernel_abort_call(call->net->socket, call->rxcall,
-+					1, 1, "K-1");
+@@ -274,17 +274,6 @@ static int tilcdc_init(struct drm_driver *ddrv, struct device *dev)
+ 		goto init_failed;
+ 	}
  
--	afs_send_simple_reply(call, &reply, sizeof(reply));
- 	afs_put_call(call);
- 	_leave("");
- }
+-#ifdef CONFIG_CPU_FREQ
+-	priv->freq_transition.notifier_call = cpufreq_transition;
+-	ret = cpufreq_register_notifier(&priv->freq_transition,
+-			CPUFREQ_TRANSITION_NOTIFIER);
+-	if (ret) {
+-		dev_err(dev, "failed to register cpufreq notifier\n");
+-		priv->freq_transition.notifier_call = NULL;
+-		goto init_failed;
+-	}
+-#endif
+-
+ 	if (of_property_read_u32(node, "max-bandwidth", &priv->max_bandwidth))
+ 		priv->max_bandwidth = TILCDC_DEFAULT_MAX_BANDWIDTH;
+ 
+@@ -361,6 +350,17 @@ static int tilcdc_init(struct drm_driver *ddrv, struct device *dev)
+ 	}
+ 	modeset_init(ddev);
+ 
++#ifdef CONFIG_CPU_FREQ
++	priv->freq_transition.notifier_call = cpufreq_transition;
++	ret = cpufreq_register_notifier(&priv->freq_transition,
++			CPUFREQ_TRANSITION_NOTIFIER);
++	if (ret) {
++		dev_err(dev, "failed to register cpufreq notifier\n");
++		priv->freq_transition.notifier_call = NULL;
++		goto init_failed;
++	}
++#endif
++
+ 	if (priv->is_componentized) {
+ 		ret = component_bind_all(dev, ddev);
+ 		if (ret < 0)
 -- 
 2.20.1
 
