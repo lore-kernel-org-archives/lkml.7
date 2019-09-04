@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BF2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E8EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 745BA22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9531B22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620178;
-	bh=loe82XiiFqDncGdpxuAyI0smABOQem9qmcY9siwJHrg=;
+	s=default; t=1567620181;
+	bh=S7xatoxrGILk99eVCvzdkYSlzdr6JTKpzXUvC1KZTXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C/BVV7zWSizP2thYlNyRI9czlnXtBXkTnwOKx/IzzfzAsKumgIsQt8joy/+EvA4kt
-	 IYaYU2D0gpK/ybCJKoPFvEoyAFAHwbx3Hrjo4NvMi75guNziYljv75V5Cm6jqRDVQF
-	 sNVsdtoE2L/nFC+6NJ28EpZJataq0d146PJrxF6E=
+	b=jK+15iAx9UXgRMAtqHxIlphnmHG0jgDYijvsBmxlIjz/amwKptyvGvQ+zSyIv9gze
+	 h798OYg1d0N5p7hBQHBhxGDD1JhXv9sXnMEkNyVVJ6xyW7/gYavvCoqFSjSh7nkhmi
+	 Dquio8f7DSlsihQd6WKtM61pqu3I1YMmMNcJLsPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388851AbfIDSC5 (ORCPT
+        id S2388457AbfIDSDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43104 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388825AbfIDSCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:55 -0400
+        id S2388480AbfIDSC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA75722CF5;
-        Wed,  4 Sep 2019 18:02:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F5F7206B8;
+        Wed,  4 Sep 2019 18:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620174;
-        bh=loe82XiiFqDncGdpxuAyI0smABOQem9qmcY9siwJHrg=;
+        s=default; t=1567620177;
+        bh=S7xatoxrGILk99eVCvzdkYSlzdr6JTKpzXUvC1KZTXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOhOkaefseWnXjDZ7MRCDAupie4vFxbPW1+VY6VlB7Ja3m7SE+cMuovB3qgja22MP
-         usCEvZPF3sPs0jQYkVD48sW0aHwdxrB7z/I/WmVjTiGuEqm83VeifCk0kMNOUDC2u9
-         4soCr02SWxRX4p6EG66T02P8u3IFMkFhhpKz6/Ic=
+        b=Katmvyh/McfW65BQCY/4ra7uAfeB+s+hpjnOb7AHg7BdqWusoAHBI5G06p/JQeFg9
+         xAGQEgnrGv/zqkJn7H8vwV09pIS9RQZrZ8ZVybLVMQwrOVK3mbwd6Dd2g7sYMlnBsR
+         D72fnbJwX4jcNOikJ4xSPsrvU0Xn0Ghk6d1ATm+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 18/57] ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
-Date:   Wed,  4 Sep 2019 19:53:46 +0200
-Message-Id: <20190904175303.725620365@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 19/57] net/smc: make sure EPOLLOUT is raised
+Date:   Wed,  4 Sep 2019 19:53:47 +0200
+Message-Id: <20190904175303.768062015@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,52 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+From: Jason Baron <jbaron@akamai.com>
 
-commit daac07156b330b18eb5071aec4b3ddca1c377f2c upstream.
+[ Upstream commit 4651d1802f7063e4d8c0bcad957f46ece0c04024 ]
 
-The `uac_mixer_unit_descriptor` shown as below is read from the
-device side. In `parse_audio_mixer_unit`, `baSourceID` field is
-accessed from index 0 to `bNrInPins` - 1, the current implementation
-assumes that descriptor is always valid (the length  of descriptor
-is no shorter than 5 + `bNrInPins`). If a descriptor read from
-the device side is invalid, it may trigger out-of-bound memory
-access.
+Currently, we are only explicitly setting SOCK_NOSPACE on a write timeout
+for non-blocking sockets. Epoll() edge-trigger mode relies on SOCK_NOSPACE
+being set when -EAGAIN is returned to ensure that EPOLLOUT is raised.
+Expand the setting of SOCK_NOSPACE to non-blocking sockets as well that can
+use SO_SNDTIMEO to adjust their write timeout. This mirrors the behavior
+that Eric Dumazet introduced for tcp sockets.
 
-```
-struct uac_mixer_unit_descriptor {
-	__u8 bLength;
-	__u8 bDescriptorType;
-	__u8 bDescriptorSubtype;
-	__u8 bUnitID;
-	__u8 bNrInPins;
-	__u8 baSourceID[];
-}
-```
-
-This patch fixes the bug by add a sanity check on the length of
-the descriptor.
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Ursula Braun <ubraun@linux.ibm.com>
+Cc: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/mixer.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/smc/smc_tx.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1719,6 +1719,7 @@ static int parse_audio_mixer_unit(struct
- 	int pin, ich, err;
+--- a/net/smc/smc_tx.c
++++ b/net/smc/smc_tx.c
+@@ -70,13 +70,11 @@ static int smc_tx_wait_memory(struct smc
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+ 	struct smc_connection *conn = &smc->conn;
+ 	struct sock *sk = &smc->sk;
+-	bool noblock;
+ 	long timeo;
+ 	int rc = 0;
  
- 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
-+	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
- 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
- 		usb_audio_err(state->chip,
- 			      "invalid MIXER UNIT descriptor %d\n",
+ 	/* similar to sk_stream_wait_memory */
+ 	timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
+-	noblock = timeo ? false : true;
+ 	add_wait_queue(sk_sleep(sk), &wait);
+ 	while (1) {
+ 		sk_set_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+@@ -91,8 +89,8 @@ static int smc_tx_wait_memory(struct smc
+ 			break;
+ 		}
+ 		if (!timeo) {
+-			if (noblock)
+-				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
++			/* ensure EPOLLOUT is subsequently generated */
++			set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+ 			rc = -EAGAIN;
+ 			break;
+ 		}
 
 
