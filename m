@@ -2,205 +2,323 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14528C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70419C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D56A522CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:59:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OrwA+4vK"
+	by mail.kernel.org (Postfix) with ESMTP id 403EE22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729217AbfIDI7Y (ORCPT
+        id S1729034AbfIDJA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:59:24 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36855 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfIDI7Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:59:24 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o12so11946944qtf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 01:59:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jFVKdea45mJrNywU948vMYq5u5WRFPo01K8iIYZKsrw=;
-        b=OrwA+4vKkCB9cklKzP5BVFlg4BG6lgl69PUYcGp5Pb5zditO/wJGwJljrVy1GIHLs2
-         i8KYGCQ2pFe6T7LNzk2gleAPCJOhYY3jJE+0CVcnCJOVRWvimJbt4Pq7cdcU2rospPhh
-         Ce2FnYU077ib318/G8aFjuNh7rkCLS0A9qHtTVi7PMiPx6Ouhqy3jXQsZx4S9pumNicD
-         6B7HTb9f+D/8uUppfMCB9SMt2kZDq8/fRhhPK24rXlr8GIqSNPiihRI5qcnJvObPM2Dr
-         vkxJQBQ3QWSk1uDOG3fm1WEV3fUYRJ1WDVuR5qE5TRBU8Qemj1A0qK4EqjU1xkT/snKR
-         RyGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jFVKdea45mJrNywU948vMYq5u5WRFPo01K8iIYZKsrw=;
-        b=YL8fDNOaaSuXwTbFkTjdbM/4yvR7V28tBT5FBue+9xbqW1ER4O2iiSNoKmUPQEZ4ee
-         LqQr+n3EniYUfWppWoOZWWLg8/tN4eu/RQ6bp/ww2BICXXOLMHz56jmt146UZUnmzySo
-         gUWSUHGZyEjpi1vm4QKKgmYP/awTusd7F9ylEDLfUhJW13wMlKdFz9Ash0HNjogfbZl1
-         nMEU2AG3/ERQS8OyTV3lODTJ/RV9bHhqbh/z7rxj+1eW9/WJTAyY3Y3PruuvgzL6hMfC
-         Y0Bq4CWk5P/3W/A/gWWtXGq0SQFssKci5hZP+lQ84LzqKJWDoxii/BY9GuSxogGluezy
-         23fQ==
-X-Gm-Message-State: APjAAAVA1qViP5uF4pZJVHUfyQi4MK2vBskphkABnFSBcuTkeZbPPmm6
-        vARgWnagBY7omrUUQ8C6dO6Hpw==
-X-Google-Smtp-Source: APXvYqyJag4ggmgi7xh2Gz1Sw+DPkf0OQ7myIaHWJXxifbKX1zyv/8Shs9SPwXg8QVxvQm6vfC0MZw==
-X-Received: by 2002:ac8:3a84:: with SMTP id x4mr14802700qte.334.1567587562863;
-        Wed, 04 Sep 2019 01:59:22 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li1320-244.members.linode.com. [45.79.221.244])
-        by smtp.gmail.com with ESMTPSA id c1sm665566qkm.70.2019.09.04.01.59.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 01:59:22 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 16:59:12 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5] perf machine: arm/arm64: Improve completeness for
- kernel address space
-Message-ID: <20190904085912.GA27922@leoy-ThinkPad-X240s>
-References: <20190815082521.16885-1-leo.yan@linaro.org>
- <d874e6b3-c115-6c8c-bb12-160cfd600505@intel.com>
- <20190815113242.GA28881@leoy-ThinkPad-X240s>
- <e0919e39-7607-815b-3a12-96f098e45a5f@intel.com>
- <20190816014541.GA17960@leoy-ThinkPad-X240s>
- <363577f1-097e-eddd-a6ca-b23f644dd8ce@intel.com>
- <20190826125105.GA3288@leoy-ThinkPad-X240s>
- <20190902141511.GF4931@leoy-ThinkPad-X240s>
- <c16ee888-73cc-588d-6156-bb5528d635cf@intel.com>
+        Wed, 4 Sep 2019 05:00:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50594 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbfIDJA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:00:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 02:00:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
+   d="scan'208";a="198980839"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Sep 2019 02:00:54 -0700
+Subject: Re: [PATCH V9 2/3] mmc: sdhci-pci-o2micro: Move functions in
+ preparation to fix DLL lock phase shift issue
+To:     "Shirley Her (SC)" <shirley.her@bayhubtech.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "Chevron Li (WH)" <chevron.li@bayhubtech.com>,
+        "Shaper Liu (WH)" <shaper.liu@bayhubtech.com>,
+        "Louis Lu (TP)" <louis.lu@bayhubtech.com>,
+        "Xiaoguang Yu (WH)" <xiaoguang.yu@bayhubtech.com>,
+        "Max Huang (SC)" <max.huang@bayhubtech.com>
+References: <1567100454-5905-1-git-send-email-shirley.her@bayhubtech.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <d4030287-1cf4-2e8a-a02a-10d2e40d230b@intel.com>
+Date:   Wed, 4 Sep 2019 11:59:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c16ee888-73cc-588d-6156-bb5528d635cf@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1567100454-5905-1-git-send-email-shirley.her@bayhubtech.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
-
-On Wed, Sep 04, 2019 at 10:26:13AM +0300, Adrian Hunter wrote:
-
-[...]
-
-> > Could you take chance to review my below replying?  I'd like to get
-> > your confirmation before I send out offical patch.
+On 29/08/19 8:40 PM, Shirley Her (SC) wrote:
+> Move functions in preparation to fix DLL lock phase shift issue
 > 
-> It is not necessary to do kallsyms__parse for x86_64, so it would be better
-> to check the arch before calling that.
+> Signed-off-by: Shirley Her <shirley.her@bayhubtech.com>
 
-Thanks for suggestion, will do it in the formal patch.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> However in general, having to copy and use kallsyms with perf.data if on a
-> different arch does not seem very user friendly.
+So that is all 3 patches acked now.
 
-Agree.  Seems it's more reasonable to save related info in
-perf.data; TBH, I have no idea for how to do that.
-
-> But really that is up to Arnaldo.
-
-@Arnaldo, if possible could you take a look for below change?
-
-If you don't think below code is the right thing and it's not a common
-issue, then maybe it's more feasible to resolve this issue only for
-Arm CoreSight specific.
-
-Please let me know how about you think for this?
-
-Thanks,
-Leo Yan
-
-> >> For your question for taking a perf.data file to a machine with a
-> >> different architecture, we can firstly use command 'perf buildid-list'
-> >> to print out the buildid for kallsyms, based on the dumped buildid we
-> >> can find out the location for the saved kallsyms file; then we can use
-> >> option '--kallsyms' to specify the offline kallsyms file and use the
-> >> offline kallsyms to fixup kernel start address.  The detailed commands
-> >> are listed as below:
-> >>
-> >> root@debian:~# perf buildid-list
-> >> 7b36dfca8317ef74974ebd7ee5ec0a8b35c97640 [kernel.kallsyms]
-> >> 56b84aa88a1bcfe222a97a53698b92723a3977ca /usr/lib/systemd/systemd
-> >> 0956b952e9cd673d48ff2cfeb1a9dbd0c853e686 /usr/lib/aarch64-linux-gnu/libm-2.28.so
-> >> [...]
-> >>
-> >> root@debian:~# perf script --kallsyms ~/.debug/\[kernel.kallsyms\]/7b36dfca8317ef74974ebd7ee5ec0a8b35c97640/kallsyms
-> >>
-> >> The amended patch is as below, please review and always welcome
-> >> any suggestions or comments!
-> >>
-> >> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> >> index 5734460fc89e..593f05cc453f 100644
-> >> --- a/tools/perf/util/machine.c
-> >> +++ b/tools/perf/util/machine.c
-> >> @@ -2672,9 +2672,26 @@ int machine__nr_cpus_avail(struct machine *machine)
-> >>  	return machine ? perf_env__nr_cpus_avail(machine->env) : 0;
-> >>  }
-> >>  
-> >> +static int machine__fixup_kernel_start(void *arg,
-> >> +				       const char *name __maybe_unused,
-> >> +				       char type,
-> >> +				       u64 start)
-> >> +{
-> >> +	struct machine *machine = arg;
-> >> +
-> >> +	type = toupper(type);
-> >> +
-> >> +	/* Fixup for text, weak, data and bss sections. */
-> >> +	if (type == 'T' || type == 'W' || type == 'D' || type == 'B')
-> >> +		machine->kernel_start = min(machine->kernel_start, start);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >>  int machine__get_kernel_start(struct machine *machine)
-> >>  {
-> >>  	struct map *map = machine__kernel_map(machine);
-> >> +	char filename[PATH_MAX];
-> >>  	int err = 0;
-> >>  
-> >>  	/*
-> >> @@ -2696,6 +2713,22 @@ int machine__get_kernel_start(struct machine *machine)
-> >>  		if (!err && !machine__is(machine, "x86_64"))
-> >>  			machine->kernel_start = map->start;
-> >>  	}
-> >> +
-> >> +	if (symbol_conf.kallsyms_name != NULL) {
-> >> +		strncpy(filename, symbol_conf.kallsyms_name, PATH_MAX);
-> >> +	} else {
-> >> +		machine__get_kallsyms_filename(machine, filename, PATH_MAX);
-> >> +
-> >> +		if (symbol__restricted_filename(filename, "/proc/kallsyms"))
-> >> +			goto out;
-> >> +	}
-> >> +
-> >> +	if (kallsyms__parse(filename, machine, machine__fixup_kernel_start))
-> >> +		pr_warning("Fail to fixup kernel start address. skipping...\n");
-> >> +
-> >> +out:
-> >>  	return err;
-> >>  }
-> >>  
-> >>
-> >> Thanks,
-> >> Leo Yan
-> > 
+> ---
+> change in V9:
+>  1. modify subject and commit message to match the patch
 > 
+> change in V8:
+>  1. fix patch format error
+> 
+> change in V7:
+>  1. change subject to match the patch
+>  2. move functions in preparation to fix DLL lock phase shift issue
+> 
+> change in V6:
+>  1. change subject and commit message to match the patch
+>  2. modify the get CD status function
+>  3. re-arrange the order of some functions
+> 
+> change in V5:
+>  1. split 2 patches into 3 patches
+>  2. make dll_adjust_count start from 0
+>  3. fix ret overwritten issue
+>  4. use break instead of goto
+> 
+> change in V4:
+>  1. add a bug fix for V3
+> 
+> change in V3:
+>  1. add more explanation in dll_recovery and execute_tuning function
+>  2. move dll_adjust_count to O2_host struct
+>  3. fix some coding style error
+>  4. renaming O2_PLL_WDT_CONTROL1 TO O2_PLL_DLL_WDT_CONTROL1
+> 
+> change in V2:
+>  1. use usleep_range instead of udelay
+>  2. move dll_adjust_count to sdhci-pci-o2micro.c
+> 
+> chagne in V1:
+>  1. add error recovery function to relock DLL with correct phase
+>  2. retuning HS200 after DLL locked
+> ---
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 187 ++++++++++++++++++-----------------
+>  1 file changed, 94 insertions(+), 93 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index b3a33d9..57c8b83 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -58,6 +58,100 @@
+>  
+>  #define O2_SD_DETECT_SETTING 0x324
+>  
+> +static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
+> +{
+> +	ktime_t timeout;
+> +	u32 scratch32;
+> +
+> +	/* Wait max 50 ms */
+> +	timeout = ktime_add_ms(ktime_get(), 50);
+> +	while (1) {
+> +		bool timedout = ktime_after(ktime_get(), timeout);
+> +
+> +		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
+> +		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
+> +		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
+> +			break;
+> +
+> +		if (timedout) {
+> +			pr_err("%s: Card Detect debounce never finished.\n",
+> +			       mmc_hostname(host->mmc));
+> +			sdhci_dumpregs(host);
+> +			return;
+> +		}
+> +		udelay(10);
+> +	}
+> +}
+> +
+> +static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+> +{
+> +	ktime_t timeout;
+> +	u16 scratch;
+> +	u32 scratch32;
+> +
+> +	/* PLL software reset */
+> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> +	scratch32 |= O2_PLL_SOFT_RESET;
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +	udelay(1);
+> +	scratch32 &= ~(O2_PLL_SOFT_RESET);
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +
+> +	/* PLL force active */
+> +	scratch32 |= O2_PLL_FORCE_ACTIVE;
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +
+> +	/* Wait max 20 ms */
+> +	timeout = ktime_add_ms(ktime_get(), 20);
+> +	while (1) {
+> +		bool timedout = ktime_after(ktime_get(), timeout);
+> +
+> +		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+> +		if (scratch & O2_PLL_LOCK_STATUS)
+> +			break;
+> +		if (timedout) {
+> +			pr_err("%s: Internal clock never stabilised.\n",
+> +			       mmc_hostname(host->mmc));
+> +			sdhci_dumpregs(host);
+> +			goto out;
+> +		}
+> +		udelay(10);
+> +	}
+> +
+> +	/* Wait for card detect finish */
+> +	udelay(1);
+> +	sdhci_o2_wait_card_detect_stable(host);
+> +
+> +out:
+> +	/* Cancel PLL force active */
+> +	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> +	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
+> +	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> +}
+> +
+> +static int sdhci_o2_get_cd(struct mmc_host *mmc)
+> +{
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +
+> +	sdhci_o2_enable_internal_clock(host);
+> +
+> +	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
+> +}
+> +
+> +static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
+> +{
+> +	u32 scratch_32;
+> +
+> +	pci_read_config_dword(chip->pdev,
+> +			      O2_SD_PLL_SETTING, &scratch_32);
+> +
+> +	scratch_32 &= 0x0000FFFF;
+> +	scratch_32 |= value;
+> +
+> +	pci_write_config_dword(chip->pdev,
+> +			       O2_SD_PLL_SETTING, scratch_32);
+> +}
+> +
+>  static void sdhci_o2_set_tuning_mode(struct sdhci_host *host)
+>  {
+>  	u16 reg;
+> @@ -136,19 +230,6 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  	return 0;
+>  }
+>  
+> -static void o2_pci_set_baseclk(struct sdhci_pci_chip *chip, u32 value)
+> -{
+> -	u32 scratch_32;
+> -	pci_read_config_dword(chip->pdev,
+> -			      O2_SD_PLL_SETTING, &scratch_32);
+> -
+> -	scratch_32 &= 0x0000FFFF;
+> -	scratch_32 |= value;
+> -
+> -	pci_write_config_dword(chip->pdev,
+> -			       O2_SD_PLL_SETTING, scratch_32);
+> -}
+> -
+>  static void o2_pci_led_enable(struct sdhci_pci_chip *chip)
+>  {
+>  	int ret;
+> @@ -284,86 +365,6 @@ static void sdhci_pci_o2_enable_msi(struct sdhci_pci_chip *chip,
+>  	host->irq = pci_irq_vector(chip->pdev, 0);
+>  }
+>  
+> -static void sdhci_o2_wait_card_detect_stable(struct sdhci_host *host)
+> -{
+> -	ktime_t timeout;
+> -	u32 scratch32;
+> -
+> -	/* Wait max 50 ms */
+> -	timeout = ktime_add_ms(ktime_get(), 50);
+> -	while (1) {
+> -		bool timedout = ktime_after(ktime_get(), timeout);
+> -
+> -		scratch32 = sdhci_readl(host, SDHCI_PRESENT_STATE);
+> -		if ((scratch32 & SDHCI_CARD_PRESENT) >> SDHCI_CARD_PRES_SHIFT
+> -		    == (scratch32 & SDHCI_CD_LVL) >> SDHCI_CD_LVL_SHIFT)
+> -			break;
+> -
+> -		if (timedout) {
+> -			pr_err("%s: Card Detect debounce never finished.\n",
+> -			       mmc_hostname(host->mmc));
+> -			sdhci_dumpregs(host);
+> -			return;
+> -		}
+> -		udelay(10);
+> -	}
+> -}
+> -
+> -static void sdhci_o2_enable_internal_clock(struct sdhci_host *host)
+> -{
+> -	ktime_t timeout;
+> -	u16 scratch;
+> -	u32 scratch32;
+> -
+> -	/* PLL software reset */
+> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> -	scratch32 |= O2_PLL_SOFT_RESET;
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -	udelay(1);
+> -	scratch32 &= ~(O2_PLL_SOFT_RESET);
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -
+> -	/* PLL force active */
+> -	scratch32 |= O2_PLL_FORCE_ACTIVE;
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -
+> -	/* Wait max 20 ms */
+> -	timeout = ktime_add_ms(ktime_get(), 20);
+> -	while (1) {
+> -		bool timedout = ktime_after(ktime_get(), timeout);
+> -
+> -		scratch = sdhci_readw(host, O2_PLL_DLL_WDT_CONTROL1);
+> -		if (scratch & O2_PLL_LOCK_STATUS)
+> -			break;
+> -		if (timedout) {
+> -			pr_err("%s: Internal clock never stabilised.\n",
+> -			       mmc_hostname(host->mmc));
+> -			sdhci_dumpregs(host);
+> -			goto out;
+> -		}
+> -		udelay(10);
+> -	}
+> -
+> -	/* Wait for card detect finish */
+> -	udelay(1);
+> -	sdhci_o2_wait_card_detect_stable(host);
+> -
+> -out:
+> -	/* Cancel PLL force active */
+> -	scratch32 = sdhci_readl(host, O2_PLL_DLL_WDT_CONTROL1);
+> -	scratch32 &= ~O2_PLL_FORCE_ACTIVE;
+> -	sdhci_writel(host, scratch32, O2_PLL_DLL_WDT_CONTROL1);
+> -}
+> -
+> -static int sdhci_o2_get_cd(struct mmc_host *mmc)
+> -{
+> -	struct sdhci_host *host = mmc_priv(mmc);
+> -
+> -	sdhci_o2_enable_internal_clock(host);
+> -
+> -	return !!(sdhci_readl(host, SDHCI_PRESENT_STATE) & SDHCI_CARD_PRESENT);
+> -}
+> -
+>  static void sdhci_o2_enable_clk(struct sdhci_host *host, u16 clk)
+>  {
+>  	/* Enable internal clock */
+> 
+
