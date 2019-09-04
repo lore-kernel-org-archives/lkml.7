@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEB9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E9DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB924208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4657E2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620554;
-	bh=DnrHmSJpqDeIhtpXZ1Tbd3urK6dLmwpYYGMRDUeovSw=;
+	s=default; t=1567620557;
+	bh=lUGqCZxST7X7Ol2xlVxrEgPWhSrYJdo+luBd/UyI7PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q3PYmEZEfP1d57Gnf1R3I9xpKMyfEt5h9IVsG6emCRveqEfFK+rPBJSl6WgSmXXha
-	 KChAVT+tcFebuHMwjoFdbNWuVS/wIBAN5S2Y7hQUKW4rYPmjy+MXvseEKXtdaLFEkS
-	 M5yJpvUo+puHM01mjhZGe7HRLBlpkMU4+qjmP3tM=
+	b=bMpLigadQKPkhjd1Nf3m/9bFZMqbvep6x/BX2bHM38NYUFAiyiaULOYPhkUJqcbIs
+	 1WU+dIKT6X5uNUOXErwMONw7wm1z1FNVQgf2D3A9mDHMKjuDPKTblhstpui1aKZQ30
+	 spj55tZavVQMXlw0JsVMcMJzG1hIHqd5PO70TiZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388832AbfIDSJN (ORCPT
+        id S2389918AbfIDSJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:09:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389137AbfIDSJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:11 -0400
+        id S2389905AbfIDSJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FD78206BA;
-        Wed,  4 Sep 2019 18:09:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 368332087E;
+        Wed,  4 Sep 2019 18:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620550;
-        bh=DnrHmSJpqDeIhtpXZ1Tbd3urK6dLmwpYYGMRDUeovSw=;
+        s=default; t=1567620552;
+        bh=lUGqCZxST7X7Ol2xlVxrEgPWhSrYJdo+luBd/UyI7PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHlelJjefZcCjMyMBtcUMHonVc7jlRFZkpZ4uuA9u70luNQF8L/aLWpwQdUYexh4H
-         wlI386ZuogawDeYJ6JwkmhQvUXsdPF73usnIkRp7x2dO6WY3ADZqpMgyGioS4Vzl2d
-         sXFLt43cxUPl1GGWNWxtbeWDs31/YTQFdRjCkl+s=
+        b=tu+Aq4TFiyHF0s9fxP1SDzYhH3RnDPDRCEXPHNJAPH3kVPQpRIdnZ7U/rqL1AQqIC
+         MxJhYzvgMfmnTtoBdn06R5pmjyEcvmttzAioz+UGcyE4dPyl43u7XYWusEW/TMEL6Y
+         H4bO8SNKM6Uwg0Ksw5oCyJIotixuB5jWcBUYhoAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 93/93] mt76: mt76x0u: do not reset radio on resume
-Date:   Wed,  4 Sep 2019 19:54:35 +0200
-Message-Id: <20190904175311.152213295@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Heyi Guo <guoheyi@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 85/93] KVM: arm/arm64: vgic: Fix potential deadlock when ap_list is long
+Date:   Wed,  4 Sep 2019 19:54:27 +0200
+Message-Id: <20190904175310.455546296@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,95 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 8f2d163cb26da87e7d8e1677368b8ba1ba4d30b3 upstream.
+[ Upstream commit d4a8061a7c5f7c27a2dc002ee4cb89b3e6637e44 ]
 
-On some machines mt76x0u firmware can hung during resume,
-what result on messages like below:
+If the ap_list is longer than 256 entries, merge_final() in list_sort()
+will call the comparison callback with the same element twice, causing
+a deadlock in vgic_irq_cmp().
 
-[  475.480062] mt76x0 1-8:1.0: Error: MCU response pre-completed!
-[  475.990066] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
-[  475.990075] mt76x0 1-8:1.0: Error: MCU response pre-completed!
-[  476.500003] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
-[  476.500012] mt76x0 1-8:1.0: Error: MCU response pre-completed!
-[  477.010046] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
-[  477.010055] mt76x0 1-8:1.0: Error: MCU response pre-completed!
-[  477.529997] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
-[  477.530006] mt76x0 1-8:1.0: Error: MCU response pre-completed!
-[  477.824907] mt76x0 1-8:1.0: Error: send MCU cmd failed:-71
-[  477.824916] mt76x0 1-8:1.0: Error: MCU response pre-completed!
-[  477.825029] usb 1-8: USB disconnect, device number 6
+Fix it by returning early when irqa == irqb.
 
-and possible whole system freeze.
-
-This can be avoided, if we do not perform mt76x0_chip_onoff() reset.
-
-Cc: stable@vger.kernel.org
-Fixes: 134b2d0d1fcf ("mt76x0: init files")
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: stable@vger.kernel.org # 4.7+
+Fixes: 8e4447457965 ("KVM: arm/arm64: vgic-new: Add IRQ sorting")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+[maz: massaged commit log and patch, added Fixes and Cc-stable]
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76x0/init.c   | 4 ++--
- drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h | 2 +-
- drivers/net/wireless/mediatek/mt76/mt76x0/usb.c    | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ virt/kvm/arm/vgic/vgic.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/init.c b/drivers/net/wireless/mediatek/mt76/mt76x0/init.c
-index 0a3e046d78db3..da2ba51dec352 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/init.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/init.c
-@@ -369,7 +369,7 @@ static void mt76x0_stop_hardware(struct mt76x0_dev *dev)
- 	mt76x0_chip_onoff(dev, false, false);
- }
- 
--int mt76x0_init_hardware(struct mt76x0_dev *dev)
-+int mt76x0_init_hardware(struct mt76x0_dev *dev, bool reset)
- {
- 	static const u16 beacon_offsets[16] = {
- 		/* 512 byte per beacon */
-@@ -382,7 +382,7 @@ int mt76x0_init_hardware(struct mt76x0_dev *dev)
- 
- 	dev->beacon_offsets = beacon_offsets;
- 
--	mt76x0_chip_onoff(dev, true, true);
-+	mt76x0_chip_onoff(dev, true, reset);
- 
- 	ret = mt76x0_wait_asic_ready(dev);
- 	if (ret)
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h b/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h
-index fc9857f61771c..f9dfe5097b099 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h
-@@ -279,7 +279,7 @@ void mt76x0_addr_wr(struct mt76x0_dev *dev, const u32 offset, const u8 *addr);
- 
- /* Init */
- struct mt76x0_dev *mt76x0_alloc_device(struct device *dev);
--int mt76x0_init_hardware(struct mt76x0_dev *dev);
-+int mt76x0_init_hardware(struct mt76x0_dev *dev, bool reset);
- int mt76x0_register_device(struct mt76x0_dev *dev);
- void mt76x0_cleanup(struct mt76x0_dev *dev);
- void mt76x0_chip_onoff(struct mt76x0_dev *dev, bool enable, bool reset);
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c b/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
-index 54ae1f113be23..5aacb1f6a841d 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
-@@ -300,7 +300,7 @@ static int mt76x0_probe(struct usb_interface *usb_intf,
- 	if (!(mt76_rr(dev, MT_EFUSE_CTRL) & MT_EFUSE_CTRL_SEL))
- 		dev_warn(dev->mt76.dev, "Warning: eFUSE not present\n");
- 
--	ret = mt76x0_init_hardware(dev);
-+	ret = mt76x0_init_hardware(dev, true);
- 	if (ret)
- 		goto err;
- 
-@@ -354,7 +354,7 @@ static int mt76x0_resume(struct usb_interface *usb_intf)
- 	struct mt76x0_dev *dev = usb_get_intfdata(usb_intf);
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index 250cd72c95a52..4040a33cdc902 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -244,6 +244,13 @@ static int vgic_irq_cmp(void *priv, struct list_head *a, struct list_head *b)
+ 	bool penda, pendb;
  	int ret;
  
--	ret = mt76x0_init_hardware(dev);
-+	ret = mt76x0_init_hardware(dev, false);
- 	if (ret)
- 		return ret;
++	/*
++	 * list_sort may call this function with the same element when
++	 * the list is fairly long.
++	 */
++	if (unlikely(irqa == irqb))
++		return 0;
++
+ 	spin_lock(&irqa->irq_lock);
+ 	spin_lock_nested(&irqb->irq_lock, SINGLE_DEPTH_NESTING);
  
 -- 
 2.20.1
