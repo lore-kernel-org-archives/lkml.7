@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD74C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E85C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1D921670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B65121670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613896;
-	bh=fb/h9KR3pLXlfXJogUmAfXxs7PKwlfI//BnBLXHS7Mw=;
+	s=default; t=1567613905;
+	bh=9ihFwqapVZ8ImWO7Fe8EEFOgFkuhEe0mW9hNiTymonE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BGZFlHCIGYvja8RaLqwI4/2h1YiCeW0X4OOW3CcZEVS2+XmlxjfdYX52vZs19KP/m
-	 FSf/ElST0thDPRbXKv+PzfZG/2iIgW0volbL02bPY1jWDJUuUXNmg6VANq02dszoz+
-	 rPgINZspnVTtWQLmlfd1iYGLYL2CKbYJFxMTMu8o=
+	b=WYTtUajvOxZAeGN/OF/F4aEkSWXhPoJordjbN5C4ttLXkoR7PVR0FX/r4gkyDn2gM
+	 p9Prh+Y9oC1BIff3vWDSKaJBkddTMFZYBDqi0MLAyNNkNmXIGd904I+BxwCxzlz0is
+	 hfQ5MOX1TFYrnwcPLbQUb/3mbAyPH1t/cLjeHkx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732146AbfIDP6x (ORCPT
+        id S1733187AbfIDQSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:18:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732119AbfIDP6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:50 -0400
+        id S1731543AbfIDP6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00623233FF;
-        Wed,  4 Sep 2019 15:58:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF93B22CF7;
+        Wed,  4 Sep 2019 15:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612729;
-        bh=fb/h9KR3pLXlfXJogUmAfXxs7PKwlfI//BnBLXHS7Mw=;
+        s=default; t=1567612728;
+        bh=9ihFwqapVZ8ImWO7Fe8EEFOgFkuhEe0mW9hNiTymonE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zh7KWDeaHuaZgRyOqYsbMYM2+cGUB8zIA/5ZlzkBlvmF3VKjYFX89DYoVVg2PX3GI
-         ypFXym4AXnLoHQ/3CvGl0WqSgmVvqECpje1J22FQEy+VsAI+uSiPovpepslqO0CB6G
-         lGXVqtcQkIYtyZhq+yMebq7vxcImV//Y+gS4DAIw=
+        b=ohLXILHVZqYXQ7dnTI/nap5vJ4RtGBTzoJiYYfcfqqMqMVgOBxeX3awnRp9+u0tA7
+         9J7Pb9v8Fb5cimz+ASNPkNOecG9nIngO/Xov283NAOjxdzgSOM56CPTwUoz+rbJu+H
+         lS7nHFssubgkJHeLWs4u+SdnRQcgPr/x0UoSopkk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 46/94] SUNRPC: Handle connection breakages correctly in call_status()
-Date:   Wed,  4 Sep 2019 11:56:51 -0400
-Message-Id: <20190904155739.2816-46-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 45/94] SUNRPC: Handle EADDRINUSE and ENOBUFS correctly
+Date:   Wed,  4 Sep 2019 11:56:50 -0400
+Message-Id: <20190904155739.2816-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -61,31 +61,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit c82e5472c9980e0e483f4b689044150eefaca408 ]
+[ Upstream commit 80f455da6cd0998a5be30a8af24ea2a22815c212 ]
 
-If the connection breaks while we're waiting for a reply from the
-server, then we want to immediately try to reconnect.
+If a connect or bind attempt returns EADDRINUSE, that means we want to
+retry with a different port. It is not a fatal connection error.
+Similarly, ENOBUFS is not fatal, but just indicates a memory allocation
+issue. Retry after a short delay.
 
-Fixes: ec6017d90359 ("SUNRPC fix regression in umount of a secure mount")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/clnt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/clnt.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 3f090a75f3721..49adae7cf4c2d 100644
+index 9e1743b364ec4..3f090a75f3721 100644
 --- a/net/sunrpc/clnt.c
 +++ b/net/sunrpc/clnt.c
-@@ -2292,7 +2292,7 @@ call_status(struct rpc_task *task)
- 	case -ECONNABORTED:
- 	case -ENOTCONN:
- 		rpc_force_rebind(clnt);
--		/* fall through */
-+		break;
- 	case -EADDRINUSE:
+@@ -1926,6 +1926,9 @@ call_bind_status(struct rpc_task *task)
+ 		task->tk_rebind_retry--;
+ 		rpc_delay(task, 3*HZ);
+ 		goto retry_timeout;
++	case -ENOBUFS:
++		rpc_delay(task, HZ >> 2);
++		goto retry_timeout;
+ 	case -EAGAIN:
+ 		goto retry_timeout;
+ 	case -ETIMEDOUT:
+@@ -1949,7 +1952,6 @@ call_bind_status(struct rpc_task *task)
+ 	case -ENETDOWN:
+ 	case -EHOSTUNREACH:
+ 	case -ENETUNREACH:
+-	case -ENOBUFS:
+ 	case -EPIPE:
+ 		dprintk("RPC: %5u remote rpcbind unreachable: %d\n",
+ 				task->tk_pid, task->tk_status);
+@@ -2040,8 +2042,6 @@ call_connect_status(struct rpc_task *task)
+ 	case -ENETDOWN:
+ 	case -ENETUNREACH:
+ 	case -EHOSTUNREACH:
+-	case -EADDRINUSE:
+-	case -ENOBUFS:
+ 	case -EPIPE:
+ 		xprt_conditional_disconnect(task->tk_rqstp->rq_xprt,
+ 					    task->tk_rqstp->rq_connect_cookie);
+@@ -2050,6 +2050,7 @@ call_connect_status(struct rpc_task *task)
+ 		/* retry with existing socket, after a delay */
  		rpc_delay(task, 3*HZ);
  		/* fall through */
++	case -EADDRINUSE:
+ 	case -ENOTCONN:
+ 	case -EAGAIN:
+ 	case -ETIMEDOUT:
+@@ -2058,6 +2059,9 @@ call_connect_status(struct rpc_task *task)
+ 		clnt->cl_stats->netreconn++;
+ 		task->tk_action = call_transmit;
+ 		return;
++	case -ENOBUFS:
++		rpc_delay(task, HZ >> 2);
++		goto out_retry;
+ 	}
+ 	rpc_call_rpcerror(task, status);
+ 	return;
 -- 
 2.20.1
 
