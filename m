@@ -2,94 +2,90 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F42C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A207FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB182339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:54:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6pMlB6U"
+	by mail.kernel.org (Postfix) with ESMTP id 819F62077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729741AbfIDKy6 (ORCPT
+        id S1729774AbfIDKzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:54:58 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:42671 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbfIDKy6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:54:58 -0400
-Received: by mail-yw1-f66.google.com with SMTP id i207so7102701ywc.9;
-        Wed, 04 Sep 2019 03:54:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=59s6uUbvi9D98ZNsytr4rsBrjjCNcx38K+42gcO4Xm0=;
-        b=i6pMlB6Ufm3xJUOWgAI857Y1p0OkeHpjYk9k3e4kK830ZlU8a9AMj11pqTX4z2KQ7o
-         hFazH3OF+cYzkcqjyeCMRD57zPHbl6EE+ZSyBaQgkv5gYGumNW2jA3u9LjevHxPfxL7/
-         c4VPvDYTIMlWeJleD/d2pXZ8e6oKWwf0D8A/rbLgP5fQDdUEOMltsS4w4gxWxanxDyXb
-         B7fgad8Ee9i0LcLheyNx9t6coI25I+W8b/v4RjrxyRkiUhSpaou7nl9vBk5a4DerfKuk
-         MsKV1d9IUK0MEs/UYG6hYkJHepkImHQyLLSe50/X147mD2/1szWpzrktxrU90gcgKwMh
-         PWyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=59s6uUbvi9D98ZNsytr4rsBrjjCNcx38K+42gcO4Xm0=;
-        b=rPu3w67f9tNR+046DMa77Luyd7yH+686OItmOiWIRKaD+Ok9nhqJD3Q4QdI43hWYeE
-         /ZSIZJWw3ytC5vP4qhdzOGDyJQt/MqaWcbd0x0C6XHx1CetY44PLpCFgnybD9PWErP3m
-         /OyMlO2P2MISAPGkLpt8jiD60b6c+XRdpLxRxlbYRjWWz2ARKCQeoK70HumT0cHvexSQ
-         BKg4DYuqHWPYsGGq2fwIFLquZlGL28B2BU71XT6wxuerYy/lK8FjO5M0OCUvwoIs1sIc
-         sWX6ZoYIav7j2R5XWNvhtgg0Pp14rEjocs0svRP+hngjtkJOTO1g6mlJpv8iIU7F72bF
-         cyjw==
-X-Gm-Message-State: APjAAAVzCBDjCNWBRvAmN8J1iZ3U42lAzV1l33BgE/tocvF/BO7DYzmS
-        1UKHrT3zNJDw2jmPeziuXbrDTSMRTn7YvcG1z2FAMPjNPO3805Q=
-X-Google-Smtp-Source: APXvYqxcYI4mArx0eHYjWtUHeboM6zxtlsbUazlikoNT8LvpRgMcSmxX9K4Uw84yraWCENizchWDUvuJgLY00Ro8C9I=
-X-Received: by 2002:a81:6c8:: with SMTP id 191mr26019625ywg.181.1567594497157;
- Wed, 04 Sep 2019 03:54:57 -0700 (PDT)
+        Wed, 4 Sep 2019 06:55:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:51884 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727768AbfIDKzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:55:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6473C337;
+        Wed,  4 Sep 2019 03:55:36 -0700 (PDT)
+Received: from [192.168.0.8] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D94B23F246;
+        Wed,  4 Sep 2019 03:55:34 -0700 (PDT)
+Subject: Re: [PATCH v3] sched/core: Fix uclamp ABI bug, clean up and robustify
+ sched_read_attr() ABI logic and code
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Olsa <jolsa@redhat.com>
+References: <20190903171645.28090-1-cascardo@canonical.com>
+ <20190903171645.28090-2-cascardo@canonical.com>
+ <20190904075532.GA26751@gmail.com> <20190904084934.GA117671@gmail.com>
+ <20190904085519.GA127156@gmail.com>
+ <db065b81-c373-f291-ad48-f556a209cc95@arm.com>
+ <20190904103925.GA60962@gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <43e9f6ae-7ebc-d3d8-eecf-860cdef7fdec@arm.com>
+Date:   Wed, 4 Sep 2019 12:55:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-From:   Hunter Nins <hunternins@gmail.com>
-Date:   Wed, 4 Sep 2019 03:54:46 -0700
-Message-ID: <CA+ex1uD4tQ+6V2k3YOA=bufEmHWL24tLVB+Q+oBtTGO-g-W4YQ@mail.gmail.com>
-Subject: Question: kexec() ISO images using encrypted partitions and/or
- "persistent RAM".
-To:     linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190904103925.GA60962@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good day,
+On 04/09/2019 12:39, Ingo Molnar wrote:
+> 
+> * Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+> 
+>>> -v3 attached. Build and minimally boot tested.
+>>>
+>>> Thanks,
+>>>
+>>> 	Ingo
+>>>
+>>
+>> This patch fixes the issue (almost).
+>>
+>> LTP's sched_getattr01 passes again. But IMHO the prio 'chrt -p $$'
+>> should be 0 instead of -65536.
+> 
+> Yeah, I forgot to zero-initialize the structure ...
+> 
+> Does the attached -v4 work any better for you?
 
-I'm currently experimenting with the use of kexec() to change the
-currently-running kernel on my test machine (Intel PC). So far, so
-good: I'm able to change the currently-running kernel and initrd image
-via kexec, and am now attempting to live-boot an ISO image (i.e.
-Ubuntu 18.04 Server amd64 image), via the following snippet (not yet
-working):
+Yeah, looks better now.
 
-mount -o loop -t iso9660 /public/ubuntu.iso /boot
-ISO_FILE="/public/ubuntu.iso"
-DEVICE="/dev/sda3"
-UUID=$(blkid ${DEVICE} | tail -1 | tr " " "\n" | grep UUID | cut -d\" -f2)
-APPEND="toram fromiso=/dev/disk/by-uuid/${UUID}/${ISO_FILE}
-iso-scan/filename=/${ISO_PATH}"
-    kexec -l /boot/casper/vmlinuz --initrd=/boot/casper/initrd
---append="${APPEND}"
+# chrt -p $$
+[  258.245786] sched_attr_copy_to_user(): copied 48 bytes. (ksize: 56,
+usize: 48)
+pid 1635's current scheduling policy: SCHED_OTHER
+pid 1635's current scheduling priority: 0
 
-Question: is it possible to kexec() into an ISO that's stored on my
-sole (LUKS encrypted) OS partition on the device, or from a RAM disk?
-I've looked into using PRAM, for example
-(https://lwn.net/Articles/561330/) to store the ISO in a persistent
-RAM disk, but the feature appears to be a non-standard, beta feature
-at best. My alternative is to attempt to kexec + ISO boot from an
-encrypted partition (i.e. "/dev/mapper/ubuntu--vg-root"), which I'm
-not sure is possible/supported, as I'm not permitted to have
-non-encrypted partitions or USB thumb drives on the server I'm
-currently testing this on.
+w/o the extra printk:
 
-Thank you.
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
