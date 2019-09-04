@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B18C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827BBC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8179622DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C50722CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619765;
-	bh=z6lJx5LHEJyB+ZMovtOJ+d4dKwYokh0c7+rh2PGTlLk=;
+	s=default; t=1567619768;
+	bh=8nokAcEZWirdKxEw7pYP5GzdcUxq8+du0AvoEqwM5rA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AMHkC/ZGcuN1NXviksASqvwB+qIMBxA8G0VNpuftWtSFALObb6A1wDmEr32YiyVCW
-	 7oMnPDBMju+DJP5+l+hXKpQMVGrXvbiDUAKkhRpi0uvaipxNidGGvRHwjwUrzv5Wf+
-	 r0rpe5EjkbwOlaYXmyzt50fUQEiWQWrKY3SaMRks=
+	b=l0slM5w6X77KJCKnmmU3Ta7J2HWYOeKE+agd51T6mwNKegD2LdEb3qvNlve52NGDJ
+	 4SjDQDZf6MlyFZ2uVTEHio8PE0DeBggt7Wcf0cL9370lx6Wfe1M/vPB3Re7TaLSLqb
+	 gtd9R5FUj+rLaN8XKGW4CW6JqRwXEOupCuws1rfc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733151AbfIDR4E (ORCPT
+        id S1733192AbfIDR4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33144 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733100AbfIDR4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:56:02 -0400
+        id S1733140AbfIDR4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:56:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D9A221883;
-        Wed,  4 Sep 2019 17:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C36F222CF5;
+        Wed,  4 Sep 2019 17:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619761;
-        bh=z6lJx5LHEJyB+ZMovtOJ+d4dKwYokh0c7+rh2PGTlLk=;
+        s=default; t=1567619764;
+        bh=8nokAcEZWirdKxEw7pYP5GzdcUxq8+du0AvoEqwM5rA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apadRopfMXEG1lJivQGFoiK0fOhvxCYEsNccDoytvuSEHhh7W19RT7z/wAs26h+bo
-         1sADdiixJvGtx4U6jfLx3d2U/+ZZ+DQTxy7ImOpxemRQG3pMuGBJod+PCgFyr3hvfl
-         PkOFOgU5Qx01v/HpmRZJXOxF43Gu0ZAXH6oRyZ38=
+        b=O8DBvQhoyChp5SqQ0ZBA+mh2kDd3GbqrbknGa717JH+dn4HLFPaePEBkPI9agwyxW
+         qIy6FlIIeTSWhTTG8gaOQCsZhwE++QBXSYDAkWE2K3LR0VmPWJS13UZQb3A7PVdRE9
+         TnWblPiHvqWmVsdqtDEGXsiUMGCpXsXrl0oh8G04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jann Horn <jannh@google.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 25/77] userfaultfd_release: always remove uffd flags and clear vm_userfaultfd_ctx
-Date:   Wed,  4 Sep 2019 19:53:12 +0200
-Message-Id: <20190904175305.895853890@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.4 26/77] x86/retpoline: Dont clobber RFLAGS during CALL_NOSPEC on i386
+Date:   Wed,  4 Sep 2019 19:53:13 +0200
+Message-Id: <20190904175306.033475295@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -68,87 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 46d0b24c5ee10a15dfb25e20642f5a5ed59c5003 upstream.
+commit b63f20a778c88b6a04458ed6ffc69da953d3a109 upstream.
 
-userfaultfd_release() should clear vm_flags/vm_userfaultfd_ctx even if
-mm->core_state != NULL.
+Use 'lea' instead of 'add' when adjusting %rsp in CALL_NOSPEC so as to
+avoid clobbering flags.
 
-Otherwise a page fault can see userfaultfd_missing() == T and use an
-already freed userfaultfd_ctx.
+KVM's emulator makes indirect calls into a jump table of sorts, where
+the destination of the CALL_NOSPEC is a small blob of code that performs
+fast emulation by executing the target instruction with fixed operands.
 
-Link: http://lkml.kernel.org/r/20190820160237.GB4983@redhat.com
-Fixes: 04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping")
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  adcb_al_dl:
+     0x000339f8 <+0>:   adc    %dl,%al
+     0x000339fa <+2>:   ret
+
+A major motiviation for doing fast emulation is to leverage the CPU to
+handle consumption and manipulation of arithmetic flags, i.e. RFLAGS is
+both an input and output to the target of CALL_NOSPEC.  Clobbering flags
+results in all sorts of incorrect emulation, e.g. Jcc instructions often
+take the wrong path.  Sans the nops...
+
+  asm("push %[flags]; popf; " CALL_NOSPEC " ; pushf; pop %[flags]\n"
+     0x0003595a <+58>:  mov    0xc0(%ebx),%eax
+     0x00035960 <+64>:  mov    0x60(%ebx),%edx
+     0x00035963 <+67>:  mov    0x90(%ebx),%ecx
+     0x00035969 <+73>:  push   %edi
+     0x0003596a <+74>:  popf
+     0x0003596b <+75>:  call   *%esi
+     0x000359a0 <+128>: pushf
+     0x000359a1 <+129>: pop    %edi
+     0x000359a2 <+130>: mov    %eax,0xc0(%ebx)
+     0x000359b1 <+145>: mov    %edx,0x60(%ebx)
+
+  ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK);
+     0x000359a8 <+136>: mov    -0x10(%ebp),%eax
+     0x000359ab <+139>: and    $0x8d5,%edi
+     0x000359b4 <+148>: and    $0xfffff72a,%eax
+     0x000359b9 <+153>: or     %eax,%edi
+     0x000359bd <+157>: mov    %edi,0x4(%ebx)
+
+For the most part this has gone unnoticed as emulation of guest code
+that can trigger fast emulation is effectively limited to MMIO when
+running on modern hardware, and MMIO is rarely, if ever, accessed by
+instructions that affect or consume flags.
+
+Breakage is almost instantaneous when running with unrestricted guest
+disabled, in which case KVM must emulate all instructions when the guest
+has invalid state, e.g. when the guest is in Big Real Mode during early
+BIOS.
+
+Fixes: 776b043848fd2 ("x86/retpoline: Add initial retpoline support")
+Fixes: 1a29b5b7f347a ("KVM: x86: Make indirect calls in emulator speculation safe")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190822211122.27579-1-sean.j.christopherson@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/userfaultfd.c |   25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/nospec-branch.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -431,6 +431,7 @@ static int userfaultfd_release(struct in
- 	/* len == 0 means wake all */
- 	struct userfaultfd_wake_range range = { .len = 0, };
- 	unsigned long new_flags;
-+	bool still_valid;
- 
- 	ACCESS_ONCE(ctx->released) = true;
- 
-@@ -446,8 +447,7 @@ static int userfaultfd_release(struct in
- 	 * taking the mmap_sem for writing.
- 	 */
- 	down_write(&mm->mmap_sem);
--	if (!mmget_still_valid(mm))
--		goto skip_mm;
-+	still_valid = mmget_still_valid(mm);
- 	prev = NULL;
- 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 		cond_resched();
-@@ -458,19 +458,20 @@ static int userfaultfd_release(struct in
- 			continue;
- 		}
- 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
--		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
--				 new_flags, vma->anon_vma,
--				 vma->vm_file, vma->vm_pgoff,
--				 vma_policy(vma),
--				 NULL_VM_UFFD_CTX);
--		if (prev)
--			vma = prev;
--		else
--			prev = vma;
-+		if (still_valid) {
-+			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
-+					 new_flags, vma->anon_vma,
-+					 vma->vm_file, vma->vm_pgoff,
-+					 vma_policy(vma),
-+					 NULL_VM_UFFD_CTX);
-+			if (prev)
-+				vma = prev;
-+			else
-+				prev = vma;
-+		}
- 		vma->vm_flags = new_flags;
- 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
- 	}
--skip_mm:
- 	up_write(&mm->mmap_sem);
- 	mmput(mm);
- wakeup:
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -151,7 +151,7 @@
+ 	"    	lfence;\n"					\
+ 	"       jmp    902b;\n"					\
+ 	"       .align 16\n"					\
+-	"903:	addl   $4, %%esp;\n"				\
++	"903:	lea    4(%%esp), %%esp;\n"			\
+ 	"       pushl  %[thunk_target];\n"			\
+ 	"       ret;\n"						\
+ 	"       .align 16\n"					\
 
 
