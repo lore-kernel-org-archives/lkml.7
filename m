@@ -2,150 +2,274 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B495C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B38C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CC9233A1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:33:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JbMqweJt"
+	by mail.kernel.org (Postfix) with ESMTP id B494B22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfIDHdb (ORCPT
+        id S1729149AbfIDHdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:33:31 -0400
-Received: from mail-eopbgr820075.outbound.protection.outlook.com ([40.107.82.75]:60768
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726033AbfIDHdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:33:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RqIMUmtgUBS81lXLCSSN/uvUAcKHYx/AWhLeCbt/Jx95QJOnrmd7OxJLQzEI/gG1T66JQY/P1FzO4dHpi+BbnycA87VAIsACoCVTMddOAedD72iK+jGSGxfIPl+UNE9I8vHQVtRTKhhdOsf6s+k2MtGlqLEI7v72pLET9FEVf0NUShgdyf/cCDt5r/GsbwrDROK6+lu87ZoJO+39mMFIlusSo4Q20eairSDRjgKNKqWAaFwQAhOEx596pPbx+344fikH7qGB2O0rZzVNREbGhKhubbp6TxmUkhI7+08b9JbUqwpXEcqDbxsrmm8ZBdozKqhZ6xxu+isnskFg/X1icA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f1IJBzZJFjTp9JhivkBo/TKz83nWdQrsk7fk/t/61p4=;
- b=ZyK29c/uGk+JLeydEniswU9E2bgjQ0kLJEGG6AnZSrC4lf7F60BtK+maDxOBFPR4cQbvsvPUSVhHb5Tj+5Ktp7T4/c4tzjaya1PGxpAEt+PRhcQIJKfBFzT3jZ3zAb5Nmqai2OVPi5RsMbYCs3v4M59jPx3KT0TUFD3pBYUZERdgmoEvtr/YCVfZT9VGQkyoAJBC+kxarQ3kJ2ZyJwSiKMfyQMvMv9v6vBivnXFU8flGlIJnjExZzsPscCkVSllSTVrf1A+BVtASode7Ro2Px3s7mJT0uy1vwlpWtKe9jZw5gn9uUxMk+I5idmvbEFCMtxCGBRSiLxKwXH36YcNJYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f1IJBzZJFjTp9JhivkBo/TKz83nWdQrsk7fk/t/61p4=;
- b=JbMqweJtRUvsyCs/FHBT8/0S4ojvmVUwjq4U1y0Eeuk9SohTVG/BGoVnIce7JManxtFPcw9qmkHZkFoT2zIwCxb0szlBJmEPSlGdqnOhO0mQLArfo0hN1GvKGCJ1O2mbw+Ozq9kvJV3q63dDyqFKrseUqNnXMeX+VhqoBBEAjv4=
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
- DM5PR12MB1225.namprd12.prod.outlook.com (10.168.240.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Wed, 4 Sep 2019 07:33:27 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc%8]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
- 07:33:27 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     =?utf-8?B?VGhvbWFzIEhlbGxzdHLDtm0gKFZNd2FyZSk=?= 
-        <thomas_os@shipmail.org>, Dave Hansen <dave.hansen@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-CC:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
- memory encryption
-Thread-Topic: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support
- AMD memory encryption
-Thread-Index: AQHVYlmrEsqRn+3n2UyO+FRNS69TaKcaWZqAgAADnYCAAAEogIAAC2+AgAAENQCAAAPnAIAAr2oA
-Date:   Wed, 4 Sep 2019 07:33:27 +0000
-Message-ID: <cfe46eda-66b5-b40d-6721-84e6e0e1f5de@amd.com>
-References: <20190903131504.18935-1-thomas_os@shipmail.org>
- <20190903131504.18935-4-thomas_os@shipmail.org>
- <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
- <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
- <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com>
- <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
- <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com>
- <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
-In-Reply-To: <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: PR2P264CA0009.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::21)
- To DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5d52c5be-54cd-4319-387a-08d7310a2cee
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1225;
-x-ms-traffictypediagnostic: DM5PR12MB1225:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB12250BA7AC689A5DF4F20FC283B80@DM5PR12MB1225.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0150F3F97D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(366004)(51444003)(199004)(189003)(478600001)(110136005)(5660300002)(54906003)(58126008)(71190400001)(71200400001)(66946007)(76176011)(7416002)(81166006)(8936002)(8676002)(14454004)(81156014)(36756003)(46003)(6486002)(4326008)(186003)(64756008)(99286004)(66476007)(386003)(6506007)(53546011)(102836004)(66556008)(2906002)(316002)(229853002)(86362001)(53936002)(6246003)(52116002)(65956001)(65806001)(31696002)(476003)(31686004)(6436002)(6512007)(305945005)(7736002)(446003)(2616005)(6116002)(256004)(11346002)(25786009)(66446008)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1225;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 5ot6W/CwzLTTu6GGkv0Lp5piVMrCSsXj6bqAdfPyTJvIcDBZrnJpxkbcBfkPEO2wSn0tOHQcfB1RtkyUvWraxHi4zrpQ0KCqztaVoTz1ab2NXEQJMZrCbhHI3LZ8ZO2nyBo6YWXjLMVHdtOY7CylOC9OMQyTmyiFLcmwTHwvUWpkthe9DsrH9aP4OhcNtFCc/SvHuH5iIXBjfgNsWcoJMH9pPzahYRjQmG2wWKMFkyxGwhZD2LefpCiPMJNfr/DLVFMBJ2Js8Qe8+sgynFi9WqHvMT4DpdmDtnQQ2L5Gjd454E1lsfFtFNFse7iEEaa2AY6dxmmlmbVIVtLK7S3hYnFlcjBMzbuhNzBHXNri71jJgSVDyndB+3NWe3AkpsG6leL0apK8NuMNL9biY8u9QcOH/vmiXm8ydORNrmaRKn4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EC6A318B0D8592409E7975FC2E0B079E@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 4 Sep 2019 03:33:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60310 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728745AbfIDHdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:33:54 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x847WV2P015874
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Sep 2019 03:33:53 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut851hqsk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 03:33:52 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Wed, 4 Sep 2019 08:33:50 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Sep 2019 08:33:48 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x847Xl2v44564858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Sep 2019 07:33:47 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04E5952051;
+        Wed,  4 Sep 2019 07:33:47 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.155.72])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 881FA52050;
+        Wed,  4 Sep 2019 07:33:46 +0000 (GMT)
+Subject: Re: [PATCH] KVM: s390: Disallow invalid bits in kvm_valid_regs and
+ kvm_dirty_regs
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190904071308.25683-1-thuth@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Wed, 4 Sep 2019 09:33:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d52c5be-54cd-4319-387a-08d7310a2cee
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 07:33:27.2586
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fNjpiJrUZ/TO62DNbfuv/FeljFLDUlNyDcrF+mV9s+GsmKNzX1EMEMPjk+ZUhb6x
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1225
+In-Reply-To: <20190904071308.25683-1-thuth@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ"
+X-TM-AS-GCONF: 00
+x-cbid: 19090407-0016-0000-0000-000002A67A96
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090407-0017-0000-0000-00003306E66B
+Message-Id: <3b1666ee-0b7f-a775-3622-5ca7f938aeb0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=973 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909040078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMDMuMDkuMTkgdW0gMjM6MDUgc2NocmllYiBUaG9tYXMgSGVsbHN0csO2bSAoVk13YXJlKToN
-Cj4gT24gOS8zLzE5IDEwOjUxIFBNLCBEYXZlIEhhbnNlbiB3cm90ZToNCj4+IE9uIDkvMy8xOSAx
-OjM2IFBNLCBUaG9tYXMgSGVsbHN0csO2bSAoVk13YXJlKSB3cm90ZToNCj4+PiBTbyB0aGUgcXVl
-c3Rpb24gaGVyZSBzaG91bGQgcmVhbGx5IGJlLCBjYW4gd2UgZGV0ZXJtaW5lIGFscmVhZHkgYXQg
-bW1hcA0KPj4+IHRpbWUgd2hldGhlciBiYWNraW5nIG1lbW9yeSB3aWxsIGJlIHVuZW5jcnlwdGVk
-IGFuZCBhZGp1c3QgdGhlICpyZWFsKg0KPj4+IHZtYS0+dm1fcGFnZV9wcm90IHVuZGVyIHRoZSBt
-bWFwX3NlbT8NCj4+Pg0KPj4+IFBvc3NpYmx5LCBidXQgdGhhdCByZXF1aXJlcyBwb3B1bGF0aW5n
-IHRoZSBidWZmZXIgd2l0aCBtZW1vcnkgYXQgbW1hcA0KPj4+IHRpbWUgcmF0aGVyIHRoYW4gYXQg
-Zmlyc3QgZmF1bHQgdGltZS4NCj4+IEknbSBub3QgY29ubmVjdGluZyB0aGUgZG90cy4NCj4+DQo+
-PiB2bWEtPnZtX3BhZ2VfcHJvdCBpcyB1c2VkIHRvIGNyZWF0ZSBhIFZNQSdzIFBURXMgcmVnYXJk
-bGVzcyBvZiBpZiB0aGV5DQo+PiBhcmUgY3JlYXRlZCBhdCBtbWFwKCkgb3IgZmF1bHQgdGltZS7C
-oCBJZiB3ZSBlc3RhYmxpc2ggYSBnb29kDQo+PiB2bWEtPnZtX3BhZ2VfcHJvdCwgY2FuJ3Qgd2Ug
-anVzdCB1c2UgaXQgZm9yZXZlciBmb3IgZGVtYW5kIGZhdWx0cz8NCj4NCj4gV2l0aCBTRVYgSSB0
-aGluayB0aGF0IHdlIGNvdWxkIHBvc3NpYmx5IGVzdGFibGlzaCB0aGUgZW5jcnlwdGlvbiBmbGFn
-cyANCj4gYXQgdm1hIGNyZWF0aW9uIHRpbWUuIEJ1dCB0aGlua2luZyBvZiBpdCwgaXQgd291bGQg
-YWN0dWFsbHkgYnJlYWsgd2l0aCANCj4gU01FIHdoZXJlIGJ1ZmZlciBjb250ZW50IGNhbiBiZSBt
-b3ZlZCBiZXR3ZWVuIGVuY3J5cHRlZCBzeXN0ZW0gbWVtb3J5IA0KPiBhbmQgdW5lbmNyeXB0ZWQg
-Z3JhcGhpY3MgY2FyZCBQQ0kgbWVtb3J5IGJlaGluZCB1c2VyLXNwYWNlJ3MgYmFjay4gDQo+IFRo
-YXQgd291bGQgaW1wbHkga2lsbGluZyBhbGwgdXNlci1zcGFjZSBlbmNyeXB0ZWQgUFRFcyBhbmQg
-YXQgZmF1bHQgDQo+IHRpbWUgc2V0IHVwIG5ldyBvbmVzIHBvaW50aW5nIHRvIHVuZW5jcnlwdGVk
-IFBDSSBtZW1vcnkuLg0KDQpXZWxsIG15IHByb2JsZW0gaXMgd2hlcmUgZG8geW91IHNlZSBlbmNy
-eXB0ZWQgc3lzdGVtIG1lbW9yeSBoZXJlPw0KDQpBdCBsZWFzdCBmb3IgQU1EIEdQVXMgYWxsIG1l
-bW9yeSBhY2Nlc3NlZCBtdXN0IGJlIHVuZW5jcnlwdGVkIGFuZCB0aGF0IA0KY291bnRzIGZvciBi
-b3RoIHN5c3RlbSBhcyB3ZWxsIGFzIFBDSSBtZW1vcnkuDQoNClNvIEkgZG9uJ3QgZ2V0IHdoeSB3
-ZSBjYW4ndCBhc3N1bWUgYWx3YXlzIHVuZW5jcnlwdGVkIGFuZCBrZWVwIGl0IGxpa2UgdGhhdC4N
-Cg0KUmVnYXJkcywNCkNocmlzdGlhbi4NCg==
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ
+Content-Type: multipart/mixed; boundary="xPn7lGCZnSVGl0FJB37AXdkF6Z4YI95iy";
+ protected-headers="v1"
+From: Janosch Frank <frankja@linux.ibm.com>
+To: Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+ Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+ linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <3b1666ee-0b7f-a775-3622-5ca7f938aeb0@linux.ibm.com>
+Subject: Re: [PATCH] KVM: s390: Disallow invalid bits in kvm_valid_regs and
+ kvm_dirty_regs
+References: <20190904071308.25683-1-thuth@redhat.com>
+In-Reply-To: <20190904071308.25683-1-thuth@redhat.com>
+
+--xPn7lGCZnSVGl0FJB37AXdkF6Z4YI95iy
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 9/4/19 9:13 AM, Thomas Huth wrote:
+> If unknown bits are set in kvm_valid_regs or kvm_dirty_regs, this
+> clearly indicates that something went wrong in the KVM userspace
+> application. The x86 variant of KVM already contains a check for
+> bad bits (and the corresponding kselftest checks this), so let's
+> do the same on s390x now, too.
+>=20
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+
+I think it would make sense to split the kvm changes from the test.
+
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+
+> ---
+>  arch/s390/include/uapi/asm/kvm.h              |  6 ++++
+>  arch/s390/kvm/kvm-s390.c                      |  4 +++
+>  .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++=
+
+>  3 files changed, 40 insertions(+)
+>=20
+> diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/=
+asm/kvm.h
+> index 47104e5b47fd..436ec7636927 100644
+> --- a/arch/s390/include/uapi/asm/kvm.h
+> +++ b/arch/s390/include/uapi/asm/kvm.h
+> @@ -231,6 +231,12 @@ struct kvm_guest_debug_arch {
+>  #define KVM_SYNC_GSCB   (1UL << 9)
+>  #define KVM_SYNC_BPBC   (1UL << 10)
+>  #define KVM_SYNC_ETOKEN (1UL << 11)
+> +
+> +#define KVM_SYNC_S390_VALID_FIELDS \
+> +	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
+> +	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \=
+
+> +	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
+> +
+>  /* length and alignment of the sdnx as a power of two */
+>  #define SDNXC 8
+>  #define SDNXL (1UL << SDNXC)
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 49d7722229ae..a7d7dedfe527 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -3998,6 +3998,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcp=
+u, struct kvm_run *kvm_run)
+>  	if (kvm_run->immediate_exit)
+>  		return -EINTR;
+> =20
+> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
+> +	    kvm_run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
+> +		return -EINVAL;
+> +
+>  	vcpu_load(vcpu);
+> =20
+>  	if (guestdbg_exit_pending(vcpu)) {
+> diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools=
+/testing/selftests/kvm/s390x/sync_regs_test.c
+> index bbc93094519b..d5290b4ad636 100644
+> --- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> +++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> @@ -85,6 +85,36 @@ int main(int argc, char *argv[])
+> =20
+>  	run =3D vcpu_state(vm, VCPU_ID);
+> =20
+> +	/* Request reading invalid register set from VCPU. */
+> +	run->kvm_valid_regs =3D INVALID_SYNC_FIELD;
+> +	rv =3D _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
+> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d=
+\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs =3D 0;
+> +
+> +	run->kvm_valid_regs =3D INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
+> +	rv =3D _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
+> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d=
+\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs =3D 0;
+> +
+> +	/* Request setting invalid register set into VCPU. */
+> +	run->kvm_dirty_regs =3D INVALID_SYNC_FIELD;
+> +	rv =3D _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
+> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d=
+\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs =3D 0;
+> +
+> +	run->kvm_dirty_regs =3D INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
+> +	rv =3D _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
+> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d=
+\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs =3D 0;
+> +
+>  	/* Request and verify all valid register sets. */
+>  	run->kvm_valid_regs =3D TEST_SYNC_FIELDS;
+>  	rv =3D _vcpu_run(vm, VCPU_ID);
+>=20
+
+
+
+--xPn7lGCZnSVGl0FJB37AXdkF6Z4YI95iy--
+
+--KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl1vaNoACgkQ41TmuOI4
+ufjW5xAAqrwQio0Wlchvkb6AmqBKX2hwY0bGnw4oALIkbpoEMQIKLp1Ka88r55wt
+cZAk90yeT7AMHNpeerBsMqkXRn5FhWkCdGGcowmjPNLHImCCwq8YztzNmps+yvxR
+S25XUoTODXHPXZFVxUyvLsA2wQPuKuo1nt9jvT9Ecbfoi4IFs/Hr/9+cIBWb4Dx4
+Cci6QnW/dLpEkgZ195hgZOif+ENGbd7fod5y73zkCI/sVrUPWyhM/di3afS2pDOZ
+7+Ckf9ydQDbGP1dfEPK5tsi/bYmKpHHqH5ORhemKJRGgBjaLqEPBq5pzxvYkVM50
+TPP3SpukZmDHzFX7VvIWMuGApyxE+IEC3+u2zGBabZTE+hMIAlRDrW6LplmV42dt
+ZyhPr9tJCYRLiMdzBZLzL1lBPm9EqbBhV47/WM66iu7256ljJ03eN6KeBlBOT8PC
+KdpR7LmyB5EoNTYMZ6XgBmBefFKb/JTcigTtIaXNXIOrlbVT2kreYpp2KIN/lwif
+DAFiTJptZX9W+tIBV6A0b9SXQBeovLiDCBjMlSZy08Edm18dr5TVeUbhoQGtpYyY
+7/jf6WVewzjn4YO/1hX2a1uL5dkCDLoIhx18IuQ+V7MPlbELoYZQuB7+P074xR7e
+UiQmR8/qS29kOKEpaMx75rk9N2BRmyahWRjo7mCbjsNC0mB479Q=
+=bXog
+-----END PGP SIGNATURE-----
+
+--KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ--
+
