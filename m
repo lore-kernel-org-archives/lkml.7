@@ -2,52 +2,51 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6B7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82449C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0303720882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5073520882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621357;
-	bh=p3mS5M2VL2WP7HU7xDfcmCo78rfdX99EhmyzDEcf49Q=;
+	s=default; t=1567621362;
+	bh=s1J+EgK/eEEIFFe3Vw/B9PmlejgcCiCTsLeyKievWXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lKo6KDxd7jE0DgFkHhQYTJSxa4AuRnG7Nt0PlAbv6kG+4kn5fUsjsrlEqXQMn2UMh
-	 SJODGNI90PciVpqobgaFiFzsfeZ6K5MV9jtDpDWiwbQu68xkcfnKWntxOF2c8VX3Ux
-	 JxaSeJVvuVki7drtb7TYE7rD9RJ1SyUfJx9fE2VQ=
+	b=BSW2kd/Ekezu89xv97m1RB3exX2ras3czgAIeKuFSZ4WdsC1FZTVVdpLrdjmcWueG
+	 7e365/rM6iZf7QLkm0Sg5hjGjwXrFLqeJKRLeSrpwPw4VN1+n2nDxqvKjA9WFn/ylQ
+	 77i8yW4VI7wgRplyrAKdjI0bjtt93HXABBrGlScQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389163AbfIDSWf (ORCPT
+        id S2389245AbfIDSWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:22:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45594 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:22:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389094AbfIDSEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:31 -0400
+        id S1732179AbfIDSEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 324842339E;
-        Wed,  4 Sep 2019 18:04:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84FF3208E4;
+        Wed,  4 Sep 2019 18:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620270;
-        bh=p3mS5M2VL2WP7HU7xDfcmCo78rfdX99EhmyzDEcf49Q=;
+        s=default; t=1567620260;
+        bh=s1J+EgK/eEEIFFe3Vw/B9PmlejgcCiCTsLeyKievWXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oxNHoHJHQEXknvIQRdGWCj8MpWXMtQy0Ed7SD1mtaswPaUwt7fXKgcW0N2wW3+mnS
-         7kD0Bqeei6WxLI8TlQWmxez9sLdvZST/gvrWdbkX13kJqVOy5s5/BYIx0HSrE4ilZJ
-         sGW7WqlOZs0aSnuqyuqKUy4M7IMCm/izraU3Zi1Y=
+        b=llP2s0E76uaPi2z44rbqTHsK3iTC/i7jLe4zZXYSaIs1Ol/IqavuZKpts2ViF84sH
+         GvU8tWe1c/2txa92sEZ2zYJgghBRgYmwmuSrZmEPGeTLhNwFJ4V325bKkzj1ESZByo
+         mgH+AEdid5XGUvcXfU095qHwPx5kwO2UI0a+v+6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 54/57] NFS: Pass error information to the pgio error cleanup routine
-Date:   Wed,  4 Sep 2019 19:54:22 +0200
-Message-Id: <20190904175307.166577781@linuxfoundation.org>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.14 42/57] intel_th: pci: Add support for another Lewisburg PCH
+Date:   Wed,  4 Sep 2019 19:54:10 +0200
+Message-Id: <20190904175306.218467754@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,129 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit df3accb849607a86278a37c35e6b313635ccc48b ]
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-Allow the caller to pass error information when cleaning up a failed
-I/O request so that we can conditionally take action to cancel the
-request altogether if the error turned out to be fatal.
+commit 164eb56e3b64f3a816238d410c9efec7567a82ef upstream.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add support for the Trace Hub in another Lewisburg PCH.
+
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.14+
+Link: https://lore.kernel.org/r/20190821074955.3925-4-alexander.shishkin@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/nfs/direct.c         |  4 ++--
- fs/nfs/pagelist.c       |  5 +++--
- fs/nfs/read.c           |  2 +-
- fs/nfs/write.c          | 11 +++++++++--
- include/linux/nfs_xdr.h |  2 +-
- 5 files changed, 16 insertions(+), 8 deletions(-)
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 0c5e56702b19e..2256ea4394d3a 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -428,7 +428,7 @@ out_put:
- 	hdr->release(hdr);
- }
- 
--static void nfs_read_sync_pgio_error(struct list_head *head)
-+static void nfs_read_sync_pgio_error(struct list_head *head, int error)
- {
- 	struct nfs_page *req;
- 
-@@ -820,7 +820,7 @@ out_put:
- 	hdr->release(hdr);
- }
- 
--static void nfs_write_sync_pgio_error(struct list_head *head)
-+static void nfs_write_sync_pgio_error(struct list_head *head, int error)
- {
- 	struct nfs_page *req;
- 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index ae598e45b2df0..16d7f9068c7ae 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -993,7 +993,7 @@ nfs_pageio_cleanup_request(struct nfs_pageio_descriptor *desc,
- 	LIST_HEAD(head);
- 
- 	nfs_list_move_request(req, &head);
--	desc->pg_completion_ops->error_cleanup(&head);
-+	desc->pg_completion_ops->error_cleanup(&head, desc->pg_error);
- }
- 
- /**
-@@ -1129,7 +1129,8 @@ static void nfs_pageio_error_cleanup(struct nfs_pageio_descriptor *desc)
- 
- 	for (midx = 0; midx < desc->pg_mirror_count; midx++) {
- 		mirror = &desc->pg_mirrors[midx];
--		desc->pg_completion_ops->error_cleanup(&mirror->pg_list);
-+		desc->pg_completion_ops->error_cleanup(&mirror->pg_list,
-+				desc->pg_error);
- 	}
- }
- 
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index 48d7277c60a97..09d5c282f50e9 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -205,7 +205,7 @@ static void nfs_initiate_read(struct nfs_pgio_header *hdr,
- }
- 
- static void
--nfs_async_read_error(struct list_head *head)
-+nfs_async_read_error(struct list_head *head, int error)
- {
- 	struct nfs_page	*req;
- 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 50ed3944d1830..3c1e46f4bce32 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1397,20 +1397,27 @@ static void nfs_redirty_request(struct nfs_page *req)
- 	nfs_release_request(req);
- }
- 
--static void nfs_async_write_error(struct list_head *head)
-+static void nfs_async_write_error(struct list_head *head, int error)
- {
- 	struct nfs_page	*req;
- 
- 	while (!list_empty(head)) {
- 		req = nfs_list_entry(head->next);
- 		nfs_list_remove_request(req);
-+		if (nfs_error_is_fatal(error)) {
-+			nfs_context_set_write_error(req->wb_context, error);
-+			if (nfs_error_is_fatal_on_server(error)) {
-+				nfs_write_error_remove_page(req);
-+				continue;
-+			}
-+		}
- 		nfs_redirty_request(req);
- 	}
- }
- 
- static void nfs_async_write_reschedule_io(struct nfs_pgio_header *hdr)
- {
--	nfs_async_write_error(&hdr->pages);
-+	nfs_async_write_error(&hdr->pages, 0);
- }
- 
- static const struct nfs_pgio_completion_ops nfs_async_write_completion_ops = {
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 6959968dc36a7..373fb26b5fed1 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1520,7 +1520,7 @@ struct nfs_commit_data {
- };
- 
- struct nfs_pgio_completion_ops {
--	void	(*error_cleanup)(struct list_head *head);
-+	void	(*error_cleanup)(struct list_head *head, int);
- 	void	(*init_hdr)(struct nfs_pgio_header *hdr);
- 	void	(*completion)(struct nfs_pgio_header *hdr);
- 	void	(*reschedule_io)(struct nfs_pgio_header *hdr);
--- 
-2.20.1
-
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -149,6 +149,11 @@ static const struct pci_device_id intel_
+ 		.driver_data = (kernel_ulong_t)0,
+ 	},
+ 	{
++		/* Lewisburg PCH */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa226),
++		.driver_data = (kernel_ulong_t)0,
++	},
++	{
+ 		/* Gemini Lake */
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x318e),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
 
 
