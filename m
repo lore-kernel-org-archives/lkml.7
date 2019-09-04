@@ -2,161 +2,104 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E97C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3BCC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402C420870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621418;
-	bh=LSl5EebwU9GZ8EwUwdPQ4Pp10EScuAYKifAdEFMv2Ps=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O0nbMzVNoZzF4UeTT4ZGLdnyKYHSnN4qz/nN+8l+Yf+FaLGz2c2y/OlYwo7WhvpB9
-	 1HRvvRtBT1ZP60er0BacF8kQY8OWVu+jZ9aDJd9oZ2Dd+4tchQvSck0kZ3CuiYQltP
-	 P/aWg+GhsiEIJJbQ7PSTZLs7q7j/z4JZgJb9nYXA=
+	by mail.kernel.org (Postfix) with ESMTP id 00A1A20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B68GhDH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388766AbfIDSCc (ORCPT
+        id S2388091AbfIDSXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 4 Sep 2019 14:23:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56662 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388764AbfIDSCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 14:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387513AbfIDSC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YWE0H+jTpcN/XC6vFgWxU0Ifm430UGtAcUQBmeqFffU=; b=B68GhDH9ylcTgqElA2r7zjY7O
+        lE6Rf0/LqJ/dbv7yx7jsCmrYsQoXzrSLpLhPKVcAq09WGGtdvjGxnz3fv+EJhtL7AFUeyL4hUtuyt
+        SO8pIA93xdezldWmlYuoV9FK9U45Phywr2f2VSWHYoZWaGJ6vERLfLEyOxy6AI5yugAjiWfw2SeTE
+        zbIU0h3IF2lpVTqWz7YPsRl3U0CE6wMNg2JLLw7DHSeFIaNu7K1T1oDbBlZnpyhAvdSKmvaSu5HCE
+        Pl8vLB1RU4X/IesTI8jJ4p8o22IevZ5TrXbR/ihKRX90p+CdzzdIVoIQQjW6xLbRAVWLBZKQa/0ga
+        ZRDX5wwYQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5Zbi-0004qX-Oq; Wed, 04 Sep 2019 18:02:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFED623402;
-        Wed,  4 Sep 2019 18:02:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620145;
-        bh=LSl5EebwU9GZ8EwUwdPQ4Pp10EScuAYKifAdEFMv2Ps=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eoRfj+Nm1EFBwa4xJ7WK55r9NRhIkHErdk/LsF7fZn6ELcdu5PvNN7g2MRhQG6m0v
-         aqE/1pJE9u99PD7ogvxpuiyyBPWAVVNw2XDvAlz82UwsYmd8HCx4Kp5vHLF34RdhO4
-         jV2jQS76RgAyfvQXdktlZ7k5lBaqD0UWnsfh7kCA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 81/83] KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI
-Date:   Wed,  4 Sep 2019 19:54:13 +0200
-Message-Id: <20190904175310.767573981@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
-References: <20190904175303.488266791@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 32C2D3060BF;
+        Wed,  4 Sep 2019 20:01:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CD686201265AF; Wed,  4 Sep 2019 20:02:11 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 20:02:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-scsi@vger.kernel.org,
+        Long Li <longli@microsoft.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190904180211.GX2332@hirez.programming.kicks-ass.net>
+References: <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
+ <20190903033001.GB23861@ming.t460p>
+ <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+ <20190903063125.GA21022@ming.t460p>
+ <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+ <20190903072848.GA22170@ming.t460p>
+ <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+ <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
+ <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+ <de16de12-fa1a-666c-ea19-fea5d096c1ca@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <de16de12-fa1a-666c-ea19-fea5d096c1ca@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 82e40f558de566fdee214bec68096bbd5e64a6a4 ]
+On Wed, Sep 04, 2019 at 10:38:59AM -0700, Bart Van Assche wrote:
+> On 9/4/19 10:31 AM, Daniel Lezcano wrote:
+> > On 04/09/2019 19:07, Bart Van Assche wrote:
+> > > Only if CONFIG_IRQ_TIME_ACCOUNTING has been enabled. However, I don't
+> > > know any Linux distro that enables that option. That's probably because
+> > > that option introduces two rdtsc() calls in each interrupt. Given the
+> > > overhead introduced by this option, I don't think this is the solution
+> > > Ming is looking for.
+> > 
+> > Was this overhead reported somewhere ?
+>  I think it is widely known that rdtsc is a relatively slow x86 instruction.
+> So I expect that using that instruction will cause a measurable overhead if
+> it is called frequently enough. I'm not aware of any publicly available
+> measurement data however.
 
-A guest is not allowed to inject a SGI (or clear its pending state)
-by writing to GICD_ISPENDR0 (resp. GICD_ICPENDR0), as these bits are
-defined as WI (as per ARM IHI 0048B 4.3.7 and 4.3.8).
+https://www.agner.org/optimize/instruction_tables.pdf
 
-Make sure we correctly emulate the architecture.
+RDTSC, Ryzen: ~36
+RDTSC, Skylake: ~20
 
-Fixes: 96b298000db4 ("KVM: arm/arm64: vgic-new: Add PENDING registers handlers")
-Cc: stable@vger.kernel.org # 4.7+
-Reported-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- virt/kvm/arm/vgic/vgic-mmio.c | 18 ++++++++++++++++++
- virt/kvm/arm/vgic/vgic-v2.c   |  5 ++++-
- virt/kvm/arm/vgic/vgic-v3.c   |  5 ++++-
- 3 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index 85814d1bad11e..87742c9803a75 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -120,6 +120,12 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
- 	return value;
- }
- 
-+static bool is_vgic_v2_sgi(struct kvm_vcpu *vcpu, struct vgic_irq *irq)
-+{
-+	return (vgic_irq_is_sgi(irq->intid) &&
-+		vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2);
-+}
-+
- void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 			      gpa_t addr, unsigned int len,
- 			      unsigned long val)
-@@ -130,6 +136,12 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 	for_each_set_bit(i, &val, len * 8) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
-+		/* GICD_ISPENDR0 SGI bits are WI */
-+		if (is_vgic_v2_sgi(vcpu, irq)) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
- 		spin_lock(&irq->irq_lock);
- 		irq->pending = true;
- 		if (irq->config == VGIC_CONFIG_LEVEL)
-@@ -150,6 +162,12 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 	for_each_set_bit(i, &val, len * 8) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
-+		/* GICD_ICPENDR0 SGI bits are WI */
-+		if (is_vgic_v2_sgi(vcpu, irq)) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
- 		spin_lock(&irq->irq_lock);
- 
- 		if (irq->config == VGIC_CONFIG_LEVEL) {
-diff --git a/virt/kvm/arm/vgic/vgic-v2.c b/virt/kvm/arm/vgic/vgic-v2.c
-index 1ab58f7b5d749..4c2919cc13ca6 100644
---- a/virt/kvm/arm/vgic/vgic-v2.c
-+++ b/virt/kvm/arm/vgic/vgic-v2.c
-@@ -154,7 +154,10 @@ void vgic_v2_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
- 		if (vgic_irq_is_sgi(irq->intid)) {
- 			u32 src = ffs(irq->source);
- 
--			BUG_ON(!src);
-+			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
-+					   irq->intid))
-+				return;
-+
- 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
- 			irq->source &= ~(1 << (src - 1));
- 			if (irq->source)
-diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-index c7924718990e5..267b1cf88a7fe 100644
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -137,7 +137,10 @@ void vgic_v3_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
- 		    model == KVM_DEV_TYPE_ARM_VGIC_V2) {
- 			u32 src = ffs(irq->source);
- 
--			BUG_ON(!src);
-+			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
-+					   irq->intid))
-+				return;
-+
- 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
- 			irq->source &= ~(1 << (src - 1));
- 			if (irq->source)
--- 
-2.20.1
-
-
-
+Sadly those same tables don't list the cost of actual exceptions or even
+IRET :/
