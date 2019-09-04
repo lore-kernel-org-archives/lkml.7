@@ -2,277 +2,102 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5617FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C6DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2525D23401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:23:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrywvA9V"
+	by mail.kernel.org (Postfix) with ESMTP id A8E3D22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731055AbfIDOX2 (ORCPT
+        id S1731076AbfIDOXc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:23:28 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39520 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfIDOX2 (ORCPT
+        Wed, 4 Sep 2019 10:23:32 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:52632 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730880AbfIDOXb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:23:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id d25so42038397iob.6;
-        Wed, 04 Sep 2019 07:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SD6S9qMSdEaKb7A47HNQkeSQYOe/PbBwHeji7l9BPq0=;
-        b=UrywvA9VgH65G9YFybvuUU60d5BHxhw+Y13cHePdKBNfxviMxlavUpDIYjMEqpnWaR
-         3qrN1NZ37Q+7IlbSebRQjChVkKmh5/Hq+NAAqsRxFZU67O/3Bp8U8HYkb5omMWOFYdXA
-         D0sECjTa4NM4EBDFZV09H9ZrxkUJp2IotDOFfRtzUs+t58sj2nLCbFVRbzlOAF83XHUv
-         Cjd2kF0JSQjhW4dcFBRb/PpivgyE2G0IVAfBM+aPlAxGKx5ex6Gev+S4pfLzyC4ny/H1
-         uUcnw1DqgoQ5qd7jyHMtBpUPO8JfVfZwMJYWBTdGgigB8fXDNVm0hKkwPgGvjuyZtxJM
-         7sag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SD6S9qMSdEaKb7A47HNQkeSQYOe/PbBwHeji7l9BPq0=;
-        b=k6qLBz8k5hoV1B7Lf3OaWl8cpdfeyH+31lzDbBeSBNg80KUl8whhJ/hs8q5wQlKeXm
-         +GhIFRgjAYFLX9G4g58k8EOMm2eZk3UA3BncSW0p3edlaKwXtkmdoUgAU4q3s198GARM
-         Ywj5gBBwq3FMOVWMU2eK0fSt68dHut8YcqK4I10jXCrFeZns6viYMQu2mDxzExMwiqiJ
-         G3VvYC6sUHZeobOL+Vj/KHUyMcHj0i+BA7Lf/OsgJ4Y7t5xYO31LtIheRVdZGnCDm7yX
-         hnWyM5x7Aqt8DtCN00Z6InQ14AsRwtECCzZLUUdm67GzvBBnET81Nl4olPiZVG1QQ+XZ
-         WjvQ==
-X-Gm-Message-State: APjAAAVnsolchnBfs/QysbdunYyPW27c4NgzEhbAozmE+bo7ppKu+dtu
-        Xm0iET8M3Uzm5QB3Sppyslo+X2bqjL+t4JRsFfA=
-X-Google-Smtp-Source: APXvYqy3U9zx4jW57pjNOKNx8WUkW1Wy6QQaV1f3ESKS5WvNx2ZxOKuVaesrDcJ6nGSM16g3C2KoEUSBXcMUrWmIKrU=
-X-Received: by 2002:a5d:8f86:: with SMTP id l6mr1610473iol.270.1567607006137;
- Wed, 04 Sep 2019 07:23:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190812213158.22097.30576.stgit@localhost.localdomain>
- <20190812213356.22097.20751.stgit@localhost.localdomain> <20190903032759-mutt-send-email-mst@kernel.org>
- <CAKgT0UfFU3oT5kKZk999XfrM6oducTizcUL5xpDWmMG=oP04ow@mail.gmail.com> <20190904064226-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20190904064226-mutt-send-email-mst@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 4 Sep 2019 07:23:14 -0700
-Message-ID: <CAKgT0UdFs2VmVZgoho98=qVPJL1z9rvWv5G6VbxCfgVTJkmeYg@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] virtio-balloon: Add support for providing unused
- page reports to host
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        virtio-dev@lists.oasis-open.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        lcapitulino@redhat.com, "Wang, Wei W" <wei.w.wang@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Sep 2019 10:23:31 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 8C9A6CECB0;
+        Wed,  4 Sep 2019 16:32:17 +0200 (CEST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] Bluetooth: btusb: Use cmd_timeout to reset Realtek device
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20190903094103.GA10714@laptop-alex>
+Date:   Wed, 4 Sep 2019 16:23:29 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Max Chou <max.chou@realtek.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <989DBD04-B5DC-4733-8784-93B45BA9FF15@holtmann.org>
+References: <20190903094103.GA10714@laptop-alex>
+To:     Alex Lu <alex_lu@realsil.com.cn>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 3:44 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Tue, Sep 03, 2019 at 07:13:32AM -0700, Alexander Duyck wrote:
-> > On Tue, Sep 3, 2019 at 12:32 AM Michael S. Tsirkin <mst@redhat.com> wrote:
-> > >
-> > > On Mon, Aug 12, 2019 at 02:33:56PM -0700, Alexander Duyck wrote:
-> > > > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > >
-> > > > Add support for the page reporting feature provided by virtio-balloon.
-> > > > Reporting differs from the regular balloon functionality in that is is
-> > > > much less durable than a standard memory balloon. Instead of creating a
-> > > > list of pages that cannot be accessed the pages are only inaccessible
-> > > > while they are being indicated to the virtio interface. Once the
-> > > > interface has acknowledged them they are placed back into their respective
-> > > > free lists and are once again accessible by the guest system.
-> > > >
-> > > > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> > > > ---
-> > > >  drivers/virtio/Kconfig              |    1 +
-> > > >  drivers/virtio/virtio_balloon.c     |   65 +++++++++++++++++++++++++++++++++++
-> > > >  include/uapi/linux/virtio_balloon.h |    1 +
-> > > >  3 files changed, 67 insertions(+)
-> > > >
-> > > > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> > > > index 078615cf2afc..4b2dd8259ff5 100644
-> > > > --- a/drivers/virtio/Kconfig
-> > > > +++ b/drivers/virtio/Kconfig
-> > > > @@ -58,6 +58,7 @@ config VIRTIO_BALLOON
-> > > >       tristate "Virtio balloon driver"
-> > > >       depends on VIRTIO
-> > > >       select MEMORY_BALLOON
-> > > > +     select PAGE_REPORTING
-> > > >       ---help---
-> > > >        This driver supports increasing and decreasing the amount
-> > > >        of memory within a KVM guest.
-> > > > diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> > > > index 2c19457ab573..52f9eeda1877 100644
-> > > > --- a/drivers/virtio/virtio_balloon.c
-> > > > +++ b/drivers/virtio/virtio_balloon.c
-> > > > @@ -19,6 +19,7 @@
-> > > >  #include <linux/mount.h>
-> > > >  #include <linux/magic.h>
-> > > >  #include <linux/pseudo_fs.h>
-> > > > +#include <linux/page_reporting.h>
-> > > >
-> > > >  /*
-> > > >   * Balloon device works in 4K page units.  So each page is pointed to by
-> > > > @@ -37,6 +38,9 @@
-> > > >  #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
-> > > >       (1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
-> > > >
-> > > > +/*  limit on the number of pages that can be on the reporting vq */
-> > > > +#define VIRTIO_BALLOON_VRING_HINTS_MAX       16
-> > > > +
-> > > >  #ifdef CONFIG_BALLOON_COMPACTION
-> > > >  static struct vfsmount *balloon_mnt;
-> > > >  #endif
-> > > > @@ -46,6 +50,7 @@ enum virtio_balloon_vq {
-> > > >       VIRTIO_BALLOON_VQ_DEFLATE,
-> > > >       VIRTIO_BALLOON_VQ_STATS,
-> > > >       VIRTIO_BALLOON_VQ_FREE_PAGE,
-> > > > +     VIRTIO_BALLOON_VQ_REPORTING,
-> > > >       VIRTIO_BALLOON_VQ_MAX
-> > > >  };
-> > > >
-> > > > @@ -113,6 +118,10 @@ struct virtio_balloon {
-> > > >
-> > > >       /* To register a shrinker to shrink memory upon memory pressure */
-> > > >       struct shrinker shrinker;
-> > > > +
-> > > > +     /* Unused page reporting device */
-> > > > +     struct virtqueue *reporting_vq;
-> > > > +     struct page_reporting_dev_info ph_dev_info;
-> > > >  };
-> > > >
-> > > >  static struct virtio_device_id id_table[] = {
-> > > > @@ -152,6 +161,32 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
-> > > >
-> > > >  }
-> > > >
-> > > > +void virtballoon_unused_page_report(struct page_reporting_dev_info *ph_dev_info,
-> > > > +                                 unsigned int nents)
-> > > > +{
-> > > > +     struct virtio_balloon *vb =
-> > > > +             container_of(ph_dev_info, struct virtio_balloon, ph_dev_info);
-> > > > +     struct virtqueue *vq = vb->reporting_vq;
-> > > > +     unsigned int unused, err;
-> > > > +
-> > > > +     /* We should always be able to add these buffers to an empty queue. */
-> > > > +     err = virtqueue_add_inbuf(vq, ph_dev_info->sg, nents, vb,
-> > > > +                               GFP_NOWAIT | __GFP_NOWARN);
-> > > > +
-> > > > +     /*
-> > > > +      * In the extremely unlikely case that something has changed and we
-> > > > +      * are able to trigger an error we will simply display a warning
-> > > > +      * and exit without actually processing the pages.
-> > > > +      */
-> > > > +     if (WARN_ON(err))
-> > > > +             return;
-> > > > +
-> > > > +     virtqueue_kick(vq);
-> > > > +
-> > > > +     /* When host has read buffer, this completes via balloon_ack */
-> > > > +     wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
-> > > > +}
-> > > > +
-> > > >  static void set_page_pfns(struct virtio_balloon *vb,
-> > > >                         __virtio32 pfns[], struct page *page)
-> > > >  {
-> > > > @@ -476,6 +511,7 @@ static int init_vqs(struct virtio_balloon *vb)
-> > > >       names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
-> > > >       names[VIRTIO_BALLOON_VQ_STATS] = NULL;
-> > > >       names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-> > > > +     names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
-> > > >
-> > > >       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-> > > >               names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-> > > > @@ -487,11 +523,19 @@ static int init_vqs(struct virtio_balloon *vb)
-> > > >               callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-> > > >       }
-> > > >
-> > > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-> > > > +             names[VIRTIO_BALLOON_VQ_REPORTING] = "reporting_vq";
-> > > > +             callbacks[VIRTIO_BALLOON_VQ_REPORTING] = balloon_ack;
-> > > > +     }
-> > > > +
-> > > >       err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
-> > > >                                        vqs, callbacks, names, NULL, NULL);
-> > > >       if (err)
-> > > >               return err;
-> > > >
-> > > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
-> > > > +             vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
-> > > > +
-> > > >       vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
-> > > >       vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
-> > > >       if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-> > > > @@ -931,12 +975,30 @@ static int virtballoon_probe(struct virtio_device *vdev)
-> > > >               if (err)
-> > > >                       goto out_del_balloon_wq;
-> > > >       }
-> > > > +
-> > > > +     vb->ph_dev_info.report = virtballoon_unused_page_report;
-> > > > +     if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-> > > > +             unsigned int capacity;
-> > > > +
-> > > > +             capacity = min_t(unsigned int,
-> > > > +                              virtqueue_get_vring_size(vb->reporting_vq) - 1,
-> > > > +                              VIRTIO_BALLOON_VRING_HINTS_MAX);
-> > >
-> > > Hmm why - 1 exactly?
-> > > This might end up being 0 in the unusual configuration of vq size 1.
-> > > Also, VIRTIO_BALLOON_VRING_HINTS_MAX is a power of 2 but
-> > > virtqueue_get_vring_size(vb->reporting_vq) - 1 won't
-> > > be if we are using split rings - donnu if that matters.
-> >
-> > Is a vq size of 1 valid?
-> > Does that mean you can use that 1 descriptor?
->
-> It seems to be according to the spec, and linux seems to accept that
-> without issues, and only put 1 descriptor there.
->
-> > Odds are I probably misunderstood the ring config in the other hinting
-> > implementation. Looking it over now I guess it was adding one
-> > additional entry for a command header and that was why it was
-> > reserving one additional slot. I can update the code to drop the "- 1"
-> > if the ring is capable of being fully utilized.
-> >
-> > Thanks.
-> >
-> > - Alex
->
-> It should be. I just hacked qemu to have 1 descriptor sized ring
-> and everything seems to work.
+Hi Alex,
 
-Okay. I will update the code to make the capacity equal to the vring
-size and max out oat HINTS_MAX.
+> Realtek Bluetooth controller provides a BT_DIS reset pin for hardware
+> reset of it. The cmd_timeout is helpful on Realtek bluetooth controller
+> where the firmware gets stuck.
+> 
+> Signed-off-by: Alex Lu <alex_lu@realsil.com.cn>
+> ---
+> drivers/bluetooth/btusb.c | 29 +++++++++++++++++++++--------
+> 1 file changed, 21 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 31d3febed187..a626de3a3f4c 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -489,16 +489,19 @@ struct btusb_data {
+> 	int (*setup_on_usb)(struct hci_dev *hdev);
+> 
+> 	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
+> -	unsigned cmd_timeout_cnt;
+> +	unsigned int cmd_timeout_cnt;
+> +	unsigned int cmd_timeout_max;
+> +	unsigned int reset_msecs;
+> +	int reset_gpio_value;
+> };
+> 
+> 
+> -static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
+> +static void btusb_cmd_timeout(struct hci_dev *hdev)
+> {
+> 	struct btusb_data *data = hci_get_drvdata(hdev);
+> 	struct gpio_desc *reset_gpio = data->reset_gpio;
+> 
+> -	if (++data->cmd_timeout_cnt < 5)
+> +	if (++data->cmd_timeout_cnt < data->cmd_timeout_max)
+> 		return;
+> 
+> 	if (!reset_gpio) {
+> @@ -519,9 +522,9 @@ static void btusb_intel_cmd_timeout(struct hci_dev *hdev)
+> 	}
+> 
+> 	bt_dev_err(hdev, "Initiating HW reset via gpio");
+> -	gpiod_set_value_cansleep(reset_gpio, 1);
+> -	msleep(100);
+> -	gpiod_set_value_cansleep(reset_gpio, 0);
+> +	gpiod_set_value_cansleep(reset_gpio, data->reset_gpio_value);
+> +	msleep(data->reset_msecs);
+> +	gpiod_set_value_cansleep(reset_gpio, !data->reset_gpio_value);
+> }
 
-I also have a fix that will make sure we return an error if we attempt
-to enable the page hinting with a capacity of 0 just in case.
+I really prefer that no Realtek specifics end up in a callback that is meant for Intel hardware. So this needs to be split.
 
-I'll post the updated v7 later today.
+So can you just provide a btusb_rtl_cmd_timeout callback and set it in case of Realtek hardware.
 
-Thanks.
+Regards
 
-- Alex
+Marcel
+
