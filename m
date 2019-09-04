@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B1AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A36C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B6921883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F3B22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620128;
-	bh=Axjq89hiNix4ExOqrgQ/7i6PpccM7JLmexMXOo6n7vQ=;
+	s=default; t=1567620131;
+	bh=W7okh1u7Oy6Sx8YpUmujwLy4mkFhhOq0pDmWqnfj42E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NX3slvNYWu+duHNgWi66KrrwgiHj5CDimiYdbOMpNBCKdHY7y24krGipf+QHWyFBA
-	 7PNp/ahU1XRwZO5BZ+6e4CbYTic05XL+fV0rXkkaHJrCBfoWihsQX6wWcwgIpTKkVW
-	 y6au6QQ8Ja5/sQih6QrgTiw4Qc/e8x/YA/J7IWds=
+	b=qkeAzbgrdF2U8kOgxW6yrU5UkKpDPrtiAmEqlIrj4seET7zsPoelNZZRw9SywVzBa
+	 m2hAXxCFCYt3GD6MPS3Ph8H/U8b04RdyiFPK463GYbX+tzhGBSbBcazy6Ik0Mqngm8
+	 5kmvBTU9k8dUJpXy1Mi4s/3AhlmadyNJgk02re8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388700AbfIDSCH (ORCPT
+        id S2387534AbfIDSCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41852 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388158AbfIDSCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:05 -0400
+        id S2388696AbfIDSCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B857822CEA;
-        Wed,  4 Sep 2019 18:02:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FEE822CF7;
+        Wed,  4 Sep 2019 18:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620124;
-        bh=Axjq89hiNix4ExOqrgQ/7i6PpccM7JLmexMXOo6n7vQ=;
+        s=default; t=1567620126;
+        bh=W7okh1u7Oy6Sx8YpUmujwLy4mkFhhOq0pDmWqnfj42E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HCbGGEr7rPer+8xRXz29Cw0+DxjKwyHFno1eEfjgYdUzYc4NqQtaRB9QV/G79ZSE8
-         LCX8p0iL+rWqo28TklPBqJnUampJAQFMos40xBow57qWrLNzuOmJhhFgIT7FHMTA3f
-         WqtpdQ2MrokfD4RN9m+pJbeARcv5GbrknrYNiFnM=
+        b=AIX/tKj243U8UKxjWjbNAu4jKMSdcTVrcLzMyoL5BTBkAFN4QtqlpsgUYPZa6Ja7b
+         JOd0lSkP+2Z6BNAPRAR1BwIlJV5F35TuLK3sm1+JhN0mhrMoalmCfv+RycPu9B5IaX
+         XKzQ/tqhLWhCzAYp3B3ZI4P2Oc++PdtQ0B6Ni4Rs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Spengler <spender@grsecurity.net>,
-        Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 4.9 83/83] x86/ptrace: fix up botched merge of spectrev1 fix
-Date:   Wed,  4 Sep 2019 19:54:15 +0200
-Message-Id: <20190904175310.951734823@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.9 74/83] mmc: sdhci-of-at91: add quirk for broken HS200
+Date:   Wed,  4 Sep 2019 19:54:06 +0200
+Message-Id: <20190904175310.124805937@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -61,40 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-I incorrectly merged commit 31a2fbb390fe ("x86/ptrace: Fix possible
-spectre-v1 in ptrace_get_debugreg()") when backporting it, as was
-graciously pointed out at
-https://grsecurity.net/teardown_of_a_failed_linux_lts_spectre_fix.php
+commit 7871aa60ae0086fe4626abdf5ed13eeddf306c61 upstream.
 
-Resolve the upstream difference with the stable kernel merge to properly
-protect things.
+HS200 is not implemented in the driver, but the controller claims it
+through caps. Remove it via a quirk, to make sure the mmc core do not try
+to enable HS200, as it causes the eMMC initialization to fail.
 
-Reported-by: Brad Spengler <spender@grsecurity.net>
-Cc: Dianzhang Chen <dianzhangchen0@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <bp@alien8.de>
-Cc: <hpa@zytor.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: bb5f8ea4d514 ("mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC")
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kernel/ptrace.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -651,11 +651,10 @@ static unsigned long ptrace_get_debugreg
- {
- 	struct thread_struct *thread = &tsk->thread;
- 	unsigned long val = 0;
--	int index = n;
+---
+ drivers/mmc/host/sdhci-of-at91.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -317,6 +317,9 @@ static int sdhci_at91_probe(struct platf
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
  
- 	if (n < HBP_NUM) {
-+		int index = array_index_nospec(n, HBP_NUM);
- 		struct perf_event *bp = thread->ptrace_bps[index];
--		index = array_index_nospec(index, HBP_NUM);
- 
- 		if (bp)
- 			val = bp->hw.info.address;
++	/* HS200 is broken at this moment */
++	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
++
+ 	ret = sdhci_add_host(host);
+ 	if (ret)
+ 		goto pm_runtime_disable;
 
 
