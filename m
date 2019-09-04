@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61EFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADF3C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C716A2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2BC2341D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbfIDOBZ (ORCPT
+        id S1731159AbfIDOB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:01:25 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55128 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:01:28 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55758 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731101AbfIDOBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:01:23 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 3F04B7307A79BDEE9434;
-        Wed,  4 Sep 2019 22:01:10 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 22:01:00 +0800
+        id S1730565AbfIDOBZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:01:25 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 68D776C4A34FFCD4FBBF;
+        Wed,  4 Sep 2019 22:01:21 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 22:01:08 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -50,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 31/36] spi: tegra: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:59:13 +0800
-Message-ID: <20190904135918.25352-32-yuehaibing@huawei.com>
+Subject: [PATCH -next 34/36] spi: zynqmp: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:59:16 +0800
+Message-ID: <20190904135918.25352-35-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -71,31 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-tegra20-sflash.c | 4 +---
+ drivers/spi/spi-zynqmp-gqspi.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-tegra20-sflash.c b/drivers/spi/spi-tegra20-sflash.c
-index cd714a4..a841a72 100644
---- a/drivers/spi/spi-tegra20-sflash.c
-+++ b/drivers/spi/spi-tegra20-sflash.c
-@@ -419,7 +419,6 @@ static int tegra_sflash_probe(struct platform_device *pdev)
- {
- 	struct spi_master	*master;
- 	struct tegra_sflash_data	*tsd;
--	struct resource		*r;
- 	int ret;
- 	const struct of_device_id *match;
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index 5e9ea8a..60c4de4 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -1016,7 +1016,6 @@ static int zynqmp_qspi_probe(struct platform_device *pdev)
+ 	int ret = 0;
+ 	struct spi_master *master;
+ 	struct zynqmp_qspi *xqspi;
+-	struct resource *res;
+ 	struct device *dev = &pdev->dev;
  
-@@ -451,8 +450,7 @@ static int tegra_sflash_probe(struct platform_device *pdev)
- 				 &master->max_speed_hz))
- 		master->max_speed_hz = 25000000; /* 25MHz */
+ 	eemi_ops = zynqmp_pm_get_eemi_ops();
+@@ -1031,8 +1030,7 @@ static int zynqmp_qspi_probe(struct platform_device *pdev)
+ 	master->dev.of_node = pdev->dev.of_node;
+ 	platform_set_drvdata(pdev, master);
  
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	tsd->base = devm_ioremap_resource(&pdev->dev, r);
-+	tsd->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tsd->base)) {
- 		ret = PTR_ERR(tsd->base);
- 		goto exit_free_master;
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	xqspi->regs = devm_ioremap_resource(&pdev->dev, res);
++	xqspi->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(xqspi->regs)) {
+ 		ret = PTR_ERR(xqspi->regs);
+ 		goto remove_master;
 -- 
 2.7.4
 
