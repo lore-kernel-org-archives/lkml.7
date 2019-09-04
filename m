@@ -2,149 +2,113 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F2DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66467C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3632021726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3133822CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hHdD8bIe"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="cxGrZjgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732188AbfIDRLS (ORCPT
+        id S1732404AbfIDRLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:11:18 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35916 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731635AbfIDRLR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:11:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f19so9842991plr.3;
-        Wed, 04 Sep 2019 10:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vYEEXFOhxtvYv/yYJOcMUmKNs0oEV4AL/NRwjoex32s=;
-        b=hHdD8bIeCBjJio5A7m8CJgEDEiHtSigJRtRdIcbuzRbewe3bc45IFg5j+qlkBynoXd
-         YXScxuygluqmLk01crpDYcFseLk6p87mZoeWvIQbWDRXnq7AqsFXcKFh3wS6kcTIUHz0
-         304YmdcmtmCzUEUT5UTro6nEIfY0AQIgwwzmfVdwK1ujvSoF65sYirx0luvpn4591bBy
-         hfwkuBevYmIwmiAWV8gllppR6L+oW6Iaa562pZw0UCg+lkW4+Cj+ZhgO9LPH0Hs4l+YO
-         +BjbKP2H/8G1+T3QqqhRouhi1qzf8E2PQUDcmfDw7hI1PWgb5XPL3uD1c8Mj18Q/0fV+
-         eRUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vYEEXFOhxtvYv/yYJOcMUmKNs0oEV4AL/NRwjoex32s=;
-        b=oKgnbFMClmY0VfzfGhbCWde4/Y0cZUsUi/68fGXwcfa+41DOD6tEmF28b8uibUNE7j
-         ytiRT0jgRfvI26awZnHFiGYqhoBCR7NTZrlC8nIRWKpBbA3XszwQGa2u8s7fD4kuX4Jd
-         dQOWSqRyKHqAg79r+or/W2loHDheE6RnFnFyB3iJQuvsBo7GWLPinCm3NGJ8kLnQuPmb
-         nIjBnvSMPkHS0z918o3lRl1+hxkD2gOWmVncHyUyoka5QFx9+/22bjOY2R7pi3NdwRmg
-         Lf3B2goasiXV6u+dFvrV8YS9fXy44WeRQnDcfv/QvYED9uiuP2MU/CtffyhpCymp5pm8
-         TiRg==
-X-Gm-Message-State: APjAAAXWxoKUhtByMC6YArBtRb7FKJkM9kIbKhbsdNzu3VGdLv3WZVF9
-        4llPy908I14IxheSIfM3p+/PX0CAY+g=
-X-Google-Smtp-Source: APXvYqxeIb7V3OhRRZv7aV+cgE3F2J0ubBjn6ANX3uLEnAOYw/PugW11KAJc9aaY1V+Q+vuKxv13nw==
-X-Received: by 2002:a17:902:e407:: with SMTP id ci7mr42394265plb.326.1567617076816;
-        Wed, 04 Sep 2019 10:11:16 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id y25sm22869474pfm.95.2019.09.04.10.11.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 10:11:16 -0700 (PDT)
-Subject: Re: [PATCH v2 2/2] net: phy: gmii2rgmii: Dont use priv field in phy
- device
-To:     Harini Katakam <harini.katakam@xilinx.com>, andrew@lunn.ch,
-        hkallweit1@gmail.com, davem@davemloft.net
-Cc:     michal.simek@xilinx.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        harinikatakamlinux@gmail.com, radhey.shyam.pandey@xilinx.com
-References: <1567605621-6818-1-git-send-email-harini.katakam@xilinx.com>
- <1567605621-6818-3-git-send-email-harini.katakam@xilinx.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <93b1f1d1-4499-04c1-f240-ef0ea73db5ea@gmail.com>
-Date:   Wed, 4 Sep 2019 10:11:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <1567605621-6818-3-git-send-email-harini.katakam@xilinx.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 4 Sep 2019 13:11:34 -0400
+Received: from mail-eopbgr760108.outbound.protection.outlook.com ([40.107.76.108]:9790
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731456AbfIDRLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:11:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K1eTD57IfQe6wlC0vN9oTjrgr9HbjSFu/kclMzlm1GVrpSmbEV3CqXbdtPry1icganheDGSEvE5VNz5fZ4DVg09JKWcYqvJuteeFbJNr4wzqhkMNwOYuZ6k/AeVlYVS/47QbzWe+OlCQrwXApgsuXGAonrjuYhbU9hk/q8qp17V4tXDEDxtSlJHBibHzpERiijDP7pcqN015jhEG0B+ROYyGRBxfpuIrqIwoisymSPSbRKTj7PQz2yC+xZiMCfBr7xk84Mq/gHPmywjqCMnAd6mtajZetKrsxjHh1BRFovD5L0yoPG1MwRN678m/pcmUSuLWerB7OVwGlUl/4W7oVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aU/m87E4OWikD98fSXwSswp2BNsqnXDAA/oRNzC3cIQ=;
+ b=BFLW4MvYBVutErnBsbdXCKWR2/sj4JLvA+pXVcz+n4cSplYygxSVhZ6Fx3+h5N1IkeQknHWig87N3DlSAL4eBY6i7kU/vR8RERXKTS7jrbuKkD9djzhywj70rUb2FyCb6fWg6m4vK5n9Hjkb96pXFw0rTEmvRI7+ZtkYOo0n3FVjrKx7UNp6uuZaldZXFT7UStmeZtytpqLRBuMHDCQIBRQSvtX9fnnxcuRWMtvRbOlHD1f1kgqoA8fyq5SrhPRjgyStcHJLDnbrFU1T0dIzECP7p/oLy3UCHpajsKnHQVuimaIKlHXcvI/lmPTj3eCNmxzvGBlhVucKHVNN7Kdgfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aU/m87E4OWikD98fSXwSswp2BNsqnXDAA/oRNzC3cIQ=;
+ b=cxGrZjgEhptrtW+6ggKYxP9plaR6WfUF0wK4BNJ9LKyjxbjcUxNgkuGWpXnIStfqtJiJ/BywLsy7Tk25xtwTXzz9GhkrDqBociGNUcJJ9OXzIGkanmt4TINTqKg5yfHP1Qm0xR1uAZEfAHHsXlTNsOjDDPHsWT1kHGg7iDyOxPk=
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
+ DM5PR13MB1836.namprd13.prod.outlook.com (10.171.154.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.14; Wed, 4 Sep 2019 17:11:30 +0000
+Received: from DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::70fd:85c2:8ea9:a0b6]) by DM5PR13MB1851.namprd13.prod.outlook.com
+ ([fe80::70fd:85c2:8ea9:a0b6%9]) with mapi id 15.20.2241.013; Wed, 4 Sep 2019
+ 17:11:30 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS bugfix
+Thread-Topic: [GIT PULL] Please pull NFS bugfix
+Thread-Index: AQHVY0PLxUsm9zdUMUCZqGsscZqnDQ==
+Date:   Wed, 4 Sep 2019 17:11:29 +0000
+Message-ID: <9c0f3a52cd4e0075713fb7b9a2adbc7f05adadb3.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=trondmy@hammerspace.com; 
+x-originating-ip: [50.124.244.14]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 47b67a9f-2ef4-4159-7a0d-08d7315aedac
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1836;
+x-ms-traffictypediagnostic: DM5PR13MB1836:
+x-microsoft-antispam-prvs: <DM5PR13MB18367C5F6834F5435A079890B8B80@DM5PR13MB1836.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:660;
+x-forefront-prvs: 0150F3F97D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39830400003)(346002)(396003)(376002)(199004)(189003)(4326008)(4744005)(8936002)(5660300002)(6506007)(102836004)(26005)(316002)(2501003)(54906003)(186003)(53936002)(81156014)(8676002)(1730700003)(81166006)(6436002)(118296001)(3846002)(6116002)(5640700003)(86362001)(36756003)(7736002)(2906002)(2351001)(6512007)(305945005)(25786009)(99286004)(14444005)(256004)(71200400001)(71190400001)(486006)(66066001)(14454004)(2616005)(6486002)(476003)(91956017)(6916009)(76116006)(64756008)(66446008)(66946007)(478600001)(66556008)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1836;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: hammerspace.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: aF7/e3Qsg9xT6/Puly8LSoD1txaaaWbvCYQt67tvlFLQcEeoPaYDxPM01ctt9OQzmA3wNber6alTmkEX0QeZ3m7nN86IjUiWXzBdWnd9iAokjP8NhoNHdo73i/IVtEp5mY05yBgPyDEiTESF581IcWPLfyVz/5hDSj8aPOmJyEVi66utAZU2vSHDgxOTYk9OPRQGS57/Y9llYOwo/C/C2xgBHJ0xmxFL0d3TiVQNEH6kI5KmBY3x7g/Dpp3pz+QeECnwVnyJ9iNpT89igfAqX8FSj7cMCvS6NFLxdkLH3hvsYvdadx5lKgdgoIInU0R+GvTsX5NGl27O84RJZEB6qRo/gBqb5vk5z54onarQQ2IDF13VWC3qI76YzST26g0EMgnng6x6qEvKk1jFkhOCFkDa6IwQm5APRqHjg/8MKoY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F53D3C44811B7347B0081207776CC1C6@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47b67a9f-2ef4-4159-7a0d-08d7315aedac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 17:11:29.9676
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7keZ30yCcUDXG5LOeVPNWxxvfCbdWquueCkYIV2+J6BeaaLjfvCtbAUnvsvNY7Jc76LijwhTDgo36LZNMKAM7w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1836
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 7:00 AM, Harini Katakam wrote:
-> Use set/get drv data in phydev's mdio device instead. Phy device priv
-> field maybe used by the external phy driver and should not be
-> overwritten.
-> 
-> Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+SGkgTGludXMsDQoNCk9uZSBtb3JlIHB1bGwgcmVxdWVzdCB0byBmaXggYSBORlN2NCByZWdyZXNz
+aW9uIHRoYXQgYWZmZWN0cyBvbmx5IHRoZQ0KdjUuMy1yYyBzZXJpZXMuDQoNClRoZSBmb2xsb3dp
+bmcgY2hhbmdlcyBzaW5jZSBjb21taXQgMDg5Y2Y3ZjZlY2IyNjZiNmE0MTY0OTE5YTJlNjliZDJm
+OTM4Mzc0YToNCg0KICBMaW51eCA1LjMtcmM3ICgyMDE5LTA5LTAyIDA5OjU3OjQwIC0wNzAwKQ0K
+DQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3NpdG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQu
+bGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xpbnV4LW5mcy5naXQgdGFncy9uZnMtZm9y
+LTUuMy00DQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byBlYjNkOGY0MjIzMWFlYzY1
+YjY0YjA3OWRkMTdiZDZjMDA4YTNmZTI5Og0KDQogIE5GUzogRml4IGlub2RlIGZpbGVpZCBjaGVj
+a3MgaW4gYXR0cmlidXRlIHJldmFsaWRhdGlvbiBjb2RlICgyMDE5LTA5LTAyIDEzOjEwOjE5IC0w
+NDAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tDQpORlMgY2xpZW50IGJ1Z2ZpeGVzIGZvciBMaW51eCA1LjMNCg0KSGln
+aGxpZ2h0cyBpbmNsdWRlOg0KDQpCdWdmaXhlczoNCi0gRml4IGlub2RlIGZpbGVpZCBjaGVja3Mg
+aW4gYXR0cmlidXRlIHJldmFsaWRhdGlvbiBjb2RlDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NClRyb25kIE15a2xlYnVz
+dCAoMSk6DQogICAgICBORlM6IEZpeCBpbm9kZSBmaWxlaWQgY2hlY2tzIGluIGF0dHJpYnV0ZSBy
+ZXZhbGlkYXRpb24gY29kZQ0KDQogZnMvbmZzL2lub2RlLmMgfCAxOCArKysrKysrKysrLS0tLS0t
+LS0NCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCi0t
+IA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNw
+YWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
