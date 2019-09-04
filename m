@@ -2,394 +2,201 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911F8C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9C3C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D25321897
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A321B21897
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:50:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfIDCtP (ORCPT
+        id S1728024AbfIDCuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 22:49:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34744 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726770AbfIDCtP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 22:49:15 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x842lGaO045367;
-        Tue, 3 Sep 2019 22:48:50 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut1jncrmu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 22:48:50 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x842lVHW045872;
-        Tue, 3 Sep 2019 22:48:50 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut1jncrme-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 03 Sep 2019 22:48:50 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x842isj3032000;
-        Wed, 4 Sep 2019 02:48:48 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01wdc.us.ibm.com with ESMTP id 2uqgh6pgke-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 02:48:48 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x842mmYU61473226
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Sep 2019 02:48:48 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 33861BE051;
-        Wed,  4 Sep 2019 02:48:48 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A5A3BE04F;
-        Wed,  4 Sep 2019 02:48:47 +0000 (GMT)
-Received: from suka-w540.localdomain (unknown [9.70.94.45])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Sep 2019 02:48:47 +0000 (GMT)
-Received: by suka-w540.localdomain (Postfix, from userid 1000)
-        id 595252E10EB; Tue,  3 Sep 2019 19:48:46 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 19:48:46 -0700
-From:   Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Anshuman Khandual <anshuman.linux@gmail.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Paul Mackerras <paulus@samba.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [RFC PATCH 00/11] Secure Virtual Machine Enablement
-Message-ID: <20190904024846.GA16605@us.ibm.com>
-References: <20180824162535.22798-1-bauerman@linux.ibm.com>
+        Tue, 3 Sep 2019 22:50:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:28684 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727756AbfIDCub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 22:50:31 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 19:50:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
+   d="scan'208";a="183761055"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.71])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Sep 2019 19:50:28 -0700
+Date:   Wed, 4 Sep 2019 10:48:01 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     jasowang@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [RFC v3] vhost: introduce mdev based hardware vhost backend
+Message-ID: <20190904024801.GA5671@___>
+References: <20190828053712.26106-1-tiwei.bie@intel.com>
+ <20190903043704-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20180824162535.22798-1-bauerman@linux.ibm.com>
-X-Operating-System: Linux 2.0.32 on an i486
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909040027
+In-Reply-To: <20190903043704-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thiago Jung Bauermann [bauerman@linux.ibm.com] wrote:
-> [ Some people didn't receive all the patches in this series, even though
->   the linuxppc-dev list did so trying to send again. This is exactly the
->   same series I posted yesterday. Sorry for the clutter. ]
+On Tue, Sep 03, 2019 at 07:26:03AM -0400, Michael S. Tsirkin wrote:
+> On Wed, Aug 28, 2019 at 01:37:12PM +0800, Tiwei Bie wrote:
+> > Details about this can be found here:
+> > 
+> > https://lwn.net/Articles/750770/
+> > 
+> > What's new in this version
+> > ==========================
+> > 
+> > There are three choices based on the discussion [1] in RFC v2:
+> > 
+> > > #1. We expose a VFIO device, so we can reuse the VFIO container/group
+> > >     based DMA API and potentially reuse a lot of VFIO code in QEMU.
+> > >
+> > >     But in this case, we have two choices for the VFIO device interface
+> > >     (i.e. the interface on top of VFIO device fd):
+> > >
+> > >     A) we may invent a new vhost protocol (as demonstrated by the code
+> > >        in this RFC) on VFIO device fd to make it work in VFIO's way,
+> > >        i.e. regions and irqs.
+> > >
+> > >     B) Or as you proposed, instead of inventing a new vhost protocol,
+> > >        we can reuse most existing vhost ioctls on the VFIO device fd
+> > >        directly. There should be no conflicts between the VFIO ioctls
+> > >        (type is 0x3B) and VHOST ioctls (type is 0xAF) currently.
+> > >
+> > > #2. Instead of exposing a VFIO device, we may expose a VHOST device.
+> > >     And we will introduce a new mdev driver vhost-mdev to do this.
+> > >     It would be natural to reuse the existing kernel vhost interface
+> > >     (ioctls) on it as much as possible. But we will need to invent
+> > >     some APIs for DMA programming (reusing VHOST_SET_MEM_TABLE is a
+> > >     choice, but it's too heavy and doesn't support vIOMMU by itself).
+> > 
+> > This version is more like a quick PoC to try Jason's proposal on
+> > reusing vhost ioctls. And the second way (#1/B) in above three
+> > choices was chosen in this version to demonstrate the idea quickly.
+> > 
+> > Now the userspace API looks like this:
+> > 
+> > - VFIO's container/group based IOMMU API is used to do the
+> >   DMA programming.
+> > 
+> > - Vhost's existing ioctls are used to setup the device.
+> > 
+> > And the device will report device_api as "vfio-vhost".
+> > 
+> > Note that, there are dirty hacks in this version. If we decide to
+> > go this way, some refactoring in vhost.c/vhost.h may be needed.
+> > 
+> > PS. The direct mapping of the notify registers isn't implemented
+> >     in this version.
+> > 
+> > [1] https://lkml.org/lkml/2019/7/9/101
+> > 
+> > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
 > 
-> This series contains preliminary work to enable Secure Virtual Machines
-> (SVM) on powerpc. SVMs request to be migrated to secure memory very early in
-> the boot process (in prom_init()), so by default all of their memory is
-> inaccessible to the hypervisor. There is an ultravisor call that the VM can
-> use to request certain pages to be made accessible (aka shared).
+> ....
+> 
+> > +long vhost_mdev_ioctl(struct mdev_device *mdev, unsigned int cmd,
+> > +		      unsigned long arg)
+> > +{
+> > +	void __user *argp = (void __user *)arg;
+> > +	struct vhost_mdev *vdpa;
+> > +	unsigned long minsz;
+> > +	int ret = 0;
+> > +
+> > +	if (!mdev)
+> > +		return -EINVAL;
+> > +
+> > +	vdpa = mdev_get_drvdata(mdev);
+> > +	if (!vdpa)
+> > +		return -ENODEV;
+> > +
+> > +	switch (cmd) {
+> > +	case VFIO_DEVICE_GET_INFO:
+> > +	{
+> > +		struct vfio_device_info info;
+> > +
+> > +		minsz = offsetofend(struct vfio_device_info, num_irqs);
+> > +
+> > +		if (copy_from_user(&info, (void __user *)arg, minsz)) {
+> > +			ret = -EFAULT;
+> > +			break;
+> > +		}
+> > +
+> > +		if (info.argsz < minsz) {
+> > +			ret = -EINVAL;
+> > +			break;
+> > +		}
+> > +
+> > +		info.flags = VFIO_DEVICE_FLAGS_VHOST;
+> > +		info.num_regions = 0;
+> > +		info.num_irqs = 0;
+> > +
+> > +		if (copy_to_user((void __user *)arg, &info, minsz)) {
+> > +			ret = -EFAULT;
+> > +			break;
+> > +		}
+> > +
+> > +		break;
+> > +	}
+> > +	case VFIO_DEVICE_GET_REGION_INFO:
+> > +	case VFIO_DEVICE_GET_IRQ_INFO:
+> > +	case VFIO_DEVICE_SET_IRQS:
+> > +	case VFIO_DEVICE_RESET:
+> > +		ret = -EINVAL;
+> > +		break;
+> > +
+> > +	case VHOST_MDEV_SET_STATE:
+> > +		ret = vhost_set_state(vdpa, argp);
+> > +		break;
+> > +	case VHOST_GET_FEATURES:
+> > +		ret = vhost_get_features(vdpa, argp);
+> > +		break;
+> > +	case VHOST_SET_FEATURES:
+> > +		ret = vhost_set_features(vdpa, argp);
+> > +		break;
+> > +	case VHOST_GET_VRING_BASE:
+> > +		ret = vhost_get_vring_base(vdpa, argp);
+> > +		break;
+> > +	default:
+> > +		ret = vhost_dev_ioctl(&vdpa->dev, cmd, argp);
+> > +		if (ret == -ENOIOCTLCMD)
+> > +			ret = vhost_vring_ioctl(&vdpa->dev, cmd, argp);
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL(vhost_mdev_ioctl);
+> 
+> 
+> I don't have a problem with this approach. A small question:
+> would it make sense to have two fds: send vhost ioctls
+> on one and vfio ioctls on another?
+> We can then pass vfio fd to the vhost fd with a
+> SET_BACKEND ioctl.
+> 
+> What do you think?
 
-I would like to piggy-back on this series (since it provides the
-context) to add another patch we need for SVMs :-) 
+I like this idea! I will give it a try.
+So we can introduce /dev/vhost-mdev to have the vhost fd, and let
+userspace pass vfio fd to the vhost fd with a SET_BACKEND ioctl.
 
-Appreciate any comments. 
+Thanks a lot!
+Tiwei
 
----
-
-From ed93a0e36ec886483a72fdb8d99380bbe6607f37 Mon Sep 17 00:00:00 2001
-From: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Date: Thu, 16 May 2019 20:57:12 -0500
-Subject: [PATCH 1/1] powerpc/pseries/svm: don't access some SPRs
-
-Ultravisor disables some CPU features like EBB and BHRB in the HFSCR
-for secure virtual machines (SVMs). If the SVMs attempt to access
-related registers, they will get a Program Interrupt.
-
-Use macros/wrappers to skip accessing EBB and BHRB related registers
-for secure VMs.
-
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
----
- arch/powerpc/include/asm/reg.h          | 35 ++++++++++++++++++++++++
- arch/powerpc/kernel/process.c           | 12 ++++-----
- arch/powerpc/kvm/book3s_hv.c            | 24 ++++++++---------
- arch/powerpc/kvm/book3s_hv_rmhandlers.S | 48 ++++++++++++++++++++++++---------
- arch/powerpc/kvm/book3s_hv_tm_builtin.c |  6 ++---
- arch/powerpc/perf/core-book3s.c         |  4 +--
- arch/powerpc/xmon/xmon.c                |  2 +-
- 7 files changed, 95 insertions(+), 36 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
-index ec3714c..1397cb3 100644
---- a/arch/powerpc/include/asm/reg.h
-+++ b/arch/powerpc/include/asm/reg.h
-@@ -1376,6 +1376,41 @@ static inline void msr_check_and_clear(unsigned long bits)
- 		__msr_check_and_clear(bits);
- }
- 
-+#ifdef CONFIG_PPC_SVM
-+/*
-+ * Move from some "restricted" sprs.
-+ * Secure VMs should not access some registers as the related features
-+ * are disabled in the CPU. If an SVM is attempting read from the given
-+ * SPR, return 0. Otherwise behave like a normal mfspr.
-+ */
-+#define mfspr_r(rn)						\
-+({								\
-+	unsigned long rval = 0ULL;				\
-+								\
-+	if (!(mfmsr() & MSR_S))					\
-+		asm volatile("mfspr %0," __stringify(rn)	\
-+				: "=r" (rval));			\
-+	rval;							\
-+})
-+
-+/*
-+ * Move to some "restricted" sprs.
-+ * Secure VMs should not access some registers as the related features
-+ * are disabled in the CPU. If an SVM is attempting write to the given
-+ * SPR, ignore the write. Otherwise behave like a normal mtspr.
-+ */
-+#define mtspr_r(rn, v)					\
-+({								\
-+	if (!(mfmsr() & MSR_S))					\
-+		asm volatile("mtspr " __stringify(rn) ",%0" :	\
-+				     : "r" ((unsigned long)(v)) \
-+				     : "memory");		\
-+})
-+#else
-+#define mfspr_r		mfspr
-+#define mtspr_r		mtspr
-+#endif
-+
- #ifdef __powerpc64__
- #if defined(CONFIG_PPC_CELL) || defined(CONFIG_PPC_FSL_BOOK3E)
- #define mftb()		({unsigned long rval;				\
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 8fc4de0..d5e7386 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -1072,9 +1072,9 @@ static inline void save_sprs(struct thread_struct *t)
- 		t->dscr = mfspr(SPRN_DSCR);
- 
- 	if (cpu_has_feature(CPU_FTR_ARCH_207S)) {
--		t->bescr = mfspr(SPRN_BESCR);
--		t->ebbhr = mfspr(SPRN_EBBHR);
--		t->ebbrr = mfspr(SPRN_EBBRR);
-+		t->bescr = mfspr_r(SPRN_BESCR);
-+		t->ebbhr = mfspr_r(SPRN_EBBHR);
-+		t->ebbrr = mfspr_r(SPRN_EBBRR);
- 
- 		t->fscr = mfspr(SPRN_FSCR);
- 
-@@ -1111,11 +1111,11 @@ static inline void restore_sprs(struct thread_struct *old_thread,
- 
- 	if (cpu_has_feature(CPU_FTR_ARCH_207S)) {
- 		if (old_thread->bescr != new_thread->bescr)
--			mtspr(SPRN_BESCR, new_thread->bescr);
-+			mtspr_r(SPRN_BESCR, new_thread->bescr);
- 		if (old_thread->ebbhr != new_thread->ebbhr)
--			mtspr(SPRN_EBBHR, new_thread->ebbhr);
-+			mtspr_r(SPRN_EBBHR, new_thread->ebbhr);
- 		if (old_thread->ebbrr != new_thread->ebbrr)
--			mtspr(SPRN_EBBRR, new_thread->ebbrr);
-+			mtspr_r(SPRN_EBBRR, new_thread->ebbrr);
- 
- 		if (old_thread->fscr != new_thread->fscr)
- 			mtspr(SPRN_FSCR, new_thread->fscr);
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 8304ee2..91f4db2 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -3584,9 +3584,9 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu *vcpu, u64 time_limit,
- 	mtspr(SPRN_PSPB, vcpu->arch.pspb);
- 	mtspr(SPRN_FSCR, vcpu->arch.fscr);
- 	mtspr(SPRN_TAR, vcpu->arch.tar);
--	mtspr(SPRN_EBBHR, vcpu->arch.ebbhr);
--	mtspr(SPRN_EBBRR, vcpu->arch.ebbrr);
--	mtspr(SPRN_BESCR, vcpu->arch.bescr);
-+	mtspr_r(SPRN_EBBHR, vcpu->arch.ebbhr);
-+	mtspr_r(SPRN_EBBRR, vcpu->arch.ebbrr);
-+	mtspr_r(SPRN_BESCR, vcpu->arch.bescr);
- 	mtspr(SPRN_WORT, vcpu->arch.wort);
- 	mtspr(SPRN_TIDR, vcpu->arch.tid);
- 	mtspr(SPRN_DAR, vcpu->arch.shregs.dar);
-@@ -3657,9 +3657,9 @@ int kvmhv_p9_guest_entry(struct kvm_vcpu *vcpu, u64 time_limit,
- 	vcpu->arch.pspb = mfspr(SPRN_PSPB);
- 	vcpu->arch.fscr = mfspr(SPRN_FSCR);
- 	vcpu->arch.tar = mfspr(SPRN_TAR);
--	vcpu->arch.ebbhr = mfspr(SPRN_EBBHR);
--	vcpu->arch.ebbrr = mfspr(SPRN_EBBRR);
--	vcpu->arch.bescr = mfspr(SPRN_BESCR);
-+	vcpu->arch.ebbhr = mfspr_r(SPRN_EBBHR);
-+	vcpu->arch.ebbrr = mfspr_r(SPRN_EBBRR);
-+	vcpu->arch.bescr = mfspr_r(SPRN_BESCR);
- 	vcpu->arch.wort = mfspr(SPRN_WORT);
- 	vcpu->arch.tid = mfspr(SPRN_TIDR);
- 	vcpu->arch.amr = mfspr(SPRN_AMR);
-@@ -4288,9 +4288,9 @@ static int kvmppc_vcpu_run_hv(struct kvm_run *run, struct kvm_vcpu *vcpu)
- 
- 	/* Save userspace EBB and other register values */
- 	if (cpu_has_feature(CPU_FTR_ARCH_207S)) {
--		ebb_regs[0] = mfspr(SPRN_EBBHR);
--		ebb_regs[1] = mfspr(SPRN_EBBRR);
--		ebb_regs[2] = mfspr(SPRN_BESCR);
-+		ebb_regs[0] = mfspr_r(SPRN_EBBHR);
-+		ebb_regs[1] = mfspr_r(SPRN_EBBRR);
-+		ebb_regs[2] = mfspr_r(SPRN_BESCR);
- 		user_tar = mfspr(SPRN_TAR);
- 	}
- 	user_vrsave = mfspr(SPRN_VRSAVE);
-@@ -4336,9 +4336,9 @@ static int kvmppc_vcpu_run_hv(struct kvm_run *run, struct kvm_vcpu *vcpu)
- 
- 	/* Restore userspace EBB and other register values */
- 	if (cpu_has_feature(CPU_FTR_ARCH_207S)) {
--		mtspr(SPRN_EBBHR, ebb_regs[0]);
--		mtspr(SPRN_EBBRR, ebb_regs[1]);
--		mtspr(SPRN_BESCR, ebb_regs[2]);
-+		mtspr_r(SPRN_EBBHR, ebb_regs[0]);
-+		mtspr_r(SPRN_EBBRR, ebb_regs[1]);
-+		mtspr_r(SPRN_BESCR, ebb_regs[2]);
- 		mtspr(SPRN_TAR, user_tar);
- 		mtspr(SPRN_FSCR, current->thread.fscr);
- 	}
-diff --git a/arch/powerpc/kvm/book3s_hv_rmhandlers.S b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-index f4399b0..4cbf8ca 100644
---- a/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-+++ b/arch/powerpc/kvm/book3s_hv_rmhandlers.S
-@@ -808,15 +808,27 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_207S)
- 	mtspr	SPRN_CIABR, r7
- 	mtspr	SPRN_TAR, r8
- 	ld	r5, VCPU_IC(r4)
--	ld	r8, VCPU_EBBHR(r4)
- 	mtspr	SPRN_IC, r5
--	mtspr	SPRN_EBBHR, r8
--	ld	r5, VCPU_EBBRR(r4)
--	ld	r6, VCPU_BESCR(r4)
-+
-+	/* EBB and TM are disabled for secure VMs so skip them */
-+	mfmsr   r8
-+	andis.  r8, r8, MSR_S@high
-+	bne     clear_ebb0
-+	ld      r5, VCPU_EBBHR(r4)
-+	ld      r6, VCPU_EBBRR(r4)
-+	ld      r7, VCPU_BESCR(r4)
-+	b       store_ebb0
-+clear_ebb0:
-+	li      r5, 0
-+	li      r6, 0
-+	li      r7, 0
-+store_ebb0:
-+	mtspr   SPRN_EBBHR, r5
-+	mtspr   SPRN_EBBRR, r6
-+	mtspr   SPRN_BESCR, r7
-+
- 	lwz	r7, VCPU_GUEST_PID(r4)
- 	ld	r8, VCPU_WORT(r4)
--	mtspr	SPRN_EBBRR, r5
--	mtspr	SPRN_BESCR, r6
- 	mtspr	SPRN_PID, r7
- 	mtspr	SPRN_WORT, r8
- BEGIN_FTR_SECTION
-@@ -1611,14 +1623,26 @@ END_FTR_SECTION_IFCLR(CPU_FTR_ARCH_207S)
- 	mfspr	r7, SPRN_TAR
- 	std	r5, VCPU_IC(r9)
- 	std	r7, VCPU_TAR(r9)
--	mfspr	r8, SPRN_EBBHR
--	std	r8, VCPU_EBBHR(r9)
--	mfspr	r5, SPRN_EBBRR
--	mfspr	r6, SPRN_BESCR
-+
-+	/* EBB and TM are disabled for secure VMs so skip them */
-+	mfmsr   r8
-+	andis.  r8, r8, MSR_S@high
-+	bne     clear_ebb1
-+	mfspr   r5, SPRN_EBBHR
-+	mfspr   r6, SPRN_EBBRR
-+	mfspr   r7, SPRN_BESCR
-+	b       store_ebb1
-+clear_ebb1:
-+	li      r5, 0
-+	li      r6, 0
-+	li      r7, 0
-+store_ebb1:
-+	std     r5, VCPU_EBBHR(r9)
-+	std     r6, VCPU_EBBRR(r9)
-+	std     r7, VCPU_BESCR(r9)
-+
- 	mfspr	r7, SPRN_PID
- 	mfspr	r8, SPRN_WORT
--	std	r5, VCPU_EBBRR(r9)
--	std	r6, VCPU_BESCR(r9)
- 	stw	r7, VCPU_GUEST_PID(r9)
- 	std	r8, VCPU_WORT(r9)
- BEGIN_FTR_SECTION
-diff --git a/arch/powerpc/kvm/book3s_hv_tm_builtin.c b/arch/powerpc/kvm/book3s_hv_tm_builtin.c
-index 2172462..bc3071c 100644
---- a/arch/powerpc/kvm/book3s_hv_tm_builtin.c
-+++ b/arch/powerpc/kvm/book3s_hv_tm_builtin.c
-@@ -45,18 +45,18 @@ int kvmhv_p9_tm_emulation_early(struct kvm_vcpu *vcpu)
- 		if (!(vcpu->arch.hfscr & HFSCR_EBB) ||
- 		    ((msr & MSR_PR) && !(mfspr(SPRN_FSCR) & FSCR_EBB)))
- 			return 0;
--		bescr = mfspr(SPRN_BESCR);
-+		bescr = mfspr_r(SPRN_BESCR);
- 		/* expect to see a S->T transition requested */
- 		if (((bescr >> 30) & 3) != 2)
- 			return 0;
- 		bescr &= ~BESCR_GE;
- 		if (instr & (1 << 11))
- 			bescr |= BESCR_GE;
--		mtspr(SPRN_BESCR, bescr);
-+		mtspr_r(SPRN_BESCR, bescr);
- 		msr = (msr & ~MSR_TS_MASK) | MSR_TS_T;
- 		vcpu->arch.shregs.msr = msr;
- 		vcpu->arch.cfar = vcpu->arch.regs.nip - 4;
--		vcpu->arch.regs.nip = mfspr(SPRN_EBBRR);
-+		vcpu->arch.regs.nip = mfspr_r(SPRN_EBBRR);
- 		return 1;
- 
- 	case PPC_INST_MTMSRD:
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index ca92e01..e51b2c9 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -846,9 +846,9 @@ void perf_event_print_debug(void)
- 
- 	if (ppmu->flags & PPMU_ARCH_207S) {
- 		pr_info("MMCR2: %016lx EBBHR: %016lx\n",
--			mfspr(SPRN_MMCR2), mfspr(SPRN_EBBHR));
-+			mfspr(SPRN_MMCR2), mfspr_r(SPRN_EBBHR));
- 		pr_info("EBBRR: %016lx BESCR: %016lx\n",
--			mfspr(SPRN_EBBRR), mfspr(SPRN_BESCR));
-+			mfspr_r(SPRN_EBBRR), mfspr_r(SPRN_BESCR));
- 	}
- #endif
- 	pr_info("SIAR:  %016lx SDAR:  %016lx SIER:  %016lx\n",
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index 14e56c2..20b3431 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -1871,7 +1871,7 @@ static void dump_207_sprs(void)
- 	printf("sdar   = %.16lx   sier = %.16lx pmc6   = %.8lx\n",
- 		mfspr(SPRN_SDAR), mfspr(SPRN_SIER), mfspr(SPRN_PMC6));
- 	printf("ebbhr  = %.16lx  ebbrr = %.16lx bescr  = %.16lx\n",
--		mfspr(SPRN_EBBHR), mfspr(SPRN_EBBRR), mfspr(SPRN_BESCR));
-+		mfspr_r(SPRN_EBBHR), mfspr_r(SPRN_EBBRR), mfspr_r(SPRN_BESCR));
- 	printf("iamr   = %.16lx\n", mfspr(SPRN_IAMR));
- 
- 	if (!(msr & MSR_HV))
--- 
-1.8.3.1
-
+> 
+> -- 
+> MST
