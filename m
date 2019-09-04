@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCB9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EA9C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67F321883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FFFB22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619899;
-	bh=O2DaIM61WuU5UURiWEQKiCvOcdVGZBk5R1VuhGJGPI8=;
+	s=default; t=1567619903;
+	bh=n0SsBDXlORyaEMZjSPgG0D44ZcsiD7lTVDrl99iuj5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x9qkPEgsvXM00fTNohRgj5Et5jeMoD2a04g5GAQVxtJIvmWL1f042HbSCloLil8ZR
-	 7jjtYGPz6donZrdUU2qEZWW54gt6VV5tcSgjPSiwBEZta61pNh0AH5kUTMc+bI6GCA
-	 TP66Ya4j8yBNXJ2360CUlOw9WW2kOmkznwfJqkqk=
+	b=bH5jcDe2iCUKhTi2w0OIJHDYC8VO/rGpIyQE6zQaEkuFlOfj5mjX8HtH/a0YOTqJk
+	 18txGC49y52KKZt4gMPgoA2nqIgnH0x6kmd1BMkluv8p5ZDGUbH8mqAxVQ6CFlrmMw
+	 iODxVNeztJwQ05/YErFGleflR8rvhNztODR0zLS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbfIDR6S (ORCPT
+        id S2388040AbfIDR6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36630 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387991AbfIDR6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:16 -0400
+        id S2387561AbfIDR6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 825E121883;
-        Wed,  4 Sep 2019 17:58:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBD2B21883;
+        Wed,  4 Sep 2019 17:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619895;
-        bh=O2DaIM61WuU5UURiWEQKiCvOcdVGZBk5R1VuhGJGPI8=;
+        s=default; t=1567619900;
+        bh=n0SsBDXlORyaEMZjSPgG0D44ZcsiD7lTVDrl99iuj5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxBBnjllDH/WlsL/QyBAMUzRtSoTw8dqMX8T2o1zdNqhn5epakEx6UtJ9OKJHo8Q3
-         mt+h31VdW2KmmveLJCMi7zkpd1XiRxV6Tb5dl3iqyYCGsvtIVOwM/swPLc3Q4TCY/k
-         YqH4K/lrwMUiavsBXFEiOyblPgfXF8l5MwRxg6OM=
+        b=G+ZsSVSySrYTOZXbXfF5K/lfAoyHx9KaWC/PeD1P2clmm9cO0luuIBA5dR2rL4IDG
+         6MhV4z75vXKg63Z08bDIQWJ+7/Im9VFem31KD9sMx+m07Cjdfv8h7hXVzDR7ihfdMN
+         UcwpvLEmcN7N0tKhL5QOKG444W3Wv7qK+i67q+9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hodaszi <robert.hodaszi@digi.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 75/77] Revert "cfg80211: fix processing world regdomain when non modular"
-Date:   Wed,  4 Sep 2019 19:54:02 +0200
-Message-Id: <20190904175310.343791950@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Vladimir Rutsky <rutsky@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 59/77] tcp: make sure EPOLLOUT wont be missed
+Date:   Wed,  4 Sep 2019 19:53:46 +0200
+Message-Id: <20190904175308.865825691@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -59,63 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hodaszi, Robert <Robert.Hodaszi@digi.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 0d31d4dbf38412f5b8b11b4511d07b840eebe8cb upstream.
+[ Upstream commit ef8d8ccdc216f797e66cb4a1372f5c4c285ce1e4 ]
 
-This reverts commit 96cce12ff6e0 ("cfg80211: fix processing world
-regdomain when non modular").
+As Jason Baron explained in commit 790ba4566c1a ("tcp: set SOCK_NOSPACE
+under memory pressure"), it is crucial we properly set SOCK_NOSPACE
+when needed.
 
-Re-triggering a reg_process_hint with the last request on all events,
-can make the regulatory domain fail in case of multiple WiFi modules. On
-slower boards (espacially with mdev), enumeration of the WiFi modules
-can end up in an intersected regulatory domain, and user cannot set it
-with 'iw reg set' anymore.
+However, Jason patch had a bug, because the 'nonblocking' status
+as far as sk_stream_wait_memory() is concerned is governed
+by MSG_DONTWAIT flag passed at sendmsg() time :
 
-This is happening, because:
-- 1st module enumerates, queues up a regulatory request
-- request gets processed by __reg_process_hint_driver():
-  - checks if previous was set by CORE -> yes
-    - checks if regulator domain changed -> yes, from '00' to e.g. 'US'
-      -> sends request to the 'crda'
-- 2nd module enumerates, queues up a regulator request (which triggers
-  the reg_todo() work)
-- reg_todo() -> reg_process_pending_hints() sees, that the last request
-  is not processed yet, so it tries to process it again.
-  __reg_process_hint driver() will run again, and:
-  - checks if the last request's initiator was the core -> no, it was
-    the driver (1st WiFi module)
-  - checks, if the previous initiator was the driver -> yes
-    - checks if the regulator domain changed -> yes, it was '00' (set by
-      core, and crda call did not return yet), and should be changed to 'US'
+    long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
 
-------> __reg_process_hint_driver calls an intersect
+So it is very possible that tcp sendmsg() calls sk_stream_wait_memory(),
+and that sk_stream_wait_memory() returns -EAGAIN with SOCK_NOSPACE
+cleared, if sk->sk_sndtimeo has been set to a small (but not zero)
+value.
 
-Besides, the reg_process_hint call with the last request is meaningless
-since the crda call has a timeout work. If that timeout expires, the
-first module's request will lost.
+This patch removes the 'noblock' variable since we must always
+set SOCK_NOSPACE if -EAGAIN is returned.
 
-Cc: stable@vger.kernel.org
-Fixes: 96cce12ff6e0 ("cfg80211: fix processing world regdomain when non modular")
-Signed-off-by: Robert Hodaszi <robert.hodaszi@digi.com>
-Link: https://lore.kernel.org/r/20190614131600.GA13897@a1-hr
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+It also renames the do_nonblock label since we might reach this
+code path even if we were in blocking mode.
+
+Fixes: 790ba4566c1a ("tcp: set SOCK_NOSPACE under memory pressure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Reported-by: Vladimir Rutsky  <rutsky@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/wireless/reg.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/stream.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2234,7 +2234,7 @@ static void reg_process_pending_hints(vo
+--- a/net/core/stream.c
++++ b/net/core/stream.c
+@@ -119,7 +119,6 @@ int sk_stream_wait_memory(struct sock *s
+ 	int err = 0;
+ 	long vm_wait = 0;
+ 	long current_timeo = *timeo_p;
+-	bool noblock = (*timeo_p ? false : true);
+ 	DEFINE_WAIT(wait);
  
- 	/* When last_request->processed becomes true this will be rescheduled */
- 	if (lr && !lr->processed) {
--		reg_process_hint(lr);
-+		pr_debug("Pending regulatory request, waiting for it to be processed...\n");
- 		return;
- 	}
+ 	if (sk_stream_memory_free(sk))
+@@ -132,11 +131,8 @@ int sk_stream_wait_memory(struct sock *s
  
+ 		if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
+ 			goto do_error;
+-		if (!*timeo_p) {
+-			if (noblock)
+-				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+-			goto do_nonblock;
+-		}
++		if (!*timeo_p)
++			goto do_eagain;
+ 		if (signal_pending(current))
+ 			goto do_interrupted;
+ 		sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+@@ -168,7 +164,13 @@ out:
+ do_error:
+ 	err = -EPIPE;
+ 	goto out;
+-do_nonblock:
++do_eagain:
++	/* Make sure that whenever EAGAIN is returned, EPOLLOUT event can
++	 * be generated later.
++	 * When TCP receives ACK packets that make room, tcp_check_space()
++	 * only calls tcp_new_space() if SOCK_NOSPACE is set.
++	 */
++	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+ 	err = -EAGAIN;
+ 	goto out;
+ do_interrupted:
 
 
