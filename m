@@ -6,117 +6,100 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCACC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85A7C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D92B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF678208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfIDPcQ (ORCPT
+        id S1731279AbfIDPcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:32:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56100 "EHLO mx1.redhat.com"
+        Wed, 4 Sep 2019 11:32:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36382 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729773AbfIDPcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:32:16 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1729773AbfIDPcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:32:51 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D5B2830A76A2;
-        Wed,  4 Sep 2019 15:32:15 +0000 (UTC)
-Received: from [10.3.116.78] (ovpn-116-78.phx2.redhat.com [10.3.116.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DBABD60606;
-        Wed,  4 Sep 2019 15:32:14 +0000 (UTC)
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
- permissions from symbolic to octal
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-3-skunberg.kelsey@gmail.com>
- <20190814053846.GA253360@google.com>
- <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
- <20190904062229.GA66871@JATN>
-From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <a7865a6a-4359-e989-7ef5-77d9a8135ae3@redhat.com>
-Date:   Wed, 4 Sep 2019 11:32:14 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 0C799800DD4;
+        Wed,  4 Sep 2019 15:32:51 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.63])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2883C5D9C9;
+        Wed,  4 Sep 2019 15:32:48 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  4 Sep 2019 17:32:49 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 17:32:46 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 1/3] task: Add a count of task rcu users
+Message-ID: <20190904153245.GF24568@redhat.com>
+References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
+ <20190830160957.GC2634@redhat.com>
+ <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org>
+ <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <87ef0yt221.fsf_-_@x220.int.ebiederm.org>
+ <20190904144415.GB20391@lenoir>
 MIME-Version: 1.0
-In-Reply-To: <20190904062229.GA66871@JATN>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 04 Sep 2019 15:32:16 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904144415.GB20391@lenoir>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 04 Sep 2019 15:32:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 02:22 AM, Kelsey Skunberg wrote:
-> On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
->> On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
->>> [+cc Bodong, Don, Greg for permission question]
->>>
->>> On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
->>>> Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
->>>> preferred and octal permissions should be used instead. Change all
->>>> symbolic permissions to octal permissions.
->>>>
->>>> Example of old:
->>>>
->>>> "(S_IWUSR | S_IWGRP)"
->>>>
->>>> Example of new:
->>>>
->>>> "0220"
->>>
->>>
->>>>    static DEVICE_ATTR_RO(sriov_totalvfs);
->>>> -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
->>>> -				  sriov_numvfs_show, sriov_numvfs_store);
->>>> +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
->>>>    static DEVICE_ATTR_RO(sriov_offset);
->>>>    static DEVICE_ATTR_RO(sriov_stride);
->>>>    static DEVICE_ATTR_RO(sriov_vf_device);
->>>> -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
->>>> -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
->>>> +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
->>>> +		   sriov_drivers_autoprobe_store);
->>>
->>> Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
->>> "unusual" permissions.  These were added by:
->>>
->>>     0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
->>>     1789382a72a5 ("PCI: SRIOV control and status via sysfs")
->>>
->>> Kelsey's patch correctly preserves the existing permissions, but we
->>> should double-check that they are the permissions they want, and
->>> possibly add a comment about why they're different from the rest.
->>>
->>> Bjorn
->>>
-> 
-> Hi Don,
-> 
->> The rest being? ... 0644 vs 0664 ?
->> The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
->>
->> -dd
->>
-> 
-> Were you able to see if the unusual permissions (0664) are needed for
-> libvirt? I appreciate your help!
-> 
-> -Kelsey
-> 
-Asking libvirt team in RH; will get back as soon as I hear back.
-LPC time sink may delay the response.
+On 09/04, Frederic Weisbecker wrote:
+>
+> So what happens if, say:
+>
+>
+>            CPU 1                         CPU 2
+>    --------------------------------------------------------------
+>    rcu_read_lock()
+>    p = rcu_dereference(rq->task)
+>    if (refcount_inc_not_zero(p->rcu_users)) {
+>        .....
+>                                          release_task() {
+>                                              put_task_struct_rcu_user() {
+>                                                  call_rcu() {
+>                                                      queue rcu_head
 
--dd
+in this particular case call_rcu() won't be called, so
+
+>                                                  }
+>                                              }
+>                                          }
+>        put_task_struct_rcu_user(); //here rcu_users has been overwritten
+
+rcu_users won't be overwritten.
+
+But nobody should try to increment ->rcu_users,
+
+	rcu_read_lock();
+	p = rcu_dereference(rq->task);
+	refcount_inc_not_zero(p->rcu_users);
+
+is already wrong because both release_task/last-schedule can happen in
+between, before refcount_inc_not_zero().
+
+Oleg.
 
