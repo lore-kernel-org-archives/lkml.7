@@ -2,84 +2,109 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B299C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E803FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEBE22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E0422CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2C4N8oB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbfIDOQp (ORCPT
+        id S1730770AbfIDORf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:16:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:25007 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727417AbfIDOQo (ORCPT
+        Wed, 4 Sep 2019 10:17:35 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52037 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729877AbfIDORf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:16:44 -0400
-X-UUID: ec6f2baf4842498f92829352c925dd9a-20190904
-X-UUID: ec6f2baf4842498f92829352c925dd9a-20190904
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2114202653; Wed, 04 Sep 2019 22:16:40 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Sep 2019 22:16:38 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Sep 2019 22:16:30 +0800
-Message-ID: <1567606591.32522.21.camel@mtksdccf07>
-Subject: Re: [PATCH 1/2] mm/kasan: dump alloc/free stack for page allocator
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 4 Sep 2019 22:16:31 +0800
-In-Reply-To: <CAAeHK+wyvLF8=DdEczHLzNXuP+oC0CEhoPmp_LHSKVNyAiRGLQ@mail.gmail.com>
-References: <20190904065133.20268-1-walter-zh.wu@mediatek.com>
-         <CAAeHK+wyvLF8=DdEczHLzNXuP+oC0CEhoPmp_LHSKVNyAiRGLQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Sep 2019 10:17:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id k1so3532961wmi.1;
+        Wed, 04 Sep 2019 07:17:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VQ9zhovu0VtY5dlO+aIxXSe5qICuVntF1g5nKJaGXzw=;
+        b=e2C4N8oBlhmJVogaSLPm6ruy+6StkXRVtFx/uoDRI8Eppp7bDaR69q0h22P3IxWmYG
+         lBK/1zbFxO4sNfEJS8JPWDQHHXQDuVR7Ih+YBnpm60I8FCP/dU/WFCTMEyoRNDAbiwlt
+         fu4zjtQRHX6BfT0Y3jqx+TPT/VJ+af56uL9Hl8BNa0w5c8SAYLgcBUkAC+mQsEwopGuY
+         UbgCiKoufgP7/TtScWvnF2p/9gz7cUGae7k95/yTShePQkYlsEPpvFaAjbdtFgWpNNLc
+         W4jKReqSjb2XEvq3AuKaQgcD8opxgmGD3ifB/IWn7cDHm+Jo4IpRMxJP1vZfAxJhuTao
+         9IKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=VQ9zhovu0VtY5dlO+aIxXSe5qICuVntF1g5nKJaGXzw=;
+        b=La31E2lEoHBbXt4JCtFuiekzQe6FA/lOCTFKuY0aPnMoTIcXeVTbgAvw+LWyRc1ddh
+         7ylijahNodCfHuqvWJbfAJ/gtGs3/KN8WJwGlfmfaldEkFmZ+edp09FiBJrvh25mc6Ib
+         14wAfsESmoYrIaFIWCt9erYvLHUUfRsMhdAF+VMxokxpQObz+23SVde/WqhMqJNAAW7L
+         gqO6POC2MF7mx7FTuBiuTiNs/Xb8Z9n48Xr1czgBpK77x+0VyrnjVlxloAj+X7crt6Bb
+         Kx66R7KDDnRfILjq+XizX3kEU2qE5WE9De/L+IEl9vuv5kT1i7KXL4iRpWqMT+n7UDqr
+         7nkw==
+X-Gm-Message-State: APjAAAWZkB9UqQ2VtW95EiIZxUfau8jZ4SIHGt78QiobMKcJ+gBq/FKb
+        kdRWolOXJDHZFuN+2HGP68s=
+X-Google-Smtp-Source: APXvYqxwSC4B/sfRKNq7HX/G79ZLS/hRbQrOxtUFfFU30szFy88WIfTAPhFGet+rSz+23qoaJojjwg==
+X-Received: by 2002:a1c:a558:: with SMTP id o85mr4606355wme.30.1567606652845;
+        Wed, 04 Sep 2019 07:17:32 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id q19sm39809979wra.89.2019.09.04.07.17.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 07:17:31 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Ariel Elior <aelior@marvell.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        GR-everest-linux-l2@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: qed: Move static keyword to the front of declaration
+Date:   Wed,  4 Sep 2019 16:17:30 +0200
+Message-Id: <20190904141730.31497-1-kw@linux.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 15:44 +0200, Andrey Konovalov wrote:
-> On Wed, Sep 4, 2019 at 8:51 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> > +config KASAN_DUMP_PAGE
-> > +       bool "Dump the page last stack information"
-> > +       depends on KASAN && PAGE_OWNER
-> > +       help
-> > +         By default, KASAN doesn't record alloc/free stack for page allocator.
-> > +         It is difficult to fix up page use-after-free issue.
-> > +         This feature depends on page owner to record the last stack of page.
-> > +         It is very helpful for solving the page use-after-free or out-of-bound.
-> 
-> I'm not sure if we need a separate config for this. Is there any
-> reason to not have this enabled by default?
+Move the static keyword to the front of declaration of iwarp_state_names,
+and resolve the following compiler warning that can be seen when building
+with warnings enabled (W=1):
 
-PAGE_OWNER need some memory usage, it is not allowed to enable by
-default in low RAM device. so I create new feature option and the person
-who wants to use it to enable it.
+drivers/net/ethernet/qlogic/qed/qed_iwarp.c:385:1: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
-Thanks.
-Walter
+Also, resolve checkpatch.pl script warning:
+
+WARNING: static const char * array should probably be
+  static const char * const
+
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
+
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index f380fae8799d..65ec16a31658 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -382,7 +382,7 @@ qed_iwarp2roce_state(enum qed_iwarp_qp_state state)
+ 	}
+ }
+ 
+-const static char *iwarp_state_names[] = {
++static const char * const iwarp_state_names[] = {
+ 	"IDLE",
+ 	"RTS",
+ 	"TERMINATE",
+-- 
+2.22.1
 
