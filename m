@@ -2,182 +2,118 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A32C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F55DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7227023402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="B24vgdZM"
+	by mail.kernel.org (Postfix) with ESMTP id 1F8A72168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbfIDNSS (ORCPT
+        id S1730373AbfIDNSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:18:18 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:33496 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729907AbfIDNRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:17:14 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 78FBFC5741;
-        Wed,  4 Sep 2019 13:17:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567603034; bh=S9lXifIRV5LjZ5ja6p24Sciaey7X+yvmq/cydA1irIk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=B24vgdZMddAJY218MQIcQzAR/P2l3oTLDM/JYncVvQeGRx8EPq87es8aH8Kb8CsEW
-         hQa/tImd/AIuqy0ELp6WsgAwHJg7N5RWF6b3uNUUyWHyqBm5ISEHjD+cGe7Mty7eI1
-         P3UQtWcX7L80ofEog4iRsPDoocSVqWyoKwG7F7+mzf/CmHbnUkSy46qsKN/y6QX8A4
-         yq2z/d2yB11iGpb4ynpteonTLZ/8oryma2Gelw+3ByyR50Y+fMZRUcRAcVLET/M5nD
-         zgxipCT9m9qrcr15K5oo/wHnvS9WgLlLo1FGzx16HdrDHqVq42/yTTdlJcZyhIYig1
-         UdYTGi4IVVh+Q==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 1EED3A005F;
-        Wed,  4 Sep 2019 13:17:12 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 01/13] net: stmmac: selftests: Return proper error code to userspace
-Date:   Wed,  4 Sep 2019 15:16:53 +0200
-Message-Id: <b1d7700ab68947678e1c479904537718555171ab.1567602867.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
-References: <cover.1567602867.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
-References: <cover.1567602867.git.joabreu@synopsys.com>
+        Wed, 4 Sep 2019 09:18:49 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59985 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727900AbfIDNSr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 09:18:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 06:18:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="194727790"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2019 06:18:47 -0700
+Received: from ravisha1-mobl1.amr.corp.intel.com (unknown [10.255.36.89])
+        by linux.intel.com (Postfix) with ESMTP id 1BC465808A9;
+        Wed,  4 Sep 2019 06:18:46 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH 2/6] soundwire: cadence_master: add hw_reset
+ capability in debugfs
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
+ <20190813213227.5163-3-pierre-louis.bossart@linux.intel.com>
+ <20190904071317.GJ2672@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <71411347-93cf-2617-4edd-f6b401fe7a9b@linux.intel.com>
+Date:   Wed, 4 Sep 2019 08:18:45 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190904071317.GJ2672@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can do better than just return 1 to userspace. Lets return a proper
-Linux error code.
+On 9/4/19 2:13 AM, Vinod Koul wrote:
+> On 13-08-19, 16:32, Pierre-Louis Bossart wrote:
+>> Provide debugfs capability to kick link and devices into hard-reset
+>> (as defined by MIPI). This capability is really useful when some
+>> devices are no longer responsive and/or to check the software handling
+>> of resynchronization.
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   drivers/soundwire/cadence_master.c | 20 ++++++++++++++++++++
+>>   1 file changed, 20 insertions(+)
+>>
+>> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+>> index 046622e4b264..bd58d80ff636 100644
+>> --- a/drivers/soundwire/cadence_master.c
+>> +++ b/drivers/soundwire/cadence_master.c
+>> @@ -340,6 +340,23 @@ static int cdns_reg_show(struct seq_file *s, void *data)
+>>   }
+>>   DEFINE_SHOW_ATTRIBUTE(cdns_reg);
+>>   
+>> +static int cdns_hw_reset(void *data, u64 value)
+>> +{
+>> +	struct sdw_cdns *cdns = data;
+>> +	int ret;
+>> +
+>> +	if (value != 1)
+>> +		return 0;
+> 
+> Should this not be EINVAL to indicate invalid value passed?
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Maybe. I must admit I don't know what -EINVAL would do, this is used for 
+debugfs so it's not clear to me if the user will see a difference?
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index ecc8602c6799..d3234338a0ca 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -318,7 +318,7 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
- 		attr->timeout = STMMAC_LB_TIMEOUT;
- 
- 	wait_for_completion_timeout(&tpriv->comp, attr->timeout);
--	ret = !tpriv->ok;
-+	ret = tpriv->ok ? 0 : -ETIMEDOUT;
- 
- cleanup:
- 	if (!attr->dont_wait)
-@@ -480,7 +480,7 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
- 
- 	/* Shall NOT receive packet */
- 	ret = __stmmac_test_loopback(priv, &attr);
--	ret = !ret;
-+	ret = ret ? 0 : -EINVAL;
- 
- cleanup:
- 	dev_mc_del(priv->dev, gd_addr);
-@@ -512,7 +512,7 @@ static int stmmac_test_pfilt(struct stmmac_priv *priv)
- 
- 	/* Shall NOT receive packet */
- 	ret = __stmmac_test_loopback(priv, &attr);
--	ret = !ret;
-+	ret = ret ? 0 : -EINVAL;
- 
- cleanup:
- 	dev_uc_del(priv->dev, gd_addr);
-@@ -562,7 +562,7 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
- 
- 	/* Shall NOT receive packet */
- 	ret = __stmmac_test_loopback(priv, &attr);
--	ret = !ret;
-+	ret = ret ? 0 : -EINVAL;
- 
- cleanup:
- 	dev_uc_del(priv->dev, uc_addr);
-@@ -600,7 +600,7 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
- 
- 	/* Shall NOT receive packet */
- 	ret = __stmmac_test_loopback(priv, &attr);
--	ret = !ret;
-+	ret = ret ? 0 : -EINVAL;
- 
- cleanup:
- 	dev_mc_del(priv->dev, mc_addr);
-@@ -699,7 +699,7 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
- 	}
- 
- 	wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
--	ret = !tpriv->ok;
-+	ret = tpriv->ok ? 0 : -ETIMEDOUT;
- 
- cleanup:
- 	dev_mc_del(priv->dev, paddr);
-@@ -833,11 +833,11 @@ static int stmmac_test_vlanfilt(struct stmmac_priv *priv)
- 			goto vlan_del;
- 
- 		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
--		ret = !tpriv->ok;
-+		ret = tpriv->ok ? 0 : -ETIMEDOUT;
- 		if (ret && !i) {
- 			goto vlan_del;
- 		} else if (!ret && i) {
--			ret = -1;
-+			ret = -EINVAL;
- 			goto vlan_del;
- 		} else {
- 			ret = 0;
-@@ -909,11 +909,11 @@ static int stmmac_test_dvlanfilt(struct stmmac_priv *priv)
- 			goto vlan_del;
- 
- 		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
--		ret = !tpriv->ok;
-+		ret = tpriv->ok ? 0 : -ETIMEDOUT;
- 		if (ret && !i) {
- 			goto vlan_del;
- 		} else if (!ret && i) {
--			ret = -1;
-+			ret = -EINVAL;
- 			goto vlan_del;
- 		} else {
- 			ret = 0;
-@@ -998,7 +998,7 @@ static int stmmac_test_rxp(struct stmmac_priv *priv)
- 	attr.src = addr;
- 
- 	ret = __stmmac_test_loopback(priv, &attr);
--	ret = !ret; /* Shall NOT receive packet */
-+	ret = ret ? 0 : -EINVAL; /* Shall NOT receive packet */
- 
- 	cls_u32.command = TC_CLSU32_DELETE_KNODE;
- 	stmmac_tc_setup_cls_u32(priv, priv, &cls_u32);
--- 
-2.7.4
+> 
+>> +
+>> +	ret = sdw_cdns_exit_reset(cdns);
+>> +
+>> +	dev_dbg(cdns->dev, "link hw_reset done: %d\n", ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +DEFINE_DEBUGFS_ATTRIBUTE(cdns_hw_reset_fops, NULL, cdns_hw_reset, "%llu\n");
+>> +
+>>   /**
+>>    * sdw_cdns_debugfs_init() - Cadence debugfs init
+>>    * @cdns: Cadence instance
+>> @@ -348,6 +365,9 @@ DEFINE_SHOW_ATTRIBUTE(cdns_reg);
+>>   void sdw_cdns_debugfs_init(struct sdw_cdns *cdns, struct dentry *root)
+>>   {
+>>   	debugfs_create_file("cdns-registers", 0400, root, cdns, &cdns_reg_fops);
+>> +
+>> +	debugfs_create_file("cdns-hw-reset", 0200, root, cdns,
+>> +			    &cdns_hw_reset_fops);
+>>   }
+>>   EXPORT_SYMBOL_GPL(sdw_cdns_debugfs_init);
+>>   
+>> -- 
+>> 2.20.1
+> 
 
