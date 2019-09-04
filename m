@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149EAC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD017C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70982339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1FE52087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612765;
-	bh=AXPR9OXJuhp5iAZ5tC1XbkvuhWf5TaT1co01bJ2eGsE=;
+	s=default; t=1567612771;
+	bh=BvbLYBycoaBZwSCz1J1OhvVyGPOAwRk9sZnNSfbTWlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CWvp5N3CbX1iL+e0+jipu1FgkjOVsWoVBwF/QVeDzmtX6GriHqDXqP3Y6vkNElGue
-	 HspieeUJA1iWr1DHwYiGwNeHTkjnR3te2k8mPzjXeoHme6AtUc6ByHmIcS6dIdMmws
-	 gWHMgk6n/qUxWlx1dEnqTCEGiNGRNWAlECzIGXFo=
+	b=tIfKZ9Q56fWMbzhzE7R6n2/b0nmBJ5DwkA9G86oBv/LC0dDk0Vc1e0Kc7/mL1yM7y
+	 5NGa0yR75z0QnxXM84WNyM6FlXETxlXVxc+utBVpLLUPz0bLJAXsrVwCRc5y+Vrm/7
+	 SY5t6haMd+1iLpETZ8MrtzLyZB55VZcaAn7i7Ydg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732377AbfIDP7Y (ORCPT
+        id S1732408AbfIDP7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:59:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33832 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:59:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732362AbfIDP7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:59:23 -0400
+        id S1731634AbfIDP71 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:59:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7CD322CF5;
-        Wed,  4 Sep 2019 15:59:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5057E20820;
+        Wed,  4 Sep 2019 15:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612762;
-        bh=AXPR9OXJuhp5iAZ5tC1XbkvuhWf5TaT1co01bJ2eGsE=;
+        s=default; t=1567612766;
+        bh=BvbLYBycoaBZwSCz1J1OhvVyGPOAwRk9sZnNSfbTWlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYOf9oaQ8dZXFmL5htyKYKQc45aICyRnw6I24M72T7AwQLsERpHIUbsgeMvc5BZq2
-         wpHpoz5qGkwdOL1K1TlwhF/N+P2cnz2TfwNg6w6Q7XAoc4pQuNPHanWc8LHt4MdDnP
-         e+uDbGInOdvOBXPuF7AB7EH8SVZQDBRT21sCSwno=
+        b=tEs54ryfdq4ENtpV/qL0glDgzYWMfGYr7Y2Kg/mpkgaDuErlujbsYmllWegBWa4xq
+         ZJcEKhG0SgHdX4frve18q34H4HJB/GgUU8lLx0Oxmvg5kT77VC+DMRoUvvrV4MurlP
+         CoUguOjk1vuIbccp7iZR+MM6a4m1Ne+BLyA43nZE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     zhaoyang <huangzhaoyang@gmail.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 66/94] ARM: 8901/1: add a criteria for pfn_valid of arm
-Date:   Wed,  4 Sep 2019 11:57:11 -0400
-Message-Id: <20190904155739.2816-66-sashal@kernel.org>
+Cc:     John Hurley <john.hurley@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, oss-drivers@netronome.com,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 68/94] nfp: flower: handle neighbour events on internal ports
+Date:   Wed,  4 Sep 2019 11:57:13 -0400
+Message-Id: <20190904155739.2816-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -60,48 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhaoyang <huangzhaoyang@gmail.com>
+From: John Hurley <john.hurley@netronome.com>
 
-[ Upstream commit 5b3efa4f1479c91cb8361acef55f9c6662feba57 ]
+[ Upstream commit e8024cb483abb2b0290b3ef5e34c736e9de2492f ]
 
-pfn_valid can be wrong when parsing a invalid pfn whose phys address
-exceeds BITS_PER_LONG as the MSB will be trimed when shifted.
+Recent code changes to NFP allowed the offload of neighbour entries to FW
+when the next hop device was an internal port. This allows for offload of
+tunnel encap when the end-point IP address is applied to such a port.
 
-The issue originally arise from bellowing call stack, which corresponding to
-an access of the /proc/kpageflags from userspace with a invalid pfn parameter
-and leads to kernel panic.
+Unfortunately, the neighbour event handler still rejects events that are
+not associated with a repr dev and so the firmware neighbour table may get
+out of sync for internal ports.
 
-[46886.723249] c7 [<c031ff98>] (stable_page_flags) from [<c03203f8>]
-[46886.723264] c7 [<c0320368>] (kpageflags_read) from [<c0312030>]
-[46886.723280] c7 [<c0311fb0>] (proc_reg_read) from [<c02a6e6c>]
-[46886.723290] c7 [<c02a6e24>] (__vfs_read) from [<c02a7018>]
-[46886.723301] c7 [<c02a6f74>] (vfs_read) from [<c02a778c>]
-[46886.723315] c7 [<c02a770c>] (SyS_pread64) from [<c0108620>]
-(ret_fast_syscall+0x0/0x28)
+Fix this by allowing internal port neighbour events to be correctly
+processed.
 
-Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 45756dfedab5 ("nfp: flower: allow tunnels to output to internal port")
+Signed-off-by: John Hurley <john.hurley@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 8e793cddac661..98e17388a563f 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -174,6 +174,11 @@ static void __init zone_sizes_init(unsigned long min, unsigned long max_low,
- #ifdef CONFIG_HAVE_ARCH_PFN_VALID
- int pfn_valid(unsigned long pfn)
- {
-+	phys_addr_t addr = __pfn_to_phys(pfn);
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
+index 8c67505865a46..43faad1893f7f 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
+@@ -329,13 +329,13 @@ nfp_tun_neigh_event_handler(struct notifier_block *nb, unsigned long event,
+ 
+ 	flow.daddr = *(__be32 *)n->primary_key;
+ 
+-	/* Only concerned with route changes for representors. */
+-	if (!nfp_netdev_is_nfp_repr(n->dev))
+-		return NOTIFY_DONE;
+-
+ 	app_priv = container_of(nb, struct nfp_flower_priv, tun.neigh_nb);
+ 	app = app_priv->app;
+ 
++	if (!nfp_netdev_is_nfp_repr(n->dev) &&
++	    !nfp_flower_internal_port_can_offload(app, n->dev))
++		return NOTIFY_DONE;
 +
-+	if (__phys_to_pfn(addr) != pfn)
-+		return 0;
-+
- 	return memblock_is_map_memory(__pfn_to_phys(pfn));
- }
- EXPORT_SYMBOL(pfn_valid);
+ 	/* Only concerned with changes to routes already added to NFP. */
+ 	if (!nfp_tun_has_route(app, flow.daddr))
+ 		return NOTIFY_DONE;
 -- 
 2.20.1
 
