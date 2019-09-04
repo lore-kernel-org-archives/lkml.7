@@ -2,164 +2,93 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 744C1C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25865C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22AAA2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C0B23402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:13:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="nzDjn94z";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TP9LTiUr"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hMmtYMXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfIDACX (ORCPT
+        id S1727314AbfIDANh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 20:02:23 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:58325 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725882AbfIDACX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 20:02:23 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 616A04EC;
-        Tue,  3 Sep 2019 20:02:21 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 03 Sep 2019 20:02:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=e2m08tJLme9DAXqhOo/SiutMgnTWzRV
-        5kaLQ5K1ekAY=; b=nzDjn94z9twTnGbhrKJ/a73kjcHrGTL9VWrGlAJuPT6XS2b
-        ghrJMcXU8s6VbgR17WvlJaho31+Eh/OQwEkyj0vYFsgn2UHXgny78fRx/LjbptIS
-        MhA1CSzESkwlAeP5Akm6WDmDXiJ3OlqUq8jF1jq5Wc+/9RgOQAALIOwcRzYqpCcV
-        By30GqX5fXYxyOKKlqg7YrvUE+e+W4BpDRYZIG93ILZPheSplnh+9ldj3A05OMuV
-        5T2pyhvcZZ/wHOBYb/4ivhjA+AtQ2iaUdRYaMG/3dE0frBQ7oMNKk41qtCH6V7xw
-        Nmehft5ZwLynGIrFxHg0s6gAjW4j3Xq8czo2qpg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=e2m08t
-        JLme9DAXqhOo/SiutMgnTWzRV5kaLQ5K1ekAY=; b=TP9LTiUreJY4bZLWzMJ1fk
-        oTwdGNuCbqXjxZX+qj8doMbEAr4qwhNPd0ogE7rUnt3pj6MUxznpkmNGE3Na2iW7
-        IuqYY92EMFrTnCEf3MENAU2Ob/jtroq4uJY8zWCf8ntpoRF35EejGSJ0Uxp2TI65
-        IOC7h3GDw/zy0DamxQ00nV8D2qxIDjzCRa7554IGJTw+rUCFqNzmmw0RTqjaRVDQ
-        ruU6uRB5l0LFQ9nwEgO87wSKTK31bHvsmH9KOOhGVNjLZRmdi2ZifZtBY1C//NRh
-        Cj/v+pJU4ujHPC5+kayV9O6kokfdKuFCCB2IwIQ1uXlyonfmdHDcAUshtV75jNMQ
-        ==
-X-ME-Sender: <xms:C_9uXbcxP2ZIW9ShjiBFkTgSlNMrsYIBE_TuiLO1yU8EpbgBExZ96g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejgedgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:C_9uXUNGfWVK6Pu3ZUBOvzJ6bFKv4JeQID4Y8l2M4pzPGY8cVJnxAA>
-    <xmx:C_9uXeb4vzNVrfsUUkEuXqkogR7Cad-_J3fBJm2JG3AYTvbzJ-ODAA>
-    <xmx:C_9uXYC3_rVXSh611uTU2_uEd4lFI-hBt5mTDTqHpKAeGEikQsWqDQ>
-    <xmx:Df9uXa8S4WRLMDJI7BY_Rw3nHq-_YQE3oi5P35WPeIkz-w1PjvkFnQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2A685E00A3; Tue,  3 Sep 2019 20:02:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-154-gfa7592a-fmstable-20190829v1
-Mime-Version: 1.0
-Message-Id: <38ff59e7-491b-478b-afff-a664d8f66547@www.fastmail.com>
-In-Reply-To: <CAPDyKFpWJu3RH4TWoO_wcJq0LDrM_fAUfsCC==e8O_6A8dLhiA@mail.gmail.com>
-References: <20190902035842.2747-1-andrew@aj.id.au>
- <20190902035842.2747-2-andrew@aj.id.au>
- <CACPK8XfYgEUfaK6rtr+FdEq-Vau6d4wE2Rvfp6Q4G2-kjVLT0g@mail.gmail.com>
- <83570e25-b20a-4a17-85ea-15a9a53289bf@www.fastmail.com>
- <CAPDyKFpWJu3RH4TWoO_wcJq0LDrM_fAUfsCC==e8O_6A8dLhiA@mail.gmail.com>
-Date:   Wed, 04 Sep 2019 09:32:44 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Ulf Hansson" <ulf.hansson@linaro.org>
-Cc:     "Joel Stanley" <joel@jms.id.au>, "Arnd Bergmann" <arnd@arndb.de>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "Adrian Hunter" <adrian.hunter@intel.com>,
-        "OpenBMC Maillist" <openbmc@lists.ozlabs.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "kbuild test robot" <lkp@intel.com>
-Subject: Re: [PATCH v2 1/4] mmc: sdhci-of-aspeed: Fix link failure for SPARC
-Content-Type: text/plain
+        Tue, 3 Sep 2019 20:13:37 -0400
+Received: from ozlabs.org ([203.11.71.1]:53439 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfIDANg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 20:13:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46NPRx71w0z9sP3;
+        Wed,  4 Sep 2019 10:13:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567556014;
+        bh=9sKqcVmNPYcGRbL8j5mK/risVZPS130A9GxQFjJc+2w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hMmtYMXzvtmigmoLB8fOijNYtv0w5+23EcHc04CBtf7WVe1yOFljK8/8JBMv0QYYK
+         sj3vgnkfMV07qCWR2S11v+HEgAcxQiXVr2h7CBqCSoon2uSCqelyjObd3OHkACDdbq
+         TQ4jsVE5GPT7/F6jlmtINjBcCW64T4xw64tqMJU1TM9tfUkRWLVMe6pDEom1/9R2fZ
+         xRnuZE1vNZQWMPFf6lIYE8QRrqUt4SHTw39cJZK/ye9bNwlse+27i6lpiUefqlZRCF
+         mqOmFYYFQRIK56R+XSEQqfLtnuJdEmzpE29jGxuYiEN9PJ8jd6qM12eYrSCoVOzryg
+         N4W6fPgtzWARQ==
+Date:   Wed, 4 Sep 2019 10:13:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        PowerPC <linuxppc-dev@lists.ozlabs.org>
+Subject: linux-next: build warnings after merge of the kbuild tree
+Message-ID: <20190904101259.2687cea4@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/ssBCJi3mTERdd=v=ROJKrJr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/ssBCJi3mTERdd=v=ROJKrJr
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+After merging the kbuild tree, today's linux-next build (powerpc
+ppc64_defconfig) produced these warnings:
 
 
-On Wed, 4 Sep 2019, at 00:18, Ulf Hansson wrote:
-> On Mon, 2 Sep 2019 at 07:26, Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> >
-> >
-> > On Mon, 2 Sep 2019, at 13:42, Joel Stanley wrote:
-> > > On Mon, 2 Sep 2019 at 03:58, Andrew Jeffery <andrew@aj.id.au> wrote:
-> > > >
-> > > > Resolves the following build error reported by the 0-day bot:
-> > > >
-> > > >     ERROR: "of_platform_device_create" [drivers/mmc/host/sdhci-of-aspeed.ko] undefined!
-> > > >
-> > > > SPARC does not set CONFIG_OF_ADDRESS so the symbol is missing. Guard the
-> > > > callsite to maintain build coverage for the rest of the driver.
-> > > >
-> > > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > > > ---
-> > > >  drivers/mmc/host/sdhci-of-aspeed.c | 38 ++++++++++++++++++++----------
-> > > >  1 file changed, 25 insertions(+), 13 deletions(-)
-> > > >
-> > > > diff --git a/drivers/mmc/host/sdhci-of-aspeed.c b/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > index d5acb5afc50f..96ca494752c5 100644
-> > > > --- a/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > +++ b/drivers/mmc/host/sdhci-of-aspeed.c
-> > > > @@ -224,10 +224,30 @@ static struct platform_driver aspeed_sdhci_driver = {
-> > > >         .remove         = aspeed_sdhci_remove,
-> > > >  };
-> > > >
-> > > > -static int aspeed_sdc_probe(struct platform_device *pdev)
-> > > > -
-> > > > +static int aspeed_sdc_create_sdhcis(struct platform_device *pdev)
-> > > >  {
-> > > > +#if defined(CONFIG_OF_ADDRESS)
-> > >
-> > > This is going to be untested code forever, as no one will be running
-> > > on a chip with this hardware present but OF_ADDRESS disabled.
-> > >
-> > > How about we make the driver depend on OF_ADDRESS instead?
-> >
-> > Testing is split into two pieces here: compile-time and run-time.
-> > Clearly the run-time behaviour is going to be broken on configurations
-> > without CONFIG_OF_ADDRESS (SPARC as mentioned), but I don't think
-> > that means we shouldn't allow it to be compiled in that case
-> > (e.g. CONFIG_COMPILE_TEST performs a similar role).
-> >
-> > With respect to compile-time it's possible to compile either path as
-> > demonstrated by the build failure report.
-> >
-> > Having said that there's no reason we  couldn't do what you suggest,
-> > just it wasn't the existing solution pattern for the problem (there are
-> > several other drivers that suffered the same bug that were fixed in the
-> > style of this patch). Either way works, it's all somewhat academic.
-> > Your suggestion is more obvious in terms of correctness, but this
-> > patch is basically just code motion (the only addition is the `#if`/
-> > `#endif` lines over what was already there if we disregard the
-> > function declaration/invocation). I'll change it if there are further
-> > complaints and a reason to do a v3.
-> 
-> I am in favor of Joel's suggestion as I don't really like having
-> ifdefs bloating around in the driver (unless very good reasons).
-> Please re-spin a v3.
-> 
-> Another option is to implement stub function and to deal with error
-> codes, but that sounds more like a long term thingy, if even
-> applicable here.
+Presumably introduced by commit
 
-No worries then, will post a respin shortly.
+  1267f9d3047d ("kbuild: add $(BASH) to run scripts with bash-extension")
 
-Andrew
+and presumably arch/powerpc/tools/unrel_branch_check.sh (which has no
+#! line) is a bash script.  Yeah, is uses '((' and '))'.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ssBCJi3mTERdd=v=ROJKrJr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1vAaYACgkQAVBC80lX
+0GxOmAf+IJwgmJGltVlvpa0v/AYyBNUCM/OMskna4gAT92XarZeed2UfoxwB0g/l
+hXnIdav7xtwj/Enz2jsOiomWSzBEAY+D2idUi2T8VMD+VVWdV5xFXFyFKL7+c0/N
+lxyYAXB/oKmyhNTOPMNJk8ThSr+hBZEgDSHX//j0iJ39+wfmf098N+RbvdVCUqXc
+jirj7RLWRrWA4LcUjMMPQMky3gp+CI5olpcFdVyGNKS4j+nE3BTR/DzQCGLPO31Y
+2XlhVtnbDGD18/aGnc8n0qBm5wqVexi939dCcXJDGmO2l+Jyb7iUAvPFD4Tev2u+
+0HyFqdbbIU5lqfTTQGgwcKlbePY3CQ==
+=l4Bs
+-----END PGP SIGNATURE-----
+
+--Sig_/ssBCJi3mTERdd=v=ROJKrJr--
