@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A10C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B04C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354E622CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F75233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620387;
-	bh=JxnV7Tjf5ViCpK3hkF1FF4rvKTigY7AmnKFNREg/YRw=;
+	s=default; t=1567620390;
+	bh=Q9c7BQ7RGkcTXElK5aKWVVoxFQJZ9lZOK80sIY6jcRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NCogoZAKiY4MYcT8RlDYtwpvN3z276P6hWt9E4Rd4NJsWHK2CZKTc0NPYaO0IVRMV
-	 MkelDlNhpKVWR4OSxaevLFdprZx34aS0cyFUfAxGcgC5LvOG+utDoH/QVpuuRwJn4A
-	 0S3yYWWRy4KwCHSCSG/+wzy/qcAy/zpL4/zB/XSs=
+	b=vnN4J4kTyHiLPqejvp10OhamXyz64II2351trBpuiY82E0cqchE5oKOnwVvcsSkpi
+	 Dy80yZZNi8ID3Wp6LpogY95yb9E4CGEDb24gYIHSH4zJZP/d0NLBO7hhQs8IR+ZgNn
+	 QsxEGc8LnstNqcnCFSGi9OciCR9mYsHrMShLDtUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389444AbfIDSGY (ORCPT
+        id S2389533AbfIDSG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389414AbfIDSGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:20 -0400
+        id S2388874AbfIDSG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FA6F233FF;
-        Wed,  4 Sep 2019 18:06:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BC723400;
+        Wed,  4 Sep 2019 18:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620379;
-        bh=JxnV7Tjf5ViCpK3hkF1FF4rvKTigY7AmnKFNREg/YRw=;
+        s=default; t=1567620387;
+        bh=Q9c7BQ7RGkcTXElK5aKWVVoxFQJZ9lZOK80sIY6jcRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WptQtUWClj9vGf5NEqVFbucX0hEdnqi0LHdgFJ6stSYbkPc9tSZYsMzFzF/DJzdfe
-         b9L8W+IEDf84oQ3ZbHftAvqROGAFbRalKOBHLniw0wwD/uxxaCVO+34sC+pDlBaRrn
-         fVp7Pruu1yPYpzR8M8WtRQgMj+XS0nWpIqI1uVF8=
+        b=jAlGVgVSwXQ7UgCyKx0thBfmuqeN3MzdPunjXrYi0fNp5nnOhf2uHIy4s8waDKlo7
+         ZvxXSc+R7r5QfkYMRFlNGLRxNOTz5MVC9clVEasuyte1dtek5NA1S9vRyoiYW5VFrF
+         gsXYon1MaBmykPK/D4rcLPMbu7IkNuiSCCpMjOe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Julian Anastasov <ja@ssi.bg>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 35/93] ipv6: Default fib6_type to RTN_UNICAST when not set
-Date:   Wed,  4 Sep 2019 19:53:37 +0200
-Message-Id: <20190904175306.324861996@linuxfoundation.org>
+Subject: [PATCH 4.19 38/93] ipv4/icmp: fix rt dst dev null pointer dereference
+Date:   Wed,  4 Sep 2019 19:53:40 +0200
+Message-Id: <20190904175306.522557233@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,35 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit c7036d97acd2527cef145b5ef9ad1a37ed21bbe6 ]
+[ Upstream commit e2c693934194fd3b4e795635934883354c06ebc9 ]
 
-A user reported that routes are getting installed with type 0 (RTN_UNSPEC)
-where before the routes were RTN_UNICAST. One example is from accel-ppp
-which apparently still uses the ioctl interface and does not set
-rtmsg_type. Another is the netlink interface where ipv6 does not require
-rtm_type to be set (v4 does). Prior to the commit in the Fixes tag the
-ipv6 stack converted type 0 to RTN_UNICAST, so restore that behavior.
+In __icmp_send() there is a possibility that the rt->dst.dev is NULL,
+e,g, with tunnel collect_md mode, which will cause kernel crash.
+Here is what the code path looks like, for GRE:
 
-Fixes: e8478e80e5a7 ("net/ipv6: Save route type in rt6_info")
-Signed-off-by: David Ahern <dsahern@gmail.com>
+- ip6gre_tunnel_xmit
+  - ip6gre_xmit_ipv4
+    - __gre6_xmit
+      - ip6_tnl_xmit
+        - if skb->len - t->tun_hlen - eth_hlen > mtu; return -EMSGSIZE
+    - icmp_send
+      - net = dev_net(rt->dst.dev); <-- here
+
+The reason is __metadata_dst_init() init dst->dev to NULL by default.
+We could not fix it in __metadata_dst_init() as there is no dev supplied.
+On the other hand, the reason we need rt->dst.dev is to get the net.
+So we can just try get it from skb->dev when rt->dst.dev is NULL.
+
+v4: Julian Anastasov remind skb->dev also could be NULL. We'd better
+still use dst.dev and do a check to avoid crash.
+
+v3: No changes.
+
+v2: fix the issue in __icmp_send() instead of updating shared dst dev
+in {ip_md, ip6}_tunnel_xmit.
+
+Fixes: c8b34e680a09 ("ip_tunnel: Add tnl_update_pmtu in ip_md_tunnel_xmit")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Julian Anastasov <ja@ssi.bg>
+Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/route.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/icmp.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -3109,7 +3109,7 @@ static struct fib6_info *ip6_route_info_
- 	rt->fib6_metric = cfg->fc_metric;
- 	rt->fib6_nh.nh_weight = 1;
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -587,7 +587,13 @@ void __icmp_send(struct sk_buff *skb_in,
  
--	rt->fib6_type = cfg->fc_type;
-+	rt->fib6_type = cfg->fc_type ? : RTN_UNICAST;
+ 	if (!rt)
+ 		goto out;
+-	net = dev_net(rt->dst.dev);
++
++	if (rt->dst.dev)
++		net = dev_net(rt->dst.dev);
++	else if (skb_in->dev)
++		net = dev_net(skb_in->dev);
++	else
++		goto out;
  
- 	/* We cannot add true routes via loopback here,
- 	   they would result in kernel looping; promote them to reject routes
+ 	/*
+ 	 *	Find the original header. It is expected to be valid, of course.
 
 
