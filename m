@@ -2,119 +2,268 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3654C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11EAC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AACAB22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="enCoL6P3"
+	by mail.kernel.org (Postfix) with ESMTP id CAB6922CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbfIDInY (ORCPT
+        id S1729350AbfIDInr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:43:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33096 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726004AbfIDInY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:43:24 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d10so7319850lfi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 01:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=22aBvTjn7JhApRUIycE5rK4HDJAGLo24z88Hc1SRWA4=;
-        b=enCoL6P3SBeQS9D5xyYEBAdoddJ9z61maY/T5ThChXtVQrjpuUkF5viAUSVLEqrTOO
-         ImWc5C+mcF/HsSThCxP2TK3SROQw3OclyEPfVNNm6K9gCy2hr99P/uyRk4d5qgMX2mRG
-         B8+d2fF3E38Wj7G9stSoSDf+B1kzactV+peRQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=22aBvTjn7JhApRUIycE5rK4HDJAGLo24z88Hc1SRWA4=;
-        b=L6G5O831ShWmnpSDuREAp7jCkGfWgN2K+zBtOij+7QlTFbBCqcp4lgTomj6g3mQUay
-         X29nAiyAn7wvOBXNopsCk19CWq1wvFp1k1OOLDaaFks8i7XxT62ml7ZNJmhwh3EqWgw0
-         bZzGQPspAsOXXCs0oyuWmqTZn7B/t5+sJolOkTPImuIa0ida0Asxmlj2CXG2RXWH5Qg+
-         d+DKfCUOVHfthPqIzVWhZ+pYR3vF+rkPvMEAnmhO5fcZAcxlM53rbNah6RBmXZP5K27Z
-         r8Q3Sbio7EXflSN15YybtWMJ1yYCwV/W6TganRw9XAIRLcYsWnsfVU2QaTrlOS5BNMVs
-         rneA==
-X-Gm-Message-State: APjAAAWJi8qeuZfBeSIEnXcILEgJvg64g8F5TMuRLtY7HUbTGGE+pybp
-        BjtVuTJHE762TkH10mI2KUcDcywkpbIK43xk
-X-Google-Smtp-Source: APXvYqw8OMMGAjW/bDQMQDkYA6XzdbLEjLxRR0ppAW3/TaJg6XOpuLFWIOJqftYhJvqXldXvtkGrIA==
-X-Received: by 2002:a19:6455:: with SMTP id b21mr23773070lfj.167.1567586602413;
-        Wed, 04 Sep 2019 01:43:22 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id z72sm1146467ljb.98.2019.09.04.01.43.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 01:43:21 -0700 (PDT)
-Subject: Re: [PATCH] media: meson: Add NULL check after the call to kmalloc()
-To:     Austin Kim <austindh.kim@gmail.com>, mchehab@kernel.org,
-        khilman@baylibre.com
-Cc:     mjourdan@baylibre.com, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190904082232.GA171180@LGEARND20B15>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <a9ca05ec-55a9-a58c-267a-334771a1480a@rasmusvillemoes.dk>
-Date:   Wed, 4 Sep 2019 10:43:20 +0200
+        Wed, 4 Sep 2019 04:43:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52826 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726004AbfIDInr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:43:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D1AACAE92;
+        Wed,  4 Sep 2019 08:43:45 +0000 (UTC)
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
+ regression
+To:     Feng Tang <feng.tang@intel.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rong Chen <rong.a.chen@intel.com>,
+        =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>, LKP <lkp@01.org>
+References: <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
+ <20190824051605.GA63850@shbuild999.sh.intel.com>
+ <1b897bfe-fd40-3ae3-d867-424d1fc08c44@suse.de>
+ <d114b0b6-6b64-406e-6c3f-a8b8d5502413@intel.com>
+ <44029e80-ba00-8246-dec0-fda122d53f5e@suse.de>
+ <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
+ <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de>
+ <20190904062716.GC5541@shbuild999.sh.intel.com>
+ <72c33bf1-9184-e24a-c084-26d9c8b6f9b7@suse.de>
+ <CAKMK7uGdOtyDHZMSzY8J45bX57EFKo=DWNUi+WL+GVOzoBpUhw@mail.gmail.com>
+ <20190904083558.GD5541@shbuild999.sh.intel.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <33d3ce15-6221-bd96-3f26-b710e4da6b1a@suse.de>
+Date:   Wed, 4 Sep 2019 10:43:40 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190904082232.GA171180@LGEARND20B15>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190904083558.GD5541@shbuild999.sh.intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="z5u8L7PhZwl2omekefWdTSnCrm327WPWo"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2019 10.22, Austin Kim wrote:
-> If the kmalloc() return NULL, the NULL pointer dereference will occur.
-> 	new_ts->ts = ts;
-> 
-> Add exception check after the call to kmalloc() is made.
-> 
-> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> ---
->  drivers/staging/media/meson/vdec/vdec_helpers.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-> index f16948b..e7e56d5 100644
-> --- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-> +++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-> @@ -206,6 +206,10 @@ void amvdec_add_ts_reorder(struct amvdec_session *sess, u64 ts, u32 offset)
->  	unsigned long flags;
->  
->  	new_ts = kmalloc(sizeof(*new_ts), GFP_KERNEL);
-> +	if (!new_ts) {
-> +		dev_err(sess->core->dev, "Failed to kmalloc()\n");
-> +		return;
-> +	}
->  	new_ts->ts = ts;
->  	new_ts->offset = offset;
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--z5u8L7PhZwl2omekefWdTSnCrm327WPWo
+Content-Type: multipart/mixed; boundary="GAqvzYwfBSRNT5wxc8MZTQlopx9rsHEt8";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Feng Tang <feng.tang@intel.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Rong Chen
+ <rong.a.chen@intel.com>, =?UTF-8?Q?Michel_D=c3=a4nzer?=
+ <michel@daenzer.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel <dri-devel@lists.freedesktop.org>, LKP <lkp@01.org>
+Message-ID: <33d3ce15-6221-bd96-3f26-b710e4da6b1a@suse.de>
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
+ regression
+References: <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
+ <20190824051605.GA63850@shbuild999.sh.intel.com>
+ <1b897bfe-fd40-3ae3-d867-424d1fc08c44@suse.de>
+ <d114b0b6-6b64-406e-6c3f-a8b8d5502413@intel.com>
+ <44029e80-ba00-8246-dec0-fda122d53f5e@suse.de>
+ <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
+ <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de>
+ <20190904062716.GC5541@shbuild999.sh.intel.com>
+ <72c33bf1-9184-e24a-c084-26d9c8b6f9b7@suse.de>
+ <CAKMK7uGdOtyDHZMSzY8J45bX57EFKo=DWNUi+WL+GVOzoBpUhw@mail.gmail.com>
+ <20190904083558.GD5541@shbuild999.sh.intel.com>
+In-Reply-To: <20190904083558.GD5541@shbuild999.sh.intel.com>
 
-No need to printk() on error, AFAIK the mm subsystem should already make
-some noise if an allocation fails.
-This is not a proper fix - you need to make the function return an error
-(-ENOMEM) to let the caller know allocation failed, and allow that to
-propagate the error. There's only one caller, which already seems
-capable of returning errors (there's an -EAGAIN), so it shouldn't be
-that hard - though of course one needs to undo what has been done so far.
+--GAqvzYwfBSRNT5wxc8MZTQlopx9rsHEt8
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Also, unrelated to the kmalloc() handling: amvdec_add_ts_reorder() could
-be moved to esparser.c and made static, or at the very least the
-EXPORT_SYMBOL can be removed since vdec_helpers.o is linked in to the
-same module as the sole user. That probably goes for all the
-EXPORT_SYMBOL(amvdec_*).
+Hi
 
-Rasmus
+Am 04.09.19 um 10:35 schrieb Feng Tang:
+> Hi Daniel,
+>=20
+> On Wed, Sep 04, 2019 at 10:11:11AM +0200, Daniel Vetter wrote:
+>> On Wed, Sep 4, 2019 at 8:53 AM Thomas Zimmermann <tzimmermann@suse.de>=
+ wrote:
+>>>
+>>> Hi
+>>>
+>>> Am 04.09.19 um 08:27 schrieb Feng Tang:
+>>>>> Thank you for testing. But don't get too excited, because the patch=
+
+>>>>> simulates a bug that was present in the original mgag200 code. A
+>>>>> significant number of frames are simply skipped. That is apparently=
+ the
+>>>>> reason why it's faster.
+>>>>
+>>>> Thanks for the detailed info, so the original code skips time-consum=
+ing
+>>>> work inside atomic context on purpose. Is there any space to optmise=
+ it?
+>>>> If 2 scheduled update worker are handled at almost same time, can on=
+e be
+>>>> skipped?
+>>>
+>>> To my knowledge, there's only one instance of the worker. Re-scheduli=
+ng
+>>> the worker before a previous instance started, will not create a seco=
+nd
+>>> instance. The worker's instance will complete all pending updates. So=
+ in
+>>> some way, skipping workers already happens.
+>>
+>> So I think that the most often fbcon update from atomic context is the=
+
+>> blinking cursor. If you disable that one you should be back to the old=
+
+>> performance level I think, since just writing to dmesg is from process=
+
+>> context, so shouldn't change.
+>=20
+> Hmm, then for the old driver, it should also do the most update in
+> non-atomic context?=20
+>=20
+> One other thing is, I profiled that updating a 3MB shadow buffer needs
+> 20 ms, which transfer to 150 MB/s bandwidth. Could it be related with
+> the cache setting of DRM shadow buffer? say the orginal code use a
+> cachable buffer?
+>=20
+>=20
+>>
+>> https://unix.stackexchange.com/questions/3759/how-to-stop-cursor-from-=
+blinking
+>>
+>> Bunch of tricks, but tbh I haven't tested them.
+>=20
+> Thomas has suggested to disable curson by
+> 	echo 0 > /sys/devices/virtual/graphics/fbcon/cursor_blink
+>=20
+> We tried that way, and no change for the performance data.
+
+There are several ways of disabling the cursor. On my test system, I ente=
+red
+
+  tput civis
+
+before the test and got better performance. Did you try this as well?
+
+Best regards
+Thomas
+
+>=20
+> Thanks,
+> Feng
+>=20
+>>
+>> In any case, I still strongly advice you don't print anything to dmesg=
+
+>> or fbcon while benchmarking, because dmesg/printf are anything but
+>> fast, especially if a gpu driver is involved. There's some efforts to
+>> make the dmesg/printk side less painful (untangling the console_lock
+>> from printk), but fundamentally printing to the gpu from the kernel
+>> through dmesg/fbcon won't be cheap. It's just not something we
+>> optimize beyond "make sure it works for emergencies".
+>> -Daniel
+>>
+>>>
+>>> Best regards
+>>> Thomas
+>>>
+>>>>
+>>>> Thanks,
+>>>> Feng
+>>>>
+>>>>>
+>>>>> Best regards
+>>>>> Thomas
+>>>> _______________________________________________
+>>>> dri-devel mailing list
+>>>> dri-devel@lists.freedesktop.org
+>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>>>
+>>>
+>>> --
+>>> Thomas Zimmermann
+>>> Graphics Driver Developer
+>>> SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+>>> GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+>>> HRB 21284 (AG N=C3=BCrnberg)
+>>>
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>
+>>
+>>
+>> --=20
+>> Daniel Vetter
+>> Software Engineer, Intel Corporation
+>> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
+
+
+--GAqvzYwfBSRNT5wxc8MZTQlopx9rsHEt8--
+
+--z5u8L7PhZwl2omekefWdTSnCrm327WPWo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl1veTwACgkQaA3BHVML
+eiN7CAf/SM9JDoFBaUDWj8xO1i+O4qpKpzL0OAfmSuxHySqrhdIuIozl8XbP1KFF
+SQ2dZWkFxTaR01c4dp8C1bwbYNejR6LapZKzQKIlzKSYdXIbtUPeG8cFV6IfFELl
+bTWa6NW2c6oWQVHwOwXpKlKqtEBG7Dq7uYNhkavsWjdAOnG68e8jhAyLClvbURRQ
+XL/pthimnw53eIKHlGgRU+/Ps5KKjMlDZ8hEa3Uuew+oBLeziCfMnqpyUeU5Tp1D
+riQ+Ogtf0V3VC4VyE43ftY8n/DBXW8y03mkIX5y1lAlldYt9mQDLiTQviWpzVOiW
+uOg0B9LuCPsEbk09sKs/4ue4Hz7kxQ==
+=HaY+
+-----END PGP SIGNATURE-----
+
+--z5u8L7PhZwl2omekefWdTSnCrm327WPWo--
