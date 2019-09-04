@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9284C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3981EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF5C22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13F5D2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620228;
-	bh=iXbFIJf6QaO+qi3Exye0+Fd0r+llpYzfwwi0AggCSPI=;
+	s=default; t=1567620231;
+	bh=2JqQvux28qzqiQiG86sbz00E1q+ZPZB1ah/c7nNZNI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JymyJoDwO48zMrPCwXFWPPBdSuYLPonK37j6wx0W/jRhpoi3B9X5J1EShYDgG/9Jo
-	 YLmMZ9FOSShq04uuvgfsokunI/DgpDNDSLugL++n6RxZ9hy1x0QEZbg9f4xAqHK0D9
-	 4ZxEIPLcM56E+IFeYJ7jleLSDtWJopcHYKWGF0uM=
+	b=QUdE4FecnI6NcjKeBiok+QmAugJbAdHqh4PEt5h7jFxg7SJr9yxHg4F9fGqlFZFr5
+	 80vqJdpWlhXtqjPBEnkgewz+JNBP78otM64bBd1DepCrCGjCBVwASNVBFRzfSN/zs3
+	 jPmY7LUk5XFsSKc4M1n9iHuosvomGVjUNvDZw/QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389005AbfIDSDr (ORCPT
+        id S2389013AbfIDSDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:03:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388995AbfIDSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:03:46 -0400
+        id S2388063AbfIDSDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:03:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD6CA22CEA;
-        Wed,  4 Sep 2019 18:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B32422CF7;
+        Wed,  4 Sep 2019 18:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620225;
-        bh=iXbFIJf6QaO+qi3Exye0+Fd0r+llpYzfwwi0AggCSPI=;
+        s=default; t=1567620228;
+        bh=2JqQvux28qzqiQiG86sbz00E1q+ZPZB1ah/c7nNZNI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thzrtZSYTR9QEb+LAMfmO7C4KekPJ4TF1KgA0M6JC4K0CYV/qMlBvi4tJNzA+yiGh
-         Dlliazp28UAPsprMEKYOUrSGmNozOSygYX49Ztoj6X1+Yz0sgBVJD1/oF/jI3D8g4m
-         g+EVtpYxddlq4v0yec2SLh5uPnks/M2SIJerXcTI=
+        b=11GomNU5/K6vEBCxn+HbFlgu1cDnabug/gCXyJlgoHEfvd7+sEvVtXd77H8i8BO2w
+         iarCa52MAQLcs3pOlegEoc2lj877duyYLvMFcQf1fOKNJhIJ4Yo7RsqbCHyYfov8KF
+         eBC+KC2cSsBr4OQK7zyEhkI0h0E9L/GLPqkIOvd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4.14 35/57] usb: host: xhci: rcar: Fix typo in compatible string matching
-Date:   Wed,  4 Sep 2019 19:54:03 +0200
-Message-Id: <20190904175305.541999221@linuxfoundation.org>
+        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 4.14 36/57] USB: storage: ums-realtek: Update module parameter description for auto_delink_en
+Date:   Wed,  4 Sep 2019 19:54:04 +0200
+Message-Id: <20190904175305.642752374@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,35 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 636bd02a7ba9025ff851d0cfb92768c8fa865859 upstream.
+commit f6445b6b2f2bb1745080af4a0926049e8bca2617 upstream.
 
-It's spelled "renesas", not "renensas".
+The option named "auto_delink_en" is a bit misleading, as setting it to
+false doesn't really disable auto-delink but let auto-delink be firmware
+controlled.
 
-Due to this typo, RZ/G1M and RZ/G1N were not covered by the check.
+Update the description to reflect the real usage of this parameter.
 
-Fixes: 2dc240a3308b ("usb: host: xhci: rcar: retire use of xhci_plat_type_is()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/20190827125112.12192-1-geert+renesas@glider.be
+Link: https://lore.kernel.org/r/20190827173450.13572-1-kai.heng.feng@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-rcar.c |    2 +-
+ drivers/usb/storage/realtek_cr.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-rcar.c
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -113,7 +113,7 @@ static int xhci_rcar_is_gen2(struct devi
- 	return of_device_is_compatible(node, "renesas,xhci-r8a7790") ||
- 		of_device_is_compatible(node, "renesas,xhci-r8a7791") ||
- 		of_device_is_compatible(node, "renesas,xhci-r8a7793") ||
--		of_device_is_compatible(node, "renensas,rcar-gen2-xhci");
-+		of_device_is_compatible(node, "renesas,rcar-gen2-xhci");
- }
+--- a/drivers/usb/storage/realtek_cr.c
++++ b/drivers/usb/storage/realtek_cr.c
+@@ -50,7 +50,7 @@ MODULE_LICENSE("GPL");
  
- static int xhci_rcar_is_gen3(struct device *dev)
+ static int auto_delink_en = 1;
+ module_param(auto_delink_en, int, S_IRUGO | S_IWUSR);
+-MODULE_PARM_DESC(auto_delink_en, "enable auto delink");
++MODULE_PARM_DESC(auto_delink_en, "auto delink mode (0=firmware, 1=software [default])");
+ 
+ #ifdef CONFIG_REALTEK_AUTOPM
+ static int ss_en = 1;
 
 
