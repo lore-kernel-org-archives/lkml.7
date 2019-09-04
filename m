@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B654CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6E9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F5523401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC7023401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbfIDOAg (ORCPT
+        id S1730891AbfIDOAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:00:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6204 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:00:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53608 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730330AbfIDOAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:00:33 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 15B6780AA5D6B48338E9;
-        Wed,  4 Sep 2019 22:00:31 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 22:00:21 +0800
+        id S1730473AbfIDOAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:00:38 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6DEEA87C3895A6B5B070;
+        Wed,  4 Sep 2019 22:00:35 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 22:00:27 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -50,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 18/36] spi: mxs: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:59:00 +0800
-Message-ID: <20190904135918.25352-19-yuehaibing@huawei.com>
+Subject: [PATCH -next 20/36] spi: nuc900: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:59:02 +0800
+Message-ID: <20190904135918.25352-21-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -71,35 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-mxs.c | 4 +---
+ drivers/spi/spi-nuc900.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-mxs.c b/drivers/spi/spi-mxs.c
-index 7bf53cf..996c1c8 100644
---- a/drivers/spi/spi-mxs.c
-+++ b/drivers/spi/spi-mxs.c
-@@ -532,7 +532,6 @@ static int mxs_spi_probe(struct platform_device *pdev)
+diff --git a/drivers/spi/spi-nuc900.c b/drivers/spi/spi-nuc900.c
+index f65a029e..6140035 100644
+--- a/drivers/spi/spi-nuc900.c
++++ b/drivers/spi/spi-nuc900.c
+@@ -327,7 +327,6 @@ static int nuc900_spi_probe(struct platform_device *pdev)
+ {
+ 	struct nuc900_spi *hw;
  	struct spi_master *master;
- 	struct mxs_spi *spi;
- 	struct mxs_ssp *ssp;
--	struct resource *iores;
- 	struct clk *clk;
- 	void __iomem *base;
- 	int devid, clk_freq;
-@@ -545,12 +544,11 @@ static int mxs_spi_probe(struct platform_device *pdev)
- 	 */
- 	const int clk_freq_default = 160000000;
+-	struct resource *res;
+ 	int err = 0;
  
--	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	irq_err = platform_get_irq(pdev, 0);
- 	if (irq_err < 0)
- 		return irq_err;
+ 	master = spi_alloc_master(&pdev->dev, sizeof(struct nuc900_spi));
+@@ -358,8 +357,7 @@ static int nuc900_spi_probe(struct platform_device *pdev)
+ 	hw->bitbang.chipselect     = nuc900_spi_chipsel;
+ 	hw->bitbang.txrx_bufs      = nuc900_spi_txrx;
  
--	base = devm_ioremap_resource(&pdev->dev, iores);
-+	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	hw->regs = devm_ioremap_resource(&pdev->dev, res);
++	hw->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(hw->regs)) {
+ 		err = PTR_ERR(hw->regs);
+ 		goto err_pdata;
 -- 
 2.7.4
 
