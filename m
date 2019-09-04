@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8A2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204B8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE0722CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D432087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621160;
-	bh=mMUhugRxCVP5bdl6+7j98wwjOy/wromZmzTztlHSIZA=;
+	s=default; t=1567621172;
+	bh=WWkBdbpGq7I+JRIMi2y3j9WaFyi9a4HptUP+C+H04sQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZS/CORADGkxlB8wlkXcOR/sabyUkCRtmzcguHJ4+aYg1wbMnX8zzOg8IQ5WzsBLzp
-	 ey5Lvr/8Noz85tUEGoougVI9Yc5KcrlixKfTgFut1DAlZbbXtvvc1D6sU10b2TY4Zl
-	 r8+6ZZM630FtBvCBnecGXyY6HKlNLlPUSfnKX82s=
+	b=WvhxVcc+i+ihJCvzD8ciXwOnfXue6G9+HuRivUHjI3puPykqCesnB4z29YtzYOZjN
+	 VC09BOhyf0ymj0HywV9GhB0ZRDaNKhbL5SocjSyqdR37MfuC+QW/K1g4+i3jAo3y2m
+	 Fn2lDqVRy7hapCb0kghAUPDUDMg6ibrUPHJ7sPBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390192AbfIDSTT (ORCPT
+        id S2390241AbfIDSTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:19:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390019AbfIDSJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:59 -0400
+        id S2389968AbfIDSJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 245042087E;
-        Wed,  4 Sep 2019 18:09:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 906D722DBF;
+        Wed,  4 Sep 2019 18:09:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620598;
-        bh=mMUhugRxCVP5bdl6+7j98wwjOy/wromZmzTztlHSIZA=;
+        s=default; t=1567620577;
+        bh=WWkBdbpGq7I+JRIMi2y3j9WaFyi9a4HptUP+C+H04sQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XTxWR2YclJVOYRGd/IIINdiJt1802a2lCNgmNoLBlhimL2J/Vj/4Ogu+kv2EV8Ktu
-         ULgb/lo3zQzarUsJEYU7b3IwapvBOfqGRJJMYWnK5rZBd23svisatjekJmCqdSAg8a
-         nxtPIx+lFPoFeEoDHHuPX/PPoYlwBzT+9ewOozmk=
+        b=HDf5CqZ/GV08mHJdQTVN3+/RT2LfF4Jq5eQ3wIsmMWpTVQxRUiefjXbksbLUl+IjW
+         RRNTCI7KPgcPNmpwY67mQtEXrwoLstOUfBPD7Z4ps9wB0ExggnNVVr6mcNn/4wMW5c
+         XqzdlK4WSSA9gF6Dc5lP/tIjlLomrJ2XRIbfaHWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 025/143] dma-direct: dont truncate dma_required_mask to bus addressing capabilities
-Date:   Wed,  4 Sep 2019 19:52:48 +0200
-Message-Id: <20190904175315.051650883@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 008/143] afs: Fix missing dentry data version updating
+Date:   Wed,  4 Sep 2019 19:52:31 +0200
+Message-Id: <20190904175314.465937108@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,36 +59,314 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8ad55538abe443919e20e0bb996561bca9cad84 ]
+[ Upstream commit 9dd0b82ef530cdfe805c9f7079c99e104be59a14 ]
 
-The dma required_mask needs to reflect the actual addressing capabilities
-needed to handle the whole system RAM. When truncated down to the bus
-addressing capabilities dma_addressing_limited() will incorrectly signal
-no limitations for devices which are restricted by the bus_dma_mask.
+In the in-kernel afs filesystem, the d_fsdata dentry field is used to hold
+the data version of the parent directory when it was created or when
+d_revalidate() last caused it to be updated.  This is compared to the
+->invalid_before field in the directory inode, rather than the actual data
+version number, thereby allowing changes due to local edits to be ignored.
+Only if the server data version gets bumped unexpectedly (eg. by a
+competing client), do we need to revalidate stuff.
 
-Fixes: b4ebe6063204 (dma-direct: implement complete bus_dma_mask handling)
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+However, the d_fsdata field should also be updated if an rpc op is
+performed that modifies that particular dentry.  Such ops return the
+revised data version of the directory(ies) involved, so we should use that.
+
+This is particularly problematic for rename, since a dentry from one
+directory may be moved directly into another directory (ie. mv a/x b/x).
+It would then be sporting the wrong data version - and if this is in the
+future, for the destination directory, revalidations would be missed,
+leading to foreign renames and hard-link deletion being missed.
+
+Fix this by the following means:
+
+ (1) Return the data version number from operations that read the directory
+     contents - if they issue the read.  This starts in afs_dir_iterate()
+     and is used, ignored or passed back by its callers.
+
+ (2) In afs_lookup*(), set the dentry version to the version returned by
+     (1) before d_splice_alias() is called and the dentry published.
+
+ (3) In afs_d_revalidate(), set the dentry version to that returned from
+     (1) if an rpc call was issued.  This means that if a parallel
+     procedure, such as mkdir(), modifies the directory, we won't
+     accidentally use the data version from that.
+
+ (4) In afs_{mkdir,create,link,symlink}(), set the new dentry's version to
+     the directory data version before d_instantiate() is called.
+
+ (5) In afs_{rmdir,unlink}, update the target dentry's version to the
+     directory data version as soon as we've updated the directory inode.
+
+ (6) In afs_rename(), we need to unhash the old dentry before we start so
+     that we don't get afs_d_revalidate() reverting the version change in
+     cross-directory renames.
+
+     We then need to set both the old and the new dentry versions the data
+     version of the new directory before we call d_move() as d_move() will
+     rehash them.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/dma/direct.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/afs/dir.c | 84 +++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 70 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 2c2772e9702ab..9912be7a970de 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -55,9 +55,6 @@ u64 dma_direct_get_required_mask(struct device *dev)
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index b87b41721eaa8..9620f19308f58 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -441,7 +441,7 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
+  * iterate through the data blob that lists the contents of an AFS directory
+  */
+ static int afs_dir_iterate(struct inode *dir, struct dir_context *ctx,
+-			   struct key *key)
++			   struct key *key, afs_dataversion_t *_dir_version)
  {
- 	u64 max_dma = phys_to_dma_direct(dev, (max_pfn - 1) << PAGE_SHIFT);
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir);
+ 	struct afs_xdr_dir_page *dbuf;
+@@ -461,6 +461,7 @@ static int afs_dir_iterate(struct inode *dir, struct dir_context *ctx,
+ 	req = afs_read_dir(dvnode, key);
+ 	if (IS_ERR(req))
+ 		return PTR_ERR(req);
++	*_dir_version = req->data_version;
  
--	if (dev->bus_dma_mask && dev->bus_dma_mask < max_dma)
--		max_dma = dev->bus_dma_mask;
--
- 	return (1ULL << (fls64(max_dma) - 1)) * 2 - 1;
+ 	/* round the file position up to the next entry boundary */
+ 	ctx->pos += sizeof(union afs_xdr_dirent) - 1;
+@@ -515,7 +516,10 @@ out:
+  */
+ static int afs_readdir(struct file *file, struct dir_context *ctx)
+ {
+-	return afs_dir_iterate(file_inode(file), ctx, afs_file_key(file));
++	afs_dataversion_t dir_version;
++
++	return afs_dir_iterate(file_inode(file), ctx, afs_file_key(file),
++			       &dir_version);
  }
  
+ /*
+@@ -556,7 +560,8 @@ static int afs_lookup_one_filldir(struct dir_context *ctx, const char *name,
+  * - just returns the FID the dentry name maps to if found
+  */
+ static int afs_do_lookup_one(struct inode *dir, struct dentry *dentry,
+-			     struct afs_fid *fid, struct key *key)
++			     struct afs_fid *fid, struct key *key,
++			     afs_dataversion_t *_dir_version)
+ {
+ 	struct afs_super_info *as = dir->i_sb->s_fs_info;
+ 	struct afs_lookup_one_cookie cookie = {
+@@ -569,7 +574,7 @@ static int afs_do_lookup_one(struct inode *dir, struct dentry *dentry,
+ 	_enter("{%lu},%p{%pd},", dir->i_ino, dentry, dentry);
+ 
+ 	/* search the directory */
+-	ret = afs_dir_iterate(dir, &cookie.ctx, key);
++	ret = afs_dir_iterate(dir, &cookie.ctx, key, _dir_version);
+ 	if (ret < 0) {
+ 		_leave(" = %d [iter]", ret);
+ 		return ret;
+@@ -643,6 +648,7 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
+ 	struct afs_server *server;
+ 	struct afs_vnode *dvnode = AFS_FS_I(dir), *vnode;
+ 	struct inode *inode = NULL, *ti;
++	afs_dataversion_t data_version = READ_ONCE(dvnode->status.data_version);
+ 	int ret, i;
+ 
+ 	_enter("{%lu},%p{%pd},", dir->i_ino, dentry, dentry);
+@@ -670,12 +676,14 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
+ 		cookie->fids[i].vid = as->volume->vid;
+ 
+ 	/* search the directory */
+-	ret = afs_dir_iterate(dir, &cookie->ctx, key);
++	ret = afs_dir_iterate(dir, &cookie->ctx, key, &data_version);
+ 	if (ret < 0) {
+ 		inode = ERR_PTR(ret);
+ 		goto out;
+ 	}
+ 
++	dentry->d_fsdata = (void *)(unsigned long)data_version;
++
+ 	inode = ERR_PTR(-ENOENT);
+ 	if (!cookie->found)
+ 		goto out;
+@@ -969,7 +977,8 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 	struct dentry *parent;
+ 	struct inode *inode;
+ 	struct key *key;
+-	long dir_version, de_version;
++	afs_dataversion_t dir_version;
++	long de_version;
+ 	int ret;
+ 
+ 	if (flags & LOOKUP_RCU)
+@@ -1015,20 +1024,20 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 	 * on a 32-bit system, we only have 32 bits in the dentry to store the
+ 	 * version.
+ 	 */
+-	dir_version = (long)dir->status.data_version;
++	dir_version = dir->status.data_version;
+ 	de_version = (long)dentry->d_fsdata;
+-	if (de_version == dir_version)
++	if (de_version == (long)dir_version)
+ 		goto out_valid_noupdate;
+ 
+-	dir_version = (long)dir->invalid_before;
+-	if (de_version - dir_version >= 0)
++	dir_version = dir->invalid_before;
++	if (de_version - (long)dir_version >= 0)
+ 		goto out_valid;
+ 
+ 	_debug("dir modified");
+ 	afs_stat_v(dir, n_reval);
+ 
+ 	/* search the directory for this vnode */
+-	ret = afs_do_lookup_one(&dir->vfs_inode, dentry, &fid, key);
++	ret = afs_do_lookup_one(&dir->vfs_inode, dentry, &fid, key, &dir_version);
+ 	switch (ret) {
+ 	case 0:
+ 		/* the filename maps to something */
+@@ -1081,7 +1090,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
+ 	}
+ 
+ out_valid:
+-	dentry->d_fsdata = (void *)dir_version;
++	dentry->d_fsdata = (void *)(unsigned long)dir_version;
+ out_valid_noupdate:
+ 	dput(parent);
+ 	key_put(key);
+@@ -1187,6 +1196,20 @@ static void afs_prep_for_new_inode(struct afs_fs_cursor *fc,
+ 	iget_data->cb_s_break = fc->cbi->server->cb_s_break;
+ }
+ 
++/*
++ * Note that a dentry got changed.  We need to set d_fsdata to the data version
++ * number derived from the result of the operation.  It doesn't matter if
++ * d_fsdata goes backwards as we'll just revalidate.
++ */
++static void afs_update_dentry_version(struct afs_fs_cursor *fc,
++				      struct dentry *dentry,
++				      struct afs_status_cb *scb)
++{
++	if (fc->ac.error == 0)
++		dentry->d_fsdata =
++			(void *)(unsigned long)scb->status.data_version;
++}
++
+ /*
+  * create a directory on an AFS filesystem
+  */
+@@ -1229,6 +1252,7 @@ static int afs_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
+ 		afs_check_for_remote_deletion(&fc, dvnode);
+ 		afs_vnode_commit_status(&fc, dvnode, fc.cb_break,
+ 					&data_version, &scb[0]);
++		afs_update_dentry_version(&fc, dentry, &scb[0]);
+ 		afs_vnode_new_inode(&fc, dentry, &iget_data, &scb[1]);
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret < 0)
+@@ -1321,6 +1345,7 @@ static int afs_rmdir(struct inode *dir, struct dentry *dentry)
+ 
+ 		afs_vnode_commit_status(&fc, dvnode, fc.cb_break,
+ 					&data_version, scb);
++		afs_update_dentry_version(&fc, dentry, scb);
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret == 0) {
+ 			afs_dir_remove_subdir(dentry);
+@@ -1462,6 +1487,7 @@ static int afs_unlink(struct inode *dir, struct dentry *dentry)
+ 					&data_version, &scb[0]);
+ 		afs_vnode_commit_status(&fc, vnode, fc.cb_break_2,
+ 					&data_version_2, &scb[1]);
++		afs_update_dentry_version(&fc, dentry, &scb[0]);
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret == 0 && !(scb[1].have_status || scb[1].have_error))
+ 			ret = afs_dir_remove_link(dvnode, dentry, key);
+@@ -1530,6 +1556,7 @@ static int afs_create(struct inode *dir, struct dentry *dentry, umode_t mode,
+ 		afs_check_for_remote_deletion(&fc, dvnode);
+ 		afs_vnode_commit_status(&fc, dvnode, fc.cb_break,
+ 					&data_version, &scb[0]);
++		afs_update_dentry_version(&fc, dentry, &scb[0]);
+ 		afs_vnode_new_inode(&fc, dentry, &iget_data, &scb[1]);
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret < 0)
+@@ -1611,6 +1638,7 @@ static int afs_link(struct dentry *from, struct inode *dir,
+ 		afs_vnode_commit_status(&fc, vnode, fc.cb_break_2,
+ 					NULL, &scb[1]);
+ 		ihold(&vnode->vfs_inode);
++		afs_update_dentry_version(&fc, dentry, &scb[0]);
+ 		d_instantiate(dentry, &vnode->vfs_inode);
+ 
+ 		mutex_unlock(&vnode->io_lock);
+@@ -1690,6 +1718,7 @@ static int afs_symlink(struct inode *dir, struct dentry *dentry,
+ 		afs_check_for_remote_deletion(&fc, dvnode);
+ 		afs_vnode_commit_status(&fc, dvnode, fc.cb_break,
+ 					&data_version, &scb[0]);
++		afs_update_dentry_version(&fc, dentry, &scb[0]);
+ 		afs_vnode_new_inode(&fc, dentry, &iget_data, &scb[1]);
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret < 0)
+@@ -1795,6 +1824,17 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		}
+ 	}
+ 
++	/* This bit is potentially nasty as there's a potential race with
++	 * afs_d_revalidate{,_rcu}().  We have to change d_fsdata on the dentry
++	 * to reflect it's new parent's new data_version after the op, but
++	 * d_revalidate may see old_dentry between the op having taken place
++	 * and the version being updated.
++	 *
++	 * So drop the old_dentry for now to make other threads go through
++	 * lookup instead - which we hold a lock against.
++	 */
++	d_drop(old_dentry);
++
+ 	ret = -ERESTARTSYS;
+ 	if (afs_begin_vnode_operation(&fc, orig_dvnode, key, true)) {
+ 		afs_dataversion_t orig_data_version;
+@@ -1806,7 +1846,7 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		if (orig_dvnode != new_dvnode) {
+ 			if (mutex_lock_interruptible_nested(&new_dvnode->io_lock, 1) < 0) {
+ 				afs_end_vnode_operation(&fc);
+-				goto error_rehash;
++				goto error_rehash_old;
+ 			}
+ 			new_data_version = new_dvnode->status.data_version + 1;
+ 		} else {
+@@ -1831,7 +1871,7 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 		}
+ 		ret = afs_end_vnode_operation(&fc);
+ 		if (ret < 0)
+-			goto error_rehash;
++			goto error_rehash_old;
+ 	}
+ 
+ 	if (ret == 0) {
+@@ -1857,10 +1897,26 @@ static int afs_rename(struct inode *old_dir, struct dentry *old_dentry,
+ 				drop_nlink(new_inode);
+ 			spin_unlock(&new_inode->i_lock);
+ 		}
++
++		/* Now we can update d_fsdata on the dentries to reflect their
++		 * new parent's data_version.
++		 *
++		 * Note that if we ever implement RENAME_EXCHANGE, we'll have
++		 * to update both dentries with opposing dir versions.
++		 */
++		if (new_dvnode != orig_dvnode) {
++			afs_update_dentry_version(&fc, old_dentry, &scb[1]);
++			afs_update_dentry_version(&fc, new_dentry, &scb[1]);
++		} else {
++			afs_update_dentry_version(&fc, old_dentry, &scb[0]);
++			afs_update_dentry_version(&fc, new_dentry, &scb[0]);
++		}
+ 		d_move(old_dentry, new_dentry);
+ 		goto error_tmp;
+ 	}
+ 
++error_rehash_old:
++	d_rehash(new_dentry);
+ error_rehash:
+ 	if (rehash)
+ 		d_rehash(rehash);
 -- 
 2.20.1
 
