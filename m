@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C23C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BEFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93BE2206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BFE2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620648;
-	bh=fPNZG9WKMOZtVaDyshIrE+uSyVM8MIhCmI3WBe5ukfw=;
+	s=default; t=1567620651;
+	bh=JWpqTs1Xkr5FESLr1COBDjSNLrRS6N11lbXarHZ6rhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fd8UNNE03MBGgW1/xokiqInkvNl0cH6UsBa/Z/DiDh8cCj1GND2O6S7cK/3j0PRZM
-	 vLV0kdN/5/1NiczpsgQbzRKdebdbicK2hrBhB/JxOIcKhBNrobf8yOzlvNUyIXk0i+
-	 UQcYCsoe18U2NsqIr00qEK5KOxcxooDp1qlL5EFo=
+	b=m2M5KKAwz2afdcUuJ48/ZQKNeEl01+2sD5R1w0KWEFsmRJz/4dsBR2yHGvpkilT3a
+	 hZLAaI0Pm0e5T0e5rPPnsYju7S2Ug4BjDFgliUmYp1UFHUuaQonD99vlAYYLPZCWXN
+	 i/k5/uySQRhLzcpU+1cUOVMxZpkMDM4HQmcOQ4lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389816AbfIDSKs (ORCPT
+        id S2390166AbfIDSKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54490 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389617AbfIDSKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:45 -0400
+        id S2390155AbfIDSKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900A5206BA;
-        Wed,  4 Sep 2019 18:10:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E1BB206B8;
+        Wed,  4 Sep 2019 18:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620644;
-        bh=fPNZG9WKMOZtVaDyshIrE+uSyVM8MIhCmI3WBe5ukfw=;
+        s=default; t=1567620646;
+        bh=JWpqTs1Xkr5FESLr1COBDjSNLrRS6N11lbXarHZ6rhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QyEGRJIyixC0xxUiQecBF/PRa7syajk2akSvd5x4Ck/GPH81r/cVQY6Q4yEnykd1P
-         CEvYeFFtS4FzAyVlxDMC4UFZGBdauMhc9E1vpBrrqZWE5nTzGUA0tu8xFWeJ3Ua7Q6
-         yji6Whp8uDbIu2qYUU0tRK5BGESlgvbufjlPunRM=
+        b=1NvULdSTsfzTnNl6rVglRbcBXCYcWuLJIXdKuORN8Zksmck878Lf3fytLkXpCaSP4
+         OGBPrRrS1CBjnUolbR+F9bDSU1sK7MuFNuKOQWMtny7c0sMam1yldKmWjdRqKu8eAm
+         Rmr/GSBJ7Ue1q14gdPK8a0j2zxDc4Nh5AbL2PUzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Morey-Chaisemartin <NMoreyChaisemartin@suse.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 014/143] nvme-rdma: fix possible use-after-free in connect error flow
-Date:   Wed,  4 Sep 2019 19:52:37 +0200
-Message-Id: <20190904175314.652104086@linuxfoundation.org>
+        Adrian Vladu <avladu@cloudbasesolutions.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Subject: [PATCH 5.2 041/143] tools: hv: fixed Python pep8/flake8 warnings for lsvmbus
+Date:   Wed,  4 Sep 2019 19:53:04 +0200
+Message-Id: <20190904175315.665275348@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -63,90 +65,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d94211b8bad3787e0655a67284105f57db728cb1 ]
+[ Upstream commit 5912e791f3018de0a007c8cfa9cb38c97d3e5f5c ]
 
-When start_queue fails, we need to make sure to drain the
-queue cq before freeing the rdma resources because we might
-still race with the completion path. Have start_queue() error
-path safely stop the queue.
+Fixed pep8/flake8 python style code for lsvmbus tool.
 
---
-[30371.808111] nvme nvme1: Failed reconnect attempt 11
-[30371.808113] nvme nvme1: Reconnecting in 10 seconds...
-[...]
-[30382.069315] nvme nvme1: creating 4 I/O queues.
-[30382.257058] nvme nvme1: Connect Invalid SQE Parameter, qid 4
-[30382.257061] nvme nvme1: failed to connect queue: 4 ret=386
-[30382.305001] BUG: unable to handle kernel NULL pointer dereference at 0000000000000018
-[30382.305022] IP: qedr_poll_cq+0x8a3/0x1170 [qedr]
-[30382.305028] PGD 0 P4D 0
-[30382.305037] Oops: 0000 [#1] SMP PTI
-[...]
-[30382.305153] Call Trace:
-[30382.305166]  ? __switch_to_asm+0x34/0x70
-[30382.305187]  __ib_process_cq+0x56/0xd0 [ib_core]
-[30382.305201]  ib_poll_handler+0x26/0x70 [ib_core]
-[30382.305213]  irq_poll_softirq+0x88/0x110
-[30382.305223]  ? sort_range+0x20/0x20
-[30382.305232]  __do_softirq+0xde/0x2c6
-[30382.305241]  ? sort_range+0x20/0x20
-[30382.305249]  run_ksoftirqd+0x1c/0x60
-[30382.305258]  smpboot_thread_fn+0xef/0x160
-[30382.305265]  kthread+0x113/0x130
-[30382.305273]  ? kthread_create_worker_on_cpu+0x50/0x50
-[30382.305281]  ret_from_fork+0x35/0x40
---
+The TAB indentation was on purpose ignored (pep8 rule W191) to make
+sure the code is complying with the Linux code guideline.
+The following command doe not show any warnings now:
+pep8 --ignore=W191 lsvmbus
+flake8 --ignore=W191 lsvmbus
 
-Reported-by: Nicolas Morey-Chaisemartin <NMoreyChaisemartin@suse.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
+
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
+Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ tools/hv/lsvmbus | 75 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 42 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 97f668a39ae1c..7b074323bcdf2 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -562,13 +562,17 @@ out_destroy_cm_id:
- 	return ret;
+diff --git a/tools/hv/lsvmbus b/tools/hv/lsvmbus
+index 55e7374bade0d..099f2c44dbed2 100644
+--- a/tools/hv/lsvmbus
++++ b/tools/hv/lsvmbus
+@@ -4,10 +4,10 @@
+ import os
+ from optparse import OptionParser
+ 
++help_msg = "print verbose messages. Try -vv, -vvv for  more verbose messages"
+ parser = OptionParser()
+-parser.add_option("-v", "--verbose", dest="verbose",
+-		   help="print verbose messages. Try -vv, -vvv for \
+-			more verbose messages", action="count")
++parser.add_option(
++	"-v", "--verbose", dest="verbose", help=help_msg, action="count")
+ 
+ (options, args) = parser.parse_args()
+ 
+@@ -21,27 +21,28 @@ if not os.path.isdir(vmbus_sys_path):
+ 	exit(-1)
+ 
+ vmbus_dev_dict = {
+-	'{0e0b6031-5213-4934-818b-38d90ced39db}' : '[Operating system shutdown]',
+-	'{9527e630-d0ae-497b-adce-e80ab0175caf}' : '[Time Synchronization]',
+-	'{57164f39-9115-4e78-ab55-382f3bd5422d}' : '[Heartbeat]',
+-	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}' : '[Data Exchange]',
+-	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}' : '[Backup (volume checkpoint)]',
+-	'{34d14be3-dee4-41c8-9ae7-6b174977c192}' : '[Guest services]',
+-	'{525074dc-8985-46e2-8057-a307dc18a502}' : '[Dynamic Memory]',
+-	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}' : 'Synthetic mouse',
+-	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}' : 'Synthetic keyboard',
+-	'{da0a7802-e377-4aac-8e77-0558eb1073f8}' : 'Synthetic framebuffer adapter',
+-	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}' : 'Synthetic network adapter',
+-	'{32412632-86cb-44a2-9b5c-50d1417354f5}' : 'Synthetic IDE Controller',
+-	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}' : 'Synthetic SCSI Controller',
+-	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}' : 'Synthetic fiber channel adapter',
+-	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}' : 'Synthetic RDMA adapter',
+-	'{44c4f61d-4444-4400-9d52-802e27ede19f}' : 'PCI Express pass-through',
+-	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}' : '[Reserved system device]',
+-	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}' : '[Reserved system device]',
+-	'{3375baf4-9e15-4b30-b765-67acb10d607b}' : '[Reserved system device]',
++	'{0e0b6031-5213-4934-818b-38d90ced39db}': '[Operating system shutdown]',
++	'{9527e630-d0ae-497b-adce-e80ab0175caf}': '[Time Synchronization]',
++	'{57164f39-9115-4e78-ab55-382f3bd5422d}': '[Heartbeat]',
++	'{a9a0f4e7-5a45-4d96-b827-8a841e8c03e6}': '[Data Exchange]',
++	'{35fa2e29-ea23-4236-96ae-3a6ebacba440}': '[Backup (volume checkpoint)]',
++	'{34d14be3-dee4-41c8-9ae7-6b174977c192}': '[Guest services]',
++	'{525074dc-8985-46e2-8057-a307dc18a502}': '[Dynamic Memory]',
++	'{cfa8b69e-5b4a-4cc0-b98b-8ba1a1f3f95a}': 'Synthetic mouse',
++	'{f912ad6d-2b17-48ea-bd65-f927a61c7684}': 'Synthetic keyboard',
++	'{da0a7802-e377-4aac-8e77-0558eb1073f8}': 'Synthetic framebuffer adapter',
++	'{f8615163-df3e-46c5-913f-f2d2f965ed0e}': 'Synthetic network adapter',
++	'{32412632-86cb-44a2-9b5c-50d1417354f5}': 'Synthetic IDE Controller',
++	'{ba6163d9-04a1-4d29-b605-72e2ffb1dc7f}': 'Synthetic SCSI Controller',
++	'{2f9bcc4a-0069-4af3-b76b-6fd0be528cda}': 'Synthetic fiber channel adapter',
++	'{8c2eaf3d-32a7-4b09-ab99-bd1f1c86b501}': 'Synthetic RDMA adapter',
++	'{44c4f61d-4444-4400-9d52-802e27ede19f}': 'PCI Express pass-through',
++	'{276aacf4-ac15-426c-98dd-7521ad3f01fe}': '[Reserved system device]',
++	'{f8e65716-3cb3-4a06-9a60-1889c5cccab5}': '[Reserved system device]',
++	'{3375baf4-9e15-4b30-b765-67acb10d607b}': '[Reserved system device]',
  }
  
-+static void __nvme_rdma_stop_queue(struct nvme_rdma_queue *queue)
-+{
-+	rdma_disconnect(queue->cm_id);
-+	ib_drain_qp(queue->qp);
-+}
 +
- static void nvme_rdma_stop_queue(struct nvme_rdma_queue *queue)
- {
- 	if (!test_and_clear_bit(NVME_RDMA_Q_LIVE, &queue->flags))
- 		return;
--
--	rdma_disconnect(queue->cm_id);
--	ib_drain_qp(queue->qp);
-+	__nvme_rdma_stop_queue(queue);
- }
+ def get_vmbus_dev_attr(dev_name, attr):
+ 	try:
+ 		f = open('%s/%s/%s' % (vmbus_sys_path, dev_name, attr), 'r')
+@@ -52,6 +53,7 @@ def get_vmbus_dev_attr(dev_name, attr):
  
- static void nvme_rdma_free_queue(struct nvme_rdma_queue *queue)
-@@ -607,11 +611,13 @@ static int nvme_rdma_start_queue(struct nvme_rdma_ctrl *ctrl, int idx)
- 	else
- 		ret = nvmf_connect_admin_queue(&ctrl->ctrl);
+ 	return lines
  
--	if (!ret)
-+	if (!ret) {
- 		set_bit(NVME_RDMA_Q_LIVE, &queue->flags);
--	else
-+	} else {
-+		__nvme_rdma_stop_queue(queue);
- 		dev_info(ctrl->ctrl.device,
- 			"failed to connect queue: %d ret=%d\n", idx, ret);
-+	}
- 	return ret;
- }
++
+ class VMBus_Dev:
+ 	pass
  
+@@ -66,12 +68,13 @@ for f in os.listdir(vmbus_sys_path):
+ 
+ 	chn_vp_mapping = get_vmbus_dev_attr(f, 'channel_vp_mapping')
+ 	chn_vp_mapping = [c.strip() for c in chn_vp_mapping]
+-	chn_vp_mapping = sorted(chn_vp_mapping,
+-		key = lambda c : int(c.split(':')[0]))
++	chn_vp_mapping = sorted(
++		chn_vp_mapping, key=lambda c: int(c.split(':')[0]))
+ 
+-	chn_vp_mapping = ['\tRel_ID=%s, target_cpu=%s' %
+-				(c.split(':')[0], c.split(':')[1])
+-					for c in chn_vp_mapping]
++	chn_vp_mapping = [
++		'\tRel_ID=%s, target_cpu=%s' %
++		(c.split(':')[0], c.split(':')[1]) for c in chn_vp_mapping
++	]
+ 	d = VMBus_Dev()
+ 	d.sysfs_path = '%s/%s' % (vmbus_sys_path, f)
+ 	d.vmbus_id = vmbus_id
+@@ -85,7 +88,7 @@ for f in os.listdir(vmbus_sys_path):
+ 	vmbus_dev_list.append(d)
+ 
+ 
+-vmbus_dev_list  = sorted(vmbus_dev_list, key = lambda d : int(d.vmbus_id))
++vmbus_dev_list = sorted(vmbus_dev_list, key=lambda d: int(d.vmbus_id))
+ 
+ format0 = '%2s: %s'
+ format1 = '%2s: Class_ID = %s - %s\n%s'
+@@ -95,9 +98,15 @@ for d in vmbus_dev_list:
+ 	if verbose == 0:
+ 		print(('VMBUS ID ' + format0) % (d.vmbus_id, d.dev_desc))
+ 	elif verbose == 1:
+-		print (('VMBUS ID ' + format1) %	\
+-			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format1) %
++			(d.vmbus_id, d.class_id, d.dev_desc, d.chn_vp_mapping)
++		)
+ 	else:
+-		print (('VMBUS ID ' + format2) % \
+-			(d.vmbus_id, d.class_id, d.dev_desc, \
+-			d.device_id, d.sysfs_path, d.chn_vp_mapping))
++		print(
++			('VMBUS ID ' + format2) %
++			(
++				d.vmbus_id, d.class_id, d.dev_desc,
++				d.device_id, d.sysfs_path, d.chn_vp_mapping
++			)
++		)
 -- 
 2.20.1
 
