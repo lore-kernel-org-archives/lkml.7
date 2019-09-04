@@ -2,158 +2,162 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA746C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51CDC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15B722CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567587990;
-	bh=EOQcGVJ6OuDmcoR+UhqLOItk6Uldp6Kp+u0aoDcoTrc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Z8VZZ4lyd06O/f8xjrw1GHjnhAeUfuFxULw0E/h5sqe3TRo8brLO0wvn/gAWIzGu6
-	 TFlsnwk0ecNy082Mxb7f4FGMrSD2U3uh/tOgQWYidikWIJ1H3yU7iYUC6LaAf4GUc3
-	 Qq4KRQ2QDaNANg7A2Lj61aUahYS9kodaW02adPoE=
+	by mail.kernel.org (Postfix) with ESMTP id 9E76D2343A
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbfIDJG3 (ORCPT
+        id S1729535AbfIDJGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34844 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 05:06:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36960 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfIDJG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:06:28 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727562AbfIDJGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:06:37 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 199892339E;
-        Wed,  4 Sep 2019 09:06:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567587987;
-        bh=EOQcGVJ6OuDmcoR+UhqLOItk6Uldp6Kp+u0aoDcoTrc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SbUL5oScju8aqdkKXaEH+CLZTc/GskaW/IOHPyNgRiBmDNvDEJwzQgaBZ0zTfOL5z
-         +vqeoa1MgUs+FrLTyZcHaiy8NltzgewYw2/Z2dvhdPqrlV3CRcpuXJp3mE565N4M+i
-         FrDdqHCVZ6e9f6fLxpH4FxNRVBtKdI4WHTMRZvtI=
-Received: by mail-qk1-f177.google.com with SMTP id f13so18842922qkm.9;
-        Wed, 04 Sep 2019 02:06:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAWglR6rpNcHI8m+gZCitflQGJpP+A12fXUz3t5pfwA49fm2ymSI
-        RqKhFhmsg5mQ/h1J4QwQNtB1kaEbHeDmbe98SQ==
-X-Google-Smtp-Source: APXvYqwsUjYioCkp7chtGIyXBeWPxAmAYYRHsnnUJEmm0tjJuP13a/87Fssk2rAEhdN6wQH59jQzx/qASdFezPeBZ/Q=
-X-Received: by 2002:a05:620a:1356:: with SMTP id c22mr18142847qkl.119.1567587986249;
- Wed, 04 Sep 2019 02:06:26 -0700 (PDT)
+        by mx1.redhat.com (Postfix) with ESMTPS id 83F307F750;
+        Wed,  4 Sep 2019 09:06:36 +0000 (UTC)
+Received: from [10.36.118.26] (unknown [10.36.118.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F1A806061E;
+        Wed,  4 Sep 2019 09:06:34 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] KVM: selftests: Test invalid bits in
+ kvm_valid_regs and kvm_dirty_regs on s390x
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190904085200.29021-1-thuth@redhat.com>
+ <20190904085200.29021-3-thuth@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <ca031254-adff-b321-0aa7-385ae3332898@redhat.com>
+Date:   Wed, 4 Sep 2019 11:06:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190903080336.32288-1-philippe.schenker@toradex.com>
- <20190903080336.32288-4-philippe.schenker@toradex.com> <CAL_JsqLnqZ80soGVMvZjAMZvu+K=ebDUz2bM_ZodPp7YRvUnDw@mail.gmail.com>
- <e64429ba4b86411da1741ab54176fb5b4b7a36de.camel@toradex.com>
-In-Reply-To: <e64429ba4b86411da1741ab54176fb5b4b7a36de.camel@toradex.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Sep 2019 10:06:14 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqLLSUWhkguCx2mc2oyV-0MHp4RWwJr5oTWRUvQiovn4Gw@mail.gmail.com>
-Message-ID: <CAL_JsqLLSUWhkguCx2mc2oyV-0MHp4RWwJr5oTWRUvQiovn4Gw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: regulator: add regulator-fixed-clock binding
-To:     Philippe Schenker <philippe.schenker@toradex.com>
-Cc:     Max Krummenacher <max.krummenacher@toradex.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Luka Pivk <luka.pivk@toradex.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190904085200.29021-3-thuth@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 04 Sep 2019 09:06:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 9:07 AM Philippe Schenker
-<philippe.schenker@toradex.com> wrote:
->
-> On Tue, 2019-09-03 at 09:45 +0100, Rob Herring wrote:
-> > On Tue, Sep 3, 2019 at 9:03 AM Philippe Schenker
-> > <philippe.schenker@toradex.com> wrote:
-> > > This adds the documentation to the compatible regulator-fixed-clock
-> >
-> > Please explain what that is in this patch.
->
-> Hi Rob and thanks for your comments. I will change this commit message
-> for a possible v2 into this:
->
-> This adds the documentation to the compatible regulator-fixed-clock.
-> This binding is a special binding of regulator-fixed and adds the
-> ability to add a clock to regulator-fixed, so the regulator can be
-> enabled and disabled with that clock.
-> If the special compatible regulator-fixed-clock is used it is mandatory
-> to supply a clock.
->
-> > >
-> >
-> > > Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> > >
-> > > ---
-> > >
-> > >  .../bindings/regulator/fixed-regulator.yaml    | 18
-> > > +++++++++++++++++-
-> > >  1 file changed, 17 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml
-> > > index a650b457085d..5fd081e80b43 100644
-> > > --- a/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml
-> > > +++ b/Documentation/devicetree/bindings/regulator/fixed-
-> > > regulator.yaml
-> > > @@ -19,9 +19,19 @@ description:
-> > >  allOf:
-> > >    - $ref: "regulator.yaml#"
-> > >
-> > > +select:
-> > > +  properties:
-> > > +    compatible:
-> > > +      contains:
-> > > +        const: regulator-fixed-clock
-> > > +  required:
-> > > +    - clocks
-> >
-> > You don't need this.
-> >
-> > If you add a new compatible, then this should probably be a new schema
-> > doc. Is the 'gpio' property valid in this case as if a clock is the
-> > enable, can you also have a gpio enable? That said, it seems like the
-> > new compatible is only for validating the DT in the driver. You could
-> > just use a clock if present and default to current behavior if not.
-> > It's not the kernel's job to validate DTs.
->
-> The gpio property is valid with this compatible. I added regulator-
-> fixed-clock to regulator-fixed hence I also don't want to create a new
-> schema file.
+On 04.09.19 10:52, Thomas Huth wrote:
+> Now that we disallow invalid bits in kvm_valid_regs and kvm_dirty_regs
+> on s390x, too, we should also check this condition in the selftests.
+> The code has been taken from the x86-version of the sync_regs_test.
+> 
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> index bbc93094519b..d5290b4ad636 100644
+> --- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> +++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> @@ -85,6 +85,36 @@ int main(int argc, char *argv[])
+>  
+>  	run = vcpu_state(vm, VCPU_ID);
+>  
+> +	/* Request reading invalid register set from VCPU. */
+> +	run->kvm_valid_regs = INVALID_SYNC_FIELD;
+> +	rv = _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs = 0;
+> +
+> +	run->kvm_valid_regs = INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
+> +	rv = _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs = 0;
+> +
+> +	/* Request setting invalid register set into VCPU. */
+> +	run->kvm_dirty_regs = INVALID_SYNC_FIELD;
+> +	rv = _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs = 0;
+> +
+> +	run->kvm_dirty_regs = INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
+> +	rv = _vcpu_run(vm, VCPU_ID);
+> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d\n",
+> +		    rv);
+> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs = 0;
+> +
+>  	/* Request and verify all valid register sets. */
+>  	run->kvm_valid_regs = TEST_SYNC_FIELDS;
+>  	rv = _vcpu_run(vm, VCPU_ID);
+> 
 
-Okay, if all the other properties are valid then adding to this file is fine.
+Looks sane to me.
 
-> With the above select statement I wanted to state clocks as required
-> when the compatible regulator-fixed-clock is given.
+-- 
 
-select is not the right way to do that. select is for whether to apply
-the schema to a node or not. What you have will silently not apply the
-schema if 'clocks' is missing or compatible is 'regulator-fixed'.
-Essentially what you need to do here is:
+Thanks,
 
-if:
-  properties:
-    compatible:
-      contains:
-        const: regulator-fixed-clock
-then:
-  required:
-    - clocks
-
-Rob
+David / dhildenb
