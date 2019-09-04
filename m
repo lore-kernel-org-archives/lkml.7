@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA40DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E3BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DC72339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE5D23404
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619802;
-	bh=Wf0yReSvmLtQN3TZjus7kyYzHe+ulnlqZnDfcwXGxiw=;
+	s=default; t=1567619804;
+	bh=SObJ3poV/ig/tkiYS3lV8SbYdKIUI3tnmVs/3gFZtng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YsIFG3ShQjsAP/jeTyCpyQ0yD7MR7GbsOjImWFTpujLQKLHfAz+Uyk4eZH9g4wvD+
-	 ICuCFPn+iNjtAtcMYAyP4hUULGpDuhZPgEzJwFPTNj3nV0X3aTRVMm49321fhmXhq5
-	 kM6SvBpkC4ZzfdTK6plNnAbEGv93XTJp+Jz7CXm0=
+	b=UuNEaTQt+WvOKzG/8lIDSesb42eJFiCcXEmGkAbx2TO2VErwh5V6Tu3PY+ITlU3lm
+	 CfPumPyzHrWJu370G/cZgttN74sTeUrXi0k/pqzo+LWkG+SEv9udgOMvFRyBFeUVYN
+	 FBoVZpOG1obSsflL1w2yD/1kjMj75jW0uocvlBZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387657AbfIDR4l (ORCPT
+        id S2387684AbfIDR4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34018 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:56:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387619AbfIDR4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:56:37 -0400
+        id S2387631AbfIDR4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:56:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D197122CF7;
-        Wed,  4 Sep 2019 17:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AABE822CEA;
+        Wed,  4 Sep 2019 17:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619796;
-        bh=Wf0yReSvmLtQN3TZjus7kyYzHe+ulnlqZnDfcwXGxiw=;
+        s=default; t=1567619799;
+        bh=SObJ3poV/ig/tkiYS3lV8SbYdKIUI3tnmVs/3gFZtng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7WV3lS0KQ0oOeHE+tqz3p3XBlLfdXdEcaCrH9Gcv+PGhIKi+la1K1Oj1Df0j6tKX
-         IzKRj5rvEoaCh2a1wOxxN6THlYITIwHecIyDsIupKdh34bVwQP+auYWvqQ8XF+8T6K
-         9TUOl4Vr32EBwhA0kAUYt6U9zE71AHKMJV7PTqgY=
+        b=tcak1oTRl0tR+vAzX0IbJMylcVUlZp6la/UHl++3oAj6iYt34EBw0mwgZQbKxsVd+
+         5OyT7q2aBI9Hg2wUG/GtfGWOFuHcjsgW/motsq7+YrrqKG85CgrdcsA6kv/cA/DRvu
+         rbVPDzWWdyTTZkpn8H3b0qIKb2d6YRe1iEVQxRmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Ben Hutchings <ben.hutchings@codethink.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 37/77] vhost_net: use packet weight for rx handler, too
-Date:   Wed,  4 Sep 2019 19:53:24 +0200
-Message-Id: <20190904175307.104169907@linuxfoundation.org>
+Subject: [PATCH 4.4 38/77] vhost_net: introduce vhost_exceeds_weight()
+Date:   Wed,  4 Sep 2019 19:53:25 +0200
+Message-Id: <20190904175307.172203458@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -62,42 +61,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit db688c24eada63b1efe6d0d7d835e5c3bdd71fd3 upstream.
+commit 272f35cba53d088085e5952fd81d7a133ab90789 upstream.
 
-Similar to commit a2ac99905f1e ("vhost-net: set packet weight of
-tx polling to 2 * vq size"), we need a packet-based limit for
-handler_rx, too - elsewhere, under rx flood with small packets,
-tx can be delayed for a very long time, even without busypolling.
-
-The pkt limit applied to handle_rx must be the same applied by
-handle_tx, or we will get unfair scheduling between rx and tx.
-Tying such limit to the queue length makes it less effective for
-large queue length values and can introduce large process
-scheduler latencies, so a constant valued is used - likewise
-the existing bytes limit.
-
-The selected limit has been validated with PVP[1] performance
-test with different queue sizes:
-
-queue size		256	512	1024
-
-baseline		366	354	362
-weight 128		715	723	670
-weight 256		740	745	733
-weight 512		600	460	583
-weight 1024		423	427	418
-
-A packet weight of 256 gives peek performances in under all the
-tested scenarios.
-
-No measurable regression in unidirectional performance tests has
-been detected.
-
-[1] https://developers.redhat.com/blog/2017/06/05/measuring-and-comparing-open-vswitch-performance/
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
@@ -105,46 +73,39 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index b8496f713bc62..c1b5bccab293f 100644
+index c1b5bccab293f..38c3120f92be4 100644
 --- a/drivers/vhost/net.c
 +++ b/drivers/vhost/net.c
-@@ -40,8 +40,10 @@ MODULE_PARM_DESC(experimental_zcopytx, "Enable Zero Copy TX;"
- #define VHOST_NET_WEIGHT 0x80000
+@@ -293,6 +293,12 @@ static void vhost_zerocopy_callback(struct ubuf_info *ubuf, bool success)
+ 	rcu_read_unlock_bh();
+ }
  
- /* Max number of packets transferred before requeueing the job.
-- * Using this limit prevents one virtqueue from starving rx. */
--#define VHOST_NET_PKT_WEIGHT(vq) ((vq)->num * 2)
-+ * Using this limit prevents one virtqueue from starving others with small
-+ * pkts.
-+ */
-+#define VHOST_NET_PKT_WEIGHT 256
- 
- /* MAX number of TX used buffers for outstanding zerocopy */
- #define VHOST_MAX_PEND 128
-@@ -414,7 +416,7 @@ static void handle_tx(struct vhost_net *net)
++static bool vhost_exceeds_weight(int pkts, int total_len)
++{
++	return total_len >= VHOST_NET_WEIGHT ||
++	       pkts >= VHOST_NET_PKT_WEIGHT;
++}
++
+ /* Expects to be always run from workqueue - which acts as
+  * read-size critical section for our kind of RCU. */
+ static void handle_tx(struct vhost_net *net)
+@@ -415,8 +421,7 @@ static void handle_tx(struct vhost_net *net)
+ 			vhost_zerocopy_signal_used(net, vq);
  		total_len += len;
  		vhost_net_tx_packet(net);
- 		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
--		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT(vq))) {
-+		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT)) {
+-		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
+-		    unlikely(++sent_pkts >= VHOST_NET_PKT_WEIGHT)) {
++		if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
  			vhost_poll_queue(&vq->poll);
  			break;
  		}
-@@ -545,6 +547,7 @@ static void handle_rx(struct vhost_net *net)
- 	struct socket *sock;
- 	struct iov_iter fixup;
- 	__virtio16 num_buffers;
-+	int recv_pkts = 0;
- 
- 	mutex_lock(&vq->mutex);
- 	sock = vq->private_data;
-@@ -637,7 +640,8 @@ static void handle_rx(struct vhost_net *net)
+@@ -640,8 +645,7 @@ static void handle_rx(struct vhost_net *net)
  		if (unlikely(vq_log))
  			vhost_log_write(vq, vq_log, log, vhost_len);
  		total_len += vhost_len;
--		if (unlikely(total_len >= VHOST_NET_WEIGHT)) {
-+		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
-+		    unlikely(++recv_pkts >= VHOST_NET_PKT_WEIGHT)) {
+-		if (unlikely(total_len >= VHOST_NET_WEIGHT) ||
+-		    unlikely(++recv_pkts >= VHOST_NET_PKT_WEIGHT)) {
++		if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
  			vhost_poll_queue(&vq->poll);
  			break;
  		}
