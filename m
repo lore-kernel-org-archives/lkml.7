@@ -2,86 +2,121 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741FEC41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6B6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5683722CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1572722CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:40:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VfG/c4g5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731303AbfIDPjq (ORCPT
+        id S1731391AbfIDPkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:39:46 -0400
-Received: from smtprelay0134.hostedemail.com ([216.40.44.134]:34192 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729316AbfIDPjq (ORCPT
+        Wed, 4 Sep 2019 11:40:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33515 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727967AbfIDPkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:39:46 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id C03B518224D9C;
-        Wed,  4 Sep 2019 15:39:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: soap07_54e0b1fef1704
-X-Filterd-Recvd-Size: 2744
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  4 Sep 2019 15:39:43 +0000 (UTC)
-Message-ID: <f62dd153a23bfbe580aee9e50d87c0ff59f4d0ec.camel@perches.com>
-Subject: Re: [PATCH v4 10/11] lib/vsprintf: Add %pfw conversion specifier
- for printing fwnode names
-From:   Joe Perches <joe@perches.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
-Date:   Wed, 04 Sep 2019 08:39:42 -0700
-In-Reply-To: <20190904151759.GS2680@smile.fi.intel.com>
-References: <20190902083240.20367-1-sakari.ailus@linux.intel.com>
-         <20190902083240.20367-11-sakari.ailus@linux.intel.com>
-         <20190903130607.cf2qv3s3evobbd5g@pathway.suse.cz>
-         <20190904150413.GU5475@paasikivi.fi.intel.com>
-         <20190904151759.GS2680@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1-2 
+        Wed, 4 Sep 2019 11:40:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q10so8429423pfl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 08:40:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GvicfsAfqa/gtGdsE0L36oJQ3kkI48A+dWUZ7j35D4o=;
+        b=VfG/c4g5oJIBvmt5pWMZislpX+KLukRhZL1sG9G14pXUjLHjpAiQqcrVsJ7C9Aua3B
+         m1rxH5DG8s2o4ykYcm+36c+MhrZuJZakaysa/qf8bCXs8NgTDJkxKOyS0pq/wwVrITWo
+         mwxSXQB5B5KET4+28Vaqzh5UjgDIDkyCQGITA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GvicfsAfqa/gtGdsE0L36oJQ3kkI48A+dWUZ7j35D4o=;
+        b=TTqlUyxQ8BV1z2968TLDtMb/n/tmCGzlSy9PiTnZpCW0uqZZmbObtwcVVh/ZUrgwJj
+         psA0F513ahvNzq58S2Yl2KGvKpzvB5mW6ieIf+e5/LqVjgltRjtCfFvLraGKrTCbTyDW
+         9x3mxZ0mtA9QOvHU5RqP7L/nepOwfEDOYUOaTlghB30+/CJUFYnlHCLFn1hQ3hlIWSnl
+         1pgkEg/BK/RJvYNX9YcIeAeFkq0o1uGL7Hvxuc9VtSIg5ZeK+a8uZORfBfiKuM/a1H4x
+         D2UPQPC0dMMx42mBobCw5hKr0D/f6VJhp/4yWMy5HtaWYikacu9FUdfA5zP+KmsqhS2M
+         D/dQ==
+X-Gm-Message-State: APjAAAVgYCNK/sLzt2cDclxC4AWMnRf6NJvobRoOk1FlpBrPbs+CTJYW
+        xHydUtLULd0QXIcbSRMWeqVqmQ==
+X-Google-Smtp-Source: APXvYqzUweEtiAVABd4fPedDHdh1xczj4h2M9w2tT85ztEkObsgSatUDVWY+La3Lw30eZxjecmlmmQ==
+X-Received: by 2002:a63:6fcf:: with SMTP id k198mr35502649pgc.276.1567611602050;
+        Wed, 04 Sep 2019 08:40:02 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s13sm24282593pfm.12.2019.09.04.08.40.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 08:40:01 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 11:40:00 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jirka =?iso-8859-1?Q?Hladk=FD?= <jhladky@redhat.com>,
+        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
+        X86 ML <x86@kernel.org>
+Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
+Message-ID: <20190904154000.GJ240514@google.com>
+References: <20190903154340.860299-1-rkrcmar@redhat.com>
+ <20190903154340.860299-3-rkrcmar@redhat.com>
+ <a2924d91-df68-42de-0709-af53649346d5@arm.com>
+ <20190904042310.GA159235@google.com>
+ <20190904104332.ogsjtbtuadhsglxh@e107158-lin.cambridge.arm.com>
+ <20190904130628.GE144846@google.com>
+ <CAADnVQJzgTRWUAaH+L6qwJvHk0vsLPX3eWdZNUr5X77TuEgvPw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQJzgTRWUAaH+L6qwJvHk0vsLPX3eWdZNUr5X77TuEgvPw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 18:17 +0300, Andy Shevchenko wrote:
-> On Wed, Sep 04, 2019 at 06:04:13PM +0300, Sakari Ailus wrote:
-> > On Tue, Sep 03, 2019 at 03:06:07PM +0200, Petr Mladek wrote:
-> > > On Mon 2019-09-02 11:32:39, Sakari Ailus wrote:
-> > > > Add support for %pfw conversion specifier (with "f" and "P" modifiers) to
-> > > > support printing full path of the node, including its name ("f") and only
-> > > > the node's name ("P") in the printk family of functions. The two flags
-> > > > have equivalent functionality to existing %pOF with the same two modifiers
-> > > > ("f" and "P") on OF based systems. The ability to do the same on ACPI
-> > > > based systems is added by this patch.
-> > > > --- a/scripts/checkpatch.pl
-> > > > +++ b/scripts/checkpatch.pl
-> > > > @@ -5995,7 +5995,8 @@ sub process {
-> > > >  				while ($fmt =~ /(\%[\*\d\.]*p(\w))/g) {
-> > > >  					$specifier = $1;
-> > > >  					$extension = $2;
-> > > > -					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxt]/) {
-> > > > +					if ($extension !~ /[SsBKRraEhMmIiUDdgVCbGNOxtf]/ ||
-> > > > +					    $extension =~ /^f[^w]/) {
-> > > 
-> > > This does not work. $extension seems to have only one character.
-> > 
-> > Good catch. \w indeed matches a single letter; I'll change that to \w+ and
-> > change the other uses accordingly.
+On Wed, Sep 04, 2019 at 08:25:27AM -0700, Alexei Starovoitov wrote:
+> On Wed, Sep 4, 2019 at 6:10 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > I wonder if this distinction of "tracepoint" being non-ABI can be documented
+> > somewhere. I would be happy to do that if there is a place for the same. I
+> > really want some general "policy" in the kernel on where we draw a line in
+> > the sand with respect to tracepoints and ABI :).
 > 
-> It's weird. \w stands for word matching. How can it match one letter only?
+> It's been discussed millions times. tracepoints are not abi.
+> Example: android folks started abusing tracepoints inside bpf core
+> and we _deleted_ them.
 
-\w 	matches any single character classified as a “word” character (alphanumeric or “_”)
+This is news to me, which ones?
+
+> Same thing can be done with _any_ tracepoint.
+> Do not abuse them and stop the fud about abi.
+
+I don't know what FUD you are referring to. At least it is not coming from
+me. This thread is dealing with the issue about ABI specifically, I jumped in
+just now. As I was saying earlier, I don't have a strong opinion about this.
+I just want to know what is the agreed upon approach so that we can stick to
+it.
+
+It sounds like the agreement here is tracepoints can be added and used
+without ABI guarantees, however the same is not true with trace events.
+Where's the FUD in that?
+
+thanks,
+
+ - Joel
 
