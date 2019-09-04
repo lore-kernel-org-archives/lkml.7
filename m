@@ -2,143 +2,127 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0D7C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABFDC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15A022CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:44:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtB5oJYM"
+	by mail.kernel.org (Postfix) with ESMTP id 57FBC22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbfIDGow (ORCPT
+        id S1728666AbfIDGq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:44:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40103 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfIDGow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:44:52 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 7so8951841ljw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 23:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9PV59x0jONCn6oZH/Jt37mkqxwJDrEsrzpgLl+0g6yY=;
-        b=qtB5oJYMCrvZltHTV+MM+PBEQ+p+R0XM5ahn+0OUrNvTXlST91Cn+Stqm4/EExX0Zk
-         u+0eyh0ncZDZLUSB3JL6zwE4I/0y6APYbgOaFjvw1z/tKVmSFVO1gjdUJcOfNrzfg7c/
-         KWLmUlCsEI5lSqNgl37KlIWKlRMeprOBhyDjSg5OADtA9LsRa8J7CL99Q+u9dbTI7bRl
-         rm4tvEmQDRB8k4vzyid3kmj/eDctx9juHwtwRrCaGzHzoJFDHDCfo7yCTtEMcaws9OuS
-         DKk58CO69SNf17Co8m/gpxSy4f3P9TC7eaqIClCSW9sxCaHzRdoSo0BTKSQQ8IjE2FnY
-         uU0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9PV59x0jONCn6oZH/Jt37mkqxwJDrEsrzpgLl+0g6yY=;
-        b=KRagJjoXxG6w88DJsosTHXHL6Ve5Qw+FxO/y2lyJyrU/fC9dmVcfXAJbZ2oVwzC5yG
-         z3ici/3yO6Bmu4w0aHCUmvImcHmFf58ZgajnRNV+++Vc4mGg9U67qySYS9U64bIuawr1
-         I5ibe552Fk5rweqrKe1bZ/KgKIU9Nn1zQg2uiyaCp3AaV3HGWAk8W7jAvp6AfGkFY0G0
-         bYhC9uVnCU6kEzn2fCmbXB62mPx20oPq5Cu2D/vBjlQ80wTZB5ZZlU5qcgiw5b3NmNfE
-         4hb9u1Opwq44dW7t+DRFIt1u16KYoAZLMi8VNUB7PXTxrv152iUd9qYLfWXq7psi3bIe
-         3t0w==
-X-Gm-Message-State: APjAAAX/MijO9jayvDOcd1a7/4dspTHFC2E5Ol4aeKbsYBe3g63+xOEb
-        7n2B2yQxzWhzoGCfsfBlhX3kPJSA+43ffPb27x6SAw==
-X-Google-Smtp-Source: APXvYqwKz8Cx4FBN7z4mOn4CvKemj1SoODI9SWAUoCW2WdW9oF/tMHmShuBFA5/zXOSv7GYcUc6yauljLoPNYNchYZE=
-X-Received: by 2002:a2e:94cd:: with SMTP id r13mr13090247ljh.24.1567579490798;
- Tue, 03 Sep 2019 23:44:50 -0700 (PDT)
+        Wed, 4 Sep 2019 02:46:28 -0400
+Received: from mga09.intel.com ([134.134.136.24]:6670 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727787AbfIDGq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 02:46:28 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Sep 2019 23:46:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
+   d="scan'208";a="383355312"
+Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.135])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Sep 2019 23:46:25 -0700
+Date:   Wed, 4 Sep 2019 14:52:40 +0800
+From:   Oliver Sang <oliver.sang@intel.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     kernel test robot <lkp@intel.com>, linux-fsdevel@vger.kernel.org,
+        lkp@01.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [LKP] [fs/namei.c] e013ec23b8:
+ WARNING:at_fs/dcache.c:#dentry_free
+Message-ID: <20190904065240.GQ22468@xsang-OptiPlex-9020>
+References: <20190831130917.ea4yx4uo5uttxk6l@inn2.lkp.intel.com>
+ <20190831154246.GY1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20190822021740.15554-1-riel@surriel.com> <20190822021740.15554-10-riel@surriel.com>
- <CAKfTPtAw1f89d4Sv+vSfytP8pJy-fy1hvpcz-=hoz4nrZXQV6A@mail.gmail.com> <6d07046810f4a490960d0124e99fe9cf546e9d10.camel@surriel.com>
-In-Reply-To: <6d07046810f4a490960d0124e99fe9cf546e9d10.camel@surriel.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 4 Sep 2019 08:44:39 +0200
-Message-ID: <CAKfTPtDbpd_FgPX21QDLSm=S7FL9z2HbS2b96aGOTAUw_bcxmg@mail.gmail.com>
-Subject: Re: [PATCH 09/15] sched,fair: refactor enqueue/dequeue_entity
-To:     Rik van Riel <riel@surriel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>, Paul Turner <pjt@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mel Gorman <mgorman@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190831154246.GY1131@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Sep 2019 at 22:27, Rik van Riel <riel@surriel.com> wrote:
->
-> On Tue, 2019-09-03 at 17:38 +0200, Vincent Guittot wrote:
-> > Hi Rik,
-> >
-> > On Thu, 22 Aug 2019 at 04:18, Rik van Riel <riel@surriel.com> wrote:
-> > > Refactor enqueue_entity, dequeue_entity, and update_load_avg, in
-> > > order
-> > > to split out the things we still want to happen at every level in
-> > > the
-> > > cgroup hierarchy with a flat runqueue from the things we only need
-> > > to
-> > > happen once.
-> > >
-> > > No functional changes.
-> > >
-> > > Signed-off-by: Rik van Riel <riel@surriel.com>
-> > > ---
-> > >  kernel/sched/fair.c | 64 +++++++++++++++++++++++++++++----------
-> > > ------
-> > >  1 file changed, 42 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index 74ee22c59d13..7b0d95f2e3a8 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -3502,7 +3502,7 @@ static void detach_entity_load_avg(struct
-> > > cfs_rq *cfs_rq, struct sched_entity *s
-> > >  #define DO_ATTACH      0x4
-> > >
-> > >  /* Update task and its cfs_rq load average */
-> > > -static inline void update_load_avg(struct cfs_rq *cfs_rq, struct
-> > > sched_entity *se, int flags)
-> > > +static inline bool update_load_avg(struct cfs_rq *cfs_rq, struct
-> > > sched_entity *se, int flags)
-> > >  {
-> > >         u64 now = cfs_rq_clock_pelt(cfs_rq);
-> > >         int decayed;
-> > > @@ -3531,6 +3531,8 @@ static inline void update_load_avg(struct
-> > > cfs_rq *cfs_rq, struct sched_entity *s
-> > >
-> > >         } else if (decayed && (flags & UPDATE_TG))
-> > >                 update_tg_load_avg(cfs_rq, 0);
-> > > +
-> > > +       return decayed;
-> >
-> > This is a functional change, isn't it ?
-> > update_cfs_group is now called only if decayed but we can we attach a
-> > task during the enqueue and there is no decay
->
-> Yes, it is, and patch 11 changes the way this functional
-> change is done.
->
-> If you want, I can change this patch to not have the
-> functional change, though in the end it should not make
-> any difference.
+On Sat, Aug 31, 2019 at 04:42:46PM +0100, Al Viro wrote:
+> On Sat, Aug 31, 2019 at 09:09:17PM +0800, kernel test robot wrote:
+> 
+> > [   13.886602] WARNING: CPU: 0 PID: 541 at fs/dcache.c:338 dentry_free+0x7f/0x90
+> > [   13.889208] Modules linked in:
+> > [   13.890276] CPU: 0 PID: 541 Comm: readlink Not tainted 5.3.0-rc1-00008-ge013ec23b8231 #1
+> > [   13.892699] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> > [   13.895419] RIP: 0010:dentry_free+0x7f/0x90
+> > [   13.896739] Code: f0 75 cb 48 8d be b0 00 00 00 48 83 c4 08 48 c7 c6 60 8d cd a5 e9 51 69 e4 ff 48 89 3c 24 48 c7 c7 f8 a9 cb a6 e8 7f 37 e3 ff <0f> 0b 48 8b 34 24 eb 8f 66 0f 1f 84 00 00 00 00 00 66 66 66 66 90
+> > [   13.901957] RSP: 0018:ffffb5524063fe38 EFLAGS: 00010282
+> > [   13.903527] RAX: 0000000000000024 RBX: ffff9941878040c0 RCX: ffffffffa706aa08
+> > [   13.905566] RDX: 0000000000000000 RSI: 0000000000000096 RDI: 0000000000000246
+> > [   13.907612] RBP: 0000000000000000 R08: 0000000000000280 R09: 0000000000000033
+> > [   13.909664] R10: 0000000000000000 R11: ffffb5524063fce8 R12: ffff994187804118
+> > [   13.911711] R13: ffff99427a810000 R14: ffff994187d7c8f0 R15: ffff99427a810b80
+> > [   13.913753] FS:  0000000000000000(0000) GS:ffff9942bfc00000(0000) knlGS:0000000000000000
+> > [   13.916187] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+> > [   13.917892] CR2: 000000000937458b CR3: 000000006800a000 CR4: 00000000000006f0
+> > [   13.919925] Call Trace:
+> > [   13.920840]  __dentry_kill+0x13c/0x1a0
+> > [   13.922076]  path_put+0x12/0x20
+> > [   13.923148]  free_fs_struct+0x1b/0x30
+> > [   13.924346]  do_exit+0x304/0xc40
+> > [   13.925438]  ? __schedule+0x25d/0x670
+> > [   13.926642]  do_group_exit+0x3a/0xa0
+> > [   13.927817]  __ia32_sys_exit_group+0x14/0x20
+> > [   13.929160]  do_fast_syscall_32+0xa9/0x340
+> > [   13.930565]  entry_SYSENTER_compat+0x7f/0x91
+> > [   13.931924] ---[ end trace 02c6706eb2c2ebf2 ]---
+> > 
+> > 
+> > To reproduce:
+> > 
+> >         # build kernel
+> > 	cd linux
+> > 	cp config-5.3.0-rc1-00008-ge013ec23b8231 .config
+> > 	make HOSTCC=gcc-7 CC=gcc-7 ARCH=x86_64 olddefconfig prepare modules_prepare bzImage
+> > 
+> >         git clone https://github.com/intel/lkp-tests.git
+> >         cd lkp-tests
+> >         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
+> 
+> Can't reproduce here...
 
-It's mainly that the code is not aligned with the commit message
+any detail failure by using this reproducer?
 
-I will continue to review other patch and will come back to this one
-after reviewing patch 11
+> 
+> I see one potential problem in there, but I would expect it to have the
+> opposite effect (I really don't believe that it's a ->d_count wraparound -
+> that would've taken much longer than a minute, if nothing else).
+> 
+> How reliably is it reproduced on your setup and does the following have
+> any impact, one way or another?
 
-Thanks
-Vincent
->
-> --
-> All Rights Reversed.
+It is always reproduced. We noticed that your branch was rebased. If it's still with problem, will let you know.
+
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 412479e4c258..671c3c1a3425 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -643,10 +643,8 @@ static bool legitimize_root(struct nameidata *nd)
+>  {
+>  	if (!nd->root.mnt || (nd->flags & LOOKUP_ROOT))
+>  		return true;
+> -	if (unlikely(!legitimize_path(nd, &nd->root, nd->root_seq)))
+> -		return false;
+>  	nd->flags |= LOOKUP_ROOT_GRABBED;
+> -	return true;
+> +	return legitimize_path(nd, &nd->root, nd->root_seq);
+>  }
+>  
+>  /*
+> _______________________________________________
+> LKP mailing list
+> LKP@lists.01.org
+> https://lists.01.org/mailman/listinfo/lkp
