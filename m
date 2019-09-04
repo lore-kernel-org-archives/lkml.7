@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6CAC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8C9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32CA22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619731;
-	bh=uun2tIggxofMoBfrIBSPSFtfiMuhO/XgwscPuae6WE0=;
+	s=default; t=1567619733;
+	bh=ykLzgQ2M+stSgkxSdBahC71YW717D4EkVNvvDv6Pqbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LTo9FWrCvpdfbHQy6tmTDIgvc0NXbMHz9wGY7GBM4Aa9pKH7CL2vy+vBvN4lVHm0D
-	 iQicWMOFksCx/rgkUSZJbNIeNJMi95K5OkIB2Jo59TimWlEVX21ZAcsYekBBScebd8
-	 JA4x3Au/mm99qH1Yn8aa2J14stwckQKCoYi70UJA=
+	b=OUOyGabkdHzwSHj5lGccMIn2cHgzi0MF3I3F7rBMg3W6c+mS7xVG3JI/eZKZ/mFhM
+	 PuFXQ2ieXc5s00vmUYB3pSlKSZ1Eaz08+hNo6zGkU4U+SO47FGkniz4RBMtEQUbGdn
+	 t4ZP9QLpZ+YfL+tVTp7WyrkZbNMg5tJd+uFRIPIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732666AbfIDRza (ORCPT
+        id S1732690AbfIDRzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:55:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60494 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:55:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732620AbfIDRz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:27 -0400
+        id S1732659AbfIDRza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:55:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CBCC208E4;
-        Wed,  4 Sep 2019 17:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F387221883;
+        Wed,  4 Sep 2019 17:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619727;
-        bh=uun2tIggxofMoBfrIBSPSFtfiMuhO/XgwscPuae6WE0=;
+        s=default; t=1567619729;
+        bh=ykLzgQ2M+stSgkxSdBahC71YW717D4EkVNvvDv6Pqbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fVmOpUyCWnbgC4SepagDUISzB0VsDsMzrpnjsUjRH8ARWP9j4b1RQBt4lDxYrbFAP
-         cQ/JtCVAxdnh1eVdjxjGwGkCkBKePGXyMwd605ySqs97vNpKAMurBGEnmmK8vYYeOE
-         bwUFpQrBZtAgxH0m5qOsMdgGD7yI5J+qIJ7IS3NM=
+        b=rvxB19IaPM8Wrr7PMgZpz7I8THEUwxWJPzJoo7RhZ0bpORrxnhf7ZjcpLOUE65nyX
+         Y3qT1t4oqrAj9tQvOxiCZlnWRgW32yTDXCNap/ABwH1HIexEVqI7A5KayA+mrWBJiS
+         hBLrVc9RsGZhPV7oSTpeQFIK+O8s90Z2pLY7Fofs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 12/77] isdn: hfcsusb: Fix mISDN driver crash caused by transfer buffer on the stack
-Date:   Wed,  4 Sep 2019 19:52:59 +0200
-Message-Id: <20190904175304.773817812@linuxfoundation.org>
+Subject: [PATCH 4.4 13/77] perf bench numa: Fix cpu0 binding
+Date:   Wed,  4 Sep 2019 19:53:00 +0200
+Message-Id: <20190904175304.940339603@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -61,83 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d8a1de3d5bb881507602bc02e004904828f88711 ]
+[ Upstream commit 6bbfe4e602691b90ac866712bd4c43c51e546a60 ]
 
-Since linux 4.9 it is not possible to use buffers on the stack for DMA transfers.
+Michael reported an issue with perf bench numa failing with binding to
+cpu0 with '-0' option.
 
-During usb probe the driver crashes with "transfer buffer is on stack" message.
+  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
+  # Running 'numa/mem' benchmark:
 
-This fix k-allocates a buffer to be used on "read_reg_atomic", which is a macro
-that calls "usb_control_msg" under the hood.
+   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
+  binding to node 0, mask: 0000000000000001 => -1
+  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
+  Aborted (core dumped)
 
-Kernel 4.19 backtrace:
+This happens when the cpu0 is not part of node0, which is the benchmark
+assumption and we can see that's not the case for some powerpc servers.
 
-usb_hcd_submit_urb+0x3e5/0x900
-? sched_clock+0x9/0x10
-? log_store+0x203/0x270
-? get_random_u32+0x6f/0x90
-? cache_alloc_refill+0x784/0x8a0
-usb_submit_urb+0x3b4/0x550
-usb_start_wait_urb+0x4e/0xd0
-usb_control_msg+0xb8/0x120
-hfcsusb_probe+0x6bc/0xb40 [hfcsusb]
-usb_probe_interface+0xc2/0x260
-really_probe+0x176/0x280
-driver_probe_device+0x49/0x130
-__driver_attach+0xa9/0xb0
-? driver_probe_device+0x130/0x130
-bus_for_each_dev+0x5a/0x90
-driver_attach+0x14/0x20
-? driver_probe_device+0x130/0x130
-bus_add_driver+0x157/0x1e0
-driver_register+0x51/0xe0
-usb_register_driver+0x5d/0x120
-? 0xf81ed000
-hfcsusb_drv_init+0x17/0x1000 [hfcsusb]
-do_one_initcall+0x44/0x190
-? free_unref_page_commit+0x6a/0xd0
-do_init_module+0x46/0x1c0
-load_module+0x1dc1/0x2400
-sys_init_module+0xed/0x120
-do_fast_syscall_32+0x7a/0x200
-entry_SYSENTER_32+0x6b/0xbe
+Using correct node for cpu0 binding.
 
-Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/hardware/mISDN/hfcsusb.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ tools/perf/bench/numa.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/isdn/hardware/mISDN/hfcsusb.c b/drivers/isdn/hardware/mISDN/hfcsusb.c
-index 6f19530ba2a93..726fba452f5f6 100644
---- a/drivers/isdn/hardware/mISDN/hfcsusb.c
-+++ b/drivers/isdn/hardware/mISDN/hfcsusb.c
-@@ -1701,13 +1701,23 @@ hfcsusb_stop_endpoint(struct hfcsusb *hw, int channel)
- static int
- setup_hfcsusb(struct hfcsusb *hw)
- {
-+	void *dmabuf = kmalloc(sizeof(u_char), GFP_KERNEL);
- 	u_char b;
-+	int ret;
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index df41deed0320e..3bfba81d19118 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -370,8 +370,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
  
- 	if (debug & DBG_HFC_CALL_TRACE)
- 		printk(KERN_DEBUG "%s: %s\n", hw->name, __func__);
+ 	/* Allocate and initialize all memory on CPU#0: */
+ 	if (init_cpu0) {
+-		orig_mask = bind_to_node(0);
+-		bind_to_memnode(0);
++		int node = numa_node_of_cpu(0);
++
++		orig_mask = bind_to_node(node);
++		bind_to_memnode(node);
+ 	}
  
-+	if (!dmabuf)
-+		return -ENOMEM;
-+
-+	ret = read_reg_atomic(hw, HFCUSB_CHIP_ID, dmabuf);
-+
-+	memcpy(&b, dmabuf, sizeof(u_char));
-+	kfree(dmabuf);
-+
- 	/* check the chip id */
--	if (read_reg_atomic(hw, HFCUSB_CHIP_ID, &b) != 1) {
-+	if (ret != 1) {
- 		printk(KERN_DEBUG "%s: %s: cannot read chip id\n",
- 		       hw->name, __func__);
- 		return 1;
+ 	bytes = bytes0 + HPSIZE;
 -- 
 2.20.1
 
