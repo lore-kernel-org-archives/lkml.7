@@ -2,236 +2,120 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4C8C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC340C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C390422CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D8922CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tdrzFPeY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731401AbfIDPv1 (ORCPT
+        id S1731436AbfIDPvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:51:27 -0400
-Received: from mga03.intel.com ([134.134.136.65]:24629 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfIDPv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:51:26 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 08:51:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="187669552"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga006.jf.intel.com with ESMTP; 04 Sep 2019 08:51:25 -0700
-Date:   Wed, 4 Sep 2019 08:51:25 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Alexander Graf <graf@amazon.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: Re: [PATCH v2 1/2] KVM: VMX: Disable posted interrupts for odd IRQs
-Message-ID: <20190904155125.GC24079@linux.intel.com>
-References: <20190904133511.17540-1-graf@amazon.com>
- <20190904133511.17540-2-graf@amazon.com>
- <20190904144045.GA24079@linux.intel.com>
- <fcaefade-16c1-6480-aeab-413bcd16dc52@amazon.com>
+        Wed, 4 Sep 2019 11:51:35 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33423 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731406AbfIDPve (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:51:34 -0400
+Received: by mail-lj1-f194.google.com with SMTP id a22so2997454ljd.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 08:51:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pFAvPhoN2SvcycRnus8t/fejSDRA815fnGKeS148qbU=;
+        b=tdrzFPeYQb2Z9jy0JbBpPVMKz4nczBWCgxlxrPnZLrrUKo1fe4CqyQALwV/cQP61dK
+         dqpjtg2g/C3DS1xO2/oUgIV7CjsS+hDZ9mxDpQYzSpKQZPc7T5DKMlCTM10pqkrPo7Ri
+         A6x4ysxckn8cuy7ASQK3K5OUDu+yyCreA2cfEFwiHwJIjAsaZa822LDPkCPF+G7S+njv
+         5ID/+iUKXiSfoeTgPg1o/s6epVqvpCGJqOTgs5KlsukY+qGfKfeg2734WrxsIqcFWv7H
+         VoSOWES6v1RZJHORu0fwXUJwTv4BKSyVOyhoa62SUAVAOM8Nem2UttsFFLhXy1BNY6ew
+         1yoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pFAvPhoN2SvcycRnus8t/fejSDRA815fnGKeS148qbU=;
+        b=hi4/GsW6J5VEU1jpwtqUTve2+yNHEWMn8nN1LXoCP/DhiuXieyxNyQDokYPXQ4BjN1
+         MLkV3xIR+DSjEzvSqeGQlHV8D5oJrM3xZi4TJgg8UPyWgLjvqgZXEbAZtk553+4aLlMw
+         hcyW9GsMFABIJjdCHO7ougrmEKtV3ru0H/fhv2xWrQcGVzTd6WfMEi83umn/WO/7u178
+         OKksm/qV20DSGmljb/SMBKaWstRuHvVW16X0XV5nczwZhZ3BtyumBxVHBy/dms9Wbccf
+         UKFJf6xPMYfQLS94ElnJzkpZnEVrmhIk3aVu/WyGstiv865xE+625nump4YxKqxyuTQG
+         29Jw==
+X-Gm-Message-State: APjAAAVdfSj/nfKb02x8wjVlyJD+AJbIk3aWS1ECG7v210d8N6MjDkIc
+        aSD0AiUr+tQy6KJnLK8bKJu+/p3S9QsyoRN8aTY=
+X-Google-Smtp-Source: APXvYqw69sG7/zWrH8uBBz2uREaQFuHJ3YME+A/L8bbWW6hHMxOpYy3UfDxghTs15adFcj3de9oxpAxHjQ2XHBkL6fs=
+X-Received: by 2002:a2e:a40e:: with SMTP id p14mr10160052ljn.29.1567612292650;
+ Wed, 04 Sep 2019 08:51:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcaefade-16c1-6480-aeab-413bcd16dc52@amazon.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190903154340.860299-1-rkrcmar@redhat.com> <20190903154340.860299-3-rkrcmar@redhat.com>
+ <a2924d91-df68-42de-0709-af53649346d5@arm.com> <20190904042310.GA159235@google.com>
+ <20190904104332.ogsjtbtuadhsglxh@e107158-lin.cambridge.arm.com>
+ <20190904130628.GE144846@google.com> <CAADnVQJzgTRWUAaH+L6qwJvHk0vsLPX3eWdZNUr5X77TuEgvPw@mail.gmail.com>
+ <20190904154000.GJ240514@google.com>
+In-Reply-To: <20190904154000.GJ240514@google.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 4 Sep 2019 08:51:21 -0700
+Message-ID: <CAADnVQK+bSzFdZmgTnDSgibhJ81pR19P6hFArqmZa_xKA1r1VQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        =?UTF-8?Q?Jirka_Hladk=C3=BD?= <jhladky@redhat.com>,
+        =?UTF-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 05:36:39PM +0200, Alexander Graf wrote:
-> 
-> 
-> On 04.09.19 16:40, Sean Christopherson wrote:
-> >On Wed, Sep 04, 2019 at 03:35:10PM +0200, Alexander Graf wrote:
-> >>We can easily route hardware interrupts directly into VM context when
-> >>they target the "Fixed" or "LowPriority" delivery modes.
-> >>
-> >>However, on modes such as "SMI" or "Init", we need to go via KVM code
-> >>to actually put the vCPU into a different mode of operation, so we can
-> >>not post the interrupt
-> >>
-> >>Add code in the VMX PI logic to explicitly refuse to establish posted
-> >>mappings for advanced IRQ deliver modes. This reflects the logic in
-> >>__apic_accept_irq() which also only ever passes Fixed and LowPriority
-> >>interrupts as posted interrupts into the guest.
-> >>
-> >>This fixes a bug I have with code which configures real hardware to
-> >>inject virtual SMIs into my guest.
-> >>
-> >>Signed-off-by: Alexander Graf <graf@amazon.com>
-> >>Reviewed-by: Liran Alon <liran.alon@oracle.com>
-> >>
-> >>---
-> >>
-> >>v1 -> v2:
-> >>
-> >>   - Make error message more unique
-> >>   - Update commit message to point to __apic_accept_irq()
-> >>---
-> >>  arch/x86/kvm/vmx/vmx.c | 22 ++++++++++++++++++++++
-> >>  1 file changed, 22 insertions(+)
-> >>
-> >>diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> >>index 570a233e272b..8029fe658c30 100644
-> >>--- a/arch/x86/kvm/vmx/vmx.c
-> >>+++ b/arch/x86/kvm/vmx/vmx.c
-> >>@@ -7401,6 +7401,28 @@ static int vmx_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
-> >>  			continue;
-> >>  		}
-> >>+		switch (irq.delivery_mode) {
-> >>+		case dest_Fixed:
-> >>+		case dest_LowestPrio:
-> >>+			break;
-> >>+		default:
-> >>+			/*
-> >>+			 * For non-trivial interrupt events, we need to go
-> >>+			 * through the full KVM IRQ code, so refuse to take
-> >>+			 * any direct PI assignments here.
-> >>+			 */
+On Wed, Sep 4, 2019 at 8:40 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> On Wed, Sep 04, 2019 at 08:25:27AM -0700, Alexei Starovoitov wrote:
+> > On Wed, Sep 4, 2019 at 6:10 AM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > I wonder if this distinction of "tracepoint" being non-ABI can be documented
+> > > somewhere. I would be happy to do that if there is a place for the same. I
+> > > really want some general "policy" in the kernel on where we draw a line in
+> > > the sand with respect to tracepoints and ABI :).
 > >
-> >IMO, a beefy comment is unnecessary, anyone that is digging through this
-> >code has hopefully read the PI spec or at least understands the basic
-> >concepts.  I.e. it should be obvious that PI can't be used for SMI, etc...
-> >
-> >>+			ret = irq_set_vcpu_affinity(host_irq, NULL);
-> >>+			if (ret < 0) {
-> >>+				printk(KERN_INFO
-> >>+				    "non-std IRQ failed to recover, irq: %u\n",
-> >>+				    host_irq);
-> >>+				goto out;
-> >>+			}
-> >>+
-> >>+			continue;
-> >
-> >Using a switch to filter out two types is a bit of overkill.  It also
-> 
-> The switch should compile into the same as the if() below, it's just a
-> matter of being more verbose in code.
-> 
-> >probably makes sense to perform the deliver_mode checks before calling
-> >kvm_intr_is_single_vcpu().  Why not simply something like this?  The
-> >existing comment and error message are even generic enough to keep as is.
-> 
-> Ok, so how about this, even though it goes against Liran's comment on the
-> combined debug print?
+> > It's been discussed millions times. tracepoints are not abi.
+> > Example: android folks started abusing tracepoints inside bpf core
+> > and we _deleted_ them.
+>
+> This is news to me, which ones?
 
-I missed that comment.
+those that your android teammates abused!
 
-How often do we expect irq_set_vcpu_affinity() to fail?  If it's frequent
-enough that the debug message matters, maybe it should be a tracepoint.
- 
-> If you think it's reasonable despite the broken formatting, I'll be happy to
-> fold the patches and submit as v3.
-> 
-> 
-> Alex
-> 
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h
-> b/arch/x86/include/asm/kvm_host.h
-> index 44a5ce57a905..55f68fb0d791 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1581,6 +1581,12 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct
-> kvm_lapic_irq *irq,
->  void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry
-> *e,
->  		     struct kvm_lapic_irq *irq);
-> 
-> +static inline bool kvm_irq_is_generic(struct kvm_lapic_irq *irq)
-> +{
-> +	return (irq->delivery_mode == dest_Fixed ||
-> +		irq->delivery_mode == dest_LowestPrio);
-> +}
-> +
->  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
->  {
->  	if (kvm_x86_ops->vcpu_blocking)
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 1f220a85514f..34cc59518cbb 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5260,7 +5260,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct
-> kvm_kernel_irq_routing_entry *e,
-> 
->  	kvm_set_msi_irq(kvm, e, &irq);
-> 
-> -	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-> +	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> +	    !kvm_irq_is_generic(&irq)) {
+> > Same thing can be done with _any_ tracepoint.
+> > Do not abuse them and stop the fud about abi.
+>
+> I don't know what FUD you are referring to. At least it is not coming from
+> me. This thread is dealing with the issue about ABI specifically, I jumped in
+> just now. As I was saying earlier, I don't have a strong opinion about this.
+> I just want to know what is the agreed upon approach so that we can stick to
+> it.
+>
+> It sounds like the agreement here is tracepoints can be added and used
+> without ABI guarantees, however the same is not true with trace events.
+> Where's the FUD in that?
 
-I've never heard/seen the term generic used to describe x86 interrupts.
-Maybe kvm_irq_is_intr() or kvm_irq_is_vectored_intr()?
-
->  		pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
->  			 __func__, irq.vector);
->  		return -1;
-> @@ -5314,6 +5315,7 @@ static int svm_update_pi_irte(struct kvm *kvm,
-> unsigned int host_irq,
->  		 * 1. When cannot target interrupt to a specific vcpu.
->  		 * 2. Unsetting posted interrupt.
->  		 * 3. APIC virtialization is disabled for the vcpu.
-> +		 * 4. IRQ has extended delivery mode (SMI, INIT, etc)
-
-Similarly, 'extended delivery mode' isn't really a thing, it's simply the
-delivery mode.
-
-	4. IRQ is not a vectored interrupt.
-
->  		 */
->  		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
->  		    kvm_vcpu_apicv_active(&svm->vcpu)) {
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 570a233e272b..69f53809c7bb 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7382,10 +7382,14 @@ static int vmx_update_pi_irte(struct kvm *kvm,
-> unsigned int host_irq,
->  		 * irqbalance to make the interrupts single-CPU.
->  		 *
->  		 * We will support full lowest-priority interrupt later.
-> +		 *
-> +		 * In addition, we can only inject generic interrupts using
-> +		 * the PI mechanism, refuse to route others through it.
->  		 */
-> 
->  		kvm_set_msi_irq(kvm, e, &irq);
-> -		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-> +		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> +		    !kvm_irq_is_generic(&irq)) {
->  			/*
->  			 * Make sure the IRTE is in remapped mode if
->  			 * we don't handle it in posted mode.
-> 
-> 
-> 
-> 
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
-> 
-> 
+Anything in tracing can be deleted.
+Tracing is about debugging and introspection.
+When underlying kernel code changes the introspection points change as well.
