@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15816C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6C2C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A1B22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2928121883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619887;
-	bh=G12k7nB8oMz3+GOLYxp3n6dUajHE3heh+g6YU64/Aws=;
+	s=default; t=1567619890;
+	bh=71JlX85HloXRuFk35f6G10fhXpqx61Us6ZgYwqEoDeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nsAs5IrT4zBXuDjQH54GoIL41DHKS3JjkS1eAE2fQK0OlCBy+nwe0eg94ixc0KctG
-	 pFc0wldUUgclxifY9XPoNT8MpYTxq8EQZ+70qnqBBLONQ/2VqbkubnOu8G65uWPNSZ
-	 tja/N1QQb5lEbeI6M6oFt5awH2v81qTU+habrANY=
+	b=fmwZOaHCV4KW0Jue4wgQ9WP6rpKpf6HYIFeFGbRw2NgQfHjUbFGZzl4f9ohfMjZR5
+	 6J+YnYfnr+I7flmJeJs6YLlVf1JTy31XqBm5wMTfZKkPX1sUfzCcvQGnrzbtWpI3Ry
+	 MYfQ4qdlixfpmmHzcH6A8DksX/RJKtRJDMFZ0kDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387990AbfIDR6H (ORCPT
+        id S2387430AbfIDR6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36388 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387980AbfIDR6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:04 -0400
+        id S2387991AbfIDR6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D5F22CED;
-        Wed,  4 Sep 2019 17:58:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 769C522CF7;
+        Wed,  4 Sep 2019 17:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619884;
-        bh=G12k7nB8oMz3+GOLYxp3n6dUajHE3heh+g6YU64/Aws=;
+        s=default; t=1567619887;
+        bh=71JlX85HloXRuFk35f6G10fhXpqx61Us6ZgYwqEoDeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dekeOPyxYpwJEFMBKmhilP+1E/XGsj8fYwTaFIB8eOYcxcOM3P4G2DXJGPoX+4cPd
-         L5hxFHdGVyOtA46I2YOCGvYGH92MXA3Swh3fQHIy4afDQ0aKc0jYqq6cRBNtD2Tluo
-         hx69MiJgJykEE/vGE3lmtv1mIXnSD/se/yJz3fBQ=
+        b=leG1P1Mm2C22K5VPiq+Kpz/8qovMBXguxPh/2rspN8cDzyZ2bzZB0XwRsCRxXOEoR
+         V9ygc126N1kuCqw73o4UQg+NkbWfguEJCc49S6IyD8cSrkCkBUsx1Aj1Fz8yajdDfv
+         pJzz5HVyiCby80PMtPyrBa8QBZ+mp3adeoQxnfh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.4 71/77] mmc: sdhci-of-at91: add quirk for broken HS200
-Date:   Wed,  4 Sep 2019 19:53:58 +0200
-Message-Id: <20190904175309.989130693@linuxfoundation.org>
+        stable@vger.kernel.org, Philip Langdale <philipl@overt.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Manuel Presnitz <mail@mpy.de>
+Subject: [PATCH 4.4 72/77] mmc: core: Fix init of SD cards reporting an invalid VDD range
+Date:   Wed,  4 Sep 2019 19:53:59 +0200
+Message-Id: <20190904175310.073705023@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -62,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit 7871aa60ae0086fe4626abdf5ed13eeddf306c61 upstream.
+commit 72741084d903e65e121c27bd29494d941729d4a1 upstream.
 
-HS200 is not implemented in the driver, but the controller claims it
-through caps. Remove it via a quirk, to make sure the mmc core do not try
-to enable HS200, as it causes the eMMC initialization to fail.
+The OCR register defines the supported range of VDD voltages for SD cards.
+However, it has turned out that some SD cards reports an invalid voltage
+range, for example having bit7 set.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Fixes: bb5f8ea4d514 ("mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC")
-Cc: stable@vger.kernel.org # v4.4+
+When a host supports MMC_CAP2_FULL_PWR_CYCLE and some of the voltages from
+the invalid VDD range, this triggers the core to run a power cycle of the
+card to try to initialize it at the lowest common supported voltage.
+Obviously this fails, since the card can't support it.
+
+Let's fix this problem, by clearing invalid bits from the read OCR register
+for SD cards, before proceeding with the VDD voltage negotiation.
+
+Cc: stable@vger.kernel.org
+Reported-by: Philip Langdale <philipl@overt.org>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Philip Langdale <philipl@overt.org>
+Tested-by: Philip Langdale <philipl@overt.org>
+Tested-by: Manuel Presnitz <mail@mpy.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-at91.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mmc/core/sd.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -144,6 +144,9 @@ static int sdhci_at91_probe(struct platf
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -1232,6 +1232,12 @@ int mmc_attach_sd(struct mmc_host *host)
+ 			goto err;
+ 	}
  
- 	sdhci_get_of_property(pdev);
- 
-+	/* HS200 is broken at this moment */
-+	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
++	/*
++	 * Some SD cards claims an out of spec VDD voltage range. Let's treat
++	 * these bits as being in-valid and especially also bit7.
++	 */
++	ocr &= ~0x7FFF;
 +
- 	ret = sdhci_add_host(host);
- 	if (ret)
- 		goto clocks_disable_unprepare;
+ 	rocr = mmc_select_voltage(host, ocr);
+ 
+ 	/*
 
 
