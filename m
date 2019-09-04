@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF26FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749B3C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9057B2341E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5336B2339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfIDOCS (ORCPT
+        id S1731213AbfIDOCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:02:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6205 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:02:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6654 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730870AbfIDOAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:00:40 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0E786E6D5F12E5D993BB;
-        Wed,  4 Sep 2019 22:00:38 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 22:00:30 +0800
+        id S1730733AbfIDOAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:00:15 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 96C07BB3FB87F10F180C;
+        Wed,  4 Sep 2019 22:00:10 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 22:00:00 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -50,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 21/36] spi: oc-tiny: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:59:03 +0800
-Message-ID: <20190904135918.25352-22-yuehaibing@huawei.com>
+Subject: [PATCH -next 11/36] spi: coldfire-qspi: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:58:53 +0800
+Message-ID: <20190904135918.25352-12-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -71,31 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-oc-tiny.c | 4 +---
+ drivers/spi/spi-coldfire-qspi.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-oc-tiny.c b/drivers/spi/spi-oc-tiny.c
-index bbc4ba6..e2331eb 100644
---- a/drivers/spi/spi-oc-tiny.c
-+++ b/drivers/spi/spi-oc-tiny.c
-@@ -240,7 +240,6 @@ static int tiny_spi_probe(struct platform_device *pdev)
- 	struct tiny_spi_platform_data *platp = dev_get_platdata(&pdev->dev);
- 	struct tiny_spi *hw;
+diff --git a/drivers/spi/spi-coldfire-qspi.c b/drivers/spi/spi-coldfire-qspi.c
+index 5ff48ab..f80e06c 100644
+--- a/drivers/spi/spi-coldfire-qspi.c
++++ b/drivers/spi/spi-coldfire-qspi.c
+@@ -339,7 +339,6 @@ static int mcfqspi_probe(struct platform_device *pdev)
+ {
  	struct spi_master *master;
+ 	struct mcfqspi *mcfqspi;
 -	struct resource *res;
- 	unsigned int i;
- 	int err = -ENODEV;
+ 	struct mcfqspi_platform_data *pdata;
+ 	int status;
  
-@@ -264,8 +263,7 @@ static int tiny_spi_probe(struct platform_device *pdev)
- 	hw->bitbang.txrx_bufs = tiny_spi_txrx_bufs;
+@@ -362,8 +361,7 @@ static int mcfqspi_probe(struct platform_device *pdev)
  
- 	/* find and map our resources */
+ 	mcfqspi = spi_master_get_devdata(master);
+ 
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	hw->base = devm_ioremap_resource(&pdev->dev, res);
-+	hw->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hw->base)) {
- 		err = PTR_ERR(hw->base);
- 		goto exit;
+-	mcfqspi->iobase = devm_ioremap_resource(&pdev->dev, res);
++	mcfqspi->iobase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(mcfqspi->iobase)) {
+ 		status = PTR_ERR(mcfqspi->iobase);
+ 		goto fail0;
 -- 
 2.7.4
 
