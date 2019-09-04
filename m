@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA316C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B7AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87DD022CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5613922CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbfIDOJS (ORCPT
+        id S1730867AbfIDOJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:09:18 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60708 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:09:20 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60710 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730214AbfIDOJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:09:16 -0400
+        id S1730521AbfIDOJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:09:18 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A8923C5F11525DB5FF1D;
+        by Forcepoint Email with ESMTP id A3E23FF442AD27FF69AB;
         Wed,  4 Sep 2019 22:09:13 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 4 Sep 2019 22:09:06 +0800
+ 14.3.439.0; Wed, 4 Sep 2019 22:09:04 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Yufeng Mo <moyufeng@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 6/7] net: hns3: disable loopback setting in hclge_mac_init
-Date:   Wed, 4 Sep 2019 22:06:45 +0800
-Message-ID: <1567606006-39598-7-git-send-email-tanhuazhong@huawei.com>
+        Jian Shen <shenjian15@huawei.com>,
+        "Huazhong Tan" <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 1/7] net: hns3: fix error VF index when setting VLAN offload
+Date:   Wed, 4 Sep 2019 22:06:40 +0800
+Message-ID: <1567606006-39598-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567606006-39598-1-git-send-email-tanhuazhong@huawei.com>
 References: <1567606006-39598-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,93 +47,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufeng Mo <moyufeng@huawei.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-If the selftest and reset are performed at the same time, the loopback
-setting may be still in the enable state after the reset. As a result,
-packets cannot be sent out.
+In original codes, the VF index used incorrectly in function
+hclge_set_vlan_rx_offload_cfg() and hclge_set_vlan_rx_offload_cfg().
+When VF id is greater than 8, for example 9, it will set the
+same bit with VF id 1.
 
-This patch fixes this issue by disabling loopback in hclge_mac_init.
+This patch fixes it by using  vport->vport_id % HCLGE_VF_NUM_PER_CMD /
+HCLGE_VF_NUM_PER_BYTE as the array index, intead of vport->vport_id /
+HCLGE_VF_NUM_PER_CMD.
 
-Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Fixes: 052ece6dc19c ("net: hns3: add ethtool related offload command")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 34 +++++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index dde752f..8d4dc1b 100644
+index 2b65f27..0e1225c 100644
 --- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
 +++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -66,6 +66,7 @@ static void hclge_rfs_filter_expire(struct hclge_dev *hdev);
- static void hclge_clear_arfs_rules(struct hnae3_handle *handle);
- static enum hnae3_reset_type hclge_get_reset_level(struct hnae3_ae_dev *ae_dev,
- 						   unsigned long *addr);
-+static int hclge_set_default_loopback(struct hclge_dev *hdev);
+@@ -7691,6 +7691,7 @@ static int hclge_set_vlan_tx_offload_cfg(struct hclge_vport *vport)
+ 	struct hclge_vport_vtag_tx_cfg_cmd *req;
+ 	struct hclge_dev *hdev = vport->back;
+ 	struct hclge_desc desc;
++	u16 bmap_index;
+ 	int status;
  
- static struct hnae3_ae_algo ae_algo;
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_VLAN_PORT_TX_CFG, false);
+@@ -7713,8 +7714,10 @@ static int hclge_set_vlan_tx_offload_cfg(struct hclge_vport *vport)
+ 	hnae3_set_bit(req->vport_vlan_cfg, HCLGE_CFG_NIC_ROCE_SEL_B, 0);
  
-@@ -2599,6 +2600,10 @@ static int hclge_mac_init(struct hclge_dev *hdev)
- 		return ret;
- 	}
+ 	req->vf_offset = vport->vport_id / HCLGE_VF_NUM_PER_CMD;
+-	req->vf_bitmap[req->vf_offset] =
+-		1 << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
++	bmap_index = vport->vport_id % HCLGE_VF_NUM_PER_CMD /
++			HCLGE_VF_NUM_PER_BYTE;
++	req->vf_bitmap[bmap_index] =
++		1U << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
  
-+	ret = hclge_set_default_loopback(hdev);
-+	if (ret)
-+		return ret;
-+
- 	ret = hclge_buffer_alloc(hdev);
- 	if (ret)
- 		dev_err(&hdev->pdev->dev,
-@@ -6331,7 +6336,7 @@ static int hclge_set_app_loopback(struct hclge_dev *hdev, bool en)
- 	return ret;
- }
+ 	status = hclge_cmd_send(&hdev->hw, &desc, 1);
+ 	if (status)
+@@ -7731,6 +7734,7 @@ static int hclge_set_vlan_rx_offload_cfg(struct hclge_vport *vport)
+ 	struct hclge_vport_vtag_rx_cfg_cmd *req;
+ 	struct hclge_dev *hdev = vport->back;
+ 	struct hclge_desc desc;
++	u16 bmap_index;
+ 	int status;
  
--static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
-+static int hclge_cfg_serdes_loopback(struct hclge_dev *hdev, bool en,
- 				     enum hnae3_loop loop_mode)
- {
- #define HCLGE_SERDES_RETRY_MS	10
-@@ -6392,6 +6397,17 @@ static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
- 		dev_err(&hdev->pdev->dev, "serdes loopback set failed in fw\n");
- 		return -EIO;
- 	}
-+	return ret;
-+}
-+
-+static int hclge_set_serdes_loopback(struct hclge_dev *hdev, bool en,
-+				     enum hnae3_loop loop_mode)
-+{
-+	int ret;
-+
-+	ret = hclge_cfg_serdes_loopback(hdev, en, loop_mode);
-+	if (ret)
-+		return ret;
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_VLAN_PORT_RX_CFG, false);
+@@ -7746,8 +7750,10 @@ static int hclge_set_vlan_rx_offload_cfg(struct hclge_vport *vport)
+ 		      vcfg->vlan2_vlan_prionly ? 1 : 0);
  
- 	hclge_cfg_mac_mode(hdev, en);
+ 	req->vf_offset = vport->vport_id / HCLGE_VF_NUM_PER_CMD;
+-	req->vf_bitmap[req->vf_offset] =
+-		1 << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
++	bmap_index = vport->vport_id % HCLGE_VF_NUM_PER_CMD /
++			HCLGE_VF_NUM_PER_BYTE;
++	req->vf_bitmap[bmap_index] =
++		1U << (vport->vport_id % HCLGE_VF_NUM_PER_BYTE);
  
-@@ -6535,6 +6551,22 @@ static int hclge_set_loopback(struct hnae3_handle *handle,
- 	return 0;
- }
- 
-+static int hclge_set_default_loopback(struct hclge_dev *hdev)
-+{
-+	int ret;
-+
-+	ret = hclge_set_app_loopback(hdev, false);
-+	if (ret)
-+		return ret;
-+
-+	ret = hclge_cfg_serdes_loopback(hdev, false, HNAE3_LOOP_SERIAL_SERDES);
-+	if (ret)
-+		return ret;
-+
-+	return hclge_cfg_serdes_loopback(hdev, false,
-+					 HNAE3_LOOP_PARALLEL_SERDES);
-+}
-+
- static void hclge_reset_tqp_stats(struct hnae3_handle *handle)
- {
- 	struct hclge_vport *vport = hclge_get_vport(handle);
+ 	status = hclge_cmd_send(&hdev->hw, &desc, 1);
+ 	if (status)
 -- 
 2.7.4
 
