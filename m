@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B21CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8650DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D9B2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC532341C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612820;
-	bh=vRRFaWWGUOYTPrur3oc3/d02XUTCjrwdPwVR3rAWPoo=;
+	s=default; t=1567612827;
+	bh=ktGTrJ3wz1U8LW7KHbEeGaC+lWSgAu8Hhu4NlfM9HzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u7Z2Lwt+4mS3vpHeuv/yEfS3MB6uXd77tC055voFPEahp8I/T6g3NUWFh90uRYj9C
-	 djtqGNL2rZyrSXZAVuvLP5ZXSGvHPCFUrhhE7XOzoUX/8oKox41+gAk8vOY15/O/At
-	 /VgVgcYFUMr/tv9v1Yrxh3tb8DfMwayAanqNBkBg=
+	b=AXFZFmvTLa/CpmHvgRFuhGqnYz2qnFKDu+t+afv0QClV2KypRhWPoYLdCaHydOR80
+	 pF+0FFF914Qwt8nCYrwLI94iWi03H3rUkoL0umEpY0thzHPV1qOoIYK7zdxx8dEKtD
+	 ykl8BSVQzbpP5lUFIkTZ2gJcok8EwHc1lRdw+yGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732647AbfIDQAT (ORCPT
+        id S1732690AbfIDQA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731942AbfIDQAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:14 -0400
+        id S1732662AbfIDQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF83222CED;
-        Wed,  4 Sep 2019 16:00:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51C0C2070C;
+        Wed,  4 Sep 2019 16:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612813;
-        bh=vRRFaWWGUOYTPrur3oc3/d02XUTCjrwdPwVR3rAWPoo=;
+        s=default; t=1567612822;
+        bh=ktGTrJ3wz1U8LW7KHbEeGaC+lWSgAu8Hhu4NlfM9HzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRQvw6hGWVIGQktfftGbYZhmDka6inDIaNox6gBXX79lMPcq/FO6GQEjTOYrFAIpY
-         WHb7Cy+p/o2GCWMlIEaMFszpLEmlwI2sDY1xRDUWa8kCcZjQ98yDPM4kHgGHQmXAfN
-         m1iAfQzHANXsH5bbLDOo94DfBNBx7d/uPtV9Esdw=
+        b=VMbFEmNzMh5OaIEJFhQDEt9OnZeOjJAIUGhgrg1ZlRGIqgoeBQQzgy09y5kcknrQN
+         CKL1r4nuJujgCN8JjtXvBzCA3jpW0EQtVKeZjnJo8KTz4rMnFJN5XGi49XRtz3JCtK
+         fWLDk9eYe7jkus1d8zoPrwyUCj/HvKB2g7EOF3Kw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/52] s390/bpf: fix lcgr instruction encoding
-Date:   Wed,  4 Sep 2019 11:59:18 -0400
-Message-Id: <20190904160004.3671-6-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/52] batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
+Date:   Wed,  4 Sep 2019 11:59:24 -0400
+Message-Id: <20190904160004.3671-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -61,41 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit bb2d267c448f4bc3a3389d97c56391cb779178ae ]
+[ Upstream commit 3ee1bb7aae97324ec9078da1f00cb2176919563f ]
 
-"masking, test in bounds 3" fails on s390, because
-BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, 0) ignores the top 32 bits of
-BPF_REG_2. The reason is that JIT emits lcgfr instead of lcgr.
-The associated comment indicates that the code was intended to
-emit lcgr in the first place, it's just that the wrong opcode
-was used.
+batadv_netlink_get_ifindex() needs to make sure user passed
+a correct u32 attribute.
 
-Fix by using the correct opcode.
+syzbot reported :
+BUG: KMSAN: uninit-value in batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
+CPU: 1 PID: 11705 Comm: syz-executor888 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+ kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+ __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+ batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
+ genl_lock_dumpit+0xc6/0x130 net/netlink/genetlink.c:482
+ netlink_dump+0xa84/0x1ab0 net/netlink/af_netlink.c:2253
+ __netlink_dump_start+0xa3a/0xb30 net/netlink/af_netlink.c:2361
+ genl_family_rcv_msg net/netlink/genetlink.c:550 [inline]
+ genl_rcv_msg+0xfc1/0x1a40 net/netlink/genetlink.c:627
+ netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2486
+ genl_rcv+0x63/0x80 net/netlink/genetlink.c:638
+ netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
+ netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1337
+ netlink_sendmsg+0x127e/0x12f0 net/netlink/af_netlink.c:1926
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg net/socket.c:661 [inline]
+ ___sys_sendmsg+0xcc6/0x1200 net/socket.c:2260
+ __sys_sendmsg net/socket.c:2298 [inline]
+ __do_sys_sendmsg net/socket.c:2307 [inline]
+ __se_sys_sendmsg+0x305/0x460 net/socket.c:2305
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2305
+ do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x440209
 
-Fixes: 054623105728 ("s390/bpf: Add s390x eBPF JIT compiler backend")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Acked-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: b60620cf567b ("batman-adv: netlink: hardif query")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 2 +-
+ net/batman-adv/netlink.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index d7052cbe984f8..a3ce1fdc3d802 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -841,7 +841,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
- 		break;
- 	case BPF_ALU64 | BPF_NEG: /* dst = -dst */
- 		/* lcgr %dst,%dst */
--		EMIT4(0xb9130000, dst_reg, dst_reg);
-+		EMIT4(0xb9030000, dst_reg, dst_reg);
- 		break;
- 	/*
- 	 * BPF_FROM_BE/LE
+diff --git a/net/batman-adv/netlink.c b/net/batman-adv/netlink.c
+index 0d9459b69bdb8..c32820963b8e7 100644
+--- a/net/batman-adv/netlink.c
++++ b/net/batman-adv/netlink.c
+@@ -118,7 +118,7 @@ batadv_netlink_get_ifindex(const struct nlmsghdr *nlh, int attrtype)
+ {
+ 	struct nlattr *attr = nlmsg_find_attr(nlh, GENL_HDRLEN, attrtype);
+ 
+-	return attr ? nla_get_u32(attr) : 0;
++	return (attr && nla_len(attr) == sizeof(u32)) ? nla_get_u32(attr) : 0;
+ }
+ 
+ /**
 -- 
 2.20.1
 
