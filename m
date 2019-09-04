@@ -2,106 +2,116 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF31C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EC6C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAB5208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC58220870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:40:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pHvO1Y9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730528AbfIDWba (ORCPT
+        id S1730135AbfIDWkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 18:31:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33580 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729919AbfIDWb2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 18:31:28 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7774A10277E2;
-        Wed,  4 Sep 2019 22:31:27 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2332A1001956;
-        Wed,  4 Sep 2019 22:31:16 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wgcJq21Hydh7Tx5-o8empoPp7ULDBw0Am-du_Pa+fcftQ@mail.gmail.com>
-References: <CAHk-=wgcJq21Hydh7Tx5-o8empoPp7ULDBw0Am-du_Pa+fcftQ@mail.gmail.com> <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-11-cyphar@cyphar.com> <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com> <20190904214856.vnvom7h5xontvngq@yavin.dot.cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 10/12] namei: aggressively check for nd->root escape on ".." resolution
+        Wed, 4 Sep 2019 18:40:04 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34568 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbfIDWkD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 18:40:03 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a13so464782qtj.1;
+        Wed, 04 Sep 2019 15:40:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HnUeqUgvHmEsTezEaxVg2P6RFT85Zk7uuJIhbn7279Y=;
+        b=pHvO1Y9pNOVKwRDHUIFgh/rciGlFlYVWTkT0XBPv3nosE3PGDq9qMpuxybiiIAGv+e
+         u1DXeKgOt8lvb3xWzxLbn3rXD8Y543Cn6/f/S0fTlQJ6G6vexCPK09TX1fpmWfEW3VC8
+         1O0W2KL70cG2ClE3xVKoRW1RCvdz6CGu49Pfadneo99ROd27P3CrwHzIN1Jt/qytAZI0
+         yu4BMgLor1zn5Z75g9el0823gTTlROvmhmqDtDpQxLhA/g08zB7EKeAgCWJXY7qsw8YF
+         w1NOUlfLyLJ49HAykmfTN7k1d5tqxaRCuCVdRD7PEISkHjDWi3NxNA0FDU+aUcrH4K39
+         RKfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HnUeqUgvHmEsTezEaxVg2P6RFT85Zk7uuJIhbn7279Y=;
+        b=GgMZ8czmYgoGpPrbAZ8e+r1Kbs45YJ/wfZpdhDSP0TP0U4xlF9esDrpI3q2ZoFOCUC
+         PVdwV0m5uZR25dNTONyNO2mbusV1NBCW/U6M0lI9s4LZ/aROvcQa16FMBNrLhbQNDoui
+         8dZClNb/c/V/xbBxHKkmwQEqErwc4H2itcFMVXGEpza6qU7EiA0ZwqzlGlCc6NOpZKGn
+         Cj1XvQpIdYvyzYkg8U8sxVFy9ONAHzXCc/H6puKwZQ5D/UPcsFCWaJNipKyH98PY/TAG
+         4KtCyfhaBJhYjK5VvdL2HMqOfE89oy4yptOwDzuLQ9IgUDFx7+vCVarDnDaVcU5DQ+d4
+         agfQ==
+X-Gm-Message-State: APjAAAVI/tzUl/MdZW5bDHOnRZViJ0AUnOvDXJoGGYD+07sSHooCXYZf
+        6aB+KfX2l6YUlYCkbOSn2PeTlhrgXcKtZXzD8YM=
+X-Google-Smtp-Source: APXvYqyH3l5wJ+MhaBXYfkRtMRlhZBfMa58sa4xh3qswk4Z/y/j0Dvr7JPVsQW+3Jh0f/2/JjsSBQjhIBEdTRPhtZ3M=
+X-Received: by 2002:a0c:fba4:: with SMTP id m4mr74237qvp.136.1567636802622;
+ Wed, 04 Sep 2019 15:40:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <20591.1567636276.1@warthog.procyon.org.uk>
-Date:   Wed, 04 Sep 2019 23:31:16 +0100
-Message-ID: <20592.1567636276@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 04 Sep 2019 22:31:28 +0000 (UTC)
+References: <20190904082232.GA171180@LGEARND20B15> <20190904084525.GB4925@kroah.com>
+In-Reply-To: <20190904084525.GB4925@kroah.com>
+From:   Austin Kim <austindh.kim@gmail.com>
+Date:   Thu, 5 Sep 2019 07:39:53 +0900
+Message-ID: <CADLLry5WHSTyWzRa0bg0Dsnm8rO-cVF=i1CkzKN+DMXv9wq-Xw@mail.gmail.com>
+Subject: Re: [PATCH] media: meson: Add NULL check after the call to kmalloc()
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     mchehab@kernel.org, khilman@baylibre.com, mjourdan@baylibre.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+2019=EB=85=84 9=EC=9B=94 4=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 5:45, Gr=
+eg KH <gregkh@linuxfoundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Wed, Sep 04, 2019 at 05:22:32PM +0900, Austin Kim wrote:
+> > If the kmalloc() return NULL, the NULL pointer dereference will occur.
+> >       new_ts->ts =3D ts;
+> >
+> > Add exception check after the call to kmalloc() is made.
+> >
+> > Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+> > ---
+> >  drivers/staging/media/meson/vdec/vdec_helpers.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/=
+staging/media/meson/vdec/vdec_helpers.c
+> > index f16948b..e7e56d5 100644
+> > --- a/drivers/staging/media/meson/vdec/vdec_helpers.c
+> > +++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
+> > @@ -206,6 +206,10 @@ void amvdec_add_ts_reorder(struct amvdec_session *=
+sess, u64 ts, u32 offset)
+> >       unsigned long flags;
+> >
+> >       new_ts =3D kmalloc(sizeof(*new_ts), GFP_KERNEL);
+> > +     if (!new_ts) {
+> > +             dev_err(sess->core->dev, "Failed to kmalloc()\n");
+>
+> Did you run this through checkpatch?  I think it will say that this line
+> is not ok.
+>
+> > +             return;
+>
+> Shouldn't you return an -ENOMEM error somehow?
 
-> > Hinting to userspace to do a retry (with -EAGAIN as you mention in your
-> > other mail) wouldn't be a bad thing at all, though you'd almost
-> > certainly get quite a few spurious -EAGAINs -- &{mount,rename}_lock are
-> > global for the entire machine, after all.
-> 
-> I'd hope that we have some future (possibly very long-term)
-> alternative that is not quite system-global, but yes, right now they
-> are.
+I agreed with your feedback.
+Let me take a look at the code more and then resend the patch if necessary.
 
-It ought to be reasonably easy to make them per-sb at least, I think.  We
-don't allow cross-super rename, right?
-
-David
+Thanks,
+Austin Kim
+>
+> thanks,
+>
+> greg k-h
