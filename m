@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63EEC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB00C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C31208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1633023400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620564;
-	bh=eUxf5px/y/J3zPOxR6HS7sIp8nKji4J2U42kiNPMmoQ=;
+	s=default; t=1567620569;
+	bh=nDJFjBuvgLE+5sJdEHt8JBVMrzHmbRyH798P8lcwKJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1df4RUilawa7Vx8x35RAjZgH47SttKA8KHbDlxvP/Y+b5u0Z+V/n+4/UJ76y58XEq
-	 jVkV59jwiKUsrvBFJ/3UO1rr+qZYoUoz7lqeAAnrx0ELae2vfYFIEqNZxD7qM++aSo
-	 atI+8oQf4f1lSXWJNhWujnqJU8v4pIneaJQmJ6MM=
+	b=biKzXr4sW6OC+Aexm+ox5fkfJCvOY9gdRAo4hUhDwTg8c3QN6yfc8HGz462vW8TEF
+	 vjqFTi/8AIta33xhO6o0Sy7T/oRQclQWg8HqANgqHXpQVlXhUfFvnvGQXPnAQKXpal
+	 rMfCn12XQ0aN600U/Z0hmYBkNzeodGbjNeHbEzbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389370AbfIDSJW (ORCPT
+        id S2388229AbfIDSJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52520 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:09:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389131AbfIDSJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:18 -0400
+        id S2389131AbfIDSJY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8426208E4;
-        Wed,  4 Sep 2019 18:09:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25BB722CF7;
+        Wed,  4 Sep 2019 18:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620558;
-        bh=eUxf5px/y/J3zPOxR6HS7sIp8nKji4J2U42kiNPMmoQ=;
+        s=default; t=1567620563;
+        bh=nDJFjBuvgLE+5sJdEHt8JBVMrzHmbRyH798P8lcwKJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0ocKevPXfR/ycc6ef8ZYDheljQ1pKw2KQ2FxtiSYp6khO/n3GJlGJRacgymC6XFt
-         JwQCJkw7/tXjAnsoi2s4V9piGUNYJF3qg37o0oBbbIwFmh6HrO9ENIpIBluAoZ10FK
-         NYweqt+1f6PVGc7sZvmjlpGZyTRPeAz8rvklDFCM=
+        b=rUt/nRIuAZY8Wy20HDeA2TxfnVmSGgEwcRkdPPplMdg8qwHyr57xBKixjjvIiF4ZI
+         6AUufCWchm/WxT0rZQwVyIdJsYS15vosAFVINaEawRKIVrtVLX7QLnWF6RUVgS67bI
+         H4Y1dH0CreuZsmhtVS+fF4soYVX2CV7awLjq/qoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Jeffrey Altman <jaltman@auristor.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 010/143] nvmet-loop: Flush nvme_delete_wq when removing the port
-Date:   Wed,  4 Sep 2019 19:52:33 +0200
-Message-Id: <20190904175314.524009703@linuxfoundation.org>
+Subject: [PATCH 5.2 003/143] afs: Fix the CB.ProbeUuid service handler to reply correctly
+Date:   Wed,  4 Sep 2019 19:52:26 +0200
+Message-Id: <20190904175314.321909400@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,48 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 86b9a63e595ff03f9d0a7b92b6acc231fecefc29 ]
+[ Upstream commit 2067b2b3f4846402a040286135f98f46f8919939 ]
 
-After calling nvme_loop_delete_ctrl(), the controllers will not
-yet be deleted because nvme_delete_ctrl() only schedules work
-to do the delete.
+Fix the service handler function for the CB.ProbeUuid RPC call so that it
+replies in the correct manner - that is an empty reply for success and an
+abort of 1 for failure.
 
-This means a race can occur if a port is removed but there
-are still active controllers trying to access that memory.
+Putting 0 or 1 in an integer in the body of the reply should result in the
+fileserver throwing an RX_PROTOCOL_ERROR abort and discarding its record of
+the client; older servers, however, don't necessarily check that all the
+data got consumed, and so might incorrectly think that they got a positive
+response and associate the client with the wrong host record.
 
-To fix this, flush the nvme_delete_wq before returning from
-nvme_loop_remove_port() so that any controllers that might
-be in the process of being deleted won't access a freed port.
+If the client is incorrectly associated, this will result in callbacks
+intended for a different client being delivered to this one and then, when
+the other client connects and responds positively, all of the callback
+promises meant for the client that issued the improper response will be
+lost and it won't receive any further change notifications.
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: 9396d496d745 ("afs: support the CB.ProbeUuid RPC op")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/loop.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/afs/cmservice.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
-index 9e211ad6bdd3d..da9cd07461fbb 100644
---- a/drivers/nvme/target/loop.c
-+++ b/drivers/nvme/target/loop.c
-@@ -654,6 +654,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
- 	mutex_lock(&nvme_loop_ports_mutex);
- 	list_del_init(&port->entry);
- 	mutex_unlock(&nvme_loop_ports_mutex);
-+
-+	/*
-+	 * Ensure any ctrls that are in the process of being
-+	 * deleted are in fact deleted before we return
-+	 * and free the port. This is to prevent active
-+	 * ctrls from using a port after it's freed.
-+	 */
-+	flush_workqueue(nvme_delete_wq);
- }
+diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
+index 3451be03667f0..00033a481ba05 100644
+--- a/fs/afs/cmservice.c
++++ b/fs/afs/cmservice.c
+@@ -502,18 +502,14 @@ static void SRXAFSCB_ProbeUuid(struct work_struct *work)
+ 	struct afs_call *call = container_of(work, struct afs_call, work);
+ 	struct afs_uuid *r = call->request;
  
- static const struct nvmet_fabrics_ops nvme_loop_ops = {
+-	struct {
+-		__be32	match;
+-	} reply;
+-
+ 	_enter("");
+ 
+ 	if (memcmp(r, &call->net->uuid, sizeof(call->net->uuid)) == 0)
+-		reply.match = htonl(0);
++		afs_send_empty_reply(call);
+ 	else
+-		reply.match = htonl(1);
++		rxrpc_kernel_abort_call(call->net->socket, call->rxcall,
++					1, 1, "K-1");
+ 
+-	afs_send_simple_reply(call, &reply, sizeof(reply));
+ 	afs_put_call(call);
+ 	_leave("");
+ }
 -- 
 2.20.1
 
