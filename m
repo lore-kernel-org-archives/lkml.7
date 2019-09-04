@@ -5,53 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A20DFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF29C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B40208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2085206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620628;
-	bh=meFTcUmkxYfq3pNm9SZhxFxrV8BBcqZk9PMJBplnH0M=;
+	s=default; t=1567620631;
+	bh=KrPtQpgU7KtViUDDEEXsHPNbJbqCycwcitUbwT9Qoy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MSE0bdRzYka8MCAPRe23jYhQlSbFbo9N8m8NJDBMFbcpfPVMucHVMDwsfX5D2LZB9
-	 P/epZlvxqj6KztRL2rEEI2mO7pT6FktI/wL++paHHZ76Cm1udk3ZWJm+LzV/OzVX6Q
-	 Hky9AOL4SsrGGYTyENvJd1RMCEdHMDxKzEeminiA=
+	b=CzmvhCLAEJK03Hl1d88+Z+6fN3aOr2iAbMT6V+TZSHEHAcRtejReyJDNGx7kVHnxH
+	 S73IqFI7x8eGrPAhfS+y98cIoP5OCG1uK6sN6IqkB59BHHbYeU6gspRspmEzRdQ6gS
+	 IvyZvrnZ9/YWi2y+CGIIAKShO07dYcJdJsNcAvNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390102AbfIDSK1 (ORCPT
+        id S2390096AbfIDSKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54018 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390085AbfIDSK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:26 -0400
+        id S2389398AbfIDSK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6339208E4;
-        Wed,  4 Sep 2019 18:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE2F22CEA;
+        Wed,  4 Sep 2019 18:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620625;
-        bh=meFTcUmkxYfq3pNm9SZhxFxrV8BBcqZk9PMJBplnH0M=;
+        s=default; t=1567620628;
+        bh=KrPtQpgU7KtViUDDEEXsHPNbJbqCycwcitUbwT9Qoy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPYOHJ5dn8U80SShYL6JysB545qsQ+uSi6vul8/frsDvtJ8qnlagpmwWMqAL6vcvv
-         x17u2NE1L7Cjm+SVr+EzbHXTDfw3kRY/8bhu0dE3bfqu5wh6gk8zPMvDIC+MyqcB6j
-         OkZOS/vvItbxAP+oNNvVSjl/hhKt/bKGQ8YBaxMo=
+        b=iNsg+xPI8DnbsydnLs29l+dysrhB+hqzpwQdwe9mymDFI135V4Q886Qvarc0xbllR
+         BMnGwbUce7Z8FEL9Lm0JfgUrj2yUN5qdr5/7GLO3hX5ZqalkssvnP7ggzJU8QONcNk
+         VcmxjDc4J476VGvxj2bbHfj8dGWmSilv6jOrVoyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 034/143] arm64: cpufeature: Dont treat granule sizes as strict
-Date:   Wed,  4 Sep 2019 19:52:57 +0200
-Message-Id: <20190904175315.385235253@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 035/143] riscv: fix flush_tlb_range() end address for flush_tlb_page()
+Date:   Wed,  4 Sep 2019 19:52:58 +0200
+Message-Id: <20190904175315.422903595@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -64,64 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5717fe5ab38f9ccb32718bcb03bea68409c9cce4 ]
+[ Upstream commit eb93685847a9055283d05951c1b205e737f38533 ]
 
-If a CPU doesn't support the page size for which the kernel is
-configured, then we will complain and refuse to bring it online. For
-secondary CPUs (and the boot CPU on a system booting with EFI), we will
-also print an error identifying the mismatch.
+The RISC-V kernel implementation of flush_tlb_page() when CONFIG_SMP
+is set is wrong.  It passes zero to flush_tlb_range() as the final
+address to flush, but it should be at least 'addr'.
 
-Consequently, the only time that the cpufeature code can detect a
-granule size mismatch is for a granule other than the one that is
-currently being used. Although we would rather such systems didn't
-exist, we've unfortunately lost that battle and Kevin reports that
-on his amlogic S922X (odroid-n2 board) we end up warning and taining
-with defconfig because 16k pages are not supported by all of the CPUs.
+Some other Linux architecture ports use the beginning address to
+flush, plus PAGE_SIZE, as the final address to flush.  This might
+flush slightly more than what's needed, but it seems unlikely that
+being more clever would improve anything.  So let's just take that
+implementation for now.
 
-In such a situation, we don't actually care about the feature mismatch,
-particularly now that KVM only exposes the sanitised view of the CPU
-registers (commit 93390c0a1b20 - "arm64: KVM: Hide unsupported AArch64
-CPU features from guests"). Treat the granule fields as non-strict and
-let Kevin run without a tainted kernel.
+While here, convert the macro into a static inline function, primarily
+to avoid unintentional multiple evaluations of 'addr'.
 
-Cc: Marc Zyngier <maz@kernel.org>
-Reported-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-[catalin.marinas@arm.com: changelog updated with KVM sanitised regs commit]
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+This second version of the patch fixes a coding style issue found by
+Christoph Hellwig <hch@lst.de>.
+
+Reported-by: Andreas Schwab <schwab@suse.de>
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ arch/riscv/include/asm/tlbflush.h | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index ae63eedea1c12..68faf535f40a3 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -184,9 +184,17 @@ static const struct arm64_ftr_bits ftr_id_aa64zfr0[] = {
- };
+diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
+index 687dd19735a7e..4d9bbe8438bf6 100644
+--- a/arch/riscv/include/asm/tlbflush.h
++++ b/arch/riscv/include/asm/tlbflush.h
+@@ -53,10 +53,17 @@ static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
+ }
  
- static const struct arm64_ftr_bits ftr_id_aa64mmfr0[] = {
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
--	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
--	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
-+	/*
-+	 * We already refuse to boot CPUs that don't support our configured
-+	 * page size, so we can only detect mismatches for a page size other
-+	 * than the one we're currently using. Unfortunately, SoCs like this
-+	 * exist in the wild so, even though we don't like it, we'll have to go
-+	 * along with it and treat them as non-strict.
-+	 */
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN4_SHIFT, 4, ID_AA64MMFR0_TGRAN4_NI),
-+	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN64_SHIFT, 4, ID_AA64MMFR0_TGRAN64_NI),
-+	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_TGRAN16_SHIFT, 4, ID_AA64MMFR0_TGRAN16_NI),
+ #define flush_tlb_all() sbi_remote_sfence_vma(NULL, 0, -1)
+-#define flush_tlb_page(vma, addr) flush_tlb_range(vma, addr, 0)
 +
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_BIGENDEL0_SHIFT, 4, 0),
- 	/* Linux shouldn't care about secure memory */
- 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR0_SNSMEM_SHIFT, 4, 0),
+ #define flush_tlb_range(vma, start, end) \
+ 	remote_sfence_vma(mm_cpumask((vma)->vm_mm), start, (end) - (start))
+-#define flush_tlb_mm(mm) \
++
++static inline void flush_tlb_page(struct vm_area_struct *vma,
++				  unsigned long addr)
++{
++	flush_tlb_range(vma, addr, addr + PAGE_SIZE);
++}
++
++#define flush_tlb_mm(mm)				\
+ 	remote_sfence_vma(mm_cpumask(mm), 0, -1)
+ 
+ #endif /* CONFIG_SMP */
 -- 
 2.20.1
 
