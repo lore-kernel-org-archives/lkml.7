@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CB1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C858C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AA520820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709E92087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612957;
-	bh=7qzM2gbgcZH8LjA8YqY/rq6Rfs4xuVzEsRBat+ya2eU=;
+	s=default; t=1567612961;
+	bh=/8h4w5nhnaGMZpvxL/ubUdla9HWv3VMjKfYOeJcLnj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nlcb8a3UvKPefq0KEWMpDgFvrLw2xssGK5WhGjSomQ1BbpSMxyWIuVZxe0MkkRpuz
-	 QxHXut5SRHBV07jx8YBCRQmVyxNW3+8/x5lYWU2FHF9edJS6wE5Pax66DCiFYstU4B
-	 8GthXaCYorA7WMR2jUS//EjXvcnINmPB3xD1b16U=
+	b=y9NDqYKGlA9wclQ1n9XhYZhgiAjPFE+v9heX22DrVxAdWNhn4d0jbXDQdm5fK46UR
+	 5TR/454LojHnLU9xKJkfZmcjohxcadqI1uzT65VyjTFFlJ+XjuKSA9v9G62AQbvVfI
+	 0JXWC/WKk7AmqYjU2pslx+G/GGoEtQCckJxr8OY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387433AbfIDQCg (ORCPT
+        id S2387460AbfIDQCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:02:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387394AbfIDQCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:32 -0400
+        id S1732345AbfIDQCh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E73222341D;
-        Wed,  4 Sep 2019 16:02:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2283323400;
+        Wed,  4 Sep 2019 16:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612951;
-        bh=7qzM2gbgcZH8LjA8YqY/rq6Rfs4xuVzEsRBat+ya2eU=;
+        s=default; t=1567612956;
+        bh=/8h4w5nhnaGMZpvxL/ubUdla9HWv3VMjKfYOeJcLnj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MvWtNsZWdH3NlbyRyCmiFk3sc+IW1u45etNZxmJXBWW6jp8gelLx3xZBjdELvOpio
-         K2+ybqLeytqERMCMs1CQOBOw9eDfjBhij1DqSiofMJ2ik1BzQwkyrhARY7TbiJo8vp
-         xEJ01epSDUjy6dgpd/HgDPRAgQK2BTDdn8YEUHzM=
+        b=nxPogHUER0gVhbJ7OP4JRwf6ZCrTDQa306skHdFD9QvfkJD0ytfzctbarzAPpJ5Fc
+         qLrOrT+6AMBzjdlok2mRcDTo1qYTy/P05VlIkzp7fGxars2bGI3U2zUr22yczUiE9O
+         3E48zN3zthC6yxqvPxUgFPgKAruazH5D+iLx7zUs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/27] qed: Add cleanup in qed_slowpath_start()
-Date:   Wed,  4 Sep 2019 12:02:02 -0400
-Message-Id: <20190904160220.4545-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 12/27] batman-adv: Only read OGM2 tvlv_len after buffer len check
+Date:   Wed,  4 Sep 2019 12:02:05 -0400
+Message-Id: <20190904160220.4545-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160220.4545-1-sashal@kernel.org>
 References: <20190904160220.4545-1-sashal@kernel.org>
@@ -60,44 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit de0e4fd2f07ce3bbdb69dfb8d9426b7227451b69 ]
+[ Upstream commit 0ff0f15a32c093381ad1abc06abe85afb561ab28 ]
 
-If qed_mcp_send_drv_version() fails, no cleanup is executed, leading to
-memory leaks. To fix this issue, introduce the label 'err4' to perform the
-cleanup work before returning the error.
+Multiple batadv_ogm2_packet can be stored in an skbuff. The functions
+batadv_v_ogm_send_to_if() uses batadv_v_ogm_aggr_packet() to check if there
+is another additional batadv_ogm2_packet in the skb or not before they
+continue processing the packet.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The length for such an OGM2 is BATADV_OGM2_HLEN +
+batadv_ogm2_packet->tvlv_len. The check must first check that at least
+BATADV_OGM2_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
+
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_main.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/batman-adv/bat_v_ogm.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
-index a769196628d91..708117fc6f733 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_main.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
-@@ -958,7 +958,7 @@ static int qed_slowpath_start(struct qed_dev *cdev,
- 					      &drv_version);
- 		if (rc) {
- 			DP_NOTICE(cdev, "Failed sending drv version command\n");
--			return rc;
-+			goto err4;
- 		}
- 	}
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index 1aeeadca620cd..f435435b447e0 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -618,17 +618,23 @@ batadv_v_ogm_process_per_outif(struct batadv_priv *bat_priv,
+  * batadv_v_ogm_aggr_packet - checks if there is another OGM aggregated
+  * @buff_pos: current position in the skb
+  * @packet_len: total length of the skb
+- * @tvlv_len: tvlv length of the previously considered OGM
++ * @ogm2_packet: potential OGM2 in buffer
+  *
+  * Return: true if there is enough space for another OGM, false otherwise.
+  */
+-static bool batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
+-				     __be16 tvlv_len)
++static bool
++batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
++			 const struct batadv_ogm2_packet *ogm2_packet)
+ {
+ 	int next_buff_pos = 0;
  
-@@ -966,6 +966,8 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+-	next_buff_pos += buff_pos + BATADV_OGM2_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm2_packet);
++	if (next_buff_pos > packet_len)
++		return false;
++
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm2_packet->tvlv_len);
  
- 	return 0;
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -775,7 +781,7 @@ int batadv_v_ogm_packet_recv(struct sk_buff *skb,
+ 	ogm_packet = (struct batadv_ogm2_packet *)skb->data;
  
-+err4:
-+	qed_ll2_dealloc_if(cdev);
- err3:
- 	qed_hw_stop(cdev);
- err2:
+ 	while (batadv_v_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					ogm_packet->tvlv_len)) {
++					ogm_packet)) {
+ 		batadv_v_ogm_process(skb, ogm_offset, if_incoming);
+ 
+ 		ogm_offset += BATADV_OGM2_HLEN;
 -- 
 2.20.1
 
