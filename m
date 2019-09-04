@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4EDC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CB1C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5559A23400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AA520820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612955;
-	bh=1uYRIa9dJFLkZU1QyZXcVGUl/P1dDHw2UzJHa6GuqiA=;
+	s=default; t=1567612957;
+	bh=7qzM2gbgcZH8LjA8YqY/rq6Rfs4xuVzEsRBat+ya2eU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b2vkfLXs5wY8A5VrtaLIDROlNohpP8NxT/ZrQMcBCRpVMPwY/Em/N8FOYhlA/1Ooc
-	 +lF9c7SbFMqH1dIEaafWmaOFFFRp2e9egHlWGncXXRSj5obVZjVNjFfo42WT/Q+nUh
-	 x7BJ7Q7fLlgMrHk74cLgYHriGF5Aw2baSXTn04Ws=
+	b=nlcb8a3UvKPefq0KEWMpDgFvrLw2xssGK5WhGjSomQ1BbpSMxyWIuVZxe0MkkRpuz
+	 QxHXut5SRHBV07jx8YBCRQmVyxNW3+8/x5lYWU2FHF9edJS6wE5Pax66DCiFYstU4B
+	 8GthXaCYorA7WMR2jUS//EjXvcnINmPB3xD1b16U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbfIDQCe (ORCPT
+        id S2387433AbfIDQCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38546 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbfIDQCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:30 -0400
+        id S2387394AbfIDQCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBFC62339D;
-        Wed,  4 Sep 2019 16:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E73222341D;
+        Wed,  4 Sep 2019 16:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612950;
-        bh=1uYRIa9dJFLkZU1QyZXcVGUl/P1dDHw2UzJHa6GuqiA=;
+        s=default; t=1567612951;
+        bh=7qzM2gbgcZH8LjA8YqY/rq6Rfs4xuVzEsRBat+ya2eU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ucqoSuX8PH6CJPQJCn5nPte5Z76ZGrd4BWgdIboMkNQZVnngnFQnmDmx0r42iXKej
-         gis8TBNXdFGIUGSaDQtMGahEGvO+BzsxfhvRt6+b/wvM2pm1Zim3on7gvGmSUFfDaa
-         MjtyIcQofSiifh5DG3pcZwuS3LAmGCiegvUPLWMY=
+        b=MvWtNsZWdH3NlbyRyCmiFk3sc+IW1u45etNZxmJXBWW6jp8gelLx3xZBjdELvOpio
+         K2+ybqLeytqERMCMs1CQOBOw9eDfjBhij1DqSiofMJ2ik1BzQwkyrhARY7TbiJo8vp
+         xEJ01epSDUjy6dgpd/HgDPRAgQK2BTDdn8YEUHzM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+Cc:     Wenwen Wang <wenwen@cs.uga.edu>,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/27] Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
-Date:   Wed,  4 Sep 2019 12:02:01 -0400
-Message-Id: <20190904160220.4545-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 09/27] qed: Add cleanup in qed_slowpath_start()
+Date:   Wed,  4 Sep 2019 12:02:02 -0400
+Message-Id: <20190904160220.4545-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160220.4545-1-sashal@kernel.org>
 References: <20190904160220.4545-1-sashal@kernel.org>
@@ -59,32 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-[ Upstream commit cd9d4ff9b78fcd0fc4708900ba3e52e71e1a7690 ]
+[ Upstream commit de0e4fd2f07ce3bbdb69dfb8d9426b7227451b69 ]
 
-This should be IDT77105, not IDT77015.
+If qed_mcp_send_drv_version() fails, no cleanup is executed, leading to
+memory leaks. To fix this issue, introduce the label 'err4' to perform the
+cleanup work before returning the error.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Acked-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
-index 31c60101a69a4..7fa840170151b 100644
---- a/drivers/atm/Kconfig
-+++ b/drivers/atm/Kconfig
-@@ -199,7 +199,7 @@ config ATM_NICSTAR_USE_SUNI
- 	  make the card work).
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
+index a769196628d91..708117fc6f733 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_main.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
+@@ -958,7 +958,7 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 					      &drv_version);
+ 		if (rc) {
+ 			DP_NOTICE(cdev, "Failed sending drv version command\n");
+-			return rc;
++			goto err4;
+ 		}
+ 	}
  
- config ATM_NICSTAR_USE_IDT77105
--	bool "Use IDT77015 PHY driver (25Mbps)"
-+	bool "Use IDT77105 PHY driver (25Mbps)"
- 	depends on ATM_NICSTAR
- 	help
- 	  Support for the PHYsical layer chip in ForeRunner LE25 cards. In
+@@ -966,6 +966,8 @@ static int qed_slowpath_start(struct qed_dev *cdev,
+ 
+ 	return 0;
+ 
++err4:
++	qed_ll2_dealloc_if(cdev);
+ err3:
+ 	qed_hw_stop(cdev);
+ err2:
 -- 
 2.20.1
 
