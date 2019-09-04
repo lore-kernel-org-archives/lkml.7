@@ -2,144 +2,79 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A05F3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D51C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DDE22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:58:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6Mb4nCM"
+	by mail.kernel.org (Postfix) with ESMTP id 3B74622CE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731182AbfIDO6g (ORCPT
+        id S1731197AbfIDO7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:58:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33965 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbfIDO6f (ORCPT
+        Wed, 4 Sep 2019 10:59:02 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:34707 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729919AbfIDO7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:58:35 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so11404828pgc.1;
-        Wed, 04 Sep 2019 07:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=TwLLRd1Csrg25/GdRKWRpgAGYI8XLduRSa0TLBWFWw8=;
-        b=Z6Mb4nCMJDwhyogeDbmvTTNBklBShXXSA8J9yLUG3puw8p2g2r1pph57Z2sF/TND8G
-         vrKZRFPNcv48L1M0ZimiQ1Eut5XJmvPhRFkUGer6JycQD1wVJPcH7jHxc7Kz61HjN7dY
-         pSMyjr8kJyFgvX3aL/KDttuezhz7uJI6AlKYgsyENzAAGWvhVUM8OLUcAmgi4o44voEP
-         RDaLXHvKSyvN+BHG7fbPOgQGZnHMUCwnLWUT2ODxUdz8HfckUDV3LohlVvtfycoyqPKG
-         wAoL5fvOL93NkYIrsgdQQ0STMzqsP/8Z5FfrLHll1GUL6Vbtcdt8KLVAZXj9SCnFDq6r
-         w5BQ==
+        Wed, 4 Sep 2019 10:59:02 -0400
+Received: by mail-io1-f72.google.com with SMTP id m25so2693670ioo.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 07:59:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=TwLLRd1Csrg25/GdRKWRpgAGYI8XLduRSa0TLBWFWw8=;
-        b=iu3npr954cA+XVDB/R3QqIQG5vzSkOCGosXUBFmqzjjclOH8JKOD+LHEsxNWgFGhnV
-         lwiHv5Hzn3bWcMKjy/MjNyWjkTiLb/5jdcabO+veIpAI+plNUp96jlqbW6cD/kJGL5CV
-         9VoVMN0EhePjKGLGJk73fkRYyjvuxi9/IfNwqcbxcY7SVcRa6qb7aelIGMKnQXedWjYd
-         bbbzsZMQ29aFG34xA1sZxffDGUNT7r0jmYl0+B7VXuyR9qeWE/9Gdo+BukQNhD/jipH+
-         km2EDwsURwF20RWDrcZfkVrLmM8h2qhqAcL8Zbk3MslE2hALW5uJgxKmhieEGgEPYg90
-         Lq8Q==
-X-Gm-Message-State: APjAAAUIjXV2Sl2B2Pap60SX/jv1RTuFvS+CT1WS2cLxfwhiUFLDT732
-        HyidH4G6gay8S9e9v0hK08E=
-X-Google-Smtp-Source: APXvYqw+5z6Whj96MOlVVCKyYa68koImYmFPdxWacC3ZvQnPNO+gz8dFo9XyIrSWD61/8pZ9WU/G1g==
-X-Received: by 2002:a17:90a:7f06:: with SMTP id k6mr5528923pjl.87.1567609114576;
-        Wed, 04 Sep 2019 07:58:34 -0700 (PDT)
-Received: from nishad ([106.51.235.3])
-        by smtp.gmail.com with ESMTPSA id p189sm18009126pfp.163.2019.09.04.07.58.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 07:58:34 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 20:28:27 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: i2c: Use the correct style for SPDX License Identifier
-Message-ID: <20190904145823.GA3749@nishad>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=OHAiKKAdXY9jCvbhzEA9HqiANItDsq2H4xiUo40Eykw=;
+        b=fcjBKsH8BLedJc2UopnEijGa6uRLo0OYILxNkrryww8YPi0J65ZHkEE0PENGk8ZsP4
+         FKe87H8h3hULFPOlhBC6yJ24uSXrtaNY65eauha86sx6WEjA7T14Z8yY4jf7Layw6nRK
+         6b3qKXqtWeXuh8txTqf2ggpy698/40qKHwaPhq0MRRFaFQn9de56H4KGC2Ghl683U7CV
+         mBe8RMQ7SuohLuk4xKlQ2qQMh7iGl56qgbJmLyBdK29nb/K8Ln+7At17f/URIGIo3M3e
+         q09+bR96BQprdNNK3uo2/OxN8QIAvnNUGfoJ/3e1HWwpQ8y71xFXtrjZP8yC+nArfiAj
+         H2qQ==
+X-Gm-Message-State: APjAAAXqJ6VUcNzLfC/5eW3YVHPIF3mpisEzQ0pcvaivdLrT757vfDur
+        s0+OlibLlTZnUKwZUhJbFWaoSwxhWoBR9azo0eu94DkMdRZD
+X-Google-Smtp-Source: APXvYqzGwMPp56tk6BDX0OXjwrYJWZDn39d0IuhDaGmvGQ0JDxlhCVa7F6Ad6gEt28kGtkUHEiAVjKFC6SJJA5SwDkwzDWdFSQOG
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a5d:8353:: with SMTP id q19mr1548312ior.59.1567609141323;
+ Wed, 04 Sep 2019 07:59:01 -0700 (PDT)
+Date:   Wed, 04 Sep 2019 07:59:01 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1909041038340.1722-100000@iolanthe.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000003f6410591bb7223@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in usb_reset_and_verify_device
+From:   syzbot <syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com>
+To:     Thinh.Nguyen@synopsys.com, andreyknvl@google.com,
+        dianders@chromium.org, gregkh@linuxfoundation.org,
+        jflat@chromium.org, kai.heng.feng@canonical.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        malat@debian.org, mathias.nyman@linux.intel.com,
+        nsaenzjulienne@suse.de, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header files related to I2C controlled media codec drivers.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
+Hello,
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
-and some manual changes.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/media/i2c/max2175.h       | 4 ++--
- drivers/media/i2c/saa711x_regs.h  | 2 +-
- drivers/media/i2c/tda1997x_regs.h | 2 +-
- drivers/media/i2c/tvp5150_reg.h   | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+Reported-and-tested-by:  
+syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com
 
-diff --git a/drivers/media/i2c/max2175.h b/drivers/media/i2c/max2175.h
-index 1ece587c153d..4c722ea3e5f1 100644
---- a/drivers/media/i2c/max2175.h
-+++ b/drivers/media/i2c/max2175.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- *
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-  * Maxim Integrated MAX2175 RF to Bits tuner driver
-  *
-  * This driver & most of the hard coded values are based on the reference
-diff --git a/drivers/media/i2c/saa711x_regs.h b/drivers/media/i2c/saa711x_regs.h
-index 44fabe08234d..4b5f6985710b 100644
---- a/drivers/media/i2c/saa711x_regs.h
-+++ b/drivers/media/i2c/saa711x_regs.h
-@@ -1,5 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
- /*
-- * SPDX-License-Identifier: GPL-2.0+
-  * saa711x - Philips SAA711x video decoder register specifications
-  *
-  * Copyright (c) 2006 Mauro Carvalho Chehab <mchehab@kernel.org>
-diff --git a/drivers/media/i2c/tda1997x_regs.h b/drivers/media/i2c/tda1997x_regs.h
-index ecf87534613b..d9b3daada07d 100644
---- a/drivers/media/i2c/tda1997x_regs.h
-+++ b/drivers/media/i2c/tda1997x_regs.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2018 Gateworks Corporation
-  */
-diff --git a/drivers/media/i2c/tvp5150_reg.h b/drivers/media/i2c/tvp5150_reg.h
-index 9088186c24d1..f716129adf09 100644
---- a/drivers/media/i2c/tvp5150_reg.h
-+++ b/drivers/media/i2c/tvp5150_reg.h
-@@ -1,5 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * SPDX-License-Identifier: GPL-2.0
-  *
-  * tvp5150 - Texas Instruments TVP5150A/AM1 video decoder registers
-  *
--- 
-2.17.1
+Tested on:
 
+commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=35f4d916c623118d576e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11d694d6600000
+
+Note: testing is done by a robot and is best-effort only.
