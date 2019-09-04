@@ -2,129 +2,153 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D723AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCCEC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB80121670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5p1efLJ"
+	by mail.kernel.org (Postfix) with ESMTP id ADECC2339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:16:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567595771;
+	bh=jMomdeRZ44KvI27hRcK5KxmVekTjZj7kvWDZM2hnl/Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=UFalhVzidCf/cqKJkCTjwg/3r/88DXGNVzHdrJQAwYcmqzQqEdyjykj5O629Dr6Lo
+	 KbFHwV6kFUr9GreWvHOezlO5OF7sc459iaUAiGg1h5BeoWpZfqil1V/MvZGzUYtgta
+	 CQ+6K31q9CymMeXOsVR9RfKy1/KeITkyoC3dhfvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfIDLPh (ORCPT
+        id S1729597AbfIDLQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 07:15:37 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44684 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbfIDLPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 07:15:37 -0400
-Received: by mail-lj1-f195.google.com with SMTP id u14so12640381ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 04:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nHq3ycJ87pRU9sYhgJHhfznS6sB5FLISaAxTxaJIi4Q=;
-        b=o5p1efLJErepXbkkgoCaSYwntoU0Yu8oLiX3TSWnk3q6AbU+GcoP4l60fwxs/JVYkT
-         H7o/ClMARxhMlbsc2ku8rtFBEODbtEd6NBg/8RTXwh2XVpmM6KoQEuEqv8x3lG8PV5yH
-         NgjzR+Z7vePf8ctqggj4hEqE9o/H3pQyISJm8Fheau6OnI2bj7JgLVQZT/wKheLpFBEf
-         +WdRRNgoSoWxoCV0BrZe20hDQpmhoYUfe4wD1JRzWTNtRXcr2/ERQldKIfVJjxecStiK
-         9PBW5cOu9tDZ7AAc0UEv7fjrfKGDyFBre0HbqqFPSmsMfpt57lx43LjyPxlZSNg/bp4E
-         lsTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nHq3ycJ87pRU9sYhgJHhfznS6sB5FLISaAxTxaJIi4Q=;
-        b=fbh9vLyJMzUKPlINE+O8dR/TjygaIEaJTMYtIqGFevhpDvxFtppbBu2rdjohAmwmpL
-         PCoAvO/7LMNe37qTFjV/aeApknzvAeZT3wieBnAIv5vwWlHRW9gNp4AmyyFe18dqC73I
-         +hwl1l8rGyWbvhRNdbN7yrSgH2Koj6XDap7NQOdxEEFJVeSM7txJ6MP2eo4jMfrWCZ4I
-         +RCe+M+lQDZvOqsQRXbklVHuGYkV9kB5aEx3g3AakYyMsjNxqjFKCZAGn+IrOtfLM9/w
-         WSuj36BW+FcODQKnJ38xpFxvriZxRqwtqfx6HQkKOecJJ9Qkugn73zaPGl+dsk8iQEml
-         rKIQ==
-X-Gm-Message-State: APjAAAXN5dNfK6nLc1SArO9xwrZs5n2v0lLPvGzKwWb4hjdE8oRBUgTD
-        2VhEd9NzvCidE0b7KxuaKY2/+X+cbHsX4gQUkvc=
-X-Google-Smtp-Source: APXvYqxXqsQOygvk+fD5pZjRHaRu9s90ct8/RwL/UzDw9S0/w7gV8FHgckqqjRwitx1y/o4OCZmqshrWgfcD677xJ9U=
-X-Received: by 2002:a2e:780c:: with SMTP id t12mr10331161ljc.226.1567595735449;
- Wed, 04 Sep 2019 04:15:35 -0700 (PDT)
+        Wed, 4 Sep 2019 07:16:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729398AbfIDLQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 07:16:10 -0400
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C756222CF7
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Sep 2019 11:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567595768;
+        bh=jMomdeRZ44KvI27hRcK5KxmVekTjZj7kvWDZM2hnl/Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=l8muRXX2SK/t6WTWEUgTLopvw1Lhrm6b1V+BEQHgaPmU+5+ikuE857dThQwrHod6d
+         byILHGVTag9hHTqCXxOm6WhYZKogcoBwYvq3BeHeCqpicz81ucp+C9t7QyhD8r4yCC
+         Qlc6ckikHtK8TxxtvV1leRj9e08O0HPH9FXpjRh8=
+Received: by mail-qk1-f179.google.com with SMTP id f13so19112172qkm.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 04:16:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAW6R+WJpOBvjDQd6RM7AbqA/OuZwhMrqOTF0BGI9dNHiMFtO26V
+        /ozcZbajRMREBQQ8zspFkHhUm+MChiTOUOCTnRU=
+X-Google-Smtp-Source: APXvYqzXntTf9MsfT1KP/+kDxZLIGzkNr+/yeq9ERExyZpJyt7UWijT4UieYo2Ok2V+lJBk89azCCkqFBTYphQTj3J4=
+X-Received: by 2002:a37:4995:: with SMTP id w143mr39184308qka.224.1567595768000;
+ Wed, 04 Sep 2019 04:16:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de> <20190824051605.GA63850@shbuild999.sh.intel.com>
- <1b897bfe-fd40-3ae3-d867-424d1fc08c44@suse.de> <d114b0b6-6b64-406e-6c3f-a8b8d5502413@intel.com>
- <44029e80-ba00-8246-dec0-fda122d53f5e@suse.de> <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
- <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de> <20190904062716.GC5541@shbuild999.sh.intel.com>
- <72c33bf1-9184-e24a-c084-26d9c8b6f9b7@suse.de> <CAKMK7uGdOtyDHZMSzY8J45bX57EFKo=DWNUi+WL+GVOzoBpUhw@mail.gmail.com>
- <20190904083558.GD5541@shbuild999.sh.intel.com> <CAKMK7uGVKEN=pi4Erc_gtbL3ZFN-b6pm-nXSznjd_rH4H2yn4w@mail.gmail.com>
-In-Reply-To: <CAKMK7uGVKEN=pi4Erc_gtbL3ZFN-b6pm-nXSznjd_rH4H2yn4w@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Wed, 4 Sep 2019 21:15:23 +1000
-Message-ID: <CAPM=9tzDMfRf_VKaiHmnb_KKVwqW3=y=09JO0SJrG6ySe=DbfQ@mail.gmail.com>
-Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8% regression
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Feng Tang <feng.tang@intel.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Rong Chen <rong.a.chen@intel.com>,
-        =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel@daenzer.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, LKP <lkp@01.org>
+References: <MWHPR12MB13436D4BF9438757EF28CA0CCBBD0@MWHPR12MB1343.namprd12.prod.outlook.com>
+In-Reply-To: <MWHPR12MB13436D4BF9438757EF28CA0CCBBD0@MWHPR12MB1343.namprd12.prod.outlook.com>
+From:   Josh Boyer <jwboyer@kernel.org>
+Date:   Wed, 4 Sep 2019 07:15:57 -0400
+X-Gmail-Original-Message-ID: <CA+5PVA76eLJySkDhkneZbX2fdJgQLU0j=4+EpVsvE_fvbR0x4g@mail.gmail.com>
+Message-ID: <CA+5PVA76eLJySkDhkneZbX2fdJgQLU0j=4+EpVsvE_fvbR0x4g@mail.gmail.com>
+Subject: Re: pull request: Linux-firmware: Add cxgb4 firmware config files
+To:     Vishal Kulkarni <vishal@chelsio.com>
+Cc:     "linux-firmware@kernel.org" <linux-firmware@kernel.org>,
+        Nirranjan Kirubaharan <nirranjan@chelsio.com>,
+        dt <dt@chelsio.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 at 19:17, Daniel Vetter <daniel@ffwll.ch> wrote:
+On Fri, Aug 30, 2019 at 8:31 AM Vishal Kulkarni <vishal@chelsio.com> wrote:
 >
-> On Wed, Sep 4, 2019 at 10:35 AM Feng Tang <feng.tang@intel.com> wrote:
-> >
-> > Hi Daniel,
-> >
-> > On Wed, Sep 04, 2019 at 10:11:11AM +0200, Daniel Vetter wrote:
-> > > On Wed, Sep 4, 2019 at 8:53 AM Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> > > >
-> > > > Hi
-> > > >
-> > > > Am 04.09.19 um 08:27 schrieb Feng Tang:
-> > > > >> Thank you for testing. But don't get too excited, because the patch
-> > > > >> simulates a bug that was present in the original mgag200 code. A
-> > > > >> significant number of frames are simply skipped. That is apparently the
-> > > > >> reason why it's faster.
-> > > > >
-> > > > > Thanks for the detailed info, so the original code skips time-consuming
-> > > > > work inside atomic context on purpose. Is there any space to optmise it?
-> > > > > If 2 scheduled update worker are handled at almost same time, can one be
-> > > > > skipped?
-> > > >
-> > > > To my knowledge, there's only one instance of the worker. Re-scheduling
-> > > > the worker before a previous instance started, will not create a second
-> > > > instance. The worker's instance will complete all pending updates. So in
-> > > > some way, skipping workers already happens.
-> > >
-> > > So I think that the most often fbcon update from atomic context is the
-> > > blinking cursor. If you disable that one you should be back to the old
-> > > performance level I think, since just writing to dmesg is from process
-> > > context, so shouldn't change.
-> >
-> > Hmm, then for the old driver, it should also do the most update in
-> > non-atomic context?
-> >
-> > One other thing is, I profiled that updating a 3MB shadow buffer needs
-> > 20 ms, which transfer to 150 MB/s bandwidth. Could it be related with
-> > the cache setting of DRM shadow buffer? say the orginal code use a
-> > cachable buffer?
+> Hi,
 >
-> Hm, that would indicate the write-combining got broken somewhere. This
-> should definitely be faster. Also we shouldn't transfer the hole
-> thing, except when scrolling ...
+> Chelsio driver loads firmware configuration file to allow
+> firmware to distribute resources before chip bring up. Chelsio NIC
+> driver, cxgb4 searches for firmware config file at /lib/firmware/cxgb4/
+> directory.
+>
+> Two predefined configuration files are available - default and
+> hashfilter. Default configuration file equally distributes
+> resources across all features, such as iSCSI, iWARP, Crypto, etc.
+> On the other hand, hashfilter configuration file borrows some
+> resources by disabling the iSCSI, iWARP, Crypto, etc. features,
+> and redistributes them to increase offloading more number of flows
+> to hardware via tc-flower.
+>
+> Please pull the files to /lib/firmware/cxgb4/config directory
+> and create a t6-config.txt symbolic link in /lib/firmware/cxgb4/ to
+> /lib/firmware/cxgb4/config/t6-config-default.txt. The same needs
+> to be done for t5-config-default.txt and t4-config-default.txt.
+>
+> The directory structure should look like below.
+> # tree /lib/firmware/cxgb4/
+> .
+> =E2=94=9C=E2=94=80=E2=94=80 config
+> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 t4-config-default.txt
+> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 t5-config-default.txt
+> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 t5-config-hashfilter.txt
+> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 t6-config-default.txt
+> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 t6-config-hashfilter.txt
+> =E2=94=9C=E2=94=80=E2=94=80 t4-config.txt -> config/t4-config-default.txt
+> =E2=94=9C=E2=94=80=E2=94=80 t5-config.txt -> config/t5-config-default.txt
+> =E2=94=9C=E2=94=80=E2=94=80 t6-config.txt -> config/t6-config-default.txt
+>
+>
+> The following changes since commit 7307a29961ad2765ebcad162da699d2497c5c3=
+f8:
+>
+>   brcm: Add 43455 based AP6255 NVRAM for the Minix Neo Z83-4 Mini PC (201=
+9-08-27 08:04:55 -0400)
+>
+> are available in the git repository at:
+>
+>   git://git.chelsio.net/pub/git/linux-firmware.git for-upstream
 
-First rule of fbcon usage, you are always effectively scrolling.
+Pulled and pushed out.
 
-Also these devices might be on a PCIE 1x piece of wet string, not sure
-if the numbers reflect that.
+josh
 
-Dave.
+>
+> for you to fetch changes up to 2f885ba53dca06eeaf3d31cfa74fa9d30ab1dcc6:
+>
+>   Chelsio driver loads firmware configuration file to allow firmware to d=
+istribute resources before chip bring up. Chelsio NIC driver, cxgb4 searche=
+s for firmware config file at /lib/firmware/cxgb4/ directory. (2019-08-29 0=
+5:40:00 -0700)
+>
+> ----------------------------------------------------------------
+> Vishal Kulkarni (1):
+>       Chelsio driver loads firmware configuration file to allow     firmw=
+are to distribute resources before chip bring up. Chelsio NIC     driver, c=
+xgb4 searches for firmware config file at /lib/firmware/cxgb4/     director=
+y.
+>
+>  WHENCE                                 |   8 +
+>  cxgb4/configs/t4-config-default.txt    | 562 +++++++++++++++++++++++++++=
++++
+>  cxgb4/configs/t5-config-default.txt    | 613 +++++++++++++++++++++++++++=
+++++++
+>  cxgb4/configs/t5-config-hashfilter.txt | 467 +++++++++++++++++++++++++
+>  cxgb4/configs/t6-config-default.txt    | 599 +++++++++++++++++++++++++++=
++++++
+>  cxgb4/configs/t6-config-hashfilter.txt | 430 +++++++++++++++++++++++
+>  cxgb4/t4-config.txt                    |   1 +
+>  cxgb4/t5-config.txt                    |   1 +
+>  cxgb4/t6-config.txt                    |   1 +
+>  9 files changed, 2682 insertions(+)
+>  create mode 100644 cxgb4/configs/t4-config-default.txt
+>  create mode 100644 cxgb4/configs/t5-config-default.txt
+>  create mode 100644 cxgb4/configs/t5-config-hashfilter.txt
+>  create mode 100644 cxgb4/configs/t6-config-default.txt
+>  create mode 100644 cxgb4/configs/t6-config-hashfilter.txt
+>  create mode 120000 cxgb4/t4-config.txt
+>  create mode 120000 cxgb4/t5-config.txt
+>  create mode 120000 cxgb4/t6-config.txt
