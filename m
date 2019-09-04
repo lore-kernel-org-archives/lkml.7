@@ -2,107 +2,87 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA55C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC64C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A41520674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6938E21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:39:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L6nO0Wxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbfIDVhs (ORCPT
+        id S1730197AbfIDVjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 17:37:48 -0400
-Received: from sauhun.de ([88.99.104.3]:46500 "EHLO pokefinder.org"
+        Wed, 4 Sep 2019 17:39:36 -0400
+Received: from ozlabs.org ([203.11.71.1]:45437 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbfIDVhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 17:37:48 -0400
-Received: from localhost (p54B337F1.dip0.t-ipconnect.de [84.179.55.241])
-        by pokefinder.org (Postfix) with ESMTPSA id E8DCE2C08C3;
-        Wed,  4 Sep 2019 23:37:45 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 23:37:45 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Ray Jui <ray.jui@broadcom.com>
-Cc:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lori Hikichi <lori.hikichi@broadcom.com>,
-        Icarus Chau <icarus.chau@broadcom.com>,
-        Shivaraj Shetty <sshetty1@broadcom.com>
-Subject: Re: [PATCH v1 1/1] i2c: iproc: Add i2c repeated start capability
-Message-ID: <20190904213745.GG23608@ninjato>
-References: <1565150941-27297-1-git-send-email-rayagonda.kokatanur@broadcom.com>
- <20190830125626.GC2870@ninjato>
- <3e70fa7e-de13-4edd-2e17-b7c56e91d220@broadcom.com>
- <20190831094940.GA1138@kunai>
- <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
+        id S1726495AbfIDVjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 17:39:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Nxzp1JR6z9sDB;
+        Thu,  5 Sep 2019 07:39:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567633174;
+        bh=Nkc0HkYO/x0RTv0Alngals51mJgcrSX+X+cmXRsFX4Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=L6nO0WxcEpwQPWOzj753nKDQDuXP7dgWWe8m3pebiJQqHvcl8mzSMCJdFVtsTaOfN
+         JCDfl0ERKIUnR1bWOMnky3LMf5wZzFnmQn0/4t8dOx0anJ2aXtQkJc45ueTC89rCTP
+         PKHnb8e33Jp8PifITe1kftv3idyEW6eYib/sft/yTcO5TrsMmuvMhlKfvwxJSBtz82
+         lBSQm/GV1qYKLNL8nBumF5em/9Fy7CkgDvnxG/fRHdqP+xRUqllpemn2OO+JYI1F5R
+         MR9T8zKoDzRQ1XcYbmeyLIGRlMbTjjLvCx6FEz9efRV9NiMN5PJSbLEoDLixSXGH+G
+         1lfw3FIHnVIew==
+Date:   Thu, 5 Sep 2019 07:39:31 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the ext4 tree
+Message-ID: <20190905073931.642040db@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EDJsL2R9iCFAt7IV"
-Content-Disposition: inline
-In-Reply-To: <540c4e2d-0dd5-5260-30b2-e1589b279d71@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/n+F5DPF.84nTp=gmxp1S+eV";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---EDJsL2R9iCFAt7IV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/n+F5DPF.84nTp=gmxp1S+eV
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> I think you are right that the controller does not seem to support
-> additional I2C features in addition to SMBUS.
->=20
-> However, my concern of switching to the smbus_xfer API is:
->=20
-> 1) Some customers might have used I2C_RDWR based API from i2cdev. Changing
-> from master_xfer to smbus_xfer may break the existing applications that a=
-re
-> already developed.
+Commit
 
-Well, given that you add new quirks in the original patch here, you are
-kind of breaking it already. Most transfers which are not SMBus-alike
-transfers would now be rejected. For SMBus-alike transfers which are
-sent via I2C_RDWR (which is ugly), I have to think about it.
+  520f897a3554 ("ext4: use percpu_counters for extent_status cache hits/mis=
+ses")
 
-> 2) The sound subsystem I2C regmap based implementation seems to be using
-> i2c_ based API instead of smbus_ based API. Does this mean this will also
-> break most of the audio codec drivers with I2C regmap API based usage?
+is missing a Signed-off-by from its committer.
 
-I don't think so. If you check regmap_get_i2c_bus() then it checks the
-adapter functionality and chooses the best transfer option then. I may
-be missing something but I would wonder if the sound system does
-something special and different.
+--=20
+Cheers,
+Stephen Rothwell
 
-
---EDJsL2R9iCFAt7IV
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/n+F5DPF.84nTp=gmxp1S+eV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1wLqkACgkQFA3kzBSg
-KbbdPBAAsHYbJFSjXbArIzGj/6rYqzbUnvYeKqVHK/C1E7C1/89RAeVkba81NFsu
-PjHeTsrPaMQ6lK5Df79WK8I0EDf++K1Imv1edG64CamFTHqc60rVShO3ifPnQf8P
-XrOEAUxLEsoXjAqsUy9Nl2xU9roZxcglRdSSg+rlDsN6WRJ8bq0xg7I/7pPs0t/m
-DU+77rOjrqcj3mKJsMvcH/ay4tAYQGwXKalqLwkRuy6u5bQ98G/z9mPdGRwBXxx7
-2lg61m1t05rmuU8PQZnnD1xB8syyt3/ivq4VWVs/9ghtAoTirMGtkhWu0SIQ17M5
-KePWtCxia4A4rHQeEF6vdrbuZAcPqFy8ttnoccsUBBXLy4KYs2zguxiss0EXq95t
-QHW83RzcyxpPqqbVPAgtoQONVcFBLvJ3p5LDIHi/kgosLcTyyjTfre1vzRcG8j9S
-j/q++XaORKmfJ4evfK5AdbexTLnXGlUyXcRj0vQElOHxVOwk2PbjYAAq58XKsY9W
-95LmlBMR2kDB/GCdZWGdTt29hyyhLgde4temx2eBCAqafAhAsPdFp8sFA2mEkaC4
-h5rby01u7yD66c8hpI/4q5psgoj1j7fRctKsdtxb/S8P2sHcKZ6HygntSmmEb+WG
-BGd+gabtDbQBSHrOxqYrYBZVQFNf3YABNMFvC5LuvgMs3Ek59iM=
-=s2Lx
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1wLxMACgkQAVBC80lX
+0Gy4YQf/WNd1yRKkMO3FjbneNAOYtXwzvBFUH0ikK0SoVvX2JyOujxH796T1UFs0
+N9r4Gl5beCGWeRaLiZ1krII2ESUmR8aVsNz0WN4rVhNYojUSdUNFBSwjOs6VZy60
+S0qGoGyqPHHCSMiXppQGud6fltRKJBaL80k86wnf1qn3WrLJpKY5Tiumo2UJYleS
+6yb6kBTdYSKfyM+y20/t9sGVl2mT44L5FAxLR47rfzyT8ORBXWQfFX8dug/UyFiC
+dyP7lwx/QG6QuEfzv+PpKld1YuhsIW7c2ZxbuBANOhSNy0OyzfdSCtbs+rfWiBfr
+ipgqK8fAlTzzCdX7NeWIk3A/bwCX9Q==
+=1y0J
 -----END PGP SIGNATURE-----
 
---EDJsL2R9iCFAt7IV--
+--Sig_/n+F5DPF.84nTp=gmxp1S+eV--
