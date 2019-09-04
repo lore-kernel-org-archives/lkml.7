@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F32CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52349C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F53E2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 213D02087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621125;
-	bh=JzGyCxM9fLvwKrSelgPKI7s1H2cRcHSU8bJMaDuOMlE=;
+	s=default; t=1567621133;
+	bh=QrPGqFjmN3VWaRhYMWu04bxZKL55/V7mCxBsqYP8BXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EoXJYZ/nKtjWSI8nstXKhZIPXi3Z5vmxT9aEPpJnJc5V/v8rbrCtuLDx4l+pNgLqg
-	 J8xgfjZ9yGf8koLzM6/5ov0RAzELC8t0gGR/6uEKMzmRPR7xbCXfNgiDcDGzkY/yuh
-	 sZb/yanRL3sPNBWOHTxOraqQz33fO64gOSr1lCUU=
+	b=o/SxxL4J4NTI8HXWo/wlD/WHe2m2euFuc7gdVgYixo68vNoWnu4qfFu54Us3UO2Sz
+	 M8ewJod728Wh7SgI7SHuqLMKH+QVpVlcmm+2yYSNf5RBY03FKi1T0MKzIo/V53yrv8
+	 nC9zGVYy6elovt/7Yqzzx/1/auuZd43IqnqeJYPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389821AbfIDSKq (ORCPT
+        id S2389801AbfIDSSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54430 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390085AbfIDSKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:42 -0400
+        id S2389398AbfIDSKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2205206BA;
-        Wed,  4 Sep 2019 18:10:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 315B123402;
+        Wed,  4 Sep 2019 18:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620641;
-        bh=JzGyCxM9fLvwKrSelgPKI7s1H2cRcHSU8bJMaDuOMlE=;
+        s=default; t=1567620630;
+        bh=QrPGqFjmN3VWaRhYMWu04bxZKL55/V7mCxBsqYP8BXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSDjbvf5HKYfnno44mkBSlbpX9w2lZE1xHSoh9uJpZq1QdqYPBvCYp/L3LZESr1Xe
-         ZrNqe99asaJXGtuR1V1B1Qkf1o88c+gbswf7AnYrtlue0IVuAr2cjkfHS9UWhF0O9J
-         Jw1dlkEa88ia6PBClw9vE9np3twgrkNwVhcjDAzc=
+        b=off4VN96pARTsLpbj5ZG1CB6HBk+3IlckShiLkN+2IhgnS7Sf925ttmkTqA5/RskY
+         PCT5msAxQS81/Ds7oLtThFxvYOeZeDag624A2cFmn9XodNAdh5mKPsZbgEpE4A16WD
+         sFWepMCcu66x5vxkz5PK9dMIl4RSfJllwIDUlZK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 040/143] usb: host: fotg2: restart hcd after port reset
-Date:   Wed,  4 Sep 2019 19:53:03 +0200
-Message-Id: <20190904175315.626484122@linuxfoundation.org>
+Subject: [PATCH 5.2 036/143] i2c: rcar: avoid race when unregistering slave client
+Date:   Wed,  4 Sep 2019 19:52:59 +0200
+Message-Id: <20190904175315.460634723@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,35 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 777758888ffe59ef754cc39ab2f275dc277732f4 ]
+[ Upstream commit 7b814d852af6944657c2961039f404c4490771c0 ]
 
-On the Gemini SoC the FOTG2 stalls after port reset
-so restart the HCD after each port reset.
+After we disabled interrupts, there might still be an active one
+running. Sync before clearing the pointer to the slave device.
 
-Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190810150458.817-1-linus.walleij@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/fotg210-hcd.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/i2c/busses/i2c-rcar.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
-index 0da68df259c86..7bf621d40c5ae 100644
---- a/drivers/usb/host/fotg210-hcd.c
-+++ b/drivers/usb/host/fotg210-hcd.c
-@@ -1628,6 +1628,10 @@ static int fotg210_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
- 			/* see what we found out */
- 			temp = check_reset_complete(fotg210, wIndex, status_reg,
- 					fotg210_readl(fotg210, status_reg));
-+
-+			/* restart schedule */
-+			fotg210->command |= CMD_RUN;
-+			fotg210_writel(fotg210, fotg210->command, &fotg210->regs->command);
- 		}
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index d39a4606f72d3..531c01100b560 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -139,6 +139,7 @@ struct rcar_i2c_priv {
+ 	enum dma_data_direction dma_direction;
  
- 		if (!(temp & (PORT_RESUME|PORT_RESET))) {
+ 	struct reset_control *rstc;
++	int irq;
+ };
+ 
+ #define rcar_i2c_priv_to_dev(p)		((p)->adap.dev.parent)
+@@ -861,9 +862,11 @@ static int rcar_unreg_slave(struct i2c_client *slave)
+ 
+ 	WARN_ON(!priv->slave);
+ 
++	/* disable irqs and ensure none is running before clearing ptr */
+ 	rcar_i2c_write(priv, ICSIER, 0);
+ 	rcar_i2c_write(priv, ICSCR, 0);
+ 
++	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+ 
+ 	pm_runtime_put(rcar_i2c_priv_to_dev(priv));
+@@ -918,7 +921,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
+ 	struct i2c_adapter *adap;
+ 	struct device *dev = &pdev->dev;
+ 	struct i2c_timings i2c_t;
+-	int irq, ret;
++	int ret;
+ 
+ 	/* Otherwise logic will break because some bytes must always use PIO */
+ 	BUILD_BUG_ON_MSG(RCAR_MIN_DMA_LEN < 3, "Invalid min DMA length");
+@@ -984,10 +987,10 @@ static int rcar_i2c_probe(struct platform_device *pdev)
+ 		pm_runtime_put(dev);
+ 
+ 
+-	irq = platform_get_irq(pdev, 0);
+-	ret = devm_request_irq(dev, irq, rcar_i2c_irq, 0, dev_name(dev), priv);
++	priv->irq = platform_get_irq(pdev, 0);
++	ret = devm_request_irq(dev, priv->irq, rcar_i2c_irq, 0, dev_name(dev), priv);
+ 	if (ret < 0) {
+-		dev_err(dev, "cannot get irq %d\n", irq);
++		dev_err(dev, "cannot get irq %d\n", priv->irq);
+ 		goto out_pm_disable;
+ 	}
+ 
 -- 
 2.20.1
 
