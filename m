@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29947C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB6FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22BC22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C59206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620404;
-	bh=5T5wDFJbje64v9ulSPFeZifoLb4REAAMjvuMG4imxjY=;
+	s=default; t=1567620408;
+	bh=3dQiJ0I3nOjQlJ5QXGYzOKeUQs0f52s6ysCBJrBzAZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4jm9IaqhAaWk4WyGz5Prup24O8JVI6+/hu5a1WB6PaZOW+JxN/7DV2YouGUov4BJ
-	 ZNKsRQXkiNE13Mx8J+FN1tD1RmiRitgVak95rwqm4Pw4+ppXQ9Hs/zXCmORg2uT5+Z
-	 dERY/1bwKD6QvAv8j7ZDevDFSJghb7Q5iFxRLbT4=
+	b=fAd9UVOiXpCDqzlM9AF8faU1v6wNgobR88eU5Js6uUErlcLCvIBHJKAMXJhcsAcFA
+	 i/Bwup/KZhYTRu90uwVy8H4bTejWbWIi+T7zFktaEqDuBFy0VRMfZ8ZYLI10DGpx0l
+	 obwxkymlstSAODZnJ4O19HxiJE3urP94gpGZYXJE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389095AbfIDSGn (ORCPT
+        id S2389499AbfIDSGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48782 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388736AbfIDSGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:41 -0400
+        id S1732321AbfIDSGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E78E208E4;
-        Wed,  4 Sep 2019 18:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C61C208E4;
+        Wed,  4 Sep 2019 18:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620400;
-        bh=5T5wDFJbje64v9ulSPFeZifoLb4REAAMjvuMG4imxjY=;
+        s=default; t=1567620403;
+        bh=3dQiJ0I3nOjQlJ5QXGYzOKeUQs0f52s6ysCBJrBzAZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6r4iR+DYtx7oofXoJa8p4nuEYePphE0BuiIgmSc6ghLpsV5+uKOL872/KblXuEGj
-         qkV1IavsdBOkcaiDB0187FZMO6es9GvKZ5jcl87R2NXIU2cDuwNhlhmPnK6wMygs7+
-         uE28PiqVSut5cRxhR6lQXyUYEkBvCBa9rqAchuWI=
+        b=HjoAC5mhX40fikAT20evM3zwu4Ni8sxlcP9c4DIlzb7bCwLykNCmEi2SNhAkmhqaZ
+         kWaqt8lNCYD+OHb6IL9APLKtLlTtCjZgP51awR15Py27G4IWn2XI1UmAsjymUTsGvK
+         5++Zl4/upRxOS5bOLVbvczJnnvoZoixl6hsNIoHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 06/93] afs: Only update d_fsdata if different in afs_d_revalidate()
-Date:   Wed,  4 Sep 2019 19:53:08 +0200
-Message-Id: <20190904175303.508008257@linuxfoundation.org>
+Subject: [PATCH 4.19 07/93] nvmet-loop: Flush nvme_delete_wq when removing the port
+Date:   Wed,  4 Sep 2019 19:53:09 +0200
+Message-Id: <20190904175303.699597924@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,44 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5dc84855b0fc7e1db182b55c5564fd539d6eff92 ]
+[ Upstream commit 86b9a63e595ff03f9d0a7b92b6acc231fecefc29 ]
 
-In the in-kernel afs filesystem, d_fsdata is set with the data version of
-the parent directory.  afs_d_revalidate() will update this to the current
-directory version, but it shouldn't do this if it the value it read from
-d_fsdata is the same as no lock is held and cmpxchg() is not used.
+After calling nvme_loop_delete_ctrl(), the controllers will not
+yet be deleted because nvme_delete_ctrl() only schedules work
+to do the delete.
 
-Fix the code to only change the value if it is different from the current
-directory version.
+This means a race can occur if a port is removed but there
+are still active controllers trying to access that memory.
 
-Fixes: 260a980317da ("[AFS]: Add "directory write" support.")
-Signed-off-by: David Howells <dhowells@redhat.com>
+To fix this, flush the nvme_delete_wq before returning from
+nvme_loop_remove_port() so that any controllers that might
+be in the process of being deleted won't access a freed port.
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by : Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dir.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/nvme/target/loop.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 855bf2b79fed4..54e7f6f1405e2 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -937,7 +937,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
- 	dir_version = (long)dir->status.data_version;
- 	de_version = (long)dentry->d_fsdata;
- 	if (de_version == dir_version)
--		goto out_valid;
-+		goto out_valid_noupdate;
+diff --git a/drivers/nvme/target/loop.c b/drivers/nvme/target/loop.c
+index 9908082b32c4b..137a27fa369cb 100644
+--- a/drivers/nvme/target/loop.c
++++ b/drivers/nvme/target/loop.c
+@@ -678,6 +678,14 @@ static void nvme_loop_remove_port(struct nvmet_port *port)
+ 	mutex_lock(&nvme_loop_ports_mutex);
+ 	list_del_init(&port->entry);
+ 	mutex_unlock(&nvme_loop_ports_mutex);
++
++	/*
++	 * Ensure any ctrls that are in the process of being
++	 * deleted are in fact deleted before we return
++	 * and free the port. This is to prevent active
++	 * ctrls from using a port after it's freed.
++	 */
++	flush_workqueue(nvme_delete_wq);
+ }
  
- 	dir_version = (long)dir->invalid_before;
- 	if (de_version - dir_version >= 0)
-@@ -1001,6 +1001,7 @@ static int afs_d_revalidate(struct dentry *dentry, unsigned int flags)
- 
- out_valid:
- 	dentry->d_fsdata = (void *)dir_version;
-+out_valid_noupdate:
- 	dput(parent);
- 	key_put(key);
- 	_leave(" = 1 [valid]");
+ static const struct nvmet_fabrics_ops nvme_loop_ops = {
 -- 
 2.20.1
 
