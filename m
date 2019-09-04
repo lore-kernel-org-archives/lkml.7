@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A047FC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6E5C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E0BD2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FCF2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613548;
-	bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
+	s=default; t=1567613552;
+	bh=n2926yFWZh0mBBiNvBFZd63smTpyjMh0h8bNLtb991U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hqg2cH2ZfpyP7vlqAoXnReecFc3b1cXUvMb0vK9lb2MzB2eMg66ibGt1kYDJRIbMt
-	 3v91cT6OwTv9sZHhcH4oyMJC/HAH6dASu0gyA6Ea2FxcDOz7k+SoSCs7jVZpnW79Tc
-	 vA9+uTryKFqQUMcuyU3TCszSCLZZcqFZDObKPtjI=
+	b=HhxO/xduY4G1QRxFPCDARN7MtRBPFS6tYVxu2x/6KO7E2cQP53UX2fKfU1MY+yxK0
+	 k8Ufbq+RhcUYZlZ/6hLhCTz63LnLWbysBoFvwxtKW8So2yi78klB+Bv8uClrTs0daf
+	 I0G6kgP3js6z6nZOeoTqfjI/M6Ett+Gs8D5AtAVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbfIDQAO (ORCPT
+        id S1732572AbfIDQAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34572 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731786AbfIDP75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:59:57 -0400
+        id S1732495AbfIDP7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:59:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D22D20820;
-        Wed,  4 Sep 2019 15:59:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F19022CF5;
+        Wed,  4 Sep 2019 15:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612796;
-        bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
+        s=default; t=1567612792;
+        bh=n2926yFWZh0mBBiNvBFZd63smTpyjMh0h8bNLtb991U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I2dlvUFgJ705ofWZRwh7B4+2D+wPTFJHOV6b0PQn1H5Bfib4CNDnehFcoasA3gkuO
-         ch3kibbMGPtYlE6n6pA/Tjg153NTw1ESye0Tk5ZeR8XuT7ZBAGmyDmSEPCFN16JQ+N
-         /6xmphQFZoCpEgB8gNBiIRu8pMVhISgara7H2IMw=
+        b=tKiQYs11ZMpzqy331sm4dUX5c+5MVukboJCpG3vq6RDhg/YZDCxp67cUJDCiWTMDA
+         m6B3yNsTEVS2OT5eqyZgQrq1z3ACNz8SCCc05vqr3ol5DzYMh9uyns8mbSOiEgLFvO
+         9rg5q9Sc8CSefsLi0n7wbvZ4Edgz861AnpRUYEm8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Igor Russkikh <Igor.Russkikh@aquantia.com>,
+Cc:     Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
         Igor Russkikh <igor.russkikh@aquantia.com>,
-        Michael Symolkin <Michael.Symolkin@aquantia.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 90/94] net: aquantia: linkstate irq should be oneshot
-Date:   Wed,  4 Sep 2019 11:57:35 -0400
-Message-Id: <20190904155739.2816-90-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 87/94] net: aquantia: fix removal of vlan 0
+Date:   Wed,  4 Sep 2019 11:57:32 -0400
+Message-Id: <20190904155739.2816-87-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -61,45 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Igor Russkikh <Igor.Russkikh@aquantia.com>
+From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 
-[ Upstream commit 5c47e3ba6fe52465603cf9d816b3371e6881d649 ]
+[ Upstream commit 6fdc060d7476ef73c8029b652d252c1a7b4de948 ]
 
-Declaring threaded irq handler should also indicate the irq is
-oneshot. It is oneshot indeed, because HW implements irq automasking
-on trigger.
+Due to absence of checking against the rx flow rule when vlan 0 is being
+removed, the other rule could be removed instead of the rule with vlan 0
 
-Not declaring this causes some kernel configurations to fail
-on interface up, because request_threaded_irq returned an err code.
-
-The issue was originally hidden on normal x86_64 configuration with
-latest kernel, because depending on interrupt controller, irq driver
-added ONESHOT flag on its own.
-
-Issue was observed on older kernels (4.14) where no such logic exists.
-
-Fixes: 4c83f170b3ac ("net: aquantia: link status irq handling")
+Fixes: 7975d2aff5afb ("net: aquantia: add support of rx-vlan-filter offload")
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
 Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Reported-by: Michael Symolkin <Michael.Symolkin@aquantia.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_filters.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index 41172fbebddd3..1a2b090652930 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -390,7 +390,7 @@ int aq_nic_start(struct aq_nic_s *self)
- 						   self->aq_nic_cfg.link_irq_vec);
- 			err = request_threaded_irq(irqvec, NULL,
- 						   aq_linkstate_threaded_isr,
--						   IRQF_SHARED,
-+						   IRQF_SHARED | IRQF_ONESHOT,
- 						   self->ndev->name, self);
- 			if (err < 0)
- 				goto err_exit;
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
+index 1fff462a4175e..11d7385babb07 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
+@@ -431,7 +431,8 @@ int aq_del_fvlan_by_vlan(struct aq_nic_s *aq_nic, u16 vlan_id)
+ 		if (be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id)
+ 			break;
+ 	}
+-	if (rule && be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id) {
++	if (rule && rule->type == aq_rx_filter_vlan &&
++	    be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id) {
+ 		struct ethtool_rxnfc cmd;
+ 
+ 		cmd.fs.location = rule->aq_fsp.location;
 -- 
 2.20.1
 
