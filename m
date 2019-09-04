@@ -2,127 +2,121 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E691C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 094F8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B072053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:17:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="Ncsm1Yid"
+	by mail.kernel.org (Postfix) with ESMTP id CE2ED2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567613884;
+	bh=0dd297o4/giydwwbHGYujD6FY22aEiS50RVYkQurEz0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UsdG1zR9/Cub+z/INe3VlVcCduBlifa9Lwy2/NCcLM5LwWY/+MFTFnX+jsP6hKijL
+	 pSucF05y+Yweb/sxs7eoRHndC+P/Tnc0gUQQqNyV2k6zY3T7wEWhfGlpUUxK0BoKr7
+	 UrZn7RhhtsJUnoyi6943fQM146BkjGOuqwlzf6/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387565AbfIDQR4 (ORCPT
+        id S1732184AbfIDP66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:17:56 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33590 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732580AbfIDQRx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:17:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id r17so2906501wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rtzMO9oNYcqZ7xJCU1SqvD7PjblQqbDV29Zyklt+ON0=;
-        b=Ncsm1Yid1oE4dNBUtEf93AxZ82UtQoJXxFdx0JoIxtdJEmRAih94AH5ZwIg0s+WCim
-         AwYZNcE2ZXCEwyjlpNBFvd4eWLy16pliyRkGzd8PNAwAYTrAFCsTSd4oR+h1O5QNnMQW
-         kGJPudKVYmlPaqsgdMx26QCxk9FkD6ft+jCl3F/yHrpccmJzCYpWz1oD2Vxhih6imE3M
-         /b3Pu4IZDf3U8jGi3dM3ShEAaISjTKjmJHBIATpOUpkQE1bYfhdAOI8eURLyug8cj1q5
-         2OT2bCy7l9JwDwuo/2v2svut0t96JXYsa7UZXE1mr1Imahm0LRqbw997Y6zCI3Yplb2A
-         TAAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rtzMO9oNYcqZ7xJCU1SqvD7PjblQqbDV29Zyklt+ON0=;
-        b=WO+cK7iah2BfB533TfuNoj+rbe+62Ti3/QBUPgDSX82GOdyY9JYj7bN4UxFNn5mLns
-         zivbmGLvuq1Z/GorcbiCpP+rrbivmM9+f8xGPmymqFNSDbmVGj3gfxq5rSUpTvlFUOjJ
-         zqJS7hvVM1KrDKu1+IXshojdWgU+vfTFiOXptIpxt3O5OlWdqNlAQUniJj/cxe+O85M+
-         qSNVdFmMaWPW+zQ5insP0JtXoXrSv5xVVpExp9fDPBr5a37aGYML9vvvQCbpVcV5kQ1Y
-         cQUEDoHGagv5DwtTGqlRIhmLutpRyAMeYmfmL9WsXf+UC8fPftMA3mUyqWWndKQLe4hx
-         4HmA==
-X-Gm-Message-State: APjAAAUJCI1iRsJfdymL6UBjACT8S+mt+Bt2ctzZzOvjA56mTrjV9rOi
-        2SUTiIzkP995Xd8xC7fvfpx0QlFHZ9L9ouxeGX4dSQ==
-X-Google-Smtp-Source: APXvYqzX6gugStutxIYe+ILprg2riVCAyjyyZH0V55aDRXJiZFZxndYKFUqntyVHZGA5c108ncLvJ8fFq0NR4omyyd4=
-X-Received: by 2002:a1c:c909:: with SMTP id f9mr5262027wmb.52.1567613871859;
- Wed, 04 Sep 2019 09:17:51 -0700 (PDT)
+        Wed, 4 Sep 2019 11:58:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732131AbfIDP65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B20D322CF7;
+        Wed,  4 Sep 2019 15:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567612736;
+        bh=0dd297o4/giydwwbHGYujD6FY22aEiS50RVYkQurEz0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h+EhOXYjAiUuTgvYtBcaGc3ta3aDHkuIgJWOpa9MAxpwnRRLMEfnilxSJyTxrwO+H
+         na5hxpefIEglS8ZkcDQSvlEpOo/B+pHjqGMjjtnnlRmy+DIZNiBxEkjkcByQqBKEEb
+         K8IR2CSi/OEvJiemN1Om2tUIJfst22PNwrvFtBWA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <david1.zhou@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.2 50/94] drm/amdgpu: fix dma_fence_wait without reference
+Date:   Wed,  4 Sep 2019 11:56:55 -0400
+Message-Id: <20190904155739.2816-50-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
+References: <20190904155739.2816-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190904161245.111924-1-anup.patel@wdc.com> <20190904161245.111924-3-anup.patel@wdc.com>
-In-Reply-To: <20190904161245.111924-3-anup.patel@wdc.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 4 Sep 2019 21:47:40 +0530
-Message-ID: <CAAhSdy3G9NOuNRhiYUgxmvNBfs79gAgSWdBrw4s=+SZBEDhVfg@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Enable KVM for RV64 and RV32
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 9:43 PM Anup Patel <Anup.Patel@wdc.com> wrote:
->
-> DO NOT UPSTREAM !!!!!
->
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/configs/defconfig      | 2 ++
->  arch/riscv/configs/rv32_defconfig | 2 ++
->  2 files changed, 4 insertions(+)
->
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 420a0dbef386..320a7f1da4fc 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -16,6 +16,8 @@ CONFIG_EXPERT=y
->  CONFIG_BPF_SYSCALL=y
->  CONFIG_SOC_SIFIVE=y
->  CONFIG_SMP=y
-> +CONFIG_VIRTUALIZATION=y
-> +CONFIG_KVM=y
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
->  CONFIG_NET=y
-> diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_defconfig
-> index 87ee6e62b64b..6223e47cc5f0 100644
-> --- a/arch/riscv/configs/rv32_defconfig
-> +++ b/arch/riscv/configs/rv32_defconfig
-> @@ -16,6 +16,8 @@ CONFIG_EXPERT=y
->  CONFIG_BPF_SYSCALL=y
->  CONFIG_ARCH_RV32I=y
->  CONFIG_SMP=y
-> +CONFIG_VIRTUALIZATION=y
-> +CONFIG_KVM=y
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
->  CONFIG_NET=y
-> --
-> 2.17.1
->
+From: Christian König <christian.koenig@amd.com>
 
-Please ignore this patch.
+[ Upstream commit 42068e1ef961c719f967dbbb4ddcb394a0ba7917 ]
 
-The KVM RISC-V should be disabled by default since it's
-experimental currently.
+We need to grab a reference to the fence we wait for.
 
-Regards,
-Anup
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Chunming Zhou <david1.zhou@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c | 27 ++++++++++++++-----------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
+index a28a3d722ba29..62298ae5c81c0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ctx.c
+@@ -535,21 +535,24 @@ int amdgpu_ctx_wait_prev_fence(struct amdgpu_ctx *ctx,
+ 			       struct drm_sched_entity *entity)
+ {
+ 	struct amdgpu_ctx_entity *centity = to_amdgpu_ctx_entity(entity);
+-	unsigned idx = centity->sequence & (amdgpu_sched_jobs - 1);
+-	struct dma_fence *other = centity->fences[idx];
++	struct dma_fence *other;
++	unsigned idx;
++	long r;
+ 
+-	if (other) {
+-		signed long r;
+-		r = dma_fence_wait(other, true);
+-		if (r < 0) {
+-			if (r != -ERESTARTSYS)
+-				DRM_ERROR("Error (%ld) waiting for fence!\n", r);
++	spin_lock(&ctx->ring_lock);
++	idx = centity->sequence & (amdgpu_sched_jobs - 1);
++	other = dma_fence_get(centity->fences[idx]);
++	spin_unlock(&ctx->ring_lock);
+ 
+-			return r;
+-		}
+-	}
++	if (!other)
++		return 0;
+ 
+-	return 0;
++	r = dma_fence_wait(other, true);
++	if (r < 0 && r != -ERESTARTSYS)
++		DRM_ERROR("Error (%ld) waiting for fence!\n", r);
++
++	dma_fence_put(other);
++	return r;
+ }
+ 
+ void amdgpu_ctx_mgr_init(struct amdgpu_ctx_mgr *mgr)
+-- 
+2.20.1
+
