@@ -2,93 +2,74 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBA2C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5A2C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4E2C22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A019D22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:55:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NVlcjAzR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfIDMzA (ORCPT
+        id S1730210AbfIDMzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:55:00 -0400
-Received: from wp498.webpack.hosteurope.de ([80.237.130.20]:46938 "EHLO
-        wp498.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725965AbfIDMy7 (ORCPT
+        Wed, 4 Sep 2019 08:55:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34186 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfIDMzi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:54:59 -0400
-Received: from p50937f79.dip0.t-ipconnect.de ([80.147.127.121] helo=ubuntu-VirtualBox.i.sigma-surface-science.com); authenticated
-        by wp498.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_CBC_SHA1:128)
-        id 1i5UDv-00012K-Ss; Wed, 04 Sep 2019 14:17:19 +0200
-From:   =?UTF-8?q?Christoph=20Vogtl=C3=A4nder?= 
-        <c.vogtlaender@sigma-surface-science.com>
-Cc:     c.vogtlaender@sigma-surface-science.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] serial: max310x: Properly set flags in AutoCTS mode
-Date:   Wed,  4 Sep 2019 14:11:41 +0200
-Message-Id: <20190904121141.4570-1-c.vogtlaender@sigma-surface-science.com>
-X-Mailer: git-send-email 2.22.1
-In-Reply-To: <20190904073009.GA9729@kroah.com>
-References: <20190904073009.GA9729@kroah.com>
+        Wed, 4 Sep 2019 08:55:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gdrnI3IApvphw67NNHv0WFysZo4kw+6WTJSwiRiiRWU=; b=NVlcjAzROJCtIAKfEJ54n264cn
+        OiYo3wOq58yhAgz7G3QG8MqJ5wYXIituzytSQ7QLX+/6FO0w5g4RxqAinZWvGr/PRMvjx9d+XwEHt
+        t1AG7BVx+UqoiX3776j/wNGzHsX2/ZkH55B8T1ht+Y6fVbzG6kGLdvTMDJ+eFhnFff7oJycg9xD4N
+        iwcez0sgKS1G+eAM02vcsBBFAWvjZ1LFrFmn/ejfgg0XfXZVUDQX7G+QifN76j2LU1SNn6T/Xb3Fp
+        tAp7hIwv7mNxKULUFymI2I2fwftm3egGZMluZRxP0W1t0YVqFjdiklQZjz5diiIkOkhXYN17lgXn1
+        WQcCEo2g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5Up0-0000gK-HV; Wed, 04 Sep 2019 12:55:38 +0000
+Date:   Wed, 4 Sep 2019 05:55:38 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: dma api errors with swiotlb
+Message-ID: <20190904125538.GA30177@infradead.org>
+References: <e3c4b2e1-7518-ab0e-a6ce-3fae9903dac0@shipmail.org>
+ <20190904121722.GA15601@infradead.org>
+ <4e21951d-025a-2b3d-14c8-878c6f237525@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;c.vogtlaender@sigma-surface-science.com;1567601698;785e2d79;
-X-HE-SMSGID: 1i5UDv-00012K-Ss
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <4e21951d-025a-2b3d-14c8-878c6f237525@shipmail.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 391f93f2ec9f ("serial: core: Rework hw-assisted flow control
-support") has changed the way the AutoCTS mode is handled.
+On Wed, Sep 04, 2019 at 02:54:26PM +0200, Thomas Hellstrˆm (VMware) wrote:
+> On 9/4/19 2:17 PM, Christoph Hellwig wrote:
+> > A call to dma_max_mapping_size() to limit the maximum I/O size solves
+> > that problem.  With the latest kernel that should actually be done
+> > automatically by the SCSI midlayer for you.
+> 
+> Hmm, OK. I guess with a sufficient queue depth and many mappings waiting for
+> DMA completion, the SWIOTLB may fill up anyway...
+> 
+> I'll see if I can come up with something.
 
-According to that change, serial drivers which enable H/W AutoCTS mode must
-set UPSTAT_AUTORTS, UPSTAT_AUTOCTS and UPSTAT_AUTOXOFF to prevent the
-serial core from inadvertently disabling RX or TX. This patch adds proper
-handling of UPSTAT_AUTORTS, UPSTAT_AUTOCTS and UPSTAT_AUTOXOFF flags.
-
-Signed-off-by: Christoph Vogtl√§nder <c.vogtlaender@sigma-surface-science.com>
----
- drivers/tty/serial/max310x.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index 0e24235..fb5a7e0 100644
---- a/drivers/tty/serial/max310x.c
-+++ b/drivers/tty/serial/max310x.c
-@@ -859,15 +859,23 @@ static void max310x_set_termios(struct uart_port *port,
- 	/* Configure flow control */
- 	max310x_port_write(port, MAX310X_XON1_REG, termios->c_cc[VSTART]);
- 	max310x_port_write(port, MAX310X_XOFF1_REG, termios->c_cc[VSTOP]);
--	if (termios->c_cflag & CRTSCTS)
-+
-+	port->status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
-+
-+	if (termios->c_cflag & CRTSCTS) {
-+		/* Enable AUTORTS and AUTOCTS */
-+		port->status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
- 		flow |= MAX310X_FLOWCTRL_AUTOCTS_BIT |
- 			MAX310X_FLOWCTRL_AUTORTS_BIT;
-+	}
- 	if (termios->c_iflag & IXON)
- 		flow |= MAX310X_FLOWCTRL_SWFLOW3_BIT |
- 			MAX310X_FLOWCTRL_SWFLOWEN_BIT;
--	if (termios->c_iflag & IXOFF)
-+	if (termios->c_iflag & IXOFF) {
-+		port->status |= UPSTAT_AUTOXOFF;
- 		flow |= MAX310X_FLOWCTRL_SWFLOW1_BIT |
- 			MAX310X_FLOWCTRL_SWFLOWEN_BIT;
-+	}
- 	max310x_port_write(port, MAX310X_FLOWCTRL_REG, flow);
- 
- 	/* Get baud rate generator configuration */
--- 
-2.7.4
-
+You are supposed to return SCSI_MLQUEUE_HOST_BUSY in that case,
+which means that the kernel won't send more commands until another
+one completed.
