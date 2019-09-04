@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859A7C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B16C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C08B2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858AE23401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730711AbfIDOAJ (ORCPT
+        id S1730731AbfIDOAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:00:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52814 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:00:11 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52608 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730685AbfIDOAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:00:08 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7D3E8F6F13507C264059;
-        Wed,  4 Sep 2019 22:00:03 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 21:59:54 +0800
+        id S1730606AbfIDOAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:00:09 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3B16BB1DB7029390B610;
+        Wed,  4 Sep 2019 22:00:01 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 21:59:52 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -50,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 09/36] spi: octeon: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:58:51 +0800
-Message-ID: <20190904135918.25352-10-yuehaibing@huawei.com>
+Subject: [PATCH -next 08/36] spi: cadence: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:58:50 +0800
+Message-ID: <20190904135918.25352-9-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -71,31 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-cavium-octeon.c | 4 +---
+ drivers/spi/spi-cadence.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-cavium-octeon.c b/drivers/spi/spi-cavium-octeon.c
-index ee4703e..1a2de6c 100644
---- a/drivers/spi/spi-cavium-octeon.c
-+++ b/drivers/spi/spi-cavium-octeon.c
-@@ -18,7 +18,6 @@
- 
- static int octeon_spi_probe(struct platform_device *pdev)
- {
--	struct resource *res_mem;
- 	void __iomem *reg_base;
+diff --git a/drivers/spi/spi-cadence.c b/drivers/spi/spi-cadence.c
+index 1c35eaa..c36587b 100644
+--- a/drivers/spi/spi-cadence.c
++++ b/drivers/spi/spi-cadence.c
+@@ -474,7 +474,6 @@ static int cdns_spi_probe(struct platform_device *pdev)
+ 	int ret = 0, irq;
  	struct spi_master *master;
- 	struct octeon_spi *p;
-@@ -30,8 +29,7 @@ static int octeon_spi_probe(struct platform_device *pdev)
- 	p = spi_master_get_devdata(master);
+ 	struct cdns_spi *xspi;
+-	struct resource *res;
+ 	u32 num_cs;
+ 
+ 	master = spi_alloc_master(&pdev->dev, sizeof(*xspi));
+@@ -485,8 +484,7 @@ static int cdns_spi_probe(struct platform_device *pdev)
+ 	master->dev.of_node = pdev->dev.of_node;
  	platform_set_drvdata(pdev, master);
  
--	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	reg_base = devm_ioremap_resource(&pdev->dev, res_mem);
-+	reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(reg_base)) {
- 		err = PTR_ERR(reg_base);
- 		goto fail;
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	xspi->regs = devm_ioremap_resource(&pdev->dev, res);
++	xspi->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(xspi->regs)) {
+ 		ret = PTR_ERR(xspi->regs);
+ 		goto remove_master;
 -- 
 2.7.4
 
