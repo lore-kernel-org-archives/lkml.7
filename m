@@ -2,80 +2,113 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 038C1C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D813022CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB042339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567597944;
+	bh=kuCVKYWh39HzDMNH8mGuQqkKXwZBKKGFW1o2IwBcDNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xhxz6tB/OOmmDg/ip7KQUMcltxb5AtUY/TpouvHZjO+0FN16OGrrkJS5Pmf87+8N3
+	 mVlGd38S6zhcAJM9OCCXwiZBJA1OlmWsKdhmVtI5BVCNpcN0hRXYuAjN2XSFQhG+GZ
+	 lEJSlPvEliRRvettpi/lwn9eJ1Jpkgxomaun3iIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbfIDLvg (ORCPT
+        id S1729803AbfIDLwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 07:51:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5758 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbfIDLvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 07:51:35 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 779DCDDBA4A18AEEDC9F;
-        Wed,  4 Sep 2019 19:51:33 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 19:51:24 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <b.zolnierkie@samsung.com>, <allison@lohutok.net>,
-        <mcgrof@kernel.org>, <yuehaibing@huawei.com>,
-        <rfontana@redhat.com>, <tglx@linutronix.de>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] fbdev: da8xx-fb: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 19:50:28 +0800
-Message-ID: <20190904115028.25392-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 4 Sep 2019 07:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbfIDLwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 07:52:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49DAA2186A;
+        Wed,  4 Sep 2019 11:52:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567597942;
+        bh=kuCVKYWh39HzDMNH8mGuQqkKXwZBKKGFW1o2IwBcDNg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2oPxsAZPafFSsKg2yN0LcN0yRhMK6udynUICY5+314QrRk7gXHyPCNjgweDqCfI6z
+         /9cgxpryogget7bzs9QSfNXEm8WXn0EwnYWxXKlK+tq5dz0f67o1pCQAir8cZ9MtmQ
+         szy59+6QxWHJx6QXkp8fxhlZQHVY+Zs8lGuuExsY=
+Date:   Wed, 4 Sep 2019 13:52:20 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v10 06/13] drivers: memory: extend of_memory by LPDDR3
+ support
+Message-ID: <20190904115220.GA9370@kroah.com>
+References: <CGME20190614095325eucas1p20083d9290b36eca945ec3f1428bdbd4f@eucas1p2.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com>
+ <20190614095309.24100-7-l.luba@partner.samsung.com>
+ <CAJKOXPcDDyYmuX-RpkpxKSBK2JfV=tYakn+g8FM5Lau+rmkm+g@mail.gmail.com>
+ <2e35d4bc-92b9-cba7-bd05-a41a1dcb300e@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e35d4bc-92b9-cba7-bd05-a41a1dcb300e@partner.samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+On Thu, Aug 22, 2019 at 03:34:48PM +0200, Lukasz Luba wrote:
+> 
+> 
+> On 6/14/19 2:43 PM, Krzysztof Kozlowski wrote:
+> > On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+> >>
+> >> The patch adds AC timings information needed to support LPDDR3 and memory
+> >> controllers. The structure is used in of_memory and currently in Exynos
+> >> 5422 DMC. Add parsing data needed for LPDDR3 support.
+> >> It is currently used in Exynos5422 Dynamic Memory Controller.
+> >>
+> >> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> >> ---
+> >>   drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
+> >>   drivers/memory/of_memory.h |  18 +++++
+> >>   include/memory/jedec_ddr.h |  62 +++++++++++++++
+> >>   3 files changed, 234 insertions(+)
+> > 
+> > Previously this was going through Greg, so if I am going to take it
+> > along with drivers/memory/samsung patches, I need some acks.
+> > 
+> > Greg, Rob,
+> > Are you okay with this patch and with taking it through samsung-soc?
+> 
+> Greg, Rob: gentle ping.
+> 
+> Currently there is a v13, with only minor changes to this patch:
+> https://lkml.org/lkml/2019/8/21/289
+> (you are on cc list of the patch set)
+> 
+> Could you please have a look. Thank you.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/video/fbdev/da8xx-fb.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I don't seem to be able to find this anywhere in my tree.  And I don't
+remember being the maintainer of drivers/memory/ so don't wait for
+anything from me!
 
-diff --git a/drivers/video/fbdev/da8xx-fb.c b/drivers/video/fbdev/da8xx-fb.c
-index b1cf248..57518d7 100644
---- a/drivers/video/fbdev/da8xx-fb.c
-+++ b/drivers/video/fbdev/da8xx-fb.c
-@@ -1328,7 +1328,6 @@ static int fb_probe(struct platform_device *device)
- {
- 	struct da8xx_lcdc_platform_data *fb_pdata =
- 						dev_get_platdata(&device->dev);
--	struct resource *lcdc_regs;
- 	struct lcd_ctrl_config *lcd_cfg;
- 	struct fb_videomode *lcdc_info;
- 	struct fb_info *da8xx_fb_info;
-@@ -1346,8 +1345,7 @@ static int fb_probe(struct platform_device *device)
- 	if (lcdc_info == NULL)
- 		return -ENODEV;
- 
--	lcdc_regs = platform_get_resource(device, IORESOURCE_MEM, 0);
--	da8xx_fb_reg_base = devm_ioremap_resource(&device->dev, lcdc_regs);
-+	da8xx_fb_reg_base = devm_platform_ioremap_resource(device, 0);
- 	if (IS_ERR(da8xx_fb_reg_base))
- 		return PTR_ERR(da8xx_fb_reg_base);
- 
--- 
-2.7.4
-
-
+greg k-h
