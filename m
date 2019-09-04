@@ -2,137 +2,112 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C66C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05E0C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B3323402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6EE2341E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567577705;
+	bh=yp4kD/F2st9eu93T9ZstIN9sLByXghLC0i9PZKJaNx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fXYJD4goES7c5fSb8PkivDZUf6uCQ5hxEBD5n+YlVxu1JECuZDllIaBluBGNWx4oR
+	 IKRorUYQ+z1l5sv1ARFx/VRnXq6x+kGHv1tYCeZ7BiwoNfdOAqHXqWpnkuJ69GaV6c
+	 eX03zm8KNWMyofwp0iYktAZaASPFsiUR8rBHcIdQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfIDGOa (ORCPT
+        id S1728827AbfIDGPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:14:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:48070 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726033AbfIDGOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:14:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 312C2344;
-        Tue,  3 Sep 2019 23:14:29 -0700 (PDT)
-Received: from [10.162.41.129] (p8cg001049571a15.blr.arm.com [10.162.41.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89A8D3F718;
-        Tue,  3 Sep 2019 23:16:41 -0700 (PDT)
-Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-snps-arc@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Paul Burton <paul.burton@mips.com>, kbuild-all@01.org,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-References: <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
- <201909031912.htvWy2Bu%lkp@intel.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <4dc9698f-dff4-b916-a83e-dc932c8087c0@arm.com>
-Date:   Wed, 4 Sep 2019 11:44:25 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 4 Sep 2019 02:15:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33342 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726589AbfIDGPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 02:15:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8055DACB4;
+        Wed,  4 Sep 2019 06:15:02 +0000 (UTC)
+Date:   Wed, 4 Sep 2019 08:15:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190904061501.GB3838@dhcp22.suse.cz>
+References: <1567177025-11016-1-git-send-email-cai@lca.pw>
+ <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
+ <1567178728.5576.32.camel@lca.pw>
+ <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
+ <20190903132231.GC18939@dhcp22.suse.cz>
+ <1567525342.5576.60.camel@lca.pw>
+ <20190903185305.GA14028@dhcp22.suse.cz>
+ <1567546948.5576.68.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <201909031912.htvWy2Bu%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567546948.5576.68.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cc printk maintainers
 
-
-On 09/03/2019 04:43 PM, kbuild test robot wrote:
-> Hi Anshuman,
+On Tue 03-09-19 17:42:28, Qian Cai wrote:
+> > > I suppose what happens is those skb_build() allocations are from softirq,
+> > > and
+> > > once one of them failed, it calls printk() which generates more interrupts.
+> > > Hence, the infinite loop.
+> > 
+> > Please elaborate more.
+> > 
 > 
-> Thank you for the patch! Yet something to improve:
+> If you look at the original report, the failed allocation dump_stack() is,
 > 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.3-rc7 next-20190902]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>  <IRQ>
+>  warn_alloc.cold.43+0x8a/0x148
+>  __alloc_pages_nodemask+0x1a5c/0x1bb0
+>  alloc_pages_current+0x9c/0x110
+>  allocate_slab+0x34a/0x11f0
+>  new_slab+0x46/0x70
+>  ___slab_alloc+0x604/0x950
+>  __slab_alloc+0x12/0x20
+>  kmem_cache_alloc+0x32a/0x400
+>  __build_skb+0x23/0x60
+>  build_skb+0x1a/0xb0
+>  igb_clean_rx_irq+0xafc/0x1010 [igb]
+>  igb_poll+0x4bb/0xe30 [igb]
+>  net_rx_action+0x244/0x7a0
+>  __do_softirq+0x1a0/0x60a
+>  irq_exit+0xb5/0xd0
+>  do_IRQ+0x81/0x170
+>  common_interrupt+0xf/0xf
+>  </IRQ>
 > 
-> url:    https://github.com/0day-ci/linux/commits/Anshuman-Khandual/mm-debug-Add-tests-for-architecture-exported-page-table-helpers/20190903-162959
-> config: m68k-allmodconfig (attached as .config)
-> compiler: m68k-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=m68k 
+> Since it has no __GFP_NOWARN to begin with, it will call,
 > 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
+> printk
+>   vprintk_default
+>     vprintk_emit
+>       wake_up_klogd
+>         irq_work_queue
+>           __irq_work_queue_local
+>             arch_irq_work_raise
+>               apic->send_IPI_self(IRQ_WORK_VECTOR)
+>                 smp_irq_work_interrupt
+>                   exiting_irq
+>                     irq_exit
 > 
-> All error/warnings (new ones prefixed by >>):
-> 
->    In file included from arch/m68k/include/asm/bug.h:32:0,
->                     from include/linux/bug.h:5,
->                     from include/linux/thread_info.h:12,
->                     from include/asm-generic/preempt.h:5,
->                     from ./arch/m68k/include/generated/asm/preempt.h:1,
->                     from include/linux/preempt.h:78,
->                     from arch/m68k/include/asm/irqflags.h:6,
->                     from include/linux/irqflags.h:16,
->                     from arch/m68k/include/asm/atomic.h:6,
->                     from include/linux/atomic.h:7,
->                     from include/linux/mm_types_task.h:13,
->                     from include/linux/mm_types.h:5,
->                     from include/linux/hugetlb.h:5,
->                     from mm/arch_pgtable_test.c:14:
->    mm/arch_pgtable_test.c: In function 'pmd_clear_tests':
->>> arch/m68k/include/asm/page.h:31:22: error: lvalue required as unary '&' operand
->     #define pmd_val(x) ((&x)->pmd[0])
->                          ^
->    include/asm-generic/bug.h:124:25: note: in definition of macro 'WARN_ON'
->      int __ret_warn_on = !!(condition);    \
->                             ^~~~~~~~~
->>> arch/m68k/include/asm/motorola_pgtable.h:138:26: note: in expansion of macro 'pmd_val'
->     #define pmd_none(pmd)  (!pmd_val(pmd))
->                              ^~~~~~~
->>> mm/arch_pgtable_test.c:233:11: note: in expansion of macro 'pmd_none'
->      WARN_ON(!pmd_none(READ_ONCE(*pmdp)));
->               ^~~~~~~~
->    mm/arch_pgtable_test.c: In function 'pmd_populate_tests':
->>> arch/m68k/include/asm/page.h:31:22: error: lvalue required as unary '&' operand
->     #define pmd_val(x) ((&x)->pmd[0])
-
-Storing READ_ONCE(*pmdp) in a local pmd_t variable first solves the problem.
+> and end up processing pending net_rx_action softirqs again which are plenty due
+> to connected via ssh etc.
+-- 
+Michal Hocko
+SUSE Labs
