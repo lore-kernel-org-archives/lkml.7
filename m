@@ -2,77 +2,146 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1688C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E74C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4C2A22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B712339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="VKVi29+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729412AbfIDIqf (ORCPT
+        id S1729313AbfIDIrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:46:35 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5754 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726358AbfIDIqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:46:34 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 51BDD35D8587737A1EBA;
-        Wed,  4 Sep 2019 16:46:30 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 16:46:21 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] usb: phy: keystone: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 16:45:58 +0800
-Message-ID: <20190904084558.24484-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Wed, 4 Sep 2019 04:47:20 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:24534 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727787AbfIDIrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:47:19 -0400
+X-Greylist: delayed 165066 seconds by postgrey-1.27 at vger.kernel.org; Wed, 04 Sep 2019 04:47:18 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567586836;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Tz1SNv7+7mwC04RCYM6zEntjQIfTGl/IpU/FemTzlv4=;
+        b=VKVi29+uQWA5b7Z5NOdhdmRLRTlkgwhfBq5Nslebgu3Yx49JgYMyDmvvxUx3/v64wI
+        yyo7CwN+7syL2dk9Kdoxv8gfGEvlb3bvjv0JSi7rWfHsicQ/qFmIpe2jWHdiqf3rPbfj
+        DVWEI+dGQNXaXvffaGjh0JGwPpHze85pop7wlTK6rLYwgrFExw1l5Y/178rLxAe+uMx/
+        PvDdmEloshRPfhcN0748HCy+OYQdC88ThWx8i0IcSP2jF6iAXK0J+g8kVC71mW32czgU
+        hjn6bQtVF1MkK/gZdJplbfIJwbO1fx+JFgzQtbvJ/n4teSqi9pp4GZ75uciGSWtfPYCk
+        PZ8w==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlabXAYFwg=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v848l7cEH
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 4 Sep 2019 10:47:07 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC 5/5] ARM: dts: omap3-beagle: make explicitly compatible to ti,omap34xx
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190903134000.GM52127@atomide.com>
+Date:   Wed, 4 Sep 2019 10:47:07 +0200
+Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4C3C8BEA-F03E-42CE-8E5C-397A025CB684@goldelico.com>
+References: <cover.1567421750.git.hns@goldelico.com> <150eb34a95b2e7ead8ac81a9ab275592ea31595b.1567421751.git.hns@goldelico.com> <20190903134000.GM52127@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+Hi Tony,
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/usb/phy/phy-keystone.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> Am 03.09.2019 um 15:40 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [190902 10:56]:
+>> Matching the ti-cpufreq driver needs to specify explicitly if
+>> a board uses an omap34xx or omap36xx chip.
+>>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> arch/arm/boot/dts/omap3-beagle.dts | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/arch/arm/boot/dts/omap3-beagle.dts =
+b/arch/arm/boot/dts/omap3-beagle.dts
+>> index e3df3c166902..d47213c7a4d0 100644
+>> --- a/arch/arm/boot/dts/omap3-beagle.dts
+>> +++ b/arch/arm/boot/dts/omap3-beagle.dts
+>> @@ -8,7 +8,7 @@
+>>=20
+>> / {
+>> 	model =3D "TI OMAP3 BeagleBoard";
+>> -	compatible =3D "ti,omap3-beagle", "ti,omap3";
+>> +	compatible =3D "ti,omap3-beagle", "ti,omap34xx", "ti,omap3";
+>>=20
+>> 	cpus {
+>> 		cpu@0 {
+>=20
+> For a clean-up patch, we should just use the following compatibles
+> in general for omap3:
+>=20
+> ti,omap3	omap3
+> ti,omap34	omap34xx and omap35xx
+> ti,omap36	omap36xx and dm37xx
+> ti,am35		am35xx
+>=20
+> So we should just leave out the "xx" part. But we still need parse
+> also the legacy binding with "xx" in drivers.
 
-diff --git a/drivers/usb/phy/phy-keystone.c b/drivers/usb/phy/phy-keystone.c
-index 1987126..110e6e9 100644
---- a/drivers/usb/phy/phy-keystone.c
-+++ b/drivers/usb/phy/phy-keystone.c
-@@ -66,15 +66,13 @@ static int keystone_usbphy_probe(struct platform_device *pdev)
- {
- 	struct device		*dev = &pdev->dev;
- 	struct keystone_usbphy	*k_phy;
--	struct resource		*res;
- 	int ret;
- 
- 	k_phy = devm_kzalloc(dev, sizeof(*k_phy), GFP_KERNEL);
- 	if (!k_phy)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	k_phy->phy_ctrl = devm_ioremap_resource(dev, res);
-+	k_phy->phy_ctrl = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(k_phy->phy_ctrl))
- 		return PTR_ERR(k_phy->phy_ctrl);
- 
--- 
-2.7.4
+Yes, getting rid of the xx in the device trees would be nice.
 
+But I have looked through the kernel tree and that makes more problems
+than it solves...
+
+There is code that explicitly checks for "ti,omap36xx" in =
+drivers/clk/ti/dpll.c
+
+Maybe that should be replaced by a check for a "ti,dpll5" property
+which is only defined in omap36xx.dtsi to make the code depend
+on a feature rather than SoC family string. Although such a change
+may break other things or we have to keep even more legacy code around.
+
+And there is a binding document omap.txt that does not describe
+it the way you propose. IMHO that should be changed first.
+
+Next is that omap.txt explicitly says that ti,omap3 defauls to OMAP3430.
+And OMAP3430 should be specified as compatible =3D "ti,omap3430", =
+"ti,omap3"
+while OMAP3630 should have compatible =3D "ti,omap36xx", "ti,omap3".
+AM3517 is compatible =3D "ti,am3517", "ti,omap3" which seems to ignore
+the AM3505 (maybe there was never a board using it).
+
+So this clean up is much more than what we need for moving from
+opp-v1 to opp-v2 and it should therefore be addressed separately.
+
+Therefore I'd prefer if we can keep all these problems isolated
+into a separate set of patches. And because of this I have prepared
+an RFC-V2 which only adds the "ti,omap3430" to those boards which
+do not yet have it (in accordance to existing omap.txt).
+
+AM3517 does not seem to have any opp table and therefore I also
+exclude it at the moment.
+
+BR and thanks,
+Nikolaus
 
