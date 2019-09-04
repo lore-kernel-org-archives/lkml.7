@@ -2,74 +2,173 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AA1CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6591C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3270B22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567600646;
-	bh=tBJwQEq/UpmgGzW3FrJSZmDckP5C+ZhupkSUXyptUHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qlKNC0SME108sbYVmJIc6Iu+ryE9VkMDB+ztE5SMIUEYZYIalh6Tu7GzZSIXCMV/I
-	 0bi3kBhnHf38lYEzW0J9iQkJlzj6S51UfUnPaFbil+4R37XCWiRV21P9t0Omn2rGIl
-	 IdHRgRpRgloa1sgdoIbbWnc4qqsiOX6kpr8ODjvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9784523404
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dHjeXkVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfIDMhZ (ORCPT
+        id S1730122AbfIDMhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:37:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbfIDMhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:37:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B0CB21883;
-        Wed,  4 Sep 2019 12:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567600644;
-        bh=tBJwQEq/UpmgGzW3FrJSZmDckP5C+ZhupkSUXyptUHY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qs6Ll5qEyM3mi+u/r56W66YyIJnp6PLS5YfD1RmO39M3ajjXDeEQoMfBfCFnD+5Mm
-         fb6WKLXFkf5EDAjN7aO0AZYXD0czjnK4Ok/8nxiJ5NDcQMCqRX+obBZqrgT6JU6qX5
-         TtmqOw+PyG8f6qOnRl18OCaebD8nwQc9ioYo/IO8=
-Date:   Wed, 4 Sep 2019 14:37:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] usb: roles: intel_xhci: Supplying software node
- for the role mux
-Message-ID: <20190904123721.GB5043@kroah.com>
-References: <20190819100724.30051-1-heikki.krogerus@linux.intel.com>
- <20190819100724.30051-3-heikki.krogerus@linux.intel.com>
+        Wed, 4 Sep 2019 08:37:45 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:52670 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729848AbfIDMhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:37:45 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190904123743euoutp02f638d0dc80360fe52d91ea377f43a6d8~BPH_AE_qA0750807508euoutp02T
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Sep 2019 12:37:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190904123743euoutp02f638d0dc80360fe52d91ea377f43a6d8~BPH_AE_qA0750807508euoutp02T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1567600663;
+        bh=yZLCbqKVi9Hs06e9qc3/1f9Heb7upU8Fu+6TMyHC/vo=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=dHjeXkVM8Gw2Kk5MqD3+92QtRGeF91rT5l7SZ5aBrmfy3ZFoAx3KlwidQka33jRG5
+         WbsFbXcMpie/O552ErZTanOHDaX3lA9XqqUiY0xJbFbOZsvoHzFvfYzruTVDV+WhVe
+         Q1CUhkTMqGoZq8b+DBJjIK4Ooti6lFw50wc5hqzw=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190904123742eucas1p28bd5e121274d4c892f407674c960308f~BPH9UZ89C0909709097eucas1p2z;
+        Wed,  4 Sep 2019 12:37:42 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id DB.1D.04374.610BF6D5; Wed,  4
+        Sep 2019 13:37:42 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190904123741eucas1p1cdc036f1d841accce579f762d1130c96~BPH8ddrDr0994209942eucas1p1G;
+        Wed,  4 Sep 2019 12:37:41 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190904123741eusmtrp2262ad688f2a83690e15b780748b3bed5~BPH8PVgeT1156311563eusmtrp2j;
+        Wed,  4 Sep 2019 12:37:41 +0000 (GMT)
+X-AuditID: cbfec7f5-92d689c000001116-e2-5d6fb016f89c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id F4.D1.04166.510BF6D5; Wed,  4
+        Sep 2019 13:37:41 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190904123740eusmtip1c12d0a0433e2d181c1b4ae6b5ae4e5dd~BPH7i7pLO0237302373eusmtip1e;
+        Wed,  4 Sep 2019 12:37:40 +0000 (GMT)
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org,
+        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <4e6379a7-0d4b-8e0d-c225-49976b2587e0@samsung.com>
+Date:   Wed, 4 Sep 2019 14:37:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190819100724.30051-3-heikki.krogerus@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190820092113.gojhe3romdnvm7eu@vireshk-i7>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTURzGO7svu66uHKfpH5OiJYRFlrYPNxKpCBpBYVQQysiVFzPn226z
+        rA+uQst36U0bC0XE5bB8mWnZMpjmssJZkSQaDZ3gS/viHGGG5rxKfvs9z/855/wfOAwh76PC
+        mbTMK7wuU6NV0DKyo29+YE9oS5Z6X7NhO9da3UxxNb0DFFcxPkNwTmeLlGsbH6K4r10mmvOW
+        9SKu2tkt4Z71/pBydS/mpFzBm14p1+pTcVZXH32IVbVZimjV6JCNVlnr81Xl7Rak8rZtTaAS
+        ZXEpvDYtl9ftjU+WXaqfcaPsX/iax2xGBvSBLUYBDGAlWMcKiGIkY+T4KYKKiZFVMYfgo62T
+        EoUXgf2HQ7p2ZKqiTyIOzAiMPVYkCg8C63wp7U8F4yNgW/AtM8OE4F0wNcz7bQJ/k0CXb4Vp
+        HANl78qRn1kcD/emKwk/kzgSuusGV/zN+BzMunooMRME/Y/dpJ8D8AEwOmZp8c4wuDXXSIm8
+        DTo9JkJcdEwKhps5Ih+FWusHWuRgmHa0r5aJgKVXNStlAN9GUPp6RCqKSgQ/HbVITB2EHsdn
+        yl+GwFHQ3LVXtA9DQ9Mo8tuAA+G7J0jcIRDudVQRos3C3UK5mI6EBUuVRORwKHEvkZVIYVzX
+        zLiujXFdG+P/d2sRaUFhvF7ISOWF/Zn81WhBkyHoM1OjL2ZltKHl3/Vx0eF7ibr/XrAjzCDF
+        Jtb1JEstpzS5Ql6GHQFDKELYszatWs6maPKu87qs8zq9lhfsaAtDKsLYGxtcSXKcqrnCp/N8
+        Nq9bm0qYgHAD2l12ejSRJzfPAR3rDl1MmGyQNeME3/AjidQVt3/nn2rTUODxfki+rHyvHdh4
+        wHVCOXWqxjGoL4ltGmedTtPxyZTRabP39EvWE9VYKKnLM5vsN858OmnjnXdytOnH4pT38y8K
+        E0X7nA/0O9S/+zvVg/FfcpPUg89DJx6SEW8VpHBJE7OL0Amafztk4alZAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJIsWRmVeSWpSXmKPExsVy+t/xu7qiG/JjDVadU7XYOGM9q8X8I+dY
+        Lfofv2a2OH9+A7vFpsfXWC0u75rDZvG59wijxYzz+5gs1h65y26xaOsXdovWvUfYLTZ+9bDY
+        /OAYmwOvx6ZVnWwed67tYfPYvKTeo2/LKkaPz5vkAlij9GyK8ktLUhUy8otLbJWiDS2M9Awt
+        LfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DKWvH7CWPBGoOLt8uWMDYyneLsYOTkkBEwk
+        XvYfY+pi5OIQEljKKPH150zWLkYOoISUxPwWJYgaYYk/17rYIGpeM0psODSJCSQhLOAksef3
+        VzaQehEBLYmXN1NBapgFrjJJLN5ziQWioYFV4vK5G+wgDWwChhK9R/sYQWxeATuJSa8mMIPY
+        LAIqEvsWXQCLiwpESBzeMQuqRlDi5MwnLCA2p4ClxKzjn9hAbGYBdYk/8y4xQ9jiEk1fVrJC
+        2PIS29/OYZ7AKDQLSfssJC2zkLTMQtKygJFlFaNIamlxbnpusaFecWJucWleul5yfu4mRmC0
+        bjv2c/MOxksbgw8xCnAwKvHwPpibHyvEmlhWXJl7iFGCg1lJhDd0T06sEG9KYmVValF+fFFp
+        TmrxIUZToOcmMkuJJucDE0leSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB9MSS1OzU1ILUIpg+
+        Jg5OqQZGjsnlN97LNMpl/syrEX79RkMi6aJfVlX2doWpQnPqO91ZHib/nVyivCzpzds3ZuyM
+        82Zt/ftTMf7158h5xz8/97e80BB+o0PlrLeLyb6jZ34xBggUmpk9Fnrb8pBZOvTynsap3x6l
+        7Zc+4isns83oiMn26SprCqtO2XPMLji029Ar/SO/zpnlSizFGYmGWsxFxYkAkCSn4+wCAAA=
+X-CMS-MailID: 20190904123741eucas1p1cdc036f1d841accce579f762d1130c96
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190820092123epcas2p2170ae19467a5fb19fcfc1acdbecf9381
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190820092123epcas2p2170ae19467a5fb19fcfc1acdbecf9381
+References: <20190723020450.z2pqwetkn2tfhacq@vireshk-i7>
+        <5ef302a4-5bbf-483d-dfdf-cf76f6f69cee@samsung.com>
+        <20190725022343.p7lqalrh5svxvtu2@vireshk-i7>
+        <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+        <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+        <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
+        <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
+        <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
+        <20190820030114.6flnn2omeys3lih3@vireshk-i7>
+        <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
+        <CGME20190820092123epcas2p2170ae19467a5fb19fcfc1acdbecf9381@epcas2p2.samsung.com>
+        <20190820092113.gojhe3romdnvm7eu@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 01:07:23PM +0300, Heikki Krogerus wrote:
-> The primary purpose for this node will be to allow linking
-> the users of the switch to it. The users will be for example
-> USB Type-C connectors. By supplying a reference to this
-> node in the software nodes representing the USB Type-C
-> controllers or connectors, the drivers for those devices can
-> access the switch.
-> 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Hi,
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On 8/20/19 11:21, Viresh Kumar wrote:
+> On 20-08-19, 11:03, Sylwester Nawrocki wrote:
+>> On 8/20/19 05:01, Viresh Kumar wrote:
+>>> Sorry but I am unable to understand the difficulty you are facing now. So what I
+>>> suggest is something like this.
+>>
+>> The difficulty was about representing data from tables asv_{arm,kfc}_table[][]
+>> added in patch 3/9 of the series in devicetree.  If you have no objections
+>> about keeping those tables in the driver then I can't see any difficulties. 
+> 
+> The problem with keeping such tables in kernel is that they contain too much
+> magic values which very few people understand. And after some amount of time,
+> even they don't remember any of it.
+>
+> What I was expecting was to remove as much of these tables as possible and do
+> the calculations to get them at runtime with some logical code which people can
+> understand later on.
+
+It might be indeed far from a good design but this is all what we get from the 
+SoC vendor. AFAIU those tables are generated based on data from the production
+process, likely from some measurements.
+
+I am afraid I will not get more information for that fairly old SoCs in order to 
+replace those tables with some sensible code generating the data programmatically,
+I'm not sure it would be at all possible to do.
+
+I could add some more comments, similar to description as in my previous RFC 
+DT binding (https://patchwork.kernel.org/patch/10886013).
+
+The tables are rather simple, it's mostly all voltage values, only selecting 
+values per each frequency and chip revision might get a bit complex. 
+I'm not sure we could change that now though.
+>> Then IIUC what I would need to change is to modify exynos_asv_update_cpu_opps() 
+>> function in patch 3/9 to use dev_pm_opp_adjust_voltage() rather than 
+>> dev_pm_opp_remove(), dev_pm_opp_add().
+> 
+> That and somehow add code to get those tables if possible.
+
+I have changed the code to use dev_pm_opp_adjust_voltage(). I was wondering 
+though, what did you mean by "triplet" when commenting on this patch
+https://patchwork.kernel.org/patch/11092245 ?
+
+-- 
+Regards,
+Sylwester
