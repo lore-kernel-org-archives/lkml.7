@@ -2,101 +2,134 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E08FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D480CC41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DA82070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE26222CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rlc1qhvZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxDni1+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbfIDRSN (ORCPT
+        id S1731743AbfIDRTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:18:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40417 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730317AbfIDRSM (ORCPT
+        Wed, 4 Sep 2019 13:19:49 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40786 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731466AbfIDRTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:18:12 -0400
-Received: by mail-ot1-f66.google.com with SMTP id y39so11348334ota.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 10:18:12 -0700 (PDT)
+        Wed, 4 Sep 2019 13:19:48 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x127so967771pfb.7;
+        Wed, 04 Sep 2019 10:19:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fWAo+cPvJp3pRuv/EjTjzujk+3Lx4B3tuClNVfFzxqE=;
-        b=Rlc1qhvZ/ZQZfeXisjWKvvbzrb0mPj0GtsVSCztE1V6gBxbgVkBtlwBpQfC2Ws0iBt
-         j4bJSkCe2TVLeJe5NK/C6H5I6WMPrjn2HB/p4HGS4lLapqisnUcpYcsHcOvLEXufOiOS
-         /Rxvb97yf7u2LLniuekAdg3DDYKhLMQQEx4l4CR7VYkoEEETOko7EYgS9GpF9q0C/2r2
-         dvVVNg9ufoLzzbx/qnE1LgO1GRYro3b/T25vZuduFuyj1S3ATJ9kKptK/TWQwnUUnEId
-         EIySB20LH9efVW3/EMHOaxC/bSdaLLY2mfjzFeoqVQWPb5Tyj8/Q733yJqVbiiK1ODNC
-         HxmA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=09xouYfGtM7P/+Szurweb+Wo4prOf3fUjEfXXhSPvME=;
+        b=bxDni1+RWIcCrmcmzKZQBT7cquE1szM+Rm10Syh+xw44EBp11UXsk0Zc5eo59dnbyr
+         Ox9VL0O3wgC9uBUAlNkC9RBa/Sjk753Igi3sCtiB4BKPQv8Mg1v0IZktFKSbMVg1scyA
+         FAZUOYfe11oasXe+cMmbFHMxcerzZvp0R65AVCvE8DtaZitzI+9Zpoi2hJSFsjP3+JhO
+         BXV9F+Qwa0ha9xmxnIPvSBF9Dxovp7Jrrc7V7JRWUe9xIY8+I5j9VnQw8EYBJLpVlWxn
+         hU83BGp2e75k5uOvyQ1/nbcDPdpqx5tGktn9Usl7STni53tGJYSGs3knulQDQ+l57PPo
+         zofg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fWAo+cPvJp3pRuv/EjTjzujk+3Lx4B3tuClNVfFzxqE=;
-        b=UnrrnY/Kn1GmM2ESqh0JcAfkbUX57+8jxSzNpW893vr0wi9r7q868bJWnhcQNOJoa1
-         4F2X0WnKxIZq191qURCYf81J8zKQmjOzXyqiClCru9n7Vmo1aPxiP6DTokH7kIP6Hy7a
-         uFEI1MiGk5ZnF4B05fGYzCrIpI9Ele9k0GISOoHiFFO0fNN6YmiUMJggk9bCe8SEgwye
-         O/z3fK4XUbiZEFPzZjDm+Kg8c8he/pzyJcXtaO6UyTwRw4y9EDpQcfQ0Y8O1uUZYQo6h
-         2ufODeQbYhtY6o/8FPZgNsdKyvwJJi62gNlhhkdRQvjxHZE06oGhvVTzXnQsniMtZFO0
-         USIA==
-X-Gm-Message-State: APjAAAUEQldszyC+ZunmrtSb/x0KKpXvfqWhPfu869mR+bcwJjMvg+SK
-        +qGCKSZHkpK92oTY78zmRaAI3jcD70KOVArSXlONMw==
-X-Google-Smtp-Source: APXvYqxB6/QFXnZ/bEnS1j2lA+AClqCX06L5cZV7XAFcGub2RVPZyKFEhbHeaZgG1pDQGqQfQ9P+zjb+4LI/qsUMqOE=
-X-Received: by 2002:a9d:30c2:: with SMTP id r2mr17813816otg.186.1567617491603;
- Wed, 04 Sep 2019 10:18:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=09xouYfGtM7P/+Szurweb+Wo4prOf3fUjEfXXhSPvME=;
+        b=QbFEJMiH74czil1seJ5411+jyKScOCwV+kdrfZl4G/CNkslwrXxDg1Hkkc7hLsjChP
+         H9UOzjmZX+Xs2XqwL/QDghazm13TE1sqjc1To4npDxvSzJIRaSQ97PgWM3rrex8OFv7E
+         ypj/ndfMm97adf3MEJ0snKX67gJGC+LS3wJ2aXTWLAaIBW+S2Jc8LZqRjZqgPSeij7uN
+         z1tW7RnI2midcydySO4H0v9QotF8wh2qhvTIiJLdj2gDAZ9aSpLno8DqsdnWuGmyEKGO
+         PoS49dMu9iXce2Sx9ukSz4Lr/ipfh0BEco62l29SBH99+YtwvD9qC7xUcrfWLT5v9lfk
+         A+Rw==
+X-Gm-Message-State: APjAAAWHeFQRPA5mjiSTGUK2fSro2q5qlxvDM3je3Vn52vAHFSne5Ugt
+        QpFhWn2tIhPpvcxTC3nHJI4=
+X-Google-Smtp-Source: APXvYqzYc/xI1nMtMO8Q1TmWhNupziMCqcsew+YiGdEK3/Q/34lirq+6VDV81HR7x7yQFYWo9F0bUw==
+X-Received: by 2002:aa7:96c1:: with SMTP id h1mr9951490pfq.111.1567617587533;
+        Wed, 04 Sep 2019 10:19:47 -0700 (PDT)
+Received: from localhost ([100.118.89.196])
+        by smtp.gmail.com with ESMTPSA id z23sm1407891pfn.45.2019.09.04.10.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 10:19:46 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] drm/msm: Use the correct dma_sync calls harder
+Date:   Wed,  4 Sep 2019 10:17:23 -0700
+Message-Id: <20190904171723.2956-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190903200905.198642-1-joel@joelfernandes.org>
- <20190904084508.GL3838@dhcp22.suse.cz> <20190904153258.GH240514@google.com> <20190904153759.GC3838@dhcp22.suse.cz>
-In-Reply-To: <20190904153759.GC3838@dhcp22.suse.cz>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Wed, 4 Sep 2019 10:17:33 -0700
-Message-ID: <CAKOZueuGML_ZX8Pk5csLK7TWEVwqGj=KZTh2TELNsLytkrHCTQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Carmen Jackson <carmenjackson@google.com>,
-        Mayank Gupta <mayankgupta@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 8:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > but also for reducing
-> > tracing noise. Flooding the traces makes it less useful for long traces and
-> > post-processing of traces. IOW, the overhead reduction is a bonus.
->
-> This is not really anything special for this tracepoint though.
-> Basically any tracepoint in a hot path is in the same situation and I do
-> not see a point why each of them should really invent its own way to
-> throttle. Maybe there is some way to do that in the tracing subsystem
-> directly.
+From: Rob Clark <robdclark@chromium.org>
 
-I agree. I'd rather not special-case RSS in this way, especially not
-with a hardcoded aggregation and thresholding configuration. It should
-be possible to handle high-frequency trace data point aggregation in a
-general way. Why shouldn't we be able to get a time series for, say,
-dirty pages? Or various slab counts? IMHO, any counter on the system
-ought to be observable in a uniform way.
+Looks like the dma_sync calls don't do what we want on armv7 either.
+Fixes:
+
+  Unable to handle kernel paging request at virtual address 50001000
+  pgd = (ptrval)
+  [50001000] *pgd=00000000
+  Internal error: Oops: 805 [#1] SMP ARM
+  Modules linked in:
+  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc6-00271-g9f159ae07f07 #4
+  Hardware name: Freescale i.MX53 (Device Tree Support)
+  PC is at v7_dma_clean_range+0x20/0x38
+  LR is at __dma_page_cpu_to_dev+0x28/0x90
+  pc : [<c011c76c>]    lr : [<c01181c4>]    psr: 20000013
+  sp : d80b5a88  ip : de96c000  fp : d840ce6c
+  r10: 00000000  r9 : 00000001  r8 : d843e010
+  r7 : 00000000  r6 : 00008000  r5 : ddb6c000  r4 : 00000000
+  r3 : 0000003f  r2 : 00000040  r1 : 50008000  r0 : 50001000
+  Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+  Control: 10c5387d  Table: 70004019  DAC: 00000051
+  Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Fixes: 3de433c5b38a ("drm/msm: Use the correct dma_sync calls in msm_gem")
+Tested-by: Fabio Estevam <festevam@gmail.com>
+---
+ drivers/gpu/drm/msm/msm_gem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 7263f4373f07..5a6a79fbc9d6 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -52,7 +52,7 @@ static void sync_for_device(struct msm_gem_object *msm_obj)
+ {
+ 	struct device *dev = msm_obj->base.dev->dev;
+ 
+-	if (get_dma_ops(dev)) {
++	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
+ 		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
+ 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+ 	} else {
+@@ -65,7 +65,7 @@ static void sync_for_cpu(struct msm_gem_object *msm_obj)
+ {
+ 	struct device *dev = msm_obj->base.dev->dev;
+ 
+-	if (get_dma_ops(dev)) {
++	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
+ 		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
+ 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
+ 	} else {
+-- 
+2.21.0
+
