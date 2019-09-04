@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B28DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B7A2C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00AF9206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 168F5206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621085;
-	bh=khsVp9cYfjAoDIzzdFzI30k+Zpgo/KBMB8i/V8V/Kx4=;
+	s=default; t=1567621092;
+	bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYY/RqmaVMdA2ha3V3srGqztNGcBWC9HuVuelpN9vyAfu7kEOFAGjiG3HXe0dNXFz
-	 vaQBtPKGrfXkeXm8ISalMB3+5JcUpILh4zBCvINRNiSb/QQ0pdpMGR3ffmxnK4IrJQ
-	 IEf3wo9LKoJNmBhDlQ6M1hQUGb6d74+08iXv8Ric=
+	b=0tQBVeNmsXUY+rSaSCZoIs5uLYW6/C232cjs+5zKW+y4pF73gDrfnXrkcpggATd+H
+	 I6zuLQQ+Lc6MWZxL3qSkcKyJkyS+eGkZhgm4CF/1RevxHBSA1yjydxj0qzfCxeFd48
+	 eiMTJRVbLtnUMySZulyv5POyb4lULRDzQQ93Oivo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390158AbfIDSSD (ORCPT
+        id S2390386AbfIDSLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55922 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:11:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388806AbfIDSLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:46 -0400
+        id S2390274AbfIDSLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE9322DBF;
-        Wed,  4 Sep 2019 18:11:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F999206BA;
+        Wed,  4 Sep 2019 18:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620705;
-        bh=khsVp9cYfjAoDIzzdFzI30k+Zpgo/KBMB8i/V8V/Kx4=;
+        s=default; t=1567620683;
+        bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YcR7kqhDX02s4ehywRrgZWCMZERdQqiIa52VRnp0wBVxSeX/r7GbjWjZ3QAyXyTgZ
-         yBdMMUHrK4sHFcDRwCJPmorpOb0C5o1I5r45kFfWclbJHvgH8za+8Vp9yeXITrZq8K
-         BN87+6Hw98Ee4WZWt+CEcSLp7JQX7nga8UV7UQNA=
+        b=n6uapoh509eTn9a0CtT9aEe1z/+qRr0oh2nlaeIPAc3C3G9KeyI3Sr9+PxBws0Uj2
+         fT4nyAX84bavwIY9jFriFWZ4S/VOPZhuTyS2/eekjRZxmR9VSLI1eE5z6EHRVnIAYX
+         eCSiVGQ2xyW0uOEath5nRtynNp5LZMb6P4CuNkes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 065/143] ALSA: usb-audio: Fix invalid NULL check in snd_emuusb_set_samplerate()
-Date:   Wed,  4 Sep 2019 19:53:28 +0200
-Message-Id: <20190904175316.613456974@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Vladimir Rutsky <rutsky@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 054/143] tcp: make sure EPOLLOUT wont be missed
+Date:   Wed,  4 Sep 2019 19:53:17 +0200
+Message-Id: <20190904175316.182242667@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -58,53 +63,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 6de3c9e3f6b3eaf66859e1379b3f35dda781416b upstream.
+[ Upstream commit ef8d8ccdc216f797e66cb4a1372f5c4c285ce1e4 ]
 
-The quirk function snd_emuusb_set_samplerate() has a NULL check for
-the mixer element, but this is useless in the current code.  It used
-to be a check against mixer->id_elems[unitid] but it was changed later
-to the value after mixer_eleme_list_to_info() which is always non-NULL
-due to the container_of() usage.
+As Jason Baron explained in commit 790ba4566c1a ("tcp: set SOCK_NOSPACE
+under memory pressure"), it is crucial we properly set SOCK_NOSPACE
+when needed.
 
-This patch fixes the check before the conversion.
+However, Jason patch had a bug, because the 'nonblocking' status
+as far as sk_stream_wait_memory() is concerned is governed
+by MSG_DONTWAIT flag passed at sendmsg() time :
 
-While we're at it, correct a typo in the comment in the function,
-too.
+    long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
 
-Fixes: 8c558076c740 ("ALSA: usb-audio: Clean up mixer element list traverse")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+So it is very possible that tcp sendmsg() calls sk_stream_wait_memory(),
+and that sk_stream_wait_memory() returns -EAGAIN with SOCK_NOSPACE
+cleared, if sk->sk_sndtimeo has been set to a small (but not zero)
+value.
+
+This patch removes the 'noblock' variable since we must always
+set SOCK_NOSPACE if -EAGAIN is returned.
+
+It also renames the do_nonblock label since we might reach this
+code path even if we were in blocking mode.
+
+Fixes: 790ba4566c1a ("tcp: set SOCK_NOSPACE under memory pressure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Reported-by: Vladimir Rutsky  <rutsky@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/mixer_quirks.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/core/stream.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -1155,17 +1155,17 @@ void snd_emuusb_set_samplerate(struct sn
- {
- 	struct usb_mixer_interface *mixer;
- 	struct usb_mixer_elem_info *cval;
--	int unitid = 12; /* SamleRate ExtensionUnit ID */
-+	int unitid = 12; /* SampleRate ExtensionUnit ID */
+--- a/net/core/stream.c
++++ b/net/core/stream.c
+@@ -120,7 +120,6 @@ int sk_stream_wait_memory(struct sock *s
+ 	int err = 0;
+ 	long vm_wait = 0;
+ 	long current_timeo = *timeo_p;
+-	bool noblock = (*timeo_p ? false : true);
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
  
- 	list_for_each_entry(mixer, &chip->mixer_list, list) {
--		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
--		if (cval) {
-+		if (mixer->id_elems[unitid]) {
-+			cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
- 			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
- 						    cval->control << 8,
- 						    samplerate_id);
- 			snd_usb_mixer_notify_id(mixer, unitid);
-+			break;
- 		}
--		break;
- 	}
- }
+ 	if (sk_stream_memory_free(sk))
+@@ -133,11 +132,8 @@ int sk_stream_wait_memory(struct sock *s
  
+ 		if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
+ 			goto do_error;
+-		if (!*timeo_p) {
+-			if (noblock)
+-				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+-			goto do_nonblock;
+-		}
++		if (!*timeo_p)
++			goto do_eagain;
+ 		if (signal_pending(current))
+ 			goto do_interrupted;
+ 		sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
+@@ -169,7 +165,13 @@ out:
+ do_error:
+ 	err = -EPIPE;
+ 	goto out;
+-do_nonblock:
++do_eagain:
++	/* Make sure that whenever EAGAIN is returned, EPOLLOUT event can
++	 * be generated later.
++	 * When TCP receives ACK packets that make room, tcp_check_space()
++	 * only calls tcp_new_space() if SOCK_NOSPACE is set.
++	 */
++	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
+ 	err = -EAGAIN;
+ 	goto out;
+ do_interrupted:
 
 
