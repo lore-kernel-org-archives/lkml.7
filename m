@@ -2,100 +2,137 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA11C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C66C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E2A2341E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:13:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+AzYIEU"
+	by mail.kernel.org (Postfix) with ESMTP id 50B3323402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728811AbfIDGNa (ORCPT
+        id S1728824AbfIDGOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:13:30 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38937 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727881AbfIDGN3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:13:29 -0400
-Received: by mail-pf1-f194.google.com with SMTP id s12so5550963pfe.6;
-        Tue, 03 Sep 2019 23:13:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/J2boyPn+qcY/K0vnmvhFTTJFIHHHtzjypsfGFGhgdk=;
-        b=T+AzYIEUXfUowK7oaDioOyQfgljXCgF5OaLeVOZDs5si9YNS62iHvZYF7QPPWxoMuD
-         6HZoj9lzZMst3evVF0QG+nXAFRWyTTfNe+b4E+h9aBaBl8CaInKHf+pZGjQktMzzlEyS
-         HPNpOSDNvBsS1d0T59kOyxX0yOuiQVzLIo1D/hymPSUPqgY+ZFRe3b3dSJPdOMgWbONz
-         XvbCScG2k/yOAyjE4AfT144iEbaku+wFeuwj856zrB+uPkd+g7LsFBwlQVtZxyT5dwXx
-         hb3V4Ke7j/tgHPb2wYdr0vtUMJXXvKhK8Lz9SZ5Ad7ed0rq0j23lIoyWDfziHTJgqVtW
-         vamg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/J2boyPn+qcY/K0vnmvhFTTJFIHHHtzjypsfGFGhgdk=;
-        b=Uc+/RrKaejOFzQq5K2W7Y6LJbehBm7dSaZPIdRngsapDqCYicNTH0OR+Fzb4xnM49A
-         R0hBmdl28s43b5YSzr3WGbgHicCz0UklT+g+iY8LKatIRe5Eu0URKh5V3+3dlCDYqUDo
-         31Sov4PyGwI9h6LqpP1w121NJ/11Fu43QStz0slB2sAoRfN6bOMfwTO4FzQctZHgmHOH
-         PgW/8osfW4TayrjdVD2OZ+K9kY2LPqBTeOERkfwEuhbGzDaWGG7IYivc1ZXquadzxSqK
-         q/dyuDJwd0Qo4haZjp5x01GxSKbgCDw9QTZ7BYZ08UsesnLW2Dv4QtwekBaH2kJUn8Jz
-         zL1g==
-X-Gm-Message-State: APjAAAUbtGtY5kn23kkzCfXcE/itW32Lr3sTlc1UHoQoP2MjyK13v1ZW
-        aprShgIDMjFFVUzwDC8l3OqFNfPiQy0=
-X-Google-Smtp-Source: APXvYqx0ThSaW+fHUBqyw3dqUD0Oa30Gmx83hxepmA1ZcStILNrjdla4WSXq4PxIDnAoPGKQ4jNvJQ==
-X-Received: by 2002:a65:5a8c:: with SMTP id c12mr32988229pgt.73.1567577609134;
-        Tue, 03 Sep 2019 23:13:29 -0700 (PDT)
-Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id i9sm42443093pgo.46.2019.09.03.23.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 23:13:28 -0700 (PDT)
-From:   Rashmica Gupta <rashmica.g@gmail.com>
-To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, andrew@aj.id.au,
-        Rashmica Gupta <rashmica.g@gmail.com>
-Subject: [PATCH 4/4] gpio: Update documentation with ast2600 controllers
-Date:   Wed,  4 Sep 2019 16:12:45 +1000
-Message-Id: <20190904061245.30770-4-rashmica.g@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904061245.30770-1-rashmica.g@gmail.com>
-References: <20190904061245.30770-1-rashmica.g@gmail.com>
+        Wed, 4 Sep 2019 02:14:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:48070 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfIDGOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 02:14:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 312C2344;
+        Tue,  3 Sep 2019 23:14:29 -0700 (PDT)
+Received: from [10.162.41.129] (p8cg001049571a15.blr.arm.com [10.162.41.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 89A8D3F718;
+        Tue,  3 Sep 2019 23:16:41 -0700 (PDT)
+Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        James Hogan <jhogan@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-snps-arc@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Burton <paul.burton@mips.com>, kbuild-all@01.org,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+References: <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
+ <201909031912.htvWy2Bu%lkp@intel.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <4dc9698f-dff4-b916-a83e-dc932c8087c0@arm.com>
+Date:   Wed, 4 Sep 2019 11:44:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <201909031912.htvWy2Bu%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
----
- Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-index 7e9b586770b0..cd388797e07c 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-@@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
- -------------------------------------------
- 
- Required properties:
--- compatible		: Either "aspeed,ast2400-gpio" or "aspeed,ast2500-gpio"
-+- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
-+					  "aspeed,ast2600-gpio", or "aspeed,ast2600-1-8v-gpio"
- 
- - #gpio-cells 		: Should be two
- 			  - First cell is the GPIO line number
--- 
-2.20.1
 
+On 09/03/2019 04:43 PM, kbuild test robot wrote:
+> Hi Anshuman,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3-rc7 next-20190902]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Anshuman-Khandual/mm-debug-Add-tests-for-architecture-exported-page-table-helpers/20190903-162959
+> config: m68k-allmodconfig (attached as .config)
+> compiler: m68k-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=m68k 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>    In file included from arch/m68k/include/asm/bug.h:32:0,
+>                     from include/linux/bug.h:5,
+>                     from include/linux/thread_info.h:12,
+>                     from include/asm-generic/preempt.h:5,
+>                     from ./arch/m68k/include/generated/asm/preempt.h:1,
+>                     from include/linux/preempt.h:78,
+>                     from arch/m68k/include/asm/irqflags.h:6,
+>                     from include/linux/irqflags.h:16,
+>                     from arch/m68k/include/asm/atomic.h:6,
+>                     from include/linux/atomic.h:7,
+>                     from include/linux/mm_types_task.h:13,
+>                     from include/linux/mm_types.h:5,
+>                     from include/linux/hugetlb.h:5,
+>                     from mm/arch_pgtable_test.c:14:
+>    mm/arch_pgtable_test.c: In function 'pmd_clear_tests':
+>>> arch/m68k/include/asm/page.h:31:22: error: lvalue required as unary '&' operand
+>     #define pmd_val(x) ((&x)->pmd[0])
+>                          ^
+>    include/asm-generic/bug.h:124:25: note: in definition of macro 'WARN_ON'
+>      int __ret_warn_on = !!(condition);    \
+>                             ^~~~~~~~~
+>>> arch/m68k/include/asm/motorola_pgtable.h:138:26: note: in expansion of macro 'pmd_val'
+>     #define pmd_none(pmd)  (!pmd_val(pmd))
+>                              ^~~~~~~
+>>> mm/arch_pgtable_test.c:233:11: note: in expansion of macro 'pmd_none'
+>      WARN_ON(!pmd_none(READ_ONCE(*pmdp)));
+>               ^~~~~~~~
+>    mm/arch_pgtable_test.c: In function 'pmd_populate_tests':
+>>> arch/m68k/include/asm/page.h:31:22: error: lvalue required as unary '&' operand
+>     #define pmd_val(x) ((&x)->pmd[0])
+
+Storing READ_ONCE(*pmdp) in a local pmd_t variable first solves the problem.
