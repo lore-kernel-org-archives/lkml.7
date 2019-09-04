@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B8AC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789A6C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2E422CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E8C20820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613306;
-	bh=uzKKD5qqt73DIpkrsgYADca5BmE3oK1MNkTTEMz098g=;
+	s=default; t=1567613323;
+	bh=9msoC85KjAkTZ+3NyTfzwtqHQ+ihqnOm2jDZUcXZ8B4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWyvNr1CZS4an3P7+YtxmaOMd36XpuF1Ay4QN6ynmv0Ue8F7MRf4rT2JxILqPSOng
-	 MvN+UNOJKlm0gAzjlPJvG0lq1bL2EL1xbAJ5m36tYdaSnveVHuyNGE/ThL0cNXok+L
-	 EihZEXIjr/R5lqCLa8bC/JiUjm0mPoMnrstJT6fQ=
+	b=n6SAHVuOsWMhtmr5Asdsm+qCQUeL+PbEvZJl1yOl7U5CPjWmKyZxkDAUjmITk5fGD
+	 sniGKgvoSellM8X8fR5aiFnYiuFh3USdR6LwumJaN8MaB3e3QQJC6+H+Dv2kTu334k
+	 wyvefGlyuXh/1I5J9/qRYIkgEl33jCM01Mt1Jeys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733207AbfIDQIZ (ORCPT
+        id S1733280AbfIDQIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:08:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36986 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733016AbfIDQBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:01:33 -0400
+        id S1732997AbfIDQB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 627AA22CF5;
-        Wed,  4 Sep 2019 16:01:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 964022339D;
+        Wed,  4 Sep 2019 16:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612892;
-        bh=uzKKD5qqt73DIpkrsgYADca5BmE3oK1MNkTTEMz098g=;
+        s=default; t=1567612886;
+        bh=9msoC85KjAkTZ+3NyTfzwtqHQ+ihqnOm2jDZUcXZ8B4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wxhdMjIMitn1O3HHD5Z6UO/OIrZi9KJ6YP+nKr3EqCGZiIbR1x6ppswPJURIHkZni
-         yidbNkNe0bXOI4zlQoUma/EwA/hc9HB5aRcF52FzJCE4cZnQI4mg7Nwul9AzJz555f
-         Rsimr1mzEzLUH4VzB7SondFnR1hGldZoILjqLRmE=
+        b=2bZZliP3fE9m9JvoCVD3qISjBMHpXGoYALxN6ltrKv4+3EYocxEi5fUrQm7plzUAE
+         Gu7iF4cJO1XEOiZJU6BKgJkn0VLGkF8+Sol3aBnM5DxGASkyiz7/2VahWNPwde/APV
+         8f5WFz8SJa2oIu5q7OMleOIZQhIAIsDxX3YDnQjY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/36] netfilter: xt_nfacct: Fix alignment mismatch in xt_nfacct_match_info
-Date:   Wed,  4 Sep 2019 12:00:54 -0400
-Message-Id: <20190904160122.4179-8-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/36] ARM: OMAP2+: Fix omap4 errata warning on other SoCs
+Date:   Wed,  4 Sep 2019 12:00:49 -0400
+Message-Id: <20190904160122.4179-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -62,105 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 89a26cd4b501e9511d3cd3d22327fc76a75a38b3 ]
+[ Upstream commit 45da5e09dd32fa98c32eaafe2513db6bd75e2f4f ]
 
-When running a 64-bit kernel with a 32-bit iptables binary, the size of
-the xt_nfacct_match_info struct diverges.
+We have errata i688 workaround produce warnings on SoCs other than
+omap4 and omap5:
 
-    kernel: sizeof(struct xt_nfacct_match_info) : 40
-    iptables: sizeof(struct xt_nfacct_match_info)) : 36
+omap4_sram_init:Unable to allocate sram needed to handle errata I688
+omap4_sram_init:Unable to get sram pool needed to handle errata I688
 
-Trying to append nfacct related rules results in an unhelpful message.
-Although it is suggested to look for more information in dmesg, nothing
-can be found there.
+This is happening because there is no ti,omap4-mpu node, or no SRAM
+to configure for the other SoCs, so let's remove the warning based
+on the SoC revision checks.
 
-    # iptables -A <chain> -m nfacct --nfacct-name <acct-object>
-    iptables: Invalid argument. Run `dmesg' for more information.
+As nobody has complained it seems that the other SoC variants do not
+need this workaround.
 
-This patch fixes the memory misalignment by enforcing 8-byte alignment
-within the struct's first revision. This solution is often used in many
-other uapi netfilter headers.
-
-Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_nfacct.h |  5 ++++
- net/netfilter/xt_nfacct.c                | 36 ++++++++++++++++--------
- 2 files changed, 30 insertions(+), 11 deletions(-)
+ arch/arm/mach-omap2/omap4-common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/uapi/linux/netfilter/xt_nfacct.h b/include/uapi/linux/netfilter/xt_nfacct.h
-index 5c8a4d760ee34..b5123ab8d54a8 100644
---- a/include/uapi/linux/netfilter/xt_nfacct.h
-+++ b/include/uapi/linux/netfilter/xt_nfacct.h
-@@ -11,4 +11,9 @@ struct xt_nfacct_match_info {
- 	struct nf_acct	*nfacct;
- };
+diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
+index cf65ab8bb0046..e5dcbda20129d 100644
+--- a/arch/arm/mach-omap2/omap4-common.c
++++ b/arch/arm/mach-omap2/omap4-common.c
+@@ -131,6 +131,9 @@ static int __init omap4_sram_init(void)
+ 	struct device_node *np;
+ 	struct gen_pool *sram_pool;
  
-+struct xt_nfacct_match_info_v1 {
-+	char		name[NFACCT_NAME_MAX];
-+	struct nf_acct	*nfacct __attribute__((aligned(8)));
-+};
++	if (!soc_is_omap44xx() && !soc_is_omap54xx())
++		return 0;
 +
- #endif /* _XT_NFACCT_MATCH_H */
-diff --git a/net/netfilter/xt_nfacct.c b/net/netfilter/xt_nfacct.c
-index 6f92d25590a85..ea447b437f122 100644
---- a/net/netfilter/xt_nfacct.c
-+++ b/net/netfilter/xt_nfacct.c
-@@ -55,25 +55,39 @@ nfacct_mt_destroy(const struct xt_mtdtor_param *par)
- 	nfnl_acct_put(info->nfacct);
- }
- 
--static struct xt_match nfacct_mt_reg __read_mostly = {
--	.name       = "nfacct",
--	.family     = NFPROTO_UNSPEC,
--	.checkentry = nfacct_mt_checkentry,
--	.match      = nfacct_mt,
--	.destroy    = nfacct_mt_destroy,
--	.matchsize  = sizeof(struct xt_nfacct_match_info),
--	.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
--	.me         = THIS_MODULE,
-+static struct xt_match nfacct_mt_reg[] __read_mostly = {
-+	{
-+		.name       = "nfacct",
-+		.revision   = 0,
-+		.family     = NFPROTO_UNSPEC,
-+		.checkentry = nfacct_mt_checkentry,
-+		.match      = nfacct_mt,
-+		.destroy    = nfacct_mt_destroy,
-+		.matchsize  = sizeof(struct xt_nfacct_match_info),
-+		.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
-+		.me         = THIS_MODULE,
-+	},
-+	{
-+		.name       = "nfacct",
-+		.revision   = 1,
-+		.family     = NFPROTO_UNSPEC,
-+		.checkentry = nfacct_mt_checkentry,
-+		.match      = nfacct_mt,
-+		.destroy    = nfacct_mt_destroy,
-+		.matchsize  = sizeof(struct xt_nfacct_match_info_v1),
-+		.usersize   = offsetof(struct xt_nfacct_match_info_v1, nfacct),
-+		.me         = THIS_MODULE,
-+	},
- };
- 
- static int __init nfacct_mt_init(void)
- {
--	return xt_register_match(&nfacct_mt_reg);
-+	return xt_register_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
- }
- 
- static void __exit nfacct_mt_exit(void)
- {
--	xt_unregister_match(&nfacct_mt_reg);
-+	xt_unregister_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
- }
- 
- module_init(nfacct_mt_init);
+ 	np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
+ 	if (!np)
+ 		pr_warn("%s:Unable to allocate sram needed to handle errata I688\n",
 -- 
 2.20.1
 
