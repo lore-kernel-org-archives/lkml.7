@@ -2,159 +2,83 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D336C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C700CC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6D822CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567601572;
-	bh=XG+z6BHhOmv9W2OyuDcqw63mHyObz78oeswsmfEdF1U=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=lxkUQ2UVQnOf2W1L8q7gdxLku0d/PlNcoGEPgz4Fdp3XbOQ+miONFSz+n19jGgHwa
-	 86UzuznJgGLUSNN4inR32jIRePofITy7pY7sohWQY1be0pzoDSFRt2TBdzzl/9Lpqq
-	 zqwZsIop2gTQ4DNvo0kSVNmfZnk0zBAYxwWi+Hho=
+	by mail.kernel.org (Postfix) with ESMTP id 8EB412073F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:54:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="nsrFer4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbfIDMwv (ORCPT
+        id S1729950AbfIDMya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbfIDMwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:52:51 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B30F21883;
-        Wed,  4 Sep 2019 12:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567601569;
-        bh=XG+z6BHhOmv9W2OyuDcqw63mHyObz78oeswsmfEdF1U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QOvybiJzp85IlBNCfwgLsBnLV9DR4UQ+d3iO+92iuV9rSa0S6OBqWysT1ufEq9jPg
-         Uc8pw3mW3WhdRGHShvIhIShiLbWPqR1oIpH89892Mb1phi9Lqta58kkyAJU+pCa6lo
-         XwT3v0mpqc9uUS8Hbn+5AeFK7k62BlqLx2/zGjmo=
-Message-ID: <2227b44d9e36f9bd129c73ee77c03b35d023236a.camel@kernel.org>
-Subject: Re: [RFC PATCH v2 02/19] fs/locks: Add Exclusive flag to user
- Layout lease
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michal Hocko <mhocko@suse.com>, linux-xfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org
-Date:   Wed, 04 Sep 2019 08:52:47 -0400
-In-Reply-To: <20190829233408.GD18249@iweiny-DESK2.sc.intel.com>
-References: <20190809225833.6657-1-ira.weiny@intel.com>
-         <20190809225833.6657-3-ira.weiny@intel.com>
-         <fde2959db776616008fc5d31df700f5d7d899433.camel@kernel.org>
-         <20190814215630.GQ6129@dread.disaster.area>
-         <e6f4f619967f4551adb5003d0364770fde2b8110.camel@kernel.org>
-         <20190829233408.GD18249@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Wed, 4 Sep 2019 08:54:30 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:22688 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfIDMya (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:54:30 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 953AD3F6BF;
+        Wed,  4 Sep 2019 14:54:28 +0200 (CEST)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=nsrFer4N;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BVSgqDGQCpuw; Wed,  4 Sep 2019 14:54:27 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 69C7A3F6A7;
+        Wed,  4 Sep 2019 14:54:26 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id A7CB7360160;
+        Wed,  4 Sep 2019 14:54:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1567601666; bh=upzIZSLLF6duTN76hVSfhKtMddKOA3X3vki43QO64y0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nsrFer4N1Lg3tAVhzg80ql6321PSBah+sDckVQAilsxXlTvvs1CZgE9WsJT3iClYB
+         +Zhag++W127Yry/WQq+rAcBWBTBmUsH4mlEKJOFidWAFnHi5tTyxT4Vd7V3v3oKkGs
+         WoBs1AKqcozTOQ60/PYSQHqg+1qKp67H9Nhek/x8=
+Subject: Re: dma api errors with swiotlb
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <e3c4b2e1-7518-ab0e-a6ce-3fae9903dac0@shipmail.org>
+ <20190904121722.GA15601@infradead.org>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <4e21951d-025a-2b3d-14c8-878c6f237525@shipmail.org>
+Date:   Wed, 4 Sep 2019 14:54:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190904121722.GA15601@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-08-29 at 16:34 -0700, Ira Weiny wrote:
-> Missed this.  sorry.
-> 
-> On Mon, Aug 26, 2019 at 06:41:07AM -0400, Jeff Layton wrote:
-> > On Thu, 2019-08-15 at 07:56 +1000, Dave Chinner wrote:
-> > > On Wed, Aug 14, 2019 at 10:15:06AM -0400, Jeff Layton wrote:
-> > > > On Fri, 2019-08-09 at 15:58 -0700, ira.weiny@intel.com wrote:
-> > > > > From: Ira Weiny <ira.weiny@intel.com>
-> > > > > 
-> > > > > Add an exclusive lease flag which indicates that the layout mechanism
-> > > > > can not be broken.
-> > > > > 
-> > > > > Exclusive layout leases allow the file system to know that pages may be
-> > > > > GUP pined and that attempts to change the layout, ie truncate, should be
-> > > > > failed.
-> > > > > 
-> > > > > A process which attempts to break it's own exclusive lease gets an
-> > > > > EDEADLOCK return to help determine that this is likely a programming bug
-> > > > > vs someone else holding a resource.
-> > > .....
-> > > > > diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-> > > > > index baddd54f3031..88b175ceccbc 100644
-> > > > > --- a/include/uapi/asm-generic/fcntl.h
-> > > > > +++ b/include/uapi/asm-generic/fcntl.h
-> > > > > @@ -176,6 +176,8 @@ struct f_owner_ex {
-> > > > >  
-> > > > >  #define F_LAYOUT	16      /* layout lease to allow longterm pins such as
-> > > > >  				   RDMA */
-> > > > > +#define F_EXCLUSIVE	32      /* layout lease is exclusive */
-> > > > > +				/* FIXME or shoudl this be F_EXLCK??? */
-> > > > >  
-> > > > >  /* operations for bsd flock(), also used by the kernel implementation */
-> > > > >  #define LOCK_SH		1	/* shared lock */
-> > > > 
-> > > > This interface just seems weird to me. The existing F_*LCK values aren't
-> > > > really set up to be flags, but are enumerated values (even if there are
-> > > > some gaps on some arches). For instance, on parisc and sparc:
-> > > 
-> > > I don't think we need to worry about this - the F_WRLCK version of
-> > > the layout lease should have these exclusive access semantics (i.e
-> > > other ops fail rather than block waiting for lease recall) and hence
-> > > the API shouldn't need a new flag to specify them.
-> > > 
-> > > i.e. the primary difference between F_RDLCK and F_WRLCK layout
-> > > leases is that the F_RDLCK is a shared, co-operative lease model
-> > > where only delays in operations will be seen, while F_WRLCK is a
-> > > "guarantee exclusive access and I don't care what it breaks"
-> > > model... :)
-> > > 
-> > 
-> > Not exactly...
-> > 
-> > F_WRLCK and F_RDLCK leases can both be broken, and will eventually time
-> > out if there is conflicting access. The F_EXCLUSIVE flag on the other
-> > hand is there to prevent any sort of lease break from 
-> 
-> Right EXCLUSIVE will not break for any reason.  It will fail truncate and hole
-> punch as we discussed back in June.  This is for the use case where the user
-> has handed this file/pages off to some hardware for which removing the lease
-> would be impossible.  _And_ we don't anticipate any valid use case that someone
-> will need to truncate short of killing the process to free up file system
-> space.
-> 
-> > I'm guessing what Ira really wants with the F_EXCLUSIVE flag is
-> > something akin to what happens when we set fl_break_time to 0 in the
-> > nfsd code. nfsd never wants the locks code to time out a lease of any
-> > sort, since it handles that timeout itself.
-> > 
-> > If you're going to add this functionality, it'd be good to also convert
-> > knfsd to use it as well, so we don't end up with multiple ways to deal
-> > with that situation.
-> 
-> Could you point me at the source for knfsd?  I looked in 
-> 
-> git://git.linux-nfs.org/projects/steved/nfs-utils.git
-> 
-> but I don't see anywhere leases are used in that source?
-> 
+On 9/4/19 2:17 PM, Christoph Hellwig wrote:
+> A call to dma_max_mapping_size() to limit the maximum I/O size solves
+> that problem.  With the latest kernel that should actually be done
+> automatically by the SCSI midlayer for you.
 
-Ahh sorry that wasn't clear. It's the fs/nfsd directory in the Linux
-kernel sources. See nfsd4_layout_lm_break and nfsd_break_deleg_cb in
-particular.
+Hmm, OK. I guess with a sufficient queue depth and many mappings waiting 
+for DMA completion, the SWIOTLB may fill up anyway...
 
--- 
-Jeff Layton <jlayton@kernel.org>
+I'll see if I can come up with something.
+
+Thanks,
+
+Thomas
+
 
