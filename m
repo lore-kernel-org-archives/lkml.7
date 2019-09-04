@@ -2,122 +2,140 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D179C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C552339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j6b8aJX2"
+	by mail.kernel.org (Postfix) with ESMTP id 989AD233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567620079;
+	bh=KFODnPUszH4MM9Zm/k4q06s97DmxuuLgP9E4w7ZP23Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wHnRrdDRTajSLOaUQBIhqrUQgGnPmJBaihza/YN/ro9dpq2NN/b7CaajqyzN4Eevu
+	 9wbM+vEcZg6WSV6oHZiOpR+aChM7wLbypLgXUwoXcjxCyy4dvDMPeVDKIw8Zy013T8
+	 C3RIfn8bP06H3RBYsXG/6b9ds1vlq0AOuG0BJ7V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388532AbfIDSBQ (ORCPT
+        id S2388542AbfIDSBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:16 -0400
-Received: from mail-ua1-f73.google.com ([209.85.222.73]:44277 "EHLO
-        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388522AbfIDSBN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:13 -0400
-Received: by mail-ua1-f73.google.com with SMTP id g19so1613712uaq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:01:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=hB3975bQEe7YwXrrn5iDW2OoMeJHoR5KURbyU532I8E=;
-        b=j6b8aJX2+AM7wrmVWiG+1fBH3wBs4G7vlhLs5djzluKf1lh+aDFRF0DMqvpeYk7+N4
-         NWTrFarLNMYotaTdV8+vHMyUHu3u6e/VrZO3+F9Ej2OgFoJrTfiP0YoPYSpH1YHOsv8z
-         E2HTiEOcRLPiX/OHLjxMn/5GFOMG1TrT9IxVAF0V06mOiD6zz9IyxSdlkNkrX4feJkzG
-         67IYNwK0B55+dyhjwdRNdAbIzHB0fQWFk78352Q5stGVPa7ofrtHOQU6t3kUVpP5WwO3
-         d32chlFQfIremRbEW84FjjFPwHhLKRnsAIrAxqe00Z1u0CR823dkMmdoPgruB+44nR9s
-         /8Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=hB3975bQEe7YwXrrn5iDW2OoMeJHoR5KURbyU532I8E=;
-        b=gXkaXAuCQUyR0moU4quM/xSAiOIK9Tl4dOKdktfazEPAo/JmtzXq28LaIXtrbmZnBd
-         Jn3sKbWfx0r8Tz0++BuJB4V2SHcX839o2JfUXCxEle51akjZEwbUYL2qcorVZYyGm2qG
-         TI/K+03qcTc9d4/uulqMPTjm3VH2LmRaRAHIA+L9EDbPLVcI0uQcbtuat6R5hlq/AiYF
-         dt0iJ6w3Co3FggSjJTNqK2yk/G4wmlNHlU1sF1HZSDPi4Ig4omudZfeCC0rPxHsn+aFV
-         ZqYnIMOoE8qmnJoYCZS579Wjh2LJICfo6IsPbSmxy3E3a4fJUJnul9TBSfbmvnq7CeBT
-         6qGg==
-X-Gm-Message-State: APjAAAXt5prAwv90VM544tk23P2YETWLjlsmALxnkXNEa9lcOt83I1Fz
-        xVMDZko67H+p1uz5xeP4OLNjyUjx9KJ0
-X-Google-Smtp-Source: APXvYqzjwKtiv/1+0t4qQYpQXzR295bpi01G2uz1AA5oIHglW2/SsuxkeOjLPLYIKpdXnjT89djQWtlcLXvx
-X-Received: by 2002:ab0:2412:: with SMTP id f18mr7710005uan.53.1567620072442;
- Wed, 04 Sep 2019 11:01:12 -0700 (PDT)
-Date:   Wed,  4 Sep 2019 11:00:45 -0700
-Message-Id: <20190904180045.138513-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
-Subject: [PATCH] perf tools: Fix include paths in ui
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Sep 2019 14:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733156AbfIDSBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36BD421883;
+        Wed,  4 Sep 2019 18:01:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567620073;
+        bh=KFODnPUszH4MM9Zm/k4q06s97DmxuuLgP9E4w7ZP23Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LTedBING+TA5YrW62xK2WLonC2WdJZurSa6GugFkBCnHUyGOOecE1uy9b6NxxE0l9
+         q+o0cSjVeS8E5IzfrFjgslECWMEW4fbG8tLdfHUSZeTdgSKBDTRI3kwstN6QiGCLBk
+         tfvibPh+tkg9oOgsyt9BAGlqRppcNhP+ahpVBgWU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Bandan Das <bsd@redhat.com>
+Subject: [PATCH 4.9 62/83] x86/apic: Do not initialize LDR and DFR for bigsmp
+Date:   Wed,  4 Sep 2019 19:53:54 +0200
+Message-Id: <20190904175309.055395108@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
+References: <20190904175303.488266791@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These paths point to the wrong location but still work because they
-get picked up by a -I flag that happens to direct to the correct
-file. Fix paths to point to the correct location without -I flags.
+From: Bandan Das <bsd@redhat.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+commit bae3a8d3308ee69a7dbdf145911b18dfda8ade0d upstream.
+
+Legacy apic init uses bigsmp for smp systems with 8 and more CPUs. The
+bigsmp APIC implementation uses physical destination mode, but it
+nevertheless initializes LDR and DFR. The LDR even ends up incorrectly with
+multiple bit being set.
+
+This does not cause a functional problem because LDR and DFR are ignored
+when physical destination mode is active, but it triggered a problem on a
+32-bit KVM guest which jumps into a kdump kernel.
+
+The multiple bits set unearthed a bug in the KVM APIC implementation. The
+code which creates the logical destination map for VCPUs ignores the
+disabled state of the APIC and ends up overwriting an existing valid entry
+and as a result, APIC calibration hangs in the guest during kdump
+initialization.
+
+Remove the bogus LDR/DFR initialization.
+
+This is not intended to work around the KVM APIC bug. The LDR/DFR
+ininitalization is wrong on its own.
+
+The issue goes back into the pre git history. The fixes tag is the commit
+in the bitkeeper import which introduced bigsmp support in 2003.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+
+Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Bandan Das <bsd@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190826101513.5080-2-bsd@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/ui/browser.c      | 9 +++++----
- tools/perf/ui/tui/progress.c | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ arch/x86/kernel/apic/bigsmp_32.c |   24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index f80c51d53565..d227d74b28f8 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -1,7 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "../string2.h"
--#include "../config.h"
--#include "../../perf.h"
-+#include "../util/util.h"
-+#include "../util/string2.h"
-+#include "../util/config.h"
-+#include "../perf.h"
- #include "libslang.h"
- #include "ui.h"
- #include "util.h"
-@@ -14,7 +15,7 @@
- #include "browser.h"
- #include "helpline.h"
- #include "keysyms.h"
--#include "../color.h"
-+#include "../util/color.h"
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
+--- a/arch/x86/kernel/apic/bigsmp_32.c
++++ b/arch/x86/kernel/apic/bigsmp_32.c
+@@ -37,32 +37,12 @@ static int bigsmp_early_logical_apicid(i
+ 	return early_per_cpu(x86_cpu_to_apicid, cpu);
+ }
  
-diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
-index bc134b82829d..5a24dd3ce4db 100644
---- a/tools/perf/ui/tui/progress.c
-+++ b/tools/perf/ui/tui/progress.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/kernel.h>
--#include "../cache.h"
-+#include "../../util/cache.h"
- #include "../progress.h"
- #include "../libslang.h"
- #include "../ui.h"
--- 
-2.22.0.770.g0f2c4a37fd-goog
+-static inline unsigned long calculate_ldr(int cpu)
+-{
+-	unsigned long val, id;
+-
+-	val = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
+-	id = per_cpu(x86_bios_cpu_apicid, cpu);
+-	val |= SET_APIC_LOGICAL_ID(id);
+-
+-	return val;
+-}
+-
+ /*
+- * Set up the logical destination ID.
+- *
+- * Intel recommends to set DFR, LDR and TPR before enabling
+- * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
+- * document number 292116).  So here it goes...
++ * bigsmp enables physical destination mode
++ * and doesn't use LDR and DFR
+  */
+ static void bigsmp_init_apic_ldr(void)
+ {
+-	unsigned long val;
+-	int cpu = smp_processor_id();
+-
+-	apic_write(APIC_DFR, APIC_DFR_FLAT);
+-	val = calculate_ldr(cpu);
+-	apic_write(APIC_LDR, val);
+ }
+ 
+ static void bigsmp_setup_apic_routing(void)
+
 
