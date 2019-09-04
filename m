@@ -3,109 +3,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C899C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E630C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1266E2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D7B21881
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="s8Sww/4D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgNGAHlo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbfIDXbJ (ORCPT
+        id S1730277AbfIDXeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:31:09 -0400
-Received: from mail-eopbgr30064.outbound.protection.outlook.com ([40.107.3.64]:64737
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727125AbfIDXbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:31:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=doeWmOg9pt0QdrtjfA7SppHTVgRR4yNLQs4YuXiUYLUzKsyx19Km3tT5Bo6gzamaakHVxkg0b4y3unwBdHXHsJOHHwD9xa5Pao8I05F85p6xRVrHzHxh1a39ty5NFXcQ0fxVcds4LUcAQa+Lc1MDvbBWM8Iq5FGAw3HGoTu2geeGB25nSYdjXUcHHkh9Ss/jol12W+0bpkdUTMTV/hEVoQhW3h4cm9X/QEYSW160h4Gpw95F9aODysSVbVW2iRzOuXV7WM5VXpgfsXKNN4W+p7n610gYet67lRTLe5twxvDTHfqZXWWCvDVF3IWYiaT1ko1VKT7ChgYkweoOrjWoZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7fwalek2FWq0Df7jpMWOQaJWbpV9k0J2PJBz2ED0BDM=;
- b=FC1f+hWkOlPVAnj+vdhZANw4tzDMiUt0QNzk+Ww/eJ7wjiqnJePtwDCZvl8tOQGuZB3KsPABMD9V3O2AH51ZTy73Kyqv8T0S2o8sOgQWxEIKaiEcz5d8vvps9i4OvAsgBWhSPxMXPKulUgs2ttyBB462+BBjUNyidDlehdeb05PF7byPOETmdjK55vHX7LQ4tsMyXY7zcbgpSQhOqYSUesiRLk3NQ1VK8BpfzuHDe+Md6tId9Ld0JJIBG5GzdZ0HpoVQv2c5KXm6g++2ouVncKd6F6Tj6BuczW0SSfcJgZGZiNtkUQfbrllY8j1fiJ1ACg6mofFt4GlwbJXkQ2GMLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7fwalek2FWq0Df7jpMWOQaJWbpV9k0J2PJBz2ED0BDM=;
- b=s8Sww/4DL4gRu0iBHHnW4gALy5GscsmTSxPJqGH9c4ym5Y5PpO5vLY0xgY+vIU9DbhzQMGr6g2WbvrvJAvBEU8pkJ/82m2EuQZTnqQbhvR3gNxxNphcVNQ/StOe7eM/S5KpeKnWzIghm06nGU7luT3MFv2g5+0cOBVUs6oDumxI=
-Received: from VI1PR0501MB2765.eurprd05.prod.outlook.com (10.172.11.140) by
- VI1PR0501MB2174.eurprd05.prod.outlook.com (10.169.134.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.20; Wed, 4 Sep 2019 23:31:05 +0000
-Received: from VI1PR0501MB2765.eurprd05.prod.outlook.com
- ([fe80::c4f0:4270:5311:f4b9]) by VI1PR0501MB2765.eurprd05.prod.outlook.com
- ([fe80::c4f0:4270:5311:f4b9%5]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
- 23:31:05 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] net/mlx5: fix spelling mistake "offlaods" ->
- "offloads"
-Thread-Topic: [PATCH][next] net/mlx5: fix spelling mistake "offlaods" ->
- "offloads"
-Thread-Index: AQHVY1hdH4X6Sw0SoUK7WFDT3woPXqccKvGA
-Date:   Wed, 4 Sep 2019 23:31:05 +0000
-Message-ID: <cff2a86e5ad9ead6a5d3595686bc50f5ba53cc25.camel@mellanox.com>
-References: <20190904193841.20138-1-colin.king@canonical.com>
-In-Reply-To: <20190904193841.20138-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [209.116.155.178]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ca251d21-971c-460f-cdaa-08d7318ff4e6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0501MB2174;
-x-ms-traffictypediagnostic: VI1PR0501MB2174:
-x-microsoft-antispam-prvs: <VI1PR0501MB21743AC6A1E8EDD72A289DCCBEB80@VI1PR0501MB2174.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 0150F3F97D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(346002)(376002)(366004)(199004)(189003)(81156014)(8936002)(8676002)(54906003)(26005)(110136005)(66946007)(305945005)(66476007)(66556008)(66446008)(36756003)(91956017)(186003)(86362001)(4326008)(25786009)(316002)(6436002)(81166006)(6512007)(102836004)(558084003)(6246003)(6506007)(64756008)(53936002)(476003)(11346002)(58126008)(446003)(2616005)(229853002)(14454004)(6486002)(76176011)(478600001)(486006)(2201001)(5660300002)(99286004)(71190400001)(6116002)(2501003)(66066001)(3846002)(71200400001)(2906002)(118296001)(256004)(76116006)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0501MB2174;H:VI1PR0501MB2765.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HQo38FbrnSWGBSvPALp/JEz3SVK+chNqqMhSqoBPUy3iK5jH8rY/gjgOVTgS9xNJx8MDhm0Tb526W46cYRdjcPUkPJc5zFwVifk4RfW7h86jkWwdZ4UQd90DxG1iXXNxH5gPahYnmICMGqbO0CCBN3orlwRD7+qf3vbmCUGcV/DB0NB6BlBwqM2COBkpw/siL4HAgTAA+S59WLSCkR2w0q4W6TmwSoAt9xaTX0eT+Nrj6GQ/AAHB+J0SXmB9xeFRas16MRyZcHs7TV8q6UJoVzwnvELmEytVp77WR3HLYId7kQ7qg5jhX/es14vAsNqg+03QdmiFy3aaZSLKrRWrwKBDThShK0WqbbtU8S0c8TqBbdQoJWrfWZKuLZi+P35Lp7QxlNi33oQg2gQu8gPtNz5pzAwBnq0qIFbiFRpU+n4=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BB12FC76D5D01345BEE725D1ACCA68F8@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 4 Sep 2019 19:34:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43599 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfIDXeQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 19:34:16 -0400
+Received: by mail-pl1-f195.google.com with SMTP id 4so325919pld.10;
+        Wed, 04 Sep 2019 16:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=zEfGTR202P+nwSsU1qSBd5C7kGsRpjPGHZxgayed3co=;
+        b=bgNGAHlojCAsmb10/j/F4VrV1/7ILP14DPCXfjdhzRir4IZQWwkF6Hg4EJKc2JLDzb
+         cgpVtDjEzBNDrKQEIvw55Uam/IjHauVNHZMcV702fkUgEYcFZJ5n7g+9MY1zHi6vMF5E
+         jUoJ3GvvFLZsZvdxgYyVI6Y2u4EjUgciFSQFZoVkEKzXHD2HaVmayQYgfXwEYGHD7bM8
+         OVDp35v2L0+znwSHmDf4ljqbUB1Q52eIcyj3phJ28h4Znsr2pSYzjgqvNimEHF0RPZtl
+         wH7Hd7K0vzSVh+vDM4bSH9SifMeSZaYfZ2e2C7CVJZQiwHPRvvms4cxoSe18y8QKWV3/
+         LE0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=zEfGTR202P+nwSsU1qSBd5C7kGsRpjPGHZxgayed3co=;
+        b=Bq6EFjCtvEZaikRTvio/DP6IT9oOuASjj86nTgzK7DXH8RfKLG7n04qyr/aju3NbP2
+         U2Vk0Xrgyn/CG1rg4S9QClcWOI4efTNZInjU088gS3BeeQYt+j/iBxTJd5l8pAzwJq5L
+         iXjx4/AUd406/s4zvJPSfIS2/ftJVKxz+jTVJfjIEphX43iLe2rg/wdTLrPTEK990X1I
+         2R5OAqzuAEHAqw6vHx3+Ey8mibRfKin+seCV2HrG1ZRcgx+isFXCRsVTyBgl0DwZKf3t
+         PhsRC8P0v367TTgS0Yu6pkZD+6tNj9JWtp15pwuRCp9OWW3yzQERqOjOUCwctsX1g+6r
+         r/NA==
+X-Gm-Message-State: APjAAAUBZe15BdVOcozrrC+ysrHVp0wu3hF0yjHACF8dMPaXSMDwtPgv
+        FDG3OTBQn1e5gt/Lnbo/A+s=
+X-Google-Smtp-Source: APXvYqw3odHmU1fPWW8sZtm0x+bGwW0rkNDvCptjLNdQshanr2Coj2SEZMCxGSIfz+2XD+ZWxq8Gvg==
+X-Received: by 2002:a17:902:a415:: with SMTP id p21mr261987plq.319.1567640055590;
+        Wed, 04 Sep 2019 16:34:15 -0700 (PDT)
+Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
+        by smtp.googlemail.com with ESMTPSA id c138sm179277pfc.80.2019.09.04.16.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 16:34:14 -0700 (PDT)
+Message-ID: <1ca6ffddd2452e218ef19ea84ac6c6277e1a9725.camel@gmail.com>
+Subject: Re: [PATCH 3/4] gpio: Add in ast2600 details to Aspeed driver
+From:   Rashmica Gupta <rashmica.g@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Date:   Thu, 05 Sep 2019 09:34:10 +1000
+In-Reply-To: <CAHp75Ve0zEkuD-75aZ6FU+A=DvX8NvVvY3n9p_pYDyfa76sxoQ@mail.gmail.com>
+References: <20190904061245.30770-1-rashmica.g@gmail.com>
+         <20190904061245.30770-3-rashmica.g@gmail.com>
+         <CAHp75Ve0zEkuD-75aZ6FU+A=DvX8NvVvY3n9p_pYDyfa76sxoQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca251d21-971c-460f-cdaa-08d7318ff4e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 23:31:05.4260
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VlTE9cEzuTNLPVqQ4JL/zXkublPX03MMlVmc4MEtUkIx04AA/arfx2JKldPKOrd0lPFZrgC2tWCsiZBmLdeyMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0501MB2174
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA5LTA0IGF0IDIwOjM4ICswMTAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBG
-cm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiANCj4gVGhl
-cmUgaXMgYSBzcGVsbGluZyBtaXN0YWtlIGluIGEgTkxfU0VUX0VSUl9NU0dfTU9EIGVycm9yIG1l
-c3NhZ2UuDQo+IEZpeCBpdC4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IENvbGluIElhbiBLaW5nIDxj
-b2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IA0KDQpBcHBsaWVkIHRvIG5ldC1uZXh0LW1seDUu
-DQoNClRoYW5rcywNClNhZWVkLg0K
+On Wed, 2019-09-04 at 19:30 +0300, Andy Shevchenko wrote:
+> On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com>
+> wrote:
+> > The ast2600 has two gpio controllers, one for 3.6V GPIOS and one
+> > for 1.8V GPIOS.
+> > 
+> > Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> > -       for (i = 0; i < ARRAY_SIZE(aspeed_gpio_banks); i++) {
+> > +       banks = (gpio->config->nr_gpios >> 5) + 1;
+> 
+> Same comment as per the other patch.
+> 
+> > +       for (i = 0; i < banks; i++) {
+> > +static const struct aspeed_bank_props ast2600_bank_props[] = {
+> > +       /*     input      output   */
+> > +       {5, 0xffffffff,  0x0000ffff}, /* U/V/W/X */
+> > +       {6, 0xffff0000,  0x0fff0000}, /* Y/Z */
+> 
+> Perhaps GENMASK() for all values?
+
+Perhaps this and your other comments below would be best addressed in
+an additional cleanup patch? This patch follows the formatting of the
+existing code and it's not very clean to differ from that or to change
+the formatting of the current code in this patch.
+
+
+> 
+> > +       { },
+> 
+> Comma is not needed here.
+> 
+> > +};
+> > +
+> > +static const struct aspeed_gpio_config ast2600_config =
+> > +       /* 208 3.6V GPIOs */
+> > +       { .nr_gpios = 208, .props = ast2600_bank_props, };
+> 
+> Seems curly braces missed their places.
+> 
+> > +static const struct aspeed_bank_props ast2600_1_8v_bank_props[] =
+> > {
+> > +       /*     input      output   */
+> > +       {1, 0x0000000f,  0x0000000f}, /* E */
+> 
+> GENMASK()?
+> 
+> > +       { },
+> 
+> No comma.
+> 
+> > +};
+> > +static const struct aspeed_gpio_config ast2600_1_8v_config =
+> > +       /* 36 1.8V GPIOs */
+> > +       { .nr_gpios = 36, .props = ast2600_1_8v_bank_props, };
+> 
+> Location of the curly braces?
+> 
+
