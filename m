@@ -4,58 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A197EC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0717CC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B5B22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B40233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620093;
-	bh=dVKz7MB7QAhE55dn1yOIiJlJLlJhegPj0oalIp3b/GA=;
+	s=default; t=1567620096;
+	bh=icEiS8cubELpyNGEJlP8+yAruHA3xIZFZjeSfrfEdKE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnaQI35C6l0CGXbHYdU8p89Yr6R9NGPAVlT3PY7vLJWO0OhOKTPKXMQcTxfjd5Q/p
-	 CUrRunlygwddR5m+5X205FoSjoeWXS7rWeg4aBz5LccSl0fwPIob6VbPCAW1bETNtQ
-	 beJV1YBJlZ6zb3XNotA7G0zkMc/ylK7MAl5ruAT4=
+	b=jcpRthvtYuRFhzl4Dooup6VcKPbkOmikJAAQjshRGoPAimrD53coOuiHLpv8swaVW
+	 3oJ7ep0OK3hVz5/XmP8scDLu8x8A6FqabMp1rQU3/XIvHR6P9Xw3/8T3EpHJ2vVqiS
+	 aqxb+c8eUaY/Gf9ITRLYYFRf3ZxozwmVbnTbn02Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387975AbfIDSBd (ORCPT
+        id S2388619AbfIDSBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:01:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388560AbfIDSBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:30 -0400
+        id S2388592AbfIDSBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C16223401;
-        Wed,  4 Sep 2019 18:01:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6267C2339E;
+        Wed,  4 Sep 2019 18:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620089;
-        bh=dVKz7MB7QAhE55dn1yOIiJlJLlJhegPj0oalIp3b/GA=;
+        s=default; t=1567620094;
+        bh=icEiS8cubELpyNGEJlP8+yAruHA3xIZFZjeSfrfEdKE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gzYFtvYG212RRts4kuV/P5EaT5Ju+DnpU9CiBkp7imofVuJke+NRp6Wx+lw/yD6us
-         J8AIkLGotndHrjEjr9Eh0qtUdV+D1sy0B1JvJTemmC3Y4EbUOkMk1vkkVeuAQOgR2l
-         dfUBHLXkWssmb6ycp7+M1rhnHx2s3atcdF1W45i0=
+        b=1Z0ehgwdPptRz6H6doDVsNHey//WGCCaaYHV+XGm6xEzFMNnoRVb3azPHL3UhOzyE
+         Mn7IHD9k9GByg5NOdBVU8tpRvRV2AZ6q6sbJ/Se00PTPM5UYGE5CsyFjzJdL4OANrU
+         m744mxpjLOhYPeLPiwC5jZKWHQKz0pcLZvUOOTlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jann Horn <jannh@google.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 32/83] userfaultfd_release: always remove uffd flags and clear vm_userfaultfd_ctx
-Date:   Wed,  4 Sep 2019 19:53:24 +0200
-Message-Id: <20190904175306.675479036@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4.9 69/83] usb: host: xhci: rcar: Fix typo in compatible string matching
+Date:   Wed,  4 Sep 2019 19:54:01 +0200
+Message-Id: <20190904175309.680342174@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -68,87 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit 46d0b24c5ee10a15dfb25e20642f5a5ed59c5003 upstream.
+commit 636bd02a7ba9025ff851d0cfb92768c8fa865859 upstream.
 
-userfaultfd_release() should clear vm_flags/vm_userfaultfd_ctx even if
-mm->core_state != NULL.
+It's spelled "renesas", not "renensas".
 
-Otherwise a page fault can see userfaultfd_missing() == T and use an
-already freed userfaultfd_ctx.
+Due to this typo, RZ/G1M and RZ/G1N were not covered by the check.
 
-Link: http://lkml.kernel.org/r/20190820160237.GB4983@redhat.com
-Fixes: 04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping")
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
-Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 2dc240a3308b ("usb: host: xhci: rcar: retire use of xhci_plat_type_is()")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://lore.kernel.org/r/20190827125112.12192-1-geert+renesas@glider.be
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/userfaultfd.c |   25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/usb/host/xhci-rcar.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -464,6 +464,7 @@ static int userfaultfd_release(struct in
- 	/* len == 0 means wake all */
- 	struct userfaultfd_wake_range range = { .len = 0, };
- 	unsigned long new_flags;
-+	bool still_valid;
+--- a/drivers/usb/host/xhci-rcar.c
++++ b/drivers/usb/host/xhci-rcar.c
+@@ -84,7 +84,7 @@ static int xhci_rcar_is_gen2(struct devi
+ 	return of_device_is_compatible(node, "renesas,xhci-r8a7790") ||
+ 		of_device_is_compatible(node, "renesas,xhci-r8a7791") ||
+ 		of_device_is_compatible(node, "renesas,xhci-r8a7793") ||
+-		of_device_is_compatible(node, "renensas,rcar-gen2-xhci");
++		of_device_is_compatible(node, "renesas,rcar-gen2-xhci");
+ }
  
- 	ACCESS_ONCE(ctx->released) = true;
- 
-@@ -479,8 +480,7 @@ static int userfaultfd_release(struct in
- 	 * taking the mmap_sem for writing.
- 	 */
- 	down_write(&mm->mmap_sem);
--	if (!mmget_still_valid(mm))
--		goto skip_mm;
-+	still_valid = mmget_still_valid(mm);
- 	prev = NULL;
- 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
- 		cond_resched();
-@@ -491,19 +491,20 @@ static int userfaultfd_release(struct in
- 			continue;
- 		}
- 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
--		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
--				 new_flags, vma->anon_vma,
--				 vma->vm_file, vma->vm_pgoff,
--				 vma_policy(vma),
--				 NULL_VM_UFFD_CTX);
--		if (prev)
--			vma = prev;
--		else
--			prev = vma;
-+		if (still_valid) {
-+			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
-+					 new_flags, vma->anon_vma,
-+					 vma->vm_file, vma->vm_pgoff,
-+					 vma_policy(vma),
-+					 NULL_VM_UFFD_CTX);
-+			if (prev)
-+				vma = prev;
-+			else
-+				prev = vma;
-+		}
- 		vma->vm_flags = new_flags;
- 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
- 	}
--skip_mm:
- 	up_write(&mm->mmap_sem);
- 	mmput(mm);
- wakeup:
+ static int xhci_rcar_is_gen3(struct device *dev)
 
 
