@@ -2,102 +2,94 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBED9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5176C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B68F02070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:29:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JM6s1cif"
+	by mail.kernel.org (Postfix) with ESMTP id AB50520882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567621882;
+	bh=hsJdVa01uomsFV9ahOXalHDfMaTyQcIwI+m2ZgSZm1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lKi7av2KGuviNHpWc5ArvKFqULLJj+S0GZJ3rT1qoSVjKsM5r8rZzdTZqkIxypqaB
+	 C9g5bOpv8wsbcuOiYqo2PhWGbcQNk+3HMDISsthQJlNyzQhINz88OQLY70g5b50F2K
+	 3PDfunUmkLqeNbEtFzUPlEvPo7gw8kWVWpm8t16Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732496AbfIDS36 (ORCPT
+        id S1732780AbfIDSbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:29:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53224 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730099AbfIDS36 (ORCPT
+        Wed, 4 Sep 2019 14:31:22 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38443 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732951AbfIDSbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:29:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t17so4358986wmi.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:29:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=/3ryve8qFIa5Tc0ayz/+DZZfN1vz7ogNtKuUpJ6xy7w=;
-        b=JM6s1cifCf/OXi1Ul8LmV+zJ6yHsOqzKaF3PYTWFQUPuh+q7Zyntwi5UsCodqKZrsd
-         RTQUYA2lYshW+Ue7gxElG3aIW5m1EwfiKmjfKJSiEPuZsAQinwUwDOs1hd8pY0bmm4nl
-         ct9O84rL54jMaXwUEVWzkumZD2kDG9Z3rLMf8VpZngenVb1S50Ud6YRRw78bCYTlV5is
-         PPgdA0nmODoiOo1fbNdGC106H0sJpe4+AjuoRP6hEx0CU48O4y6XLgxjTwPGl/0pXI9M
-         roQlY4XMsYh79ofU47eCjbzRrvI82JYh8k2AgkhCe88r6LH95lecSB9A+0+glXwBVDOO
-         ahng==
+        Wed, 4 Sep 2019 14:31:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o184so4949008wme.3;
+        Wed, 04 Sep 2019 11:31:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=/3ryve8qFIa5Tc0ayz/+DZZfN1vz7ogNtKuUpJ6xy7w=;
-        b=H04AEeKRTbMT+7ZbmZRh5HVac8sXrPP3CyQJBjO+D/D/vXwQijGQX7Zx3MWFDzYoYg
-         0kj1uTN7a0GNLxPTHLSF+yKLXed3bPVNCDyZgozC0aDTiTPUnn+xlrzQ1u3o9c1JWb24
-         FisEjOxcpWpQ55U1zOhW3gYs9kPjIGiCK+Ld59fz9lHrYYSsRSvfYCx+MiP8RJpGKlT+
-         v84cONGc/bntB25uspG0O2gwQIEr2x4FA+lcZikUoOzZ3Sg4hExXRdqa/XVwpQElmMjp
-         fN+g4uYzlyiBRtDJl4/kWou32RvRkFvdwg6EtNQiCORt6FQUW+RSlOsvX2dKPRk4b/7I
-         mbAA==
-X-Gm-Message-State: APjAAAU14+h6cW64ovd+Uh0+aejEDxMtRetFpIpKRfWoXdLdM7UtQdgy
-        O4sItRzEU6T9ckLZdjFhxy0=
-X-Google-Smtp-Source: APXvYqzZvqxl3yX757RGeKlr4SQvPHeW8Z/vf9FbhokVdTdLZphmuT+T8NG86o2z17+Qmf044JCk6Q==
-X-Received: by 2002:a7b:cc94:: with SMTP id p20mr5605327wma.171.1567621796338;
-        Wed, 04 Sep 2019 11:29:56 -0700 (PDT)
-Received: from gmail.com ([157.230.19.186])
-        by smtp.gmail.com with ESMTPSA id f75sm4416722wmf.2.2019.09.04.11.29.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hsJdVa01uomsFV9ahOXalHDfMaTyQcIwI+m2ZgSZm1o=;
+        b=IMGfQjZMM/rwo/iIhT2xgttUTu01BNIpib3yfQNY5PsbwkZ1Rw4mUGm5O59bo+HNUR
+         J3HBJ+M3Wt4LRmtR+zbj+15jVFvtC7M++7FL6T+QTQVqqSsBoJLij6tYMpPlmBpocgFu
+         Wmx8/sDSGuVsl1XEj5rQjCs/3An+MDLZijmsjKzgOOTMcJTEq+GoZTNmg8L162+BAgWx
+         mNu25WUe56CUztAjvkzFhMG00+0pJLlyrAYsbSfCeQgap7aVK43lIRcSU+rliYnZCh3H
+         pdBBeuRWpaCP1UjjY0+/o2L4aqIO4ijGxMY71/eaFhZBfLyIbJ3wUTERWh0c4ZetkIbY
+         /1BA==
+X-Gm-Message-State: APjAAAVcEcN8UteqElFgLW4SfmUEbePvVWB6FTChnvpQrwhTEbDE9OIf
+        4rwJuC2k/gNgk+b8olfp/Mg=
+X-Google-Smtp-Source: APXvYqx50kGyewoRhEfHRm1dIpaYZpn3D+gdSEGrCOzZ/nz1uVLkScoUS0FqBfE7Wg150Co82Xs4eg==
+X-Received: by 2002:a1c:c911:: with SMTP id f17mr5625501wmb.73.1567621879136;
+        Wed, 04 Sep 2019 11:31:19 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id f24sm3252156wmc.25.2019.09.04.11.31.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 11:29:55 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 20:29:49 +0200
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] clang-format for v5.3-rc8
-Message-ID: <20190904182949.GA22025@gmail.com>
+        Wed, 04 Sep 2019 11:31:18 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 20:31:14 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, b.zolnierkie@samsung.com, kgene@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+Subject: Re: [PATCH v13 3/8] drivers: memory: extend of_memory by LPDDR3
+ support
+Message-ID: <20190904183114.GB12918@kozik-lap>
+References: <20190821104303.32079-1-l.luba@partner.samsung.com>
+ <CGME20190821104320eucas1p10c911c2ce59007bcf6c039f52b869656@eucas1p1.samsung.com>
+ <20190821104303.32079-4-l.luba@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: elm/2
+In-Reply-To: <20190821104303.32079-4-l.luba@partner.samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Aug 21, 2019 at 12:42:58PM +0200, Lukasz Luba wrote:
+> The patch adds AC timings information needed to support LPDDR3 and memory
+> controllers. The structure is used in of_memory and currently in Exynos
+> 5422 DMC. Add parsing data needed for LPDDR3 support.
 
-Please pull this trivial update for the .clang-format file.
+Thanks, applied, with commit msg fixes.
 
-Cheers,
-Miguel
+Please do not write "This patch" (submitting patches mentions preferred
+format). Also at this point, this is not "used currently in Exynos 5422
+DMC" because there is no such driver. Just say that it is necessary for
+upcoming DMC driver.
 
-The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+Best regards,
+Krzysztof
 
-  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
-
-are available in the Git repository at:
-
-  https://github.com/ojeda/linux.git tags/clang-format-for-linus-v5.3-rc8
-
-for you to fetch changes up to 52d083472e0b64d1da5b6469ed3defb1ddc45929:
-
-  clang-format: Update with the latest for_each macro list (2019-08-31 10:00:51 +0200)
-
-----------------------------------------------------------------
-clang-format update for 5.3
-
-----------------------------------------------------------------
-Miguel Ojeda (1):
-      clang-format: Update with the latest for_each macro list
-
- .clang-format | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
