@@ -2,55 +2,56 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F3FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5222C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD3920870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32D720870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621397;
-	bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
+	s=default; t=1567621412;
+	bh=Ux6mz4S4+0g54ti7S6WbeadakibflhW2g4qi+dAYFIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nr/QaJAEU7v3TvTdv4WnkEOmaE4wjAso7dVIE89sAU44698Na42po7yWmUpuLEjcu
-	 46Pl9wkB4dmOQ7yWwG0m6JvTwZJx2lnyNzZmAQ8PwmX1+vHyxg+90MvIw6U2NiG6+3
-	 VHqx+6PguSCcT1n8wmK8RVSoRFm7UJcdJ/9euqZY=
+	b=sHqgUGtii+OkBq5f5t1RXEv+/u0xR9UmdARcgZkOtqmEvPHR5MotT19FIUKE/Yb9H
+	 IKsyMA4UP/UhnljNldh3MrNS9ZaGw08l7obee7EUidfwiWEGB5HxcBQrpaP/2VnCKV
+	 T9AZW8N2wRhtGY0EVmwNl4KiDvQaOfs0uzy2XpDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388871AbfIDSDG (ORCPT
+        id S2388805AbfIDSCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:03:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43332 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388284AbfIDSDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:03:03 -0400
+        id S2388061AbfIDSCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD26523697;
-        Wed,  4 Sep 2019 18:03:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57610208E4;
+        Wed,  4 Sep 2019 18:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620182;
-        bh=H+dch+YFeYG4YZLYOpmbLkkC1J9RsxRQVN+Y3N93/zE=;
+        s=default; t=1567620155;
+        bh=Ux6mz4S4+0g54ti7S6WbeadakibflhW2g4qi+dAYFIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NmSzNQyDtqVGvNqZYW5PBcJAZWI7fp+WFSZ805mhM5R2/X0WJHQbrW/xiMluwgqpm
-         xVKZVygGYATmDHbKCNA55xV+t6aB5hLGeJH7sDhSsGs1wDSa7cla0xcltZ1F4x4coW
-         aB2SDaY4KeHpGxtGRFXt5WncGNvC1GGD3lYETpJw=
+        b=Ji0ybStQnxuZGOa+HJ+rU4w5pPf3RaDezsieGq3rjpMAHzLdmtVgNxMMXo/7tmTJG
+         4OaxVRdm+fIjL/xYova5jU4vv6XBrl53twLDjKCfvdpdDsxNiJkRzf4AvwX8gVuKqg
+         3/jG4Jt8oX4vtZ5n9CTU1ouZbfIQ1jESUOID1KHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Vladimir Rutsky <rutsky@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 20/57] tcp: make sure EPOLLOUT wont be missed
-Date:   Wed,  4 Sep 2019 19:53:48 +0200
-Message-Id: <20190904175303.918854334@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Adrian Vladu <avladu@cloudbasesolutions.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Subject: [PATCH 4.14 11/57] tools: hv: fix KVP and VSS daemons exit code
+Date:   Wed,  4 Sep 2019 19:53:39 +0200
+Message-Id: <20190904175303.028531986@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -63,82 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+[ Upstream commit b0995156071b0ff29a5902964a9dc8cfad6f81c0 ]
 
-[ Upstream commit ef8d8ccdc216f797e66cb4a1372f5c4c285ce1e4 ]
+HyperV KVP and VSS daemons should exit with 0 when the '--help'
+or '-h' flags are used.
 
-As Jason Baron explained in commit 790ba4566c1a ("tcp: set SOCK_NOSPACE
-under memory pressure"), it is crucial we properly set SOCK_NOSPACE
-when needed.
+Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
 
-However, Jason patch had a bug, because the 'nonblocking' status
-as far as sk_stream_wait_memory() is concerned is governed
-by MSG_DONTWAIT flag passed at sendmsg() time :
-
-    long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
-
-So it is very possible that tcp sendmsg() calls sk_stream_wait_memory(),
-and that sk_stream_wait_memory() returns -EAGAIN with SOCK_NOSPACE
-cleared, if sk->sk_sndtimeo has been set to a small (but not zero)
-value.
-
-This patch removes the 'noblock' variable since we must always
-set SOCK_NOSPACE if -EAGAIN is returned.
-
-It also renames the do_nonblock label since we might reach this
-code path even if we were in blocking mode.
-
-Fixes: 790ba4566c1a ("tcp: set SOCK_NOSPACE under memory pressure")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Reported-by: Vladimir Rutsky  <rutsky@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Jason Baron <jbaron@akamai.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/stream.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ tools/hv/hv_kvp_daemon.c | 2 ++
+ tools/hv/hv_vss_daemon.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
---- a/net/core/stream.c
-+++ b/net/core/stream.c
-@@ -120,7 +120,6 @@ int sk_stream_wait_memory(struct sock *s
- 	int err = 0;
- 	long vm_wait = 0;
- 	long current_timeo = *timeo_p;
--	bool noblock = (*timeo_p ? false : true);
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
- 
- 	if (sk_stream_memory_free(sk))
-@@ -133,11 +132,8 @@ int sk_stream_wait_memory(struct sock *s
- 
- 		if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
- 			goto do_error;
--		if (!*timeo_p) {
--			if (noblock)
--				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
--			goto do_nonblock;
--		}
-+		if (!*timeo_p)
-+			goto do_eagain;
- 		if (signal_pending(current))
- 			goto do_interrupted;
- 		sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
-@@ -169,7 +165,13 @@ out:
- do_error:
- 	err = -EPIPE;
- 	goto out;
--do_nonblock:
-+do_eagain:
-+	/* Make sure that whenever EAGAIN is returned, EPOLLOUT event can
-+	 * be generated later.
-+	 * When TCP receives ACK packets that make room, tcp_check_space()
-+	 * only calls tcp_new_space() if SOCK_NOSPACE is set.
-+	 */
-+	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
- 	err = -EAGAIN;
- 	goto out;
- do_interrupted:
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 62c9a503ae052..0ef215061fb50 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -1380,6 +1380,8 @@ int main(int argc, char *argv[])
+ 			daemonize = 0;
+ 			break;
+ 		case 'h':
++			print_usage(argv);
++			exit(0);
+ 		default:
+ 			print_usage(argv);
+ 			exit(EXIT_FAILURE);
+diff --git a/tools/hv/hv_vss_daemon.c b/tools/hv/hv_vss_daemon.c
+index 34031a297f024..514d29966ac67 100644
+--- a/tools/hv/hv_vss_daemon.c
++++ b/tools/hv/hv_vss_daemon.c
+@@ -172,6 +172,8 @@ int main(int argc, char *argv[])
+ 			daemonize = 0;
+ 			break;
+ 		case 'h':
++			print_usage(argv);
++			exit(0);
+ 		default:
+ 			print_usage(argv);
+ 			exit(EXIT_FAILURE);
+-- 
+2.20.1
+
 
 
