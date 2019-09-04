@@ -2,113 +2,166 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30AAC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6F3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997E3206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5A7206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Fpfim0KL"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YjCi67RR";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PSn84YQk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfIDHyG (ORCPT
+        id S1729235AbfIDHyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:54:06 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33766 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfIDHyG (ORCPT
+        Wed, 4 Sep 2019 03:54:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57088 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728526AbfIDHyG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 03:54:06 -0400
-Received: by mail-ot1-f66.google.com with SMTP id p23so19703391oto.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 00:54:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nsL2dG0Jkv/yBtdq643XdQgXacAtlmVt/WZU7C9r86Q=;
-        b=Fpfim0KLgJ+FNUELGd/cGbfkJVwz26hJlETB2SD4TW1Yi+H4dORrDsb+7WOsgUCfCa
-         wvIESBCC6aMyklaV4lbBJAoUZOpTVEfCpEgrnDEPYSaTF5HzRKGBzIWCpRMC+wTI2Kse
-         X2iSsZIejDC/X+uhwFkMzF8Ia0FiRe8aLWGxI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nsL2dG0Jkv/yBtdq643XdQgXacAtlmVt/WZU7C9r86Q=;
-        b=jjsMjU0cyxJ9iSAigU93A9Nm7M4SGgqKwbUOWY+Fk9Bsl5sa0zcpgKvKMTOOmhpi1X
-         PT4TNId/QGoFYq6C2XExF2wg8+63g37kIqMTF4jO4cghJ/NpGg6QThQW2nx2+zhDiHrw
-         nCgIwGd9gKezJqFZlj//NLkQQ4rIDqertLdlR239AbLM/4TfOTT8kXUSiN1Wjqkz1nTF
-         nkqLZFKtEBYlXOkItiNTgDw83d61uZBeFeNGfZGgJnbfEsjOWQGqrbe0UzAjBG5g/BGg
-         IWT39nt+bSdhuI7L9tYsTrEnVhkl12TjbdvWUBo4I+zD6gIe8lAw/fLCpiSorAEl0Fzz
-         FzNw==
-X-Gm-Message-State: APjAAAWHPocRC91s8Zf5Os7a5FHCaqRIVew1dI/SDegKrSabqhqJJE5d
-        mcrO53mtYP4HhMrRgM4TFJ2pHs4yLd3c8dEYAqzodg==
-X-Google-Smtp-Source: APXvYqxIAUAvfPNM73tpeSvNr//yloLprQQu73fJhL+XKHcnaBcmH7124BD4NPk5vIXaT6rUNf8CFt+b+b0Z/W6osOs=
-X-Received: by 2002:a05:6830:10d8:: with SMTP id z24mr11461873oto.281.1567583645124;
- Wed, 04 Sep 2019 00:54:05 -0700 (PDT)
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1EF366013C; Wed,  4 Sep 2019 07:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567583646;
+        bh=ZfLR1YEu1X4rVSuz+01cnPj1qh9JDAVads5Zz46yCig=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YjCi67RRtgDJe8H4UIOaoB9SGUBhvwToiUrifxdUZN8EpnpZznXJbezdYocsHfU3V
+         YqOl8/QrBTWJjRwjpAczhLBP3gsBA/McnAptixvz0yL8GkfrEIVXTHLlrYieCgLge7
+         FwG5grEIjXhVx3GWNNvSzdntRhP/uSyCIY4HF09g=
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A29A6085C;
+        Wed,  4 Sep 2019 07:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567583645;
+        bh=ZfLR1YEu1X4rVSuz+01cnPj1qh9JDAVads5Zz46yCig=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PSn84YQkYRqzlbB6ARnPmvWPVF+kGw+uNfoaoE/PAvF29VRrd+lMdJYWoF2PpVpgT
+         tvxEXlrBxGQtRwn9lqw2XiJgIqgZplK0ZvEwU/MTk4b9nbhqBOatbrVcnptx+KvJay
+         kUfziTeNgHrNTMa/U7mKX+EGmYgm4Ptf7nparABc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A29A6085C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Received: by mail-ed1-f50.google.com with SMTP id r12so21514460edo.5;
+        Wed, 04 Sep 2019 00:54:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAVRig2ab+MKoA6P+OGQkZGiULmXqsW4OkLSwKZzyPP65uZvVmeI
+        iXed13YFzhNDgdAS1KhyCLlFpIibVI0R0ib/NrU=
+X-Google-Smtp-Source: APXvYqxl16lDYkKjVb/zuHMs0WdKDQs5m8eyKUOOqaqa4GkxbpgQ8vAEd4fbQhpLi3sa3E/4pr2Gjy23NyDUzjn4Sig=
+X-Received: by 2002:aa7:ca42:: with SMTP id j2mr26782407edt.197.1567583643945;
+ Wed, 04 Sep 2019 00:54:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190903131504.18935-1-thomas_os@shipmail.org>
- <20190903131504.18935-4-thomas_os@shipmail.org> <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
- <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
- <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com> <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
- <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com> <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
- <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
- <44b094c8-63fe-d9e5-1bf4-7da0788caccf@shipmail.org> <6d122d62-9c96-4c29-8d06-02f7134e5e2a@shipmail.org>
- <B3C5DD1B-A33C-417F-BDDC-73120A035EA5@amacapital.net> <3393108b-c7e3-c9be-b65b-5860c15ca228@shipmail.org>
-In-Reply-To: <3393108b-c7e3-c9be-b65b-5860c15ca228@shipmail.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 4 Sep 2019 09:53:53 +0200
-Message-ID: <CAKMK7uH0jxaWJLxfXfGLyN-Rb=0ZKUFTkrEPdFCuGCh4ORCv9w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
- memory encryption
-To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        pv-drivers@vmware.com,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+References: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
+ <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
+ <CAFp+6iE6zwrOUoCoOJO0mgYJGrWj+wUjXQ7RnxSPsV34ndYGbw@mail.gmail.com> <20190904044252.GD3081@tuxbook-pro>
+In-Reply-To: <20190904044252.GD3081@tuxbook-pro>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Date:   Wed, 4 Sep 2019 13:23:52 +0530
+X-Gmail-Original-Message-ID: <CAFp+6iGTG6mBerAHSQesJyHO=yn2QHKR1TWuQQDduaPWusqPvg@mail.gmail.com>
+Message-ID: <CAFp+6iGTG6mBerAHSQesJyHO=yn2QHKR1TWuQQDduaPWusqPvg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] soc: qcom: llcc cleanups
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        rishabhb@codeaurora.org, Evan Green <evgreen@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 8:49 AM Thomas Hellstr=C3=B6m (VMware)
-<thomas_os@shipmail.org> wrote:
-> On 9/4/19 1:15 AM, Andy Lutomirski wrote:
-> > But, reading this, I have more questions:
-> >
-> > Can=E2=80=99t you get rid of cvma by using vmf_insert_pfn_prot()?
+On Wed, Sep 4, 2019 at 10:13 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 >
-> It looks like that, although there are comments in the code about
-> serious performance problems using VM_PFNMAP / vmf_insert_pfn() with
-> write-combining and PAT, so that would require some serious testing with
-> hardware I don't have. But I guess there is definitely room for
-> improvement here. Ideally we'd like to be able to change the
-> vma->vm_page_prot within fault(). But we can
+> On Tue 27 Aug 04:01 PDT 2019, Vivek Gautam wrote:
+>
+> > On Fri, Aug 2, 2019 at 11:43 AM Vivek Gautam
+> > <vivek.gautam@codeaurora.org> wrote:
+> > >
+> > > On Thu, Jul 18, 2019 at 6:33 PM Vivek Gautam
+> > > <vivek.gautam@codeaurora.org> wrote:
+> > > >
+> > > > To better support future versions of llcc, consolidating the
+> > > > driver to llcc-qcom driver file, and taking care of the dependencies.
+> > > > v1 series is availale at:
+> > > > https://lore.kernel.org/patchwork/patch/1099573/
+> > > >
+> > > > Changes since v1:
+> > > > Addressing Bjorn's comments -
+> > > >  * Not using llcc-plat as the platform driver rather using a single
+> > > >    driver file now - llcc-qcom.
+> > > >  * Removed SCT_ENTRY macro.
+> > > >  * Moved few structure definitions from include/linux path to llcc-qcom
+> > > >    driver as they are not exposed to other subsystems.
+> > >
+> > > Hi Bjorn,
+> > >
+> > > How does this cleanup look now? Let me know if there are any
+> > > improvements to make here.
+> > >
+> >
+> > Hi Bjorn,
+> >
+> > Are you planning to pull this series in the next merge window?
+> > There's a dt patch as well for llcc on sdm845 [1] that has been lying around.
+> >
+> > Let me know if you have concerns with this series. I will be happy to
+> > incorporate the suggestions.
+> >
+>
+> No concerns, this is exactly what we discussed before. Sorry for missing
+> it. I've picked the patches now.
+>
+> > [1] https://lore.kernel.org/patchwork/patch/1099318/
+> >
+>
+> This is part of the v5.4 pull request.
 
-Just a quick comment on this: It's the repeated (per-pfn/pte) lookup
-of the PAT tables, which are dead slow. If you have a struct
-io_mapping then that can be done once, and then just blindly inserted.
-See remap_io_mapping in i915.
--Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Thanks a lot Bjorn.
+
+Best regards
+Vivek
+
+>
+> Thanks,
+> Bjorn
+>
+> > Thanks & Regards
+> > Vivek
+> >
+> > > Best Regards
+> > > Vivek
+> > > >
+> > > > Vivek Gautam (3):
+> > > >   soc: qcom: llcc cleanup to get rid of sdm845 specific driver file
+> > > >   soc: qcom: Rename llcc-slice to llcc-qcom
+> > > >   soc: qcom: Make llcc-qcom a generic driver
+> > > >
+> > > >  drivers/soc/qcom/Kconfig                       |  14 +--
+> > > >  drivers/soc/qcom/Makefile                      |   3 +-
+> > > >  drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} | 155 +++++++++++++++++++++++--
+> > > >  drivers/soc/qcom/llcc-sdm845.c                 | 100 ----------------
+> > > >  include/linux/soc/qcom/llcc-qcom.h             | 104 -----------------
+> > > >  5 files changed, 152 insertions(+), 224 deletions(-)
+> > > >  rename drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} (64%)
+> > > >  delete mode 100644 drivers/soc/qcom/llcc-sdm845.c
+> > > >
+> >
+> >
+> >
+> > --
+> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> > of Code Aurora Forum, hosted by The Linux Foundation
+
+
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
