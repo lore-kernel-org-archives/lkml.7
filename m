@@ -2,113 +2,122 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88126C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D179C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE102339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620074;
-	bh=SukYggwGcFDiVrMyR9vCcwGi1x6yMdhUrF/1+UKg93I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PQpnndcYAbRxApDnSumGu3EykzUVxRMrOguw/l8tG4n7GJuy2v6klzGKk1tVtf3Zm
-	 RN0koFYelqINB35hHXfygcbYTzNpR/aAFtnMpcd3jFdA60DhgcK9qINKnqtQnMzu/Q
-	 YTwWuzQMR963HDCtAwMvl1YIPnGhJWa0Qbb6IPvU=
+	by mail.kernel.org (Postfix) with ESMTP id 36C552339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j6b8aJX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388524AbfIDSBN (ORCPT
+        id S2388532AbfIDSBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 4 Sep 2019 14:01:16 -0400
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:44277 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388522AbfIDSBN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 14:01:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733156AbfIDSBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F44A21883;
-        Wed,  4 Sep 2019 18:01:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620071;
-        bh=SukYggwGcFDiVrMyR9vCcwGi1x6yMdhUrF/1+UKg93I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bHjHWPk7yWMuWU2aQeJTTsnIRzDK+lP4D/iq6RaqZ2tPxZ6kUWAkR7G5XpdS4bd2A
-         Qj9DuCs4BNNegNGYKWzotcXB71jvmH16bYOQvrLLt6BsdLw84JtlcUeZPU5Z6+u95T
-         vdbdGMeIsJkM9jkbayS/0qyAfM7cwEKAo1dUPzTs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH 4.9 61/83] KVM: x86: Dont update RIP or do single-step on faulting emulation
-Date:   Wed,  4 Sep 2019 19:53:53 +0200
-Message-Id: <20190904175308.960212726@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
-References: <20190904175303.488266791@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Received: by mail-ua1-f73.google.com with SMTP id g19so1613712uaq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:01:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=hB3975bQEe7YwXrrn5iDW2OoMeJHoR5KURbyU532I8E=;
+        b=j6b8aJX2+AM7wrmVWiG+1fBH3wBs4G7vlhLs5djzluKf1lh+aDFRF0DMqvpeYk7+N4
+         NWTrFarLNMYotaTdV8+vHMyUHu3u6e/VrZO3+F9Ej2OgFoJrTfiP0YoPYSpH1YHOsv8z
+         E2HTiEOcRLPiX/OHLjxMn/5GFOMG1TrT9IxVAF0V06mOiD6zz9IyxSdlkNkrX4feJkzG
+         67IYNwK0B55+dyhjwdRNdAbIzHB0fQWFk78352Q5stGVPa7ofrtHOQU6t3kUVpP5WwO3
+         d32chlFQfIremRbEW84FjjFPwHhLKRnsAIrAxqe00Z1u0CR823dkMmdoPgruB+44nR9s
+         /8Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=hB3975bQEe7YwXrrn5iDW2OoMeJHoR5KURbyU532I8E=;
+        b=gXkaXAuCQUyR0moU4quM/xSAiOIK9Tl4dOKdktfazEPAo/JmtzXq28LaIXtrbmZnBd
+         Jn3sKbWfx0r8Tz0++BuJB4V2SHcX839o2JfUXCxEle51akjZEwbUYL2qcorVZYyGm2qG
+         TI/K+03qcTc9d4/uulqMPTjm3VH2LmRaRAHIA+L9EDbPLVcI0uQcbtuat6R5hlq/AiYF
+         dt0iJ6w3Co3FggSjJTNqK2yk/G4wmlNHlU1sF1HZSDPi4Ig4omudZfeCC0rPxHsn+aFV
+         ZqYnIMOoE8qmnJoYCZS579Wjh2LJICfo6IsPbSmxy3E3a4fJUJnul9TBSfbmvnq7CeBT
+         6qGg==
+X-Gm-Message-State: APjAAAXt5prAwv90VM544tk23P2YETWLjlsmALxnkXNEa9lcOt83I1Fz
+        xVMDZko67H+p1uz5xeP4OLNjyUjx9KJ0
+X-Google-Smtp-Source: APXvYqzjwKtiv/1+0t4qQYpQXzR295bpi01G2uz1AA5oIHglW2/SsuxkeOjLPLYIKpdXnjT89djQWtlcLXvx
+X-Received: by 2002:ab0:2412:: with SMTP id f18mr7710005uan.53.1567620072442;
+ Wed, 04 Sep 2019 11:01:12 -0700 (PDT)
+Date:   Wed,  4 Sep 2019 11:00:45 -0700
+Message-Id: <20190904180045.138513-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
+Subject: [PATCH] perf tools: Fix include paths in ui
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+These paths point to the wrong location but still work because they
+get picked up by a -I flag that happens to direct to the correct
+file. Fix paths to point to the correct location without -I flags.
 
-commit 75ee23b30dc712d80d2421a9a547e7ab6e379b44 upstream.
-
-Don't advance RIP or inject a single-step #DB if emulation signals a
-fault.  This logic applies to all state updates that are conditional on
-clean retirement of the emulation instruction, e.g. updating RFLAGS was
-previously handled by commit 38827dbd3fb85 ("KVM: x86: Do not update
-EFLAGS on faulting emulation").
-
-Not advancing RIP is likely a nop, i.e. ctxt->eip isn't updated with
-ctxt->_eip until emulation "retires" anyways.  Skipping #DB injection
-fixes a bug reported by Andy Lutomirski where a #UD on SYSCALL due to
-invalid state with EFLAGS.TF=1 would loop indefinitely due to emulation
-overwriting the #UD with #DB and thus restarting the bad SYSCALL over
-and over.
-
-Cc: Nadav Amit <nadav.amit@gmail.com>
-Cc: stable@vger.kernel.org
-Reported-by: Andy Lutomirski <luto@kernel.org>
-Fixes: 663f4c61b803 ("KVM: x86: handle singlestep during emulation")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/x86/kvm/x86.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/ui/browser.c      | 9 +++++----
+ tools/perf/ui/tui/progress.c | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5823,12 +5823,13 @@ restart:
- 		unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
- 		toggle_interruptibility(vcpu, ctxt->interruptibility);
- 		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
--		kvm_rip_write(vcpu, ctxt->eip);
--		if (r == EMULATE_DONE && ctxt->tf)
--			kvm_vcpu_do_singlestep(vcpu, &r);
- 		if (!ctxt->have_exception ||
--		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
-+		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
-+			kvm_rip_write(vcpu, ctxt->eip);
-+			if (r == EMULATE_DONE && ctxt->tf)
-+				kvm_vcpu_do_singlestep(vcpu, &r);
- 			__kvm_set_rflags(vcpu, ctxt->eflags);
-+		}
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index f80c51d53565..d227d74b28f8 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -1,7 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include "../string2.h"
+-#include "../config.h"
+-#include "../../perf.h"
++#include "../util/util.h"
++#include "../util/string2.h"
++#include "../util/config.h"
++#include "../perf.h"
+ #include "libslang.h"
+ #include "ui.h"
+ #include "util.h"
+@@ -14,7 +15,7 @@
+ #include "browser.h"
+ #include "helpline.h"
+ #include "keysyms.h"
+-#include "../color.h"
++#include "../util/color.h"
+ #include <linux/ctype.h>
+ #include <linux/zalloc.h>
  
- 		/*
- 		 * For STI, interrupts are shadowed; so KVM_REQ_EVENT will
-
+diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
+index bc134b82829d..5a24dd3ce4db 100644
+--- a/tools/perf/ui/tui/progress.c
++++ b/tools/perf/ui/tui/progress.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/kernel.h>
+-#include "../cache.h"
++#include "../../util/cache.h"
+ #include "../progress.h"
+ #include "../libslang.h"
+ #include "../ui.h"
+-- 
+2.22.0.770.g0f2c4a37fd-goog
 
