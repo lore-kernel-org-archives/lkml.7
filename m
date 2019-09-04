@@ -6,77 +6,66 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2938CC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2682DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0452822CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0790422CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbfIDJqn (ORCPT
+        id S1729669AbfIDJqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:46:43 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33024 "EHLO huawei.com"
+        Wed, 4 Sep 2019 05:46:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:32812 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725840AbfIDJqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:46:43 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A41B6469D31384F761E5;
-        Wed,  4 Sep 2019 17:46:40 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 17:46:34 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <daniel@zonque.org>, <haojian.zhuang@gmail.com>,
-        <robert.jarzmik@free.fr>, <balbi@kernel.org>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] usb: gadget: pxa27x_udc: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 17:45:57 +0800
-Message-ID: <20190904094557.22884-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1725840AbfIDJqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:46:49 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8E76FF1821FAB7104FF9;
+        Wed,  4 Sep 2019 17:46:47 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Sep 2019 17:46:38 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <joro@8bytes.org>
+CC:     <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <zhongjiang@huawei.com>
+Subject: [PATCH v2] iommu/pamu: Use kzfree rather than its implementation
+Date:   Wed, 4 Sep 2019 17:43:44 +0800
+Message-ID: <1567590224-23364-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
+X-Originating-IP: [10.175.102.37]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource() to simplify the code a bit.
-This is detected by coccinelle.
+Use kzfree instead of memset() + kfree().
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 ---
- drivers/usb/gadget/udc/pxa27x_udc.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/iommu/fsl_pamu.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/pxa27x_udc.c b/drivers/usb/gadget/udc/pxa27x_udc.c
-index 0142332..5f107f2 100644
---- a/drivers/usb/gadget/udc/pxa27x_udc.c
-+++ b/drivers/usb/gadget/udc/pxa27x_udc.c
-@@ -2356,7 +2356,6 @@ MODULE_DEVICE_TABLE(of, udc_pxa_dt_ids);
-  */
- static int pxa_udc_probe(struct platform_device *pdev)
- {
--	struct resource *regs;
- 	struct pxa_udc *udc = &memory;
- 	int retval = 0, gpio;
- 	struct pxa2xx_udc_mach_info *mach = dev_get_platdata(&pdev->dev);
-@@ -2378,8 +2377,7 @@ static int pxa_udc_probe(struct platform_device *pdev)
- 		udc->gpiod = devm_gpiod_get(&pdev->dev, NULL, GPIOD_ASIS);
- 	}
+diff --git a/drivers/iommu/fsl_pamu.c b/drivers/iommu/fsl_pamu.c
+index cde281b..e924368 100644
+--- a/drivers/iommu/fsl_pamu.c
++++ b/drivers/iommu/fsl_pamu.c
+@@ -1174,11 +1174,7 @@ static int fsl_pamu_probe(struct platform_device *pdev)
+ 	if (irq != NO_IRQ)
+ 		free_irq(irq, data);
  
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	udc->regs = devm_ioremap_resource(&pdev->dev, regs);
-+	udc->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(udc->regs))
- 		return PTR_ERR(udc->regs);
- 	udc->irq = platform_get_irq(pdev, 0);
+-	if (data) {
+-		memset(data, 0, sizeof(struct pamu_isr_data));
+-		kfree(data);
+-	}
+-
++	kzfree(data);
+ 	if (pamu_regs)
+ 		iounmap(pamu_regs);
+ 
 -- 
-2.7.4
-
+1.7.12.4
 
