@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F85C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0CFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E7F2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B4A2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613393;
-	bh=RBiB+nszUOZlllJwJQPDLHwFxoOujyJoImu0eDIhmHY=;
+	s=default; t=1567613399;
+	bh=K93ZfifvKFmK/rsmxc+R5+nB6ROmf3mlE/wOO2Vb1Ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yk3JDRYFaHBrybkKys8FLOJEROCRCnCDFqHSioZSyTvBLJknMQZoI2SJchy/mNGuQ
-	 D6wAqeaa4uFdJP7YrV20QZ/2NrCg6PZ1uoeQDDGZ9+qKSWzhOZzbDLgxVCRcOTRZmb
-	 0qVcY4Veoxo68ucrsSKrb7CXwoiyzfpma8XMFGFw=
+	b=i7ToXuMvTcucQFJxLjkXtj0S5SQhtVnOyXFBI28Uw83QpRGqbePErZcp02bUfeCFQ
+	 MstwYgCdJ9RHBDrL7PBPueR9fkxo/6OGj49RbC0x9lciig/1BGlm9tpNjRMp/VZQhB
+	 UBokMC7pE8P4u5uHZNlYKuYjVPYwLqHpQm1B/R44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733189AbfIDQJx (ORCPT
+        id S1732895AbfIDQBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732898AbfIDQBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 12:01:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732830AbfIDQAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CE132339E;
-        Wed,  4 Sep 2019 16:01:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 812E520820;
+        Wed,  4 Sep 2019 16:00:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612866;
-        bh=RBiB+nszUOZlllJwJQPDLHwFxoOujyJoImu0eDIhmHY=;
+        s=default; t=1567612850;
+        bh=K93ZfifvKFmK/rsmxc+R5+nB6ROmf3mlE/wOO2Vb1Ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gzN9QtxwuyaZULp8+e6BM08h+Zx+LPrgvni6VYC9fLHKBK6ZUTpFRly98OBePYk16
-         ZJiOu1lFlbmRSc4tghDxDl/op1dDfObI8+I2jGt8uNJ+BpKBf1hf5Amauezk9X2Uih
-         75v6tnR0+wzrHcd2xFPx+ZDk+Qh4Ajx86ofJiKqY=
+        b=GTGAc9AyYP3Dp6Onwf3nm+V7Ci1Wo44yY44OaK5SE/rd1/t3j2W/z3mJCtWkKK7XE
+         4d09OJsQGLZiNK2R7UwoHNRiie0nm8dLxPL+RECC/CPuQalDPTeF0nfYQ7lky0MF2o
+         HQsJriK+F8CbH8woi2v/Iusl9ZgjguO5F2ttM6sY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 43/52] i2c: designware: Synchronize IRQs when unregistering slave client
-Date:   Wed,  4 Sep 2019 11:59:55 -0400
-Message-Id: <20190904160004.3671-43-sashal@kernel.org>
+Cc:     Todd Seidelmann <tseidelmann@linode.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 31/52] netfilter: xt_physdev: Fix spurious error message in physdev_mt_check
+Date:   Wed,  4 Sep 2019 11:59:43 -0400
+Message-Id: <20190904160004.3671-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -60,37 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Todd Seidelmann <tseidelmann@linode.com>
 
-[ Upstream commit c486dcd2f1bbdd524a1e0149734b79e4ae329650 ]
+[ Upstream commit 3cf2f450fff304be9cf4868bf0df17f253bc5b1c ]
 
-Make sure interrupt handler i2c_dw_irq_handler_slave() has finished
-before clearing the the dev->slave pointer in i2c_dw_unreg_slave().
+Simplify the check in physdev_mt_check() to emit an error message
+only when passed an invalid chain (ie, NF_INET_LOCAL_OUT).
+This avoids cluttering up the log with errors against valid rules.
 
-There is possibility for a race if i2c_dw_irq_handler_slave() is running
-on another CPU while clearing the dev->slave pointer.
+For large/heavily modified rulesets, current behavior can quickly
+overwhelm the ring buffer, because this function gets called on
+every change, regardless of the rule that was changed.
 
-Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Reported-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Todd Seidelmann <tseidelmann@linode.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-designware-slave.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/xt_physdev.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
-index e7f9305b2dd9f..f5f001738df5e 100644
---- a/drivers/i2c/busses/i2c-designware-slave.c
-+++ b/drivers/i2c/busses/i2c-designware-slave.c
-@@ -94,6 +94,7 @@ static int i2c_dw_unreg_slave(struct i2c_client *slave)
+diff --git a/net/netfilter/xt_physdev.c b/net/netfilter/xt_physdev.c
+index 05f00fb20b047..cd15ea79e3e2a 100644
+--- a/net/netfilter/xt_physdev.c
++++ b/net/netfilter/xt_physdev.c
+@@ -104,11 +104,9 @@ static int physdev_mt_check(const struct xt_mtchk_param *par)
+ 	if (info->bitmask & (XT_PHYSDEV_OP_OUT | XT_PHYSDEV_OP_ISOUT) &&
+ 	    (!(info->bitmask & XT_PHYSDEV_OP_BRIDGED) ||
+ 	     info->invert & XT_PHYSDEV_OP_BRIDGED) &&
+-	    par->hook_mask & ((1 << NF_INET_LOCAL_OUT) |
+-	    (1 << NF_INET_FORWARD) | (1 << NF_INET_POST_ROUTING))) {
++	    par->hook_mask & (1 << NF_INET_LOCAL_OUT)) {
+ 		pr_info_ratelimited("--physdev-out and --physdev-is-out only supported in the FORWARD and POSTROUTING chains with bridged traffic\n");
+-		if (par->hook_mask & (1 << NF_INET_LOCAL_OUT))
+-			return -EINVAL;
++		return -EINVAL;
+ 	}
  
- 	dev->disable_int(dev);
- 	dev->disable(dev);
-+	synchronize_irq(dev->irq);
- 	dev->slave = NULL;
- 	pm_runtime_put(dev->dev);
- 
+ 	if (!brnf_probed) {
 -- 
 2.20.1
 
