@@ -2,339 +2,108 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDCFC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0F9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D502077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:52:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F7InDeDd"
+	by mail.kernel.org (Postfix) with ESMTP id 7BBF820828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbfIDKw4 (ORCPT
+        id S1729525AbfIDKxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:52:56 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:36483 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfIDKw4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:52:56 -0400
-Received: by mail-ua1-f67.google.com with SMTP id n6so3154122uaq.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 03:52:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e4KIv9I3g7+mOQqRzTP4rO2ZJBefQoecY/Xb2Ym6olU=;
-        b=F7InDeDdRxFYW2jGglTfH+IsPhK3owVOWn3dkfwpo+nJLSRDoIp+fkzvjDeg0KbMYy
-         RLx8BUk6e8PoVvZbOix87mZMX/EOJHsHM970X3VY1pyk3ySyUBMaTu1Ryh10AN4LYkOQ
-         VoGLVuBctVdz6OE9UTz0WnU5x/EoSaeM6JFcM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e4KIv9I3g7+mOQqRzTP4rO2ZJBefQoecY/Xb2Ym6olU=;
-        b=MJd7XoRjUX4wbYlNGm9cDyej0BqHUDR58aoHhwNFrMQHD8bMo/NXdcD8m8Lwp7oWGH
-         a8g3RZjIp/o1MZ/gk+7jbT7RMlLdIxjVUKhAHK0hef82FOWHmz88Yn5q5yQn73uV4adO
-         F9SAeuA/dk2P/6NzJLsVkQAkeMgdu+veS9cyTbVVEQ5LpaQwAE6q03kmMBZ7rG3NTMWY
-         j2yEGuW4phPcC5fTKfb6m4kT94B0u6b8q3U68A0QbURwHk6yxbGAwKnjKzVMT/QX5cRq
-         U+O+wa+VkTtafpFFpSPAKDqYY6ejZ4LlOYAum3UQYOFPdMny301qRvZ1bVFBXy7jdnDb
-         IAsA==
-X-Gm-Message-State: APjAAAWuc2wXnTHuDFM1MDNrIqiSBSDGjrKNJtpqYl8mbSeOhNZPkIKk
-        ZdLXB7Mt6XmdY8EG5G1vK9l7nJcKi82zecm6e0uxDw==
-X-Google-Smtp-Source: APXvYqzTsm1PRXBLENmLqKrpnRjHHEkTnH3e+BsDOUowsK8ueNa1E9U4VdvhS65bKO4gdsnFmtPbwI6X5Ogz5qz4D7k=
-X-Received: by 2002:ab0:7c3:: with SMTP id d3mr19181451uaf.131.1567594374428;
- Wed, 04 Sep 2019 03:52:54 -0700 (PDT)
+        Wed, 4 Sep 2019 06:53:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:51810 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbfIDKw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:52:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D088337;
+        Wed,  4 Sep 2019 03:52:57 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64C683F246;
+        Wed,  4 Sep 2019 03:52:55 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 11:52:53 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jirka =?utf-8?Q?Hladk=C3=BD?= <jhladky@redhat.com>,
+        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
+        x86@kernel.org
+Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
+Message-ID: <20190904105252.qpnf7qmmeqhlp575@e107158-lin.cambridge.arm.com>
+References: <20190903154340.860299-1-rkrcmar@redhat.com>
+ <20190903154340.860299-3-rkrcmar@redhat.com>
+ <a2924d91-df68-42de-0709-af53649346d5@arm.com>
+ <20190904042310.GA159235@google.com>
+ <20190904081448.GZ2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190903055103.134764-1-cychiang@chromium.org>
- <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com> <CAFv8NwKHZM+zTu7GF_J0Xk6hubA2JK4cCsdhsDPOGk=3rnbCZw@mail.gmail.com>
- <1a167659-2eb1-d9be-c1ae-4958ac3f7929@baylibre.com> <CAFv8NwLFd4EZY5tcYeaagRiHWPx_QWDrtKs3WPT4ouJBMvM-LQ@mail.gmail.com>
- <20190904103150.GK13294@shell.armlinux.org.uk>
-In-Reply-To: <20190904103150.GK13294@shell.armlinux.org.uk>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Wed, 4 Sep 2019 18:52:27 +0800
-Message-ID: <CAFv8Nw+7DU2iM7XxZ1Nz4BW-=Xv731i-4LXe1_Bfm46hAosnkg@mail.gmail.com>
-Subject: Re: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status setting
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Doug Anderson <dianders@chromium.org>,
-        kuninori.morimoto.gx@renesas.com, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        sam@ravnborg.org, Xing Zheng <zhengxing@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        =?UTF-8?B?6JSh5p6r?= <eddie.cai@rock-chips.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        cain.cai@rock-chips.com, Daniel Vetter <daniel@ffwll.ch>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        kuankuan.y@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904081448.GZ2349@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 6:32 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Wed, Sep 04, 2019 at 05:45:20PM +0800, Cheng-yi Chiang wrote:
-> > On Wed, Sep 4, 2019 at 5:28 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On 04/09/2019 11:09, Cheng-yi Chiang wrote:
-> > > > Hi,
-> > > >
-> > > > On Tue, Sep 3, 2019 at 5:53 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> > > >>
-> > > >> Hi,
-> > > >>
-> > > >> On 03/09/2019 07:51, Cheng-Yi Chiang wrote:
-> > > >>> From: Yakir Yang <ykk@rock-chips.com>
-> > > >>>
-> > > >>> When transmitting IEC60985 linear PCM audio, we configure the
-> > > >>> Audio Sample Channel Status information of all the channel
-> > > >>> status bits in the IEC60958 frame.
-> > > >>> Refer to 60958-3 page 10 for frequency, original frequency, and
-> > > >>> wordlength setting.
-> > > >>>
-> > > >>> This fix the issue that audio does not come out on some monitors
-> > > >>> (e.g. LG 22CV241)
-> > > >>>
-> > > >>> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> > > >>> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > > >>> ---
-> > > >>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 59 +++++++++++++++++++++++
-> > > >>>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 20 ++++++++
-> > > >>>  2 files changed, 79 insertions(+)
-> > > >>>
-> > > >>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > >>> index bd65d0479683..34d46e25d610 100644
-> > > >>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > >>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > > >>> @@ -582,6 +582,63 @@ static unsigned int hdmi_compute_n(unsigned int freq, unsigned long pixel_clk)
-> > > >>>       return n;
-> > > >>>  }
-> > > >>>
-> > > >>> +static void hdmi_set_schnl(struct dw_hdmi *hdmi)
-> > > >>> +{
-> > > >>> +     u8 aud_schnl_samplerate;
-> > > >>> +     u8 aud_schnl_8;
-> > > >>> +
-> > > >>> +     /* These registers are on RK3288 using version 2.0a. */
-> > > >>> +     if (hdmi->version != 0x200a)
-> > > >>> +             return;
-> > > >>
-> > > >> Are these limited to the 2.0a version *in* RK3288, or 2.0a version on all
-> > > >> SoCs ?
-> > > >>
-> > > >
-> > > > In the original patch by Yakir,
-> > > >
-> > > > https://lore.kernel.org/patchwork/patch/539653/   (sorry, I should
-> > > > have added this link in the "after the cut" note)
-> > > >
-> > > > The fix is limited to version 2.0.
-> > > > Since I am only testing on RK3288 with 2.0a, I change the check to 2.0a only.
-> > > > I can not test 2.0a version on other SoCs.
-> > > > The databook I have at hand is 2.0a (not specific to RK3288) so I
-> > > > think all 2.0a should have this register.
-> > > >
-> > > > As for other version like version 1.3 on iMX6, there is no such
-> > > > register, as stated by Russell
-> > > >
-> > > > http://lkml.iu.edu/hypermail/linux/kernel/1501.3/06268.html.
-> > >
-> > > Russell assumes the registers are not present on the iMX6 IP not having
-> > > the I2S registers, but they are present on the IPs configured with I2S
-> > > at any versions.
-> >
-> > I see. Thanks for the check.
-> >
-> > >
-> > > My databook version (1.40.a) specifies :
-> > >
-> > > fc_audschnls0 to fc_audschnls8
-> > >
-> > > ```
-> > > When transmitting IEC60958 linear PCM audio, this registers allow to configure the channel status
-> > > information of all the channel status bits in the IEC60958 frame. For the moment this configuration is only
-> > > used when the I2S audio interface, General Purpose Audio (GPA), or AHB audio DMA (AHBAUDDMA)
-> > > interface is active (for S/PDIF interface this information comes from the stream).
-> > > ```
-> > >
-> > > But the databook Revision History shows these registers were present since version 1.10a.
-> > >
-> > > I propose you remove the version check, but you only setup these registers when I2S is enabled:
-> > > (hdmi_readb(hdmi, HDMI_CONFIG0_ID) & HDMI_CONFIG0_I2S) until a AHBAUDDMA user needs this,
-> > > with a small comment explaining the situation.
-> >
-> > I see. Sound like a good plan.
-> > In sum, I will add
-> > set_channel_status()
-> > in dw_hdmi.c
-> > And in the beginning of this function,
-> > check it is using I2S
-> >  (hdmi_readb(hdmi, HDMI_CONFIG0_ID) & HDMI_CONFIG0_I2S)
-> > with a comment explaining the situation.
-> >
-> > And let dw-hdmi-audio-i2s dw_hdmi_i2s_hw_params() to call this
-> > function after dw_hdmi_set_sample_rate, with word length (or
-> > sample_bit) passed it as argument.
->
-> If you're going to do it this way, there's little point having the
-> check.  The dw-hdmi-audio-i2s device will only be created if that
-> ID bit is already set.  So, provided set_channel_status() (which
-> should probably be dw_hdmi_set_channel_status()) is only called from
-> the I2S driver, then everything should be fine without such a check.
-> However, it is worth noting in the docbook comments above the function
-> that it is only for I2S setups.
->
-I see. Yes it is simpler.
-Thanks for the suggestion!
-Will fix in v2.
+On 09/04/19 10:14, Peter Zijlstra wrote:
+> On Wed, Sep 04, 2019 at 12:23:10AM -0400, Joel Fernandes wrote:
+> > On Tue, Sep 03, 2019 at 05:05:47PM +0100, Valentin Schneider wrote:
+> > > On 03/09/2019 16:43, Radim Krčmář wrote:
+> > > > The paper "The Linux Scheduler: a Decade of Wasted Cores" used several
+> > > > custom data gathering points to better understand what was going on in
+> > > > the scheduler.
+> > > > Red Hat adapted one of them for the tracepoint framework and created a
+> > > > tool to plot a heatmap of nr_running, where the sched_update_nr_running
+> > > > tracepoint is being used for fine grained monitoring of scheduling
+> > > > imbalance.
+> > > > The tool is available from https://github.com/jirvoz/plot-nr-running.
+> > > > 
+> > > > The best place for the tracepoints is inside the add/sub_nr_running,
+> > > > which requires some shenanigans to make it work as they are defined
+> > > > inside sched.h.
+> > > > The tracepoints have to be included from sched.h, which means that
+> > > > CREATE_TRACE_POINTS has to be defined for the whole header and this
+> > > > might cause problems if tree-wide headers expose tracepoints in sched.h
+> > > > dependencies, but I'd argue it's the other side's misuse of tracepoints.
+> > > > 
+> > > > Moving the import sched.h line lower would require fixes in s390 and ppc
+> > > > headers, because they don't include dependecies properly and expect
+> > > > sched.h to do it, so it is simpler to keep sched.h there and
+> > > > preventively undefine CREATE_TRACE_POINTS right after.
+> > > > 
+> > > > Exports of the pelt tracepoints remain because they don't need to be
+> > > > protected by CREATE_TRACE_POINTS and moving them closer would be
+> > > > unsightly.
+> > > > 
+> > > 
+> > > Pure trace events are frowned upon in scheduler world, try going with
+> > > trace points. 
+> 
+> Quite; I hate tracepoints for the API constraints they impose. Been
+> bitten by that, not want to ever have to deal with that again.
 
+s/tracepoints/trace events/ ?
 
-> > I have not tested setting this register here as in the original patch
-> > it was set in hdmi_set_clk_regenerator.
-> > I will test it and update in my v2.
-> >
-> > Thanks again to everyone for the prompt reply and help.
-> >
-> > >
-> > > Neil
-> > >
-> > > >
-> > > > So at least we should check the version.
-> > > > Maybe we can set the criteria as version 2.0 or above to make it a safe patch ?
-> > > > If there is the same need on other SoC with version < 2.0, it can be
-> > > > added later.
-> > > > Presumably, there will be databook of that version to help confirming
-> > > > this setting.
-> > > >
-> > > > Thanks!
-> > > >>> +
-> > > >>> +     switch (hdmi->sample_rate) {
-> > > >>> +     case 32000:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
-> > > >>> +             break;
-> > > >>> +     case 44100:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
-> > > >>> +             break;
-> > > >>> +     case 48000:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
-> > > >>> +             break;
-> > > >>> +     case 88200:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
-> > > >>> +             break;
-> > > >>> +     case 96000:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
-> > > >>> +             break;
-> > > >>> +     case 176400:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
-> > > >>> +             break;
-> > > >>> +     case 192000:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
-> > > >>> +             break;
-> > > >>> +     case 768000:
-> > > >>> +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
-> > > >>> +             break;
-> > > >>> +     default:
-> > > >>> +             dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)\n",
-> > > >>> +                      hdmi->sample_rate);
-> > > >>> +             return;
-> > > >>> +     }
-> > > >>> +
-> > > >>> +     /* set channel status register */
-> > > >>> +     hdmi_modb(hdmi, aud_schnl_samplerate, HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
-> > > >>> +               HDMI_FC_AUDSCHNLS7);
-> > > >>> +
-> > > >>> +     /*
-> > > >>> +      * Set original frequency to be the same as frequency.
-> > > >>> +      * Use one-complement value as stated in IEC60958-3 page 13.
-> > > >>> +      */
-> > > >>> +     aud_schnl_8 = (~aud_schnl_samplerate) <<
-> > > >>> +                     HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
-> > > >>> +
-> > > >>> +     /* This means word length is 16 bit. Refer to IEC60958-3 page 12. */
-> > > >>> +     aud_schnl_8 |= 2 << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
-> > > >>> +
-> > > >>> +     hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
-> > > >>> +}
-> > > >>> +
-> > > >>>  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
-> > > >>>       unsigned long pixel_clk, unsigned int sample_rate)
-> > > >>>  {
-> > > >>> @@ -620,6 +677,8 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
-> > > >>>       hdmi->audio_cts = cts;
-> > > >>>       hdmi_set_cts_n(hdmi, cts, hdmi->audio_enable ? n : 0);
-> > > >>>       spin_unlock_irq(&hdmi->audio_lock);
-> > > >>> +
-> > > >>> +     hdmi_set_schnl(hdmi);
-> > > >>>  }
-> > > >>>
-> > > >>>  static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
-> > > >>> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > > >>> index 6988f12d89d9..619ebc1c8354 100644
-> > > >>> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > > >>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > > >>> @@ -158,6 +158,17 @@
-> > > >>>  #define HDMI_FC_SPDDEVICEINF                    0x1062
-> > > >>>  #define HDMI_FC_AUDSCONF                        0x1063
-> > > >>>  #define HDMI_FC_AUDSSTAT                        0x1064
-> > > >>> +#define HDMI_FC_AUDSV                           0x1065
-> > > >>> +#define HDMI_FC_AUDSU                           0x1066
-> > > >>> +#define HDMI_FC_AUDSCHNLS0                      0x1067
-> > > >>> +#define HDMI_FC_AUDSCHNLS1                      0x1068
-> > > >>> +#define HDMI_FC_AUDSCHNLS2                      0x1069
-> > > >>> +#define HDMI_FC_AUDSCHNLS3                      0x106a
-> > > >>> +#define HDMI_FC_AUDSCHNLS4                      0x106b
-> > > >>> +#define HDMI_FC_AUDSCHNLS5                      0x106c
-> > > >>> +#define HDMI_FC_AUDSCHNLS6                      0x106d
-> > > >>> +#define HDMI_FC_AUDSCHNLS7                      0x106e
-> > > >>> +#define HDMI_FC_AUDSCHNLS8                      0x106f
-> > > >>>  #define HDMI_FC_DATACH0FILL                     0x1070
-> > > >>>  #define HDMI_FC_DATACH1FILL                     0x1071
-> > > >>>  #define HDMI_FC_DATACH2FILL                     0x1072
-> > > >>> @@ -706,6 +717,15 @@ enum {
-> > > >>>  /* HDMI_FC_AUDSCHNLS7 field values */
-> > > >>>       HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
-> > > >>>       HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
-> > > >>> +     HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
-> > > >>>
-> > > >>>  /* HDMI_FC_AUDSCHNLS8 field values */
-> > > >>>       HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
-> > > >>>
-> > > >>
-> > >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >
->
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+They used to be one and the same but I think using them interchangeably might
+cause some confusion now since we have tracepoints without trace events
+associated with them.
+
+Not trying to be picky, but the missing distinction confused the hell out of
+me when I first started looking at this :-)
+
+--
+Qais Yousef
