@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF12C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF94C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950A62087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA01F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620926;
-	bh=nDjyrpOByM6yY5SDXXalE77u9RzjwGi6LBtIAPqrq+g=;
+	s=default; t=1567620930;
+	bh=0JTnuWsTelDkywrJ0M1VQsfCLhs1bVpfAngi0Bt8z9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14xm/vXGikJjg+5Xe/DPtObLH8EBO8l6GRg7PFUvOkuw+e8JzD2f+GLeXLtDRFfwK
-	 8C6hTyu2JFSvY6hJXgCiE1EPjwFj0WolK1uWoyJlxuQ1hzVvX+rEwZeKrtqVqqwKqi
-	 F6o8OXuA7sVwPSh6Lb6SQltBvmTjZlSOj6/zEuCw=
+	b=xfBUoovswh0i/kfcW8c0U0ayX/LkJoWrWGJuviJbs7BD5mpACD3KjzkCB5cqinzse
+	 eaVaoPlTEF3R3guuxT6zdmXrXtTDm61pTnLKkToBoEFvJhh3l/GxsqSEHgGnjiiu4h
+	 CS5PfP1WjrmVBheFdzIvoLCtJYe/uv3r2J8mKHmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390965AbfIDSPZ (ORCPT
+        id S2390694AbfIDSP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390456AbfIDSPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:15:21 -0400
+        id S2390393AbfIDSP1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:15:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A60442087E;
-        Wed,  4 Sep 2019 18:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9501206BA;
+        Wed,  4 Sep 2019 18:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620921;
-        bh=nDjyrpOByM6yY5SDXXalE77u9RzjwGi6LBtIAPqrq+g=;
+        s=default; t=1567620926;
+        bh=0JTnuWsTelDkywrJ0M1VQsfCLhs1bVpfAngi0Bt8z9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AH33CiOyq2wR14QKuT8uPOY383Lngl6AYklG+v6z3zy/8fRixOmdkdD5A022Gzr9/
-         ch/7UNX40AfIvj7Li8iwEICN7y+xAWfHH69FGMSbkAbkVlniBLK3s4O4FsQcpXv8Ha
-         ApQQtkt5gvHt1z8XKo4/5ig6AvWd3qPODLwL8ka4=
+        b=MweqImoEPg3YsLtcDbAnV4A1kEfK7sFk6vBSMBPQXEZLJLFwPfTXi/nPYFaeMatAE
+         JAsS66t2n26Oq8kTYj8mKgWJWFF8IKm/Npc48ECqs9Hf7COCa/t/HBnFSIho6saMhU
+         aoGPUHQW8ekCw2TGTjUfCTutPiCtdVimkvr9SfPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.2 105/143] NFS: Ensure O_DIRECT reports an error if the bytes read/written is 0
-Date:   Wed,  4 Sep 2019 19:54:08 +0200
-Message-Id: <20190904175318.483862880@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH 5.2 107/143] lib: logic_pio: Fix RCU usage
+Date:   Wed,  4 Sep 2019 19:54:10 +0200
+Message-Id: <20190904175318.588086429@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,85 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: John Garry <john.garry@huawei.com>
 
-commit eb2c50da9e256dbbb3ff27694440e4c1900cfef8 upstream.
+commit 06709e81c668f5f56c65b806895b278517bd44e0 upstream.
 
-If the attempt to resend the I/O results in no bytes being read/written,
-we must ensure that we report the error.
+The traversing of io_range_list with list_for_each_entry_rcu()
+is not properly protected by rcu_read_lock() and rcu_read_unlock(),
+so add them.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Fixes: 0a00b77b331a ("nfs: mirroring support for direct io")
-Cc: stable@vger.kernel.org # v3.20+
+These functions mark the critical section scope where the list is
+protected for the reader, it cannot be  "reclaimed". Any updater - in
+this case, the logical PIO registration functions - cannot update the
+list until the reader exits this critical section.
+
+In addition, the list traversing used in logic_pio_register_range()
+does not need to use the rcu variant.
+
+This is because we are already using io_range_mutex to guarantee mutual
+exclusion from mutating the list.
+
+Cc: stable@vger.kernel.org
+Fixes: 031e3601869c ("lib: Add generic PIO mapping method")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/direct.c   |   27 ++++++++++++++++++---------
- fs/nfs/pagelist.c |    1 +
- 2 files changed, 19 insertions(+), 9 deletions(-)
+ lib/logic_pio.c |   49 +++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 14 deletions(-)
 
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -401,15 +401,21 @@ static void nfs_direct_read_completion(s
- 	unsigned long bytes = 0;
- 	struct nfs_direct_req *dreq = hdr->dreq;
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -46,7 +46,7 @@ int logic_pio_register_range(struct logi
+ 	end = new_range->hw_start + new_range->size;
  
--	if (test_bit(NFS_IOHDR_REDO, &hdr->flags))
--		goto out_put;
--
- 	spin_lock(&dreq->lock);
--	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags) && (hdr->good_bytes == 0))
-+	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
- 		dreq->error = hdr->error;
--	else
-+
-+	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
-+		spin_unlock(&dreq->lock);
-+		goto out_put;
-+	}
-+
-+	if (hdr->good_bytes != 0)
- 		nfs_direct_good_bytes(dreq, hdr);
+ 	mutex_lock(&io_range_mutex);
+-	list_for_each_entry_rcu(range, &io_range_list, list) {
++	list_for_each_entry(range, &io_range_list, list) {
+ 		if (range->fwnode == new_range->fwnode) {
+ 			/* range already there */
+ 			goto end_register;
+@@ -108,26 +108,38 @@ end_register:
+  */
+ struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode)
+ {
+-	struct logic_pio_hwaddr *range;
++	struct logic_pio_hwaddr *range, *found_range = NULL;
  
-+	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
-+		dreq->error = 0;
-+
- 	spin_unlock(&dreq->lock);
- 
- 	while (!list_empty(&hdr->pages)) {
-@@ -782,16 +788,19 @@ static void nfs_direct_write_completion(
- 	bool request_commit = false;
- 	struct nfs_page *req = nfs_list_entry(hdr->pages.next);
- 
--	if (test_bit(NFS_IOHDR_REDO, &hdr->flags))
--		goto out_put;
--
- 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
- 
- 	spin_lock(&dreq->lock);
- 
- 	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
- 		dreq->error = hdr->error;
--	if (dreq->error == 0) {
-+
-+	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
-+		spin_unlock(&dreq->lock);
-+		goto out_put;
-+	}
-+
-+	if (hdr->good_bytes != 0) {
- 		nfs_direct_good_bytes(dreq, hdr);
- 		if (nfs_write_need_commit(hdr)) {
- 			if (dreq->flags == NFS_ODIRECT_RESCHED_WRITES)
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1268,6 +1268,7 @@ int nfs_pageio_resend(struct nfs_pageio_
- 	if (!list_empty(&pages)) {
- 		int err = desc->pg_error < 0 ? desc->pg_error : -EIO;
- 		hdr->completion_ops->error_cleanup(&pages, err);
-+		nfs_set_pgio_error(hdr, err, hdr->io_start);
- 		return err;
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(range, &io_range_list, list) {
+-		if (range->fwnode == fwnode)
+-			return range;
++		if (range->fwnode == fwnode) {
++			found_range = range;
++			break;
++		}
  	}
- 	return 0;
+-	return NULL;
++	rcu_read_unlock();
++
++	return found_range;
+ }
+ 
+ /* Return a registered range given an input PIO token */
+ static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
+ {
+-	struct logic_pio_hwaddr *range;
++	struct logic_pio_hwaddr *range, *found_range = NULL;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(range, &io_range_list, list) {
+-		if (in_range(pio, range->io_start, range->size))
+-			return range;
++		if (in_range(pio, range->io_start, range->size)) {
++			found_range = range;
++			break;
++		}
+ 	}
+-	pr_err("PIO entry token %lx invalid\n", pio);
+-	return NULL;
++	rcu_read_unlock();
++
++	if (!found_range)
++		pr_err("PIO entry token 0x%lx invalid\n", pio);
++
++	return found_range;
+ }
+ 
+ /**
+@@ -180,14 +192,23 @@ unsigned long logic_pio_trans_cpuaddr(re
+ {
+ 	struct logic_pio_hwaddr *range;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(range, &io_range_list, list) {
+ 		if (range->flags != LOGIC_PIO_CPU_MMIO)
+ 			continue;
+-		if (in_range(addr, range->hw_start, range->size))
+-			return addr - range->hw_start + range->io_start;
++		if (in_range(addr, range->hw_start, range->size)) {
++			unsigned long cpuaddr;
++
++			cpuaddr = addr - range->hw_start + range->io_start;
++
++			rcu_read_unlock();
++			return cpuaddr;
++		}
+ 	}
+-	pr_err("addr %llx not registered in io_range_list\n",
+-	       (unsigned long long) addr);
++	rcu_read_unlock();
++
++	pr_err("addr %pa not registered in io_range_list\n", &addr);
++
+ 	return ~0UL;
+ }
+ 
 
 
