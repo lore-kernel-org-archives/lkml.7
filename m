@@ -3,328 +3,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C661C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB2EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686C420820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F26CD20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbfIDIDS (ORCPT
+        id S1729246AbfIDIEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:03:18 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:44648 "EHLO mail5.wrs.com"
+        Wed, 4 Sep 2019 04:04:06 -0400
+Received: from mga11.intel.com ([192.55.52.93]:47680 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbfIDIDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:03:16 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x8482cDn016609
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Wed, 4 Sep 2019 01:02:49 -0700
-Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 4 Sep
- 2019 01:02:27 -0700
-From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
-Subject: Bug?: unlink cause btrfs error but other fs don't
-To:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <josef@toxicpanda.com>
-Message-ID: <49edadc4-9191-da89-3e3b-ca495f582a4d@windriver.com>
-Date:   Wed, 4 Sep 2019 16:02:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        id S1727787AbfIDIEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:04:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 01:04:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
+   d="scan'208";a="182406388"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Sep 2019 01:04:04 -0700
+Received: from [10.226.38.83] (rtanwar-mobl.gar.corp.intel.com [10.226.38.83])
+        by linux.intel.com (Postfix) with ESMTP id 336DC580105;
+        Wed,  4 Sep 2019 01:04:02 -0700 (PDT)
+Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com,
+        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, yixin.zhu@linux.intel.com
+References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
+ <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
+ <d9e96dab-96be-0c14-b7af-e1f2dc07ebd2@linux.intel.com>
+ <CAFBinCARQJ7q9q3r6c6Yr2SD0Oo_Drah-kxss3Obs-g=B1M28A@mail.gmail.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com>
+Date:   Wed, 4 Sep 2019 16:03:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-        boundary="------------935A56B25A949F598160A930"
+In-Reply-To: <CAFBinCARQJ7q9q3r6c6Yr2SD0Oo_Drah-kxss3Obs-g=B1M28A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Originating-IP: [128.224.162.188]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---------------935A56B25A949F598160A930
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
 
-Hi ,
-
-
-*Kernel:*
-
-     After v5.2-rc1, qemux86-64
-
-     make -j40 ARCH=x86_64 CROSS_COMPILE=x86-64-gcc
-     use qemu to bootup kernel
-
-
-*Reproduce:*
-
-     There is a test case failed on btrfs but success on other 
-fs(ext4,ext3), see attachment.
-
-
-     Download attachments:
-
-         gcc test.c -o myout -Wall -lpthread
-
-         copy myout and run.sh to your qemu same directory.
-
-         on qemu:
-
-             ./run.sh
-
-
-     I found the block device size with btrfs set 512M will cause the error.
-     256M and 1G all success.
-
-
-*Error info:*
-
-     "BTRFS warning (device loop0): could not allocate space for a 
-delete; will truncate on mount"
-
-
-*Related patch:*
-
-     I use git bisect to find the following patch introduces the issue.
-
-     commit c8eaeac7b734347c3afba7008b7af62f37b9c140
-     Author: Josef Bacik <josef@toxicpanda.com>
-     Date:   Wed Apr 10 15:56:10 2019 -0400
-
-         btrfs: reserve delalloc metadata differently
-         ...
-
-
-Anyone's reply will be appreciated.
-
---Hongzhi
-
-
---------------935A56B25A949F598160A930
-Content-Type: application/x-shellscript; name="run.sh"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="run.sh"
-
-IyBjaGVjayBwZXJtaXNzaW9uCkNVUl9VU0VSPWBlbnYgfCBncmVwIFVTRVI9IHwgY3V0IC1k
-ICI9IiAtZiAyYApmb3IgaSBpbiAkQ1VSX1VTRVIKZG8KICAgIGlmIFsgJGkgPSAicm9vdCIg
-XTt0aGVuCiAgICAgICAgYnJlYWsKICAgIGVsc2UKICAgICAgICBlY2hvICJyZXF1aXJlIHJv
-b3QgcGVybWlzc2lvbihyb290L3N1ZG8pIgogICAgICAgIGV4aXQKICAgIGZpCmRvbmUKCiMg
-Y3JlYXRlIGJ0cmZzIGJsb2NrIGRldmljZSBhbmQgbW91bnQKQkxPQ0tfU0laRT1gZXhwciA1
-MTIgXCogMTAyNGAKCmRkIGlmPS9kZXYvemVybyBvZj0kSE9NRS90ZXN0LmltZyBicz0xMDI0
-IGNvdW50PSRCTE9DS19TSVpFCm1rZnMuYnRyZnMgLWYgJEhPTUUvdGVzdC5pbWcKCmlmIFsg
-ISAtZCAiJEhPTUUvdG1wbW50IiBdOyB0aGVuCglta2RpciAkSE9NRS90bXBtbnQKZWxzZQoJ
-cm0gLXJmICRIT01FL3RtcG1udAoJbWtkaXIgJEhPTUUvdG1wbW50CmZpCgptb3VudCAkSE9N
-RS90ZXN0LmltZyAkSE9NRS90bXBtbnQKCiMgaW1wbGVtZW50IHRlc3QgY2FzZQouL215b3V0
-Cgp1bW91bnQgJEhPTUUvdG1wbW50CnJtIC1yZiAkSE9NRS90bXBtbnQKcm0gLXJmICRIT01F
-L3Rlc3QuaW1nCg==
---------------935A56B25A949F598160A930
-Content-Type: text/x-csrc; name="test.c"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename="test.c"
-
-/**
- * mount a 512M btrfs block device.
- * and then fill the block device to the full with multi threads(ncpus+2).
- * and then unlink the files in the block device with multi threads.
- * 
- */
-
-
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#include <sys/stat.h>
-#include <sys/vfs.h>
-#include <fcntl.h>
-#include <libgen.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <grp.h>
-#include <sys/ioctl.h>     
-#include <dirent.h>
-#include <stdio.h>
-#include <errno.h>
-#include <pthread.h>
-#include <string.h>
-
-//#define PATH_MAX 512
-
-unsigned int nthreads;
-static volatile int run;
-struct worker *workers;
-static int enospc_cnt;	//no space count
-const char *homepath;
-
-struct worker {
-    char dir[PATH_MAX];
-};
-
-#define MIN(a, b) ({\
-    typeof(a) _a = (a); \
-    typeof(b) _b = (b); \
-    _a < _b ? _a : _b; \
-})
-
-#define pr_err(a) do{\
-    printf("%s:%d:\n", __FILE__, __LINE__); \
-    perror(a); \
-}while(0)
-
-unsigned int get_ncpus_conf()
-{
-	unsigned int ncpus_conf = -1;
-
-	if ( (ncpus_conf = sysconf(_SC_NPROCESSORS_CONF)) == -1 ) {
-		pr_err("Fail to get ncpus!");
-		exit(1);
-	}
-
-	return ncpus_conf;
-}
-
-void fill_fs(const char *path)
-{
-    int i = 0;
-    char file[PATH_MAX];
-    char buf[4096];
-    size_t len;
-    ssize_t ret;
-    int fd;
-
-    for (;;) {
-        len = random() % (1024 * 102400);
-
-        snprintf(file, sizeof(file), "%s/file%i", path, i++);
-        printf("%s \n", file);
-
-        fd = open(file, O_WRONLY | O_CREAT, 0700);
-        if (fd == -1) {
-            if (errno != ENOSPC)
-                pr_err("Fail to open()");
-				exit(1);
-
-            printf("No space to open() \n");
-            return;
-        }
-
-        while (len) {
-            ret = write(fd, buf, MIN(len, sizeof(buf)));
-
-            if (ret < 0) {
-                close(fd);
-
-                if (errno != ENOSPC)
-                    pr_err("Fail to write()");
-
-                printf("No space to write() \n");
-                return;
-            }
-
-            len -= ret;
-        }
-
-        close(fd);
-    }
-}
-
-static void *worker(void *p)
-{
-
-    struct worker *w = p;
-    DIR *d;
-    struct dirent *ent;
-    char file[2*PATH_MAX];
-
-    while (run) {
-        fill_fs(w->dir);
-
-         __atomic_fetch_add(&enospc_cnt, 1, __ATOMIC_SEQ_CST);
-
-        d = opendir(w->dir);
-        while ((ent = readdir(d))) {
-
-            if (!strcmp(ent->d_name, ".") || !strcmp(ent->d_name, ".."))
-                continue;
-
-            snprintf(file, sizeof(file), "%s/%s", w->dir, ent->d_name);
-
-            printf("Unlinking %s \n", file);
-
-            if( unlink(file) ) {
-				pr_err("Fail to unlink");
-			}
-            break;
-        }
-        closedir(d);
-    }
-
-    return NULL;
-}
-
-
-int main()
-{
-	unsigned int i, ms;
-
-    homepath = getenv("HOME");
-
-	nthreads = get_ncpus_conf() + 2;
-    pthread_t threads[nthreads];
-
-	workers = malloc(sizeof(struct worker) * nthreads);
-	if (!workers) {
-		pr_err("Fail to malloc workers!");
-		exit(1);
-	}
-
-	for (i = 0; i < nthreads; i++) {
-        snprintf(workers[i].dir, sizeof(workers[i].dir), \
-        "%s/tmpmnt/thread%i", homepath, i + 1);
-
-        if( mkdir(workers[i].dir, 0700) ){
-			pr_err("Fail to mkdir workerdir");
-			exit(1);
-		}
-    }
-
-	printf("Running %d writer threads \n", nthreads);
-
-	run = 1;
-    for (i = 0; i < nthreads; i++) {
-        if( pthread_create(&threads[i], NULL, worker, &workers[i]) ) {
-			pr_err("Fail to create pthread");
-			exit(1);
-		}
-    }
-
-    for (ms = 0; ; ms++) {
-        usleep(1000);
-
-        if (ms >= 1000 && enospc_cnt)
-            break;
-
-        if (enospc_cnt > 100)
-            break;
-    }
-
-    run = 0;
-    for (i = 0; i < nthreads; i++){
-        if( pthread_join(threads[i], NULL) ) {
-			pr_err("Fail to pthread_join");
-		}
-    }
-
-    printf("Got %d ENOSPC runtime %dms \n", enospc_cnt, ms);
-	
-	return 0;
-}
-
---------------935A56B25A949F598160A930--
+Hi Martin,
+
+On 4/9/2019 2:53 AM, Martin Blumenstingl wrote:
+>> My understanding is that if we do not use syscon, then there is no
+>> point in using regmap because this driver uses simple 32 bit register
+>> access. Can directly read/write registers using readl() & writel().
+>>
+>> Would you agree ?
+> if there was only the LGM SoC then I would say: drop regmap
+>
+> however, last year a driver for the GRX350/GRX550 SoCs was proposed: [0]
+> this was never updated but it seems to use the same "framework" as the
+> LGM driver
+> with this in mind I am for keeping regmap support because.
+> I think it will be easier to add support for old SoCs like
+> GRX350/GRX550 (but also VRX200), because the PLL sub-driver (I am
+> assuming that it is similar on all SoCs) or some other helpers can be
+> re-used across various SoCs instead of "duplicating" code (where one
+> variant would use regmap and the other readl/writel).
+
+
+Earlier, we had discussed about it in our team.  There are no plans to
+
+upstream mips based platform code, past up-streaming efforts for mips
+
+platforms were also dropped. GRX350/GRX550/VRX200 are all mips
+
+based platforms. Plan is to upstream only x86 based platforms. In-fact,
+
+i had removed GRX & other older SoCs support from this driver before
+
+sending for review. So we can consider only x86 based LGM family of
+
+SoCs for this driver & all of them will be reusing same IP.
+
+> [...]
+>>> +     select OF_EARLY_FLATTREE
+>>> there's not a single other "select OF_EARLY_FLATTREE" in driver/clk
+>>> I'm not saying this is wrong but it makes me curious why you need this
+>>
+>> We need OF_EARLY_FLATTREE for LGM. But adding a new x86
+>> platform for LGM is discouraged because that would lead to too
+>> many platforms. Only differentiating factor for LGM is CPU model
+>> ID but it can differentiate only at run time. So i had no option
+>> other then enabling it with some LGM specific core system module
+>> driver and CGU seemed perfect for this purpose.
+> so when my x86 kernel maintainer enables CONFIG_INTEL_LGM_CGU_CLK then
+> OF_EARLY_FLATTREE is enabled as well.
+> does this hurt any existing x86 platform? if not: why can't we enable
+> it for x86 unconditionally?
+
+
+IMHO, it will not hurt any other existing x86 platform but enabling it for
+
+x86 unconditionally also doesn't sound like a good idea. I now get your
+
+point that enabling OF_EARLY_FLATTREE here is a bit odd. I will remove
+
+it in next patch.
+
+Regards,
+
+Rahul
+
+> I went through meson & qcom regmap clock code. Agree, it can be
+> reused for mux, divider and gate. But as mentioned above, i am now
+> considering to move away from using regmap.
+> thank you for evaluating them. let's continue the discussion above
+> whether regmap should be used - after that we decide (if needed) which
+> regmap implementation to use
+>
+>
+> Martin
+>
+>
+> [0] https://patchwork.kernel.org/patch/10554401/
