@@ -2,113 +2,148 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66467C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060A6C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3133822CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF1321726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:12:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="cxGrZjgE"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="ov4XHsiB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732404AbfIDRLe (ORCPT
+        id S1732433AbfIDRMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:11:34 -0400
-Received: from mail-eopbgr760108.outbound.protection.outlook.com ([40.107.76.108]:9790
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731456AbfIDRLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:11:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K1eTD57IfQe6wlC0vN9oTjrgr9HbjSFu/kclMzlm1GVrpSmbEV3CqXbdtPry1icganheDGSEvE5VNz5fZ4DVg09JKWcYqvJuteeFbJNr4wzqhkMNwOYuZ6k/AeVlYVS/47QbzWe+OlCQrwXApgsuXGAonrjuYhbU9hk/q8qp17V4tXDEDxtSlJHBibHzpERiijDP7pcqN015jhEG0B+ROYyGRBxfpuIrqIwoisymSPSbRKTj7PQz2yC+xZiMCfBr7xk84Mq/gHPmywjqCMnAd6mtajZetKrsxjHh1BRFovD5L0yoPG1MwRN678m/pcmUSuLWerB7OVwGlUl/4W7oVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aU/m87E4OWikD98fSXwSswp2BNsqnXDAA/oRNzC3cIQ=;
- b=BFLW4MvYBVutErnBsbdXCKWR2/sj4JLvA+pXVcz+n4cSplYygxSVhZ6Fx3+h5N1IkeQknHWig87N3DlSAL4eBY6i7kU/vR8RERXKTS7jrbuKkD9djzhywj70rUb2FyCb6fWg6m4vK5n9Hjkb96pXFw0rTEmvRI7+ZtkYOo0n3FVjrKx7UNp6uuZaldZXFT7UStmeZtytpqLRBuMHDCQIBRQSvtX9fnnxcuRWMtvRbOlHD1f1kgqoA8fyq5SrhPRjgyStcHJLDnbrFU1T0dIzECP7p/oLy3UCHpajsKnHQVuimaIKlHXcvI/lmPTj3eCNmxzvGBlhVucKHVNN7Kdgfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aU/m87E4OWikD98fSXwSswp2BNsqnXDAA/oRNzC3cIQ=;
- b=cxGrZjgEhptrtW+6ggKYxP9plaR6WfUF0wK4BNJ9LKyjxbjcUxNgkuGWpXnIStfqtJiJ/BywLsy7Tk25xtwTXzz9GhkrDqBociGNUcJJ9OXzIGkanmt4TINTqKg5yfHP1Qm0xR1uAZEfAHHsXlTNsOjDDPHsWT1kHGg7iDyOxPk=
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com (10.171.159.143) by
- DM5PR13MB1836.namprd13.prod.outlook.com (10.171.154.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.14; Wed, 4 Sep 2019 17:11:30 +0000
-Received: from DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6]) by DM5PR13MB1851.namprd13.prod.outlook.com
- ([fe80::70fd:85c2:8ea9:a0b6%9]) with mapi id 15.20.2241.013; Wed, 4 Sep 2019
- 17:11:30 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS bugfix
-Thread-Topic: [GIT PULL] Please pull NFS bugfix
-Thread-Index: AQHVY0PLxUsm9zdUMUCZqGsscZqnDQ==
-Date:   Wed, 4 Sep 2019 17:11:29 +0000
-Message-ID: <9c0f3a52cd4e0075713fb7b9a2adbc7f05adadb3.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=trondmy@hammerspace.com; 
-x-originating-ip: [50.124.244.14]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47b67a9f-2ef4-4159-7a0d-08d7315aedac
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR13MB1836;
-x-ms-traffictypediagnostic: DM5PR13MB1836:
-x-microsoft-antispam-prvs: <DM5PR13MB18367C5F6834F5435A079890B8B80@DM5PR13MB1836.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:660;
-x-forefront-prvs: 0150F3F97D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39830400003)(346002)(396003)(376002)(199004)(189003)(4326008)(4744005)(8936002)(5660300002)(6506007)(102836004)(26005)(316002)(2501003)(54906003)(186003)(53936002)(81156014)(8676002)(1730700003)(81166006)(6436002)(118296001)(3846002)(6116002)(5640700003)(86362001)(36756003)(7736002)(2906002)(2351001)(6512007)(305945005)(25786009)(99286004)(14444005)(256004)(71200400001)(71190400001)(486006)(66066001)(14454004)(2616005)(6486002)(476003)(91956017)(6916009)(76116006)(64756008)(66446008)(66946007)(478600001)(66556008)(66476007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1836;H:DM5PR13MB1851.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hammerspace.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: aF7/e3Qsg9xT6/Puly8LSoD1txaaaWbvCYQt67tvlFLQcEeoPaYDxPM01ctt9OQzmA3wNber6alTmkEX0QeZ3m7nN86IjUiWXzBdWnd9iAokjP8NhoNHdo73i/IVtEp5mY05yBgPyDEiTESF581IcWPLfyVz/5hDSj8aPOmJyEVi66utAZU2vSHDgxOTYk9OPRQGS57/Y9llYOwo/C/C2xgBHJ0xmxFL0d3TiVQNEH6kI5KmBY3x7g/Dpp3pz+QeECnwVnyJ9iNpT89igfAqX8FSj7cMCvS6NFLxdkLH3hvsYvdadx5lKgdgoIInU0R+GvTsX5NGl27O84RJZEB6qRo/gBqb5vk5z54onarQQ2IDF13VWC3qI76YzST26g0EMgnng6x6qEvKk1jFkhOCFkDa6IwQm5APRqHjg/8MKoY=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F53D3C44811B7347B0081207776CC1C6@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 4 Sep 2019 13:12:10 -0400
+Received: from mout.web.de ([212.227.15.4]:36961 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731456AbfIDRMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:12:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1567617098;
+        bh=8FYBlMNDa4QYgsP1spn0LFhetvVOppJuogo1VyWwUo4=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=ov4XHsiB3hMhvYSxUtDOft97TLnObg04hWJw5qxWsa8g4KMAPT+g59/DQPImIuH6U
+         /0VqsocaxGem/ZZKRogeCYE6WTurYxn4AKwn3HbfDBl6g+EQJR/PZL/EqWIWxoz2xp
+         LblC4emPTILkam5RmwQ/m9uPN1+RI+WKldvwDJNE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.49.100.89]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MDByG-1hxp3u0YNY-00GafH; Wed, 04
+ Sep 2019 19:11:38 +0200
+Subject: Re: drm/amdgpu: Delete an unnecessary check before two function calls
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Jack Xiao <Jack.Xiao@amd.com>,
+        Kevin Wang <Kevin1.Wang@amd.com>,
+        Tom St Denis <tom.stdenis@amd.com>,
+        Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+References: <a3739125-5fa8-cadb-d2b8-8a9f12e9bacd@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <ef57fbc1-8c67-c6ae-42b8-0de76df7cea3@web.de>
+Date:   Wed, 4 Sep 2019 19:11:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47b67a9f-2ef4-4159-7a0d-08d7315aedac
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 17:11:29.9676
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7keZ30yCcUDXG5LOeVPNWxxvfCbdWquueCkYIV2+J6BeaaLjfvCtbAUnvsvNY7Jc76LijwhTDgo36LZNMKAM7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1836
+In-Reply-To: <a3739125-5fa8-cadb-d2b8-8a9f12e9bacd@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZLeBkHBr0q8jZES0PP9vBzsioYA+llirF1PkWN6y5UMtFezSU2w
+ HgB0h+917mYE4zlr5XhyodWdIsDaVEp2j1SrejmFdj5b6nO32jnWWfnLz2HCH1mio8JeMDH
+ TKjn4QGJ8I7Qgkv8Bhr2+ntYCDL5RIZCK0A0Wjt2rR8AfQAXalrub0LmB0SqPixUKOlwN3d
+ xBOIPXPVs74Y+INDqb2cg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sWbJhIOyBiU=:FYC4UUvU+ss+XcEqxiXYgR
+ lOui+4bFpaI9DOcnB73MjeFafN0OExxjfYlr86y9pkuLqfwDo4zB20BRTVlERyN2LU56ieqB4
+ rmNSFELRvVvuE6IvlL1o6THtek4SXHAMmt0DkPDX6GHv4IUyuu9ml93EcZmwCx2J+r1tBE5w2
+ qsNbDVVPSOjHhtP/Yb1mvxF5A1TOENy00Og7P6w597L2qHZYSbvAPfGzdiJvjCjV+onHEQTtT
+ YFKCRf0PFmdd16s+ubfj6/h//FXe0c41BE/ethA6py4cUET4y+bNEQmK+q2stlJpTiLf1wvqz
+ oX1iV6fSR/ztGNZYB0uMOBvU/AwZLjRCAurfR4hhuQHa3/S+cqzgoDOwr6VSUydRfV+lwndj1
+ bjuuzlmGn3uQjpDJDj33qVjXMI9oBE+zRTZzOjgye8ZNualFElOwv3u1tvA22Ph3qT5rVCzzp
+ fJMzUU0KNAzk11Yoauyx0rxqP1LC1rkSNIh63O/dHpXctkEf7bUhmqG8GXv0NwsczOLB/RlnN
+ +BhTYMg/gzyF+Tx8kdVzBgok2I9xL5K637prF/k7EroA5poKQg/C5iGr5cxcSzJM7lsCfatDR
+ 5j0jJ5E9Iufhp72LtOJmh4+/3Zlu/yX+isfMp1BwAHGo3W9BraqoSIatSAMaVL3vd1CK1rwaI
+ IzhKPrPUIXe9aWtXGoFx5cCOVsfQjd6AMb/A1GjPrFKQKtT41BTDms6E099lM4ylK9npSU/OL
+ e1hEzE5n9CtABfw9eDyFY4TTNoi5DeRr9XOiqinC3jzGH5u1pTjikC6/rlKJW2wfzdlGCTojx
+ 1LYMVTsoDjgOeSsIrKOZDFF2beg6lwUlzXvV2gGa1vTgnl8E8shgghlZbUeV8l27zVihW4V8L
+ 7luqEODPEG/3tYESdXPdurcHGwMRsB6gYgOsUeGjxUq05/VMCB5v0ZPHqXULcLwwqAmnMMkDe
+ ZXvWDzCleulqOnqrHStitWwz8PFK1mM5BvTs1mfRg8UEoAAGs/SIX7MzHZzH+C2Y29lUQeinL
+ F2SZmpNvgfPR/2TTve6yPy+Np+shGfN+gqZTe1SKHKuE17P3PRAiu219zS3SSmpKQ25gD0qDK
+ HtrduvmIxLWbVIi6kMlzxAr+KbiD/HOEcsm2XDJXUSp6QKRtZzIHoiZmDftifjOpWnW9dVUgL
+ vlLwirqvyvbHtOhNe2diWIJEAdcR1UJqAefAyDmavWbN9V4c2rq2X1a8C3ZRqIZrGrDhxB6wm
+ rKj3tldt3emUSikrp
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGludXMsDQoNCk9uZSBtb3JlIHB1bGwgcmVxdWVzdCB0byBmaXggYSBORlN2NCByZWdyZXNz
-aW9uIHRoYXQgYWZmZWN0cyBvbmx5IHRoZQ0KdjUuMy1yYyBzZXJpZXMuDQoNClRoZSBmb2xsb3dp
-bmcgY2hhbmdlcyBzaW5jZSBjb21taXQgMDg5Y2Y3ZjZlY2IyNjZiNmE0MTY0OTE5YTJlNjliZDJm
-OTM4Mzc0YToNCg0KICBMaW51eCA1LjMtcmM3ICgyMDE5LTA5LTAyIDA5OjU3OjQwIC0wNzAwKQ0K
-DQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3NpdG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQu
-bGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xpbnV4LW5mcy5naXQgdGFncy9uZnMtZm9y
-LTUuMy00DQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byBlYjNkOGY0MjIzMWFlYzY1
-YjY0YjA3OWRkMTdiZDZjMDA4YTNmZTI5Og0KDQogIE5GUzogRml4IGlub2RlIGZpbGVpZCBjaGVj
-a3MgaW4gYXR0cmlidXRlIHJldmFsaWRhdGlvbiBjb2RlICgyMDE5LTA5LTAyIDEzOjEwOjE5IC0w
-NDAwKQ0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQpORlMgY2xpZW50IGJ1Z2ZpeGVzIGZvciBMaW51eCA1LjMNCg0KSGln
-aGxpZ2h0cyBpbmNsdWRlOg0KDQpCdWdmaXhlczoNCi0gRml4IGlub2RlIGZpbGVpZCBjaGVja3Mg
-aW4gYXR0cmlidXRlIHJldmFsaWRhdGlvbiBjb2RlDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NClRyb25kIE15a2xlYnVz
-dCAoMSk6DQogICAgICBORlM6IEZpeCBpbm9kZSBmaWxlaWQgY2hlY2tzIGluIGF0dHJpYnV0ZSBy
-ZXZhbGlkYXRpb24gY29kZQ0KDQogZnMvbmZzL2lub2RlLmMgfCAxOCArKysrKysrKysrLS0tLS0t
-LS0NCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCi0t
-IA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNw
-YWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+> The functions =E2=80=9Cdebugfs_remove=E2=80=9D and =E2=80=9Ckfree=E2=80=
+=9D test whether their argument
+> is NULL and then return immediately.
+> Thus the tests around the shown calls are not needed.
+>
+> This issue was detected by using the Coccinelle software.
+
+I suggest to take another look at a similar patch.
+
+drm/amdgpu: remove the redundant null check
+https://lkml.org/lkml/2019/9/3/59
+https://lore.kernel.org/patchwork/patch/1123118/
+https://lore.kernel.org/r/1567491305-18320-1-git-send-email-zhongjiang@hua=
+wei.com/
+
+Regards,
+Markus
