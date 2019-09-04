@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A7DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443F8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBEE20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1065620882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621473;
-	bh=d+AOmtSRkPLxq726y6RApsJJKUrt5FlgLRur9jxsM3o=;
+	s=default; t=1567621475;
+	bh=Agm7Gx9JZ79sv3rkp+il6lu4tb27ryMPb3LzsWceM2w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=juQGeN4IRJoX3IY5K+bCGZuhB5tyjw5pAkhWSzJAIt8dmhm277azyf1vnMQwJ0RTo
-	 p1YDz9R80dT8A9RMWavCmBMadanQayVGboyEOHYzyHLF6Qefq4s6NJpH23P9tkSS3K
-	 hUPavdMsduaQmIdUWC7uj7SFoH2COsb06p9YjJm0=
+	b=idJCBbHLit/+mEsDOQg6FQbq9W4bFJQpWVsBW7y+ugkyJvjCrmlgCIfprf2yh9quU
+	 AYp2gQMBCfQtk3jFBjIQGytpJ8KaobIix+uUhprPpOgQskeKAAHROAxYWQ3B3CPuwW
+	 on4KWxL7AAOJ2MO/7qVj9gcs4tQcxaFrzptR5O8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388553AbfIDSBW (ORCPT
+        id S2388489AbfIDSYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40788 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:24:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388533AbfIDSBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:17 -0400
+        id S2388551AbfIDSBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6E792339D;
-        Wed,  4 Sep 2019 18:01:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C7C0233FF;
+        Wed,  4 Sep 2019 18:01:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620076;
-        bh=d+AOmtSRkPLxq726y6RApsJJKUrt5FlgLRur9jxsM3o=;
+        s=default; t=1567620081;
+        bh=Agm7Gx9JZ79sv3rkp+il6lu4tb27ryMPb3LzsWceM2w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MAwR+zVYg/UJ28mhB7LkQH0EX5ebOrsAcHI4S6bDi4XWUkrpQPvTYUqi6qmeMZ+WM
-         UT+2yJTIr0dNhNCx6Y0mdg70NTCk0hGelHUA+Uf1tXwfn9q2Et9y8LGS74H8unai5F
-         mLB37yKOaNP+NW7vHBp+IlXv0yiUqGcZhBbCy7aM=
+        b=DMqZv7Ubhw/gn0neI7KNFhZ978vkRwCd7NDqjljykGap3TR7N1Djc4wf8YEO04P4O
+         JMHEKvgX8tszkBjQ4B5ynZltWoXCW+P5odMQQDJVNrqWB3IclbZuC5eVJXZxiItxP7
+         DdMpTBzKKre6iPbJM14Ngp7p0uAqZht4jbs8RKGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bandan Das <bsd@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 63/83] x86/apic: Include the LDR when clearing out APIC registers
-Date:   Wed,  4 Sep 2019 19:53:55 +0200
-Message-Id: <20190904175309.164387222@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Henk van der Laan <opensource@henkvdlaan.com>
+Subject: [PATCH 4.9 65/83] usb-storage: Add new JMS567 revision to unusual_devs
+Date:   Wed,  4 Sep 2019 19:53:57 +0200
+Message-Id: <20190904175309.343129768@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -59,49 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bandan Das <bsd@redhat.com>
+From: Henk van der Laan <opensource@henkvdlaan.com>
 
-commit 558682b5291937a70748d36fd9ba757fb25b99ae upstream.
+commit 08d676d1685c2a29e4d0e1b0242324e564d4589e upstream.
 
-Although APIC initialization will typically clear out the LDR before
-setting it, the APIC cleanup code should reset the LDR.
+Revision 0x0117 suffers from an identical issue to earlier revisions,
+therefore it should be added to the quirks list.
 
-This was discovered with a 32-bit KVM guest jumping into a kdump
-kernel. The stale bits in the LDR triggered a bug in the KVM APIC
-implementation which caused the destination mapping for VCPUs to be
-corrupted.
-
-Note that this isn't intended to paper over the KVM APIC bug. The kernel
-has to clear the LDR when resetting the APIC registers except when X2APIC
-is enabled.
-
-This lacks a Fixes tag because missing to clear LDR goes way back into pre
-git history.
-
-[ tglx: Made x2apic_enabled a function call as required ]
-
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190826101513.5080-3-bsd@redhat.com
+Signed-off-by: Henk van der Laan <opensource@henkvdlaan.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190816200847.21366-1-opensource@henkvdlaan.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/apic.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/storage/unusual_devs.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1067,6 +1067,10 @@ void clear_local_APIC(void)
- 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
- 	v = apic_read(APIC_LVT1);
- 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
-+	if (!x2apic_enabled()) {
-+		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
-+		apic_write(APIC_LDR, v);
-+	}
- 	if (maxlvt >= 4) {
- 		v = apic_read(APIC_LVTPC);
- 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
+--- a/drivers/usb/storage/unusual_devs.h
++++ b/drivers/usb/storage/unusual_devs.h
+@@ -2119,7 +2119,7 @@ UNUSUAL_DEV(  0x14cd, 0x6600, 0x0201, 0x
+ 		US_FL_IGNORE_RESIDUE ),
+ 
+ /* Reported by Michael Büsch <m@bues.ch> */
+-UNUSUAL_DEV(  0x152d, 0x0567, 0x0114, 0x0116,
++UNUSUAL_DEV(  0x152d, 0x0567, 0x0114, 0x0117,
+ 		"JMicron",
+ 		"USB to ATA/ATAPI Bridge",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
 
 
