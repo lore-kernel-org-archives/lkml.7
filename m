@@ -2,111 +2,137 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FBFC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E1DD22CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA10F22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="jHZXAogL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731302AbfIDPHM (ORCPT
+        id S1731325AbfIDPHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:07:12 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:27777 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729944AbfIDPHM (ORCPT
+        Wed, 4 Sep 2019 11:07:24 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36654 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731253AbfIDPHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:07:12 -0400
-Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x84F6OmK057013;
-        Thu, 5 Sep 2019 00:06:24 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp);
- Thu, 05 Sep 2019 00:06:24 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav104.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x84F6N7i057007
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 5 Sep 2019 00:06:24 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH v3 1/4] ASoC: es8316: judge PCM rate at later timing
-To:     Mark Brown <broonie@kernel.org>
-Cc:     David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190903165322.20791-1-katsuhiro@katsuster.net>
- <20190903174801.GD7916@sirena.co.uk>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <85c717bf-d875-016c-a303-867bdca9a645@katsuster.net>
-Date:   Thu, 5 Sep 2019 00:06:23 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190903174801.GD7916@sirena.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Sep 2019 11:07:23 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o12so13200886qtf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 08:07:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Bjd/DHxyfRBfNYOym7ZeBY5xHPB82GB3Jq5Tu5oVy78=;
+        b=jHZXAogLqBHGjDRqzv2BE9ym48eXzz+4o6+zbnl+BwInpdYGrRMShVv8qzdexPoeb/
+         vYXQ4ajKw3a/n5aBNC4VhSsCICv9XUxTmuUodSeshCk4Cco25QaHvg6dnhQz8fosfgQW
+         GdcmtgH1mepQHwWgJSzdsueMoCHstNRvLxQsljKBxCFAg5cGuLGIs154VmP0Ux4TBYYy
+         w7zfMEPdPGk3xYXlT/cpYNjKULaAWUvaGi/iHkRX2uHJFAJX5hHbo0tbzy81ZReiW+07
+         hNNIika7P41kvG85V6UeleEL6El+xVcQL5hTfUbrSzmikyiZQQ2jC3RJ6tCSe3DTHqnZ
+         pQqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Bjd/DHxyfRBfNYOym7ZeBY5xHPB82GB3Jq5Tu5oVy78=;
+        b=NP5t96IxdnJrOTyRQxNnl3bVgu5v2nIhaWNUFAiJHOyn/CG8TrpgkFDROv7c0hzrEB
+         3Q8FQH070HS/REt91Gi0Fe6v8a/La85C05MZYB4XkC1gjvRoqLQEOearo5lsxyzEnydh
+         IieZnQNjIf+1iuIkgyDipNOho0dRCC/fQ8+v8OkbnvA57p0GErtEjvv/oToHvVXIIFJS
+         B+WIo0mx4Tn4xjrkLyHBlK0EPBNDkKLZASwmGkzw5RvcRik+h8ewM683Np+ey8Ik19Er
+         3cYBK9BMBdVFQfcHM9DY5whRArIAInkrCCdhxsIjJ/ZvW/SLyiNii7sky4SJfxXLtEF8
+         GfQg==
+X-Gm-Message-State: APjAAAVxBtjlGfN+YkT24smpxpl8J7cwlJsVwr3j4oqQSe7cLbV67/sK
+        DGwFuK1XoEIQUE4Jp8tGsY6Hmw==
+X-Google-Smtp-Source: APXvYqyUFuGuP1OqyDPej1C7+ccIcKNGMcWn7j0roB5W+o42SqyZvE7l4bW0iAC0eogfNCEovjMcag==
+X-Received: by 2002:ac8:295d:: with SMTP id z29mr40394176qtz.168.1567609642691;
+        Wed, 04 Sep 2019 08:07:22 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id k54sm1027434qtf.28.2019.09.04.08.07.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 08:07:22 -0700 (PDT)
+Message-ID: <1567609639.5576.79.camel@lca.pw>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+From:   Qian Cai <cai@lca.pw>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Wed, 04 Sep 2019 11:07:19 -0400
+In-Reply-To: <20190904144850.GA8296@tigerII.localdomain>
+References: <20190903132231.GC18939@dhcp22.suse.cz>
+         <1567525342.5576.60.camel@lca.pw> <20190903185305.GA14028@dhcp22.suse.cz>
+         <1567546948.5576.68.camel@lca.pw> <20190904061501.GB3838@dhcp22.suse.cz>
+         <20190904064144.GA5487@jagdpanzerIV> <20190904065455.GE3838@dhcp22.suse.cz>
+         <20190904071911.GB11968@jagdpanzerIV> <20190904074312.GA25744@jagdpanzerIV>
+         <1567599263.5576.72.camel@lca.pw>
+         <20190904144850.GA8296@tigerII.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mark,
-
-On 2019/09/04 2:48, Mark Brown wrote:
-> On Wed, Sep 04, 2019 at 01:53:19AM +0900, Katsuhiro Suzuki wrote:
+On Wed, 2019-09-04 at 23:48 +0900, Sergey Senozhatsky wrote:
+> On (09/04/19 08:14), Qian Cai wrote:
+> > > Plus one more check - waitqueue_active(&log_wait). printk() adds
+> > > pending irq_work only if there is a user-space process sleeping on
+> > > log_wait and irq_work is not already scheduled. If the syslog is
+> > > active or there is noone to wakeup then we don't queue irq_work.
+> > 
+> > Another possibility for this potential livelock is that those printk() from
+> > warn_alloc(), dump_stack() and show_mem() increase the time it needs to
+> > process
+> > build_skb() allocation failures significantly under memory pressure. As the
+> > result, ksoftirqd() could be rescheduled during that time via a different
+> > CPU
+> > (this is a large x86 NUMA system anyway),
+> > 
+> > [83605.577256][   C31]  run_ksoftirqd+0x1f/0x40
+> > [83605.577256][   C31]  smpboot_thread_fn+0x255/0x440
+> > [83605.577256][   C31]  kthread+0x1df/0x200
+> > [83605.577256][   C31]  ret_from_fork+0x35/0x40
 > 
->> Root cause of this strange behavior is changing constraints list at
->> set_sysclk timing. It seems that is too early to determine. So this
->> patch does not use constraints list and check PCM rate limit more
->> later timing at hw_params.
+> Hum hum hum...
 > 
-> hw_params is a bit late to impose constraints, you want them to be
-> available to be available to the application before it gets as far as
-> picking the parameters it wants so that you don't get hw_params failing
-> due to an invalid configuration.  That makes everything run more
-> smoothly, applications should be able to trust the constraints they got
-> and some will not handle failures well.
+> So I can, _probably_, think of several patches.
 > 
-> The way this works with the variable MCLKs is that you end up in one of
-> two cases (wm8731 and wm8741 do this):
+> First, move wake_up_klogd() back to console_unlock().
 > 
->     1. The system is idle, MCLK is set to 0.  In this case no constraints
->        are set and we just set MCLK to whatever is required in hw_params()
->        in the machine driver.
->     2. One direction is active, MCLK is set to whatever that needed.  In
->        this case startup() sets constraints derived from the MCLK.
+> Second, move `printk_pending' out of per-CPU region and make it global.
+> So we will have just one printk irq_work scheduled across all CPUs;
+> currently we have one irq_work per CPU. I think I sent a patch a long
+> long time ago, but we never discussed it, as far as I remember.
 > 
-> There are races in this if streams are being started and torn down
-> simultaneously, there's not much we can do about them with the API the
-> way it is so we do have to validate in hw_params() anyway but it should
-> be validation not constraint imposition.
+> > In addition, those printk() will deal with console drivers or even a
+> > networking
+> > console, so it is probably not unusual that it could call irq_exit()-
+> > __do_softirq() at one point and then this livelock.
 > 
-> If the system has a fixed MCLK it just sets that on probe then we always
-> get the constraints applied on startup through the same code that
-> handles case 2.
+> Do you use netcon? Because this, theoretically, can open up one more
+> vector. netcon allocates skbs from ->write() path. We call con drivers'
+> ->write() from printk_safe context, so should netcon skb allocation
+> warn we will scedule one more irq_work on that CPU to flush per-CPU
+> printk_safe buffer.
+
+No, I don't use netcon. Just thought to mention it anyway since there could
+other people use it.
+
 > 
-
-Thank you for explanation. I agree with apply no constraints if MCLK is
-set to 0, and suitable constraints if MCLK is set to other values like
-as wm8731 and wm8741 drivers.
-
-I'll change my patch set and send.
-
-
-Would you tell me one more thing. I don't understand who sets MCLK to 0.
-Is it needed original machine driver instead of audio-graph-card?
-
-On my test environment (audio-graph-card + Rockchip I2S + ES8316), it
-seems audio-graph-card has never called set_sysclk() with freq = 0 after
-stop play/capture sound. So my env will go to bad scenario as I 
-described in this patch.
-
-Best Regards,
-Katsuhiro Suzuki
+> If this is the case, then we can stop calling console_driver() under
+> printk_safe. I sent a patch a while ago, but we agreed to keep the
+> things the way they are, fot the time being.
+> 
+> Let me think more.
+> 
+> 	-ss
