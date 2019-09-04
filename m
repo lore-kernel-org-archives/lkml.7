@@ -2,113 +2,196 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA1CC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF2F8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF1823400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567574742;
-	bh=CXNu9IN1Uq+0JFc0kjRWO1y9r0+ATS28FSmG0b0t2mk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qgEiY9jsiU0OZ+7BxemgIrA8BNcMBKgGQhIZCgToyq1QYs2Cyhw8fE37yZlC5L3B0
-	 n/NxCxoBQqL2FUR5RM5UB645QIHVl1MMvqf18t9ZnI/EvElvJzyDObeutfFtPJE3bw
-	 rPkkcW+vI3FKII8qHl+XFLb2AhpZnhQyAIVr3PSo=
+	by mail.kernel.org (Postfix) with ESMTP id 8698A2339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfIDFZl (ORCPT
+        id S1728238AbfIDF0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 01:25:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDFZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 01:25:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Sep 2019 01:26:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44868 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725938AbfIDF0I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 01:26:08 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x845NTFO106483
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Sep 2019 01:26:07 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut5vw20uc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 01:26:07 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 4 Sep 2019 06:26:04 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Sep 2019 06:26:00 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x845PxUO27197504
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Sep 2019 05:25:59 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF7115204F;
+        Wed,  4 Sep 2019 05:25:59 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1DA5152052;
+        Wed,  4 Sep 2019 05:25:59 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04C802339D;
-        Wed,  4 Sep 2019 05:25:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567574740;
-        bh=CXNu9IN1Uq+0JFc0kjRWO1y9r0+ATS28FSmG0b0t2mk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NHS6x1AV4wFH2nBQ/fs186BvlLSw8U4EgEYYBHRQle4S+DEKxvQ8C/hiKfdTTkgXM
-         WpXCxyb72sNYUSsGaZQLxZxjt9YMfseuWBDqFeZuGg+of3G70kT8FpQ3meUUbNzkV/
-         kTNyNEDxSMKSUaitSylkwH88KhVhUza8BemG3+oA=
-Date:   Wed, 4 Sep 2019 07:25:38 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] nvme: fire discovery log page change events to
- userspace
-Message-ID: <20190904052538.GB17236@kroah.com>
-References: <20190822002328.GP9511@lst.de>
- <205d06ab-fedc-739d-323f-b358aff2cbfe@grimberg.me>
- <e4603511-6dae-e26d-12a9-e9fa727a8d03@grimberg.me>
- <20190826065639.GA11036@lst.de>
- <20190826075916.GA30396@kroah.com>
- <ac168168-fed2-2b57-493e-e88261ead73b@grimberg.me>
- <20190830062036.GA15257@kroah.com>
- <73e3d2ca-33e0-3133-9dfb-62b07e5b09c4@grimberg.me>
- <20190902193341.GA28723@kroah.com>
- <f9204955-a1b3-796a-dc4f-fd7af7946635@grimberg.me>
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id B77E2A0147;
+        Wed,  4 Sep 2019 15:25:55 +1000 (AEST)
+Subject: Re: [PATCH] powerpc: Perform a bounds check in arch_add_memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 04 Sep 2019 15:25:55 +1000
+In-Reply-To: <5ce9f700-8e70-c669-32fa-9598a01eb8ba@redhat.com>
+References: <20190827052047.31547-1-alastair@au1.ibm.com>
+         <20190827062844.GQ7538@dhcp22.suse.cz>
+         <ea9e43fff6b6531af0620f9df62e015af66d4535.camel@au1.ibm.com>
+         <1f2d967a-57a1-d3a3-4eb7-306b43709fee@redhat.com>
+         <7e8e34ece6386bd3b0703f218a3b4688c83886d7.camel@au1.ibm.com>
+         <5ce9f700-8e70-c669-32fa-9598a01eb8ba@redhat.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9204955-a1b3-796a-dc4f-fd7af7946635@grimberg.me>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090405-4275-0000-0000-00000360DDD9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090405-4276-0000-0000-00003873218D
+Message-Id: <6823c187257b5033bca8905dda17b6c79a4944a6.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909040056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 06:35:30PM -0700, Sagi Grimberg wrote:
+On Mon, 2019-09-02 at 09:28 +0200, David Hildenbrand wrote:
+> On 02.09.19 01:54, Alastair D'Silva wrote:
+> > On Tue, 2019-08-27 at 09:13 +0200, David Hildenbrand wrote:
+> > > On 27.08.19 08:39, Alastair D'Silva wrote:
+> > > > On Tue, 2019-08-27 at 08:28 +0200, Michal Hocko wrote:
+> > > > > On Tue 27-08-19 15:20:46, Alastair D'Silva wrote:
+> > > > > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > > > > 
+> > > > > > It is possible for firmware to allocate memory ranges
+> > > > > > outside
+> > > > > > the range of physical memory that we support
+> > > > > > (MAX_PHYSMEM_BITS).
+> > > > > 
+> > > > > Doesn't that count as a FW bug? Do you have any evidence of
+> > > > > that
+> > > > > in
+> > > > > the
+> > > > > field? Just wondering...
+> > > > > 
+> > > > 
+> > > > Not outside our lab, but OpenCAPI attached LPC memory is
+> > > > assigned
+> > > > addresses based on the slot/NPU it is connected to. These
+> > > > addresses
+> > > > prior to:
+> > > > 4ffe713b7587 ("powerpc/mm: Increase the max addressable memory
+> > > > to
+> > > > 2PB")
+> > > > were inaccessible and resulted in bogus sections - see our
+> > > > discussion
+> > > > on 'mm: Trigger bug on if a section is not found in
+> > > > __section_nr'.
+> > > > Doing this check here was your suggestion :)
+> > > > 
+> > > > It's entirely possible that a similar problem will occur in the
+> > > > future,
+> > > > and it's cheap to guard against, which is why I've added this.
+> > > > 
+> > > 
+> > > If you keep it here, I guess this should be wrapped by a
+> > > WARN_ON_ONCE().
+> > > 
+> > > If we move it to common code (e.g., __add_pages() or
+> > > add_memory()),
+> > > then
+> > > probably not. I can see that s390x allows to configure
+> > > MAX_PHYSMEM_BITS,
+> > > so the check could actually make sense.
+> > > 
+> > 
+> > I couldn't see a nice platform indepedent way to determine the
+> > allowable address range, but if there is, then I'll move this to
+> > the
+> > generic code instead.
+> > 
 > 
-> > > Still don't understand how this is ok...
-> > > 
-> > > I have /dev/nvme0 represents a network endpoint that I would discover
-> > > from, it is raising me an event to do a discovery operation (namely to
-> > > issue an ioctl to it) so my udev code calls a systemd script.
-> > > 
-> > > By the time I actually get to do that, /dev/nvme0 represents now a new
-> > > network endpoint (where the event is no longer relevant to). I would
-> > > rather the discovery to explicitly fail than to give me something
-> > > different, so we pass some arguments that we verify in the operation.
-> > > 
-> > > Its a stretch case, but it was raised by people as a potential issue.
-> > 
-> > Ok, and how do you handle this same thing for something like /dev/sda ?
-> > (hint, it isn't new, and is something we solved over a decade ago)
-> > 
-> > If you worry about stuff like this, use a persistant device naming
-> > scheme and have your device node be pointed to by a symlink.  Create
-> > that symlink by using the information in the initial 'ADD' uevent.
-> > 
-> > That way, when userspace opens the device node, it "knows" exactly which
-> > one it opens.  It sounds like you have a bunch of metadata to describe
-> > these uniquely, so pass that in the ADD event, not in some other crazy
-> > non-standard manner.
+> At least on the !ZONE_DEVICE path we have
 > 
-> We could send these variables when adding the device and then validating
-> them using a rich-text-explanatory symlink. Seems slightly backwards to
-> me, but that would work too.
+> __add_memory() -> register_memory_resource() ...
+> 
+> return ERR_PTR(-E2BIG);
+> 
+> 
+> I was thinking about something like
+> 
+> int add_pages()
+> {
+> 	if ((start + size - 1) >> MAX_PHYSMEM_BITS)
+> 		return -E2BIG;	
+> 
+> 	return arch_add_memory(...)
+> }
+> 
+> And switching users of arch_add_memory() to add_pages(). However, x86
+> already has an add_pages() function, so that would need some more
+> thought.
+> 
+> Maybe simply renaming the existing add_pages() to arch_add_pages().
+> 
+> add_pages(): Create virtual mapping
+> __add_pages(): Don't create virtual mapping
+> 
+> arch_add_memory(): Arch backend for add_pages()
+> arch_add_pages(): Arch backend for __add_pages()
+> 
+> It would be even more consistent if we would have arch_add_pages()
+> vs.
+> __arch_add_pages().
 
-That's the way the driver model is expected to work, instead of having
-to do crazy device-specific stuff.
+Looking a bit further, I think a good course of action would be to add
+the check to memory_hotplug.c:check_hotplug_memory_range().
 
-> We create the char device using device_add (in nvme_init_subsystem),
-> I didn't find any way to append env variables to that ADD uevent.
+This would be the least invasive, and could check both
+MAX_POSSIBLE_PHYSMEM_BITS and MAX_PHYSMEM_BITS.
 
-You do that in your uevent or dev_uevent callback like all other
-subsystems.  Nothing "new" to do here, again, it's been working fine for
-everyone else for well over a decade now :)
+With that in mind, we can drop this patch.
 
-thanks,
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
-greg k-h
