@@ -2,76 +2,53 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05416C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CE4C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6D623431
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhdQaPS9"
+	by mail.kernel.org (Postfix) with ESMTP id 7294A20449
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729523AbfIDKT5 (ORCPT
+        id S1729559AbfIDKUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:19:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38925 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfIDKT4 (ORCPT
+        Wed, 4 Sep 2019 06:20:02 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:56439 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfIDKUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:19:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q12so1202621wmj.4;
-        Wed, 04 Sep 2019 03:19:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZrAqSL59OLCEzE52HTekg7fPZUlax89btgET9BLQ71E=;
-        b=bhdQaPS9cc30tOzD7DKX0HLVLg2l7AEj2darYht6/SLmp33LqXyhFhPhR8+xHsWcTR
-         CPj5YkAX5Cyji3fF4H6GeRjSTB6xkrVe5vTbpNCg3UABvKRTSIikZyP5isZvuB3xzXq/
-         1Aae6iVhoyFsAwI2m/NDBY7lB0dBOx+Vmx8KGXnDik7Vn2ufcnfP0CTIkJ4KRBYoiRFb
-         +1tILqUkBVG/h8X4052yrUzqJQgJTjgl0io9qBmA5EnF0u8a7dC1tJjTDnbXWfW9v4yg
-         ZGdahtqyRZPEatNPH9a/5EV3MDFd7COUWvQHEwoKIOUtzAY+aheRnrr2eki/oOGdO39u
-         oBjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZrAqSL59OLCEzE52HTekg7fPZUlax89btgET9BLQ71E=;
-        b=o8lX9rK0vufTIcDpNzZp6cVvhkNnukXbEn2cDOxlR+VVhyCYxoDhw6CBZXLFsS1wv7
-         LXe7vpui5OmerzIcdO3E5UFvAdVAacSyRtJZbsvDZz0p4iIABRsZA9GLV+uvzK6tT1/g
-         6uwshOI5xoiTQyik4hPYIJIeyIlTZnjrumNrIbs2RKAihM/4FnLLODHZdnwZowqrHzEU
-         Es62z/SAIiTU9IrLxDXPJ+TbIPwddSDI5TrGtm9DJYSo8V5UlcknzYeqbKpMaxYk+iUQ
-         ZwEuD6Oyuo/DMQ+nHB7VVODgNRW/p4c4kgRE4eBg7g5fGIr5hgOt4v5ROjTELTWU8zw1
-         Ge2g==
-X-Gm-Message-State: APjAAAX4UQgdhk/TscCDI1FACv3o8n0uv88jwIsaa3OKNQsG6gTzT/YY
-        5z57LUOe5SEA54dXI3+ERpVwClGn
-X-Google-Smtp-Source: APXvYqyvOLR5/S4HFyOVauqNl0jLDWv/prMfE+ba8C4Uavp1L+tmEg3kYirYTz8DGh4eMD4JDgmecA==
-X-Received: by 2002:a1c:a942:: with SMTP id s63mr3712661wme.152.1567592393778;
-        Wed, 04 Sep 2019 03:19:53 -0700 (PDT)
-Received: from [192.168.8.147] (206.165.185.81.rev.sfr.net. [81.185.165.206])
-        by smtp.gmail.com with ESMTPSA id x5sm17823427wrg.69.2019.09.04.03.19.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2019 03:19:52 -0700 (PDT)
-Subject: Re: [PATCH net] net: sonic: remove dev_kfree_skb before return
- NETDEV_TX_BUSY
-To:     Mao Wenan <maowenan@huawei.com>, tsbogend@alpha.franken.de,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190904094211.117454-1-maowenan@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <c4a4d1b0-d036-7af7-2b30-117f9fdee9ad@gmail.com>
-Date:   Wed, 4 Sep 2019 12:19:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Wed, 4 Sep 2019 06:20:01 -0400
+Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x84AJlJ4065553;
+        Wed, 4 Sep 2019 19:19:47 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
+ Wed, 04 Sep 2019 19:19:47 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x84AJlAg065549
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 4 Sep 2019 19:19:47 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v3] /dev/mem: Bail out upon SIGKILL.
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+References: <1566825205-10703-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190826132916.GB12281@kroah.com>
+ <87bb0adb-1d36-6481-6845-a93e5a3e5d17@i-love.sakura.ne.jp>
+Message-ID: <5ea28431-c677-0552-41aa-1c67779e2248@i-love.sakura.ne.jp>
+Date:   Wed, 4 Sep 2019 19:19:47 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190904094211.117454-1-maowenan@huawei.com>
+In-Reply-To: <87bb0adb-1d36-6481-6845-a93e5a3e5d17@i-love.sakura.ne.jp>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,43 +57,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ping? Syzbot is still reporting this problem.
 
-
-On 9/4/19 11:42 AM, Mao Wenan wrote:
-> When dma_map_single is failed to map buffer, skb can't be freed
-> before sonic driver return to stack with NETDEV_TX_BUSY, because
-> this skb may be requeued to qdisc, it might trigger use-after-free.
+On 2019/08/26 22:44, Tetsuo Handa wrote:
+> On 2019/08/26 22:29, Greg Kroah-Hartman wrote:
+>> On Mon, Aug 26, 2019 at 10:13:25PM +0900, Tetsuo Handa wrote:
+>>> syzbot found that a thread can stall for minutes inside read_mem() or
+>>> write_mem() after that thread was killed by SIGKILL [1]. Reading from
+>>> iomem areas of /dev/mem can be slow, depending on the hardware.
+>>> While reading 2GB at one read() is legal, delaying termination of killed
+>>> thread for minutes is bad. Thus, allow reading/writing /dev/mem and
+>>> /dev/kmem to be preemptible and killable.
+>>>
+>>>   [ 1335.912419][T20577] read_mem: sz=4096 count=2134565632
+>>>   [ 1335.943194][T20577] read_mem: sz=4096 count=2134561536
+>>>   [ 1335.978280][T20577] read_mem: sz=4096 count=2134557440
+>>>   [ 1336.011147][T20577] read_mem: sz=4096 count=2134553344
+>>>   [ 1336.041897][T20577] read_mem: sz=4096 count=2134549248
+>>>
+>>> Theoretically, reading/writing /dev/mem and /dev/kmem can become
+>>> "interruptible". But this patch chose "killable". Future patch will make
+>>> them "interruptible" so that we can revert to "killable" if some program
+>>> regressed.
+>>>
+>>> [1] https://syzkaller.appspot.com/bug?id=a0e3436829698d5824231251fad9d8e998f94f5e
+>>>
+>>> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>>> Reported-by: syzbot <syzbot+8ab2d0f39fb79fe6ca40@syzkaller.appspotmail.com>
+>>> ---
+>>>  drivers/char/mem.c | 21 +++++++++++++++++++++
+>>>  1 file changed, 21 insertions(+)
+>>
+>> What changed from previous versions?
+>>
+>> That goes below the --- line at the very least.
 > 
-> Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  drivers/net/ethernet/natsemi/sonic.c | 1 -
->  1 file changed, 1 deletion(-)
+> (1) Moved fatal_signal_pending() test to end of iteration.
+> (2) Added need_resched() test before cond_resched().
+> (3) Removed -EINTR assignment because end of iteration means
+>     that at least one byte was processed (sz > 0).
 > 
-> diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
-> index d0a01e8f000a..248a8f22a33b 100644
-> --- a/drivers/net/ethernet/natsemi/sonic.c
-> +++ b/drivers/net/ethernet/natsemi/sonic.c
-> @@ -233,7 +233,6 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
->  	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
->  	if (!laddr) {
->  		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
-> -		dev_kfree_skb(skb);
->  		return NETDEV_TX_BUSY;
->  	}
->  
+>>
+>> thanks,
+>>
+>> greg k-h
+>>
 > 
-
-That is the wrong way to fix this bug.
-
-What guarantee do we have that the mapping operation will succeed next time we attempt
-the transmit (and the dma_map_single() operation) ?
-
-NETDEV_TX_BUSY is very dangerous, this might trigger an infinite loop.
-
-I would rather leave the dev_kfree_skb(skb), and return NETDEV_TX_OK
-
-Also the printk(KERN_ERR ...) should be replaced by pr_err_ratelimited(...)
-
-NETDEV_TX_BUSY really should only be used by drivers that call netif_tx_stop_queue()
-at the wrong moment.
