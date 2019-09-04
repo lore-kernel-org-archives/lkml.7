@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2BDC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD74C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850442053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1D921670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613891;
-	bh=mwSawzqvGepzHhzYcW+mOuWO/xbS9HzV7XVFuIbeqYQ=;
+	s=default; t=1567613896;
+	bh=fb/h9KR3pLXlfXJogUmAfXxs7PKwlfI//BnBLXHS7Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJGhmvSp5E/VGPmBNpxnfGuLgSdO9ofnZH+BpOTmL9NM97h81Bs2nB5EIRPQ+1pPy
-	 86QVzJ5gboHZyLna9mroG2PZT91r8Al/d9p3GpjnopVZb/hirzuXe1Is4jrFfWxf2B
-	 Gjt/RcL7tVMgKvakvWMKsvFYBDVbY/8UYK6AFCQE=
+	b=BGZFlHCIGYvja8RaLqwI4/2h1YiCeW0X4OOW3CcZEVS2+XmlxjfdYX52vZs19KP/m
+	 FSf/ElST0thDPRbXKv+PzfZG/2iIgW0volbL02bPY1jWDJUuUXNmg6VANq02dszoz+
+	 rPgINZspnVTtWQLmlfd1iYGLYL2CKbYJFxMTMu8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733293AbfIDQSK (ORCPT
+        id S1732146AbfIDP6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732147AbfIDP6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:55 -0400
+        id S1732119AbfIDP6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AB1A22CF7;
-        Wed,  4 Sep 2019 15:58:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00623233FF;
+        Wed,  4 Sep 2019 15:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612733;
-        bh=mwSawzqvGepzHhzYcW+mOuWO/xbS9HzV7XVFuIbeqYQ=;
+        s=default; t=1567612729;
+        bh=fb/h9KR3pLXlfXJogUmAfXxs7PKwlfI//BnBLXHS7Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+oLNgIiPDygsj5VYVysVCrjMZPhzAQLrGeqrS9FEKeYdKwmb87Ax0muAmhLwyHC+
-         /OGq+kCmfJjs+08/ZpMsEiLv0aRd5Koqp5C/q4K6k90RKi86JiqHqxPi9VJrnsVtS6
-         owAVrhMQ6g8vP5t1Qfc2qIy4Oo144cWBLEQPqOYI=
+        b=Zh7KWDeaHuaZgRyOqYsbMYM2+cGUB8zIA/5ZlzkBlvmF3VKjYFX89DYoVVg2PX3GI
+         ypFXym4AXnLoHQ/3CvGl0WqSgmVvqECpje1J22FQEy+VsAI+uSiPovpepslqO0CB6G
+         lGXVqtcQkIYtyZhq+yMebq7vxcImV//Y+gS4DAIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 49/94] NFS: Fix writepage(s) error handling to not report errors twice
-Date:   Wed,  4 Sep 2019 11:56:54 -0400
-Message-Id: <20190904155739.2816-49-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 46/94] SUNRPC: Handle connection breakages correctly in call_status()
+Date:   Wed,  4 Sep 2019 11:56:51 -0400
+Message-Id: <20190904155739.2816-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -60,104 +61,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 96c4145599b30c0eb6cbeaa24207802452dd1872 ]
+[ Upstream commit c82e5472c9980e0e483f4b689044150eefaca408 ]
 
-If writepage()/writepages() saw an error, but handled it without
-reporting it, we should not be re-reporting that error on exit.
+If the connection breaks while we're waiting for a reply from the
+server, then we want to immediately try to reconnect.
 
+Fixes: ec6017d90359 ("SUNRPC fix regression in umount of a secure mount")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ net/sunrpc/clnt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index f15dda5efb741..0d6d7beb85053 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -621,12 +621,12 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
- 	WARN_ON_ONCE(test_bit(PG_CLEAN, &req->wb_flags));
- 
- 	/* If there is a fatal error that covers this write, just exit */
--	ret = 0;
- 	mapping = page_file_mapping(page);
--	if (test_bit(AS_ENOSPC, &mapping->flags) ||
--	    test_bit(AS_EIO, &mapping->flags))
-+	ret = pgio->pg_error;
-+	if (nfs_error_is_fatal_on_server(ret))
- 		goto out_launder;
- 
-+	ret = 0;
- 	if (!nfs_pageio_add_request(pgio, req)) {
- 		ret = pgio->pg_error;
- 		/*
-@@ -638,6 +638,7 @@ static int nfs_page_async_flush(struct nfs_pageio_descriptor *pgio,
- 		} else
- 			ret = -EAGAIN;
- 		nfs_redirty_request(req);
-+		pgio->pg_error = 0;
- 	} else
- 		nfs_add_stats(page_file_mapping(page)->host,
- 				NFSIOS_WRITEPAGES, 1);
-@@ -657,7 +658,7 @@ static int nfs_do_writepage(struct page *page, struct writeback_control *wbc,
- 	ret = nfs_page_async_flush(pgio, page);
- 	if (ret == -EAGAIN) {
- 		redirty_page_for_writepage(wbc, page);
--		ret = 0;
-+		ret = AOP_WRITEPAGE_ACTIVATE;
- 	}
- 	return ret;
- }
-@@ -676,10 +677,11 @@ static int nfs_writepage_locked(struct page *page,
- 	nfs_pageio_init_write(&pgio, inode, 0,
- 				false, &nfs_async_write_completion_ops);
- 	err = nfs_do_writepage(page, wbc, &pgio);
-+	pgio.pg_error = 0;
- 	nfs_pageio_complete(&pgio);
- 	if (err < 0)
- 		return err;
--	if (pgio.pg_error < 0)
-+	if (nfs_error_is_fatal(pgio.pg_error))
- 		return pgio.pg_error;
- 	return 0;
- }
-@@ -689,7 +691,8 @@ int nfs_writepage(struct page *page, struct writeback_control *wbc)
- 	int ret;
- 
- 	ret = nfs_writepage_locked(page, wbc);
--	unlock_page(page);
-+	if (ret != AOP_WRITEPAGE_ACTIVATE)
-+		unlock_page(page);
- 	return ret;
- }
- 
-@@ -698,7 +701,8 @@ static int nfs_writepages_callback(struct page *page, struct writeback_control *
- 	int ret;
- 
- 	ret = nfs_do_writepage(page, wbc, data);
--	unlock_page(page);
-+	if (ret != AOP_WRITEPAGE_ACTIVATE)
-+		unlock_page(page);
- 	return ret;
- }
- 
-@@ -725,6 +729,7 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
- 				&nfs_async_write_completion_ops);
- 	pgio.pg_io_completion = ioc;
- 	err = write_cache_pages(mapping, wbc, nfs_writepages_callback, &pgio);
-+	pgio.pg_error = 0;
- 	nfs_pageio_complete(&pgio);
- 	nfs_io_completion_put(ioc);
- 
-@@ -733,7 +738,7 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
- 	if (err < 0)
- 		goto out_err;
- 	err = pgio.pg_error;
--	if (err < 0)
-+	if (nfs_error_is_fatal(err))
- 		goto out_err;
- 	return 0;
- out_err:
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 3f090a75f3721..49adae7cf4c2d 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2292,7 +2292,7 @@ call_status(struct rpc_task *task)
+ 	case -ECONNABORTED:
+ 	case -ENOTCONN:
+ 		rpc_force_rebind(clnt);
+-		/* fall through */
++		break;
+ 	case -EADDRINUSE:
+ 		rpc_delay(task, 3*HZ);
+ 		/* fall through */
 -- 
 2.20.1
 
