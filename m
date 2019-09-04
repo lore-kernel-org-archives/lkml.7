@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95DFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BD5C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842572053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEF22053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613514;
-	bh=mrHPstL9iqpCEs00xslJimRfbU5IgiEpQekd6zBwPBc=;
+	s=default; t=1567613521;
+	bh=y+twx5L5mLyZA/HpEM5GdqYd/BMLorMN/INrMAODq3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VXEIuDWtQ8rmMxazoilnc6hWIpLAn44Ub8RoR0C+Sx7UBdwhIhkLAq4NT56gESM9S
-	 jIvOD+URp+Q8lL1HGB560OqKS6YV5KlOg6qs9X5haIXqiuzWyYep1OebxECP7Gh/0e
-	 z94/p0qPIq4ELeiR6BuBQ3GcOdKuUFxg5m6yK9bk=
+	b=j4riCG+JOPlWo+PkDHIKv1F147bMiyQVX1TH/KdtX/ztXnImSHxvS8vfyZR6OXSjT
+	 ugwVMxZr6CyRU2nWWPyLmXQwXRTUE7AO9MDXwyzOnaVnKdQPlP+nMQUCCakG5Ft5Jq
+	 Li2XV+XsdXwGdr+qnvNLfkFzud7PlF8cQKuVebhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732668AbfIDQLx (ORCPT
+        id S1732654AbfIDQAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35264 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732667AbfIDQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:23 -0400
+        id S1732646AbfIDQAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A5C22CF7;
-        Wed,  4 Sep 2019 16:00:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9BBB2070C;
+        Wed,  4 Sep 2019 16:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612823;
-        bh=mrHPstL9iqpCEs00xslJimRfbU5IgiEpQekd6zBwPBc=;
+        s=default; t=1567612819;
+        bh=y+twx5L5mLyZA/HpEM5GdqYd/BMLorMN/INrMAODq3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bk7toRb+ptV+tlpdYJjIbJsz8mbNj8R8qHlHDsQMCvaMMLhYcbGTWUmHJmaKnnqs2
-         b4Z4HHtblTP/QHRgnN1Cw3neGtJi0AdbZNVB6+plSCtg1FFfYDYhsNu2aUup/tWibe
-         4YlyEuRGi03UI0F8GynlQUG61IGTLmqX55zshF2E=
+        b=oMBaNGYBm6EgPOjqWqXe3pB4Guw1Hxb51IwtOwu509GGy1lhiA0AvfXGRVw4Kx7xx
+         lkQ5o6KRSwiW8X6qOxT2jfe0J6thINc3o+F8AXFdW0rgkNjULdvMpGEMED/Fz9XTph
+         CC4Fy8Vkl5IvNqe7cKpsrTj2PPTOU57THGyLzJb4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/52] selftests/bpf: fix "bind{4, 6} deny specific IP & port" on s390
-Date:   Wed,  4 Sep 2019 11:59:25 -0400
-Message-Id: <20190904160004.3671-13-sashal@kernel.org>
+Cc:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 10/52] bus: ti-sysc: Simplify cleanup upon failures in sysc_probe()
+Date:   Wed,  4 Sep 2019 11:59:22 -0400
+Message-Id: <20190904160004.3671-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -61,59 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Suman Anna <s-anna@ti.com>
 
-[ Upstream commit 27df5c7068bf23cab282dc64b1c9894429b3b8a0 ]
+[ Upstream commit a304f483b6b00d42bde41c45ca52c670945348e2 ]
 
-"bind4 allow specific IP & port" and "bind6 deny specific IP & port"
-fail on s390 because of endianness issue: the 4 IP address bytes are
-loaded as a word and compared with a constant, but the value of this
-constant should be different on big- and little- endian machines, which
-is not the case right now.
+The clocks are not yet parsed and prepared until after a successful
+sysc_get_clocks(), so there is no need to unprepare the clocks upon
+any failure of any of the prior functions in sysc_probe(). The current
+code path would have been a no-op because of the clock validity checks
+within sysc_unprepare(), but let's just simplify the cleanup path by
+returning the error directly.
 
-Use __bpf_constant_ntohl to generate proper value based on machine
-endianness.
+While at this, also fix the cleanup path for a sysc_init_resets()
+failure which is executed after the clocks are prepared.
 
-Fixes: 1d436885b23b ("selftests/bpf: Selftest for sys_bind post-hooks.")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_sock.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/bus/ti-sysc.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_sock.c b/tools/testing/selftests/bpf/test_sock.c
-index b8ebe2f580741..e9567122070a3 100644
---- a/tools/testing/selftests/bpf/test_sock.c
-+++ b/tools/testing/selftests/bpf/test_sock.c
-@@ -13,6 +13,7 @@
- #include <bpf/bpf.h>
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 4ca006e2137f7..e95b26319cd91 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1685,7 +1685,7 @@ static int sysc_probe(struct platform_device *pdev)
  
- #include "cgroup_helpers.h"
-+#include "bpf_endian.h"
- #include "bpf_rlimit.h"
- #include "bpf_util.h"
+ 	error = sysc_init_dts_quirks(ddata);
+ 	if (error)
+-		goto unprepare;
++		return error;
  
-@@ -231,7 +232,8 @@ static struct sock_test tests[] = {
- 			/* if (ip == expected && port == expected) */
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_ip6[3])),
--			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x01000000, 4),
-+			BPF_JMP_IMM(BPF_JNE, BPF_REG_7,
-+				    __bpf_constant_ntohl(0x00000001), 4),
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_port)),
- 			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x2001, 2),
-@@ -260,7 +262,8 @@ static struct sock_test tests[] = {
- 			/* if (ip == expected && port == expected) */
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_ip4)),
--			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x0100007F, 4),
-+			BPF_JMP_IMM(BPF_JNE, BPF_REG_7,
-+				    __bpf_constant_ntohl(0x7F000001), 4),
- 			BPF_LDX_MEM(BPF_W, BPF_REG_7, BPF_REG_6,
- 				    offsetof(struct bpf_sock, src_port)),
- 			BPF_JMP_IMM(BPF_JNE, BPF_REG_7, 0x1002, 2),
+ 	error = sysc_get_clocks(ddata);
+ 	if (error)
+@@ -1693,27 +1693,27 @@ static int sysc_probe(struct platform_device *pdev)
+ 
+ 	error = sysc_map_and_check_registers(ddata);
+ 	if (error)
+-		goto unprepare;
++		return error;
+ 
+ 	error = sysc_init_sysc_mask(ddata);
+ 	if (error)
+-		goto unprepare;
++		return error;
+ 
+ 	error = sysc_init_idlemodes(ddata);
+ 	if (error)
+-		goto unprepare;
++		return error;
+ 
+ 	error = sysc_init_syss_mask(ddata);
+ 	if (error)
+-		goto unprepare;
++		return error;
+ 
+ 	error = sysc_init_pdata(ddata);
+ 	if (error)
+-		goto unprepare;
++		return error;
+ 
+ 	error = sysc_init_resets(ddata);
+ 	if (error)
+-		return error;
++		goto unprepare;
+ 
+ 	pm_runtime_enable(ddata->dev);
+ 	error = sysc_init_module(ddata);
 -- 
 2.20.1
 
