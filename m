@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87039C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AF6C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F46422DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D1B22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612937;
-	bh=XTWT0GLRT137n4aAiPNoeEPynziTQES2TZ5NDZpB7R8=;
+	s=default; t=1567612940;
+	bh=+vy2sI6ZQKEC8eJl5BuN7/MMzh/3CK0DPMhT/+F2YH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWdz4MBGS5HUYOVtqXjSSUY+6HqWZjQw5HJT7K6r1ffyqYc1CqXy6N2eWUWDpnyYw
-	 W4oqZMiJ9vSuqYs4uPCtynQ3UisMK1h8fEHlWx7aDTDwMcoN6QYTSa8+Xbfvrcl3GL
-	 EhpelGFmQ7qk/hNez996gqtzfHG1DXkr6+a0lzUY=
+	b=pZ/0laeIu82EzGKhdRIr3kWP+xHWhboGzfeZCAwXnCfVC2bIUQC3NYg/vkWPOAK1O
+	 D62xx6P0w4WTx/jcLl6KvHudExt2P59yg9QeZHu3hpY6WefIyjB8Crf1v0FND98FkG
+	 lhm7V4yVoXny1MxwBMLHLS2Xlv8qjjtu+7Tyo1Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733215AbfIDQCQ (ORCPT
+        id S1733227AbfIDQCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733194AbfIDQCM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:12 -0400
+        id S1733213AbfIDQCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D24522CF5;
-        Wed,  4 Sep 2019 16:02:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 755C42339D;
+        Wed,  4 Sep 2019 16:02:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612931;
-        bh=XTWT0GLRT137n4aAiPNoeEPynziTQES2TZ5NDZpB7R8=;
+        s=default; t=1567612936;
+        bh=+vy2sI6ZQKEC8eJl5BuN7/MMzh/3CK0DPMhT/+F2YH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HVwnX74Z0ZjOh3ees5ce/zynQlw0rsLwhr8xRjmrxce3klZGYhhkEjtRg4OJTJuXX
-         uwq/ux90HO5aRClOJAWNX0XTuh8dLyVBqW0jy5NrJFot6agx7VwDQhulAMdeHxdUy0
-         xHqQKhM5DDgyMum9AenB90Zf/NiUqtv0i/kxxIGw=
+        b=jOLKW/gH/V26mSbhZAW+Bxvh3w5A8wTqxmG96bC0cgVFlO4Gy3lmq7QOPmTW1nBx7
+         KujujJb/BQHkPPMDEPVFSF/tnR8e2YjPZERLmD26Xa4Pmn5bLZvc4yRzqlCykn+pLP
+         HGD72PT55nRtmgqDxSkXShzcYHUJxwSbog0qsQG4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 32/36] net: stmmac: dwmac-rk: Don't fail if phy regulator is absent
-Date:   Wed,  4 Sep 2019 12:01:18 -0400
-Message-Id: <20190904160122.4179-32-sashal@kernel.org>
+Cc:     "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>,
+        Len Brown <len.brown@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 34/36] tools/power x86_energy_perf_policy: Fix argument parsing
+Date:   Wed,  4 Sep 2019 12:01:20 -0400
+Message-Id: <20190904160122.4179-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -59,43 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>
 
-[ Upstream commit 3b25528e1e355c803e73aa326ce657b5606cda73 ]
+[ Upstream commit 03531482402a2bc4ab93cf6dde46833775e035e9 ]
 
-The devicetree binding lists the phy phy as optional. As such, the
-driver should not bail out if it can't find a regulator. Instead it
-should just skip the remaining regulator related code and continue
-on normally.
+The -w argument in x86_energy_perf_policy currently triggers an
+unconditional segfault.
 
-Skip the remainder of phy_power_on() if a regulator supply isn't
-available. This also gets rid of the bogus return code.
+This is because the argument string reads: "+a:c:dD:E:e:f:m:M:rt:u:vw" and
+yet the argument handler expects an argument.
 
-Fixes: 2e12f536635f ("net: stmmac: dwmac-rk: Use standard devicetree property for phy regulator")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+When parse_optarg_string is called with a null argument, we then proceed to
+crash in strncmp, not horribly friendly.
+
+The man page describes -w as taking an argument, the long form
+(--hwp-window) is correctly marked as taking a required argument, and the
+code expects it.
+
+As such, this patch simply marks the short form (-w) as requiring an
+argument.
+
+Signed-off-by: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 01787344f6e59..712b5eb3507ab 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1145,10 +1145,8 @@ static int phy_power_on(struct rk_priv_data *bsp_priv, bool enable)
- 	int ret;
- 	struct device *dev = &bsp_priv->pdev->dev;
+diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+index bbef8bcf44d6d..2aba622d1c5aa 100644
+--- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
++++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
+@@ -546,7 +546,7 @@ void cmdline(int argc, char **argv)
  
--	if (!ldo) {
--		dev_err(dev, "no regulator found\n");
--		return -1;
--	}
-+	if (!ldo)
-+		return 0;
+ 	progname = argv[0];
  
- 	if (enable) {
- 		ret = regulator_enable(ldo);
+-	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw",
++	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw:",
+ 				long_options, &option_index)) != -1) {
+ 		switch (opt) {
+ 		case 'a':
 -- 
 2.20.1
 
