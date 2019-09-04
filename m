@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B54D3C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC10C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E0E22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C0022CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfIDOJ2 (ORCPT
+        id S1730922AbfIDOJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:09:28 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60666 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:09:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60610 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730552AbfIDOJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727722AbfIDOJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 10:09:15 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 97652283CA4C42E2D9E4;
+        by Forcepoint Email with ESMTP id 92A6185AE45D8AAA7818;
         Wed,  4 Sep 2019 22:09:13 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 4 Sep 2019 22:09:06 +0800
+ 14.3.439.0; Wed, 4 Sep 2019 22:09:04 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Guojia Liao <liaoguojia@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 7/7] net: hns3: make hclge_dbg_get_m7_stats_info static
-Date:   Wed, 4 Sep 2019 22:06:46 +0800
-Message-ID: <1567606006-39598-8-git-send-email-tanhuazhong@huawei.com>
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 2/7] net: hns3: fix double free bug when setting ringparam
+Date:   Wed, 4 Sep 2019 22:06:41 +0800
+Message-ID: <1567606006-39598-3-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1567606006-39598-1-git-send-email-tanhuazhong@huawei.com>
 References: <1567606006-39598-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,30 +46,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+The system will panic when change the ringparam in HNS3 drivers:
 
-hclge_dbg_get_m7_info is used only in the hclge_debugfs.c,
-so it should be declared with static.
+[ 1459.627727] hns3 0000:bd:00.0 eth6: Changing Tx/Rx ring ds from 1024/1024 to 24/24
+[ 1459.635766] hns3 0000:bd:00.0 eth6: link down
+[ 1459.640788] BUG: Bad page state in process ethtool  pfn:203f75c18
+[ 1459.646940] page:ffff7ee4ffd70600 refcount:0 mapcount:0 mapping:ffff993fff40f400 index:0x0 compound_mapcount: 0
+[ 1459.656987] flags: 0x9fffe00000010200(slab|head)
+[ 1459.661591] raw: 9fffe00000010200 dead000000000100 dead000000000122 ffff993fff40f400
+[ 1459.669302] raw: 0000000000000000 0000000080100010 00000000ffffffff 0000000000000000
+[ 1459.677016] page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+[ 1459.683432] bad because of flags: 0x200(slab)
+[ 1459.687775] Modules linked in: ib_ipoib ib_umad rpcrdma ib_iser libiscsi scsi_transport_iscsi hns_roce_hw_v2 crct10dif_ce hns3 ses hclge hnae3 hisi_hpre hisi_zip qm uacce ip_tables x_tables hisi_sas_v3_hw hisi_sas_main libsas scsi_transport_sas
+[ 1459.709329] CPU: 14 PID: 17244 Comm: ethtool Tainted: G           O      5.3.0-rc4-00415-gc86f057 #1
+[ 1459.718419] Hardware name: Huawei TaiShan 2280 V2/BC82AMDC, BIOS 2280-V2 CS V3.B040.01 07/26/2019
+[ 1459.727248] Call trace:
+[ 1459.729688]  dump_backtrace+0x0/0x150
+[ 1459.733335]  show_stack+0x24/0x30
+[ 1459.736639]  dump_stack+0xa0/0xc4
+[ 1459.739943]  bad_page+0xf0/0x158
+[ 1459.743157]  free_pages_check_bad+0x84/0xa0
+[ 1459.747322]  __free_pages_ok+0x348/0x378
+[ 1459.751228]  page_frag_free+0x80/0x88
+[ 1459.754877]  skb_free_head+0x38/0x48
+[ 1459.758436]  skb_release_data+0x134/0x160
+[ 1459.762427]  skb_release_all+0x30/0x40
+[ 1459.766158]  consume_skb+0x38/0x108
+[ 1459.769633]  __dev_kfree_skb_any+0x58/0x68
+[ 1459.773718]  hns3_fini_ring+0x48/0x58 [hns3]
+[ 1459.777970]  hns3_set_ringparam+0x2a8/0x418 [hns3]
+[ 1459.782741]  dev_ethtool+0x5f4/0x2080
+[ 1459.786390]  dev_ioctl+0x190/0x3d8
+[ 1459.789777]  sock_do_ioctl+0xf8/0x220
+[ 1459.793423]  sock_ioctl+0x3bc/0x490
+[ 1459.796896]  do_vfs_ioctl+0xc4/0x868
+[ 1459.800454]  ksys_ioctl+0x8c/0xa0
+[ 1459.803752]  __arm64_sys_ioctl+0x28/0x38
+[ 1459.807658]  el0_svc_common.constprop.0+0xe0/0x1e0
+[ 1459.812426]  el0_svc_handler+0x34/0x90
+[ 1459.816158]  el0_svc+0x10/0x14
+[ 1459.819220] Disabling lock debugging due to kernel taint
+[ 1459.825182] ------------[ cut here ]------------
 
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
+Since ndo_stop will reclaim the RX's skb allocated by the driver,
+so the backed up ring parameter should not keep this info.
+
+Fixes: a723fb8efe29 ("net: hns3: refine for set ring parameters")
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-index 1c6b501..6dcce48 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_debugfs.c
-@@ -949,7 +949,7 @@ static void hclge_dbg_dump_rst_info(struct hclge_dev *hdev)
- 		 hdev->rst_stats.reset_cnt);
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+index c52eccc..aa692b1 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
+@@ -908,9 +908,11 @@ static struct hns3_enet_ring *hns3_backup_ringparam(struct hns3_nic_priv *priv)
+ 	if (!tmp_rings)
+ 		return NULL;
  
--void hclge_dbg_get_m7_stats_info(struct hclge_dev *hdev)
-+static void hclge_dbg_get_m7_stats_info(struct hclge_dev *hdev)
- {
- 	struct hclge_desc *desc_src, *desc_tmp;
- 	struct hclge_get_m7_bd_cmd *req;
+-	for (i = 0; i < handle->kinfo.num_tqps * 2; i++)
++	for (i = 0; i < handle->kinfo.num_tqps * 2; i++) {
+ 		memcpy(&tmp_rings[i], priv->ring_data[i].ring,
+ 		       sizeof(struct hns3_enet_ring));
++		tmp_rings[i].skb = NULL;
++	}
+ 
+ 	return tmp_rings;
+ }
 -- 
 2.7.4
 
