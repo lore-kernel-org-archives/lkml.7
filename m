@@ -2,150 +2,117 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B863C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C963C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5A520882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3252223431
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:34:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="J1VY4NLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbfIDIdH (ORCPT
+        id S1728300AbfIDIeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:33:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7729 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfIDIdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:33:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 01:33:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
-   d="scan'208";a="198976730"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.66]) ([10.237.72.66])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Sep 2019 01:33:04 -0700
-Subject: Re: [PATCH v2] mmc: tegra: Implement enable_dma() to set dma_mask
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     ulf.hansson@linaro.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-mmc@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vdumpa@nvidia.com
-References: <20190814005741.13331-1-nicoleotsuka@gmail.com>
- <09d9ba41-f4cd-e515-cd2d-0b4134648059@intel.com>
- <20190815231646.GA15635@Asurada-Nvidia.nvidia.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <4a9c5d15-5f33-4275-8cf0-24cf374ad86b@intel.com>
-Date:   Wed, 4 Sep 2019 11:31:56 +0300
+        Wed, 4 Sep 2019 04:34:46 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:33339 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfIDIep (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:34:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 51B553F5F0;
+        Wed,  4 Sep 2019 10:34:28 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=J1VY4NLk;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TF6Qxe2YrX2F; Wed,  4 Sep 2019 10:34:27 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 109A53F346;
+        Wed,  4 Sep 2019 10:34:25 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 25C2136117F;
+        Wed,  4 Sep 2019 10:34:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1567586065; bh=MbtBfVZaBumDkBlAtpFFrFhKmgiWkoQ1b1+zCTqFcPk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=J1VY4NLk8W4zmUOI/PrVpikNX2CTceCnda/zQbfYcicCF3vdBOuNsDCJA92eFp5ht
+         3lD12c2pd8Zfdi7N5HHMYy89RLMKOp4gwBPCXMmdA/a6GjY6jA2yivh93n/ObwJ+L3
+         Bnjg6fVWttF9EPPWca+yjsxjPyKFv0Igx7Tf3A8c=
+Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
+ memory encryption
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        pv-drivers@vmware.com,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20190903131504.18935-1-thomas_os@shipmail.org>
+ <20190903131504.18935-4-thomas_os@shipmail.org>
+ <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
+ <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
+ <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com>
+ <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+ <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com>
+ <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+ <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
+ <44b094c8-63fe-d9e5-1bf4-7da0788caccf@shipmail.org>
+ <6d122d62-9c96-4c29-8d06-02f7134e5e2a@shipmail.org>
+ <2759de53-123f-5972-a246-bbf959439c5d@intel.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <e02e18e9-662e-e4bd-dee5-2dde673278ea@shipmail.org>
+Date:   Wed, 4 Sep 2019 10:34:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190815231646.GA15635@Asurada-Nvidia.nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <2759de53-123f-5972-a246-bbf959439c5d@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/08/19 2:16 AM, Nicolin Chen wrote:
-> On Thu, Aug 15, 2019 at 02:48:20PM +0300, Adrian Hunter wrote:
->> On 14/08/19 3:57 AM, Nicolin Chen wrote:
->>> [ Integrated the change and commit message made by Thierry Reding ]
->>>
->>> The SDHCI controller found in early Tegra SoCs (from Tegra20 through
->>> Tegra114) used an AHB interface to the memory controller, which allowed
->>> only 32 bits of memory to be addressed.
->>>
->>> Starting with Tegra124, this limitation was removed by making the SDHCI
->>> controllers native MCCIF clients, which means that they got increased
->>> bandwidth and better arbitration to the memory controller as well as an
->>> address range extended to 40 bits, out of which only 34 were actually
->>> used (bits 34-39 are tied to 0 in the controller).
->>>
->>> For Tegra186, all of the 40 bits can be used; For Tegra194, 39-bit can
->>> be used.
->>>
->>> So far, sdhci-tegra driver has been relying on sdhci core to configure
->>> the DMA_BIT_MASK between 32-bit or 64-bit, using one of quirks2 flags:
->>> SDHCI_QUIRK2_BROKEN_64_BIT_DMA. However, there is a common way, being
->>> mentioned in sdhci.c file, to set dma_mask via enable_dma() callback in
->>> the device driver directly.
->>>
->>> So this patch implements an enable_dma() callback in the sdhci-tegra,
->>> in order to set an accurate DMA_BIT_MASK, other than just 32/64 bits.
->>
->> Is there a reason this cannot be done at probe time?
-> 
-> It's supposed to be done at probe() time. But sdhci_setup_host()
-> does both 32-bit/64-bit dma_mask setting and dma_alloc(), so if
-> the dma_mask isn't correctly set inside sdhci_setup_host(), the
-> allocation would fall to a 64-bit IOVA range that hardware does
-> not support -- smmu error would happen and crash the system. On
-> the other hand, ->enable_dma() is called in that function right
-> after 32-bit/64-bit dma_mask setting. Or is there any other way
-> of adding to probe() that I am missing here?
+Hi, Dave,
 
-Hmmm.  Maybe we should clean that up a bit.  What do about this:
+On 9/4/19 1:10 AM, Dave Hansen wrote:
+> Thomas, this series has garnered a nak and a whole pile of thoroughly
+> confused reviewers.
+>
+> Could you take another stab at this along with a more ample changelog
+> explaining the context of the problem?  I suspect that's a better place
+> to start than having us all piece together the disparate parts of the
+> thread.
 
-From: Adrian Hunter <adrian.hunter@intel.com>
-Date: Wed, 4 Sep 2019 11:28:51 +0300
-Subject: [PATCH] mmc: sdhci: Let drivers define their DMA mask
+Sure.
 
-Add host operation ->set_dma_mask() so that drivers can define their own
-DMA masks.
+I was just trying to follow up on the emails  to get a better 
+understanding what got people confused in the first place.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- drivers/mmc/host/sdhci.c | 12 ++++--------
- drivers/mmc/host/sdhci.h |  1 +
- 2 files changed, 5 insertions(+), 8 deletions(-)
+Thanks,
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 66c2cf89ee22..43d32ba63ff5 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -3756,18 +3756,14 @@ int sdhci_setup_host(struct sdhci_host *host)
- 		host->flags &= ~SDHCI_USE_ADMA;
- 	}
- 
--	/*
--	 * It is assumed that a 64-bit capable device has set a 64-bit DMA mask
--	 * and *must* do 64-bit DMA.  A driver has the opportunity to change
--	 * that during the first call to ->enable_dma().  Similarly
--	 * SDHCI_QUIRK2_BROKEN_64_BIT_DMA must be left to the drivers to
--	 * implement.
--	 */
- 	if (sdhci_can_64bit_dma(host))
- 		host->flags |= SDHCI_USE_64_BIT_DMA;
- 
- 	if (host->flags & (SDHCI_USE_SDMA | SDHCI_USE_ADMA)) {
--		ret = sdhci_set_dma_mask(host);
-+		if (host->ops->set_dma_mask)
-+			ret = host->ops->set_dma_mask(host);
-+		else
-+			ret = sdhci_set_dma_mask(host);
- 
- 		if (!ret && host->ops->enable_dma)
- 			ret = host->ops->enable_dma(host);
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index 81e23784475a..a9ab2deaeb45 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -623,6 +623,7 @@ struct sdhci_ops {
- 	u32		(*irq)(struct sdhci_host *host, u32 intmask);
- 
- 	int		(*enable_dma)(struct sdhci_host *host);
-+	int		(*set_dma_mask)(struct sdhci_host *host);
- 	unsigned int	(*get_max_clock)(struct sdhci_host *host);
- 	unsigned int	(*get_min_clock)(struct sdhci_host *host);
- 	/* get_timeout_clock should return clk rate in unit of Hz */
--- 
-2.17.1
+Thomas
+
 
