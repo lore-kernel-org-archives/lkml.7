@@ -2,93 +2,163 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C39CC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1829C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E6721881
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:27:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FE821881
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u96W3i3h"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="FszKmCEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731814AbfIDQ1p (ORCPT
+        id S1731867AbfIDQ2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:27:45 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37668 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731466AbfIDQ1p (ORCPT
+        Wed, 4 Sep 2019 12:28:10 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45196 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730299AbfIDQ2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:27:45 -0400
-Received: by mail-pg1-f196.google.com with SMTP id d1so11510512pgp.4;
-        Wed, 04 Sep 2019 09:27:44 -0700 (PDT)
+        Wed, 4 Sep 2019 12:28:10 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y72so5988124pfb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h04RkzjT3hXLTqVi3hxMYt7+XgkxZzlEb0BXvzdW1Iw=;
-        b=u96W3i3h8EyeOAeUHfKxUJeZZrPcR78dwH/TA9Q0gcEBy2fX0/RospEgR+NpW6qmL8
-         x7Cw14anhZMC/3swXtc5wbpMZ+zCJqv4YzAVxVQuTkU+2IspzSnhZM3Gv5klXmNda5mw
-         wVF9asAXOiNpj3HEIMkNLKBdRy6DO8xyWZEufSISyBoqV0U9AFhOxjXiRaF3BcQWN0kq
-         zWWkmevlB+++8fGIjUZFmXsFgLzRrXmjtPLiUiaPDrwTQ3LzcfaJ7vq2GqaVRy5rrt5u
-         b4hUoaq7bsGZDSpHsgo2hT8e70WUzAVYai9e+pS1NGd+erk4+IDj3tcPJyGAyEfYLupO
-         Z28g==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Yk/Zf1u2BdMMV+kkm5yvLh1KAtBPz3BEz98OU76ZcXI=;
+        b=FszKmCEwYuTJXHPJSyXKFkAIkX06tgKEEJ8rXP+NANZXqsq2cuSCbfHGT0tbvOWm1W
+         fP1DI5Nht8S23YelKpJfF72JQLn7Cw/ai1ygsPjE3Z1afhZajlZgIWlrzap+qjSOUjJv
+         kRKicL5mPA9cDbjDOaaQv844KwyulIeQ3qAds=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h04RkzjT3hXLTqVi3hxMYt7+XgkxZzlEb0BXvzdW1Iw=;
-        b=R8Q+rky9+5LrBKssdJLVWb27mU5rjkGoPITDPc8u1ejqc9Cy8jEcXJI1cB957BlvnN
-         KA+tV2Dw8azbpVyySdg3aJhDb8l5Pd6yQZ8lTpECRSE3+AxXeQcHL63pJdjYV0jUM0VR
-         VWJLxmpcerR4Wksc89qGKlCcjg4fPwSOHOCvYicIbkiKkONxJMK9ZMI15h36RVDmxGB6
-         3DvMnGbfEIhkdSD3/FeMZa7fsdQViqO1mqD1tmUPMFenp9z+bGXumVZdoIYZI2l/fRrh
-         lBLIEoSGlDvYmvW76QZCGWDPk3Yib0eDTOQ9Lpgn2uyxYqfHMC43JLhNvn4ERjQRxSXe
-         xPSQ==
-X-Gm-Message-State: APjAAAV5E43VNKW7YG1jtkhMg2eZ1Z1c6OD2fp93GJXLGx2Qb0LETaR9
-        NIbjMB6lb1RjC9Tu3LS5MdmtoABKkPnnqyhUIPY=
-X-Google-Smtp-Source: APXvYqzS8bxdeH8zm+j+hxb1ouuCS1ZUvEOMUS0WH79z6S5Qndoz6KZ4UIiuE9srzqOavs3O1cbyfUGHH5iUYCJJZFI=
-X-Received: by 2002:aa7:93a8:: with SMTP id x8mr14577315pff.151.1567614464501;
- Wed, 04 Sep 2019 09:27:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yk/Zf1u2BdMMV+kkm5yvLh1KAtBPz3BEz98OU76ZcXI=;
+        b=JdLOYJUh2rt0LBY0OVz8u3YpwhglVOOIPQA4OWcxE4nygygWbUSaM8mtzGluo58e6f
+         5Z4VTp7KRuTV2ZCI3xt+cfS8GMYIFYN59MDy7ny7HnzSeTWotkwIUryTTCqpm6cjV/lI
+         TuZCMyYSaj/lstZ371x6HuMEa4z6vHDLjZjP1o8i19GrD1L9bo5CO501uClmV7XPtAIx
+         lGGank4m3AFjJ7tGeNFpqXJDDYbe2dLH76dc45iTz4DYjiKqRqHrOWj5B5Rwd2iILiOm
+         L9cNO6UBWYotroI2b5u8FBL4JZ0PEo/ivDUao0Yb3DJWTRTJJJT/XgDjiKIDUFuSos4l
+         4g0Q==
+X-Gm-Message-State: APjAAAV2lrhA5MCzSoN3eAu5wTrxi5/FuTBp1AJgb7u9mwrmq36TDGEM
+        fQUYOyPQMNEYF81+WcZlbHYYwQ==
+X-Google-Smtp-Source: APXvYqy/vA5T9EERpFZ83PCmkYnMQMAWGtTYiDxLWWOcUETRK9wxLZfVoiyrnwFmnOAVpknrG9HWlg==
+X-Received: by 2002:a17:90a:b38e:: with SMTP id e14mr5364244pjr.120.1567614489660;
+        Wed, 04 Sep 2019 09:28:09 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q4sm9721913pfh.115.2019.09.04.09.28.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 09:28:09 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 12:28:08 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
+        carmenjackson@google.com, mayankgupta@google.com,
+        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
+        akpm@linux-foundation.org, kernel-team@android.com,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190904162808.GO240514@google.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz>
+ <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20190904061245.30770-1-rashmica.g@gmail.com>
-In-Reply-To: <20190904061245.30770-1-rashmica.g@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Sep 2019 19:27:33 +0300
-Message-ID: <CAHp75Vd_6Rpt5=BjzV8YFCiFP7qsRrYHHo7+=gWwnZH-zT9jNw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
-To:     Rashmica Gupta <rashmica.g@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904153759.GC3838@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
+On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
 >
-> Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
+> On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> > On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
+> > > On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
+> > > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
+> > > > memory hogs. Several Android teams have been using this patch in various
+> > > > kernel trees for half a year now. Many reported to me it is really
+> > > > useful so I'm posting it upstream.
+> > > >
+> > > > Initial patch developed by Tim Murray. Changes I made from original patch:
+> > > > o Prevent any additional space consumed by mm_struct.
+> > > > o Keep overhead low by checking if tracing is enabled.
+> > > > o Add some noise reduction and lower overhead by emitting only on
+> > > >   threshold changes.
+> > >
+> > > Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
+> > > the Linus tree (nor in linux-next).
+> >
+> > No, this is generated automatically by the tracepoint infrastructure when a
+> > tracepoint is added.
 >
-> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> OK, I was not aware of that.
+>
+> > > Besides that why do we need batching in the first place. Does this have a
+> > > measurable overhead? How does it differ from any other tracepoints that we
+> > > have in other hotpaths (e.g.  page allocator doesn't do any checks).
+> >
+> > We do need batching not only for overhead reduction,
+>
+> What is the overhead?
 
->         /* Allocate a cache of the output registers */
-> -       banks = gpio->config->nr_gpios >> 5;
-> +       banks = (gpio->config->nr_gpios >> 5) + 1;
+The overhead is occasionally higher without the threshold (that is if we
+trace every counter change). I would classify performance benefit to be
+almost the same and within the noise.
 
-Shouldn't be rather DIV_ROUND_UP(nr_gpios, sizeof(u32)) ?
+For memset of 1GB data:
 
->         gpio->dcache = devm_kcalloc(&pdev->dev,
->                                     banks, sizeof(u32), GFP_KERNEL);
+With threshold:
+Total time for 1GB data: 684172499 nanoseconds.
+Total time for 1GB data: 692379986 nanoseconds.
+Total time for 1GB data: 760023463 nanoseconds.
+Total time for 1GB data: 669291457 nanoseconds.
+Total time for 1GB data: 729722783 nanoseconds.
 
+Without threshold
+Total time for 1GB data: 722505810 nanoseconds.
+Total time for 1GB data: 648724292 nanoseconds.
+Total time for 1GB data: 643102853 nanoseconds.
+Total time for 1GB data: 641815282 nanoseconds.
+Total time for 1GB data: 828561187 nanoseconds.  <-- outlier but it did happen.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > but also for reducing
+> > tracing noise. Flooding the traces makes it less useful for long traces and
+> > post-processing of traces. IOW, the overhead reduction is a bonus.
+>
+> This is not really anything special for this tracepoint though.
+> Basically any tracepoint in a hot path is in the same situation and I do
+> not see a point why each of them should really invent its own way to
+> throttle. Maybe there is some way to do that in the tracing subsystem
+> directly.
+
+I am not sure if there is a way to do this easily. Add to that, the fact that
+you still have to call into trace events. Why call into it at all, if you can
+filter in advance and have a sane filtering default?
+
+The bigger improvement with the threshold is the number of trace records are
+almost halved by using a threshold. The number of records went from 4.6K to
+2.6K.
+
+I don't see any drawbacks with using a threshold. There is no overhead either
+way. For system without split RSS accounting, the reduction in number of
+trace records would be even higher significantly reducing the consumption of
+the ftrace buffer and the noise that people have to deal with.
+
+Hope you agree now?
+
+thanks,
+
+ - Joel
+
