@@ -2,149 +2,170 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982FCC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C546AC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8BA2339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:08:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567598907;
-	bh=QbYO5xJQGT1Uu94hWScBCp6qWdp8GydhSptk7yOPeHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qMLOO3OfK3C0wScjshSshxsLmbecbia2zMWgFrRut7PYsJAvWSBUSx4UYGbDuhUtH
-	 mTr61M6c4UGNZBMQLN2tQXvfkqJxGAVkGH0hemBZHsjOWEpzAae1Aq5rysT0Rb6oqs
-	 WeXl75VBWJ6Wkm4rng/mjxoqCSgyceErbRwxbir4=
+	by mail.kernel.org (Postfix) with ESMTP id 9E3D922CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:09:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J7ZfwMvx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbfIDMI0 (ORCPT
+        id S1729906AbfIDMJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726943AbfIDMI0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:08:26 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E189922CED;
-        Wed,  4 Sep 2019 12:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567598905;
-        bh=QbYO5xJQGT1Uu94hWScBCp6qWdp8GydhSptk7yOPeHE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HLOwcXn29+BdSWFL3qKDpEDbLdF51Ww2YAF6klsvOok5k1oQ1Lee8fRjgoP40Z3hD
-         XXrM2fR7PuHQwR72a2MJS+DqWYtl7VMLoDnalEiQgicy4dE8KYwGP7ehYl2uyJ/Dva
-         xKoaEHfjepJkgmsXpJhskZPwPDGL0hrKIhAaKrZY=
-Date:   Wed, 4 Sep 2019 08:08:23 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Michel =?iso-8859-1?Q?D=E4nzer?= <michel@daenzer.net>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Dave Airlie <airlied@linux.ie>,
-        Yu Zhao <yuzhao@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 4.19 044/167] drm/amdgpu: validate user pitch
- alignment
-Message-ID: <20190904120823.GW5281@sasha-vm>
-References: <20190903162519.7136-1-sashal@kernel.org>
- <20190903162519.7136-44-sashal@kernel.org>
- <7957107d-634f-4771-327e-99fdd5e6474e@daenzer.net>
- <20190903170347.GA24357@kroah.com>
- <20190903200139.GJ5281@sasha-vm>
- <CAKMK7uFpBnkF4xABdkDMZ8TYhL4jg6ZuGyHGyVeBxc9rkyUtXQ@mail.gmail.com>
- <829c5912-cf80-81d0-7400-d01d286861fc@daenzer.net>
+        Wed, 4 Sep 2019 08:09:00 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45889 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfIDMJA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:09:00 -0400
+Received: by mail-wr1-f67.google.com with SMTP id l16so2670123wrv.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 05:08:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=cXNd5NFyo+yXcDkUhbL4DCnkYm1i1knViowjla1FTwE=;
+        b=J7ZfwMvx+pjJ1KtIMg2FP2iKHNJugtUCVhDT0Q9A9FjR6NMHgbC3mf/LmljjuOidey
+         UGqdxc1zMZTpTvw6hwHC1aHs7rOmo6aaccw1sRY2uRZlabi29r5B6lNG+s3zzZaSMH1C
+         Z4tIH6+/totYd97oYlUmHDWy1h6khLfBmvhCz9+UhOpEsL4SaAa/cdlQqBtVm5+jEaqA
+         pmtDQIzmxpohUiucVvUBP3ioD3mO7zvmxsdxwuhe2oZBFcdQjCUZoBHbidQ1ORP4VLq4
+         wOtK4aZ8XgNv6wyaIbNj/9icjZy0TFMaGC6OnEW61BxKyj7/2fRktWn8svHDF0t6B7Db
+         tOlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=cXNd5NFyo+yXcDkUhbL4DCnkYm1i1knViowjla1FTwE=;
+        b=ihYwvDi1B92h8X5N/fCa2rwRYfQQRtD9wUDK6f33V4IOENNDR1k17RmdbKZFyvYz2o
+         ugKCnMuEb5sbqJ9tuCreeiRufYnZkcjVsUdmAdNtquFJQK4+lrGHAwg0Z0t2naDBY+y7
+         pIrIw0pFP0kHvAKCtUuDXDpUC5/m80MWYZa1ZHVnVUZpXHBIJP2F3V954c11SrHHvDhc
+         EF+T9S5938MsDQMXjR5R5MZQhocZHHoml7/fh5S9Coa690mQNKV7FHmAI4In4k1UYObr
+         zRfy0XzBk7VYkQU88flxd9lma2O+E7P6hYX08sOM4sy+djVNaygGVrhBeCh2G85mn5w8
+         jEuA==
+X-Gm-Message-State: APjAAAVJr94hQcrbzTeLO+TUkD2V5ugp40Y7ufT7a3fOKIK22YpxVZw7
+        BjU94LeehISSDOEYf2chgiPTfQ==
+X-Google-Smtp-Source: APXvYqzoDt1j5nXwZfg6kdlNZiEWEaIC+6f7Yyq3ssLHAa5vCsy93S4qA0vTD5oeY0IsGHeo93JgRQ==
+X-Received: by 2002:a5d:4d81:: with SMTP id b1mr50990154wru.27.1567598937914;
+        Wed, 04 Sep 2019 05:08:57 -0700 (PDT)
+Received: from dell ([95.147.198.36])
+        by smtp.gmail.com with ESMTPSA id j22sm3005688wre.45.2019.09.04.05.08.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Sep 2019 05:08:57 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 13:08:55 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Message-ID: <20190904120855.GJ26880@dell>
+References: <20190904113917.15223-1-lee.jones@linaro.org>
+ <20190904115234.GV2672@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <829c5912-cf80-81d0-7400-d01d286861fc@daenzer.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190904115234.GV2672@vkoul-mobl>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 10:55:10AM +0200, Michel D�nzer wrote:
->On 2019-09-03 10:16 p.m., Daniel Vetter wrote:
->> On Tue, Sep 3, 2019 at 10:01 PM Sasha Levin <sashal@kernel.org> wrote:
->>> On Tue, Sep 03, 2019 at 07:03:47PM +0200, Greg KH wrote:
->>>> On Tue, Sep 03, 2019 at 06:40:43PM +0200, Michel D�nzer wrote:
->>>>> On 2019-09-03 6:23 p.m., Sasha Levin wrote:
->>>>>> From: Yu Zhao <yuzhao@google.com>
->>>>>>
->>>>>> [ Upstream commit 89f23b6efef554766177bf51aa754bce14c3e7da ]
->>>>>
->>>>> Hold your horses!
->>>>>
->>>>> This commit and c4a32b266da7bb702e60381ca0c35eaddbc89a6c had to be
->>>>> reverted, as they caused regressions. See commits
->>>>> 25ec429e86bb790e40387a550f0501d0ac55a47c &
->>>>> 92b0730eaf2d549fdfb10ecc8b71f34b9f472c12 .
->>>>>
->>>>>
->>>>> This isn't bolstering confidence in how these patches are selected...
->>>>
->>>> The patch _itself_ said to be backported to the stable trees from 4.2
->>>> and newer.  Why wouldn't we be confident in doing this?
->>>>
->>>> If the patch doesn't want to be backported, then do not add the cc:
->>>> stable line to it...
->>>
->>> This patch was picked because it has a stable tag, which you presumably
->>> saw as your Reviewed-by tag is in the patch. This is why it was
->>> backported; it doesn't take AI to backport patches tagged for stable...
->
->The patches did point to gaps in validation of ioctl parameters passed
->in by userspace. Unfortunately, they turned out to be too strict,
->causing valid parameters to spuriously fail. If that wasn't the case,
->and the patches didn't have stable tags, maybe we'd be having a
->discussion about why they didn't have the tags now...
+On Wed, 04 Sep 2019, Vinod Koul wrote:
 
-That's fair, and we're definitely not complaining that these patches had
-a stable tag, my comment was directed more towards the "This isn't
-bolstering confidence in how these patches are selected" comment you've
-made - we basically did what we were told to do and for some reason you
-got upset :)
+> On 04-09-19, 12:39, Lee Jones wrote:
+> > --- a/arch/arm64/boot/dts/qcom/Makefile
+> > +++ b/arch/arm64/boot/dts/qcom/Makefile
+> > @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+> > +dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
+> 
+> Can we keep this sorted, so before mtp.
 
->>> The revert of this patch, however:
->>>
->>>  1. Didn't have a stable tag.
->
->I guess it didn't occur to me that was necessary, as the patches got
->reverted within days.
+Look closer. :)
 
-Since the original stable tagged patch made it upstream, we're bound to
-try and select it for stable branches even if there are more changes or
-reverts later on. We'll try to detect further fixes and reverts, but
-we're limited by the metadata in the commit message.
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+> >  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> > new file mode 100644
+> > index 000000000000..ad160c718b33
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> > @@ -0,0 +1,454 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> Are we going to make this dual? or BSD..
 
->>>  2. Didn't have a "Fixes:" tag.
->>>  3. Didn't have the usual "the reverts commit ..." string added by git
->>>  when one does a revert.
->
->I suspect that's because there were no stable commit hashes to
->reference, see below.
->
->
->>> Which is why we still kick patches for review, even though they had a
->>> stable tag, just so people could take a look and confirm we're not
->>> missing anything - like we did here.
->>>
->>> I'm not sure what you expected me to do differently here.
->
->Yeah, sorry, I didn't realize it's tricky for scripts to recognize that
->the patches have been reverted in this case.
+This patches the DTS files already in this directory.
 
-FWIW, I've added another test to my scripts to try and catch these cases
-(Revert "%s"). It'll slow down the scripts a bit but it's better to get
-it right rather than to be done quickly :)
+> > +&apps_rsc {
+> > +	pm8998-rpmh-regulators {
+> > +		compatible = "qcom,pm8998-rpmh-regulators";
+> > +		qcom,pmic-id = "a";
+> > +
+> > +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
+> > +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+> > +
+> > +		vreg_s2a_1p125: smps2 {
+> > +		};
+> > +
+> > +		vreg_s3a_1p35: smps3 {
+> > +			regulator-min-microvolt = <1352000>;
+> > +			regulator-max-microvolt = <1352000>;
+> > +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> > +		};
+> > +
+> > +		vreg_s4a_1p8: smps4 {
+> > +			regulator-min-microvolt = <1800000>;
+> > +			regulator-max-microvolt = <1800000>;
+> > +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> > +		};
+> > +
+> > +		vreg_s5a_2p04: smps5 {
+> > +			regulator-min-microvolt = <2040000>;
+> > +			regulator-max-microvolt = <2040000>;
+> > +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> > +		};
+> > +
+> > +		vreg_s7a_1p025: smps7 {
+> 
+> Any reason why we dont specify the mode and min/max voltage for this
+> and few others below..?
 
---
-Thanks,
-Sasha
+Might have to ask Bjorn that one.
+
+> > +&i2c1 {
+> > +	status = "okay";
+> > +	clock-frequency = <400000>;
+> > +	qcom,geni-se-fifo;
+> > +
+> > +	battery@70 {
+> > +		compatible = "some,battery";
+> 
+> some,battery ..?
+
+Good spot.  This the battery level/AC detection driver that isn't
+upstream yet.  Will remove.
+
+> > +&qup_i2c12_default {
+> 
+> Please move the qup nodes up so that nodes are sorted alphabetically
+
+Sure.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
