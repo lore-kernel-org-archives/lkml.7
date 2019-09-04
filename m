@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3218C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ABCC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DEB22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EC4208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620148;
-	bh=Dtb2xlJUXaI7h1jTZ4aYV373tHKBE5AMbf5Ac85jxRs=;
+	s=default; t=1567620154;
+	bh=Ywm29xgR2yTj4RcVM92DdMlNq/nCgVyDWXEKNz9+NSI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IR2aSqFi3AC07U2LCxkzx4er2H+tmSX9y17PExUgYG20BhsAg0scdQlLBjnwBfzkQ
-	 Vh5/z2gkLNRKLdLZDDiEVE1/M2+vALLeqNBHdrXIPjW6/CN8QrNAP3Dp6EHZ9dNtOz
-	 cPa/1dc1tfG4sQ/nUIeSHCkQNtCKWp1+1XjnX5wE=
+	b=lDQ+U6RiBAu868Z/4gohWmPF8dJ6zqFm3ij/J2zd6D8L+ToWU6EiPubVI9mD2nnUu
+	 j9Wy4x/Crs1pIKw5BHRBCenj6biU8hO3qgRIAFS3dAxCQtH9HwvCajsf7ev1UjqGlg
+	 3DArjzvTN5+c8Ty9OqoOwnERsWWnZ+4tzDEZ1gXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388743AbfIDSC1 (ORCPT
+        id S2388777AbfIDSCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388738AbfIDSCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:23 -0400
+        id S2388750AbfIDSCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4671622CEA;
-        Wed,  4 Sep 2019 18:02:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4C223401;
+        Wed,  4 Sep 2019 18:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620142;
-        bh=Dtb2xlJUXaI7h1jTZ4aYV373tHKBE5AMbf5Ac85jxRs=;
+        s=default; t=1567620150;
+        bh=Ywm29xgR2yTj4RcVM92DdMlNq/nCgVyDWXEKNz9+NSI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nva/gb+kuXpOzuusUE1ui5RSfmjUpumLjT/VL6cMO71rGT5ffaftJWxYDJm7yUqq5
-         2/GyfRoh8foUnpm7mKb/jkIRNZF0ytX8JeibUFdSweQ2vsH+Z+p3+Qi74ztNKSX5m8
-         ajDRaBrkrBrMMH1zMWVUxg03HbeLksPk10CcMuII=
+        b=nXQZvIySMxkGWz1FW5+XtT7iEtOu1M+eoWeUzZCc8pmHOgq25o5SRa5JNGWt/KlEy
+         3EyiJTbkIL8tp8J8RQeAeb6GJQZCXl6e8eli3yyEGWxmdrEUKQMmIvLV6spFnYzLv+
+         0v1Pem2tDUY2shVK+lX5wF0jxvvSWmuhLHWKa6+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Heyi Guo <guoheyi@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 80/83] KVM: arm/arm64: vgic: Fix potential deadlock when ap_list is long
-Date:   Wed,  4 Sep 2019 19:54:12 +0200
-Message-Id: <20190904175310.676208472@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 01/57] dmaengine: ste_dma40: fix unneeded variable warning
+Date:   Wed,  4 Sep 2019 19:53:29 +0200
+Message-Id: <20190904175302.158134911@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
-References: <20190904175303.488266791@linuxfoundation.org>
+In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
+References: <20190904175301.777414715@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,44 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4a8061a7c5f7c27a2dc002ee4cb89b3e6637e44 ]
+[ Upstream commit 5d6fb560729a5d5554e23db8d00eb57cd0021083 ]
 
-If the ap_list is longer than 256 entries, merge_final() in list_sort()
-will call the comparison callback with the same element twice, causing
-a deadlock in vgic_irq_cmp().
+clang-9 points out that there are two variables that depending on the
+configuration may only be used in an ARRAY_SIZE() expression but not
+referenced:
 
-Fix it by returning early when irqa == irqb.
+drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs[] = {
+           ^
+drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs_chan[] = {
 
-Cc: stable@vger.kernel.org # 4.7+
-Fixes: 8e4447457965 ("KVM: arm/arm64: vgic-new: Add IRQ sorting")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-Signed-off-by: Heyi Guo <guoheyi@huawei.com>
-[maz: massaged commit log and patch, added Fixes and Cc-stable]
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Mark these __maybe_unused to shut up the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190712091357.744515-1-arnd@arndb.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/dma/ste_dma40.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
-index 6440b56ec90e2..1934dc8a2ce09 100644
---- a/virt/kvm/arm/vgic/vgic.c
-+++ b/virt/kvm/arm/vgic/vgic.c
-@@ -196,6 +196,13 @@ static int vgic_irq_cmp(void *priv, struct list_head *a, struct list_head *b)
- 	bool penda, pendb;
- 	int ret;
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index c2b089af04208..90feb6a05e59b 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -142,7 +142,7 @@ enum d40_events {
+  * when the DMA hw is powered off.
+  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
+  */
+-static u32 d40_backup_regs[] = {
++static __maybe_unused u32 d40_backup_regs[] = {
+ 	D40_DREG_LCPA,
+ 	D40_DREG_LCLA,
+ 	D40_DREG_PRMSE,
+@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
  
-+	/*
-+	 * list_sort may call this function with the same element when
-+	 * the list is fairly long.
-+	 */
-+	if (unlikely(irqa == irqb))
-+		return 0;
-+
- 	spin_lock(&irqa->irq_lock);
- 	spin_lock_nested(&irqb->irq_lock, SINGLE_DEPTH_NESTING);
+ #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
  
+-static u32 d40_backup_regs_chan[] = {
++static __maybe_unused u32 d40_backup_regs_chan[] = {
+ 	D40_CHAN_REG_SSCFG,
+ 	D40_CHAN_REG_SSELT,
+ 	D40_CHAN_REG_SSPTR,
 -- 
 2.20.1
 
