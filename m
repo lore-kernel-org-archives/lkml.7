@@ -2,117 +2,170 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A041C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3952EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733A421883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077262053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=one-eyed-alien.net header.i=@one-eyed-alien.net header.b="TUlK0rc1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="OwlUJJPm";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="tt+j8tPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387803AbfIDQQZ (ORCPT
+        id S2387809AbfIDQQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:16:25 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36958 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387604AbfIDQQV (ORCPT
+        Wed, 4 Sep 2019 12:16:29 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:1382 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732824AbfIDQQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:16:21 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t14so20261406lji.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:16:19 -0700 (PDT)
+        Wed, 4 Sep 2019 12:16:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1567613787; x=1599149787;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=QkCuUnm7rFHsjeMxQfk19+kOHPZpSm76hl2dHeC6d8Y=;
+  b=OwlUJJPmhk6zHsRTl/AER2Z+cGWGcaAtKKLbDrqFBVbHgXdZTSfGAbyN
+   l0hC+OB3nRGI9QAt4LXEzl9Z8Xz3S+dFcyczsPUtEivw+13EJTbWtL7Rn
+   PCVD2yhE+9QejV8Z6PbuAGOW19OKsEGdFaeWEtFVZ2lgTbTchfxLhMlVJ
+   Km/OR6J/d0ToEKzkVA7pTLVEdcvqiZGwMcJimEIh3BQnmSC0x7mimjAIK
+   7rFMSLeDwQyUdmbUcu6/nXLsUI8VMwZwm1slrNrrdFfJfj5US5KGpVTBz
+   rNiaAzHlFJZFcSqMwMANfAczOT4o4BjEYo/4Tr/XLUooE9QXq8PiEa9UE
+   g==;
+IronPort-SDR: f1OmzBLks22rSV5lCMgSsyh3F2SnJunFRmRUVGrf/a7f1dZTYXVUWzYPxpsy6P5xmkPE7XSTVg
+ ENbW3mR0KgANHyFgomhyIjXdHz5uLOav3fUbQaV+H3q6AK7lLNfQ5D9GvTJvB6ruG8pdzI2SQb
+ AclLDvQcM3dhiTo8XE9O4DLDIiNd770gdWZ68JLK/6GFHX3EB2HyVSm8x8x4xGOckfhGR/Qqi+
+ +cecN8BJ4RXJmfy+q8B27zOW2JGSDKK3LPpmGxPoq83OyQKLImJXsJgBV1q3cw3mJpYwke9qx3
+ r7M=
+X-IronPort-AV: E=Sophos;i="5.64,467,1559491200"; 
+   d="scan'208";a="121994112"
+Received: from mail-dm3nam05lp2059.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.59])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Sep 2019 00:16:26 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kgrUTYcFmLmCBZ84dv3zZRAjbmDG+iHY+PKzXMdHuWBkBf0iP8eStYRS+aZRLfDWQP7GmNQgeTtVNXqJIiWhw2ylhuUpMfFOrdKmcr6obFOvGuXSlPB0Y0eLPLpUt/IIf6E1NfxCoECWewGNf1a9uNAdNdFTxXIUXCPomCC0llVepHN91Gk9MXzb4QTC3NcVZtqNnHavamER0xGTSERINSbSsSUylkmBkaSOEfYZhb+xqduGZFxhfkrI8XXyKjlyai0v2aETPqeGcalGOqt7zA45/tFy+IujJB1s5t9O10nw0+icSlCqhr+joKlhBoz3lSFm630pwS41zimhRjVqMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y4kJ4urmqfV6Wv++MMv8WEELCUqKV0375ZHYRoyE/jE=;
+ b=B+cvOQcgd6B5KkCjIahlGm+tUXbyebMR9jI9xpecQz9xfiZa3Yz0LZCNSB1Tx1xj1RmNG9FYpcXhuXRJrObd1aTqudJy3U3sxWZRnLyQF4K7DUsI96akS4Kb2JA8iknxlwJuf3Fs2rWlH6PC8oQsUzLLACXPYMUDgH0cwaOCWcIMJUyLiWlo3nO4fIFQDYyI6Ql4WxQf52/V3yOMm/mvufSIw9/vm0q7x04xa/b42QqlJgN1JWqlrfdxS2R8u6NXW4g65N+fk1DgXLgud0Fb9elA1qWMnHc9MEVV1a2ba4Nwv6psfUloILoL2MQFpxdFBwDqzgzdY+V71YfZ4FCGtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=one-eyed-alien.net; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3OkOI3j0Oo0CjA3trKCkMR2MwBR7d8kErbi/HKpfcyM=;
-        b=TUlK0rc196VsjDYABXU7yCCcQ4sTNOl47V6TQt/Z6Y4FZj6TevmCuFWT9dKCaAnTkd
-         ii+pt9kyT4tMSieTNWDBUkxJWxisf3YEfmljgf/j7puwe7joaJGEU4O2426wowD5IuNU
-         CQLeaZs18KcpY8ipXZwRFzvDYcdReO/oyNEP4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3OkOI3j0Oo0CjA3trKCkMR2MwBR7d8kErbi/HKpfcyM=;
-        b=XEgDLyPu/SvN9NeKyYSdnLLj3yS+HpWX1119NHwIUU4FrLStfyUVEpd3tEC11xS6g0
-         AU1CMj0cZ5lyrRgsvrN+p+BbCCbu90mtKaCRq5m9n3E5Pn8svjYkj/cg8PCR+EXcUev9
-         UXe4niD6onUaUS4ml2jzQNRy7KJHpVoXawBITM30qVN9p3ZQpKQI8ArKIr48jr4vaTYd
-         hxFq2uP+Ua8Lo1JanU+wC0pser8Ecn9uBsgHAp40qoDF1486C3sCWLRAfNYHlPYdIZzI
-         5usUsoenKt6FgiAlnhjkiWX/e5UJqbcic/u9R7AyMUci0cq8eQYq8MIGDoOSZEzarCOy
-         /xqg==
-X-Gm-Message-State: APjAAAXiwB8SYTN1qRTuou8+aftc/K9iAXMN0IXprZzYRXdkVQCM7JMI
-        Yeqt6Esyp/Hngn7mRZEq2En1DQhf9l99djSWuX4kkg==
-X-Google-Smtp-Source: APXvYqwjBs0W5/qIegdlz+i6Wn/+JSt4M3u1OfLNwPhUCj4In1akz/3V+ycUi8EU6qZzBMs2ICtcju1RZEnxtZQrP/k=
-X-Received: by 2002:a2e:9ad4:: with SMTP id p20mr24178237ljj.49.1567613778648;
- Wed, 04 Sep 2019 09:16:18 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y4kJ4urmqfV6Wv++MMv8WEELCUqKV0375ZHYRoyE/jE=;
+ b=tt+j8tPvttFvc93IdOPQWHP3zorMdgRGITTFPOC0lADIYfWyvYnJITrkDHmJ5vWB6jQtNDo8WWZ5Jmr7PIHPNUi0kYPVkBK4RGrotd/rgP8mMBFeDVp4ntnBZcex9qanc6t5BceYgFbLQyKP4lRsSlHJOEtKx31XdW56r35VOOc=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB5504.namprd04.prod.outlook.com (20.178.247.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 4 Sep 2019 16:16:24 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::e1a5:8de2:c3b1:3fb0]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::e1a5:8de2:c3b1:3fb0%7]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
+ 16:16:24 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH v7 21/21] RISC-V: KVM: Add MAINTAINERS entry
+Thread-Topic: [PATCH v7 21/21] RISC-V: KVM: Add MAINTAINERS entry
+Thread-Index: AQHVYzwZ6A9tT90ryEytO9HyVHtSNQ==
+Date:   Wed, 4 Sep 2019 16:16:24 +0000
+Message-ID: <20190904161245.111924-23-anup.patel@wdc.com>
+References: <20190904161245.111924-1-anup.patel@wdc.com>
+In-Reply-To: <20190904161245.111924-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR01CA0084.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::24)
+ To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [49.207.53.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5e72e6c-1493-49a5-6084-08d731533b52
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5504;
+x-ms-traffictypediagnostic: MN2PR04MB5504:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB5504D1A41B5C91473F3578C28DB80@MN2PR04MB5504.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1303;
+x-forefront-prvs: 0150F3F97D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(396003)(346002)(366004)(39860400002)(199004)(189003)(66556008)(66446008)(7416002)(7736002)(8676002)(478600001)(25786009)(386003)(66946007)(99286004)(256004)(50226002)(14454004)(66476007)(64756008)(6506007)(6512007)(102836004)(6436002)(8936002)(54906003)(6116002)(3846002)(486006)(26005)(55236004)(86362001)(1076003)(53936002)(476003)(316002)(71200400001)(71190400001)(81156014)(76176011)(52116002)(305945005)(5660300002)(6486002)(36756003)(186003)(11346002)(2616005)(66066001)(44832011)(4744005)(4326008)(2906002)(446003)(81166006)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5504;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8a4iLrah/hv/gdPeF7c4hHkYzzmZM/0gRg3P70kiv3N1N6gLKs29khQ5yQkvwrptSz6xkIH3nhMRYPbWqI+A43nl/hYy6bxsmXSHKxrPealIVS24ByRCLFFKXU5L0R0hVVS3cdtJqm0jxH7PaaLWi68/dsfWiKgqnewrCkKWUV+OREPTjLFbIjXCGxGb1SCdvJu3mbuXwQAAcA+9zOtykYk8hshe36Xeu8mOb2hzZUVbN3PsFIS14juSJ6NY96Le5W0hc7v22Gzu6RpYe7PS0nhbXcT/zkqnSPLyJm62mMH3Ee42su/i0usn5evC3A/t4BlXjWx9PbzS2E5W4tobeLfqBec6K0VgGDiILK64U/8nW3A89iq6VsY33vAaDUBlXHceCPNCeFPNDbRwW7qRLG2iOeYJ2ekIHSLQC8yTtV0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
- <20190903150638.242049-13-maennich@google.com> <20190903161045.GA22754@roeck-us.net>
- <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com> <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net>
-In-Reply-To: <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net>
-From:   Matthew Dharm <mdharm-usb@one-eyed-alien.net>
-Date:   Wed, 4 Sep 2019 09:16:07 -0700
-Message-ID: <CAA6KcBBeP9xYbVws4=RMFNA4kyrodE-R3mifhbkee-Q+jFRcoQ@mail.gmail.com>
-Subject: Re: [usb-storage] Re: [PATCH v4 12/12] RFC: watchdog: export core
- symbols in WATCHDOG_CORE namespace
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        maco@android.com, sspatil@google.com,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-modules@vger.kernel.org,
-        linux-usb <linux-usb@vger.kernel.org>,
-        USB Mass Storage on Linux 
-        <usb-storage@lists.one-eyed-alien.net>,
-        linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5e72e6c-1493-49a5-6084-08d731533b52
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 16:16:24.7583
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yd0m4clRSYEa6g8wwLMsnLiY1vTga/T3Yn7mgIr3f+4BhjVIMVhTEy1JK4tHn656f5K1I40d2GaswHcUJ1psiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 5:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> Note that I don't object to the patch set in general. There may be symbols
-> which only need be exported in the context of a single subsystem or even
-> driver (if a driver consists of more than one module). For example, a mfd
-> driver may export symbols which should only be called by its client drivers.
-> In such a situation, it may well be beneficial to limit the use of exported
-> symbols.
+Add myself as maintainer for KVM RISC-V and Atish as designated reviewer.
 
-I can appreciate this benefit.
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
+---
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> I am not sure what good that does in practice (if I understand correctly,
-> a driver only has to declare that it wants to use a restricted use symbol
-> if it wants to use it), but that is a different question.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e7a47b5210fd..71da7a4ea706 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8864,6 +8864,16 @@ F:	arch/powerpc/include/asm/kvm*
+ F:	arch/powerpc/kvm/
+ F:	arch/powerpc/kernel/kvm*
+=20
++KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
++M:	Anup Patel <anup.patel@wdc.com>
++R:	Atish Patra <atish.patra@wdc.com>
++L:	kvm@vger.kernel.org
++T:	git git://github.com/kvm-riscv/linux.git
++S:	Maintained
++F:	arch/riscv/include/uapi/asm/kvm*
++F:	arch/riscv/include/asm/kvm*
++F:	arch/riscv/kvm/
++
+ KERNEL VIRTUAL MACHINE for s390 (KVM/s390)
+ M:	Christian Borntraeger <borntraeger@de.ibm.com>
+ M:	Janosch Frank <frankja@linux.ibm.com>
+--=20
+2.17.1
 
-I think this question implies that you are coming from the perspective
-of "security" or wanting to restrict access to the underlying
-functions, rather than wanting to clean-up the way symbols are handled
-for manageability / maintainability purposes (which is the goal, as I
-understand it).
-
-HOWEVER, I have one question:  If these patches are included, and
-someone wants to introduce a bit of code which needs to use two
-symbols from different namespaces but with the same name, can that be
-done?  That is, if driver A has symbol 'foo' and driver B has symbol
-'foo' (both in their respective namespaces), and driver C wants to use
-A.foo and B.foo, can that be supported?
-
-Matt
-
-
--- 
-Matthew Dharm
-Former Maintainer, USB Mass Storage driver for Linux
