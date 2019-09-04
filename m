@@ -2,112 +2,153 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32229C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A197EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0622C2339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="kbRt0PBS"
+	by mail.kernel.org (Postfix) with ESMTP id 78B5B22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567620093;
+	bh=dVKz7MB7QAhE55dn1yOIiJlJLlJhegPj0oalIp3b/GA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HnaQI35C6l0CGXbHYdU8p89Yr6R9NGPAVlT3PY7vLJWO0OhOKTPKXMQcTxfjd5Q/p
+	 CUrRunlygwddR5m+5X205FoSjoeWXS7rWeg4aBz5LccSl0fwPIob6VbPCAW1bETNtQ
+	 beJV1YBJlZ6zb3XNotA7G0zkMc/ylK7MAl5ruAT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388011AbfIDSB3 (ORCPT
+        id S2387975AbfIDSBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:29 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33730 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388169AbfIDSB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:26 -0400
-Received: by mail-qt1-f196.google.com with SMTP id r5so20186104qtd.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:01:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I+yojRW69JxaQ1YWeqMffbm7yLHLeYtlezXpC/ayb9A=;
-        b=kbRt0PBSJ48HPVKqYf6ln5xrY0K3tPQUm2vMDVscw9cYbN6byjes7cgfaBiOH/g4Se
-         bSV5QE+ivAav5Lo49RKTpLIuAmKnEIhwOObmqBuh3aDAtAgqiYZUoP025LEG6AO4xfOM
-         Ad4rH+Rj4ColCBhR7VZeM0jzkWvmq5qUjtYyw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I+yojRW69JxaQ1YWeqMffbm7yLHLeYtlezXpC/ayb9A=;
-        b=I0groZ1bagr8gPNVkmdIOVTUFk5j/rN78c0DHVr5C8GOJjgbKW4VJVN6hRTW3IcBjn
-         ypAvVcrkMsQ5wXxyYwYsuHv+urNVyiL/OTyR0dfnt70jXuM41jI33dp/c10cndKr4L8Y
-         UzOeHFDcXVAgmRYWtmYNL68cNFQlT/UwJXDuMFkyBrH9dg485TkEoyNRI1g3wg6W9ZHo
-         eMrnRcLkpAf6fOWk72znsbGgRhUDik9qImEbNJML2fEYQOkMnTBX42h1ObMgiCyl6Q9v
-         DeQ60ijur7L7ZqBuB2c+EvYfVSt/AYcAAeZ69I9VFi2wMOBPIlgFf8Qhfq11TMMPcvMg
-         1oyQ==
-X-Gm-Message-State: APjAAAW9TL6XTWx7papL1uiSmTyMFVt3veP+0YZDLd5A7uzHikPWmAYH
-        CiK8yHDUOAQcKRsCesJp2UhhfqWlry1l40c+OuKtnQ==
-X-Google-Smtp-Source: APXvYqwWC2X+OYzUl5J5ytQJfTXyJbSLc0g6beM03QYuEGvgG0SQAMDJ28TJJEMxAaAsJBpxWqCA1jWIOj3doc4HQKU=
-X-Received: by 2002:ac8:44c7:: with SMTP id b7mr24636084qto.170.1567620084987;
- Wed, 04 Sep 2019 11:01:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190830231817.76862-1-joel@joelfernandes.org>
- <201909041108.RSjNvfDL%lkp@intel.com> <20190904050419.GA102582@google.com> <CAHp75Vdeoc1S_0Dn_vk2ULPRLk_sevWoxs8+Gscv9ki_kkPx4Q@mail.gmail.com>
-In-Reply-To: <CAHp75Vdeoc1S_0Dn_vk2ULPRLk_sevWoxs8+Gscv9ki_kkPx4Q@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Wed, 4 Sep 2019 14:01:13 -0400
-Message-ID: <CAEXW_YQyXSuT9o6pTdMJBM=7xRhUAGtVoteswY5hNcNZBc9bgg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pci: Convert to use built-in RCU list checking
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Wed, 4 Sep 2019 14:01:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388560AbfIDSBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C16223401;
+        Wed,  4 Sep 2019 18:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567620089;
+        bh=dVKz7MB7QAhE55dn1yOIiJlJLlJhegPj0oalIp3b/GA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gzYFtvYG212RRts4kuV/P5EaT5Ju+DnpU9CiBkp7imofVuJke+NRp6Wx+lw/yD6us
+         J8AIkLGotndHrjEjr9Eh0qtUdV+D1sy0B1JvJTemmC3Y4EbUOkMk1vkkVeuAQOgR2l
+         dfUBHLXkWssmb6ycp7+M1rhnHx2s3atcdF1W45i0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jann Horn <jannh@google.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 32/83] userfaultfd_release: always remove uffd flags and clear vm_userfaultfd_ctx
+Date:   Wed,  4 Sep 2019 19:53:24 +0200
+Message-Id: <20190904175306.675479036@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
+References: <20190904175303.488266791@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 1:13 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Sep 4, 2019 at 8:07 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> >
-> > On Wed, Sep 04, 2019 at 12:06:43PM +0800, kbuild test robot wrote:
-> > > Hi "Joel,
-> > >
-> > > Thank you for the patch! Yet something to improve:
-> > >
-> > > [auto build test ERROR on linus/master]
-> > > [cannot apply to v5.3-rc7 next-20190903]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > >
-> > > url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/pci-Convert-to-use-built-in-RCU-list-checking/20190901-211013
-> > > config: x86_64-rhel-7.6 (attached as .config)
-> > > compiler: gcc-7 (Debian 7.4.0-11) 7.4.0
-> > > reproduce:
-> > >         # save the attached .config to linux build tree
-> > >         make ARCH=x86_64
-> >
-> > This error seems bogus. I pulled -next and applied this patch and it builds
-> > fine. I am not sure what is wrong with the 0day tree, and the above 0day link
-> > is also dead.
-> >
-> > What's going on with 0day ?!
->
-> I would rather to add Depends-on: ... tag to your patch if the
-> dependency is going thru another tree at the same cycle.
-> kbuildbot absolutely correct here.
+From: Oleg Nesterov <oleg@redhat.com>
 
-The dependency is already in -next and I pulled it and applied the
-patch. It is testing -next right?
+commit 46d0b24c5ee10a15dfb25e20642f5a5ed59c5003 upstream.
 
-thanks,
+userfaultfd_release() should clear vm_flags/vm_userfaultfd_ctx even if
+mm->core_state != NULL.
 
- - Joel
+Otherwise a page fault can see userfaultfd_missing() == T and use an
+already freed userfaultfd_ctx.
+
+Link: http://lkml.kernel.org/r/20190820160237.GB4983@redhat.com
+Fixes: 04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping")
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/userfaultfd.c |   25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
+
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -464,6 +464,7 @@ static int userfaultfd_release(struct in
+ 	/* len == 0 means wake all */
+ 	struct userfaultfd_wake_range range = { .len = 0, };
+ 	unsigned long new_flags;
++	bool still_valid;
+ 
+ 	ACCESS_ONCE(ctx->released) = true;
+ 
+@@ -479,8 +480,7 @@ static int userfaultfd_release(struct in
+ 	 * taking the mmap_sem for writing.
+ 	 */
+ 	down_write(&mm->mmap_sem);
+-	if (!mmget_still_valid(mm))
+-		goto skip_mm;
++	still_valid = mmget_still_valid(mm);
+ 	prev = NULL;
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+ 		cond_resched();
+@@ -491,19 +491,20 @@ static int userfaultfd_release(struct in
+ 			continue;
+ 		}
+ 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
+-		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
+-				 new_flags, vma->anon_vma,
+-				 vma->vm_file, vma->vm_pgoff,
+-				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX);
+-		if (prev)
+-			vma = prev;
+-		else
+-			prev = vma;
++		if (still_valid) {
++			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
++					 new_flags, vma->anon_vma,
++					 vma->vm_file, vma->vm_pgoff,
++					 vma_policy(vma),
++					 NULL_VM_UFFD_CTX);
++			if (prev)
++				vma = prev;
++			else
++				prev = vma;
++		}
+ 		vma->vm_flags = new_flags;
+ 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
+ 	}
+-skip_mm:
+ 	up_write(&mm->mmap_sem);
+ 	mmput(mm);
+ wakeup:
+
+
