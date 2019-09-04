@@ -2,253 +2,138 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2E6C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1947C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243752339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:10:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mlg5W6F0"
+	by mail.kernel.org (Postfix) with ESMTP id CF90521670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbfIDJJ7 (ORCPT
+        id S1729317AbfIDJKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:09:59 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:35684 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfIDJJ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:09:58 -0400
-Received: by mail-vk1-f195.google.com with SMTP id d66so2177891vka.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 02:09:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/7UND9SOq0N/Mu7NFRIefvWNsoxRo00bN5EWVx1PPmg=;
-        b=Mlg5W6F0m6BbiO7bLUIcb9iudFcat5z/DX3B7/G8pCGiW9ROsclogeu2jIRlvHzM/d
-         IXAxYvgqLjxSbY15XuPpr7HHx82st/A8TT7KGrkwiAwb718KqM9yKz4SKhMnx/QM2w1U
-         SMLB3tK9KTJrgBY5A+s3bOjaPYoMoxO05sCsY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/7UND9SOq0N/Mu7NFRIefvWNsoxRo00bN5EWVx1PPmg=;
-        b=Mw9bcqQ4i5eFMvXTL7M4jyU8h5h+Jrm5PPc9C9HDcD2a40cQ3sdF9Ta/CQgSz3fTxb
-         cT70tXK2GrOcEghOvi5GHPFVT38q3go6peyLDMuey5z2eau7ZyweM0edfe4KqPSitpbF
-         KIdtue/pQBZPIwelzmYIqNPn3TdvsWGB702GcY3wbcBFKwUEfp2s2AaNe3j6tWBvBRyt
-         txdmYIVMNKkGdPzOh7FNj8uz2a9952jjQhfrlh/o1tBWdn6KXpQzVjz2b5FmiLy/WRKS
-         DS2//29o/LmHnLNILvGQX6kwCA7lt2Qjd3oPkkt+zCqZlClcV1l15N0Caxrh3RGM0kSQ
-         kHhQ==
-X-Gm-Message-State: APjAAAW0z7pgyyCJpW9u5SpEp+A/MfyIZXVNl650rH/Idyji1xpiiAZ7
-        9c6mVMsqxed+x33YS+6MoIzaTm1tl8JHR+bSnWk21w==
-X-Google-Smtp-Source: APXvYqxyUrMUAEkf02GxMqWIIOzfSuvgtrLWM2sSGK16hyG7HzhEOSHPAFZCD4s0FpvvQcKVYvJ3YZLL0+Bj3C67BUA=
-X-Received: by 2002:ac5:c4f7:: with SMTP id b23mr14767555vkl.17.1567588196444;
- Wed, 04 Sep 2019 02:09:56 -0700 (PDT)
+        Wed, 4 Sep 2019 05:10:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54690 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726304AbfIDJKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 05:10:51 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 94FC4811D8;
+        Wed,  4 Sep 2019 09:10:50 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-69.ams2.redhat.com [10.36.116.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 110BA5C207;
+        Wed,  4 Sep 2019 09:10:45 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] KVM: s390: Disallow invalid bits in kvm_valid_regs
+ and kvm_dirty_regs
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190904085200.29021-1-thuth@redhat.com>
+ <20190904085200.29021-2-thuth@redhat.com>
+ <b34a237f-77a5-2939-624d-0240451f2976@redhat.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <79e5e0a4-78f3-8a61-7311-b711cf4bcd9f@redhat.com>
+Date:   Wed, 4 Sep 2019 11:10:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190903055103.134764-1-cychiang@chromium.org> <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com>
-In-Reply-To: <e1c3483c-baa6-c726-e547-fadf40d259f4@baylibre.com>
-From:   Cheng-yi Chiang <cychiang@chromium.org>
-Date:   Wed, 4 Sep 2019 17:09:29 +0800
-Message-ID: <CAFv8NwKHZM+zTu7GF_J0Xk6hubA2JK4cCsdhsDPOGk=3rnbCZw@mail.gmail.com>
-Subject: Re: [PATCH] drm: bridge/dw_hdmi: add audio sample channel status setting
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>, tzungbi@chromium.org,
-        Xing Zheng <zhengxing@rock-chips.com>,
-        kuninori.morimoto.gx@renesas.com,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>, kuankuan.y@gmail.com,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Doug Anderson <dianders@chromium.org>,
-        dri-devel@lists.freedesktop.org, cain.cai@rock-chips.com,
-        linux-rockchip@lists.infradead.org,
-        =?UTF-8?B?6JSh5p6r?= <eddie.cai@rock-chips.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Dylan Reid <dgreid@chromium.org>, sam@ravnborg.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b34a237f-77a5-2939-624d-0240451f2976@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 04 Sep 2019 09:10:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 04/09/2019 11.05, David Hildenbrand wrote:
+> On 04.09.19 10:51, Thomas Huth wrote:
+>> If unknown bits are set in kvm_valid_regs or kvm_dirty_regs, this
+>> clearly indicates that something went wrong in the KVM userspace
+>> application. The x86 variant of KVM already contains a check for
+>> bad bits, so let's do the same on s390x now, too.
+>>
+>> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+>> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>> ---
+>>  arch/s390/include/uapi/asm/kvm.h | 6 ++++++
+>>  arch/s390/kvm/kvm-s390.c         | 4 ++++
+>>  2 files changed, 10 insertions(+)
+>>
+>> diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
+>> index 47104e5b47fd..436ec7636927 100644
+>> --- a/arch/s390/include/uapi/asm/kvm.h
+>> +++ b/arch/s390/include/uapi/asm/kvm.h
+>> @@ -231,6 +231,12 @@ struct kvm_guest_debug_arch {
+>>  #define KVM_SYNC_GSCB   (1UL << 9)
+>>  #define KVM_SYNC_BPBC   (1UL << 10)
+>>  #define KVM_SYNC_ETOKEN (1UL << 11)
+>> +
+>> +#define KVM_SYNC_S390_VALID_FIELDS \
+>> +	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
+>> +	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \
+>> +	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
+>> +
+> 
+> We didn't care about the S390 for the actual flags, why care now?
 
-On Tue, Sep 3, 2019 at 5:53 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi,
->
-> On 03/09/2019 07:51, Cheng-Yi Chiang wrote:
-> > From: Yakir Yang <ykk@rock-chips.com>
-> >
-> > When transmitting IEC60985 linear PCM audio, we configure the
-> > Audio Sample Channel Status information of all the channel
-> > status bits in the IEC60958 frame.
-> > Refer to 60958-3 page 10 for frequency, original frequency, and
-> > wordlength setting.
-> >
-> > This fix the issue that audio does not come out on some monitors
-> > (e.g. LG 22CV241)
-> >
-> > Signed-off-by: Yakir Yang <ykk@rock-chips.com>
-> > Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> > ---
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 59 +++++++++++++++++++++++
-> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h | 20 ++++++++
-> >  2 files changed, 79 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > index bd65d0479683..34d46e25d610 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> > @@ -582,6 +582,63 @@ static unsigned int hdmi_compute_n(unsigned int freq, unsigned long pixel_clk)
-> >       return n;
-> >  }
-> >
-> > +static void hdmi_set_schnl(struct dw_hdmi *hdmi)
-> > +{
-> > +     u8 aud_schnl_samplerate;
-> > +     u8 aud_schnl_8;
-> > +
-> > +     /* These registers are on RK3288 using version 2.0a. */
-> > +     if (hdmi->version != 0x200a)
-> > +             return;
->
-> Are these limited to the 2.0a version *in* RK3288, or 2.0a version on all
-> SoCs ?
->
+x86 does the same, and we don't want to be worse than x86, do we? ;-)
 
-In the original patch by Yakir,
+Honestly, this was just one of the differences that I noticed while
+porting the sync_regs_test from x86 to s390x.
 
-https://lore.kernel.org/patchwork/patch/539653/   (sorry, I should
-have added this link in the "after the cut" note)
-
-The fix is limited to version 2.0.
-Since I am only testing on RK3288 with 2.0a, I change the check to 2.0a only.
-I can not test 2.0a version on other SoCs.
-The databook I have at hand is 2.0a (not specific to RK3288) so I
-think all 2.0a should have this register.
-
-As for other version like version 1.3 on iMX6, there is no such
-register, as stated by Russell
-
-http://lkml.iu.edu/hypermail/linux/kernel/1501.3/06268.html.
-
-So at least we should check the version.
-Maybe we can set the criteria as version 2.0 or above to make it a safe patch ?
-If there is the same need on other SoC with version < 2.0, it can be
-added later.
-Presumably, there will be databook of that version to help confirming
-this setting.
-
-Thanks!
-> > +
-> > +     switch (hdmi->sample_rate) {
-> > +     case 32000:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_32K;
-> > +             break;
-> > +     case 44100:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_44K1;
-> > +             break;
-> > +     case 48000:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_48K;
-> > +             break;
-> > +     case 88200:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_88K2;
-> > +             break;
-> > +     case 96000:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_96K;
-> > +             break;
-> > +     case 176400:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_176K4;
-> > +             break;
-> > +     case 192000:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_192K;
-> > +             break;
-> > +     case 768000:
-> > +             aud_schnl_samplerate = HDMI_FC_AUDSCHNLS7_SMPRATE_768K;
-> > +             break;
-> > +     default:
-> > +             dev_warn(hdmi->dev, "Unsupported audio sample rate (%u)\n",
-> > +                      hdmi->sample_rate);
-> > +             return;
-> > +     }
-> > +
-> > +     /* set channel status register */
-> > +     hdmi_modb(hdmi, aud_schnl_samplerate, HDMI_FC_AUDSCHNLS7_SMPRATE_MASK,
-> > +               HDMI_FC_AUDSCHNLS7);
-> > +
-> > +     /*
-> > +      * Set original frequency to be the same as frequency.
-> > +      * Use one-complement value as stated in IEC60958-3 page 13.
-> > +      */
-> > +     aud_schnl_8 = (~aud_schnl_samplerate) <<
-> > +                     HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_OFFSET;
-> > +
-> > +     /* This means word length is 16 bit. Refer to IEC60958-3 page 12. */
-> > +     aud_schnl_8 |= 2 << HDMI_FC_AUDSCHNLS8_WORDLEGNTH_OFFSET;
-> > +
-> > +     hdmi_writeb(hdmi, aud_schnl_8, HDMI_FC_AUDSCHNLS8);
-> > +}
-> > +
-> >  static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
-> >       unsigned long pixel_clk, unsigned int sample_rate)
-> >  {
-> > @@ -620,6 +677,8 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
-> >       hdmi->audio_cts = cts;
-> >       hdmi_set_cts_n(hdmi, cts, hdmi->audio_enable ? n : 0);
-> >       spin_unlock_irq(&hdmi->audio_lock);
-> > +
-> > +     hdmi_set_schnl(hdmi);
-> >  }
-> >
-> >  static void hdmi_init_clk_regenerator(struct dw_hdmi *hdmi)
-> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > index 6988f12d89d9..619ebc1c8354 100644
-> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.h
-> > @@ -158,6 +158,17 @@
-> >  #define HDMI_FC_SPDDEVICEINF                    0x1062
-> >  #define HDMI_FC_AUDSCONF                        0x1063
-> >  #define HDMI_FC_AUDSSTAT                        0x1064
-> > +#define HDMI_FC_AUDSV                           0x1065
-> > +#define HDMI_FC_AUDSU                           0x1066
-> > +#define HDMI_FC_AUDSCHNLS0                      0x1067
-> > +#define HDMI_FC_AUDSCHNLS1                      0x1068
-> > +#define HDMI_FC_AUDSCHNLS2                      0x1069
-> > +#define HDMI_FC_AUDSCHNLS3                      0x106a
-> > +#define HDMI_FC_AUDSCHNLS4                      0x106b
-> > +#define HDMI_FC_AUDSCHNLS5                      0x106c
-> > +#define HDMI_FC_AUDSCHNLS6                      0x106d
-> > +#define HDMI_FC_AUDSCHNLS7                      0x106e
-> > +#define HDMI_FC_AUDSCHNLS8                      0x106f
-> >  #define HDMI_FC_DATACH0FILL                     0x1070
-> >  #define HDMI_FC_DATACH1FILL                     0x1071
-> >  #define HDMI_FC_DATACH2FILL                     0x1072
-> > @@ -706,6 +717,15 @@ enum {
-> >  /* HDMI_FC_AUDSCHNLS7 field values */
-> >       HDMI_FC_AUDSCHNLS7_ACCURACY_OFFSET = 4,
-> >       HDMI_FC_AUDSCHNLS7_ACCURACY_MASK = 0x30,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_MASK = 0x0f,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_192K = 0xe,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_176K4 = 0xc,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_96K = 0xa,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_768K = 0x9,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_88K2 = 0x8,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_32K = 0x3,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_48K = 0x2,
-> > +     HDMI_FC_AUDSCHNLS7_SMPRATE_44K1 = 0x0,
-> >
-> >  /* HDMI_FC_AUDSCHNLS8 field values */
-> >       HDMI_FC_AUDSCHNLS8_ORIGSAMPFREQ_MASK = 0xf0,
-> >
->
+ Thomas
