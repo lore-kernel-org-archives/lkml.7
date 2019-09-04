@@ -2,297 +2,97 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0824DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17F2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4ACE21726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A5021883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:22:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Q+1hk21R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730609AbfIDUWU (ORCPT
+        id S1730628AbfIDUWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:22:20 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:9034 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729626AbfIDUWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:22:18 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 588E6A1603;
-        Wed,  4 Sep 2019 22:22:12 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
-        with ESMTP id I97TJ8rIgm6D; Wed,  4 Sep 2019 22:22:08 +0200 (CEST)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: [PATCH v12 07/12] open: O_EMPTYPATH: procfs-less file descriptor re-opening
-Date:   Thu,  5 Sep 2019 06:19:28 +1000
-Message-Id: <20190904201933.10736-8-cyphar@cyphar.com>
-In-Reply-To: <20190904201933.10736-1-cyphar@cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
+        Wed, 4 Sep 2019 16:22:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46898 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730365AbfIDUWa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 16:22:30 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q5so6163277pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:22:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=xVOtfa4FemHiS/Yp7atJtq7Zy87lPl7zBOB4z9A7MuY=;
+        b=Q+1hk21RFb1tZ0ePhKaz0FBP+F7xrChbtOjP47j0INYk22MckIk8FAVmUdnlduNLiY
+         vJUGbBajYhb8/8theSGrC63KxTjXhJjvmsEpUPvgpupBO36l5uZMwaw87S+8NHl54zZQ
+         Wq0wbDhaLvHhiTG6g1xXdzZAwbvn8n9Iph63c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=xVOtfa4FemHiS/Yp7atJtq7Zy87lPl7zBOB4z9A7MuY=;
+        b=cJhdnHhBIk1WlkZqazFb3QlI6BzVg6Q5iCOB5WxYWtzdTOnge+TaprNRPCqgd1Thqs
+         1ltBisB9Io8hOqhOXQhy87KORP89DU5Qi914JduliDelqzenf4bqzmmu707IVRSDxgYX
+         nGnATv76/OfFOmGLU5cmbBTqp6ls605/RWR/u8JZZpsgoaZxTSqou9j74EYalzQiCeVV
+         JvapiW/1PczVkCBRrSsslhxsdvHrJf+6Ajli/UOT8k5vHEE1ET/iPJne8Ff3Cizvxwl4
+         WQ4pV49J6nVhCo7LUzYO6tvCvM7wl+dOe378aMAX0cbA3VFt+zyk3iInq0f7FLXQKPI2
+         B90Q==
+X-Gm-Message-State: APjAAAXkZQWX2qPqhE/tH/lRe/YCZ6CeEpz210xkZzZlMxwVK4p9yAW3
+        BxDSch2wR0JNbIykWu/DBhpF1DLnJEE=
+X-Google-Smtp-Source: APXvYqwBzTEtSdnbNv4cKtzyBFFJzW885bb0y8aCjJz1dx+RCqXH5zFiSZ/xW+rVes78ygzURGS+fA==
+X-Received: by 2002:a63:3ec7:: with SMTP id l190mr4031pga.334.1567628549777;
+        Wed, 04 Sep 2019 13:22:29 -0700 (PDT)
+Received: from [10.69.45.46] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d20sm30053798pfq.88.2019.09.04.13.22.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 13:22:29 -0700 (PDT)
+Subject: Re: [PATCH 1/1] scsi: lpfc: Convert existing %pf users to %ps
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>
+Cc:     linux-scsi@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <20190904160423.3865-1-sakari.ailus@linux.intel.com>
+From:   James Smart <james.smart@broadcom.com>
+Message-ID: <2899e50b-2984-c546-2d3e-450908eada88@broadcom.com>
+Date:   Wed, 4 Sep 2019 13:22:24 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904160423.3865-1-sakari.ailus@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userspace has made use of /proc/self/fd very liberally to allow for
-descriptors to be re-opened. There are a wide variety of uses for this
-feature, but it has always required constructing a pathname and could
-not be done without procfs mounted. The obvious solution for this is to
-extend openat(2) to have an AT_EMPTY_PATH-equivalent -- O_EMPTYPATH.
+On 9/4/2019 9:04 AM, Sakari Ailus wrote:
+> Convert the remaining %pf users to %ps to prepare for the removal of the
+> old %pf conversion specifier support.
+>
+> Fixes: 323506644972 ("scsi: lpfc: Migrate to %px and %pf in kernel print calls")
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>   drivers/scsi/lpfc/lpfc_hbadisc.c | 4 ++--
+>   drivers/scsi/lpfc/lpfc_sli.c     | 2 +-
+>   2 files changed, 3 insertions(+), 3 deletions(-)
+>
+>
 
-Now that descriptor re-opening has been made safe through the new
-magic-link resolution restrictions, we can replicate these restrictions
-for O_EMPTYPATH. In particular, we only allow "upgrading" the file
-descriptor if the corresponding FMODE_PATH_* bit is set (or the
-FMODE_{READ,WRITE} cases for non-O_PATH file descriptors).
+Reviewed by: James Smart <james.smart@broadcom.com>
 
-When doing openat(O_EMPTYPATH|O_PATH), O_PATH takes precedence and
-O_EMPTYPATH is ignored. Very few users ever have a need to O_PATH
-re-open an existing file descriptor, and so accommodating them at the
-expense of further complicating O_PATH makes little sense. Ultimately,
-if users ask for this we can always add RESOLVE_EMPTY_PATH to
-resolveat(2) in the future.
+-- james
 
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- arch/alpha/include/uapi/asm/fcntl.h  |  1 +
- arch/parisc/include/uapi/asm/fcntl.h | 39 ++++++++++++++--------------
- arch/sparc/include/uapi/asm/fcntl.h  |  1 +
- fs/fcntl.c                           |  2 +-
- fs/namei.c                           | 20 ++++++++++++++
- fs/open.c                            |  7 ++++-
- include/linux/fcntl.h                |  2 +-
- include/uapi/asm-generic/fcntl.h     |  4 +++
- 8 files changed, 54 insertions(+), 22 deletions(-)
-
-diff --git a/arch/alpha/include/uapi/asm/fcntl.h b/arch/alpha/include/uapi/asm/fcntl.h
-index 50bdc8e8a271..1f879bade68b 100644
---- a/arch/alpha/include/uapi/asm/fcntl.h
-+++ b/arch/alpha/include/uapi/asm/fcntl.h
-@@ -34,6 +34,7 @@
- 
- #define O_PATH		040000000
- #define __O_TMPFILE	0100000000
-+#define O_EMPTYPATH	0200000000
- 
- #define F_GETLK		7
- #define F_SETLK		8
-diff --git a/arch/parisc/include/uapi/asm/fcntl.h b/arch/parisc/include/uapi/asm/fcntl.h
-index 03ce20e5ad7d..5d709058a76f 100644
---- a/arch/parisc/include/uapi/asm/fcntl.h
-+++ b/arch/parisc/include/uapi/asm/fcntl.h
-@@ -2,26 +2,27 @@
- #ifndef _PARISC_FCNTL_H
- #define _PARISC_FCNTL_H
- 
--#define O_APPEND	000000010
--#define O_BLKSEEK	000000100 /* HPUX only */
--#define O_CREAT		000000400 /* not fcntl */
--#define O_EXCL		000002000 /* not fcntl */
--#define O_LARGEFILE	000004000
--#define __O_SYNC	000100000
-+#define O_APPEND	0000000010
-+#define O_BLKSEEK	0000000100 /* HPUX only */
-+#define O_CREAT		0000000400 /* not fcntl */
-+#define O_EXCL		0000002000 /* not fcntl */
-+#define O_LARGEFILE	0000004000
-+#define __O_SYNC	0000100000
- #define O_SYNC		(__O_SYNC|O_DSYNC)
--#define O_NONBLOCK	000200004 /* HPUX has separate NDELAY & NONBLOCK */
--#define O_NOCTTY	000400000 /* not fcntl */
--#define O_DSYNC		001000000 /* HPUX only */
--#define O_RSYNC		002000000 /* HPUX only */
--#define O_NOATIME	004000000
--#define O_CLOEXEC	010000000 /* set close_on_exec */
--
--#define O_DIRECTORY	000010000 /* must be a directory */
--#define O_NOFOLLOW	000000200 /* don't follow links */
--#define O_INVISIBLE	004000000 /* invisible I/O, for DMAPI/XDSM */
--
--#define O_PATH		020000000
--#define __O_TMPFILE	040000000
-+#define O_NONBLOCK	0000200004 /* HPUX has separate NDELAY & NONBLOCK */
-+#define O_NOCTTY	0000400000 /* not fcntl */
-+#define O_DSYNC		0001000000 /* HPUX only */
-+#define O_RSYNC		0002000000 /* HPUX only */
-+#define O_NOATIME	0004000000
-+#define O_CLOEXEC	0010000000 /* set close_on_exec */
-+
-+#define O_DIRECTORY	0000010000 /* must be a directory */
-+#define O_NOFOLLOW	0000000200 /* don't follow links */
-+#define O_INVISIBLE	0004000000 /* invisible I/O, for DMAPI/XDSM */
-+
-+#define O_PATH		0020000000
-+#define __O_TMPFILE	0040000000
-+#define O_EMPTYPATH	0100000000
- 
- #define F_GETLK64	8
- #define F_SETLK64	9
-diff --git a/arch/sparc/include/uapi/asm/fcntl.h b/arch/sparc/include/uapi/asm/fcntl.h
-index 67dae75e5274..dc86c9eaf950 100644
---- a/arch/sparc/include/uapi/asm/fcntl.h
-+++ b/arch/sparc/include/uapi/asm/fcntl.h
-@@ -37,6 +37,7 @@
- 
- #define O_PATH		0x1000000
- #define __O_TMPFILE	0x2000000
-+#define O_EMPTYPATH	0x4000000
- 
- #define F_GETOWN	5	/*  for sockets. */
- #define F_SETOWN	6	/*  for sockets. */
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 3d40771e8e7c..4cf05a2fd162 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -1031,7 +1031,7 @@ static int __init fcntl_init(void)
- 	 * Exceptions: O_NONBLOCK is a two bit define on parisc; O_NDELAY
- 	 * is defined as O_NONBLOCK on some platforms and not on others.
- 	 */
--	BUILD_BUG_ON(21 - 1 /* for O_RDONLY being 0 */ !=
-+	BUILD_BUG_ON(22 - 1 /* for O_RDONLY being 0 */ !=
- 		HWEIGHT32(
- 			(VALID_OPEN_FLAGS & ~(O_NONBLOCK | O_NDELAY)) |
- 			__FMODE_EXEC | __FMODE_NONOTIFY));
-diff --git a/fs/namei.c b/fs/namei.c
-index 54d57dad0f91..e39b573fcc4d 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3571,6 +3571,24 @@ static int trailing_magiclink(struct nameidata *nd, int acc_mode,
- 	return may_open_magiclink(upgrade_mask, acc_mode);
- }
- 
-+static int do_emptypath(struct nameidata *nd, const struct open_flags *op,
-+			struct file *file)
-+{
-+	int error;
-+	/* We don't support AT_FDCWD (since O_PATH is disallowed here). */
-+	struct fd f = fdget_raw(nd->dfd);
-+
-+	if (!f.file)
-+		return -EBADF;
-+
-+	/* Apply trailing_magiclink()-like restrictions. */
-+	error = may_open_magiclink(f.file->f_mode, op->acc_mode);
-+	if (!error)
-+		error = vfs_open(&f.file->f_path, file);
-+	fdput(f);
-+	return error;
-+}
-+
- static struct file *path_openat(struct nameidata *nd,
- 			const struct open_flags *op, unsigned flags)
- {
-@@ -3583,6 +3601,8 @@ static struct file *path_openat(struct nameidata *nd,
- 
- 	if (unlikely(file->f_flags & __O_TMPFILE)) {
- 		error = do_tmpfile(nd, flags, op, file);
-+	} else if (unlikely(file->f_flags & O_EMPTYPATH)) {
-+		error = do_emptypath(nd, op, file);
- 	} else if (unlikely(file->f_flags & O_PATH)) {
- 		/* Inlined path_lookupat() with a trailing_magiclink() check. */
- 		fmode_t opath_mask = op->opath_mask;
-diff --git a/fs/open.c b/fs/open.c
-index 806a75d685e1..310b896eecf0 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1015,6 +1015,8 @@ static inline int build_open_flags(int flags, umode_t mode, struct open_flags *o
- 		lookup_flags |= LOOKUP_DIRECTORY;
- 	if (!(flags & O_NOFOLLOW))
- 		lookup_flags |= LOOKUP_FOLLOW;
-+	if (flags & O_EMPTYPATH)
-+		lookup_flags |= LOOKUP_EMPTY;
- 	op->lookup_flags = lookup_flags;
- 	return 0;
- }
-@@ -1076,14 +1078,17 @@ long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
- {
- 	struct open_flags op;
- 	int fd = build_open_flags(flags, mode, &op);
-+	int empty = 0;
- 	struct filename *tmp;
- 
- 	if (fd)
- 		return fd;
- 
--	tmp = getname(filename);
-+	tmp = getname_flags(filename, op.lookup_flags, &empty);
- 	if (IS_ERR(tmp))
- 		return PTR_ERR(tmp);
-+	if (!empty)
-+		op.open_flag &= ~O_EMPTYPATH;
- 
- 	fd = get_unused_fd_flags(flags);
- 	if (fd >= 0) {
-diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
-index d019df946cb2..2868ae6c8fc1 100644
---- a/include/linux/fcntl.h
-+++ b/include/linux/fcntl.h
-@@ -9,7 +9,7 @@
- 	(O_RDONLY | O_WRONLY | O_RDWR | O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC | \
- 	 O_APPEND | O_NDELAY | O_NONBLOCK | O_NDELAY | __O_SYNC | O_DSYNC | \
- 	 FASYNC	| O_DIRECT | O_LARGEFILE | O_DIRECTORY | O_NOFOLLOW | \
--	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE)
-+	 O_NOATIME | O_CLOEXEC | O_PATH | __O_TMPFILE | O_EMPTYPATH)
- 
- #ifndef force_o_largefile
- #define force_o_largefile() (!IS_ENABLED(CONFIG_ARCH_32BIT_OFF_T))
-diff --git a/include/uapi/asm-generic/fcntl.h b/include/uapi/asm-generic/fcntl.h
-index 9dc0bf0c5a6e..ae6862f69cc2 100644
---- a/include/uapi/asm-generic/fcntl.h
-+++ b/include/uapi/asm-generic/fcntl.h
-@@ -89,6 +89,10 @@
- #define __O_TMPFILE	020000000
- #endif
- 
-+#ifndef O_EMPTYPATH
-+#define O_EMPTYPATH 040000000
-+#endif
-+
- /* a horrid kludge trying to make sure that this will fail on old kernels */
- #define O_TMPFILE (__O_TMPFILE | O_DIRECTORY)
- #define O_TMPFILE_MASK (__O_TMPFILE | O_DIRECTORY | O_CREAT)      
--- 
-2.23.0
 
