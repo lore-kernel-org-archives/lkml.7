@@ -2,85 +2,162 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B863EC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077D9C41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7F021881
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47F322CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:01:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ppv9Ijw+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732343AbfIDQ7c (ORCPT
+        id S1732466AbfIDRBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:59:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731580AbfIDQ7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:59:32 -0400
-Received: from oasis.local.home (bl11-233-114.dsl.telepac.pt [85.244.233.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E335D21670;
-        Wed,  4 Sep 2019 16:59:29 +0000 (UTC)
-Date:   Wed, 4 Sep 2019 12:59:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>, mingo@redhat.com,
-        tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] trace:Add "gfp_t" support in synthetic_events
-Message-ID: <20190904125923.7b1e66b8@oasis.local.home>
-In-Reply-To: <1567602838.13841.1.camel@kernel.org>
-References: <20190712015308.9908-1-zhengjun.xing@linux.intel.com>
-        <1562947506.12920.0.camel@kernel.org>
-        <20190904064327.28876d71@oasis.local.home>
-        <1567602838.13841.1.camel@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 4 Sep 2019 13:01:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35292 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732017AbfIDRBF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:01:05 -0400
+Received: by mail-pl1-f193.google.com with SMTP id gn20so9835439plb.2;
+        Wed, 04 Sep 2019 10:01:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=je/JRM23CFMmtCabZOLTly42DTuDpjvs95bEOcGW0nY=;
+        b=Ppv9Ijw+rP2Z4aLtEU4EVazpu/bDS70Dr+4jDFIzB0dy8hq8WaSv55EqaP8/jvmQEu
+         /0KurSo5w25jt6cq033ToPoegmCGkbhqxUaPPmuKz7ZohhEFoZ/DMMjhUzSVK8gVE/u2
+         ggg5gvujfZCtaC/J66sSVF3aHr3tQb/eoUyiC0QN6L5u5FyhQ62NTQVnKzgu29mUOU83
+         NFsQJ61fTBpjkKEec5sxZBXQeunenqjOyUGScrxi4W3m8CbhBpkojMx1i+a599O1FQ3n
+         VbtwBnUPRo+H/7ypcwuFktethWF3qIw2cZI6ebwKfHKC6NNM9l8x6KfzCbLcii4L8rWR
+         6Bpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=je/JRM23CFMmtCabZOLTly42DTuDpjvs95bEOcGW0nY=;
+        b=l83deePq0iFIXMJBYdnN7VBUNn9XcXn9BK+6c4iKZclxh9fr4sYLyOqy9dC8j/SdF2
+         fA1k8J6fqZ3lKXkNe47dgpUyQUafF4xlpTnLP9knDIh8azPO7vOBp/ppVvO0OgvGTpFi
+         +0h6WKcCwB1fIUY1vtaYR/ZA84hYnRNxSGmDJr7fvH8cEFTSCR/uQZAPIFtQ/6JU1hlQ
+         R3D7esMk4q7TbXe3LtGEHHXWF+jWC7M2hkIvwlOTk9Mixi67Tw9p58zWH34ya+SjsV35
+         VbuJIBb+WSRhgzLfbHcKfXXUVzi899SEEjJxBLa2ZkeRLJ01+OabDBQahfYWRh8Q/uKY
+         tt1A==
+X-Gm-Message-State: APjAAAVFqNYJpgdeDWfjV4bS0bIbIeNdUyMS11DHZJUR+YtA2jFzxecY
+        5StmU+CRNPJwSI6PKg4+Cp70XGqwx3A=
+X-Google-Smtp-Source: APXvYqxYdfWIdCIS57bDuWHnOuIACjTMtU9hdF8meptsvEAIrvCd1H++EHWbcYGSjjux415ikfoCAg==
+X-Received: by 2002:a17:902:d888:: with SMTP id b8mr11121027plz.272.1567616464548;
+        Wed, 04 Sep 2019 10:01:04 -0700 (PDT)
+Received: from [10.67.49.31] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id z25sm22441967pfa.91.2019.09.04.10.00.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 10:01:03 -0700 (PDT)
+Subject: Re: [PATCH -next 03/15] thermal: brcmstb: use
+ devm_platform_ioremap_resource() to simplify code
+To:     YueHaibing <yuehaibing@huawei.com>, miquel.raynal@bootlin.com,
+        rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        eric@anholt.net, wahrenst@gmx.net, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com, mmayer@broadcom.com,
+        computersforpeace@gmail.com, gregory.0xf0@gmail.com,
+        matthias.bgg@gmail.com, agross@kernel.org, heiko@sntech.de,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        marc.w.gonzalez@free.fr, mans@mansr.com, talel@amazon.com,
+        jun.nie@linaro.org, shawnguo@kernel.org, phil@raspberrypi.org,
+        gregkh@linuxfoundation.org, david.hernandezsanchez@st.com,
+        horms+renesas@verge.net.au, wsa+renesas@sang-engineering.com
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <20190904122939.23780-1-yuehaibing@huawei.com>
+ <20190904122939.23780-4-yuehaibing@huawei.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <69d0cdc4-fefc-d173-ba42-4a43e46d0379@gmail.com>
+Date:   Wed, 4 Sep 2019 10:00:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190904122939.23780-4-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 04 Sep 2019 08:13:58 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
-
-> Hi Steve,
+On 9/4/19 5:29 AM, YueHaibing wrote:
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
 > 
-> On Wed, 2019-09-04 at 06:43 -0400, Steven Rostedt wrote:
-> > On Fri, 12 Jul 2019 11:05:06 -0500
-> > Tom Zanussi <zanussi@kernel.org> wrote:
-> >   
-> > > Hi Zhengjun,
-> > > 
-> > > On Fri, 2019-07-12 at 09:53 +0800, Zhengjun Xing wrote:  
-> > > > Add "gfp_t" support in synthetic_events, then the "gfp_t" type
-> > > > parameter in some functions can be traced.
-> > > > 
-> > > > Prints the gfp flags as hex in addition to the human-readable
-> > > > flag
-> > > > string.  Example output:
-> > > > 
-> > > >   whoopsie-630 [000] ...1 78.969452: testevent: bar=b20
-> > > > (GFP_ATOMIC|__GFP_ZERO)
-> > > >     rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20
-> > > > (GFP_ATOMIC)
-> > > >     rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20
-> > > > (GFP_ATOMIC)
-> > > > 
-> > > > Signed-off-by: Tom Zanussi <zanussi@kernel.org>  
-> > 
-> > Why is this Signed-off-by Tom? Tom, did you author part of this??
-> >   
-> 
-> Yeah, I added the part that prints the flag names.
-> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-OK, I'll comment that in the patch change log.
-
-Thanks!
-
--- Steve
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
