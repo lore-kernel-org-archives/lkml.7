@@ -2,171 +2,93 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6DFC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C39CC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6A922CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E6721881
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u96W3i3h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731643AbfIDQ0y (ORCPT
+        id S1731814AbfIDQ1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:26:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60646 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730299AbfIDQ0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:26:54 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A464585A03;
-        Wed,  4 Sep 2019 16:26:53 +0000 (UTC)
-Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E1C035D6D0;
-        Wed,  4 Sep 2019 16:26:52 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-To:     Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>
-Cc:     jikos@kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20190728200427.dbrojgu7hafphia7@treble>
- <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
- <20190814151244.5xoaxib5iya2qjco@treble>
- <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
- <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
- <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <72b5e7b6-4c8d-4211-01ee-96c219f93807@redhat.com>
-Date:   Wed, 4 Sep 2019 12:26:52 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 12:27:45 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37668 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731466AbfIDQ1p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:27:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d1so11510512pgp.4;
+        Wed, 04 Sep 2019 09:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h04RkzjT3hXLTqVi3hxMYt7+XgkxZzlEb0BXvzdW1Iw=;
+        b=u96W3i3h8EyeOAeUHfKxUJeZZrPcR78dwH/TA9Q0gcEBy2fX0/RospEgR+NpW6qmL8
+         x7Cw14anhZMC/3swXtc5wbpMZ+zCJqv4YzAVxVQuTkU+2IspzSnhZM3Gv5klXmNda5mw
+         wVF9asAXOiNpj3HEIMkNLKBdRy6DO8xyWZEufSISyBoqV0U9AFhOxjXiRaF3BcQWN0kq
+         zWWkmevlB+++8fGIjUZFmXsFgLzRrXmjtPLiUiaPDrwTQ3LzcfaJ7vq2GqaVRy5rrt5u
+         b4hUoaq7bsGZDSpHsgo2hT8e70WUzAVYai9e+pS1NGd+erk4+IDj3tcPJyGAyEfYLupO
+         Z28g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h04RkzjT3hXLTqVi3hxMYt7+XgkxZzlEb0BXvzdW1Iw=;
+        b=R8Q+rky9+5LrBKssdJLVWb27mU5rjkGoPITDPc8u1ejqc9Cy8jEcXJI1cB957BlvnN
+         KA+tV2Dw8azbpVyySdg3aJhDb8l5Pd6yQZ8lTpECRSE3+AxXeQcHL63pJdjYV0jUM0VR
+         VWJLxmpcerR4Wksc89qGKlCcjg4fPwSOHOCvYicIbkiKkONxJMK9ZMI15h36RVDmxGB6
+         3DvMnGbfEIhkdSD3/FeMZa7fsdQViqO1mqD1tmUPMFenp9z+bGXumVZdoIYZI2l/fRrh
+         lBLIEoSGlDvYmvW76QZCGWDPk3Yib0eDTOQ9Lpgn2uyxYqfHMC43JLhNvn4ERjQRxSXe
+         xPSQ==
+X-Gm-Message-State: APjAAAV5E43VNKW7YG1jtkhMg2eZ1Z1c6OD2fp93GJXLGx2Qb0LETaR9
+        NIbjMB6lb1RjC9Tu3LS5MdmtoABKkPnnqyhUIPY=
+X-Google-Smtp-Source: APXvYqzS8bxdeH8zm+j+hxb1ouuCS1ZUvEOMUS0WH79z6S5Qndoz6KZ4UIiuE9srzqOavs3O1cbyfUGHH5iUYCJJZFI=
+X-Received: by 2002:aa7:93a8:: with SMTP id x8mr14577315pff.151.1567614464501;
+ Wed, 04 Sep 2019 09:27:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 04 Sep 2019 16:26:53 +0000 (UTC)
+References: <20190904061245.30770-1-rashmica.g@gmail.com>
+In-Reply-To: <20190904061245.30770-1-rashmica.g@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Sep 2019 19:27:33 +0300
+Message-ID: <CAHp75Vd_6Rpt5=BjzV8YFCiFP7qsRrYHHo7+=gWwnZH-zT9jNw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] gpio/aspeed: Fix incorrect number of banks
+To:     Rashmica Gupta <rashmica.g@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 4:49 AM, Petr Mladek wrote:
-> On Tue 2019-09-03 15:02:34, Miroslav Benes wrote:
->> On Mon, 2 Sep 2019, Joe Lawrence wrote:
->>
->>> On 9/2/19 12:13 PM, Miroslav Benes wrote:
->>>>> I can easily foresee more problems like those in the future.  Going
->>>>> forward we have to always keep track of which special sections are
->>>>> needed for which architectures.  Those special sections can change over
->>>>> time, or can simply be overlooked for a given architecture.  It's
->>>>> fragile.
->>>>
->>>> Indeed. It bothers me a lot. Even x86 "port" is not feature complete in
->>>> this regard (jump labels, alternatives,...) and who knows what lurks in
->>>> the corners of the other architectures we support.
->>>>
->>>> So it is in itself reason enough to do something about late module
->>>> patching.
->>>>
->>>
->>> Hi Miroslav,
->>>
->>> I was tinkering with the "blue-sky" ideas that I mentioned to Josh the other
->>> day.
->>
->>> I dunno if you had a chance to look at what removing that code looks
->>> like, but I can continue to flesh out that idea if it looks interesting:
->>
->> Unfortunately no and I don't think I'll come up with something useful
->> before LPC, so anything is really welcome.
->>
->>>
->>>    https://github.com/joe-lawrence/linux/tree/blue-sky
->>>
->>> A full demo would require packaging up replacement .ko's with a livepatch, as
->>> well as "blacklisting" those deprecated .kos, etc.  But that's all I had time
->>> to cook up last week before our holiday weekend here.
->>
->> Frankly, I'm not sure about this approach. I'm kind of torn. The current
->> solution is far from ideal, but I'm not excited about the other options
->> either. It seems like the choice is basically between "general but
->> technically complicated fragile solution with nontrivial maintenance
->> burden", or "something safer and maybe cleaner, but limiting for
->> users/distros". Of course it depends on whether the limitation is even
->> real and how big it is. Unfortunately we cannot quantify it much and that
->> is probably why our opinions (in the email thread) differ.
-> 
-> I wonder what is necessary for a productive discussion on Plumbers:
-> 
+On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
+>
+> Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
+>
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
 
-Pre-planning this part of the miniconf is a great idea.
+>         /* Allocate a cache of the output registers */
+> -       banks = gpio->config->nr_gpios >> 5;
+> +       banks = (gpio->config->nr_gpios >> 5) + 1;
 
->    + Josh would like to see what code can get removed when late
->      handling of modules gets removed. I think that it might be
->      partially visible from Joe's blue-sky patches.
-> 
-> 
->    + I would like to better understand the scope of the current
->      problems. It is about modifying code in the livepatch that
->      depends on position of the related code:
-> 
->        + relocations are rather clear; we will need them anyway
-> 	to access non-public (static) API from the original code.
-> 
->        + What are the other changes?
-> 
->        + Do we use them in livepatches? How often?
-> 
->        + How often new problematic features appear?
-> 
->        + Would be possible to detect potential problems, for example
-> 	by comparing the code in the binary and in memory when
-> 	the module is loaded the normal way?
-> 
->        + Would be possible to reset the livepatch code in memory
-> 	when the related module is unloaded and safe us half
-> 	of the troubles?
-> 
-> 
->      + It might be useful to prepare overview of the existing proposals
->        and agree on the positives and negatives. I am afraid that some
->        of them might depend on the customer base and
->        use cases. Sometimes we might not have enough information.
->        But it might be good to get on the same page where possible.
-> 
->        Anyway, it might rule out some variants so that we could better
->        concentrate on the acceptable ones. Or come with yet another
->        proposal that would avoid the real blockers.
-> 
-> 
-> Any other ideas?
+Shouldn't be rather DIV_ROUND_UP(nr_gpios, sizeof(u32)) ?
 
-I'll just add to your list that late module patching introduces 
-complexity for klp-convert / livepatch style relocation support. 
-Without worrying about unloaded modules, I *think* klp-convert might 
-already be able to handle relocations in special sections (altinsts, 
-parainst, etc.).
+>         gpio->dcache = devm_kcalloc(&pdev->dev,
+>                                     banks, sizeof(u32), GFP_KERNEL);
 
-I've put the current klp-convert patchset on top of the blue-sky branch 
-to see if this indeed the case, but I'm not sure if I'll get through 
-that experiment before LPC.
 
-> 
-> Would it be better to discuss this in a separate room with
-> a whiteboard or paperboard?
-> 
-
-Whiteboard would probably be ideal, but paper would work and be more 
-transportable than the former.
-
--- Joe
+-- 
+With Best Regards,
+Andy Shevchenko
