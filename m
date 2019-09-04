@@ -2,106 +2,114 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA987C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1998C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F0321670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KiHFXmnt"
+	by mail.kernel.org (Postfix) with ESMTP id 8419B21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732097AbfIDRsz (ORCPT
+        id S1732115AbfIDRt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:48:55 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37832 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729594AbfIDRsy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:48:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=otnoETpjjFh9EvRiSspHwCA0zg+B9ubZI5YSFz3UZL0=; b=KiHFXmnts9lTbw0V+M2cXk3de
-        Sd5DCWSUl+tOGPpCe91zuSD5gQ04C8Ll8Wb2oO9gdor/2VulCtG/mXoETzqgAduIcSi0wrhiGH02K
-        iYSspvZQLr+qL3H7CAfTiYl0XNQ25X4fk3eRNmXYmw9zfYahP5Ups7TCPFmY6PISTzb7DI62bcsNt
-        YpIo/TNrTIydf+Ob82WdH9DexO51N0dGFSaAYqpwWLSC95SPXn5PonFjsUeE6iKwKtvV7jmPRVn7a
-        FlfVSVFSXwGSvaumtEomJhdeXQwW0337JeJwD+FhpsRTN9jW0K8JWw3tLFmh5OhC83CoeuWsvFCkW
-        NnBb57g3w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5ZOc-0001Ah-Sz; Wed, 04 Sep 2019 17:48:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B81AD30116F;
-        Wed,  4 Sep 2019 19:48:04 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6854229DB9F8B; Wed,  4 Sep 2019 19:48:41 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 19:48:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jirka =?iso-8859-1?Q?Hladk=FD?= <jhladky@redhat.com>,
-        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
-        x86@kernel.org
-Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
-Message-ID: <20190904174841.GW2332@hirez.programming.kicks-ass.net>
-References: <20190903154340.860299-1-rkrcmar@redhat.com>
- <20190903154340.860299-3-rkrcmar@redhat.com>
- <20190904143711.zorh2whdapymc5ng@e107158-lin.cambridge.arm.com>
+        Wed, 4 Sep 2019 13:49:27 -0400
+Received: from mga17.intel.com ([192.55.52.151]:54851 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729594AbfIDRt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:49:27 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 10:49:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="194814550"
+Received: from enagase-mobl1.amr.corp.intel.com (HELO [10.251.133.230]) ([10.251.133.230])
+  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2019 10:49:24 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 4/5] ASoC: SOF: Intel: hda: add SoundWire
+ stream config/free callbacks
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
+ <20190821201720.17768-5-pierre-louis.bossart@linux.intel.com>
+ <20190822071835.GA30262@ubuntu>
+ <f73796d6-fcfa-97c8-69ae-0a183edbbd97@linux.intel.com>
+ <20190904073549.GL2672@vkoul-mobl>
+ <4de9613c-2da4-8d39-6f99-3039811673b8@linux.intel.com>
+ <20190904165522.GC2672@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <b37f7be2-27b4-4ba5-e07a-8993d8c171f2@linux.intel.com>
+Date:   Wed, 4 Sep 2019 12:49:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904143711.zorh2whdapymc5ng@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190904165522.GC2672@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 03:37:11PM +0100, Qais Yousef wrote:
 
-> I managed to hook into sched_switch to get the nr_running of cfs tasks via
-> eBPF.
-> 
-> ```
-> int on_switch(struct sched_switch_args *args) {
->     struct task_struct *prev = (struct task_struct *)bpf_get_current_task();
->     struct cgroup *prev_cgroup = prev->cgroups->subsys[cpuset_cgrp_id]->cgroup;
->     const char *prev_cgroup_name = prev_cgroup->kn->name;
-> 
->     if (prev_cgroup->kn->parent) {
->         bpf_trace_printk("sched_switch_ext: nr_running=%d prev_cgroup=%s\\n",
->                          prev->se.cfs_rq->nr_running,
->                          prev_cgroup_name);
->     } else {
->         bpf_trace_printk("sched_switch_ext: nr_running=%d prev_cgroup=/\\n",
->                          prev->se.cfs_rq->nr_running);
->     }
->     return 0;
-> };
-> ```
-> 
-> You can do something similar by attaching to the sched_switch tracepoint from
-> a module and a create a new event to get the nr_running.
-> 
-> Now this is not as accurate as your proposed new tracepoint in terms where you
-> sample nr_running, but should be good enough?
 
-The above is after deactivate() and gives an up-to-date count for
-decrements. Attach something to trace_sched_wakeup() to get the
-increment update.
+On 9/4/19 11:55 AM, Vinod Koul wrote:
+> On 04-09-19, 08:31, Pierre-Louis Bossart wrote:
+>> On 9/4/19 2:35 AM, Vinod Koul wrote:
+>>> On 22-08-19, 08:53, Pierre-Louis Bossart wrote:
+>>>> Thanks for the review Guennadi
+>>>>
+>>>>>> +static int sdw_config_stream(void *arg, void *s, void *dai,
+>>>>>> +			     void *params, int link_id, int alh_stream_id)
+>>>>>
+>>>>> I realise, that these function prototypes aren't being introduced by these
+>>>>> patches, but just wondering whether such overly generic prototype is really
+>>>>> a good idea here, whether some of those "void *" pointers could be given
+>>>>> real types. The first one could be "struct device *" etc.
+>>>>
+>>>> In this case the 'arg' parameter is actually a private 'struct snd_sof_dev',
+>>>> as shown below [1]. We probably want to keep this relatively opaque, this is
+>>>> a context that doesn't need to be exposed to the SoundWire code.
+>>>
+>>> This does look bit ugly.
+>>>
+>>>> The dai and params are indeed cases where we could use stronger types, they
+>>>> are snd_soc_dai and hw_params respectively. I don't recall why the existing
+>>>> code is this way, Vinod and Sanyog may have the history of this.
+>>>
+>>> Yes we wanted to decouple the sdw and audio bits that is the reason why
+>>> none of the audio types are used here, but I think it should be revisited
+>>> and perhaps made as:
+>>>
+>>> sdw_config_stream(struct device *sdw, struct sdw_callback_ctx *ctx)
+>>>
+>>> where the callback context contains all the other args. That would make
+>>> it look lot neater too and of course use real structs if possible
+>>
+>> the suggested sdw_callbback_ctx is really intel-specific at the moment, e.g.
+>> the notion of link_id and alh_stream_id are due to the hardware, it's not
+>> generic at all. And in the latest code we also pass the dai->id.
+> 
+> s/sdw_callback_ctx/intel_sdw_callback_ctx
+> 
+> Yes this code is intel specific and this would be intel specific too
+
+ok, I'll fold all the fields in a structure then. That's a nice cleanup, 
+thanks Guennadi and Vinod for the reviews.
