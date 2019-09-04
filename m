@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B65C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2212C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9E320870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A44D20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621462;
-	bh=arZ4+NXqgdxfL8uwf4k6jpA6HH1HMnNN80Qg0BeR0Uk=;
+	s=default; t=1567621465;
+	bh=HmqFCPFCKaJpoZao2sHYtfAsKC5MuJ2xbU/4FCfXwvU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tDmgK5MYDa+Yry8ag1XLLaDQxIKycxKP8plrclU8M4ff7EZY/IPJuJCFrfCIovBHS
-	 uCMeAgX513gEJSH6sb60DuujWdgYuVhlBgu0UEbEG2LNnM6f+jNJqUVzjQuE/6h6Pu
-	 3JWhb2iZEAh3+NzROA/sL9rbGrSpc4IqpDROEiuE=
+	b=2uJ7uqttp2pccGRshcSMc/DnOYn3kfkk4ztPSvFdNETn3GwB1IpO7q1RsY0Y9b95+
+	 GIlWwRfEHjdMVp/tck+b1v7I7Zr7ABGRQflef1XV6oQwHUSj041fLa6ZXr3rDeQ00d
+	 DxFtvE23xkbcKXFcs8OC1tdCiAy4ijfapV9mxNhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388594AbfIDSBf (ORCPT
+        id S2388572AbfIDSBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41162 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:01:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388586AbfIDSBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:33 -0400
+        id S2387984AbfIDSB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B47592341B;
-        Wed,  4 Sep 2019 18:01:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B9D42341E;
+        Wed,  4 Sep 2019 18:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620092;
-        bh=arZ4+NXqgdxfL8uwf4k6jpA6HH1HMnNN80Qg0BeR0Uk=;
+        s=default; t=1567620087;
+        bh=HmqFCPFCKaJpoZao2sHYtfAsKC5MuJ2xbU/4FCfXwvU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mImHjL5xdBPr9vilZSJ6+NIHHy5fWkLVo3DBjOk6jqAHNVsEVZuDGEm2Z8X9ubQxG
-         zC9fN7uiGu9tU2faUlOfjR47pYl+y7Ln/4D/SDBvblzrHVzoo3ojaGzHmqCHfR5vKt
-         hpEjQ/dYcylGu3wOucsuFRLSR4xr/18nJRFGT7gg=
+        b=MP9ulvXZfFe7dYsRF4f2NMP8K28FubBVo9cUIOGS9T0bdMMAti/dCjtEBAyHLZKlR
+         UyIpQzAZ3nI6Tu6ccK89vvzMT3xUqJ+T0Qxr5nZ3L0X9Np7gCZz1pT/acs2GUbr0id
+         J9C0oSQI8SyFNjM/ih5ukfC6wv1ogrGM6DU6n+C8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.9 68/83] usb: host: ohci: fix a race condition between shutdown and irq
-Date:   Wed,  4 Sep 2019 19:54:00 +0200
-Message-Id: <20190904175309.592577495@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 4.9 67/83] usb: chipidea: udc: dont do hardware access if gadget has stopped
+Date:   Wed,  4 Sep 2019 19:53:59 +0200
+Message-Id: <20190904175309.517424909@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,134 +58,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit a349b95d7ca0cea71be4a7dac29830703de7eb62 upstream.
+commit cbe85c88ce80fb92956a0793518d415864dcead8 upstream.
 
-This patch fixes an issue that the following error is
-possible to happen when ohci hardware causes an interruption
-and the system is shutting down at the same time.
+After _gadget_stop_activity is executed, we can consider the hardware
+operation for gadget has finished, and the udc can be stopped and enter
+low power mode. So, any later hardware operations (from usb_ep_ops APIs
+or usb_gadget_ops APIs) should be considered invalid, any deinitializatons
+has been covered at _gadget_stop_activity.
 
-[   34.851754] usb 2-1: USB disconnect, device number 2
-[   35.166658] irq 156: nobody cared (try booting with the "irqpoll" option)
-[   35.173445] CPU: 0 PID: 22 Comm: kworker/0:1 Not tainted 5.3.0-rc5 #85
-[   35.179964] Hardware name: Renesas Salvator-X 2nd version board based on r8a77965 (DT)
-[   35.187886] Workqueue: usb_hub_wq hub_event
-[   35.192063] Call trace:
-[   35.194509]  dump_backtrace+0x0/0x150
-[   35.198165]  show_stack+0x14/0x20
-[   35.201475]  dump_stack+0xa0/0xc4
-[   35.204785]  __report_bad_irq+0x34/0xe8
-[   35.208614]  note_interrupt+0x2cc/0x318
-[   35.212446]  handle_irq_event_percpu+0x5c/0x88
-[   35.216883]  handle_irq_event+0x48/0x78
-[   35.220712]  handle_fasteoi_irq+0xb4/0x188
-[   35.224802]  generic_handle_irq+0x24/0x38
-[   35.228804]  __handle_domain_irq+0x5c/0xb0
-[   35.232893]  gic_handle_irq+0x58/0xa8
-[   35.236548]  el1_irq+0xb8/0x180
-[   35.239681]  __do_softirq+0x94/0x23c
-[   35.243253]  irq_exit+0xd0/0xd8
-[   35.246387]  __handle_domain_irq+0x60/0xb0
-[   35.250475]  gic_handle_irq+0x58/0xa8
-[   35.254130]  el1_irq+0xb8/0x180
-[   35.257268]  kernfs_find_ns+0x5c/0x120
-[   35.261010]  kernfs_find_and_get_ns+0x3c/0x60
-[   35.265361]  sysfs_unmerge_group+0x20/0x68
-[   35.269454]  dpm_sysfs_remove+0x2c/0x68
-[   35.273284]  device_del+0x80/0x370
-[   35.276683]  hid_destroy_device+0x28/0x60
-[   35.280686]  usbhid_disconnect+0x4c/0x80
-[   35.284602]  usb_unbind_interface+0x6c/0x268
-[   35.288867]  device_release_driver_internal+0xe4/0x1b0
-[   35.293998]  device_release_driver+0x14/0x20
-[   35.298261]  bus_remove_device+0x110/0x128
-[   35.302350]  device_del+0x148/0x370
-[   35.305832]  usb_disable_device+0x8c/0x1d0
-[   35.309921]  usb_disconnect+0xc8/0x2d0
-[   35.313663]  hub_event+0x6e0/0x1128
-[   35.317146]  process_one_work+0x1e0/0x320
-[   35.321148]  worker_thread+0x40/0x450
-[   35.324805]  kthread+0x124/0x128
-[   35.328027]  ret_from_fork+0x10/0x18
-[   35.331594] handlers:
-[   35.333862] [<0000000079300c1d>] usb_hcd_irq
-[   35.338126] [<0000000079300c1d>] usb_hcd_irq
-[   35.342389] Disabling IRQ #156
+I meet this problem when I plug out usb cable from PC using mass_storage
+gadget, my callstack like: vbus interrupt->.vbus_session->
+composite_disconnect ->pm_runtime_put_sync(&_gadget->dev),
+the composite_disconnect will call fsg_disable, but fsg_disable calls
+usb_ep_disable using async way, there are register accesses for
+usb_ep_disable. So sometimes, I get system hang due to visit register
+without clock, sometimes not.
 
-ohci_shutdown() disables all the interrupt and rh_state is set to
-OHCI_RH_HALTED. In other hand, ohci_irq() is possible to enable
-OHCI_INTR_SF and OHCI_INTR_MIE on ohci_irq(). Note that OHCI_INTR_SF
-is possible to be set by start_ed_unlink() which is called:
- ohci_irq()
-  -> process_done_list()
-   -> takeback_td()
-    -> start_ed_unlink()
+The Linux Kernel USB maintainer Alan Stern suggests this kinds of solution.
+See: http://marc.info/?l=linux-usb&m=138541769810983&w=2.
 
-So, ohci_irq() has the following condition, the issue happens by
-&ohci->regs->intrenable = OHCI_INTR_MIE | OHCI_INTR_SF and
-ohci->rh_state = OHCI_RH_HALTED:
-
-	/* interrupt for some other device? */
-	if (ints == 0 || unlikely(ohci->rh_state == OHCI_RH_HALTED))
-		return IRQ_NOTMINE;
-
-To fix the issue, ohci_shutdown() holds the spin lock while disabling
-the interruption and changing the rh_state flag to prevent reenable
-the OHCI_INTR_MIE unexpectedly. Note that io_watchdog_func() also
-calls the ohci_shutdown() and it already held the spin lock, so that
-the patch makes a new function as _ohci_shutdown().
-
-This patch is inspired by a Renesas R-Car Gen3 BSP patch
-from Tho Vu.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/1566877910-6020-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
+Cc: <stable@vger.kernel.org> #v4.9+
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20190820020503.27080-2-peter.chen@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/ohci-hcd.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/usb/chipidea/udc.c |   32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/host/ohci-hcd.c
-+++ b/drivers/usb/host/ohci-hcd.c
-@@ -417,8 +417,7 @@ static void ohci_usb_reset (struct ohci_
-  * other cases where the next software may expect clean state from the
-  * "firmware".  this is bus-neutral, unlike shutdown() methods.
-  */
--static void
--ohci_shutdown (struct usb_hcd *hcd)
-+static void _ohci_shutdown(struct usb_hcd *hcd)
- {
- 	struct ohci_hcd *ohci;
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -709,12 +709,6 @@ static int _gadget_stop_activity(struct
+ 	struct ci_hdrc    *ci = container_of(gadget, struct ci_hdrc, gadget);
+ 	unsigned long flags;
  
-@@ -434,6 +433,16 @@ ohci_shutdown (struct usb_hcd *hcd)
- 	ohci->rh_state = OHCI_RH_HALTED;
+-	spin_lock_irqsave(&ci->lock, flags);
+-	ci->gadget.speed = USB_SPEED_UNKNOWN;
+-	ci->remote_wakeup = 0;
+-	ci->suspended = 0;
+-	spin_unlock_irqrestore(&ci->lock, flags);
+-
+ 	/* flush all endpoints */
+ 	gadget_for_each_ep(ep, gadget) {
+ 		usb_ep_fifo_flush(ep);
+@@ -732,6 +726,12 @@ static int _gadget_stop_activity(struct
+ 		ci->status = NULL;
+ 	}
+ 
++	spin_lock_irqsave(&ci->lock, flags);
++	ci->gadget.speed = USB_SPEED_UNKNOWN;
++	ci->remote_wakeup = 0;
++	ci->suspended = 0;
++	spin_unlock_irqrestore(&ci->lock, flags);
++
+ 	return 0;
  }
  
-+static void ohci_shutdown(struct usb_hcd *hcd)
-+{
-+	struct ohci_hcd	*ohci = hcd_to_ohci(hcd);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&ohci->lock, flags);
-+	_ohci_shutdown(hcd);
-+	spin_unlock_irqrestore(&ohci->lock, flags);
-+}
-+
- /*-------------------------------------------------------------------------*
-  * HC functions
-  *-------------------------------------------------------------------------*/
-@@ -752,7 +761,7 @@ static void io_watchdog_func(unsigned lo
-  died:
- 			usb_hc_died(ohci_to_hcd(ohci));
- 			ohci_dump(ohci);
--			ohci_shutdown(ohci_to_hcd(ohci));
-+			_ohci_shutdown(ohci_to_hcd(ohci));
- 			goto done;
- 		} else {
- 			/* No write back because the done queue was empty */
+@@ -1306,6 +1306,10 @@ static int ep_disable(struct usb_ep *ep)
+ 		return -EBUSY;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return 0;
++	}
+ 
+ 	/* only internal SW should disable ctrl endpts */
+ 
+@@ -1395,6 +1399,10 @@ static int ep_queue(struct usb_ep *ep, s
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return 0;
++	}
+ 	retval = _ep_queue(ep, req, gfp_flags);
+ 	spin_unlock_irqrestore(hwep->lock, flags);
+ 	return retval;
+@@ -1418,8 +1426,8 @@ static int ep_dequeue(struct usb_ep *ep,
+ 		return -EINVAL;
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
+-
+-	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
++	if (hwep->ci->gadget.speed != USB_SPEED_UNKNOWN)
++		hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
+ 
+ 	list_for_each_entry_safe(node, tmpnode, &hwreq->tds, td) {
+ 		dma_pool_free(hwep->td_pool, node->ptr, node->dma);
+@@ -1490,6 +1498,10 @@ static void ep_fifo_flush(struct usb_ep
+ 	}
+ 
+ 	spin_lock_irqsave(hwep->lock, flags);
++	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(hwep->lock, flags);
++		return;
++	}
+ 
+ 	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
+ 
+@@ -1558,6 +1570,10 @@ static int ci_udc_wakeup(struct usb_gadg
+ 	int ret = 0;
+ 
+ 	spin_lock_irqsave(&ci->lock, flags);
++	if (ci->gadget.speed == USB_SPEED_UNKNOWN) {
++		spin_unlock_irqrestore(&ci->lock, flags);
++		return 0;
++	}
+ 	if (!ci->remote_wakeup) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
 
 
