@@ -2,54 +2,53 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68833C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903ACC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E1D206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BCA208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620688;
-	bh=nx4BE7QFsN29rEp7SS5/OfNznALXnOvEC33bd5bZ4r0=;
+	s=default; t=1567620692;
+	bh=MQiAGOW7PCLLPupgghlunayvmyad+OpM+CldYOEc8ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HgKgJ+2Bor+RmieKpTQaB46NgzBV1n3+kL4axzaJsLF3oLLMXyHbD5vaz4UsnbMQi
-	 82X7/qq3CgmWkiEza/cWz5Auxi5dFOzW0Zr6+U/MVSdfUwpt1dx3dnTZm/n9igj1N/
-	 4HkpdUxPG0zQO7CAtHXEJXKl2XCTWom7YzAtw84k=
+	b=bbeptatXK16bnJzzXk4ScNaQcwbq1OOd16qwQklnqMrmX1ncSWIhzvVVlb03/zRKN
+	 e2Vtp4fr4WY2jfSB8coJlq1SNgNao4WPK9I6L6xQ0AOQkl+ZIXZryfDDZBgy+ebWQ3
+	 0Bqrkk5c82jc/Tl1uO13PwgnQHpTFWsrUQq9mbCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390285AbfIDSLY (ORCPT
+        id S2389929AbfIDSLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55368 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389877AbfIDSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:22 -0400
+        id S2390335AbfIDSL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 891D12087E;
-        Wed,  4 Sep 2019 18:11:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBC9D2087E;
+        Wed,  4 Sep 2019 18:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620681;
-        bh=nx4BE7QFsN29rEp7SS5/OfNznALXnOvEC33bd5bZ4r0=;
+        s=default; t=1567620686;
+        bh=MQiAGOW7PCLLPupgghlunayvmyad+OpM+CldYOEc8ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOIS4SXgdWhzU5tg47qQkIyAClxmzcTYtj6JtgFQ7gRqDOSFY/+/rnPgcuRt2JsVe
-         PGYnPsjePEocJl1d+RATrTslvkrmCS3h3mQ8ygAmELDfcBt+ECxFtIrFT74lWtKssR
-         2Ydb5O9IpUVWMk/NJFrb8jZD04d5uKVWN8mLoADo=
+        b=DusmTX5hTrqA/OEv+vOwYeT/Ck8nMkc72Bpa6hr53JZmxffbsWizVu39atoxCPj+i
+         FgO2qcYsTyx9dfZu3RWu4GqFR/L1g4qAaNWrlKTKOGGaGPZS3DXIkuYsITtKK4gmZK
+         IltD3aLz8QaOv32Y0k7RHP45KLnfjEYfJtcE+pe0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 053/143] net/smc: make sure EPOLLOUT is raised
-Date:   Wed,  4 Sep 2019 19:53:16 +0200
-Message-Id: <20190904175316.142954365@linuxfoundation.org>
+        stable@vger.kernel.org, Li Zhong <lizhongfs@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 016/143] nvme-pci: Fix async probe remove race
+Date:   Wed,  4 Sep 2019 19:52:39 +0200
+Message-Id: <20190904175314.720373935@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -62,53 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+[ Upstream commit bd46a90634302bfe791e93ad5496f98f165f7ae0 ]
 
-[ Upstream commit 4651d1802f7063e4d8c0bcad957f46ece0c04024 ]
+Ensure the controller is not in the NEW state when nvme_probe() exits.
+This will always allow a subsequent nvme_remove() to set the state to
+DELETING, fixing a potential race between the initial asynchronous probe
+and device removal.
 
-Currently, we are only explicitly setting SOCK_NOSPACE on a write timeout
-for non-blocking sockets. Epoll() edge-trigger mode relies on SOCK_NOSPACE
-being set when -EAGAIN is returned to ensure that EPOLLOUT is raised.
-Expand the setting of SOCK_NOSPACE to non-blocking sockets as well that can
-use SO_SNDTIMEO to adjust their write timeout. This mirrors the behavior
-that Eric Dumazet introduced for tcp sockets.
-
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Ursula Braun <ubraun@linux.ibm.com>
-Cc: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Li Zhong <lizhongfs@gmail.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_tx.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/nvme/host/pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/smc/smc_tx.c
-+++ b/net/smc/smc_tx.c
-@@ -76,13 +76,11 @@ static int smc_tx_wait(struct smc_sock *
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
- 	struct smc_connection *conn = &smc->conn;
- 	struct sock *sk = &smc->sk;
--	bool noblock;
- 	long timeo;
- 	int rc = 0;
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index f9959eaaa185e..09ffd21d18096 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2712,7 +2712,7 @@ static void nvme_async_probe(void *data, async_cookie_t cookie)
+ {
+ 	struct nvme_dev *dev = data;
  
- 	/* similar to sk_stream_wait_memory */
- 	timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
--	noblock = timeo ? false : true;
- 	add_wait_queue(sk_sleep(sk), &wait);
- 	while (1) {
- 		sk_set_bit(SOCKWQ_ASYNC_NOSPACE, sk);
-@@ -97,8 +95,8 @@ static int smc_tx_wait(struct smc_sock *
- 			break;
- 		}
- 		if (!timeo) {
--			if (noblock)
--				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
-+			/* ensure EPOLLOUT is subsequently generated */
-+			set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
- 			rc = -EAGAIN;
- 			break;
- 		}
+-	nvme_reset_ctrl_sync(&dev->ctrl);
++	flush_work(&dev->ctrl.reset_work);
+ 	flush_work(&dev->ctrl.scan_work);
+ 	nvme_put_ctrl(&dev->ctrl);
+ }
+@@ -2778,6 +2778,7 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	dev_info(dev->ctrl.device, "pci function %s\n", dev_name(&pdev->dev));
+ 
++	nvme_reset_ctrl(&dev->ctrl);
+ 	nvme_get_ctrl(&dev->ctrl);
+ 	async_schedule(nvme_async_probe, dev);
+ 
+-- 
+2.20.1
+
 
 
