@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00740C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A32C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC65F23400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7227023402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:18:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GOL7DB4E"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="B24vgdZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbfIDNSI (ORCPT
+        id S1730623AbfIDNSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:18:08 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:33568 "EHLO
+        Wed, 4 Sep 2019 09:18:18 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:33496 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730390AbfIDNRP (ORCPT
+        by vger.kernel.org with ESMTP id S1729907AbfIDNRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:17:15 -0400
+        Wed, 4 Sep 2019 09:17:14 -0400
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 14F98C5749;
-        Wed,  4 Sep 2019 13:17:14 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 78FBFC5741;
+        Wed,  4 Sep 2019 13:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567603034; bh=793MRHdv4DLwQdQr3WJdmtfxyUuhU0fectEqf0N0Y5Y=;
+        t=1567603034; bh=S9lXifIRV5LjZ5ja6p24Sciaey7X+yvmq/cydA1irIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=GOL7DB4EvZZtEV6nBeWoDantKpGDbyJrjWPDA/GQP0gabJkvtEHJrSkJOzfGhmZvZ
-         26IiYz8Tiu9I/OjtHbbE1VkAz1x7hyRDF1FEB3R2DW4zItMGJbt2U0TnKOung+0ZzY
-         35sUWJAZ2CsfRwc63hH02G26G4vZLZq+xE+BVoii8oxJRkEqm7KUnlI14evbtljm4d
-         tEV/8pjPslfWDTOZL3oBCoBAvlYiPXp6aBSwH6neE6FZnaFvBWMCiRykSews26v8U1
-         ZnUkKdWDtEKlSmxUmTnLKf/ZxZ8awHrOQdwa/+SNbmqBtSVNaCMSWqWYTaHiPysk0s
-         tRkyq9XUxUdJg==
+        b=B24vgdZMddAJY218MQIcQzAR/P2l3oTLDM/JYncVvQeGRx8EPq87es8aH8Kb8CsEW
+         hQa/tImd/AIuqy0ELp6WsgAwHJg7N5RWF6b3uNUUyWHyqBm5ISEHjD+cGe7Mty7eI1
+         P3UQtWcX7L80ofEog4iRsPDoocSVqWyoKwG7F7+mzf/CmHbnUkSy46qsKN/y6QX8A4
+         yq2z/d2yB11iGpb4ynpteonTLZ/8oryma2Gelw+3ByyR50Y+fMZRUcRAcVLET/M5nD
+         zgxipCT9m9qrcr15K5oo/wHnvS9WgLlLo1FGzx16HdrDHqVq42/yTTdlJcZyhIYig1
+         UdYTGi4IVVh+Q==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id A3841A007B;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 1EED3A005F;
         Wed,  4 Sep 2019 13:17:12 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -51,9 +51,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next 09/13] net: stmmac: ethtool: Let user configure TX coalesce without RIWT
-Date:   Wed,  4 Sep 2019 15:17:01 +0200
-Message-Id: <7f11754637d5c757ca43b5a832f6707d692e1099.1567602868.git.joabreu@synopsys.com>
+Subject: [PATCH v2 net-next 01/13] net: stmmac: selftests: Return proper error code to userspace
+Date:   Wed,  4 Sep 2019 15:16:53 +0200
+Message-Id: <b1d7700ab68947678e1c479904537718555171ab.1567602867.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1567602867.git.joabreu@synopsys.com>
 References: <cover.1567602867.git.joabreu@synopsys.com>
@@ -64,8 +64,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When RX Watchdog is disabled its currently not possible to configure TX
-coalesce settings. Let user configure it anyway.
+We can do better than just return 1 to userspace. Lets return a proper
+Linux error code.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
@@ -80,52 +80,104 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c    | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-index 1c450105e5a6..1a768837ca72 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
-@@ -746,8 +746,15 @@ static int stmmac_set_coalesce(struct net_device *dev,
- 	    (ec->tx_max_coalesced_frames_high) || (ec->rate_sample_interval))
- 		return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index ecc8602c6799..d3234338a0ca 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -318,7 +318,7 @@ static int __stmmac_test_loopback(struct stmmac_priv *priv,
+ 		attr->timeout = STMMAC_LB_TIMEOUT;
  
--	if (ec->rx_coalesce_usecs == 0)
--		return -EINVAL;
-+	if (priv->use_riwt && (ec->rx_coalesce_usecs > 0)) {
-+		rx_riwt = stmmac_usec2riwt(ec->rx_coalesce_usecs, priv);
-+
-+		if ((rx_riwt > MAX_DMA_RIWT) || (rx_riwt < MIN_DMA_RIWT))
-+			return -EINVAL;
-+
-+		priv->rx_riwt = rx_riwt;
-+		stmmac_rx_watchdog(priv, priv->ioaddr, priv->rx_riwt, rx_cnt);
-+	}
+ 	wait_for_completion_timeout(&tpriv->comp, attr->timeout);
+-	ret = !tpriv->ok;
++	ret = tpriv->ok ? 0 : -ETIMEDOUT;
  
- 	if ((ec->tx_coalesce_usecs == 0) &&
- 	    (ec->tx_max_coalesced_frames == 0))
-@@ -757,20 +764,10 @@ static int stmmac_set_coalesce(struct net_device *dev,
- 	    (ec->tx_max_coalesced_frames > STMMAC_TX_MAX_FRAMES))
- 		return -EINVAL;
+ cleanup:
+ 	if (!attr->dont_wait)
+@@ -480,7 +480,7 @@ static int stmmac_test_hfilt(struct stmmac_priv *priv)
  
--	rx_riwt = stmmac_usec2riwt(ec->rx_coalesce_usecs, priv);
--
--	if ((rx_riwt > MAX_DMA_RIWT) || (rx_riwt < MIN_DMA_RIWT))
--		return -EINVAL;
--	else if (!priv->use_riwt)
--		return -EOPNOTSUPP;
--
- 	/* Only copy relevant parameters, ignore all others. */
- 	priv->tx_coal_frames = ec->tx_max_coalesced_frames;
- 	priv->tx_coal_timer = ec->tx_coalesce_usecs;
- 	priv->rx_coal_frames = ec->rx_max_coalesced_frames;
--	priv->rx_riwt = rx_riwt;
--	stmmac_rx_watchdog(priv, priv->ioaddr, priv->rx_riwt, rx_cnt);
--
- 	return 0;
- }
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
  
+ cleanup:
+ 	dev_mc_del(priv->dev, gd_addr);
+@@ -512,7 +512,7 @@ static int stmmac_test_pfilt(struct stmmac_priv *priv)
+ 
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
+ 
+ cleanup:
+ 	dev_uc_del(priv->dev, gd_addr);
+@@ -562,7 +562,7 @@ static int stmmac_test_mcfilt(struct stmmac_priv *priv)
+ 
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
+ 
+ cleanup:
+ 	dev_uc_del(priv->dev, uc_addr);
+@@ -600,7 +600,7 @@ static int stmmac_test_ucfilt(struct stmmac_priv *priv)
+ 
+ 	/* Shall NOT receive packet */
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret;
++	ret = ret ? 0 : -EINVAL;
+ 
+ cleanup:
+ 	dev_mc_del(priv->dev, mc_addr);
+@@ -699,7 +699,7 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
+ 	}
+ 
+ 	wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
+-	ret = !tpriv->ok;
++	ret = tpriv->ok ? 0 : -ETIMEDOUT;
+ 
+ cleanup:
+ 	dev_mc_del(priv->dev, paddr);
+@@ -833,11 +833,11 @@ static int stmmac_test_vlanfilt(struct stmmac_priv *priv)
+ 			goto vlan_del;
+ 
+ 		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
+-		ret = !tpriv->ok;
++		ret = tpriv->ok ? 0 : -ETIMEDOUT;
+ 		if (ret && !i) {
+ 			goto vlan_del;
+ 		} else if (!ret && i) {
+-			ret = -1;
++			ret = -EINVAL;
+ 			goto vlan_del;
+ 		} else {
+ 			ret = 0;
+@@ -909,11 +909,11 @@ static int stmmac_test_dvlanfilt(struct stmmac_priv *priv)
+ 			goto vlan_del;
+ 
+ 		wait_for_completion_timeout(&tpriv->comp, STMMAC_LB_TIMEOUT);
+-		ret = !tpriv->ok;
++		ret = tpriv->ok ? 0 : -ETIMEDOUT;
+ 		if (ret && !i) {
+ 			goto vlan_del;
+ 		} else if (!ret && i) {
+-			ret = -1;
++			ret = -EINVAL;
+ 			goto vlan_del;
+ 		} else {
+ 			ret = 0;
+@@ -998,7 +998,7 @@ static int stmmac_test_rxp(struct stmmac_priv *priv)
+ 	attr.src = addr;
+ 
+ 	ret = __stmmac_test_loopback(priv, &attr);
+-	ret = !ret; /* Shall NOT receive packet */
++	ret = ret ? 0 : -EINVAL; /* Shall NOT receive packet */
+ 
+ 	cls_u32.command = TC_CLSU32_DELETE_KNODE;
+ 	stmmac_tc_setup_cls_u32(priv, priv, &cls_u32);
 -- 
 2.7.4
 
