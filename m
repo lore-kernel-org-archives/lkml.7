@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DCDC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 178CBC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4652F22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F052087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620863;
-	bh=o7Cjc0rUBHidSXFULpRtnarcnI8uMMcuQvulc8XTS/4=;
+	s=default; t=1567620868;
+	bh=0yy/2OVnBI5Qh2eAcoybrixJRPrvvYdKrPeHjXlj130=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wUb2Vtz6Pj4xVdyuCYEp+dfk2SFtvPvoxNvie1XvnenaWrKdw4FR7fgT/t8KhpBmq
-	 WMaXbe5wbqbTk37WcGRPU5rwrMiL226f7s5LsXA5CH7EAkmtM9zLAtl/G26CEIlKur
-	 8LNWJxj7MSkMq4S37DvEpk6aPsjc58ymqQHdz89s=
+	b=Hwut6JBWhLM79tEFRA4eAyQPB3sL/cVfEB6ABn6rAqELvCviWjgGaFWDhRureZuWM
+	 Qa/ec7s5Q6lZ0GEo+pJYsMPcd4cuMTyqqXksZbiM84Kw16X2AUWFufkaMq+UShfxjI
+	 phJU7fktzflJYinhY1IffprcUvgT1A+mYjiuHpS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390775AbfIDSOW (ORCPT
+        id S2390794AbfIDSO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59450 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390756AbfIDSOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:17 -0400
+        id S2390485AbfIDSOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEBAF22CEA;
-        Wed,  4 Sep 2019 18:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4761B208E4;
+        Wed,  4 Sep 2019 18:14:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620857;
-        bh=o7Cjc0rUBHidSXFULpRtnarcnI8uMMcuQvulc8XTS/4=;
+        s=default; t=1567620862;
+        bh=0yy/2OVnBI5Qh2eAcoybrixJRPrvvYdKrPeHjXlj130=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AgxKuIXouIQONYxKuNRCi5vtPidpCEZrihbtZqGsFUa92yxUyX699iD38PVKujlmm
-         om1JdwIGtM6qxVSgzvDhCjHkCXIe2ts2uqj5zr4XePrNpZKYyfYeTbbx31zYyUfwdx
-         MikTbnQumo322Y/ecOXWZg5aaYKgoWy/G2Vf2GKo=
+        b=c8y+nZr+t5o85FOg5ckSs+HQXag2rNIEASH+ZB2j+K5qB6steE8rBcoziV5QTVtPu
+         Zho0/McLaE8UUvZ/Pe/dnLVmhGcfXtvDU6MmwBQFBNpgwmFKEb/QLSchswPzMZzhS/
+         E7keb+MGUvCGMFAIhC4E6/DIlplVXiqKBJ3tA1tI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.2 121/143] mms: sdhci-sprd: add SDHCI_QUIRK_BROKEN_CARD_DETECTION
-Date:   Wed,  4 Sep 2019 19:54:24 +0200
-Message-Id: <20190904175319.132665759@linuxfoundation.org>
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 123/143] mm: memcontrol: fix percpu vmstats and vmevents flush
+Date:   Wed,  4 Sep 2019 19:54:26 +0200
+Message-Id: <20190904175319.213100525@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,37 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit 4324e54bbea0107b054336f20075a26939b2bd51 upstream.
+commit 6c1c280805ded72eceb2afc1a0d431b256608554 upstream.
 
-sprd's sd host controller doesn't support detection to
-card insert or remove.
+Instead of using raw_cpu_read() use per_cpu() to read the actual data of
+the corresponding cpu otherwise we will be reading the data of the
+current cpu for the number of online CPUs.
 
-Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-Tested-by: Baolin Wang <baolin.wang@linaro.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: http://lkml.kernel.org/r/20190829203110.129263-1-shakeelb@google.com
+Fixes: bb65f89b7d3d ("mm: memcontrol: flush percpu vmevents before releasing memcg")
+Fixes: c350a99ea2b1 ("mm: memcontrol: flush percpu vmstats before releasing memcg")
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-sprd.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/memcontrol.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/mmc/host/sdhci-sprd.c
-+++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -319,7 +319,8 @@ static void sdhci_sprd_request(struct mm
- }
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3159,7 +3159,7 @@ static void memcg_flush_percpu_vmstats(s
  
- static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
--	.quirks = SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
-+	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
-+		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
- 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
- 		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
- 		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
+ 	for_each_online_cpu(cpu)
+ 		for (i = 0; i < MEMCG_NR_STAT; i++)
+-			stat[i] += raw_cpu_read(memcg->vmstats_percpu->stat[i]);
++			stat[i] += per_cpu(memcg->vmstats_percpu->stat[i], cpu);
+ 
+ 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+ 		for (i = 0; i < MEMCG_NR_STAT; i++)
+@@ -3174,8 +3174,8 @@ static void memcg_flush_percpu_vmstats(s
+ 
+ 		for_each_online_cpu(cpu)
+ 			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+-				stat[i] += raw_cpu_read(
+-					pn->lruvec_stat_cpu->count[i]);
++				stat[i] += per_cpu(
++					pn->lruvec_stat_cpu->count[i], cpu);
+ 
+ 		for (pi = pn; pi; pi = parent_nodeinfo(pi, node))
+ 			for (i = 0; i < NR_VM_NODE_STAT_ITEMS; i++)
+@@ -3194,8 +3194,8 @@ static void memcg_flush_percpu_vmevents(
+ 
+ 	for_each_online_cpu(cpu)
+ 		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
+-			events[i] += raw_cpu_read(
+-				memcg->vmstats_percpu->events[i]);
++			events[i] += per_cpu(memcg->vmstats_percpu->events[i],
++					     cpu);
+ 
+ 	for (mi = memcg; mi; mi = parent_mem_cgroup(mi))
+ 		for (i = 0; i < NR_VM_EVENT_ITEMS; i++)
 
 
