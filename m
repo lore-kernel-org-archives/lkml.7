@@ -2,113 +2,133 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4DAC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB042339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9369F22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567597944;
-	bh=kuCVKYWh39HzDMNH8mGuQqkKXwZBKKGFW1o2IwBcDNg=;
+	s=default; t=1567598026;
+	bh=6yE3IUv7qBSVFJ6+Mf00UxE1PnKsLJ0VJifYwWdQq1Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xhxz6tB/OOmmDg/ip7KQUMcltxb5AtUY/TpouvHZjO+0FN16OGrrkJS5Pmf87+8N3
-	 mVlGd38S6zhcAJM9OCCXwiZBJA1OlmWsKdhmVtI5BVCNpcN0hRXYuAjN2XSFQhG+GZ
-	 lEJSlPvEliRRvettpi/lwn9eJ1Jpkgxomaun3iIE=
+	b=XVlgIiuGXGos/FHPE7D8MVEhX1zDEKG47AYT7aI/V5l/30KZxyji8kRdFaY0vpNT/
+	 QHOnTIHEGKrbP59+Bm+6TMUhEdA+JpJFKxSg6On4oMMZLOrR2rvEMueZdWS7MgM/uT
+	 0f2zS0AFcRzD7Z1iiOWjgREj2NinSkCTdExzRmH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfIDLwY (ORCPT
+        id S1729597AbfIDLxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 07:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 07:53:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725965AbfIDLwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 07:52:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725829AbfIDLxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 07:53:45 -0400
+Received: from localhost (unknown [122.182.201.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49DAA2186A;
-        Wed,  4 Sep 2019 11:52:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C20722CF5;
+        Wed,  4 Sep 2019 11:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567597942;
-        bh=kuCVKYWh39HzDMNH8mGuQqkKXwZBKKGFW1o2IwBcDNg=;
+        s=default; t=1567598024;
+        bh=6yE3IUv7qBSVFJ6+Mf00UxE1PnKsLJ0VJifYwWdQq1Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2oPxsAZPafFSsKg2yN0LcN0yRhMK6udynUICY5+314QrRk7gXHyPCNjgweDqCfI6z
-         /9cgxpryogget7bzs9QSfNXEm8WXn0EwnYWxXKlK+tq5dz0f67o1pCQAir8cZ9MtmQ
-         szy59+6QxWHJx6QXkp8fxhlZQHVY+Zs8lGuuExsY=
-Date:   Wed, 4 Sep 2019 13:52:20 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, willy.mh.wolff.ml@gmail.com
-Subject: Re: [PATCH v10 06/13] drivers: memory: extend of_memory by LPDDR3
- support
-Message-ID: <20190904115220.GA9370@kroah.com>
-References: <CGME20190614095325eucas1p20083d9290b36eca945ec3f1428bdbd4f@eucas1p2.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com>
- <20190614095309.24100-7-l.luba@partner.samsung.com>
- <CAJKOXPcDDyYmuX-RpkpxKSBK2JfV=tYakn+g8FM5Lau+rmkm+g@mail.gmail.com>
- <2e35d4bc-92b9-cba7-bd05-a41a1dcb300e@partner.samsung.com>
+        b=bINwaOQTuFOWx7V12YuIGe2FCJ+xjHqhhW3BE3LSzwuFSEyTJsQ1SW8/5NIU8zUQy
+         DpAM0NqtkKvoWpvFGBSP9qhjJlOM834TBGmJpNbdMCItmQx0hKRfmQN5iU9krCQYkh
+         rSM7PF0SdS00ITRfSqCIRGCPqVzc+Dc7JDvuXR9I=
+Date:   Wed, 4 Sep 2019 17:22:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] arm64: dts: qcom: Add Lenovo Yoga C630
+Message-ID: <20190904115234.GV2672@vkoul-mobl>
+References: <20190904113917.15223-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2e35d4bc-92b9-cba7-bd05-a41a1dcb300e@partner.samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190904113917.15223-1-lee.jones@linaro.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 22, 2019 at 03:34:48PM +0200, Lukasz Luba wrote:
-> 
-> 
-> On 6/14/19 2:43 PM, Krzysztof Kozlowski wrote:
-> > On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
-> >>
-> >> The patch adds AC timings information needed to support LPDDR3 and memory
-> >> controllers. The structure is used in of_memory and currently in Exynos
-> >> 5422 DMC. Add parsing data needed for LPDDR3 support.
-> >> It is currently used in Exynos5422 Dynamic Memory Controller.
-> >>
-> >> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> >> ---
-> >>   drivers/memory/of_memory.c | 154 +++++++++++++++++++++++++++++++++++++
-> >>   drivers/memory/of_memory.h |  18 +++++
-> >>   include/memory/jedec_ddr.h |  62 +++++++++++++++
-> >>   3 files changed, 234 insertions(+)
-> > 
-> > Previously this was going through Greg, so if I am going to take it
-> > along with drivers/memory/samsung patches, I need some acks.
-> > 
-> > Greg, Rob,
-> > Are you okay with this patch and with taking it through samsung-soc?
-> 
-> Greg, Rob: gentle ping.
-> 
-> Currently there is a v13, with only minor changes to this patch:
-> https://lkml.org/lkml/2019/8/21/289
-> (you are on cc list of the patch set)
-> 
-> Could you please have a look. Thank you.
+On 04-09-19, 12:39, Lee Jones wrote:
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -12,5 +12,6 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
 
-I don't seem to be able to find this anywhere in my tree.  And I don't
-remember being the maintainer of drivers/memory/ so don't wait for
-anything from me!
+Can we keep this sorted, so before mtp.
 
-greg k-h
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> new file mode 100644
+> index 000000000000..ad160c718b33
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
+> @@ -0,0 +1,454 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+Are we going to make this dual? or BSD..
+
+> +&apps_rsc {
+> +	pm8998-rpmh-regulators {
+> +		compatible = "qcom,pm8998-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vdd-l2-l8-l17-supply = <&vreg_s3a_1p35>;
+> +		vdd-l7-l12-l14-l15-supply = <&vreg_s5a_2p04>;
+> +
+> +		vreg_s2a_1p125: smps2 {
+> +		};
+> +
+> +		vreg_s3a_1p35: smps3 {
+> +			regulator-min-microvolt = <1352000>;
+> +			regulator-max-microvolt = <1352000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s4a_1p8: smps4 {
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s5a_2p04: smps5 {
+> +			regulator-min-microvolt = <2040000>;
+> +			regulator-max-microvolt = <2040000>;
+> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +		};
+> +
+> +		vreg_s7a_1p025: smps7 {
+
+Any reason why we dont specify the mode and min/max voltage for this
+and few others below..?
+
+> +&i2c1 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +	qcom,geni-se-fifo;
+> +
+> +	battery@70 {
+> +		compatible = "some,battery";
+
+some,battery ..?
+
+> +&qup_i2c12_default {
+
+Please move the qup nodes up so that nodes are sorted alphabetically
+
+-- 
+~Vinod
