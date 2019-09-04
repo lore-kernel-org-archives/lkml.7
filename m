@@ -4,49 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7300BC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B18C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3E122CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8179622DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619763;
-	bh=C+g5dJThEkiTnCwufBUzsevaiuznZHmKFpkm824y7JI=;
+	s=default; t=1567619765;
+	bh=z6lJx5LHEJyB+ZMovtOJ+d4dKwYokh0c7+rh2PGTlLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lqhRMuNivulBqXAvQ4HpgR3qFT+svQWemZaVIBRyJRJKIKyXILn/HDwg8BBJr13YR
-	 aiBIC9p6Lcnbh7EK0GQHni4jM/gh63vUgbMehKFGaklzHpVB+WDqgOLocX/oxuOxLZ
-	 9+V5IrusXrYVEIJ5+27u+mh9XVJxZDAwWCu7HC6M=
+	b=AMHkC/ZGcuN1NXviksASqvwB+qIMBxA8G0VNpuftWtSFALObb6A1wDmEr32YiyVCW
+	 7oMnPDBMju+DJP5+l+hXKpQMVGrXvbiDUAKkhRpi0uvaipxNidGGvRHwjwUrzv5Wf+
+	 r0rpe5EjkbwOlaYXmyzt50fUQEiWQWrKY3SaMRks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733118AbfIDR4C (ORCPT
+        id S1733151AbfIDR4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33074 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733059AbfIDRz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:59 -0400
+        id S1733100AbfIDR4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:56:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7601822CF5;
-        Wed,  4 Sep 2019 17:55:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D9A221883;
+        Wed,  4 Sep 2019 17:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619759;
-        bh=C+g5dJThEkiTnCwufBUzsevaiuznZHmKFpkm824y7JI=;
+        s=default; t=1567619761;
+        bh=z6lJx5LHEJyB+ZMovtOJ+d4dKwYokh0c7+rh2PGTlLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h+dATPTpUNbLbAAETdToKomv/2S5rqlul0sUQgr47KKIDXvxpNxbBwQIVoJbGz8HU
-         BUzQl8sXj8+MNxAtkBNJ0fPbBlhnPBBUKfsDF6XFq0myJaUYWeSbB+ym74zR9Otz29
-         3Lu5nV/x3uG02Ze3tF4yPZD5IFYtnY7jUARRDFdA=
+        b=apadRopfMXEG1lJivQGFoiK0fOhvxCYEsNccDoytvuSEHhh7W19RT7z/wAs26h+bo
+         1sADdiixJvGtx4U6jfLx3d2U/+ZZ+DQTxy7ImOpxemRQG3pMuGBJod+PCgFyr3hvfl
+         PkOFOgU5Qx01v/HpmRZJXOxF43Gu0ZAXH6oRyZ38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.4 24/77] Revert "dm bufio: fix deadlock with loop device"
-Date:   Wed,  4 Sep 2019 19:53:11 +0200
-Message-Id: <20190904175305.820812068@linuxfoundation.org>
+        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jann Horn <jannh@google.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 25/77] userfaultfd_release: always remove uffd flags and clear vm_userfaultfd_ctx
+Date:   Wed,  4 Sep 2019 19:53:12 +0200
+Message-Id: <20190904175305.895853890@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -59,61 +68,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Oleg Nesterov <oleg@redhat.com>
 
-commit cf3591ef832915892f2499b7e54b51d4c578b28c upstream.
+commit 46d0b24c5ee10a15dfb25e20642f5a5ed59c5003 upstream.
 
-Revert the commit bd293d071ffe65e645b4d8104f9d8fe15ea13862. The proper
-fix has been made available with commit d0a255e795ab ("loop: set
-PF_MEMALLOC_NOIO for the worker thread").
+userfaultfd_release() should clear vm_flags/vm_userfaultfd_ctx even if
+mm->core_state != NULL.
 
-Note that the fix offered by commit bd293d071ffe doesn't really prevent
-the deadlock from occuring - if we look at the stacktrace reported by
-Junxiao Bi, we see that it hangs in bit_wait_io and not on the mutex -
-i.e. it has already successfully taken the mutex. Changing the mutex
-from mutex_lock to mutex_trylock won't help with deadlocks that happen
-afterwards.
+Otherwise a page fault can see userfaultfd_missing() == T and use an
+already freed userfaultfd_ctx.
 
-PID: 474    TASK: ffff8813e11f4600  CPU: 10  COMMAND: "kswapd0"
-   #0 [ffff8813dedfb938] __schedule at ffffffff8173f405
-   #1 [ffff8813dedfb990] schedule at ffffffff8173fa27
-   #2 [ffff8813dedfb9b0] schedule_timeout at ffffffff81742fec
-   #3 [ffff8813dedfba60] io_schedule_timeout at ffffffff8173f186
-   #4 [ffff8813dedfbaa0] bit_wait_io at ffffffff8174034f
-   #5 [ffff8813dedfbac0] __wait_on_bit at ffffffff8173fec8
-   #6 [ffff8813dedfbb10] out_of_line_wait_on_bit at ffffffff8173ff81
-   #7 [ffff8813dedfbb90] __make_buffer_clean at ffffffffa038736f [dm_bufio]
-   #8 [ffff8813dedfbbb0] __try_evict_buffer at ffffffffa0387bb8 [dm_bufio]
-   #9 [ffff8813dedfbbd0] dm_bufio_shrink_scan at ffffffffa0387cc3 [dm_bufio]
-  #10 [ffff8813dedfbc40] shrink_slab at ffffffff811a87ce
-  #11 [ffff8813dedfbd30] shrink_zone at ffffffff811ad778
-  #12 [ffff8813dedfbdc0] kswapd at ffffffff811ae92f
-  #13 [ffff8813dedfbec0] kthread at ffffffff810a8428
-  #14 [ffff8813dedfbf50] ret_from_fork at ffffffff81745242
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: bd293d071ffe ("dm bufio: fix deadlock with loop device")
-Depends-on: d0a255e795ab ("loop: set PF_MEMALLOC_NOIO for the worker thread")
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Link: http://lkml.kernel.org/r/20190820160237.GB4983@redhat.com
+Fixes: 04f5866e41fb ("coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping")
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Reviewed-by: Andrea Arcangeli <aarcange@redhat.com>
+Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-bufio.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/userfaultfd.c |   25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
---- a/drivers/md/dm-bufio.c
-+++ b/drivers/md/dm-bufio.c
-@@ -1561,7 +1561,9 @@ dm_bufio_shrink_scan(struct shrinker *sh
- 	unsigned long freed;
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -431,6 +431,7 @@ static int userfaultfd_release(struct in
+ 	/* len == 0 means wake all */
+ 	struct userfaultfd_wake_range range = { .len = 0, };
+ 	unsigned long new_flags;
++	bool still_valid;
  
- 	c = container_of(shrink, struct dm_bufio_client, shrinker);
--	if (!dm_bufio_trylock(c))
-+	if (sc->gfp_mask & __GFP_FS)
-+		dm_bufio_lock(c);
-+	else if (!dm_bufio_trylock(c))
- 		return SHRINK_STOP;
+ 	ACCESS_ONCE(ctx->released) = true;
  
- 	freed  = __scan(c, sc->nr_to_scan, sc->gfp_mask);
+@@ -446,8 +447,7 @@ static int userfaultfd_release(struct in
+ 	 * taking the mmap_sem for writing.
+ 	 */
+ 	down_write(&mm->mmap_sem);
+-	if (!mmget_still_valid(mm))
+-		goto skip_mm;
++	still_valid = mmget_still_valid(mm);
+ 	prev = NULL;
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+ 		cond_resched();
+@@ -458,19 +458,20 @@ static int userfaultfd_release(struct in
+ 			continue;
+ 		}
+ 		new_flags = vma->vm_flags & ~(VM_UFFD_MISSING | VM_UFFD_WP);
+-		prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
+-				 new_flags, vma->anon_vma,
+-				 vma->vm_file, vma->vm_pgoff,
+-				 vma_policy(vma),
+-				 NULL_VM_UFFD_CTX);
+-		if (prev)
+-			vma = prev;
+-		else
+-			prev = vma;
++		if (still_valid) {
++			prev = vma_merge(mm, prev, vma->vm_start, vma->vm_end,
++					 new_flags, vma->anon_vma,
++					 vma->vm_file, vma->vm_pgoff,
++					 vma_policy(vma),
++					 NULL_VM_UFFD_CTX);
++			if (prev)
++				vma = prev;
++			else
++				prev = vma;
++		}
+ 		vma->vm_flags = new_flags;
+ 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
+ 	}
+-skip_mm:
+ 	up_write(&mm->mmap_sem);
+ 	mmput(mm);
+ wakeup:
 
 
