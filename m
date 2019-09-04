@@ -6,215 +6,83 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4F5AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F41C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB3C21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67AA2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732969AbfIDTUM (ORCPT
+        id S1730511AbfIDT0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:20:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37549 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbfIDTUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:20:11 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D4BF5C04B2FF
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Sep 2019 19:20:10 +0000 (UTC)
-Received: by mail-qt1-f197.google.com with SMTP id n59so12455888qtd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 12:20:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YG7YQrWiCrGYyXn0hsXQfZREV2+DUhMzGKMuB8RBizc=;
-        b=qMokyEb/cQAQ3Jf/bI0rvlWJqLwUAM25Acu+5iP74lFMJyK+GfR1h+8/oibBj2Oila
-         pF4MjIIOc1t4V3wLvXOP7s1Tz09nnMyc3bTji+8lOeRpFUH0Slr5+tSt4rvpabGNDLlz
-         xKVN/FzBdM7Eii3ZiKHAe6NAzOiISeqv2fL/dhzYRg7jXWm4pDsOkITYZB6bRmHno8Gv
-         Z6I+qwXqmJtV9r4c/hb4cO25t3g2AH5T/6xZppqjOxnFWhJ/X6dP+Rpz+hVVQ4yqWphX
-         dQ2M9hlnBnLVpqUeuBOSF4x20Vv9dH+slTcu5rUV7GxZVo+/ri5Fl+O9//oOyoTmhFam
-         Oi2w==
-X-Gm-Message-State: APjAAAUpL5UIsMbjXiiv8+XHmsIJmpEqiho4FanIb85l38STb+h242OH
-        YbRi5uefFSeABBDd+0w3xbF4rTmQWQ/iw5IAIcIyWcMAS6KBoFKKasJlPXOQy6epdgeanAiWtdB
-        3xjjUG4LXWDnFCl/55CyBW3pk
-X-Received: by 2002:ac8:7543:: with SMTP id b3mr41419649qtr.13.1567624809584;
-        Wed, 04 Sep 2019 12:20:09 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyiuEOA18y0IcItqFHBzPGP6QKRPqZkjGSaYlr5ueWyM8jRojhccek0i79rLZWkTKIiGK0c0Q==
-X-Received: by 2002:ac8:7543:: with SMTP id b3mr41419621qtr.13.1567624809337;
-        Wed, 04 Sep 2019 12:20:09 -0700 (PDT)
-Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
-        by smtp.gmail.com with ESMTPSA id l23sm9438852qta.53.2019.09.04.12.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 12:20:08 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 15:20:01 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
-        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org,
-        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        riel@surriel.com, konrad.wilk@oracle.com, lcapitulino@redhat.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
-Subject: Re: [PATCH v7 0/6] mm / virtio: Provide support for unused page
- reporting
-Message-ID: <20190904151905-mutt-send-email-mst@kernel.org>
-References: <20190904150920.13848.32271.stgit@localhost.localdomain>
+        Wed, 4 Sep 2019 15:26:50 -0400
+Received: from smtprelay0239.hostedemail.com ([216.40.44.239]:36854 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729740AbfIDT0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 15:26:49 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 2178C182CED5B;
+        Wed,  4 Sep 2019 19:26:48 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sign82_1e205b955f54d
+X-Filterd-Recvd-Size: 2459
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  4 Sep 2019 19:26:46 +0000 (UTC)
+Message-ID: <ab957f98a62390dbc603632704c60d39596095c1.camel@perches.com>
+Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
+ Identifier
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 04 Sep 2019 12:26:45 -0700
+In-Reply-To: <20190904160010.4532c3f5@coco.lan>
+References: <20190831151147.GA7082@nishad>
+         <20190904153432.7fb54f02@coco.lan> <20190904183608.GA495@kroah.com>
+         <20190904160010.4532c3f5@coco.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904150920.13848.32271.stgit@localhost.localdomain>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:10:24AM -0700, Alexander Duyck wrote:
-> This series provides an asynchronous means of reporting to a hypervisor
-> that a guest page is no longer in use and can have the data associated
-> with it dropped. To do this I have implemented functionality that allows
-> for what I am referring to as unused page reporting
+On Wed, 2019-09-04 at 16:00 -0300, Mauro Carvalho Chehab wrote:
+> With Python, you can't even use the second line, as it is reserved
+> for charset encoding. 
 > 
-> The functionality for this is fairly simple. When enabled it will allocate
-> statistics to track the number of reported pages in a given free area.
-> When the number of free pages exceeds this value plus a high water value,
-> currently 32, it will begin performing page reporting which consists of
-> pulling pages off of free list and placing them into a scatter list. The
-> scatterlist is then given to the page reporting device and it will perform
-> the required action to make the pages "reported", in the case of
-> virtio-balloon this results in the pages being madvised as MADV_DONTNEED
-> and as such they are forced out of the guest. After this they are placed
-> back on the free list, and an additional bit is added if they are not
-> merged indicating that they are a reported buddy page instead of a
-> standard buddy page. The cycle then repeats with additional non-reported
-> pages being pulled until the free areas all consist of reported pages.
+> So, realistically, the SPDX header could be up to the third line of
+> a given file.
 > 
-> I am leaving a number of things hard-coded such as limiting the lowest
-> order processed to PAGEBLOCK_ORDER, and have left it up to the guest to
-> determine what the limit is on how many pages it wants to allocate to
-> process the hints. The upper limit for this is based on the size of the
-> queue used to store the scattergather list.
+> Besides that, I vaguely remember some discussions we had, back on the
+> days SPDX was introduced, envolving Thomas, Linus and others. My 
+> understanding for such discussions is that something like this:
 > 
-> My primary testing has just been to verify the memory is being freed after
-> allocation by running memhog 40g on a 40g guest and watching the total
-> free memory via /proc/meminfo on the host. With this I have verified most
-> of the memory is freed after each iteration. As far as performance I have
-> been mainly focusing on the will-it-scale/page_fault1 test running with
-> 16 vcpus. I have modified it to use Transparent Huge Pages. With this I
-> see almost no difference, -0.08%, with the patches applied and the feature
-> disabled. I see a regression of -0.86% with the feature enabled, but the
-> madvise disabled in the hypervisor due to a device being assigned. With
-> the feature fully enabled I see a regression of -3.27% versus the baseline
-> without these patches applied. In my testing I found that most of the
-> overhead was due to the page zeroing that comes as a result of the pages
-> having to be faulted back into the guest.
+> /*
+>  * SPDX-License-Identifier: GPL-2.0+
+>  *
+>  * some other notes about the file
+>  */
 > 
-> One side effect of these patches is that the guest becomes much more
-> resilient in terms of NUMA locality. With the pages being freed and then
-> reallocated when used it allows for the pages to be much closer to the
-> active thread, and as a result there can be situations where this patch
-> set will out-perform the stock kernel when the guest memory is not local
-> to the guest vCPUs. To avoid that in my testing I set the affinity of all
-> the vCPUs and QEMU instance to the same node.
+> Would be acceptable, as the first line of the comment (with is at
+> the beginning of the file) is the SPDX tag.
+
+Using the 2nd line of a .[ch] file does not follow the
+documented mechanisms.
+
+Documentation/process/license-rules.rst-1. Placement:
+Documentation/process/license-rules.rst-
+Documentation/process/license-rules.rst-   The SPDX license identifier in kernel files shall be added at the first
+Documentation/process/license-rules.rst:   possible line in a file which can contain a comment.  For the majority
+Documentation/process/license-rules.rst:   of files this is the first line, except for scripts which require the
+Documentation/process/license-rules.rst:   '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
+Documentation/process/license-rules.rst:   identifier goes into the second line.
 
 
-So the virtio side looks good to me. But we need mm faulks to ack the mm
-changes. And maybe merge all of this ...
-
-
-> Changes from the RFC:
-> https://lore.kernel.org/lkml/20190530215223.13974.22445.stgit@localhost.localdomain/
-> Moved aeration requested flag out of aerator and into zone->flags.
-> Moved boundary out of free_area and into local variables for aeration.
-> Moved aeration cycle out of interrupt and into workqueue.
-> Left nr_free as total pages instead of splitting it between raw and aerated.
-> Combined size and physical address values in virtio ring into one 64b value.
-> 
-> Changes from v1:
-> https://lore.kernel.org/lkml/20190619222922.1231.27432.stgit@localhost.localdomain/
-> Dropped "waste page treatment" in favor of "page hinting"
-> Renamed files and functions from "aeration" to "page_hinting"
-> Moved from page->lru list to scatterlist
-> Replaced wait on refcnt in shutdown with RCU and cancel_delayed_work_sync
-> Virtio now uses scatterlist directly instead of intermediate array
-> Moved stats out of free_area, now in separate area and pointed to from zone
-> Merged patch 5 into patch 4 to improve review-ability
-> Updated various code comments throughout
-> 
-> Changes from v2:
-> https://lore.kernel.org/lkml/20190724165158.6685.87228.stgit@localhost.localdomain/
-> Dropped "page hinting" in favor of "page reporting"
-> Renamed files from "hinting" to "reporting"
-> Replaced "Hinted" page type with "Reported" page flag
-> Added support for page poisoning while hinting is active
-> Add QEMU patch that implements PAGE_POISON feature
-> 
-> Changes from v3:
-> https://lore.kernel.org/lkml/20190801222158.22190.96964.stgit@localhost.localdomain/
-> Added mutex lock around page reporting startup and shutdown
-> Fixed reference to "page aeration" in patch 2
-> Split page reporting function bit out into separate QEMU patch
-> Limited capacity of scatterlist to vq size - 1 instead of vq size
-> Added exception handling for case of virtio descriptor allocation failure
-> 
-> Changes from v4:
-> https://lore.kernel.org/lkml/20190807224037.6891.53512.stgit@localhost.localdomain/
-> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_cycle()
-> Dropped if/continue for ternary operator in page_reporting_process()
-> Added checks for isolate and cma types to for_each_reporting_migratetype_order
-> Added virtio-dev, Michal Hocko, and Oscar Salvador to to:/cc:
-> Rebased on latest linux-next and QEMU git trees
-> 
-> Changes from v5:
-> https://lore.kernel.org/lkml/20190812213158.22097.30576.stgit@localhost.localdomain/
-> Replaced spin_(un)lock with spin_(un)lock_irq in page_reporting_startup()
-> Updated shuffle code to use "shuffle_pick_tail" and updated patch description
-> Dropped storage of order and migratettype while page is being reported
-> Used get_pfnblock_migratetype to determine migratetype of page
-> Renamed put_reported_page to free_reported_page, added order as argument
-> Dropped check for CMA type as I believe we should be reporting those
-> Added code to allow moving of reported pages into and out of isolation
-> Defined page reporting order as minimum of Huge Page size vs MAX_ORDER - 1
-> Cleaned up use of static branch usage for page_reporting_notify_enabled
-> 
-> Changes from v6:
-> https://lore.kernel.org/lkml/20190821145806.20926.22448.stgit@localhost.localdomain/
-> Rebased on linux-next for 20190903
-> Added jump label to __page_reporting_request so we release RCU read lock
-> Removed "- 1" from capacity limit based on virtio ring
-> Added code to verify capacity is non-zero or return error on startup
-> 
-> ---
-> 
-> Alexander Duyck (6):
->       mm: Adjust shuffle code to allow for future coalescing
->       mm: Move set/get_pcppage_migratetype to mmzone.h
->       mm: Use zone and order instead of free area in free_list manipulators
->       mm: Introduce Reported pages
->       virtio-balloon: Pull page poisoning config out of free page hinting
->       virtio-balloon: Add support for providing unused page reports to host
-> 
-> 
->  drivers/virtio/Kconfig              |    1 
->  drivers/virtio/virtio_balloon.c     |   84 ++++++++-
->  include/linux/mmzone.h              |  124 ++++++++-----
->  include/linux/page-flags.h          |   11 +
->  include/linux/page_reporting.h      |  177 ++++++++++++++++++
->  include/uapi/linux/virtio_balloon.h |    1 
->  mm/Kconfig                          |    5 +
->  mm/Makefile                         |    1 
->  mm/internal.h                       |   18 ++
->  mm/memory_hotplug.c                 |    1 
->  mm/page_alloc.c                     |  216 ++++++++++++++++------
->  mm/page_reporting.c                 |  340 +++++++++++++++++++++++++++++++++++
->  mm/shuffle.c                        |   40 ++--
->  mm/shuffle.h                        |   12 +
->  14 files changed, 900 insertions(+), 131 deletions(-)
->  create mode 100644 include/linux/page_reporting.h
->  create mode 100644 mm/page_reporting.c
-> 
-> --
