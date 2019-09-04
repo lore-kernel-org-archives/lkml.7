@@ -2,102 +2,99 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B6BC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D149C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403C922CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567615839;
-	bh=b/x7QUROWv0yxoBVITIFYudbm4LpCcqr2OJ2VY0gqq8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pmDK9ndTi9FeLE9dRyITcGBfMuYoDnSttqziWtjq4IImdDMiOoHECH5ecHF2Ms3/A
-	 TmvfFlN45Pdliqh+QX7JWkySamLCfXhGrUSPCT9FR/5GC1jvaD87BoDTWT6gUbGaFe
-	 LsRG5zH6u6quxIm+TjFbj0idK9/e6a1wt80/ZKoc=
+	by mail.kernel.org (Postfix) with ESMTP id 1B8D920882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:51:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i3Woe2pW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732191AbfIDQui (ORCPT
+        id S1732339AbfIDQva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731599AbfIDQuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:50:37 -0400
-Received: from localhost (unknown [122.182.201.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB1BF2087E;
-        Wed,  4 Sep 2019 16:50:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567615836;
-        bh=b/x7QUROWv0yxoBVITIFYudbm4LpCcqr2OJ2VY0gqq8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jOM2Hxu4umgWpQLtVXuFiGxx/FAXv3Gc+0G9Scdok9NzK6wiXb7aZyhPC86JhhrP4
-         ijcxucrMe5zDGbFGP5vOjqO71gAR9JVMAP4mVLfHiWe+fa/AjDnmrlRHK8kte29lSP
-         6PMctjjHWvLuhrkRDCt3sRRoRiHn4upxzLqmSh00=
-Date:   Wed, 4 Sep 2019 22:19:26 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [alsa-devel] [PATCH 2/6] soundwire: cadence_master: add hw_reset
- capability in debugfs
-Message-ID: <20190904164926.GA2672@vkoul-mobl>
-References: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
- <20190813213227.5163-3-pierre-louis.bossart@linux.intel.com>
- <20190904071317.GJ2672@vkoul-mobl>
- <71411347-93cf-2617-4edd-f6b401fe7a9b@linux.intel.com>
+        Wed, 4 Sep 2019 12:51:30 -0400
+Received: from mail-io1-f54.google.com ([209.85.166.54]:32806 "EHLO
+        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732212AbfIDQv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:51:29 -0400
+Received: by mail-io1-f54.google.com with SMTP id m11so13743874ioo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WZhwDl6poxhpjErg8726fERGH8TrIU1vOsYDyQkch3E=;
+        b=i3Woe2pWDCqAw20ncPSTH8Ql/DNWO3edrHq446JMjqWucW0BQjssI4ttLhKd71iIyA
+         s4xgPPgqhtUZDObsdTA0/iwkPfmg+Uz/cfT/9iJpj/RDTX/MtG83BLLsK+bHQxU+LbCJ
+         Jse0xUFXD6Uzij7kOt7TziTiqtDRxp8wvxVVPsLKaCquivp6GEMrHerFs7w64WsyQDoy
+         Ki44kzBodecZCrKnR4RzT9Nw1C94M2ntE8SKSIbn+OzoGXMEuGDuYKmYPX6bb2yvC1lr
+         ChOh5yXl2tF0pod2DjqiglMA155srRe6QOwrzQBKXSalbNM9bk2Hfr1AgrVFR7xavRyN
+         7J1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WZhwDl6poxhpjErg8726fERGH8TrIU1vOsYDyQkch3E=;
+        b=G/4T782IExvz3TT3HG8+uvXZt7wm3ICRiNOnvWTPnuajrOBegDqrLmpJ19aRwT1WNo
+         HyQMDOE4/zD5ad0EZvirCiZ/OkiCiLaPYPb/XdAWGCIimgL14J+gsmoydr/2r8FUNUhK
+         ZZiF26pt6XzicehNK6uzvaqWQ7foo1OC9V3w6We82PMn6RcYckr9ggjtNhu5KrmppfGW
+         oQqPfyDpQ8yvv6AWDVL69ZZxloarqe3BtJlzQ+6BuZC+lhdAWoM5mBJbP/p4s1EsVUPR
+         cm/b3lYsOGSUObacilFUmfOaWgkxn4DVokGppNuny4h+ZOyHnnEITAK17COH6t3s1SYR
+         hxRg==
+X-Gm-Message-State: APjAAAWLhQvIOgJgnkVoaUsOIXwNcykgzHI4rJz8nufNdwXm0JyntN9S
+        utlPLXKcc0F3XvY+50MiQ5M11CV+dEEli7iR/M5P+g==
+X-Google-Smtp-Source: APXvYqwjRF8a99iUluCFFe+DjE80oak9svxYnq42f+Yw74Cq7sqW1SVYbnVAS0cHrDmZBYUEGkazDlwCG7/YSNLiOY8=
+X-Received: by 2002:a6b:6303:: with SMTP id p3mr5303269iog.169.1567615888614;
+ Wed, 04 Sep 2019 09:51:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71411347-93cf-2617-4edd-f6b401fe7a9b@linux.intel.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <20190820001805.241928-1-matthewgarrett@google.com>
+ <20190820001805.241928-4-matthewgarrett@google.com> <3440.1567182506@warthog.procyon.org.uk>
+In-Reply-To: <3440.1567182506@warthog.procyon.org.uk>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Wed, 4 Sep 2019 09:51:16 -0700
+Message-ID: <CACdnJuvR7mqhpzEQZdgw9EE_PsM-QWQ_JmwFLcoeLbAuKCHnOA@mail.gmail.com>
+Subject: Re: [PATCH V40 03/29] security: Add a static lockdown policy LSM
+To:     David Howells <dhowells@redhat.com>
+Cc:     James Morris <jmorris@namei.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-09-19, 08:18, Pierre-Louis Bossart wrote:
-> On 9/4/19 2:13 AM, Vinod Koul wrote:
-> > On 13-08-19, 16:32, Pierre-Louis Bossart wrote:
-> > > Provide debugfs capability to kick link and devices into hard-reset
-> > > (as defined by MIPI). This capability is really useful when some
-> > > devices are no longer responsive and/or to check the software handling
-> > > of resynchronization.
-> > > 
-> > > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> > > ---
-> > >   drivers/soundwire/cadence_master.c | 20 ++++++++++++++++++++
-> > >   1 file changed, 20 insertions(+)
-> > > 
-> > > diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-> > > index 046622e4b264..bd58d80ff636 100644
-> > > --- a/drivers/soundwire/cadence_master.c
-> > > +++ b/drivers/soundwire/cadence_master.c
-> > > @@ -340,6 +340,23 @@ static int cdns_reg_show(struct seq_file *s, void *data)
-> > >   }
-> > >   DEFINE_SHOW_ATTRIBUTE(cdns_reg);
-> > > +static int cdns_hw_reset(void *data, u64 value)
-> > > +{
-> > > +	struct sdw_cdns *cdns = data;
-> > > +	int ret;
-> > > +
-> > > +	if (value != 1)
-> > > +		return 0;
-> > 
-> > Should this not be EINVAL to indicate invalid value passed?
-> 
-> Maybe. I must admit I don't know what -EINVAL would do, this is used for
-> debugfs so it's not clear to me if the user will see a difference?
+On Fri, Aug 30, 2019 at 9:28 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Matthew Garrett <matthewgarrett@google.com> wrote:
+>
+> > +static char *lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1] = {
+>
+> const char *const maybe?
 
-Well user should see "write error: Invalid argument" when he writes
-anything other than valid values :)
+Seems reasonable.
 
--- 
-~Vinod
+> > +static enum lockdown_reason lockdown_levels[] = {LOCKDOWN_NONE,
+> > +                                              LOCKDOWN_INTEGRITY_MAX,
+> > +                                              LOCKDOWN_CONFIDENTIALITY_MAX};
+> > +
+>
+> const?
+>
+> Isn't this also a 1:1 mapping?
+
+Sorry, a 1:1 mapping to what?
+
+> > +static int lock_kernel_down(const char *where, enum lockdown_reason level)
+>
+> Is the last parameter the reason or the level?  You're mixing the terms.
+
+Fair.
