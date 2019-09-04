@@ -2,93 +2,90 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7416C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C79C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE8522CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:36:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWugBZGm"
+	by mail.kernel.org (Postfix) with ESMTP id 089B02077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:36:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730930AbfIDOg3 (ORCPT
+        id S1730981AbfIDOgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:36:29 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36521 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfIDOg3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:36:29 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y19so21557107wrd.3;
-        Wed, 04 Sep 2019 07:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=thf6ZYT2fvljLGGoatMJVii4VlehtlAdeI7q9TGVUxs=;
-        b=RWugBZGmQbZIL33HQqpOXcO6a9jK8uzlaKpqyvDmENzd1oA6GAQCPoMqebLtSEKZad
-         Jh1Q64EKQ7FLsJMb/iKl335z5iX7H1dGWriR+kiu1OMMzstxdHR1eMDVUfmFtbV96kBe
-         YxmoT6yQzVvW++V/KkTjF1z7yiOo6VFoaZgZgaeBiY/Zq5HrgJ4vteUw3jLgrEweLh8o
-         fXBFIwu4rc8hzAxy9Z1fZU39zqZ+V0qizfDEM2+201OEdRaXkusGgI6wwBtDCtR/O7Jy
-         KcN9NS7jXNaoV8+z3XYrYxULpPWqmdVkO5nRh4CoOYTbRt0mx5B1pH+Ham21vlqhRI+R
-         ObsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=thf6ZYT2fvljLGGoatMJVii4VlehtlAdeI7q9TGVUxs=;
-        b=MCjIfyhI+0yr01ZcRdIoPhDvT3CS6jh0J8Dj8yvT/zCDpvavgMYxGsQrqa/s4eyQqJ
-         ZDUKWSyXcG0Asf5/FrP/wnVPbFWfszPx/1dA8a/AwRmUZABgPhnFMN4M2QARJUK9xHKU
-         IJWyXFD/LTQZ5RgUm6tR1SQNgJwn8oA7zQr5cNqNuTFPmJ6VeHCKGPuI3lgJGsV7E4ZK
-         vEParhg/hIXK6H9a6OgfZ7HOUSMOvwjekYAwdAtsQb6tXK3/dw2HQImxSNr+GQl6+E+s
-         KUVtcEYvVMGmDuj9qUbx3SYmjfXFDhpYqICFOEWc/lm6DTq2yTbpUgfnrv0oPYZuTVEt
-         M6tw==
-X-Gm-Message-State: APjAAAUQGf7uh0lEGErsGv/+T940heZDVvO8RZ6tWiuv3Ezjg0J6jtlG
-        kQWQaBCbaWr59gYmZoDEfOtkdZ8eEwT0ZA==
-X-Google-Smtp-Source: APXvYqyb0is4E5rj/kA8576GYtmsudrqswsrKNcdR+wgIY3d/vLmEgWGUpL+o/uJjtWmDp2CWM2SAw==
-X-Received: by 2002:a5d:678a:: with SMTP id v10mr23568596wru.145.1567607786884;
-        Wed, 04 Sep 2019 07:36:26 -0700 (PDT)
-Received: from rocinante (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id e30sm33559424wra.48.2019.09.04.07.36.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 07:36:26 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 16:36:25 +0200
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH v3] PCI: hv: Make functions static
-Message-ID: <20190904143624.GA8393@rocinante>
-References: <20190828221846.6672-1-kw@linux.com>
- <20190829091713.27130-1-kw@linux.com>
- <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
- <20190904142737.GA28184@e121166-lin.cambridge.arm.com>
+        Wed, 4 Sep 2019 10:36:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41640 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727083AbfIDOgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:36:38 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 575D4A28738;
+        Wed,  4 Sep 2019 14:36:38 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.63])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 94B9060BFB;
+        Wed,  4 Sep 2019 14:36:35 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed,  4 Sep 2019 16:36:36 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 16:36:33 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH 1/3] task: Add a count of task rcu users
+Message-ID: <20190904143632.GE24568@redhat.com>
+References: <CAHk-=whuggNup=-MOS=7gBkuRqUigk7ABot_Pxi5koF=dM3S5Q@mail.gmail.com>
+ <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
+ <20190830160957.GC2634@redhat.com>
+ <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org>
+ <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <87ef0yt221.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904142737.GA28184@e121166-lin.cambridge.arm.com>
+In-Reply-To: <87ef0yt221.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 04 Sep 2019 14:36:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Lorenzo,
+On 09/02, Eric W. Biederman wrote:
+>
+> @@ -900,10 +900,9 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+> -	/*
+> -	 * One for us, one for whoever does the "release_task()" (usually
+> -	 * parent)
+> -	 */
+> +	/* One for the user space visible state that goes away when reaped. */
+> +	refcount_set(&tsk->rcu_users, 1);
 
-[...]
-> This patch should go via the net tree - the code it is fixing
-> is queued there, I will drop this patch from the PCI review
-> queue.
-[...]
+forgot to mention...
 
-Thank you!  Appreciated.
+This is minor, but we don't really need to initialize child->rcu_users in
+dup_task_struct(), we can just add
 
-Krzysztof
+	.rcu_users = REFCOUNT_INIT(2),
+
+into init_task's initializer.
+
+Until we have a refcount_inc(task->rcu_users) user, of course.
+
+Oleg.
+
