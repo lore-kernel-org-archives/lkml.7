@@ -2,123 +2,134 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E74C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE7DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88892339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:38:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="jmqI5tgg"
+	by mail.kernel.org (Postfix) with ESMTP id F0A742339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567593490;
+	bh=a7KcCjxvZ7QnCGdxs/fbPhmEa4sN3JIvH3PaQemDeBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LmdSN8rH+YorzZpUZJLA8S6TkBUizisSZIE8KlafoHKOCB7wfTaFe0oz3bZoBjwtX
+	 Bi9dWq7mpsKkRJm+62noxe4zJaWiDmsb+8rTOhA79WdAqt1Z6QTv5IYa/YAoqTGX3B
+	 4eQyJkLGu8sOmo0bGlC1hG20CQpZDIrSFtdu6apM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbfIDKiC (ORCPT
+        id S1729525AbfIDKiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:38:02 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:53786 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfIDKiC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:38:02 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 8A1353F6E5;
-        Wed,  4 Sep 2019 12:37:49 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=jmqI5tgg;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5OXVNpQKvjjO; Wed,  4 Sep 2019 12:37:48 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 194913F538;
-        Wed,  4 Sep 2019 12:37:46 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 4A1BB36117F;
-        Wed,  4 Sep 2019 12:37:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1567593466; bh=akRBTXxMLQXPdPRml7vfcwvBwbf56SVhUOk6CAVkC7g=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jmqI5tggrRqyalYT5qgVmkGv5E8PK0uoJAGge7hKl4hbNkmvoLq77PsUgXGd2drhA
-         I/iSZLiecT2/xY1eWKLfVOepEryYzy3tLTAVvISoPgU2jKW+HJTBb3A32vn9GWQ6yV
-         pCPMJEf5h0JyBbBhEIyiOqKdJBtPPg2R2PR6gDBc=
-Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
- memory encryption
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        pv-drivers@vmware.com,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-References: <20190903131504.18935-1-thomas_os@shipmail.org>
- <20190903131504.18935-4-thomas_os@shipmail.org>
- <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
- <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
- <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com>
- <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
- <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com>
- <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
- <CALCETrVnNpPwmRddGLku9hobE7wG30_3j+QfcYxk09hZgtaYww@mail.gmail.com>
- <44b094c8-63fe-d9e5-1bf4-7da0788caccf@shipmail.org>
- <6d122d62-9c96-4c29-8d06-02f7134e5e2a@shipmail.org>
- <B3C5DD1B-A33C-417F-BDDC-73120A035EA5@amacapital.net>
- <3393108b-c7e3-c9be-b65b-5860c15ca228@shipmail.org>
- <CAKMK7uH0jxaWJLxfXfGLyN-Rb=0ZKUFTkrEPdFCuGCh4ORCv9w@mail.gmail.com>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <0fd10438-5da4-fb69-f40c-c9b4beea1977@shipmail.org>
-Date:   Wed, 4 Sep 2019 12:37:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 4 Sep 2019 06:38:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725966AbfIDKiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:38:08 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3B5922CF5;
+        Wed,  4 Sep 2019 10:38:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567593487;
+        bh=a7KcCjxvZ7QnCGdxs/fbPhmEa4sN3JIvH3PaQemDeBc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ILxU3QE84ARauFFBedsGBmjVGkCC3WbRNVBOwju+fL2uI5eW8rCFKvmHEFiXdhWzA
+         nkpMPzRYVlMsu5NYGN/LgRzq6rPO2zNCzRllDIS7Co2IFmxjMQFEtZkqeTM51Fw8bK
+         6D45/fO/KRyf/38IwuiH7BzsvYk7Ws+1lLP2c0i4=
+Date:   Wed, 4 Sep 2019 11:38:03 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] efi/libstub/arm64: Report meaningful relocation errors
+Message-ID: <20190904103803.iv7agcw2suv6fcib@willie-the-truck>
+References: <201908141353.043EF60B@keescook>
 MIME-Version: 1.0
-In-Reply-To: <CAKMK7uH0jxaWJLxfXfGLyN-Rb=0ZKUFTkrEPdFCuGCh4ORCv9w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201908141353.043EF60B@keescook>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 9:53 AM, Daniel Vetter wrote:
-> On Wed, Sep 4, 2019 at 8:49 AM Thomas Hellström (VMware)
-> <thomas_os@shipmail.org> wrote:
->> On 9/4/19 1:15 AM, Andy Lutomirski wrote:
->>> But, reading this, I have more questions:
->>>
->>> Can’t you get rid of cvma by using vmf_insert_pfn_prot()?
->> It looks like that, although there are comments in the code about
->> serious performance problems using VM_PFNMAP / vmf_insert_pfn() with
->> write-combining and PAT, so that would require some serious testing with
->> hardware I don't have. But I guess there is definitely room for
->> improvement here. Ideally we'd like to be able to change the
->> vma->vm_page_prot within fault(). But we can
-> Just a quick comment on this: It's the repeated (per-pfn/pte) lookup
-> of the PAT tables, which are dead slow. If you have a struct
-> io_mapping then that can be done once, and then just blindly inserted.
-> See remap_io_mapping in i915.
-> -Daniel
+Hi Kees,
 
-Thanks, Daniel.
+On Wed, Aug 14, 2019 at 01:55:50PM -0700, Kees Cook wrote:
+> When UEFI booting, if allocate_pages() fails (either via KASLR or
+> regular boot), efi_low_alloc() is used for fall back. If it, too, fails,
+> it reports "Failed to relocate kernel". Then handle_kernel_image()
+> reports the failure to its caller, which unhelpfully reports exactly
+> the same string again:
+> 
+> EFI stub: ERROR: Failed to relocate kernel
+> EFI stub: ERROR: Failed to relocate kernel
+> 
+> While debugging linker errors in the UEFI code that created insane memory
+> sizes that all the allocation attempts would fail at, this was a cause
+> for confusion. Knowing each allocation had failed would have helped me
+> isolate the issue sooner. To that end, this improves the error messages
+> to detail which specific allocations have failed.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/firmware/efi/libstub/arm64-stub.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
+> index 1550d244e996..24022f956e01 100644
+> --- a/drivers/firmware/efi/libstub/arm64-stub.c
+> +++ b/drivers/firmware/efi/libstub/arm64-stub.c
+> @@ -111,6 +111,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
+>  		status = efi_random_alloc(sys_table_arg, *reserve_size,
+>  					  MIN_KIMG_ALIGN, reserve_addr,
+>  					  (u32)phys_seed);
+> +		if (status != EFI_SUCCESS)
+> +			pr_efi_err(sys_table_arg, "KASLR allocate_pages() failed\n");
+>  
+>  		*image_addr = *reserve_addr + offset;
+>  	} else {
+> @@ -135,6 +137,8 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
+>  					EFI_LOADER_DATA,
+>  					*reserve_size / EFI_PAGE_SIZE,
+>  					(efi_physical_addr_t *)reserve_addr);
+> +		if (status != EFI_SUCCESS)
+> +			pr_efi_err(sys_table_arg, "regular allocate_pages() failed\n");
+>  	}
 
-Indeed looks a lot like remap_pfn_range(), but usable at fault time?
+Not sure I see the need to distinsuish the 'KASLR' case from the 'regular'
+case -- only one should run, right?  That also didn't seem to be part of
+the use-case in the commit, unless I'm missing something.
 
-/Thomas
+Maybe combine the prints as per the diff below?
 
+Will
 
+--->8
+
+diff --git a/drivers/firmware/efi/libstub/arm64-stub.c b/drivers/firmware/efi/libstub/arm64-stub.c
+index 1550d244e996..820c58cc149e 100644
+--- a/drivers/firmware/efi/libstub/arm64-stub.c
++++ b/drivers/firmware/efi/libstub/arm64-stub.c
+@@ -143,13 +143,15 @@ efi_status_t handle_kernel_image(efi_system_table_t *sys_table_arg,
+ 				       MIN_KIMG_ALIGN, reserve_addr);
+ 
+ 		if (status != EFI_SUCCESS) {
+-			pr_efi_err(sys_table_arg, "Failed to relocate kernel\n");
++			pr_efi_err(sys_table_arg, "efi_low_alloc() failed\n");
+ 			*reserve_size = 0;
+ 			return status;
+ 		}
+ 		*image_addr = *reserve_addr + TEXT_OFFSET;
++	} else {
++		pr_efi_err(sys_table_arg, "allocate_pages() failed\n");
+ 	}
+-	memcpy((void *)*image_addr, old_image_addr, kernel_size);
+ 
++	memcpy((void *)*image_addr, old_image_addr, kernel_size);
+ 	return EFI_SUCCESS;
+ }
