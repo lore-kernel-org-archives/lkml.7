@@ -2,99 +2,130 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7F4C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610B9C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E209B22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37EDD22CE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567607325;
+	bh=L76A2ZvdZ49vwh9gPyzYANOjIS9WVsZyi57kx5mf8cQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c7bknzQ5Yq1a5AolvcnG31ichyzYa3sraKbAXsQbcNvVTJx6zIdqX2qGSt/Hbrpd/
+	 agTHb+7cpfk9Ia5ciLvnThnKJQ1lkUdV/LtCO77pRa2ML895rtGUf+fnW3IxlfkFM9
+	 2fAKxntCLFzl524Fjwg2gVmyLQRpxMTy91McUAFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbfIDO1t (ORCPT
+        id S1730846AbfIDO2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:27:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:56462 "EHLO foss.arm.com"
+        Wed, 4 Sep 2019 10:28:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfIDO1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:27:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8E7E1570;
-        Wed,  4 Sep 2019 07:27:47 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F7E93F59C;
-        Wed,  4 Sep 2019 07:27:46 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 15:27:37 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: Re: [PATCH v3] PCI: hv: Make functions static
-Message-ID: <20190904142737.GA28184@e121166-lin.cambridge.arm.com>
-References: <20190828221846.6672-1-kw@linux.com>
- <20190829091713.27130-1-kw@linux.com>
- <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
+        id S1729809AbfIDO2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:28:44 -0400
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C1F2341D;
+        Wed,  4 Sep 2019 14:28:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567607322;
+        bh=L76A2ZvdZ49vwh9gPyzYANOjIS9WVsZyi57kx5mf8cQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=szOhtdy3pm0hmLpuZGMow2vaeDvOjEj/9NcUKl3Ye865Ae8MB/Tl+Sip/dXvPxb9B
+         72hiCdJ/0l/oVbxrbyiOYabDzUdSAJFpf80udg8QExAsVR84ISBvUwLj6bCfquTzob
+         rRp/OA3BeXbrfH/12rQnn4/Hm5WjoM800DRgrq64=
+Received: by mail-lf1-f49.google.com with SMTP id r134so15222441lff.12;
+        Wed, 04 Sep 2019 07:28:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAXKsHSWA8QBIvUCi2NhiaW9xiys6xDkf8a0nO3ITrHh+iN4Xd9T
+        jvAfLq8FBPhlkyKV666hx0eZp2YqKOel4DQWN5Y=
+X-Google-Smtp-Source: APXvYqycXOQpNE+apc0JPS11KQSp+RmtxHn6Ng9LQDVcy4lQi5wxS8ZrsQ1N6swmH4iFFIYS5iVQwDmEz/WmDjOTj6U=
+X-Received: by 2002:a19:c649:: with SMTP id w70mr24808672lff.33.1567607320399;
+ Wed, 04 Sep 2019 07:28:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190904135918.25352-1-yuehaibing@huawei.com> <20190904135918.25352-26-yuehaibing@huawei.com>
+In-Reply-To: <20190904135918.25352-26-yuehaibing@huawei.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 4 Sep 2019 16:28:29 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdq4as1Oe3U+9znkvP0RA=sxUoiWVBCSbzf_wq_um2t=w@mail.gmail.com>
+Message-ID: <CAJKOXPdq4as1Oe3U+9znkvP0RA=sxUoiWVBCSbzf_wq_um2t=w@mail.gmail.com>
+Subject: Re: [PATCH -next 25/36] spi: s3c24xx: use devm_platform_ioremap_resource()
+ to simplify code
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     broonie@kernel.org, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, eric@anholt.net, wahrenst@gmx.net,
+        shc_work@mail.ru, agross@kernel.org, khilman@baylibre.com,
+        matthias.bgg@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, avifishman70@gmail.com, tmaimon77@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, kgene@kernel.org,
+        Andi Shyti <andi@etezian.org>, palmer@sifive.com,
+        paul.walmsley@sifive.com, baohua@kernel.org, mripard@kernel.org,
+        wens@csie.org, ldewangan@nvidia.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, yamada.masahiro@socionext.com,
+        michal.simek@xilinx.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-spi@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-riscv@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 03:50:47PM +0000, Haiyang Zhang wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Krzysztof Wilczynski <kswilczynski@gmail.com> On Behalf Of Krzysztof
-> > Wilczynski
-> > Sent: Thursday, August 29, 2019 2:17 AM
-> > To: Bjorn Helgaas <helgaas@kernel.org>
-> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> > <haiyangz@microsoft.com>; Stephen Hemminger
-> > <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Lorenzo
-> > Pieralisi <lorenzo.pieralisi@arm.com>; linux-pci@vger.kernel.org; linux-
-> > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
-> > Subject: [PATCH v3] PCI: hv: Make functions static
-> > 
-> > Functions hv_read_config_block(), hv_write_config_block() and
-> > hv_register_block_invalidate() are not used anywhere else and are local to
-> > drivers/pci/controller/pci-hyperv.c,
-> > and do not need to be in global scope, so make these static.
-> > 
-> > Resolve following compiler warning that can be seen when building with
-> > warnings enabled (W=1):
-> > 
-> > drivers/pci/controller/pci-hyperv.c:933:5: warning:
-> >  no previous prototype for ‘hv_read_config_block’
-> >   [-Wmissing-prototypes]
-> > 
-> > drivers/pci/controller/pci-hyperv.c:1013:5: warning:
-> >  no previous prototype for ‘hv_write_config_block’
-> >   [-Wmissing-prototypes]
-> > 
-> > drivers/pci/controller/pci-hyperv.c:1082:5: warning:
-> >  no previous prototype for ‘hv_register_block_invalidate’
-> >   [-Wmissing-prototypes]
-> > 
-> > Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
-> 
-> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+On Wed, 4 Sep 2019 at 16:00, YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
 
-This patch should go via the net tree - the code it is fixing
-is queued there, I will drop this patch from the PCI review
-queue.
+This tag does not look real... First of all where is the report?
+Second, it was reported by coccinelle.
+Reported-by should be use to give real credits.
 
-If it helps:
+Best regards,
+Krzysztof
 
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/spi/spi-s3c24xx.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
+> index aea8fd9..2d6e37f 100644
+> --- a/drivers/spi/spi-s3c24xx.c
+> +++ b/drivers/spi/spi-s3c24xx.c
+> @@ -487,7 +487,6 @@ static int s3c24xx_spi_probe(struct platform_device *pdev)
+>         struct s3c2410_spi_info *pdata;
+>         struct s3c24xx_spi *hw;
+>         struct spi_master *master;
+> -       struct resource *res;
+>         int err = 0;
+>
+>         master = spi_alloc_master(&pdev->dev, sizeof(struct s3c24xx_spi));
+> @@ -536,8 +535,7 @@ static int s3c24xx_spi_probe(struct platform_device *pdev)
+>         dev_dbg(hw->dev, "bitbang at %p\n", &hw->bitbang);
+>
+>         /* find and map our resources */
+> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       hw->regs = devm_ioremap_resource(&pdev->dev, res);
+> +       hw->regs = devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(hw->regs)) {
+>                 err = PTR_ERR(hw->regs);
+>                 goto err_no_pdata;
+> --
+> 2.7.4
+>
+>
