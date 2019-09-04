@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D55AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF95EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAFD2070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982F420820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613003;
-	bh=pUVWt381qJjF8tjvuVMb4FsfCYLWkbgME4MV9zTIhsc=;
+	s=default; t=1567613007;
+	bh=s3X8KYhopGYFylN09akusJr4NOztZXLrmbfsb8R3yHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOYoGx+8gY3bLoVbubTgcjzmKLTuw0rM6tOO69+oY1+LLFh6oLQSOne03hXqXCaIW
-	 EkQ4GRN8b8eNfvkITSNci9lwjP5gKylQUvVHz+Ewjv/yzjrAXoqrszSkL9vGAnPrsG
-	 QQODzVUmY7hPfwEU7i9UjS361pba+E9A/5v9jR/k=
+	b=O37NFMdH1OoDZslRqH87c02Dfy9Jr0uvP8DF3PObWTkSnjWik1QPQiCLYI/L8s3bG
+	 IV8Js5w98AeRAsG49CUgVVbRcqwM/HmrWnOYitjKStsFFDKhxIKsurr7CkIAO2bp6c
+	 NhnvOq34Y9wWe8SkrA4kE3+ERT6bGRtPgbv495oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387652AbfIDQDX (ORCPT
+        id S2387667AbfIDQD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39776 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732358AbfIDQDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:21 -0400
+        id S2387654AbfIDQDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7573022CF7;
-        Wed,  4 Sep 2019 16:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90AD52341C;
+        Wed,  4 Sep 2019 16:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567613000;
-        bh=pUVWt381qJjF8tjvuVMb4FsfCYLWkbgME4MV9zTIhsc=;
+        s=default; t=1567613003;
+        bh=s3X8KYhopGYFylN09akusJr4NOztZXLrmbfsb8R3yHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v0H5GoBWLs/5aLobdkjpusK41A8721BCx9N+Bdzv8EznAFhCcCOQKbgKRk+i8EAlx
-         jIQrFMtHs1S51VGL82UW+glr5WUc08CmPo8+1Aa+pzAqm0NusdMcE5z8XsuIqcWdV0
-         NWXkcQKmd8t3sxjY0Tjvc9egU6YmLp6+SzQyuLv8=
+        b=VHdrcNM09meJKAVE9ibnAWZuFC7KXbCGTsPxR3xBjuJlUteMw3962+3JyLGztP2LG
+         ayD7p6A+KNOzcLvaNdiMTKVWC07fHoNDJ9jzbJgoLhyhOxm7QOfEPinC4xsBP8OzSP
+         dJCehKEArlxASU4cYE6RudjLpa4kX5/zwxDTo1bA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, alan@linux.intel.com,
-        bp@alien8.de, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar@intel.com, rppt@linux.ibm.com, tony.luck@intel.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 09/20] x86/apic: Fix arch_dynirq_lower_bound() bug for DT enabled machines
-Date:   Wed,  4 Sep 2019 12:02:52 -0400
-Message-Id: <20190904160303.5062-9-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Jan Stancek <jstancek@redhat.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 12/20] NFSv2: Fix write regression
+Date:   Wed,  4 Sep 2019 12:02:55 -0400
+Message-Id: <20190904160303.5062-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
 References: <20190904160303.5062-1-sashal@kernel.org>
@@ -65,69 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3e5bedc2c258341702ddffbd7688c5e6eb01eafa ]
+[ Upstream commit d33d4beb522987d1c305c12500796f9be3687dee ]
 
-Rahul Tanwar reported the following bug on DT systems:
+Ensure we update the write result count on success, since the
+RPC call itself does not do so.
 
-> 'ioapic_dynirq_base' contains the virtual IRQ base number. Presently, it is
-> updated to the end of hardware IRQ numbers but this is done only when IOAPIC
-> configuration type is IOAPIC_DOMAIN_LEGACY or IOAPIC_DOMAIN_STRICT. There is
-> a third type IOAPIC_DOMAIN_DYNAMIC which applies when IOAPIC configuration
-> comes from devicetree.
->
-> See dtb_add_ioapic() in arch/x86/kernel/devicetree.c
->
-> In case of IOAPIC_DOMAIN_DYNAMIC (DT/OF based system), 'ioapic_dynirq_base'
-> remains to zero initialized value. This means that for OF based systems,
-> virtual IRQ base will get set to zero.
-
-Such systems will very likely not even boot.
-
-For DT enabled machines ioapic_dynirq_base is irrelevant and not
-updated, so simply map the IRQ base 1:1 instead.
-
-Reported-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Tested-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Tested-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: alan@linux.intel.com
-Cc: bp@alien8.de
-Cc: cheol.yong.kim@intel.com
-Cc: qi-ming.wu@intel.com
-Cc: rahul.tanwar@intel.com
-Cc: rppt@linux.ibm.com
-Cc: tony.luck@intel.com
-Link: http://lkml.kernel.org/r/20190821081330.1187-1-rahul.tanwar@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Tested-by: Jan Stancek <jstancek@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/io_apic.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/nfs/proc.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index fd945099fc958..4d5e8ff3b5e5c 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2344,7 +2344,13 @@ unsigned int arch_dynirq_lower_bound(unsigned int from)
- 	 * dmar_alloc_hwirq() may be called before setup_IO_APIC(), so use
- 	 * gsi_top if ioapic_dynirq_base hasn't been initialized yet.
- 	 */
--	return ioapic_initialized ? ioapic_dynirq_base : gsi_top;
-+	if (!ioapic_initialized)
-+		return gsi_top;
-+	/*
-+	 * For DT enabled machines ioapic_dynirq_base is irrelevant and not
-+	 * updated. So simply return @from if ioapic_dynirq_base == 0.
-+	 */
-+	return ioapic_dynirq_base ? : from;
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index 80ecdf2ec8b6a..b83e14ad13c45 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -610,8 +610,10 @@ static int nfs_proc_pgio_rpc_prepare(struct rpc_task *task,
+ 
+ static int nfs_write_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ {
+-	if (task->tk_status >= 0)
++	if (task->tk_status >= 0) {
++		hdr->res.count = hdr->args.count;
+ 		nfs_writeback_update_inode(hdr);
++	}
+ 	return 0;
  }
  
- #ifdef CONFIG_X86_32
 -- 
 2.20.1
 
