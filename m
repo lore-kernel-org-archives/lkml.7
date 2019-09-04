@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8845BC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93924C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56ABB2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A9AF22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612716;
-	bh=pk8YjyyRwMJOPfCa/yxcD7L3OlLFFCTVp2VRhcwJ2fw=;
+	s=default; t=1567612719;
+	bh=Ce03TRONCo+jPJ4+G/qwwYAa7wCQSNf9hkEJ485RqsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ME84+IiWkKNemOZZW4nZuSvaQz4+QMCtFcutVPeKnk9vWwK5E2RimX5K5LedSIta
-	 Gq7ZfdnHHSZIgmEEQbZHKkQxOd8fqoPZVEbEAw5cq2f50qd2VeeM52+qmNsUj9fWQ/
-	 /PCbJGwlKGWyzz7R9Ud3cZ/zeUkdsXEadOJmZgMs=
+	b=h0V28msfOjiSNqIX4kdTaKPOvbTQGpN12L7/pYXLzWrqLUbzBCWVuEmcOQVTHwifE
+	 peyMHVY5K5qs7acA8p5ToMfVIDnwqQNOzd7QQWIO9YyOkKQOJP8G553WF8hjmnSSD8
+	 cxNvdC10YRCV8Bz5dajVnnPcNtx3BwIC6Bh13Dj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732037AbfIDP6f (ORCPT
+        id S1732066AbfIDP6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732017AbfIDP6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:32 -0400
+        id S1732038AbfIDP6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB24C233FF;
-        Wed,  4 Sep 2019 15:58:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE0CA233FF;
+        Wed,  4 Sep 2019 15:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612711;
-        bh=pk8YjyyRwMJOPfCa/yxcD7L3OlLFFCTVp2VRhcwJ2fw=;
+        s=default; t=1567612715;
+        bh=Ce03TRONCo+jPJ4+G/qwwYAa7wCQSNf9hkEJ485RqsY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BU/ttMNS9pIUITNNX+AKHx9sdp45Y9CGYaVNBFKfmkklIIaaEocGx6KVx7Lg+Q+mC
-         aIeGWhYjSo+8MygE6j83u4cA1vSdIpwzeKRayDcvJQbi+Zh5jzwLIQxyy/cttd+4yr
-         ekkCU3r4CcJJJEETONTE/SfpCY2f+PFkbeJ4cDDg=
+        b=Mw3VkpxX0OcB98k9MaCtv5lyB8+ZN5bvW9b4/wUzmV4sc0qyFzMOajjd4Qc+DFpRr
+         gk0kCvxL+Ef950UBbsk3UnA2rqJhk6qBUyk1WsoQFiIvdzgRLlUkhwpGJGPSQyBJ8+
+         JlXHIT+u/jVkj13m261x+v61rp4RdLvyZ2qY3TtI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Laszlo Ersek <lersek@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.2 36/94] drm/virtio: use virtio_max_dma_size
-Date:   Wed,  4 Sep 2019 11:56:41 -0400
-Message-Id: <20190904155739.2816-36-sashal@kernel.org>
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 38/94] batman-adv: Only read OGM tvlv_len after buffer len check
+Date:   Wed,  4 Sep 2019 11:56:43 -0400
+Message-Id: <20190904155739.2816-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -61,51 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerd Hoffmann <kraxel@redhat.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit 9b2a0a1ef66f96bf34921a3865581eca32ff05ec ]
+[ Upstream commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 ]
 
-We must make sure our scatterlist segments are not too big, otherwise
-we might see swiotlb failures (happens with sev, also reproducable with
-swiotlb=force).
+Multiple batadv_ogm_packet can be stored in an skbuff. The functions
+batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
+batadv_iv_ogm_aggr_packet() to check if there is another additional
+batadv_ogm_packet in the skb or not before they continue processing the
+packet.
 
-Suggested-by: Laszlo Ersek <lersek@redhat.com>
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Reviewed-by: Laszlo Ersek <lersek@redhat.com>
-Link: http://patchwork.freedesktop.org/patch/msgid/20190821111210.27165-1-kraxel@redhat.com
+The length for such an OGM is BATADV_OGM_HLEN +
+batadv_ogm_packet->tvlv_len. The check must first check that at least
+BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
+
+Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
+Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_object.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ net/batman-adv/bat_iv_ogm.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index b2da31310d24c..09b526518f5a6 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -204,6 +204,7 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
- 		.interruptible = false,
- 		.no_wait_gpu = false
- 	};
-+	size_t max_segment;
+diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
+index 240ed70912d6a..d78938e3e0085 100644
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -277,17 +277,23 @@ static u8 batadv_hop_penalty(u8 tq, const struct batadv_priv *bat_priv)
+  * batadv_iv_ogm_aggr_packet() - checks if there is another OGM attached
+  * @buff_pos: current position in the skb
+  * @packet_len: total length of the skb
+- * @tvlv_len: tvlv length of the previously considered OGM
++ * @ogm_packet: potential OGM in buffer
+  *
+  * Return: true if there is enough space for another OGM, false otherwise.
+  */
+-static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
+-				      __be16 tvlv_len)
++static bool
++batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
++			  const struct batadv_ogm_packet *ogm_packet)
+ {
+ 	int next_buff_pos = 0;
  
- 	/* wtf swapping */
- 	if (bo->pages)
-@@ -215,8 +216,13 @@ int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
- 	if (!bo->pages)
- 		goto out;
+-	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm_packet);
++	if (next_buff_pos > packet_len)
++		return false;
++
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm_packet->tvlv_len);
  
--	ret = sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
--					nr_pages << PAGE_SHIFT, GFP_KERNEL);
-+	max_segment = virtio_max_dma_size(qdev->vdev);
-+	max_segment &= PAGE_MASK;
-+	if (max_segment > SCATTERLIST_MAX_SEGMENT)
-+		max_segment = SCATTERLIST_MAX_SEGMENT;
-+	ret = __sg_alloc_table_from_pages(bo->pages, pages, nr_pages, 0,
-+					  nr_pages << PAGE_SHIFT,
-+					  max_segment, GFP_KERNEL);
- 	if (ret)
- 		goto out;
- 	return 0;
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -315,7 +321,7 @@ static void batadv_iv_ogm_send_to_if(struct batadv_forw_packet *forw_packet,
+ 
+ 	/* adjust all flags and log packets */
+ 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
+-					 batadv_ogm_packet->tvlv_len)) {
++					 batadv_ogm_packet)) {
+ 		/* we might have aggregated direct link packets with an
+ 		 * ordinary base packet
+ 		 */
+@@ -1704,7 +1710,7 @@ static int batadv_iv_ogm_receive(struct sk_buff *skb,
+ 
+ 	/* unpack the aggregated packets and process them one by one */
+ 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					 ogm_packet->tvlv_len)) {
++					 ogm_packet)) {
+ 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
+ 
+ 		ogm_offset += BATADV_OGM_HLEN;
 -- 
 2.20.1
 
