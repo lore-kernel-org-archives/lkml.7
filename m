@@ -2,141 +2,109 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C210C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2427CC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E166821670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077A621670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfIDMeY (ORCPT
+        id S1730075AbfIDMe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:34:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:4080 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbfIDMeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:34:24 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 05:34:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="194716420"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2019 05:34:21 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i5UUO-0000nP-7s; Wed, 04 Sep 2019 15:34:20 +0300
-Date:   Wed, 4 Sep 2019 15:34:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: of: fix fallback quirks handling
-Message-ID: <20190904123420.GK2680@smile.fi.intel.com>
-References: <20190903231856.GA165165@dtor-ws>
+        Wed, 4 Sep 2019 08:34:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56818 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728878AbfIDMe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:34:26 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9CD8AFFFA055F3DC3ABE;
+        Wed,  4 Sep 2019 20:34:24 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 20:34:17 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <miquel.raynal@bootlin.com>, <rui.zhang@intel.com>,
+        <edubezval@gmail.com>, <daniel.lezcano@linaro.org>,
+        <amit.kucheria@verdurent.com>, <eric@anholt.net>,
+        <wahrenst@gmx.net>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
+        <sbranden@broadcom.com>, <mmayer@broadcom.com>,
+        <computersforpeace@gmail.com>, <gregory.0xf0@gmail.com>,
+        <matthias.bgg@gmail.com>, <agross@kernel.org>, <heiko@sntech.de>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <marc.w.gonzalez@free.fr>, <mans@mansr.com>, <talel@amazon.com>,
+        <jun.nie@linaro.org>, <shawnguo@kernel.org>,
+        <phil@raspberrypi.org>, <yuehaibing@huawei.com>,
+        <gregkh@linuxfoundation.org>, <david.hernandezsanchez@st.com>,
+        <horms+renesas@verge.net.au>, <wsa+renesas@sang-engineering.com>
+CC:     <bcm-kernel-feedback-list@broadcom.com>,
+        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-rockchip@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH -next 00/15] use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 20:29:24 +0800
+Message-ID: <20190904122939.23780-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903231856.GA165165@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:18:56PM -0700, Dmitry Torokhov wrote:
-> We should only try to execute fallback quirks handling when previous
-> call returned -ENOENT, and not when we did not get -EPROBE_DEFER.
-> The other errors should be treated as hard errors: we did find the GPIO
-> description, but for some reason we failed to handle it properly.
-> 
-> The fallbacks should only be executed when previous handlers returned
-> -ENOENT, which means the mapping/description was not found.
-> 
-> Also let's remove the explicit deferral handling when iterating through
-> GPIO suffixes: it is not needed anymore as we will not be calling
-> fallbacks for anything but -ENOENT.
-> 
+devm_platform_ioremap_resource() internally have platform_get_resource()
+and devm_ioremap_resource() in it. So instead of calling them separately
+use devm_platform_ioremap_resource() directly.
 
-I would rather leave extra parenthesis and comments untouched,
-nevertheless, FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+YueHaibing (15):
+  thermal: armada: use devm_platform_ioremap_resource() to simplify code
+  thermal: bcm2835: use devm_platform_ioremap_resource() to simplify
+    code
+  thermal: brcmstb: use devm_platform_ioremap_resource() to simplify
+    code
+  thermal: hisilicon: use devm_platform_ioremap_resource() to simplify
+    code
+  thermal: dove: use devm_platform_ioremap_resource() to simplify code
+  thermal: mtk: use devm_platform_ioremap_resource() to simplify code
+  thermal: kirkwood: use devm_platform_ioremap_resource() to simplify
+    code
+  thermal: tsens: use devm_platform_ioremap_resource() to simplify code
+  thermal: rockchip: use devm_platform_ioremap_resource() to simplify
+    code
+  thermal: spear: use devm_platform_ioremap_resource() to simplify code
+  thermal: stm32: use devm_platform_ioremap_resource() to simplify code
+  thermal: tango: use devm_platform_ioremap_resource() to simplify code
+  thermal: thermal_mmio: use devm_platform_ioremap_resource() to
+    simplify code
+  thermal: zx2967: use devm_platform_ioremap_resource() to simplify code
+  thermal: rcar: use devm_platform_ioremap_resource() to simplify code
 
-> Fixes: df451f83e1fc ("gpio: of: fix Freescale SPI CS quirk handling")
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
->  drivers/gpio/gpiolib-of.c | 27 +++++++++------------------
->  1 file changed, 9 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index b034abe59f28..b45b39c48a34 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -457,36 +457,27 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
->  
->  		desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
->  						&of_flags);
-> -		/*
-> -		 * -EPROBE_DEFER in our case means that we found a
-> -		 * valid GPIO property, but no controller has been
-> -		 * registered so far.
-> -		 *
-> -		 * This means we don't need to look any further for
-> -		 * alternate name conventions, and we should really
-> -		 * preserve the return code for our user to be able to
-> -		 * retry probing later.
-> -		 */
-> -		if (IS_ERR(desc) && PTR_ERR(desc) == -EPROBE_DEFER)
-> -			return desc;
->  
-> -		if (!IS_ERR(desc) || (PTR_ERR(desc) != -ENOENT))
-> +		if (!IS_ERR(desc) || PTR_ERR(desc) != -ENOENT)
->  			break;
->  	}
->  
-> -	/* Special handling for SPI GPIOs if used */
-> -	if (IS_ERR(desc))
-> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
-> +		/* Special handling for SPI GPIOs if used */
->  		desc = of_find_spi_gpio(dev, con_id, &of_flags);
-> -	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER) {
-> +	}
-> +
-> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
->  		/* This quirk looks up flags and all */
->  		desc = of_find_spi_cs_gpio(dev, con_id, idx, flags);
->  		if (!IS_ERR(desc))
->  			return desc;
->  	}
->  
-> -	/* Special handling for regulator GPIOs if used */
-> -	if (IS_ERR(desc) && PTR_ERR(desc) != -EPROBE_DEFER)
-> +	if (IS_ERR(desc) && PTR_ERR(desc) == -ENOENT) {
-> +		/* Special handling for regulator GPIOs if used */
->  		desc = of_find_regulator_gpio(dev, con_id, &of_flags);
-> +	}
->  
->  	if (IS_ERR(desc))
->  		return desc;
-> -- 
-> 2.23.0.187.g17f5b7556c-goog
-> 
-> 
-> -- 
-> Dmitry
+ drivers/thermal/armada_thermal.c           | 4 +---
+ drivers/thermal/broadcom/bcm2835_thermal.c | 4 +---
+ drivers/thermal/broadcom/brcmstb_thermal.c | 4 +---
+ drivers/thermal/dove_thermal.c             | 7 ++-----
+ drivers/thermal/hisi_thermal.c             | 4 +---
+ drivers/thermal/kirkwood_thermal.c         | 4 +---
+ drivers/thermal/mtk_thermal.c              | 4 +---
+ drivers/thermal/qcom/tsens-common.c        | 7 ++-----
+ drivers/thermal/rcar_thermal.c             | 5 ++---
+ drivers/thermal/rockchip_thermal.c         | 4 +---
+ drivers/thermal/spear_thermal.c            | 4 +---
+ drivers/thermal/st/stm_thermal.c           | 4 +---
+ drivers/thermal/tango_thermal.c            | 4 +---
+ drivers/thermal/thermal_mmio.c             | 4 +---
+ drivers/thermal/zx2967_thermal.c           | 4 +---
+ 15 files changed, 18 insertions(+), 49 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
 
 
