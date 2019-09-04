@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8650DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA733C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC532341C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA42C22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612827;
-	bh=ktGTrJ3wz1U8LW7KHbEeGaC+lWSgAu8Hhu4NlfM9HzQ=;
+	s=default; t=1567612835;
+	bh=bVOk13PRzIHQGBfYtVxop4HBf3WHR2t6grZQC+tJR1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AXFZFmvTLa/CpmHvgRFuhGqnYz2qnFKDu+t+afv0QClV2KypRhWPoYLdCaHydOR80
-	 pF+0FFF914Qwt8nCYrwLI94iWi03H3rUkoL0umEpY0thzHPV1qOoIYK7zdxx8dEKtD
-	 ykl8BSVQzbpP5lUFIkTZ2gJcok8EwHc1lRdw+yGQ=
+	b=u1o5ebHmRdgJ6/rsoI/GiFOjdI3H8CdBmYwc2aBhaxjjnqk6HI0jAVCnu2fGt+uR/
+	 /vWI4eZ9nw1CeJhvniE+KkOTHvV9PJDLV0UaTH9BNIy81RcphhtBU9MOHMf+dtvS9i
+	 x6IqbTTZgNpJFGhw3iRGeqRiA/w+FEfLJd5Ikt64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732690AbfIDQA0 (ORCPT
+        id S1732083AbfIDQAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732662AbfIDQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:23 -0400
+        id S1732734AbfIDQAc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51C0C2070C;
-        Wed,  4 Sep 2019 16:00:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 256BC2341C;
+        Wed,  4 Sep 2019 16:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612822;
-        bh=ktGTrJ3wz1U8LW7KHbEeGaC+lWSgAu8Hhu4NlfM9HzQ=;
+        s=default; t=1567612831;
+        bh=bVOk13PRzIHQGBfYtVxop4HBf3WHR2t6grZQC+tJR1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VMbFEmNzMh5OaIEJFhQDEt9OnZeOjJAIUGhgrg1ZlRGIqgoeBQQzgy09y5kcknrQN
-         CKL1r4nuJujgCN8JjtXvBzCA3jpW0EQtVKeZjnJo8KTz4rMnFJN5XGi49XRtz3JCtK
-         fWLDk9eYe7jkus1d8zoPrwyUCj/HvKB2g7EOF3Kw=
+        b=ISvHK4dxV6ei8wshpVQ5C9LWQl+S7lTlVcw0sKkgPcmCdsK4LFSbtfDiRgwwN/m14
+         WYZHfl9Re0RD22X0O0E+R4cSD1qD9GD8yqmEtQUKnaEDe2lcnN8kt0adI5TtC24Uyy
+         1u0b+bAwzdtgXzGGKZETOCzu6N/T2riLqWrzJsEA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/52] batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
-Date:   Wed,  4 Sep 2019 11:59:24 -0400
-Message-Id: <20190904160004.3671-12-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 19/52] NFSv4: Fix return values for nfs4_file_open()
+Date:   Wed,  4 Sep 2019 11:59:31 -0400
+Message-Id: <20190904160004.3671-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -61,67 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 3ee1bb7aae97324ec9078da1f00cb2176919563f ]
+[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
 
-batadv_netlink_get_ifindex() needs to make sure user passed
-a correct u32 attribute.
+Currently, we are translating RPC level errors such as timeouts,
+as well as interrupts etc into EOPENSTALE, which forces a single
+replay of the open attempt. What we actually want to do is
+force the replay only in the cases where the returned error
+indicates that the file may have changed on the server.
 
-syzbot reported :
-BUG: KMSAN: uninit-value in batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
-CPU: 1 PID: 11705 Comm: syz-executor888 Not tainted 5.1.0+ #1
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x191/0x1f0 lib/dump_stack.c:113
- kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
- __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
- batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
- genl_lock_dumpit+0xc6/0x130 net/netlink/genetlink.c:482
- netlink_dump+0xa84/0x1ab0 net/netlink/af_netlink.c:2253
- __netlink_dump_start+0xa3a/0xb30 net/netlink/af_netlink.c:2361
- genl_family_rcv_msg net/netlink/genetlink.c:550 [inline]
- genl_rcv_msg+0xfc1/0x1a40 net/netlink/genetlink.c:627
- netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2486
- genl_rcv+0x63/0x80 net/netlink/genetlink.c:638
- netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
- netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1337
- netlink_sendmsg+0x127e/0x12f0 net/netlink/af_netlink.c:1926
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg net/socket.c:661 [inline]
- ___sys_sendmsg+0xcc6/0x1200 net/socket.c:2260
- __sys_sendmsg net/socket.c:2298 [inline]
- __do_sys_sendmsg net/socket.c:2307 [inline]
- __se_sys_sendmsg+0x305/0x460 net/socket.c:2305
- __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2305
- do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
- entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x440209
+So the fix is to spell out the exact set of errors where we want
+to return EOPENSTALE.
 
-Fixes: b60620cf567b ("batman-adv: netlink: hardif query")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4file.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/batman-adv/netlink.c b/net/batman-adv/netlink.c
-index 0d9459b69bdb8..c32820963b8e7 100644
---- a/net/batman-adv/netlink.c
-+++ b/net/batman-adv/netlink.c
-@@ -118,7 +118,7 @@ batadv_netlink_get_ifindex(const struct nlmsghdr *nlh, int attrtype)
- {
- 	struct nlattr *attr = nlmsg_find_attr(nlh, GENL_HDRLEN, attrtype);
- 
--	return attr ? nla_get_u32(attr) : 0;
-+	return (attr && nla_len(attr) == sizeof(u32)) ? nla_get_u32(attr) : 0;
- }
- 
- /**
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 61abbb087ed13..75d3cf86f1723 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
+ 	if (IS_ERR(inode)) {
+ 		err = PTR_ERR(inode);
+ 		switch (err) {
+-		case -EPERM:
+-		case -EACCES:
+-		case -EDQUOT:
+-		case -ENOSPC:
+-		case -EROFS:
+-			goto out_put_ctx;
+ 		default:
++			goto out_put_ctx;
++		case -ENOENT:
++		case -ESTALE:
++		case -EISDIR:
++		case -ENOTDIR:
++		case -ELOOP:
+ 			goto out_drop;
+ 		}
+ 	}
 -- 
 2.20.1
 
