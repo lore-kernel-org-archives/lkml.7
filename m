@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE84C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B744CC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8F82339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F9522CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619845;
-	bh=C9yvWTJdzERYfS2Yx6bFhvJqt7qd67vfum1FMfH3rMk=;
+	s=default; t=1567619849;
+	bh=JrtETm+0xl/10RbjcsYE4fg/WzMGzTm1IIheOI8DXog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4Hc+73asF6tvX8D6Gzb+ThnO3WDhVoS+QxwJRkBFvNO+B/9cr4zajuqMSkaEzOg7
-	 CyR1L+uMI3r1EI28nU/vxW8p/3iZ+mnnVMmC0RfBqRIpfxSKPeOJpiZsc6ONyeBe5H
-	 usexU+KFUASsmsLztURBQBGM1BzXBOrKlSR2/m4c=
+	b=v1pCVF4998je/PYMIYiwQ58j/q/gwZKHKvEHHqEtayzU6juma2xpSzFRiBrO6fR17
+	 g6ql2K9zXkc7Gkrht9tqs27KTrMCvkNp6Afe64s4vTRTa3Rsut1Xf6JlzMYUpv8ugb
+	 yyxuufEy+H4POOuTqe7VMQz4r0pri8k/IZAFFm9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbfIDR5X (ORCPT
+        id S2387862AbfIDR52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35220 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387822AbfIDR5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:19 -0400
+        id S2387822AbfIDR5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EA462339E;
-        Wed,  4 Sep 2019 17:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAFDE208E4;
+        Wed,  4 Sep 2019 17:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619838;
-        bh=C9yvWTJdzERYfS2Yx6bFhvJqt7qd67vfum1FMfH3rMk=;
+        s=default; t=1567619844;
+        bh=JrtETm+0xl/10RbjcsYE4fg/WzMGzTm1IIheOI8DXog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RRR9mLBN3OT9SeGSx6yD0mMsO5tYavFBiQYF7p6MH6XGwRQIeGSbEvpAsx8NEoCUI
-         +elfDVoTimexS6gj1PUeNvnFkPTrp+DFevcDAQsQHQKD1cIzlZU77EvWV5QWUUFZOb
-         Wxv5R6MnB8V91PQZZWTCMOrc89Kus6O3obf8+tMA=
+        b=vf3HjnzJskTA0IRK5Ne+OyMpxiVByHpimxiyghZ0Nez8x4wqw7Uzf8TRdaSE18tKX
+         dVfMpDucuiWaiPKBlveVb/k7abpk6Sa1AnpGed4XFKSUfcnnw/Gb6U9nGc0/yu/1sl
+         m4Rjc46+D2EeGYVr2HOFoJ6C6Upn/vd6qFBzRPhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 52/77] usb: gadget: composite: Clear "suspended" on reset/disconnect
-Date:   Wed,  4 Sep 2019 19:53:39 +0200
-Message-Id: <20190904175308.295739594@linuxfoundation.org>
+Subject: [PATCH 4.4 18/77] net: hisilicon: make hip04_tx_reclaim non-reentrant
+Date:   Wed,  4 Sep 2019 19:53:05 +0200
+Message-Id: <20190904175305.311657236@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -61,31 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 602fda17c7356bb7ae98467d93549057481d11dd ]
+[ Upstream commit 1a2c070ae805910a853b4a14818481ed2e17c727 ]
 
-In some cases, one can get out of suspend with a reset or
-a disconnect followed by a reconnect. Previously we would
-leave a stale suspended flag set.
+If hip04_tx_reclaim is interrupted while it is running
+and then __napi_schedule continues to execute
+hip04_rx_poll->hip04_tx_reclaim, reentrancy occurs
+and oops is generated. So you need to mask the interrupt
+during the hip04_tx_reclaim run.
 
-Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+The kernel oops exception stack is as follows:
+
+Unable to handle kernel NULL pointer dereference
+at virtual address 00000050
+pgd = c0003000
+[00000050] *pgd=80000000a04003, *pmd=00000000
+Internal error: Oops: 206 [#1] SMP ARM
+Modules linked in: hip04_eth mtdblock mtd_blkdevs mtd
+ohci_platform ehci_platform ohci_hcd ehci_hcd
+vfat fat sd_mod usb_storage scsi_mod usbcore usb_common
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G           O    4.4.185 #1
+Hardware name: Hisilicon A15
+task: c0a250e0 task.stack: c0a00000
+PC is at hip04_tx_reclaim+0xe0/0x17c [hip04_eth]
+LR is at hip04_tx_reclaim+0x30/0x17c [hip04_eth]
+pc : [<bf30c3a4>]    lr : [<bf30c2f4>]    psr: 600e0313
+sp : c0a01d88  ip : 00000000  fp : c0601f9c
+r10: 00000000  r9 : c3482380  r8 : 00000001
+r7 : 00000000  r6 : 000000e1  r5 : c3482000  r4 : 0000000c
+r3 : f2209800  r2 : 00000000  r1 : 00000000  r0 : 00000000
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+Control: 32c5387d  Table: 03d28c80  DAC: 55555555
+Process swapper/0 (pid: 0, stack limit = 0xc0a00190)
+Stack: (0xc0a01d88 to 0xc0a02000)
+[<bf30c3a4>] (hip04_tx_reclaim [hip04_eth]) from [<bf30d2e0>]
+                                                (hip04_rx_poll+0x88/0x368 [hip04_eth])
+[<bf30d2e0>] (hip04_rx_poll [hip04_eth]) from [<c04c2d9c>] (net_rx_action+0x114/0x34c)
+[<c04c2d9c>] (net_rx_action) from [<c021eed8>] (__do_softirq+0x218/0x318)
+[<c021eed8>] (__do_softirq) from [<c021f284>] (irq_exit+0x88/0xac)
+[<c021f284>] (irq_exit) from [<c0240090>] (msa_irq_exit+0x11c/0x1d4)
+[<c0240090>] (msa_irq_exit) from [<c02677e0>] (__handle_domain_irq+0x110/0x148)
+[<c02677e0>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
+[<c0201588>] (gic_handle_irq) from [<c0551700>] (__irq_svc+0x40/0x58)
+Exception stack(0xc0a01f30 to 0xc0a01f78)
+1f20:                                     c0ae8b40 00000000 00000000 00000000
+1f40: 00000002 ffffe000 c0601f9c 00000000 ffffffff c0a2257c c0a22440 c0831a38
+1f60: c0a01ec4 c0a01f80 c0203714 c0203718 600e0213 ffffffff
+[<c0551700>] (__irq_svc) from [<c0203718>] (arch_cpu_idle+0x20/0x3c)
+[<c0203718>] (arch_cpu_idle) from [<c025bfd8>] (cpu_startup_entry+0x244/0x29c)
+[<c025bfd8>] (cpu_startup_entry) from [<c054b0d8>] (rest_init+0xc8/0x10c)
+[<c054b0d8>] (rest_init) from [<c0800c58>] (start_kernel+0x468/0x514)
+Code: a40599e5 016086e2 018088e2 7660efe6 (503090e5)
+---[ end trace 1db21d6d09c49d74 ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+CPU3: stopping
+CPU: 3 PID: 0 Comm: swapper/3 Tainted: G      D    O    4.4.185 #1
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/composite.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
-index 8bf54477f4724..351a406b97af7 100644
---- a/drivers/usb/gadget/composite.c
-+++ b/drivers/usb/gadget/composite.c
-@@ -1889,6 +1889,7 @@ void composite_disconnect(struct usb_gadget *gadget)
- 	 * disconnect callbacks?
- 	 */
- 	spin_lock_irqsave(&cdev->lock, flags);
-+	cdev->suspended = 0;
- 	if (cdev->config)
- 		reset_config(cdev);
- 	if (cdev->driver->disconnect)
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index 60c727b0b7ab2..fdf8a477bec9c 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -497,6 +497,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 	u16 len;
+ 	u32 err;
+ 
++	/* clean up tx descriptors */
++	tx_remaining = hip04_tx_reclaim(ndev, false);
++
+ 	while (cnt && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+@@ -554,8 +557,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 	}
+ 	napi_complete(napi);
+ done:
+-	/* clean up tx descriptors and start a new timer if necessary */
+-	tx_remaining = hip04_tx_reclaim(ndev, false);
++	/* start a new timer if necessary */
+ 	if (rx < budget && tx_remaining)
+ 		hip04_start_tx_timer(priv);
+ 
 -- 
 2.20.1
 
