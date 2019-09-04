@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E33C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD23C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B16423402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4092339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620376;
-	bh=wi7QPloT7ZupYfLWvxNTgmmg5zP7Awd/iBAz68mCT38=;
+	s=default; t=1567620381;
+	bh=/W9B7Sno1Cvi2aD3B8vReKUaPG7Au4vT5P3cEEHE2l4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=digexqWG2WJqzzkgBped8gFXKHKoEbQvFyWNLF6aa6V8zQeoWRN9ju7yBcw065pcv
-	 67yB5x7GMp/n3p7uIfn80o/MW4fxLkNQQH4zHQFKx+xm5ltVf/eiVMs0bpMOD+gxlT
-	 Z2d/NvD8OO//OH9Loxo1Z8DHZH0ZB6r9z165jqD0=
+	b=C7xv2zBBbTZAEFIclqZNkge3brelW26s2o9PeaU8mT/tA0eFa9DReAb1WEWR02q30
+	 l9a7EZa/If+s5hnNElZIfnhoMbVDZSJ0talFVKLWyk8s4HnvgXi2DQot1gfALV8vjY
+	 AeZyUZ9dHj+nPbeUdWG8/8v6v81HaktZmRmCcMTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389410AbfIDSGP (ORCPT
+        id S2389052AbfIDSGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48092 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389401AbfIDSGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:12 -0400
+        id S2389408AbfIDSGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5496B23402;
-        Wed,  4 Sep 2019 18:06:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E81A523400;
+        Wed,  4 Sep 2019 18:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620371;
-        bh=wi7QPloT7ZupYfLWvxNTgmmg5zP7Awd/iBAz68mCT38=;
+        s=default; t=1567620374;
+        bh=/W9B7Sno1Cvi2aD3B8vReKUaPG7Au4vT5P3cEEHE2l4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nXXNZjEdA1dQd7WerCZ0YDqc0eqbzINJhinTzUjRe7mcZsPJOpL1DLTHSMCbmrGi6
-         H9drH/Wd6KQbxkNu6FDGjh6YjjHjW005ObBs9WZz5GW46DMcJy5hKlkv+FgnC6UGBo
-         oSJo2yyRNeq7XSsEgzh/bIgDLFerGtuo4LY5YxmA=
+        b=XFV9wuQWWSsmckZBB9Cy47dyxw9sDoIkEihgUVVSmzbV/00GX7sxDUo4Jn42zd9oe
+         XUJZWLQE5wmSO8uqMRBQFBaNY7CcoePGZ46uagnZTjJXJiAI96pOPfTI4WdY/M04nu
+         WqPA2BkFW6r6C7SceIgifAX2bU1wjD9imWGmWWno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 32/93] net/tls: swap sk_write_space on close
-Date:   Wed,  4 Sep 2019 19:53:34 +0200
-Message-Id: <20190904175306.030325372@linuxfoundation.org>
+Subject: [PATCH 4.19 33/93] net: tls, fix sk_write_space NULL write when tx disabled
+Date:   Wed,  4 Sep 2019 19:53:35 +0200
+Message-Id: <20190904175306.180232159@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -61,31 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 57c722e932cfb82e9820bbaae1b1f7222ea97b52 ]
+[ Upstream commit d85f01775850a35eae47a0090839baf510c1ef12 ]
 
-Now that we swap the original proto and clear the ULP pointer
-on close we have to make sure no callback will try to access
-the freed state. sk_write_space is not part of sk_prot, remember
-to swap it.
+The ctx->sk_write_space pointer is only set when TLS tx mode is enabled.
+When running without TX mode its a null pointer but we still set the
+sk sk_write_space pointer on close().
 
-Reported-by: syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com
-Fixes: 95fa145479fb ("bpf: sockmap/tls, close can race with map free")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fix the close path to only overwrite sk->sk_write_space when the current
+pointer is to the tls_write_space function indicating the tls module should
+clean it up properly as well.
+
+Reported-by: Hillf Danton <hdanton@sina.com>
+Cc: Ying Xue <ying.xue@windriver.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Fixes: 57c722e932cfb ("net/tls: swap sk_write_space on close")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_main.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/tls/tls_main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/net/tls/tls_main.c
 +++ b/net/tls/tls_main.c
-@@ -301,6 +301,7 @@ static void tls_sk_proto_close(struct so
+@@ -301,7 +301,8 @@ static void tls_sk_proto_close(struct so
  #else
  	{
  #endif
-+		sk->sk_write_space = ctx->sk_write_space;
+-		sk->sk_write_space = ctx->sk_write_space;
++		if (sk->sk_write_space == tls_write_space)
++			sk->sk_write_space = ctx->sk_write_space;
  		tls_ctx_free(ctx);
  		ctx = NULL;
  	}
