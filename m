@@ -5,430 +5,252 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18ABC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C52DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6C522CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0914621670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aQFs7BkX"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="jhBWG15A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfIDFBH (ORCPT
+        id S1728506AbfIDFCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 01:01:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39819 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbfIDFBH (ORCPT
+        Wed, 4 Sep 2019 01:02:43 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42607 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfIDFCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 01:01:07 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u17so10531542pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 22:01:06 -0700 (PDT)
+        Wed, 4 Sep 2019 01:02:42 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y1so8984426plp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 22:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=lP88Oq7al7PBW9u8uObARBFewmt5nawXVbYgCnhmgcw=;
-        b=aQFs7BkXwDJuV1ik953IOR1wWCX2nurSza5bS5jYIVI2sCbPXF+akThAh/Z3xWrc21
-         g8Kyoc88gEIgKCfJZFcJ+FBA4p8OoeX8C6qWU/mul4kBAiC5HmVLGqgHo7ibjE+W0R5U
-         OyR/ABcezgGd3PR3USsnne64F8tSn4bhlBvukvSO7ohvESals7geHyvwFINqUk13h87B
-         P6jkW4BaSiBjS66AqptBnovUsu1usKtdd2YR4IqVVYPTlF9QoqnTzsJBb7SJhd7ON6Ry
-         M2m5L9p/Pw/mPLahK/gw4jqumbg5yMysu5bx+W6H248SZCQ2J0kVD7kD8VH5WJib92zf
-         DhDg==
+        bh=pDj1bZcKWdYkCPbWgz/Pz2qMGxk7UgTAcQYM9ROVqw0=;
+        b=jhBWG15AlqK3xprU+HODJGbDECbvG7FlMM8fuoD8/LWLxPXWYohHnPZOtxNQ5RgeXK
+         fEoCXJGVrlmBWkOM+IzI8pKDCqx1LTa7IvPd2jPNU3D9QdrV7tnq2n6pBlO2TsUHn0TN
+         Dt3bmqAEc5aau0JUNifmRnKjgGhzlqklSKEVs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lP88Oq7al7PBW9u8uObARBFewmt5nawXVbYgCnhmgcw=;
-        b=IhkL26AE8/k1jlLi2LRViKPfs5eIPAYzp64WE0qEdMFm1kJ2bs5legV6AAPGe/YfpJ
-         VnbWGlMi5DrER1mlQHwZzD6dr/+VC9Z5Zz0J2VlLzGWfjPN5EWXeFkri54o20lFx45Qe
-         lm7bCUkjVkzgtioHXOHexIyUI2BlWpR3STA18yyFsxV2ThbJXpF8ShgyCnmk9zYXWNbJ
-         ki9POwMi4tqCW/oCeLnXP9CIo1YAb7nuOVz0DRotrGHiCLwDXuBoSyw81eo1bLj2TvAI
-         wgzM8moP/UbfPVSGgUWeu/KTRNfjcS1Amms1UZ1tQgF1l9/IEkQpa9f6pVUwvDHfwZj+
-         6UhA==
-X-Gm-Message-State: APjAAAXl68l1BF+TOMiMx2oKi/i6CwUR61F01DSCCWvQ2qqFeKbSOfP1
-        obd2OODA85BVP7JXh+0JVXilaQ==
-X-Google-Smtp-Source: APXvYqx/GqVjUT76KPVaabdbztCQ4ffzG1QXBDfRUnTq7vn7Vdl5H/I7GTHJvwGyI9sIh85YqwJ/5A==
-X-Received: by 2002:a63:4522:: with SMTP id s34mr33065155pga.362.1567573266199;
-        Tue, 03 Sep 2019 22:01:06 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e17sm1152021pjt.6.2019.09.03.22.01.05
+        bh=pDj1bZcKWdYkCPbWgz/Pz2qMGxk7UgTAcQYM9ROVqw0=;
+        b=XJsPULH5W3c4GVzN1dXxwBBV+BUcu83N605RkeJ9GOr/UjPO36+5wVWP7NvP2MxHcq
+         UQyqix5Wl34IcJeMTeD2Caxi1oC+3RByoIoSuuK5O4ScekfTTR6Jtai9CbrONNC203b1
+         UGze6WekeP619ALofGUgDFH/Y3/J81HCVLjzm745IwQtX/6tBQnPyc44Yl1Zr9cqPYRp
+         HciBSMW322ysK9jPcQde+xpXZhaT+FbfL8GVT6AfrZCTtj1B6I5rLVoYSENmgpsUKt7P
+         OSsGvMwJmZzlS813CS7DWhmlMsWYFhGFwHP2dGLJgdjVvGhFiBZJ5Xhpfsd/YLl3+lBt
+         +0Xg==
+X-Gm-Message-State: APjAAAV7kRx2Bp6v81G1MWI5VAmYAI8q5nbUk9jcb3ANlFok2InFazju
+        eh/fnnegYz+0IJ+Q4lE9JrqK2g==
+X-Google-Smtp-Source: APXvYqwFAoBQdwlA0QwMATvwlTnwADSgKV4Rci0PHl20Z+apUh4ALoinpglyCuZdFVxd1SkpK8eczQ==
+X-Received: by 2002:a17:902:830c:: with SMTP id bd12mr39733162plb.237.1567573361845;
+        Tue, 03 Sep 2019 22:02:41 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id q132sm16031769pfq.16.2019.09.03.22.02.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 22:01:05 -0700 (PDT)
-Date:   Tue, 3 Sep 2019 22:01:03 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     georgi.djakov@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/2] dt-bindings: interconnect: qcom: add msm8974
- bindings
-Message-ID: <20190904050103.GE3081@tuxbook-pro>
-References: <20190902211925.27169-1-masneyb@onstation.org>
- <20190902211925.27169-2-masneyb@onstation.org>
+        Tue, 03 Sep 2019 22:02:41 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 01:02:40 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        mayankgupta@google.com, Daniel Colascione <dancol@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190904050240.GD144846@google.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <CAJuCfpEXpYq2i3zNbJ3w+R+QXTuMyzwL6S9UpiGEDvTioKORhQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190902211925.27169-2-masneyb@onstation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAJuCfpEXpYq2i3zNbJ3w+R+QXTuMyzwL6S9UpiGEDvTioKORhQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 02 Sep 14:19 PDT 2019, Brian Masney wrote:
-
-> Add device tree bindings for the Qualcomm MSM8974 interconnect providers
-> that support setting system bandwidth requirements between various
-> network-on-chip fabrics.
+On Tue, Sep 03, 2019 at 09:44:51PM -0700, Suren Baghdasaryan wrote:
+> On Tue, Sep 3, 2019 at 1:09 PM Joel Fernandes (Google)
+> <joel@joelfernandes.org> wrote:
+> >
+> > Useful to track how RSS is changing per TGID to detect spikes in RSS and
+> > memory hogs. Several Android teams have been using this patch in various
+> > kernel trees for half a year now. Many reported to me it is really
+> > useful so I'm posting it upstream.
+> >
+> > Initial patch developed by Tim Murray. Changes I made from original patch:
+> > o Prevent any additional space consumed by mm_struct.
+> > o Keep overhead low by checking if tracing is enabled.
+> > o Add some noise reduction and lower overhead by emitting only on
+> >   threshold changes.
+> >
+> > Co-developed-by: Tim Murray <timmurray@google.com>
+> > Signed-off-by: Tim Murray <timmurray@google.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> >
+> > ---
+> >
+> > v1->v2: Added more commit message.
+> >
+> > Cc: carmenjackson@google.com
+> > Cc: mayankgupta@google.com
+> > Cc: dancol@google.com
+> > Cc: rostedt@goodmis.org
+> > Cc: minchan@kernel.org
+> > Cc: akpm@linux-foundation.org
+> > Cc: kernel-team@android.com
+> >
+> >  include/linux/mm.h          | 14 +++++++++++---
+> >  include/trace/events/kmem.h | 21 +++++++++++++++++++++
+> >  mm/memory.c                 | 20 ++++++++++++++++++++
+> >  3 files changed, 52 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 0334ca97c584..823aaf759bdb 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -1671,19 +1671,27 @@ static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+> >         return (unsigned long)val;
+> >  }
+> >
+> > +void mm_trace_rss_stat(int member, long count, long value);
+> > +
+> >  static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+> >  {
+> > -       atomic_long_add(value, &mm->rss_stat.count[member]);
+> > +       long count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
+> > +
+> > +       mm_trace_rss_stat(member, count, value);
+> >  }
+> >
+> >  static inline void inc_mm_counter(struct mm_struct *mm, int member)
+> >  {
+> > -       atomic_long_inc(&mm->rss_stat.count[member]);
+> > +       long count = atomic_long_inc_return(&mm->rss_stat.count[member]);
+> > +
+> > +       mm_trace_rss_stat(member, count, 1);
+> >  }
+> >
+> >  static inline void dec_mm_counter(struct mm_struct *mm, int member)
+> >  {
+> > -       atomic_long_dec(&mm->rss_stat.count[member]);
+> > +       long count = atomic_long_dec_return(&mm->rss_stat.count[member]);
+> > +
+> > +       mm_trace_rss_stat(member, count, -1);
+> >  }
+> >
+> >  /* Optimized variant when page is already known not to be PageAnon */
+> > diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+> > index eb57e3037deb..8b88e04fafbf 100644
+> > --- a/include/trace/events/kmem.h
+> > +++ b/include/trace/events/kmem.h
+> > @@ -315,6 +315,27 @@ TRACE_EVENT(mm_page_alloc_extfrag,
+> >                 __entry->change_ownership)
+> >  );
+> >
+> > +TRACE_EVENT(rss_stat,
+> > +
+> > +       TP_PROTO(int member,
+> > +               long count),
+> > +
+> > +       TP_ARGS(member, count),
+> > +
+> > +       TP_STRUCT__entry(
+> > +               __field(int, member)
+> > +               __field(long, size)
+> > +       ),
+> > +
+> > +       TP_fast_assign(
+> > +               __entry->member = member;
+> > +               __entry->size = (count << PAGE_SHIFT);
+> > +       ),
+> > +
+> > +       TP_printk("member=%d size=%ldB",
+> > +               __entry->member,
+> > +               __entry->size)
+> > +       );
+> >  #endif /* _TRACE_KMEM_H */
+> >
+> >  /* This part must be outside protection */
+> > diff --git a/mm/memory.c b/mm/memory.c
+> > index e2bb51b6242e..9d81322c24a3 100644
+> > --- a/mm/memory.c
+> > +++ b/mm/memory.c
+> > @@ -72,6 +72,8 @@
+> >  #include <linux/oom.h>
+> >  #include <linux/numa.h>
+> >
+> > +#include <trace/events/kmem.h>
+> > +
+> >  #include <asm/io.h>
+> >  #include <asm/mmu_context.h>
+> >  #include <asm/pgalloc.h>
+> > @@ -140,6 +142,24 @@ static int __init init_zero_pfn(void)
+> >  }
+> >  core_initcall(init_zero_pfn);
+> >
+> > +/*
+> > + * This threshold is the boundary in the value space, that the counter has to
+> > + * advance before we trace it. Should be a power of 2. It is to reduce unwanted
+> > + * trace overhead. The counter is in units of number of pages.
+> > + */
+> > +#define TRACE_MM_COUNTER_THRESHOLD 128
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/interconnect/qcom,msm8974.yaml   | 163 ++++++++++++++++++
->  .../dt-bindings/interconnect/qcom,msm8974.h   | 146 ++++++++++++++++
->  2 files changed, 309 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
->  create mode 100644 include/dt-bindings/interconnect/qcom,msm8974.h
-> 
-> diff --git a/Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml b/Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
-> new file mode 100644
-> index 000000000000..fbf440f5ffe0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interconnect/qcom,msm8974.yaml
-> @@ -0,0 +1,163 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interconnect/qcom,msm8974.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm MSM8974 Network-On-Chip Interconnect
-> +
-> +maintainers:
-> +  - Brian Masney <masneyb@onstation.org>
-> +
-> +description: |
-> +   The Qualcomm MSM8974 interconnect providers support setting system
-> +   bandwidth requirements between various network-on-chip fabrics.
-> +
-> +properties:
-> +  reg:
-> +    maxItems: 1
-> +
-> +  compatible:
-> +    enum:
-> +      - qcom,msm8974-bimc
-> +      - qcom,msm8974-cnoc
-> +      - qcom,msm8974-mmssnoc
-> +      - qcom,msm8974-ocmemnoc
-> +      - qcom,msm8974-pnoc
-> +      - qcom,msm8974-snoc
-> +
-> +  '#interconnect-cells':
-> +    const: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: bus
-> +      - const: bus_a
-> +
-> +  clocks:
-> +    items:
-> +      - description: Bus Clock
-> +      - description: Bus A Clock
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#interconnect-cells'
-> +  - clock-names
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> +      #include <dt-bindings/clock/qcom,rpmcc.h>
-> +      #include <dt-bindings/interconnect/qcom,msm8974.h>
-> +      #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +      bimc: interconnect@fc380000 {
-> +              reg = <0xfc380000 0x6a000>;
-> +              compatible = "qcom,msm8974-bimc";
-> +              #interconnect-cells = <1>;
-> +              clock-names = "bus", "bus_a";
-> +              clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
-> +                       <&rpmcc RPM_SMD_BIMC_A_CLK>;
-> +      };
-> +
-> +      cnoc: interconnect@fc480000 {
-> +              reg = <0xfc480000 0x4000>;
-> +              compatible = "qcom,msm8974-cnoc";
-> +              #interconnect-cells = <1>;
-> +              clock-names = "bus", "bus_a";
-> +              clocks = <&rpmcc RPM_SMD_CNOC_CLK>,
-> +                       <&rpmcc RPM_SMD_CNOC_A_CLK>;
-> +      };
-> +
-> +      mmssnoc: interconnect@fc478000 {
-> +              reg = <0xfc478000 0x4000>;
-> +              compatible = "qcom,msm8974-mmssnoc";
-> +              #interconnect-cells = <1>;
-> +              clock-names = "bus", "bus_a";
-> +              clocks = <&rpmcc RPM_SMD_MMSSNOC_AHB_CLK>,
-> +                       <&rpmcc RPM_SMD_MMSSNOC_AHB_A_CLK>;
+> IIUC the counter has to change by 128 pages (512kB assuming 4kB pages)
+> before the change gets traced. Would it make sense to make this step
+> size configurable? For a system with limited memory size change of
+> 512kB might be considerable while on systems with plenty of memory
+> that might be negligible. Not even mentioning possible difference in
+> page sizes. Maybe something like
+> /sys/kernel/debug/tracing/rss_step_order with
+> TRACE_MM_COUNTER_THRESHOLD=(1<<rss_step_order)?
 
-Isn't MMSS_S0_AXI_CLK the bus clock of the mmssnoc (which somehow seems
-to depend on mmssnoc_ahb_clk)?
+I would not want to complicate this more to be honest. It is already a bit
+complex, and I am not sure about the win in making it as configurable as you
+seem to want. The "threshold" thing is just a slight improvement, it is not
+aiming to be optimal. If in your tracing, this granularity is an issue, we
+can visit it then.
 
-> +      };
-> +
-> +      ocmemnoc: interconnect@fc470000 {
-> +              reg = <0xfc470000 0x4000>;
-> +              compatible = "qcom,msm8974-ocmemnoc";
-> +              #interconnect-cells = <1>;
-> +              clock-names = "bus", "bus_a";
-> +              clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-> +                       <&rpmcc RPM_SMD_OCMEMGX_A_CLK>;
-> +      };
-> +
-> +      pnoc: interconnect@fc468000 {
-> +              reg = <0xfc468000 0x4000>;
-> +              compatible = "qcom,msm8974-pnoc";
-> +              #interconnect-cells = <1>;
-> +              clock-names = "bus", "bus_a";
-> +              clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
-> +                       <&rpmcc RPM_SMD_PNOC_A_CLK>;
-> +      };
-> +
-> +      snoc: interconnect@fc460000 {
-> +              reg = <0xfc460000 0x4000>;
-> +              compatible = "qcom,msm8974-snoc";
-> +              #interconnect-cells = <1>;
-> +              clock-names = "bus", "bus_a";
-> +              clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> +                       <&rpmcc RPM_SMD_SNOC_A_CLK>;
-> +      };
-> +
-> +      mdss: mdss@fd900000 {
+thanks,
 
-I think you can omit the client, as this adheres to the standard binding
-for interconnect clients. And you don't need to have an example that
-covers all compatibles either...
+ - Joel
 
 
-> +              compatible = "qcom,mdss";
-> +              reg = <0xfd900000 0x100>, <0xfd924000 0x1000>;
-> +              reg-names = "mdss_phys", "vbif_phys";
-> +
-> +              power-domains = <&mmcc MDSS_GDSC>;
-> +
-> +              clocks = <&mmcc MDSS_AHB_CLK>,
-> +                       <&mmcc MDSS_AXI_CLK>,
-> +                       <&mmcc MDSS_VSYNC_CLK>;
-> +              clock-names = "iface", "bus", "vsync";
-> +
-> +              interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +              interrupt-controller;
-> +              #interrupt-cells = <1>;
-> +
-> +              #address-cells = <1>;
-> +              #size-cells = <1>;
-> +              ranges;
-> +
-> +              mdp: mdp@fd900000 {
-> +                      compatible = "qcom,mdp5";
-> +                      reg = <0xfd900100 0x22000>;
-> +                      reg-names = "mdp_phys";
-> +
-> +                      interrupt-parent = <&mdss>;
-> +                      interrupts = <0 0>;
-> +
-> +                      clocks = <&mmcc MDSS_AHB_CLK>,
-> +                               <&mmcc MDSS_AXI_CLK>,
-> +                               <&mmcc MDSS_MDP_CLK>,
-> +                               <&mmcc MDSS_VSYNC_CLK>;
-> +                      clock-names = "iface", "bus", "core", "vsync";
-> +
-> +                      interconnects = <&mmssnoc MNOC_MAS_GRAPHICS_3D &bimc BIMC_SLV_EBI_CH0>,
-> +                                      <&ocmemnoc OCMEM_VNOC_MAS_GFX3D &ocmemnoc OCMEM_SLV_OCMEM>;
-> +                      interconnect-names = "mdp0-mem", "mdp1-mem";
-> +
-> +                      ports {
-> +                              #address-cells = <1>;
-> +                              #size-cells = <0>;
-> +
-> +                              port@0 {
-> +                                      reg = <0>;
-> +                                      mdp5_intf1_out: endpoint {
-> +                                              remote-endpoint = <&dsi0_in>;
-> +                                      };
-> +                              };
-> +                      };
-> +              };
-> +      };
-> diff --git a/include/dt-bindings/interconnect/qcom,msm8974.h b/include/dt-bindings/interconnect/qcom,msm8974.h
-> new file mode 100644
-> index 000000000000..58acf7196410
-> --- /dev/null
-> +++ b/include/dt-bindings/interconnect/qcom,msm8974.h
-> @@ -0,0 +1,146 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
 
-Would you mind dual licensing this part as well?
-
-Apart from that, I think this binding looks good.
-
-Regards,
-Bjorn
-
-> +/*
-> + * Qualcomm msm8974 interconnect IDs
-> + *
-> + * Copyright (c) 2019 Brian Masney <masneyb@onstation.org>
-> + */
-> +
-> +#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_MSM8974_H
-> +#define __DT_BINDINGS_INTERCONNECT_QCOM_MSM8974_H
-> +
-> +#define BIMC_MAS_AMPSS_M0		0
-> +#define BIMC_MAS_AMPSS_M1		1
-> +#define BIMC_MAS_MSS_PROC		2
-> +#define BIMC_TO_MNOC			3
-> +#define BIMC_TO_SNOC			4
-> +#define BIMC_SLV_EBI_CH0		5
-> +#define BIMC_SLV_AMPSS_L2		6
-> +
-> +#define CNOC_MAS_RPM_INST		0
-> +#define CNOC_MAS_RPM_DATA		1
-> +#define CNOC_MAS_RPM_SYS		2
-> +#define CNOC_MAS_DEHR			3
-> +#define CNOC_MAS_QDSS_DAP		4
-> +#define CNOC_MAS_SPDM			5
-> +#define CNOC_MAS_TIC			6
-> +#define CNOC_SLV_CLK_CTL		7
-> +#define CNOC_SLV_CNOC_MSS		8
-> +#define CNOC_SLV_SECURITY		9
-> +#define CNOC_SLV_TCSR			10
-> +#define CNOC_SLV_TLMM			11
-> +#define CNOC_SLV_CRYPTO_0_CFG		12
-> +#define CNOC_SLV_CRYPTO_1_CFG		13
-> +#define CNOC_SLV_IMEM_CFG		14
-> +#define CNOC_SLV_MESSAGE_RAM		15
-> +#define CNOC_SLV_BIMC_CFG		16
-> +#define CNOC_SLV_BOOT_ROM		17
-> +#define CNOC_SLV_PMIC_ARB		18
-> +#define CNOC_SLV_SPDM_WRAPPER		19
-> +#define CNOC_SLV_DEHR_CFG		20
-> +#define CNOC_SLV_MPM			21
-> +#define CNOC_SLV_QDSS_CFG		22
-> +#define CNOC_SLV_RBCPR_CFG		23
-> +#define CNOC_SLV_RBCPR_QDSS_APU_CFG	24
-> +#define CNOC_TO_SNOC			25
-> +#define CNOC_SLV_CNOC_ONOC_CFG		26
-> +#define CNOC_SLV_CNOC_MNOC_MMSS_CFG	27
-> +#define CNOC_SLV_CNOC_MNOC_CFG		28
-> +#define CNOC_SLV_PNOC_CFG		29
-> +#define CNOC_SLV_SNOC_MPU_CFG		30
-> +#define CNOC_SLV_SNOC_CFG		31
-> +#define CNOC_SLV_EBI1_DLL_CFG		32
-> +#define CNOC_SLV_PHY_APU_CFG		33
-> +#define CNOC_SLV_EBI1_PHY_CFG		34
-> +#define CNOC_SLV_RPM			35
-> +#define CNOC_SLV_SERVICE_CNOC		36
-> +
-> +#define MNOC_MAS_GRAPHICS_3D		0
-> +#define MNOC_MAS_JPEG			1
-> +#define MNOC_MAS_MDP_PORT0		2
-> +#define MNOC_MAS_VIDEO_P0		3
-> +#define MNOC_MAS_VIDEO_P1		4
-> +#define MNOC_MAS_VFE			5
-> +#define MNOC_TO_CNOC			6
-> +#define MNOC_TO_BIMC			7
-> +#define MNOC_SLV_CAMERA_CFG		8
-> +#define MNOC_SLV_DISPLAY_CFG		9
-> +#define MNOC_SLV_OCMEM_CFG		10
-> +#define MNOC_SLV_CPR_CFG		11
-> +#define MNOC_SLV_CPR_XPU_CFG		12
-> +#define MNOC_SLV_MISC_CFG		13
-> +#define MNOC_SLV_MISC_XPU_CFG		14
-> +#define MNOC_SLV_VENUS_CFG		15
-> +#define MNOC_SLV_GRAPHICS_3D_CFG	16
-> +#define MNOC_SLV_MMSS_CLK_CFG		17
-> +#define MNOC_SLV_MMSS_CLK_XPU_CFG	18
-> +#define MNOC_SLV_MNOC_MPU_CFG		19
-> +#define MNOC_SLV_ONOC_MPU_CFG		20
-> +#define MNOC_SLV_SERVICE_MNOC		21
-> +
-> +#define OCMEM_NOC_TO_OCMEM_VNOC		0
-> +#define OCMEM_MAS_JPEG_OCMEM		1
-> +#define OCMEM_MAS_MDP_OCMEM		2
-> +#define OCMEM_MAS_VIDEO_P0_OCMEM	3
-> +#define OCMEM_MAS_VIDEO_P1_OCMEM	4
-> +#define OCMEM_MAS_VFE_OCMEM		5
-> +#define OCMEM_MAS_CNOC_ONOC_CFG		6
-> +#define OCMEM_SLV_SERVICE_ONOC		7
-> +#define OCMEM_VNOC_TO_SNOC		8
-> +#define OCMEM_VNOC_TO_OCMEM_NOC		9
-> +#define OCMEM_VNOC_MAS_GFX3D		10
-> +#define OCMEM_SLV_OCMEM			11
-> +
-> +#define PNOC_MAS_PNOC_CFG		0
-> +#define PNOC_MAS_SDCC_1			1
-> +#define PNOC_MAS_SDCC_3			2
-> +#define PNOC_MAS_SDCC_4			3
-> +#define PNOC_MAS_SDCC_2			4
-> +#define PNOC_MAS_TSIF			5
-> +#define PNOC_MAS_BAM_DMA		6
-> +#define PNOC_MAS_BLSP_2			7
-> +#define PNOC_MAS_USB_HSIC		8
-> +#define PNOC_MAS_BLSP_1			9
-> +#define PNOC_MAS_USB_HS			10
-> +#define PNOC_TO_SNOC			11
-> +#define PNOC_SLV_SDCC_1			12
-> +#define PNOC_SLV_SDCC_3			13
-> +#define PNOC_SLV_SDCC_2			14
-> +#define PNOC_SLV_SDCC_4			15
-> +#define PNOC_SLV_TSIF			16
-> +#define PNOC_SLV_BAM_DMA		17
-> +#define PNOC_SLV_BLSP_2			18
-> +#define PNOC_SLV_USB_HSIC		19
-> +#define PNOC_SLV_BLSP_1			20
-> +#define PNOC_SLV_USB_HS			21
-> +#define PNOC_SLV_PDM			22
-> +#define PNOC_SLV_PERIPH_APU_CFG		23
-> +#define PNOC_SLV_PNOC_MPU_CFG		24
-> +#define PNOC_SLV_PRNG			25
-> +#define PNOC_SLV_SERVICE_PNOC		26
-> +
-> +#define SNOC_MAS_LPASS_AHB		0
-> +#define SNOC_MAS_QDSS_BAM		1
-> +#define SNOC_MAS_SNOC_CFG		2
-> +#define SNOC_TO_BIMC			3
-> +#define SNOC_TO_CNOC			4
-> +#define SNOC_TO_PNOC			5
-> +#define SNOC_TO_OCMEM_VNOC		6
-> +#define SNOC_MAS_CRYPTO_CORE0		7
-> +#define SNOC_MAS_CRYPTO_CORE1		8
-> +#define SNOC_MAS_LPASS_PROC		9
-> +#define SNOC_MAS_MSS			10
-> +#define SNOC_MAS_MSS_NAV		11
-> +#define SNOC_MAS_OCMEM_DMA		12
-> +#define SNOC_MAS_WCSS			13
-> +#define SNOC_MAS_QDSS_ETR		14
-> +#define SNOC_MAS_USB3			15
-> +#define SNOC_SLV_AMPSS			16
-> +#define SNOC_SLV_LPASS			17
-> +#define SNOC_SLV_USB3			18
-> +#define SNOC_SLV_WCSS			19
-> +#define SNOC_SLV_OCIMEM			20
-> +#define SNOC_SLV_SNOC_OCMEM		21
-> +#define SNOC_SLV_SERVICE_SNOC		22
-> +#define SNOC_SLV_QDSS_STM		23
-> +
-> +#endif
-> -- 
-> 2.21.0
-> 
+> > +void mm_trace_rss_stat(int member, long count, long value)
+> > +{
+> > +       long thresh_mask = ~(TRACE_MM_COUNTER_THRESHOLD - 1);
+> > +
+> > +       if (!trace_rss_stat_enabled())
+> > +               return;
+> > +
+> > +       /* Threshold roll-over, trace it */
+> > +       if ((count & thresh_mask) != ((count - value) & thresh_mask))
+> > +               trace_rss_stat(member, count);
+> > +}
+> >
+> >  #if defined(SPLIT_RSS_COUNTING)
+> >
+> > --
+> > 2.23.0.187.g17f5b7556c-goog
+> >
+> > --
+> > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> >
