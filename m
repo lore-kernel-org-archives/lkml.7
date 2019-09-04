@@ -2,113 +2,114 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24F2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FA5C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF232087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dFPK7v0e"
+	by mail.kernel.org (Postfix) with ESMTP id 49BC92087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567621231;
+	bh=3/Lw2+5tkQ9b27JAWQVZ4hfFuCO6iReicQ/dfluSlQg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gXthzSVCvEuOmpDyT4EAokoC8PMbUUf+uTC+ZnkfQpkSRhKXy8uVr0A8QN1WsR6TM
+	 a6PH8zDd1UBnzSd5FI7nKjyK0tC77D4g37IpLRueJbCrw81GarGLLruZTl+gfwfwJg
+	 GH0hSm5arz2xetFfswbo3BGS/R8bhIW4ZR3Zk62M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389966AbfIDSUY (ORCPT
+        id S2390067AbfIDSU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:20:24 -0400
-Received: from mout.gmx.net ([212.227.15.15]:44349 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388701AbfIDSIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1567620473;
-        bh=uSFdeY18J73GEbur7/f5eGY33e2+gZfGIbg70oqM+2E=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=dFPK7v0eikK//IWvKaPDuTF8vPd9O/aKmO1DDSUY2K3IC2bxnVQ5PIk2EJhGM27kR
-         +lY+G9BNhgaiYDLaUrJX9F/2f1aIQsTNuq3ya5rD0AT7g8CjigqFQwromeihBXHSXC
-         O/uuMoGto9MJPLXCEM44QVkN4nCV3sTM8MJWrjW4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from localhost.localdomain ([84.118.159.3]) by mail.gmx.com
- (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MhlGk-1ij1B310yG-00dqYX; Wed, 04 Sep 2019 20:07:53 +0200
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        =?UTF-8?q?Daniel=20P=20=2E=20Berrang=C3=A9?= <berrange@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
-Date:   Wed,  4 Sep 2019 20:07:36 +0200
-Message-Id: <20190904180736.29009-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.23.0.rc1
+        Wed, 4 Sep 2019 14:20:29 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:46059 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387477AbfIDSUX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:20:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id f12so28881918iog.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:20:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=D27Zs+STvqIcqPGbkFvSR5YBtl93H53NlQy8TmMQ104=;
+        b=FkPQsG3WR1YbR2JzeHMw/rv9JM87flNUuNo7Y+xbD2DJNytrA9+X8V+7zJ/fmuxtCA
+         8xZJFPVFel2vCew6v0IXDtx5bHrTa4GvDfSh2dNDzCTNthDwmm2YUUl4/gfmcT2VbGtg
+         4ApFszIbB53oyQlY9D4vR8eo4SA7jeAUSVXA4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D27Zs+STvqIcqPGbkFvSR5YBtl93H53NlQy8TmMQ104=;
+        b=KmS+PexwhcDjD4afZj4pWYVxTWbiSp59d8I0J+qiw+7uSM547bmgFetSO2I2SsI8Dk
+         DWuVyUeRNIBugGuToBCdbJPQqKu6oLLw7nDTt3BRukexC8fk26cF8qVsp3rvUyYCKm5n
+         bigH/H3FfnJ1ty1Xs3fsicupu1PoiO4kVSeQArtLDhOxiTR4usUDMDuKt/iPT2RndI6K
+         zGLtsNuWRARS9SGmFzwTJCpXCD/FksPELXuf4+FrC5KEUW1YOviGTfJEgXOIeiA4uyIk
+         D+8MSJqfSdVCXe8LOQBzFlKUKhhMXbMgf/3Km7+Ji4vzKnWaMKDkNTY7yss/NJji86Xa
+         EnTA==
+X-Gm-Message-State: APjAAAU0orkfIhzhGZ/3AFPQZpslgy6T/seYRVjHYkPhffXuh2TN0UaG
+        XK8QaEtg2yJYJ2uISv/pnr0A24HdSow=
+X-Google-Smtp-Source: APXvYqx4ksyIz2mp2cVEg7gzmc1wLIVctlBhstO+/w9PNAVcEaLfWYidhI8b/EOywYxqFtJebLyMCQ==
+X-Received: by 2002:a5d:9c0b:: with SMTP id 11mr4273776ioe.192.1567621222620;
+        Wed, 04 Sep 2019 11:20:22 -0700 (PDT)
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com. [209.85.166.53])
+        by smtp.gmail.com with ESMTPSA id p9sm19328035ios.1.2019.09.04.11.20.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Sep 2019 11:20:20 -0700 (PDT)
+Received: by mail-io1-f53.google.com with SMTP id n197so44426208iod.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:20:19 -0700 (PDT)
+X-Received: by 2002:a6b:581a:: with SMTP id m26mr1356085iob.161.1567621219740;
+ Wed, 04 Sep 2019 11:20:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:abXNHvOQi/p7CEIzoPWMQ9XFYpp4Z25ZscYRNbtDcb67ZH0vqAE
- CCaWYLtBMzVUoZZj3DLLIFWRozpR+tYvr63KEw05ujxgzzI7iN0g+dgjei45TpxWlugdsiF
- hLqcNFs7qc6B5xKFTZBxgoGdWkp6vsuL+qhmsf9GozxhZ5IUyUHXZk7+SsU37eCbQpoyn4O
- c/fcxp1MYFQRPvj2y1OVw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:JozR6u9JImk=:9BlOOIijgEVJQxytK0x9tx
- ffPR1NDnISmrIyzczzP11cywtaAFP9aCT0RxToSFNkToJSnm4aAHE/S7sSOhgAIyxz/MiIr75
- KcPkdb6fnx23AA/KWNlaSRurYgMgazJ/6IuexrQBTdxaFm90ZlBzRLL3K8ywN/CV7JZtvH6z7
- aFhqnENeGY04kiL4Zvg4gvZ4OW0XCYjI/FqU9AbtXKdBObedSvwR72zNEd05U37t9+x8zKk6j
- LTJizGn7PHI8EuNOQLdKg0IXFjG8dPDYe8z7wgn2qlKGBjBeAawjfNp3Epb6kUw9213ZNGLMo
- fh1gBhdrooRdaj1tEiGAhterenwoPCIM9X+VRYi8DAQbb70yGSicPAYEljE/k+/rJofxOuT+q
- CxwkoHsuZ4mqi5+NhnaTJl4e36SNg28WzHRxDYOvL2igXBERcU6bsBTitDCccbufyP+5dPxOQ
- uPyjZfdAVfzt20K85FboUwnZkpWJ8PAiIrQaJZXInThEl1hlhcQZBHzYzyhU5Hr0vT7U4bguC
- Jk1d4iShpWENsqgl5/YyR1EpmrUUZyiBRo01uDGlt9hLy/RC6f3F7rSjihjY1zPvYJb9r26zl
- sjKm0HwdyniWypblwzX1tidPLcBPHVc7xLlAQB9Amxfrap8J5aIaJV9ncupkKh9lDp1SMA7bi
- bbFb7ydvnEj9BvWA7m7P9G3rJBACZN+IByS9r2paS2gmJORze++SF7xMJ4CapGqMPhm0Uh0+m
- NWRh4c0s58AB0LRR0FnqR0vIkZjw58tSrhrZpQ+i3HGvS9U73dI9u74NpBU/UtPNAl1M2oC33
- lU0fo9l6DRWSvRYhpvM+2DLbV2udzosMeRZaicEkLQuVPBWNFtqfE6GjW4KVEbg3EftIIKjKR
- 0gT3EfIIZdht5LApSOvcoT70CR06LPLNQ0o3DEzr2ake3RZ2x6ItWyyJD2cf+MIMsBa7xKluS
- cRnSMqgtb9PkRlVbNFar+V/OJ3yKgF04Ay4K/3PiP3AygXGBXLaN2SaDOnbm+6BsN8XXZNLGJ
- wEJbpsOVJ8RM0sLV8X2HpOgJy77cP3gLkngJ3OQ0+ziAetElq+4QoVGQHvzzIc37WuWuUj672
- HV4zT7/BsxTmuoCUoNd2qwOf/vWbcWNHRuTTY+ujEDs0+SybO+LhCZ8r+WlBFZgejj7NXq+RE
- cgxieGDxbNjHstwJ68ra7rk37gfXEY/CDV3xk1cGtH89pLOT4mYhLPJ/CAin64ctNsznLUIXM
- 81exZsNAov/vsxqph
+References: <20190830160957.GC2634@redhat.com> <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org> <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org> <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org> <87ef0yt221.fsf_-_@x220.int.ebiederm.org>
+ <20190904144415.GB20391@lenoir> <20190904153245.GF24568@redhat.com> <20190904163325.GA22421@lenoir>
+In-Reply-To: <20190904163325.GA22421@lenoir>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 4 Sep 2019 11:20:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whv60YepBaTUWnDvZ1QMezTyHLvCvzF_QgUQ+6LdrpScw@mail.gmail.com>
+Message-ID: <CAHk-=whv60YepBaTUWnDvZ1QMezTyHLvCvzF_QgUQ+6LdrpScw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] task: Add a count of task rcu users
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an application tries to access memory that is not mapped, an error
-ENOSYS, "load/store instruction decoding not implemented" may occur.
-QEMU will hang with a register dump.
+On Wed, Sep 4, 2019 at 9:33 AM Frederic Weisbecker <frederic@kernel.org> wrote:
+>
+> I thought the point of these rcu_users was to be able to do:
+>
+> rcu_read_lock()
+> p = rcu_dereference(task)
+> if (!refcount_inc_not_zero(p->rcu_users)) {
 
-Instead create a data abort that can be handled gracefully by the
-application running in the virtual environment.
+No. Because of the shared state, you can't do that from RCU context.
 
-Now the virtual machine can react to the event in the most appropriate
-way - by recovering, by writing an informative log, or by rebooting.
+But you *could* increase rcu_users from within the process context
+itself (as long as you do it before the exit path, ie during normal
+system call execution), or possibly while holding the tasklist_lock
+and verifying that the task hasn't died yet.
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- virt/kvm/arm/mmio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm not sure there is any sensible case for doing that, though. It
+would have to have a similar pattern to the runqueue use, where you
+add a new RCU lookup point for the task. I'm sure something like that
+_could_ exist, I just can't think of any right now.
 
-diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
-index a8a6a0c883f1..0cbed7d6a0f4 100644
-=2D-- a/virt/kvm/arm/mmio.c
-+++ b/virt/kvm/arm/mmio.c
-@@ -161,8 +161,8 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run=
- *run,
- 		if (ret)
- 			return ret;
- 	} else {
--		kvm_err("load/store instruction decoding not implemented\n");
--		return -ENOSYS;
-+		kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
-+		return 1;
- 	}
-
- 	rt =3D vcpu->arch.mmio_decode.rt;
-=2D-
-2.23.0.rc1
-
+             Linus
