@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD63C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584FAC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36F321670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CBF02053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613922;
-	bh=KT1cqQYuCdglFPdumvq7H8CWoXVeOetimjy1U9BQ8MQ=;
+	s=default; t=1567613935;
+	bh=ep+37ZmQaFe9khzB1Ublxq7aT04QtrRwFlS7AmDIN7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aEqut2TtmJTBwwFbtX2bLBjLZ3avOluGU+O+QB4W0chsbiVDoYCLzpoVOKX+olhKG
-	 YAHWDy5IY+0eL2HOkuCbWQ89r9QM2oVpQ4pkO20X8wJr6EbCevBRJ0zcRUPCePEF/e
-	 EBqiIvMnR7W1SI9WwTXLNUu8EFEkrgv1LZeM/POc=
+	b=MS8pctpx8hMWYl87qCNVJ7tmnC+YJ3s39ZsYCN763qeS69z/7Sba+QgXwn8Ln2rKG
+	 SYlmYS6uM7pHcMcDpeh1DHCZZIRjcy9/wULjtUcTm/gGQPzA0v0s3e6b2FNOD6AvsB
+	 mtylXbD2Egm9scJjgGDfihrFc8bFW+tX0wB4vISk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbfIDQSm (ORCPT
+        id S1731971AbfIDP6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:18:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32820 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731479AbfIDP6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:42 -0400
+        id S1732028AbfIDP6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE2132070C;
-        Wed,  4 Sep 2019 15:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 330D523402;
+        Wed,  4 Sep 2019 15:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612720;
-        bh=KT1cqQYuCdglFPdumvq7H8CWoXVeOetimjy1U9BQ8MQ=;
+        s=default; t=1567612714;
+        bh=ep+37ZmQaFe9khzB1Ublxq7aT04QtrRwFlS7AmDIN7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DVv0KBhkdS/Lpwk6kw2O7mkrO39W0dzE4+NwyZpI/zbo474cwVXT9OPosd8gAkOJk
-         2VTWxjNkatZbaMRoBPe1Vpjf2hCw7Znyiw31NNYenTk8ENmJ199oJNA00ZVGBfAee5
-         E8I7FOSMdblK2GmQHSSrq/Odf1KaJ1X2Il8ebKdI=
+        b=Eu1ZeAPEyrvoWQe6C+Yp4gxaHkvM5xrP0W2U2ElcUBkwAgyY7ZEoidXgClx8MTv5a
+         jO3+sRKDYx4+zIPLmibXSlJSNEYHiKj6Hq0aeUeStkOpJ6wHAUb5z7VQG+DwZAklRh
+         xy07gywUS3TeS2Gt//O/tnkbXNMwgfAoIX4wmJeA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com,
-        Song Liu <songliubraving@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 41/94] bpf: fix use after free in prog symbol exposure
-Date:   Wed,  4 Sep 2019 11:56:46 -0400
-Message-Id: <20190904155739.2816-41-sashal@kernel.org>
+Cc:     Doug Berger <opendmb@gmail.com>, Laura Abbott <labbott@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 37/94] ARM: 8874/1: mm: only adjust sections of valid mm structures
+Date:   Wed,  4 Sep 2019 11:56:42 -0400
+Message-Id: <20190904155739.2816-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -61,129 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit c751798aa224fadc5124b49eeb38fb468c0fa039 ]
+[ Upstream commit c51bc12d06b3a5494fbfcbd788a8e307932a06e9 ]
 
-syzkaller managed to trigger the warning in bpf_jit_free() which checks via
-bpf_prog_kallsyms_verify_off() for potentially unlinked JITed BPF progs
-in kallsyms, and subsequently trips over GPF when walking kallsyms entries:
+A timing hazard exists when an early fork/exec thread begins
+exiting and sets its mm pointer to NULL while a separate core
+tries to update the section information.
 
-  [...]
-  8021q: adding VLAN 0 to HW filter on device batadv0
-  8021q: adding VLAN 0 to HW filter on device batadv0
-  WARNING: CPU: 0 PID: 9869 at kernel/bpf/core.c:810 bpf_jit_free+0x1e8/0x2a0
-  Kernel panic - not syncing: panic_on_warn set ...
-  CPU: 0 PID: 9869 Comm: kworker/0:7 Not tainted 5.0.0-rc8+ #1
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  Workqueue: events bpf_prog_free_deferred
-  Call Trace:
-   __dump_stack lib/dump_stack.c:77 [inline]
-   dump_stack+0x113/0x167 lib/dump_stack.c:113
-   panic+0x212/0x40b kernel/panic.c:214
-   __warn.cold.8+0x1b/0x38 kernel/panic.c:571
-   report_bug+0x1a4/0x200 lib/bug.c:186
-   fixup_bug arch/x86/kernel/traps.c:178 [inline]
-   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:271
-   do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:290
-   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
-  RIP: 0010:bpf_jit_free+0x1e8/0x2a0
-  Code: 02 4c 89 e2 83 e2 07 38 d0 7f 08 84 c0 0f 85 86 00 00 00 48 ba 00 02 00 00 00 00 ad de 0f b6 43 02 49 39 d6 0f 84 5f fe ff ff <0f> 0b e9 58 fe ff ff 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1
-  RSP: 0018:ffff888092f67cd8 EFLAGS: 00010202
-  RAX: 0000000000000007 RBX: ffffc90001947000 RCX: ffffffff816e9d88
-  RDX: dead000000000200 RSI: 0000000000000008 RDI: ffff88808769f7f0
-  RBP: ffff888092f67d00 R08: fffffbfff1394059 R09: fffffbfff1394058
-  R10: fffffbfff1394058 R11: ffffffff89ca02c7 R12: ffffc90001947002
-  R13: ffffc90001947020 R14: ffffffff881eca80 R15: ffff88808769f7e8
-  BUG: unable to handle kernel paging request at fffffbfff400d000
-  #PF error: [normal kernel read fault]
-  PGD 21ffee067 P4D 21ffee067 PUD 21ffed067 PMD 9f942067 PTE 0
-  Oops: 0000 [#1] PREEMPT SMP KASAN
-  CPU: 0 PID: 9869 Comm: kworker/0:7 Not tainted 5.0.0-rc8+ #1
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  Workqueue: events bpf_prog_free_deferred
-  RIP: 0010:bpf_get_prog_addr_region kernel/bpf/core.c:495 [inline]
-  RIP: 0010:bpf_tree_comp kernel/bpf/core.c:558 [inline]
-  RIP: 0010:__lt_find include/linux/rbtree_latch.h:115 [inline]
-  RIP: 0010:latch_tree_find include/linux/rbtree_latch.h:208 [inline]
-  RIP: 0010:bpf_prog_kallsyms_find+0x107/0x2e0 kernel/bpf/core.c:632
-  Code: 00 f0 ff ff 44 38 c8 7f 08 84 c0 0f 85 fa 00 00 00 41 f6 45 02 01 75 02 0f 0b 48 39 da 0f 82 92 00 00 00 48 89 d8 48 c1 e8 03 <42> 0f b6 04 30 84 c0 74 08 3c 03 0f 8e 45 01 00 00 8b 03 48 c1 e0
-  [...]
+This commit ensures that the mm pointer is not NULL before
+setting its section parameters. The arguments provided by
+commit 11ce4b33aedc ("ARM: 8672/1: mm: remove tasklist locking
+from update_sections_early()") are equally valid for not
+requiring grabbing the task_lock around this check.
 
-Upon further debugging, it turns out that whenever we trigger this
-issue, the kallsyms removal in bpf_prog_ksym_node_del() was /skipped/
-but yet bpf_jit_free() reported that the entry is /in use/.
-
-Problem is that symbol exposure via bpf_prog_kallsyms_add() but also
-perf_event_bpf_event() were done /after/ bpf_prog_new_fd(). Once the
-fd is exposed to the public, a parallel close request came in right
-before we attempted to do the bpf_prog_kallsyms_add().
-
-Given at this time the prog reference count is one, we start to rip
-everything underneath us via bpf_prog_release() -> bpf_prog_put().
-The memory is eventually released via deferred free, so we're seeing
-that bpf_jit_free() has a kallsym entry because we added it from
-bpf_prog_load() but /after/ bpf_prog_put() from the remote CPU.
-
-Therefore, move both notifications /before/ we install the fd. The
-issue was never seen between bpf_prog_alloc_id() and bpf_prog_new_fd()
-because upon bpf_prog_get_fd_by_id() we'll take another reference to
-the BPF prog, so we're still holding the original reference from the
-bpf_prog_load().
-
-Fixes: 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
-Fixes: 74451e66d516 ("bpf: make jited programs visible in traces")
-Reported-by: syzbot+bd3bba6ff3fcea7a6ec6@syzkaller.appspotmail.com
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Song Liu <songliubraving@fb.com>
+Fixes: 08925c2f124f ("ARM: 8464/1: Update all mm structures with section adjustments")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Laura Abbott <labbott@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/syscall.c | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ arch/arm/mm/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 42d17f7307802..d2146277071f3 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1686,20 +1686,26 @@ static int bpf_prog_load(union bpf_attr *attr, union bpf_attr __user *uattr)
- 	if (err)
- 		goto free_used_maps;
- 
--	err = bpf_prog_new_fd(prog);
--	if (err < 0) {
--		/* failed to allocate fd.
--		 * bpf_prog_put() is needed because the above
--		 * bpf_prog_alloc_id() has published the prog
--		 * to the userspace and the userspace may
--		 * have refcnt-ed it through BPF_PROG_GET_FD_BY_ID.
--		 */
--		bpf_prog_put(prog);
--		return err;
--	}
--
-+	/* Upon success of bpf_prog_alloc_id(), the BPF prog is
-+	 * effectively publicly exposed. However, retrieving via
-+	 * bpf_prog_get_fd_by_id() will take another reference,
-+	 * therefore it cannot be gone underneath us.
-+	 *
-+	 * Only for the time /after/ successful bpf_prog_new_fd()
-+	 * and before returning to userspace, we might just hold
-+	 * one reference and any parallel close on that fd could
-+	 * rip everything out. Hence, below notifications must
-+	 * happen before bpf_prog_new_fd().
-+	 *
-+	 * Also, any failure handling from this point onwards must
-+	 * be using bpf_prog_put() given the program is exposed.
-+	 */
- 	bpf_prog_kallsyms_add(prog);
- 	perf_event_bpf_event(prog, PERF_BPF_EVENT_PROG_LOAD, 0);
-+
-+	err = bpf_prog_new_fd(prog);
-+	if (err < 0)
-+		bpf_prog_put(prog);
- 	return err;
- 
- free_used_maps:
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 749a5a6f61433..8e793cddac661 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -613,7 +613,8 @@ static void update_sections_early(struct section_perm perms[], int n)
+ 		if (t->flags & PF_KTHREAD)
+ 			continue;
+ 		for_each_thread(t, s)
+-			set_section_perms(perms, n, true, s->mm);
++			if (s->mm)
++				set_section_perms(perms, n, true, s->mm);
+ 	}
+ 	set_section_perms(perms, n, true, current->active_mm);
+ 	set_section_perms(perms, n, true, &init_mm);
 -- 
 2.20.1
 
