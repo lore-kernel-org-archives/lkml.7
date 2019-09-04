@@ -2,99 +2,159 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2432C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A766FC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A0321883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80A2C21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbfIDMsA convert rfc822-to-8bit (ORCPT
+        id S1730115AbfIDMtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:48:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46238 "EHLO mx1.suse.de"
+        Wed, 4 Sep 2019 08:49:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47098 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727675AbfIDMsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:48:00 -0400
+        id S1730065AbfIDMtK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:49:10 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 51CE3AF47;
-        Wed,  4 Sep 2019 12:47:59 +0000 (UTC)
-Date:   Wed, 4 Sep 2019 14:47:59 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Evgeniy Polyakov <zbr@ioremap.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] w1: add 1-wire master driver for IP block found
- in SGI ASICs
-Message-Id: <20190904144759.39294ab80882bfdb9eeb78d0@suse.de>
-In-Reply-To: <20190904123351.GA15401@kroah.com>
-References: <20190831082623.15627-1-tbogendoerfer@suse.de>
-        <20190831082623.15627-2-tbogendoerfer@suse.de>
-        <20190904114837.GA9153@kroah.com>
-        <20190904140134.698aaf5f5ec204a5305c1177@suse.de>
-        <20190904120646.GA11400@kroah.com>
-        <20190904141434.7d05c6bcd2852d2060ba91ce@suse.de>
-        <20190904123351.GA15401@kroah.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        by mx1.suse.de (Postfix) with ESMTP id F03BCAF47;
+        Wed,  4 Sep 2019 12:49:07 +0000 (UTC)
+Subject: Re: [PATCH 1/2] mm/kasan: dump alloc/free stack for page allocator
+To:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+References: <20190904065133.20268-1-walter-zh.wu@mediatek.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <401064ae-279d-bef3-a8d5-0fe155d0886d@suse.cz>
+Date:   Wed, 4 Sep 2019 14:49:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190904065133.20268-1-walter-zh.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 14:33:51 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> On Wed, Sep 04, 2019 at 02:14:34PM +0200, Thomas Bogendoerfer wrote:
-> > On Wed, 4 Sep 2019 14:06:46 +0200
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > 
-> > > On Wed, Sep 04, 2019 at 02:01:34PM +0200, Thomas Bogendoerfer wrote:
-> > > > On Wed, 4 Sep 2019 13:48:37 +0200
-> > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > > > 
-> > > > > On Sat, Aug 31, 2019 at 10:26:21AM +0200, Thomas Bogendoerfer wrote:
-> > > > > > Starting with SGI Origin machines nearly every new SGI ASIC contains
-> > > > > > an 1-Wire master. They are used for attaching One-Wire prom devices,
-> > > > > > which contain information about part numbers, revision numbers,
-> > > > > > serial number etc. and MAC addresses for ethernet interfaces.
-> > > > > > This patch adds a master driver to support this IP block.
-> > > > > > It also adds an extra field dev_id to struct w1_bus_master, which
-> > > > > > could be in used in slave drivers for creating unique device names.
-> > > > > > 
-> > > > > > Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-> > > > > > ---
-> > > > > >  drivers/w1/masters/Kconfig           |   9 +++
-> > > > > >  drivers/w1/masters/Makefile          |   1 +
-> > > > > >  drivers/w1/masters/sgi_w1.c          | 130 +++++++++++++++++++++++++++++++++++
-> > > > > >  include/linux/platform_data/sgi-w1.h |  13 ++++
-> > > > > 
-> > > > > Why platform data?  I thought that was the "old way", and the "proper
-> > > > > way" now is to use device tree?
-> > > > 
-> > > > this machine is old and doesn't have device tree at all.
-> > > 
-> > > Your text says "every new SGI ASIC".  So new devices are being made for
-> > > old systems?
-> > > 
-> > > confused,
-> > 
-> > ok, now I see where the confusion comes from. New in the meaning of latest
-> > produced SGI MIPS system.
-> > 
-> > Is it better, if I rephrase this to latest line of MIPS system ASICs ?
+On 9/4/19 8:51 AM, Walter Wu wrote:
+> This patch is KASAN report adds the alloc/free stacks for page allocator
+> in order to help programmer to see memory corruption caused by page.
 > 
-> Nah, I'll take this now, it's ok, thanks for the explanation.
+> By default, KASAN doesn't record alloc/free stack for page allocator.
+> It is difficult to fix up page use-after-free issue.
+> 
+> This feature depends on page owner to record the last stack of pages.
+> It is very helpful for solving the page use-after-free or out-of-bound.
+> 
+> KASAN report will show the last stack of page, it may be:
+> a) If page is in-use state, then it prints alloc stack.
+>    It is useful to fix up page out-of-bound issue.
 
-thank you,
-Thomas.
+I expect this will conflict both in syntax and semantics with my series [1] that
+adds the freeing stack to page_owner when used together with debug_pagealloc,
+and it's now in mmotm. Glad others see the need as well :) Perhaps you could
+review the series, see if it fulfils your usecase (AFAICS the series should be a
+superset, by storing both stacks at once), and perhaps either make KASAN enable
+debug_pagealloc, or turn KASAN into an alternative enabler of the functionality
+there?
 
--- 
-SUSE Software Solutions Germany GmbH
-HRB 247165 (AG München)
-Geschäftsführer: Felix Imendörffer
+Thanks, Vlastimil
+
+[1] https://lore.kernel.org/linux-mm/20190820131828.22684-1-vbabka@suse.cz/t/#u
+
+> BUG: KASAN: slab-out-of-bounds in kmalloc_pagealloc_oob_right+0x88/0x90
+> Write of size 1 at addr ffffffc0d64ea00a by task cat/115
+> ...
+> Allocation stack of page:
+>  prep_new_page+0x1a0/0x1d8
+>  get_page_from_freelist+0xd78/0x2748
+>  __alloc_pages_nodemask+0x1d4/0x1978
+>  kmalloc_order+0x28/0x58
+>  kmalloc_order_trace+0x28/0xe0
+>  kmalloc_pagealloc_oob_right+0x2c/0x90
+> 
+> b) If page is freed state, then it prints free stack.
+>    It is useful to fix up page use-after-free issue.
+> 
+> BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
+> Write of size 1 at addr ffffffc0d651c000 by task cat/115
+> ...
+> Free stack of page:
+>  kasan_free_pages+0x68/0x70
+>  __free_pages_ok+0x3c0/0x1328
+>  __free_pages+0x50/0x78
+>  kfree+0x1c4/0x250
+>  kmalloc_pagealloc_uaf+0x38/0x80
+> 
+> 
+> This has been discussed, please refer below link.
+> https://bugzilla.kernel.org/show_bug.cgi?id=203967
+> 
+> Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+> ---
+>  lib/Kconfig.kasan | 9 +++++++++
+>  mm/kasan/common.c | 6 ++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 4fafba1a923b..ba17f706b5f8 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -135,6 +135,15 @@ config KASAN_S390_4_LEVEL_PAGING
+>  	  to 3TB of RAM with KASan enabled). This options allows to force
+>  	  4-level paging instead.
+>  
+> +config KASAN_DUMP_PAGE
+> +	bool "Dump the page last stack information"
+> +	depends on KASAN && PAGE_OWNER
+> +	help
+> +	  By default, KASAN doesn't record alloc/free stack for page allocator.
+> +	  It is difficult to fix up page use-after-free issue.
+> +	  This feature depends on page owner to record the last stack of page.
+> +	  It is very helpful for solving the page use-after-free or out-of-bound.
+> +
+>  config TEST_KASAN
+>  	tristate "Module for testing KASAN for bug detection"
+>  	depends on m && KASAN
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 2277b82902d8..2a32474efa74 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -35,6 +35,7 @@
+>  #include <linux/vmalloc.h>
+>  #include <linux/bug.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/page_owner.h>
+>  
+>  #include "kasan.h"
+>  #include "../slab.h"
+> @@ -227,6 +228,11 @@ void kasan_alloc_pages(struct page *page, unsigned int order)
+>  
+>  void kasan_free_pages(struct page *page, unsigned int order)
+>  {
+> +#ifdef CONFIG_KASAN_DUMP_PAGE
+> +	gfp_t gfp_flags = GFP_KERNEL;
+> +
+> +	set_page_owner(page, order, gfp_flags);
+> +#endif
+>  	if (likely(!PageHighMem(page)))
+>  		kasan_poison_shadow(page_address(page),
+>  				PAGE_SIZE << order,
+> 
+
