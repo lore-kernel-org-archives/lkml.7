@@ -2,192 +2,159 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9804C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58424C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD29A2168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="herM5rmY"
+	by mail.kernel.org (Postfix) with ESMTP id 207BB22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567640720;
+	bh=sLD7TWCuuTDypkRVtGgzbHmac5Y57V+ojUVVL0XIqu8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=b7K4AI3VIZVoxSkv7J5gfxWzhsOn7dF4oWHep9kSo5duhsMnDAg5qUKSsLpo2lcAu
+	 CeVIfJhLPgfw1n+uJoWA7xsjHGtL+3ZpBZwlaFVHWoUJxp5TjYrd2I2c38PQM50W/U
+	 wRtiE8f1diLoEbJsIynorvJ64M9Ko+VnP/GSD+tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbfIDXnr (ORCPT
+        id S1730539AbfIDXpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:43:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37301 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbfIDXnr (ORCPT
+        Wed, 4 Sep 2019 19:45:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42557 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730386AbfIDXpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:43:47 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y9so455200pfl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:43:46 -0700 (PDT)
+        Wed, 4 Sep 2019 19:45:17 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so433000lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=20yt+YNZ1L9RG1o4wcjzf4KRuf7yK7zvoTIvG7LJ5dY=;
-        b=herM5rmY9dTySIiWkNtCKws+S32Q+KNr9KnA+p+QMqgbvsrsie5gRriffPC8sA/dvK
-         C++NJPm6cH/IV68xM7a5W3/bTfJlMUFX7BletVHvCCULvYeZu48DdlxbAwoy94COPeAO
-         BGcpaMHSHj2EEV0RFEg9nPnaQpxL9D/QuBcIcCpiVGxTDNkmNzGk6ekHCJIXmsrYr3oQ
-         YJGXuZA5OUqyclRL9oYjNGwSjgNYxHO4R881eXHiHVeOEN8PHtpeAaICunkMrmOE2uSY
-         wPBwMv1qHNKI62tT1HPe5QAamvEIjeMaPx6S3IT+eKQr1aYnFZDUzwx++38b90NXxpXS
-         paJQ==
+        bh=lkW/YWLZKFkaRlur1cRxiMMOTA0gNhHwo+TbpZCC63g=;
+        b=Cnu5WYs/aAthmsXfnwtWzL5CNjpaY23sMnhFtcX1zve3r2rc/Ho+dRzPF32HPRMBnj
+         gveXLtTDU7YHSGctyOcfke7l1YNaudqputmw6AJ3ZcUOsNYmqHCIu9DY9WHGlywCQ4Su
+         iCCcCFmwH9f6fkeMSqS83pY7B6dx4aSlHZljU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=20yt+YNZ1L9RG1o4wcjzf4KRuf7yK7zvoTIvG7LJ5dY=;
-        b=U/SthBk7tnmbu68mD5GF4zK+y/egf6T+q+TYr1asHPuR+E/5JWo3Vs5GhI0bmXOLJX
-         mdqRj6wUYgOUFxoq/DMJxVLj48Vkos9XRDN0KSDsoXAovLwYrYn5Y8ODCNPc6bhHxqjt
-         OimsiLfe9SR60sodaxMboQKaP/EO1HKI5XoKe0Bwie1qZQ0W841O5jT/3g0ZJtQ2QWGZ
-         7UDcopYJs9d1eRpktZvefNVHFkit42e9p+vVoJsb15VJ//pAUR6XoDHfB91+eXN9p7uW
-         UA0aY76+aYKT8hNZ737qqS5HIiFmfBFxez91Ee2oOb/inL2loinXffOdT1dqirR/omSj
-         k3HA==
-X-Gm-Message-State: APjAAAXrQvksw1HDgVU5kuw2yWgGj3Q37QzXLZM0pEM5VNQDEorgwBES
-        42RI2TD8aDpc224kCWDT2q5RY6hj4GWxZgCScBpfcA==
-X-Google-Smtp-Source: APXvYqwb6a9JvgIsY537fvx0QmcGGFZpP9NmS0y0s0rFiAJs9NR6meGRExFTHKlaBQgpKv098lpoKduJkhchy366fA4=
-X-Received: by 2002:a65:690b:: with SMTP id s11mr596069pgq.10.1567640625488;
- Wed, 04 Sep 2019 16:43:45 -0700 (PDT)
+        bh=lkW/YWLZKFkaRlur1cRxiMMOTA0gNhHwo+TbpZCC63g=;
+        b=EaqUPcW78B5oR6cQzbxEud0Gt2SY3qKqX25nHEAxhuWp1NzW6UeugyeZLopMIS/NmD
+         9DLFPMsFm5+wQff6ddMHmQL50N/lrlR4JFT6j1U0JsVmTwvpvxSQcqGrHIvS3Kv2Nrba
+         7VLwH5IR7iEQiahVVt+WcNPIIxgSwl/TdBX0h5+E2Ly6kNYW30NbDTaadsG7rmr6nn0U
+         tivPuJ6WgouMe5PN5kTz/3JlZXyOYan+LDhH8NXN3NHqNPvxYtzXwnQ1yVrmzaGXOqwr
+         nlLdHJO0HdnJRlkQlOIbz/y1c3BwYsR6qLlyBu4UghwXusVwTtAoieF+hLw08gnUXZhd
+         JZWw==
+X-Gm-Message-State: APjAAAVjDP+p7YFM5xzaymAQh3n2ncARKgc6XqN6tqQR1y0yD3uEIlQU
+        uVoNdP4K/kUppWJigTJI57DTO8rQUlw=
+X-Google-Smtp-Source: APXvYqzWseCZDd5HmsG43w4827RBRuFZtic8u2x2omP1bF3UheZuxu1Agew06Tdm76KCZ28jgRWqNg==
+X-Received: by 2002:a2e:2953:: with SMTP id u80mr110831lje.233.1567640715401;
+        Wed, 04 Sep 2019 16:45:15 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id v6sm47826ljk.17.2019.09.04.16.45.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Sep 2019 16:45:14 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id 7so442005ljw.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:45:12 -0700 (PDT)
+X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr127121lja.180.1567640710863;
+ Wed, 04 Sep 2019 16:45:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190904164622.57f69595@canb.auug.org.au>
-In-Reply-To: <20190904164622.57f69595@canb.auug.org.au>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 4 Sep 2019 16:43:34 -0700
-Message-ID: <CAKwvOdkxgNJ_KW3M4DW-VnMk9_Vst8yPTheELTrMDK14bb+L+w@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the drm tree with the kbuild tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>
+References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-11-cyphar@cyphar.com>
+ <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com>
+ <20190904214856.vnvom7h5xontvngq@yavin.dot.cyphar.com> <CAHk-=wgcJq21Hydh7Tx5-o8empoPp7ULDBw0Am-du_Pa+fcftQ@mail.gmail.com>
+ <20592.1567636276@warthog.procyon.org.uk> <CAHk-=wg7Wq1kj8kZ+SSpfU_o991woW60NWca9yBA2ccs2eNx8Q@mail.gmail.com>
+ <20190904232911.GN1131@ZenIV.linux.org.uk>
+In-Reply-To: <20190904232911.GN1131@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 4 Sep 2019 16:44:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjx3y1Y7iE6T0yiERc8G5iT1sTABWbX_nFxw9NVHCFCPA@mail.gmail.com>
+Message-ID: <CAHk-=wjx3y1Y7iE6T0yiERc8G5iT1sTABWbX_nFxw9NVHCFCPA@mail.gmail.com>
+Subject: Re: [PATCH v12 10/12] namei: aggressively check for nd->root escape
+ on ".." resolution
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     David Howells <dhowells@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 11:46 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+On Wed, Sep 4, 2019 at 4:29 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> Hi all,
+> On Wed, Sep 04, 2019 at 03:38:20PM -0700, Linus Torvalds wrote:
+> > On Wed, Sep 4, 2019 at 3:31 PM David Howells <dhowells@redhat.com> wrote:
+> > >
+> > > It ought to be reasonably easy to make them per-sb at least, I think.  We
+> > > don't allow cross-super rename, right?
+> >
+> > Right now the sequence count handling very much depends on it being a
+> > global entity on the reader side, at least.
+> >
+> > And while the rename sequence count could (and probably should) be
+> > per-sb, the same is very much not true of the mount one.
 >
-> Today's linux-next merge of the drm tree got conflicts in:
->
->   drivers/gpu/drm/amd/display/dc/calcs/Makefile
->   drivers/gpu/drm/amd/display/dc/dml/Makefile
->   drivers/gpu/drm/amd/display/dc/dsc/Makefile
->
-> between commit:
->
->   30851871d5ab ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
->
-> from the kbuild tree and commit:
->
->   0f0727d971f6 ("drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines")
->
-> from the drm tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+> Huh?  That will cost us having to have a per-superblock dentry
+> hash table; recall that lockless lockup can give false negatives
+> if something gets moved from chain to chain, and rename_lock is
+> first and foremost used to catch those and retry.  If we split
+> it on per-superblock basis, we can't have dentries from different
+> superblocks in the same chain anymore...
 
-My changes LGTM, thanks!
+That's exactly the "very much depends on it being a global entity on
+the reader side" thing.
 
->
-> --
-> Cheers,
-> Stephen Rothwell
->
-> diff --cc drivers/gpu/drm/amd/display/dc/calcs/Makefile
-> index d930df63772c,16614d73a5fc..000000000000
-> --- a/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/calcs/Makefile
-> @@@ -32,9 -32,13 +32,13 @@@ endi
->
->   calcs_ccflags := -mhard-float -msse $(cc_stack_align)
->
-> + ifdef CONFIG_CC_IS_CLANG
-> + calcs_ccflags += -msse2
-> + endif
-> +
->  -CFLAGS_dcn_calcs.o := $(calcs_ccflags)
->  -CFLAGS_dcn_calc_auto.o := $(calcs_ccflags)
->  -CFLAGS_dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
->  +CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calcs.o := $(calcs_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calc_auto.o := $(calcs_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/calcs/dcn_calc_math.o := $(calcs_ccflags) -Wno-tautological-compare
->
->   BW_CALCS = dce_calcs.o bw_fixed.o custom_float.o
->
-> diff --cc drivers/gpu/drm/amd/display/dc/dml/Makefile
-> index 83792e2c0f0e,95fd2beca80c..000000000000
-> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> @@@ -32,16 -32,25 +32,20 @@@ endi
->
->   dml_ccflags := -mhard-float -msse $(cc_stack_align)
->
-> + ifdef CONFIG_CC_IS_CLANG
-> + dml_ccflags += -msse2
-> + endif
-> +
->  -CFLAGS_display_mode_lib.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o := $(dml_ccflags)
->
->   ifdef CONFIG_DRM_AMD_DC_DCN2_0
->  -CFLAGS_display_mode_vba.o := $(dml_ccflags)
->  -CFLAGS_display_mode_vba_20.o := $(dml_ccflags)
->  -CFLAGS_display_rq_dlg_calc_20.o := $(dml_ccflags)
->  -CFLAGS_display_mode_vba_20v2.o := $(dml_ccflags)
->  -CFLAGS_display_rq_dlg_calc_20v2.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o := $(dml_ccflags)
->   endif
->  -ifdef CONFIG_DRM_AMD_DCN3AG
->  -CFLAGS_display_mode_vba_3ag.o := $(dml_ccflags)
->  -endif
->  -CFLAGS_dml1_display_rq_dlg_calc.o := $(dml_ccflags)
->  -CFLAGS_display_rq_dlg_helpers.o := $(dml_ccflags)
->  -CFLAGS_dml_common_defs.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dml1_display_rq_dlg_calc.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/display_rq_dlg_helpers.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dml_common_defs.o := $(dml_ccflags)
->
->   DML = display_mode_lib.o display_rq_dlg_helpers.o dml1_display_rq_dlg_calc.o \
->         dml_common_defs.o
-> diff --cc drivers/gpu/drm/amd/display/dc/dsc/Makefile
-> index c3922d6e7696,17db603f2d1f..000000000000
-> --- a/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dsc/Makefile
-> @@@ -9,9 -9,14 +9,13 @@@ endi
->
->   dsc_ccflags := -mhard-float -msse $(cc_stack_align)
->
-> + ifdef CONFIG_CC_IS_CLANG
-> + dsc_ccflags += -msse2
-> + endif
-> +
->  -CFLAGS_rc_calc.o := $(dsc_ccflags)
->  -CFLAGS_rc_calc_dpi.o := $(dsc_ccflags)
->  -CFLAGS_codec_main_amd.o := $(dsc_ccflags)
->  -CFLAGS_dc_dsc.o := $(dsc_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc.o := $(dsc_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dsc/rc_calc_dpi.o := $(dsc_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dsc/dc_dsc.o := $(dsc_ccflags)
->
->   DSC = dc_dsc.o rc_calc.o rc_calc_dpi.o
->
+I'm not convinced that's the _only_ way to handle things. Maybe a
+combination of (wild handwaving) per-hashqueue sequence count and some
+clever scheme for pathname handling could work.
 
+I've not personally seen a load where the global rename lock has been
+a problem (very few things really do a lot of renames), but
+system-wide locks do make me nervous.
 
--- 
-Thanks,
-~Nick Desaulniers
+We have other (and worse) ones. tasklist_lock comes to mind.
+
+             Linus
