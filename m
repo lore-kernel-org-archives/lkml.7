@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B339BC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82498C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6DA206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC8E23402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620364;
-	bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
+	s=default; t=1567620367;
+	bh=awKC4Bz62hBmNN8GYGsbiOOk001llEw8zxKsLuVc8Pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LQkA8OtyQ5ULBO4eSiPp1/a+re3LhtMhlv5gIZrdjEjbdoif47NYmEruM6U4tAX2
-	 hWVaxV+yqm40KkVHS6cE5kiAKK5DCQGcvso7Qburz1+uzJI/xp1iw7y7WJKd5p/u/x
-	 j8oTlxop6Xu7GW6/sHT51WaNbM9zun6/MWKJbNLE=
+	b=s9c/B6hW6awCiAxL9z3NL5UsKA+FzFPjr0rRZK6bLSvZd/JOxxiQtiH4Ig8rW/e2c
+	 Ycq0tPGx2cJTQ8KCQAu/urs5LFKkP6kxHl9b2HnO4Q2FSTCbftVLTR/H+M2ufzpMGv
+	 D/Itz59mY2LLhc9mqLzOTeW5frnuZ6jTfwzbI8WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389379AbfIDSGD (ORCPT
+        id S2389384AbfIDSGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47844 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389366AbfIDSGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:01 -0400
+        id S2389007AbfIDSGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCB4B206B8;
-        Wed,  4 Sep 2019 18:06:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D52208E4;
+        Wed,  4 Sep 2019 18:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620361;
-        bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
+        s=default; t=1567620364;
+        bh=awKC4Bz62hBmNN8GYGsbiOOk001llEw8zxKsLuVc8Pg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FU2erhxTkcFLsy1dlA4USV/GMIDg7F6xpskBHa0PgKRs4i7Afd75MAbG819ufoY+3
-         bTBrJa7tW0WMWiC/+mKJO8jWlTdJk/3mK6nCP5AoDdTH2YDK1WjECdCIjEPOwmx5oi
-         01C43f4ENGqKovD8e0T24qfCU33S2K9SQROIZNa8=
+        b=sIkUXu//LOCuhBChLqOCYozJcFmUOkU+yGcNAqmJVsPkCHWfHOTzPGC/BUHdsRQ52
+         +1ltd5rXtlcBB/ccZT/G46lG1jSCyKHki8jSwTItBokINTdpXcu48W5ML/qUJmc65W
+         V84HdavP73TvRjEJwQjbwafsS6WXJfpunKxMecsg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pedro Sousa <sousa@synopsys.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Jeffrey Altman <jaltman@auristor.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 29/93] scsi: ufs: Fix RX_TERMINATION_FORCE_ENABLE define value
-Date:   Wed,  4 Sep 2019 19:53:31 +0200
-Message-Id: <20190904175305.811788415@linuxfoundation.org>
+Subject: [PATCH 4.19 03/93] afs: Fix the CB.ProbeUuid service handler to reply correctly
+Date:   Wed,  4 Sep 2019 19:53:05 +0200
+Message-Id: <20190904175303.213488999@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,32 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ebcb8f8508c5edf428f52525cec74d28edea7bcb ]
+[ Upstream commit 2067b2b3f4846402a040286135f98f46f8919939 ]
 
-Fix RX_TERMINATION_FORCE_ENABLE define value from 0x0089 to 0x00A9
-according to MIPI Alliance MPHY specification.
+Fix the service handler function for the CB.ProbeUuid RPC call so that it
+replies in the correct manner - that is an empty reply for success and an
+abort of 1 for failure.
 
-Fixes: e785060ea3a1 ("ufs: definitions for phy interface")
-Signed-off-by: Pedro Sousa <sousa@synopsys.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Putting 0 or 1 in an integer in the body of the reply should result in the
+fileserver throwing an RX_PROTOCOL_ERROR abort and discarding its record of
+the client; older servers, however, don't necessarily check that all the
+data got consumed, and so might incorrectly think that they got a positive
+response and associate the client with the wrong host record.
+
+If the client is incorrectly associated, this will result in callbacks
+intended for a different client being delivered to this one and then, when
+the other client connects and responds positively, all of the callback
+promises meant for the client that issued the improper response will be
+lost and it won't receive any further change notifications.
+
+Fixes: 9396d496d745 ("afs: support the CB.ProbeUuid RPC op")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/unipro.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/cmservice.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
-index 23129d7b2678d..c77e365264478 100644
---- a/drivers/scsi/ufs/unipro.h
-+++ b/drivers/scsi/ufs/unipro.h
-@@ -52,7 +52,7 @@
- #define RX_HS_UNTERMINATED_ENABLE		0x00A6
- #define RX_ENTER_HIBERN8			0x00A7
- #define RX_BYPASS_8B10B_ENABLE			0x00A8
--#define RX_TERMINATION_FORCE_ENABLE		0x0089
-+#define RX_TERMINATION_FORCE_ENABLE		0x00A9
- #define RX_MIN_ACTIVATETIME_CAPABILITY		0x008F
- #define RX_HIBERN8TIME_CAPABILITY		0x0092
- #define RX_REFCLKFREQ				0x00EB
+diff --git a/fs/afs/cmservice.c b/fs/afs/cmservice.c
+index 9e51d6fe7e8f9..40c6860d4c632 100644
+--- a/fs/afs/cmservice.c
++++ b/fs/afs/cmservice.c
+@@ -423,18 +423,14 @@ static void SRXAFSCB_ProbeUuid(struct work_struct *work)
+ 	struct afs_call *call = container_of(work, struct afs_call, work);
+ 	struct afs_uuid *r = call->request;
+ 
+-	struct {
+-		__be32	match;
+-	} reply;
+-
+ 	_enter("");
+ 
+ 	if (memcmp(r, &call->net->uuid, sizeof(call->net->uuid)) == 0)
+-		reply.match = htonl(0);
++		afs_send_empty_reply(call);
+ 	else
+-		reply.match = htonl(1);
++		rxrpc_kernel_abort_call(call->net->socket, call->rxcall,
++					1, 1, "K-1");
+ 
+-	afs_send_simple_reply(call, &reply, sizeof(reply));
+ 	afs_put_call(call);
+ 	_leave("");
+ }
 -- 
 2.20.1
 
