@@ -2,113 +2,106 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 179F0C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB096C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF60C20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C5E21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:41:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epQ6Hx9q"
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="S9HabiEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbfIDWkz (ORCPT
+        id S1730491AbfIDWlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 18:40:55 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45909 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbfIDWky (ORCPT
+        Wed, 4 Sep 2019 18:41:44 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:39601 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727722AbfIDWln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 18:40:54 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l16so421830wrv.12;
-        Wed, 04 Sep 2019 15:40:53 -0700 (PDT)
+        Wed, 4 Sep 2019 18:41:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s12so356252pfe.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 15:41:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n42hMk5GEGKVgiWQ4Tr6YXAISJ/x8t5++qX9vnL5Xm0=;
-        b=epQ6Hx9qyetHKAg1lFLlHRAHKCST6sypO0YqNN6ARKvZ8uzC9e2C86JE1ezB5FthCH
-         dsqUbKNE24k3u1oqyZNl7OunM+DnbCe1/R1dVlEelJWnL+tZ0Fc4Zc47oDIxp/DdAm32
-         QopjtCpnRzMwYgzMRE0aT7XUqw+HIC/iGB1nui4LfAwBRFnDagcjAJwEMhMfhkVkp4Dm
-         8EnXByoTZelFlAXHGv9n/itJrU2kUybMaV8uOdEnaOMdRZUGhzvVhtXmrwA3xmrfTlx4
-         yNPN0YWzxtDbugDJqVWiGEBSMeRHc+gpUt/PbGxQdEbSEY0mH2HmTzP0J1KBdnD453jg
-         hhZw==
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=F7w7OYWEZp92dbWwWfKCD0/GMcWvLQYFBW0H+BsI0yY=;
+        b=S9HabiEoGTVsur2kzoliknHRgENKmGHHuORCxFux0MZLNCi4uI64q0L3AbjfI9oXiW
+         Ol+n98+2c8TLzKp0JmirprwgYfGCrcw71+13XO81KW5vfmAo4zLwCLJ0Iq9kB5zs4dra
+         MDGKCqgFMdOZxhKxxH8KgBs7K8pBLSFSmqva8inGOOfYMooL0Yn/w9p4vLS4/cVqVLdk
+         C1OY3tpJZWWHeXm975Z36vbSasINlDUdZ9yFqkIp8OzHx+SzTcZzJ1kx6iLQx6BWYIRG
+         IjBHE4ZP9eIRYpOAa/75/9sB7/kIiFGmUkMS6XZ7PWK4pDco+bVol5pYXYKqHHtghJ1S
+         Zo/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n42hMk5GEGKVgiWQ4Tr6YXAISJ/x8t5++qX9vnL5Xm0=;
-        b=jnxDwZzUC40P1+yRSFEcp8FSfD/WIYtQptzw1kRqlTXTMOlkfokG7vC0GnSVxovzsF
-         dWeJmFsx/agKWof7vQwpeokY8fIsKHPRO36+S1Dz/DFW8LLmJ5wjM36svVU8UnRbH0+E
-         eicuC47Mg36ViXQXCTm++gTeA5++c38y3/KondeLl20M1URJ69YRCj3gpCMAJJSU73f3
-         9urZYU46/s46tove7kztsWnp2z1qSgbZDcFj5qLSZInCy28vJaPAmTCzPYdxHVHm16J7
-         gpZtuAFt2JnKBwofE/f6lu3sST2l4XKsniwamEzcXDahF07MN4QA35pzI5N8SePaWp32
-         keLQ==
-X-Gm-Message-State: APjAAAVyhV7Au+ZU2fDfWamPRPy4gxBr1TCsOFbZpHVR196YL3zoF/v9
-        AjfCEXGjG60oPtkYnSNixl0=
-X-Google-Smtp-Source: APXvYqx06dii//7/Fpw0RwIMYI3WVSwHpshEIFHk0w6kBQebFtdxym+HCVrtsIiugv+QuoBF5tBcVg==
-X-Received: by 2002:adf:e607:: with SMTP id p7mr42979wrm.230.1567636852627;
-        Wed, 04 Sep 2019 15:40:52 -0700 (PDT)
-Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
-        by smtp.gmail.com with ESMTPSA id y3sm158912wrw.83.2019.09.04.15.40.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=F7w7OYWEZp92dbWwWfKCD0/GMcWvLQYFBW0H+BsI0yY=;
+        b=JZDstw7SPbqZyLBZrqbvR+xNTHIoIP1GZUkVl256TDOylCbo3RQGjuP4U8XKD1w4b4
+         c9jDv7lgFodFdPaHORIgtiOVBZYJeuCLPbY93B0IQX7JfxZNq+vr84q+/tYdzihrFzdy
+         eOKgNxznwp6FLQO7NOXl2yMyzcQ/HGN4IlaIMIwATnpjCzRPoNs5xRr3R2fJ55PoZlE8
+         SOUxSqc/eg7fAQPQD9XuIAQYR5Vj3GrsoVfN8tMFB5Ht9pYaz4Xa29MEO6rPi3RROKaD
+         7j1qPhdKpgk2or9RhHZpJrjwB6zQz849ULQO02EbXVPWXu2adM5bXL84GnU8EEGz+cbc
+         tKtw==
+X-Gm-Message-State: APjAAAVYFiDtM35lLsWafpMjv7Rn2ePAouaKL5MfaS/F/yx58MK8GXYD
+        oBOrKfAyB8A5Pd2m3fuGOZb2Yw==
+X-Google-Smtp-Source: APXvYqznDsIr2C14kjGSQV8JdcBv9qpoetbNHpdsCPFVRFAR3SY86n+TqDytSXZBKzEHxh8lgZfLrg==
+X-Received: by 2002:a17:90a:ac0a:: with SMTP id o10mr519853pjq.139.1567636902930;
+        Wed, 04 Sep 2019 15:41:42 -0700 (PDT)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id t9sm148163pgj.89.2019.09.04.15.41.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 15:40:52 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 15:40:50 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] kbuild: refactor scripts/Makefile.extrawarn
-Message-ID: <20190904224050.GA82176@archlinux-threadripper>
-References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
- <CAK8P3a0kPFojqAWqXEAcitVMjBA5ABc=rRx=zHMxXat+gCz=gA@mail.gmail.com>
+        Wed, 04 Sep 2019 15:41:42 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 15:41:40 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Hui Peng <benquike@gmail.com>
+Cc:     syzbot+44d53c7255bb1aea22d2@syzkaller.appspotmail.com,
+        alexios.zavras@intel.com, andreyknvl@google.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        mathias.payer@nebelwelt.net, netdev@vger.kernel.org,
+        rfontana@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Subject: Re: WARNING in hso_free_net_device
+Message-ID: <20190904154140.45dfb398@hermes.lan>
+In-Reply-To: <d6e4d2da-66c6-a8fe-2fea-a3435fa7cb54@gmail.com>
+References: <0000000000002a95df0591a4f114@google.com>
+        <d6e4d2da-66c6-a8fe-2fea-a3435fa7cb54@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0kPFojqAWqXEAcitVMjBA5ABc=rRx=zHMxXat+gCz=gA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 11:46:45PM +0200, Arnd Bergmann wrote:
-> On Sat, Aug 31, 2019 at 6:26 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> 
-> > +# Some diagnostics enabled by default are noisy.
-> > +# Suppress them by using -Wno... except for W=1.
-> > +
-> >  ifdef CONFIG_CC_IS_CLANG
-> >  KBUILD_CFLAGS += -Wno-initializer-overrides
-> >  KBUILD_CFLAGS += -Wno-format
-> >  KBUILD_CFLAGS += -Wno-sign-compare
-> >  KBUILD_CFLAGS += -Wno-format-zero-length
-> >  endif
-> 
-> FWIW, I just found out I missed a bug that clang failed to warn about
-> because of the  -Wno-format. Apparently gcc warns only about type
-> mismatches that result in incompatible calling conventions (e.g.
-> int vs int64_t) but not smaller types (int, short) that get converted to an
-> int anyway. Passing -Wno-format turns both off.
-> 
->       Arnd
+On Wed, 4 Sep 2019 16:27:50 -0400
+Hui Peng <benquike@gmail.com> wrote:
 
-Hi Arnd,
+> Hi, all:
+>=20
+> I looked at the bug a little.
+>=20
+> The issue is that in the error handling code, hso_free_net_device
+> unregisters
+>=20
+> the net_device (hso_net->net)=C2=A0 by calling unregister_netdev. In the
+> error handling code path,
+>=20
+> hso_net->net has not been registered yet.
+>=20
+> I think there are two ways to solve the issue:
+>=20
+> 1. fix it in drivers/net/usb/hso.c to avoiding unregistering the
+> net_device when it is still not registered
+>=20
+> 2. fix it in unregister_netdev. We can add a field in net_device to
+> record whether it is registered, and make unregister_netdev return if
+> the net_device is not registered yet.
+>=20
+> What do you guys think ?
 
-This has been fixed in clang 10.0.0 but this areas has not been updated
-as nobody has sent a patch yet:
-
-https://github.com/ClangBuiltLinux/linux/issues/378#issuecomment-524411147
-
-Cheers,
-Nathan
+#1
