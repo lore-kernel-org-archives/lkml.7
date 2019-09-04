@@ -2,51 +2,51 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3A8C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB69C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A165233FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A016E233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620201;
-	bh=pfHA4ghX1sdzBre+QSIFvxbGOXnT+CmSpcZh5msUerA=;
+	s=default; t=1567620203;
+	bh=/vVKWsKr8PHXAd2ZBVyb90mfEjgyJ4hEIGBSG27XaME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E0nk/b6TwIT6MzdB3ZXjZm7MQ7EcK9xOaY0UMuBBGT/z9Ch2egSzPC7RymCTkygcs
-	 CSN0scfiiJO71HdT65lj5MkoPegulz2AABLgYPrTH9+sVClbWHr/VQiDFAXBW4T+mv
-	 HKdA/eFNs0Ghu/fBvMEDogqaDc7nGI7ZDgHr1vcM=
+	b=M2poWKNNCfyVqIMqRsAI2jv9KM6lx8RNh7Y3evJgdkJZO88i1uJnCsCcPyj3EQrqA
+	 JPQwmvCwr6xld3aXxnL3xbtAMyl0vRhUIDHrvBMQi9yl83elJV4Q2dkpVDFb2vuqX6
+	 J9A3WoeFn3RZokwpviQ0SyAvJPuedtwwVi9VTMus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388916AbfIDSDU (ORCPT
+        id S2388922AbfIDSDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:03:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43774 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387939AbfIDSDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:03:19 -0400
+        id S1733108AbfIDSDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:03:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF25F22CEA;
-        Wed,  4 Sep 2019 18:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4992339D;
+        Wed,  4 Sep 2019 18:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620198;
-        bh=pfHA4ghX1sdzBre+QSIFvxbGOXnT+CmSpcZh5msUerA=;
+        s=default; t=1567620201;
+        bh=/vVKWsKr8PHXAd2ZBVyb90mfEjgyJ4hEIGBSG27XaME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOWvdoLTTeWVzuPHWiHOJiaiaKFOJz37NcMVhJCusRJsOArDUF/0R9cBHtIpfOnK/
-         JFyirpTu3NE2WP+7YcOnYP/n53R4UW1W0+ja/e5n1NuhNGxUoxbufYWe3Qb+lTB+aH
-         ZdQxeQ7CD6hWKcqhv0YsRaiGcHE3UmT6hp/v1ap0=
+        b=QB6YRvpny1gWQcjTqkUgTNA0tiAoICVWPAzAfHJtMwGL3CRebtSoqE8UX7L3U+XHq
+         /mZ8pz5KBCSA9S6CXlBXrrId+W0HIqD01bEPx3Ts59tUR9GmPwnYDuCThFV6ZGWhL6
+         dKKEZZkNXFIo8wyaYs+c9dudxBD3xEJ+LXtQHB3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Bandan Das <bsd@redhat.com>
-Subject: [PATCH 4.14 26/57] x86/apic: Do not initialize LDR and DFR for bigsmp
-Date:   Wed,  4 Sep 2019 19:53:54 +0200
-Message-Id: <20190904175304.445981038@linuxfoundation.org>
+        stable@vger.kernel.org, Bandan Das <bsd@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 27/57] x86/apic: Include the LDR when clearing out APIC registers
+Date:   Wed,  4 Sep 2019 19:53:55 +0200
+Message-Id: <20190904175304.578424876@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -61,81 +61,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bandan Das <bsd@redhat.com>
 
-commit bae3a8d3308ee69a7dbdf145911b18dfda8ade0d upstream.
+commit 558682b5291937a70748d36fd9ba757fb25b99ae upstream.
 
-Legacy apic init uses bigsmp for smp systems with 8 and more CPUs. The
-bigsmp APIC implementation uses physical destination mode, but it
-nevertheless initializes LDR and DFR. The LDR even ends up incorrectly with
-multiple bit being set.
+Although APIC initialization will typically clear out the LDR before
+setting it, the APIC cleanup code should reset the LDR.
 
-This does not cause a functional problem because LDR and DFR are ignored
-when physical destination mode is active, but it triggered a problem on a
-32-bit KVM guest which jumps into a kdump kernel.
+This was discovered with a 32-bit KVM guest jumping into a kdump
+kernel. The stale bits in the LDR triggered a bug in the KVM APIC
+implementation which caused the destination mapping for VCPUs to be
+corrupted.
 
-The multiple bits set unearthed a bug in the KVM APIC implementation. The
-code which creates the logical destination map for VCPUs ignores the
-disabled state of the APIC and ends up overwriting an existing valid entry
-and as a result, APIC calibration hangs in the guest during kdump
-initialization.
+Note that this isn't intended to paper over the KVM APIC bug. The kernel
+has to clear the LDR when resetting the APIC registers except when X2APIC
+is enabled.
 
-Remove the bogus LDR/DFR initialization.
+This lacks a Fixes tag because missing to clear LDR goes way back into pre
+git history.
 
-This is not intended to work around the KVM APIC bug. The LDR/DFR
-ininitalization is wrong on its own.
+[ tglx: Made x2apic_enabled a function call as required ]
 
-The issue goes back into the pre git history. The fixes tag is the commit
-in the bitkeeper import which introduced bigsmp support in 2003.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
-
-Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Bandan Das <bsd@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190826101513.5080-2-bsd@redhat.com
+Link: https://lkml.kernel.org/r/20190826101513.5080-3-bsd@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/bigsmp_32.c |   24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ arch/x86/kernel/apic/apic.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/x86/kernel/apic/bigsmp_32.c
-+++ b/arch/x86/kernel/apic/bigsmp_32.c
-@@ -38,32 +38,12 @@ static int bigsmp_early_logical_apicid(i
- 	return early_per_cpu(x86_cpu_to_apicid, cpu);
- }
- 
--static inline unsigned long calculate_ldr(int cpu)
--{
--	unsigned long val, id;
--
--	val = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
--	id = per_cpu(x86_bios_cpu_apicid, cpu);
--	val |= SET_APIC_LOGICAL_ID(id);
--
--	return val;
--}
--
- /*
-- * Set up the logical destination ID.
-- *
-- * Intel recommends to set DFR, LDR and TPR before enabling
-- * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
-- * document number 292116).  So here it goes...
-+ * bigsmp enables physical destination mode
-+ * and doesn't use LDR and DFR
-  */
- static void bigsmp_init_apic_ldr(void)
- {
--	unsigned long val;
--	int cpu = smp_processor_id();
--
--	apic_write(APIC_DFR, APIC_DFR_FLAT);
--	val = calculate_ldr(cpu);
--	apic_write(APIC_LDR, val);
- }
- 
- static void bigsmp_setup_apic_routing(void)
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1148,6 +1148,10 @@ void clear_local_APIC(void)
+ 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
+ 	v = apic_read(APIC_LVT1);
+ 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
++	if (!x2apic_enabled()) {
++		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
++		apic_write(APIC_LDR, v);
++	}
+ 	if (maxlvt >= 4) {
+ 		v = apic_read(APIC_LVTPC);
+ 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
 
 
