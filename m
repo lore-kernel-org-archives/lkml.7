@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE273C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B625C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9771D20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B3C2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620474;
-	bh=0JTnuWsTelDkywrJ0M1VQsfCLhs1bVpfAngi0Bt8z9w=;
+	s=default; t=1567620477;
+	bh=NjjlK0L40oNwXA2eIBXXjgOmyHOKgNeFLgz0nR1jtx0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mRsval5bfffFf3PGdlhYFOb7/z6apXjEucZwDA0a/LvNSgQCopfmR7+VdyUZ4HZJc
-	 USydFrs8ssx+hjCz3x7AzIOEvgPnk0wcKNqL9mftU4gGvJ32o3goac74l7tdTge3gT
-	 pPh5yXAslM5OW3Xz/f+wsGvYOE3I4HMO6pKkaaj4=
+	b=MLcryEowNzksqnly9SvNnbKJbxiT2IJmlMYbZMexLPiG2sy/SU6NP1nYEvffDTdap
+	 grdOxNA4FKx7Hmr6DRz7TZdh03H6x2zlPCXF8ki0siYEwGpe+3TH+EE9NfbGryTdbU
+	 Y/D48diPUMW7BWIUkIAbTfQowH97C8A+M+R6ZtTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389091AbfIDSHx (ORCPT
+        id S2389690AbfIDSH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50444 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389673AbfIDSHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:51 -0400
+        id S2388919AbfIDSHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:07:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9611722CEA;
-        Wed,  4 Sep 2019 18:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 402512341D;
+        Wed,  4 Sep 2019 18:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620470;
-        bh=0JTnuWsTelDkywrJ0M1VQsfCLhs1bVpfAngi0Bt8z9w=;
+        s=default; t=1567620472;
+        bh=NjjlK0L40oNwXA2eIBXXjgOmyHOKgNeFLgz0nR1jtx0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qik2EbBDcfB8OyGfrBcU4zWn1PLWAp6oHaGib4Q/17J/MKAIIRZZoSO601xUNWCb6
-         UsHJ8DCipxRz9Rw5fIoNTZZWkLzDgX9GfWOHTahxo8LTkbSa48ClpCzlcR+tH98zuz
-         dFc+48F8qmibVyPlPtYjvUy7lyhWImaotGQl/i18=
+        b=twHKCcdfHJ3rRWcN4r6/SbE3Z/JoF5MMYHp7rQq0YDMfyBwPvxIWuMVnq/ru45TZr
+         BDWAIe1z5KlLWSIzeYp4ADNctFzQk4LQvzugRTdnDZ69qYZpyLNDJEEt3/g4OkiOiN
+         s5AKqOHwnTnZ9xA4G5X7WCUNwtiUIjGmfHvdA780=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Subject: [PATCH 4.19 70/93] lib: logic_pio: Fix RCU usage
-Date:   Wed,  4 Sep 2019 19:54:12 +0200
-Message-Id: <20190904175309.102352926@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 44/93] ALSA: usb-audio: Fix invalid NULL check in snd_emuusb_set_samplerate()
+Date:   Wed,  4 Sep 2019 19:53:46 +0200
+Message-Id: <20190904175306.960298434@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,120 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 06709e81c668f5f56c65b806895b278517bd44e0 upstream.
+commit 6de3c9e3f6b3eaf66859e1379b3f35dda781416b upstream.
 
-The traversing of io_range_list with list_for_each_entry_rcu()
-is not properly protected by rcu_read_lock() and rcu_read_unlock(),
-so add them.
+The quirk function snd_emuusb_set_samplerate() has a NULL check for
+the mixer element, but this is useless in the current code.  It used
+to be a check against mixer->id_elems[unitid] but it was changed later
+to the value after mixer_eleme_list_to_info() which is always non-NULL
+due to the container_of() usage.
 
-These functions mark the critical section scope where the list is
-protected for the reader, it cannot be  "reclaimed". Any updater - in
-this case, the logical PIO registration functions - cannot update the
-list until the reader exits this critical section.
+This patch fixes the check before the conversion.
 
-In addition, the list traversing used in logic_pio_register_range()
-does not need to use the rcu variant.
+While we're at it, correct a typo in the comment in the function,
+too.
 
-This is because we are already using io_range_mutex to guarantee mutual
-exclusion from mutating the list.
-
-Cc: stable@vger.kernel.org
-Fixes: 031e3601869c ("lib: Add generic PIO mapping method")
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+Fixes: 8c558076c740 ("ALSA: usb-audio: Clean up mixer element list traverse")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/logic_pio.c |   49 +++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 35 insertions(+), 14 deletions(-)
+ sound/usb/mixer_quirks.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -46,7 +46,7 @@ int logic_pio_register_range(struct logi
- 	end = new_range->hw_start + new_range->size;
- 
- 	mutex_lock(&io_range_mutex);
--	list_for_each_entry_rcu(range, &io_range_list, list) {
-+	list_for_each_entry(range, &io_range_list, list) {
- 		if (range->fwnode == new_range->fwnode) {
- 			/* range already there */
- 			goto end_register;
-@@ -108,26 +108,38 @@ end_register:
-  */
- struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode)
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1167,17 +1167,17 @@ void snd_emuusb_set_samplerate(struct sn
  {
--	struct logic_pio_hwaddr *range;
-+	struct logic_pio_hwaddr *range, *found_range = NULL;
+ 	struct usb_mixer_interface *mixer;
+ 	struct usb_mixer_elem_info *cval;
+-	int unitid = 12; /* SamleRate ExtensionUnit ID */
++	int unitid = 12; /* SampleRate ExtensionUnit ID */
  
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(range, &io_range_list, list) {
--		if (range->fwnode == fwnode)
--			return range;
-+		if (range->fwnode == fwnode) {
-+			found_range = range;
+ 	list_for_each_entry(mixer, &chip->mixer_list, list) {
+-		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+-		if (cval) {
++		if (mixer->id_elems[unitid]) {
++			cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+ 			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
+ 						    cval->control << 8,
+ 						    samplerate_id);
+ 			snd_usb_mixer_notify_id(mixer, unitid);
 +			break;
-+		}
+ 		}
+-		break;
  	}
--	return NULL;
-+	rcu_read_unlock();
-+
-+	return found_range;
- }
- 
- /* Return a registered range given an input PIO token */
- static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
- {
--	struct logic_pio_hwaddr *range;
-+	struct logic_pio_hwaddr *range, *found_range = NULL;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(range, &io_range_list, list) {
--		if (in_range(pio, range->io_start, range->size))
--			return range;
-+		if (in_range(pio, range->io_start, range->size)) {
-+			found_range = range;
-+			break;
-+		}
- 	}
--	pr_err("PIO entry token %lx invalid\n", pio);
--	return NULL;
-+	rcu_read_unlock();
-+
-+	if (!found_range)
-+		pr_err("PIO entry token 0x%lx invalid\n", pio);
-+
-+	return found_range;
- }
- 
- /**
-@@ -180,14 +192,23 @@ unsigned long logic_pio_trans_cpuaddr(re
- {
- 	struct logic_pio_hwaddr *range;
- 
-+	rcu_read_lock();
- 	list_for_each_entry_rcu(range, &io_range_list, list) {
- 		if (range->flags != LOGIC_PIO_CPU_MMIO)
- 			continue;
--		if (in_range(addr, range->hw_start, range->size))
--			return addr - range->hw_start + range->io_start;
-+		if (in_range(addr, range->hw_start, range->size)) {
-+			unsigned long cpuaddr;
-+
-+			cpuaddr = addr - range->hw_start + range->io_start;
-+
-+			rcu_read_unlock();
-+			return cpuaddr;
-+		}
- 	}
--	pr_err("addr %llx not registered in io_range_list\n",
--	       (unsigned long long) addr);
-+	rcu_read_unlock();
-+
-+	pr_err("addr %pa not registered in io_range_list\n", &addr);
-+
- 	return ~0UL;
  }
  
 
