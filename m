@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41969C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647E8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE8E20882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EF420870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621535;
-	bh=2w9cBEpuvv137vz55MidZCdZC8ewdK2WUXJtiTkff6Q=;
+	s=default; t=1567621540;
+	bh=+g2+1TXZMeEDdeX8VPRARnKKneMpEfXU54c/7gjeNnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NE/ZFGA5xFdIhoeQJ89Ksy7RifWwcFaGQZvMOEfdAz+WXrGc7R096V4wC8RuKTwIl
-	 m2lQ55WO+v2ueWzyYOb06nw5USpYa22KuGxwxffPUJ1J3/wNFJ+JoxnvBmbAj8Bel4
-	 vNfZ7gkIrLRjeDyT/RuaJTNSsRsTLE6ADy53NDNY=
+	b=ncUB6PJBxs8S7zxWt1qN3oiXsiOgul3aqZW+Go92zBlWp8uyVn9FqEi8+DKFBn4pY
+	 B5xFqKTfdZmZp2ZchMh0vY4ho4RqiF1y4I6Xitv/6tqNGErx3mEmdzM4sPsY2bDsOc
+	 WVST4IEkvDfa8jXIOJk/wn0omui3rPKOPVfeV5RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388290AbfIDR7v (ORCPT
+        id S2388531AbfIDSZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:59:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38618 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:25:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388265AbfIDR7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:41 -0400
+        id S2388277AbfIDR7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:59:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45C7C21883;
-        Wed,  4 Sep 2019 17:59:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B2A923404;
+        Wed,  4 Sep 2019 17:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619980;
-        bh=2w9cBEpuvv137vz55MidZCdZC8ewdK2WUXJtiTkff6Q=;
+        s=default; t=1567619988;
+        bh=+g2+1TXZMeEDdeX8VPRARnKKneMpEfXU54c/7gjeNnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HR47O7H6aPShCS7nTiS5nCpTBWGuIl1a2iCact3Eaw5sKDQfWmzb28MUIGWC0j6pe
-         53XqBTg5VFlZcye41WmT5Y/OQ2c8dzBseMN93h4Ucztxc2jqPSUedZx8GHY8/p48O9
-         oLvrg+oGxJwuQZz3PxqWGogUd7QYybwj0WAxV0Jg=
+        b=tEF2io6by4kidvx1Sn5UNE56TiHwi6hS/CbFlvhrQqouZ6t0+lE0myz4D7OdCql6j
+         FcZ2/Sx7YIMCyO/hQ1P9kH6CerhFRN1Fqy3SRL9wyTAye5PCmwUCuI/sW0RHshY2U2
+         2LhYO772CKOddrDwodfD3BW3JUpYwtbmQVW3ju/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Willem de Bruijn <willemb@google.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 03/83] netfilter: ebtables: fix a memory leak bug in compat
-Date:   Wed,  4 Sep 2019 19:52:55 +0200
-Message-Id: <20190904175303.871150754@linuxfoundation.org>
+Subject: [PATCH 4.9 06/83] can: dev: call netif_carrier_off() in register_candev()
+Date:   Wed,  4 Sep 2019 19:52:58 +0200
+Message-Id: <20190904175304.248865446@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -61,42 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 15a78ba1844a8e052c1226f930133de4cef4e7ad ]
+[ Upstream commit c63845609c4700488e5eacd6ab4d06d5d420e5ef ]
 
-In compat_do_replace(), a temporary buffer is allocated through vmalloc()
-to hold entries copied from the user space. The buffer address is firstly
-saved to 'newinfo->entries', and later on assigned to 'entries_tmp'. Then
-the entries in this temporary buffer is copied to the internal kernel
-structure through compat_copy_entries(). If this copy process fails,
-compat_do_replace() should be terminated. However, the allocated temporary
-buffer is not freed on this path, leading to a memory leak.
+CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
+trigger as suggested, there's a small inconsistency with the link
+property: The LED is on initially, stays on when the device is brought
+up, and then turns off (as expected) when the device is brought down.
 
-To fix the bug, free the buffer before returning from compat_do_replace().
+Make sure the LED always reflects the state of the CAN device.
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/can/dev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 142ccaae9c7b6..4a47918b504f8 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2288,8 +2288,10 @@ static int compat_do_replace(struct net *net, void __user *user,
- 	state.buf_kern_len = size64;
- 
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
--	if (WARN_ON(ret < 0))
-+	if (WARN_ON(ret < 0)) {
-+		vfree(entries_tmp);
- 		goto out_unlock;
-+	}
- 
- 	vfree(entries_tmp);
- 	tmp.entries_size = size64;
+diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+index 214a48703a4e4..ffc5467a1ec2b 100644
+--- a/drivers/net/can/dev.c
++++ b/drivers/net/can/dev.c
+@@ -1095,6 +1095,8 @@ static struct rtnl_link_ops can_link_ops __read_mostly = {
+ int register_candev(struct net_device *dev)
+ {
+ 	dev->rtnl_link_ops = &can_link_ops;
++	netif_carrier_off(dev);
++
+ 	return register_netdev(dev);
+ }
+ EXPORT_SYMBOL_GPL(register_candev);
 -- 
 2.20.1
 
