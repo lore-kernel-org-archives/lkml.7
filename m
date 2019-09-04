@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B66C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35032C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFFE22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0300022CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619863;
-	bh=54VtRoqU8kvRGwbrBOQmMbSEAWo9D7ld9pRs7Lg+DvM=;
+	s=default; t=1567619867;
+	bh=fp7pC5A6v8DesicfVH1brRId9ycSV71FJmTtEnSVlJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2RU2lM7I3m3nzLtVNoni7QaVDsIufr+phUwkLVmRb2nyKRvUorjoYr8Hyrv6wumsE
-	 +KoOSNCEEOKMKxOSjgnAqDv+7YJexQ1zuxXW7a2Ywj3wK897Ohr56jkDqUOqowWhPv
-	 Kn3anObdlNIJzWhQSm4TjBx048EkOPq44FgWMlrw=
+	b=vg84y/mpLxPDJOZJrYtQNvyT3lns+nkE3RWe5kaedaFY0SL9w1ApTEsZXYYQQsgBt
+	 lPwP3eAhhTsr347VZ4MHgLFoJv6s1Q71FGFvduvPDLDC3U6cD+6urwRz4+R+t5oP3Z
+	 qUXpELrIU8YpXMxcT7SdEjCOZWk0iFeLPrszhNlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387907AbfIDR5m (ORCPT
+        id S2387916AbfIDR5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387898AbfIDR5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:40 -0400
+        id S2387898AbfIDR5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7B2621883;
-        Wed,  4 Sep 2019 17:57:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63E3721883;
+        Wed,  4 Sep 2019 17:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619860;
-        bh=54VtRoqU8kvRGwbrBOQmMbSEAWo9D7ld9pRs7Lg+DvM=;
+        s=default; t=1567619862;
+        bh=fp7pC5A6v8DesicfVH1brRId9ycSV71FJmTtEnSVlJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v3Wv9BUfyZcTp6e6CCaE+msozJ+63A1a+LlErdHMg8nBEZ2PEKYiKByuEattDHiID
-         Ta9Yfhv7y3RYjOe3cekXCaW/zhq3umDb8Quwya+pBwXfktuxLnvfY4P9PEhDNtg4lI
-         4FnP4uY8YzsgalzerVbPiSaRrr8boCczbQ5jJfMc=
+        b=aAhysD7GptrDMtLnBW4/95ANR+hOIJyiHUyjPlyOZQOjqcKHSNmu4e0KW16Mkvvf2
+         iJ14JTLQ4SWhpq60QVaflmbYo+w+vBAuQCm4sTaHu5W4gWRI3fljpTeUflSutND3QE
+         R3JC1nG+QdXxJeTB2WrE8g3dNzaYJ6svYgjVpeLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 21/77] libata: add SG safety checks in SFF pio transfers
-Date:   Wed,  4 Sep 2019 19:53:08 +0200
-Message-Id: <20190904175305.616064032@linuxfoundation.org>
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 22/77] selftests: kvm: Adding config fragments
+Date:   Wed,  4 Sep 2019 19:53:09 +0200
+Message-Id: <20190904175305.676613129@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -59,44 +60,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
+[ Upstream commit c096397c78f766db972f923433031f2dec01cae0 ]
 
-Abort processing of a command if we run out of mapped data in the
-SG list. This should never happen, but a previous bug caused it to
-be possible. Play it safe and attempt to abort nicely if we don't
-have more SG segments left.
+selftests kvm test cases need pre-required kernel configs for the test
+to get pass.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libata-sff.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/testing/selftests/kvm/config | 3 +++
+ 1 file changed, 3 insertions(+)
+ create mode 100644 tools/testing/selftests/kvm/config
 
-diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
-index 18de4c4570682..1d8901fc0bfa9 100644
---- a/drivers/ata/libata-sff.c
-+++ b/drivers/ata/libata-sff.c
-@@ -703,6 +703,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
- 	unsigned int offset;
- 	unsigned char *buf;
- 
-+	if (!qc->cursg) {
-+		qc->curbytes = qc->nbytes;
-+		return;
-+	}
- 	if (qc->curbytes == qc->nbytes - qc->sect_size)
- 		ap->hsm_task_state = HSM_ST_LAST;
- 
-@@ -742,6 +746,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
- 
- 	if (qc->cursg_ofs == qc->cursg->length) {
- 		qc->cursg = sg_next(qc->cursg);
-+		if (!qc->cursg)
-+			ap->hsm_task_state = HSM_ST_LAST;
- 		qc->cursg_ofs = 0;
- 	}
- }
+diff --git a/tools/testing/selftests/kvm/config b/tools/testing/selftests/kvm/config
+new file mode 100644
+index 0000000000000..63ed533f73d6e
+--- /dev/null
++++ b/tools/testing/selftests/kvm/config
+@@ -0,0 +1,3 @@
++CONFIG_KVM=y
++CONFIG_KVM_INTEL=y
++CONFIG_KVM_AMD=y
 -- 
 2.20.1
 
