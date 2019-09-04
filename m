@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE29C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88ABC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B885620870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9092F2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620508;
-	bh=cKh9PNFoHdWk83tn6Qbei9u/Hkn4unYXuL6IU++rW9E=;
+	s=default; t=1567620510;
+	bh=/rTf8DzgI8IYrGf5cmSkPBb6QTLA+lA/qUe2mdsLGio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxniPsSbytcdroVvjOeBNFiWmSVCggLVkAuwiuaX+hOphC+5X8gbRNZbHd1Y0Q44R
-	 spH/824sqphjNnqy8q5VcC7EOD0X1rOED3GFM75hHGbkZqarouIVR7mOYNRNceS9Q5
-	 ONl/378QtP4FWBZ8hqvzTqKown+uLcpprmWIfxW8=
+	b=0pUZRuB4mZ/luoGZ4c42PQfEmcK5q/VIBXkKgLIaqG5A/+YuoENS6Zk4HG0JRjAWK
+	 s7GvJwyoAk1VgVxrsozCFXdWzIN92iFyrcZTRhDVmlZd04UYz8a08ByxWKJHZWCG0c
+	 EEFF4q1RQhetVdHsmCJ9NsBaV8bbMIajKWyHQcAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389380AbfIDSI1 (ORCPT
+        id S2389800AbfIDSI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:08:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51288 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389179AbfIDSIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:25 -0400
+        id S2389792AbfIDSI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F6BB20870;
-        Wed,  4 Sep 2019 18:08:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF84920870;
+        Wed,  4 Sep 2019 18:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620504;
-        bh=cKh9PNFoHdWk83tn6Qbei9u/Hkn4unYXuL6IU++rW9E=;
+        s=default; t=1567620507;
+        bh=/rTf8DzgI8IYrGf5cmSkPBb6QTLA+lA/qUe2mdsLGio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gkXJnovZtcEgNqWeneF4WQvRWJvEzrZVTiZAh3FDeEtNazF5w8hZc8QdcC5P1oYLN
-         vQB/wqQSyymM+zU+UWyHsWUoZ4dVryxKb/VsoRFaBDWt6qrFqRThH7ZuZ4OBf2pcX4
-         ayh1z2dBQGTbIlcBURU4LUvawrvJYvvy7Ra9Dcqs=
+        b=U2w4FVPiTe5T4ewtXEYttoikhzILNPjXVnhwxjzx9JzFRtkccvspU8G/rSDmyVwDp
+         9vt7bsKlXMAxq1FmGLcXHmQr8F+RGWSPuoltdz5haRK9DXIm+LfAERyYSEdj3uQum+
+         onjE3mrq6He4pG30PIUB3LjuAzyex5ZZH75KVuXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.19 81/93] mac80211: fix possible sta leak
-Date:   Wed,  4 Sep 2019 19:54:23 +0200
-Message-Id: <20190904175310.093185949@linuxfoundation.org>
+        stable@vger.kernel.org, Denis Kenzior <denkenz@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 82/93] mac80211: Dont memset RXCB prior to PAE intercept
+Date:   Wed,  4 Sep 2019 19:54:24 +0200
+Message-Id: <20190904175310.180060830@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -58,47 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Denis Kenzior <denkenz@gmail.com>
 
-commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 upstream.
+commit c8a41c6afa27b8c3f61622dfd882b912da9d6721 upstream.
 
-If TDLS station addition is rejected, the sta memory is leaked.
-Avoid this by moving the check before the allocation.
+In ieee80211_deliver_skb_to_local_stack intercepts EAPoL frames if
+mac80211 is configured to do so and forwards the contents over nl80211.
+During this process some additional data is also forwarded, including
+whether the frame was received encrypted or not.  Unfortunately just
+prior to the call to ieee80211_deliver_skb_to_local_stack, skb->cb is
+cleared, resulting in incorrect data being exposed over nl80211.
 
+Fixes: 018f6fbf540d ("mac80211: Send control port frames over nl80211")
 Cc: stable@vger.kernel.org
-Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
-Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
+Signed-off-by: Denis Kenzior <denkenz@gmail.com>
+Link: https://lore.kernel.org/r/20190827224120.14545-2-denkenz@gmail.com
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/cfg.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/mac80211/rx.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1471,6 +1471,11 @@ static int ieee80211_add_station(struct
- 	if (is_multicast_ether_addr(mac))
- 		return -EINVAL;
- 
-+	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
-+	    sdata->vif.type == NL80211_IFTYPE_STATION &&
-+	    !sdata->u.mgd.associated)
-+		return -EINVAL;
+--- a/net/mac80211/rx.c
++++ b/net/mac80211/rx.c
+@@ -2377,6 +2377,8 @@ static void ieee80211_deliver_skb_to_loc
+ 		cfg80211_rx_control_port(dev, skb, noencrypt);
+ 		dev_kfree_skb(skb);
+ 	} else {
++		memset(skb->cb, 0, sizeof(skb->cb));
 +
- 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
- 	if (!sta)
- 		return -ENOMEM;
-@@ -1478,10 +1483,6 @@ static int ieee80211_add_station(struct
- 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
- 		sta->sta.tdls = true;
+ 		/* deliver to local stack */
+ 		if (rx->napi)
+ 			napi_gro_receive(rx->napi, skb);
+@@ -2470,8 +2472,6 @@ ieee80211_deliver_skb(struct ieee80211_r
  
--	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
--	    !sdata->u.mgd.associated)
--		return -EINVAL;
+ 	if (skb) {
+ 		skb->protocol = eth_type_trans(skb, dev);
+-		memset(skb->cb, 0, sizeof(skb->cb));
 -
- 	err = sta_apply_parameters(local, sta, params);
- 	if (err) {
- 		sta_info_free(local, sta);
+ 		ieee80211_deliver_skb_to_local_stack(skb, rx);
+ 	}
+ 
 
 
