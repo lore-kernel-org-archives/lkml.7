@@ -2,112 +2,117 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E1BC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F1DC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7DA21726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C0F21726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:12:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWXBSs+r"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="G4fn03uV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbfIDXKm (ORCPT
+        id S1730106AbfIDXMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:10:42 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32826 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727741AbfIDXKm (ORCPT
+        Wed, 4 Sep 2019 19:12:37 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18618 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727741AbfIDXMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:10:42 -0400
-Received: by mail-io1-f65.google.com with SMTP id m11so403275ioo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DB1rbzm8PF8Bwfs8Jp/tKsNhJPofsXR23GDzMzgP/Zo=;
-        b=TWXBSs+rssh2KOR8Br4xQVWj2yPdts1caiQ8YeGZCkLygQUi3QXTp7bXtG8avLPfoY
-         FU0qWwBUSFqJQ11YlGcYAyCc1LuOHBkMXnenhqK6bcrkpT40+xQVdSKLzHma7+CFHsNH
-         DZE2H4wNyGmxrNjxgvrV/PEFzx79oncEEh/D3bItyY1amR4GCh4qqWlRADRT5zCrS1xz
-         v9RL7oWNP1ZGT3CoxK7EoA/Xh83edIeMEIwa2Q5LX2O+a5xbwE8I0aEm9ioQHvqkHV6F
-         cx90+SxExNmT98lEpdrmmEC1UE3oSt/btorqGtDplYJGoFnrKoF6bjyDNR9WrI8DSxLl
-         l/fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DB1rbzm8PF8Bwfs8Jp/tKsNhJPofsXR23GDzMzgP/Zo=;
-        b=nSlGclLHSgYBX1bn+O28BONuJU56YE01zzpeQhTPjL5UUa9dXjMbGrdewflJi7tATk
-         W2W722khCCLZcGQdCY6uGzOQp43ihXedXr36khI96XNrxCxibggVB/KW5paMkh4rblJt
-         iROYlK6gPX2xAAjb3gK6tL9Y3GThZPxMypl+D55bx30QiUC7HJtdyPOLsxULj6AeyTwb
-         QteRUqffWueDhROdt/dnoi5hXK+Qpagb6lf5uZ95rMBD1elQQ+0LaWvnilBKilskJ913
-         9Ja885f39Zo8VYG2Xm4qBG5skHLXuATt4bwK23UPUFw4xHYPYZWgutizXQsWA15kP2ow
-         6FkQ==
-X-Gm-Message-State: APjAAAVgWDgXH9RxA0ykke5rz+YOg6bcs2IYc3rKlpSdqhIf5zAZkHIt
-        bN0c9fTFcJlDku1E0dbvDS2l7z8DEyvP21hY+w2Z1g==
-X-Google-Smtp-Source: APXvYqy0jYg/Z8XA/MeoEAwnqZjsjs0eFej+KYg1PPMJWO6JB9B1AVaOVDMkjRWEP7D3sv6xexnbd1n0FFsKarY4fh4=
-X-Received: by 2002:a6b:db0e:: with SMTP id t14mr546846ioc.93.1567638641383;
- Wed, 04 Sep 2019 16:10:41 -0700 (PDT)
+        Wed, 4 Sep 2019 19:12:36 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7044e40000>; Wed, 04 Sep 2019 16:12:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 04 Sep 2019 16:12:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 04 Sep 2019 16:12:35 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Sep
+ 2019 23:12:35 +0000
+Subject: Re: [RFC PATCH v2 02/19] fs/locks: Add Exclusive flag to user Layout
+ lease
+To:     <ira.weiny@intel.com>, Andrew Morton <akpm@linux-foundation.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>,
+        <linux-xfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nvdimm@lists.01.org>, <linux-ext4@vger.kernel.org>,
+        <linux-mm@kvack.org>
+References: <20190809225833.6657-1-ira.weiny@intel.com>
+ <20190809225833.6657-3-ira.weiny@intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <69a7c037-6b4b-dbe3-2b42-77f85043b9eb@nvidia.com>
+Date:   Wed, 4 Sep 2019 16:12:35 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190904074828.32502-1-kraxel@redhat.com>
-In-Reply-To: <20190904074828.32502-1-kraxel@redhat.com>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Wed, 4 Sep 2019 16:10:30 -0700
-Message-ID: <CAPaKu7RWiEr5n_DWcg0H2PPnRs9CUn-ZgQV3NYe8VrdZgEAhTQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/virtio: fix command submission with objects but
- without fence.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     ML dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190809225833.6657-3-ira.weiny@intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1567638756; bh=KcHEqM2TNQedobjZznlViJ4AvUuHmWBw0j98IvGFhfc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=G4fn03uVMA7J4UC1m9Yj7DhfsqKE5JCNHVM+oBqTe0AR3ZAlGEFmH7YKmkjPCmtCQ
+         LUvXJdUANpLjlNJVqXY9TBqjeHx+L53SCBVVR7cf/kJBTDzGJICMvneFxnJ/bznKdv
+         dNrJ4yQD+F1DCobVh03UMVVgaQfrILzPPrM7GeO2NaLVNZG5LHBQIJvvbOmoaMH7bs
+         msCDq0E+I3UeIhdWC/toHOT1SlxdWDyKPOg3HjVgFJReZrxpb8PrvSxEcypog9tmYA
+         zj992eW84rG8B8gGL5qOlDh0yQONipgKi9UW/dLLh2vAF7f5ffKJVuuRAS6ttv/Rev
+         x8kDOD2mdY4mQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 12:48 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> Only call virtio_gpu_array_add_fence if we actually have a fence.
->
-> Fixes: da758d51968a ("drm/virtio: rework virtio_gpu_execbuffer_ioctl fencing")
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_vq.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> index 595fa6ec2d58..7fd2851f7b97 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> @@ -339,11 +339,12 @@ static void virtio_gpu_queue_fenced_ctrl_buffer(struct virtio_gpu_device *vgdev,
->                 goto again;
->         }
->
-> -       if (fence)
-> +       if (fence) {
->                 virtio_gpu_fence_emit(vgdev, hdr, fence);
-> -       if (vbuf->objs) {
-> -               virtio_gpu_array_add_fence(vbuf->objs, &fence->f);
-> -               virtio_gpu_array_unlock_resv(vbuf->objs);
-> +               if (vbuf->objs) {
-> +                       virtio_gpu_array_add_fence(vbuf->objs, &fence->f);
-> +                       virtio_gpu_array_unlock_resv(vbuf->objs);
-> +               }
-This leaks when fence == NULL and vbuf->objs != NULL (which can really
-happen IIRC... not at my desk to check).
+On 8/9/19 3:58 PM, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> Add an exclusive lease flag which indicates that the layout mechanism
+> can not be broken.
+
+After studying the rest of these discussions extensively, I think in all
+cases FL_EXCLUSIVE is better named "unbreakable", rather than exclusive.
+
+If you read your sentence above, it basically reinforces that idea: "add an
+exclusive flag to mean it is unbreakable" is a bit of a disconnect. It 
+would be better to say,
+
+Add an "unbreakable" lease flag which indicates that the layout lease
+cannot be broken.
+
+Furthermore, while this may or may not be a way forward on the "we cannot
+have more than one process take a layout lease on a file/range", it at
+least stops making it impossible. In other words, no one is going to
+write a patch that allows sharing an exclusive layout lease--but someone
+might well update some of these patches here to make it possible to
+have multiple processes take unbreakable leases on the same file/range.
+
+I haven't worked through everything there yet, but again:
+
+* FL_UNBREAKABLE is the name you're looking for here, and
+
+* I think we want to allow multiple processes to take FL_UNBREAKABLE
+leases on the same file/range, so that we can make RDMA setups
+reasonable. By "reasonable" I mean, "no need to have a lead process
+that owns all the leases".
 
 
->         }
->         notify = virtio_gpu_queue_ctrl_buffer_locked(vgdev, vbuf);
->         spin_unlock(&vgdev->ctrlq.qlock);
-> --
-> 2.18.1
->
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
