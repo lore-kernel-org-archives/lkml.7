@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6E7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33312C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6284F23404
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ADBD233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620161;
-	bh=o/h0K/QgLQLBTCQBwpwh39O6WHVqKMUR9tz1VOI8b2A=;
+	s=default; t=1567620165;
+	bh=1RYvOBwHtQajG5Il0JH6xNqFr/+oHkRE2seaRdexZtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BqFfJ2tI7s1SxAAES23pyAnLN0ZJrqr87kL/X/lOxd1EUUW4p/mDafsCmsxnCBsj4
-	 g91/oqM0aT5V/do92EitKVNS050XfzP/9hangE4DMiuR+Ru8CoSs0t7QCEF+M9Npdx
-	 9jiDHurZ43LW5e/yK9uZ3243YtjrOuN6OdY1LSjQ=
+	b=0dvUmiEqd9hkqH9PYHWqn0Qp83wlXiVEpLq+za214D17/CL7dNV/wUra8NGNG6diP
+	 zjlcUZMmsgPr3nk9D1i0Ox902KYmmHF+AiRsg5ud0aaBwBxUnh7kzv/hsgJqT0KDba
+	 mQTa83ePLk7lubtsuk2xtpXfFMb2DR+CO2JsPnAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388796AbfIDSCk (ORCPT
+        id S2388812AbfIDSCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42710 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732363AbfIDSCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:38 -0400
+        id S2388800AbfIDSCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10AFB2339D;
-        Wed,  4 Sep 2019 18:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE45D208E4;
+        Wed,  4 Sep 2019 18:02:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620158;
-        bh=o/h0K/QgLQLBTCQBwpwh39O6WHVqKMUR9tz1VOI8b2A=;
+        s=default; t=1567620161;
+        bh=1RYvOBwHtQajG5Il0JH6xNqFr/+oHkRE2seaRdexZtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Imw4u4/MAuCycV2xsxA8nZ3wlHryFVO/k3hNvLG1y6xgAgZbj/Mi8EdZSDwhvKK47
-         KOkSjtI0mc8djK21hG8hKJvNc/Hy055uqQzSoSdyoS0EOPjkeudU4DI+ERrC1DB/oQ
-         O9NpwIr/JKFYuv27RwYoo6xbaP33Ap408gOQplXc=
+        b=vw3cRvcBS7fbY1UuTaRlHtcca3zUpVJ4hzao3azUVNpak1Dn/N3x/sM9Ik6qjB4fy
+         fEp5TZsLXPZTLCivrviqeBTed3jknVyHZUhhsbgn7gSX9/bGGZejrIWi4yGwnIxxlI
+         LPaXPXzZ/mT6GHNFQK7oM5zy5P6ofdtsOipCLSkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/57] watchdog: bcm2835_wdt: Fix module autoload
-Date:   Wed,  4 Sep 2019 19:53:40 +0200
-Message-Id: <20190904175303.162724718@linuxfoundation.org>
+Subject: [PATCH 4.14 13/57] drm/bridge: tfp410: fix memleak in get_modes()
+Date:   Wed,  4 Sep 2019 19:53:41 +0200
+Message-Id: <20190904175303.217813422@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -61,33 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 215e06f0d18d5d653d6ea269e4dfc684854d48bf ]
+[ Upstream commit c08f99c39083ab55a9c93b3e93cef48711294dad ]
 
-The commit 5e6acc3e678e ("bcm2835-pm: Move bcm2835-watchdog's DT probe
-to an MFD.") broke module autoloading on Raspberry Pi. So add a
-module alias this fix this.
+We don't free the edid blob allocated by the call to drm_get_edid(),
+causing a memleak. Fix this by calling kfree(edid) at the end of the
+get_modes().
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190610135739.6077-1-tomi.valkeinen@ti.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/bcm2835_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/bridge/ti-tfp410.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/bcm2835_wdt.c b/drivers/watchdog/bcm2835_wdt.c
-index b339e0e67b4c1..adb699145a071 100644
---- a/drivers/watchdog/bcm2835_wdt.c
-+++ b/drivers/watchdog/bcm2835_wdt.c
-@@ -252,6 +252,7 @@ module_param(nowayout, bool, 0);
- MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
+index acb857030951a..1bb01905be8e3 100644
+--- a/drivers/gpu/drm/bridge/ti-tfp410.c
++++ b/drivers/gpu/drm/bridge/ti-tfp410.c
+@@ -64,7 +64,12 @@ static int tfp410_get_modes(struct drm_connector *connector)
  
-+MODULE_ALIAS("platform:bcm2835-wdt");
- MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
- MODULE_DESCRIPTION("Driver for Broadcom BCM2835 watchdog timer");
- MODULE_LICENSE("GPL");
+ 	drm_mode_connector_update_edid_property(connector, edid);
+ 
+-	return drm_add_edid_modes(connector, edid);
++	ret = drm_add_edid_modes(connector, edid);
++
++	kfree(edid);
++
++	return ret;
++
+ fallback:
+ 	/* No EDID, fallback on the XGA standard modes */
+ 	ret = drm_add_modes_noedid(connector, 1920, 1200);
 -- 
 2.20.1
 
