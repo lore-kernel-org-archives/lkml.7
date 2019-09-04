@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BA7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0BDC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 963C822CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DD32339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619976;
-	bh=K3sUxwuK4U/+xieBaB5p/JucqXzHSKvpmUsQVWuCUMw=;
+	s=default; t=1567619978;
+	bh=Rz5W86QNLhm8ZYZlo6tOUZ86rEbHzRkh+dT4ZEkT3eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwd9Vg6Lj546P+w5bH+Q1xE1iH/t56uc5huvD6WyjHYHvvuSGH87Tq1Eq2mie8x0R
-	 OuScknFEPicWamrbR9io6YvLAsdY3wDXIHXCKUaoy/47Z5ov05YvlU0duzy7tCKCA0
-	 MS6h7vEDjdvnmj+uUPdcziLjDM1l79sCxdSA7ubg=
+	b=b81UVPRCBywyoDSWxwPrUbd8wbFMz0cbSUwRCIpCj8+4fV6XoL9Dqlxrtg6+xqmQE
+	 ZnbKJQXrmmFwoHA8c8BkLOAfoJSxmgDQ/t0JSY/UALu+ZRztevaP9yQQqbQbFoNF4x
+	 OJpdn2dJmILrAejgIIFiqCzNHWow5F2pNeccW3IA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387892AbfIDR7e (ORCPT
+        id S2388257AbfIDR7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38404 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:59:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388239AbfIDR7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:30 -0400
+        id S2388244AbfIDR7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:59:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7261521883;
-        Wed,  4 Sep 2019 17:59:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2202B22CEA;
+        Wed,  4 Sep 2019 17:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619970;
-        bh=K3sUxwuK4U/+xieBaB5p/JucqXzHSKvpmUsQVWuCUMw=;
+        s=default; t=1567619972;
+        bh=Rz5W86QNLhm8ZYZlo6tOUZ86rEbHzRkh+dT4ZEkT3eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GBgnLdVtJBYUjsrqtHl4UL+K7Ef0Gc5m8VmQKiUEk8A/cWo26O1LeSR4ti5wpNGP3
-         k9p5JOmvVkKv9+Pqa2eWzXFIQ5jJ70rGw9mc4ID3pbVs8w/o0y2hTnrfo2enbpDp44
-         wQH3idPTyUdrF0jxU4bR+S/qFP9ynyRBjTX3GC4Q=
+        b=qgOJ/2JLjJSsCGlX7G3enaYb8fGbEMQE7mHCTvKftXn2PYvvubM95dWUq8BQqzuhC
+         BS9bk1hX89TntEHOLNlAzLRzBfCFmW4rs9b22k11CKNRV57AJBYP5CyNqsQ5oUwvEs
+         zaLPZY50tl1j+w0L+Tj5vnzFVxRGB5rAkXMEmmDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Deepak Rawat <drawat@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 24/83] x86/lib/cpu: Address missing prototypes warning
-Date:   Wed,  4 Sep 2019 19:53:16 +0200
-Message-Id: <20190904175306.030470019@linuxfoundation.org>
+Subject: [PATCH 4.9 25/83] drm/vmwgfx: fix memory leak when too many retries have occurred
+Date:   Wed,  4 Sep 2019 19:53:17 +0200
+Message-Id: <20190904175306.098695604@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,42 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 04f5bda84b0712d6f172556a7e8dca9ded5e73b9 ]
+[ Upstream commit 6b7c3b86f0b63134b2ab56508921a0853ffa687a ]
 
-When building with W=1, warnings about missing prototypes are emitted:
+Currently when too many retries have occurred there is a memory
+leak on the allocation for reply on the error return path. Fix
+this by kfree'ing reply before returning.
 
-  CC      arch/x86/lib/cpu.o
-arch/x86/lib/cpu.c:5:14: warning: no previous prototype for 'x86_family' [-Wmissing-prototypes]
-    5 | unsigned int x86_family(unsigned int sig)
-      |              ^~~~~~~~~~
-arch/x86/lib/cpu.c:18:14: warning: no previous prototype for 'x86_model' [-Wmissing-prototypes]
-   18 | unsigned int x86_model(unsigned int sig)
-      |              ^~~~~~~~~
-arch/x86/lib/cpu.c:33:14: warning: no previous prototype for 'x86_stepping' [-Wmissing-prototypes]
-   33 | unsigned int x86_stepping(unsigned int sig)
-      |              ^~~~~~~~~~~~
-
-Add the proper include file so the prototypes are there.
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/42513.1565234837@turing-police
+Addresses-Coverity: ("Resource leak")
+Fixes: a9cd9c044aa9 ("drm/vmwgfx: Add a check to handle host message failure")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Deepak Rawat <drawat@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/cpu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/lib/cpu.c b/arch/x86/lib/cpu.c
-index 2dd1fe13a37b3..19f707992db22 100644
---- a/arch/x86/lib/cpu.c
-+++ b/arch/x86/lib/cpu.c
-@@ -1,5 +1,6 @@
- #include <linux/types.h>
- #include <linux/export.h>
-+#include <asm/cpu.h>
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+index e57a0bad7a626..77df50dd6d30d 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
+@@ -300,8 +300,10 @@ static int vmw_recv_msg(struct rpc_channel *channel, void **msg,
+ 		break;
+ 	}
  
- unsigned int x86_family(unsigned int sig)
- {
+-	if (retries == RETRIES)
++	if (retries == RETRIES) {
++		kfree(reply);
+ 		return -EINVAL;
++	}
+ 
+ 	*msg_len = reply_len;
+ 	*msg     = reply;
 -- 
 2.20.1
 
