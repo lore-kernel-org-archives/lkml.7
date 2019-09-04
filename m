@@ -2,79 +2,164 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D51C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07B3C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B74622CE3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01B422CE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:59:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="D9ih9Cw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfIDO7C (ORCPT
+        id S1731206AbfIDO7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:59:02 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:34707 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729919AbfIDO7C (ORCPT
+        Wed, 4 Sep 2019 10:59:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41818 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731060AbfIDO7n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:59:02 -0400
-Received: by mail-io1-f72.google.com with SMTP id m25so2693670ioo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 07:59:01 -0700 (PDT)
+        Wed, 4 Sep 2019 10:59:43 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x15so11390426pgg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 07:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rE1O7fdRvE37jnARAHsLuKHdyufLxZ8cmQ0gadZAgL8=;
+        b=D9ih9Cw29Le6OiWtBd6aRyEWwpDTtYVafWcJb7+7LuDHHVOIIXPs+2zV1Ht8Ax++BC
+         ia8+M2H3nQxG94rQvOCQVj16tbKYPYaFGu4HsuhvV78nwd2wFSOzc3c/yQNBbBvBA0Yd
+         qsTZxSaf3QzMI1+NuWyOro0muhD4GtxAju2jM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=OHAiKKAdXY9jCvbhzEA9HqiANItDsq2H4xiUo40Eykw=;
-        b=fcjBKsH8BLedJc2UopnEijGa6uRLo0OYILxNkrryww8YPi0J65ZHkEE0PENGk8ZsP4
-         FKe87H8h3hULFPOlhBC6yJ24uSXrtaNY65eauha86sx6WEjA7T14Z8yY4jf7Layw6nRK
-         6b3qKXqtWeXuh8txTqf2ggpy698/40qKHwaPhq0MRRFaFQn9de56H4KGC2Ghl683U7CV
-         mBe8RMQ7SuohLuk4xKlQ2qQMh7iGl56qgbJmLyBdK29nb/K8Ln+7At17f/URIGIo3M3e
-         q09+bR96BQprdNNK3uo2/OxN8QIAvnNUGfoJ/3e1HWwpQ8y71xFXtrjZP8yC+nArfiAj
-         H2qQ==
-X-Gm-Message-State: APjAAAXqJ6VUcNzLfC/5eW3YVHPIF3mpisEzQ0pcvaivdLrT757vfDur
-        s0+OlibLlTZnUKwZUhJbFWaoSwxhWoBR9azo0eu94DkMdRZD
-X-Google-Smtp-Source: APXvYqzGwMPp56tk6BDX0OXjwrYJWZDn39d0IuhDaGmvGQ0JDxlhCVa7F6Ad6gEt28kGtkUHEiAVjKFC6SJJA5SwDkwzDWdFSQOG
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rE1O7fdRvE37jnARAHsLuKHdyufLxZ8cmQ0gadZAgL8=;
+        b=Ftur+1+DdQcDPKF9nSKMl7qdr4M5wj7EC95/b9YE4hs+8FgPSqHsCQe49Ey+ylpJhi
+         B6ex2t2ieSOvnCQLk/HYTCkK8DeGVo1VNjBuN26skqH8yjsXdyEmXGZ5/oZWB051zqA5
+         Nh3ZcKbr2FYAUmIcED1kqzIvK+kUxFGgaFEmblS70F/iADOHwIEGiifnmJOLQRDg79LK
+         iB90WEhdzSAfdgA0ggnuz7Wyyb4oDpk5nNxVW3fcKeOuS1tAeWKiofyZfLS9wqwIo6On
+         eLItM8d13pAOzU/gI9mTQy9N7KnRmomma51ErggiziJ6t6vgTJvcyNBzLgskhsWZuNEW
+         +bUA==
+X-Gm-Message-State: APjAAAW9F5AS9Kzjajbw4cdPRMxSHS3twc4ZDakhnUXo9yfqW6LRQYxA
+        9J31F+EyMAEE7QDBgFMKwmRT2Q==
+X-Google-Smtp-Source: APXvYqxuEGPgataM5LlCHGmg8spcNNtos2YS2T0M6fjjvvs1uxXK1j1DXp8YMRz+T1Ekbu4SuHJDKg==
+X-Received: by 2002:a17:90a:2e15:: with SMTP id q21mr5316128pjd.97.1567609182722;
+        Wed, 04 Sep 2019 07:59:42 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id e6sm643717pfl.146.2019.09.04.07.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 07:59:42 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 10:59:41 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        Mayank Gupta <mayankgupta@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190904145941.GF240514@google.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <CAJuCfpEXpYq2i3zNbJ3w+R+QXTuMyzwL6S9UpiGEDvTioKORhQ@mail.gmail.com>
+ <CAKOZuesWV9yxbS9+T5+p1Ty1-=vFeYcHuO=6MgzTY8akMhbFbQ@mail.gmail.com>
+ <20190904051549.GB256568@google.com>
+ <CAKOZuet_M7nu5PYQj1iZErXV8hSZnjv4kMokVyumixVXibveoQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8353:: with SMTP id q19mr1548312ior.59.1567609141323;
- Wed, 04 Sep 2019 07:59:01 -0700 (PDT)
-Date:   Wed, 04 Sep 2019 07:59:01 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1909041038340.1722-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000003f6410591bb7223@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in usb_reset_and_verify_device
-From:   syzbot <syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com>
-To:     Thinh.Nguyen@synopsys.com, andreyknvl@google.com,
-        dianders@chromium.org, gregkh@linuxfoundation.org,
-        jflat@chromium.org, kai.heng.feng@canonical.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        malat@debian.org, mathias.nyman@linux.intel.com,
-        nsaenzjulienne@suse.de, stern@rowland.harvard.edu,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZuet_M7nu5PYQj1iZErXV8hSZnjv4kMokVyumixVXibveoQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Sep 03, 2019 at 10:42:53PM -0700, Daniel Colascione wrote:
+> On Tue, Sep 3, 2019 at 10:15 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > On Tue, Sep 03, 2019 at 09:51:20PM -0700, Daniel Colascione wrote:
+> > > On Tue, Sep 3, 2019 at 9:45 PM Suren Baghdasaryan <surenb@google.com> wrote:
+> > > >
+> > > > On Tue, Sep 3, 2019 at 1:09 PM Joel Fernandes (Google)
+> > > > <joel@joelfernandes.org> wrote:
+> > > > >
+> > > > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
+> > > > > memory hogs. Several Android teams have been using this patch in various
+> > > > > kernel trees for half a year now. Many reported to me it is really
+> > > > > useful so I'm posting it upstream.
+> > >
+> > > It's also worth being able to turn off the per-task memory counter
+> > > caching, otherwise you'll have two levels of batching before the
+> > > counter gets updated, IIUC.
+> >
+> > I prefer to keep split RSS accounting turned on if it is available.
+> 
+> Why? AFAIK, nobody's produced numbers showing that split accounting
+> has a real benefit.
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+I am not too sure. Have you checked the original patches that added this
+stuff though? It seems to me the main win would be on big systems that have
+to pay for atomic updates.
 
-Reported-and-tested-by:  
-syzbot+35f4d916c623118d576e@syzkaller.appspotmail.com
+> > I think
+> > discussing split RSS accounting is a bit out of scope of this patch as well.
+> 
+> It's in-scope, because with split RSS accounting, allocated memory can
+> stay accumulated in task structs for an indefinite time without being
+> flushed to the mm. As a result, if you take the stream of virtual
+> memory management system calls that  program makes on one hand, and VM
+> counter values on the other, the two don't add up. For various kinds
+> of robustness (trace self-checking, say) it's important that various
+> sources of data add up.
+> 
+> If we're adding a configuration knob that controls how often VM
+> counters get reflected in system trace points, we should also have a
+> knob to control delayed VM counter operations. The whole point is for
+> users to be able to specify how precisely they want VM counter changes
+> reported to analysis tools.
 
-Tested on:
+We're not adding more configuration knobs.
 
-commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
-dashboard link: https://syzkaller.appspot.com/bug?extid=35f4d916c623118d576e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=11d694d6600000
+> > Any improvements on that front can be a follow-up.
+> >
+> > Curious, has split RSS accounting shown you any issue with this patch?
+> 
+> Split accounting has been a source of confusion for a while now: it
+> causes that numbers-don't-add-up problem even when sampling from
+> procfs instead of reading memory tracepoint data.
 
-Note: testing is done by a robot and is best-effort only.
+I think you can just disable split RSS accounting if it does not work well
+for your configuration. It sounds like the problems you share are common all
+with existing ways of getting RSS accounting working, and not this particular
+one, hence I mentioned it is a bit of scope.
+
+Also AFAIU, every TASK_RSS_EVENTS_THRESH the page fault code does sync the
+counters. So it does not indefinitely lurk. The tracepoint's main intended
+use is to detect spikes which provides ample opportunity to sync the cache.
+
+You could reduce TASK_RSS_EVENTS_THRESH in your kernel, or even just disable
+split RSS accounting if that suits you better. That would solve all the
+issues you raised, not just any potential ones that you raised here for this
+tracepoint.
+
+thanks,
+
+ - Joel
+
+
