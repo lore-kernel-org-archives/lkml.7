@@ -2,158 +2,198 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CC1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE7EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A02E22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD5123711
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728936AbfIDHZc (ORCPT
+        id S1728982AbfIDHZw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:25:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33594 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725840AbfIDHZb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:25:31 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x847MGWH064380
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Sep 2019 03:25:30 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut851hfu8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 03:25:30 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 4 Sep 2019 08:25:28 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Sep 2019 08:25:26 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x847PP0o26279988
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Sep 2019 07:25:25 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAABB4C04A;
-        Wed,  4 Sep 2019 07:25:24 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A838E4C046;
-        Wed,  4 Sep 2019 07:25:24 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.122])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Sep 2019 07:25:24 +0000 (GMT)
-Subject: Re: [PATCH 1/1] s390: vfio-ap: fix warning reset not completed
-To:     Halil Pasic <pasic@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-References: <20190903133618.9122-1-pasic@linux.ibm.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Wed, 4 Sep 2019 09:25:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 03:25:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41378 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbfIDHZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:25:52 -0400
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 78D3BC04D293
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Sep 2019 07:25:51 +0000 (UTC)
+Received: by mail-qt1-f198.google.com with SMTP id x11so21748451qtm.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 00:25:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qGt7/Asvjla5NLjhNtTVWV76tKsaxhQMsyUh6I8J27A=;
+        b=ZLNOvsnVjlqzydQtbqOEVGPEuYk99mgR0IqKLZlIIyUaL5E0mOGWNADjvgVLLMpUpm
+         eBXvvGQkIdtZD3epMQRy6YOf6UoEV8+fw/Puaaj8JQc8UdA2UHM7I9YVnQbAeUqopIf7
+         3nCABoMSts3GVwVpOq6G4Dzjkk88Ftq/rLv5Ss3aYzR2lQghAKw/Hh8ZSDs8lyRNux5g
+         /GxZJl+3osm9AFmCZOfnoRPipxQ/mV/VCZch4Bt0hgeZK4L1hZZ3ST5H6UriLc2wMX6Q
+         6f9br/Qz+05YyCMqJtrxOZZ4YXUegKx35m2sddP1pqOTd7MflhBw3nkqXWvBfOkGsbdL
+         SmgQ==
+X-Gm-Message-State: APjAAAXWNpKzedQ1wYPKMXwjBY8aI7AKLVY/vYM7/BzrP4Nf3+tcEAkh
+        SBLpiU5CoaIQttxnMMLXwyDaL8mO0SuhrdktSvADFsxQu12cS3A48kquajrS4YtMXqION8lPO8N
+        z20mdr5bODaJvUiqcRr6zBvbWHyqrPm7PoKfz4P6K
+X-Received: by 2002:a0c:afe6:: with SMTP id t35mr7541973qvc.29.1567581950732;
+        Wed, 04 Sep 2019 00:25:50 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqy0M8yUCb0WYixzLgIMORz7xhZ11Kr5p8HFZwGTG6xWd+7Qxtmg+iNn2bUV+vuS1zR+c+tR1J0zYys01uH0UmQ=
+X-Received: by 2002:a0c:afe6:: with SMTP id t35mr7541962qvc.29.1567581950479;
+ Wed, 04 Sep 2019 00:25:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190903133618.9122-1-pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090407-0028-0000-0000-000003977634
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090407-0029-0000-0000-00002459C68B
-Message-Id: <9af2dd28-a2ce-769c-f90c-dd079c967022@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909040076
+References: <20190903144632.26299-1-benjamin.tissoires@redhat.com> <CAHxFc3SXM6hkbpTGZCsWOk70tByHE8af59ftOBwahY4fL0Sz=g@mail.gmail.com>
+In-Reply-To: <CAHxFc3SXM6hkbpTGZCsWOk70tByHE8af59ftOBwahY4fL0Sz=g@mail.gmail.com>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Wed, 4 Sep 2019 09:25:39 +0200
+Message-ID: <CAO-hwJLunZZr0f2u8TMV8REbq-nCGyJtMmWzTo6F2yTMcUbnEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: apple: Fix stuck function keys when using FN
+To:     =?UTF-8?B?Sm/Do28gTW9yZW5v?= <mail@joaomoreno.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.09.19 15:36, Halil Pasic wrote:
-> The intention seems to be to warn once when we don't wait enough for the
-> reset to complete. Let's use the right retry counter to accomplish that
-> semantic.
-> 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+On Tue, Sep 3, 2019 at 8:33 PM João Moreno <mail@joaomoreno.com> wrote:
+>
+> Hi Benjamin,
+>
+> On Tue, 3 Sep 2019 at 16:46, Benjamin Tissoires
+> <benjamin.tissoires@redhat.com> wrote:
+> >
+> > From: Joao Moreno <mail@joaomoreno.com>
+> >
+> > This fixes an issue in which key down events for function keys would be
+> > repeatedly emitted even after the user has raised the physical key. For
+> > example, the driver fails to emit the F5 key up event when going through
+> > the following steps:
+> > - fnmode=1: hold FN, hold F5, release FN, release F5
+> > - fnmode=2: hold F5, hold FN, release F5, release FN
+> >
+> > The repeated F5 key down events can be easily verified using xev.
+> >
+> > Signed-off-by: Joao Moreno <mail@joaomoreno.com>
+> > Co-developed-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > ---
+> >
+> > Hi Joao,
+> >
+> > last chance to pull back :)
+> >
+> > If you are still happy, I'll push this version
+> >
+> > Cheers,
+> > Benjamin
+> >
+>
+> Looks great. Thanks a bunch for your help!
+>
 
-Thanks applied.
+Thanks.
 
-I will let it sit in our tree for some days as I want to see if we actually
-hit the WARN_ON now. So if there is an rc8 this will be part of the next 
-merge window, otherwise this will somewhat come later.
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 0604b49a4d32..5c0f53c6dde7 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -1143,7 +1143,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
->  				msleep(20);
->  				status = ap_tapq(apqn, NULL);
->  			}
-> -			WARN_ON_ONCE(retry <= 0);
-> +			WARN_ON_ONCE(retry2 <= 0);
->  			return 0;
->  		case AP_RESPONSE_RESET_IN_PROGRESS:
->  		case AP_RESPONSE_BUSY:
-> 
+Applied to for-5.4/apple
 
+Cheers,
+Benjamin
+
+> Cheers,
+> João
+>
+> >  drivers/hid/hid-apple.c | 49 +++++++++++++++++++++++------------------
+> >  1 file changed, 28 insertions(+), 21 deletions(-)
+> >
+> > diff --git a/drivers/hid/hid-apple.c b/drivers/hid/hid-apple.c
+> > index 81df62f48c4c..6ac8becc2372 100644
+> > --- a/drivers/hid/hid-apple.c
+> > +++ b/drivers/hid/hid-apple.c
+> > @@ -54,7 +54,6 @@ MODULE_PARM_DESC(swap_opt_cmd, "Swap the Option (\"Alt\") and Command (\"Flag\")
+> >  struct apple_sc {
+> >         unsigned long quirks;
+> >         unsigned int fn_on;
+> > -       DECLARE_BITMAP(pressed_fn, KEY_CNT);
+> >         DECLARE_BITMAP(pressed_numlock, KEY_CNT);
+> >  };
+> >
+> > @@ -181,6 +180,8 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+> >  {
+> >         struct apple_sc *asc = hid_get_drvdata(hid);
+> >         const struct apple_key_translation *trans, *table;
+> > +       bool do_translate;
+> > +       u16 code = 0;
+> >
+> >         if (usage->code == KEY_FN) {
+> >                 asc->fn_on = !!value;
+> > @@ -189,8 +190,6 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+> >         }
+> >
+> >         if (fnmode) {
+> > -               int do_translate;
+> > -
+> >                 if (hid->product >= USB_DEVICE_ID_APPLE_WELLSPRING4_ANSI &&
+> >                                 hid->product <= USB_DEVICE_ID_APPLE_WELLSPRING4A_JIS)
+> >                         table = macbookair_fn_keys;
+> > @@ -202,25 +201,33 @@ static int hidinput_apple_event(struct hid_device *hid, struct input_dev *input,
+> >                 trans = apple_find_translation (table, usage->code);
+> >
+> >                 if (trans) {
+> > -                       if (test_bit(usage->code, asc->pressed_fn))
+> > -                               do_translate = 1;
+> > -                       else if (trans->flags & APPLE_FLAG_FKEY)
+> > -                               do_translate = (fnmode == 2 && asc->fn_on) ||
+> > -                                       (fnmode == 1 && !asc->fn_on);
+> > -                       else
+> > -                               do_translate = asc->fn_on;
+> > -
+> > -                       if (do_translate) {
+> > -                               if (value)
+> > -                                       set_bit(usage->code, asc->pressed_fn);
+> > -                               else
+> > -                                       clear_bit(usage->code, asc->pressed_fn);
+> > -
+> > -                               input_event(input, usage->type, trans->to,
+> > -                                               value);
+> > -
+> > -                               return 1;
+> > +                       if (test_bit(trans->from, input->key))
+> > +                               code = trans->from;
+> > +                       else if (test_bit(trans->to, input->key))
+> > +                               code = trans->to;
+> > +
+> > +                       if (!code) {
+> > +                               if (trans->flags & APPLE_FLAG_FKEY) {
+> > +                                       switch (fnmode) {
+> > +                                       case 1:
+> > +                                               do_translate = !asc->fn_on;
+> > +                                               break;
+> > +                                       case 2:
+> > +                                               do_translate = asc->fn_on;
+> > +                                               break;
+> > +                                       default:
+> > +                                               /* should never happen */
+> > +                                               do_translate = false;
+> > +                                       }
+> > +                               } else {
+> > +                                       do_translate = asc->fn_on;
+> > +                               }
+> > +
+> > +                               code = do_translate ? trans->to : trans->from;
+> >                         }
+> > +
+> > +                       input_event(input, usage->type, code, value);
+> > +                       return 1;
+> >                 }
+> >
+> >                 if (asc->quirks & APPLE_NUMLOCK_EMULATION &&
+> > --
+> > 2.19.2
+> >
