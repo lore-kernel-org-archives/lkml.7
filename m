@@ -2,87 +2,86 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1BFC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E540C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422BF22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:53:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A5822CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:53:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TSEn5/o5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731474AbfIDPxG (ORCPT
+        id S1731489AbfIDPx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:53:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:57552 "EHLO foss.arm.com"
+        Wed, 4 Sep 2019 11:53:29 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52012 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730277AbfIDPxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:53:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BB8728;
-        Wed,  4 Sep 2019 08:53:05 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C969A3F246;
-        Wed,  4 Sep 2019 08:53:03 -0700 (PDT)
-Subject: Re: [PATCH v4 05/10] KVM: arm64: Support stolen time reporting via
- shared structure
-To:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <20190830084255.55113-1-steven.price@arm.com>
- <20190830084255.55113-6-steven.price@arm.com>
- <d55d091f-1c0f-9c47-b7b2-95c87285335d@huawei.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <d68fd0f8-a01f-0939-8493-865c4f037783@arm.com>
-Date:   Wed, 4 Sep 2019 16:53:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731465AbfIDPx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:53:28 -0400
+Received: from zn.tnic (p200300EC2F0A23007420D76C17796BA0.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:2300:7420:d76c:1779:6ba0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8378B1EC0528;
+        Wed,  4 Sep 2019 17:53:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567612407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1wN5rIWmEF3eBwLzPPZZZ+UrG/kIZXE/7pS5w/Sbemo=;
+        b=TSEn5/o59iL21J1EnNRh8ctW7FwHQz8R4nABE+qcd4Yd60cfnI6jnoMVP4Kj9JpGWhx7EP
+        98DH5FqOzDTOizMdJXHqkJ8rGGonvq932AQ5l9cuNqKQgBc0+SXfuUj0z6kdoQ+RMFV9J9
+        VqrsNz4JqfnlvnZ4WGwRM1z5+QZ+cV8=
+Date:   Wed, 4 Sep 2019 17:53:21 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Robert Richter <rrichter@marvell.com>
+Cc:     Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/5] EDAC: Small cleanups and fixes
+Message-ID: <20190904155321.GA31961@zn.tnic>
+References: <20190902123216.9809-1-rrichter@marvell.com>
+ <20190902171716.50c226d6@coco.lan>
 MIME-Version: 1.0
-In-Reply-To: <d55d091f-1c0f-9c47-b7b2-95c87285335d@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <20190902171716.50c226d6@coco.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/09/2019 10:14, Zenghui Yu wrote:
-> On 2019/8/30 16:42, Steven Price wrote:
->> Implement the service call for configuring a shared structure between a
->> VCPU and the hypervisor in which the hypervisor can write the time
->> stolen from the VCPU's execution time by other tasks on the host.
->>
->> The hypervisor allocates memory which is placed at an IPA chosen by user
->> space.
+On Mon, Sep 02, 2019 at 05:17:16PM -0300, Mauro Carvalho Chehab wrote:
+> > Robert Richter (5):
+> >   EDAC: Prefer 'unsigned int' to bare use of 'unsigned'
+> >   EDAC, mc_sysfs: Change dev_ch_attribute->channel to unsigned int
+> >   EDAC, mc_sysfs: Remove pointless gotos
+> >   EDAC, mc_sysfs: Make debug messages consistent
+> >   MAINTAINERS: update EDAC's reviewer entry
 > 
-> It seems that no allocation happens in the hypervisor code.  User space
-> will do it instead?
-
-Ah, yes I should update the commit message. User space does now allocate
-the memory. Thanks for spotting that.
-
-Steve
-
->> The hypervisor then updates the shared structure using
->> kvm_put_guest() to ensure single copy atomicity of the 64-bit value
->> reporting the stolen time in nanoseconds.
->>
->> Whenever stolen time is enabled by the guest, the stolen time counter is
->> reset.
->>
->> The stolen time itself is retrieved from the sched_info structure
->> maintained by the Linux scheduler code. We enable SCHEDSTATS when
->> selecting KVM Kconfig to ensure this value is meaningful.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
+> For the entire series:
 > 
-> Thanks,
-> zenghui
+> Reviewed-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 > 
+> > 
+> >  MAINTAINERS                  |  1 +
+> >  drivers/edac/edac_mc.c       | 20 ++++----
+> >  drivers/edac/edac_mc.h       |  6 +--
+> >  drivers/edac/edac_mc_sysfs.c | 91 ++++++++++++++++--------------------
+> >  drivers/edac/ghes_edac.c     |  2 +-
+> >  drivers/edac/i5100_edac.c    | 16 ++++---
+> >  include/linux/edac.h         | 10 ++--
+> >  7 files changed, 69 insertions(+), 77 deletions(-)
 
+Queued, thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
