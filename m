@@ -2,87 +2,60 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F41C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42651C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E67AA2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0ED22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:27:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="mP+Wb2fq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbfIDT0u (ORCPT
+        id S1730663AbfIDT1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:26:50 -0400
-Received: from smtprelay0239.hostedemail.com ([216.40.44.239]:36854 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729740AbfIDT0t (ORCPT
+        Wed, 4 Sep 2019 15:27:20 -0400
+Received: from a9-34.smtp-out.amazonses.com ([54.240.9.34]:35370 "EHLO
+        a9-34.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729740AbfIDT1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:26:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 2178C182CED5B;
-        Wed,  4 Sep 2019 19:26:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sign82_1e205b955f54d
-X-Filterd-Recvd-Size: 2459
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  4 Sep 2019 19:26:46 +0000 (UTC)
-Message-ID: <ab957f98a62390dbc603632704c60d39596095c1.camel@perches.com>
-Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
- Identifier
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        Wed, 4 Sep 2019 15:27:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1567625238;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=GSADDDUzucjw0izr9jastymBrpAHNMYRyeaYzA8+Uhc=;
+        b=mP+Wb2fqiHE3fKmY0lTJ5cgTL8X56zeovIKhwE5tXL5FGqe/zJl7HMc0vpR0WP9L
+        pGZs89DUthfoOijrI+PGaCd/DuxFWZxVZ+1TjeK/CiriyJQ4vP3haOtVCs2yZB7qwNj
+        X8T9yx92nvnLJkhMYDzkopTHI5cS8NGvFL9Bs/ck=
+Date:   Wed, 4 Sep 2019 19:27:18 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Pengfei Li <lpf.vector@gmail.com>
+cc:     akpm@linux-foundation.org, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Date:   Wed, 04 Sep 2019 12:26:45 -0700
-In-Reply-To: <20190904160010.4532c3f5@coco.lan>
-References: <20190831151147.GA7082@nishad>
-         <20190904153432.7fb54f02@coco.lan> <20190904183608.GA495@kroah.com>
-         <20190904160010.4532c3f5@coco.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+Subject: Re: [PATCH 0/5] mm, slab: Make kmalloc_info[] contain all types of
+ names
+In-Reply-To: <20190903160430.1368-1-lpf.vector@gmail.com>
+Message-ID: <0100016cfdbed786-8e9441ab-4c0c-4d2d-b9dc-d1d6878481b8-000000@email.amazonses.com>
+References: <20190903160430.1368-1-lpf.vector@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.09.04-54.240.9.34
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 16:00 -0300, Mauro Carvalho Chehab wrote:
-> With Python, you can't even use the second line, as it is reserved
-> for charset encoding. 
-> 
-> So, realistically, the SPDX header could be up to the third line of
-> a given file.
-> 
-> Besides that, I vaguely remember some discussions we had, back on the
-> days SPDX was introduced, envolving Thomas, Linus and others. My 
-> understanding for such discussions is that something like this:
-> 
-> /*
->  * SPDX-License-Identifier: GPL-2.0+
->  *
->  * some other notes about the file
->  */
-> 
-> Would be acceptable, as the first line of the comment (with is at
-> the beginning of the file) is the SPDX tag.
+On Wed, 4 Sep 2019, Pengfei Li wrote:
 
-Using the 2nd line of a .[ch] file does not follow the
-documented mechanisms.
+> There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
+> and KMALLOC_DMA.
 
-Documentation/process/license-rules.rst-1. Placement:
-Documentation/process/license-rules.rst-
-Documentation/process/license-rules.rst-   The SPDX license identifier in kernel files shall be added at the first
-Documentation/process/license-rules.rst:   possible line in a file which can contain a comment.  For the majority
-Documentation/process/license-rules.rst:   of files this is the first line, except for scripts which require the
-Documentation/process/license-rules.rst:   '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
-Documentation/process/license-rules.rst:   identifier goes into the second line.
-
+I only got a few patches of this set. Can I see the complete patchset
+somewhere?
 
