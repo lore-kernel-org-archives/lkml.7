@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554BEC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5746BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233C92339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322C121883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619962;
-	bh=hHHjSbiQsAjEEctleSS533vZ2M8xIgEBQTPowA2D9+g=;
+	s=default; t=1567619966;
+	bh=jBZPe5j4z1EqrI5SgRBRqBmJPo6bOwbkHE/6gxE2rX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CY6gW7nNvnqwevJhWg+oykj6uUhC8zKAsw+YulVN2CqC8y/Ssnvg0ca5Wa38Fyfdw
-	 edb5JNVZKm+TtISjtEAurRR0BeNi44OeVD0z9IByzARFeURZ/VWkRNUjiSMmcCtGIZ
-	 K9xj78Hr2yp23coS69McDEyeP1UAiWOQQjUGpsPc=
+	b=GFYPWodT45k05hOeKUkkQp4HP8AdoJYSZOgo3wm2g/pJzTCDF1bk6wtYquRgPdLBu
+	 ZVLo/K9ZsG98ChbzMCZWdwpgUD9/JdTlmIbvyHIfEGsuRwYfPXcBFrvGQ7X/DQOO5T
+	 HTHzgOau4vNimG+zjLauuWgW4Sx4NFjOq2E4+a18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387830AbfIDR7V (ORCPT
+        id S2387853AbfIDR7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38090 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbfIDR7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:17 -0400
+        id S2387821AbfIDR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:59:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 071CB21883;
-        Wed,  4 Sep 2019 17:59:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0E212339E;
+        Wed,  4 Sep 2019 17:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619956;
-        bh=hHHjSbiQsAjEEctleSS533vZ2M8xIgEBQTPowA2D9+g=;
+        s=default; t=1567619959;
+        bh=jBZPe5j4z1EqrI5SgRBRqBmJPo6bOwbkHE/6gxE2rX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TZFeWXsFTS0tox8q4MetCL5UZ2Xpm/iyTAKpnGTITrB1k9wjxDcl3q42o7RIhoL8H
-         7K+F0zM1uqyIxcTJpEFY3RiHm3zV5+nlbuKHERUdNC1wCV9t11dT2/TLhoI1xsDzJ7
-         PL3kknrnWT63jWjjl7x3sW6QGiQTKlpfyw7q5tSQ=
+        b=sXB3hdkfk6Yofzl4sB6I2GHXrq2z2zvpd6qxcFDgsveC7XOInln3kOyP3nRpEYrlF
+         BCB/nRaTEhIQYqNcuLcEwUZzEs8SxIKIi6bWV2MdB5TfDeW/5fLN95MemTG0stJyJN
+         UNkIzhcKHEbplNC2IY6pITR2D03kxQVwv7jBbyQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/83] MIPS: kernel: only use i8253 clocksource with periodic clockevent
-Date:   Wed,  4 Sep 2019 19:52:54 +0200
-Message-Id: <20190904175303.776133799@linuxfoundation.org>
+Subject: [PATCH 4.9 20/83] net: hisilicon: make hip04_tx_reclaim non-reentrant
+Date:   Wed,  4 Sep 2019 19:53:12 +0200
+Message-Id: <20190904175305.687835347@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -63,36 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a07e3324538a989b7cdbf2c679be6a7f9df2544f ]
+[ Upstream commit 1a2c070ae805910a853b4a14818481ed2e17c727 ]
 
-i8253 clocksource needs a free running timer. This could only
-be used, if i8253 clockevent is set up as periodic.
+If hip04_tx_reclaim is interrupted while it is running
+and then __napi_schedule continues to execute
+hip04_rx_poll->hip04_tx_reclaim, reentrancy occurs
+and oops is generated. So you need to mask the interrupt
+during the hip04_tx_reclaim run.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+The kernel oops exception stack is as follows:
+
+Unable to handle kernel NULL pointer dereference
+at virtual address 00000050
+pgd = c0003000
+[00000050] *pgd=80000000a04003, *pmd=00000000
+Internal error: Oops: 206 [#1] SMP ARM
+Modules linked in: hip04_eth mtdblock mtd_blkdevs mtd
+ohci_platform ehci_platform ohci_hcd ehci_hcd
+vfat fat sd_mod usb_storage scsi_mod usbcore usb_common
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G           O    4.4.185 #1
+Hardware name: Hisilicon A15
+task: c0a250e0 task.stack: c0a00000
+PC is at hip04_tx_reclaim+0xe0/0x17c [hip04_eth]
+LR is at hip04_tx_reclaim+0x30/0x17c [hip04_eth]
+pc : [<bf30c3a4>]    lr : [<bf30c2f4>]    psr: 600e0313
+sp : c0a01d88  ip : 00000000  fp : c0601f9c
+r10: 00000000  r9 : c3482380  r8 : 00000001
+r7 : 00000000  r6 : 000000e1  r5 : c3482000  r4 : 0000000c
+r3 : f2209800  r2 : 00000000  r1 : 00000000  r0 : 00000000
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+Control: 32c5387d  Table: 03d28c80  DAC: 55555555
+Process swapper/0 (pid: 0, stack limit = 0xc0a00190)
+Stack: (0xc0a01d88 to 0xc0a02000)
+[<bf30c3a4>] (hip04_tx_reclaim [hip04_eth]) from [<bf30d2e0>]
+                                                (hip04_rx_poll+0x88/0x368 [hip04_eth])
+[<bf30d2e0>] (hip04_rx_poll [hip04_eth]) from [<c04c2d9c>] (net_rx_action+0x114/0x34c)
+[<c04c2d9c>] (net_rx_action) from [<c021eed8>] (__do_softirq+0x218/0x318)
+[<c021eed8>] (__do_softirq) from [<c021f284>] (irq_exit+0x88/0xac)
+[<c021f284>] (irq_exit) from [<c0240090>] (msa_irq_exit+0x11c/0x1d4)
+[<c0240090>] (msa_irq_exit) from [<c02677e0>] (__handle_domain_irq+0x110/0x148)
+[<c02677e0>] (__handle_domain_irq) from [<c0201588>] (gic_handle_irq+0xd4/0x118)
+[<c0201588>] (gic_handle_irq) from [<c0551700>] (__irq_svc+0x40/0x58)
+Exception stack(0xc0a01f30 to 0xc0a01f78)
+1f20:                                     c0ae8b40 00000000 00000000 00000000
+1f40: 00000002 ffffe000 c0601f9c 00000000 ffffffff c0a2257c c0a22440 c0831a38
+1f60: c0a01ec4 c0a01f80 c0203714 c0203718 600e0213 ffffffff
+[<c0551700>] (__irq_svc) from [<c0203718>] (arch_cpu_idle+0x20/0x3c)
+[<c0203718>] (arch_cpu_idle) from [<c025bfd8>] (cpu_startup_entry+0x244/0x29c)
+[<c025bfd8>] (cpu_startup_entry) from [<c054b0d8>] (rest_init+0xc8/0x10c)
+[<c054b0d8>] (rest_init) from [<c0800c58>] (start_kernel+0x468/0x514)
+Code: a40599e5 016086e2 018088e2 7660efe6 (503090e5)
+---[ end trace 1db21d6d09c49d74 ]---
+Kernel panic - not syncing: Fatal exception in interrupt
+CPU3: stopping
+CPU: 3 PID: 0 Comm: swapper/3 Tainted: G      D    O    4.4.185 #1
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/i8253.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/kernel/i8253.c b/arch/mips/kernel/i8253.c
-index c5bc344fc745c..73039746ae364 100644
---- a/arch/mips/kernel/i8253.c
-+++ b/arch/mips/kernel/i8253.c
-@@ -31,7 +31,8 @@ void __init setup_pit_timer(void)
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index b5d18d95d7b99..1fabbbd4544e7 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -497,6 +497,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
+ 	u16 len;
+ 	u32 err;
  
- static int __init init_pit_clocksource(void)
- {
--	if (num_possible_cpus() > 1) /* PIT does not scale! */
-+	if (num_possible_cpus() > 1 || /* PIT does not scale! */
-+	    !clockevent_state_periodic(&i8253_clockevent))
- 		return 0;
++	/* clean up tx descriptors */
++	tx_remaining = hip04_tx_reclaim(ndev, false);
++
+ 	while (cnt && !last) {
+ 		buf = priv->rx_buf[priv->rx_head];
+ 		skb = build_skb(buf, priv->rx_buf_size);
+@@ -557,8 +560,7 @@ refill:
+ 	}
+ 	napi_complete(napi);
+ done:
+-	/* clean up tx descriptors and start a new timer if necessary */
+-	tx_remaining = hip04_tx_reclaim(ndev, false);
++	/* start a new timer if necessary */
+ 	if (rx < budget && tx_remaining)
+ 		hip04_start_tx_timer(priv);
  
- 	return clocksource_i8253_init();
 -- 
 2.20.1
 
