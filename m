@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6E5C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E7DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FCF2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14EAA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613552;
-	bh=n2926yFWZh0mBBiNvBFZd63smTpyjMh0h8bNLtb991U=;
+	s=default; t=1567613556;
+	bh=nVFI3vmSter5ho8tuRJcBpNeZYCsfswYldUZv3Ldu5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhxO/xduY4G1QRxFPCDARN7MtRBPFS6tYVxu2x/6KO7E2cQP53UX2fKfU1MY+yxK0
-	 k8Ufbq+RhcUYZlZ/6hLhCTz63LnLWbysBoFvwxtKW8So2yi78klB+Bv8uClrTs0daf
-	 I0G6kgP3js6z6nZOeoTqfjI/M6Ett+Gs8D5AtAVU=
+	b=I1u9HHtcteiHCBApUKfS+FWCbToRmGKT/Q0eLvpIILT5bkmvkA7ZU8IQNd+DBXUTZ
+	 Qm5oVWY2iJqcAZm/LqfHlkJBSxfsdZvWy2o3iFG/8EbDUp2NYxjfW2diZKcLsCVtGh
+	 A/GCgzDC9jLKbSg3PFNpAgo+LbqjpqewkGXW7TL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732572AbfIDQAL (ORCPT
+        id S1732727AbfIDQMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34448 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732495AbfIDP7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:59:53 -0400
+        id S1731925AbfIDQAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F19022CF5;
-        Wed,  4 Sep 2019 15:59:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8396422DBF;
+        Wed,  4 Sep 2019 16:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612792;
-        bh=n2926yFWZh0mBBiNvBFZd63smTpyjMh0h8bNLtb991U=;
+        s=default; t=1567612810;
+        bh=nVFI3vmSter5ho8tuRJcBpNeZYCsfswYldUZv3Ldu5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tKiQYs11ZMpzqy331sm4dUX5c+5MVukboJCpG3vq6RDhg/YZDCxp67cUJDCiWTMDA
-         m6B3yNsTEVS2OT5eqyZgQrq1z3ACNz8SCCc05vqr3ol5DzYMh9uyns8mbSOiEgLFvO
-         9rg5q9Sc8CSefsLi0n7wbvZ4Edgz861AnpRUYEm8=
+        b=JHdhgfYDc3PvU0nECE5elTcEJT0qhzDuAo7q/oXx2UMkrzLaMZDDQPAc45ql5s0dU
+         Ooq0Sm16ejChzGwj4gP8wEdIlB2Mljc9Xmo9NT2s5k58RYpLhQ8KgD++hv1I2WS2Px
+         qXdAAB7KhuZMV/O+Nu+qFSDz9LnrvlRgMfb1ECxA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 87/94] net: aquantia: fix removal of vlan 0
-Date:   Wed,  4 Sep 2019 11:57:32 -0400
-Message-Id: <20190904155739.2816-87-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Sasha Levin <sashal@kernel.org>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/52] ARM: OMAP2+: Fix missing SYSC_HAS_RESET_STATUS for dra7 epwmss
+Date:   Wed,  4 Sep 2019 11:59:16 -0400
+Message-Id: <20190904160004.3671-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
-References: <20190904155739.2816-1-sashal@kernel.org>
+In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
+References: <20190904160004.3671-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,36 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 6fdc060d7476ef73c8029b652d252c1a7b4de948 ]
+[ Upstream commit afd58b162e48076e3fe66d08a69eefbd6fe71643 ]
 
-Due to absence of checking against the rx flow rule when vlan 0 is being
-removed, the other rule could be removed instead of the rule with vlan 0
+TRM says PWMSS_SYSCONFIG bit for SOFTRESET changes to zero when
+reset is completed. Let's configure it as otherwise we get warnings
+on boot when we check the data against dts provided data. Eventually
+the legacy platform data will be just dropped, but let's fix the
+warning first.
 
-Fixes: 7975d2aff5afb ("net: aquantia: add support of rx-vlan-filter offload")
-Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Suman Anna <s-anna@ti.com>
+Tested-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_filters.c | 3 ++-
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
-index 1fff462a4175e..11d7385babb07 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
-@@ -431,7 +431,8 @@ int aq_del_fvlan_by_vlan(struct aq_nic_s *aq_nic, u16 vlan_id)
- 		if (be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id)
- 			break;
- 	}
--	if (rule && be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id) {
-+	if (rule && rule->type == aq_rx_filter_vlan &&
-+	    be16_to_cpu(rule->aq_fsp.h_ext.vlan_tci) == vlan_id) {
- 		struct ethtool_rxnfc cmd;
- 
- 		cmd.fs.location = rule->aq_fsp.location;
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+index e6c7061a8e736..3547f32822b64 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -385,7 +385,8 @@ static struct omap_hwmod dra7xx_dcan2_hwmod = {
+ static struct omap_hwmod_class_sysconfig dra7xx_epwmss_sysc = {
+ 	.rev_offs	= 0x0,
+ 	.sysc_offs	= 0x4,
+-	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET,
++	.sysc_flags	= SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET |
++			  SYSC_HAS_RESET_STATUS,
+ 	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+ 	.sysc_fields	= &omap_hwmod_sysc_type2,
+ };
 -- 
 2.20.1
 
