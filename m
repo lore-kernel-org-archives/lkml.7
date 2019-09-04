@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B36C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9601FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1BFF2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7682053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613973;
-	bh=7gN4oGxskhNmUiNRGD1LOaJ12Rz2xRgqnnMm885HDkM=;
+	s=default; t=1567613976;
+	bh=mbAnJLPux9j3NgtOPTJIbHRprF1T00ylq5JsIks4E2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aXdKuFxWJiR6AgEGvzSqS1HpyuMsU3O60/GX01ggvCrSdMoMsOXsfpImKKoCmbTs/
-	 nNbQU9l/A0PmPrDNeUPbFMkqcy5lFTpAdeFA0zI1YpigIip/fifAJKfvEtSn72zL2B
-	 6NMKwcKHgGGRqSCws6RdFM2fVAwbETHt2jMpWVto=
+	b=ExokJszmLVtjWtWbtsd7N9Hch8dUs6lG1XPj/gJDN2QWFGhGhA2Kx7oAFfEL8YzoZ
+	 C7D7k7y+BOpQ4G50Sb+HrTMqHcicZpIoJLvENMxPGwzus14+XMGprvt1oSPqUz5M1s
+	 mcTIIFO1bFpk/qXkGXrrCDCaTK0MQ/U0rrPAUnME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbfIDP6V (ORCPT
+        id S1732896AbfIDQTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60318 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731893AbfIDP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:18 -0400
+        id S1731911AbfIDP6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C3B2342D;
-        Wed,  4 Sep 2019 15:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F3032339D;
+        Wed,  4 Sep 2019 15:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612697;
-        bh=7gN4oGxskhNmUiNRGD1LOaJ12Rz2xRgqnnMm885HDkM=;
+        s=default; t=1567612700;
+        bh=mbAnJLPux9j3NgtOPTJIbHRprF1T00ylq5JsIks4E2I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oBRfGjuz0NELG9IYDkeZOLDmt/3138DPrxlsbkisxkX2MdSGOGYCaeSGkOaw4owNM
-         fXvR3sVxPUnLHmfbkW97IaMeiUCo3TcIczyl1ukwy53gy2hw/HmVKdcEoqW58gzDgy
-         iA4yuLtK/8xJqmML0hvm0FLTexLFd6HP+tU7+IDg=
+        b=UuVNa3xDl6B66zQry2q7Yzh4122zN3scBRr+Vf2A8wNfc7qU6hd0dwV9ZYfF5qtHk
+         QYfTGYpG7IrjrJ57eynp599Gu7Y6AKazziP+D0V48eRXoReFh89pjtGgc3hQmBaJD7
+         LpfCGVE2uo5ObziWcy/319TlHppktRFkLZE1zYFY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 25/94] NFSv4: Fix return values for nfs4_file_open()
-Date:   Wed,  4 Sep 2019 11:56:30 -0400
-Message-Id: <20190904155739.2816-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 28/94] NFS: On fatal writeback errors, we need to call nfs_inode_remove_request()
+Date:   Wed,  4 Sep 2019 11:56:33 -0400
+Message-Id: <20190904155739.2816-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -60,47 +60,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
+[ Upstream commit 06c9fdf3b9f1acc6e53753c99c54c39764cc979f ]
 
-Currently, we are translating RPC level errors such as timeouts,
-as well as interrupts etc into EOPENSTALE, which forces a single
-replay of the open attempt. What we actually want to do is
-force the replay only in the cases where the returned error
-indicates that the file may have changed on the server.
+If the writeback error is fatal, we need to remove the tracking structures
+(i.e. the nfs_page) from the inode.
 
-So the fix is to spell out the exact set of errors where we want
-to return EOPENSTALE.
-
+Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism...")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/nfs/write.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 3a507c42c1cae..113be154a1ec6 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 	if (IS_ERR(inode)) {
- 		err = PTR_ERR(inode);
- 		switch (err) {
--		case -EPERM:
--		case -EACCES:
--		case -EDQUOT:
--		case -ENOSPC:
--		case -EROFS:
--			goto out_put_ctx;
- 		default:
-+			goto out_put_ctx;
-+		case -ENOENT:
-+		case -ESTALE:
-+		case -EISDIR:
-+		case -ENOTDIR:
-+		case -ELOOP:
- 			goto out_drop;
- 		}
- 	}
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 059a7c38bc4fc..bf3a3f5e1884e 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -57,6 +57,7 @@ static const struct rpc_call_ops nfs_commit_ops;
+ static const struct nfs_pgio_completion_ops nfs_async_write_completion_ops;
+ static const struct nfs_commit_completion_ops nfs_commit_completion_ops;
+ static const struct nfs_rw_ops nfs_rw_write_ops;
++static void nfs_inode_remove_request(struct nfs_page *req);
+ static void nfs_clear_request_commit(struct nfs_page *req);
+ static void nfs_init_cinfo_from_inode(struct nfs_commit_info *cinfo,
+ 				      struct inode *inode);
+@@ -591,7 +592,9 @@ nfs_lock_and_join_requests(struct page *page)
+ 
+ static void nfs_write_error(struct nfs_page *req, int error)
+ {
++	nfs_set_pageerror(page_file_mapping(req->wb_page));
+ 	nfs_mapping_set_error(req->wb_page, error);
++	nfs_inode_remove_request(req);
+ 	nfs_end_page_writeback(req);
+ 	nfs_release_request(req);
+ }
 -- 
 2.20.1
 
