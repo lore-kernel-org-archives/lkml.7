@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CB5C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3345DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0F422DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD8223400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620702;
-	bh=3rwJ7ku9/cStwdw7IJRzQ1SEy8H0NB+TKPHJlrIlwJc=;
+	s=default; t=1567620705;
+	bh=ScpewfHPSZ83E08AM4jG+abwOpaZQZLHQlnlmK+lkto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCzMhOlWQoe4kcvSNZV5lm7pfg2XjAwI8QEWs23/TF8qHiDMbV7iuUkVAa7/owXo9
-	 D+Fj/XoEuXMvIis3G7mT7cuZf+35iy5at+FmpayvckCDKwgc3KAGaJrzfUBRGoy860
-	 C7mpTwNUmXT+kMazxGJa8Z0Qwa4YmFlBpYvap0Mg=
+	b=gZladuHA+OMYmyKDNbwlaGmv14bYFXsrAdlWNpdVd8BiR48+CzYMqGnWLzBkEMAv0
+	 EVKLVrKKFw/eiixcMQf+od6uYYPceZSqycgAMCcTdJ18XBIr5Z8rbq85cQVrunVTsW
+	 tLR5sOGYWSSWp1boASZxNuK5PU7Bwsw1l5XsRqxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390352AbfIDSLl (ORCPT
+        id S2390359AbfIDSLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:11:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55706 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389606AbfIDSLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:37 -0400
+        id S2388806AbfIDSLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F702339E;
-        Wed,  4 Sep 2019 18:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31163206B8;
+        Wed,  4 Sep 2019 18:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620697;
-        bh=3rwJ7ku9/cStwdw7IJRzQ1SEy8H0NB+TKPHJlrIlwJc=;
+        s=default; t=1567620699;
+        bh=ScpewfHPSZ83E08AM4jG+abwOpaZQZLHQlnlmK+lkto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mpPP1RMBO+Qmaz9I6t5vKO2E4SjObtdrwp9o1LJQGulapOZbMOdUGPxOH+MGxBHNp
-         QQOIRE+TjVDWJxYBnnAF43pzdnjCbLa1GujFSiLS2uECGuzi5hQUGxe4j7Jdati6SR
-         ItSs2c+jvmKwq7WLbjB2ynpYOtGBJdXEfXbFvZ1Y=
+        b=kljMIKQi0HP4IJxYjAOrCPnqEJWXME/PG+CgvruqbYIXxZik19vK6rP2AzK5P5Ifx
+         mW34IVvvSgwn5MLu9IZFuJl3QyDhBvSp01yeTRR3zCJDFDGH2cwhlb9R41AMeKoFkb
+         ijDiB7OLUvz8gbNEcTlNp6LSu0r3oikDdsPVI+ag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Logan Gunthorpe <logang@deltatee.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 020/143] btrfs: trim: Check the range passed into to prevent overflow
-Date:   Wed,  4 Sep 2019 19:52:43 +0200
-Message-Id: <20190904175314.862538430@linuxfoundation.org>
+Subject: [PATCH 5.2 011/143] nvmet-file: fix nvmet_file_flush() always returning an error
+Date:   Wed,  4 Sep 2019 19:52:34 +0200
+Message-Id: <20190904175314.554285195@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,61 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 07301df7d2fc220d3de5f7ad804dcb941400cb00 ]
+[ Upstream commit cfc1a1af56200362d1508b82b9a3cc3acb2eae0c ]
 
-Normally the range->len is set to default value (U64_MAX), but when it's
-not default value, we should check if the range overflows.
+Presently, nvmet_file_flush() always returns a call to
+errno_to_nvme_status() but that helper doesn't take into account the
+case when errno=0. So nvmet_file_flush() always returns an error code.
 
-And if it overflows, return -EINVAL before doing anything.
+All other callers of errno_to_nvme_status() check for success before
+calling it.
 
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+To fix this, ensure errno_to_nvme_status() returns success if the
+errno is zero. This should prevent future mistakes like this from
+happening.
+
+Fixes: c6aa3542e010 ("nvmet: add error log support for file backend")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/nvme/target/core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index 5faf057f6f37f..b8f4720879021 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -11226,6 +11226,7 @@ int btrfs_trim_fs(struct btrfs_fs_info *fs_info, struct fstrim_range *range)
- 	struct btrfs_device *device;
- 	struct list_head *devices;
- 	u64 group_trimmed;
-+	u64 range_end = U64_MAX;
- 	u64 start;
- 	u64 end;
- 	u64 trimmed = 0;
-@@ -11235,16 +11236,23 @@ int btrfs_trim_fs(struct btrfs_fs_info *fs_info, struct fstrim_range *range)
- 	int dev_ret = 0;
- 	int ret = 0;
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index e4db9a4411681..396cbc7ea3532 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -43,6 +43,9 @@ inline u16 errno_to_nvme_status(struct nvmet_req *req, int errno)
+ 	u16 status;
  
-+	/*
-+	 * Check range overflow if range->len is set.
-+	 * The default range->len is U64_MAX.
-+	 */
-+	if (range->len != U64_MAX &&
-+	    check_add_overflow(range->start, range->len, &range_end))
-+		return -EINVAL;
-+
- 	cache = btrfs_lookup_first_block_group(fs_info, range->start);
- 	for (; cache; cache = next_block_group(cache)) {
--		if (cache->key.objectid >= (range->start + range->len)) {
-+		if (cache->key.objectid >= range_end) {
- 			btrfs_put_block_group(cache);
- 			break;
- 		}
- 
- 		start = max(range->start, cache->key.objectid);
--		end = min(range->start + range->len,
--				cache->key.objectid + cache->key.offset);
-+		end = min(range_end, cache->key.objectid + cache->key.offset);
- 
- 		if (end - start >= range->minlen) {
- 			if (!block_group_cache_done(cache)) {
+ 	switch (errno) {
++	case 0:
++		status = NVME_SC_SUCCESS;
++		break;
+ 	case -ENOSPC:
+ 		req->error_loc = offsetof(struct nvme_rw_command, length);
+ 		status = NVME_SC_CAP_EXCEEDED | NVME_SC_DNR;
 -- 
 2.20.1
 
