@@ -2,64 +2,92 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4B3C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5F8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060BA23400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA172339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ju3nP+nI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hqY0g/pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfIDGGH (ORCPT
+        id S1728700AbfIDGIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:06:07 -0400
-Received: from verein.lst.de ([213.95.11.211]:36258 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfIDGGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:06:07 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4D026227A8D; Wed,  4 Sep 2019 08:05:59 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 08:05:58 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-Message-ID: <20190904060558.GA10849@lst.de>
-References: <20190831000139.7662-1-logang@deltatee.com> <20190831152910.GA29439@localhost.localdomain> <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com> <20190903164620.GA20847@localhost.localdomain>
+        Wed, 4 Sep 2019 02:08:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:52384 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726045AbfIDGIC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 02:08:02 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1FDD460863; Wed,  4 Sep 2019 06:08:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567577281;
+        bh=A5jxgUwpEQdGcpUrgTBp7J90qN5hLJxxlg5AJOlfIYw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=ju3nP+nIT9JobGjhVXro7zxQqFIoHkfT8P4bqRjXNxhT0Y7jf0NjypR7XAHW3iiGI
+         6Yz2HqV+Rs3j/TNc97UnPPuWTWE/m8vqCcvnBthzm1KEOKmrrJNhVi5uIT9Q4IDt90
+         RAsIk3CUngOz79pfMtr5TXv2MlCo87CFtdX08S1U=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF42860863;
+        Wed,  4 Sep 2019 06:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567577280;
+        bh=A5jxgUwpEQdGcpUrgTBp7J90qN5hLJxxlg5AJOlfIYw=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=hqY0g/pwJZmTrVTa0oArHt2OE2P5q67htDxuWaCEFNvxPrHloIRDCsXKzPWXMwMGG
+         RHF8+MZOHnOz1mfm+m2KlIng0yxrhaC13uJJMGllfbOR2Xt3/StASgTx49JyiDuuQI
+         ljE4Y+5Hk4BsdOB1wrvO1C4P4YN9za+ryH6bH3s4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF42860863
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190903164620.GA20847@localhost.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] wil6210: Delete an unnecessary kfree() call in
+ wil_tid_ampdu_rx_alloc()
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <b9620e49-618d-b392-6456-17de5807df75@web.de>
+References: <b9620e49-618d-b392-6456-17de5807df75@web.de>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        wil6210@qti.qualcomm.com, "David S. Miller" <davem@davemloft.net>,
+        Maya Erez <merez@codeaurora.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20190904060801.1FDD460863@smtp.codeaurora.org>
+Date:   Wed,  4 Sep 2019 06:08:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:46:20AM -0600, Keith Busch wrote:
-> Could we possibly make /dev/nvmeX be a subsystem handle without causing
-> trouble for anyone? This would essentially be the same thing as today
-> for non-CMIC controllers with a device-per-controller and only affects
-> the CMIC ones.
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-A per-subsyste character device doesn't make sense, as a lot of admin
-command require a specific controller.
+> A null pointer would be passed to a call of the function “kfree”
+> directly after a call of the function “kcalloc” failed at one place.
+> Remove this superfluous function call.
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> Reviewed-by: Maya Erez <merez@codeaurora.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-If this really is an isue for people we'll just need to refcount the
-handle allocation.  That is:
+Patch applied to ath-next branch of ath.git, thanks.
 
- - nvme_init_ctrl allocates a new nvme_instance or so object, which
-   does the ida_simple_get.
- - we allocate a new subsystem that reuses the handle and grabs
-   a reference in nvme_init_subsystem, then if we find an existing
-   subsystem we drop that reference again.
- - last free of a ctrl or subsystem also drops a reference, with
-   the final free releasing the ida
+d20b1e6c8307 wil6210: Delete an unnecessary kfree() call in wil_tid_ampdu_rx_alloc()
+
+-- 
+https://patchwork.kernel.org/patch/11117119/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
