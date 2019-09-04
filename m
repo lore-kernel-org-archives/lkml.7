@@ -2,120 +2,102 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E7CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D758C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3903522CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qWT8T8t8"
+	by mail.kernel.org (Postfix) with ESMTP id 3266D22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbfIDMSN (ORCPT
+        id S1729982AbfIDMTS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:18:13 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51513 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729398AbfIDMSM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:18:12 -0400
-Received: by mail-wm1-f65.google.com with SMTP id k1so3076807wmi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 05:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZUNvCNl71LL7bsOV2q3vh455zcpyuXw4iwVhdFBYbko=;
-        b=qWT8T8t8cXk3gJqp5zZ0LNwl++o68vkXUweIMe4C+BVD3OYH5teo1CMvNy5D2/RyyY
-         1fek0ayL+6+lhLrZh5sPHjSmhWZRGC8xrEgsyrz3zMX/Jwmrf+nM01GoUmZiKg1wih+x
-         1RLARPW/5pG83iO/faxDUIegwvDNqu+nhMjJlH2XdnKoOjWJH8hd5WiPX7SacnpYZjbG
-         lYMwjf/o9sXMgGDqoYGqvOkzMqVQJQz9eEe3CLsaeYPHol3m+ZlGCF14PG1MsYs6GyP2
-         qxMkDEB+evV/eJquxuYh8kjTXd+OcpKBmB9/LOlrNG9hXTtYUH8NGu9q5kW8B3Lki7sQ
-         OL6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZUNvCNl71LL7bsOV2q3vh455zcpyuXw4iwVhdFBYbko=;
-        b=PZqKgR4aoF4QJDCLyuBOJGSQC04Bl6mmfKK9VA/s/ZOF9S/zPARkax4aWg8t7osEpN
-         /PGCNtLN5MxcGjPVcMZ1Ze6Hb71yY3GReEStg7H5Bj+TRKxDgfCyVZDVI3y3I8JcvPiE
-         1LqOsZUps5GbIzy0VvN9bpWQg9d0DHZ7FGHS4xI76JY/2pYgdlFDl8V5fx32jhZ8zDoc
-         3pl0uVWVD0nEixpReNOqDD/0DLGd4JxZzC7uQ/eznEinE6zB8i/uIQl3H+UUO3euqmL6
-         JOdZwo3NtDa0wFAHJfE4tRJqJwKYiXvQO6wERrACoBSCcu3XNwYsfxDgRiB/zNnonT+d
-         EdNg==
-X-Gm-Message-State: APjAAAVBKBWJotOV1xNeWSwlmJnHYdIy1QBrWSL+4VpazoMh1kDh1QQo
-        vjYxuNX8RBBlF2uzEFEQmIU5rQ==
-X-Google-Smtp-Source: APXvYqy5ydGI/DCwg82bhVMUvfPqZPtc/DZDbnOwai2+G18YLAiMRjy7v6kAEkXBPu3TkQ152a/7sg==
-X-Received: by 2002:a1c:f910:: with SMTP id x16mr3869419wmh.173.1567599489980;
-        Wed, 04 Sep 2019 05:18:09 -0700 (PDT)
-Received: from dell ([95.147.198.36])
-        by smtp.gmail.com with ESMTPSA id d18sm29560180wra.91.2019.09.04.05.18.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 05:18:09 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 13:18:07 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, bjorn.andersson@linaro.org,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
- processing
-Message-ID: <20190904121807.GK26880@dell>
-References: <20190904113613.14997-1-lee.jones@linaro.org>
- <20190904115609.GW2672@vkoul-mobl>
+        Wed, 4 Sep 2019 08:19:18 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:37294 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727929AbfIDMTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:19:18 -0400
+Received: from DGGEML401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 409C5B175537DB1266F5;
+        Wed,  4 Sep 2019 20:19:16 +0800 (CST)
+Received: from DGGEML512-MBX.china.huawei.com ([169.254.2.60]) by
+ DGGEML401-HUB.china.huawei.com ([fe80::89ed:853e:30a9:2a79%31]) with mapi id
+ 14.03.0439.000; Wed, 4 Sep 2019 20:19:11 +0800
+From:   sunqiuyang <sunqiuyang@huawei.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: RE: [PATCH 1/1] mm/migrate: fix list corruption in migration of
+ non-LRU movable pages
+Thread-Topic: [PATCH 1/1] mm/migrate: fix list corruption in migration of
+ non-LRU movable pages
+Thread-Index: AQHVYi7CKRiSaGuZ20KJAhdeZXNZ4qcZaW+AgAFf/lT//8LbAIAAjGWd//+OTACAAMgqDg==
+Date:   Wed, 4 Sep 2019 12:19:11 +0000
+Message-ID: <157FC541501A9C4C862B2F16FFE316DC190C3402@dggeml512-mbx.china.huawei.com>
+References: <20190903082746.20736-1-sunqiuyang@huawei.com>
+ <20190903131737.GB18939@dhcp22.suse.cz>
+ <157FC541501A9C4C862B2F16FFE316DC190C1B09@dggeml512-mbx.china.huawei.com>
+ <20190904063836.GD3838@dhcp22.suse.cz>
+ <157FC541501A9C4C862B2F16FFE316DC190C2EBD@dggeml512-mbx.china.huawei.com>,<20190904081408.GF3838@dhcp22.suse.cz>
+In-Reply-To: <20190904081408.GF3838@dhcp22.suse.cz>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.249.127]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904115609.GW2672@vkoul-mobl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 04 Sep 2019, Vinod Koul wrote:
 
-> On 04-09-19, 12:36, Lee Jones wrote:
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
-> >  1 file changed, 10 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> > index a89bfce5388e..dfdbce067827 100644
-> > --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> > @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
-> >  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> >  				u32 m_param)
-> >  {
-> > +	struct device_node *np = gi2c->se.dev->of_node;
-> >  	dma_addr_t rx_dma;
-> >  	unsigned long time_left;
-> > -	void *dma_buf;
-> > +	void *dma_buf = NULL;
-> >  	struct geni_se *se = &gi2c->se;
-> >  	size_t len = msg->len;
-> >  
-> > -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
-> 
-> Where is this property documented, I dont see anything in linux-next for
-> today
+________________________________________
+From: Michal Hocko [mhocko@kernel.org]
+Sent: Wednesday, September 04, 2019 16:14
+To: sunqiuyang
+Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm/migrate: fix list corruption in migration of non-LRU movable pages
 
-In this set. :)
+Do not top post please
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On Wed 04-09-19 07:27:25, sunqiuyang wrote:
+> isolate_migratepages_block() from another thread may try to isolate the page again:
+>
+> for (; low_pfn < end_pfn; low_pfn++) {
+>   /* ... */
+>   page = pfn_to_page(low_pfn);
+>  /* ... */
+>   if (!PageLRU(page)) {
+>     if (unlikely(__PageMovable(page)) && !PageIsolated(page)) {
+>         /* ... */
+>         if (!isolate_movable_page(page, isolate_mode))
+>           goto isolate_success;
+>       /*... */
+> isolate_success:
+>      list_add(&page->lru, &cc->migratepages);
+>
+> And this page will be added to another list.
+> Or, do you see any reason that the page cannot go through this path?
+
+The page shouldn't be __PageMovable after the migration is done. All the
+state should have been transfered to the new page IIUC.
+
+----
+I don't see where page->mapping is modified after the migration is done. 
+
+Actually, the last comment in move_to_new_page() says,
+"Anonymous and movable page->mapping will be cleard by
+free_pages_prepare so don't reset it here for keeping
+the type to work PageAnon, for example. "
+
+Or did I miss something? Thanks,
+
+--
+Michal Hocko
+SUSE Labs
