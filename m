@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 584FAC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E65C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBF02053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79E221670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613935;
-	bh=ep+37ZmQaFe9khzB1Ublxq7aT04QtrRwFlS7AmDIN7w=;
+	s=default; t=1567613940;
+	bh=VCqD+zpgTPlJpeIXx3HdQ9BeStIBLvtyglC5qFeJWV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MS8pctpx8hMWYl87qCNVJ7tmnC+YJ3s39ZsYCN763qeS69z/7Sba+QgXwn8Ln2rKG
-	 SYlmYS6uM7pHcMcDpeh1DHCZZIRjcy9/wULjtUcTm/gGQPzA0v0s3e6b2FNOD6AvsB
-	 mtylXbD2Egm9scJjgGDfihrFc8bFW+tX0wB4vISk=
+	b=kKVGbJ5Wgz2cmSRd7nr8rhQMFV/IzSfAbRrR+wOlyYW7JnM/FDFbZXMJAlgU/1Zqg
+	 8kOD+agC6WfzfL3q5ygJClCW7fV+8rXPRhgDf2wnXvHSuGAQ1niuoOKxYXEukYXvhY
+	 AmxXutsXD96gF16TdEc0WBx1bxZPgvodeEYU2gGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfIDP6h (ORCPT
+        id S1732001AbfIDP62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60876 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732028AbfIDP6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:35 -0400
+        id S1731950AbfIDP6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330D523402;
-        Wed,  4 Sep 2019 15:58:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48688238AB;
+        Wed,  4 Sep 2019 15:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612714;
-        bh=ep+37ZmQaFe9khzB1Ublxq7aT04QtrRwFlS7AmDIN7w=;
+        s=default; t=1567612704;
+        bh=VCqD+zpgTPlJpeIXx3HdQ9BeStIBLvtyglC5qFeJWV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eu1ZeAPEyrvoWQe6C+Yp4gxaHkvM5xrP0W2U2ElcUBkwAgyY7ZEoidXgClx8MTv5a
-         jO3+sRKDYx4+zIPLmibXSlJSNEYHiKj6Hq0aeUeStkOpJ6wHAUb5z7VQG+DwZAklRh
-         xy07gywUS3TeS2Gt//O/tnkbXNMwgfAoIX4wmJeA=
+        b=dvp1ufRBZ3TijrYp+Uju1vMfby7xpgHC2RE4WeXggClBGFjnhI0jra45UatNH0UKf
+         HS8jhCt+4jM8zZ+fM/lBOb+O7cx92ZV15E3zkrYW66OhrYZ29GqlN4OvBgJlayyulu
+         xQZwBm/nQ1L9Bdk9S+7YgXf9+w4Be/SSOsMHITGQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>, Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.2 37/94] ARM: 8874/1: mm: only adjust sections of valid mm structures
-Date:   Wed,  4 Sep 2019 11:56:42 -0400
-Message-Id: <20190904155739.2816-37-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 31/94] selftests/bpf: fix test_cgroup_storage on s390
+Date:   Wed,  4 Sep 2019 11:56:36 -0400
+Message-Id: <20190904155739.2816-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -66,50 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit c51bc12d06b3a5494fbfcbd788a8e307932a06e9 ]
+[ Upstream commit 806ce6e2117a42528e7bb979e04e28229b34a612 ]
 
-A timing hazard exists when an early fork/exec thread begins
-exiting and sets its mm pointer to NULL while a separate core
-tries to update the section information.
+test_cgroup_storage fails on s390 with an assertion failure: packets are
+dropped when they shouldn't. The problem is that BPF_DW packet count is
+accessed as BPF_W with an offset of 0, which is not correct on
+big-endian machines.
 
-This commit ensures that the mm pointer is not NULL before
-setting its section parameters. The arguments provided by
-commit 11ce4b33aedc ("ARM: 8672/1: mm: remove tasklist locking
-from update_sections_early()") are equally valid for not
-requiring grabbing the task_lock around this check.
+Since the point of this test is not to verify narrow loads/stores,
+simply use BPF_DW when working with packet counts.
 
-Fixes: 08925c2f124f ("ARM: 8464/1: Update all mm structures with section adjustments")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 68cfa3ac6b8d ("selftests/bpf: add a cgroup storage test")
+Fixes: 919646d2a3a9 ("selftests/bpf: extend the storage test to test per-cpu cgroup storage")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_cgroup_storage.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 749a5a6f61433..8e793cddac661 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -613,7 +613,8 @@ static void update_sections_early(struct section_perm perms[], int n)
- 		if (t->flags & PF_KTHREAD)
- 			continue;
- 		for_each_thread(t, s)
--			set_section_perms(perms, n, true, s->mm);
-+			if (s->mm)
-+				set_section_perms(perms, n, true, s->mm);
- 	}
- 	set_section_perms(perms, n, true, current->active_mm);
- 	set_section_perms(perms, n, true, &init_mm);
+diff --git a/tools/testing/selftests/bpf/test_cgroup_storage.c b/tools/testing/selftests/bpf/test_cgroup_storage.c
+index 2fc4625c1a150..6557290043911 100644
+--- a/tools/testing/selftests/bpf/test_cgroup_storage.c
++++ b/tools/testing/selftests/bpf/test_cgroup_storage.c
+@@ -20,9 +20,9 @@ int main(int argc, char **argv)
+ 		BPF_MOV64_IMM(BPF_REG_2, 0), /* flags, not used */
+ 		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, 0, 0,
+ 			     BPF_FUNC_get_local_storage),
+-		BPF_LDX_MEM(BPF_W, BPF_REG_3, BPF_REG_0, 0),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_3, BPF_REG_0, 0),
+ 		BPF_ALU64_IMM(BPF_ADD, BPF_REG_3, 0x1),
+-		BPF_STX_MEM(BPF_W, BPF_REG_0, BPF_REG_3, 0),
++		BPF_STX_MEM(BPF_DW, BPF_REG_0, BPF_REG_3, 0),
+ 
+ 		BPF_LD_MAP_FD(BPF_REG_1, 0), /* map fd */
+ 		BPF_MOV64_IMM(BPF_REG_2, 0), /* flags, not used */
+@@ -30,7 +30,7 @@ int main(int argc, char **argv)
+ 			     BPF_FUNC_get_local_storage),
+ 		BPF_MOV64_IMM(BPF_REG_1, 1),
+ 		BPF_STX_XADD(BPF_DW, BPF_REG_0, BPF_REG_1, 0),
+-		BPF_LDX_MEM(BPF_W, BPF_REG_1, BPF_REG_0, 0),
++		BPF_LDX_MEM(BPF_DW, BPF_REG_1, BPF_REG_0, 0),
+ 		BPF_ALU64_IMM(BPF_AND, BPF_REG_1, 0x1),
+ 		BPF_MOV64_REG(BPF_REG_0, BPF_REG_1),
+ 		BPF_EXIT_INSN(),
 -- 
 2.20.1
 
