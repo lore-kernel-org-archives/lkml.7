@@ -2,53 +2,51 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F5BC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7A3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2321922CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F346B22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619912;
-	bh=bMUvELWfyORTJn0BnG0czOALyqsyGqF2SS4iI0gMyzs=;
+	s=default; t=1567619915;
+	bh=KFODnPUszH4MM9Zm/k4q06s97DmxuuLgP9E4w7ZP23Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=smLhdI2Ysb1MR1nFMwQJxdsKw8T2wBvJv5FbXaQcvlp7xuvdh5RrgDMVOJAb10Qa+
-	 B/Cr9AioGGtCJJgyzaF0TlffkefL/iiWX9cunowHSDFY/HlPhuvIR9PWogCdIIzZ97
-	 4kus7SwTXCIa7jk/RZR8oTXpHioG3HJwxoVDRTdU=
+	b=z9rQHKdfd+UM0yFmUJIv43BaVHlVXi9Yg+hid+TXZg8oD9apa0IKn7tUl1iqv8b3j
+	 dNWk5WRrJtPRUP8auf2y7zrOCaTd9GQljkTMYrdCSgUHV0B8vpWw1UZhTSL5FQPLr9
+	 PGsQrAWlX4J/JiyvIawvwSQVTNqNKE49GUR8pZVE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388068AbfIDR6b (ORCPT
+        id S2388077AbfIDR6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36906 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387463AbfIDR63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:29 -0400
+        id S1731727AbfIDR6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB8CD21883;
-        Wed,  4 Sep 2019 17:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91DC3208E4;
+        Wed,  4 Sep 2019 17:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619908;
-        bh=bMUvELWfyORTJn0BnG0czOALyqsyGqF2SS4iI0gMyzs=;
+        s=default; t=1567619911;
+        bh=KFODnPUszH4MM9Zm/k4q06s97DmxuuLgP9E4w7ZP23Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOxTSjvaMfeNdzuoinYFGCOe9T6iIST2lZN8FPu7saJPZhbGxHZSKlpGeSQA5OW3l
-         +0MvHjUCTTSSI1FZ0YK+E0s8S7iPzgnPC4O6k48220nLmbdNhJ7JwVN8vgOOlH/1CW
-         OfIktg3H5oFofBRnyLcczroKRLY4fQqn8+A1sSuQ=
+        b=KLFPRELXwW+Q9CRpJDMP0oh6vGhgliY5rognZOaBjHB3gkv7gNogzFd09YLfK6uAN
+         iWHmqlx37NCFvpf5+MmdPbpmbALk/ad75kw9stFid5qK2Gy33N9g389fo1MM/akUyu
+         AQYl3YR/eydx4ITZvgNQVu7k0wg0oHlrAD23rUOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Subject: [PATCH 4.4 61/77] KVM: x86: Dont update RIP or do single-step on faulting emulation
-Date:   Wed,  4 Sep 2019 19:53:48 +0200
-Message-Id: <20190904175309.065946179@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Bandan Das <bsd@redhat.com>
+Subject: [PATCH 4.4 62/77] x86/apic: Do not initialize LDR and DFR for bigsmp
+Date:   Wed,  4 Sep 2019 19:53:49 +0200
+Message-Id: <20190904175309.184658503@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -61,54 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Bandan Das <bsd@redhat.com>
 
-commit 75ee23b30dc712d80d2421a9a547e7ab6e379b44 upstream.
+commit bae3a8d3308ee69a7dbdf145911b18dfda8ade0d upstream.
 
-Don't advance RIP or inject a single-step #DB if emulation signals a
-fault.  This logic applies to all state updates that are conditional on
-clean retirement of the emulation instruction, e.g. updating RFLAGS was
-previously handled by commit 38827dbd3fb85 ("KVM: x86: Do not update
-EFLAGS on faulting emulation").
+Legacy apic init uses bigsmp for smp systems with 8 and more CPUs. The
+bigsmp APIC implementation uses physical destination mode, but it
+nevertheless initializes LDR and DFR. The LDR even ends up incorrectly with
+multiple bit being set.
 
-Not advancing RIP is likely a nop, i.e. ctxt->eip isn't updated with
-ctxt->_eip until emulation "retires" anyways.  Skipping #DB injection
-fixes a bug reported by Andy Lutomirski where a #UD on SYSCALL due to
-invalid state with EFLAGS.TF=1 would loop indefinitely due to emulation
-overwriting the #UD with #DB and thus restarting the bad SYSCALL over
-and over.
+This does not cause a functional problem because LDR and DFR are ignored
+when physical destination mode is active, but it triggered a problem on a
+32-bit KVM guest which jumps into a kdump kernel.
 
-Cc: Nadav Amit <nadav.amit@gmail.com>
+The multiple bits set unearthed a bug in the KVM APIC implementation. The
+code which creates the logical destination map for VCPUs ignores the
+disabled state of the APIC and ends up overwriting an existing valid entry
+and as a result, APIC calibration hangs in the guest during kdump
+initialization.
+
+Remove the bogus LDR/DFR initialization.
+
+This is not intended to work around the KVM APIC bug. The LDR/DFR
+ininitalization is wrong on its own.
+
+The issue goes back into the pre git history. The fixes tag is the commit
+in the bitkeeper import which introduced bigsmp support in 2003.
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+
+Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Bandan Das <bsd@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Cc: stable@vger.kernel.org
-Reported-by: Andy Lutomirski <luto@kernel.org>
-Fixes: 663f4c61b803 ("KVM: x86: handle singlestep during emulation")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
+Link: https://lkml.kernel.org/r/20190826101513.5080-2-bsd@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/kernel/apic/bigsmp_32.c |   24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -5545,12 +5545,13 @@ restart:
- 		unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
- 		toggle_interruptibility(vcpu, ctxt->interruptibility);
- 		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
--		kvm_rip_write(vcpu, ctxt->eip);
--		if (r == EMULATE_DONE && ctxt->tf)
--			kvm_vcpu_do_singlestep(vcpu, &r);
- 		if (!ctxt->have_exception ||
--		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
-+		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
-+			kvm_rip_write(vcpu, ctxt->eip);
-+			if (r == EMULATE_DONE && ctxt->tf)
-+				kvm_vcpu_do_singlestep(vcpu, &r);
- 			__kvm_set_rflags(vcpu, ctxt->eflags);
-+		}
+--- a/arch/x86/kernel/apic/bigsmp_32.c
++++ b/arch/x86/kernel/apic/bigsmp_32.c
+@@ -37,32 +37,12 @@ static int bigsmp_early_logical_apicid(i
+ 	return early_per_cpu(x86_cpu_to_apicid, cpu);
+ }
  
- 		/*
- 		 * For STI, interrupts are shadowed; so KVM_REQ_EVENT will
+-static inline unsigned long calculate_ldr(int cpu)
+-{
+-	unsigned long val, id;
+-
+-	val = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
+-	id = per_cpu(x86_bios_cpu_apicid, cpu);
+-	val |= SET_APIC_LOGICAL_ID(id);
+-
+-	return val;
+-}
+-
+ /*
+- * Set up the logical destination ID.
+- *
+- * Intel recommends to set DFR, LDR and TPR before enabling
+- * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
+- * document number 292116).  So here it goes...
++ * bigsmp enables physical destination mode
++ * and doesn't use LDR and DFR
+  */
+ static void bigsmp_init_apic_ldr(void)
+ {
+-	unsigned long val;
+-	int cpu = smp_processor_id();
+-
+-	apic_write(APIC_DFR, APIC_DFR_FLAT);
+-	val = calculate_ldr(cpu);
+-	apic_write(APIC_LDR, val);
+ }
+ 
+ static void bigsmp_setup_apic_routing(void)
 
 
