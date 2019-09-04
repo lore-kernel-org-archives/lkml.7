@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ACBC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CFBEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C199F22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DFD2070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613095;
-	bh=j1iYY3kQO3B/s0ayC98GlO6pXuKeFJHAECORyA+XmSs=;
+	s=default; t=1567613107;
+	bh=fSg4w60wGc2fe1to3ZNBO/o5AAysdACtKnyKU+ecgZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KNvao2CvHYfk0iyviM+GIjIUckbb82BBgVlifWVlcbTTKpCn1ACflO9KNkIYEJ7qX
-	 Jrg3je9Llh7TIpl1EDWAQ4G2t2R1vuRRK8f+D3Xp01mUbw5FpM2XdbRITFrOx6gEHG
-	 20vpt7ThZu0S3XgT2FVahdfHDC7xWzfS+V0rBrSo=
+	b=lZJf31dlyaLdfAHdl/MqfjrQpjPngpOJzdHNAGougiC/9g0dhEUglPN430c2+WkjV
+	 8CqolWuzjv43auBK02iN1b/odNZ0Z7hwwUdf9aGZt7qb69HD4isHL65/BssrlGSHV+
+	 PE/rTW2TdEfLkKa0pxHqTCuzYs8U4jgWZZlkYc98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732942AbfIDQDJ (ORCPT
+        id S1733010AbfIDQFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732460AbfIDQDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:06 -0400
+        id S2387546AbfIDQC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B293422CF5;
-        Wed,  4 Sep 2019 16:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4752070C;
+        Wed,  4 Sep 2019 16:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612986;
-        bh=j1iYY3kQO3B/s0ayC98GlO6pXuKeFJHAECORyA+XmSs=;
+        s=default; t=1567612978;
+        bh=fSg4w60wGc2fe1to3ZNBO/o5AAysdACtKnyKU+ecgZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AP0bcLQOs7vySkGD/8wdoaDzoCcjVPSvGU1J66tiE2jk22sudesp4TOvrBber5YF
-         4scpRoujloahihmvpQw2MuQhVA1s1xJO8Sku65MupsOsSw0/zW+x+MCc+dviZyW/+3
-         boBlmD4goyJcQ30IksLwueCAc4q1LaeKgy25IOSg=
+        b=doNt8EfQwaKGoTvrK+hXqQldit536WjpotMw1jDuxT4hiEcReewoZ/FBqHw9tlD11
+         wETcD2kAfN9MtS93bTjm32d9vkrLNY9D/i56bHBrfoADwAauT7G26JT7TInmznMikX
+         M4hQk65NDQQAa8JiJ7WaV3A5zitK33M+SM4rqgDY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
-        linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/20] ARM: OMAP2+: Fix omap4 errata warning on other SoCs
-Date:   Wed,  4 Sep 2019 12:02:45 -0400
-Message-Id: <20190904160303.5062-2-sashal@kernel.org>
+Cc:     Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Len Brown <len.brown@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 26/27] tools/power turbostat: fix buffer overrun
+Date:   Wed,  4 Sep 2019 12:02:19 -0400
+Message-Id: <20190904160220.4545-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
-References: <20190904160303.5062-1-sashal@kernel.org>
+In-Reply-To: <20190904160220.4545-1-sashal@kernel.org>
+References: <20190904160220.4545-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,43 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-[ Upstream commit 45da5e09dd32fa98c32eaafe2513db6bd75e2f4f ]
+[ Upstream commit eeb71c950bc6eee460f2070643ce137e067b234c ]
 
-We have errata i688 workaround produce warnings on SoCs other than
-omap4 and omap5:
+turbostat could be terminated by general protection fault on some latest
+hardwares which (for example) support 9 levels of C-states and show 18
+"tADDED" lines. That bloats the total output and finally causes buffer
+overrun.  So let's extend the buffer to avoid this.
 
-omap4_sram_init:Unable to allocate sram needed to handle errata I688
-omap4_sram_init:Unable to get sram pool needed to handle errata I688
-
-This is happening because there is no ti,omap4-mpu node, or no SRAM
-to configure for the other SoCs, so let's remove the warning based
-on the SoC revision checks.
-
-As nobody has complained it seems that the other SoC variants do not
-need this workaround.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/omap4-common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/power/x86/turbostat/turbostat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
-index 949696b6f17b6..511fd08c784ba 100644
---- a/arch/arm/mach-omap2/omap4-common.c
-+++ b/arch/arm/mach-omap2/omap4-common.c
-@@ -131,6 +131,9 @@ static int __init omap4_sram_init(void)
- 	struct device_node *np;
- 	struct gen_pool *sram_pool;
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index b4c5d96e54c12..7c2c8e74aa9a9 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3593,7 +3593,7 @@ int initialize_counters(int cpu_id)
  
-+	if (!soc_is_omap44xx() && !soc_is_omap54xx())
-+		return 0;
-+
- 	np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
- 	if (!np)
- 		pr_warn("%s:Unable to allocate sram needed to handle errata I688\n",
+ void allocate_output_buffer()
+ {
+-	output_buffer = calloc(1, (1 + topo.num_cpus) * 1024);
++	output_buffer = calloc(1, (1 + topo.num_cpus) * 2048);
+ 	outp = output_buffer;
+ 	if (outp == NULL)
+ 		err(-1, "calloc output buffer");
 -- 
 2.20.1
 
