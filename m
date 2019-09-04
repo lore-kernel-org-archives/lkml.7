@@ -6,82 +6,155 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765BBC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13807C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5823223400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7FE2341D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfIDFru (ORCPT
+        id S1728661AbfIDFr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 01:47:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38960 "EHLO mx1.redhat.com"
+        Wed, 4 Sep 2019 01:47:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35388 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDFrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 01:47:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1727899AbfIDFrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 01:47:45 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B7085308FB82;
-        Wed,  4 Sep 2019 05:47:48 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-72.ams2.redhat.com [10.36.117.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D24C960BFB;
+        by mx1.redhat.com (Postfix) with ESMTPS id 641F710F23F6;
         Wed,  4 Sep 2019 05:47:45 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-72.ams2.redhat.com [10.36.117.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 22AAD60127;
+        Wed,  4 Sep 2019 05:47:42 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B55AD31EEA; Wed,  4 Sep 2019 07:47:41 +0200 (CEST)
+        id 7074431EBF; Wed,  4 Sep 2019 07:47:41 +0200 (CEST)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 6/7] drm/qxl: use drm_gem_ttm_print_info
-Date:   Wed,  4 Sep 2019 07:47:39 +0200
-Message-Id: <20190904054740.20817-7-kraxel@redhat.com>
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v3 4/7] drm/vram: add vram-mm debugfs file
+Date:   Wed,  4 Sep 2019 07:47:37 +0200
+Message-Id: <20190904054740.20817-5-kraxel@redhat.com>
 In-Reply-To: <20190904054740.20817-1-kraxel@redhat.com>
 References: <20190904054740.20817-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 04 Sep 2019 05:47:48 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 04 Sep 2019 05:47:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Wire up drm_mm_print() for vram helpers, using a new
+debugfs file, so one can see how vram is used:
+
+   # cat /sys/kernel/debug/dri/0/vram-mm
+   0x0000000000000000-0x0000000000000300: 768: used
+   0x0000000000000300-0x0000000000000600: 768: used
+   0x0000000000000600-0x0000000000000900: 768: used
+   0x0000000000000900-0x0000000000000c00: 768: used
+   0x0000000000000c00-0x0000000000004000: 13312: free
+   total: 16384, used 3072 free 13312
+
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 ---
- drivers/gpu/drm/qxl/qxl_drv.h    | 1 +
- drivers/gpu/drm/qxl/qxl_object.c | 1 +
- 2 files changed, 2 insertions(+)
+ include/drm/drm_gem_vram_helper.h    |  1 +
+ include/drm/drm_vram_mm_helper.h     |  1 +
+ drivers/gpu/drm/drm_vram_mm_helper.c | 44 ++++++++++++++++++++++++++++
+ 3 files changed, 46 insertions(+)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.h b/drivers/gpu/drm/qxl/qxl_drv.h
-index 9e034c5fa87d..d4051409ce64 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.h
-+++ b/drivers/gpu/drm/qxl/qxl_drv.h
-@@ -38,6 +38,7 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_encoder.h>
- #include <drm/drm_fb_helper.h>
-+#include <drm/drm_gem_ttm_helper.h>
- #include <drm/drm_ioctl.h>
- #include <drm/drm_gem.h>
- #include <drm/qxl_drm.h>
-diff --git a/drivers/gpu/drm/qxl/qxl_object.c b/drivers/gpu/drm/qxl/qxl_object.c
-index 29aab7b14513..c013c516f561 100644
---- a/drivers/gpu/drm/qxl/qxl_object.c
-+++ b/drivers/gpu/drm/qxl/qxl_object.c
-@@ -86,6 +86,7 @@ static const struct drm_gem_object_funcs qxl_object_funcs = {
- 	.get_sg_table = qxl_gem_prime_get_sg_table,
- 	.vmap = qxl_gem_prime_vmap,
- 	.vunmap = qxl_gem_prime_vunmap,
-+	.print_info = drm_gem_ttm_print_info,
- };
+diff --git a/include/drm/drm_gem_vram_helper.h b/include/drm/drm_gem_vram_helper.h
+index ac217d768456..91c6934138f2 100644
+--- a/include/drm/drm_gem_vram_helper.h
++++ b/include/drm/drm_gem_vram_helper.h
+@@ -122,6 +122,7 @@ int drm_gem_vram_driver_dumb_mmap_offset(struct drm_file *file,
+  * &struct drm_driver with default functions.
+  */
+ #define DRM_GEM_VRAM_DRIVER \
++	.debugfs_init             = drm_vram_mm_debugfs_init, \
+ 	.dumb_create		  = drm_gem_vram_driver_dumb_create, \
+ 	.dumb_map_offset	  = drm_gem_vram_driver_dumb_mmap_offset, \
+ 	.gem_prime_mmap		  = drm_gem_prime_mmap
+diff --git a/include/drm/drm_vram_mm_helper.h b/include/drm/drm_vram_mm_helper.h
+index 2aacfb1ccfae..9e0ac9aaac7d 100644
+--- a/include/drm/drm_vram_mm_helper.h
++++ b/include/drm/drm_vram_mm_helper.h
+@@ -60,6 +60,7 @@ static inline struct drm_vram_mm *drm_vram_mm_of_bdev(
+ 	return container_of(bdev, struct drm_vram_mm, bdev);
+ }
  
- int qxl_bo_create(struct qxl_device *qdev,
++int drm_vram_mm_debugfs_init(struct drm_minor *minor);
+ int drm_vram_mm_init(struct drm_vram_mm *vmm, struct drm_device *dev,
+ 		     uint64_t vram_base, size_t vram_size,
+ 		     const struct drm_vram_mm_funcs *funcs);
+diff --git a/drivers/gpu/drm/drm_vram_mm_helper.c b/drivers/gpu/drm/drm_vram_mm_helper.c
+index c911781d6728..3c2f0cbcad5b 100644
+--- a/drivers/gpu/drm/drm_vram_mm_helper.c
++++ b/drivers/gpu/drm/drm_vram_mm_helper.c
+@@ -1,7 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0-or-later
+ 
++#include <drm/drm_debugfs.h>
+ #include <drm/drm_device.h>
+ #include <drm/drm_file.h>
++#include <drm/drm_gem_ttm_helper.h>
+ #include <drm/drm_vram_mm_helper.h>
+ 
+ #include <drm/ttm/ttm_page_alloc.h>
+@@ -148,6 +150,48 @@ static struct ttm_bo_driver bo_driver = {
+  * struct drm_vram_mm
+  */
+ 
++#if defined(CONFIG_DEBUG_FS)
++static int drm_vram_mm_debugfs(struct seq_file *m, void *data)
++{
++	struct drm_info_node *node = (struct drm_info_node *) m->private;
++	struct drm_vram_mm *vmm = node->minor->dev->vram_mm;
++	struct drm_mm *mm = vmm->bdev.man[TTM_PL_VRAM].priv;
++	struct ttm_bo_global *glob = vmm->bdev.glob;
++	struct drm_printer p = drm_seq_file_printer(m);
++
++	spin_lock(&glob->lru_lock);
++	drm_mm_print(mm, &p);
++	spin_unlock(&glob->lru_lock);
++	return 0;
++}
++
++static const struct drm_info_list drm_vram_mm_debugfs_list[] = {
++	{ "vram-mm", drm_vram_mm_debugfs, 0, NULL },
++};
++#endif
++
++/**
++ * drm_vram_mm_debugfs_init() - Register VRAM MM debugfs file.
++ *
++ * @minor: drm minor device.
++ *
++ * Returns:
++ * 0 on success, or
++ * a negative error code otherwise.
++ */
++int drm_vram_mm_debugfs_init(struct drm_minor *minor)
++{
++	int ret = 0;
++
++#if defined(CONFIG_DEBUG_FS)
++	ret = drm_debugfs_create_files(drm_vram_mm_debugfs_list,
++				       ARRAY_SIZE(drm_vram_mm_debugfs_list),
++				       minor->debugfs_root, minor);
++#endif
++	return ret;
++}
++EXPORT_SYMBOL(drm_vram_mm_debugfs_init);
++
+ /**
+  * drm_vram_mm_init() - Initialize an instance of VRAM MM.
+  * @vmm:	the VRAM MM instance to initialize
 -- 
 2.18.1
 
