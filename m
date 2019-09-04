@@ -2,78 +2,46 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E630C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12350C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D7B21881
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgNGAHlo"
+	by mail.kernel.org (Postfix) with ESMTP id DAC782087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfIDXeQ (ORCPT
+        id S1730453AbfIDXfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:34:16 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43599 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIDXeQ (ORCPT
+        Wed, 4 Sep 2019 19:35:02 -0400
+Received: from smtprelay0094.hostedemail.com ([216.40.44.94]:41904 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728008AbfIDXfB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:34:16 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 4so325919pld.10;
-        Wed, 04 Sep 2019 16:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=zEfGTR202P+nwSsU1qSBd5C7kGsRpjPGHZxgayed3co=;
-        b=bgNGAHlojCAsmb10/j/F4VrV1/7ILP14DPCXfjdhzRir4IZQWwkF6Hg4EJKc2JLDzb
-         cgpVtDjEzBNDrKQEIvw55Uam/IjHauVNHZMcV702fkUgEYcFZJ5n7g+9MY1zHi6vMF5E
-         jUoJ3GvvFLZsZvdxgYyVI6Y2u4EjUgciFSQFZoVkEKzXHD2HaVmayQYgfXwEYGHD7bM8
-         OVDp35v2L0+znwSHmDf4ljqbUB1Q52eIcyj3phJ28h4Znsr2pSYzjgqvNimEHF0RPZtl
-         wH7Hd7K0vzSVh+vDM4bSH9SifMeSZaYfZ2e2C7CVJZQiwHPRvvms4cxoSe18y8QKWV3/
-         LE0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=zEfGTR202P+nwSsU1qSBd5C7kGsRpjPGHZxgayed3co=;
-        b=Bq6EFjCtvEZaikRTvio/DP6IT9oOuASjj86nTgzK7DXH8RfKLG7n04qyr/aju3NbP2
-         U2Vk0Xrgyn/CG1rg4S9QClcWOI4efTNZInjU088gS3BeeQYt+j/iBxTJd5l8pAzwJq5L
-         iXjx4/AUd406/s4zvJPSfIS2/ftJVKxz+jTVJfjIEphX43iLe2rg/wdTLrPTEK990X1I
-         2R5OAqzuAEHAqw6vHx3+Ey8mibRfKin+seCV2HrG1ZRcgx+isFXCRsVTyBgl0DwZKf3t
-         PhsRC8P0v367TTgS0Yu6pkZD+6tNj9JWtp15pwuRCp9OWW3yzQERqOjOUCwctsX1g+6r
-         r/NA==
-X-Gm-Message-State: APjAAAUBZe15BdVOcozrrC+ysrHVp0wu3hF0yjHACF8dMPaXSMDwtPgv
-        FDG3OTBQn1e5gt/Lnbo/A+s=
-X-Google-Smtp-Source: APXvYqw3odHmU1fPWW8sZtm0x+bGwW0rkNDvCptjLNdQshanr2Coj2SEZMCxGSIfz+2XD+ZWxq8Gvg==
-X-Received: by 2002:a17:902:a415:: with SMTP id p21mr261987plq.319.1567640055590;
-        Wed, 04 Sep 2019 16:34:15 -0700 (PDT)
-Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.googlemail.com with ESMTPSA id c138sm179277pfc.80.2019.09.04.16.34.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 16:34:14 -0700 (PDT)
-Message-ID: <1ca6ffddd2452e218ef19ea84ac6c6277e1a9725.camel@gmail.com>
-Subject: Re: [PATCH 3/4] gpio: Add in ast2600 details to Aspeed driver
-From:   Rashmica Gupta <rashmica.g@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Date:   Thu, 05 Sep 2019 09:34:10 +1000
-In-Reply-To: <CAHp75Ve0zEkuD-75aZ6FU+A=DvX8NvVvY3n9p_pYDyfa76sxoQ@mail.gmail.com>
-References: <20190904061245.30770-1-rashmica.g@gmail.com>
-         <20190904061245.30770-3-rashmica.g@gmail.com>
-         <CAHp75Ve0zEkuD-75aZ6FU+A=DvX8NvVvY3n9p_pYDyfa76sxoQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 4 Sep 2019 19:35:01 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 4B4EA18224D7C;
+        Wed,  4 Sep 2019 23:35:00 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: kiss88_e7d1a863eb12
+X-Filterd-Recvd-Size: 2051
+Received: from XPS-9350.home (unknown [47.151.152.152])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  4 Sep 2019 23:34:59 +0000 (UTC)
+Message-ID: <6806d25a240cd80ebd265fcf5f02496852027bed.camel@perches.com>
+Subject: Re: [GIT PULL] clang-format for v5.3-rc8
+From:   Joe Perches <joe@perches.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed, 04 Sep 2019 16:34:58 -0700
+In-Reply-To: <20190904182949.GA22025@gmail.com>
+References: <20190904182949.GA22025@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.32.1-2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,61 +49,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 19:30 +0300, Andy Shevchenko wrote:
-> On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com>
-> wrote:
-> > The ast2600 has two gpio controllers, one for 3.6V GPIOS and one
-> > for 1.8V GPIOS.
-> > 
-> > Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
-> > -       for (i = 0; i < ARRAY_SIZE(aspeed_gpio_banks); i++) {
-> > +       banks = (gpio->config->nr_gpios >> 5) + 1;
+On Wed, 2019-09-04 at 20:29 +0200, Miguel Ojeda wrote:
+> Hi Linus,
 > 
-> Same comment as per the other patch.
+> Please pull this trivial update for the .clang-format file.
 > 
-> > +       for (i = 0; i < banks; i++) {
-> > +static const struct aspeed_bank_props ast2600_bank_props[] = {
-> > +       /*     input      output   */
-> > +       {5, 0xffffffff,  0x0000ffff}, /* U/V/W/X */
-> > +       {6, 0xffff0000,  0x0fff0000}, /* Y/Z */
+> Cheers,
+> Miguel
 > 
-> Perhaps GENMASK() for all values?
+> The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+> 
+>   Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   https://github.com/ojeda/linux.git tags/clang-format-for-linus-v5.3-rc8
+> 
+> for you to fetch changes up to 52d083472e0b64d1da5b6469ed3defb1ddc45929:
+> 
+>   clang-format: Update with the latest for_each macro list (2019-08-31 10:00:51 +0200)
+> 
+> ----------------------------------------------------------------
+> clang-format update for 5.3
+> 
+> ----------------------------------------------------------------
+> Miguel Ojeda (1):
+>       clang-format: Update with the latest for_each macro list
+> 
+>  .clang-format | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
 
-Perhaps this and your other comments below would be best addressed in
-an additional cleanup patch? This patch follows the formatting of the
-existing code and it's not very clean to differ from that or to change
-the formatting of the current code in this patch.
+It's a long, long list.
+
+$ git grep -P -h '^\s*#\s*define\s+\w*for_each\w*' | \
+  grep -P -oh '\w+for_each\w*' | sort | uniq | wc -l
+491
+
+Isn't there some way to regexes or automate this?
+
+Maybe just:
+$ git grep -P -h '^\s*#\s*define\s+\w*for_each\w*' | \
+  grep -P -oh '\w+for_each\w*' | sort | uniq > somefile...
 
 
-> 
-> > +       { },
-> 
-> Comma is not needed here.
-> 
-> > +};
-> > +
-> > +static const struct aspeed_gpio_config ast2600_config =
-> > +       /* 208 3.6V GPIOs */
-> > +       { .nr_gpios = 208, .props = ast2600_bank_props, };
-> 
-> Seems curly braces missed their places.
-> 
-> > +static const struct aspeed_bank_props ast2600_1_8v_bank_props[] =
-> > {
-> > +       /*     input      output   */
-> > +       {1, 0x0000000f,  0x0000000f}, /* E */
-> 
-> GENMASK()?
-> 
-> > +       { },
-> 
-> No comma.
-> 
-> > +};
-> > +static const struct aspeed_gpio_config ast2600_1_8v_config =
-> > +       /* 36 1.8V GPIOs */
-> > +       { .nr_gpios = 36, .props = ast2600_1_8v_bank_props, };
-> 
-> Location of the curly braces?
-> 
 
