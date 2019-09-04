@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 918BFC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D0BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66ED021883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5B222CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619774;
-	bh=d/PkP+1oljDM2sHuvFgWg/3DRuNkpg5gqrs9YIlNhl8=;
+	s=default; t=1567619778;
+	bh=YaezAtlfkEaTi5ezWg9Y7/KVHwZlyo5nraWPbkLVsaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uey1/2V3mi6QuEw4yABt7YmBphdt4r+HrH76BqtVw3yy5m0t64M0gCYLBrPS6ExJ1
-	 CqOqBp0vA3BO1CoF1n+gAOEMl4txtKEHwATKV7XmXrQInw4CHI4t+aGP0833U9IAsx
-	 s7JtjkF4NnhSSxMpck3UymxfBylnxvxLObsg3vbU=
+	b=G2IznKHhsoabay/ViDqTaQuwOCG8rtNFZSDfWG6rUnv2QUWDAp1XViv4my1uGgXNQ
+	 V3IlD5NnqNm7Kro33czrZMO7gcoovudE89zYqQfUQHk8Q0ufmtZ4TF2J7+bI4rQ7jk
+	 4tyyrwcvb+5lWlI142qdwSnmG7l2QH1pNiTWZB5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733228AbfIDR4N (ORCPT
+        id S1733280AbfIDR4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:56:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733178AbfIDR4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:56:08 -0400
+        id S1733211AbfIDR4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:56:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9B322DBF;
-        Wed,  4 Sep 2019 17:56:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D830323400;
+        Wed,  4 Sep 2019 17:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619767;
-        bh=d/PkP+1oljDM2sHuvFgWg/3DRuNkpg5gqrs9YIlNhl8=;
+        s=default; t=1567619772;
+        bh=YaezAtlfkEaTi5ezWg9Y7/KVHwZlyo5nraWPbkLVsaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cgLjRyIjjiUa2tnPcYxtrV+JeLhYjy0qFYYAfOYsUibSJxxSPvySwqo3EvDf4yWrP
-         JnNmeXNVrfyrrxLsX0UsdLnNQi9PkuMmaAWkbwEWWxtyVyu02gkb4OAJ6Wox+PsYxh
-         o5SqRYhPo9hN7xupCcsR2iPCBNSMqBdV7Toh+dfU=
+        b=SOVZu1/0h9DHMqQ88NdbSeXSVmjB44VgoH7l+uOdqcqd9aZOi78k/hTEWf7IbC6Sp
+         3may/LmMhDBHZOfM0Uo9C/6H88xpOcKNuQil/jS0eZSLAoNL3cQkCSCen1YHWGcVpj
+         QbWbe5YEYw++Ps29au9QRXNtXv8qApHYAM11y3gU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.4 27/77] x86/apic: Handle missing global clockevent gracefully
-Date:   Wed,  4 Sep 2019 19:53:14 +0200
-Message-Id: <20190904175306.098238386@linuxfoundation.org>
+        stable@vger.kernel.org, Neil MacLeod <neil@nmacleod.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 4.4 29/77] x86/boot: Fix boot regression caused by bootparam sanitizing
+Date:   Wed,  4 Sep 2019 19:53:16 +0200
+Message-Id: <20190904175306.362034308@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,154 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit f897e60a12f0b9146357780d317879bce2a877dc upstream.
+commit 7846f58fba964af7cb8cf77d4d13c33254725211 upstream.
 
-Some newer machines do not advertise legacy timers. The kernel can handle
-that situation if the TSC and the CPU frequency are enumerated by CPUID or
-MSRs and the CPU supports TSC deadline timer. If the CPU does not support
-TSC deadline timer the local APIC timer frequency has to be known as well.
+commit a90118c445cc ("x86/boot: Save fields explicitly, zero out everything
+else") had two errors:
 
-Some Ryzens machines do not advertize legacy timers, but there is no
-reliable way to determine the bus frequency which feeds the local APIC
-timer when the machine allows overclocking of that frequency.
+    * It preserved boot_params.acpi_rsdp_addr, and
+    * It failed to preserve boot_params.hdr
 
-As there is no legacy timer the local APIC timer calibration crashes due to
-a NULL pointer dereference when accessing the not installed global clock
-event device.
+Therefore, zero out acpi_rsdp_addr, and preserve hdr.
 
-Switch the calibration loop to a non interrupt based one, which polls
-either TSC (if frequency is known) or jiffies. The latter requires a global
-clockevent. As the machines which do not have a global clockevent installed
-have a known TSC frequency this is a non issue. For older machines where
-TSC frequency is not known, there is no known case where the legacy timers
-do not exist as that would have been reported long ago.
-
-Reported-by: Daniel Drake <drake@endlessm.com>
-Reported-by: Jiri Slaby <jslaby@suse.cz>
+Fixes: a90118c445cc ("x86/boot: Save fields explicitly, zero out everything else")
+Reported-by: Neil MacLeod <neil@nmacleod.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Daniel Drake <drake@endlessm.com>
+Tested-by: Neil MacLeod <neil@nmacleod.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de
-Link: http://bugzilla.opensuse.org/show_bug.cgi?id=1142926#c12
+Link: https://lkml.kernel.org/r/20190821192513.20126-1-jhubbard@nvidia.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/apic.c |   68 ++++++++++++++++++++++++++++++++++----------
- 1 file changed, 53 insertions(+), 15 deletions(-)
+ arch/x86/include/asm/bootparam_utils.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -593,7 +593,7 @@ static __initdata unsigned long lapic_ca
- static __initdata unsigned long lapic_cal_j1, lapic_cal_j2;
+--- a/arch/x86/include/asm/bootparam_utils.h
++++ b/arch/x86/include/asm/bootparam_utils.h
+@@ -70,6 +70,7 @@ static void sanitize_boot_params(struct
+ 			BOOT_PARAM_PRESERVE(eddbuf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buf_entries),
+ 			BOOT_PARAM_PRESERVE(edd_mbr_sig_buffer),
++			BOOT_PARAM_PRESERVE(hdr),
+ 			BOOT_PARAM_PRESERVE(eddbuf),
+ 		};
  
- /*
-- * Temporary interrupt handler.
-+ * Temporary interrupt handler and polled calibration function.
-  */
- static void __init lapic_cal_handler(struct clock_event_device *dev)
- {
-@@ -677,7 +677,8 @@ calibrate_by_pmtimer(long deltapm, long
- static int __init calibrate_APIC_clock(void)
- {
- 	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
--	void (*real_handler)(struct clock_event_device *dev);
-+	u64 tsc_perj = 0, tsc_start = 0;
-+	unsigned long jif_start;
- 	unsigned long deltaj;
- 	long delta, deltatsc;
- 	int pm_referenced = 0;
-@@ -706,29 +707,65 @@ static int __init calibrate_APIC_clock(v
- 	apic_printk(APIC_VERBOSE, "Using local APIC timer interrupts.\n"
- 		    "calibrating APIC timer ...\n");
- 
-+	/*
-+	 * There are platforms w/o global clockevent devices. Instead of
-+	 * making the calibration conditional on that, use a polling based
-+	 * approach everywhere.
-+	 */
- 	local_irq_disable();
- 
--	/* Replace the global interrupt handler */
--	real_handler = global_clock_event->event_handler;
--	global_clock_event->event_handler = lapic_cal_handler;
--
- 	/*
- 	 * Setup the APIC counter to maximum. There is no way the lapic
- 	 * can underflow in the 100ms detection time frame
- 	 */
- 	__setup_APIC_LVTT(0xffffffff, 0, 0);
- 
--	/* Let the interrupts run */
-+	/*
-+	 * Methods to terminate the calibration loop:
-+	 *  1) Global clockevent if available (jiffies)
-+	 *  2) TSC if available and frequency is known
-+	 */
-+	jif_start = READ_ONCE(jiffies);
-+
-+	if (tsc_khz) {
-+		tsc_start = rdtsc();
-+		tsc_perj = div_u64((u64)tsc_khz * 1000, HZ);
-+	}
-+
-+	/*
-+	 * Enable interrupts so the tick can fire, if a global
-+	 * clockevent device is available
-+	 */
- 	local_irq_enable();
- 
--	while (lapic_cal_loops <= LAPIC_CAL_LOOPS)
--		cpu_relax();
-+	while (lapic_cal_loops <= LAPIC_CAL_LOOPS) {
-+		/* Wait for a tick to elapse */
-+		while (1) {
-+			if (tsc_khz) {
-+				u64 tsc_now = rdtsc();
-+				if ((tsc_now - tsc_start) >= tsc_perj) {
-+					tsc_start += tsc_perj;
-+					break;
-+				}
-+			} else {
-+				unsigned long jif_now = READ_ONCE(jiffies);
-+
-+				if (time_after(jif_now, jif_start)) {
-+					jif_start = jif_now;
-+					break;
-+				}
-+			}
-+			cpu_relax();
-+		}
-+
-+		/* Invoke the calibration routine */
-+		local_irq_disable();
-+		lapic_cal_handler(NULL);
-+		local_irq_enable();
-+	}
- 
- 	local_irq_disable();
- 
--	/* Restore the real event handler */
--	global_clock_event->event_handler = real_handler;
--
- 	/* Build delta t1-t2 as apic timer counts down */
- 	delta = lapic_cal_t1 - lapic_cal_t2;
- 	apic_printk(APIC_VERBOSE, "... lapic delta = %ld\n", delta);
-@@ -778,10 +815,11 @@ static int __init calibrate_APIC_clock(v
- 	levt->features &= ~CLOCK_EVT_FEAT_DUMMY;
- 
- 	/*
--	 * PM timer calibration failed or not turned on
--	 * so lets try APIC timer based calibration
-+	 * PM timer calibration failed or not turned on so lets try APIC
-+	 * timer based calibration, if a global clockevent device is
-+	 * available.
- 	 */
--	if (!pm_referenced) {
-+	if (!pm_referenced && global_clock_event) {
- 		apic_printk(APIC_VERBOSE, "... verify APIC timer\n");
- 
- 		/*
 
 
