@@ -2,292 +2,233 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB53C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 103B4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8153A21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D174521883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RYqZnuhm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y7zjrTqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbfIDTyq (ORCPT
+        id S1729919AbfIDUBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:54:46 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38581 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730462AbfIDTyp (ORCPT
+        Wed, 4 Sep 2019 16:01:35 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34512 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbfIDUBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:54:45 -0400
-Received: by mail-io1-f66.google.com with SMTP id p12so47087146iog.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 12:54:44 -0700 (PDT)
+        Wed, 4 Sep 2019 16:01:35 -0400
+Received: by mail-wr1-f67.google.com with SMTP id s18so136298wrn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:01:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=LlDPSpEczR5fvkibAFO5ZZRZGBz+aXPzFC2kng0jziw=;
-        b=RYqZnuhmNd8oj1G0LxozGHsQy7uyZPoCcXks41skJkE6cUhOrz6IA7RM3coDs9YY05
-         nA6wLO6qI9srj92LTt2ZoUrtqth9FgzHW9mb/upxz+3wZg0PkuAtPVdkv0onzzfw/VDw
-         iAKVu/Di2b1tKS0xVYBDyXKUv4v+8zZ2AGXe2oq2WsLPcYAquOvym+ukXcxfPqIzSqGK
-         cwlRoP4G/i9qLyy1nnmLRnalI2hZa6yVWUtdgNHye7rjhc4zB6UvGKf8rkW+BeoeSm83
-         OiRgaY3CgbLZ4bXOMhed4XLCeh1qzMrGKQs6bduFDlVUMz1F3umjWCRrmCT1B07/zGsW
-         +adA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=JCNSU8zuFffQH3IN2sAAGv7QBbOUi5d4/dyTjM3iQBA=;
+        b=y7zjrTqYbdm4vAstK7azobzgWjVzIZ5ldkjh4BmXeP0B1mWYubxD1LnX4QmG2eQcJj
+         pB6MjLlbYhk27CRdHfU453vbsVLi6ZpusmXG7SgfxVyZTow36qm6V032keVH3Bx+qQqx
+         BbWWBkiipVzl1S8DKRU7Akt92DtSbFcTElgSTg1Kps6+9nlFxY4W0/CDyPOtVEKs3utO
+         zSft3HDnM1YVJX17Kjl/ONhABuVOLF28eKpu7TvShjaAPbDYNWSSVnnk2iTZq9IZgZUy
+         NeJdx+y932RsNDO9EqlwICezMVuVguJUDD8NM4GIMDY6pPoIP9w37ibntJY+bnR5ah3d
+         /nXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=LlDPSpEczR5fvkibAFO5ZZRZGBz+aXPzFC2kng0jziw=;
-        b=DuWJkPwxMZZ04gjJQPqdaJQ3WN7QqG2x1Lpgb+lw3hKmCq1c2DAPtuNkU1/OK+R58M
-         HmeOmBvizst626bpDvRhbAk3LH3FAwbOFsW06Z4dyT5UMFX7lst06WkHYBA8lMyLLCeR
-         0KrprsDY4Sf6jrKM89H9YzEFPpEJzsKUtQFmYKlEXonmclB7adSLEhwD4CJdna519kkR
-         4Aj1vpqV8El9+6Y+dzp2tLCnsSp2uFQqSSYdLH6kgXaOv8HJCJNGlXPbTB3Ugi6oCuMS
-         hUEqEXwDq9cheZTs0LZglkA+2Eobl8TR0urvIk2fySwJO0Gph82Kk/zwFHSG6hsKsP0H
-         mV3Q==
-X-Gm-Message-State: APjAAAWtXU8Jme4mD24fcZf0TIdH4ORd8o5mppe8N/fasS028UMI5MvW
-        sMTZbW/sYp0NE9q1+DgwrMiPaA==
-X-Google-Smtp-Source: APXvYqwSihk3BoH49liqRzwu0WHQ8cc9wMxBVqQG42DA+3Yj0C4NpZ/zeFIWqjtZU0o3VDjaryxLUQ==
-X-Received: by 2002:a02:cf10:: with SMTP id q16mr533015jar.89.1567626882839;
-        Wed, 04 Sep 2019 12:54:42 -0700 (PDT)
-Received: from localhost (75-161-11-128.albq.qwest.net. [75.161.11.128])
-        by smtp.gmail.com with ESMTPSA id q74sm35036563iod.72.2019.09.04.12.54.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 12:54:42 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 12:54:41 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Mao Han <han_mao@c-sky.com>
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, Greentime Hu <green.hu@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH V6 1/3] riscv: Add perf callchain support
-In-Reply-To: <86d18d80affc39cf9579a24f1beb7c8631cfa9bd.1567060834.git.han_mao@c-sky.com>
-Message-ID: <alpine.DEB.2.21.9999.1909041247560.13502@viisi.sifive.com>
-References: <cover.1567060834.git.han_mao@c-sky.com> <86d18d80affc39cf9579a24f1beb7c8631cfa9bd.1567060834.git.han_mao@c-sky.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=JCNSU8zuFffQH3IN2sAAGv7QBbOUi5d4/dyTjM3iQBA=;
+        b=szVhUvojLoKHGmXB1OPHhfCLADx5ZWXg6FwwPubv4yTHSGO3VQlZ0xUWDqVKj/r7Dk
+         RXzR3paL7Kn8bOFohJlolMtreErevtosc7E8w6JCxdWAa67WBv6meNTKDypCmMPJ8c4B
+         0vR6/toprWH7W6h/PS4tb4m3RwGfbuklAw5Hea7cyaERhVgRVGqGRb+2PB36woJScv2i
+         BDMk9EJy6yB9cCZexXMEToXhF4iz7rKeVN0Zj9BwlhbxlJeFLx3i9g8+FzVBREVxyNaL
+         A0Hk3qESJeq5wzr05VbJrFBqSaWfB6YU8zjjal8bJ44rlv1vqG3gZROsdWKYEZeIQNPT
+         A/sg==
+X-Gm-Message-State: APjAAAXDyzfhZmIvcn0gBC2AfTphf1ul4xf+xYgt2pBtk+50s1ewu3wY
+        Wzlysbys/U4w427KzhKfs5vTTA==
+X-Google-Smtp-Source: APXvYqyN0dIJyvcBXKxN2V3Fdd9bsbiNhCY2jKRDrvFe/zrl6Y4+0fkbjyiKaEh1bx5ZqmtSI5VP+w==
+X-Received: by 2002:adf:e947:: with SMTP id m7mr36164812wrn.178.1567627292475;
+        Wed, 04 Sep 2019 13:01:32 -0700 (PDT)
+Received: from dell ([95.147.198.36])
+        by smtp.gmail.com with ESMTPSA id b184sm50211wmg.47.2019.09.04.13.01.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Sep 2019 13:01:31 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 21:01:30 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     agross@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
+Message-ID: <20190904200130.GT26880@dell>
+References: <20190903135052.13827-1-lee.jones@linaro.org>
+ <20190904031922.GC574@tuxbook-pro>
+ <20190904084554.GF26880@dell>
+ <20190904182732.GE574@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904182732.GE574@tuxbook-pro>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Mao Han,
+On Wed, 04 Sep 2019, Bjorn Andersson wrote:
 
-On Thu, 29 Aug 2019, Mao Han wrote:
-
-> This patch add support for perf callchain sampling on riscv platform.
-> The return address of leaf function is retrieved from pt_regs as
-> it is not saved in the outmost frame.
+> On Wed 04 Sep 01:45 PDT 2019, Lee Jones wrote:
 > 
-> Signed-off-by: Mao Han <han_mao@c-sky.com>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Greentime Hu <green.hu@gmail.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: linux-riscv <linux-riscv@lists.infradead.org>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Guo Ren <guoren@kernel.org>
+> > On Tue, 03 Sep 2019, Bjorn Andersson wrote:
+> > 
+> > > On Tue 03 Sep 06:50 PDT 2019, Lee Jones wrote:
+> > > 
+> > > > When booting with ACPI, the Geni Serial Engine is not set as the I2C/SPI
+> > > > parent and thus, the wrapper (parent device) is unassigned.  This causes
+> > > > the kernel to crash with a null dereference error.
+> > > > 
+> > > 
+> > > Now I see what you did in 8bc529b25354; i.e. stubbed all the other calls
+> > > between the SE and wrapper.
+> > > 
+> > > Do you think it would be possible to resolve the _DEP link to QGP[01]
+> > > somehow?
+> > 
+> > I looked at QGP{0,1}, but did not see it represented in the current
+> > Device Tree implementation and thus failed to identify it.  Do you
+> > know what it is?  Does it have a driver in Linux already?
+> 
+> QGP0 is the same hardware block as &qupv3_id_0, but apparently both are
+> only representing a smaller part - and different ones.
+> 
+> But conceptually both represents the wrapper...
 
-There are some 'checkpatch.pl --strict' warnings with this patch (below).  
-These have been fixed here.  The following patch has been queued for 
-v5.4-rc1 with Greentime's Tested-by:.  Thanks for your hard work following 
-up on the feedback with these patches -
+... which doesn't actually do anything in the Linux implementation.
 
+It only has one register. :)
 
-- Paul
+> > > For the clocks workarounds this could be resolved by us
+> > > representing that relationship using device_link and just rely on
+> > > pm_runtime to propagate the clock state.
+> > 
+> > That is not allowed when booting ACPI.  The Clock/Regulator frameworks
+> > are not to be used in this use-case, hence why all of the calls to
+> > these frameworks are "stubbed out".  If we wanted to properly
+> > implement power management, we would have to create a driver/subsystem
+> > similar to the "Windows-compatible System Power Management Controller"
+> > (PEP).  Without documentation for the PEP, this would be an impossible
+> > task.  A request for the aforementioned documentation has been put in
+> > to Lenovo/Qualcomm.  Hopefully something appears soon.
+> > 
+> 
+> I see, so the PEP states needs to be parsed and associated with each
+> device and we would use pm_runtime to toggle between the states and
+> device_links to ensure that _DEP nodes are powered in appropriate order.
+> 
+> That seems reasonable and straight forward and the reliance on
+> pm_runtime will make the DT case cleaner as well.
 
+Essentially yes.  The issue is translating the ACPI tables into
+actions to be taken by the Linux Power Management APIs.  Again, we've
+requested documentation.  Now, we wait ...
 
-CHECK: Alignment should match open parenthesis
-#77: FILE: arch/riscv/kernel/perf_callchain.c:18:
-+static unsigned long user_backtrace(struct perf_callchain_entry_ctx 
-*entry,
-+			unsigned long fp, unsigned long reg_ra)
+> > > For the DMA operation, iiuc it's the wrapper that implements the DMA
+> > > engine involved, but I'm guessing the main reason for mapping buffers on
+> > > the wrapper is so that it ends up being associated with the iommu
+> > > context of the wrapper.
+> > 
+> > Judging by the code alone, the wrapper doesn't sound like it does much
+> > at all.  It seems to only have a single (version) register (at least
+> > that is the only register that's used).  The only registers it
+> > reads/writes are those of the calling device, whether that be I2C, SPI
+> > or UART.
+> > 
+> > Device Tree represents the wrapper's relationship with the I2C (and
+> > SPI/UART) Serial Engine (SE) devices as parent-child ones, with the
+> > wrapper being the parent and SE the child.  Whether this is a true
+> > representation of the hardware or just a tactic used for convenience
+> > is not clear, but the same representation does not exist in ACPI.
+> > 
+> > In the current Linux implementation, the buffer belongs to the SE
+> > (obtained by the child (e.g. I2C) SE by fetching the parent's
+> > (wrapper's) device data using the standard platform helpers) but the
+> > register-set used to control the DMA transactions belong to the SE
+> > devices.
+> > 
+> 
+> Yeah, I saw this as well. If all the SEs where the wrappers iommu domain
+> things should work fine by mapping it on the se->dev, regardless of the
+> device's being linked together.
 
-CHECK: Blank lines aren't necessary after an open brace '{'
-#146: FILE: arch/riscv/kernel/perf_callchain.c:87:
-+{
-+
+This is my assumption too.
 
-CHECK: Alignment should match open parenthesis
-#165: FILE: arch/riscv/kernel/stacktrace.c:23:
-+void notrace walk_stackframe(struct task_struct *task,
- 	struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg)
+> The remaining relationship to the wrapper would then be reduced to the
+> read of the version to check for 1.0 or 1.1 hardware in the SPI driver,
+> which can be replaced by the assumption that we're on 1.1.
 
-------
+Also correct.  You would be left with a huge duplication of code
+across each of the SEs however.
 
-From: Mao Han <han_mao@c-sky.com>
-Date: Thu, 29 Aug 2019 14:57:00 +0800
-Subject: [PATCH] riscv: Add perf callchain support
+> > > Are the SMMU contexts at all represented in the ACPI world and if so do
+> > > you know how the wrapper vs SEs are bound to contexts? Can we map on
+> > > se->dev when wrapper is NULL (or perhaps always?)?
+> > 
+> > Yes, the SMMU devices are represented in ACPI (MMU0) and (MMU1).  They
+> > share the same register addresses as the SMMU devices located in
+> > arch/arm64/boot/dts/qcom/sdm845.dtsi.
+> 
+> Right but this only describes the IOMMU devices, I don't see any
+> information about how individual client devices relates to the various
+> IOMMU contexts.
 
-This patch adds support for perf callchain sampling on riscv platforms.
-The return address of leaf function is retrieved from pt_regs as
-it is not saved in the outmost frame.
+I see some _DEPs which detail the MMU{0,1}, but that's about it.
 
-Signed-off-by: Mao Han <han_mao@c-sky.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: linux-riscv <linux-riscv@lists.infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Guo Ren <guoren@kernel.org>
-Tested-by: Greentime Hu <greentime.hu@sifive.com>
-[paul.walmsley@sifive.com: fixed some 'checkpatch.pl --strict' issues;
- fixed patch description spelling]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- arch/riscv/Makefile                |  3 +
- arch/riscv/kernel/Makefile         |  3 +-
- arch/riscv/kernel/perf_callchain.c | 94 ++++++++++++++++++++++++++++++
- arch/riscv/kernel/stacktrace.c     |  4 +-
- 4 files changed, 101 insertions(+), 3 deletions(-)
- create mode 100644 arch/riscv/kernel/perf_callchain.c
+> > With this simple parameter checking patch, the SE falls back to using
+> > FIFO mode to transmit data and continues to work flawlessly.  IMHO
+> > this should be applied in the first instance, as it fixes a real (null
+> > dereference) bug which currently resides in the Mainline kernel.
+> > 
+> 
+> Per the current driver design the wrapper device is the parent of the
+> SE, I should have seen that 8bc529b25354 was the beginning of a game of
+> whac-a-mole circumventing this design. Sorry for not spotting this
+> earlier.
 
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index a73659e30f8d..4f0a3d2018d2 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -54,6 +54,9 @@ endif
- ifeq ($(CONFIG_MODULE_SECTIONS),y)
- 	KBUILD_LDFLAGS_MODULE += -T $(srctree)/arch/riscv/kernel/module.lds
- endif
-+ifeq ($(CONFIG_PERF_EVENTS),y)
-+        KBUILD_CFLAGS += -fno-omit-frame-pointer
-+endif
- 
- KBUILD_CFLAGS_MODULE += $(call cc-option,-mno-relax)
- 
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 2420d37d96de..b1bea89fc814 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_MODULE_SECTIONS)	+= module-sections.o
- obj-$(CONFIG_FUNCTION_TRACER)	+= mcount.o ftrace.o
- obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
- 
--obj-$(CONFIG_PERF_EVENTS)      += perf_event.o
-+obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
-+obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
- 
- clean:
-diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-new file mode 100644
-index 000000000000..8d2804f05cf9
---- /dev/null
-+++ b/arch/riscv/kernel/perf_callchain.c
-@@ -0,0 +1,94 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
-+
-+#include <linux/perf_event.h>
-+#include <linux/uaccess.h>
-+
-+/* Kernel callchain */
-+struct stackframe {
-+	unsigned long fp;
-+	unsigned long ra;
-+};
-+
-+/*
-+ * Get the return address for a single stackframe and return a pointer to the
-+ * next frame tail.
-+ */
-+static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
-+				    unsigned long fp, unsigned long reg_ra)
-+{
-+	struct stackframe buftail;
-+	unsigned long ra = 0;
-+	unsigned long *user_frame_tail =
-+			(unsigned long *)(fp - sizeof(struct stackframe));
-+
-+	/* Check accessibility of one struct frame_tail beyond */
-+	if (!access_ok(user_frame_tail, sizeof(buftail)))
-+		return 0;
-+	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-+				      sizeof(buftail)))
-+		return 0;
-+
-+	if (reg_ra != 0)
-+		ra = reg_ra;
-+	else
-+		ra = buftail.ra;
-+
-+	fp = buftail.fp;
-+	if (ra != 0)
-+		perf_callchain_store(entry, ra);
-+	else
-+		return 0;
-+
-+	return fp;
-+}
-+
-+/*
-+ * This will be called when the target is in user mode
-+ * This function will only be called when we use
-+ * "PERF_SAMPLE_CALLCHAIN" in
-+ * kernel/events/core.c:perf_prepare_sample()
-+ *
-+ * How to trigger perf_callchain_[user/kernel] :
-+ * $ perf record -e cpu-clock --call-graph fp ./program
-+ * $ perf report --call-graph
-+ *
-+ * On RISC-V platform, the program being sampled and the C library
-+ * need to be compiled with -fno-omit-frame-pointer, otherwise
-+ * the user stack will not contain function frame.
-+ */
-+void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
-+			 struct pt_regs *regs)
-+{
-+	unsigned long fp = 0;
-+
-+	/* RISC-V does not support perf in guest mode. */
-+	if (perf_guest_cbs && perf_guest_cbs->is_in_guest())
-+		return;
-+
-+	fp = regs->s0;
-+	perf_callchain_store(entry, regs->sepc);
-+
-+	fp = user_backtrace(entry, fp, regs->ra);
-+	while (fp && !(fp & 0x3) && entry->nr < entry->max_stack)
-+		fp = user_backtrace(entry, fp, 0);
-+}
-+
-+bool fill_callchain(unsigned long pc, void *entry)
-+{
-+	return perf_callchain_store(entry, pc);
-+}
-+
-+void notrace walk_stackframe(struct task_struct *task,
-+	struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg);
-+void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-+			   struct pt_regs *regs)
-+{
-+	/* RISC-V does not support perf in guest mode. */
-+	if (perf_guest_cbs && perf_guest_cbs->is_in_guest()) {
-+		pr_warn("RISC-V does not support perf in guest mode!");
-+		return;
-+	}
-+
-+	walk_stackframe(NULL, regs, fill_callchain, entry);
-+}
-diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-index f15642715d1a..0940681d2f68 100644
---- a/arch/riscv/kernel/stacktrace.c
-+++ b/arch/riscv/kernel/stacktrace.c
-@@ -19,8 +19,8 @@ struct stackframe {
- 	unsigned long ra;
- };
- 
--static void notrace walk_stackframe(struct task_struct *task,
--	struct pt_regs *regs, bool (*fn)(unsigned long, void *), void *arg)
-+void notrace walk_stackframe(struct task_struct *task, struct pt_regs *regs,
-+			     bool (*fn)(unsigned long, void *), void *arg)
- {
- 	unsigned long fp, sp, pc;
- 
+Right, but that doesn't mean that the current driver design is
+correct.  ACPI, which is in theory a description of the hardware
+doesn't seem to think so.  It looks more like we do this in Linux as a
+convenience function to link the devices.  Instead this 'parent' seems
+to be represented as a very small register space at the end of the SE
+banks.
+
+> But if this is the one whack left to get the thing to boot then I think
+> we should merge it.
+
+Amazing, thank you!
+
+Do you know how we go about getting this merged?  We only potentially
+have 0.5 weeks (1.5 weeks if there is an -rc8 [doubtful]), so we need
+to move fast.  Would you be prepared to send it to Linus for -fixes?
+I'd do it myself, but this is a little out of my remit.
+
+Nothing heard from Andy for a very long time.
+
+> > Moving forward we can try to come up with a suitable plan to implement
+> > DMA in the ACPI use-case - but again, this is feature adding work
+> > which should be carried out against -next, where as this patch needs
+> > to go in via the current -rcs ASAP.
+> 
+> Sounds good.
+
+Great.
+
 -- 
-2.23.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
