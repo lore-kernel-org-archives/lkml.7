@@ -2,51 +2,53 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F7AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B400C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3879208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2AA21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621346;
-	bh=Jm/m4caFgQ2a7ortrK8Zzy+WsfxLIPCafK0O0I0TJjo=;
+	s=default; t=1567621349;
+	bh=AlYrLLd2/oNTqAUY81/sN6/lWfyg0HvsynexbqdfeLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cevmTXiCNaaqoPG3lcVBxMWjSV4dd5CtKAyUmIUvj0V2CEjEaalr6OYBhxTfpcsxd
-	 vMGSxBrQyTHeX1OkHMwCetRjwXcsLnIVyUKAkJLxkMapQxEeY40vqaPY6blrEaEqtx
-	 chtUHOVAgAaw9kOAG39PuT8w6KfHZ+DKIYiMYZrg=
+	b=RWL4qN0yExsDTu8DO/xMdZe33hSq0wFf9faSw4LFFxenLfx2bArr4OfUYO0ftkaXB
+	 Y1vXrN4rV7P9tLMPROFHsX4baNpfBYpo6NboAQeIBVg1JAg98mzhDZIqk0WPl4SybI
+	 I3FJ3kd9OY9+L9fQkvd0jhRC4WWLsAh2j5oOGiu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbfIDSEp (ORCPT
+        id S2389126AbfIDSEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:04:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45850 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732312AbfIDSEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:41 -0400
+        id S2389117AbfIDSEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D969A233FF;
-        Wed,  4 Sep 2019 18:04:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E71D206BA;
+        Wed,  4 Sep 2019 18:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620281;
-        bh=Jm/m4caFgQ2a7ortrK8Zzy+WsfxLIPCafK0O0I0TJjo=;
+        s=default; t=1567620278;
+        bh=AlYrLLd2/oNTqAUY81/sN6/lWfyg0HvsynexbqdfeLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NZrzvHxrNh+PG223lxJFXzmzj9nPH9yxxqv8JZUFmpJKmDzuNE0pKPH6dKonFFYXr
-         blymOypDHP3440YNfcJ400fXzuJ/1BWWZRvzYKmhd517q8WSvWkL9fAVq6WMHerjCA
-         yGaOqziJ7AtUNCP8NURn0svpQPO9R/0w6hV2gphU=
+        b=iE4Yfawh76dePGnlD7h8yAgdSu6diNTqgo6Psi4usPlrn1Um4KEFEFZXyTwgVjZxO
+         bM/eHhba7wQqR5y15lwO2CaEvwiPKMaUpAbfp3xa0tdkU5takLVjgw8mA3unJw3DnS
+         n/sYD4Iu7GThuelLmtOLa3z4z755vl5rWxP9RlEs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.14 43/57] intel_th: pci: Add Tiger Lake support
-Date:   Wed,  4 Sep 2019 19:54:11 +0200
-Message-Id: <20190904175306.304199267@linuxfoundation.org>
+        stable@vger.kernel.org, Brad Spengler <spender@grsecurity.net>,
+        Dianzhang Chen <dianzhangchen0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com
+Subject: [PATCH 4.14 57/57] x86/ptrace: fix up botched merge of spectrev1 fix
+Date:   Wed,  4 Sep 2019 19:54:25 +0200
+Message-Id: <20190904175307.682768555@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -59,34 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 9c78255fdde45c6b9a1ee30f652f7b34c727f5c7 upstream.
+I incorrectly merged commit 31a2fbb390fe ("x86/ptrace: Fix possible
+spectre-v1 in ptrace_get_debugreg()") when backporting it, as was
+graciously pointed out at
+https://grsecurity.net/teardown_of_a_failed_linux_lts_spectre_fix.php
 
-This adds support for the Trace Hub in Tiger Lake PCH.
+Resolve the upstream difference with the stable kernel merge to properly
+protect things.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.14+
-Link: https://lore.kernel.org/r/20190821074955.3925-5-alexander.shishkin@linux.intel.com
+Reported-by: Brad Spengler <spender@grsecurity.net>
+Cc: Dianzhang Chen <dianzhangchen0@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: <bp@alien8.de>
+Cc: <hpa@zytor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kernel/ptrace.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -188,6 +188,11 @@ static const struct pci_device_id intel_
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x45c5),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Tiger Lake PCH */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{ 0 },
- };
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -652,11 +652,10 @@ static unsigned long ptrace_get_debugreg
+ {
+ 	struct thread_struct *thread = &tsk->thread;
+ 	unsigned long val = 0;
+-	int index = n;
  
+ 	if (n < HBP_NUM) {
++		int index = array_index_nospec(n, HBP_NUM);
+ 		struct perf_event *bp = thread->ptrace_bps[index];
+-		index = array_index_nospec(index, HBP_NUM);
+ 
+ 		if (bp)
+ 			val = bp->hw.info.address;
 
 
