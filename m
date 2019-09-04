@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4DCC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE273C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1797F2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9771D20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620472;
-	bh=5uk+51uu0Z02aMpaY4RrJs1/FVlS4vsGz6j6s1yrv74=;
+	s=default; t=1567620474;
+	bh=0JTnuWsTelDkywrJ0M1VQsfCLhs1bVpfAngi0Bt8z9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YwB3zcplYr6OmX8MRFS5svp4xLI2G+bnhTbsfVloVyQwgTeO/1u/JrBdeP4ikuP2U
-	 gqc9TsgHg3CS2q8wtRBUgIX9N3aAj0apgUh4u/Y1/uHDGeSXKYO6p9vEUY8+Fo9B0E
-	 G9i/BY3y8eqUIChG9tuGTbpDf4ECf7+VbIXn14E8=
+	b=mRsval5bfffFf3PGdlhYFOb7/z6apXjEucZwDA0a/LvNSgQCopfmR7+VdyUZ4HZJc
+	 USydFrs8ssx+hjCz3x7AzIOEvgPnk0wcKNqL9mftU4gGvJ32o3goac74l7tdTge3gT
+	 pPh5yXAslM5OW3Xz/f+wsGvYOE3I4HMO6pKkaaj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389677AbfIDSHv (ORCPT
+        id S2389091AbfIDSHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:07:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389666AbfIDSHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:48 -0400
+        id S2389673AbfIDSHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:07:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E121B2087E;
-        Wed,  4 Sep 2019 18:07:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9611722CEA;
+        Wed,  4 Sep 2019 18:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620467;
-        bh=5uk+51uu0Z02aMpaY4RrJs1/FVlS4vsGz6j6s1yrv74=;
+        s=default; t=1567620470;
+        bh=0JTnuWsTelDkywrJ0M1VQsfCLhs1bVpfAngi0Bt8z9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oF4z7BK5kJEcPBEg6sLeS0JD/DEgNmUnqM6C3ylc7zS7+tDWzkqsvAEuOFyJeQPos
-         acxnbxGY7jmqVyShBoiU8tcyUR8qzx4WI5NaFabUFwuvCZ+OBbVUDZCkki3RxgHkre
-         dLi4uejZegZ/5FkU9Jyfp05Ugdcey1rq5xxhDkqo=
+        b=qik2EbBDcfB8OyGfrBcU4zWn1PLWAp6oHaGib4Q/17J/MKAIIRZZoSO601xUNWCb6
+         UsHJ8DCipxRz9Rw5fIoNTZZWkLzDgX9GfWOHTahxo8LTkbSa48ClpCzlcR+tH98zuz
+         dFc+48F8qmibVyPlPtYjvUy7lyhWImaotGQl/i18=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 4.19 69/93] fsi: scom: Dont abort operations for minor errors
-Date:   Wed,  4 Sep 2019 19:54:11 +0200
-Message-Id: <20190904175309.006011103@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH 4.19 70/93] lib: logic_pio: Fix RCU usage
+Date:   Wed,  4 Sep 2019 19:54:12 +0200
+Message-Id: <20190904175309.102352926@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -61,52 +59,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: John Garry <john.garry@huawei.com>
 
-commit 8919dfcb31161fae7d607bbef5247e5e82fd6457 upstream.
+commit 06709e81c668f5f56c65b806895b278517bd44e0 upstream.
 
-The scom driver currently fails out of operations if certain system
-errors are flagged in the status register; system checkstop, special
-attention, or recoverable error. These errors won't impact the ability
-of the scom engine to perform operations, so the driver should continue
-under these conditions.
-Also, don't do a PIB reset for these conditions, since it won't help.
+The traversing of io_range_list with list_for_each_entry_rcu()
+is not properly protected by rcu_read_lock() and rcu_read_unlock(),
+so add them.
 
-Fixes: 6b293258cded ("fsi: scom: Major overhaul")
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Link: https://lore.kernel.org/r/20190827041249.13381-1-jk@ozlabs.org
+These functions mark the critical section scope where the list is
+protected for the reader, it cannot be  "reclaimed". Any updater - in
+this case, the logical PIO registration functions - cannot update the
+list until the reader exits this critical section.
+
+In addition, the list traversing used in logic_pio_register_range()
+does not need to use the rcu variant.
+
+This is because we are already using io_range_mutex to guarantee mutual
+exclusion from mutating the list.
+
+Cc: stable@vger.kernel.org
+Fixes: 031e3601869c ("lib: Add generic PIO mapping method")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/fsi/fsi-scom.c |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ lib/logic_pio.c |   49 +++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 35 insertions(+), 14 deletions(-)
 
---- a/drivers/fsi/fsi-scom.c
-+++ b/drivers/fsi/fsi-scom.c
-@@ -47,8 +47,7 @@
- #define SCOM_STATUS_PIB_RESP_MASK	0x00007000
- #define SCOM_STATUS_PIB_RESP_SHIFT	12
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -46,7 +46,7 @@ int logic_pio_register_range(struct logi
+ 	end = new_range->hw_start + new_range->size;
  
--#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_ERR_SUMMARY | \
--					 SCOM_STATUS_PROTECTION | \
-+#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_PROTECTION | \
- 					 SCOM_STATUS_PARITY |	  \
- 					 SCOM_STATUS_PIB_ABORT | \
- 					 SCOM_STATUS_PIB_RESP_MASK)
-@@ -260,11 +259,6 @@ static int handle_fsi2pib_status(struct
- 	/* Return -EBUSY on PIB abort to force a retry */
- 	if (status & SCOM_STATUS_PIB_ABORT)
- 		return -EBUSY;
--	if (status & SCOM_STATUS_ERR_SUMMARY) {
--		fsi_device_write(scom->fsi_dev, SCOM_FSI2PIB_RESET_REG, &dummy,
--				 sizeof(uint32_t));
--		return -EIO;
--	}
- 	return 0;
+ 	mutex_lock(&io_range_mutex);
+-	list_for_each_entry_rcu(range, &io_range_list, list) {
++	list_for_each_entry(range, &io_range_list, list) {
+ 		if (range->fwnode == new_range->fwnode) {
+ 			/* range already there */
+ 			goto end_register;
+@@ -108,26 +108,38 @@ end_register:
+  */
+ struct logic_pio_hwaddr *find_io_range_by_fwnode(struct fwnode_handle *fwnode)
+ {
+-	struct logic_pio_hwaddr *range;
++	struct logic_pio_hwaddr *range, *found_range = NULL;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(range, &io_range_list, list) {
+-		if (range->fwnode == fwnode)
+-			return range;
++		if (range->fwnode == fwnode) {
++			found_range = range;
++			break;
++		}
+ 	}
+-	return NULL;
++	rcu_read_unlock();
++
++	return found_range;
+ }
+ 
+ /* Return a registered range given an input PIO token */
+ static struct logic_pio_hwaddr *find_io_range(unsigned long pio)
+ {
+-	struct logic_pio_hwaddr *range;
++	struct logic_pio_hwaddr *range, *found_range = NULL;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(range, &io_range_list, list) {
+-		if (in_range(pio, range->io_start, range->size))
+-			return range;
++		if (in_range(pio, range->io_start, range->size)) {
++			found_range = range;
++			break;
++		}
+ 	}
+-	pr_err("PIO entry token %lx invalid\n", pio);
+-	return NULL;
++	rcu_read_unlock();
++
++	if (!found_range)
++		pr_err("PIO entry token 0x%lx invalid\n", pio);
++
++	return found_range;
+ }
+ 
+ /**
+@@ -180,14 +192,23 @@ unsigned long logic_pio_trans_cpuaddr(re
+ {
+ 	struct logic_pio_hwaddr *range;
+ 
++	rcu_read_lock();
+ 	list_for_each_entry_rcu(range, &io_range_list, list) {
+ 		if (range->flags != LOGIC_PIO_CPU_MMIO)
+ 			continue;
+-		if (in_range(addr, range->hw_start, range->size))
+-			return addr - range->hw_start + range->io_start;
++		if (in_range(addr, range->hw_start, range->size)) {
++			unsigned long cpuaddr;
++
++			cpuaddr = addr - range->hw_start + range->io_start;
++
++			rcu_read_unlock();
++			return cpuaddr;
++		}
+ 	}
+-	pr_err("addr %llx not registered in io_range_list\n",
+-	       (unsigned long long) addr);
++	rcu_read_unlock();
++
++	pr_err("addr %pa not registered in io_range_list\n", &addr);
++
+ 	return ~0UL;
  }
  
 
