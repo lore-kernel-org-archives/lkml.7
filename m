@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989A9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E33C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740DB206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B16423402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620373;
-	bh=1z0/PnKnzdrtHvrkdbZNhkIDZuCv6e19BiAJJKBBu8I=;
+	s=default; t=1567620376;
+	bh=wi7QPloT7ZupYfLWvxNTgmmg5zP7Awd/iBAz68mCT38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qDItxc76+I89qyjxMOdLbGddH9mZgHdiBf83ebg/AKC7vnednBe+UTY+cSFckvdeg
-	 IJhGi1oshVNR1annqn8KYYntkyiX3arXNDR/ViiWe93olpXi7ZZpUEV/HUTEMsWzCJ
-	 7CM9PocmVOyeCqxFWs1qOKKHNROKLWQb9HMvuoD4=
+	b=digexqWG2WJqzzkgBped8gFXKHKoEbQvFyWNLF6aa6V8zQeoWRN9ju7yBcw065pcv
+	 67yB5x7GMp/n3p7uIfn80o/MW4fxLkNQQH4zHQFKx+xm5ltVf/eiVMs0bpMOD+gxlT
+	 Z2d/NvD8OO//OH9Loxo1Z8DHZH0ZB6r9z165jqD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389405AbfIDSGM (ORCPT
+        id S2389410AbfIDSGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389393AbfIDSGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:09 -0400
+        id S2389401AbfIDSGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C89206B8;
-        Wed,  4 Sep 2019 18:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5496B23402;
+        Wed,  4 Sep 2019 18:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620369;
-        bh=1z0/PnKnzdrtHvrkdbZNhkIDZuCv6e19BiAJJKBBu8I=;
+        s=default; t=1567620371;
+        bh=wi7QPloT7ZupYfLWvxNTgmmg5zP7Awd/iBAz68mCT38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jhMAna5C9uqno85G47V1vkKYXTl1Vw1U3WGLp+mgcAUeNOsGs8SzULCjq6VXeSytW
-         8+I3EYsof4D5+KloRSlL/ZtlMaqS2Dc62b39001zIoEnj4e+BhrTbvTLHHyOYmeV12
-         BrEYLLcWZ21hWFYXk1nFxL+Yp4J6r6fLl/AefAsQ=
+        b=nXXNZjEdA1dQd7WerCZ0YDqc0eqbzINJhinTzUjRe7mcZsPJOpL1DLTHSMCbmrGi6
+         H9drH/Wd6KQbxkNu6FDGjh6YjjHjW005ObBs9WZz5GW46DMcJy5hKlkv+FgnC6UGBo
+         oSJo2yyRNeq7XSsEgzh/bIgDLFerGtuo4LY5YxmA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vakul Garg <vakul.garg@nxp.com>,
+        stable@vger.kernel.org,
+        syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 31/93] net/tls: Fixed return value when tls_complete_pending_work() fails
-Date:   Wed,  4 Sep 2019 19:53:33 +0200
-Message-Id: <20190904175305.973059058@linuxfoundation.org>
+Subject: [PATCH 4.19 32/93] net/tls: swap sk_write_space on close
+Date:   Wed,  4 Sep 2019 19:53:34 +0200
+Message-Id: <20190904175306.030325372@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,61 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vakul Garg <vakul.garg@nxp.com>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 150085791afb8054e11d2e080d4b9cd755dd7f69 ]
+[ Upstream commit 57c722e932cfb82e9820bbaae1b1f7222ea97b52 ]
 
-In tls_sw_sendmsg() and tls_sw_sendpage(), the variable 'ret' has
-been set to return value of tls_complete_pending_work(). This allows
-return of proper error code if tls_complete_pending_work() fails.
+Now that we swap the original proto and clear the ULP pointer
+on close we have to make sure no callback will try to access
+the freed state. sk_write_space is not part of sk_prot, remember
+to swap it.
 
-Fixes: 3c4d7559159b ("tls: kernel TLS support")
-Signed-off-by: Vakul Garg <vakul.garg@nxp.com>
+Reported-by: syzbot+dcdc9deefaec44785f32@syzkaller.appspotmail.com
+Fixes: 95fa145479fb ("bpf: sockmap/tls, close can race with map free")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_sw.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ net/tls/tls_main.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -354,7 +354,7 @@ int tls_sw_sendmsg(struct sock *sk, stru
- {
- 	struct tls_context *tls_ctx = tls_get_ctx(sk);
- 	struct tls_sw_context_tx *ctx = tls_sw_ctx_tx(tls_ctx);
--	int ret = 0;
-+	int ret;
- 	int required_size;
- 	long timeo = sock_sndtimeo(sk, msg->msg_flags & MSG_DONTWAIT);
- 	bool eor = !(msg->msg_flags & MSG_MORE);
-@@ -370,7 +370,8 @@ int tls_sw_sendmsg(struct sock *sk, stru
- 
- 	lock_sock(sk);
- 
--	if (tls_complete_pending_work(sk, tls_ctx, msg->msg_flags, &timeo))
-+	ret = tls_complete_pending_work(sk, tls_ctx, msg->msg_flags, &timeo);
-+	if (ret)
- 		goto send_end;
- 
- 	if (unlikely(msg->msg_controllen)) {
-@@ -505,7 +506,7 @@ int tls_sw_sendpage(struct sock *sk, str
- {
- 	struct tls_context *tls_ctx = tls_get_ctx(sk);
- 	struct tls_sw_context_tx *ctx = tls_sw_ctx_tx(tls_ctx);
--	int ret = 0;
-+	int ret;
- 	long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
- 	bool eor;
- 	size_t orig_size = size;
-@@ -525,7 +526,8 @@ int tls_sw_sendpage(struct sock *sk, str
- 
- 	sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
- 
--	if (tls_complete_pending_work(sk, tls_ctx, flags, &timeo))
-+	ret = tls_complete_pending_work(sk, tls_ctx, flags, &timeo);
-+	if (ret)
- 		goto sendpage_end;
- 
- 	/* Call the sk_stream functions to manage the sndbuf mem. */
+--- a/net/tls/tls_main.c
++++ b/net/tls/tls_main.c
+@@ -301,6 +301,7 @@ static void tls_sk_proto_close(struct so
+ #else
+ 	{
+ #endif
++		sk->sk_write_space = ctx->sk_write_space;
+ 		tls_ctx_free(ctx);
+ 		ctx = NULL;
+ 	}
 
 
