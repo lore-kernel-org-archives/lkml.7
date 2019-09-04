@@ -2,91 +2,203 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB020C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D491C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFFFD2168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006A422CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:23:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="YuMj7bu6"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="yRIbvoDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730219AbfIDNWB (ORCPT
+        id S1730271AbfIDNX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:22:01 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:38082 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729020AbfIDNWB (ORCPT
+        Wed, 4 Sep 2019 09:23:57 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:4662 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727675AbfIDNX4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:22:01 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 3F5B03F7B6;
-        Wed,  4 Sep 2019 15:21:59 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=YuMj7bu6;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JaEMwbwikqrj; Wed,  4 Sep 2019 15:21:58 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id AB2613F538;
-        Wed,  4 Sep 2019 15:21:57 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 1C21F360160;
-        Wed,  4 Sep 2019 15:21:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1567603317; bh=yiIBmQhIS6s0ipKjugaVe6+eubjvGH0sI0nWCFLP7rc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YuMj7bu680Kp7FvTxZJWVkWQxK0ymtONbkrPrLR7useEdrIv5vqWYL8/f3gnpGA8O
-         46LAMwg7ZwIjG28d0UWROFVJ8Ab+P9vXQk+AM5Ma7sjgqK3BHpeOvw+yMdnsnvigq/
-         bK0phgOaoY4JzjcjyPO+qmNiTYXoU7KuRF7LAChk=
-Subject: Re: dma api errors with swiotlb
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <e3c4b2e1-7518-ab0e-a6ce-3fae9903dac0@shipmail.org>
- <20190904121722.GA15601@infradead.org>
- <4e21951d-025a-2b3d-14c8-878c6f237525@shipmail.org>
- <20190904125538.GA30177@infradead.org>
- <a78c4100-4f93-d96d-60d1-d965a7769fca@shipmail.org>
- <20190904131638.GA29164@infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <d7bf95a0-e4c3-f257-77f5-c384996cf7f4@shipmail.org>
-Date:   Wed, 4 Sep 2019 15:21:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 4 Sep 2019 09:23:56 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x84DNOiF027845;
+        Wed, 4 Sep 2019 09:23:50 -0400
+Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2052.outbound.protection.outlook.com [104.47.32.52])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2uqnh5fpj2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Sep 2019 09:23:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U+seGsod1H+HZGhlcpSoB7rtKWefU4jPQyOjf6TrY+h5UkPAGBvVLbN+aW21USvitTDG2xNKQtrJloYMNqpLaQmteKq80Y8phdJY0VN0MzN7Yax+RZubIqQ0HlitaaDe3rnV8CZnO1cmBF5LwfFMFgB1iZq/kpIlLZ5roLAQ3L7WF72XS/gYo7ki6Xsy+J+dSgSF5cqHb/PIIGW4GIJLwuP6fTdYwrSVzSvIu0TIiGjOebSGwBcKg/ttc/yeuE9GK25v2qRIf90RCP3SCOaYvwroxwfb6iIxAJJCR/uA2KScAOpgKko5E48rERmgTUxvA0TWxbTRGQByU5TYgNA2/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EwyWsWTTjnhaEVbnOb0I+raOCV6dgAKf/IPOLbO6ze0=;
+ b=gSz8rpEBvn8kt0i+uWj6soGckh9IU5xIDnx0NTNIXIU+ztxR3MuZnlA5gER9bq0lM9Ox5GPDCoLt/59cIHhkJAcCrKW6S2OTd0K4/e2i7uZGp/GuLOQ6T1G2VxT9lNW+DHRXFI+z9V1V9DrpO1+4huXvQ0NhnKfT1hc7f572dzculbBvf9lQdcu7uDOZjJe/30q+/an4M3Ke907H1nkIj3VbY3zaOVvgSxPo5/w3/2LyhVGgBqLnFUoCAUqAHu1RedF9/Qy76Vit0mbGoW2CbyXigB08MFGwvt+UNTJXwCvRGzmyOQCQ43DVHZzeVnQNRqXobPMrEPp2sozaXq3fCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=lunn.ch smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EwyWsWTTjnhaEVbnOb0I+raOCV6dgAKf/IPOLbO6ze0=;
+ b=yRIbvoDjsNvmMFIyzsfbHbHuHmgF6+68RvwoHUydVms9Wke70u9AY5fRZns+0oSKZgRWjtv+wwBmi9UMqynAzWrD/2CHx9vqjSIBfsb4C0cUmokP97CA8MdKtMSdAyHZNxcnyYWZiKowNciyYGcIuCoIWZGBkT4n8yndVammk1I=
+Received: from MWHPR03CA0019.namprd03.prod.outlook.com (2603:10b6:300:117::29)
+ by BN7PR03MB3523.namprd03.prod.outlook.com (2603:10b6:406:bf::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.19; Wed, 4 Sep
+ 2019 13:23:46 +0000
+Received: from CY1NAM02FT010.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::201) by MWHPR03CA0019.outlook.office365.com
+ (2603:10b6:300:117::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.14 via Frontend
+ Transport; Wed, 4 Sep 2019 13:23:45 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ CY1NAM02FT010.mail.protection.outlook.com (10.152.75.50) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2220.16
+ via Frontend Transport; Wed, 4 Sep 2019 13:23:43 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x84DNgaY019827
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 4 Sep 2019 06:23:42 -0700
+Received: from saturn.ad.analog.com (10.48.65.123) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 4 Sep 2019 09:23:41 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 1/2] ethtool: implement Energy Detect Powerdown support via phy-tunable
+Date:   Wed, 4 Sep 2019 19:23:21 +0300
+Message-ID: <20190904162322.17542-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904162322.17542-1-alexandru.ardelean@analog.com>
+References: <20190904162322.17542-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20190904131638.GA29164@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(39860400002)(346002)(2980300002)(189003)(199004)(86362001)(1076003)(246002)(54906003)(110136005)(50226002)(47776003)(186003)(8936002)(476003)(26005)(106002)(5660300002)(8676002)(486006)(336012)(2616005)(126002)(478600001)(44832011)(356004)(6666004)(446003)(11346002)(426003)(316002)(36756003)(7636002)(4326008)(2906002)(2870700001)(305945005)(70586007)(107886003)(70206006)(51416003)(76176011)(7696005)(14444005)(48376002)(50466002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR03MB3523;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 04161901-0d38-4c3a-61ad-08d7313b1cc7
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BN7PR03MB3523;
+X-MS-TrafficTypeDiagnostic: BN7PR03MB3523:
+X-Microsoft-Antispam-PRVS: <BN7PR03MB3523226CF693011822708F54F9B80@BN7PR03MB3523.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 0150F3F97D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: FowBlHPxDtZrkUBK6aIHWH2lidchYmd3YnBNyID43rS5JexsGwTegykmWz6Bg6/6YLmjoxCuRqEkyZ6mSYZCLvyUtipwNQNrsNdtoVAxHz845JsZjMcxSSlfJXKyV7akta5glIhLNupHjoNCh9J9TN28ZbCgxYhpsMGqwvBmR582MMLG0824nhB8DgGI260rxyUxRXS9/0bLIzxjqS3IKtiQe03nhkI4++EVLwttyB8/Fwr3KwC95qIBEq4PbxyjZa4A9FyoXrTjLNlvowMqZXuKnB+g+TnBrG1nguVWvqGwNsUzYWFziDG5o7zSM2QcZ2gwfvbl/hpqqK7QAsCuyzgM8fAM91FSuPsJ1IWXWi0CwZXKyru822+ADBG+2Cxqx3BBd3631iH912BHaompV/Wa6LzJKEIHzamKPKDwe4I=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2019 13:23:43.7853
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04161901-0d38-4c3a-61ad-08d7313b1cc7
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB3523
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-04_04:2019-09-03,2019-09-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0 impostorscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 phishscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1909040135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 3:16 PM, Christoph Hellwig wrote:
-> On Wed, Sep 04, 2019 at 03:02:14PM +0200, Thomas Hellström (VMware) wrote:
->> It looks like it does that, although when we send it, the SWIOTLB error has
->> already occured and been printed out, and then the sequence starts again.
-> Well, the only way to really find out is to try.  We also have a
-> backoff algorithm in the SCSI midlayer, so it should not be much of
-> an inpact.  If you care about the warnings they can be disabled using
-> DMA_ATTR_NO_WARN.  I have to admit that I'm not even sure the warnings
-> are all that useful, but that's something you need to take up with
-> the swiotlb maintainer.
+The `phy_tunable_id` has been named `ETHTOOL_PHY_EDPD` since it looks like
+this feature is common across other PHYs (like EEE), and defining
+`ETHTOOL_PHY_ENERGY_DETECT_POWER_DOWN` seems too long.
 
-Yes, I guess so. I actually think the warnings make sense, since while 
-the scsi midlayer handles this nicely, other drivers competing for the 
-space might not.
+The way EDPD works, is that the RX block is put to a lower power mode,
+except for link-pulse detection circuits. The TX block is also put to low
+power mode, but the PHY wakes-up periodically to send link pulses, to avoid
+lock-ups in case the other side is also in EDPD mode.
 
-Thanks!
-Thomas
+Currently, there are 2 PHY drivers that look like they could use this new
+PHY tunable feature: the `adin` && `micrel` PHYs.
 
+The ADIN's datasheet mentions that TX pulses are at intervals of 1 second
+default each, and they can be disabled. For the Micrel KSZ9031 PHY, the
+datasheet does not mention whether they can be disabled, but mentions that
+they can modified.
+
+The way this change is structured, is similar to the PHY tunable downshift
+control:
+* a `ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL` value is exposed to cover a default
+  TX interval; some PHYs could specify a certain value that makes sense
+* `ETHTOOL_PHY_EDPD_NO_TX` would disable TX when EDPD is enabled
+* `ETHTOOL_PHY_EDPD_DISABLE` will disable EDPD
+
+This should allow PHYs to:
+* enable EDPD and not enable TX pulses (interval would be 0)
+* enable EDPD and configure TX pulse interval; note that TX interval units
+  would be PHY specific; we could consider `seconds` as units, but it could
+  happen that some PHYs would be prefer 500 milliseconds as a unit;
+  a maximum of 32766 units should be sufficient
+* disable EDPD
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ include/uapi/linux/ethtool.h | 5 +++++
+ net/core/ethtool.c           | 6 ++++++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+index dd06302aa93e..0349e9c4350f 100644
+--- a/include/uapi/linux/ethtool.h
++++ b/include/uapi/linux/ethtool.h
+@@ -259,10 +259,15 @@ struct ethtool_tunable {
+ #define ETHTOOL_PHY_FAST_LINK_DOWN_ON	0
+ #define ETHTOOL_PHY_FAST_LINK_DOWN_OFF	0xff
+ 
++#define ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL	0x7fff
++#define ETHTOOL_PHY_EDPD_NO_TX			0x8000
++#define ETHTOOL_PHY_EDPD_DISABLE		0
++
+ enum phy_tunable_id {
+ 	ETHTOOL_PHY_ID_UNSPEC,
+ 	ETHTOOL_PHY_DOWNSHIFT,
+ 	ETHTOOL_PHY_FAST_LINK_DOWN,
++	ETHTOOL_PHY_EDPD,
+ 	/*
+ 	 * Add your fresh new phy tunable attribute above and remember to update
+ 	 * phy_tunable_strings[] in net/core/ethtool.c
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index 6288e69e94fc..c763106c73fc 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -133,6 +133,7 @@ phy_tunable_strings[__ETHTOOL_PHY_TUNABLE_COUNT][ETH_GSTRING_LEN] = {
+ 	[ETHTOOL_ID_UNSPEC]     = "Unspec",
+ 	[ETHTOOL_PHY_DOWNSHIFT]	= "phy-downshift",
+ 	[ETHTOOL_PHY_FAST_LINK_DOWN] = "phy-fast-link-down",
++	[ETHTOOL_PHY_EDPD]	= "phy-energy-detect-power-down",
+ };
+ 
+ static int ethtool_get_features(struct net_device *dev, void __user *useraddr)
+@@ -2451,6 +2452,11 @@ static int ethtool_phy_tunable_valid(const struct ethtool_tunable *tuna)
+ 		    tuna->type_id != ETHTOOL_TUNABLE_U8)
+ 			return -EINVAL;
+ 		break;
++	case ETHTOOL_PHY_EDPD:
++		if (tuna->len != sizeof(u16) ||
++		    tuna->type_id != ETHTOOL_TUNABLE_U16)
++			return -EINVAL;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+-- 
+2.20.1
 
