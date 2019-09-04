@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33312C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C3FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADBD233FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E3522CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620165;
-	bh=1RYvOBwHtQajG5Il0JH6xNqFr/+oHkRE2seaRdexZtc=;
+	s=default; t=1567620168;
+	bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dvUmiEqd9hkqH9PYHWqn0Qp83wlXiVEpLq+za214D17/CL7dNV/wUra8NGNG6diP
-	 zjlcUZMmsgPr3nk9D1i0Ox902KYmmHF+AiRsg5ud0aaBwBxUnh7kzv/hsgJqT0KDba
-	 mQTa83ePLk7lubtsuk2xtpXfFMb2DR+CO2JsPnAI=
+	b=OVWD4KoET1CQeti+z/g/DQA4lZyHuy8+AMifef+s+IDCBAOruPuWkIew1toPAipoV
+	 4WBVBvAVF95s6b/SsE/cYmAt+NgPDtpAriC9VFYsvlD9Do4JSbkGyz7YKU9t6N/JRP
+	 dJq7DIx6rI4KuQ3eU/UwZ6418KN0WgEaZPLO3lMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388812AbfIDSCo (ORCPT
+        id S2388421AbfIDSCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42756 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388800AbfIDSCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:41 -0400
+        id S2388422AbfIDSCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE45D208E4;
-        Wed,  4 Sep 2019 18:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E0B522CF5;
+        Wed,  4 Sep 2019 18:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620161;
-        bh=1RYvOBwHtQajG5Il0JH6xNqFr/+oHkRE2seaRdexZtc=;
+        s=default; t=1567620163;
+        bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vw3cRvcBS7fbY1UuTaRlHtcca3zUpVJ4hzao3azUVNpak1Dn/N3x/sM9Ik6qjB4fy
-         fEp5TZsLXPZTLCivrviqeBTed3jknVyHZUhhsbgn7gSX9/bGGZejrIWi4yGwnIxxlI
-         LPaXPXzZ/mT6GHNFQK7oM5zy5P6ofdtsOipCLSkA=
+        b=DlVQSHl3l8sPTSyaaqMM/pXLpmDtXNG4Ilrhyu28dUujhtENO7yuui5+b+Bn2lg21
+         C4KGvgA5tESyhC51bsBqYDKos0wkVxRqcYMQQVVxw7lLfF+AKFhnb02h4qTKEdySxX
+         z0rDiIiQZ5xZagfUkr5KZZnBOgfmUc39N8W+7xB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
+        stable@vger.kernel.org, Pedro Sousa <sousa@synopsys.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 13/57] drm/bridge: tfp410: fix memleak in get_modes()
-Date:   Wed,  4 Sep 2019 19:53:41 +0200
-Message-Id: <20190904175303.217813422@linuxfoundation.org>
+Subject: [PATCH 4.14 14/57] scsi: ufs: Fix RX_TERMINATION_FORCE_ENABLE define value
+Date:   Wed,  4 Sep 2019 19:53:42 +0200
+Message-Id: <20190904175303.327466376@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,38 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c08f99c39083ab55a9c93b3e93cef48711294dad ]
+[ Upstream commit ebcb8f8508c5edf428f52525cec74d28edea7bcb ]
 
-We don't free the edid blob allocated by the call to drm_get_edid(),
-causing a memleak. Fix this by calling kfree(edid) at the end of the
-get_modes().
+Fix RX_TERMINATION_FORCE_ENABLE define value from 0x0089 to 0x00A9
+according to MIPI Alliance MPHY specification.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190610135739.6077-1-tomi.valkeinen@ti.com
+Fixes: e785060ea3a1 ("ufs: definitions for phy interface")
+Signed-off-by: Pedro Sousa <sousa@synopsys.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/ti-tfp410.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/unipro.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-index acb857030951a..1bb01905be8e3 100644
---- a/drivers/gpu/drm/bridge/ti-tfp410.c
-+++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-@@ -64,7 +64,12 @@ static int tfp410_get_modes(struct drm_connector *connector)
- 
- 	drm_mode_connector_update_edid_property(connector, edid);
- 
--	return drm_add_edid_modes(connector, edid);
-+	ret = drm_add_edid_modes(connector, edid);
-+
-+	kfree(edid);
-+
-+	return ret;
-+
- fallback:
- 	/* No EDID, fallback on the XGA standard modes */
- 	ret = drm_add_modes_noedid(connector, 1920, 1200);
+diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
+index 23129d7b2678d..c77e365264478 100644
+--- a/drivers/scsi/ufs/unipro.h
++++ b/drivers/scsi/ufs/unipro.h
+@@ -52,7 +52,7 @@
+ #define RX_HS_UNTERMINATED_ENABLE		0x00A6
+ #define RX_ENTER_HIBERN8			0x00A7
+ #define RX_BYPASS_8B10B_ENABLE			0x00A8
+-#define RX_TERMINATION_FORCE_ENABLE		0x0089
++#define RX_TERMINATION_FORCE_ENABLE		0x00A9
+ #define RX_MIN_ACTIVATETIME_CAPABILITY		0x008F
+ #define RX_HIBERN8TIME_CAPABILITY		0x0092
+ #define RX_REFCLKFREQ				0x00EB
 -- 
 2.20.1
 
