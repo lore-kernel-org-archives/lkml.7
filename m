@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41436C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D18C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122EF22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC5D22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620828;
-	bh=izBRRnXiw9mOfutHNB06OnVP5gsPFMTfZ8E+HUYKFVE=;
+	s=default; t=1567620833;
+	bh=CSRHk86gh5WIy5DIPkqYlXmBSEzXVknhxkEwMMZeuSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKiCB3B3Kv55z7X/vOxMSAXKr0hNyQSxXbkmZRLlH0prFVSDqVn4Hkggf0Yn1PYPx
-	 zRBR1Pv/7XSApE7qQxzkbnLV++Bs1vfIm2MPjJAu+G0GKQNlwWSpPvqN6oaN5q62lZ
-	 +gvCETMO1XaifMaP4PF6TU2KZ+jc8DYE7iGIfiGA=
+	b=HY1fYOrRPCfasoVzAQ6cB4zLPjKb42juTPkiHn7RiYjdx1y57hatmfl4jHJW180vA
+	 RaYIkZS14jwHkxPybMkqSDeQXJT7h2aQvOUavHj3Ky6FsifA1cEwLm7BPDS9ATK+uC
+	 POSTGYm87HOi2l4KPOPzrmfmwAeq8WQYu0eT+AVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390341AbfIDSNq (ORCPT
+        id S2389991AbfIDSNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58644 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389972AbfIDSNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:43 -0400
+        id S2390346AbfIDSNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC79D208E4;
-        Wed,  4 Sep 2019 18:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D05A208E4;
+        Wed,  4 Sep 2019 18:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620822;
-        bh=izBRRnXiw9mOfutHNB06OnVP5gsPFMTfZ8E+HUYKFVE=;
+        s=default; t=1567620827;
+        bh=CSRHk86gh5WIy5DIPkqYlXmBSEzXVknhxkEwMMZeuSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g53H2+YvJ7V0o1HGulFNEvw7tbfyLiR0ZHtfNKayhX74uZud4ELH1mJM5EtaEGhJN
-         xW1zRsn1BRi2nIOv2t1qYReK3SPFWtx9LcAKI8hATFnE4AKIMItTvvSLtnbbAsc0W9
-         uGni6C+5Jz4XFwhdpotxQhyn3ble3uxF4vSc8OHs=
+        b=CSCetijhJDItUGbKzHbuImpXpkSc8oRb1Ko3yKRPifpzRlruhsb5OI11FrJodvbAm
+         u6ps7+9LkYaFHEpsmvXecia12qOomu65596Vy7Ppoc3z/RIoZWwOvfPhXGoVrM3yyj
+         +JWsnZet3PrhQk6QJJn1mPKN5wFwHfHm9yJjzNco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>
-Subject: [PATCH 5.2 109/143] lib: logic_pio: Add logic_pio_unregister_range()
-Date:   Wed,  4 Sep 2019 19:54:12 +0200
-Message-Id: <20190904175318.668350121@linuxfoundation.org>
+        stable@vger.kernel.org, Huang Rui <ray.huang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Aaron Liu <aaron.liu@amd.com>
+Subject: [PATCH 5.2 111/143] drm/amdgpu: fix GFXOFF on Picasso and Raven2
+Date:   Wed,  4 Sep 2019 19:54:14 +0200
+Message-Id: <20190904175318.740365280@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,59 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Aaron Liu <aaron.liu@amd.com>
 
-commit b884e2de2afc68ce30f7093747378ef972dde253 upstream.
+commit 41940ff50f6c347f3541163702566cd526200d98 upstream.
 
-Add a function to unregister a logical PIO range.
+For picasso(adev->pdev->device == 0x15d8)&raven2(adev->rev_id >= 0x8),
+firmware is sufficient to support gfxoff.
+In commit 98f58ada2d37e, for picasso&raven2,
+return directly and cause gfxoff disabled.
 
-Logical PIO space can still be leaked when unregistering certain
-LOGIC_PIO_CPU_MMIO regions, but this acceptable for now since there are no
-callers to unregister LOGIC_PIO_CPU_MMIO regions, and the logical PIO
-region allocation scheme would need significant work to improve this.
-
+Fixes: 98f58ada2d37 ("drm/amdgpu/gfx9: update pg_flags after determining if gfx off is possible")
+Reviewed-by: Huang Rui <ray.huang@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Aaron Liu <aaron.liu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/logic_pio.h |    1 +
- lib/logic_pio.c           |   14 ++++++++++++++
- 2 files changed, 15 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
---- a/include/linux/logic_pio.h
-+++ b/include/linux/logic_pio.h
-@@ -117,6 +117,7 @@ struct logic_pio_hwaddr *find_io_range_b
- unsigned long logic_pio_trans_hwaddr(struct fwnode_handle *fwnode,
- 			resource_size_t hw_addr, resource_size_t size);
- int logic_pio_register_range(struct logic_pio_hwaddr *newrange);
-+void logic_pio_unregister_range(struct logic_pio_hwaddr *range);
- resource_size_t logic_pio_to_hwaddr(unsigned long pio);
- unsigned long logic_pio_trans_cpuaddr(resource_size_t hw_addr);
- 
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -99,6 +99,20 @@ end_register:
- }
- 
- /**
-+ * logic_pio_unregister_range - unregister a logical PIO range for a host
-+ * @range: pointer to the IO range which has been already registered.
-+ *
-+ * Unregister a previously-registered IO range node.
-+ */
-+void logic_pio_unregister_range(struct logic_pio_hwaddr *range)
-+{
-+	mutex_lock(&io_range_mutex);
-+	list_del_rcu(&range->list);
-+	mutex_unlock(&io_range_mutex);
-+	synchronize_rcu();
-+}
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -588,14 +588,14 @@ static void gfx_v9_0_check_if_need_gfxof
+ 	case CHIP_VEGA20:
+ 		break;
+ 	case CHIP_RAVEN:
+-		if (adev->rev_id >= 0x8 || adev->pdev->device == 0x15d8)
+-			break;
+-		if ((adev->gfx.rlc_fw_version != 106 &&
+-		     adev->gfx.rlc_fw_version < 531) ||
+-		    (adev->gfx.rlc_fw_version == 53815) ||
+-		    (adev->gfx.rlc_feature_version < 1) ||
+-		    !adev->gfx.rlc.is_rlc_v2_1)
++		if (!(adev->rev_id >= 0x8 || adev->pdev->device == 0x15d8)
++			&&((adev->gfx.rlc_fw_version != 106 &&
++			     adev->gfx.rlc_fw_version < 531) ||
++			    (adev->gfx.rlc_fw_version == 53815) ||
++			    (adev->gfx.rlc_feature_version < 1) ||
++			    !adev->gfx.rlc.is_rlc_v2_1))
+ 			adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
 +
-+/**
-  * find_io_range_by_fwnode - find logical PIO range for given FW node
-  * @fwnode: FW node handle associated with logical PIO range
-  *
+ 		if (adev->pm.pp_feature & PP_GFXOFF_MASK)
+ 			adev->pg_flags |= AMD_PG_SUPPORT_GFX_PG |
+ 				AMD_PG_SUPPORT_CP |
 
 
