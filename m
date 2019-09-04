@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1229AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EE1C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70C32087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E09E22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620770;
-	bh=0yclGDOg7Dy3vf9xGWlNF8+UryRlkRqDD76l1GgU0bU=;
+	s=default; t=1567620774;
+	bh=Qt0pZTBm2HLd9hNL3X5vWaW/wEcU1poUIWeHPEe82YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v//CC/ACey+AVV0KHx3jsUUG/IV/fTOfzA15/Rygn0ofBLWq/mFjRGSS1aJXNapE/
-	 gB/a32oHU4FgL5xEpJbeggQr29o26N04xdSl0Bc/t1AvHixfsX3wsobxh1Mwv41pzr
-	 0BgJ0rnd8p1A08IitfCQFZqciuzZEbn3SVlJwAHE=
+	b=tclvfkFem3i4Fj/Vp2XoHGr2RFY5q9zShzjbcUaQJPajn83R+/5UknfYDPEHV/vkT
+	 H5clh8ZUJjq+rqnM3FR2JovUStoqzxsj9UKOjWniEGFTOH34hoHvc291YDwffQRJcM
+	 GHAVxQ1aCx6tRani34sLtyaEclxv4RIhTtQliG2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390572AbfIDSMu (ORCPT
+        id S2390573AbfIDSMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57304 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390566AbfIDSMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:12:46 -0400
+        id S2389947AbfIDSMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:12:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD798206BA;
-        Wed,  4 Sep 2019 18:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B86E206BA;
+        Wed,  4 Sep 2019 18:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620766;
-        bh=0yclGDOg7Dy3vf9xGWlNF8+UryRlkRqDD76l1GgU0bU=;
+        s=default; t=1567620768;
+        bh=Qt0pZTBm2HLd9hNL3X5vWaW/wEcU1poUIWeHPEe82YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q8mCAsRLxDdLQ8csIIyKKyR4M4azpP38m7Nr0JZO4c9PQjdkr/7p9B17XkLyX4ErF
-         jW5akFGtRGA6tvJ+LLjy3UEhWWBjhlhRs/UcPkHgKqZUGO3Yf4/KiEdjIfoFvDcbkx
-         7sIDvFx9whM/1XU6QgXZdk6gb6idaZmVX8Z59xmY=
+        b=vPAI8I20L/jdgUsmpZs/GJyw2fbgqYzFFrR52ougpGbGD/JudUxIKsE2XZQ0y6rjs
+         Y6+tplZ3r/DHxSLEwla5cvsTH50abk8UaAVxCJDqRRWmgVhCIKel0eeH8GRhLZwZuX
+         UykpswWRcasGp0WFiEwK+aNO1FT/HGGpiKonlU5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 5.2 086/143] USB: storage: ums-realtek: Whitelist auto-delink support
-Date:   Wed,  4 Sep 2019 19:53:49 +0200
-Message-Id: <20190904175317.437575744@linuxfoundation.org>
+        stable@vger.kernel.org, Pu Wen <puwen@hygon.cn>,
+        Calvin Walton <calvin.walton@kepstin.ca>,
+        Len Brown <len.brown@intel.com>
+Subject: [PATCH 5.2 087/143] tools/power turbostat: Fix caller parameter of get_tdp_amd()
+Date:   Wed,  4 Sep 2019 19:53:50 +0200
+Message-Id: <20190904175317.487175133@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,52 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Pu Wen <puwen@hygon.cn>
 
-commit 1902a01e2bcc3abd7c9a18dc05e78c7ab4a53c54 upstream.
+commit 9cfa8e042f7cbb1994cc5923e46c78b36f6054f4 upstream.
 
-Auto-delink requires writing special registers to ums-realtek devices.
-Unconditionally enable auto-delink may break newer devices.
+Commit 9392bd98bba760be96ee ("tools/power turbostat: Add support for AMD
+Fam 17h (Zen) RAPL") add a function get_tdp_amd(), the parameter is CPU
+family. But the rapl_probe_amd() function use wrong model parameter.
+Fix the wrong caller parameter of get_tdp_amd() to use family.
 
-So only enable auto-delink by default for the original three IDs,
-0x0138, 0x0158 and 0x0159.
-
-Realtek is working on a patch to properly support auto-delink for other
-IDs.
-
-BugLink: https://bugs.launchpad.net/bugs/1838886
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190827173450.13572-2-kai.heng.feng@canonical.com
+Cc: <stable@vger.kernel.org> # v5.1+
+Signed-off-by: Pu Wen <puwen@hygon.cn>
+Reviewed-by: Calvin Walton <calvin.walton@kepstin.ca>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/realtek_cr.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ tools/power/x86/turbostat/turbostat.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/storage/realtek_cr.c
-+++ b/drivers/usb/storage/realtek_cr.c
-@@ -996,12 +996,15 @@ static int init_realtek_cr(struct us_dat
- 			goto INIT_FAIL;
- 	}
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -4002,7 +4002,7 @@ void rapl_probe_amd(unsigned int family,
+ 	rapl_energy_units = ldexp(1.0, -(msr >> 8 & 0x1f));
+ 	rapl_power_units = ldexp(1.0, -(msr & 0xf));
  
--	if (CHECK_FW_VER(chip, 0x5888) || CHECK_FW_VER(chip, 0x5889) ||
--	    CHECK_FW_VER(chip, 0x5901))
--		SET_AUTO_DELINK(chip);
--	if (STATUS_LEN(chip) == 16) {
--		if (SUPPORT_AUTO_DELINK(chip))
-+	if (CHECK_PID(chip, 0x0138) || CHECK_PID(chip, 0x0158) ||
-+	    CHECK_PID(chip, 0x0159)) {
-+		if (CHECK_FW_VER(chip, 0x5888) || CHECK_FW_VER(chip, 0x5889) ||
-+				CHECK_FW_VER(chip, 0x5901))
- 			SET_AUTO_DELINK(chip);
-+		if (STATUS_LEN(chip) == 16) {
-+			if (SUPPORT_AUTO_DELINK(chip))
-+				SET_AUTO_DELINK(chip);
-+		}
- 	}
- #ifdef CONFIG_REALTEK_AUTOPM
- 	if (ss_en)
+-	tdp = get_tdp_amd(model);
++	tdp = get_tdp_amd(family);
+ 
+ 	rapl_joule_counter_range = 0xFFFFFFFF * rapl_energy_units / tdp;
+ 	if (!quiet)
 
 
