@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31072C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ACBC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14D722CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C199F22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613091;
-	bh=ZnDZXhBIRGN6OWMGxYRviA8kQtnsHMHEhPRM7nl7h60=;
+	s=default; t=1567613095;
+	bh=j1iYY3kQO3B/s0ayC98GlO6pXuKeFJHAECORyA+XmSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wOJU9Dx4rFkrSQvrpW7HCdsqP/D5BBhGbo/H4Zp0hkU81dmOmGuAXUQLi0xMmdIEh
-	 lbKLBe5nCaNvRAPBbBWAaKZUDDdNn8P120QnsuTs6mPt4h2kBNKW7G/WKK2h9Jj62w
-	 jca16tqYTz1dld5v61XcZkG//3eCDhsonf+T3jc0=
+	b=KNvao2CvHYfk0iyviM+GIjIUckbb82BBgVlifWVlcbTTKpCn1ACflO9KNkIYEJ7qX
+	 Jrg3je9Llh7TIpl1EDWAQ4G2t2R1vuRRK8f+D3Xp01mUbw5FpM2XdbRITFrOx6gEHG
+	 20vpt7ThZu0S3XgT2FVahdfHDC7xWzfS+V0rBrSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387757AbfIDQEu (ORCPT
+        id S1732942AbfIDQDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:04:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387599AbfIDQDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 12:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732460AbfIDQDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FDCB22CF5;
-        Wed,  4 Sep 2019 16:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B293422CF5;
+        Wed,  4 Sep 2019 16:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612988;
-        bh=ZnDZXhBIRGN6OWMGxYRviA8kQtnsHMHEhPRM7nl7h60=;
+        s=default; t=1567612986;
+        bh=j1iYY3kQO3B/s0ayC98GlO6pXuKeFJHAECORyA+XmSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGs45oLXNt+hphd3Dm7Cag83MODN0ctrhSLnWtz7t2/3yEm+PIGzAa4ROgDIN9bto
-         Vk5MAp4YtYl9DGCrPRmkUIX6XVe2OF00TYz7EgNgC/zaZ+J38r9ldI4LKSH5JFnaHH
-         KScz81tUNg9rjJj0s4uiIEzBjaOUvIW83H3DxQe0=
+        b=1AP0bcLQOs7vySkGD/8wdoaDzoCcjVPSvGU1J66tiE2jk22sudesp4TOvrBber5YF
+         4scpRoujloahihmvpQw2MuQhVA1s1xJO8Sku65MupsOsSw0/zW+x+MCc+dviZyW/+3
+         boBlmD4goyJcQ30IksLwueCAc4q1LaeKgy25IOSg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 04/20] NFSv4: Fix return values for nfs4_file_open()
-Date:   Wed,  4 Sep 2019 12:02:47 -0400
-Message-Id: <20190904160303.5062-4-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>,
+        linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 02/20] ARM: OMAP2+: Fix omap4 errata warning on other SoCs
+Date:   Wed,  4 Sep 2019 12:02:45 -0400
+Message-Id: <20190904160303.5062-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
 References: <20190904160303.5062-1-sashal@kernel.org>
@@ -58,49 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
+[ Upstream commit 45da5e09dd32fa98c32eaafe2513db6bd75e2f4f ]
 
-Currently, we are translating RPC level errors such as timeouts,
-as well as interrupts etc into EOPENSTALE, which forces a single
-replay of the open attempt. What we actually want to do is
-force the replay only in the cases where the returned error
-indicates that the file may have changed on the server.
+We have errata i688 workaround produce warnings on SoCs other than
+omap4 and omap5:
 
-So the fix is to spell out the exact set of errors where we want
-to return EOPENSTALE.
+omap4_sram_init:Unable to allocate sram needed to handle errata I688
+omap4_sram_init:Unable to get sram pool needed to handle errata I688
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+This is happening because there is no ti,omap4-mpu node, or no SRAM
+to configure for the other SoCs, so let's remove the warning based
+on the SoC revision checks.
+
+As nobody has complained it seems that the other SoC variants do not
+need this workaround.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4file.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/mach-omap2/omap4-common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index d3e3761eacfa2..c5e884585c23a 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
- 	if (IS_ERR(inode)) {
- 		err = PTR_ERR(inode);
- 		switch (err) {
--		case -EPERM:
--		case -EACCES:
--		case -EDQUOT:
--		case -ENOSPC:
--		case -EROFS:
--			goto out_put_ctx;
- 		default:
-+			goto out_put_ctx;
-+		case -ENOENT:
-+		case -ESTALE:
-+		case -EISDIR:
-+		case -ENOTDIR:
-+		case -ELOOP:
- 			goto out_drop;
- 		}
- 	}
+diff --git a/arch/arm/mach-omap2/omap4-common.c b/arch/arm/mach-omap2/omap4-common.c
+index 949696b6f17b6..511fd08c784ba 100644
+--- a/arch/arm/mach-omap2/omap4-common.c
++++ b/arch/arm/mach-omap2/omap4-common.c
+@@ -131,6 +131,9 @@ static int __init omap4_sram_init(void)
+ 	struct device_node *np;
+ 	struct gen_pool *sram_pool;
+ 
++	if (!soc_is_omap44xx() && !soc_is_omap54xx())
++		return 0;
++
+ 	np = of_find_compatible_node(NULL, NULL, "ti,omap4-mpu");
+ 	if (!np)
+ 		pr_warn("%s:Unable to allocate sram needed to handle errata I688\n",
 -- 
 2.20.1
 
