@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F394C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5054C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 150702087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9435022CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620452;
-	bh=zueV2V7bjkIQL2erAfQQQlqmcwe1Cf2R9izzABTAD14=;
+	s=default; t=1567620455;
+	bh=oefQlcXlXBGt5Pz+10mh105K6JtFKDQSmaifvQ6ZOZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MYJ5p4tPnvuahzsqmDQ2RJ4gWI4xhZZQ6tZnn4/xn323m4perNwV5ZuNdX0ORLM2p
-	 myxj8NBny6pn0rCPo5YvaRiScJH4Js8IA7qKo+neaQCSzw3TescZt5p2ZI/RatQCmf
-	 tRtqnUUJFaj7/S1wN3SB4+WnULTHTQXQmjyGR6I0=
+	b=bDfRejhsjKBgstprASQR+HBQJTG1P+SqzwcPQ9bfMMpkKWabfG+Qo59CGFrsQDtkL
+	 7PQeFYN3OpfzxZc9AhJRHFmzm6WPfyCTWcWLHIi91cJ/G6x7KCH9XJhh+8zNKjS4Gx
+	 scdTnfuHpAr1ZVDm+icGywMpGwxbad0wUiwtzHV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389457AbfIDSHb (ORCPT
+        id S2389482AbfIDSHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:07:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49906 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388138AbfIDSH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:29 -0400
+        id S2388138AbfIDSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:07:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C688206B8;
-        Wed,  4 Sep 2019 18:07:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA90B206B8;
+        Wed,  4 Sep 2019 18:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620448;
-        bh=zueV2V7bjkIQL2erAfQQQlqmcwe1Cf2R9izzABTAD14=;
+        s=default; t=1567620451;
+        bh=oefQlcXlXBGt5Pz+10mh105K6JtFKDQSmaifvQ6ZOZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2EAa1fxpsin4d6Y0m+W0wi+7hEs+/qqF/nAuZg3CInJLTybriiSekTuYVHtJdwmp
-         Tf4BJ9SJpcG570iztBOIaPJAj/9Qe1MrjyZ+Xe917DvVpu5dY1lAMZaEvKChNzxzva
-         /PNSaO6XRcwohByrPPEId9s9ZWhO0wMOtzkEPAqM=
+        b=mpY1aPAKLmUQro0LZqhrJBNIthaeXZvoZx6Rt/0TQtWbA0e5TtGBPkrnozcB8fhZT
+         XUjuPS43GwnTwJeJJ4GgkgQcC4TBE08lArOdOdtOUB+hwMDzQ+TTmOUm+ugXEq5n+O
+         YVIMnISoas2yEeVnU9NgwAS94ZEHC8tT9Uc+zwbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomas Winkler <tomas.winkler@intel.com>
-Subject: [PATCH 4.19 62/93] mei: me: add Tiger Lake point LP device ID
-Date:   Wed,  4 Sep 2019 19:54:04 +0200
-Message-Id: <20190904175308.354572384@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 63/93] mmc: sdhci-of-at91: add quirk for broken HS200
+Date:   Wed,  4 Sep 2019 19:54:05 +0200
+Message-Id: <20190904175308.420017894@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -58,43 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Winkler <tomas.winkler@intel.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit 587f17407741a5be07f8a2d1809ec946c8120962 upstream.
+commit 7871aa60ae0086fe4626abdf5ed13eeddf306c61 upstream.
 
-Add Tiger Lake Point device ID for TGP LP.
+HS200 is not implemented in the driver, but the controller claims it
+through caps. Remove it via a quirk, to make sure the mmc core do not try
+to enable HS200, as it causes the eMMC initialization to fail.
 
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190819103210.32748-1-tomas.winkler@intel.com
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: bb5f8ea4d514 ("mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC")
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/mei/hw-me-regs.h |    2 ++
- drivers/misc/mei/pci-me.c     |    2 ++
- 2 files changed, 4 insertions(+)
+ drivers/mmc/host/sdhci-of-at91.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -141,6 +141,8 @@
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -365,6 +365,9 @@ static int sdhci_at91_probe(struct platf
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
  
- #define MEI_DEV_ID_ICP_LP     0x34E0  /* Ice Lake Point LP */
- 
-+#define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
++	/* HS200 is broken at this moment */
++	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
 +
- #define MEI_DEV_ID_MCC        0x4B70  /* Mule Creek Canyon (EHL) */
- #define MEI_DEV_ID_MCC_4      0x4B75  /* Mule Creek Canyon 4 (EHL) */
- 
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -107,6 +107,8 @@ static const struct pci_device_id mei_me
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH12_CFG)},
-+
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC, MEI_ME_PCH12_CFG)},
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_MCC_4, MEI_ME_PCH8_CFG)},
- 
+ 	ret = sdhci_add_host(host);
+ 	if (ret)
+ 		goto pm_runtime_disable;
 
 
