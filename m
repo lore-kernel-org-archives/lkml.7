@@ -7,73 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D65EC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC1BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573C722CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04F622CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619882;
-	bh=zoRprk2V8Tx3nRetmgk8Ms+4yAZgUhFm9LnvQgur+3I=;
+	s=default; t=1567619885;
+	bh=4rP86TfaAMjgCiBLphU1/UPXUB0yv9Gq5PyHJn/AYVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DzF/n20KHJUpTovMN6tKTTj7Os1mD1kQ10CQTskcvevoKYymmF46UDoJ5Rk/N58ad
-	 y8w3Svc3LqY+RifnJPmMC9AbPHF2unIqTgaElSQM5k21aTWsxDL22msIb4c8Il9Uzm
-	 UB13YlTazKiO4/hVkLFDWxeco8lrrczmraC6gVKY=
+	b=zx9js8pTeJtXoq0jVtCigIq6Us+BKYzI/7Moqo+Ehz1gNCN/oNuNB+aHhagjFaJwT
+	 Bd1yker0qkcMia9Zf2gWOJJuVHI+vdbtcr5aKHwhrNDe/5Qb3xtMcT7XOl3fKAz+nk
+	 dpVmyYB75MIF8VrQ0ehhfdDnoh8sVjg4MXWBEeDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387973AbfIDR6B (ORCPT
+        id S2387981AbfIDR6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387966AbfIDR6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:00 -0400
+        id S1733164AbfIDR6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80495208E4;
-        Wed,  4 Sep 2019 17:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30C1C21883;
+        Wed,  4 Sep 2019 17:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619879;
-        bh=zoRprk2V8Tx3nRetmgk8Ms+4yAZgUhFm9LnvQgur+3I=;
+        s=default; t=1567619881;
+        bh=4rP86TfaAMjgCiBLphU1/UPXUB0yv9Gq5PyHJn/AYVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lzPAYsW0WUWbtB7JMCgQSDho5ry1gm3q2K0MU4o6uweFsJfvFSRRs8rWvKOnYeyD+
-         rNA3BXMmKBW4KoXait0NsWTWwQZ6AR+Z2tyAgK/RXPPm6SOECutSZRL1vhaTW6ZHe4
-         UeyY8VuAJJeEyQg2uSHHOLPssx+onVaBIVsHj7Ec=
+        b=Thv+jXya8VTQbYz9R4HmNDIWvK2gjb1ptSw2goQbQ3U2hCG2lv3ULyfeSVwb1UMf0
+         ryqZOEIkWNHBtxf72K+dlzQDELdVko6ktGMl2TpM7c1C/dEim3+b9SW9COvpWyxV8X
+         lDiPE+iGkmKMWjHz0BL6DI+z21Se4y6nEwkvTGcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        stable@vger.kernel.org, Sebastian Mayr <me@sam.st>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        ricardo.neri@intel.com, Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Qiaowei Ren <qiaowei.ren@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Chris Metcalf <cmetcalf@mellanox.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Chen Yucong <slaoub@gmail.com>,
-        Adam Buchbinder <adam.buchbinder@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Garnier <thgarnie@google.com>,
+        Dmitry Safonov <dsafonov@virtuozzo.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 69/77] ptrace,x86: Make user_64bit_mode() available to 32-bit builds
-Date:   Wed,  4 Sep 2019 19:53:56 +0200
-Message-Id: <20190904175309.806860827@linuxfoundation.org>
+Subject: [PATCH 4.4 70/77] uprobes/x86: Fix detection of 32-bit user mode
+Date:   Wed,  4 Sep 2019 19:53:57 +0200
+Message-Id: <20190904175309.893076215@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -86,82 +64,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e27c310af5c05cf876d9cad006928076c27f54d4 ]
+[ Upstream commit 9212ec7d8357ea630031e89d0d399c761421c83b ]
 
-In its current form, user_64bit_mode() can only be used when CONFIG_X86_64
-is selected. This implies that code built with CONFIG_X86_64=n cannot use
-it. If a piece of code needs to be built for both CONFIG_X86_64=y and
-CONFIG_X86_64=n and wants to use this function, it needs to wrap it in
-an #ifdef/#endif; potentially, in multiple places.
+32-bit processes running on a 64-bit kernel are not always detected
+correctly, causing the process to crash when uretprobes are installed.
 
-This can be easily avoided with a single #ifdef/#endif pair within
-user_64bit_mode() itself.
+The reason for the crash is that in_ia32_syscall() is used to determine the
+process's mode, which only works correctly when called from a syscall.
 
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+In the case of uretprobes, however, the function is called from a exception
+and always returns 'false' on a 64-bit kernel. In consequence this leads to
+corruption of the process's return address.
+
+Fix this by using user_64bit_mode() instead of in_ia32_syscall(), which
+is correct in any situation.
+
+[ tglx: Add a comment and the following historical info ]
+
+This should have been detected by the rename which happened in commit
+
+  abfb9498ee13 ("x86/entry: Rename is_{ia32,x32}_task() to in_{ia32,x32}_syscall()")
+
+which states in the changelog:
+
+    The is_ia32_task()/is_x32_task() function names are a big misnomer: they
+    suggests that the compat-ness of a system call is a task property, which
+    is not true, the compatness of a system call purely depends on how it
+    was invoked through the system call layer.
+    .....
+
+and then it went and blindly renamed every call site.
+
+Sadly enough this was already mentioned here:
+
+   8faaed1b9f50 ("uprobes/x86: Introduce sizeof_long(), cleanup adjust_ret_addr() and
+arch_uretprobe_hijack_return_addr()")
+
+where the changelog says:
+
+    TODO: is_ia32_task() is not what we actually want, TS_COMPAT does
+    not necessarily mean 32bit. Fortunately syscall-like insns can't be
+    probed so it actually works, but it would be better to rename and
+    use is_ia32_frame().
+
+and goes all the way back to:
+
+    0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
+
+Oh well. 7+ years until someone actually tried a uretprobe on a 32bit
+process on a 64bit kernel....
+
+Fixes: 0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
+Signed-off-by: Sebastian Mayr <me@sam.st>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: ricardo.neri@intel.com
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Huang Rui <ray.huang@amd.com>
-Cc: Qiaowei Ren <qiaowei.ren@intel.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Jiri Slaby <jslaby@suse.cz>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Chris Metcalf <cmetcalf@mellanox.com>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Chen Yucong <slaoub@gmail.com>
-Cc: Adam Buchbinder <adam.buchbinder@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Lorenzo Stoakes <lstoakes@gmail.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Garnier <thgarnie@google.com>
-Link: https://lkml.kernel.org/r/1509135945-13762-4-git-send-email-ricardo.neri-calderon@linux.intel.com
+Cc: Dmitry Safonov <dsafonov@virtuozzo.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190728152617.7308-1-me@sam.st
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/ptrace.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/x86/kernel/uprobes.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 6271281f947d8..0d8e0831b1a07 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -121,9 +121,9 @@ static inline int v8086_mode(struct pt_regs *regs)
- #endif
- }
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index b8105289c60b6..178d63cac321b 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -514,9 +514,12 @@ struct uprobe_xol_ops {
+ 	void	(*abort)(struct arch_uprobe *, struct pt_regs *);
+ };
  
--#ifdef CONFIG_X86_64
- static inline bool user_64bit_mode(struct pt_regs *regs)
+-static inline int sizeof_long(void)
++static inline int sizeof_long(struct pt_regs *regs)
  {
-+#ifdef CONFIG_X86_64
- #ifndef CONFIG_PARAVIRT
- 	/*
- 	 * On non-paravirt systems, this is the only long mode CPL 3
-@@ -134,8 +134,12 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
- 	/* Headers are too twisted for this to go in paravirt.h. */
- 	return regs->cs == __USER_CS || regs->cs == pv_info.extra_user_64bit_cs;
- #endif
-+#else /* !CONFIG_X86_64 */
-+	return false;
-+#endif
+-	return is_ia32_task() ? 4 : 8;
++	/*
++	 * Check registers for mode as in_xxx_syscall() does not apply here.
++	 */
++	return user_64bit_mode(regs) ? 8 : 4;
  }
  
-+#ifdef CONFIG_X86_64
- #define current_user_stack_pointer()	current_pt_regs()->sp
- #define compat_user_stack_pointer()	current_pt_regs()->sp
- #endif
+ static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+@@ -527,9 +530,9 @@ static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ 
+ static int push_ret_address(struct pt_regs *regs, unsigned long ip)
+ {
+-	unsigned long new_sp = regs->sp - sizeof_long();
++	unsigned long new_sp = regs->sp - sizeof_long(regs);
+ 
+-	if (copy_to_user((void __user *)new_sp, &ip, sizeof_long()))
++	if (copy_to_user((void __user *)new_sp, &ip, sizeof_long(regs)))
+ 		return -EFAULT;
+ 
+ 	regs->sp = new_sp;
+@@ -562,7 +565,7 @@ static int default_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs
+ 		long correction = utask->vaddr - utask->xol_vaddr;
+ 		regs->ip += correction;
+ 	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
+-		regs->sp += sizeof_long(); /* Pop incorrect return address */
++		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
+ 		if (push_ret_address(regs, utask->vaddr + auprobe->defparam.ilen))
+ 			return -ERESTART;
+ 	}
+@@ -671,7 +674,7 @@ static int branch_post_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ 	 * "call" insn was executed out-of-line. Just restore ->sp and restart.
+ 	 * We could also restore ->ip and try to call branch_emulate_op() again.
+ 	 */
+-	regs->sp += sizeof_long();
++	regs->sp += sizeof_long(regs);
+ 	return -ERESTART;
+ }
+ 
+@@ -962,7 +965,7 @@ bool arch_uprobe_skip_sstep(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ unsigned long
+ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs)
+ {
+-	int rasize = sizeof_long(), nleft;
++	int rasize = sizeof_long(regs), nleft;
+ 	unsigned long orig_ret_vaddr = 0; /* clear high bits for 32-bit apps */
+ 
+ 	if (copy_from_user(&orig_ret_vaddr, (void __user *)regs->sp, rasize))
 -- 
 2.20.1
 
