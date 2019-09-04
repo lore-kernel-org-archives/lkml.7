@@ -2,116 +2,101 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF29C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A4AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2085206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E39822CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620631;
-	bh=KrPtQpgU7KtViUDDEEXsHPNbJbqCycwcitUbwT9Qoy0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CzmvhCLAEJK03Hl1d88+Z+6fN3aOr2iAbMT6V+TZSHEHAcRtejReyJDNGx7kVHnxH
-	 S73IqFI7x8eGrPAhfS+y98cIoP5OCG1uK6sN6IqkB59BHHbYeU6gspRspmEzRdQ6gS
-	 IvyZvrnZ9/YWi2y+CGIIAKShO07dYcJdJsNcAvNM=
+	s=default; t=1567620634;
+	bh=qV05ywLNhkw5oOxBhEEGmA7EY58+l2bVgOq9K+RRCSE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cxBdru1ZVQCVVn56lviyID0Zs2zLkYj3mby2B6BWWdquHr+vYMw04jKUZlYg70itI
+	 YpakOwuxBayPI4p6ybqsdNaYMYoL75l+rJOTWzx32p+12fbu3r1qpWl84hBNp20D8k
+	 dM9nlXM/FOWQzI1mnp5IMsyrU1QnSCzqGu/BIIog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390096AbfIDSKa (ORCPT
+        id S2390119AbfIDSKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389398AbfIDSK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CE2F22CEA;
-        Wed,  4 Sep 2019 18:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620628;
-        bh=KrPtQpgU7KtViUDDEEXsHPNbJbqCycwcitUbwT9Qoy0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNsg+xPI8DnbsydnLs29l+dysrhB+hqzpwQdwe9mymDFI135V4Q886Qvarc0xbllR
-         BMnGwbUce7Z8FEL9Lm0JfgUrj2yUN5qdr5/7GLO3hX5ZqalkssvnP7ggzJU8QONcNk
-         VcmxjDc4J476VGvxj2bbHfj8dGWmSilv6jOrVoyo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Schwab <schwab@suse.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 035/143] riscv: fix flush_tlb_range() end address for flush_tlb_page()
-Date:   Wed,  4 Sep 2019 19:52:58 +0200
-Message-Id: <20190904175315.422903595@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-References: <20190904175314.206239922@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 4 Sep 2019 14:10:33 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49898 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390085AbfIDSKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qV05ywLNhkw5oOxBhEEGmA7EY58+l2bVgOq9K+RRCSE=; b=l8T7UEE/HS8sg7kowfz/+EUNp
+        9rpWmbF/Qzo07zEp3UqHIucDuX4ZAeP2kp6diPbi8Wsk+DZ2cFY7Bk9J5b7sPmoyDdaSKpcRerpHp
+        2lK0P5MhN3gg81oFYzzV1YTMhy3SXTtrU1vVM7x3wmqssW4GXWqH6XPwLuCx9sP0BMetA=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i5Zjf-0006oF-Ms; Wed, 04 Sep 2019 18:10:27 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3D6B52742B45; Wed,  4 Sep 2019 19:10:27 +0100 (BST)
+Date:   Wed, 4 Sep 2019 19:10:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ricard Wanderlof <ricardw@axis.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.9 07/83] ASoC: Fail card instantiation if DAI format
+ setup fails
+Message-ID: <20190904181027.GG4348@sirena.co.uk>
+References: <20190904175303.488266791@linuxfoundation.org>
+ <20190904175304.389271806@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QWpDgw58+k1mSFBj"
+Content-Disposition: inline
+In-Reply-To: <20190904175304.389271806@linuxfoundation.org>
+X-Cookie: Help fight continental drift.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eb93685847a9055283d05951c1b205e737f38533 ]
 
-The RISC-V kernel implementation of flush_tlb_page() when CONFIG_SMP
-is set is wrong.  It passes zero to flush_tlb_range() as the final
-address to flush, but it should be at least 'addr'.
+--QWpDgw58+k1mSFBj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Some other Linux architecture ports use the beginning address to
-flush, plus PAGE_SIZE, as the final address to flush.  This might
-flush slightly more than what's needed, but it seems unlikely that
-being more clever would improve anything.  So let's just take that
-implementation for now.
+On Wed, Sep 04, 2019 at 07:52:59PM +0200, Greg Kroah-Hartman wrote:
+> [ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
+>=20
+> If the DAI format setup fails, there is no valid communication format
+> between CPU and CODEC, so fail card instantiation, rather than continue
+> with a card that will most likely not function properly.
 
-While here, convert the macro into a static inline function, primarily
-to avoid unintentional multiple evaluations of 'addr'.
+I nacked this patch when Sasha posted it - it only improves diagnostics
+and might make systems that worked by accident break since it turns=20
+things into a hard failure, it won't make anything that didn't work
+previously work.
 
-This second version of the patch fixes a coding style issue found by
-Christoph Hellwig <hch@lst.de>.
+--QWpDgw58+k1mSFBj
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Reported-by: Andreas Schwab <schwab@suse.de>
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/riscv/include/asm/tlbflush.h | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/riscv/include/asm/tlbflush.h b/arch/riscv/include/asm/tlbflush.h
-index 687dd19735a7e..4d9bbe8438bf6 100644
---- a/arch/riscv/include/asm/tlbflush.h
-+++ b/arch/riscv/include/asm/tlbflush.h
-@@ -53,10 +53,17 @@ static inline void remote_sfence_vma(struct cpumask *cmask, unsigned long start,
- }
- 
- #define flush_tlb_all() sbi_remote_sfence_vma(NULL, 0, -1)
--#define flush_tlb_page(vma, addr) flush_tlb_range(vma, addr, 0)
-+
- #define flush_tlb_range(vma, start, end) \
- 	remote_sfence_vma(mm_cpumask((vma)->vm_mm), start, (end) - (start))
--#define flush_tlb_mm(mm) \
-+
-+static inline void flush_tlb_page(struct vm_area_struct *vma,
-+				  unsigned long addr)
-+{
-+	flush_tlb_range(vma, addr, addr + PAGE_SIZE);
-+}
-+
-+#define flush_tlb_mm(mm)				\
- 	remote_sfence_vma(mm_cpumask(mm), 0, -1)
- 
- #endif /* CONFIG_SMP */
--- 
-2.20.1
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1v/hIACgkQJNaLcl1U
+h9Dkowf+KbjSSQVbjapxEa9i0Tmjpe8K9MpYCABj4iB/aertfFsfF7lruARygQLs
+JLqr5Rdf/lmK5Acn+3UKnkVvJOrFWnasjMZsgZW5oZ47CdjaWIuQ76BAclHtwUCr
+7DoyuUnAHbZPXWw7BbKv6zt/wb++RdWuweuzUa2LE6YwVQCqixGpXmYz7RRhfcDm
+SMPYuYMczBvj8iONtRILTZc40DtYsPkc7jXvk67bwjImQceyuq4uW4/jTerTgzfm
+s0ZnoSOxopHUwoJ6V/Va+ae7DweWi/+bOqBbo69ff6lD6gZ2miKg3Wxb5tN5mAwh
+UsPNYX9fBwy9tJvNRwq0aAvOf4fGEA==
+=2RWa
+-----END PGP SIGNATURE-----
 
-
-
+--QWpDgw58+k1mSFBj--
