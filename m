@@ -2,54 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	URI_HEX,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA321C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C421C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B77B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3665420870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:27:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621625;
-	bh=66GlbSIe3lsHjQ3mgTHCehb7S9M3AfWbB22k6cbO8l0=;
+	s=default; t=1567621637;
+	bh=wpHgXNLKJJ7Qcv3Io2JOGqlm6M9bh7i9sIQhYjSNxDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sjxWXxapPh1Hbn3VA2DaHJBc84PFcf6BH0ir233B14UHu6CwsJtssr/PrvtMvGsOw
-	 ldpVlxeGnJ9KRamr5Agx6WMY0aheF6uxEZf/jQbB/vdiX47UQheQuOt2H4gcbb2EmR
-	 nILnWWMti6VoLMPKabFl3wqXiVPClp3OgSHQYo9w=
+	b=Bt09YBiIVgtwPdhOedNj2jAOIzvsEdw7BWhYANjwHbveyonQH4cQsp130CeEvCwA1
+	 AABwNhpVo08rBINZ5e0pv9nJpG6Bmh3nkTF6aJgxTnlGHfcVPsNlmoiYYbVE96POl7
+	 RbOWUg7FyEZAxii+8VnACHVI14GBYJVkUflgQM/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388083AbfIDS1E (ORCPT
+        id S2387550AbfIDR4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:27:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34394 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:56:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732142AbfIDR4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:56:54 -0400
+        id S1732038AbfIDR40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:56:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 181E321883;
-        Wed,  4 Sep 2019 17:56:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 303F522CF5;
+        Wed,  4 Sep 2019 17:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619812;
-        bh=66GlbSIe3lsHjQ3mgTHCehb7S9M3AfWbB22k6cbO8l0=;
+        s=default; t=1567619785;
+        bh=wpHgXNLKJJ7Qcv3Io2JOGqlm6M9bh7i9sIQhYjSNxDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gCn2lPfqm6eYsoy1AcGeeXOI9Zm/9ZfUTe2NNOQqHiBu46iQFeJE0BhGNif71XP0U
-         ge+0YiYe+VYotoFEvw1Hq8Fzve8ED+qMk5I12bELH0dtipdemK0RXjRE1ptPGG9R4o
-         7faWv/+AMygK3MxrG3s7hsBKIsAdaZ53XUx43QkE=
+        b=NyLCvYhdiwReIgemnvwb3LCH6+mvuyQvv9RY78GrDRmM/m2HNnbmt1YL0898+NuHj
+         /LMtL2uk2kWs1dAtsig7sgxSGnywM0c3H6KDxTOvtSrl52w0ABmhgq5O9KN0WWKjBH
+         mlB1r270+C1tuxV9+rl/ipmdBIvmPBLUFL9qPz/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jean-Philippe Aumasson <jeanphilippe.aumasson@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 43/77] siphash: implement HalfSipHash1-3 for hash tables
-Date:   Wed,  4 Sep 2019 19:53:30 +0200
-Message-Id: <20190904175307.603498713@linuxfoundation.org>
+Subject: [PATCH 4.4 16/77] NFSv4: Fix a potential sleep while atomic in nfs4_do_reclaim()
+Date:   Wed,  4 Sep 2019 19:53:03 +0200
+Message-Id: <20190904175305.152724843@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -62,680 +60,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 1ae2324f732c9c4e2fa4ebd885fa1001b70d52e1 upstream.
+[ Upstream commit c77e22834ae9a11891cb613bd9a551be1b94f2bc ]
 
-HalfSipHash, or hsiphash, is a shortened version of SipHash, which
-generates 32-bit outputs using a weaker 64-bit key. It has *much* lower
-security margins, and shouldn't be used for anything too sensitive, but
-it could be used as a hashtable key function replacement, if the output
-is never exposed, and if the security requirement is not too high.
+John Hubbard reports seeing the following stack trace:
 
-The goal is to make this something that performance-critical jhash users
-would be willing to use.
+nfs4_do_reclaim
+   rcu_read_lock /* we are now in_atomic() and must not sleep */
+       nfs4_purge_state_owners
+           nfs4_free_state_owner
+               nfs4_destroy_seqid_counter
+                   rpc_destroy_wait_queue
+                       cancel_delayed_work_sync
+                           __cancel_work_timer
+                               __flush_work
+                                   start_flush_work
+                                       might_sleep:
+                                        (kernel/workqueue.c:2975: BUG)
 
-On 64-bit machines, HalfSipHash1-3 is slower than SipHash1-3, so we alias
-SipHash1-3 to HalfSipHash1-3 on those systems.
+The solution is to separate out the freeing of the state owners
+from nfs4_purge_state_owners(), and perform that outside the atomic
+context.
 
-64-bit x86_64:
-[    0.509409] test_siphash:     SipHash2-4 cycles: 4049181
-[    0.510650] test_siphash:     SipHash1-3 cycles: 2512884
-[    0.512205] test_siphash: HalfSipHash1-3 cycles: 3429920
-[    0.512904] test_siphash:    JenkinsHash cycles:  978267
-So, we map hsiphash() -> SipHash1-3
-
-32-bit x86:
-[    0.509868] test_siphash:     SipHash2-4 cycles: 14812892
-[    0.513601] test_siphash:     SipHash1-3 cycles:  9510710
-[    0.515263] test_siphash: HalfSipHash1-3 cycles:  3856157
-[    0.515952] test_siphash:    JenkinsHash cycles:  1148567
-So, we map hsiphash() -> HalfSipHash1-3
-
-hsiphash() is roughly 3 times slower than jhash(), but comes with a
-considerable security improvement.
-
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Jean-Philippe Aumasson <jeanphilippe.aumasson@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 4.4 to avoid regression for WireGuard with only half
- the siphash API present]
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Reported-by: John Hubbard <jhubbard@nvidia.com>
+Fixes: 0aaaf5c424c7f ("NFS: Cache state owners after files are closed")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/siphash.txt |  75 +++++++++
- include/linux/siphash.h   |  57 ++++++-
- lib/siphash.c             | 321 +++++++++++++++++++++++++++++++++++++-
- lib/test_siphash.c        |  98 +++++++++++-
- 4 files changed, 546 insertions(+), 5 deletions(-)
+ fs/nfs/nfs4_fs.h    |  3 ++-
+ fs/nfs/nfs4client.c |  5 ++++-
+ fs/nfs/nfs4state.c  | 27 ++++++++++++++++++++++-----
+ 3 files changed, 28 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/siphash.txt b/Documentation/siphash.txt
-index e8e6ddbbaab47..908d348ff7776 100644
---- a/Documentation/siphash.txt
-+++ b/Documentation/siphash.txt
-@@ -98,3 +98,78 @@ u64 h = siphash(&combined, offsetofend(typeof(combined), dport), &secret);
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 4afdee420d253..9f15696f55b9f 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -416,7 +416,8 @@ static inline void nfs4_schedule_session_recovery(struct nfs4_session *session,
  
- Read the SipHash paper if you're interested in learning more:
- https://131002.net/siphash/siphash.pdf
-+
-+
-+~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~=~
-+
-+HalfSipHash - SipHash's insecure younger cousin
-+-----------------------------------------------
-+Written by Jason A. Donenfeld <jason@zx2c4.com>
-+
-+On the off-chance that SipHash is not fast enough for your needs, you might be
-+able to justify using HalfSipHash, a terrifying but potentially useful
-+possibility. HalfSipHash cuts SipHash's rounds down from "2-4" to "1-3" and,
-+even scarier, uses an easily brute-forcable 64-bit key (with a 32-bit output)
-+instead of SipHash's 128-bit key. However, this may appeal to some
-+high-performance `jhash` users.
-+
-+Danger!
-+
-+Do not ever use HalfSipHash except for as a hashtable key function, and only
-+then when you can be absolutely certain that the outputs will never be
-+transmitted out of the kernel. This is only remotely useful over `jhash` as a
-+means of mitigating hashtable flooding denial of service attacks.
-+
-+1. Generating a key
-+
-+Keys should always be generated from a cryptographically secure source of
-+random numbers, either using get_random_bytes or get_random_once:
-+
-+hsiphash_key_t key;
-+get_random_bytes(&key, sizeof(key));
-+
-+If you're not deriving your key from here, you're doing it wrong.
-+
-+2. Using the functions
-+
-+There are two variants of the function, one that takes a list of integers, and
-+one that takes a buffer:
-+
-+u32 hsiphash(const void *data, size_t len, const hsiphash_key_t *key);
-+
-+And:
-+
-+u32 hsiphash_1u32(u32, const hsiphash_key_t *key);
-+u32 hsiphash_2u32(u32, u32, const hsiphash_key_t *key);
-+u32 hsiphash_3u32(u32, u32, u32, const hsiphash_key_t *key);
-+u32 hsiphash_4u32(u32, u32, u32, u32, const hsiphash_key_t *key);
-+
-+If you pass the generic hsiphash function something of a constant length, it
-+will constant fold at compile-time and automatically choose one of the
-+optimized functions.
-+
-+3. Hashtable key function usage:
-+
-+struct some_hashtable {
-+	DECLARE_HASHTABLE(hashtable, 8);
-+	hsiphash_key_t key;
-+};
-+
-+void init_hashtable(struct some_hashtable *table)
-+{
-+	get_random_bytes(&table->key, sizeof(table->key));
-+}
-+
-+static inline hlist_head *some_hashtable_bucket(struct some_hashtable *table, struct interesting_input *input)
-+{
-+	return &table->hashtable[hsiphash(input, sizeof(*input), &table->key) & (HASH_SIZE(table->hashtable) - 1)];
-+}
-+
-+You may then iterate like usual over the returned hash bucket.
-+
-+4. Performance
-+
-+HalfSipHash is roughly 3 times slower than JenkinsHash. For many replacements,
-+this will not be a problem, as the hashtable lookup isn't the bottleneck. And
-+in general, this is probably a good sacrifice to make for the security and DoS
-+resistance of HalfSipHash.
-diff --git a/include/linux/siphash.h b/include/linux/siphash.h
-index feeb29cd113ed..fa7a6b9cedbff 100644
---- a/include/linux/siphash.h
-+++ b/include/linux/siphash.h
-@@ -5,7 +5,9 @@
-  * SipHash: a fast short-input PRF
-  * https://131002.net/siphash/
-  *
-- * This implementation is specifically for SipHash2-4.
-+ * This implementation is specifically for SipHash2-4 for a secure PRF
-+ * and HalfSipHash1-3/SipHash1-3 for an insecure PRF only suitable for
-+ * hashtables.
-  */
+ extern struct nfs4_state_owner *nfs4_get_state_owner(struct nfs_server *, struct rpc_cred *, gfp_t);
+ extern void nfs4_put_state_owner(struct nfs4_state_owner *);
+-extern void nfs4_purge_state_owners(struct nfs_server *);
++extern void nfs4_purge_state_owners(struct nfs_server *, struct list_head *);
++extern void nfs4_free_state_owners(struct list_head *head);
+ extern struct nfs4_state * nfs4_get_open_state(struct inode *, struct nfs4_state_owner *);
+ extern void nfs4_put_open_state(struct nfs4_state *);
+ extern void nfs4_close_state(struct nfs4_state *, fmode_t);
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index ae91d1e450be7..dac20f31f01f8 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -685,9 +685,12 @@ found:
  
- #ifndef _LINUX_SIPHASH_H
-@@ -82,4 +84,57 @@ static inline u64 siphash(const void *data, size_t len,
- 	return ___siphash_aligned(data, len, key);
- }
- 
-+#define HSIPHASH_ALIGNMENT __alignof__(unsigned long)
-+typedef struct {
-+	unsigned long key[2];
-+} hsiphash_key_t;
-+
-+u32 __hsiphash_aligned(const void *data, size_t len,
-+		       const hsiphash_key_t *key);
-+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-+u32 __hsiphash_unaligned(const void *data, size_t len,
-+			 const hsiphash_key_t *key);
-+#endif
-+
-+u32 hsiphash_1u32(const u32 a, const hsiphash_key_t *key);
-+u32 hsiphash_2u32(const u32 a, const u32 b, const hsiphash_key_t *key);
-+u32 hsiphash_3u32(const u32 a, const u32 b, const u32 c,
-+		  const hsiphash_key_t *key);
-+u32 hsiphash_4u32(const u32 a, const u32 b, const u32 c, const u32 d,
-+		  const hsiphash_key_t *key);
-+
-+static inline u32 ___hsiphash_aligned(const __le32 *data, size_t len,
-+				      const hsiphash_key_t *key)
-+{
-+	if (__builtin_constant_p(len) && len == 4)
-+		return hsiphash_1u32(le32_to_cpu(data[0]), key);
-+	if (__builtin_constant_p(len) && len == 8)
-+		return hsiphash_2u32(le32_to_cpu(data[0]), le32_to_cpu(data[1]),
-+				     key);
-+	if (__builtin_constant_p(len) && len == 12)
-+		return hsiphash_3u32(le32_to_cpu(data[0]), le32_to_cpu(data[1]),
-+				     le32_to_cpu(data[2]), key);
-+	if (__builtin_constant_p(len) && len == 16)
-+		return hsiphash_4u32(le32_to_cpu(data[0]), le32_to_cpu(data[1]),
-+				     le32_to_cpu(data[2]), le32_to_cpu(data[3]),
-+				     key);
-+	return __hsiphash_aligned(data, len, key);
-+}
-+
-+/**
-+ * hsiphash - compute 32-bit hsiphash PRF value
-+ * @data: buffer to hash
-+ * @size: size of @data
-+ * @key: the hsiphash key
-+ */
-+static inline u32 hsiphash(const void *data, size_t len,
-+			   const hsiphash_key_t *key)
-+{
-+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-+	if (!IS_ALIGNED((unsigned long)data, HSIPHASH_ALIGNMENT))
-+		return __hsiphash_unaligned(data, len, key);
-+#endif
-+	return ___hsiphash_aligned(data, len, key);
-+}
-+
- #endif /* _LINUX_SIPHASH_H */
-diff --git a/lib/siphash.c b/lib/siphash.c
-index c43cf406e71b2..3ae58b4edad61 100644
---- a/lib/siphash.c
-+++ b/lib/siphash.c
-@@ -5,7 +5,9 @@
-  * SipHash: a fast short-input PRF
-  * https://131002.net/siphash/
-  *
-- * This implementation is specifically for SipHash2-4.
-+ * This implementation is specifically for SipHash2-4 for a secure PRF
-+ * and HalfSipHash1-3/SipHash1-3 for an insecure PRF only suitable for
-+ * hashtables.
-  */
- 
- #include <linux/siphash.h>
-@@ -230,3 +232,320 @@ u64 siphash_3u32(const u32 first, const u32 second, const u32 third,
- 	POSTAMBLE
- }
- EXPORT_SYMBOL(siphash_3u32);
-+
-+#if BITS_PER_LONG == 64
-+/* Note that on 64-bit, we make HalfSipHash1-3 actually be SipHash1-3, for
-+ * performance reasons. On 32-bit, below, we actually implement HalfSipHash1-3.
-+ */
-+
-+#define HSIPROUND SIPROUND
-+#define HPREAMBLE(len) PREAMBLE(len)
-+#define HPOSTAMBLE \
-+	v3 ^= b; \
-+	HSIPROUND; \
-+	v0 ^= b; \
-+	v2 ^= 0xff; \
-+	HSIPROUND; \
-+	HSIPROUND; \
-+	HSIPROUND; \
-+	return (v0 ^ v1) ^ (v2 ^ v3);
-+
-+u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
-+{
-+	const u8 *end = data + len - (len % sizeof(u64));
-+	const u8 left = len & (sizeof(u64) - 1);
-+	u64 m;
-+	HPREAMBLE(len)
-+	for (; data != end; data += sizeof(u64)) {
-+		m = le64_to_cpup(data);
-+		v3 ^= m;
-+		HSIPROUND;
-+		v0 ^= m;
-+	}
-+#if defined(CONFIG_DCACHE_WORD_ACCESS) && BITS_PER_LONG == 64
-+	if (left)
-+		b |= le64_to_cpu((__force __le64)(load_unaligned_zeropad(data) &
-+						  bytemask_from_count(left)));
-+#else
-+	switch (left) {
-+	case 7: b |= ((u64)end[6]) << 48;
-+	case 6: b |= ((u64)end[5]) << 40;
-+	case 5: b |= ((u64)end[4]) << 32;
-+	case 4: b |= le32_to_cpup(data); break;
-+	case 3: b |= ((u64)end[2]) << 16;
-+	case 2: b |= le16_to_cpup(data); break;
-+	case 1: b |= end[0];
-+	}
-+#endif
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(__hsiphash_aligned);
-+
-+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-+u32 __hsiphash_unaligned(const void *data, size_t len,
-+			 const hsiphash_key_t *key)
-+{
-+	const u8 *end = data + len - (len % sizeof(u64));
-+	const u8 left = len & (sizeof(u64) - 1);
-+	u64 m;
-+	HPREAMBLE(len)
-+	for (; data != end; data += sizeof(u64)) {
-+		m = get_unaligned_le64(data);
-+		v3 ^= m;
-+		HSIPROUND;
-+		v0 ^= m;
-+	}
-+#if defined(CONFIG_DCACHE_WORD_ACCESS) && BITS_PER_LONG == 64
-+	if (left)
-+		b |= le64_to_cpu((__force __le64)(load_unaligned_zeropad(data) &
-+						  bytemask_from_count(left)));
-+#else
-+	switch (left) {
-+	case 7: b |= ((u64)end[6]) << 48;
-+	case 6: b |= ((u64)end[5]) << 40;
-+	case 5: b |= ((u64)end[4]) << 32;
-+	case 4: b |= get_unaligned_le32(end); break;
-+	case 3: b |= ((u64)end[2]) << 16;
-+	case 2: b |= get_unaligned_le16(end); break;
-+	case 1: b |= end[0];
-+	}
-+#endif
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(__hsiphash_unaligned);
-+#endif
-+
-+/**
-+ * hsiphash_1u32 - compute 64-bit hsiphash PRF value of a u32
-+ * @first: first u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_1u32(const u32 first, const hsiphash_key_t *key)
-+{
-+	HPREAMBLE(4)
-+	b |= first;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_1u32);
-+
-+/**
-+ * hsiphash_2u32 - compute 32-bit hsiphash PRF value of 2 u32
-+ * @first: first u32
-+ * @second: second u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_2u32(const u32 first, const u32 second, const hsiphash_key_t *key)
-+{
-+	u64 combined = (u64)second << 32 | first;
-+	HPREAMBLE(8)
-+	v3 ^= combined;
-+	HSIPROUND;
-+	v0 ^= combined;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_2u32);
-+
-+/**
-+ * hsiphash_3u32 - compute 32-bit hsiphash PRF value of 3 u32
-+ * @first: first u32
-+ * @second: second u32
-+ * @third: third u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_3u32(const u32 first, const u32 second, const u32 third,
-+		  const hsiphash_key_t *key)
-+{
-+	u64 combined = (u64)second << 32 | first;
-+	HPREAMBLE(12)
-+	v3 ^= combined;
-+	HSIPROUND;
-+	v0 ^= combined;
-+	b |= third;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_3u32);
-+
-+/**
-+ * hsiphash_4u32 - compute 32-bit hsiphash PRF value of 4 u32
-+ * @first: first u32
-+ * @second: second u32
-+ * @third: third u32
-+ * @forth: forth u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_4u32(const u32 first, const u32 second, const u32 third,
-+		  const u32 forth, const hsiphash_key_t *key)
-+{
-+	u64 combined = (u64)second << 32 | first;
-+	HPREAMBLE(16)
-+	v3 ^= combined;
-+	HSIPROUND;
-+	v0 ^= combined;
-+	combined = (u64)forth << 32 | third;
-+	v3 ^= combined;
-+	HSIPROUND;
-+	v0 ^= combined;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_4u32);
-+#else
-+#define HSIPROUND \
-+	do { \
-+	v0 += v1; v1 = rol32(v1, 5); v1 ^= v0; v0 = rol32(v0, 16); \
-+	v2 += v3; v3 = rol32(v3, 8); v3 ^= v2; \
-+	v0 += v3; v3 = rol32(v3, 7); v3 ^= v0; \
-+	v2 += v1; v1 = rol32(v1, 13); v1 ^= v2; v2 = rol32(v2, 16); \
-+	} while (0)
-+
-+#define HPREAMBLE(len) \
-+	u32 v0 = 0; \
-+	u32 v1 = 0; \
-+	u32 v2 = 0x6c796765U; \
-+	u32 v3 = 0x74656462U; \
-+	u32 b = ((u32)(len)) << 24; \
-+	v3 ^= key->key[1]; \
-+	v2 ^= key->key[0]; \
-+	v1 ^= key->key[1]; \
-+	v0 ^= key->key[0];
-+
-+#define HPOSTAMBLE \
-+	v3 ^= b; \
-+	HSIPROUND; \
-+	v0 ^= b; \
-+	v2 ^= 0xff; \
-+	HSIPROUND; \
-+	HSIPROUND; \
-+	HSIPROUND; \
-+	return v1 ^ v3;
-+
-+u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
-+{
-+	const u8 *end = data + len - (len % sizeof(u32));
-+	const u8 left = len & (sizeof(u32) - 1);
-+	u32 m;
-+	HPREAMBLE(len)
-+	for (; data != end; data += sizeof(u32)) {
-+		m = le32_to_cpup(data);
-+		v3 ^= m;
-+		HSIPROUND;
-+		v0 ^= m;
-+	}
-+	switch (left) {
-+	case 3: b |= ((u32)end[2]) << 16;
-+	case 2: b |= le16_to_cpup(data); break;
-+	case 1: b |= end[0];
-+	}
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(__hsiphash_aligned);
-+
-+#ifndef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-+u32 __hsiphash_unaligned(const void *data, size_t len,
-+			 const hsiphash_key_t *key)
-+{
-+	const u8 *end = data + len - (len % sizeof(u32));
-+	const u8 left = len & (sizeof(u32) - 1);
-+	u32 m;
-+	HPREAMBLE(len)
-+	for (; data != end; data += sizeof(u32)) {
-+		m = get_unaligned_le32(data);
-+		v3 ^= m;
-+		HSIPROUND;
-+		v0 ^= m;
-+	}
-+	switch (left) {
-+	case 3: b |= ((u32)end[2]) << 16;
-+	case 2: b |= get_unaligned_le16(end); break;
-+	case 1: b |= end[0];
-+	}
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(__hsiphash_unaligned);
-+#endif
-+
-+/**
-+ * hsiphash_1u32 - compute 32-bit hsiphash PRF value of a u32
-+ * @first: first u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_1u32(const u32 first, const hsiphash_key_t *key)
-+{
-+	HPREAMBLE(4)
-+	v3 ^= first;
-+	HSIPROUND;
-+	v0 ^= first;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_1u32);
-+
-+/**
-+ * hsiphash_2u32 - compute 32-bit hsiphash PRF value of 2 u32
-+ * @first: first u32
-+ * @second: second u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_2u32(const u32 first, const u32 second, const hsiphash_key_t *key)
-+{
-+	HPREAMBLE(8)
-+	v3 ^= first;
-+	HSIPROUND;
-+	v0 ^= first;
-+	v3 ^= second;
-+	HSIPROUND;
-+	v0 ^= second;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_2u32);
-+
-+/**
-+ * hsiphash_3u32 - compute 32-bit hsiphash PRF value of 3 u32
-+ * @first: first u32
-+ * @second: second u32
-+ * @third: third u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_3u32(const u32 first, const u32 second, const u32 third,
-+		  const hsiphash_key_t *key)
-+{
-+	HPREAMBLE(12)
-+	v3 ^= first;
-+	HSIPROUND;
-+	v0 ^= first;
-+	v3 ^= second;
-+	HSIPROUND;
-+	v0 ^= second;
-+	v3 ^= third;
-+	HSIPROUND;
-+	v0 ^= third;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_3u32);
-+
-+/**
-+ * hsiphash_4u32 - compute 32-bit hsiphash PRF value of 4 u32
-+ * @first: first u32
-+ * @second: second u32
-+ * @third: third u32
-+ * @forth: forth u32
-+ * @key: the hsiphash key
-+ */
-+u32 hsiphash_4u32(const u32 first, const u32 second, const u32 third,
-+		  const u32 forth, const hsiphash_key_t *key)
-+{
-+	HPREAMBLE(16)
-+	v3 ^= first;
-+	HSIPROUND;
-+	v0 ^= first;
-+	v3 ^= second;
-+	HSIPROUND;
-+	v0 ^= second;
-+	v3 ^= third;
-+	HSIPROUND;
-+	v0 ^= third;
-+	v3 ^= forth;
-+	HSIPROUND;
-+	v0 ^= forth;
-+	HPOSTAMBLE
-+}
-+EXPORT_SYMBOL(hsiphash_4u32);
-+#endif
-diff --git a/lib/test_siphash.c b/lib/test_siphash.c
-index d972acfc15e4a..a6d854d933bff 100644
---- a/lib/test_siphash.c
-+++ b/lib/test_siphash.c
-@@ -7,7 +7,9 @@
-  * SipHash: a fast short-input PRF
-  * https://131002.net/siphash/
-  *
-- * This implementation is specifically for SipHash2-4.
-+ * This implementation is specifically for SipHash2-4 for a secure PRF
-+ * and HalfSipHash1-3/SipHash1-3 for an insecure PRF only suitable for
-+ * hashtables.
-  */
- 
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-@@ -18,8 +20,8 @@
- #include <linux/errno.h>
- #include <linux/module.h>
- 
--/* Test vectors taken from official reference source available at:
-- *     https://131002.net/siphash/siphash24.c
-+/* Test vectors taken from reference source available at:
-+ *     https://github.com/veorq/SipHash
-  */
- 
- static const siphash_key_t test_key_siphash =
-@@ -50,6 +52,64 @@ static const u64 test_vectors_siphash[64] = {
- 	0x958a324ceb064572ULL
- };
- 
-+#if BITS_PER_LONG == 64
-+static const hsiphash_key_t test_key_hsiphash =
-+	{{ 0x0706050403020100ULL, 0x0f0e0d0c0b0a0908ULL }};
-+
-+static const u32 test_vectors_hsiphash[64] = {
-+	0x050fc4dcU, 0x7d57ca93U, 0x4dc7d44dU,
-+	0xe7ddf7fbU, 0x88d38328U, 0x49533b67U,
-+	0xc59f22a7U, 0x9bb11140U, 0x8d299a8eU,
-+	0x6c063de4U, 0x92ff097fU, 0xf94dc352U,
-+	0x57b4d9a2U, 0x1229ffa7U, 0xc0f95d34U,
-+	0x2a519956U, 0x7d908b66U, 0x63dbd80cU,
-+	0xb473e63eU, 0x8d297d1cU, 0xa6cce040U,
-+	0x2b45f844U, 0xa320872eU, 0xdae6c123U,
-+	0x67349c8cU, 0x705b0979U, 0xca9913a5U,
-+	0x4ade3b35U, 0xef6cd00dU, 0x4ab1e1f4U,
-+	0x43c5e663U, 0x8c21d1bcU, 0x16a7b60dU,
-+	0x7a8ff9bfU, 0x1f2a753eU, 0xbf186b91U,
-+	0xada26206U, 0xa3c33057U, 0xae3a36a1U,
-+	0x7b108392U, 0x99e41531U, 0x3f1ad944U,
-+	0xc8138825U, 0xc28949a6U, 0xfaf8876bU,
-+	0x9f042196U, 0x68b1d623U, 0x8b5114fdU,
-+	0xdf074c46U, 0x12cc86b3U, 0x0a52098fU,
-+	0x9d292f9aU, 0xa2f41f12U, 0x43a71ed0U,
-+	0x73f0bce6U, 0x70a7e980U, 0x243c6d75U,
-+	0xfdb71513U, 0xa67d8a08U, 0xb7e8f148U,
-+	0xf7a644eeU, 0x0f1837f2U, 0x4b6694e0U,
-+	0xb7bbb3a8U
-+};
-+#else
-+static const hsiphash_key_t test_key_hsiphash =
-+	{{ 0x03020100U, 0x07060504U }};
-+
-+static const u32 test_vectors_hsiphash[64] = {
-+	0x5814c896U, 0xe7e864caU, 0xbc4b0e30U,
-+	0x01539939U, 0x7e059ea6U, 0x88e3d89bU,
-+	0xa0080b65U, 0x9d38d9d6U, 0x577999b1U,
-+	0xc839caedU, 0xe4fa32cfU, 0x959246eeU,
-+	0x6b28096cU, 0x66dd9cd6U, 0x16658a7cU,
-+	0xd0257b04U, 0x8b31d501U, 0x2b1cd04bU,
-+	0x06712339U, 0x522aca67U, 0x911bb605U,
-+	0x90a65f0eU, 0xf826ef7bU, 0x62512debU,
-+	0x57150ad7U, 0x5d473507U, 0x1ec47442U,
-+	0xab64afd3U, 0x0a4100d0U, 0x6d2ce652U,
-+	0x2331b6a3U, 0x08d8791aU, 0xbc6dda8dU,
-+	0xe0f6c934U, 0xb0652033U, 0x9b9851ccU,
-+	0x7c46fb7fU, 0x732ba8cbU, 0xf142997aU,
-+	0xfcc9aa1bU, 0x05327eb2U, 0xe110131cU,
-+	0xf9e5e7c0U, 0xa7d708a6U, 0x11795ab1U,
-+	0x65671619U, 0x9f5fff91U, 0xd89c5267U,
-+	0x007783ebU, 0x95766243U, 0xab639262U,
-+	0x9c7e1390U, 0xc368dda6U, 0x38ddc455U,
-+	0xfa13d379U, 0x979ea4e8U, 0x53ecd77eU,
-+	0x2ee80657U, 0x33dbb66aU, 0xae3f0577U,
-+	0x88b4c4ccU, 0x3e7f480bU, 0x74c1ebf8U,
-+	0x87178304U
-+};
-+#endif
-+
- static int __init siphash_test_init(void)
+ static void nfs4_destroy_server(struct nfs_server *server)
  {
- 	u8 in[64] __aligned(SIPHASH_ALIGNMENT);
-@@ -70,6 +130,16 @@ static int __init siphash_test_init(void)
- 			pr_info("siphash self-test unaligned %u: FAIL\n", i + 1);
- 			ret = -EINVAL;
- 		}
-+		if (hsiphash(in, i, &test_key_hsiphash) !=
-+						test_vectors_hsiphash[i]) {
-+			pr_info("hsiphash self-test aligned %u: FAIL\n", i + 1);
-+			ret = -EINVAL;
-+		}
-+		if (hsiphash(in_unaligned + 1, i, &test_key_hsiphash) !=
-+						test_vectors_hsiphash[i]) {
-+			pr_info("hsiphash self-test unaligned %u: FAIL\n", i + 1);
-+			ret = -EINVAL;
-+		}
++	LIST_HEAD(freeme);
++
+ 	nfs_server_return_all_delegations(server);
+ 	unset_pnfs_layoutdriver(server);
+-	nfs4_purge_state_owners(server);
++	nfs4_purge_state_owners(server, &freeme);
++	nfs4_free_state_owners(&freeme);
+ }
+ 
+ /*
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 5be61affeefd8..ef3ed2b1fd278 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -611,24 +611,39 @@ void nfs4_put_state_owner(struct nfs4_state_owner *sp)
+ /**
+  * nfs4_purge_state_owners - Release all cached state owners
+  * @server: nfs_server with cached state owners to release
++ * @head: resulting list of state owners
+  *
+  * Called at umount time.  Remaining state owners will be on
+  * the LRU with ref count of zero.
++ * Note that the state owners are not freed, but are added
++ * to the list @head, which can later be used as an argument
++ * to nfs4_free_state_owners.
+  */
+-void nfs4_purge_state_owners(struct nfs_server *server)
++void nfs4_purge_state_owners(struct nfs_server *server, struct list_head *head)
+ {
+ 	struct nfs_client *clp = server->nfs_client;
+ 	struct nfs4_state_owner *sp, *tmp;
+-	LIST_HEAD(doomed);
+ 
+ 	spin_lock(&clp->cl_lock);
+ 	list_for_each_entry_safe(sp, tmp, &server->state_owners_lru, so_lru) {
+-		list_move(&sp->so_lru, &doomed);
++		list_move(&sp->so_lru, head);
+ 		nfs4_remove_state_owner_locked(sp);
  	}
- 	if (siphash_1u64(0x0706050403020100ULL, &test_key_siphash) !=
- 						test_vectors_siphash[8]) {
-@@ -115,6 +185,28 @@ static int __init siphash_test_init(void)
- 		pr_info("siphash self-test 4u32: FAIL\n");
- 		ret = -EINVAL;
+ 	spin_unlock(&clp->cl_lock);
++}
+ 
+-	list_for_each_entry_safe(sp, tmp, &doomed, so_lru) {
++/**
++ * nfs4_purge_state_owners - Release all cached state owners
++ * @head: resulting list of state owners
++ *
++ * Frees a list of state owners that was generated by
++ * nfs4_purge_state_owners
++ */
++void nfs4_free_state_owners(struct list_head *head)
++{
++	struct nfs4_state_owner *sp, *tmp;
++
++	list_for_each_entry_safe(sp, tmp, head, so_lru) {
+ 		list_del(&sp->so_lru);
+ 		nfs4_free_state_owner(sp);
  	}
-+	if (hsiphash_1u32(0x03020100U, &test_key_hsiphash) !=
-+						test_vectors_hsiphash[4]) {
-+		pr_info("hsiphash self-test 1u32: FAIL\n");
-+		ret = -EINVAL;
-+	}
-+	if (hsiphash_2u32(0x03020100U, 0x07060504U, &test_key_hsiphash) !=
-+						test_vectors_hsiphash[8]) {
-+		pr_info("hsiphash self-test 2u32: FAIL\n");
-+		ret = -EINVAL;
-+	}
-+	if (hsiphash_3u32(0x03020100U, 0x07060504U,
-+			  0x0b0a0908U, &test_key_hsiphash) !=
-+						test_vectors_hsiphash[12]) {
-+		pr_info("hsiphash self-test 3u32: FAIL\n");
-+		ret = -EINVAL;
-+	}
-+	if (hsiphash_4u32(0x03020100U, 0x07060504U,
-+			  0x0b0a0908U, 0x0f0e0d0cU, &test_key_hsiphash) !=
-+						test_vectors_hsiphash[16]) {
-+		pr_info("hsiphash self-test 4u32: FAIL\n");
-+		ret = -EINVAL;
-+	}
- 	if (!ret)
- 		pr_info("self-tests: pass\n");
- 	return ret;
+@@ -1724,12 +1739,13 @@ static int nfs4_do_reclaim(struct nfs_client *clp, const struct nfs4_state_recov
+ 	struct nfs4_state_owner *sp;
+ 	struct nfs_server *server;
+ 	struct rb_node *pos;
++	LIST_HEAD(freeme);
+ 	int status = 0;
+ 
+ restart:
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link) {
+-		nfs4_purge_state_owners(server);
++		nfs4_purge_state_owners(server, &freeme);
+ 		spin_lock(&clp->cl_lock);
+ 		for (pos = rb_first(&server->state_owners);
+ 		     pos != NULL;
+@@ -1758,6 +1774,7 @@ restart:
+ 		spin_unlock(&clp->cl_lock);
+ 	}
+ 	rcu_read_unlock();
++	nfs4_free_state_owners(&freeme);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
