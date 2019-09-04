@@ -5,56 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3498AC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA0CC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5BC208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66731208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619616;
-	bh=lBpyFDA5hZnbijuaJ6bRBDeCsLH10Lg896AGxn2kkVA=;
+	s=default; t=1567619623;
+	bh=H5+rd+m1l2I4vg2UE8bUyffVx/2IpmLt64BPIBfCkkY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=SE6sENlcblAgNbMrJ/UBycsgEn2o6O1QjQ9y8GzmU3sb7qIPAcVmTcLXkVTPlAWK1
-	 3S6qgiUuXyIudOpjnHwhD+ymKEnC5HrNm6dmL06slmCtZk84tDQTlB8gD8MmjQNki3
-	 Dr6LvpQ3aeWArCvNmLKV1NJiaowT6AmLX15HobHo=
+	b=0m8ZsHk6lkOXIFzFBV0yHJIOk0VdbB9VR0NVZ21+b3hjVokJzJ1EikIjvm5l7iNIU
+	 twNLQRPxJpKQX4XS1+sjAy6iuFVFWB3IP0WorBNPDMV5XUHcNRuMrYjqN/kvl69Sy9
+	 ljVtY8EXddM+8ZKm1oi4/JltggCJpwDubKqQ38U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732030AbfIDRxf (ORCPT
+        id S1732179AbfIDRxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:53:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49464 "EHLO
+        Wed, 4 Sep 2019 13:53:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49738 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731633AbfIDRxf (ORCPT
+        with ESMTP id S1731306AbfIDRxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:53:35 -0400
+        Wed, 4 Sep 2019 13:53:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=iYIeUpDrEBWiGCuNs3OXSzfuqXKPHDOYVNqEcIq84zI=; b=PHwYHOjtzvRy
-        nZxGXvdyTWw9rFtgYhq9c6Marg5F+Dxm4hwBNyc8vHMZviaHlawtuaXPDoALLdeL8HE+jyJKBbM/H
-        sfXh8EKYFdglj8vu2cJoXtu6oOfL36qvQojyRjbgcoCzM/lxki40QLi+7OIfTBVo9LHDUpd7ibuIj
-        GeZj0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=VCp+GINcdewaFZUB7P8VBjJ5Q+P6scN0GPbH/ZYlu7g=; b=lIUzyIf+Ndxz
+        kAGCdJy6h5VNx3k/w/8/MIzj5BXPlw4K1V4lYvCpfSj68s0pbFh8JlS7qkNbruBjIFeeg2GUvywjL
+        rom9pMG54jZfn3KbbZNssYtylHSzX+ZtZ1GSzb8H0/uSn6FaDgi5S63TzSKj2B6XCLvvT0SDfJABy
+        l8HY4=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i5ZTH-0006hY-MZ; Wed, 04 Sep 2019 17:53:31 +0000
+        id 1i5ZTC-0006hF-NW; Wed, 04 Sep 2019 17:53:26 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 3ADAE2742B45; Wed,  4 Sep 2019 18:53:31 +0100 (BST)
+        id 365752742CDC; Wed,  4 Sep 2019 18:53:26 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Applied "regulator: Defer init completion for a while after late_initcall" to the regulator tree
-In-Reply-To: <20190904124250.25844-1-broonie@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     akshu.agrawal@amd.com, alsa-devel@alsa-project.org,
+        broonie@kernel.org, Hulk Robot <hulkci@huawei.com>,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        tglx@linutronix.de, tiwai@suse.com, yuehaibing@huawei.com,
+        yuzhao@google.com
+Subject: Applied "ASoC: amd: use devm_platform_ioremap_resource() to simplify code" to the asoc tree
+In-Reply-To: <20190904074833.23572-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190904175331.3ADAE2742B45@ypsilon.sirena.org.uk>
-Date:   Wed,  4 Sep 2019 18:53:31 +0100 (BST)
+Message-Id: <20190904175326.365752742CDC@ypsilon.sirena.org.uk>
+Date:   Wed,  4 Sep 2019 18:53:26 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -62,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: Defer init completion for a while after late_initcall
+   ASoC: amd: use devm_platform_ioremap_resource() to simplify code
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -87,106 +90,37 @@ to this mail.
 Thanks,
 Mark
 
-From 55576cf1853798e86f620766e23b604c9224c19c Mon Sep 17 00:00:00 2001
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 4 Sep 2019 13:42:50 +0100
-Subject: [PATCH] regulator: Defer init completion for a while after
- late_initcall
+From dfafc1822f6826c9d250223f59ce8c3b227866a6 Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Wed, 4 Sep 2019 15:48:33 +0800
+Subject: [PATCH] ASoC: amd: use devm_platform_ioremap_resource() to simplify
+ code
 
-The kernel has no way of knowing when we have finished instantiating
-drivers, between deferred probe and systems that build key drivers as
-modules we might be doing this long after userspace has booted. This has
-always been a bit of an issue with regulator_init_complete since it can
-power off hardware that's not had it's driver loaded which can result in
-user visible effects, the main case is powering off displays. Practically
-speaking it's not been an issue in real systems since most systems that
-use the regulator API are embedded and build in key drivers anyway but
-with Arm laptops coming on the market it's becoming more of an issue so
-let's do something about it.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-In the absence of any better idea just defer the powering off for 30s
-after late_initcall(), this is obviously a hack but it should mask the
-issue for now and it's no more arbitrary than late_initcall() itself.
-Ideally we'd have some heuristics to detect if we're on an affected
-system and tune or skip the delay appropriately, and there may be some
-need for a command line option to be added.
-
-Link: https://lore.kernel.org/r/20190904124250.25844-1-broonie@kernel.org
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190904074833.23572-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
-Tested-by: Lee Jones <lee.jones@linaro.org>
-Cc: stable@vger.kernel.org
 ---
- drivers/regulator/core.c | 42 +++++++++++++++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 11 deletions(-)
+ sound/soc/amd/acp-pcm-dma.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 4a27a46ec6e7..340db986b67f 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -5644,7 +5644,7 @@ static int __init regulator_init(void)
- /* init early to allow our consumers to complete system booting */
- core_initcall(regulator_init);
+diff --git a/sound/soc/amd/acp-pcm-dma.c b/sound/soc/amd/acp-pcm-dma.c
+index d26653f81416..52225b4b6382 100644
+--- a/sound/soc/amd/acp-pcm-dma.c
++++ b/sound/soc/amd/acp-pcm-dma.c
+@@ -1251,8 +1251,7 @@ static int acp_audio_probe(struct platform_device *pdev)
+ 	if (!audio_drv_data)
+ 		return -ENOMEM;
  
--static int __init regulator_late_cleanup(struct device *dev, void *data)
-+static int regulator_late_cleanup(struct device *dev, void *data)
- {
- 	struct regulator_dev *rdev = dev_to_rdev(dev);
- 	const struct regulator_ops *ops = rdev->desc->ops;
-@@ -5693,17 +5693,8 @@ static int __init regulator_late_cleanup(struct device *dev, void *data)
- 	return 0;
- }
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	audio_drv_data->acp_mmio = devm_ioremap_resource(&pdev->dev, res);
++	audio_drv_data->acp_mmio = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(audio_drv_data->acp_mmio))
+ 		return PTR_ERR(audio_drv_data->acp_mmio);
  
--static int __init regulator_init_complete(void)
-+static void regulator_init_complete_work_function(struct work_struct *work)
- {
--	/*
--	 * Since DT doesn't provide an idiomatic mechanism for
--	 * enabling full constraints and since it's much more natural
--	 * with DT to provide them just assume that a DT enabled
--	 * system has full constraints.
--	 */
--	if (of_have_populated_dt())
--		has_full_constraints = true;
--
- 	/*
- 	 * Regulators may had failed to resolve their input supplies
- 	 * when were registered, either because the input supply was
-@@ -5721,6 +5712,35 @@ static int __init regulator_init_complete(void)
- 	 */
- 	class_for_each_device(&regulator_class, NULL, NULL,
- 			      regulator_late_cleanup);
-+}
-+
-+static DECLARE_DELAYED_WORK(regulator_init_complete_work,
-+			    regulator_init_complete_work_function);
-+
-+static int __init regulator_init_complete(void)
-+{
-+	/*
-+	 * Since DT doesn't provide an idiomatic mechanism for
-+	 * enabling full constraints and since it's much more natural
-+	 * with DT to provide them just assume that a DT enabled
-+	 * system has full constraints.
-+	 */
-+	if (of_have_populated_dt())
-+		has_full_constraints = true;
-+
-+	/*
-+	 * We punt completion for an arbitrary amount of time since
-+	 * systems like distros will load many drivers from userspace
-+	 * so consumers might not always be ready yet, this is
-+	 * particularly an issue with laptops where this might bounce
-+	 * the display off then on.  Ideally we'd get a notification
-+	 * from userspace when this happens but we don't so just wait
-+	 * a bit and hope we waited long enough.  It'd be better if
-+	 * we'd only do this on systems that need it, and a kernel
-+	 * command line option might be useful.
-+	 */
-+	schedule_delayed_work(&regulator_init_complete_work,
-+			      msecs_to_jiffies(30000));
- 
- 	return 0;
- }
 -- 
 2.20.1
 
