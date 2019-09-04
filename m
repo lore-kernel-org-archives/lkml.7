@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7495C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64236C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C126F22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 362CC2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620886;
-	bh=2yoVyZHUw19o1kpTAXlMkoYYOYXEkWT1PtvYSd40/5s=;
+	s=default; t=1567620889;
+	bh=bZL5zCNcdNHk5Kj8/hfVZlyAXCY5M1AF1eWosfk3xZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mVb2cF9hsxwa0R0y0C6JOnue+GDhJkSX4xwzTs09oWM8c/JfvUHXZrTUnljvCtVoS
-	 1PiJGRcfz2h7YKFj96vb4Gymv0vB8dqDvArcRIRpjD+RQHCC1o/mFKlLm2qfeM3ikA
-	 Nv410k6XhEG0qI4s0aGHZXwIZbnfPGDOL2Cp8nUM=
+	b=W2bIHaNVlW699K3DBM9C9UvSujcVCRf/8akCjXgecYG982X6FHZj5MOtLbmePBmLm
+	 ELXxEe6wgWPcZwLdP5BP9ObdMk4DdSnpmPdZ01EEsxWH4QbomAJzPLnoU5/wG94snK
+	 GCaY45J+Xo6ZoU2strPOZ9JR3leGdORZwfcvFcn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390319AbfIDSOp (ORCPT
+        id S2390864AbfIDSOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60008 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390568AbfIDSOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:42 -0400
+        id S2390392AbfIDSOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8F38208E4;
-        Wed,  4 Sep 2019 18:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4340C22CF7;
+        Wed,  4 Sep 2019 18:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620881;
-        bh=2yoVyZHUw19o1kpTAXlMkoYYOYXEkWT1PtvYSd40/5s=;
+        s=default; t=1567620883;
+        bh=bZL5zCNcdNHk5Kj8/hfVZlyAXCY5M1AF1eWosfk3xZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RC1Vp6dnuiCEE5kf4Juga0VnWi4NS2AFiA07slEp1C4MBDJVTDNmkthFJFP876gxi
-         cSArSQOOpHZa8hPp1xDUPqeDpQU6GCdTx5AAqX2ILJmWxVwSOqEorSdMiWRIE0OVAP
-         Dtq3S53m4ZBFy7ZQRajIxZ2H5avrz1NaKiny7O9M=
+        b=0fstsv59U4H9FoVPqxK2xkvfJ1IFKQGaI8+eJbxz2hkl0KirjP+yVF7u64bq78Kyd
+         ndyvmZKfoM2RrZOFg5wOwxb2iEY1H40RW0afq3daF9P251fKQvjkMlwdks6KdZuXMR
+         IW74Fbr8BqdlwrrN5E0oe1gt3WNGHmkGbQo3JO1s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
+        stable@vger.kernel.org, Baolin Wang <baolin.wang@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 129/143] mmc: sdhci-sprd: clear the UHS-I modes read from registers
-Date:   Wed,  4 Sep 2019 19:54:32 +0200
-Message-Id: <20190904175319.453014946@linuxfoundation.org>
+Subject: [PATCH 5.2 130/143] mmc: sdhci-sprd: Implement the get_max_timeout_count() interface
+Date:   Wed,  4 Sep 2019 19:54:33 +0200
+Message-Id: <20190904175319.491925858@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -62,54 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2f765c175e1d1acae911f889e71e5933c6488929 ]
+[ Upstream commit 7486831d7d6aebcf851f9a4bbe65080351d5c9fb ]
 
-sprd's sd host controller supports SDR50/SDR104/DDR50 though, the UHS-I
-mode used by the specific card can be selected via devicetree only.
+Implement the get_max_timeout_count() interface to set the Spredtrum SD
+host controller actual maximum timeout count.
 
-Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
-Reviewed-by: Baolin Wang <baolin.wang@linaro.org>
-Tested-by: Baolin Wang <baolin.wang@linaro.org>
-Cc: stable@vger.kernel.org
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-sprd.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-sprd.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
-index dee30aa23cf72..9d0f58a665276 100644
+index 9d0f58a665276..1c5e6b77ca641 100644
 --- a/drivers/mmc/host/sdhci-sprd.c
 +++ b/drivers/mmc/host/sdhci-sprd.c
-@@ -320,7 +320,8 @@ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
+@@ -285,6 +285,12 @@ static void sdhci_sprd_hw_reset(struct sdhci_host *host)
+ 	usleep_range(300, 500);
+ }
  
- static const struct sdhci_pltfm_data sdhci_sprd_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_CARD_DETECTION |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK,
-+		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
-+		  SDHCI_QUIRK_MISSING_CAPS,
- 	.quirks2 = SDHCI_QUIRK2_BROKEN_HS200 |
- 		   SDHCI_QUIRK2_USE_32BIT_BLK_CNT |
- 		   SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
-@@ -389,6 +390,16 @@ static int sdhci_sprd_probe(struct platform_device *pdev)
- 
- 	sdhci_enable_v4_mode(host);
- 
-+	/*
-+	 * Supply the existing CAPS, but clear the UHS-I modes. This
-+	 * will allow these modes to be specified only by device
-+	 * tree properties through mmc_of_parse().
-+	 */
-+	host->caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-+	host->caps1 = sdhci_readl(host, SDHCI_CAPABILITIES_1);
-+	host->caps1 &= ~(SDHCI_SUPPORT_SDR50 | SDHCI_SUPPORT_SDR104 |
-+			 SDHCI_SUPPORT_DDR50);
++static unsigned int sdhci_sprd_get_max_timeout_count(struct sdhci_host *host)
++{
++	/* The Spredtrum controller actual maximum timeout count is 1 << 31 */
++	return 1 << 31;
++}
 +
- 	ret = sdhci_setup_host(host);
- 	if (ret)
- 		goto pm_runtime_disable;
+ static struct sdhci_ops sdhci_sprd_ops = {
+ 	.read_l = sdhci_sprd_readl,
+ 	.write_l = sdhci_sprd_writel,
+@@ -296,6 +302,7 @@ static struct sdhci_ops sdhci_sprd_ops = {
+ 	.reset = sdhci_reset,
+ 	.set_uhs_signaling = sdhci_sprd_set_uhs_signaling,
+ 	.hw_reset = sdhci_sprd_hw_reset,
++	.get_max_timeout_count = sdhci_sprd_get_max_timeout_count,
+ };
+ 
+ static void sdhci_sprd_request(struct mmc_host *mmc, struct mmc_request *mrq)
 -- 
 2.20.1
 
