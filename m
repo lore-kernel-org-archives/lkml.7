@@ -2,126 +2,104 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3ADC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509C1C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA542168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E63E22CE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfIDOmS (ORCPT
+        id S1730643AbfIDOmo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:42:18 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6210 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729965AbfIDOmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:42:18 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AF49BB8E4149F22B28EE;
-        Wed,  4 Sep 2019 22:42:15 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 22:42:10 +0800
-Subject: Re: [PATCH -next 25/36] spi: s3c24xx: use
- devm_platform_ioremap_resource() to simplify code
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-References: <20190904135918.25352-1-yuehaibing@huawei.com>
- <20190904135918.25352-26-yuehaibing@huawei.com>
- <CAJKOXPdq4as1Oe3U+9znkvP0RA=sxUoiWVBCSbzf_wq_um2t=w@mail.gmail.com>
-CC:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
-        <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
-        <shc_work@mail.ru>, <agross@kernel.org>, <khilman@baylibre.com>,
-        <matthias.bgg@gmail.com>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
-        <festevam@gmail.com>, <linux-imx@nxp.com>,
-        <avifishman70@gmail.com>, <tmaimon77@gmail.com>,
-        <tali.perry1@gmail.com>, <venture@google.com>, <yuenn@google.com>,
-        <benjaminfair@google.com>, <kgene@kernel.org>,
-        Andi Shyti <andi@etezian.org>, <palmer@sifive.com>,
-        <paul.walmsley@sifive.com>, <baohua@kernel.org>,
-        <mripard@kernel.org>, <wens@csie.org>, <ldewangan@nvidia.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <yamada.masahiro@socionext.com>, <michal.simek@xilinx.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <openbmc@lists.ozlabs.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <3595bac1-e426-b4f9-4e24-01e104fdfe5d@huawei.com>
-Date:   Wed, 4 Sep 2019 22:42:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 4 Sep 2019 10:42:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729398AbfIDOmn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:42:43 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x84ETspl088262
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Sep 2019 10:42:42 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2utdes4xu5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 10:42:41 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Wed, 4 Sep 2019 15:42:40 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Sep 2019 15:42:37 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x84Ega2d43647078
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Sep 2019 14:42:36 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A214EAE055;
+        Wed,  4 Sep 2019 14:42:36 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 349A4AE045;
+        Wed,  4 Sep 2019 14:42:36 +0000 (GMT)
+Received: from localhost (unknown [9.199.56.52])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Sep 2019 14:42:36 +0000 (GMT)
+Date:   Wed, 04 Sep 2019 20:12:34 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 2/3] Powerpc64/Watchpoint: Don't ignore extraneous
+ exceptions
+To:     mikey@neuling.org, mpe@ellerman.id.au,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     benh@kernel.crashing.org, christophe.leroy@c-s.fr,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        npiggin@gmail.com, paulus@samba.org
+References: <20190710045445.31037-1-ravi.bangoria@linux.ibm.com>
+        <20190710045445.31037-3-ravi.bangoria@linux.ibm.com>
+In-Reply-To: <20190710045445.31037-3-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPdq4as1Oe3U+9znkvP0RA=sxUoiWVBCSbzf_wq_um2t=w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19090414-0028-0000-0000-00000397A571
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090414-0029-0000-0000-00002459F765
+Message-Id: <1567608022.j44gajn34z.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=921 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909040143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/4 22:28, Krzysztof Kozlowski wrote:
-> On Wed, 4 Sep 2019 at 16:00, YueHaibing <yuehaibing@huawei.com> wrote:
->>
->> Use devm_platform_ioremap_resource() to simplify the code a bit.
->> This is detected by coccinelle.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
-> 
-> This tag does not look real... First of all where is the report?
+Ravi Bangoria wrote:
+> On Powerpc64, watchpoint match range is double-word granular. On
+> a watchpoint hit, DAR is set to the first byte of overlap between
+> actual access and watched range. And thus it's quite possible that
+> DAR does not point inside user specified range. Ex, say user creates
+> a watchpoint with address range 0x1004 to 0x1007. So hw would be
+> configured to watch from 0x1000 to 0x1007. If there is a 4 byte
+> access from 0x1002 to 0x1005, DAR will point to 0x1002 and thus
+> interrupt handler considers it as extraneous, but it's actually not,
+> because part of the access belongs to what user has asked. So, let
+> kernel pass it on to user and let user decide what to do with it
+> instead of silently ignoring it. The drawback is, it can generate
+> false positive events.
 
-It is our internal CI robot, which is unavailable to external temporarily.
+I think you should do the additional validation here, instead of 
+generating false positives. You should be able to read the instruction, 
+run it through analyse_instr(), and then use OP_IS_LOAD_STORE() and 
+GETSIZE() to understand the access range. This can be used to then 
+perform a better match against what the user asked for.
 
-> Second, it was reported by coccinelle.
-> Reported-by should be use to give real credits.
-> 
-> Best regards,
-> Krzysztof
-> 
->> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->> ---
->>  drivers/spi/spi-s3c24xx.c | 4 +---
->>  1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/drivers/spi/spi-s3c24xx.c b/drivers/spi/spi-s3c24xx.c
->> index aea8fd9..2d6e37f 100644
->> --- a/drivers/spi/spi-s3c24xx.c
->> +++ b/drivers/spi/spi-s3c24xx.c
->> @@ -487,7 +487,6 @@ static int s3c24xx_spi_probe(struct platform_device *pdev)
->>         struct s3c2410_spi_info *pdata;
->>         struct s3c24xx_spi *hw;
->>         struct spi_master *master;
->> -       struct resource *res;
->>         int err = 0;
->>
->>         master = spi_alloc_master(&pdev->dev, sizeof(struct s3c24xx_spi));
->> @@ -536,8 +535,7 @@ static int s3c24xx_spi_probe(struct platform_device *pdev)
->>         dev_dbg(hw->dev, "bitbang at %p\n", &hw->bitbang);
->>
->>         /* find and map our resources */
->> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -       hw->regs = devm_ioremap_resource(&pdev->dev, res);
->> +       hw->regs = devm_platform_ioremap_resource(pdev, 0);
->>         if (IS_ERR(hw->regs)) {
->>                 err = PTR_ERR(hw->regs);
->>                 goto err_no_pdata;
->> --
->> 2.7.4
->>
->>
-> 
-> .
-> 
+- Naveen
 
