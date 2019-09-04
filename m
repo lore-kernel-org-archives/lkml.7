@@ -2,101 +2,112 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE05C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A114C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86B002341F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E4322CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0ktxI2d"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="a4yHwUrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbfIDHAs (ORCPT
+        id S1728870AbfIDHCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:00:48 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46739 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbfIDHAr (ORCPT
+        Wed, 4 Sep 2019 03:02:46 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42046 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfIDHCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:00:47 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so4763436pfg.13;
-        Wed, 04 Sep 2019 00:00:47 -0700 (PDT)
+        Wed, 4 Sep 2019 03:02:45 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c10so8200575otd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 00:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0jgAF8J58aWl0sjFxiXtsOlB308+Q67iE1jg4iTF8/A=;
-        b=c0ktxI2d6mLipekS0Gyb/pF9PPPM9kTMCdtTBrqZBmBoxhFgDHL83YHdISem/zmndi
-         fBr3HDDmvC8mM9PrN+jNEE/b7TQdwSH6nFsLgKiypVevSXBsgFhioq5L0YuMud4RK9pq
-         rLzDgafT+CKTGnz2+oMYSHtS7Chx2y3X0aA1JZL8qd7BfgqkpDHTKc6xfogU+w8mxAv+
-         ohessldjc/M4d0bn7Bvpz/dEzgLdiH7/QoPXMumNToUidXiX0sVXd9Vcxp7cA+reoZ3g
-         v9Egr9JYvBeb7/D3e4X9Qc0yZDXmzMwBo25ujSNXQKfiTjsmYQegHGBR+0qQJpSb1YVX
-         PByA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=hJb8C0XxHQ+BPdFitXGai/GvOOBT3Zt2EUfRo7xRmzs=;
+        b=a4yHwUrxocYrJolETfDC/dVE5GboZjW8JiuE3msRZRCguq5K4r/1oDLfRqaoJmbSH5
+         cZI/QYpDHXUrcZotRjrf/trcRlqB8ltA3kJK6DjfGFk3hmeG+jXApv3k7ApeIlJO7AFR
+         u4xiR3hK90QpFCVn6HPEsug1s8QSoJBV5XzlMHywHUadBrAyy3Q+bmm3Z68VXeZH43IC
+         BjK6Nl3lnDt6qR04RYGBn0zAQ+XvmjU2z9x2H8MgGPQSsPdLycKbhOhmph0C4YMPDCw8
+         0RfbGDgCXiPYDnO8jlo/vKaMVj26uIkvRHpk+oocjJrN6gwqA2WzgWoxaJXQX2evtFw3
+         3gIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0jgAF8J58aWl0sjFxiXtsOlB308+Q67iE1jg4iTF8/A=;
-        b=Vp/xCK4HmbdbP5XYhbEFbXwCBJEOJ7PoSH3hZoGQzWBah4d0BqT8IYW8+gGCBlcXbe
-         JdcUyEGY3wXUX0elpRkoU8j0fsNjw2gSzI5n5CpNG4bZ/7pFDFvgb3uST3hDbVT9BotO
-         M8QT5iX09UZofu1k/1Sr+Yn9BApVq3WcA32asA6Zb88B4eaE+tKnoVKR+2H697Ua9nTd
-         4o8mwdypsC9hAxKAF40d2GfyyUB/6DfSt15s+CASnUQRB9mfQ87UO8QGKpDZqFGtglyp
-         16t8lgj1810nUIjRpQolCD0trKjsAyDtnpzonBAntumx/YSDeluKjB9LMe6UvAwYOvxj
-         ETjQ==
-X-Gm-Message-State: APjAAAWp2GqfGQ6r45VfEAJ56L8Jd0m8KMzSzAqEuobejRwDv+j6j2oB
-        WG95KOelgG/XwSH9+jo0IIQ=
-X-Google-Smtp-Source: APXvYqwzHahC/ZrTpolUl6fKkmnQKYzORYyELnj9JSN1bbSC7s7LQjrvvGR6/yrUpDLjvrNjP3jOyg==
-X-Received: by 2002:a62:7790:: with SMTP id s138mr42802476pfc.243.1567580447147;
-        Wed, 04 Sep 2019 00:00:47 -0700 (PDT)
-Received: from localhost ([175.223.23.37])
-        by smtp.gmail.com with ESMTPSA id v20sm18223934pfm.63.2019.09.04.00.00.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 00:00:46 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 16:00:42 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
-        davem@davemloft.net, netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-Message-ID: <20190904070042.GA11968@jagdpanzerIV>
-References: <1567177025-11016-1-git-send-email-cai@lca.pw>
- <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
- <1567178728.5576.32.camel@lca.pw>
- <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
- <20190903132231.GC18939@dhcp22.suse.cz>
- <1567525342.5576.60.camel@lca.pw>
- <20190903185305.GA14028@dhcp22.suse.cz>
- <1567546948.5576.68.camel@lca.pw>
- <20190904061501.GB3838@dhcp22.suse.cz>
- <20190904064144.GA5487@jagdpanzerIV>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hJb8C0XxHQ+BPdFitXGai/GvOOBT3Zt2EUfRo7xRmzs=;
+        b=JbairNLO5dxOMNRP32aumI5DHidfOfh0BPVY9PHxKN5DBMYUz/riQ4IEb3ggZhqEUA
+         CZ8OP1HR6zoEYIZyaur6XcKUlL2+mruISaa+h1Cp7FTe5w4LrKxxqwvrZQe8T1ZkSVBA
+         MCWdRHCW4VrgLF4JGer0MPP9ZRReLVtB/ggqHN8XAj5m00XH7CpBso923eJvjGALuBei
+         WSIgC1VWhyKrfuC8sfdr1zu6qjhdPeW+t/QovhjN2b02CLEgv+3V8NZqpxzy1bwvoym9
+         1IJ+zgW38KEzth3Gv9W45bzaBFud2h8mGmp8k3wLhtYToCIIYxa4wIXw2yMJDZBYxf7j
+         /mLQ==
+X-Gm-Message-State: APjAAAVfQS1tw9q2kxexZcKzN3AlEQNVeJnH6mEI7iBYZSt/E+F/eq8U
+        C3m/Xoc9n6lplCTTjfwRNMipWaOFxG9HbfGth/lcgg==
+X-Google-Smtp-Source: APXvYqxxks9djuMMHQfVLolM/IUn9zgO3O4jtGuHuSO1CHv6NW5x0Jn250yoKjvs6bRFbiPnut+ChZu3saOUiE5+Idk=
+X-Received: by 2002:a9d:68c5:: with SMTP id i5mr15201774oto.250.1567580564651;
+ Wed, 04 Sep 2019 00:02:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904064144.GA5487@jagdpanzerIV>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190904061245.30770-1-rashmica.g@gmail.com> <20190904061245.30770-4-rashmica.g@gmail.com>
+In-Reply-To: <20190904061245.30770-4-rashmica.g@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 4 Sep 2019 09:02:33 +0200
+Message-ID: <CAMpxmJUGm3Zs8VHwHnXTQ2cKnpF0caR=7V4bBi1_sy1U2mWc0g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] gpio: Update documentation with ast2600 controllers
+To:     Rashmica Gupta <rashmica.g@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (09/04/19 15:41), Sergey Senozhatsky wrote:
-> But the thing is different in case of dump_stack() + show_mem() +
-> some other output. Because now we ratelimit not a single printk() line,
-> but hundreds of them. The ratelimit becomes - 10 * $$$ lines in 5 seconds
-> (IOW, now we talk about thousands of lines).
+=C5=9Br., 4 wrz 2019 o 08:13 Rashmica Gupta <rashmica.g@gmail.com> napisa=
+=C5=82(a):
+>
 
-And on devices with slow serial consoles this can be somewhat close to
-"no ratelimit". *Suppose* that warn_alloc() adds 700 lines each time.
-Within 5 seconds we can call warn_alloc() 10 times, which will add 7000
-lines to the logbuf. If printk() can evict only 6000 lines in 5 seconds
-then we have a growing number of pending logbuf messages.
+Again, this needs a proper commit description and the subject should
+start with "dt-bindings: ...".
 
-	-ss
+You also need to Cc the device-tree maintainers. Use
+scripts/get_maintainer.pl to list all people that should get this
+patch.
+
+Bart
+
+> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Doc=
+umentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> index 7e9b586770b0..cd388797e07c 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> @@ -2,7 +2,8 @@ Aspeed GPIO controller Device Tree Bindings
+>  -------------------------------------------
+>
+>  Required properties:
+> -- compatible           : Either "aspeed,ast2400-gpio" or "aspeed,ast2500=
+-gpio"
+> +- compatible           : Either "aspeed,ast2400-gpio", "aspeed,ast2500-g=
+pio",
+> +                                         "aspeed,ast2600-gpio", or "aspe=
+ed,ast2600-1-8v-gpio"
+>
+>  - #gpio-cells          : Should be two
+>                           - First cell is the GPIO line number
+> --
+> 2.20.1
+>
