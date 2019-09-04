@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0D3C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2559EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01A0322CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2DC2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619828;
-	bh=6DTqg9frxndXf+CFHwsm71uZlpFbznLVFeK7I+rtje8=;
+	s=default; t=1567619831;
+	bh=yXn5V3reSUa4JewyBLMYoVI4vg9EKURLb3VjTzOCjj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yc46M+kqgEb5N1wdEIMitT3j0NN/f+p6VedBSscqBEWF8T75GlUxGqhnwShz//Qwq
-	 Y0IjN2lrRGw7u4VdFQhQVEuk8bhBpgKLn9eLRl2s3Nt1DDUTVEn5QxcrgRqMk9H+ZG
-	 R8A17RnDdJA9E3sp1PbOMhLtpeO1aLf6XZyt6JYU=
+	b=qHdUTJOfy8twDnZBHXufFnieGezgBG0cmgdZz1ps0PYNd0cKveoqE/tmXfVcMzw8l
+	 t21gbK+I4DLQ6hgm39T9mWm0CG9t+W8dkgkU5hghbEpXJCELAaRIOVHTIEEF7SbgIG
+	 VyYarrQitF4O4Gig8JQp5j50VkOGVVd+pHkGZov8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387786AbfIDR5G (ORCPT
+        id S1732206AbfIDR5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387773AbfIDR5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:03 -0400
+        id S2387782AbfIDR5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B563D22CEA;
-        Wed,  4 Sep 2019 17:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55F82208E4;
+        Wed,  4 Sep 2019 17:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619823;
-        bh=6DTqg9frxndXf+CFHwsm71uZlpFbznLVFeK7I+rtje8=;
+        s=default; t=1567619825;
+        bh=yXn5V3reSUa4JewyBLMYoVI4vg9EKURLb3VjTzOCjj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X48g5W569boKknEM0ODWRkYTI7XBMmF9nEqkiMOa9m1ZLGdQ0E1AyS08vFvdr913c
-         5QC9kAX3em5IzZy5mwNZ7kM4qoR/gKiQWkmws+CfCe9CJuQevnO7kRC/BIxNXuzLIz
-         nNHt68G5QPxSIpMU5mFCuEMOClwZ8V2jO4QZKkQQ=
+        b=Wrr+T0j0DIBnGHHMTKINbTqqE3avh/dGdXjDME37+LiBoK2W7fSmHkfLJtewODYui
+         3j+JHNZAOD2LKcIq/fnVOtX7YIJb/0mvvHAqnKCRmoRjnnZ+pjNd2z1rhF2vOe1Nmb
+         N9W8dOrQdynOiO1dvsP/X/oJLWA0UoEi1nu+nTzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dirk Morris <dmorris@metaloft.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 46/77] netfilter: conntrack: Use consistent ct id hash calculation
-Date:   Wed,  4 Sep 2019 19:53:33 +0200
-Message-Id: <20190904175307.831985497@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 47/77] Revert "perf test 6: Fix missing kvm module load for s390"
+Date:   Wed,  4 Sep 2019 19:53:34 +0200
+Message-Id: <20190904175307.884235347@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -62,66 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 656c8e9cc1badbc18eefe6ba01d33ebbcae61b9a upstream.
+This reverts commit 5f18429ae48faebefc00533cb24afdd01064754c.
 
-Change ct id hash calculation to only use invariants.
+Which was upstream commit 53fe307dfd309e425b171f6272d64296a54f4dff.
 
-Currently the ct id hash calculation is based on some fields that can
-change in the lifetime on a conntrack entry in some corner cases. The
-current hash uses the whole tuple which contains an hlist pointer which
-will change when the conntrack is placed on the dying list resulting in
-a ct id change.
+Ben Hutchings reports that this commit depends on new code added in
+v4.18, and so is irrelevant on older kernels, and breaks the build.
 
-This patch also removes the reply-side tuple and extension pointer from
-the hash calculation so that the ct id will will not change from
-initialization until confirmation.
-
-Fixes: 3c79107631db1f7 ("netfilter: ctnetlink: don't use conntrack/expect object addresses as id")
-Signed-off-by: Dirk Morris <dmorris@metaloft.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ tools/perf/tests/parse-events.c | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index fd301fb137194..de0aad12b91d2 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -241,13 +241,12 @@ EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
-  * table location, we assume id gets exposed to userspace.
-  *
-  * Following nf_conn items do not change throughout lifetime
-- * of the nf_conn after it has been committed to main hash table:
-+ * of the nf_conn:
-  *
-  * 1. nf_conn address
-- * 2. nf_conn->ext address
-- * 3. nf_conn->master address (normally NULL)
-- * 4. tuple
-- * 5. the associated net namespace
-+ * 2. nf_conn->master address (normally NULL)
-+ * 3. the associated net namespace
-+ * 4. the original direction tuple
-  */
- u32 nf_ct_get_id(const struct nf_conn *ct)
- {
-@@ -257,9 +256,10 @@ u32 nf_ct_get_id(const struct nf_conn *ct)
- 	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 1a35ab044c11d..54af2f2e2ee4f 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -12,32 +12,6 @@
+ #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
+ 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
  
- 	a = (unsigned long)ct;
--	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
--	c = (unsigned long)ct->ext;
--	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
-+	b = (unsigned long)ct->master;
-+	c = (unsigned long)nf_ct_net(ct);
-+	d = (unsigned long)siphash(&ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
-+				   sizeof(ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple),
- 				   &ct_id_seed);
- #ifdef CONFIG_64BIT
- 	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
+-#if defined(__s390x__)
+-/* Return true if kvm module is available and loaded. Test this
+- * and retun success when trace point kvm_s390_create_vm
+- * exists. Otherwise this test always fails.
+- */
+-static bool kvm_s390_create_vm_valid(void)
+-{
+-	char *eventfile;
+-	bool rc = false;
+-
+-	eventfile = get_events_file("kvm-s390");
+-
+-	if (eventfile) {
+-		DIR *mydir = opendir(eventfile);
+-
+-		if (mydir) {
+-			rc = true;
+-			closedir(mydir);
+-		}
+-		put_events_file(eventfile);
+-	}
+-
+-	return rc;
+-}
+-#endif
+-
+ static int test__checkevent_tracepoint(struct perf_evlist *evlist)
+ {
+ 	struct perf_evsel *evsel = perf_evlist__first(evlist);
+@@ -1587,7 +1561,6 @@ static struct evlist_test test__events[] = {
+ 	{
+ 		.name  = "kvm-s390:kvm_s390_create_vm",
+ 		.check = test__checkevent_tracepoint,
+-		.valid = kvm_s390_create_vm_valid,
+ 		.id    = 100,
+ 	},
+ #endif
 -- 
 2.20.1
 
