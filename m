@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D422DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D326C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBB722CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6466B22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620816;
-	bh=I9c8+mI73wBB/l3wPqRLRS5mw5uBMutPW2XFFFwYECs=;
+	s=default; t=1567620819;
+	bh=A2LNTAbowGHYsvP0o7t9CSW2UkgGnnhpFRXPYW18W8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b5175k3Dy3YAPIyvgmmr4fdIZhsTVYPsObkiga4sfbuZukrz+spfWeQKOOCwCfRIB
-	 xmmbQ52optkYO993N56OO+NSRzgyOXhG46N2VizWNV4FfXoWzUlB02GYzOeXtiTAqU
-	 lJcm3YX2JLBeiPmFHsxfSysvXeSROS/oAX+5PHnE=
+	b=02Jzz77l4yE2LzOe/kXyl6pRbmxbtac+Bw5X+Kgh8d/KgkyWV3hCBn4sz7gVJ5vDA
+	 7TwJk3EKN9DYXM1AzyBqAiAgW0kmkX96vbYyskaFouiZiMt+BeXbALivWdY3TKG3+l
+	 h/w44DnPs6BsmF2qkDFn4CM/6HuO6LDhF7MYsUi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390709AbfIDSNf (ORCPT
+        id S2389561AbfIDSNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390700AbfIDSNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:32 -0400
+        id S2390705AbfIDSNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E9B2341B;
-        Wed,  4 Sep 2019 18:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C41502339E;
+        Wed,  4 Sep 2019 18:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620811;
-        bh=I9c8+mI73wBB/l3wPqRLRS5mw5uBMutPW2XFFFwYECs=;
+        s=default; t=1567620814;
+        bh=A2LNTAbowGHYsvP0o7t9CSW2UkgGnnhpFRXPYW18W8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ka28y/ar0RCnu8rXb4eHQjRG76ABXnT+sl6sRjZxVVVvZvBa8f9hHZ76Dk4yoojuz
-         m+Dhpl95JK//DR6IxMo1foWAsmb7DKKBF1Vd02iQjDIMbDJUILMm2WGnaXPnSiXFWD
-         5ipbCtoag7f9MtjUk1+i9AlTGiKXGD4+wAFu3Yzs=
+        b=g/MouZNsdau//ViHEeeebnp/BaB2Z0RlFD+TlAbM2LBDRqcZvdTndhH4xzELAg4UK
+         NodVBqhYdHWXl9nhtkToHcu12mxx94OZ8XfGT4wLxGQUrHYnYPwWjHyVyPpn2S1GGF
+         i1ZRFvYngvPT/ztonw3qGAT10HGe/Legf7V+MMwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        Jeronimo Borque <jeronimo@borque.com.ar>
-Subject: [PATCH 5.2 063/143] ALSA: hda - Fixes inverted Conexant GPIO mic mute led
-Date:   Wed,  4 Sep 2019 19:53:26 +0200
-Message-Id: <20190904175316.537139719@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 064/143] ALSA: seq: Fix potential concurrent access to the deleted pool
+Date:   Wed,  4 Sep 2019 19:53:27 +0200
+Message-Id: <20190904175316.576668488@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,75 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeronimo Borque <jeronimo@borque.com.ar>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f9ef724d4896763479f3921afd1ee61552fc9836 upstream.
+commit 75545304eba6a3d282f923b96a466dc25a81e359 upstream.
 
-"enabled" parameter historically referred to the device input or
-output, not to the led indicator. After the changes added with the led
-helper functions the mic mute led logic refers to the led and not to
-the mic input which caused led indicator to be negated.
-Fixing logic in cxt_update_gpio_led and updated
-cxt_fixup_gpio_mute_hook
-Also updated debug messages to ease further debugging if necessary.
+The input pool of a client might be deleted via the resize ioctl, the
+the access to it should be covered by the proper locks.  Currently the
+only missing place is the call in snd_seq_ioctl_get_client_pool(), and
+this patch papers over it.
 
-Fixes: 184e302b46c9 ("ALSA: hda/conexant - Use the mic-mute LED helper")
-Suggested-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Jeronimo Borque <jeronimo@borque.com.ar>
+Reported-by: syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_conexant.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ sound/core/seq/seq_clientmgr.c |    3 +--
+ sound/core/seq/seq_fifo.c      |   17 +++++++++++++++++
+ sound/core/seq/seq_fifo.h      |    2 ++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
---- a/sound/pci/hda/patch_conexant.c
-+++ b/sound/pci/hda/patch_conexant.c
-@@ -611,18 +611,20 @@ static void cxt_fixup_hp_gate_mic_jack(s
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1835,8 +1835,7 @@ static int snd_seq_ioctl_get_client_pool
+ 	if (cptr->type == USER_CLIENT) {
+ 		info->input_pool = cptr->data.user.fifo_pool_size;
+ 		info->input_free = info->input_pool;
+-		if (cptr->data.user.fifo)
+-			info->input_free = snd_seq_unused_cells(cptr->data.user.fifo->pool);
++		info->input_free = snd_seq_fifo_unused_cells(cptr->data.user.fifo);
+ 	} else {
+ 		info->input_pool = 0;
+ 		info->input_free = 0;
+--- a/sound/core/seq/seq_fifo.c
++++ b/sound/core/seq/seq_fifo.c
+@@ -263,3 +263,20 @@ int snd_seq_fifo_resize(struct snd_seq_f
  
- /* update LED status via GPIO */
- static void cxt_update_gpio_led(struct hda_codec *codec, unsigned int mask,
--				bool enabled)
-+				bool led_on)
- {
- 	struct conexant_spec *spec = codec->spec;
- 	unsigned int oldval = spec->gpio_led;
- 
- 	if (spec->mute_led_polarity)
--		enabled = !enabled;
-+		led_on = !led_on;
- 
--	if (enabled)
--		spec->gpio_led &= ~mask;
--	else
-+	if (led_on)
- 		spec->gpio_led |= mask;
-+	else
-+		spec->gpio_led &= ~mask;
-+	codec_dbg(codec, "mask:%d enabled:%d gpio_led:%d\n",
-+			mask, led_on, spec->gpio_led);
- 	if (spec->gpio_led != oldval)
- 		snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_GPIO_DATA,
- 				    spec->gpio_led);
-@@ -633,8 +635,8 @@ static void cxt_fixup_gpio_mute_hook(voi
- {
- 	struct hda_codec *codec = private_data;
- 	struct conexant_spec *spec = codec->spec;
--
--	cxt_update_gpio_led(codec, spec->gpio_mute_led_mask, enabled);
-+	/* muted -> LED on */
-+	cxt_update_gpio_led(codec, spec->gpio_mute_led_mask, !enabled);
+ 	return 0;
  }
++
++/* get the number of unused cells safely */
++int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f)
++{
++	unsigned long flags;
++	int cells;
++
++	if (!f)
++		return 0;
++
++	snd_use_lock_use(&f->use_lock);
++	spin_lock_irqsave(&f->lock, flags);
++	cells = snd_seq_unused_cells(f->pool);
++	spin_unlock_irqrestore(&f->lock, flags);
++	snd_use_lock_free(&f->use_lock);
++	return cells;
++}
+--- a/sound/core/seq/seq_fifo.h
++++ b/sound/core/seq/seq_fifo.h
+@@ -53,5 +53,7 @@ int snd_seq_fifo_poll_wait(struct snd_se
+ /* resize pool in fifo */
+ int snd_seq_fifo_resize(struct snd_seq_fifo *f, int poolsize);
  
- /* turn on/off mic-mute LED via GPIO per capture hook */
-@@ -656,7 +658,6 @@ static void cxt_fixup_mute_led_gpio(stru
- 		{ 0x01, AC_VERB_SET_GPIO_DIRECTION, 0x03 },
- 		{}
- 	};
--	codec_info(codec, "action: %d gpio_led: %d\n", action, spec->gpio_led);
++/* get the number of unused cells safely */
++int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f);
  
- 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
- 		spec->gen.vmaster_mute.hook = cxt_fixup_gpio_mute_hook;
+ #endif
 
 
