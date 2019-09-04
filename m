@@ -2,135 +2,97 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A3AC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8774CC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9BD20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5913621670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qx5Z70Jb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OGjChnSQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730222AbfIDWrt (ORCPT
+        id S1729834AbfIDWx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 18:47:49 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41155 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbfIDWrt (ORCPT
+        Wed, 4 Sep 2019 18:53:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49902 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728008AbfIDWx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 18:47:49 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j10so428559qtp.8;
-        Wed, 04 Sep 2019 15:47:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CKyHosvEnb91lwk3iCp8C93MqyR+kvMHU7ULcRus+7I=;
-        b=qx5Z70JbBnAHWChlfXFE5EcvHvuUeZjp0pNuSkBiAK4wxUKeeemJ240MWaAqAXJup6
-         L/6DwaJW80L776VdT8vX/kDYIxrwUBFUh47iJCETmYZBlzVeRhrRF2qfTKQUfNg9CwsU
-         bHCYMewVtXjnvT5I2plewmkYMEK4oLVLz2poKjWltxRLermJ/7BHUoF8eMhgUEeRpUss
-         e3g1nDrySwS29cKYneZUgpPDWvio7J0SPrXVpCLqxLX7/xfeEgG309tTWjTXe1hlNTls
-         8CTgWlig0f9VUs7K3VJKAG3bJ7HOJI/E2R/FiF4l8GPGV1otIkvvq75A/CxAALguD7PZ
-         /PPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CKyHosvEnb91lwk3iCp8C93MqyR+kvMHU7ULcRus+7I=;
-        b=CJt22H3pwhyo3+eC8gEw7GqaEUJAtm8T2fuEWueC9dxLsCWf8coIfozplxABj01e0k
-         h9NeQIOOjM3sJNdEsfmRUsfhKkLioe+2TiauYGA1HF31epwm2zSPJuuZqOVZYusmOvzo
-         ZXjDTBldFMJjkP6gLqwDAmuUJ3nPLNL43Knqm6QQQkt1XA8U2HwyilaXp6QVvzUAU6sd
-         wavdilUkJDlxpYZTRIG6JlLYZX2thiAd+cVaHzkaYzHgQ4CbCad8pwtw05P2jIiqh51X
-         NwyduhlsfPFMSyDhqpgGUSdpfvqPiOQR6bYB25s8066lGo94uaO8o3VfbpaDbovA05iJ
-         EMnQ==
-X-Gm-Message-State: APjAAAWrUjCSdvCpQQXPJXkEhP1yK4Z0VdMBbOxR26/YSY0G3a/vpKK2
-        3xXAAY/F1o19IZKg9dsjCTxTxOvpNsbT5/+Oj6E=
-X-Google-Smtp-Source: APXvYqxHz3NP2NmOFPlG2V4YfgrtnS7CaVm8XSVUZfgCbTTa3LE71JKOBFGtZLN4+eA+Rjux7wZV78pzYvlgwg0s/qE=
-X-Received: by 2002:ac8:51c4:: with SMTP id d4mr543637qtn.17.1567637268581;
- Wed, 04 Sep 2019 15:47:48 -0700 (PDT)
+        Wed, 4 Sep 2019 18:53:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VOCDgRJjNCLo+qT7jheJoN/yK4TwqXLq7YSM/I7lAwM=; b=OGjChnSQgBUdP9C+KoRTk06hO
+        LL5vFvOBJqtJ/BsOqKP89pdZefSyvXIlZCuz+5sUuxu8k80BHvVB80bb/yVSw+S5EB99/f3LjUN4n
+        3yM/unZPI5oUiSmvIb35mTEmqHyq96vTbTysc78rUKETBQkEYZmAQxwdZxhCVcDGiChX6Q89Q/gBc
+        y236e/UUSpbFGr46hF5VsfIeWhHX+NziI46++9JriY1d9p+c9YXSe63FgbYth1yFgLBbHMdQlndSZ
+        tlsc+skxcU3u4IWS1rYtJDPDvp7QExB753nYQnJ4I8eJKxTYgeMr1wsSQFogsHQx3yPxkKUrlqGFz
+        j5RdzYcRQ==;
+Received: from [2601:1c0:6200:6e8::e2a8]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5e9M-0008GX-Tb; Wed, 04 Sep 2019 22:53:18 +0000
+Subject: Re: [PATCH 1/1] x86/purgatory: Change compiler flags to avoid
+ relocation errors.
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Vaibhav Rustagi <vaibhavrustagi@google.com>,
+        russ.anderson@hpe.com, dimitri.sivanich@hpe.com,
+        mike.travis@hpe.com, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
+References: <20190904214505.GA15093@swahl-linux>
+ <CAKwvOdnX3qVq1wGovViyGJSnySKzCATU4SU_ASsL-9XfDZ8+Eg@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5cdbd4bf-245c-1baf-97c0-e7723bad89bd@infradead.org>
+Date:   Wed, 4 Sep 2019 15:53:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190904082232.GA171180@LGEARND20B15> <a9ca05ec-55a9-a58c-267a-334771a1480a@rasmusvillemoes.dk>
-In-Reply-To: <a9ca05ec-55a9-a58c-267a-334771a1480a@rasmusvillemoes.dk>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Thu, 5 Sep 2019 07:47:39 +0900
-Message-ID: <CADLLry6WYJRWz1mkgO-fvKeRmOhOJQ3S_hXH1sBW11TujT-a1g@mail.gmail.com>
-Subject: Re: [PATCH] media: meson: Add NULL check after the call to kmalloc()
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     mchehab@kernel.org, khilman@baylibre.com, mjourdan@baylibre.com,
-        gregkh@linuxfoundation.org, linux-media@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAKwvOdnX3qVq1wGovViyGJSnySKzCATU4SU_ASsL-9XfDZ8+Eg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=EB=85=84 9=EC=9B=94 4=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 5:43, Ra=
-smus Villemoes <linux@rasmusvillemoes.dk>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
->
-> On 04/09/2019 10.22, Austin Kim wrote:
-> > If the kmalloc() return NULL, the NULL pointer dereference will occur.
-> >       new_ts->ts =3D ts;
-> >
-> > Add exception check after the call to kmalloc() is made.
-> >
-> > Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> > ---
-> >  drivers/staging/media/meson/vdec/vdec_helpers.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/=
-staging/media/meson/vdec/vdec_helpers.c
-> > index f16948b..e7e56d5 100644
-> > --- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-> > +++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-> > @@ -206,6 +206,10 @@ void amvdec_add_ts_reorder(struct amvdec_session *=
-sess, u64 ts, u32 offset)
-> >       unsigned long flags;
-> >
-> >       new_ts =3D kmalloc(sizeof(*new_ts), GFP_KERNEL);
-> > +     if (!new_ts) {
-> > +             dev_err(sess->core->dev, "Failed to kmalloc()\n");
-> > +             return;
-> > +     }
-> >       new_ts->ts =3D ts;
-> >       new_ts->offset =3D offset;
->
-> No need to printk() on error, AFAIK the mm subsystem should already make
-> some noise if an allocation fails.
+On 9/4/19 3:18 PM, Nick Desaulniers wrote:
+> + (folks recommended by ./scripts/get_maintainer.pl <patchfile>)
+> (See also, step 7:
+> https://nickdesaulniers.github.io/blog/2017/05/16/submitting-your-first-patch-to-the-linux-kernel-and-responding-to-feedback/)
+> 
+> On Wed, Sep 4, 2019 at 2:45 PM Steve Wahl <steve.wahl@hpe.com> wrote:
+>>
+>> The last change to this Makefile caused relocation errors when loading
+> 
+> It's good to add a fixes tag like below when a patch fixes a
+> regression, so that stable backports the fix as far back as the
+> regression:
+> Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than
+> reset KBUILD_CFLAGS")
 
-Thanks for valuable feedback.
-BTW, if the kmalloc return NULL, mm subsystem throws error log with 100%?
-If no, please share error signature of kernel.
+but don't split the Fixes: line (I did that once :).
 
-> This is not a proper fix - you need to make the function return an error
-> (-ENOMEM) to let the caller know allocation failed, and allow that to
-> propagate the error. There's only one caller, which already seems
-> capable of returning errors (there's an -EAGAIN), so it shouldn't be
-> that hard - though of course one needs to undo what has been done so far.
->
-> Also, unrelated to the kmalloc() handling: amvdec_add_ts_reorder() could
-> be moved to esparser.c and made static, or at the very least the
-> EXPORT_SYMBOL can be removed since vdec_helpers.o is linked in to the
-> same module as the sole user. That probably goes for all the
-> EXPORT_SYMBOL(amvdec_*).
+from submitting-patches.rst:
 
-I agreed with your feedback.
-- On memory allocation failure, it should have returned (-ENOMEM)
-rather than 'return' statement.
-- The call to amvdec_add_ts_reorder() is only made by esparser_queue().
+If your patch fixes a bug in a specific commit, e.g. you found an issue using
+``git bisect``, please use the 'Fixes:' tag with the first 12 characters of
+the SHA-1 ID, and the one line summary.  Do not split the tag across multiple
+lines, tags are exempt from the "wrap at 75 columns" rule in order to simplify
+parsing scripts.
 
-Let me resend the patch if necessary.
 
-Thanks,
-Austin Kim
->
-> Rasmus
+thnx.
+-- 
+~Randy
