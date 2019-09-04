@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10454C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC26AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE15D22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5FC122CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619779;
-	bh=65wrpjWoktkSJp86Ap3AYdw1m1DK/ZBIbQ9wj+ThaWs=;
+	s=default; t=1567619782;
+	bh=tFqCp16aNSWR277rTmCPSwFTD5kGdcp9QL3VQurlJrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbdDzz7bQxmZSnLRT2By8EjtflvCqE/ClDYnrbdFCKHDhml/fERe1T3f5cbtyGf7q
-	 nh9MEa4jXovGZjZNNH8JaGXybj6BeALQEV/Ep/ec0zJS95dEDePP9cO++jCvtfc2SJ
-	 lYO/panZe4xa7nrvCg4fzMqv4TL6hILcnA4XV+Pc=
+	b=thM1ULO93G7zz5hqvWnDu2yJTw1kYdv7yIUqeaeVt/JbxhlOMR/8eI6YumcI5a68+
+	 8GfaGRYT8iHjj0L4R5sl0P110QSa85oaS3CrBW608biw8qRyalYqjCGoTZwzXj124X
+	 nqeNbFQ97r4JF8LYbQZsXj2gbdn8lrL1B5lW1+4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387416AbfIDR4S (ORCPT
+        id S2387455AbfIDR4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:56:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33500 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbfIDR4Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:56:16 -0400
+        id S1733308AbfIDR4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:56:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 797B822CF5;
-        Wed,  4 Sep 2019 17:56:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A6421883;
+        Wed,  4 Sep 2019 17:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619775;
-        bh=65wrpjWoktkSJp86Ap3AYdw1m1DK/ZBIbQ9wj+ThaWs=;
+        s=default; t=1567619777;
+        bh=tFqCp16aNSWR277rTmCPSwFTD5kGdcp9QL3VQurlJrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dtzoMC/ObOybUB0PXmFnvyETG4p2NcgBumVbz8/Oko5dhHuJGJBbf6DUXB4RKcJEX
-         g4lOwQkvIJbo921XG3ig9WPAou/BmRjnw+dSNLf2p2kJk8qwcucMcX49DvuHG8lX2L
-         dmTvWnqCZyhiICZLjuPIf0E8R46/vM/CTpc4VeEo=
+        b=ZyFj2DkjBt//zxKf1Dol8ASAle+qeEc/EDEtqXOHneagBEKmp7gmo3sNaXBBln8aK
+         ypbBTI45ygKrpP4WisXJfL0lu+bxZA71Gn0fEhzmdWuyIt0WveEdL9Fx8ex1SxSWvz
+         Wh4OfT969fXjWIYTZLuPqV5tWAA/CogorWVxvzpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.4 30/77] dm btree: fix order of block initialization in btree_split_beneath
-Date:   Wed,  4 Sep 2019 19:53:17 +0200
-Message-Id: <20190904175306.423975993@linuxfoundation.org>
+Subject: [PATCH 4.4 31/77] dm space map metadata: fix missing store of apply_bops() return value
+Date:   Wed,  4 Sep 2019 19:53:18 +0200
+Message-Id: <20190904175306.484947592@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -61,86 +61,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-commit e4f9d6013820d1eba1432d51dd1c5795759aa77f upstream.
+commit ae148243d3f0816b37477106c05a2ec7d5f32614 upstream.
 
-When btree_split_beneath() splits a node to two new children, it will
-allocate two blocks: left and right.  If right block's allocation
-failed, the left block will be unlocked and marked dirty.  If this
-happened, the left block'ss content is zero, because it wasn't
-initialized with the btree struct before the attempot to allocate the
-right block.  Upon return, when flushing the left block to disk, the
-validator will fail when check this block.  Then a BUG_ON is raised.
+In commit 6096d91af0b6 ("dm space map metadata: fix occasional leak
+of a metadata block on resize"), we refactor the commit logic to a new
+function 'apply_bops'.  But when that logic was replaced in out() the
+return value was not stored.  This may lead out() returning a wrong
+value to the caller.
 
-Fix this by completely initializing the left block before allocating and
-initializing the right block.
-
-Fixes: 4dcb8b57df359 ("dm btree: fix leak of bufio-backed block in btree_split_beneath error path")
+Fixes: 6096d91af0b6 ("dm space map metadata: fix occasional leak of a metadata block on resize")
 Cc: stable@vger.kernel.org
 Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-btree.c |   31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/md/persistent-data/dm-space-map-metadata.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/persistent-data/dm-btree.c
-+++ b/drivers/md/persistent-data/dm-btree.c
-@@ -616,39 +616,40 @@ static int btree_split_beneath(struct sh
- 
- 	new_parent = shadow_current(s);
- 
-+	pn = dm_block_data(new_parent);
-+	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
-+		sizeof(__le64) : s->info->value_type.size;
-+
-+	/* create & init the left block */
- 	r = new_block(s->info, &left);
- 	if (r < 0)
- 		return r;
- 
-+	ln = dm_block_data(left);
-+	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
-+
-+	ln->header.flags = pn->header.flags;
-+	ln->header.nr_entries = cpu_to_le32(nr_left);
-+	ln->header.max_entries = pn->header.max_entries;
-+	ln->header.value_size = pn->header.value_size;
-+	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
-+	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
-+
-+	/* create & init the right block */
- 	r = new_block(s->info, &right);
- 	if (r < 0) {
- 		unlock_block(s->info, left);
- 		return r;
+--- a/drivers/md/persistent-data/dm-space-map-metadata.c
++++ b/drivers/md/persistent-data/dm-space-map-metadata.c
+@@ -248,7 +248,7 @@ static int out(struct sm_metadata *smm)
  	}
  
--	pn = dm_block_data(new_parent);
--	ln = dm_block_data(left);
- 	rn = dm_block_data(right);
--
--	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
- 	nr_right = le32_to_cpu(pn->header.nr_entries) - nr_left;
+ 	if (smm->recursion_count == 1)
+-		apply_bops(smm);
++		r = apply_bops(smm);
  
--	ln->header.flags = pn->header.flags;
--	ln->header.nr_entries = cpu_to_le32(nr_left);
--	ln->header.max_entries = pn->header.max_entries;
--	ln->header.value_size = pn->header.value_size;
--
- 	rn->header.flags = pn->header.flags;
- 	rn->header.nr_entries = cpu_to_le32(nr_right);
- 	rn->header.max_entries = pn->header.max_entries;
- 	rn->header.value_size = pn->header.value_size;
--
--	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
- 	memcpy(rn->keys, pn->keys + nr_left, nr_right * sizeof(pn->keys[0]));
--
--	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
--		sizeof(__le64) : s->info->value_type.size;
--	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
- 	memcpy(value_ptr(rn, 0), value_ptr(pn, nr_left),
- 	       nr_right * size);
+ 	smm->recursion_count--;
  
 
 
