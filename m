@@ -2,67 +2,47 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEDFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EC0C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29DB721670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4538E21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731866AbfIDRrs (ORCPT
+        id S1731972AbfIDRsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:47:48 -0400
-Received: from mga01.intel.com ([192.55.52.88]:21092 "EHLO mga01.intel.com"
+        Wed, 4 Sep 2019 13:48:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:59344 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfIDRrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:47:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 10:47:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="194814201"
-Received: from enagase-mobl1.amr.corp.intel.com (HELO [10.251.133.230]) ([10.251.133.230])
-  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2019 10:47:44 -0700
-Subject: Re: [alsa-devel] [RFC PATCH 3/5] ASoC: SOF: Intel: hda: add SoundWire
- IP support
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Keyon Jie <yang.jie@linux.intel.com>,
-        Pan Xiuli <xiuli.pan@linux.intel.com>,
-        Fred Oh <fred.oh@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
- <20190821201720.17768-4-pierre-louis.bossart@linux.intel.com>
- <20190904072131.GK2672@vkoul-mobl>
- <1897e21f-b086-8233-e96e-6024e75a2153@linux.intel.com>
- <20190904165129.GB2672@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <785cce2e-febe-3bbd-7590-32943fe7ac99@linux.intel.com>
-Date:   Wed, 4 Sep 2019 12:47:44 -0500
+        id S1729594AbfIDRsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:48:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96343337;
+        Wed,  4 Sep 2019 10:48:51 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76BA03F67D;
+        Wed,  4 Sep 2019 10:48:50 -0700 (PDT)
+Subject: Re: [PATCH] sched: make struct task_struct::state 32-bit
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        linux-block@vger.kernel.org, dm-devel@redhat.com, axboe@kernel.dk,
+        aarcange@redhat.com
+References: <20190902210558.GA23013@avx2>
+ <d8ad0be1-4ed7-df74-d415-2b1c9a44bac7@arm.com> <20190903181920.GA22358@avx2>
+ <92ead22e-0580-c720-1a29-7db79d76f7d7@arm.com>
+ <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com>
+Message-ID: <f0328a66-ca9f-974d-3799-e73308fb1d34@arm.com>
+Date:   Wed, 4 Sep 2019 18:48:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190904165129.GB2672@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <a43fe392-bd6a-71f5-8611-c6b764ba56c3@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,61 +50,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/09/2019 13:07, Valentin Schneider wrote:
+> [...]
+> Baby steps...
 
 
-On 9/4/19 11:51 AM, Vinod Koul wrote:
-> On 04-09-19, 08:25, Pierre-Louis Bossart wrote:
->> On 9/4/19 2:21 AM, Vinod Koul wrote:
->>> On 21-08-19, 15:17, Pierre-Louis Bossart wrote:
->>>> The Core0 needs to be powered before the SoundWire IP is initialized.
->>>>
->>>> Call sdw_intel_init/exit and store the context. We only have one
->>>> context, but depending on the hardware capabilities and BIOS settings
->>>> may enable multiple SoundWire links.
->>>>
->>>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>>> ---
->>>>    sound/soc/sof/intel/hda.c | 40 +++++++++++++++++++++++++++++++++------
->>>>    sound/soc/sof/intel/hda.h |  5 +++++
->>>>    2 files changed, 39 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
->>>> index a968890d0754..e754058e3679 100644
->>>> --- a/sound/soc/sof/intel/hda.c
->>>> +++ b/sound/soc/sof/intel/hda.c
->>>> @@ -57,6 +57,8 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
->>>>    {
->>>>    	acpi_handle handle;
->>>>    	struct sdw_intel_res res;
->>>> +	struct sof_intel_hda_dev *hdev;
->>>> +	void *sdw;
->>>>    	handle = ACPI_HANDLE(sdev->dev);
->>>> @@ -66,23 +68,32 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
->>>>    	res.irq = sdev->ipc_irq;
->>>>    	res.parent = sdev->dev;
->>>> -	hda_sdw_int_enable(sdev, true);
->>>> -
->>>> -	sdev->sdw = sdw_intel_init(handle, &res);
->>>> -	if (!sdev->sdw) {
->>>> +	sdw = sdw_intel_init(handle, &res);
->>>
->>> should this be called for platforms without sdw, I was hoping that some
->>> checks would be performed.. For example how would skl deal with this?
->>
->> Good point. For now we rely on CONFIG_SOUNDWIRE_INTEL to use a fallback, but
->> if the kernel defines this config and we run on an older platform the only
->> safety would be the hardware capabilities and BIOS dependencies, I need to
->> test if it works.
-> 
-> Yes I am not sure given the experience with BIOS relying on that is a
-> great idea ! But if that works, that would be better.
+There's something regarding coccinelle disjunctions that just can't grasp,
+and this also fails to recognize "current" as being "struct task_struct*".
 
-I don't think it's going to be that bad, first we need to find the ACPI 
-description for the controller, then see which links are active, and 
-even with all links disabled nothing bad will happen.
+Once I fix these, it's "just" a matter of finding out how to write a rule
+for layered calls (e.g. __kthread_bind() -> __kthread_bind_mask() ->
+wait_task_inactive()), and we should be close to having something somewhat
+usable.
 
-What I am more worried about are inconsistencies where e.g we have both 
-I2C/I2S and SoundWire devices exposed at the same time. The BIOS deals 
-with this with dynamic changes depending on user changes, and we are 
-likely to see reports of problems due to BIOS configuration selection, 
-not the BIOS itself.
+---
+virtual patch
+virtual report
+
+@state_access@
+identifier func;
+struct task_struct *p;
+identifier state_var;
+position fpos;
+position epos;
+@@
+
+func(...)@fpos
+{
+	<...
+(
+  p->state & state_var@epos
+|
+  p->state | state_var@epos
+|
+  p->state < state_var@epos
+|
+  p->state > state_var@epos
+|
+  state_var@epos = p->state
+// For some reason adding this disjunction gives us more matches, but causes
+// some to go away :/
+// |
+//   p->state == state_var@epos
+|
+  p->state != state_var@epos
+)
+	...>
+}
+
+@depends on patch@
+identifier fn = state_access.func;
+identifier state_var = state_access.state_var;
+@@
+
+fn(...,
+- long state_var
++ int state_var
+,...)
+{
+	...
+}
+
+// Should be merged in the above but can't get disjunction to work
+@depends on patch@
+identifier fn = state_access.func;
+identifier state_var = state_access.state_var;
+@@
+
+fn(...,
+- unsigned long state_var
++ unsigned int state_var
+,...)
+{
+	...
+}
+
+// Is it possible to match without semicolons? :/
+@depends on patch@
+identifier state_var = state_access.state_var;
+expression E;
+@@
+
+(
+- long state_var;
++ int state_var;
+|
+- long state_var = E;
++ int state_var = E;
+)
+
+@script:python depends on report@
+fp << state_access.fpos;
+ep << state_access.epos;
+@@
+cocci.print_main("Func at", fp)
+cocci.print_main("Expr at", ep)
