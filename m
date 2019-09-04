@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98397C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBC7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC86208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A7002087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621175;
-	bh=5u3z1KOs8QFwmpFoypdFi5zGCT8c+6Kam+DDyPLb1Go=;
+	s=default; t=1567621192;
+	bh=KWRkPpHq4GKG0B43OYfuAYJdaXvoifvfYz9Fl7bcoeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GRQoN0AnGUhbG5OENkjlyg7GdoRmWC5T4iQ1MJ1YEg+G4NJUOLC5jmX3J6pGIvvml
-	 xpCt/H+x0nviHP5vm80jGsAK/bOkgWFjjnERRMza8jqhBXBCS2tu5TM+pbDPWNXQYK
-	 zvmPEUTNH5IIVo28vQenAxA9qOWKa6+0xICAYvIg=
+	b=y8iyGOyWDHb5mZtum0+Z7eutpiRg/Gq9atzH9QwK26v3iwFbqTfibzDwjAAZnkpzO
+	 2RRBQcdTLKB3OV7xmXLeJd1/5FdEXJl3LKaJL1HF/XDWbGPgFAZlD/3bcxKYoGtITQ
+	 Wi2zU/jWvuL9URQIrZQQvR/aJXx8X/s1Y17jWk4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389962AbfIDSJf (ORCPT
+        id S2388327AbfIDSTv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52694 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:19:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389936AbfIDSJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:26 -0400
+        id S2389476AbfIDSI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0C36208E4;
-        Wed,  4 Sep 2019 18:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2A7206B8;
+        Wed,  4 Sep 2019 18:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620566;
-        bh=5u3z1KOs8QFwmpFoypdFi5zGCT8c+6Kam+DDyPLb1Go=;
+        s=default; t=1567620536;
+        bh=KWRkPpHq4GKG0B43OYfuAYJdaXvoifvfYz9Fl7bcoeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BEMU8gqC3PM05oR0Tnp0FEopjzzLhCVZUgS27jblFus2FKuAS6c5ZK4FYlLzE/IxT
-         lQI9I+s590oLNl4oReiyN31bFMQB47DRhK+dfeNWlMXK5aLlabKrYCCbAdPuvIRxN5
-         nIvtMl6+UiJZ4PavZSniga4+XSe4zkmbCg2rVK4Y=
+        b=MlVVTnlTVEWCV2UG3kPo30GnFezzmp6bo4VS8Zw6tciMmQkvdyiBPIJbUwFfP3LQN
+         x0EFV1XvWaFZAIUDjFrcN9XTz+am0xBZ5ZhN3LD+mNlbq/THxpv2mH82K+gJURVR2n
+         BExoMxbBRdqC0sPBUi4d8o8UNUBDrwyBT6E3CKxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        Jeffrey Altman <jaltman@auristor.com>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 004/143] afs: Fix loop index mixup in afs_deliver_vl_get_entry_by_name_u()
-Date:   Wed,  4 Sep 2019 19:52:27 +0200
-Message-Id: <20190904175314.350813503@linuxfoundation.org>
+Subject: [PATCH 4.19 88/93] NFSv4/pnfs: Fix a page lock leak in nfs_pageio_resend()
+Date:   Wed,  4 Sep 2019 19:54:30 +0200
+Message-Id: <20190904175310.728158872@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-References: <20190904175314.206239922@linuxfoundation.org>
+In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
+References: <20190904175302.845828956@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,66 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4a46fdba449a5cd890271df5a9e23927d519ed00 ]
+[ Upstream commit f4340e9314dbfadc48758945f85fc3b16612d06f ]
 
-afs_deliver_vl_get_entry_by_name_u() scans through the vl entry
-received from the volume location server and builds a return list
-containing the sites that are currently valid.  When assigning
-values for the return list, the index into the vl entry (i) is used
-rather than the one for the new list (entry->nr_server).  If all
-sites are usable, this works out fine as the indices will match.
-If some sites are not valid, for example if AFS_VLSF_DONTUSE is
-set, fs_mask and the uuid will be set for the wrong return site.
+If the attempt to resend the pages fails, we need to ensure that we
+clean up those pages that were not transmitted.
 
-Fix this by using entry->nr_server as the index into the arrays
-being filled in rather than i.
-
-This can lead to EDESTADDRREQ errors if none of the returned sites
-have a valid fs_mask.
-
-Fixes: d2ddc776a458 ("afs: Overhaul volume and server record caching and fileserver rotation")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: stable@vger.kernel.org # v4.5+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/vlclient.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ fs/nfs/pagelist.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
-index d7e0fd3c00df9..cfb0ac4bd039e 100644
---- a/fs/afs/vlclient.c
-+++ b/fs/afs/vlclient.c
-@@ -56,23 +56,24 @@ static int afs_deliver_vl_get_entry_by_name_u(struct afs_call *call)
- 		struct afs_uuid__xdr *xdr;
- 		struct afs_uuid *uuid;
- 		int j;
-+		int n = entry->nr_servers;
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index d40bf560f3ca7..9cbd829b4ed5f 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -1232,20 +1232,22 @@ static void nfs_pageio_complete_mirror(struct nfs_pageio_descriptor *desc,
+ int nfs_pageio_resend(struct nfs_pageio_descriptor *desc,
+ 		      struct nfs_pgio_header *hdr)
+ {
+-	LIST_HEAD(failed);
++	LIST_HEAD(pages);
  
- 		tmp = ntohl(uvldb->serverFlags[i]);
- 		if (tmp & AFS_VLSF_DONTUSE ||
- 		    (new_only && !(tmp & AFS_VLSF_NEWREPSITE)))
- 			continue;
- 		if (tmp & AFS_VLSF_RWVOL) {
--			entry->fs_mask[i] |= AFS_VOL_VTM_RW;
-+			entry->fs_mask[n] |= AFS_VOL_VTM_RW;
- 			if (vlflags & AFS_VLF_BACKEXISTS)
--				entry->fs_mask[i] |= AFS_VOL_VTM_BAK;
-+				entry->fs_mask[n] |= AFS_VOL_VTM_BAK;
- 		}
- 		if (tmp & AFS_VLSF_ROVOL)
--			entry->fs_mask[i] |= AFS_VOL_VTM_RO;
--		if (!entry->fs_mask[i])
-+			entry->fs_mask[n] |= AFS_VOL_VTM_RO;
-+		if (!entry->fs_mask[n])
- 			continue;
+ 	desc->pg_io_completion = hdr->io_completion;
+ 	desc->pg_dreq = hdr->dreq;
+-	while (!list_empty(&hdr->pages)) {
+-		struct nfs_page *req = nfs_list_entry(hdr->pages.next);
++	list_splice_init(&hdr->pages, &pages);
++	while (!list_empty(&pages)) {
++		struct nfs_page *req = nfs_list_entry(pages.next);
  
- 		xdr = &uvldb->serverNumber[i];
--		uuid = (struct afs_uuid *)&entry->fs_server[i];
-+		uuid = (struct afs_uuid *)&entry->fs_server[n];
- 		uuid->time_low			= xdr->time_low;
- 		uuid->time_mid			= htons(ntohl(xdr->time_mid));
- 		uuid->time_hi_and_version	= htons(ntohl(xdr->time_hi_and_version));
+ 		if (!nfs_pageio_add_request(desc, req))
+-			nfs_list_move_request(req, &failed);
++			break;
+ 	}
+ 	nfs_pageio_complete(desc);
+-	if (!list_empty(&failed)) {
+-		list_move(&failed, &hdr->pages);
+-		return desc->pg_error < 0 ? desc->pg_error : -EIO;
++	if (!list_empty(&pages)) {
++		int err = desc->pg_error < 0 ? desc->pg_error : -EIO;
++		hdr->completion_ops->error_cleanup(&pages, err);
++		return err;
+ 	}
+ 	return 0;
+ }
 -- 
 2.20.1
 
