@@ -2,98 +2,92 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDA1C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD392C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5082087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpEY8onH"
+	by mail.kernel.org (Postfix) with ESMTP id A623B2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730645AbfIDU4R (ORCPT
+        id S1730685AbfIDU4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:56:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41903 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726495AbfIDU4Q (ORCPT
+        Wed, 4 Sep 2019 16:56:37 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37219 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbfIDU4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:56:16 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j10so104620qtp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:56:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1QaddsCLQh46Q9EX1SzXxpSpkDTuxvATR1ZZECPWevo=;
-        b=cpEY8onH+66PmROo6FfSYd2t9qhQqTUCfB8ecNbQ0QrLmY+XMYybIMnsSgqmWKi0t/
-         I4tsokd+CnAbDflDCj8iS95whEKAEvs0qZ/ebVNJQEbJOceh+u9+jHi1XDEmuIoRpogR
-         WF0teQBi924p/laP6m1LY0Rkb0YiFnU0Pdxheusy0X3QDdN78UMz07ZlzQM2YiJwM5LB
-         QAAoCny2YbP8UtaB4PgHCOUAzGCO5EgKBttnUmc8LHcYoqog2y69Cwbsg1y6xrBG2HVA
-         6Ggu3PiWUHJ9ElxI2RSgGmAyUkPj7oo1mz6KnYXDRtSxozmOhJAKLe/ppOa39YrDY21p
-         eCtA==
+        Wed, 4 Sep 2019 16:56:36 -0400
+Received: by mail-qk1-f195.google.com with SMTP id s14so11621qkm.4;
+        Wed, 04 Sep 2019 13:56:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1QaddsCLQh46Q9EX1SzXxpSpkDTuxvATR1ZZECPWevo=;
-        b=uGG8htp5B3dg48zhC3Sq7Sym/oVutlhJ0Jec3D/OBuKa7VaxKN1jfyF5X3e+500Ko/
-         vZVIbu3c42pGKHBIK/H2S6oa8t9YsOdBhIFSbtX2L1IARG3wKpVQbtqKLTlBK3Bd/jV9
-         JgCZ17KF3deUP3HXX4j4WUdA3fY8D+iv9PxAxUhdT5ktWlO1vJl34P62tsF016wg0zr+
-         AxyNWjGcb9cSJvtNfHaY/iznbNjwuFSgza594fhWIDpeRwtmbgopMCEWKgIzBoVoB8rl
-         0BJR3zgHXj5ENXv9Df0I5gpaZiNhnD8rDIdqCYR4OgrLfwJMrgoCJsecaT0fYgfmb97r
-         a2OA==
-X-Gm-Message-State: APjAAAVIkmYJ7DyG1Mmih8TgeYEj5plILvTwu6UOxZouNQDFHFuVcPVN
-        svYT5TEQrboN1UVEkqjcdp0=
-X-Google-Smtp-Source: APXvYqzmSUjeBY0HCsAUxhBjx6Rf12lCd77aY1C0yZnkwSV/0fmWgXiCTIX6FfsZuohn9DAN1QFwww==
-X-Received: by 2002:ad4:5048:: with SMTP id m8mr27389919qvq.134.1567630575468;
-        Wed, 04 Sep 2019 13:56:15 -0700 (PDT)
-Received: from 389b3b377db9.ic.unicamp.br (wifi-177-220-85-178.wifi.ic.unicamp.br. [177.220.85.178])
-        by smtp.gmail.com with ESMTPSA id g194sm95382qke.46.2019.09.04.13.56.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 13:56:14 -0700 (PDT)
-From:   joahannes <joahannes@gmail.com>
-To:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        jevsilv@gmail.com, joahannes@gmail.com
-Subject: [PATCH] staging: greybus: remove blank line after an open brace '{'.
-Date:   Wed,  4 Sep 2019 20:55:58 +0000
-Message-Id: <20190904205558.27666-1-joahannes@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8rwFcbv8ysatmI5tLrkRcCFyc0txYVdfJq7aSGtxta8=;
+        b=uVL9Sh+brLAh2oENCqd9GJim4fJD6f/2ZPJbt6Puxmi4psn+XdiHSLo59Ugh36kWQt
+         MljWnlBoyhSXZD2ykdPQ7Q4iiPGItBMpJ3sEqC/qIY8Rsa7pXe0uxpCo1DEc47zTUksr
+         jACC6ZOq8Kt+wMprg4K5HzSmurXTfIuOWu3MV023tb5g2U53QY4Jy+WCN7b17fH2/2bQ
+         wYIo71njSc8A5L1CGB9kGGyP+bTUWPbmPHZ5ckXVjILvjRgrbK5url9teLhbenoPwL1I
+         q//vl1FZFeJGsF6VKcH8UdXS/C5VY1ryreYWlVPyXt1Dz8kLTFlVCvWdBszWXefGVRCS
+         GZEg==
+X-Gm-Message-State: APjAAAW9gKeRQ+jh0dDndqBfsTMWn++Nfq2ppvbPkpZpFt6wtRgBrBwT
+        /mcU1ArHaS6b9ND6f9cO+WHBPORm7bjgXr2dXRI=
+X-Google-Smtp-Source: APXvYqyNf6/R0CbOS/YJtFLQ3Jl51yOjJsflDfUUqw3iFf5p9kL3WvWb3FQ6id+qoirrK19x8FXOv/jcWr5ZQm0ML2c=
+X-Received: by 2002:a37:4051:: with SMTP id n78mr40135453qka.138.1567630595588;
+ Wed, 04 Sep 2019 13:56:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <31a671ea-a00b-37da-5f30-558c3ab6d690@thelounge.net>
+ <20190904150251.27004-1-deepa.kernel@gmail.com> <ECBC97E7-53C5-4B4C-BC4C-1FCDC4C371B9@dilger.ca>
+In-Reply-To: <ECBC97E7-53C5-4B4C-BC4C-1FCDC4C371B9@dilger.ca>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 4 Sep 2019 22:56:19 +0200
+Message-ID: <CAK8P3a1YnNbzoRE_=3_F9ppqNaS7TO3a+ccN7mCgwjSUuNcW3w@mail.gmail.com>
+Subject: Re: [PATCH] ext4: Reduce ext4 timestamp warnings
+To:     Andreas Dilger <adilger@dilger.ca>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Qian Cai <cai@lca.pw>, Jeff Layton <jlayton@kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch error
-"CHECK: Blank lines aren't necessary after an open brace '{'"
-in loopback_test.c:742.
+On Wed, Sep 4, 2019 at 8:39 PM Andreas Dilger <adilger@dilger.ca> wrote:
+>
+> On Sep 4, 2019, at 09:02, Deepa Dinamani <deepa.kernel@gmail.com> wrote:
+> >
+> > When ext4 file systems were created intentionally with 128 byte inodes,
+> > the rate-limited warning of eventual possible timestamp overflow are
+> > still emitted rather frequently.  Remove the warning for now.
+> >
+> > Discussion for whether any warning is needed,
+> > and where it should be emitted, can be found at
+> > https://lore.kernel.org/lkml/1567523922.5576.57.camel@lca.pw/.
+> > I can post a separate follow-up patch after the conclusion.
+> >
+> > Reported-by: Qian Cai <cai@lca.pw>
+> > Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+>
+> I'd be in favor of a severely rare-limited warning in the actual case
+> that Y2038 timestamps cannot be stored, but the current message is
+> too verbose for now and I agree it is better to remove it while discussions
+> on the best solution are underway.
+>
+> Reviewed-by: Andreas Dilger <adilger@dilger.ca>
 
-Signed-off-by: joahannes <joahannes@gmail.com>
----
- drivers/staging/greybus/tools/loopback_test.c | 1 -
- 1 file changed, 1 deletion(-)
+Agreed completely.
 
-diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
-index ba6f905f2..251b05710 100644
---- a/drivers/staging/greybus/tools/loopback_test.c
-+++ b/drivers/staging/greybus/tools/loopback_test.c
-@@ -739,7 +739,6 @@ static int wait_for_complete(struct loopback_test *t)
- 		ts = &t->poll_timeout;
- 
- 	while (1) {
--
- 		ret = ppoll(t->fds, t->poll_count, ts, &mask_old);
- 		if (ret <= 0) {
- 			stop_tests(t);
--- 
-2.20.1
+Applied on top of the y2038 branch now, thanks a lot for the update!
 
+This should be part of tomorrow's linux-next then.
+
+       Arnd
