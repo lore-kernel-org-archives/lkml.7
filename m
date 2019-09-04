@@ -2,145 +2,64 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8901C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5CDC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C88E2073F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E57022CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfIDNCE (ORCPT
+        id S1730224AbfIDNCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:02:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50008 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbfIDNCC (ORCPT
+        Wed, 4 Sep 2019 09:02:15 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:37403 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727929AbfIDNCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:02:02 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 8FD28260B2D
-Message-ID: <37bbd1b8ee7bb82c75aefb675e0c3ddd955dde0b.camel@collabora.com>
-Subject: Re: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution
- changes
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Wed, 04 Sep 2019 10:01:50 -0300
-In-Reply-To: <1567592011.3041.1.camel@pengutronix.de>
-References: <20190903171256.25052-1-ezequiel@collabora.com>
-         <1567592011.3041.1.camel@pengutronix.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 4 Sep 2019 09:02:15 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-96.corp.google.com [104.133.0.96] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x84D29pR023350
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 4 Sep 2019 09:02:11 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 2D04142049E; Wed,  4 Sep 2019 09:02:09 -0400 (EDT)
+Date:   Wed, 4 Sep 2019 09:02:09 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     zhao.hang1@zte.com.cn
+Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn
+Subject: Re: [PATCH] fs:ext4:remove unused including <linux/version.h>
+Message-ID: <20190904130209.GB3044@mit.edu>
+References: <201909041536282215333@zte.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909041536282215333@zte.com.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 12:13 +0200, Philipp Zabel wrote:
-> Hi Ezequiel,
-> 
-> On Tue, 2019-09-03 at 14:12 -0300, Ezequiel Garcia wrote:
-> > Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> > changed the conditions under S_FMT was allowed for OUTPUT
-> > CAPTURE buffers.
-> > 
-> > However, and according to the mem-to-mem stateless decoder specification,
-> > in order to support dynamic resolution changes, S_FMT should be allowed
-> > even if OUTPUT buffers have been allocated.
-> > 
-> > Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
-> > modification, provided the pixel format stays the same.
-> > 
-> > Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
-> > 
-> > Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > ---
-> >  drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
-> >  1 file changed, 16 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-> > index 3dae52abb96c..d48b548842cf 100644
-> > --- a/drivers/staging/media/hantro/hantro_v4l2.c
-> > +++ b/drivers/staging/media/hantro/hantro_v4l2.c
-> > @@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-> >  {
-> >  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-> >  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> > +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> >  	const struct hantro_fmt *formats;
-> >  	unsigned int num_fmts;
-> > -	struct vb2_queue *vq;
-> >  	int ret;
-> >  
-> > -	/* Change not allowed if queue is busy. */
-> > -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> > -	if (vb2_is_busy(vq))
-> > -		return -EBUSY;
-> > -
-> >  	if (!hantro_is_encoder_ctx(ctx)) {
-> >  		struct vb2_queue *peer_vq;
-> >  
-> > +		/*
-> > +		 * In other to support dynamic resolution change,
-> > +		 * the decoder admits a resolution change, as long
-> > +		 * as the pixelformat remains. Can't be done if streaming.
-> > +		 */
-> > +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
-> > +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
-> 
-> Before using contents of the v4l2_format f for comparison, we should run
-> vidioc_try_fmt_out_mplane over it.
+On Wed, Sep 04, 2019 at 03:36:28PM +0800, zhao.hang1@zte.com.cn wrote:
+> fix compiler error in ext4.hfs/ext4/ext4.h:30:27: fatal error: linux/version.h: No such file or directorySigned-off-by: Zhao Hang <zhao.hang1@zte.com.cn> --- fs/ext4/ext4.h | 1 - 1 file changed, 1 deletion(-)diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.hindex 1cb6785..9baa4cf 100644--- a/fs/ext4/ext4.h+++ b/fs/ext4/ext4.h@@ -27,7 +27,6 @@ #include <linux/seqlock.h>  #include <linux/mutex.h>  #include <linux/timer.h> -#include <linux/version.h>  #include <linux/wait.h>  #include <linux/sched/signal.h>  #include <linux/blockgroup_lock.h> --  2.15.2
 
-Right, good catch.
+First of all, this patch is completely white space namaged.
 
->  Also, besides pixelformat, sizeimage
-> shouldn't change either, at least if this is a VB2_MMAP queue.
-> 
+Secondly, this is a problem in how you are building your kernel (or
+ext4 as a module, if you are trying to build ext4 as some kind of out
+of tree module or some such).  When you do a kernel build, the file
+include/linux/version.h is automatically generated.  It will look
+something like this.
 
-This is the OUTPUT queue, so I don't see why the sizeimage
-of the coded buffers should stay the same. Maybe I'm missing
-something? 
+% cat /build/ext4-64/usr/include/linux/version.h
+#define LINUX_VERSION_CODE 327936
+#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))
 
-> > +			return -EBUSY;
-> >  		/*
-> >  		 * Since format change on the OUTPUT queue will reset
-> >  		 * the CAPTURE queue, we can't allow doing so
-> > @@ -389,6 +392,13 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-> >  					  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
-> >  		if (vb2_is_busy(peer_vq))
-> >  			return -EBUSY;
-> > +	} else {
-> > +		/*
-> > +		 * The encoder doesn't admit a format change if
-> > +		 * there are OUTPUT buffers allocated.
-> > +		 */
-> > +		if (vb2_is_busy(vq))
-> > +			return -EBUSY;
-> >  	}
-> >  
-> >  	ret = vidioc_try_fmt_out_mplane(file, priv, f);
-> 
-> I think this needs to be moved up.
-> 
-
-Right.
-
-Thanks,
-Ezequiel
-
+			      	       	     - Ted
