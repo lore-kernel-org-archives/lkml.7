@@ -2,114 +2,67 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129D1C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B172EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E2F206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:15:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XOb99Kzi"
+	by mail.kernel.org (Postfix) with ESMTP id 8A72923404
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 05:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfIDFPw (ORCPT
+        id S1728203AbfIDFTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 01:15:52 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36822 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfIDFPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 01:15:51 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so6827044pfr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 22:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t927y1khlcFbJ5TIcMQsCQQZ5PjZ/jC3FUiyzaKm0xU=;
-        b=XOb99KzijvQur9tAY1DhfKGGRZI7vtlx/Beim1yaYj/lpuRs6X1wfG9SDUGcST4Kdr
-         a+fBPIJYJ50KoXBDStczwTkBSXlbivAmRKwnRoKtVCcJrC3FqAWx5jqMwqWmZpsyr6h4
-         khkJHK5GuH2aBTRCasn8yqND/okuCogJiSqkY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t927y1khlcFbJ5TIcMQsCQQZ5PjZ/jC3FUiyzaKm0xU=;
-        b=dJhqGMSqdKDoahpW+tB/LLqKRr04iBCuGVaV5sFIkVTAbZ3VzmkqlaZYGKFsc8Ak2G
-         N3+h/IzUr3LA3AFubHOo+v8auSR/JjXatGjo794CCgvK3h985fO4+wMWPVsH+TZf9VJ/
-         Hn+TDArcUKUIPwAnjjztKxot0KTTWsjHSBnYAYRapIWvcoEp3fO2BsuvNAahMHMR2PaY
-         kr3MYAbccG8N+3hQ99fMcbeow7rnfa+atKWMBo1/7l/KvspD11tGA6zrRN1bI/NW4sw7
-         jdrnuq7MZCGn5TUYyQPyjmGffgwwdrPoYXh1qyNjLv9/+bZuQucweGC2ENjq5ACcSUHc
-         7ULg==
-X-Gm-Message-State: APjAAAWdGZ4UxUg3VRvmkLuL1P6qPkV14bI7qogH0d1xWVZ/FAckrcOa
-        eWICU9yovUQLLku1fgcT96sgJQ==
-X-Google-Smtp-Source: APXvYqzugh5tH8AehCVMWStbl6p9lwVs92YQnW+2nHFZFgFsUosZZJUnfaS9trtUmXFIX8piXL4olw==
-X-Received: by 2002:aa7:870c:: with SMTP id b12mr5565098pfo.122.1567574151089;
-        Tue, 03 Sep 2019 22:15:51 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id x11sm1566783pja.3.2019.09.03.22.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 22:15:50 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 01:15:49 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Carmen Jackson <carmenjackson@google.com>,
-        Mayank Gupta <mayankgupta@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel-team <kernel-team@android.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@suse.cz>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-Message-ID: <20190904051549.GB256568@google.com>
-References: <20190903200905.198642-1-joel@joelfernandes.org>
- <CAJuCfpEXpYq2i3zNbJ3w+R+QXTuMyzwL6S9UpiGEDvTioKORhQ@mail.gmail.com>
- <CAKOZuesWV9yxbS9+T5+p1Ty1-=vFeYcHuO=6MgzTY8akMhbFbQ@mail.gmail.com>
+        Wed, 4 Sep 2019 01:19:38 -0400
+Received: from verein.lst.de ([213.95.11.211]:35930 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725877AbfIDFTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 01:19:38 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7B64868AEF; Wed,  4 Sep 2019 07:19:33 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 07:19:33 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christopher Lameter <cl@linux.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+Message-ID: <20190904051933.GA10218@lst.de>
+References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com> <20190828194607.GB6590@bombadil.infradead.org> <20190829073921.GA21880@dhcp22.suse.cz> <0100016ce39e6bb9-ad20e033-f3f4-4e6d-85d6-87e7d07823ae-000000@email.amazonses.com> <20190901005205.GA2431@bombadil.infradead.org> <0100016cf8c3033d-bbcc9ba3-2d59-4654-a7c2-8ba094f8a7de-000000@email.amazonses.com> <20190903205312.GK29434@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKOZuesWV9yxbS9+T5+p1Ty1-=vFeYcHuO=6MgzTY8akMhbFbQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190903205312.GK29434@bombadil.infradead.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 09:51:20PM -0700, Daniel Colascione wrote:
-> On Tue, Sep 3, 2019 at 9:45 PM Suren Baghdasaryan <surenb@google.com> wrote:
-> >
-> > On Tue, Sep 3, 2019 at 1:09 PM Joel Fernandes (Google)
-> > <joel@joelfernandes.org> wrote:
-> > >
-> > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
-> > > memory hogs. Several Android teams have been using this patch in various
-> > > kernel trees for half a year now. Many reported to me it is really
-> > > useful so I'm posting it upstream.
+On Tue, Sep 03, 2019 at 01:53:12PM -0700, Matthew Wilcox wrote:
+> > Its enabled in all full debug session as far as I know. Fedora for
+> > example has been running this for ages to find breakage in device drivers
+> > etc etc.
 > 
-> It's also worth being able to turn off the per-task memory counter
-> caching, otherwise you'll have two levels of batching before the
-> counter gets updated, IIUC.
+> Are you telling me nobody uses the ramdisk driver on fedora?  Because
+> that's one of the affected drivers.
 
-I prefer to keep split RSS accounting turned on if it is available. I think
-discussing split RSS accounting is a bit out of scope of this patch as well.
-Any improvements on that front can be a follow-up.
-
-Curious, has split RSS accounting shown you any issue with this patch?
-
-thanks,
-
- - Joel
-
+For pmem/brd misaligned memory alone doesn't seem to be the problem.
+Misaligned memory that cross a page barrier is.  And at least XFS
+before my log recovery changes only used kmalloc for smaller than
+page size allocation, so this case probably didn't hit.  But other
+cases where alignment and not just not crossing a page boundary
+occurred and we had problems with those before.  It just too a long
+time for people to root cause them.
