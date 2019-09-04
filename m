@@ -2,84 +2,98 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30303C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BF5C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E6522CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6F122CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:56:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567612580;
+	bh=RMh5SN41NZE5u/rDTqAA4+0804mMUI9Vm26Q35MpjWA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UhibJWT9zPkOyE9k5iFqAQjzHJ5zvxWbPAe+MwAqK+XUgLblc0BIWd4NqR9b1n3gB
+	 kcl/lEiRGn54/TAhMV1BliR2vJXRocH5WbRKwetvfXlEKQTFz8d6dPZvy+pYE8OrIN
+	 Kc9ozoYLSBahzg5y+xWVgDI+G4kdeecsBbtd0zrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731479AbfIDPzi (ORCPT
+        id S1731506AbfIDP4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:55:38 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:55900 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727967AbfIDPzi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:55:38 -0400
-Received: from fsav110.sakura.ne.jp (fsav110.sakura.ne.jp [27.133.134.237])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x84FtLBW074387;
-        Thu, 5 Sep 2019 00:55:22 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav110.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp);
- Thu, 05 Sep 2019 00:55:21 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav110.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x84FtLpL074384
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 5 Sep 2019 00:55:21 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH v3 1/4] ASoC: es8316: judge PCM rate at later timing
-To:     Mark Brown <broonie@kernel.org>
-Cc:     David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190903165322.20791-1-katsuhiro@katsuster.net>
- <20190903174801.GD7916@sirena.co.uk>
- <85c717bf-d875-016c-a303-867bdca9a645@katsuster.net>
- <20190904153016.GD4348@sirena.co.uk>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <d6f821d9-e7ed-95fd-fc47-82208f77c5df@katsuster.net>
-Date:   Thu, 5 Sep 2019 00:55:21 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 11:56:19 -0400
+Received: from mga01.intel.com ([192.55.52.88]:10024 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727967AbfIDP4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:56:17 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 08:56:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="199059841"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Sep 2019 08:56:16 -0700
+Date:   Wed, 4 Sep 2019 09:54:45 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@fb.com>, Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
+Message-ID: <20190904155445.GD21302@localhost.localdomain>
+References: <20190831000139.7662-1-logang@deltatee.com>
+ <20190831152910.GA29439@localhost.localdomain>
+ <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
+ <20190903164620.GA20847@localhost.localdomain>
+ <20190904060558.GA10849@lst.de>
+ <20190904144426.GB21302@localhost.localdomain>
+ <20190904154215.GA20422@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190904153016.GD4348@sirena.co.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904154215.GA20422@lst.de>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/05 0:30, Mark Brown wrote:
-> On Thu, Sep 05, 2019 at 12:06:23AM +0900, Katsuhiro Suzuki wrote:
+On Wed, Sep 04, 2019 at 05:42:15PM +0200, Christoph Hellwig wrote:
+> On Wed, Sep 04, 2019 at 08:44:27AM -0600, Keith Busch wrote:
+> > Let me step through an example:
+> > 
+> >   Ctrl A gets instance 0.
+> > 
+> >   Its subsystem gets the same instance, and takes ref count on it:
+> >   all namespaces in this subsystem will use '0'.
+> > 
+> >   Ctrl B gets instance 1, and it's in the same subsystem as Ctrl A so
+> >   no new subsytem is allocated.
+> > 
+> >   Ctrl A is disconnected, dropping its ref on instance 0, but the
+> >   subsystem still has its refcount, making it unavailable.
+> > 
+> >   Ctrl A is reconnected, and allocates instance 2 because 0 is still in
+> >   use.
+> > 
+> > Now all the namespaces in this subsystem are prefixed with nvme0, but no
+> > controller exists with the same prefix. We still have inevitable naming
+> > mismatch, right?
 > 
->> Would you tell me one more thing. I don't understand who sets MCLK to 0.
->> Is it needed original machine driver instead of audio-graph-card?
-> 
->> On my test environment (audio-graph-card + Rockchip I2S + ES8316), it
->> seems audio-graph-card has never called set_sysclk() with freq = 0 after
->> stop play/capture sound. So my env will go to bad scenario as I described in
->> this patch.
-> 
-> You shouldn't need a custom machine driver - you'll just be the first
-> person who ran into this with audio-graph-card.  I'd just add this
-> support to the audio-graph-card, either with custom startup and shutdown
-> callbacks or using a set_bias_level() callback (both get used, I'd guess
-> the set_bias_level() is easier since you don't need to reference count
-> anything).
-> 
+> I think th major confusion was that we can use the same handle for
+> and unrelated subsystem vs controller, and that would avoid it.
+>
+> I don't see how we can avoid the controller is entirely different
+> from namespace problem ever.
 
-Oh, I understand current situation. I'll try it.
-Thanks for your support!
+Can we just ensure there is never a matching controller then? This
+patch will accomplish that and simpler than wrapping the instance in a
+refcount'ed object:
 
-Best Regards,
-Katsuhiro Suzuki
+http://lists.infradead.org/pipermail/linux-nvme/2019-May/024142.html
