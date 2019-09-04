@@ -2,52 +2,54 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8728C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65EA4C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74338208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE0C23401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620245;
-	bh=71JlX85HloXRuFk35f6G10fhXpqx61Us6ZgYwqEoDeA=;
+	s=default; t=1567620249;
+	bh=fhHOuvkO9622U0xzRJeu4w7rQ+ZA2sQ7P92LgGkwuQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCZsIMD98ndsIyula85FKJkiWH8wnIndIFRjj9zmsQ+UYDGz+sqS4E3NNv6NMTTH4
-	 m7XoHONdVRb5ST4x2N0wBo1QiBJuUEBkwJ9L8ut7wJiNw8InYdWctaMpvbWlz6tOSd
-	 s4jOzxvQQE+E/sBlBWYhqcvEwWqB2QGcOx2s6NS4=
+	b=JKcuDmGMna7qqsMnClXINiNUhYmu2RWZongLQ/RVkcjdvtFKoKJ2Ya1v+0p96Xj02
+	 2oRlghz09BqeIRkgV/sH1ID4vDPsRzFPDlWgH/yUNG55PamO2Ac8WLl946TnGLmcPk
+	 cxyElx7yW5U+tHhfAOqHq/Vs77ao9M2/bwEuMCbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389057AbfIDSEE (ORCPT
+        id S2389062AbfIDSEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44890 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389049AbfIDSEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:02 -0400
+        id S2389053AbfIDSEF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9478208E4;
-        Wed,  4 Sep 2019 18:04:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A841208E4;
+        Wed,  4 Sep 2019 18:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620241;
-        bh=71JlX85HloXRuFk35f6G10fhXpqx61Us6ZgYwqEoDeA=;
+        s=default; t=1567620244;
+        bh=fhHOuvkO9622U0xzRJeu4w7rQ+ZA2sQ7P92LgGkwuQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6smVa+Tkeh86SZRrL7ZuOm3UL2ltXWHmJ71vJ4q/Q7P5UHKhWhV3T22f4zI7LePo
-         eucl0i/3Cwtsz7ZS14+aeCQh1+UlYg8JoSYdPURZU7AHu5p3O+7dmbtfYAGc1zqRTh
-         RALZ2s3pjHDo5x44jMq35rOjjmyhCdnI0RInawdU=
+        b=GleYQikJlco3xDLt1IOmF4JjWYXkBupAck54/l7hl3bkWI89L3C4T+8OoB4el4deE
+         G8qZjr6UU1q3wpqroBVhxQV7bmthwP4oOCylsD/hvnUn1m2j79W9ANqWl9Z06XLSbK
+         oYybicTfWKzzn0zNRtxR/OZVgU+Sp3Je9bjlkp4g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philip Langdale <philipl@overt.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Manuel Presnitz <mail@mpy.de>
-Subject: [PATCH 4.14 40/57] mmc: core: Fix init of SD cards reporting an invalid VDD range
-Date:   Wed,  4 Sep 2019 19:54:08 +0200
-Message-Id: <20190904175305.967021644@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/57] usb: gadget: mass_storage: Fix races between fsg_disable and fsg_set_alt
+Date:   Wed,  4 Sep 2019 19:53:33 +0200
+Message-Id: <20190904175302.448648132@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -60,48 +62,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+[ Upstream commit 4a56a478a525d6427be90753451c40e1327caa1a ]
 
-commit 72741084d903e65e121c27bd29494d941729d4a1 upstream.
+If fsg_disable() and fsg_set_alt() are called too closely to each
+other (for example due to a quick reset/reconnect), what can happen
+is that fsg_set_alt sets common->new_fsg from an interrupt while
+handle_exception is trying to process the config change caused by
+fsg_disable():
 
-The OCR register defines the supported range of VDD voltages for SD cards.
-However, it has turned out that some SD cards reports an invalid voltage
-range, for example having bit7 set.
+	fsg_disable()
+	...
+	handle_exception()
+		sets state back to FSG_STATE_NORMAL
+		hasn't yet called do_set_interface()
+		or is inside it.
 
-When a host supports MMC_CAP2_FULL_PWR_CYCLE and some of the voltages from
-the invalid VDD range, this triggers the core to run a power cycle of the
-card to try to initialize it at the lowest common supported voltage.
-Obviously this fails, since the card can't support it.
+ ---> interrupt
+	fsg_set_alt
+		sets common->new_fsg
+		queues a new FSG_STATE_CONFIG_CHANGE
+ <---
 
-Let's fix this problem, by clearing invalid bits from the read OCR register
-for SD cards, before proceeding with the VDD voltage negotiation.
+Now, the first handle_exception can "see" the updated
+new_fsg, treats it as if it was a fsg_set_alt() response,
+call usb_composite_setup_continue() etc...
 
-Cc: stable@vger.kernel.org
-Reported-by: Philip Langdale <philipl@overt.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Philip Langdale <philipl@overt.org>
-Tested-by: Philip Langdale <philipl@overt.org>
-Tested-by: Manuel Presnitz <mail@mpy.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+But then, the thread sees the second FSG_STATE_CONFIG_CHANGE,
+and goes back down the same path, wipes and reattaches a now
+active fsg, and .. calls usb_composite_setup_continue() which
+at this point is wrong.
 
+Not only we get a backtrace, but I suspect the second set_interface
+wrecks some state causing the host to get upset in my case.
+
+This fixes it by replacing "new_fsg" by a "state argument" (same
+principle) which is set in the same lock section as the state
+update, and retrieved similarly.
+
+That way, there is never any discrepancy between the dequeued
+state and the observed value of it. We keep the ability to have
+the latest reconfig operation take precedence, but we guarantee
+that once "dequeued" the argument (new_fsg) will not be clobbered
+by any new event.
+
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/core/sd.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/gadget/function/f_mass_storage.c | 28 +++++++++++++-------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -1232,6 +1232,12 @@ int mmc_attach_sd(struct mmc_host *host)
- 			goto err;
- 	}
+diff --git a/drivers/usb/gadget/function/f_mass_storage.c b/drivers/usb/gadget/function/f_mass_storage.c
+index 25ba303295332..41b5baa1f43b7 100644
+--- a/drivers/usb/gadget/function/f_mass_storage.c
++++ b/drivers/usb/gadget/function/f_mass_storage.c
+@@ -261,7 +261,7 @@ struct fsg_common;
+ struct fsg_common {
+ 	struct usb_gadget	*gadget;
+ 	struct usb_composite_dev *cdev;
+-	struct fsg_dev		*fsg, *new_fsg;
++	struct fsg_dev		*fsg;
+ 	wait_queue_head_t	io_wait;
+ 	wait_queue_head_t	fsg_wait;
  
-+	/*
-+	 * Some SD cards claims an out of spec VDD voltage range. Let's treat
-+	 * these bits as being in-valid and especially also bit7.
-+	 */
-+	ocr &= ~0x7FFF;
+@@ -290,6 +290,7 @@ struct fsg_common {
+ 	unsigned int		bulk_out_maxpacket;
+ 	enum fsg_state		state;		/* For exception handling */
+ 	unsigned int		exception_req_tag;
++	void			*exception_arg;
+ 
+ 	enum data_direction	data_dir;
+ 	u32			data_size;
+@@ -393,7 +394,8 @@ static int fsg_set_halt(struct fsg_dev *fsg, struct usb_ep *ep)
+ 
+ /* These routines may be called in process context or in_irq */
+ 
+-static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
++static void __raise_exception(struct fsg_common *common, enum fsg_state new_state,
++			      void *arg)
+ {
+ 	unsigned long		flags;
+ 
+@@ -406,6 +408,7 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
+ 	if (common->state <= new_state) {
+ 		common->exception_req_tag = common->ep0_req_tag;
+ 		common->state = new_state;
++		common->exception_arg = arg;
+ 		if (common->thread_task)
+ 			send_sig_info(SIGUSR1, SEND_SIG_FORCED,
+ 				      common->thread_task);
+@@ -413,6 +416,10 @@ static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
+ 	spin_unlock_irqrestore(&common->lock, flags);
+ }
+ 
++static void raise_exception(struct fsg_common *common, enum fsg_state new_state)
++{
++	__raise_exception(common, new_state, NULL);
++}
+ 
+ /*-------------------------------------------------------------------------*/
+ 
+@@ -2287,16 +2294,16 @@ reset:
+ static int fsg_set_alt(struct usb_function *f, unsigned intf, unsigned alt)
+ {
+ 	struct fsg_dev *fsg = fsg_from_func(f);
+-	fsg->common->new_fsg = fsg;
+-	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
 +
- 	rocr = mmc_select_voltage(host, ocr);
++	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, fsg);
+ 	return USB_GADGET_DELAYED_STATUS;
+ }
+ 
+ static void fsg_disable(struct usb_function *f)
+ {
+ 	struct fsg_dev *fsg = fsg_from_func(f);
+-	fsg->common->new_fsg = NULL;
+-	raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++
++	__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
+ }
+ 
+ 
+@@ -2309,6 +2316,7 @@ static void handle_exception(struct fsg_common *common)
+ 	enum fsg_state		old_state;
+ 	struct fsg_lun		*curlun;
+ 	unsigned int		exception_req_tag;
++	struct fsg_dev		*new_fsg;
  
  	/*
+ 	 * Clear the existing signals.  Anything but SIGUSR1 is converted
+@@ -2362,6 +2370,7 @@ static void handle_exception(struct fsg_common *common)
+ 	common->next_buffhd_to_fill = &common->buffhds[0];
+ 	common->next_buffhd_to_drain = &common->buffhds[0];
+ 	exception_req_tag = common->exception_req_tag;
++	new_fsg = common->exception_arg;
+ 	old_state = common->state;
+ 	common->state = FSG_STATE_NORMAL;
+ 
+@@ -2415,8 +2424,8 @@ static void handle_exception(struct fsg_common *common)
+ 		break;
+ 
+ 	case FSG_STATE_CONFIG_CHANGE:
+-		do_set_interface(common, common->new_fsg);
+-		if (common->new_fsg)
++		do_set_interface(common, new_fsg);
++		if (new_fsg)
+ 			usb_composite_setup_continue(common->cdev);
+ 		break;
+ 
+@@ -3007,8 +3016,7 @@ static void fsg_unbind(struct usb_configuration *c, struct usb_function *f)
+ 
+ 	DBG(fsg, "unbind\n");
+ 	if (fsg->common->fsg == fsg) {
+-		fsg->common->new_fsg = NULL;
+-		raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE);
++		__raise_exception(fsg->common, FSG_STATE_CONFIG_CHANGE, NULL);
+ 		/* FIXME: make interruptible or killable somehow? */
+ 		wait_event(common->fsg_wait, common->fsg != fsg);
+ 	}
+-- 
+2.20.1
+
 
 
