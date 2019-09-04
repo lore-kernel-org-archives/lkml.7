@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B04C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641B7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0F75233FF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372E523402
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620390;
-	bh=Q9c7BQ7RGkcTXElK5aKWVVoxFQJZ9lZOK80sIY6jcRw=;
+	s=default; t=1567620393;
+	bh=EXJFMCe0j7c1JE5xw+Ox8ar2HYLuO+hkBy9PQix63Jw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vnN4J4kTyHiLPqejvp10OhamXyz64II2351trBpuiY82E0cqchE5oKOnwVvcsSkpi
-	 Dy80yZZNi8ID3Wp6LpogY95yb9E4CGEDb24gYIHSH4zJZP/d0NLBO7hhQs8IR+ZgNn
-	 QsxEGc8LnstNqcnCFSGi9OciCR9mYsHrMShLDtUs=
+	b=JDTrX6OLZYqm7czq6hfAIiabiUAwFBLqN2SBJWxWbVhbjcsmHRDJnDUCFW+CZV1HQ
+	 w73YRgww4QyuAB0Eleh7kZntLbTpxVwrceoCvFAf0y0iB3vmhbPSLG9edKAlHF4zrf
+	 9MW9hFbn/l+cz+xWAHPWGuUO9xNTNUy8pHm8B9C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389533AbfIDSG3 (ORCPT
+        id S2389541AbfIDSGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48464 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388874AbfIDSG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:28 -0400
+        id S2388704AbfIDSGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46BC723400;
-        Wed,  4 Sep 2019 18:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC82222CF7;
+        Wed,  4 Sep 2019 18:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620387;
-        bh=Q9c7BQ7RGkcTXElK5aKWVVoxFQJZ9lZOK80sIY6jcRw=;
+        s=default; t=1567620390;
+        bh=EXJFMCe0j7c1JE5xw+Ox8ar2HYLuO+hkBy9PQix63Jw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAlGVgVSwXQ7UgCyKx0thBfmuqeN3MzdPunjXrYi0fNp5nnOhf2uHIy4s8waDKlo7
-         ZvxXSc+R7r5QfkYMRFlNGLRxNOTz5MVC9clVEasuyte1dtek5NA1S9vRyoiYW5VFrF
-         gsXYon1MaBmykPK/D4rcLPMbu7IkNuiSCCpMjOe4=
+        b=pDZBwTh3KhbQgIe92iJKdoIOcEIm8pLnb9tuj0fniIVU8bnOMNwrieunxxPH6FfFp
+         p3HIIlkpcw9jk7t0J8pQ/UtTEpeIGWqVBGa+lNMt5HdnlUW8m5hVAvvfuVAHobY3Uy
+         F5ilOOSjB9Y612tXRAW91dL/nxLe4Tiiz4BHX8ys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 38/93] ipv4/icmp: fix rt dst dev null pointer dereference
-Date:   Wed,  4 Sep 2019 19:53:40 +0200
-Message-Id: <20190904175306.522557233@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jonathan Adams <jwadams@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 39/93] mm/zsmalloc.c: fix build when CONFIG_COMPACTION=n
+Date:   Wed,  4 Sep 2019 19:53:41 +0200
+Message-Id: <20190904175306.592082075@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -61,61 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Andrew Morton <akpm@linux-foundation.org>
 
-[ Upstream commit e2c693934194fd3b4e795635934883354c06ebc9 ]
+commit 441e254cd40dc03beec3c650ce6ce6074bc6517f upstream.
 
-In __icmp_send() there is a possibility that the rt->dst.dev is NULL,
-e,g, with tunnel collect_md mode, which will cause kernel crash.
-Here is what the code path looks like, for GRE:
-
-- ip6gre_tunnel_xmit
-  - ip6gre_xmit_ipv4
-    - __gre6_xmit
-      - ip6_tnl_xmit
-        - if skb->len - t->tun_hlen - eth_hlen > mtu; return -EMSGSIZE
-    - icmp_send
-      - net = dev_net(rt->dst.dev); <-- here
-
-The reason is __metadata_dst_init() init dst->dev to NULL by default.
-We could not fix it in __metadata_dst_init() as there is no dev supplied.
-On the other hand, the reason we need rt->dst.dev is to get the net.
-So we can just try get it from skb->dev when rt->dst.dev is NULL.
-
-v4: Julian Anastasov remind skb->dev also could be NULL. We'd better
-still use dst.dev and do a check to avoid crash.
-
-v3: No changes.
-
-v2: fix the issue in __icmp_send() instead of updating shared dst dev
-in {ip_md, ip6}_tunnel_xmit.
-
-Fixes: c8b34e680a09 ("ip_tunnel: Add tnl_update_pmtu in ip_md_tunnel_xmit")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Reviewed-by: Julian Anastasov <ja@ssi.bg>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 701d678599d0c1 ("mm/zsmalloc.c: fix race condition in zs_destroy_pool")
+Link: http://lkml.kernel.org/r/201908251039.5oSbEEUT%25lkp@intel.com
+Reported-by: kbuild test robot <lkp@intel.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Henry Burns <henrywolfeburns@gmail.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Jonathan Adams <jwadams@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/icmp.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -587,7 +587,13 @@ void __icmp_send(struct sk_buff *skb_in,
+---
+ mm/zsmalloc.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -2432,7 +2432,9 @@ struct zs_pool *zs_create_pool(const cha
+ 	if (!pool->name)
+ 		goto err;
  
- 	if (!rt)
- 		goto out;
--	net = dev_net(rt->dst.dev);
-+
-+	if (rt->dst.dev)
-+		net = dev_net(rt->dst.dev);
-+	else if (skb_in->dev)
-+		net = dev_net(skb_in->dev);
-+	else
-+		goto out;
++#ifdef CONFIG_COMPACTION
+ 	init_waitqueue_head(&pool->migration_wait);
++#endif
  
- 	/*
- 	 *	Find the original header. It is expected to be valid, of course.
+ 	if (create_cache(pool))
+ 		goto err;
 
 
