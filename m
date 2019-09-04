@@ -2,382 +2,152 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9ECC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB06C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15EB121670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33FC21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567635437;
+	bh=oI4Gqqh4YW86HiNSYMOpR8XBMiq2xox7Gjib7q3ix4I=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F68B4YRzyCggiGNs0Cc8drRXRiZD4q0Qm+mfkEPS5xnzzaV4NP2obrIiQd8rc4Tfc
+	 +sGKN3OAzG3Zf9fDYKva/HRqgWl7Jc0al58XbO0dtBSQ82Z7ZG16xZl9Whxdi5j9BB
+	 H7hYdKcewNtgpFWuv2Bv43aOCEF4WfmxLYCTLT+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730952AbfIDWRM (ORCPT
+        id S1730968AbfIDWRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 4 Sep 2019 18:17:16 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:33397 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730936AbfIDWRM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 18:17:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40540 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbfIDWRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 18:17:10 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6D97330860C0;
-        Wed,  4 Sep 2019 22:17:09 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-255.rdu2.redhat.com [10.10.120.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C53F6092D;
-        Wed,  4 Sep 2019 22:17:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 09/11] Add sample notification program [ver #8]
-From:   David Howells <dhowells@redhat.com>
-To:     keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     dhowells@redhat.com, torvalds@linux-foundation.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>, dhowells@redhat.com,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 04 Sep 2019 23:17:05 +0100
-Message-ID: <156763542571.18676.10450446815486316014.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+Received: by mail-lf1-f66.google.com with SMTP id d10so297827lfi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 15:17:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L+6eZ5jXr9FHa9aXBFBl0ghBEbFlLODFrE967a3DFmE=;
+        b=hfyCSdKgCY/Fe6ZhOgmUuzH+l1Av9MeoieBRJhOHgspd/HlfkJB3tRok9F33ql8Uzt
+         YCi53+gSbOv7WH3zYmMiTF0zGBnANwxV7c7oClcZwaNIXXqds0cxD5Xcu535ms7QpKLP
+         zDVTwLMuj95aI+DpS0Y7tzdH7BHLTHU6tmSJs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L+6eZ5jXr9FHa9aXBFBl0ghBEbFlLODFrE967a3DFmE=;
+        b=Aziotw/hQ+RqYOZHRR5RYF/KYua8NztJbuj0Uip5/9Te9AkXCrH1E8aeS1umajBYzS
+         WYjKkOh3jZOYIgCdH1+sCmRdz+29uImkOimy6MDnO51d3YkBBFYHtPlKV0G80sVrVD6T
+         I7rX1/X8dzdMa2DfW5dOU7qpBbvAnSAYkXC+Doyh4b/POF/BCPLMhIJM1AiDUz82mX5J
+         bvCqh9KVLUaEjh74+E5HQa6sYq8Sw+tQUbsej2bIvC4YF5JJV7PUN6CX75U1h3O8Veyw
+         xdrH5IErh/QG3TVdaczLwkIlDGzw+SfnhkW3FiRV9Z6jLusgITvuSWzFxVjMHKNYmQRY
+         TpXA==
+X-Gm-Message-State: APjAAAUX4eerQduvi3HYS74Ttt7OdQ+47txv86Vd/HNj8kUWAene74LA
+        jSoto6En1NOVivnvrIpVj/X8AjQIX0w=
+X-Google-Smtp-Source: APXvYqzpOx0vY5obsvXUY9H2/+bUfgfAI2LB9oNtlmct9s2Ea122xUn6ByCeCZfRViPdlaSg4j+5NA==
+X-Received: by 2002:a19:c191:: with SMTP id r139mr226439lff.23.1567635429474;
+        Wed, 04 Sep 2019 15:17:09 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id y10sm15880ljk.5.2019.09.04.15.17.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Sep 2019 15:17:08 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id e17so255319ljf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 15:17:06 -0700 (PDT)
+X-Received: by 2002:a2e:9a84:: with SMTP id p4mr24283824lji.52.1567635425244;
+ Wed, 04 Sep 2019 15:17:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 04 Sep 2019 22:17:09 +0000 (UTC)
+References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-11-cyphar@cyphar.com>
+ <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com> <20190904214856.vnvom7h5xontvngq@yavin.dot.cyphar.com>
+In-Reply-To: <20190904214856.vnvom7h5xontvngq@yavin.dot.cyphar.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 4 Sep 2019 15:16:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgcJq21Hydh7Tx5-o8empoPp7ULDBw0Am-du_Pa+fcftQ@mail.gmail.com>
+Message-ID: <CAHk-=wgcJq21Hydh7Tx5-o8empoPp7ULDBw0Am-du_Pa+fcftQ@mail.gmail.com>
+Subject: Re: [PATCH v12 10/12] namei: aggressively check for nd->root escape
+ on ".." resolution
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This needs to be linked with -lkeyutils.
+On Wed, Sep 4, 2019 at 2:49 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+>
+> Hinting to userspace to do a retry (with -EAGAIN as you mention in your
+> other mail) wouldn't be a bad thing at all, though you'd almost
+> certainly get quite a few spurious -EAGAINs -- &{mount,rename}_lock are
+> global for the entire machine, after all.
 
-It is run like:
+I'd hope that we have some future (possibly very long-term)
+alternative that is not quite system-global, but yes, right now they
+are.
 
-	./watch_test
+Which is one reason I'd rather see EAGAIN in user space - yes, it
+probably makes it even easier to trigger, but it also means that user
+space might be able to do something about it when it does trigger.
 
-and watches "/" for mount changes and the current session keyring for key
-changes:
+For example, maybe user space can first just use an untrusted path
+as-is, and if it gets EAGAIN or EXDEV, it may be that user space can
+simplify the path (ie turn "xyz/.../abc" into just "abc".
 
-	# keyctl add user a a @s
-	1035096409
-	# keyctl unlink 1035096409 @s
+And even if user space doesn't do anything like that, I suspect a
+performance problem is going to be a whole lot easier to debug and
+report when somebody ends up seeing excessive retries happening. As a
+developer you'll see it in profiles or in system call traces, rather
+than it resulting in very odd possible slowdowns for the kernel.
 
-producing:
+And yeah, it would probably be best to then at least delay doing
+option 3 indefinitely, just to make sure user space knows about and
+actually has a test-case for that EAGAIN happening.
 
-	# ./watch_test
-	ptrs h=4 t=2 m=20003
-	NOTIFY[00000004-00000002] ty=0003 sy=0002 i=01000010
-	KEY 2ffc2e5d change=2[linked] aux=1035096409
-	ptrs h=6 t=4 m=20003
-	NOTIFY[00000006-00000004] ty=0003 sy=0003 i=01000010
-	KEY 2ffc2e5d change=3[unlinked] aux=1035096409
-
-Other events may be produced, such as with a failing disk:
-
-	ptrs h=5 t=2 m=6000004
-	NOTIFY[00000005-00000002] ty=0004 sy=0006 i=04000018
-	BLOCK 00800050 e=6[critical medium] s=5be8
-
-This corresponds to:
-
-	print_req_error: critical medium error, dev sdf, sector 23528 flags 0
-
-in dmesg.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- samples/Kconfig                  |    6 +
- samples/Makefile                 |    1 
- samples/watch_queue/Makefile     |    8 +
- samples/watch_queue/watch_test.c |  231 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 246 insertions(+)
- create mode 100644 samples/watch_queue/Makefile
- create mode 100644 samples/watch_queue/watch_test.c
-
-diff --git a/samples/Kconfig b/samples/Kconfig
-index c8dacb4dda80..2c3e07addd38 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -169,4 +169,10 @@ config SAMPLE_VFS
- 	  as mount API and statx().  Note that this is restricted to the x86
- 	  arch whilst it accesses system calls that aren't yet in all arches.
- 
-+config SAMPLE_WATCH_QUEUE
-+	bool "Build example /dev/watch_queue notification consumer"
-+	help
-+	  Build example userspace program to use the new mount_notify(),
-+	  sb_notify() syscalls and the KEYCTL_WATCH_KEY keyctl() function.
-+
- endif # SAMPLES
-diff --git a/samples/Makefile b/samples/Makefile
-index 7d6e4ca28d69..a61a39047d02 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -20,3 +20,4 @@ obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
- obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
- obj-y					+= vfio-mdev/
- subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
-+subdir-$(CONFIG_SAMPLE_WATCH_QUEUE)	+= watch_queue
-diff --git a/samples/watch_queue/Makefile b/samples/watch_queue/Makefile
-new file mode 100644
-index 000000000000..6ee61e3ca8d2
---- /dev/null
-+++ b/samples/watch_queue/Makefile
-@@ -0,0 +1,8 @@
-+# List of programs to build
-+hostprogs-y := watch_test
-+
-+# Tell kbuild to always build the programs
-+always := $(hostprogs-y)
-+
-+HOSTCFLAGS_watch_test.o += -I$(objtree)/usr/include
-+HOSTLDLIBS_watch_test += -lkeyutils
-diff --git a/samples/watch_queue/watch_test.c b/samples/watch_queue/watch_test.c
-new file mode 100644
-index 000000000000..ecc191174b7a
---- /dev/null
-+++ b/samples/watch_queue/watch_test.c
-@@ -0,0 +1,231 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Use /dev/watch_queue to watch for notifications.
-+ *
-+ * Copyright (C) 2019 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <stdbool.h>
-+#include <stdarg.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <signal.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+#include <dirent.h>
-+#include <errno.h>
-+#include <sys/wait.h>
-+#include <sys/ioctl.h>
-+#include <sys/mman.h>
-+#include <poll.h>
-+#include <limits.h>
-+#include <linux/watch_queue.h>
-+#include <linux/unistd.h>
-+#include <linux/keyctl.h>
-+
-+#ifndef KEYCTL_WATCH_KEY
-+#define KEYCTL_WATCH_KEY -1
-+#endif
-+#ifndef __NR_watch_devices
-+#define __NR_watch_devices -1
-+#endif
-+
-+#define BUF_SIZE 4
-+
-+static long keyctl_watch_key(int key, int watch_fd, int watch_id)
-+{
-+	return syscall(__NR_keyctl, KEYCTL_WATCH_KEY, key, watch_fd, watch_id);
-+}
-+
-+static const char *key_subtypes[256] = {
-+	[NOTIFY_KEY_INSTANTIATED]	= "instantiated",
-+	[NOTIFY_KEY_UPDATED]		= "updated",
-+	[NOTIFY_KEY_LINKED]		= "linked",
-+	[NOTIFY_KEY_UNLINKED]		= "unlinked",
-+	[NOTIFY_KEY_CLEARED]		= "cleared",
-+	[NOTIFY_KEY_REVOKED]		= "revoked",
-+	[NOTIFY_KEY_INVALIDATED]	= "invalidated",
-+	[NOTIFY_KEY_SETATTR]		= "setattr",
-+};
-+
-+static void saw_key_change(struct watch_notification *n)
-+{
-+	struct key_notification *k = (struct key_notification *)n;
-+	unsigned int len = (n->info & WATCH_INFO_LENGTH) >> WATCH_INFO_LENGTH__SHIFT;
-+
-+	if (len != sizeof(struct key_notification) / WATCH_LENGTH_GRANULARITY)
-+		return;
-+
-+	printf("KEY %08x change=%u[%s] aux=%u\n",
-+	       k->key_id, n->subtype, key_subtypes[n->subtype], k->aux);
-+}
-+
-+static const char *block_subtypes[256] = {
-+	[NOTIFY_BLOCK_ERROR_TIMEOUT]			= "timeout",
-+	[NOTIFY_BLOCK_ERROR_NO_SPACE]			= "critical space allocation",
-+	[NOTIFY_BLOCK_ERROR_RECOVERABLE_TRANSPORT]	= "recoverable transport",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_TARGET]		= "critical target",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_NEXUS]		= "critical nexus",
-+	[NOTIFY_BLOCK_ERROR_CRITICAL_MEDIUM]		= "critical medium",
-+	[NOTIFY_BLOCK_ERROR_PROTECTION]			= "protection",
-+	[NOTIFY_BLOCK_ERROR_KERNEL_RESOURCE]		= "kernel resource",
-+	[NOTIFY_BLOCK_ERROR_DEVICE_RESOURCE]		= "device resource",
-+	[NOTIFY_BLOCK_ERROR_IO]				= "I/O",
-+};
-+
-+static void saw_block_change(struct watch_notification *n)
-+{
-+	struct block_notification *b = (struct block_notification *)n;
-+	unsigned int len = (n->info & WATCH_INFO_LENGTH) >> WATCH_INFO_LENGTH__SHIFT;
-+
-+	if (len < sizeof(struct block_notification) / WATCH_LENGTH_GRANULARITY)
-+		return;
-+
-+	printf("BLOCK %08llx e=%u[%s] s=%llx\n",
-+	       (unsigned long long)b->dev,
-+	       n->subtype, block_subtypes[n->subtype],
-+	       (unsigned long long)b->sector);
-+}
-+
-+static const char *usb_subtypes[256] = {
-+	[NOTIFY_USB_DEVICE_ADD]		= "dev-add",
-+	[NOTIFY_USB_DEVICE_REMOVE]	= "dev-remove",
-+	[NOTIFY_USB_DEVICE_RESET]	= "dev-reset",
-+	[NOTIFY_USB_DEVICE_ERROR]	= "dev-error",
-+};
-+
-+static void saw_usb_event(struct watch_notification *n)
-+{
-+	struct usb_notification *u = (struct usb_notification *)n;
-+	unsigned int len = (n->info & WATCH_INFO_LENGTH) >> WATCH_INFO_LENGTH__SHIFT;
-+
-+	if (len < sizeof(struct usb_notification) / WATCH_LENGTH_GRANULARITY)
-+		return;
-+
-+	printf("USB %*.*s %s e=%x r=%x\n",
-+	       u->name_len, u->name_len, u->name,
-+	       usb_subtypes[n->subtype],
-+	       u->error, u->reserved);
-+}
-+
-+/*
-+ * Consume and display events.
-+ */
-+static int consumer(int fd, struct watch_queue_buffer *buf)
-+{
-+	struct watch_notification *n;
-+	struct pollfd p[1];
-+	unsigned int head, tail, mask = buf->meta.mask;
-+
-+	for (;;) {
-+		p[0].fd = fd;
-+		p[0].events = POLLIN | POLLERR;
-+		p[0].revents = 0;
-+
-+		if (poll(p, 1, -1) == -1) {
-+			perror("poll");
-+			break;
-+		}
-+
-+		printf("ptrs h=%x t=%x m=%x\n",
-+		       buf->meta.head, buf->meta.tail, buf->meta.mask);
-+
-+		while (head = __atomic_load_n(&buf->meta.head, __ATOMIC_ACQUIRE),
-+		       tail = buf->meta.tail,
-+		       tail != head
-+		       ) {
-+			n = &buf->slots[tail & mask];
-+			printf("NOTIFY[%08x-%08x] ty=%04x sy=%04x i=%08x\n",
-+			       head, tail, n->type, n->subtype, n->info);
-+			if ((n->info & WATCH_INFO_LENGTH) == 0)
-+				goto out;
-+
-+			switch (n->type) {
-+			case WATCH_TYPE_META:
-+				if (n->subtype == WATCH_META_REMOVAL_NOTIFICATION)
-+					printf("REMOVAL of watchpoint %08x\n",
-+					       (n->info & WATCH_INFO_ID) >>
-+					       WATCH_INFO_ID__SHIFT);
-+				break;
-+			case WATCH_TYPE_KEY_NOTIFY:
-+				saw_key_change(n);
-+				break;
-+			case WATCH_TYPE_BLOCK_NOTIFY:
-+				saw_block_change(n);
-+				break;
-+			case WATCH_TYPE_USB_NOTIFY:
-+				saw_usb_event(n);
-+				break;
-+			}
-+
-+			tail += (n->info & WATCH_INFO_LENGTH) >> WATCH_INFO_LENGTH__SHIFT;
-+			__atomic_store_n(&buf->meta.tail, tail, __ATOMIC_RELEASE);
-+		}
-+	}
-+
-+out:
-+	return 0;
-+}
-+
-+static struct watch_notification_filter filter = {
-+	.nr_filters	= 3,
-+	.__reserved	= 0,
-+	.filters = {
-+		[0]	= {
-+			.type			= WATCH_TYPE_KEY_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
-+		[1]	= {
-+			.type			= WATCH_TYPE_BLOCK_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
-+		[2]	= {
-+			.type			= WATCH_TYPE_USB_NOTIFY,
-+			.subtype_filter[0]	= UINT_MAX,
-+		},
-+	},
-+};
-+
-+int main(int argc, char **argv)
-+{
-+	struct watch_queue_buffer *buf;
-+	size_t page_size;
-+	int fd;
-+
-+	fd = open("/dev/watch_queue", O_RDWR);
-+	if (fd == -1) {
-+		perror("/dev/watch_queue");
-+		exit(1);
-+	}
-+
-+	if (ioctl(fd, IOC_WATCH_QUEUE_SET_SIZE, BUF_SIZE) == -1) {
-+		perror("/dev/watch_queue(size)");
-+		exit(1);
-+	}
-+
-+	if (ioctl(fd, IOC_WATCH_QUEUE_SET_FILTER, &filter) == -1) {
-+		perror("/dev/watch_queue(filter)");
-+		exit(1);
-+	}
-+
-+	page_size = sysconf(_SC_PAGESIZE);
-+	buf = mmap(NULL, BUF_SIZE * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_SHARED, fd, 0);
-+	if (buf == MAP_FAILED) {
-+		perror("mmap");
-+		exit(1);
-+	}
-+
-+	if (keyctl_watch_key(KEY_SPEC_SESSION_KEYRING, fd, 0x01) == -1) {
-+		perror("keyctl");
-+		exit(1);
-+	}
-+
-+	if (syscall(__NR_watch_devices, fd, 0x04, 0) == -1) {
-+		perror("watch_devices");
-+		exit(1);
-+	}
-+
-+	return consumer(fd, buf);
-+}
-
+              Linus
