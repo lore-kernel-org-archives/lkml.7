@@ -2,142 +2,98 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCDFC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A6C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0211522CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613458;
-	bh=dOm9cV4WjYKhIDuRAOsbU5/stHWTJ2O1+eb9sxKQP1s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpqRu3+HQFaVn7ltHHq4jEqofznqu7g+bh4xcbgezxDmuGfl5Js/5IIjwiFe3kq71
-	 aNRjVi8eVTAuJKltIzSRACVbIOFaVW7mVS6d+qxZ3KDwRKCCiA7kCgkokaNthw6biX
-	 shwSEV7/YJHSTaYa1JiEloo4hLKmY5ps5MC7yn7o=
+	by mail.kernel.org (Postfix) with ESMTP id 0CE5B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbfIDQK5 (ORCPT
+        id S1733140AbfIDQLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35636 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:11:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:62815 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732057AbfIDQAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 461B222CF5;
-        Wed,  4 Sep 2019 16:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612841;
-        bh=dOm9cV4WjYKhIDuRAOsbU5/stHWTJ2O1+eb9sxKQP1s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VUqFCOjflHnKyj1weYa5ZU3BCHkGNiu1MTcR6vBSY5av524KUvVEyCSIGUKmP6Se0
-         ML8F6AtS2Av5QTCJg3Y4C5n4l1mmXYsukqNax4jnuc6g001Js72vo24oZdGYPcR+ds
-         YqOHiEfzfWFAXOdGzT9FHI60PQFpRYTsLXsWS4o4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
-        Antonio Quartulli <a@unstable.cc>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/52] batman-adv: Only read OGM tvlv_len after buffer len check
-Date:   Wed,  4 Sep 2019 11:59:38 -0400
-Message-Id: <20190904160004.3671-26-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
-References: <20190904160004.3671-1-sashal@kernel.org>
+        id S1732057AbfIDQK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:10:58 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 09:10:56 -0700
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="183951504"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 09:10:54 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 07921204A6; Wed,  4 Sep 2019 19:10:52 +0300 (EEST)
+Date:   Wed, 4 Sep 2019 19:10:51 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 11/11] lib/test_printf: Add tests for %pfw printk
+ modifier
+Message-ID: <20190904161051.GX5475@paasikivi.fi.intel.com>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+ <20190902135732.23455-12-sakari.ailus@linux.intel.com>
+ <20190902161352.GS2680@smile.fi.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902161352.GS2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+Hi Andy,
 
-[ Upstream commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 ]
+On Mon, Sep 02, 2019 at 07:13:52PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 02, 2019 at 04:57:32PM +0300, Sakari Ailus wrote:
+> > Add a test for the %pfw printk modifier using software nodes.
+> 
+> > +static void __init fwnode_pointer(void)
+> > +{
+> > +	const struct software_node softnodes[] = {
+> > +		{ .name = "first", },
+> > +		{ .name = "second", .parent = &softnodes[0], },
+> > +		{ .name = "third", .parent = &softnodes[1], },
+> > +		{ NULL /* Guardian */ },
+> 
+> Comma is still here :-)
 
-Multiple batadv_ogm_packet can be stored in an skbuff. The functions
-batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
-batadv_iv_ogm_aggr_packet() to check if there is another additional
-batadv_ogm_packet in the skb or not before they continue processing the
-packet.
+Oops. I ended up removing the comma in a wrong patch which wasn't submitted
+to the list. Will fix for v6.
 
-The length for such an OGM is BATADV_OGM_HLEN +
-batadv_ogm_packet->tvlv_len. The check must first check that at least
-BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
-part of the header. Otherwise it might try read outside of the currently
-available skbuff to get the content of tvlv_len.
+> 
+> > +	};
+> 
+> > +	test(full_name_second, "%pfw",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> > +	test(full_name, "%pfw",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +	test(full_name, "%pfwf",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> > +	test(second_name, "%pfwP",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 3]));
+> > +	test(third_name, "%pfwP",
+> > +	     software_node_fwnode(&softnodes[ARRAY_SIZE(softnodes) - 2]));
+> 
+> I have another thought about these. The test cases will fail in either of
+> adding, inserting or removing items in softnodes array. So, using the above
+> "protective" scheme doesn't bring any value except making readability worse.
 
-Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
-Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Acked-by: Antonio Quartulli <a@unstable.cc>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/batman-adv/bat_iv_ogm.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+Agreed, to be addressed in v6.
 
-diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
-index 0b7b36fa0d5cd..36f244125d24c 100644
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -463,17 +463,23 @@ static u8 batadv_hop_penalty(u8 tq, const struct batadv_priv *bat_priv)
-  * batadv_iv_ogm_aggr_packet() - checks if there is another OGM attached
-  * @buff_pos: current position in the skb
-  * @packet_len: total length of the skb
-- * @tvlv_len: tvlv length of the previously considered OGM
-+ * @ogm_packet: potential OGM in buffer
-  *
-  * Return: true if there is enough space for another OGM, false otherwise.
-  */
--static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
--				      __be16 tvlv_len)
-+static bool
-+batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
-+			  const struct batadv_ogm_packet *ogm_packet)
- {
- 	int next_buff_pos = 0;
- 
--	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
--	next_buff_pos += ntohs(tvlv_len);
-+	/* check if there is enough space for the header */
-+	next_buff_pos += buff_pos + sizeof(*ogm_packet);
-+	if (next_buff_pos > packet_len)
-+		return false;
-+
-+	/* check if there is enough space for the optional TVLV */
-+	next_buff_pos += ntohs(ogm_packet->tvlv_len);
- 
- 	return (next_buff_pos <= packet_len) &&
- 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
-@@ -501,7 +507,7 @@ static void batadv_iv_ogm_send_to_if(struct batadv_forw_packet *forw_packet,
- 
- 	/* adjust all flags and log packets */
- 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
--					 batadv_ogm_packet->tvlv_len)) {
-+					 batadv_ogm_packet)) {
- 		/* we might have aggregated direct link packets with an
- 		 * ordinary base packet
- 		 */
-@@ -1852,7 +1858,7 @@ static int batadv_iv_ogm_receive(struct sk_buff *skb,
- 
- 	/* unpack the aggregated packets and process them one by one */
- 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
--					 ogm_packet->tvlv_len)) {
-+					 ogm_packet)) {
- 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
- 
- 		ogm_offset += BATADV_OGM_HLEN;
 -- 
-2.20.1
+Regards,
 
+Sakari Ailus
+sakari.ailus@linux.intel.com
