@@ -2,155 +2,111 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D7BC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D5DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81992208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0EC22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:38:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YWgQalXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfIDChI (ORCPT
+        id S1728102AbfIDCiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 22:37:08 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:42056 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727499AbfIDChI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 22:37:08 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x842a533009007
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Tue, 3 Sep 2019 19:36:20 -0700
-Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 3 Sep
- 2019 19:36:03 -0700
-Subject: Re: Bug Report: Btrfs can't allocate space for delete when block size
- arounds 512M
-To:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <josef@toxicpanda.com>, <dsterba@suse.com>
-References: <b501bcff-8be0-4303-8789-363fda4658e5@windriver.com>
-From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
-Message-ID: <3eca92d0-5a57-3fff-63e1-edd3217341d5@windriver.com>
-Date:   Wed, 4 Sep 2019 10:36:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 22:38:54 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41894 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727805AbfIDCix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 22:38:53 -0400
+Received: by mail-oi1-f195.google.com with SMTP id h4so11218755oih.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 19:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qr8l030m/3BmP8EcsP561eQfhI/tMxRAFvT/xZLcZuU=;
+        b=YWgQalXaOCXV0wmfeSjdPdCGpxfHipNdunoQ98FIfc0c0/UfrPYVgPpZDzZPTxb5jk
+         zUkkr7ZdLnMHJk8GiTtl8bhzzD3zhx6z1i+vVTnalYllllg5L/rKFF5FT0tvwzVXA1NN
+         kL3qTYyfX1dOm5pJoUCklDfdP2BhX+rtt5OPPlyt2rxqrmZrUgMh2tMu/kgWjRqLPw8x
+         PmGzJ9xkcxNPOl0EqcTuTOa+70pjKA6krYpSW9K+/sCGoSKspcBLrsDrcizMB1wtx0sR
+         ye0kXzubgEcfcgpBvGkl8m/SLFIos5Gnu02Pv2pCnij/0FqvO0/hI0pOcS5xJHnVG3he
+         aWdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qr8l030m/3BmP8EcsP561eQfhI/tMxRAFvT/xZLcZuU=;
+        b=cglt8QhLQVYF7lNnNdUuXmqjmRY+WoeruCsfASS3ksKk8iyqcmV1BTbAXip2wX8Nsw
+         5gYfQfK6dgw4HcKrtUpPZmC+671Gs8GDcTk7Rm1io+87KjfcAQPwv5NoXDmkUwViybSo
+         XUk7nq0VNqRtbIcvpqx56+fi0UAXG7kymNNpQJePA1PMja0ZC2x18AcCEAUd+NzwH2Ea
+         CLR2Xoc6SPX4Qml63s//LMH3Fhubk6CepTseTuMgqCmq2sVIhQDHizO9zD0aRH0sV2IY
+         9bfnCr870dvur5Gfj/4+JHcUBtl9xrDBhSF3BmSGxL1wc+fMqnvsUJcTbjCqUeTCFGGu
+         NwRQ==
+X-Gm-Message-State: APjAAAURMdhnnCWPUBgMqCS6EoChClTLQvslZLxS97gzcq7/91Mx23B9
+        kQP3c/1Sga2xKy6nxR7V18w+1caSdjWmZ127EryZ0w==
+X-Google-Smtp-Source: APXvYqzHXn2jzsxC3dRsC9tJT9imYI/Ar0PlH780cjytKiIYVtdOEzJsc2OifiS4sbg19VoLLOcydDjBA98jiAJ3rRE=
+X-Received: by 2002:aca:42c3:: with SMTP id p186mr1843411oia.33.1567564732459;
+ Tue, 03 Sep 2019 19:38:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b501bcff-8be0-4303-8789-363fda4658e5@windriver.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.188]
+References: <cover.1567492316.git.baolin.wang@linaro.org> <0e71732006c11f119826b3be9c1a9ccd102742d8.1567492316.git.baolin.wang@linaro.org>
+ <20190903145206.GB3499@localhost.localdomain> <20190903183331.GB26562@kroah.com>
+In-Reply-To: <20190903183331.GB26562@kroah.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 4 Sep 2019 10:38:40 +0800
+Message-ID: <CAMz4kuJMfAR6w+SpiTA-EWMB3MQ_wiuW+_-DfL-8zdrCagmS0Q@mail.gmail.com>
+Subject: Re: [BACKPORT 4.14.y 4/8] net: sctp: fix warning "NULL check before
+ some freeing functions is not needed"
+To:     Greg KH <greg@kroah.com>
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "# 3.4.x" <stable@vger.kernel.org>, vyasevich@gmail.com,
+        Neil Horman <nhorman@tuxdriver.com>,
+        David Miller <davem@davemloft.net>, hariprasad.kelam@gmail.com,
+        linux-sctp@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anybody notice this?
+On Wed, 4 Sep 2019 at 02:33, Greg KH <greg@kroah.com> wrote:
+>
+> On Tue, Sep 03, 2019 at 11:52:06AM -0300, Marcelo Ricardo Leitner wrote:
+> > On Tue, Sep 03, 2019 at 02:58:16PM +0800, Baolin Wang wrote:
+> > > From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> > >
+> > > This patch removes NULL checks before calling kfree.
+> > >
+> > > fixes below issues reported by coccicheck
+> > > net/sctp/sm_make_chunk.c:2586:3-8: WARNING: NULL check before some
+> > > freeing functions is not needed.
+> > > net/sctp/sm_make_chunk.c:2652:3-8: WARNING: NULL check before some
+> > > freeing functions is not needed.
+> > > net/sctp/sm_make_chunk.c:2667:3-8: WARNING: NULL check before some
+> > > freeing functions is not needed.
+> > > net/sctp/sm_make_chunk.c:2684:3-8: WARNING: NULL check before some
+> > > freeing functions is not needed.
+> >
+> > Hi. This doesn't seem the kind of patch that should be backported to
+> > such old/stable releases. After all, it's just a cleanup.
+>
+> I agree, this does not seem necessary _unless_ it is needed for a later
+> real fix.
 
---Hongzhi
+It can remove warnings from our product kernel since this patch
+(c4964bfaf433 sctp: Free cookie before we memdup a new one) was merged
+into stable, we still need backport it to our product kernel manually.
 
+But if you still think this is unnecessary, please ignore this patch.
+Thanks for your comments.
 
-On 7/17/19 4:34 PM, Hongzhi, Song wrote:
-> Hi friends,
->
-> *Description:*
->
->
->     One LTP testcase, fs_fill.c, fails on btrfs with kernel error when 
-> unlink files on Btrfs device:
->
->     "BTRFS warning (device loop0): could not allocate space for a 
-> delete; will truncate on mount".
->
->
->     I found the loop block device formatted with btrfs roughly rangs 
-> from 460M to 560M will cause the error.
->
->     256M and 1G all pass.
->
->
->     The fs_fill.c source code:
->
-> [https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/fs_fill/fs_fill.c] 
->
->
->     The fs_fill.c calls unlink which triggers the error.
->
-> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/testcases/kernel/fs/fs_fill/fs_fill.c#L55] 
->
->
-> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/lib/safe_macros.c#L358] 
->
->
->
-> *Error info:*
->
->     The issue maybe not reproduced everytime but four fifths chance.
->
->     fs_fill.c:53: INFO: Unlinking mntpoint/thread5/file0
->     safe_macros.c:360: BROK: fs_fill.c:55: 
-> unlink(mntpoint/thread10/file0) failed: ENOSPC
->     safe_macros.c:360: BROK: fs_fill.c:55: 
-> unlink(mntpoint/thread11/file0) failed: ENOSPC
->     [62477.378848] BTRFS warning (device loop0): could not allocate 
-> space for a delete; will truncate on mount
->     [62477.378905] BTRFS warning (device loop0): could not allocate 
-> space for a delete; will truncate on mount
->
->
->
-> *Kernel:*
->
->     After v5.2-rc1, qemux86-64
->
->     # make -j40 ARCH=x86_64 CROSS_COMPILE=x86-64-gcc
->     use qemu to bootup kernel
->
->
-> *LTP:*
->
->     master branch: I tested on 20190625
->     Reproduce:
->
->     // build Ltp
->     # cd Ltp-source
->     # ./build.sh
->
->     // copy files to qemu
->     # cp runltp testcases/kernel/fs/fs_fill/fs_fill to qemu
->
->     // login to qemu:
->     // adjust block device size to 512M
->     # vi runltp
->     in function: create_block()
->         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=262144
->         --->
->         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=524288
->
->     // execute testcase
->     # runltp -f fs -s fs_fill
->
->
-> *Analysis:*
->
->     One new kernel commit contained in v5.2-rc1 introduces the issue.
->
->     commit c8eaeac7b734347c3afba7008b7af62f37b9c140
->     Author: Josef Bacik <josef@toxicpanda.com>
->     Date:   Wed Apr 10 15:56:10 2019 -0400
->
->         btrfs: reserve delalloc metadata differently
->         ...
->
->
-> Anyone's reply will be appreciated.
->
-> --Hongzhi
->
->
->
->
->
->
+-- 
+Baolin Wang
+Best Regards
