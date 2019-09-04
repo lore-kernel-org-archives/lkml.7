@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF11C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0094C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE73F21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D8220820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613232;
-	bh=mP0K/uEJqx8+BnvBniqIy2bLIgX7+uy59FBpsDE/IJo=;
+	s=default; t=1567613242;
+	bh=n4O69lSB8nwj9edhHifkBr0eP+IfjyRsjVkeu8i6mzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HC7P1MUeEgzZdS9fPBiV7AIim4rPBdnqNaLKtpwP+MyCkrkMu4g4i2cac4Ymo87Sh
-	 K+BTamDGOsD2YX7JfGP4zxyDV7yYqGYGNO1kUgiM0CejBhA8H40KGwERXrUqMS7TkR
-	 icNntWtZhn9c95g/ta6K0VfI0wmjK0eJjQBO3Q68=
+	b=Tt+0IQNYh67iarhiy0NLDHUdE+5LDjTMXZzoRUPgsijkJ6XzBMUu8f/wILDWA6Iqj
+	 qD/JVzYyeoXQwPLNY1dkgSYS5JTHFEowtBji3PbWNyPL6V1NW1rxaeui4tsLrQsPZ8
+	 kts9rxjdJkxAOXxN1uI3M//rl+OCmkX6QadYtb6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733180AbfIDQHL (ORCPT
+        id S1732673AbfIDQHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37820 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733165AbfIDQCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:05 -0400
+        id S1732163AbfIDQCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A53922CF7;
-        Wed,  4 Sep 2019 16:02:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9322622CF5;
+        Wed,  4 Sep 2019 16:02:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612925;
-        bh=mP0K/uEJqx8+BnvBniqIy2bLIgX7+uy59FBpsDE/IJo=;
+        s=default; t=1567612921;
+        bh=n4O69lSB8nwj9edhHifkBr0eP+IfjyRsjVkeu8i6mzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yp6DvAXH9kzdxQNYMEmLNof5xEe+4c2PoFjRwwbhZ65f7jon8uN3gRy48XQm3QgO8
-         ZfuxifH0Ol48heehQ+vosThf0fbI45eY72sn1XDEy2tD0TQThF31qq3lcLidNWA1Zr
-         ZQu/e5CXTMtC2/YAHzS3ooHf00Ri2GQdWjVaUIWo=
+        b=gz8yh6LcYEdqewQCeUwC3sKS8d+tgPTb11xxBjt3xdz3Pd5GO4Q3LjKxeWYJf2NIC
+         LtO+kVezy+j4PoNDPeHVqlqT9KGe0G17TFLYvq9AUht9KU9TQDnv/uS0PnHvLb1RP+
+         buFRFlwZPGtnjfQQhg/LlTCzPdEpROVxhnmzXgek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, SteveM <swm@swm1.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 27/36] sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
-Date:   Wed,  4 Sep 2019 12:01:13 -0400
-Message-Id: <20190904160122.4179-27-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 25/36] x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
+Date:   Wed,  4 Sep 2019 12:01:11 -0400
+Message-Id: <20190904160122.4179-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,40 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 189308d5823a089b56e2299cd96589507dac7319 ]
+[ Upstream commit 42e0e95474fc6076b5cd68cab8fa0340a1797a72 ]
 
-A similar workaround for the suspend/resume problem is needed for yet
-another ASUS machines, P6X models.  Like the previous fix, the BIOS
-doesn't provide the standard DMI_SYS_* entry, so again DMI_BOARD_*
-entries are used instead.
+One of the very few warnings I have in the current build comes from
+arch/x86/boot/edd.c, where I get the following with a gcc9 build:
 
-Reported-and-tested-by: SteveM <swm@swm1.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+   arch/x86/boot/edd.c: In function ‘query_edd’:
+   arch/x86/boot/edd.c:148:11: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+     148 |  mbrptr = boot_params.edd_mbr_sig_buffer;
+         |           ^~~~~~~~~~~
+
+This warning triggers because we throw away all the CFLAGS and then make
+a new set for REALMODE_CFLAGS, so the -Wno-address-of-packed-member we
+added in the following commit is not present:
+
+  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
+
+The simplest solution for now is to adjust the warning for this version
+of CFLAGS as well, but it would definitely make sense to examine whether
+REALMODE_CFLAGS could be derived from CFLAGS, so that it picks up changes
+in the compiler flags environment automatically.
+
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Borislav Petkov <bp@alien8.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/sky2.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
-index 7b239af6cc040..5046efdad5390 100644
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -4954,6 +4954,13 @@ static const struct dmi_system_id msi_blacklist[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
- 		},
- 	},
-+	{
-+		.ident = "ASUS P6X",
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "P6X"),
-+		},
-+	},
- 	{}
- };
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index b4c72da8a7adb..cd596ca609010 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -39,6 +39,7 @@ REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os -D__KERNEL__ \
+ 
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
++REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
+ export REALMODE_CFLAGS
  
 -- 
 2.20.1
