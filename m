@@ -2,120 +2,270 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB60C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6242C41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26EE222CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766452339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="rFTf2tCW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="PLnXcraD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfIDIwX (ORCPT
+        id S1729304AbfIDIx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:52:23 -0400
-Received: from mail-eopbgr690121.outbound.protection.outlook.com ([40.107.69.121]:55203
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729045AbfIDIwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:52:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m+QJ8gwuyDUKi8BDt3W9L/RevU54XelPV35tzL94on1XQAJ9enaRABX5G0VZaAkgVPc+HRbZMOOjVI6sqLcqPMiPxffzvUwLD1koi/xTfb8UFEpNeLiJadiJfKXpAW8zcVhGf7Sb/1eQbL4gt4wd4x2hzWDe5hVRRCzUoPbbln9xgnb1vF44d+t3TmPKYhBo7s/SIuG12+FjYnMXgfIpXvT0SsPdXjb4yWoFJSc3C+jiq54/1iK3uvSPdZ557cjguW/cvYxO5mYf/cKl0I1u7f1rTxdwNe7tm84i85Tbj+aXzBCDkSCnISA1rYAOeUU7grwgx8BlHzmfcpqWnb6cww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qq2wALwUZMjFidryExAqg4OBakuRJaOAp8F1zLi5uFA=;
- b=DIZyD+k+sm1qcuMiVi2elg1Xwq24oV6Xh1r4aXXRM4LDZjiSB1dJVtyWcfF2hPh8nZ0mgb9bR2LZhSW/UGGuefSYmp2Xnstw48FkdyLCQFf8r7D3ZPjYVA27Ng0rjadcdxNgT8VJoDZL1KN+1MLS5l7dhxy+gHsaCg3h0ogEVg/6i58A2rQIzUbGvk98ECiQGf61+Lcm4kq9GoXGErDdqE8SwR6Qc9aEDsl5g98+kUfkZq/6NuyY1CfhCFtNj/psIXEDgsz4CtlBGOZu4+HzqYQIHydueWn2f1DpcJRVRDsOVmBBXN19+JG+hWv1KTdn8s5jbN/Y+ptZcUeZnWUHoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 117.103.190.106) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sony.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=sony.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
- s=selector2-Sony-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qq2wALwUZMjFidryExAqg4OBakuRJaOAp8F1zLi5uFA=;
- b=rFTf2tCWvYgPtoIVqRbeCkarYmypc7okgo7YS+z/UJCC7lE2EMCaGS0vnDdPHrZqMnOXuiIaqH/7zxDhwrEOKN2zmikzdFCdUBPtrLVnb3E3EZYgPmz9oYQtjg+VcujCYvehyBgfYaXyefxJ4751AA9yncyH1rYO20/WDj38OQ0=
-Received: from DM5PR1301CA0001.namprd13.prod.outlook.com (2603:10b6:4:2a::14)
- by DM5PR13MB1433.namprd13.prod.outlook.com (2603:10b6:3:123::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.11; Wed, 4 Sep
- 2019 08:52:19 +0000
-Received: from CY1NAM02FT006.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::203) by DM5PR1301CA0001.outlook.office365.com
- (2603:10b6:4:2a::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2241.10 via Frontend
- Transport; Wed, 4 Sep 2019 08:52:18 +0000
-Authentication-Results: spf=pass (sender IP is 117.103.190.106)
- smtp.mailfrom=sony.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=pass action=none header.from=sony.com;
-Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
- 117.103.190.106 as permitted sender) receiver=protection.outlook.com;
- client-ip=117.103.190.106; helo=ap.sony.com;
-Received: from ap.sony.com (117.103.190.106) by
- CY1NAM02FT006.mail.protection.outlook.com (10.152.74.104) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2220.16 via Frontend Transport; Wed, 4 Sep 2019 08:52:18 +0000
-Received: from APYOKXHT102.ap.sony.com (117.103.191.215) by
- APYOKXEG102.ap.sony.com (117.103.190.106) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Wed, 4 Sep 2019 08:52:13 +0000
-Received: from APYOKXMS108.ap.sony.com ([169.254.3.47]) by
- APYOKXHT102.ap.sony.com ([117.103.191.215]) with mapi id 14.03.0468.000; Wed,
- 4 Sep 2019 08:52:13 +0000
-From:   <Jacky.Cao@sony.com>
-To:     <gregkh@linuxfoundation.org>, <balbi@kernel.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stern@rowland.harvard.edu>, <Kento.A.Kobayashi@sony.com>,
-        <Jacky.Cao@sony.com>
-Subject: RE: [PATCH] USB: dummy-hcd: fix power budget for SuperSpeed mode
-Thread-Topic: [PATCH] USB: dummy-hcd: fix power budget for SuperSpeed mode
-Thread-Index: AdVi9W5+0ODcBoGLQOCjqUMWZobPywAAIucAAAAlZ4AAAcHL0A==
-Date:   Wed, 4 Sep 2019 08:52:12 +0000
-Message-ID: <16EA1F625E922C43B00B9D82250220500871C90C@APYOKXMS108.ap.sony.com>
-References: <16EA1F625E922C43B00B9D82250220500871C862@APYOKXMS108.ap.sony.com>
- <87sgpcmr7v.fsf@gmail.com> <20190904075839.GA28042@kroah.com>
-In-Reply-To: <20190904075839.GA28042@kroah.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [43.82.17.73]
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 4 Sep 2019 04:53:58 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:18264 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfIDIx6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:53:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1567587231;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=EX1bNEn/x8Jc1Wv1Dd9sM3KpSMIqIknqvK0YdCx9ouo=;
+        b=PLnXcraDG/6bR1XncskxicMHKNX1sNQupUKZiTeCmVIdfj5fWrGxIowE5W04ExBA1v
+        MtFJPCQ9iR31CRpMDz+B0CfyFvgnQQb8W12AFYR7ERLUsiMLei6N2r2BBzdRdki+Ghk7
+        hH5IxMxDSaQ2h/rNoDtdI/MPvKsHDdtnC0O4EbIw5eLMHx6FVRP7BPpzpWkh/vy1eDEq
+        9AY31zrjcizL1bt4E4ZRF1qDdJCO6btKVL9JTpuOvGSfQFIoIC06/monsG+IqBbac/j/
+        sxmJOQoRaYlt3DRHE/jZGFKzK5P+CmGBb8uNTLisDYggQoYEw1uK/zqCohCm/xJcoBGj
+        ZcAA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1mfYzBGHXH6GK4zSwk="
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v848rgcLf
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 4 Sep 2019 10:53:42 +0200 (CEST)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Andr=C3=A9=20Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [RFC v2 2/3] ARM: dts: replace opp-v1 tables by opp-v2 for omap34xx and omap36xx
+Date:   Wed,  4 Sep 2019 10:53:40 +0200
+Message-Id: <647c83c40a8afd530464a6f7d74634738311399f.1567587220.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <cover.1567587220.git.hns@goldelico.com>
+References: <cover.1567587220.git.hns@goldelico.com>
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:117.103.190.106;IPV:NLI;CTRY:JP;EFV:NLI;SFV:NSPM;SFS:(10019020)(39860400002)(376002)(136003)(346002)(396003)(2980300002)(199004)(189003)(16586007)(106002)(110136005)(558084003)(76176011)(7736002)(86362001)(46406003)(4326008)(8936002)(316002)(7636002)(126002)(426003)(14444005)(7696005)(336012)(356004)(54906003)(246002)(186003)(305945005)(8676002)(229853002)(47776003)(478600001)(23726003)(26005)(5660300002)(2906002)(3846002)(6116002)(97756001)(102836004)(2876002)(55846006)(33656002)(50466002)(107886003)(486006)(70206006)(70586007)(6246003)(446003)(37786003)(11346002)(55016002)(476003)(66066001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR13MB1433;H:ap.sony.com;FPR:;SPF:Pass;LANG:en;PTR:apyokxeg102.ap.sony.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0ce5bdc8-be3b-4c0d-4967-08d731153151
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR13MB1433;
-X-MS-TrafficTypeDiagnostic: DM5PR13MB1433:
-X-Microsoft-Antispam-PRVS: <DM5PR13MB1433B899D2488B4B774133D587B80@DM5PR13MB1433.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 0150F3F97D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: 4/HEJ+WKWz/Y75qzWIU+nVOR7iZtNpWo1iq+BBtVsiQ1qg/TybywV9yy+YhABNX6lT/NAotiT/zjdYnnWmAs8bZiri+dkDhvYw3CfmdXps6x3lZ5b+blfkIUTOJBEiBwzuOY8aBZqZICoPLP7qyh3BKM6LZDvN88Ke3fxbvnVdT3WmsUZMhj2/S9sUtsroKL7A+AqXjvJElxxuKmbhuzQrh4uNPL2YdRAA2RW1LHsHsSNg9xER1YlDMcHs18qnvxlGywvSzPPq4FJuFgqhCTb5bHk6Wcbn72hQLI/HQfGeWb5DowfADR8s7fJgHbkIsrYs8Q7H2XN7nA/fSd/hbMagBFgMGXlXKug5fBe9cmZ0umzZpi9timdcmB8repwMX1IEeOceuDp4BcFrpVPo+rnjLgHgxSHrvPzcAjbnOfoCI=
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2019 08:52:18.3115
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ce5bdc8-be3b-4c0d-4967-08d731153151
-X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[117.103.190.106];Helo=[ap.sony.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1433
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, 
+In addition, move omap3 from whitelist to blacklist in cpufreq-dt-platdev
+in the same patch, because doing either first breaks operation and
+may make trouble in bisect.
 
-> I'm not ok with the whitespace damage making this patch impossible to apply :)
+We also can remove opp-v1 table for omap3-n950-n9 since it is now
+automatically detected.
 
-Sorry for the whitespace damage issue I didn't notice when I copied the content.
-Just now I submitted v2 for this patch with whitespace damage issue fix.
-Please help to confirm, thank you.
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+ arch/arm/boot/dts/omap3-n950-n9.dtsi |  7 ---
+ arch/arm/boot/dts/omap34xx.dtsi      | 65 ++++++++++++++++++++++++----
+ arch/arm/boot/dts/omap36xx.dtsi      | 53 +++++++++++++++++++----
+ drivers/cpufreq/cpufreq-dt-platdev.c |  2 +-
+ 4 files changed, 102 insertions(+), 25 deletions(-)
 
-Regards
-Jacky
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+index 5441e9ffdbb4..e98b0c615f19 100644
+--- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -11,13 +11,6 @@
+ 	cpus {
+ 		cpu@0 {
+ 			cpu0-supply = <&vcc>;
+-			operating-points = <
+-				/* kHz    uV */
+-				300000  1012500
+-				600000  1200000
+-				800000  1325000
+-				1000000	1375000
+-			>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
+index f572a477f74c..6408a0448834 100644
+--- a/arch/arm/boot/dts/omap34xx.dtsi
++++ b/arch/arm/boot/dts/omap34xx.dtsi
+@@ -16,19 +16,66 @@
+ / {
+ 	cpus {
+ 		cpu: cpu@0 {
+-			/* OMAP343x/OMAP35xx variants OPP1-5 */
+-			operating-points = <
+-				/* kHz    uV */
+-				125000   975000
+-				250000  1075000
+-				500000  1200000
+-				550000  1270000
+-				600000  1350000
+-			>;
++			/* OMAP343x/OMAP35xx variants OPP1-6 */
++			operating-points-v2 = <&cpu0_opp_table>;
++
+ 			clock-latency = <300000>; /* From legacy driver */
+ 		};
+ 	};
+ 
++	/* see Documentation/devicetree/bindings/opp/opp.txt */
++	cpu0_opp_table: opp-table {
++		compatible = "operating-points-v2-ti-cpu";
++		syscon = <&scm_conf>;
++
++		opp1-125000000 {
++			opp-hz = /bits/ 64 <125000000>;
++			/*
++			 * we currently only select the max voltage from table
++			 * Table 3-3 of the omap3530 Data sheet (SPRS507F).
++			 * Format is: <target min max>
++			 */
++			opp-microvolt = <975000 975000 975000>;
++			/*
++			 * first value is silicon revision bit mask
++			 * second one 720MHz Device Identification bit mask
++			 */
++			opp-supported-hw = <0xffffffff 3>;
++		};
++
++		opp2-250000000 {
++			opp-hz = /bits/ 64 <250000000>;
++			opp-microvolt = <1075000 1075000 1075000>;
++			opp-supported-hw = <0xffffffff 3>;
++			opp-suspend;
++		};
++
++		opp3-500000000 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <1200000 1200000 1200000>;
++			opp-supported-hw = <0xffffffff 3>;
++		};
++
++		opp4-550000000 {
++			opp-hz = /bits/ 64 <550000000>;
++			opp-microvolt = <1270000 1270000 1270000>;
++			opp-supported-hw = <0xffffffff 3>;
++		};
++
++		opp5-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1350000 1350000 1350000>;
++			opp-supported-hw = <0xffffffff 3>;
++		};
++
++		opp6-720000000 {
++			opp-hz = /bits/ 64 <720000000>;
++			opp-microvolt = <1350000 1350000 1350000>;
++			/* only high-speed grade omap3530 devices */
++			opp-supported-hw = <0xffffffff 2>;
++		};
++	};
++
+ 	ocp@68000000 {
+ 		omap3_pmx_core2: pinmux@480025d8 {
+ 			compatible = "ti,omap3-padconf", "pinctrl-single";
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+index 6fb23ada1f64..44f25b0eb45b 100644
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -19,15 +19,52 @@
+ 	};
+ 
+ 	cpus {
+-		/* OMAP3630/OMAP37xx 'standard device' variants OPP50 to OPP130 */
++		/* OMAP3630/OMAP37xx variants OPP50 to OPP130 and OPP1G */
+ 		cpu: cpu@0 {
+-			operating-points = <
+-				/* kHz    uV */
+-				300000  1012500
+-				600000  1200000
+-				800000  1325000
+-			>;
+-			clock-latency = <300000>; /* From legacy driver */
++			operating-points-v2 = <&cpu0_opp_table>;
++
++			clock-latency = <300000>; /* From omap-cpufreq driver */
++		};
++	};
++
++	/* see Documentation/devicetree/bindings/opp/opp.txt */
++	cpu0_opp_table: opp-table {
++		compatible = "operating-points-v2-ti-cpu";
++		syscon = <&scm_conf>;
++
++		opp50-300000000 {
++			opp-hz = /bits/ 64 <300000000>;
++			/*
++			 * we currently only select the max voltage from table
++			 * Table 4-19 of the DM3730 Data sheet (SPRS685B)
++			 * Format is: <target min max>
++			 */
++			opp-microvolt = <1012500 1012500 1012500>;
++			/*
++			 * first value is silicon revision bit mask
++			 * second one is "speed binned" bit mask
++			 */
++			opp-supported-hw = <0xffffffff 3>;
++			opp-suspend;
++		};
++
++		opp100-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1200000 1200000 1200000>;
++			opp-supported-hw = <0xffffffff 3>;
++		};
++
++		opp130-800000000 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = <1325000 1325000 1325000>;
++			opp-supported-hw = <0xffffffff 3>;
++		};
++
++		opp1g-1000000000 {
++			opp-hz = /bits/ 64 <1000000000>;
++			opp-microvolt = <1375000 1375000 1375000>;
++			/* only on am/dm37x with speed-binned bit set */
++			opp-supported-hw = <0xffffffff 2>;
+ 		};
+ 	};
+ 
+diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+index 03dc4244ab00..68b7fc4225f8 100644
+--- a/drivers/cpufreq/cpufreq-dt-platdev.c
++++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+@@ -86,7 +86,6 @@ static const struct of_device_id whitelist[] __initconst = {
+ 	{ .compatible = "st-ericsson,u9540", },
+ 
+ 	{ .compatible = "ti,omap2", },
+-	{ .compatible = "ti,omap3", },
+ 	{ .compatible = "ti,omap4", },
+ 	{ .compatible = "ti,omap5", },
+ 
+@@ -132,6 +131,7 @@ static const struct of_device_id blacklist[] __initconst = {
+ 	{ .compatible = "ti,am33xx", },
+ 	{ .compatible = "ti,am43", },
+ 	{ .compatible = "ti,dra7", },
++	{ .compatible = "ti,omap3", },
+ 
+ 	{ }
+ };
+-- 
+2.19.1
+
