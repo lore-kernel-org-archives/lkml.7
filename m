@@ -2,207 +2,179 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0552C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D4AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C312820870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:52:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B709322CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfIDGwv (ORCPT
+        id S1728781AbfIDGxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:52:51 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:36255 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfIDGwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:52:51 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1i5P9s-0002uV-Ki; Wed, 04 Sep 2019 08:52:48 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1i5P9s-0004iI-6D; Wed, 04 Sep 2019 08:52:48 +0200
-Date:   Wed, 4 Sep 2019 08:52:48 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Robin van der Gracht <robin@protonic.nl>
-Cc:     "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
-        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        RobinGong <yibin.gong@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "linux-arm-kernel @ lists . infradead . org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-Message-ID: <20190904065248.4i7q2vuxxt2xdnrr@pengutronix.de>
-References: <20190904062329.97520-1-robin@protonic.nl>
+        Wed, 4 Sep 2019 02:53:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44820 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725938AbfIDGxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 02:53:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E09CAB048;
+        Wed,  4 Sep 2019 06:53:30 +0000 (UTC)
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
+ regression
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rong Chen <rong.a.chen@intel.com>, michel@daenzer.net,
+        linux-kernel@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>, lkp@01.org
+References: <c6e220fe-230c-265c-f2fc-b0948d1cb898@intel.com>
+ <20190812072545.GA63191@shbuild999.sh.intel.com>
+ <20190813093616.GA65475@shbuild999.sh.intel.com>
+ <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
+ <20190824051605.GA63850@shbuild999.sh.intel.com>
+ <1b897bfe-fd40-3ae3-d867-424d1fc08c44@suse.de>
+ <d114b0b6-6b64-406e-6c3f-a8b8d5502413@intel.com>
+ <44029e80-ba00-8246-dec0-fda122d53f5e@suse.de>
+ <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
+ <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de>
+ <20190904062716.GC5541@shbuild999.sh.intel.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNKFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmNvbT7CwJQEEwEIAD4W
+ IQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznTtgIbAwUJA8JnAAULCQgHAgYVCgkICwIEFgID
+ AQIeAQIXgAAKCRBoDcEdUwt6I7D7CACBK42XW+7mCiK8ioXMEy1NzGbXC51RzGea8N83oEJS
+ 1KVUtQxrkDxgrW/WLSl/TfqHFsJpdEFOv1XubWbleun3uKPy0e5vZCd5UjZPkeNjnqfCYTDy
+ hVVsdOuFbtWDppJyJrThLqr9AgSFmoCNNUt1SVpYEEOLNE6C32BhlnSq21VLC+YXTgO/ZHTa
+ YXkq54hHj63jwrcjkBSCkXLh37kHeqnl++GHpN+3R+o3w2OpwHAlvVjdKPT27v1tVkiydsFG
+ 65Vd0n3m/ft+IOrGgxQM1C20uqKvsZGB4r3OGR50ekAybO7sjEJJ1Obl4ge/6RRqcvKz4LMb
+ tGs85D6tPIeFzsBNBFs50uABCADGJj+DP1fk+UWOWrf4O61HTbC4Vr9QD2K4fUUHnzg2B6zU
+ R1BPXqLGG0+lzK8kfYU/F5RjmEcClsIkAaFkg4kzKP14tvY1J5+AV3yNqcdg018HNtiyrSwI
+ E0Yz/qm1Ot2NMZ0DdvVBg22IMsiudQ1tx9CH9mtyTbIXgACvl3PW2o9CxiHPE/bohFhwZwh/
+ kXYYAE51lhinQ3oFEeQZA3w4OTvxSEspiQR8dg8qJJb+YOAc5IKk6sJmmM7JfFMWSr22satM
+ 23oQ3WvJb4RV6HTRTAIEyyZS7g2DhiytgMG60t0qdABG5KXSQW+OKlZRpuWwKWaLh3if/p/u
+ 69dvpanbABEBAAHCwHwEGAEIACYWIQRyF/usjOnPY0ShaOVoDcEdUwt6IwUCWznS4AIbDAUJ
+ A8JnAAAKCRBoDcEdUwt6I6X3CACJ8D+TpXBCqJE5xwog08+Dp8uBpx0T9n1wE0GQisZruACW
+ NofYn8PTX9k4wmegDLwt7YQDdKxQ4+eTfZeLNQqWg6OCftH5Kx7sjWnJ09tOgniVdROzWJ7c
+ VJ/i0okazncsJ+nq48UYvRGE1Swh3A4QRIyphWX4OADOBmTFl9ZYNPnh23eaC9WrNvFr7yP7
+ iGjMlfEW8l6Lda//EC5VpXVNza0xeae0zFNst2R9pn+bLkihwDLWxOIyifGRxTqNxoS4I1aw
+ VhxPSVztPMSpIA/sOr/N/p6JrBLn+gui2K6mP7bGb8hF+szfArYqz3T1rv1VzUWAJf5Wre5U
+ iNx9uqqx
+Message-ID: <72c33bf1-9184-e24a-c084-26d9c8b6f9b7@suse.de>
+Date:   Wed, 4 Sep 2019 08:53:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904062329.97520-1-robin@protonic.nl>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:40:59 up 109 days, 12:59, 63 users,  load average: 0.17, 0.09,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190904062716.GC5541@shbuild999.sh.intel.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="tEbemzNCYIFlTv8AgFLJdLrJ0nAFUgocA"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--tEbemzNCYIFlTv8AgFLJdLrJ0nAFUgocA
+Content-Type: multipart/mixed; boundary="UCnYEQcVbLWlQ3FT4ybwA0vEYacvLWFF7";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Feng Tang <feng.tang@intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Rong Chen
+ <rong.a.chen@intel.com>, michel@daenzer.net, linux-kernel@vger.kernel.org,
+ dri-devel <dri-devel@lists.freedesktop.org>, lkp@01.org
+Message-ID: <72c33bf1-9184-e24a-c084-26d9c8b6f9b7@suse.de>
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
+ regression
+References: <c6e220fe-230c-265c-f2fc-b0948d1cb898@intel.com>
+ <20190812072545.GA63191@shbuild999.sh.intel.com>
+ <20190813093616.GA65475@shbuild999.sh.intel.com>
+ <64d41701-55a4-e526-17ae-8936de4bc1ef@suse.de>
+ <20190824051605.GA63850@shbuild999.sh.intel.com>
+ <1b897bfe-fd40-3ae3-d867-424d1fc08c44@suse.de>
+ <d114b0b6-6b64-406e-6c3f-a8b8d5502413@intel.com>
+ <44029e80-ba00-8246-dec0-fda122d53f5e@suse.de>
+ <90e78ce8-d46a-5154-c324-a05aa1743c98@intel.com>
+ <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de>
+ <20190904062716.GC5541@shbuild999.sh.intel.com>
+In-Reply-To: <20190904062716.GC5541@shbuild999.sh.intel.com>
 
-thanks for the patch it looks quite good, just two minor nitpicks.
+--UCnYEQcVbLWlQ3FT4ybwA0vEYacvLWFF7
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-On 19-09-04 06:23, Robin van der Gracht wrote:
-> The first generation i.MX6 processors does not send an interrupt when the
-> power key is pressed. It sends a power down request interrupt if the key is
-> released before a hard shutdown (5 second press). This should allow
-> software to bring down the SoC safely.
-> 
-> For this driver to work as a regular power key with the older SoCs, we need
-> to send a keypress AND release when we get the power down request irq.
-> 
-> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
-> ---
-> 
-> Changes v2 -> v3:
->  - Drop alt compatible string for identifying first revision snvs hardware,
->    read minor revision from register instead.
->  - Drop imx6qdl.dtsi modification and device-tree binding documentation.
->  - Add an additional input_sync() to create 2 seperate input reports for press
->    and release.
-> 
->  drivers/input/keyboard/Kconfig       |  2 +-
->  drivers/input/keyboard/snvs_pwrkey.c | 28 ++++++++++++++++++++++++++--
->  2 files changed, 27 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 7c4f19dab34f..937e58da5ce1 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -436,7 +436,7 @@ config KEYBOARD_SNVS_PWRKEY
->  	depends on OF
->  	help
->  	  This is the snvs powerkey driver for the Freescale i.MX application
-> -	  processors that are newer than i.MX6 SX.
-> +	  processors.
->  
->  	  To compile this driver as a module, choose M here; the
->  	  module will be called snvs_pwrkey.
-> diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> index 5342d8d45f81..828580eee0d2 100644
-> --- a/drivers/input/keyboard/snvs_pwrkey.c
-> +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> @@ -19,6 +19,7 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
->  
-> +#define SNVS_HPVIDR1_REG 0xF8
->  #define SNVS_LPSR_REG	0x4C	/* LP Status Register */
->  #define SNVS_LPCR_REG	0x38	/* LP Control Register */
->  #define SNVS_HPSR_REG	0x14
-> @@ -37,6 +38,7 @@ struct pwrkey_drv_data {
->  	int wakeup;
->  	struct timer_list check_timer;
->  	struct input_dev *input;
-> +	u8 minor_rev;
->  };
->  
->  static void imx_imx_snvs_check_for_events(struct timer_list *t)
-> @@ -45,6 +47,20 @@ static void imx_imx_snvs_check_for_events(struct timer_list *t)
->  	struct input_dev *input = pdata->input;
->  	u32 state;
->  
-> +	if (pdata->minor_rev == 0) {
+Hi
 
-Should we use a define here and ..
+Am 04.09.19 um 08:27 schrieb Feng Tang:
+>> Thank you for testing. But don't get too excited, because the patch
+>> simulates a bug that was present in the original mgag200 code. A
+>> significant number of frames are simply skipped. That is apparently th=
+e
+>> reason why it's faster.
+>=20
+> Thanks for the detailed info, so the original code skips time-consuming=
 
-> +		/*
-> +		 * The first generation i.MX6 SoCs only sends an interrupt on
-> +		 * button release. To mimic power-key usage, we'll prepend a
-> +		 * press event.
-> +		 */
-> +		input_report_key(input, pdata->keycode, 1);
-> +		input_sync(input);
-> +		input_report_key(input, pdata->keycode, 0);
-> +		input_sync(input);
-> +		pm_relax(input->dev.parent);
-> +		return;
-> +	}
-> +
->  	regmap_read(pdata->snvs, SNVS_HPSR_REG, &state);
->  	state = state & SNVS_HPSR_BTN ? 1 : 0;
->  
-> @@ -67,13 +83,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
->  {
->  	struct platform_device *pdev = dev_id;
->  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
-> +	unsigned long expire = jiffies;
->  	u32 lp_status;
->  
->  	pm_wakeup_event(pdata->input->dev.parent, 0);
->  
->  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> -	if (lp_status & SNVS_LPSR_SPO)
-> -		mod_timer(&pdata->check_timer, jiffies + msecs_to_jiffies(DEBOUNCE_TIME));
-> +	if (lp_status & SNVS_LPSR_SPO) {
-> +		if (pdata->minor_rev > 0)
+> work inside atomic context on purpose. Is there any space to optmise it=
+?
+> If 2 scheduled update worker are handled at almost same time, can one b=
+e
+> skipped?
 
-here? Just a nitpick, feel free to add/drop it.
+To my knowledge, there's only one instance of the worker. Re-scheduling
+the worker before a previous instance started, will not create a second
+instance. The worker's instance will complete all pending updates. So in
+some way, skipping workers already happens.
 
-> +			expire = jiffies + msecs_to_jiffies(DEBOUNCE_TIME);
-> +		mod_timer(&pdata->check_timer, expire);
-> +	}
->  
->  	/* clear SPO status */
->  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> @@ -94,6 +114,7 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  	struct input_dev *input = NULL;
->  	struct device_node *np;
->  	int error;
-> +	u32 vid;
->  
->  	/* Get SNVS register Page */
->  	np = pdev->dev.of_node;
-> @@ -123,6 +144,9 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
->  		return -EINVAL;
->  	}
->  
-> +	regmap_read(pdata->snvs, SNVS_HPVIDR1_REG, &vid);
+Best regards
+Thomas
 
-Should we check the return val here?
+>=20
+> Thanks,
+> Feng
+>=20
+>>
+>> Best regards
+>> Thomas
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
 
-Regards,
-  Marco
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Linux GmbH, Maxfeldstrasse 5, 90409 Nuernberg, Germany
+GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG N=C3=BCrnberg)
 
-> +	pdata->minor_rev = vid & 0xff;
-> +
->  	regmap_update_bits(pdata->snvs, SNVS_LPCR_REG, SNVS_LPCR_DEP_EN, SNVS_LPCR_DEP_EN);
->  
->  	/* clear the unexpected interrupt before driver ready */
-> -- 
-> 2.20.1
-> 
-> 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--UCnYEQcVbLWlQ3FT4ybwA0vEYacvLWFF7--
+
+--tEbemzNCYIFlTv8AgFLJdLrJ0nAFUgocA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl1vX2kACgkQaA3BHVML
+eiNHDwgAsQsC6gXLY1MB/RZP/0mKFGb2Qoo240lakrE7jDtQNZ+Bk5n+V8PAYGea
+r9TJTNUgLv4NbawjkaFKEeWtlFZq//EfK6kicfTTrRP/YhYKZl49wrHXzURKziWh
+xVqBwP0kpq6y1l7P8/37daz3QCsJd0lNyJZ6DPz7pk8Z831wV1jyDgmvtnBsYzpZ
+AO5MUFpRPawxp/dj9DtASl/xlq6ipcvBGYVWz7CxdgQF9cn1N6bMPkcEsKHjqZSl
+p6MaZXkmxmlogRK7A8Go4N0TvXFG4VdNaP3999yg9p96qy2lQY3FT7tyLun5a0HR
+AIxGD6es+LfBfc3AululgnnJpx+DRw==
+=H8JY
+-----END PGP SIGNATURE-----
+
+--tEbemzNCYIFlTv8AgFLJdLrJ0nAFUgocA--
