@@ -2,122 +2,99 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906D2C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7F4C41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 639F822DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iz5ubyrr"
+	by mail.kernel.org (Postfix) with ESMTP id E209B22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:27:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbfIDOZc (ORCPT
+        id S1730606AbfIDO1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:25:32 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34190 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729809AbfIDOZc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:25:32 -0400
-Received: by mail-io1-f67.google.com with SMTP id s21so44654350ioa.1;
-        Wed, 04 Sep 2019 07:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J14Deb8/u/x8SPSlK7MOeAWJqG+LQLoxFq5bvKEaz7c=;
-        b=iz5ubyrro5kU3CaILVKZ8g/Z46nRZl2E5EyMh/ddWuMOVV58AfTdZwE1lRlA+/2gC6
-         rrkQv7Bp6R8klnOdkZovLFlAMseafse6HjXYkwlivbDXKrdmit02Xak1fqWHxonDgVV6
-         /THpyJ3YfT/ZPmf9TwGbUj9Eofn+9rujJFBRsMPhzq3z2WxmMmeYhvn/qFEMkL9hX6PM
-         alZD7vxlRLJJ214HETUdqMiNsuZef2T6xZqoD1niihB8KCuW/RE9kZJaw5pTU06Z4Fti
-         x+5IUyhPNbOkcSzgA9xXTC6aAbu+aIpcrugIKDZjoO8KL0P98vOCMjXx4rCJXes0SPCZ
-         AweQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J14Deb8/u/x8SPSlK7MOeAWJqG+LQLoxFq5bvKEaz7c=;
-        b=kPaXiqTwfNtaB3lF0XPQW2rDdFSjGyMy6n03RnTEpJg39F9AnBfGTNt96ZSspWiEvn
-         NLkIotSqaRY4h5M6PsuiCSU450kzbTJfrWhlLsuqicIAc0NFRy0EhjoGnxzMeiN8eNf1
-         zED88leKCoTQDde0Imzy8xcOpqZX9xpMaSelfPbrATnX1VAP/T/AwjZmBmhHMVJg/HYx
-         FwNj7HQYX6FoZxUWFC8yWkXC7Zg1OYlJ9f+llQUTu1glBiMKdVl7dMdgcLMx7byep3fC
-         At8nlWE2cnZ5RpMMXT2Y7RDKDc6n4TJDPi3EVFct3hE9DDAK1BRUUsthV4VqQ0CC/eYp
-         3Eng==
-X-Gm-Message-State: APjAAAVny7GYfe0SBVUOf7saYsc8x/Cq1HwIa7SnRGkp+cbUzc0HQ80L
-        S23FZdrxpcT7wMIMr4Xy4jO5E8Qj1N31PUeLlu8mkd87
-X-Google-Smtp-Source: APXvYqzeRG/uyzgFU9gsbGJOxvokb0v5sAg3EY0xn/Cbi7tu5fxDRkc9byd7neezSHJcWUe85BzUNRQz0zOhbAy7Xpo=
-X-Received: by 2002:a6b:148b:: with SMTP id 133mr5849872iou.81.1567607130936;
- Wed, 04 Sep 2019 07:25:30 -0700 (PDT)
+        Wed, 4 Sep 2019 10:27:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:56462 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729809AbfIDO1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:27:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8E7E1570;
+        Wed,  4 Sep 2019 07:27:47 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F7E93F59C;
+        Wed,  4 Sep 2019 07:27:46 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 15:27:37 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI: hv: Make functions static
+Message-ID: <20190904142737.GA28184@e121166-lin.cambridge.arm.com>
+References: <20190828221846.6672-1-kw@linux.com>
+ <20190829091713.27130-1-kw@linux.com>
+ <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-References: <1567523922.5576.57.camel@lca.pw> <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
- <20190903211747.GD2899@mit.edu> <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
- <CAK8P3a0AcPzuGeNFMW=ymO0wH_cmgnynLGYXGjqyrQb65o6aOw@mail.gmail.com>
- <CABeXuvq0_YsyuFY509XmwFsX6tX5EVHmWGuzHnSyOEX=9X6TFg@mail.gmail.com> <20190904125834.GA3044@mit.edu>
-In-Reply-To: <20190904125834.GA3044@mit.edu>
-From:   Deepa Dinamani <deepa.kernel@gmail.com>
-Date:   Wed, 4 Sep 2019 07:25:19 -0700
-Message-ID: <CABeXuvoKE4VrnAcHff+veyds+JbqzrUtYxBJ4tUv3eaUsec0bw@mail.gmail.com>
-Subject: Re: "beyond 2038" warnings from loopback mount is noisy
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
-        Jeff Layton <jlayton@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DM6PR21MB13372349374A473FF98AD7BCCAA20@DM6PR21MB1337.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Sep 4, 2019, at 5:58 AM, Theodore Y. Ts'o <tytso@mit.edu> wrote:
->
->> On Tue, Sep 03, 2019 at 09:50:09PM -0700, Deepa Dinamani wrote:
->> If we don't care to warn about the timestamps that are clamped in
->> memory, maybe we could just warn when they are being written out.
->> Would something like this be more acceptable? I would also remove the
->> warning in ext4.h. I think we don't have to check if the inode is 128
->> bytes here (Please correct me if I am wrong). If this looks ok, I can
->> post this.
->
-> That's better, but it's going to be misleading in many cases.  The
-> inode's extra size field is 16 or larger, there will be enough space
-> for the timestamps, so talking about "timestamps on this inode beyond
-> 2038" when ext4 is unable to expand it from say, 24 to 32, won't be
-> true.  Certain certain features won't be available, yes --- such as
-> project-id-based quotas, since there won't be room to store the
-> project ID.  However, it's not going to impact the ability to store
-> timestamps beyond 2038.  The i_extra_isize field is not just about
-> timestamps!
+On Thu, Aug 29, 2019 at 03:50:47PM +0000, Haiyang Zhang wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Krzysztof Wilczynski <kswilczynski@gmail.com> On Behalf Of Krzysztof
+> > Wilczynski
+> > Sent: Thursday, August 29, 2019 2:17 AM
+> > To: Bjorn Helgaas <helgaas@kernel.org>
+> > Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Stephen Hemminger
+> > <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>; Lorenzo
+> > Pieralisi <lorenzo.pieralisi@arm.com>; linux-pci@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-hyperv@vger.kernel.org
+> > Subject: [PATCH v3] PCI: hv: Make functions static
+> > 
+> > Functions hv_read_config_block(), hv_write_config_block() and
+> > hv_register_block_invalidate() are not used anywhere else and are local to
+> > drivers/pci/controller/pci-hyperv.c,
+> > and do not need to be in global scope, so make these static.
+> > 
+> > Resolve following compiler warning that can be seen when building with
+> > warnings enabled (W=1):
+> > 
+> > drivers/pci/controller/pci-hyperv.c:933:5: warning:
+> >  no previous prototype for ‘hv_read_config_block’
+> >   [-Wmissing-prototypes]
+> > 
+> > drivers/pci/controller/pci-hyperv.c:1013:5: warning:
+> >  no previous prototype for ‘hv_write_config_block’
+> >   [-Wmissing-prototypes]
+> > 
+> > drivers/pci/controller/pci-hyperv.c:1082:5: warning:
+> >  no previous prototype for ‘hv_register_block_invalidate’
+> >   [-Wmissing-prototypes]
+> > 
+> > Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> 
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-I understand that i_extra_isize is not just about timestamps. It=E2=80=99s
-evident from EXT4_FITS_IN_INODE(). I think we can check for
-EXT4_FITS_IN_INODE() here if that will consistently eliminates false
-positives.
+This patch should go via the net tree - the code it is fixing
+is queued there, I will drop this patch from the PCI review
+queue.
 
-But, I hear you. You think this warning is unnecessary. I think there
-are many file systems and I don=E2=80=99t think anybody would knows in=E2=
-=80=99s and
-outs of each one. I think if I=E2=80=99m mounting an ext4 fs and it has mix=
-ed
-sizes of inodes, I think I would at least expect a dmesg(with a hint
-on how to fix it) considering that this filesystem is restricted in
-more ways than just time. Is this the purpose of the warning you
-already have?:
+If it helps:
 
-        if (error && (mnt_count !=3D le16_to_cpu(sbi->s_es->s_mnt_count))) =
-{
-               ext4_warning(inode->i_sb, "Unable to expand inode %lu.
-Delete some EAs or run e2fsck.",
-
-Maybe there should be a warning, but it has nothing to do with just
-time. Do we already have this?
-
--Deepa
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
