@@ -2,132 +2,94 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53C7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D07CC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C163D2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FA9r/2CC"
+	by mail.kernel.org (Postfix) with ESMTP id 1DCC32087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567621251;
+	bh=umZgLcx4LyDobcUqiPkXfOxFI+Pw5k7wzlTFOTD1aLk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MjNQ2XrQNZ1NypOZFQVZm9uHXQpDfXPGmzFdv6algd9CHhUfe7lNlszTVjaLRAS3S
+	 MGgrnoIYn38+2Yhkgof9GQXRTPN541vQAKFq7Udi/s5/Aev4ApBGuMg/yyRRfoJxTM
+	 6wMnqfTtpUwbqN3xw7rjMrWQJft/cVsaQYA+mkxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389502AbfIDSHh (ORCPT
+        id S2390000AbfIDSUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 4 Sep 2019 14:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389500AbfIDSHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 14:07:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35269 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389066AbfIDSHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g7so22308921wrx.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:07:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0pNxF1eREpDVfAwH6P4Jz2ZR6a4tSQss5fAPg9xipcU=;
-        b=FA9r/2CC69zrS4nHuU7/ZJsIVHzlYShr6fmJ9cEc28SsCM0dUkvafTdZzwpdBAt2UJ
-         jgxR/dmssZ0xRcjzo8HoyhLmr8+B211eJV67GRxLPu86Kh08UJ1M1p+lCItWU9YBYMaP
-         APb5itG0fZ19ZkUDqEPz9SJpJu/LnXye6hZ5ZtVEqo8WP/O4eoRmU/L14TfW3+/K1Iaw
-         JTJFif5NJ9zgEIzRwPA2gZGm20IFW/hWZHk4qoXyXrYt3I5F4HQvmvCA10jlLa8lk3Vp
-         2MEc68xp6S66OT+1IObXV0L3CeWimjP7T92glaYZ4xeielSt4PxHZK5WPz9JnXCHmnLB
-         bDvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0pNxF1eREpDVfAwH6P4Jz2ZR6a4tSQss5fAPg9xipcU=;
-        b=oDsbi08iNejWDrNUyVWbiO4JQaTj4cekjFIfkAnqQONqAPmlTROmwudvqMuHUuRzTJ
-         KYy/2ZcvaBeJQfdn8mguM/DZ04a5iNZmoiSJDmgIqSliC8vz3QSnZ8lovaUatb5FOLp4
-         UjVfrJCIXbJecStKeb85Sbrg4NfLAUCrVHU21+mqxc+HiuG2o0kkgYRpLqALVgx8CCAj
-         FNcOp187n51Wt89PVM7UYA8gXllXmS55tMMqU9W1GvxEfvyRvOkQgmhGGtdJ0ZE5Fxi8
-         Nw2TG+m13uWza0FOvFXakzk+KXjz7XCNHCRs6YGZtZU6Oai+zE4ooxux4L9I3zQgcvc8
-         T2tg==
-X-Gm-Message-State: APjAAAWmnKbjXgvULAlOtreY5ABhFC/8WjQ6NwKBcWt7PXAcZ95QbpDS
-        9KLWFKK1FCx31CG2zJwk96vPHfI7wXMTe9m3sV4hzA==
-X-Google-Smtp-Source: APXvYqw1PiXtVVva1gwnaGI3eyRH6HOU+Beb+APJ8gT0kJZ5PRbpcdwK3VG10lRtE7999s45H+XmUEwn8pdTuluQXVU=
-X-Received: by 2002:a5d:6703:: with SMTP id o3mr10511544wru.335.1567620453261;
- Wed, 04 Sep 2019 11:07:33 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 386F92087E;
+        Wed,  4 Sep 2019 18:07:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567620456;
+        bh=umZgLcx4LyDobcUqiPkXfOxFI+Pw5k7wzlTFOTD1aLk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xv0QWF4EeKej/3gIDEyteIMtV52DrS6vuci6nSqHuvTYDmnPAGNSuo3cj7hpWAMZh
+         zIyzEN8fzG5P6B8MvqTD8ZqgNVHIxf7qx/z6UMDNTxrIifPAH0bpZ9tjFV2xzDyWNJ
+         UJm43juAwRS29SDG7MnPk8bbTM545R+Gv9zGrF80=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.19 65/93] stm class: Fix a double free of stm_source_device
+Date:   Wed,  4 Sep 2019 19:54:07 +0200
+Message-Id: <20190904175308.602533755@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
+References: <20190904175302.845828956@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190904180045.138513-1-irogers@google.com>
-In-Reply-To: <20190904180045.138513-1-irogers@google.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 4 Sep 2019 11:07:21 -0700
-Message-ID: <CAP-5=fXdZudoPWGASVVB0YKAok9hTBKAY43h7prSX7=1PPoR3w@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Fix include paths in ui
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apologies, this was an accidental resend of a patch that's already
-merged fa37bab6d7154658d8a35920513f9396587754cc.
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-Ian
+commit 961b6ffe0e2c403b09a8efe4a2e986b3c415391a upstream.
 
-On Wed, Sep 4, 2019 at 11:01 AM Ian Rogers <irogers@google.com> wrote:
->
-> These paths point to the wrong location but still work because they
-> get picked up by a -I flag that happens to direct to the correct
-> file. Fix paths to point to the correct location without -I flags.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/ui/browser.c      | 9 +++++----
->  tools/perf/ui/tui/progress.c | 2 +-
->  2 files changed, 6 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-> index f80c51d53565..d227d74b28f8 100644
-> --- a/tools/perf/ui/browser.c
-> +++ b/tools/perf/ui/browser.c
-> @@ -1,7 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -#include "../string2.h"
-> -#include "../config.h"
-> -#include "../../perf.h"
-> +#include "../util/util.h"
-> +#include "../util/string2.h"
-> +#include "../util/config.h"
-> +#include "../perf.h"
->  #include "libslang.h"
->  #include "ui.h"
->  #include "util.h"
-> @@ -14,7 +15,7 @@
->  #include "browser.h"
->  #include "helpline.h"
->  #include "keysyms.h"
-> -#include "../color.h"
-> +#include "../util/color.h"
->  #include <linux/ctype.h>
->  #include <linux/zalloc.h>
->
-> diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
-> index bc134b82829d..5a24dd3ce4db 100644
-> --- a/tools/perf/ui/tui/progress.c
-> +++ b/tools/perf/ui/tui/progress.c
-> @@ -1,6 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include <linux/kernel.h>
-> -#include "../cache.h"
-> +#include "../../util/cache.h"
->  #include "../progress.h"
->  #include "../libslang.h"
->  #include "../ui.h"
-> --
-> 2.22.0.770.g0f2c4a37fd-goog
->
+In the error path of stm_source_register_device(), the kfree is
+unnecessary, as the put_device() before it ends up calling
+stm_source_device_release() to free stm_source_device, leading to
+a double free at the outer kfree() call. Remove it.
+
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2fa ("stm class: Introduce an abstraction for System Trace Module devices")
+Link: https://lore.kernel.org/linux-arm-kernel/1563354988-23826-1-git-send-email-dingxiang@cmss.chinamobile.com/
+Cc: stable@vger.kernel.org # v4.4+
+Link: https://lore.kernel.org/r/20190821074955.3925-2-alexander.shishkin@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/hwtracing/stm/core.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -1098,7 +1098,6 @@ int stm_source_register_device(struct de
+ 
+ err:
+ 	put_device(&src->dev);
+-	kfree(src);
+ 
+ 	return err;
+ }
+
+
