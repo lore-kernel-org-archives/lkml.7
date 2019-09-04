@@ -2,120 +2,112 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E595C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD48C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1743F2168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C632168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567622743;
-	bh=4ayV0ZK7/gnUuB1eJ6I6aCRk4tV24nhjprhkcptmwNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UkyjKg+6rES3ZRmyWhjzP5BA0H/UT+mREl0gBIt+1NJ+1UBKCa+Zc7moY9GrM5BPa
-	 ccSrb3jQYaPMKEVc8Cr0Mrh34sv6yRUMkJM1JX0MykMXjyDysCFh5OwxCqU90u0Ua2
-	 TDNKj2wICt1IqFCPP0xw/GCxuZbzF9krAZsJ5esE=
+	s=default; t=1567622903;
+	bh=y/U9awkp5NHEKyToOdNfhASID49ak7lJitv2XnwM8ig=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LznO9wVQEWvLy3kIGh/nxAsL1oSV+eSatMClo/CW//RWrEncUtrLtRKsk4aGg9lYN
+	 Lhk7mndWKAEtcMwFRw86RQwY11skxeciWGu0aPUS62k9g8CR9YVwnhkMMUvLTDJ6ux
+	 XWFqpvFkHDBxS4R0nbJaeQ8VT6iYNocM1brrXDE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387780AbfIDSpm (ORCPT
+        id S2387652AbfIDSsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:45:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46416 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732798AbfIDSpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:45:41 -0400
-Received: from localhost (unknown [69.71.4.100])
+        id S1730410AbfIDSsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:48:21 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3145D2077B;
-        Wed,  4 Sep 2019 18:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03D9C2077B;
+        Wed,  4 Sep 2019 18:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567622740;
-        bh=4ayV0ZK7/gnUuB1eJ6I6aCRk4tV24nhjprhkcptmwNo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=clKMoHf4f+cqeoN2lRe+nXQJ55QFAC7eIIXFhRk37MSPC2Jlpa+itQHz66dFnA/HL
-         XFHAQfV9adz0Vc0sKI91K9iD51rA2E0njbmYkgIgXKNuSxD7Nhmo0jR/rUhypbVslc
-         Pe3Tc1dxzwH/mcO7C38BHiSU9x0to6ZxXW6ySvb0=
-Date:   Wed, 4 Sep 2019 13:45:38 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Carolyn Wyborny <carolyn.wyborny@intel.com>
-Subject: Re: [PATCH 2/2] PCI: Unify pci_dev_is_disconnected() and
- pci_dev_is_inaccessible()
-Message-ID: <20190904184538.GC103977@google.com>
-References: <20190904043633.65026-1-skunberg.kelsey@gmail.com>
- <20190904043633.65026-3-skunberg.kelsey@gmail.com>
- <20190904053523.7lmuoo5zempxtsdq@wunner.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904053523.7lmuoo5zempxtsdq@wunner.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1567622901;
+        bh=y/U9awkp5NHEKyToOdNfhASID49ak7lJitv2XnwM8ig=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=l48eplRtfDQ9dCB0z0/vjJSBpp4+nu72sQ5JB/xFiwEi+5YkL02O902322DNOoXq0
+         2o6b81X9JJkXjkuTU3+Rlwzma+WoPy3wed9pWDdYoHBGHF78R5LfS/3ZeheTMIWMgh
+         bKmluPnWE7bN+EqOrCD1L/bEcjgC3ET+et+hF2Yw=
+Date:   Wed, 4 Sep 2019 11:48:20 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     zhong jiang <zhongjiang@huawei.com>, mhocko@kernel.org,
+        anshuman.khandual@arm.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+Subject: Re: [PATCH] mm: Unsigned 'nr_pages' always larger than zero
+Message-Id: <20190904114820.42d9c4daf445ded3d0da52ab@linux-foundation.org>
+In-Reply-To: <5505fa16-117e-8890-0f48-38555a61a036@suse.cz>
+References: <1567592763-25282-1-git-send-email-zhongjiang@huawei.com>
+        <5505fa16-117e-8890-0f48-38555a61a036@suse.cz>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Carolyn, author of 17a402a0075c]
+On Wed, 4 Sep 2019 13:24:58 +0200 Vlastimil Babka <vbabka@suse.cz> wrote:
 
-On Wed, Sep 04, 2019 at 07:35:23AM +0200, Lukas Wunner wrote:
-> On Tue, Sep 03, 2019 at 10:36:35PM -0600, Kelsey Skunberg wrote:
-> > Change pci_dev_is_disconnected() call inside pci_dev_is_inaccessible() to:
-> > 
-> > 	pdev->error_state == pci_channel_io_perm_failure
-> > 
-> > Change remaining pci_dev_is_disconnected() calls to
-> > pci_dev_is_inaccessible() calls.
+> On 9/4/19 12:26 PM, zhong jiang wrote:
+> > With the help of unsigned_lesser_than_zero.cocci. Unsigned 'nr_pages"'
+> > compare with zero. And __get_user_pages_locked will return an long value.
+> > Hence, Convert the long to compare with zero is feasible.
 > 
-> I don't think that's a good idea because it introduces a config space read
-> (for the vendor ID) in places where we don't want that.  E.g., after the
-> check of pdev->error_state, a regular config space read may take place and
-> if that returns all ones, we may already be able to determine that the
-> device is inaccessible, obviating the need for a vendor ID check.
+> It would be nicer if the parameter nr_pages was long again instead of unsigned
+> long (note there are two variants of the function, so both should be changed).
 
-Oh, I think I see what you mean: Previously pci_read_config_byte() et
-al called pci_dev_is_disconnected(), which only checked
-dev->error_state.
+nr_pages should be unsigned - it's a count of pages!
 
-If we applied this patch, those sites would call
-pci_dev_is_inaccessible(), which would check error_state and then (in
-the common case where we haven't set error_state) do a config read of
-the vendor ID.
+The bug is that __get_user_pages_locked() returns a signed long which
+can be a -ve errno.
 
-So we would basically double the config access overhead because we'd
-be doing an extra read of the vendor ID before every access.  That
-indeed doesn't seem practical.
+I think it's best if __get_user_pages_locked() is to get itself a new
+local with the same type as its return value.  Something like:
 
-I think what we need to figure out is whether we really need two
-interfaces (one that looks only at dev->error_state and a second that
-looks at dev->error_state and also reads the vendor ID).  If we do
-need both, then I think we need a little guidance in the function
-comments about when to use one vs the other.
+--- a/mm/gup.c~a
++++ a/mm/gup.c
+@@ -1450,6 +1450,7 @@ static long check_and_migrate_cma_pages(
+ 	bool drain_allow = true;
+ 	bool migrate_allow = true;
+ 	LIST_HEAD(cma_page_list);
++	long ret;
+ 
+ check_again:
+ 	for (i = 0; i < nr_pages;) {
+@@ -1511,17 +1512,18 @@ check_again:
+ 		 * again migrating any new CMA pages which we failed to isolate
+ 		 * earlier.
+ 		 */
+-		nr_pages = __get_user_pages_locked(tsk, mm, start, nr_pages,
++		ret = __get_user_pages_locked(tsk, mm, start, nr_pages,
+ 						   pages, vmas, NULL,
+ 						   gup_flags);
+ 
+-		if ((nr_pages > 0) && migrate_allow) {
++		nr_pages = ret;
++		if (ret > 0 && migrate_allow) {
+ 			drain_allow = true;
+ 			goto check_again;
+ 		}
+ 	}
+ 
+-	return nr_pages;
++	return ret;
+ }
+ #else
+ static long check_and_migrate_cma_pages(struct task_struct *tsk,
 
-There are only a few uses of pci_device_is_present() (which looks at
-dev->error_state and also reads the vendor ID) and they were added
-here:
 
-  8496e85c20e7 ("PCI / tg3: Give up chip reset and carrier loss handling if PCI device is not present")
-  17a402a0075c ("igb: Fixes needed for surprise removal support")
-  6db28eda2660 ("nvme/pci: Disable on removal when disconnected")
-  b8a62d540240 ("ACPI / hotplug / PCI: Use pci_device_is_present()")
-  4ebe34503baa ("ACPI / hotplug / PCI: Check for new devices on enabled slots")
-  a6a64026c0cd ("PCI: Recognize D3cold in pci_update_current_state()")
-
-The ACPI and PCI core uses are basically enumeration-type things so
-that mostly makes sense to me.
-
-I'm not so sure about the driver uses though.  I wonder if those could
-be better handled by having the drivers check for ~0 error response
-data from MMIO and config reads.
-
-Bjorn
