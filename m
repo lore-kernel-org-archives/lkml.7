@@ -2,236 +2,148 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41941C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0912C3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1363621897
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:58:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pYFQLhMo"
+	by mail.kernel.org (Postfix) with ESMTP id BD34522DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 00:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfIDA6e (ORCPT
+        id S1727787AbfIDA6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 20:58:34 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39689 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbfIDA6d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 20:58:33 -0400
-Received: by mail-ed1-f66.google.com with SMTP id u6so14786960edq.6;
-        Tue, 03 Sep 2019 17:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=96k3Ap6WgO1ubCZcnQYSOq5Fr6vkCvjWMlxPWHE7mDg=;
-        b=pYFQLhMoijP7Erg+oZF4nfoYi8XoHLvkNJI/nc6PcR14Pzz+yx+gC7xAtPj8RZ3Di/
-         dufXhWzuZSq0mtmDnLFLUvgPJZ3ALLyCn4ZcCQdUOnlSZHeAsM31Q1U0Goq6T5Cnd6m7
-         IIjVcoKNfKwRsIcFk7vK5Zdwv/fsZhg+tEsPdEwgsfeuaxRMaFBkEh0/GH56rs5rH8pl
-         YMWR43dWvgeUGtr0trLgmmiX2mc26aC1DWMSe3mR6N117vE67+AJSupANu2Z4RuwyMKu
-         Kzr/OZNWq+vw9Nzotn6+aRvZucNWPsZlaNJP4QyNm6/00GAPn9DJTNK67NOXD4daPWfZ
-         DoWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=96k3Ap6WgO1ubCZcnQYSOq5Fr6vkCvjWMlxPWHE7mDg=;
-        b=NwlLNkW402MTzcZQLDEFTA0RhjevHXmt8LtpcfAA1uoa5LG18/BMTmhyQtJSMdQIu0
-         GfCnBt4iYBnVCF/EjurgwO11JkYtczaET2QHCLMRut4uwdLXABnBvBVndrUXh9sTIZ0b
-         kLNWI6gMhHSL+V4MmSXIVmIPvFexhZOTVp31cT9PdeZL1Fw5SKiMf3A9k0idBev4D582
-         5MZiaI7XMbgOsMKrWHcT1VUuT8XbEgnbX38bmE47u9tBUNqzVxOy7L+LwS9+FQAkLO6l
-         ebqP+i2/iikRQrb3jZAOZ6cUNfSg7PxVbkXW2x+RyTgJqqnZZfROA+a2ZPzJpwmswunU
-         PTow==
-X-Gm-Message-State: APjAAAVg9CEhRpi/ns8HCWC2Uyc5IKZ2EsGm1XkElJOhZfPLrgVse7/h
-        pDU3ehGIwRRVLrkg92RVhzTUMXT8+Ge8NXvOFW4=
-X-Google-Smtp-Source: APXvYqxL7/6g4WdVoKygQkrH4jcXN6BTdspG9dGdMAlhilwJAGcSn0H2CM3jOBlSmOT2Dm8VejWdD185ViqKxfc4VSg=
-X-Received: by 2002:a50:ad5b:: with SMTP id z27mr25396902edc.252.1567558711317;
- Tue, 03 Sep 2019 17:58:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190830022542.8571-1-benchuanggli@gmail.com> <CAHp75Vfx4FukybSjQjiNNQpHUNQrUsvwOen4ibqxOONKTJNxww@mail.gmail.com>
-In-Reply-To: <CAHp75Vfx4FukybSjQjiNNQpHUNQrUsvwOen4ibqxOONKTJNxww@mail.gmail.com>
-From:   Ben Chuang <benchuanggli@gmail.com>
-Date:   Wed, 4 Sep 2019 08:58:19 +0800
-Message-ID: <CACT4zj_+7r=0pO-c4H_QzEJzY=pSJn5pQkAK-5bM+vR6u8qS3Q@mail.gmail.com>
-Subject: Re: [PATCH V7 5/5] mmc: host: sdhci-pci: Add Genesys Logic GL975x support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Michael K. Johnson" <johnsonm@danlj.org>,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 3 Sep 2019 20:58:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:46428 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727168AbfIDA6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 20:58:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76655344;
+        Tue,  3 Sep 2019 17:58:43 -0700 (PDT)
+Received: from entos-thunderx2-02.shanghai.arm.com (entos-thunderx2-02.shanghai.arm.com [10.169.40.54])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 91F0A3F246;
+        Tue,  3 Sep 2019 17:58:40 -0700 (PDT)
+From:   Jia He <justin.he@arm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Airlie <airlied@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Jia He <justin.he@arm.com>
+Subject: [PATCH] mm: fix double page fault on arm64 if PTE_AF is cleared
+Date:   Wed,  4 Sep 2019 08:58:31 +0800
+Message-Id: <20190904005831.153934-1-justin.he@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 6:05 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Fri, Aug 30, 2019 at 5:28 AM Ben Chuang <benchuanggli@gmail.com> wrote:
-> >
-> > From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-> >
-> > Add support for the GL9750 and GL9755 chipsets.
-> >
-> > Enable v4 mode and wait 5ms after set 1.8V signal enable for GL9750/
-> > GL9755. Fix the value of SDHCI_MAX_CURRENT register and use the vendor
-> > tuning flow for GL9750.
-> >
->
-> > Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
->
-> Usually last one for latest developer / submitter goes on.
->
-> > Co-developed-by: Michael K Johnson <johnsonm@danlj.org>
-> > Signed-off-by: Michael K Johnson <johnsonm@danlj.org>
->
->
-> > +#define GLI_MAX_TUNING_LOOP 40
->
->
-> > +static void gli_set_9750(struct sdhci_host *host)
-> > +{
-> > +       u32 driving_value = 0;
-> > +       u32 pll_value = 0;
-> > +       u32 sw_ctrl_value = 0;
-> > +       u32 misc_value = 0;
-> > +       u32 parameter_value = 0;
-> > +       u32 control_value = 0;
->
-> > +
->
-> Redundant blank line.
->
-> > +       u16 ctrl2 = 0;
->
-> Do you need these all assignments above?
->
-> > +       driving_value = sdhci_readl(host, SDHCI_GLI_9750_DRIVING);
-> > +       pll_value = sdhci_readl(host, SDHCI_GLI_9750_PLL);
-> > +       sw_ctrl_value = sdhci_readl(host, SDHCI_GLI_9750_SW_CTRL);
-> > +       misc_value = sdhci_readl(host, SDHCI_GLI_9750_MISC);
-> > +       parameter_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_PARAMETERS);
-> > +       control_value = sdhci_readl(host, SDHCI_GLI_9750_TUNING_CONTROL);
->
->
->
-> > +
-> > +       udelay(1);
->
-> This misses the answer to question why. Why this is needed and why
-> timeout is this long?
->
-> > +
-> > +       gl9750_wt_off(host);
-> > +}
->
-> > +static int __sdhci_execute_tuning_9750(struct sdhci_host *host, u32 opcode)
-> > +{
-> > +       int i;
->
-> > +       int rx_inv = 0;
->
-> Duplicate assignment.
->
-> > +
-> > +       for (rx_inv = 0; rx_inv < 2; rx_inv++) {
->
-> > +               if (rx_inv & 0x1)
-> > +                       gli_set_9750_rx_inv(host, true);
-> > +               else
-> > +                       gli_set_9750_rx_inv(host, false);
->
-> gli_set_...(host, !!rx_inv);
->
-> > +
-> > +               sdhci_start_tuning(host);
-> > +
-> > +               for (i = 0; i < GLI_MAX_TUNING_LOOP; i++) {
-> > +                       u16 ctrl;
-> > +
-> > +                       sdhci_send_tuning(host, opcode);
-> > +
-> > +                       if (!host->tuning_done) {
->
-> > +                               if (rx_inv == 1) {
->
-> It's an invariant to the loop. So, you may do this check after outter loop.
->
-> > +                                       pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
-> > +                                               mmc_hostname(host->mmc));
->
-> > +                                       sdhci_abort_tuning(host, opcode);
->
-> It will also de-duplicates this call.
->
-> > +                                       return -ETIMEDOUT;
-> > +                               }
-> > +                               sdhci_abort_tuning(host, opcode);
-> > +                               break;
-> > +                       }
->
-> > +               }
-> > +       }
-> > +
-> > +       pr_info("%s: Tuning failed, falling back to fixed sampling clock\n",
-> > +               mmc_hostname(host->mmc));
-> > +       sdhci_reset_tuning(host);
-> > +       return -EAGAIN;
-> > +}
->
-> > +static void sdhci_gli_voltage_switch(struct sdhci_host *host)
-> > +{
->
-> Any comment why?
->
-> > +       usleep_range(5000, 5500);
-> > +}
->
-> > +static u32 sdhci_gl9750_readl(struct sdhci_host *host, int reg)
-> > +{
-> > +       u32 value;
-> > +
-> > +       value = readl(host->ioaddr + reg);
->
-> > +       if (unlikely(reg == SDHCI_MAX_CURRENT)) {
-> > +               if (!(value & 0xff))
-> > +                       value |= 0xc8;
-> > +       }
->
-> if (a) {
->  if (b) {
->    ...
->  }
-> }
->
-> is the same as
->
-> if (a && b) {
->  ...
-> }
->
-> > +       return value;
-> > +}
->
-> > +#define PCI_DEVICE_ID_GLI_9755         0x9755
-> > +#define PCI_DEVICE_ID_GLI_9750         0x9750
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+When we tested pmdk unit test [1] vmmalloc_fork TEST1 in arm64 guest, there
+will be a double page fault in __copy_from_user_inatomic of cow_user_page.
 
-Hi, Andy,
+Below call trace is from arm64 do_page_fault for debugging purpose
+[  110.016195] Call trace:
+[  110.016826]  do_page_fault+0x5a4/0x690
+[  110.017812]  do_mem_abort+0x50/0xb0
+[  110.018726]  el1_da+0x20/0xc4
+[  110.019492]  __arch_copy_from_user+0x180/0x280
+[  110.020646]  do_wp_page+0xb0/0x860
+[  110.021517]  __handle_mm_fault+0x994/0x1338
+[  110.022606]  handle_mm_fault+0xe8/0x180
+[  110.023584]  do_page_fault+0x240/0x690
+[  110.024535]  do_mem_abort+0x50/0xb0
+[  110.025423]  el0_da+0x20/0x24
 
-Thank you for your comments to make the code better.
-Waiting to see if Adrian has any other comments.
+The pte info before __copy_from_user_inatomic is(PTE_AF is cleared):
+[ffff9b007000] pgd=000000023d4f8003, pud=000000023da9b003, pmd=000000023d4b3003, pte=360000298607bd3
 
-Best Regards,
-Ben Chuang
+The keypoint is: we don't always have a hardware-managed access flag on
+arm64.
+
+The root cause is in copy_one_pte, it will clear the PTE_AF for COW
+pages. Generally, when it is accessed by user, the COW pages will be set
+as accessed(PTE_AF bit on arm64) by hardware if hardware feature is
+supported. But on some arm64 platforms, the PTE_AF needs to be set by
+software.
+
+This patch fix it by calling pte_mkyoung. Also, the parameter is
+changed because vmf should be passed to cow_user_page()
+
+[1] https://github.com/pmem/pmdk/tree/master/src/test/vmmalloc_fork
+
+Reported-by: Yibo Cai <Yibo.Cai@arm.com>
+Signed-off-by: Jia He <justin.he@arm.com>
+---
+ mm/memory.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/mm/memory.c b/mm/memory.c
+index e2bb51b6242e..b1f9ace2e943 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2140,7 +2140,8 @@ static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
+ 	return same;
+ }
+ 
+-static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
++static inline void cow_user_page(struct page *dst, struct page *src,
++				struct vm_fault *vmf)
+ {
+ 	debug_dma_assert_idle(src);
+ 
+@@ -2152,20 +2153,30 @@ static inline void cow_user_page(struct page *dst, struct page *src, unsigned lo
+ 	 */
+ 	if (unlikely(!src)) {
+ 		void *kaddr = kmap_atomic(dst);
+-		void __user *uaddr = (void __user *)(va & PAGE_MASK);
++		void __user *uaddr = (void __user *)(vmf->address & PAGE_MASK);
++		pte_t entry;
+ 
+ 		/*
+ 		 * This really shouldn't fail, because the page is there
+ 		 * in the page tables. But it might just be unreadable,
+ 		 * in which case we just give up and fill the result with
+-		 * zeroes.
++		 * zeroes. If PTE_AF is cleared on arm64, it might
++		 * cause double page fault here. so makes pte young here
+ 		 */
++		if (!pte_young(vmf->orig_pte)) {
++			entry = pte_mkyoung(vmf->orig_pte);
++			if (ptep_set_access_flags(vmf->vma, vmf->address,
++				vmf->pte, entry, vmf->flags & FAULT_FLAG_WRITE))
++				update_mmu_cache(vmf->vma, vmf->address,
++						vmf->pte);
++		}
++
+ 		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE))
+ 			clear_page(kaddr);
+ 		kunmap_atomic(kaddr);
+ 		flush_dcache_page(dst);
+ 	} else
+-		copy_user_highpage(dst, src, va, vma);
++		copy_user_highpage(dst, src, vmf->address, vmf->vma);
+ }
+ 
+ static gfp_t __get_fault_gfp_mask(struct vm_area_struct *vma)
+@@ -2318,7 +2329,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+ 				vmf->address);
+ 		if (!new_page)
+ 			goto oom;
+-		cow_user_page(new_page, old_page, vmf->address, vma);
++		cow_user_page(new_page, old_page, vmf);
+ 	}
+ 
+ 	if (mem_cgroup_try_charge_delay(new_page, mm, GFP_KERNEL, &memcg, false))
+-- 
+2.17.1
+
