@@ -2,107 +2,138 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B644AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC827C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FA62168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:46:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567608361;
-	bh=4QsIpO9CHyCkHQFshPyEHuo3ebtygZDVtBBWomEIU0Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZeDlFKgflY0iHLQVP2OGjTUcKX8zYYG6ErscAkclu1UyYAXM4Y3hnqmgbOQhnc8Jt
-	 qwp7nJNSLOhj7emi/c9BCQ+i9xyQlwzAfhjzSAsqCnGNfZ6v5WMIv3t3AM2dHq5j+V
-	 AvaAZc3KIlKreNKMAcGGLU/aKx4j8NXRy8q7jeNw=
+	by mail.kernel.org (Postfix) with ESMTP id B1941208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqjoJjQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730914AbfIDOqA (ORCPT
+        id S1730937AbfIDOs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:46:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:3453 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730326AbfIDOp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:45:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 07:45:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="334232146"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga004.jf.intel.com with ESMTP; 04 Sep 2019 07:45:58 -0700
-Date:   Wed, 4 Sep 2019 08:44:27 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@fb.com>, Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-Message-ID: <20190904144426.GB21302@localhost.localdomain>
-References: <20190831000139.7662-1-logang@deltatee.com>
- <20190831152910.GA29439@localhost.localdomain>
- <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
- <20190903164620.GA20847@localhost.localdomain>
- <20190904060558.GA10849@lst.de>
+        Wed, 4 Sep 2019 10:48:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46902 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbfIDOsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:48:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m3so11346912pgv.13;
+        Wed, 04 Sep 2019 07:48:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Y0Way3KHGFmyr4IdZ55Bi63R1MS1mhVmJWvvJPi7ufE=;
+        b=WqjoJjQ8S4lX609PlOBqGbYMVGDW7BSa431Cl3izLPCn2DMGQleTv8LbHmsWiS7r8y
+         3JBCO4Y7rkL3QwMisIOFGqPHMRGV1eYsP2nTVd7+HwuE+3C0R0aiKGrpBfCK60fVcbX2
+         he68y1N5zS8z7CyMnvMi5M+U7rBvjYxHV/cj1ewYaH+4V/YN13QxCf2oX0yCS/S5kPt5
+         HDYpFbswKqkb6MfUh8lIsVrnwnSBMUUb/2Xj7bVOnd+ieTuy4ee2NK1wYGtdpo1iHMRK
+         5pFsIVK7r+xOWL8aIhfOGEVEuZOWvZ6HNWXP9SlgVmFFA8hEu1/HHk4sys20eOt9tLql
+         6vHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Y0Way3KHGFmyr4IdZ55Bi63R1MS1mhVmJWvvJPi7ufE=;
+        b=amc4aK7FNMxTHqU77ZOucxP5vekC6XzWBMq9w51K31P60UlyGx91KBibpxYZPTRQpf
+         GqytsfvgWe5XlGO7nG0en0Cb8MzkJ4iYJ4j3PufuOT1Tj6bEeRQ56eJ3NVj2g3rFHpL8
+         RXTHQFPX0TJSsaAGmKr/iivVNRoMeueN5E8EQXN8JOYsMbrRPO0v4dJF4a4ylTr0peFV
+         oHlsmf0zcc3U1c90fZd3pTkVDTJWqD7PzQiZmnqCvE53jysu3nwxioKWufx0OoFRI5E6
+         k9vvl+l1xl4RTnj/GkRxLwQMnlb3DgH+PbXzjsraQgMh3QZNoZh0wNQOGwBFkD8H0VBx
+         rjqQ==
+X-Gm-Message-State: APjAAAUp33OBr9rIF9/hN8JyLjSie6hnxTzQlskQnry62z6yqvJMqv2k
+        9a2K/NyalrlMkoj6duJ4fTE=
+X-Google-Smtp-Source: APXvYqxW6zv9Q8MMQUyy/57EoTj5mk4de72N7EcxPzQhS0BTGdBSndFBF7RHG+eJ6QvAnkqTlGVRzA==
+X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr5434986pjq.143.1567608534744;
+        Wed, 04 Sep 2019 07:48:54 -0700 (PDT)
+Received: from localhost ([121.137.63.184])
+        by smtp.gmail.com with ESMTPSA id m4sm21145034pgs.71.2019.09.04.07.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 07:48:53 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Wed, 4 Sep 2019 23:48:50 +0900
+To:     Qian Cai <cai@lca.pw>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190904144850.GA8296@tigerII.localdomain>
+References: <20190903132231.GC18939@dhcp22.suse.cz>
+ <1567525342.5576.60.camel@lca.pw>
+ <20190903185305.GA14028@dhcp22.suse.cz>
+ <1567546948.5576.68.camel@lca.pw>
+ <20190904061501.GB3838@dhcp22.suse.cz>
+ <20190904064144.GA5487@jagdpanzerIV>
+ <20190904065455.GE3838@dhcp22.suse.cz>
+ <20190904071911.GB11968@jagdpanzerIV>
+ <20190904074312.GA25744@jagdpanzerIV>
+ <1567599263.5576.72.camel@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190904060558.GA10849@lst.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567599263.5576.72.camel@lca.pw>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:05:58AM +0200, Christoph Hellwig wrote:
-> On Tue, Sep 03, 2019 at 10:46:20AM -0600, Keith Busch wrote:
-> > Could we possibly make /dev/nvmeX be a subsystem handle without causing
-> > trouble for anyone? This would essentially be the same thing as today
-> > for non-CMIC controllers with a device-per-controller and only affects
-> > the CMIC ones.
+On (09/04/19 08:14), Qian Cai wrote:
+> > Plus one more check - waitqueue_active(&log_wait). printk() adds
+> > pending irq_work only if there is a user-space process sleeping on
+> > log_wait and irq_work is not already scheduled. If the syslog is
+> > active or there is noone to wakeup then we don't queue irq_work.
 > 
-> A per-subsyste character device doesn't make sense, as a lot of admin
-> command require a specific controller.
-
-Yeah, I was hoping to provide something special for CMIC controllers
-so you can do path specific admin, but that looks sure to break user
-space.
-
-> If this really is an isue for people we'll just need to refcount the
-> handle allocation.  That is:
+> Another possibility for this potential livelock is that those printk() from
+> warn_alloc(), dump_stack() and show_mem() increase the time it needs to process
+> build_skb() allocation failures significantly under memory pressure. As the
+> result, ksoftirqd() could be rescheduled during that time via a different CPU
+> (this is a large x86 NUMA system anyway),
 > 
->  - nvme_init_ctrl allocates a new nvme_instance or so object, which
->    does the ida_simple_get.
->  - we allocate a new subsystem that reuses the handle and grabs
->    a reference in nvme_init_subsystem, then if we find an existing
->    subsystem we drop that reference again.
->  - last free of a ctrl or subsystem also drops a reference, with
->    the final free releasing the ida
+> [83605.577256][   C31]  run_ksoftirqd+0x1f/0x40
+> [83605.577256][   C31]  smpboot_thread_fn+0x255/0x440
+> [83605.577256][   C31]  kthread+0x1df/0x200
+> [83605.577256][   C31]  ret_from_fork+0x35/0x40
 
-Let me step through an example:
+Hum hum hum...
 
-  Ctrl A gets instance 0.
+So I can, _probably_, think of several patches.
 
-  Its subsystem gets the same instance, and takes ref count on it:
-  all namespaces in this subsystem will use '0'.
+First, move wake_up_klogd() back to console_unlock().
 
-  Ctrl B gets instance 1, and it's in the same subsystem as Ctrl A so
-  no new subsytem is allocated.
+Second, move `printk_pending' out of per-CPU region and make it global.
+So we will have just one printk irq_work scheduled across all CPUs;
+currently we have one irq_work per CPU. I think I sent a patch a long
+long time ago, but we never discussed it, as far as I remember.
 
-  Ctrl A is disconnected, dropping its ref on instance 0, but the
-  subsystem still has its refcount, making it unavailable.
+> In addition, those printk() will deal with console drivers or even a networking
+> console, so it is probably not unusual that it could call irq_exit()-
+>__do_softirq() at one point and then this livelock.
 
-  Ctrl A is reconnected, and allocates instance 2 because 0 is still in
-  use.
+Do you use netcon? Because this, theoretically, can open up one more
+vector. netcon allocates skbs from ->write() path. We call con drivers'
+->write() from printk_safe context, so should netcon skb allocation
+warn we will scedule one more irq_work on that CPU to flush per-CPU
+printk_safe buffer.
 
-Now all the namespaces in this subsystem are prefixed with nvme0, but no
-controller exists with the same prefix. We still have inevitable naming
-mismatch, right?
+If this is the case, then we can stop calling console_driver() under
+printk_safe. I sent a patch a while ago, but we agreed to keep the
+things the way they are, fot the time being.
+
+Let me think more.
+
+	-ss
