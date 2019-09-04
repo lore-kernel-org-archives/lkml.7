@@ -2,97 +2,135 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D7FC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC88BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEA5208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DDA3208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:46:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bxpw6B/g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B3ZwBoxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfIDUpA (ORCPT
+        id S1730417AbfIDUqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:45:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38642 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729316AbfIDUo7 (ORCPT
+        Wed, 4 Sep 2019 16:46:55 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44947 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfIDUqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:44:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84Kh54m153884;
-        Wed, 4 Sep 2019 20:44:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=CMHKj2GIWVRIBx+G51xYXdDUsZp6Rgv4DQI91QouWAc=;
- b=bxpw6B/gKwT4HLmwUQRwgNAnz0YXhHaNBgTGlpfq+Sf/Naor0cn6oY5D65g75x0gaJ/T
- YGTOllBk9NzMfaWtNn4xsCXYSSbjZtmcCI9K2HGrKd6pInqSykEN+zlH8MIyc1GEo1k3
- uOAYFJ+6Xh/rBfwb6QmrbH5fMEYRs9aIgvASpA03s6DrNXYEXDi0kG1BWBfDdIlPyeDq
- pIlRqDMKZnfDh2vxl9idRmUHOnhhM6Ivg0pRJEhCfnto4Z/mb0Fqe5XvccOslZhaoC4c
- 0z/hTlkrfDM+1Ceb4h1wR6z1NpaXAPiVsI+0C5ISGdB4JITFvro5CfHrBzGbzM51MNH1 SA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2utmj100ee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 20:44:52 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84KX9xS047583;
-        Wed, 4 Sep 2019 20:44:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2usu529w7p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 20:44:51 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x84KimGx001287;
-        Wed, 4 Sep 2019 20:44:48 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Sep 2019 13:44:47 -0700
-Date:   Wed, 4 Sep 2019 16:44:46 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Florian Schmidt <florian.schmidt@nutanix.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH 1/2] trace-vmscan-postprocess: sync with tracepoints
- updates
-Message-ID: <20190904204446.kceqzrg4zmnw3mm6@ca-dmjordan1.us.oracle.com>
-References: <20190903111342.17731-1-florian.schmidt@nutanix.com>
- <20190903111342.17731-2-florian.schmidt@nutanix.com>
+        Wed, 4 Sep 2019 16:46:55 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so20300pfn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 13:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7FpVgaIhgimDRqpweFDbMiGBjSsk/JazcD80okKL/K8=;
+        b=B3ZwBoxDNj5wp/W0+6EgPLtyn42FRM4lKEPuGul/INFNVDV0d6vrjAfI74kiYbBjwb
+         RtwOAFpFkp8ULzlYQBnaGau4RSDKiK2Sdq8Hjs6JHKbU5On8H56ARMSYggt77ImaOAXR
+         Phja5i1TBR6bjGzSRWjJc8EZqzoOHCuT1G+iocES8UWBNVeoOYiRY6HkgRLZvKh5M6Sb
+         WHzguaFI/2ByIIVLDKt6nFLW+FJbEXZiBcnjB+VvF1jsWXutZ6GLiXNq+3ly3QHxD/gn
+         UhmFNW0RtNQQoSqk6dbh3isqFmSp5AkCvUY6fi5kmUt8vL3neywbb2V1USK8/dnNvSiJ
+         Cxug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7FpVgaIhgimDRqpweFDbMiGBjSsk/JazcD80okKL/K8=;
+        b=U1o2AC8iiOimRN62vmv4Y1B3sXSOvfWn1ZHjfdMq7hm1JsBmPgJ0/jVLaDYgvW9ijG
+         CXFCaSy9wItvk86pU+9XLGqUaE2EaIW7ZRWF4OpHYP5fXb+dWHB/nKwT18PUcAinLE9w
+         TgNpZwpWYlaE5L5/C77KEqGaGvd1XcyPnr3tD17o0+2SHgTks+RqekiM+pAyCLy6Bq/l
+         D+YrixO9m1o/7OLPe4Sk25vnBiCPUrm1kxMWxdKXNXrj40DtffyG4d8M4FthEBDWFUpg
+         xb34rho51ZgsvXyHwIbdVTTpgh7kE0pYLs4ecvKt8tb9Vr+vkQuKuRyj8Hj51hLuL+gh
+         56bA==
+X-Gm-Message-State: APjAAAXDyABEM6CySlZyVF69k1vcfwST9fJgA1BAKV0ypVyLM9TujER8
+        sqjkaGDJ0biUuBiK3167B+RIaw==
+X-Google-Smtp-Source: APXvYqx6p9POXMCXKO+7CZNt3OeG669blGTjX7rgKqWleU9xBmKU6iit1LtXZOmDeIMaYc7+Sw+ZcA==
+X-Received: by 2002:a63:66c5:: with SMTP id a188mr49168pgc.127.1567630014448;
+        Wed, 04 Sep 2019 13:46:54 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id br18sm3019455pjb.20.2019.09.04.13.46.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 13:46:53 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 13:46:49 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     broonie@kernel.org, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, eric@anholt.net, wahrenst@gmx.net,
+        shc_work@mail.ru, agross@kernel.org, khilman@baylibre.com,
+        matthias.bgg@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, avifishman70@gmail.com, tmaimon77@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, kgene@kernel.org, krzk@kernel.org,
+        andi@etezian.org, palmer@sifive.com, paul.walmsley@sifive.com,
+        baohua@kernel.org, mripard@kernel.org, wens@csie.org,
+        ldewangan@nvidia.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, yamada.masahiro@socionext.com,
+        michal.simek@xilinx.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
+        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH -next 23/36] spi: spi-qcom-qspi: use
+ devm_platform_ioremap_resource() to simplify code
+Message-ID: <20190904204649.GF580@tuxbook-pro>
+References: <20190904135918.25352-1-yuehaibing@huawei.com>
+ <20190904135918.25352-24-yuehaibing@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903111342.17731-2-florian.schmidt@nutanix.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=998
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909040204
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909040204
+In-Reply-To: <20190904135918.25352-24-yuehaibing@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 11:14:12AM +0000, Florian Schmidt wrote:
-> mm_vmscan_{direct_reclaim_begin,wakeup_kswapd,lru_isolate,lru_shrink_active}
-> changed their output to the point where the script throws warnings and
-> errors. Update it to be properly in line with those changes.
+On Wed 04 Sep 06:59 PDT 2019, YueHaibing wrote:
 
-Could use the appropriate Fixes tags here.
+> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> This is detected by coccinelle.
+> 
 
-> Signed-off-by: Florian Schmidt <florian.schmidt@nutanix.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/spi/spi-qcom-qspi.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+> index a0ad73f..250fd60 100644
+> --- a/drivers/spi/spi-qcom-qspi.c
+> +++ b/drivers/spi/spi-qcom-qspi.c
+> @@ -424,7 +424,6 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>  {
+>  	int ret;
+>  	struct device *dev;
+> -	struct resource *res;
+>  	struct spi_master *master;
+>  	struct qcom_qspi *ctrl;
+>  
+> @@ -440,8 +439,7 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+>  
+>  	spin_lock_init(&ctrl->lock);
+>  	ctrl->dev = dev;
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	ctrl->base = devm_ioremap_resource(dev, res);
+> +	ctrl->base = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(ctrl->base)) {
+>  		ret = PTR_ERR(ctrl->base);
+>  		goto exit_probe_master_put;
+> -- 
+> 2.7.4
+> 
+> 
