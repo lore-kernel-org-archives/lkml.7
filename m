@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7F9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B28DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84336206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00AF9206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621075;
-	bh=LUeoebDSkEmkqPZKQIgyABnmVp4brEV6jnYkhq/O4BY=;
+	s=default; t=1567621085;
+	bh=khsVp9cYfjAoDIzzdFzI30k+Zpgo/KBMB8i/V8V/Kx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QNirsdtGusOnRuBLEnM67OddSUesGWqS2y17tloGJDJl+1UGUaNSlrbEkAjE5oqyF
-	 I4vt79gzF6nvJB7Ff4XxPvtCDLY9guZBSsGPvzK8o/qUzre8hg1d/U4G9Q5X+hntql
-	 cpzW8n8NWYtKu95QT56U81ILocCwcZfPLIc+FJo8=
+	b=VYY/RqmaVMdA2ha3V3srGqztNGcBWC9HuVuelpN9vyAfu7kEOFAGjiG3HXe0dNXFz
+	 vaQBtPKGrfXkeXm8ISalMB3+5JcUpILh4zBCvINRNiSb/QQ0pdpMGR3ffmxnK4IrJQ
+	 IEf3wo9LKoJNmBhDlQ6M1hQUGb6d74+08iXv8Ric=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389964AbfIDSRz (ORCPT
+        id S2390158AbfIDSSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:18:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389848AbfIDSMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:12:06 -0400
+        id S2388806AbfIDSLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:11:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 986142339E;
-        Wed,  4 Sep 2019 18:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DE9322DBF;
+        Wed,  4 Sep 2019 18:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620726;
-        bh=LUeoebDSkEmkqPZKQIgyABnmVp4brEV6jnYkhq/O4BY=;
+        s=default; t=1567620705;
+        bh=khsVp9cYfjAoDIzzdFzI30k+Zpgo/KBMB8i/V8V/Kx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KntBZLugfoTdxV59w8na1C7LmiuqJ/BZR91nhO8ZseKUELnQ0yoFyZ+2u5vCYmzEu
-         YNOHiqUjz8XTO33aWbRE8TVZXz19FQ9ugnoum7aYDxbcvyJC+DITkwJV918zOUqwS/
-         1Mg8CF51WaXvBS01+rOOiDqHKp6RyiX6VtnqRr7g=
+        b=YcR7kqhDX02s4ehywRrgZWCMZERdQqiIa52VRnp0wBVxSeX/r7GbjWjZ3QAyXyTgZ
+         yBdMMUHrK4sHFcDRwCJPmorpOb0C5o1I5r45kFfWclbJHvgH8za+8Vp9yeXITrZq8K
+         BN87+6Hw98Ee4WZWt+CEcSLp7JQX7nga8UV7UQNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bandan Das <bsd@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.2 073/143] x86/apic: Include the LDR when clearing out APIC registers
-Date:   Wed,  4 Sep 2019 19:53:36 +0200
-Message-Id: <20190904175316.912884373@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 065/143] ALSA: usb-audio: Fix invalid NULL check in snd_emuusb_set_samplerate()
+Date:   Wed,  4 Sep 2019 19:53:28 +0200
+Message-Id: <20190904175316.613456974@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,49 +58,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bandan Das <bsd@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 558682b5291937a70748d36fd9ba757fb25b99ae upstream.
+commit 6de3c9e3f6b3eaf66859e1379b3f35dda781416b upstream.
 
-Although APIC initialization will typically clear out the LDR before
-setting it, the APIC cleanup code should reset the LDR.
+The quirk function snd_emuusb_set_samplerate() has a NULL check for
+the mixer element, but this is useless in the current code.  It used
+to be a check against mixer->id_elems[unitid] but it was changed later
+to the value after mixer_eleme_list_to_info() which is always non-NULL
+due to the container_of() usage.
 
-This was discovered with a 32-bit KVM guest jumping into a kdump
-kernel. The stale bits in the LDR triggered a bug in the KVM APIC
-implementation which caused the destination mapping for VCPUs to be
-corrupted.
+This patch fixes the check before the conversion.
 
-Note that this isn't intended to paper over the KVM APIC bug. The kernel
-has to clear the LDR when resetting the APIC registers except when X2APIC
-is enabled.
+While we're at it, correct a typo in the comment in the function,
+too.
 
-This lacks a Fixes tag because missing to clear LDR goes way back into pre
-git history.
-
-[ tglx: Made x2apic_enabled a function call as required ]
-
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190826101513.5080-3-bsd@redhat.com
+Fixes: 8c558076c740 ("ALSA: usb-audio: Clean up mixer element list traverse")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/apic.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/usb/mixer_quirks.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1152,6 +1152,10 @@ void clear_local_APIC(void)
- 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
- 	v = apic_read(APIC_LVT1);
- 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
-+	if (!x2apic_enabled()) {
-+		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
-+		apic_write(APIC_LDR, v);
-+	}
- 	if (maxlvt >= 4) {
- 		v = apic_read(APIC_LVTPC);
- 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1155,17 +1155,17 @@ void snd_emuusb_set_samplerate(struct sn
+ {
+ 	struct usb_mixer_interface *mixer;
+ 	struct usb_mixer_elem_info *cval;
+-	int unitid = 12; /* SamleRate ExtensionUnit ID */
++	int unitid = 12; /* SampleRate ExtensionUnit ID */
+ 
+ 	list_for_each_entry(mixer, &chip->mixer_list, list) {
+-		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+-		if (cval) {
++		if (mixer->id_elems[unitid]) {
++			cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+ 			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
+ 						    cval->control << 8,
+ 						    samplerate_id);
+ 			snd_usb_mixer_notify_id(mixer, unitid);
++			break;
+ 		}
+-		break;
+ 	}
+ }
+ 
 
 
