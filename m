@@ -2,196 +2,289 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E82C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1793BC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B676922CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:17:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567628228;
-	bh=IRlgNYTNSwFPj1cdbWfjibr8ZzYIdPQrh+rK7T1XUHI=;
-	h=Subject:From:To:Cc:Date:List-ID:From;
-	b=sWxT/hBnVaHSHejcMX0isqRNflqYKgpYqZIFcn+WmY53EugpEQQ+y2MExncX+3SOE
-	 hGmq4JWJaxwl3LSLJZttWCmgfoNgHLPVLHIjiVvwLnTcT4Jd26f5icCG7/QFBgkfx1
-	 37LfL4nJL/migobTVPfxq6UcsvfYQlrTlr50MZCg=
+	by mail.kernel.org (Postfix) with ESMTP id D80D52087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 20:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbfIDURI (ORCPT
+        id S1729957AbfIDUUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 16:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47162 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 16:20:17 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:60506 "EHLO mx2.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfIDURH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 16:17:07 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726834AbfIDUUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 16:20:16 -0400
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B0A2087E;
-        Wed,  4 Sep 2019 20:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567628226;
-        bh=IRlgNYTNSwFPj1cdbWfjibr8ZzYIdPQrh+rK7T1XUHI=;
-        h=Subject:From:To:Cc:Date:From;
-        b=vz4v7C1InUozBJY6dIHEifiAfNbTxRPOVsXo0oag2V0UTg5RV+FLXuh0G6OcPsSlv
-         FHXd1DklfrwLCeQm7C1H4FcOZXaXYMoyX6LLxCLErBvoDVY2B0N4+e7oQJX1dvdDAD
-         HRNCgdeFu9zZciUD7vNcegkXtq7uQWOvLQ+XFOCM=
-Message-ID: <1567628224.13841.4.camel@kernel.org>
-Subject: [PATCH] trace-cmd: Add proper KBUFFER_TYPE_TIME_STAMP handling
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Linux Trace Devel <linux-trace-devel@vger.kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 04 Sep 2019 15:17:04 -0500
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mx2.mailbox.org (Postfix) with ESMTPS id E41B0A0D17;
+        Wed,  4 Sep 2019 22:20:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
+        with ESMTP id 2Dhxv46xQ4FZ; Wed,  4 Sep 2019 22:20:04 +0200 (CEST)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        David Drysdale <drysdale@google.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Kees Cook <keescook@chromium.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: [PATCH v12 00/12] namei: openat2(2) path resolution restrictions
+Date:   Thu,  5 Sep 2019 06:19:21 +1000
+Message-Id: <20190904201933.10736-1-cyphar@cyphar.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Zanussi <zanussi@kernel.org>
+This patchset is being developed here:
+    <https://github.com/cyphar/linux/tree/resolveat/master>
 
-Kernel commit dc4e2801d400 (ring-buffer: Redefine the unimplemented
-RINGBUF_TYPE_TIME_STAMP) changed the way the ring buffer timestamps
-work - after that commit the previously unimplemented
-RINGBUF_TYPE_TIME_STAMP type causes the time delta to be used as a
-timestamp rather than a delta to be added to the timestamp.
+Patch changelog:
+ v12:
+  * Remove @how->reserved field from openat2(2), and instead use the
+    (struct, size) design for syscall extensions.
+  * Implement copy_struct_{to,from}_user() to unify (struct, size)
+    syscall extension designs (as well as make them slightly more
+    efficient by using memchr_inv() as well as using buffers and
+    avoiding repeated access_ok() checks for trailing byte operations).
+    * Port sched_setattr(), perf_event_attr(), and clone3() to use the
+      new helpers.
+ v11: <https://lore.kernel.org/lkml/20190820033406.29796-1-cyphar@cyphar.com/>
+      <https://lore.kernel.org/lkml/20190728010207.9781-1-cyphar@cyphar.com/>
+ v10: <https://lore.kernel.org/lkml/20190719164225.27083-1-cyphar@cyphar.com/>
+ v09: <https://lore.kernel.org/lkml/20190706145737.5299-1-cyphar@cyphar.com/>
+ v08: <https://lore.kernel.org/lkml/20190520133305.11925-1-cyphar@cyphar.com/>
+ v07: <https://lore.kernel.org/lkml/20190507164317.13562-1-cyphar@cyphar.com/>
+ v06: <https://lore.kernel.org/lkml/20190506165439.9155-1-cyphar@cyphar.com/>
+ v05: <https://lore.kernel.org/lkml/20190320143717.2523-1-cyphar@cyphar.com/>
+ v04: <https://lore.kernel.org/lkml/20181112142654.341-1-cyphar@cyphar.com/>
+ v03: <https://lore.kernel.org/lkml/20181009070230.12884-1-cyphar@cyphar.com/>
+ v02: <https://lore.kernel.org/lkml/20181009065300.11053-1-cyphar@cyphar.com/>
+ v01: <https://lore.kernel.org/lkml/20180929103453.12025-1-cyphar@cyphar.com/>
 
-The trace-cmd code didn't get updated to handle this, so misinterprets
-the event data for this case, which causes a cascade of errors,
-including trace-report not being able to identify synthetic (or any
-other) events generated by the histogram code (which uses TIME_STAMP
-mode).  For example, the following triggers along with the trace-cmd
-shown cause an UNKNOWN_EVENT error and trace-cmd report crash:
+The need for some sort of control over VFS's path resolution (to avoid
+malicious paths resulting in inadvertent breakouts) has been a very
+long-standing desire of many userspace applications. This patchset is a
+revival of Al Viro's old AT_NO_JUMPS[1,2] patchset (which was a variant
+of David Drysdale's O_BENEATH patchset[3] which was a spin-off of the
+Capsicum project[4]) with a few additions and changes made based on the
+previous discussion within [5] as well as others I felt were useful.
 
-  # echo 'wakeup_latency  u64 lat pid_t pid char comm[16]' > /sys/kernel/debug/tracing/synthetic_events
+In line with the conclusions of the original discussion of AT_NO_JUMPS,
+the flag has been split up into separate flags. However, instead of
+being an openat(2) flag it is provided through a new syscall openat2(2)
+which provides several other improvements to the openat(2) interface (see the
+patch description for more details). The following new LOOKUP_* flags are
+added:
 
-  # echo 'hist:keys=pid:ts0=common_timestamp.usecs if comm=="ping"' > /sys/kernel/debug/tracing/events/sched/sched_wakeup/trigger
-  # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0:onmatch(sched.sched_wakeup).trace(wakeup_latency,$wakeup_lat,next_pid,next_comm) if next_comm=="ping"' > /sys/kernel/debug/tracing/events/sched/sched_switch/trigger
-  # echo 'hist:keys=comm,pid,lat:wakeup_lat=lat:sort=lat' > /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/trigger
+  * LOOKUP_NO_XDEV blocks all mountpoint crossings (upwards, downwards,
+    or through absolute links). Absolute pathnames alone in openat(2) do
+    not trigger this.
 
-  # trace-cmd record -e wakeup_latency -e sched_wakeup -f comm==\"ping\" ping localhost -c 5
+  * LOOKUP_NO_MAGICLINKS blocks resolution through /proc/$pid/fd-style
+    links. This is done by blocking the usage of nd_jump_link() during
+    resolution in a filesystem. The term "magic-links" is used to match
+    with the only reference to these links in Documentation/, but I'm
+    happy to change the name.
 
-  # trace-cmd report
-  CPU 0 is empty
-  CPU 1 is empty
-  CPU 2 is empty
-  CPU 3 is empty
-  CPU 5 is empty
-  CPU 6 is empty
-  CPU 7 is empty
-  cpus=8
-    ug! no event found for type 0
-  [UNKNOWN TYPE 0]
-    ug! no event found for type 11520
-  Segmentation fault (core dumped)
+    It should be noted that this is different to the scope of
+    ~LOOKUP_FOLLOW in that it applies to all path components. However,
+    you can do openat2(NO_FOLLOW|NO_MAGICLINKS) on a magic-link and it
+    will *not* fail (assuming that no parent component was a
+    magic-link), and you will have an fd for the magic-link.
 
-After this patch we get the correct interpretation and the events are
-shown properly:
+  * LOOKUP_BENEATH disallows escapes to outside the starting dirfd's
+    tree, using techniques such as ".." or absolute links. Absolute
+    paths in openat(2) are also disallowed. Conceptually this flag is to
+    ensure you "stay below" a certain point in the filesystem tree --
+    but this requires some additional to protect against various races
+    that would allow escape using "..".
 
-  # trace-cmd report
-  CPU 0 is empty
-  CPU 1 is empty
-  CPU 2 is empty
-  CPU 3 is empty
-  CPU 5 is empty
-  CPU 6 is empty
-  CPU 7 is empty
-  cpus=8
-          <idle>-0     [004] 23284.341392: sched_wakeup:         ping:12031 [120] success=1 CPU:004
-          <idle>-0     [004] 23284.341464: wakeup_latency:       lat=58, pid=12031, comm=ping
-          <idle>-0     [004] 23285.365303: sched_wakeup:         ping:12031 [120] success=1 CPU:004
-          <idle>-0     [004] 23285.365382: wakeup_latency:       lat=64, pid=12031, comm=ping
-          <idle>-0     [004] 23286.389290: sched_wakeup:         ping:12031 [120] success=1 CPU:004
-          <idle>-0     [004] 23286.389378: wakeup_latency:       lat=72, pid=12031, comm=ping
-          <idle>-0     [004] 23287.413213: sched_wakeup:         ping:12031 [120] success=1 CPU:004
-          <idle>-0     [004] 23287.413291: wakeup_latency:       lat=64, pid=12031, comm=ping
+    Currently LOOKUP_BENEATH implies LOOKUP_NO_MAGICLINKS, because it
+    can trivially beam you around the filesystem (breaking the
+    protection). In future, there might be similar safety checks done as
+    in LOOKUP_IN_ROOT, but that requires more discussion.
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- lib/traceevent/kbuffer-parse.c | 15 +++++++++------
- tracecmd/trace-read.c          | 13 +++++++++----
- 2 files changed, 18 insertions(+), 10 deletions(-)
+In addition, two new flags are added that expand on the above ideas:
 
-diff --git a/lib/traceevent/kbuffer-parse.c b/lib/traceevent/kbuffer-parse.c
-index 622f285..b18dedc 100644
---- a/lib/traceevent/kbuffer-parse.c
-+++ b/lib/traceevent/kbuffer-parse.c
-@@ -361,6 +361,7 @@ translate_data(struct kbuffer *kbuf, void *data, void **rptr,
- 		break;
- 
- 	case KBUFFER_TYPE_TIME_EXTEND:
-+	case KBUFFER_TYPE_TIME_STAMP:
- 		extend = read_4(kbuf, data);
- 		data += 4;
- 		extend <<= TS_SHIFT;
-@@ -369,10 +370,6 @@ translate_data(struct kbuffer *kbuf, void *data, void **rptr,
- 		*length = 0;
- 		break;
- 
--	case KBUFFER_TYPE_TIME_STAMP:
--		data += 12;
--		*length = 0;
--		break;
- 	case 0:
- 		*length = read_4(kbuf, data) - 4;
- 		*length = (*length + 3) & ~3;
-@@ -397,7 +394,11 @@ static unsigned int update_pointers(struct kbuffer *kbuf)
- 
- 	type_len = translate_data(kbuf, ptr, &ptr, &delta, &length);
- 
--	kbuf->timestamp += delta;
-+	if (type_len == KBUFFER_TYPE_TIME_STAMP)
-+		kbuf->timestamp = delta;
-+	else
-+		kbuf->timestamp += delta;
-+
- 	kbuf->index = calc_index(kbuf, ptr);
- 	kbuf->next = kbuf->index + length;
- 
-@@ -454,7 +455,9 @@ static int __next_event(struct kbuffer *kbuf)
- 		if (kbuf->next >= kbuf->size)
- 			return -1;
- 		type = update_pointers(kbuf);
--	} while (type == KBUFFER_TYPE_TIME_EXTEND || type == KBUFFER_TYPE_PADDING);
-+	} while (type == KBUFFER_TYPE_TIME_EXTEND ||
-+		 type == KBUFFER_TYPE_TIME_STAMP ||
-+		 type == KBUFFER_TYPE_PADDING);
- 
- 	return 0;
- }
-diff --git a/tracecmd/trace-read.c b/tracecmd/trace-read.c
-index 12b8b3d..a1371f4 100644
---- a/tracecmd/trace-read.c
-+++ b/tracecmd/trace-read.c
-@@ -846,12 +846,17 @@ void trace_show_data(struct tracecmd_input *handle, struct tep_record *record)
- 					trace_seq_printf(&s, "\n TIME EXTEND: ");
- 					break;
- 				case KBUFFER_TYPE_TIME_STAMP:
--					trace_seq_printf(&s, "\n TIME STAMP?: ");
-+					trace_seq_printf(&s, "\n TIME STAMP: ");
- 					break;
- 				}
--				trace_seq_printf(&s, "delta:%lld length:%d",
--						 pi->delta,
--						 pi->length);
-+				if (pi->type == KBUFFER_TYPE_TIME_STAMP)
-+					trace_seq_printf(&s, "timestamp:%lld length:%d",
-+							 pi->delta,
-+							 pi->length);
-+				else
-+					trace_seq_printf(&s, "delta:%lld length:%d",
-+							 pi->delta,
-+							 pi->length);
- 			}
- 		}
- 	}
+  * LOOKUP_NO_SYMLINKS does what it says on the tin. No symlink
+    resolution is allowed at all, including magic-links. Just as with
+    LOOKUP_NO_MAGICLINKS this can still be used with NOFOLLOW to open an
+    fd for the symlink as long as no parent path had a symlink
+    component.
+
+  * LOOKUP_IN_ROOT is an extension of LOOKUP_BENEATH that, rather than
+    blocking attempts to move past the root, forces all such movements
+    to be scoped to the starting point. This provides chroot(2)-like
+    protection but without the cost of a chroot(2) for each filesystem
+    operation, as well as being safe against race attacks that chroot(2)
+    is not.
+
+    If a race is detected (as with LOOKUP_BENEATH) then an error is
+    generated, and similar to LOOKUP_BENEATH it is not permitted to cross
+    magic-links with LOOKUP_IN_ROOT.
+
+    The primary need for this is from container runtimes, which
+    currently need to do symlink scoping in userspace[6] when opening
+    paths in a potentially malicious container. There is a long list of
+    CVEs that could have bene mitigated by having RESOLVE_THIS_ROOT
+    (such as CVE-2017-1002101, CVE-2017-1002102, CVE-2018-15664, and
+    CVE-2019-5736, just to name a few).
+
+And further, several semantics of file descriptor "re-opening" are now
+changed to prevent attacks like CVE-2019-5736 by restricting how
+magic-links can be resolved (based on their mode). This required some
+other changes to the semantics of the modes of O_PATH file descriptor's
+associated /proc/self/fd magic-links. openat2(2) has the ability to
+further restrict re-opening of its own O_PATH fds, so that users can
+make even better use of this feature.
+
+Finally, O_EMPTYPATH was added so that users can do /proc/self/fd-style
+re-opening without depending on procfs. The new restricted semantics for
+magic-links are applied here too.
+
+In order to make all of the above more usable, I'm working on
+libpathrs[7] which is a C-friendly library for safe path resolution. It
+features a userspace-emulated backend if the kernel doesn't support
+openat2(2). Hopefully we can get userspace to switch to using it, and
+thus get openat2(2) support for free once it's ready.
+
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: David Drysdale <drysdale@google.com>
+Cc: Tycho Andersen <tycho@tycho.ws>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+
+[1]: https://lwn.net/Articles/721443/
+[2]: https://lore.kernel.org/patchwork/patch/784221/
+[3]: https://lwn.net/Articles/619151/
+[4]: https://lwn.net/Articles/603929/
+[5]: https://lwn.net/Articles/723057/
+[6]: https://github.com/cyphar/filepath-securejoin
+[7]: https://github.com/openSUSE/libpathrs
+
+Aleksa Sarai (12):
+  lib: introduce copy_struct_{to,from}_user helpers
+  clone3: switch to copy_struct_from_user()
+  sched_setattr: switch to copy_struct_{to,from}_user()
+  perf_event_open: switch to copy_struct_from_user()
+  namei: obey trailing magic-link DAC permissions
+  procfs: switch magic-link modes to be more sane
+  open: O_EMPTYPATH: procfs-less file descriptor re-opening
+  namei: O_BENEATH-style path resolution flags
+  namei: LOOKUP_IN_ROOT: chroot-like path resolution
+  namei: aggressively check for nd->root escape on ".." resolution
+  open: openat2(2) syscall
+  selftests: add openat2(2) selftests
+
+ Documentation/filesystems/path-lookup.rst     |  12 +-
+ arch/alpha/include/uapi/asm/fcntl.h           |   1 +
+ arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
+ arch/arm/tools/syscall.tbl                    |   1 +
+ arch/arm64/include/asm/unistd.h               |   2 +-
+ arch/arm64/include/asm/unistd32.h             |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
+ arch/parisc/include/uapi/asm/fcntl.h          |  39 +-
+ arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl           |   1 +
+ arch/sparc/include/uapi/asm/fcntl.h           |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
+ fs/fcntl.c                                    |   2 +-
+ fs/internal.h                                 |   1 +
+ fs/namei.c                                    | 270 ++++++++++--
+ fs/open.c                                     | 100 ++++-
+ fs/proc/base.c                                |  20 +-
+ fs/proc/fd.c                                  |  23 +-
+ fs/proc/namespaces.c                          |   2 +-
+ include/linux/fcntl.h                         |  21 +-
+ include/linux/fs.h                            |   8 +-
+ include/linux/namei.h                         |   9 +
+ include/linux/syscalls.h                      |  14 +-
+ include/linux/uaccess.h                       |   5 +
+ include/uapi/asm-generic/fcntl.h              |   4 +
+ include/uapi/asm-generic/unistd.h             |   5 +-
+ include/uapi/linux/fcntl.h                    |  42 ++
+ include/uapi/linux/sched.h                    |   2 +
+ kernel/events/core.c                          |  45 +-
+ kernel/fork.c                                 |  34 +-
+ kernel/sched/core.c                           |  85 +---
+ lib/Makefile                                  |   2 +-
+ lib/struct_user.c                             | 182 ++++++++
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/memfd/memfd_test.c    |   7 +-
+ tools/testing/selftests/openat2/.gitignore    |   1 +
+ tools/testing/selftests/openat2/Makefile      |   8 +
+ tools/testing/selftests/openat2/helpers.c     | 167 ++++++++
+ tools/testing/selftests/openat2/helpers.h     | 118 +++++
+ .../testing/selftests/openat2/linkmode_test.c | 333 +++++++++++++++
+ .../testing/selftests/openat2/openat2_test.c  | 106 +++++
+ .../selftests/openat2/rename_attack_test.c    | 127 ++++++
+ .../testing/selftests/openat2/resolve_test.c  | 402 ++++++++++++++++++
+ 53 files changed, 1971 insertions(+), 248 deletions(-)
+ create mode 100644 lib/struct_user.c
+ create mode 100644 tools/testing/selftests/openat2/.gitignore
+ create mode 100644 tools/testing/selftests/openat2/Makefile
+ create mode 100644 tools/testing/selftests/openat2/helpers.c
+ create mode 100644 tools/testing/selftests/openat2/helpers.h
+ create mode 100644 tools/testing/selftests/openat2/linkmode_test.c
+ create mode 100644 tools/testing/selftests/openat2/openat2_test.c
+ create mode 100644 tools/testing/selftests/openat2/rename_attack_test.c
+ create mode 100644 tools/testing/selftests/openat2/resolve_test.c
+
 -- 
-2.14.1
+2.23.0
 
