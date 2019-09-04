@@ -2,204 +2,110 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93094C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94A0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623562168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3F321726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:52:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mqab7Fib"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WCSe2dJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfIDXph (ORCPT
+        id S1730496AbfIDXwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:45:37 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33144 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730131AbfIDXph (ORCPT
+        Wed, 4 Sep 2019 19:52:19 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56095 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729635AbfIDXwT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:45:37 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t11so373837plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:45:36 -0700 (PDT)
+        Wed, 4 Sep 2019 19:52:19 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g207so580140wmg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:52:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=vu/9p2fe9GxGN3cNpeW7qpxXHEjWh+kyFDAn4s7xdho=;
-        b=Mqab7Fib6jTd4940cCY9Q0mYQnIuq3We/SHz2mL2Xaguh74hw/YHmMotjdASz5B1b/
-         zuDwDOKTVZWYyT70lCDc+8RSNJ72EYJejYwJclxAyL/16HukhCpLsphM62qK7vaKXJos
-         nIoWYhg2qNnWmXebvnGAyro0j/Nawne7vsdA0=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DP+w8Reea8xQqNhk6ytQ1Vf7IQB6w5cSP5pS7nk17P8=;
+        b=WCSe2dJRpyLYEJzHzWzKX/M4KJRSygBcT4ixMiKvKETW56WKDxWi/Fnuzf8aetHjyk
+         VXjHjNH0F849Mjub6NSNKSaTSUMgIMcR0pm8j4eRA3gITNNfxkqMWmRLyFLIAaf4r0Mb
+         G6mBV7hpfPE3x5p4Q9S4fr36ZDVSIlMX495FEY8gk48PLSJQR68gqxgfJyAfA5wuXKk/
+         W+fYylGYsUG0CXZqV0nf1eR30Y1nr/5hovISQRW4gRvRKu6GnocbF0bzQO10LwVm6+So
+         l5XngKJFl+Gco+0m/s0zkjGZ4qzy/pBLNKFHj77xSnh/e1mEGiK+xiw+ExZg6xxBZzJV
+         zoNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=vu/9p2fe9GxGN3cNpeW7qpxXHEjWh+kyFDAn4s7xdho=;
-        b=CwHymtcq7MN/TchcLMij222poGirwLl1th1c2Go9PH8WiMbtCcuLBg336hRPNzg3IV
-         c3HuKDfzF9DUYNIq8OpRpFl8q88qDmyaTBkmXKNBlOg1PFr5rrR+kBytuDGZ0VO/kB8A
-         ZvM7k8Lf2BEqTAeFtCLm5jOweP4aM96kmhrsbg6ABW3bpsr4aVAqqHr41jWhF1+Mfre7
-         1YyyAtO+EUDSWIiRX4Xj/Q3p921fOCxBfJozqTFLcRsBNzPAgxLcvWpF1T3YzJOGphx6
-         yRyzz/0IfjBau4gE+OMLiTGUHywWraki+2CgF9KZ1bQLbwvrMOFKKi8fTeF60+x5NlLT
-         Cw5Q==
-X-Gm-Message-State: APjAAAU2ruVLJY7QLM3zRL1LQTLV25Y8CsUfF7ML7qJek5Mx7e6QvwoL
-        CZOuG0tWBhOZNTz9AfJhNNcoGw==
-X-Google-Smtp-Source: APXvYqxSeCbsEH7VIZRhORWAP49G1l4WDjZqdXrxRw+p5ofbVPXVM0QFnnhvRjBWMm8NbbdRATHs2g==
-X-Received: by 2002:a17:902:7449:: with SMTP id e9mr376613plt.242.1567640735962;
-        Wed, 04 Sep 2019 16:45:35 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id f62sm190298pfg.74.2019.09.04.16.45.35
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=DP+w8Reea8xQqNhk6ytQ1Vf7IQB6w5cSP5pS7nk17P8=;
+        b=hc0AFHDS1kNBz+tYjSe1+Or29ypOE39ksgifVaooeNj/i4ZVopH7I6Nb78OGlGm4hR
+         bM3TEMH+b1PRzezbnTS1zwyKeJth8fl9HJYR8+XiGeuTR4jIdsGw6y/aMWvilelY9nxM
+         j8wQdahPRMj80rGPyfKAAsmjJFi4dKUf5Yey9UkCSV84g0WRY2cC11enHR/nUjQG4byl
+         3WHzj26Y6RSZqUhYcF+YcuVPVLZBL68tJHU1iK+tLfwqLAA1EjR8FrP29vE+aCOFSdsi
+         SjQcGrRIFGo9bP7pJQfGf5yRB2kyBAJx4vI27NgP4+xldhcwDNR3MkZA0mHplvD2meec
+         yc+A==
+X-Gm-Message-State: APjAAAVmtAMbXdQBKfldCJlwDRExuJN9ZzynN3t1wvCp6D5dJwd5TOMz
+        C8o23LxYl/rM9kl9VgEOuJ8f9Ey7kSd/gg==
+X-Google-Smtp-Source: APXvYqw2BzqDVKreHJEMnu8TmBg230mk+HWRgfFJig/5egwmGj4bXiiU9grBFrptR8uNqS7Ca6eXFQ==
+X-Received: by 2002:a7b:c40f:: with SMTP id k15mr506756wmi.99.1567641138422;
+        Wed, 04 Sep 2019 16:52:18 -0700 (PDT)
+Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
+        by smtp.gmail.com with ESMTPSA id z17sm296949wrw.23.2019.09.04.16.52.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 16:45:35 -0700 (PDT)
-Message-ID: <5d704c9f.1c69fb81.a1686.0eb3@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 04 Sep 2019 16:52:17 -0700 (PDT)
+From:   Krzysztof Wilczynski <kw@linux.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nds32: Move static keyword to the front of declaration
+Date:   Thu,  5 Sep 2019 01:52:16 +0200
+Message-Id: <20190904235216.18510-1-kw@linux.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190904182732.GE574@tuxbook-pro>
-References: <20190903135052.13827-1-lee.jones@linaro.org> <20190904031922.GC574@tuxbook-pro> <20190904084554.GF26880@dell> <20190904182732.GE574@tuxbook-pro>
-Cc:     agross@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Wed, 04 Sep 2019 16:45:34 -0700
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-09-04 11:27:32)
-> On Wed 04 Sep 01:45 PDT 2019, Lee Jones wrote:
->=20
-> > On Tue, 03 Sep 2019, Bjorn Andersson wrote:
-> >=20
-> > > On Tue 03 Sep 06:50 PDT 2019, Lee Jones wrote:
-> > >=20
-> > > > When booting with ACPI, the Geni Serial Engine is not set as the I2=
-C/SPI
-> > > > parent and thus, the wrapper (parent device) is unassigned.  This c=
-auses
-> > > > the kernel to crash with a null dereference error.
-> > > >=20
-> > >=20
-> > > Now I see what you did in 8bc529b25354; i.e. stubbed all the other ca=
-lls
-> > > between the SE and wrapper.
-> > >=20
-> > > Do you think it would be possible to resolve the _DEP link to QGP[01]
-> > > somehow?
-> >=20
-> > I looked at QGP{0,1}, but did not see it represented in the current
-> > Device Tree implementation and thus failed to identify it.  Do you
-> > know what it is?  Does it have a driver in Linux already?
-> >=20
->=20
-> QGP0 is the same hardware block as &qupv3_id_0, but apparently both are
-> only representing a smaller part - and different ones.
->=20
-> But conceptually both represents the wrapper...
->=20
-> > > For the clocks workarounds this could be resolved by us
-> > > representing that relationship using device_link and just rely on
-> > > pm_runtime to propagate the clock state.
-> >=20
-> > That is not allowed when booting ACPI.  The Clock/Regulator frameworks
-> > are not to be used in this use-case, hence why all of the calls to
-> > these frameworks are "stubbed out".  If we wanted to properly
-> > implement power management, we would have to create a driver/subsystem
-> > similar to the "Windows-compatible System Power Management Controller"
-> > (PEP).  Without documentation for the PEP, this would be an impossible
-> > task.  A request for the aforementioned documentation has been put in
-> > to Lenovo/Qualcomm.  Hopefully something appears soon.
-> >=20
->=20
-> I see, so the PEP states needs to be parsed and associated with each
-> device and we would use pm_runtime to toggle between the states and
-> device_links to ensure that _DEP nodes are powered in appropriate order.
->=20
-> That seems reasonable and straight forward and the reliance on
-> pm_runtime will make the DT case cleaner as well.
+Move the static keyword to the front of declaration of
+cpu_pmu_of_device_ids, and resolve the following compiler
+warning that can be seen when building with warnings
+enabled (W=1):
 
-I think we tried to push for pm_runtime here but it was rejected because
-of a missing interconnect framework? See
-https://marc.info/?l=3Ddevicetree&m=3D152002327106864&w=3D2
+arch/nds32/kernel/perf_event_cpu.c:1122:1: warning:
+  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
->=20
-> > > For the DMA operation, iiuc it's the wrapper that implements the DMA
-> > > engine involved, but I'm guessing the main reason for mapping buffers=
- on
-> > > the wrapper is so that it ends up being associated with the iommu
-> > > context of the wrapper.
-> >=20
-> > Judging by the code alone, the wrapper doesn't sound like it does much
-> > at all.  It seems to only have a single (version) register (at least
-> > that is the only register that's used).  The only registers it
-> > reads/writes are those of the calling device, whether that be I2C, SPI
-> > or UART.
-> >=20
-> > Device Tree represents the wrapper's relationship with the I2C (and
-> > SPI/UART) Serial Engine (SE) devices as parent-child ones, with the
-> > wrapper being the parent and SE the child.  Whether this is a true
-> > representation of the hardware or just a tactic used for convenience
-> > is not clear, but the same representation does not exist in ACPI.
-> >=20
-> > In the current Linux implementation, the buffer belongs to the SE
-> > (obtained by the child (e.g. I2C) SE by fetching the parent's
-> > (wrapper's) device data using the standard platform helpers) but the
-> > register-set used to control the DMA transactions belong to the SE
-> > devices.
-> >=20
->=20
-> Yeah, I saw this as well. If all the SEs where the wrappers iommu domain
-> things should work fine by mapping it on the se->dev, regardless of the
-> device's being linked together.
->=20
-> The remaining relationship to the wrapper would then be reduced to the
-> read of the version to check for 1.0 or 1.1 hardware in the SPI driver,
-> which can be replaced by the assumption that we're on 1.1.
+Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+---
+Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
 
-Could this be described in the DT compatible for the SE in the future
-instead of reading it from the wrapper register space?
+ arch/nds32/kernel/perf_event_cpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->=20
-> > > Are the SMMU contexts at all represented in the ACPI world and if so =
-do
-> > > you know how the wrapper vs SEs are bound to contexts? Can we map on
-> > > se->dev when wrapper is NULL (or perhaps always?)?
-> >=20
-> > Yes, the SMMU devices are represented in ACPI (MMU0) and (MMU1).  They
-> > share the same register addresses as the SMMU devices located in
-> > arch/arm64/boot/dts/qcom/sdm845.dtsi.
-> >=20
->=20
-> Right but this only describes the IOMMU devices, I don't see any
-> information about how individual client devices relates to the various
-> IOMMU contexts.
-
-The only thread I recall describing this is
-https://lkml.kernel.org/r/945b6c00-dde6-6ec7-4577-4cc0d034796b@codeaurora.o=
-rg
-
->=20
-> > With this simple parameter checking patch, the SE falls back to using
-> > FIFO mode to transmit data and continues to work flawlessly.  IMHO
-> > this should be applied in the first instance, as it fixes a real (null
-> > dereference) bug which currently resides in the Mainline kernel.
-> >=20
->=20
-> Per the current driver design the wrapper device is the parent of the
-> SE, I should have seen that 8bc529b25354 was the beginning of a game of
-> whac-a-mole circumventing this design. Sorry for not spotting this
-> earlier.
->=20
-> But if this is the one whack left to get the thing to boot then I think
-> we should merge it.
->=20
-
-Agreed.
+diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_event_cpu.c
+index 334c2a6cec23..0ce6f9f307e6 100644
+--- a/arch/nds32/kernel/perf_event_cpu.c
++++ b/arch/nds32/kernel/perf_event_cpu.c
+@@ -1119,7 +1119,7 @@ static void cpu_pmu_init(struct nds32_pmu *cpu_pmu)
+ 		on_each_cpu(cpu_pmu->reset, cpu_pmu, 1);
+ }
+ 
+-const static struct of_device_id cpu_pmu_of_device_ids[] = {
++static const struct of_device_id cpu_pmu_of_device_ids[] = {
+ 	{.compatible = "andestech,nds32v3-pmu",
+ 	 .data = device_pmu_init},
+ 	{},
+-- 
+2.22.1
 
