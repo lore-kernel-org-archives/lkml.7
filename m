@@ -2,128 +2,129 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7749C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481D1C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16C822CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7MJE3qJ"
+	by mail.kernel.org (Postfix) with ESMTP id 232B62073F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731850AbfIDQaV (ORCPT
+        id S1731782AbfIDQdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:30:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41163 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731520AbfIDQaV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:30:21 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so11513960pgg.8;
-        Wed, 04 Sep 2019 09:30:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Bk5FCrmIebdNTJxqeSp5asp911jjtdI8aFxkaoSkUA=;
-        b=Z7MJE3qJHR8e1zg4M/OzjRMI8uXwVNEOcJS7BGFiaDV6mFALldUUSXDzH7MDyjvIPC
-         N3ORyV1v0tHe0bs85LwIt8W3EDERZ9+ixgYiqYntooIRtWwd0cs7l/fnCUltEybL5LnU
-         AxSYEpWniZ9Vc9HG6/XZyqZTO3u9wlVyUmwU9p7BU8s7K7YCcQ2O8/SGOBjo4uPyS6zx
-         nsN0/ojOMkS3Jj2Vk7LwCMkBQY3EvHhBSKnV2G+lZMK7koE2fAZwP+wc19x3joGmOyTQ
-         d/eDjlbD1Ea+xJ4ZG3I1n6BpTMlO0Ow++2Hu03dK+pWgvMIOwmtd/bC/EWjXYZh9p51n
-         BSiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Bk5FCrmIebdNTJxqeSp5asp911jjtdI8aFxkaoSkUA=;
-        b=Oo4AMOULWdLQUiKg7EyC7fcRpvnfr/gLe47rjo4JPJGQgpN55pY+w3JL/QdIDRvmmy
-         hOfxGRTUib/jYtmHTzWembWqmyR095OGiWLdS/+qyOYL0bUsNQzZGfxf+3ZqD4MGJZa6
-         L3qjQRIgVnLawOe3quuOUf0rP3xq8ApNaLKq4KjHt83QwMM8SXygJ4wWodi2HgP9uEqc
-         /UMKave6HMGBA2dBSrb7++aCJvyZr8Qffv319Js2cu2ldr1k+nHL9vb3s9GpXhsk4S6W
-         GF1AEoCUuYukejux/+AnIGxwlSm4rktvT+ufxpJK/gSt7e4XoSlcztQdOnKikQ3GGc3F
-         f/DQ==
-X-Gm-Message-State: APjAAAXknD6Zkg903t7BL5F7n7hoP+Wuy8XzYRNs0CPNvJGqDWbZX4Ug
-        0z03MXQBV1znBFXLk1O+2NpQ63QHgwwimg4uiN4=
-X-Google-Smtp-Source: APXvYqwfTMyky+gr506dU7vA5RQA2gAYCn+ZMYC+IVVNtVkdvfPY6ix3mRDrBzSvrtUGH0BfnF3ha8tgX/jGZ72bAxY=
-X-Received: by 2002:a17:90a:19c4:: with SMTP id 4mr5998093pjj.20.1567614620706;
- Wed, 04 Sep 2019 09:30:20 -0700 (PDT)
+        Wed, 4 Sep 2019 12:33:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731520AbfIDQdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:33:20 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A280621E8953A5A2F875;
+        Thu,  5 Sep 2019 00:33:15 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 5 Sep 2019 00:33:06 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@hisilicon.com>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <olof@lixom.net>, <arnd@arndb.de>, <bhelgaas@google.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH] lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
+Date:   Thu, 5 Sep 2019 00:30:33 +0800
+Message-ID: <1567614633-210580-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <20190904061245.30770-1-rashmica.g@gmail.com> <20190904061245.30770-3-rashmica.g@gmail.com>
-In-Reply-To: <20190904061245.30770-3-rashmica.g@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Sep 2019 19:30:09 +0300
-Message-ID: <CAHp75Ve0zEkuD-75aZ6FU+A=DvX8NvVvY3n9p_pYDyfa76sxoQ@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: Add in ast2600 details to Aspeed driver
-To:     Rashmica Gupta <rashmica.g@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 9:14 AM Rashmica Gupta <rashmica.g@gmail.com> wrote:
->
-> The ast2600 has two gpio controllers, one for 3.6V GPIOS and one for 1.8V GPIOS.
->
-> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+Since the only LOGIC_PIO_INDIRECT host (hisi-lpc) now sets the accessors
+ops prior to registration, enforce the check for these ops at registration
+instead of in the IO port accessors, to simplify and marginally optimise
+the code.
 
-> -       for (i = 0; i < ARRAY_SIZE(aspeed_gpio_banks); i++) {
-> +       banks = (gpio->config->nr_gpios >> 5) + 1;
+A slight misalignment is also tidied.
 
-Same comment as per the other patch.
+Also add myself as an author.
 
-> +       for (i = 0; i < banks; i++) {
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+I hope that the soc maintainers don't mind taking this patch through their
+tree, as it is relevant to the HiSilicon LPC bus driver. Thanks
 
-> +static const struct aspeed_bank_props ast2600_bank_props[] = {
-> +       /*     input      output   */
-> +       {5, 0xffffffff,  0x0000ffff}, /* U/V/W/X */
-> +       {6, 0xffff0000,  0x0fff0000}, /* Y/Z */
-
-Perhaps GENMASK() for all values?
-
-> +       { },
-
-Comma is not needed here.
-
-> +};
-> +
-> +static const struct aspeed_gpio_config ast2600_config =
-> +       /* 208 3.6V GPIOs */
-
-> +       { .nr_gpios = 208, .props = ast2600_bank_props, };
-
-Seems curly braces missed their places.
-
-> +static const struct aspeed_bank_props ast2600_1_8v_bank_props[] = {
-> +       /*     input      output   */
-> +       {1, 0x0000000f,  0x0000000f}, /* E */
-
-GENMASK()?
-
-> +       { },
-
-No comma.
-
-> +};
-
-> +static const struct aspeed_gpio_config ast2600_1_8v_config =
-> +       /* 36 1.8V GPIOs */
-> +       { .nr_gpios = 36, .props = ast2600_1_8v_bank_props, };
-
-Location of the curly braces?
-
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index 905027574e5d..f511a99bb389 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -3,6 +3,7 @@
+  * Copyright (C) 2017 HiSilicon Limited, All Rights Reserved.
+  * Author: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+  * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
++ * Author: John Garry <john.garry@huawei.com>
+  */
+ 
+ #define pr_fmt(fmt)	"LOGIC PIO: " fmt
+@@ -39,7 +40,8 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
+ 	int ret = 0;
+ 
+-	if (!new_range || !new_range->fwnode || !new_range->size)
++	if (!new_range || !new_range->fwnode || !new_range->size ||
++	    (new_range->flags == LOGIC_PIO_INDIRECT && !new_range->ops))
+ 		return -EINVAL;
+ 
+ 	start = new_range->hw_start;
+@@ -237,7 +239,7 @@ type logic_in##bw(unsigned long addr)					\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			ret = entry->ops->in(entry->hostdata,		\
+ 					addr, sizeof(type));		\
+ 		else							\
+@@ -253,7 +255,7 @@ void logic_out##bw(type value, unsigned long addr)			\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->out(entry->hostdata,		\
+ 					addr, value, sizeof(type));	\
+ 		else							\
+@@ -261,7 +263,7 @@ void logic_out##bw(type value, unsigned long addr)			\
+ 	}								\
+ }									\
+ 									\
+-void logic_ins##bw(unsigned long addr, void *buffer,		\
++void logic_ins##bw(unsigned long addr, void *buffer,			\
+ 		   unsigned int count)					\
+ {									\
+ 	if (addr < MMIO_UPPER_LIMIT) {					\
+@@ -269,7 +271,7 @@ void logic_ins##bw(unsigned long addr, void *buffer,		\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->ins(entry->hostdata,		\
+ 				addr, buffer, sizeof(type), count);	\
+ 		else							\
+@@ -286,7 +288,7 @@ void logic_outs##bw(unsigned long addr, const void *buffer,		\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->outs(entry->hostdata,		\
+ 				addr, buffer, sizeof(type), count);	\
+ 		else							\
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
