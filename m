@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EA9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5CEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FFFB22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C412339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619903;
-	bh=n0SsBDXlORyaEMZjSPgG0D44ZcsiD7lTVDrl99iuj5o=;
+	s=default; t=1567619906;
+	bh=fLPibfJ42aAIHABvPctEZANEfg5uArP9JzQqEn9pGTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bH5jcDe2iCUKhTi2w0OIJHDYC8VO/rGpIyQE6zQaEkuFlOfj5mjX8HtH/a0YOTqJk
-	 18txGC49y52KKZt4gMPgoA2nqIgnH0x6kmd1BMkluv8p5ZDGUbH8mqAxVQ6CFlrmMw
-	 iODxVNeztJwQ05/YErFGleflR8rvhNztODR0zLS0=
+	b=0aJu49fHUyvGQogqOLAO45Ruehw/QDFOC2lBbiYRMEyDH4mZu22I7TCfVJIVAJY4v
+	 GytFHB4P0Wo5bt9V2bFsAu1dEUh+h9u4w2+t5AHQN5xYDkq1AWDos9+d22QStyDfGI
+	 i/hQ7xoCQR7zg2CaBWDYTV8rzMvUJkfSsLHRBr0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388040AbfIDR6W (ORCPT
+        id S2388051AbfIDR6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36744 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387561AbfIDR6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:21 -0400
+        id S1732748AbfIDR6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBD2B21883;
-        Wed,  4 Sep 2019 17:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2DB022CF5;
+        Wed,  4 Sep 2019 17:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619900;
-        bh=n0SsBDXlORyaEMZjSPgG0D44ZcsiD7lTVDrl99iuj5o=;
+        s=default; t=1567619903;
+        bh=fLPibfJ42aAIHABvPctEZANEfg5uArP9JzQqEn9pGTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G+ZsSVSySrYTOZXbXfF5K/lfAoyHx9KaWC/PeD1P2clmm9cO0luuIBA5dR2rL4IDG
-         6MhV4z75vXKg63Z08bDIQWJ+7/Im9VFem31KD9sMx+m07Cjdfv8h7hXVzDR7ihfdMN
-         UcwpvLEmcN7N0tKhL5QOKG444W3Wv7qK+i67q+9M=
+        b=u+ysG/ukT8Ta8DPV3eHmyROB4u65FPRO+uUFzi75W7+Cmp6rXx4EUbLQ8fpiM4TUI
+         CvdnfsEyItmyd7h6E9bXrHKn0zSNVQxy6UN4aCz9/1NbhKT0lCI9NaS1oZzg25rnKU
+         Uc/j1ZOF6/xv9Oboo50AvM9tPpO1bhLkbFBeOMqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Vladimir Rutsky <rutsky@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 59/77] tcp: make sure EPOLLOUT wont be missed
-Date:   Wed,  4 Sep 2019 19:53:46 +0200
-Message-Id: <20190904175308.865825691@linuxfoundation.org>
+        stable@vger.kernel.org, Brad Spengler <spender@grsecurity.net>,
+        Dianzhang Chen <dianzhangchen0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        hpa@zytor.com
+Subject: [PATCH 4.4 77/77] x86/ptrace: fix up botched merge of spectrev1 fix
+Date:   Wed,  4 Sep 2019 19:54:04 +0200
+Message-Id: <20190904175310.513008739@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -63,82 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit ef8d8ccdc216f797e66cb4a1372f5c4c285ce1e4 ]
+I incorrectly merged commit 31a2fbb390fe ("x86/ptrace: Fix possible
+spectre-v1 in ptrace_get_debugreg()") when backporting it, as was
+graciously pointed out at
+https://grsecurity.net/teardown_of_a_failed_linux_lts_spectre_fix.php
 
-As Jason Baron explained in commit 790ba4566c1a ("tcp: set SOCK_NOSPACE
-under memory pressure"), it is crucial we properly set SOCK_NOSPACE
-when needed.
+Resolve the upstream difference with the stable kernel merge to properly
+protect things.
 
-However, Jason patch had a bug, because the 'nonblocking' status
-as far as sk_stream_wait_memory() is concerned is governed
-by MSG_DONTWAIT flag passed at sendmsg() time :
-
-    long timeo = sock_sndtimeo(sk, flags & MSG_DONTWAIT);
-
-So it is very possible that tcp sendmsg() calls sk_stream_wait_memory(),
-and that sk_stream_wait_memory() returns -EAGAIN with SOCK_NOSPACE
-cleared, if sk->sk_sndtimeo has been set to a small (but not zero)
-value.
-
-This patch removes the 'noblock' variable since we must always
-set SOCK_NOSPACE if -EAGAIN is returned.
-
-It also renames the do_nonblock label since we might reach this
-code path even if we were in blocking mode.
-
-Fixes: 790ba4566c1a ("tcp: set SOCK_NOSPACE under memory pressure")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Jason Baron <jbaron@akamai.com>
-Reported-by: Vladimir Rutsky  <rutsky@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Jason Baron <jbaron@akamai.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: Brad Spengler <spender@grsecurity.net>
+Cc: Dianzhang Chen <dianzhangchen0@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: <bp@alien8.de>
+Cc: <hpa@zytor.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/stream.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ arch/x86/kernel/ptrace.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/net/core/stream.c
-+++ b/net/core/stream.c
-@@ -119,7 +119,6 @@ int sk_stream_wait_memory(struct sock *s
- 	int err = 0;
- 	long vm_wait = 0;
- 	long current_timeo = *timeo_p;
--	bool noblock = (*timeo_p ? false : true);
- 	DEFINE_WAIT(wait);
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -698,11 +698,10 @@ static unsigned long ptrace_get_debugreg
+ {
+ 	struct thread_struct *thread = &tsk->thread;
+ 	unsigned long val = 0;
+-	int index = n;
  
- 	if (sk_stream_memory_free(sk))
-@@ -132,11 +131,8 @@ int sk_stream_wait_memory(struct sock *s
+ 	if (n < HBP_NUM) {
++		int index = array_index_nospec(n, HBP_NUM);
+ 		struct perf_event *bp = thread->ptrace_bps[index];
+-		index = array_index_nospec(index, HBP_NUM);
  
- 		if (sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN))
- 			goto do_error;
--		if (!*timeo_p) {
--			if (noblock)
--				set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
--			goto do_nonblock;
--		}
-+		if (!*timeo_p)
-+			goto do_eagain;
- 		if (signal_pending(current))
- 			goto do_interrupted;
- 		sk_clear_bit(SOCKWQ_ASYNC_NOSPACE, sk);
-@@ -168,7 +164,13 @@ out:
- do_error:
- 	err = -EPIPE;
- 	goto out;
--do_nonblock:
-+do_eagain:
-+	/* Make sure that whenever EAGAIN is returned, EPOLLOUT event can
-+	 * be generated later.
-+	 * When TCP receives ACK packets that make room, tcp_check_space()
-+	 * only calls tcp_new_space() if SOCK_NOSPACE is set.
-+	 */
-+	set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
- 	err = -EAGAIN;
- 	goto out;
- do_interrupted:
+ 		if (bp)
+ 			val = bp->hw.info.address;
 
 
