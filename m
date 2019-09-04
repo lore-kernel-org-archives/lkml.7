@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646F4C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792A4C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9512087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5192C2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620870;
-	bh=QiiWuGcgOjRZ/srI8+ia0peu/RvqTW7WEzFTV7LwK2o=;
+	s=default; t=1567620874;
+	bh=Gv3o9jc/CWvLdaxVZ2vJNVBL76ADaBp67Nglqgg26R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YQbNSoWYyIDVfBwhzzWmXbna3FYxogwVWxgkXfPRCnEQpiNpD+qC4boHkTAXMOt4s
-	 l7J8cY2nL67KsnltJw6wdrwabcuHJ9yedhWl4dRUJfX9JJQSgtimo7OBJnJkCUkJOF
-	 W/tIRzM0+ciInFhVMNeYx8L7ywhaVRP31SbDzxNA=
+	b=0FRyB67ngt6dxvcqqmz5q7cpOL+AVHLrWk8eUE6x9kthpmmeolAKqi1wv2p+4rwlx
+	 c1Vh87gTFLGO9osFkKhn7RJLdoOmBrUkGnWoI9I64xyjh9yoU0IZnmZ8Pc6BzK7QL3
+	 Ll6fsvO6+ZB4KyRHd849fFIo7Wmo7HUwnT7wyJ4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390785AbfIDSO0 (ORCPT
+        id S2390545AbfIDSOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59496 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389453AbfIDSOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:21 -0400
+        id S2390529AbfIDSOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B4EB22CF7;
-        Wed,  4 Sep 2019 18:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 581DB22CF7;
+        Wed,  4 Sep 2019 18:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620860;
-        bh=QiiWuGcgOjRZ/srI8+ia0peu/RvqTW7WEzFTV7LwK2o=;
+        s=default; t=1567620870;
+        bh=Gv3o9jc/CWvLdaxVZ2vJNVBL76ADaBp67Nglqgg26R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a8nQ2EfQj4U0y30WV8ndFenN+Z0q0Gj/h906XDFW3f589s8vz1M1XmVcmHwYfd9eY
-         1q1xNaFYB3whMG1mhweHjFiQYHQJddtiZW8z2SOvK0KCESKI/Q8Ry/dKe4hrHSgJCU
-         QpoM0bK1ZT4nsXqS5h6rZitVZCT1R5LploQsWwSg=
+        b=tfd520Jq6G91u7LACHuJf0GiA1tV5YnkgSSOuNeqdTepCjH7T4aVDMMQ2dNH37X06
+         3L8gz07to8wwaDS32ShWWhekrbsCygDKgn2TGCn7AzAphea4YwA9VMoNi73ryDQ16Y
+         lpdlgSScP8EGK5UbYkzatxOn4nXAYMZGfe+8a7Hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.2 122/143] mm, memcg: partially revert "mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones"
-Date:   Wed,  4 Sep 2019 19:54:25 +0200
-Message-Id: <20190904175319.173967594@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Wetzel <alexander@wetzel-home.de>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.2 126/143] cfg80211: Fix Extended Key ID key install checks
+Date:   Wed,  4 Sep 2019 19:54:29 +0200
+Message-Id: <20190904175319.336774224@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -63,72 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
+From: Alexander Wetzel <alexander@wetzel-home.de>
 
-commit b4c46484dc3fa3721d68fdfae85c1d7b1f6b5472 upstream.
+commit b67fd72e84a88cae64cea8ab47ccdaab3bb3094d upstream.
 
-Commit 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync
-with the hierarchical ones") effectively decreased the precision of
-per-memcg vmstats_local and per-memcg-per-node lruvec percpu counters.
+Fix two shortcomings in the Extended Key ID API:
 
-That's good for displaying in memory.stat, but brings a serious
-regression into the reclaim process.
+ 1) Allow the userspace to install pairwise keys using keyid 1 without
+    NL80211_KEY_NO_TX set. This allows the userspace to install and
+    activate pairwise keys with keyid 1 in the same way as for keyid 0,
+    simplifying the API usage for e.g. FILS and FT key installs.
 
-One issue I've discovered and debugged is the following:
-lruvec_lru_size() can return 0 instead of the actual number of pages in
-the lru list, preventing the kernel to reclaim last remaining pages.
-Result is yet another dying memory cgroups flooding.  The opposite is
-also happening: scanning an empty lru list is the waste of cpu time.
+ 2) IEEE 802.11 - 2016 restricts Extended Key ID usage to CCMP/GCMP
+    ciphers in IEEE 802.11 - 2016 "9.4.2.25.4 RSN capabilities".
+    Enforce that when installing a key.
 
-Also, inactive_list_is_low() can return incorrect values, preventing the
-active lru from being scanned and freed.  It can fail both because the
-size of active and inactive lists are inaccurate, and because the number
-of workingset refaults isn't precise.  In other words, the result is
-pretty random.
-
-I'm not sure, if using the approximate number of slab pages in
-count_shadow_number() is acceptable, but issues described above are
-enough to partially revert the patch.
-
-Let's keep per-memcg vmstat_local batched (they are only used for
-displaying stats to the userspace), but keep lruvec stats precise.  This
-change fixes the dead memcg flooding on my setup.
-
-Link: http://lkml.kernel.org/r/20190817004726.2530670-1-guro@fb.com
-Fixes: 766a4c19d880 ("mm/memcontrol.c: keep local VM counters in sync with the hierarchical ones")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Yafang Shao <laoar.shao@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org # 5.2
+Fixes: 6cdd3979a2bd ("nl80211/cfg80211: Extended Key ID support")
+Signed-off-by: Alexander Wetzel <alexander@wetzel-home.de>
+Link: https://lore.kernel.org/r/20190805123400.51567-1-alexander@wetzel-home.de
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memcontrol.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ net/wireless/util.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -748,15 +748,13 @@ void __mod_lruvec_state(struct lruvec *l
- 	/* Update memcg */
- 	__mod_memcg_state(memcg, idx, val);
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -233,25 +233,30 @@ int cfg80211_validate_key_settings(struc
  
-+	/* Update lruvec */
-+	__this_cpu_add(pn->lruvec_stat_local->count[idx], val);
-+
- 	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
- 	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
- 		struct mem_cgroup_per_node *pi;
- 
--		/*
--		 * Batch local counters to keep them in sync with
--		 * the hierarchical ones.
--		 */
--		__this_cpu_add(pn->lruvec_stat_local->count[idx], x);
- 		for (pi = pn; pi; pi = parent_nodeinfo(pi, pgdat->node_id))
- 			atomic_long_add(x, &pi->lruvec_stat[idx]);
- 		x = 0;
+ 	switch (params->cipher) {
+ 	case WLAN_CIPHER_SUITE_TKIP:
++		/* Extended Key ID can only be used with CCMP/GCMP ciphers */
++		if ((pairwise && key_idx) ||
++		    params->mode != NL80211_KEY_RX_TX)
++			return -EINVAL;
++		break;
+ 	case WLAN_CIPHER_SUITE_CCMP:
+ 	case WLAN_CIPHER_SUITE_CCMP_256:
+ 	case WLAN_CIPHER_SUITE_GCMP:
+ 	case WLAN_CIPHER_SUITE_GCMP_256:
+-		/* IEEE802.11-2016 allows only 0 and - when using Extended Key
+-		 * ID - 1 as index for pairwise keys.
++		/* IEEE802.11-2016 allows only 0 and - when supporting
++		 * Extended Key ID - 1 as index for pairwise keys.
+ 		 * @NL80211_KEY_NO_TX is only allowed for pairwise keys when
+ 		 * the driver supports Extended Key ID.
+ 		 * @NL80211_KEY_SET_TX can't be set when installing and
+ 		 * validating a key.
+ 		 */
+-		if (params->mode == NL80211_KEY_NO_TX) {
+-			if (!wiphy_ext_feature_isset(&rdev->wiphy,
+-						     NL80211_EXT_FEATURE_EXT_KEY_ID))
+-				return -EINVAL;
+-			else if (!pairwise || key_idx < 0 || key_idx > 1)
++		if ((params->mode == NL80211_KEY_NO_TX && !pairwise) ||
++		    params->mode == NL80211_KEY_SET_TX)
++			return -EINVAL;
++		if (wiphy_ext_feature_isset(&rdev->wiphy,
++					    NL80211_EXT_FEATURE_EXT_KEY_ID)) {
++			if (pairwise && (key_idx < 0 || key_idx > 1))
+ 				return -EINVAL;
+-		} else if ((pairwise && key_idx) ||
+-			   params->mode == NL80211_KEY_SET_TX) {
++		} else if (pairwise && key_idx) {
+ 			return -EINVAL;
+ 		}
+ 		break;
 
 
