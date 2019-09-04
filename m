@@ -2,110 +2,126 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E43C41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AED6C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9202721726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:13:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ouJxs/16"
+	by mail.kernel.org (Postfix) with ESMTP id E243A21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567617259;
+	bh=4lhedrTdvyNdZnIcwKpoBZ0Q5do9zTK6jHQL29tFVZk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J3lhZ6b3VtKroGLHz4QKdhUfSHp9bDps0OkS7kofHwHL6lLklSxBHnfK9+WzB0gxO
+	 tEZBRMPMNlgRFfhHlLFpg3kUTInRZfN/2QYzMkEI6jSXgyJ0ukx+ABdyfjUai+q5PF
+	 YV8hPy84THBokMUBT/61lMlemUmMFbukIPXkh5dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbfIDRNg (ORCPT
+        id S1731712AbfIDROR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:13:36 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46225 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731611AbfIDRNg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:13:36 -0400
-Received: by mail-pg1-f196.google.com with SMTP id m3so11544650pgv.13;
-        Wed, 04 Sep 2019 10:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=203rL96lqX9CJ7MhqHWhG04uP6pIdNdYcJDpLH3Er7E=;
-        b=ouJxs/16RBB649/E0/4u3+4Q3AfsNRAbmb9v/CToDhKV+1YOwmn/fU3MYx6CMvqg4v
-         dlTQsNjA3XprYx29R3QKzMR/bhN4nCgSiSDjVamR9pe63LGmkPpD6F8WliemDwPAkr5G
-         btiyjhaQTXV9sIYOptCiAz9cxfxMmYMaziMe92oUoZARqdxMIvTxWnuRH/aJOoY6xnDw
-         nu4r6zvX7+DMA+sJH5HINkE7NG3WM9YEnGk3vR5YZtR2rMnHmLWXSAisY1sNMPXlGtX1
-         vHBjCMM0auZZIVZAlR0FNRkyq1lR5lnEJ3sFfgi/p0fTlPf0Eb0g1DfHwhqlmXIAgLJF
-         9/cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=203rL96lqX9CJ7MhqHWhG04uP6pIdNdYcJDpLH3Er7E=;
-        b=cEt4yEQ0aUcyArFNivxvNAWCv/lzMXB7HwECEAgA3PjQKwhdrjKvu4MQOnWPTBdsNV
-         y73RQXH0onijtcsTkYlIZsRmqRPF4cEa8+MJf+N2/b7aI7Z1HAs5NqPxW9mERWpbS432
-         gGeokYXWtgyHJ2dxts+wQrmh5YJECA7NgcHaGVBXROPQP2ZA8JsRaVRVZLMWj1Jh1bAj
-         CDmOAN3EP0ABy8Kmr9qfj210SAB0TCGTCee+i94WN2pZr67qjvw6WzQ+N5EhC9KhnAf8
-         xHkTSGENgh38rk/uP4jCbnz1uK3Fyctms3HFIALeEg76V1ICuPDO5cXOqpeVmySuBEA7
-         +g+w==
-X-Gm-Message-State: APjAAAWVkwi08KL0IchD4rv8WCPoV5AT9XhWxzsgMiYmeMIOaqi0hx7H
-        6rcnKJM1MSuKaw93mGnr2/91SkqCcH0VrCkxAYE=
-X-Google-Smtp-Source: APXvYqy1q6FKr2BVGFuDHAekiPGsik3GgCaln4T9YGQW5rrmsKtxaRxiEfJviDKfqykEVer3/KPGg/31X239tUf7VgU=
-X-Received: by 2002:aa7:86c8:: with SMTP id h8mr9503892pfo.241.1567617215580;
- Wed, 04 Sep 2019 10:13:35 -0700 (PDT)
+        Wed, 4 Sep 2019 13:14:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729890AbfIDROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:14:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DF2D21726;
+        Wed,  4 Sep 2019 17:14:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567617256;
+        bh=4lhedrTdvyNdZnIcwKpoBZ0Q5do9zTK6jHQL29tFVZk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=naAF2dfkuBEiligHmtjWd3v3i9bZ8JYi0blq+r3tgLJoaqM7VrZG1NsRN+uaBjP3y
+         In17bJ03iAHIZdxty25BGNeU5mPsbF1nkdNeCgHx6qdzzJ1GME4qSJtypq5qJte641
+         fJE5cpxekm16N9eCR8flaq7d6+oCPkh46chnlj9M=
+Date:   Wed, 4 Sep 2019 19:14:13 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Prakhar Sinha <prakharsinha2808@gmail.com>
+Cc:     tobias.niessen@stud.uni-hannover.de, kim.jamie.bradley@gmail.com,
+        pakki001@umn.edu, sabrina-gaube@web.de, nishkadg.linux@gmail.com,
+        qader.aymen@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rts5208: Fix 80 char warning by re-structuring
+ if-blocks.
+Message-ID: <20190904171413.GA18390@kroah.com>
+References: <20190904130523.GA17126@MeraComputer>
 MIME-Version: 1.0
-References: <20190830231817.76862-1-joel@joelfernandes.org>
- <201909041108.RSjNvfDL%lkp@intel.com> <20190904050419.GA102582@google.com>
-In-Reply-To: <20190904050419.GA102582@google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Sep 2019 20:13:23 +0300
-Message-ID: <CAHp75Vdeoc1S_0Dn_vk2ULPRLk_sevWoxs8+Gscv9ki_kkPx4Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pci: Convert to use built-in RCU list checking
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904130523.GA17126@MeraComputer>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 8:07 AM Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> On Wed, Sep 04, 2019 at 12:06:43PM +0800, kbuild test robot wrote:
-> > Hi "Joel,
-> >
-> > Thank you for the patch! Yet something to improve:
-> >
-> > [auto build test ERROR on linus/master]
-> > [cannot apply to v5.3-rc7 next-20190903]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/Joel-Fernandes-Google/pci-Convert-to-use-built-in-RCU-list-checking/20190901-211013
-> > config: x86_64-rhel-7.6 (attached as .config)
-> > compiler: gcc-7 (Debian 7.4.0-11) 7.4.0
-> > reproduce:
-> >         # save the attached .config to linux build tree
-> >         make ARCH=x86_64
->
-> This error seems bogus. I pulled -next and applied this patch and it builds
-> fine. I am not sure what is wrong with the 0day tree, and the above 0day link
-> is also dead.
->
-> What's going on with 0day ?!
+On Wed, Sep 04, 2019 at 06:35:23PM +0530, Prakhar Sinha wrote:
+> This patch solves the following checkpatch.pl's messages in
+> drivers/staging/rts5208/sd.c
+> 
+> WARNING: line over 80 characters
+> 4517: FILE: drivers/staging/rts5208/sd.c:4517:
+> +                                               sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON | SD_SDR_RST);
+> 
+> WARNING: line over 80 characters
+> 4518: FILE: drivers/staging/rts5208/sd.c:4518:
+> +                                               goto sd_execute_write_cmd_failed;
+> 
+> WARNING: line over 80 characters
+> 4522: FILE: drivers/staging/rts5208/sd.c:4522:
+> +                               sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON | SD_SDR_RST);
+> 
+> Signed-off-by: Prakhar Sinha <prakharsinha2808@gmail.com>
+> ---
+>  drivers/staging/rts5208/sd.c | 26 ++++++++++++--------------
+>  1 file changed, 12 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/staging/rts5208/sd.c b/drivers/staging/rts5208/sd.c
+> index a06045344301..7d6f2c56e740 100644
+> --- a/drivers/staging/rts5208/sd.c
+> +++ b/drivers/staging/rts5208/sd.c
+> @@ -4505,22 +4505,20 @@ int sd_execute_write_data(struct scsi_cmnd *srb, struct rtsx_chip *chip)
+>  
+>  		dev_dbg(rtsx_dev(chip), "sd_lock_state = 0x%x, sd_card->sd_lock_status = 0x%x\n",
+>  			sd_lock_state, sd_card->sd_lock_status);
+> -		if (sd_lock_state ^ (sd_card->sd_lock_status & SD_LOCKED)) {
+> +		if (sd_lock_state ^ (sd_card->sd_lock_status & SD_LOCKED))
+>  			sd_card->sd_lock_notify = 1;
+> -			if (sd_lock_state &&
+> -			    (sd_card->sd_lock_status & SD_LOCK_1BIT_MODE)) {
+> -				sd_card->sd_lock_status |= (
+> -					SD_UNLOCK_POW_ON | SD_SDR_RST);
+> -				if (CHK_SD(sd_card)) {
+> -					retval = reset_sd(chip);
+> -					if (retval != STATUS_SUCCESS) {
+> -						sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON | SD_SDR_RST);
+> -						goto sd_execute_write_cmd_failed;
+> -					}
+> -				}
+> -
+> -				sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON | SD_SDR_RST);
+> +		if ((sd_lock_state & !(sd_card->sd_lock_status & SD_LOCKED)) &&
+> +		    (sd_card->sd_lock_status & SD_LOCK_1BIT_MODE)) {
+> +			sd_card->sd_lock_status |= (SD_UNLOCK_POW_ON |
+> +						    SD_SDR_RST);
+> +			if (CHK_SD(sd_card) &&
+> +			    reset_sd(chip) != STATUS_SUCCESS) {
+> +				sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON |
+> +							     SD_SDR_RST);
+> +				goto sd_execute_write_cmd_failed;
+>  			}
+> +			sd_card->sd_lock_status &= ~(SD_UNLOCK_POW_ON |
+> +						     SD_SDR_RST);
 
-I would rather to add Depends-on: ... tag to your patch if the
-dependency is going thru another tree at the same cycle.
-kbuildbot absolutely correct here.
+Are you sure you can indent and call the if() statement twice like this?
 
--- 
-With Best Regards,
-Andy Shevchenko
+If so, please document this in your changelog text.
+
+thanks,
+
+greg k-h
