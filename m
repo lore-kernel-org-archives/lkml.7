@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C7DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4DCC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5CF22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1797F2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620469;
-	bh=HVPsM3txQgcnk/3lR3lRftJNUg0OBCD3o9erAomK1l4=;
+	s=default; t=1567620472;
+	bh=5uk+51uu0Z02aMpaY4RrJs1/FVlS4vsGz6j6s1yrv74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nyo0WevGJk2flRZphD8ZiHv+0j4n0K07ZF/+z2GeqquiV2QZdyHVIaZW/njqmWUXz
-	 4ZdHK8SBCR9ZbbKEyypaLjhAMEy30tTQOFVwxEe+lKC+FgdNrih0uyK0Rle204eLIk
-	 szYgYP68nGmt8uShwlVQYg9mrkHUoT7Qw4HPI+Nk=
+	b=YwB3zcplYr6OmX8MRFS5svp4xLI2G+bnhTbsfVloVyQwgTeO/1u/JrBdeP4ikuP2U
+	 gqc9TsgHg3CS2q8wtRBUgIX9N3aAj0apgUh4u/Y1/uHDGeSXKYO6p9vEUY8+Fo9B0E
+	 G9i/BY3y8eqUIChG9tuGTbpDf4ECf7+VbIXn14E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388720AbfIDSHs (ORCPT
+        id S2389677AbfIDSHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:07:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50304 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389274AbfIDSHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:45 -0400
+        id S2389666AbfIDSHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:07:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37962206B8;
-        Wed,  4 Sep 2019 18:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E121B2087E;
+        Wed,  4 Sep 2019 18:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620464;
-        bh=HVPsM3txQgcnk/3lR3lRftJNUg0OBCD3o9erAomK1l4=;
+        s=default; t=1567620467;
+        bh=5uk+51uu0Z02aMpaY4RrJs1/FVlS4vsGz6j6s1yrv74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sGIHI+g2AkWeoOFk837deCsV6uhIZapzC202jYaK8MqU9fOWI+DF76lXBwDuODiNM
-         Pwyq3o6QlsLtj9jxkCxwwFSqAbjP0l4x0+1LEQpg9kxoU2ZwtdEC6zKqsddTEBs3mM
-         fZCdtYqarsx4huAYU16LMFllMdETZv0xAiAc5miA=
+        b=oF4z7BK5kJEcPBEg6sLeS0JD/DEgNmUnqM6C3ylc7zS7+tDWzkqsvAEuOFyJeQPos
+         acxnbxGY7jmqVyShBoiU8tcyUR8qzx4WI5NaFabUFwuvCZ+OBbVUDZCkki3RxgHkre
+         dLi4uejZegZ/5FkU9Jyfp05Ugdcey1rq5xxhDkqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: [PATCH 4.19 68/93] typec: tcpm: fix a typo in the comparison of pdo_max_voltage
-Date:   Wed,  4 Sep 2019 19:54:10 +0200
-Message-Id: <20190904175308.907305241@linuxfoundation.org>
+        stable@vger.kernel.org, Eddie James <eajames@linux.ibm.com>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 4.19 69/93] fsi: scom: Dont abort operations for minor errors
+Date:   Wed,  4 Sep 2019 19:54:11 +0200
+Message-Id: <20190904175309.006011103@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,38 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-commit a684d8fd87182090ee96e34519ecdf009cef093a upstream.
+commit 8919dfcb31161fae7d607bbef5247e5e82fd6457 upstream.
 
-There appears to be a typo in the comparison of pdo_max_voltage[i]
-with the previous value, currently it is checking against the
-array pdo_min_voltage rather than pdo_max_voltage. I believe this
-is a typo. Fix this.
+The scom driver currently fails out of operations if certain system
+errors are flagged in the status register; system checkstop, special
+attention, or recoverable error. These errors won't impact the ability
+of the scom engine to perform operations, so the driver should continue
+under these conditions.
+Also, don't do a PIB reset for these conditions, since it won't help.
 
-Addresses-Coverity: ("Copy-paste error")
-Fixes: 5007e1b5db73 ("typec: tcpm: Validate source and sink caps")
+Fixes: 6b293258cded ("fsi: scom: Major overhaul")
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Link: https://lore.kernel.org/r/20190822135212.10195-1-colin.king@canonical.com
+Acked-by: Jeremy Kerr <jk@ozlabs.org>
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Link: https://lore.kernel.org/r/20190827041249.13381-1-jk@ozlabs.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tcpm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/fsi/fsi-scom.c |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -1445,7 +1445,7 @@ static enum pdo_err tcpm_caps_err(struct
- 				else if ((pdo_min_voltage(pdo[i]) ==
- 					  pdo_min_voltage(pdo[i - 1])) &&
- 					 (pdo_max_voltage(pdo[i]) ==
--					  pdo_min_voltage(pdo[i - 1])))
-+					  pdo_max_voltage(pdo[i - 1])))
- 					return PDO_ERR_DUPE_PDO;
- 				break;
- 			/*
+--- a/drivers/fsi/fsi-scom.c
++++ b/drivers/fsi/fsi-scom.c
+@@ -47,8 +47,7 @@
+ #define SCOM_STATUS_PIB_RESP_MASK	0x00007000
+ #define SCOM_STATUS_PIB_RESP_SHIFT	12
+ 
+-#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_ERR_SUMMARY | \
+-					 SCOM_STATUS_PROTECTION | \
++#define SCOM_STATUS_ANY_ERR		(SCOM_STATUS_PROTECTION | \
+ 					 SCOM_STATUS_PARITY |	  \
+ 					 SCOM_STATUS_PIB_ABORT | \
+ 					 SCOM_STATUS_PIB_RESP_MASK)
+@@ -260,11 +259,6 @@ static int handle_fsi2pib_status(struct
+ 	/* Return -EBUSY on PIB abort to force a retry */
+ 	if (status & SCOM_STATUS_PIB_ABORT)
+ 		return -EBUSY;
+-	if (status & SCOM_STATUS_ERR_SUMMARY) {
+-		fsi_device_write(scom->fsi_dev, SCOM_FSI2PIB_RESET_REG, &dummy,
+-				 sizeof(uint32_t));
+-		return -EIO;
+-	}
+ 	return 0;
+ }
+ 
 
 
