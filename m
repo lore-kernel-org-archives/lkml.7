@@ -2,52 +2,78 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C68EC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D65EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D932A21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573C722CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619879;
-	bh=eXnkznGXAG3AwUaxreiaShnm6n/qQwAB9/xWNwbz3fU=;
+	s=default; t=1567619882;
+	bh=zoRprk2V8Tx3nRetmgk8Ms+4yAZgUhFm9LnvQgur+3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DZNyLKsMQbHPrve/u3hf5pFkk3Ma6vc2ZrYbvwmu8xDTtsQRJQ67qjR5j+HoaGGxq
-	 0XGkpOqwtrcDqR8lkYMWhBeq6yBDuzAiSl1o8EKccFsxBHsDozaw9TZ9WIF0xY8SzP
-	 pSk3ZFFzPEFrbhbayFBCEYmoCJHgLVuem3jFvLvE=
+	b=DzF/n20KHJUpTovMN6tKTTj7Os1mD1kQ10CQTskcvevoKYymmF46UDoJ5Rk/N58ad
+	 y8w3Svc3LqY+RifnJPmMC9AbPHF2unIqTgaElSQM5k21aTWsxDL22msIb4c8Il9Uzm
+	 UB13YlTazKiO4/hVkLFDWxeco8lrrczmraC6gVKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387965AbfIDR56 (ORCPT
+        id S2387973AbfIDR6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36176 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387952AbfIDR55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:57 -0400
+        id S2387966AbfIDR6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37AF208E4;
-        Wed,  4 Sep 2019 17:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80495208E4;
+        Wed,  4 Sep 2019 17:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619876;
-        bh=eXnkznGXAG3AwUaxreiaShnm6n/qQwAB9/xWNwbz3fU=;
+        s=default; t=1567619879;
+        bh=zoRprk2V8Tx3nRetmgk8Ms+4yAZgUhFm9LnvQgur+3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UEKYffMTzrpAUvWY3J606Ju9W4ISYkb7d5qRoZ+w92BDTZracp+vQ14X/Ebwg679A
-         Y0RKzxaILIK2kk53OvMpCnj/eebx1+sj7BFvYUpnps8JDsyVdavQpDX70blHPYHCiP
-         NXjQpLRtzdnKLuTfytFj41ZQi1n43YSwQXy89DbM=
+        b=lzPAYsW0WUWbtB7JMCgQSDho5ry1gm3q2K0MU4o6uweFsJfvFSRRs8rWvKOnYeyD+
+         rNA3BXMmKBW4KoXait0NsWTWwQZ6AR+Z2tyAgK/RXPPm6SOECutSZRL1vhaTW6ZHe4
+         UeyY8VuAJJeEyQg2uSHHOLPssx+onVaBIVsHj7Ec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.4 68/77] USB: storage: ums-realtek: Whitelist auto-delink support
-Date:   Wed,  4 Sep 2019 19:53:55 +0200
-Message-Id: <20190904175309.713318176@linuxfoundation.org>
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        ricardo.neri@intel.com, Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Qiaowei Ren <qiaowei.ren@intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, Jiri Slaby <jslaby@suse.cz>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Chris Metcalf <cmetcalf@mellanox.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Chen Yucong <slaoub@gmail.com>,
+        Adam Buchbinder <adam.buchbinder@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 69/77] ptrace,x86: Make user_64bit_mode() available to 32-bit builds
+Date:   Wed,  4 Sep 2019 19:53:56 +0200
+Message-Id: <20190904175309.806860827@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,52 +86,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+[ Upstream commit e27c310af5c05cf876d9cad006928076c27f54d4 ]
 
-commit 1902a01e2bcc3abd7c9a18dc05e78c7ab4a53c54 upstream.
+In its current form, user_64bit_mode() can only be used when CONFIG_X86_64
+is selected. This implies that code built with CONFIG_X86_64=n cannot use
+it. If a piece of code needs to be built for both CONFIG_X86_64=y and
+CONFIG_X86_64=n and wants to use this function, it needs to wrap it in
+an #ifdef/#endif; potentially, in multiple places.
 
-Auto-delink requires writing special registers to ums-realtek devices.
-Unconditionally enable auto-delink may break newer devices.
+This can be easily avoided with a single #ifdef/#endif pair within
+user_64bit_mode() itself.
 
-So only enable auto-delink by default for the original three IDs,
-0x0138, 0x0158 and 0x0159.
-
-Realtek is working on a patch to properly support auto-delink for other
-IDs.
-
-BugLink: https://bugs.launchpad.net/bugs/1838886
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190827173450.13572-2-kai.heng.feng@canonical.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Suggested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: ricardo.neri@intel.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Qiaowei Ren <qiaowei.ren@intel.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Jiri Slaby <jslaby@suse.cz>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+Cc: Chris Metcalf <cmetcalf@mellanox.com>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Colin Ian King <colin.king@canonical.com>
+Cc: Chen Yucong <slaoub@gmail.com>
+Cc: Adam Buchbinder <adam.buchbinder@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Lorenzo Stoakes <lstoakes@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Garnier <thgarnie@google.com>
+Link: https://lkml.kernel.org/r/1509135945-13762-4-git-send-email-ricardo.neri-calderon@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/realtek_cr.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/ptrace.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/storage/realtek_cr.c
-+++ b/drivers/usb/storage/realtek_cr.c
-@@ -1006,12 +1006,15 @@ static int init_realtek_cr(struct us_dat
- 			goto INIT_FAIL;
- 	}
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 6271281f947d8..0d8e0831b1a07 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -121,9 +121,9 @@ static inline int v8086_mode(struct pt_regs *regs)
+ #endif
+ }
  
--	if (CHECK_FW_VER(chip, 0x5888) || CHECK_FW_VER(chip, 0x5889) ||
--	    CHECK_FW_VER(chip, 0x5901))
--		SET_AUTO_DELINK(chip);
--	if (STATUS_LEN(chip) == 16) {
--		if (SUPPORT_AUTO_DELINK(chip))
-+	if (CHECK_PID(chip, 0x0138) || CHECK_PID(chip, 0x0158) ||
-+	    CHECK_PID(chip, 0x0159)) {
-+		if (CHECK_FW_VER(chip, 0x5888) || CHECK_FW_VER(chip, 0x5889) ||
-+				CHECK_FW_VER(chip, 0x5901))
- 			SET_AUTO_DELINK(chip);
-+		if (STATUS_LEN(chip) == 16) {
-+			if (SUPPORT_AUTO_DELINK(chip))
-+				SET_AUTO_DELINK(chip);
-+		}
- 	}
- #ifdef CONFIG_REALTEK_AUTOPM
- 	if (ss_en)
+-#ifdef CONFIG_X86_64
+ static inline bool user_64bit_mode(struct pt_regs *regs)
+ {
++#ifdef CONFIG_X86_64
+ #ifndef CONFIG_PARAVIRT
+ 	/*
+ 	 * On non-paravirt systems, this is the only long mode CPL 3
+@@ -134,8 +134,12 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
+ 	/* Headers are too twisted for this to go in paravirt.h. */
+ 	return regs->cs == __USER_CS || regs->cs == pv_info.extra_user_64bit_cs;
+ #endif
++#else /* !CONFIG_X86_64 */
++	return false;
++#endif
+ }
+ 
++#ifdef CONFIG_X86_64
+ #define current_user_stack_pointer()	current_pt_regs()->sp
+ #define compat_user_stack_pointer()	current_pt_regs()->sp
+ #endif
+-- 
+2.20.1
+
 
 
