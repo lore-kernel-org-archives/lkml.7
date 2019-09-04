@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDC9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAC2C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A6652053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48ABC21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613809;
-	bh=agH5+U3fXKJyCeEab3jPzf+6QiPNlR+qYEGA4l7+8So=;
+	s=default; t=1567613817;
+	bh=D0PHffr+UtvzHd3GiiY/dXffQ6WW2L71eNfjM+kPnm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnTdf85o2pTymul4+Nevboa7jf6S7HE97/aUJ5vEolh1feC/vvGwOcLyI1Rl2i+pl
-	 ddWZF7Nkd0uCLW0JO8RdbURMQYCZAdxRiEjkyWof6avKocv2o7Y6Q2jObfOLG2qzOm
-	 bfM/QkmjlzG8Cx1C++h9ODnld1o/y6rSV4XgYooM=
+	b=BrQlA6xG2YefdGRCXRjwSy1C6LfK2xr3xsH7UO1CMeeaJVtM3fCZYtUOi2/BwIY2W
+	 qXQp0JE9WU/ICuYzdQK1w7MJPyLMBOpxiBlB9LeyN4iRyWTDoQvBKnC1vmOOUHCgCF
+	 X3voDzPGHPs13+T0aZR3T2cKQJwGnoQGYpC16L1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732397AbfIDP73 (ORCPT
+        id S2387695AbfIDQQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:59:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33866 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731505AbfIDP7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:59:24 -0400
+        id S1731639AbfIDP72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:59:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B11FA2087E;
-        Wed,  4 Sep 2019 15:59:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9330E22CED;
+        Wed,  4 Sep 2019 15:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612763;
-        bh=agH5+U3fXKJyCeEab3jPzf+6QiPNlR+qYEGA4l7+8So=;
+        s=default; t=1567612767;
+        bh=D0PHffr+UtvzHd3GiiY/dXffQ6WW2L71eNfjM+kPnm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GH+G2rJxoA/JGwP+3GkXVP4FdPd5sJW7Td7V0vF1xe4aEGZNG10UPZwHnjUObp56C
-         RWkr7ajmLXxAuw9HF0XE4PP5vk9M6A3PQt6wmf6/7HhQV5C+HCDV1hD1yx6DEYgCYd
-         f9Eh5MHq0bqnyhQyMTVzK6i0tV85Zb2TjUPkHr8A=
+        b=ZZb6CS/4fNAVq5/smu2sWUAi1ejGU/+zQgf6QnZd/m9iTqFBK3z85K8NkvbbcvdVJ
+         r9RKJg1ozbbTIiN7nvrExHwre7DMVPIzeo1DWZ2xsFHpOSsB+9arwZSR3QPDOIDYPR
+         dJiA7RYa+El6V6w2leuPLgpnTp1QSmmrTWQ8hgWU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+Cc:     Takashi Iwai <tiwai@suse.de>, SteveM <swm@swm1.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 67/94] ibmvnic: Do not process reset during or after device removal
-Date:   Wed,  4 Sep 2019 11:57:12 -0400
-Message-Id: <20190904155739.2816-67-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 69/94] sky2: Disable MSI on yet another ASUS boards (P6Xxxx)
+Date:   Wed,  4 Sep 2019 11:57:14 -0400
+Message-Id: <20190904155739.2816-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -61,52 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 36f1031c51a2538e5558fb44c6d6b88f98d3c0f2 ]
+[ Upstream commit 189308d5823a089b56e2299cd96589507dac7319 ]
 
-Currently, the ibmvnic driver will not schedule device resets
-if the device is being removed, but does not check the device
-state before the reset is actually processed. This leads to a race
-where a reset is scheduled with a valid device state but is
-processed after the driver has been removed, resulting in an oops.
+A similar workaround for the suspend/resume problem is needed for yet
+another ASUS machines, P6X models.  Like the previous fix, the BIOS
+doesn't provide the standard DMI_SYS_* entry, so again DMI_BOARD_*
+entries are used instead.
 
-Fix this by checking the device state before processing a queued
-reset event.
-
-Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Tested-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Reported-and-tested-by: SteveM <swm@swm1.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/sky2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 3da6800732656..d103be77eb406 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -1981,6 +1981,10 @@ static void __ibmvnic_reset(struct work_struct *work)
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index c93a6f9b735b0..7e88446ac97a9 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -4924,6 +4924,13 @@ static const struct dmi_system_id msi_blacklist[] = {
+ 			DMI_MATCH(DMI_BOARD_NAME, "P6T"),
+ 		},
+ 	},
++	{
++		.ident = "ASUS P6X",
++		.matches = {
++			DMI_MATCH(DMI_BOARD_VENDOR, "ASUSTeK Computer INC."),
++			DMI_MATCH(DMI_BOARD_NAME, "P6X"),
++		},
++	},
+ 	{}
+ };
  
- 	rwi = get_next_rwi(adapter);
- 	while (rwi) {
-+		if (adapter->state == VNIC_REMOVING ||
-+		    adapter->state == VNIC_REMOVED)
-+			goto out;
-+
- 		if (adapter->force_reset_recovery) {
- 			adapter->force_reset_recovery = false;
- 			rc = do_hard_reset(adapter, rwi, reset_state);
-@@ -2005,7 +2009,7 @@ static void __ibmvnic_reset(struct work_struct *work)
- 		netdev_dbg(adapter->netdev, "Reset failed\n");
- 		free_all_rwi(adapter);
- 	}
--
-+out:
- 	adapter->resetting = false;
- 	if (we_lock_rtnl)
- 		rtnl_unlock();
 -- 
 2.20.1
 
