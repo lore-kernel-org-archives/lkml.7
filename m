@@ -2,98 +2,85 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6E8C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B863EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2D2721670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:58:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="asWc2sqI"
+	by mail.kernel.org (Postfix) with ESMTP id 8C7F021881
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732402AbfIDQ6F (ORCPT
+        id S1732343AbfIDQ7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:58:05 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34104 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731564AbfIDQ6E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:58:04 -0400
-Received: by mail-io1-f68.google.com with SMTP id s21so45824338ioa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I4AEVHZWDKj5M3XNGlUJpNgGM5Z1l9AtMPF1Hqde4DM=;
-        b=asWc2sqIHddJtfzpGPSflNT5pALrlHIbgF4I0kHpFB1oZPYM9gDBwVZGGi7OtxWdXG
-         PPLjQaihV0MOd2qP3s+pRow5caaVDzoXH65KvyTmbH6UL6DMpMt+2d17Z1AfLZjo8ep3
-         hMdZZxJELA2F5afBUr10xth92mqJc8bLt5d+nWpYIUhxfUurKK4W4Emy+SQnkZRhYi4G
-         hjZKiEtB39XoumJNkg1WOWUEmIA6i+ZwBZtg7rStpIivhqv8ekIGDdUZmtoLo/uQshqW
-         SgwZHF7mgB/lRouNZ4D25erP6OjzyBkkz78zvxvjAEX6cR1uHIpXgziTDvHHsZpY0+ny
-         O8Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I4AEVHZWDKj5M3XNGlUJpNgGM5Z1l9AtMPF1Hqde4DM=;
-        b=ex4B+GDqieMOWMS3ku+HmPNAH/vOxvcMJS6yQRr2NxBRfBS8EGtjS7gQTm6kJraOwb
-         e2ukJG42bOPTyxoad5MP/tMJLsqMwAw4dTvFQRJA8Bb26+rvBS+EBIevc3DmVqAE4QJR
-         N/SKIWpRg+6RgthvjKtW+kFhOpvMrJq4co2z53dHI9BOV/aveM9EFW93+XLd5RgmiLuO
-         KFBWu8ElDAu2ho13cLs3vZBJbQcwNfH5oaQmooJDmb7O3FkGirUyr03XDhjvnnByRW+X
-         qQ686MAAidq3vztiVMuZYuDEBI8oc6MqWsSudffNr+CBHQeYsO92G2i8D6T+a/OvvZJ0
-         vl4Q==
-X-Gm-Message-State: APjAAAWVpwndjYL1c1Rg4jMC8TEZaNWeks8XFf63AJ59+TFkR5RlzQLI
-        rGhGACiyOBcj+/JaJ6W4JHYli4F16JI16v8Rpp35sQ==
-X-Google-Smtp-Source: APXvYqzIbsuE/yut9DVBnXppG4ta1mqNva3WuZnN1oWipNNP7O4N/45Gr53DC/XHb8eNNMFecqOhTbvf220xSgyYutU=
-X-Received: by 2002:a02:354b:: with SMTP id y11mr17856473jae.53.1567616283414;
- Wed, 04 Sep 2019 09:58:03 -0700 (PDT)
+        Wed, 4 Sep 2019 12:59:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731580AbfIDQ7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:59:32 -0400
+Received: from oasis.local.home (bl11-233-114.dsl.telepac.pt [85.244.233.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E335D21670;
+        Wed,  4 Sep 2019 16:59:29 +0000 (UTC)
+Date:   Wed, 4 Sep 2019 12:59:23 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>, mingo@redhat.com,
+        tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] trace:Add "gfp_t" support in synthetic_events
+Message-ID: <20190904125923.7b1e66b8@oasis.local.home>
+In-Reply-To: <1567602838.13841.1.camel@kernel.org>
+References: <20190712015308.9908-1-zhengjun.xing@linux.intel.com>
+        <1562947506.12920.0.camel@kernel.org>
+        <20190904064327.28876d71@oasis.local.home>
+        <1567602838.13841.1.camel@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190820001805.241928-1-matthewgarrett@google.com>
- <20190820001805.241928-5-matthewgarrett@google.com> <3638.1567182673@warthog.procyon.org.uk>
-In-Reply-To: <3638.1567182673@warthog.procyon.org.uk>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Wed, 4 Sep 2019 09:57:52 -0700
-Message-ID: <CACdnJuuTRQM9SQvLMqW+C=6ukQPpvkwqFZ6U+wnL4uYxcG14Ww@mail.gmail.com>
-Subject: Re: [PATCH V40 04/29] lockdown: Enforce module signatures if the
- kernel is locked down
-To:     David Howells <dhowells@redhat.com>
-Cc:     James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, Jessica Yu <jeyu@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 9:31 AM David Howells <dhowells@redhat.com> wrote:
->
-> Matthew Garrett <matthewgarrett@google.com> wrote:
->
-> >  enum lockdown_reason {
-> >       LOCKDOWN_NONE,
-> > +     LOCKDOWN_MODULE_SIGNATURE,
-> >       LOCKDOWN_INTEGRITY_MAX,
-> >       LOCKDOWN_CONFIDENTIALITY_MAX,
-> >  };
->
-> Aren't you mixing disjoint sets?
+On Wed, 04 Sep 2019 08:13:58 -0500
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-The goal is to be able to check whether any given lockdown reason is a
-matter of integrity or confidentiality in a straightforward way.
+> Hi Steve,
+> 
+> On Wed, 2019-09-04 at 06:43 -0400, Steven Rostedt wrote:
+> > On Fri, 12 Jul 2019 11:05:06 -0500
+> > Tom Zanussi <zanussi@kernel.org> wrote:
+> >   
+> > > Hi Zhengjun,
+> > > 
+> > > On Fri, 2019-07-12 at 09:53 +0800, Zhengjun Xing wrote:  
+> > > > Add "gfp_t" support in synthetic_events, then the "gfp_t" type
+> > > > parameter in some functions can be traced.
+> > > > 
+> > > > Prints the gfp flags as hex in addition to the human-readable
+> > > > flag
+> > > > string.  Example output:
+> > > > 
+> > > >   whoopsie-630 [000] ...1 78.969452: testevent: bar=b20
+> > > > (GFP_ATOMIC|__GFP_ZERO)
+> > > >     rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20
+> > > > (GFP_ATOMIC)
+> > > >     rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20
+> > > > (GFP_ATOMIC)
+> > > > 
+> > > > Signed-off-by: Tom Zanussi <zanussi@kernel.org>  
+> > 
+> > Why is this Signed-off-by Tom? Tom, did you author part of this??
+> >   
+> 
+> Yeah, I added the part that prints the flag names.
+> 
 
-> > +     [LOCKDOWN_MODULE_SIGNATURE] = "unsigned module loading",
->
-> Wouldn't it be better to pass this string as a parameter to
-> security_locked_down()?
+OK, I'll comment that in the patch change log.
 
-I thought about that, but it's not how any other LSM hooks behave. I
-think it's probably easier to revisit that when we see how other LSMs
-want to make use of the data.
+Thanks!
+
+-- Steve
