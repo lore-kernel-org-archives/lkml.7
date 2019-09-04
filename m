@@ -2,55 +2,58 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703C8C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88212C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E08522CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A38208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621334;
-	bh=JVMkUiNi1mC+2p6+ITIHy1TPRAyipRK4jUwnLWfxZTM=;
+	s=default; t=1567621343;
+	bh=yOuuWbnzDzrVFrx19MYF+nHUQbpLTEStOdeaKYBpv9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y2NqKonWQfEmc4tEbU6QOCFdsXzUYGBwpYsYzvKc4keIwtkSM23NvbFSM9EGE9zJy
-	 ttOa5f8Yu8LXt+h//edfR3TZHi8MiGWs3/29NbQkhbsH3eMjRHafbODzCOo5jXS3fm
-	 LIYCkrHDxsr+rLI0IQ3ITt1Ei0eAM3PeymFbF7Aw=
+	b=JlR4ERGYv3zJEps9GTgur+il1eoAZzdIdZNX0oheKr0uamCSPm1TlvMUcAqlVJMrJ
+	 foT2DP4Z/kpHJaZWOf+3O5uIzHrfnBM4+mFxySEpl7SUOeeo3t5/2RNpVv1ygpZZWa
+	 ae/H/+xFOH1O+al6o+ljuAEffwPffvOMAC5Mf2Ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388116AbfIDSWN (ORCPT
+        id S2389150AbfIDSEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46436 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:04:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389198AbfIDSFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:05:08 -0400
+        id S2388614AbfIDSEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F3CB206BA;
-        Wed,  4 Sep 2019 18:05:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A74E2339E;
+        Wed,  4 Sep 2019 18:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620307;
-        bh=JVMkUiNi1mC+2p6+ITIHy1TPRAyipRK4jUwnLWfxZTM=;
+        s=default; t=1567620286;
+        bh=yOuuWbnzDzrVFrx19MYF+nHUQbpLTEStOdeaKYBpv9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XpfiAzIx88tHk2+p95Ielc5RM7BasT28+Tx78E8enXs6ogL478vdB44y6fYLa0VHn
-         1f0K6yB/XeCt0AUcsdkIi9JnVYyAKd8Vi8jZp6s945aTQPq3SSVi7Gt3bGDd4TcYCc
-         nRUEwqdpsgWkGmOpYNBTLC7R0L8uCpwVDoPPorKs=
+        b=fdvPico4lmr8oh4uBoXEgYnIVrucA5GmiZc9knbLAx22p9kuUnFYIADr8m7uLxHOg
+         /YSSTBg9+F1xGYbJ2KZ4mSfiGDrZl/d3fiqQn4WLJcoVkfrymg/fxT3WycNUiPnrW0
+         JEfoLwybcqweT3m276ql+FO43GPDzjVnilPBkke4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 10/93] soundwire: cadence_master: fix register definition for SLAVE_STATE
-Date:   Wed,  4 Sep 2019 19:53:12 +0200
-Message-Id: <20190904175304.057403828@linuxfoundation.org>
+        Francois Rigault <rigault.francois@gmail.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Vishnu DASA <vdasa@vmware.com>, Nadav Amit <namit@vmware.com>
+Subject: [PATCH 4.14 45/57] VMCI: Release resource if the work is already queued
+Date:   Wed,  4 Sep 2019 19:54:13 +0200
+Message-Id: <20190904175306.439462021@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
-References: <20190904175302.845828956@linuxfoundation.org>
+In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
+References: <20190904175301.777414715@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,35 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b07dd9b400981f487940a4d84292d3a0e7cd9362 ]
+From: Nadav Amit <namit@vmware.com>
 
-wrong prefix and wrong macro.
+commit ba03a9bbd17b149c373c0ea44017f35fc2cd0f28 upstream.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20190725234032.21152-14-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Francois reported that VMware balloon gets stuck after a balloon reset,
+when the VMCI doorbell is removed. A similar error can occur when the
+balloon driver is removed with the following splat:
+
+[ 1088.622000] INFO: task modprobe:3565 blocked for more than 120 seconds.
+[ 1088.622035]       Tainted: G        W         5.2.0 #4
+[ 1088.622087] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1088.622205] modprobe        D    0  3565   1450 0x00000000
+[ 1088.622210] Call Trace:
+[ 1088.622246]  __schedule+0x2a8/0x690
+[ 1088.622248]  schedule+0x2d/0x90
+[ 1088.622250]  schedule_timeout+0x1d3/0x2f0
+[ 1088.622252]  wait_for_completion+0xba/0x140
+[ 1088.622320]  ? wake_up_q+0x80/0x80
+[ 1088.622370]  vmci_resource_remove+0xb9/0xc0 [vmw_vmci]
+[ 1088.622373]  vmci_doorbell_destroy+0x9e/0xd0 [vmw_vmci]
+[ 1088.622379]  vmballoon_vmci_cleanup+0x6e/0xf0 [vmw_balloon]
+[ 1088.622381]  vmballoon_exit+0x18/0xcc8 [vmw_balloon]
+[ 1088.622394]  __x64_sys_delete_module+0x146/0x280
+[ 1088.622408]  do_syscall_64+0x5a/0x130
+[ 1088.622410]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1088.622415] RIP: 0033:0x7f54f62791b7
+[ 1088.622421] Code: Bad RIP value.
+[ 1088.622421] RSP: 002b:00007fff2a949008 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+[ 1088.622426] RAX: ffffffffffffffda RBX: 000055dff8b55d00 RCX: 00007f54f62791b7
+[ 1088.622426] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055dff8b55d68
+[ 1088.622427] RBP: 000055dff8b55d00 R08: 00007fff2a947fb1 R09: 0000000000000000
+[ 1088.622427] R10: 00007f54f62f5cc0 R11: 0000000000000206 R12: 000055dff8b55d68
+[ 1088.622428] R13: 0000000000000001 R14: 000055dff8b55d68 R15: 00007fff2a94a3f0
+
+The cause for the bug is that when the "delayed" doorbell is invoked, it
+takes a reference on the doorbell entry and schedules work that is
+supposed to run the appropriate code and drop the doorbell entry
+reference. The code ignores the fact that if the work is already queued,
+it will not be scheduled to run one more time. As a result one of the
+references would not be dropped. When the code waits for the reference
+to get to zero, during balloon reset or module removal, it gets stuck.
+
+Fix it. Drop the reference if schedule_work() indicates that the work is
+already queued.
+
+Note that this bug got more apparent (or apparent at all) due to
+commit ce664331b248 ("vmw_balloon: VMCI_DOORBELL_SET does not check status").
+
+Fixes: 83e2ec765be03 ("VMCI: doorbell implementation.")
+Reported-by: Francois Rigault <rigault.francois@gmail.com>
+Cc: Jorgen Hansen <jhansen@vmware.com>
+Cc: Adit Ranadive <aditr@vmware.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Vishnu DASA <vdasa@vmware.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Reviewed-by: Vishnu Dasa <vdasa@vmware.com>
+Link: https://lore.kernel.org/r/20190820202638.49003-1-namit@vmware.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/soundwire/cadence_master.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/misc/vmw_vmci/vmci_doorbell.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-index cb6a331f448ab..d3d7de5a319c5 100644
---- a/drivers/soundwire/cadence_master.c
-+++ b/drivers/soundwire/cadence_master.c
-@@ -81,8 +81,8 @@
+--- a/drivers/misc/vmw_vmci/vmci_doorbell.c
++++ b/drivers/misc/vmw_vmci/vmci_doorbell.c
+@@ -318,7 +318,8 @@ int vmci_dbell_host_context_notify(u32 s
  
- #define CDNS_MCP_INTSET				0x4C
- 
--#define CDNS_SDW_SLAVE_STAT			0x50
--#define CDNS_MCP_SLAVE_STAT_MASK		BIT(1, 0)
-+#define CDNS_MCP_SLAVE_STAT			0x50
-+#define CDNS_MCP_SLAVE_STAT_MASK		GENMASK(1, 0)
- 
- #define CDNS_MCP_SLAVE_INTSTAT0			0x54
- #define CDNS_MCP_SLAVE_INTSTAT1			0x58
--- 
-2.20.1
-
+ 	entry = container_of(resource, struct dbell_entry, resource);
+ 	if (entry->run_delayed) {
+-		schedule_work(&entry->work);
++		if (!schedule_work(&entry->work))
++			vmci_resource_put(resource);
+ 	} else {
+ 		entry->notify_cb(entry->client_data);
+ 		vmci_resource_put(resource);
+@@ -366,7 +367,8 @@ static void dbell_fire_entries(u32 notif
+ 		    atomic_read(&dbell->active) == 1) {
+ 			if (dbell->run_delayed) {
+ 				vmci_resource_get(&dbell->resource);
+-				schedule_work(&dbell->work);
++				if (!schedule_work(&dbell->work))
++					vmci_resource_put(&dbell->resource);
+ 			} else {
+ 				dbell->notify_cb(dbell->client_data);
+ 			}
 
 
