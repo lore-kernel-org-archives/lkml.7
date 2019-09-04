@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C78C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8B3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3D5D22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B47022CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619744;
-	bh=yr4ch9rwju2SqQkK8tFH0pysm3ex2mVPb9iB2D/7cMY=;
+	s=default; t=1567619747;
+	bh=ScZ5QTYk4GXp07IKFfpar44gcHvE3kABQmHUVVU2oN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AtV+Z+JHD8NgRQPRJCtfmRAsiy3aPrg1tHUlPLlzxCh4/B/AzaSTfykafJqTu8DE9
-	 BlJk9XgOTUhfopf7BkCW6ry+MxFXpO6wbq6VL1mkWo5+o7KiP/033Fqk4PVuK5Racp
-	 HbCHxgi0nexVkW64q+I9ax0lrpirC/R1qK4S/slo=
+	b=wtxOxLqe9v0c2SQLFPbdK7v10v/eTj/2FfOcHaGZP8T0DpXD+rVwZhzzePc0vnx1t
+	 RggFXrme7jaD0tjUtugxHVROLiHC7IMbrPfvhEb0EUTQzs3SnopkGE7h1JK6D3nK8C
+	 bY6k3zPRgnYnezXh+nTnr7S4stXNH96Tnb9/5838=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732861AbfIDRzn (ORCPT
+        id S1732902AbfIDRzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:55:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60840 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732799AbfIDRzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:40 -0400
+        id S1732839AbfIDRzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:55:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B045622CEA;
-        Wed,  4 Sep 2019 17:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F89822CF7;
+        Wed,  4 Sep 2019 17:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619740;
-        bh=yr4ch9rwju2SqQkK8tFH0pysm3ex2mVPb9iB2D/7cMY=;
+        s=default; t=1567619742;
+        bh=ScZ5QTYk4GXp07IKFfpar44gcHvE3kABQmHUVVU2oN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mJsQUIXGUNKlXAsoGFA5pp6cmvL+XcmNg8z6FIahpm2xCdrGSl4+ZODN2aIw1c7dT
-         h8CHr7GPmwD7HWh+Xx/4MwaWxihl+S9nXSpoK3zhP1uSH2CMIJxZUnNRexwYPeMVg9
-         zqfk0fV9oyF3kN2vyHaTijYJHuQJ2znF8e9mG79c=
+        b=sDq2n5a060MfafOeY3WQJKWqaw62X58EP67ZhCVBXsVf1XYDC/wMjaJAkXit+y9Px
+         7VryDef6Qn3fHZ9fSe19fxPmV8baKUUsF8iPAPDPL4/cXeR6vvyAjFT1qJUBUkrH0s
+         tFYSfzIj/RcJd7llZyGW2sG5YDFt6efkEU9UI8Ws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Willem de Bruijn <willemb@google.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, Ricard Wanderlof <ricardw@axis.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 05/77] can: dev: call netif_carrier_off() in register_candev()
-Date:   Wed,  4 Sep 2019 19:52:52 +0200
-Message-Id: <20190904175303.919845972@linuxfoundation.org>
+Subject: [PATCH 4.4 06/77] ASoC: Fail card instantiation if DAI format setup fails
+Date:   Wed,  4 Sep 2019 19:52:53 +0200
+Message-Id: <20190904175304.060004729@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -62,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c63845609c4700488e5eacd6ab4d06d5d420e5ef ]
+[ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
 
-CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
-trigger as suggested, there's a small inconsistency with the link
-property: The LED is on initially, stays on when the device is brought
-up, and then turns off (as expected) when the device is brought down.
+If the DAI format setup fails, there is no valid communication format
+between CPU and CODEC, so fail card instantiation, rather than continue
+with a card that will most likely not function properly.
 
-Make sure the LED always reflects the state of the CAN device.
-
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Ricard Wanderlof <ricardw@axis.com>
+Link: https://lore.kernel.org/r/alpine.DEB.2.20.1907241132350.6338@lnxricardw1.se.axis.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/can/dev.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/soc-core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-index 8b7c6425b681d..9dd968ee792e0 100644
---- a/drivers/net/can/dev.c
-+++ b/drivers/net/can/dev.c
-@@ -1065,6 +1065,8 @@ static struct rtnl_link_ops can_link_ops __read_mostly = {
- int register_candev(struct net_device *dev)
- {
- 	dev->rtnl_link_ops = &can_link_ops;
-+	netif_carrier_off(dev);
-+
- 	return register_netdev(dev);
- }
- EXPORT_SYMBOL_GPL(register_candev);
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index b927f9c81d922..8d10a24d38e06 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1357,8 +1357,11 @@ static int soc_probe_link_dais(struct snd_soc_card *card, int num, int order)
+ 		}
+ 	}
+ 
+-	if (dai_link->dai_fmt)
+-		snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
++	if (dai_link->dai_fmt) {
++		ret = snd_soc_runtime_set_dai_fmt(rtd, dai_link->dai_fmt);
++		if (ret)
++			return ret;
++	}
+ 
+ 	ret = soc_post_component_init(rtd, dai_link->name);
+ 	if (ret)
 -- 
 2.20.1
 
