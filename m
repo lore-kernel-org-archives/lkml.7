@@ -2,165 +2,106 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4D5C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4202DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A2B21726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567631413;
-	bh=LuUtzpYz+SszjJS1ASCTqLWs6NSw/g3zdJ1//DUUYJs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Powh0v//ayqSoIkpuwqFPIJEgHN0L23gA020W8ZsU0FB+Bd1uIGoFYQT12WdQIU7Q
-	 1xZKjgoZZ7nKyZJG0BGEZcae/sKQSHBXDAtS0J1XNcwUhvbLm0Fi4/zaSJp63Bxh8V
-	 m2CHJCrCj5QYaukAq6YnDAUfQMwgIbd79ZnSSt/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 164DC21726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 21:10:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="cr/2pcTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730355AbfIDVKM (ORCPT
+        id S1730663AbfIDVK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 17:10:12 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42348 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfIDVKL (ORCPT
+        Wed, 4 Sep 2019 17:10:29 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42113 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730257AbfIDVK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 17:10:11 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u13so137657lfm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:10:10 -0700 (PDT)
+        Wed, 4 Sep 2019 17:10:28 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c10so10782449otd.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hgF2nRVhP2Z9Hk/CZOFcXhAAs++h0MvE3fMY8xcOeYw=;
-        b=V0fXrvG/y6fw7T3tD/KUlmTDsOhByRFRgMw+QxPA9hiU5TDgpngn7HfopRM+i/LJMb
-         k2AA+nRMkFxYb/ldSeHBR5el3bmmhNNCMxw9ToB+OOlkWRR6wchZHlLiKsQK9TmfmvjP
-         dVvrUijYkfU5Fh9X3uECYhU3OGmtsUJMmdGfk=
+        bh=wPMWwNSvV9eb5rCu0YMNtiK3/0cR200eFpdZP8tToms=;
+        b=cr/2pcTab+KUWoDNVNzO2zJ+8zFyfJbc3u75JTwJU8kJ7gWl3gxzG5ENnPPSyVrSCq
+         SuBqAQ8RzhaV2a/HxduSt7ppLV/eWGTtUx/a6wNjIODvqE88o+7S1ZWGc6I6GW/lWSco
+         ugSco9IMYbUbbhVhb7LB51QAUisJGNylBc2XTRY+ofuMS4mtW7yB+nBDwcC8Eflg+DIh
+         C47efgC6cD78+M5RvB3gTx+JoWSmjAvaaa2GqDhJjsgLFt59c15hiEh1Ur3QDfAToi1y
+         ZJezHfiZrelD2BcNYDQu3jmZ72RSuDo/vns5bY+ZuJ10WxhXfVOcTURaAUZLAfLH4A1T
+         NulQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hgF2nRVhP2Z9Hk/CZOFcXhAAs++h0MvE3fMY8xcOeYw=;
-        b=mw5JsjT4BrAO5WKG8JRb0pjdN01YeM+0G5P7W9xEM5qwuez2PrMCahVmTgGJRcZ6pN
-         hNA0B0bC24zTyHNmqFnTqd9PnUCH6zVxmgK36rSdJy8r88NgSad6KhCJiY7r7t+fAp5X
-         LS6WTe+XNudU6PY5U3yhgaR+GqQNXVAx6TNLuqUDxB8oNdDxctL1IPtDqOwBs5ynj93u
-         BJv88gaMzMYRcZ+QXjBFbXLolit0vUk+7r32/YR9om7Da5zbVNcAVf25xO1zil6xoSAJ
-         AzGlB+uMmdtCsw9r/ufC4eBSAQ4RuDcHBzsdcDuDDjHWW60RDWB6MC3IY27bCtJEVqHu
-         nQAA==
-X-Gm-Message-State: APjAAAXecmYyjLmYgAXFl0Drl2QQ31rjCYfmBuPBYV6Ht3Dj1PK3W7op
-        NtsbVh0TEXcV5eISQgw2CMTCWeN8vMI=
-X-Google-Smtp-Source: APXvYqyA9mfRwg0nsAOkjIWDdAOj/sw3a3z/MvmH6bCWT1MI0Ff7yXn2EkzDJ4SGgCAHBzi73PSdnA==
-X-Received: by 2002:ac2:4a70:: with SMTP id q16mr122256lfp.4.1567631408918;
-        Wed, 04 Sep 2019 14:10:08 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id v1sm3717728lfa.87.2019.09.04.14.10.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2019 14:10:08 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id j16so160636ljg.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 14:10:06 -0700 (PDT)
-X-Received: by 2002:a2e:8507:: with SMTP id j7mr10579330lji.156.1567631404184;
- Wed, 04 Sep 2019 14:10:04 -0700 (PDT)
+        bh=wPMWwNSvV9eb5rCu0YMNtiK3/0cR200eFpdZP8tToms=;
+        b=KF/vooN5G7sszytf/GpgSxbqWEKEQenr/0pHizS+zGxXPMoKjb5QLbWkuRv1CbrG4u
+         1mFIXQMPibmOSyYcd1cOVPNXCMEZXcx7T2Vn+ulsP9GgiPfV0+x3Jb07ElBgOF9/qTIx
+         /cNNaz7xR9VdhjBM1AuF6a/pI0wYUd97Je+6h43ROIIcukOwuK0Q8PXueJPl3peq12m3
+         v0TdJg3uL8iARGgxWxGoblvU5qMVnrib3JF4xu5WEC22Jj8/MnoZrNUYNP8Cwwp+MlX/
+         04RIuVPU/O3exNTv0NNpY0EYWdLDMKrEnEF27Jnceg7ZLOQOmQm/Dim5MvyB0YUuDntA
+         pK5w==
+X-Gm-Message-State: APjAAAVuBjICYnmXKRuy+Us7flmENZNQsTaZqtlLOZoBuGClE0QNGbHk
+        1Q+mgLC8LtqO9buMEHIbMTh2W8Srx6MRculves0Cwg==
+X-Google-Smtp-Source: APXvYqzFh8uueHK+qUmQpwTm/TlKG431AzcbA3p2O6x4cql8knUN37kiD/jGqwHTO7K8qxaIQLqXw5St076KjdfoMnU=
+X-Received: by 2002:a9d:6d15:: with SMTP id o21mr9381251otp.363.1567631427871;
+ Wed, 04 Sep 2019 14:10:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-11-cyphar@cyphar.com>
-In-Reply-To: <20190904201933.10736-11-cyphar@cyphar.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 4 Sep 2019 14:09:48 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com>
-Message-ID: <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com>
-Subject: Re: [PATCH v12 10/12] namei: aggressively check for nd->root escape
- on ".." resolution
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
+References: <20190904150920.13848.32271.stgit@localhost.localdomain> <20190904151030.13848.25822.stgit@localhost.localdomain>
+In-Reply-To: <20190904151030.13848.25822.stgit@localhost.localdomain>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 4 Sep 2019 14:10:17 -0700
+Message-ID: <CAPcyv4jZVoztoRA7hEq5xzbwg0QJ+UVASuk5XQmB5KHQrvAmfA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/6] mm: Adjust shuffle code to allow for future coalescing
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, KVM list <kvm@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+        virtio-dev@lists.oasis-open.org,
+        Oscar Salvador <osalvador@suse.de>, yang.zhang.wz@gmail.com,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        lcapitulino@redhat.com, "Wang, Wei W" <wei.w.wang@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 1:23 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+On Wed, Sep 4, 2019 at 8:10 AM Alexander Duyck
+<alexander.duyck@gmail.com> wrote:
 >
-> This patch allows for LOOKUP_BENEATH and LOOKUP_IN_ROOT to safely permit
-> ".." resolution (in the case of LOOKUP_BENEATH the resolution will still
-> fail if ".." resolution would resolve a path outside of the root --
-> while LOOKUP_IN_ROOT will chroot(2)-style scope it). Magic-link jumps
-> are still disallowed entirely because now they could result in
-> inconsistent behaviour if resolution encounters a subsequent ".."[*].
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+>
+> Move the head/tail adding logic out of the shuffle code and into the
+> __free_one_page function since ultimately that is where it is really
+> needed anyway. By doing this we should be able to reduce the overhead
+> and can consolidate all of the list addition bits in one spot.
+>
+> While changing out the code I also opted to go for a bit more thread safe
+> approach to getting the boolean value. This way we can avoid possible cache
+> line bouncing of the batched entropy between CPUs.
 
-This is the only patch in the series that makes me go "umm".
+The original version of this patch just did the movement, but now the
+patch also does the percpu optimization. At this point it warrants
+being split into a "move" patch and then "rework". Otherwise the bulk
+of the patch is not really well described by the patch title. With the
+split there's a commit id for each of the performance improvement
+claims.
 
-Why is it ok to re-initialize m_seq, which is used by other things
-too? I think it's because we're out of RCU lookup, but there's no
-comment about it, and it looks iffy to me. I'd rather have a separate
-sequence count that doesn't have two users with different lifetime
-rules.
-
-But even apart from that, I think from a "patch continuity" standpoint
-it would be better to introduce the sequence counts as just an error
-condition first - iow, not have the "path_is_under()" check, but just
-return -EXDEV if the sequence number doesn't match.
-
-So you'd have three stages:
-
- 1) ".." always returns -EXDEV
-
- 2) ".." returns -EXDEV if there was a concurrent rename/mount
-
- 3) ".." returns -EXDEV if there was a concurrent rename/mount and we
-reset the sequence numbers and check if you escaped.
-
-becasue the sequence number reset really does make me go "hmm", plus I
-get this nagging little feeling in the back of my head that you can
-cause nasty O(n^2) lookup cost behavior with deep paths, lots of "..",
-and repeated path_is_under() calls.
-
-So (1) sounds safe. (2) sounds simple. And (3) is where I think subtle
-things start happening.
-
-Also, I'm not 100% convinced that (3) is needed at all. I think the
-retry could be done in user space instead, which needs to have a
-fallback anyway. Yes? No?
-
-                 Linus
+Other than that the percpu logic changes look good to me.
