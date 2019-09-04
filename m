@@ -2,141 +2,160 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C694BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F7EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960C82168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091E422CE3
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="kdTM8h4S"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j9LKolnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbfIDO4v (ORCPT
+        id S1731105AbfIDO5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:56:51 -0400
-Received: from sonic303-27.consmr.mail.ne1.yahoo.com ([66.163.188.153]:40034
-        "EHLO sonic303-27.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729806AbfIDO4u (ORCPT
+        Wed, 4 Sep 2019 10:57:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52910 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730016AbfIDO5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:56:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1567609008; bh=ZiZUpa4OlflpyykovNV00Zn2esYZ6QcbKLYZHtiNUds=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=kdTM8h4SvoXCtFh3aPtY0+13TysL9zTXW0z6Uyd1g2MFYlhcPLO2YfsD6a0NAY0n2a3JYANIy+7Xq0IpDlYqA1knU2FqmA4Ap3QGaUE0pKnXr82qfDdispihs+/LILi8RoBIGnO4XpN6B0kAneSe1e0W6sZHxAkrf+ZUCzp4NIPakTEpO/j4qQNaZ7FGbjPky5QN0Za6nAVc5XCtyNL3RXAAkvzrvUc+00Dnpv/kmOKXQfUC0lcd3EWV6sLr8g7jCcRUkPc4bUuCDymw6sko1oFXUjMgaJRx+EnXhNAlmWsKIJZbKEMklDfBAF8/SXfmMqp3cuLuZWJy/I54rhjFIA==
-X-YMail-OSG: opM.IoIVM1nmPQ6ac22krzy3RhYyjsKlAXH..fafy0u1.b.v4c6Wst5wl4gwQZc
- kTsSvw7BqxrCGP075bn_ZMxZyduB5r90n5msR5B.4wDeABhoJ.3RTEnqSFut0Z3EfqvbzGwChUOj
- vGoA6QuK8NdhfCpXute0rpFHFYe3eL4hwWpyDPs6IRLZISdWGTmAzNwTowydw6lcfHIU.1g0z8UU
- CRlmnVLWjQu1z3SkDGcbympDZVRFuToMqECjO8z_KS6pFdwsaLy_HnU.t.80TejK_fVp5QRVJlj_
- oCtQGdLcBeS27MCucR1UpAG08DnBN3Pbqzi9vaWvjKqybLI9XvX.FBlfB2QC6_Fpkr70gQ6P4ZFu
- h7VqGy4vsVr1_cvw1EnARMfx25zEtF.JF2S6xpoloa1_5iVSRoglSF7bS2NIyEd8WY4e1xFKWxFj
- w24.V2AGGGUk302jPO4igK_HwxmYiTPjuamXwJ12Sm.ex2WwJfYzkiVmUkL5l.1zIH72QMKOcEkq
- 5KQ8uAxX68oxn29eJeAlmdYutg4Dci1N2iwekXXGBDCw5hMpYnwTgKbaGho5LKedUrp4eQc8c.3V
- 8wnq.qXjXR0rZfSCoB4Sm26kjGBUCAd5rBKstuXAvye7CrVm.s.cluybTF9O2A.9VghbGUhKmr_A
- _JSSQQ_Icmi9OS.OSwnvv_yCzRUAcd1sVyUsrA1btQYDLZhMSHMeD3sYCXMOFC6dqXpqGWrW9luN
- TX3mmwu6FPEGTWllORiJl.32.NS1AHeEvAkG0rxPhMaQkzGwdM_dx7okQg9_TBhjvsY6X3r8XR09
- Ln37Ne_gowGu6dOwpxwctC9wbOj7pZieFbDKf3Fp4wGIOdICbcCau63OrD23pwBpVkSoEgnjrBb4
- ZFOoKA_VKSGeh36umXadTqlQilhU74H0B.WXxfDYWbOZjfkQ3A0sBpsFyJNf95PgTDTp0C.UlQkg
- .QebP8aRAsp1nSPb3s9opmOlrlHpI2utLb1nYAnP9x1bIZTRgfTJBUp8L8psdwVdmLuz.OI.2rv.
- rOA7BtAsrSO3ycuHqALj4oIjugzd5xb8TKM1pvyc2W9ZKYO9uAYZ2BAtAQ6E5iiHEoWbPXdNrI.P
- lrnDg.f85u3yS2KtyAE61rvvgfzpVibnwGG7s1TboD47CVhhtsoYY_TxONC6fE9Knv.u1VHLII2F
- _F_rFz6nxKn6Ucj6UbtCvccxj7COilwe9s44nClkdUY7dfvV6WWXANRYApOeksAvpuw9C_A6S4FP
- NHe03IUfHxPXKv7DrtFvolZZAn8NfmznWc7U8MfHaqkysw4GG71Q9HGKrm3wiVCbRCJjCHT5k4ly
- b4bW5Pzp_1BYTK2AOZ2ib.gmWOs.nTzrfjjJp
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.ne1.yahoo.com with HTTP; Wed, 4 Sep 2019 14:56:48 +0000
-Received: by smtp431.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID ab143955ae61667d238fde3beed8cf6c;
-          Wed, 04 Sep 2019 14:56:47 +0000 (UTC)
-Subject: Re: [PATCH 11/11] smack: Implement the watch_key and
- post_notification hooks [untested] [ver #7]
-To:     David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, Stephen Smalley <sds@tycho.nsa.gov>,
+        Wed, 4 Sep 2019 10:57:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84EsLv7021639;
+        Wed, 4 Sep 2019 14:57:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=bMkLNokI8FrqjbwiojaO/ClC+naevlTB3j4jok3nW9w=;
+ b=j9LKolnDe405L/SnefO66pxHYcZ+puiqVF086GdjYze1AJWjqAiEInb2SC/dMiBrf/iN
+ zkRzErR8bMQjsBJkZZDZkYTlHti8Tv5F4V1uFxiWciStEjwcYxCPU4WfFMl355qr02I1
+ 4thmAcgTf8Rf4gD+ezRD7HYFGfgRiSRGrG+NEqdup7Yn0LIawJ2R2gdsmarwUBxu5XYk
+ 8bfvZuCYvU9guvA2EAXuP6d3tkIJNjTtx26JBBOj5YlobUFSAh2JASqHnlCA1qir1khh
+ O9JEdCt1Rlrg9tqz6HlLJIhww27a5IF/F9xKlHpjN5xfcUvEVDIBSLYugBThdLe9CWv3 iw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2utfejg0ut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Sep 2019 14:57:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84EqgYt065225;
+        Wed, 4 Sep 2019 14:57:13 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2usu51xw9s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Sep 2019 14:57:13 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x84Ev9FT025123;
+        Wed, 4 Sep 2019 14:57:10 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Sep 2019 07:57:09 -0700
+Date:   Wed, 4 Sep 2019 17:57:01 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Anders Larsen <al@alarsen.net>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        kernel-janitors@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        nicolas.dichtel@6wind.com, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        casey@schaufler-ca.com
-References: <23d61564-026e-b37a-8b16-ce68d5949f6c@schaufler-ca.com>
- <87bf0363-af77-1e5a-961f-72730e39e3a6@schaufler-ca.com>
- <e36fa722-a300-2abf-ae9c-a0246fc66d0e@schaufler-ca.com>
- <156717343223.2204.15875738850129174524.stgit@warthog.procyon.org.uk>
- <156717352917.2204.17206219813087348132.stgit@warthog.procyon.org.uk>
- <4910.1567525310@warthog.procyon.org.uk>
- <11467.1567534014@warthog.procyon.org.uk>
- <31205.1567598939@warthog.procyon.org.uk>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <5be00881-258a-d888-e544-0d14ac496dcf@schaufler-ca.com>
-Date:   Wed, 4 Sep 2019 07:56:46 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Jeff Layton <jlayton@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fs/qnx: Delete unnecessary checks before brelse()
+Message-ID: <20190904145700.GB3115@kadam>
+References: <056c8b8e-abaa-8856-4953-118d14048ddc@web.de>
+ <21774224.cEpxz9ejUk@alarsen.net>
 MIME-Version: 1.0
-In-Reply-To: <31205.1567598939@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21774224.cEpxz9ejUk@alarsen.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909040146
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9369 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909040146
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/2019 5:08 AM, David Howells wrote:
-> Casey Schaufler <casey@schaufler-ca.com> wrote:
->
->> I rebuilt with keys-next, updated the tests again, and now
->> the suite looks to be running trouble free.
-> Can I put you down as an Acked-by or something on this patch?
+On Tue, Sep 03, 2019 at 07:27:22PM +0200, Anders Larsen wrote:
+> On Tuesday, 2019-09-03 19:20 Markus Elfring wrote:
+> > diff --git a/fs/qnx6/inode.c b/fs/qnx6/inode.c
+> > index 345db56c98fd..083170541add 100644
+> > --- a/fs/qnx6/inode.c
+> > +++ b/fs/qnx6/inode.c
+> > @@ -472,10 +472,8 @@ static int qnx6_fill_super(struct super_block *s, void *data, int silent)
+> >  out1:
+> >  	iput(sbi->inodes);
+> >  out:
+> > -	if (bh1)
+> > -		brelse(bh1);
+> > -	if (bh2)
+> > -		brelse(bh2);
+> > +	brelse(bh1);
+> > +	brelse(bh2);
+> >  outnobh:
+> >  	kfree(qs);
+> >  	s->s_fs_info = NULL;
 
-I haven't done anything to see if the patch is actually useful.
-I don't have much (read: anything) in the way of key tests for
-Smack, so I can't say if this is what I want long term. But as
-it does appear harmless, yes, you can add my Acked-by on this.
+It looks like the original code is buggy:
 
->
-> Thanks,
-> David
+fs/qnx6/inode.c
+   409                  pr_info("superblock #1 active\n");
+   410          } else {
+   411                  /* superblock #2 active */
+   412                  sbi->sb_buf = bh2;
+   413                  sbi->sb = (struct qnx6_super_block *)bh2->b_data;
+   414                  brelse(bh1);
+                        ^^^^^^^^^^
+brelse()
+
+   415                  pr_info("superblock #2 active\n");
+   416          }
+   417  mmi_success:
+   418          /* sanity check - limit maximum indirect pointer levels */
+   419          if (sb1->Inode.levels > QNX6_PTR_MAX_LEVELS) {
+   420                  pr_err("too many inode levels (max %i, sb %i)\n",
+   421                         QNX6_PTR_MAX_LEVELS, sb1->Inode.levels);
+   422                  goto out;
+                        ^^^^^^^^
+goto
+
+   423          }
+
+[ snip ]
+
+   466  
+   467  out3:
+   468          dput(s->s_root);
+   469          s->s_root = NULL;
+   470  out2:
+   471          iput(sbi->longfile);
+   472  out1:
+   473          iput(sbi->inodes);
+   474  out:
+   475          if (bh1)
+   476                  brelse(bh1);
+                        ^^^^^^^^^^^
+Double brelse().
+
+   477          if (bh2)
+   478                  brelse(bh2);
+   479  outnobh:
+   480          kfree(qs);
+   481          s->s_fs_info = NULL;
+   482          return ret;
+   483  }
+
+regards,
+dan carpenter
+
