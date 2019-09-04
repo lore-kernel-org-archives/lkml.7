@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A95C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD2AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFB622CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA36422CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620761;
-	bh=xcdhgxoSN0I3e+GsI5uIN78iRb9bKshDfuoPcsJaGWQ=;
+	s=default; t=1567620763;
+	bh=9j13SR6PFoGHS9DU6kXVZT3HtgNT+HZ/YvMRajqX1co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1LqWBPMB7F4JK9huDxjarYcqbjk5Sg0hXd68Y/wq/TX21l1XP7SbdegwUFRAFKGT3
-	 CH+8hghdQyLgVEk8rsqNMCiii4V7q6rQv9Ll0CUbwWqfmjubYpNbQII0P20VERABeJ
-	 fFctTqUyeVvzDFohDmf3iIOU0VQbjwo57Ir6HoOE=
+	b=1sS1QVhbl5pgNV27k865frHDNS0Mkgdv34n6mEXn3Y5uWPrvhuh46Xsz3VWezxUdL
+	 5B7T84o2zfCuh6dEy3mlpGl3u6ueK3I+aUEo30dGoVMou5wfuRRyNXw5k6Hi6LQgIt
+	 0NECbo4qLBALCm3Th3GTA4zsVt69gHgWvOEU0qNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390546AbfIDSMk (ORCPT
+        id S2390558AbfIDSMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:12:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:12:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733228AbfIDSMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:12:38 -0400
+        id S1733228AbfIDSMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:12:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A11A522CEA;
-        Wed,  4 Sep 2019 18:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B778206BA;
+        Wed,  4 Sep 2019 18:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620758;
-        bh=xcdhgxoSN0I3e+GsI5uIN78iRb9bKshDfuoPcsJaGWQ=;
+        s=default; t=1567620760;
+        bh=9j13SR6PFoGHS9DU6kXVZT3HtgNT+HZ/YvMRajqX1co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wwbAqPTkMyUS9pbc9SCGARdUwQnDjL5xxdd3U7MAKGJ7X1TS/xQoUA3B1N/H6qO1a
-         HAncaqExNBE3dD+Le82ccgwB9ZeDrTM0d7hJ3sv1EAIWROtOfCkyU5743w3DCfKCtx
-         n+50Dv+Txuo0KWs7MECFx2mSUHhT+dy4YCSliEr0=
+        b=S/aFSJHOxyK+rNYtQX7lDG4CCSKzHaaynUVJW/elX4v25VM5r5aiLHZBMx1Yu6hC6
+         /1nY9zSOf771JrVl4YO2jt4efcVGnhqEMVfF5jNf4uKNs9Wvm/OBMM2GZt+sVqesv2
+         wchixQAJNL1p/C4dfw/omwcI8W1ZkbTy3VRN/s6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 5.2 084/143] usb: host: xhci: rcar: Fix typo in compatible string matching
-Date:   Wed,  4 Sep 2019 19:53:47 +0200
-Message-Id: <20190904175317.357949448@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 058/143] xfrm/xfrm_policy: fix dst dev null pointer dereference in collect_md mode
+Date:   Wed,  4 Sep 2019 19:53:21 +0200
+Message-Id: <20190904175316.343523033@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,35 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 636bd02a7ba9025ff851d0cfb92768c8fa865859 upstream.
+[ Upstream commit c3b4c3a47e05d5fecf7354d75824a9d1b37f3e84 ]
 
-It's spelled "renesas", not "renensas".
+In decode_session{4,6} there is a possibility that the skb dst dev is NULL,
+e,g, with tunnel collect_md mode, which will cause kernel crash.
+Here is what the code path looks like, for GRE:
 
-Due to this typo, RZ/G1M and RZ/G1N were not covered by the check.
+- ip6gre_tunnel_xmit
+  - ip6gre_xmit_ipv6
+    - __gre6_xmit
+      - ip6_tnl_xmit
+        - if skb->len - t->tun_hlen - eth_hlen > mtu; return -EMSGSIZE
+    - icmpv6_send
+      - icmpv6_route_lookup
+        - xfrm_decode_session_reverse
+          - decode_session4
+            - oif = skb_dst(skb)->dev->ifindex; <-- here
+          - decode_session6
+            - oif = skb_dst(skb)->dev->ifindex; <-- here
 
-Fixes: 2dc240a3308b ("usb: host: xhci: rcar: retire use of xhci_plat_type_is()")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/20190827125112.12192-1-geert+renesas@glider.be
+The reason is __metadata_dst_init() init dst->dev to NULL by default.
+We could not fix it in __metadata_dst_init() as there is no dev supplied.
+On the other hand, the skb_dst(skb)->dev is actually not needed as we
+called decode_session{4,6} via xfrm_decode_session_reverse(), so oif is not
+used by: fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
+
+So make a dst dev check here should be clean and safe.
+
+v4: No changes.
+
+v3: No changes.
+
+v2: fix the issue in decode_session{4,6} instead of updating shared dst dev
+in {ip_md, ip6}_tunnel_xmit.
+
+Fixes: 8d79266bc48c ("ip6_tunnel: add collect_md mode to IPv6 tunnels")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Tested-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/host/xhci-rcar.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/xfrm/xfrm_policy.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-rcar.c
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -104,7 +104,7 @@ static int xhci_rcar_is_gen2(struct devi
- 	return of_device_is_compatible(node, "renesas,xhci-r8a7790") ||
- 		of_device_is_compatible(node, "renesas,xhci-r8a7791") ||
- 		of_device_is_compatible(node, "renesas,xhci-r8a7793") ||
--		of_device_is_compatible(node, "renensas,rcar-gen2-xhci");
-+		of_device_is_compatible(node, "renesas,rcar-gen2-xhci");
- }
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -3272,7 +3272,7 @@ decode_session4(struct sk_buff *skb, str
+ 	struct flowi4 *fl4 = &fl->u.ip4;
+ 	int oif = 0;
  
- static int xhci_rcar_is_gen3(struct device *dev)
+-	if (skb_dst(skb))
++	if (skb_dst(skb) && skb_dst(skb)->dev)
+ 		oif = skb_dst(skb)->dev->ifindex;
+ 
+ 	memset(fl4, 0, sizeof(struct flowi4));
+@@ -3390,7 +3390,7 @@ decode_session6(struct sk_buff *skb, str
+ 
+ 	nexthdr = nh[nhoff];
+ 
+-	if (skb_dst(skb))
++	if (skb_dst(skb) && skb_dst(skb)->dev)
+ 		oif = skb_dst(skb)->dev->ifindex;
+ 
+ 	memset(fl6, 0, sizeof(struct flowi6));
 
 
