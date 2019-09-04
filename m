@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09716C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0308C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94242339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC14F2341E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620422;
-	bh=/G2L9rpwpWgF/1asPzMmBbVZZzUgI+VRzg/JqC53Kxg=;
+	s=default; t=1567620425;
+	bh=uWaPL25pe0Llx5gG/+yzOEfACXboyd03F+p56skofao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ur7GsU98KNrlv0fFpIsC4dF2sxg91yne/GOgFGPgKCPn7DQjon5imKGBmidQoqaIt
-	 B0zEcg8QXNJ2heYev5EPs0V8ZLIgFstvKehRgJKKVTWnaS3wFvHvEq4mg3jvOa53F2
-	 KZABcdWP+WBC3LcLSRGQ3SDjRzV13lh+BxHgxZBA=
+	b=Nn6hZ22ELzckZM6AFLTDTTReZAeDptcqSfvISzYcy7zev5dQqSB7tbg5WYwAEEpKu
+	 9PyMi6jDCH6xnD8EYfAqJbsnPo41RdIKSQau8kcm6cPfPUr0QSmGiWf2hUTii8AxTQ
+	 K+s5FbZuenR5FHeG9lyG9JxR7ac3wljnBOKs0By8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389568AbfIDSHC (ORCPT
+        id S2388614AbfIDSHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:07:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:07:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389556AbfIDSHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:07:00 -0400
+        id S2389556AbfIDSHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:07:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E6AF206B8;
-        Wed,  4 Sep 2019 18:06:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB93722CF7;
+        Wed,  4 Sep 2019 18:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620419;
-        bh=/G2L9rpwpWgF/1asPzMmBbVZZzUgI+VRzg/JqC53Kxg=;
+        s=default; t=1567620422;
+        bh=uWaPL25pe0Llx5gG/+yzOEfACXboyd03F+p56skofao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qRdYbJlkBc5yxLJPrll8KKKXE9lfISUehnMB8oRNQJdPOkSx/6ewrjhB0a/W0dK9x
-         1bJSAaTLv9/B+NckyYjdcY9U2AwLWy9YX2RGCa8ufo4ChoZlYv1qPGhVKRY+eWel4P
-         SfaK2c6+OsiOfHEf19DfwQ/uCJI+vW0Q09PHV3sg=
+        b=cUASt3zzDRa5syxicgez5Vbd63mYxriP2a2pySoZ0Pw8aGozSh9KL48ZPZCVmIRBQ
+         1xyJe8b6Vcfmy2pxw0L1i9Oh+5Lrh9mDsr/JdCi+IYbrmJg+R3rtehCNMgwTs8+sc3
+         iAvjmzz0YxKat24I6LhEX4aCxb4X2+8eapU4xfMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 52/93] ftrace: Check for successful allocation of hash
-Date:   Wed,  4 Sep 2019 19:53:54 +0200
-Message-Id: <20190904175307.488673549@linuxfoundation.org>
+Subject: [PATCH 4.19 53/93] ftrace: Check for empty hash and comment the race with registering probes
+Date:   Wed,  4 Sep 2019 19:53:55 +0200
+Message-Id: <20190904175307.599372951@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,40 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 5b0022dd32b7c2e15edf1827ba80aa1407edf9ff upstream.
+commit 372e0d01da71c84dcecf7028598a33813b0d5256 upstream.
 
-In register_ftrace_function_probe(), we are not checking the return
-value of alloc_and_copy_ftrace_hash(). The subsequent call to
-ftrace_match_records() may end up dereferencing the same. Add a check to
-ensure this doesn't happen.
-
-Link: http://lkml.kernel.org/r/26e92574f25ad23e7cafa3cf5f7a819de1832cbe.1562249521.git.naveen.n.rao@linux.vnet.ibm.com
+The race between adding a function probe and reading the probes that exist
+is very subtle. It needs a comment. Also, the issue can also happen if the
+probe has has the EMPTY_HASH as its func_hash.
 
 Cc: stable@vger.kernel.org
-Fixes: 1ec3a81a0cf42 ("ftrace: Have each function probe use its own ftrace_ops")
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Fixes: 7b60f3d876156 ("ftrace: Dynamically create the probe ftrace_ops for the trace_array")
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/trace/ftrace.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -4317,6 +4317,11 @@ register_ftrace_function_probe(char *glo
- 	old_hash = *orig_hash;
- 	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS, old_hash);
+@@ -3113,7 +3113,11 @@ t_probe_next(struct seq_file *m, loff_t
  
-+	if (!hash) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
- 	ret = ftrace_match_records(hash, glob, strlen(glob));
+ 	hash = iter->probe->ops.func_hash->filter_hash;
  
- 	/* Nothing found? */
+-	if (!hash)
++	/*
++	 * A probe being registered may temporarily have an empty hash
++	 * and it's at the end of the func_probes list.
++	 */
++	if (!hash || hash == EMPTY_HASH)
+ 		return NULL;
+ 
+ 	size = 1 << hash->size_bits;
+@@ -4311,6 +4315,10 @@ register_ftrace_function_probe(char *glo
+ 
+ 	mutex_unlock(&ftrace_lock);
+ 
++	/*
++	 * Note, there's a small window here that the func_hash->filter_hash
++	 * may be NULL or empty. Need to be carefule when reading the loop.
++	 */
+ 	mutex_lock(&probe->ops.func_hash->regex_lock);
+ 
+ 	orig_hash = &probe->ops.func_hash->filter_hash;
 
 
