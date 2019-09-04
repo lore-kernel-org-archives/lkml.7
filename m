@@ -2,111 +2,70 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7FCC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:36:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3569C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DBF22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:36:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjjXrrvY"
+	by mail.kernel.org (Postfix) with ESMTP id C2FD122CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:38:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731543AbfIDTg5 (ORCPT
+        id S1732655AbfIDTiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:36:57 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42525 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730686AbfIDTg4 (ORCPT
+        Wed, 4 Sep 2019 15:38:46 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37453 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730197AbfIDTip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:36:56 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w22so5481848pfi.9;
-        Wed, 04 Sep 2019 12:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wpep2LyOTWtiIBc4HmPe2hGyBzwA/CaDAWU9SYsEWFM=;
-        b=bjjXrrvYBE6O1PY9usMoum+IaEdozwCZQqvVUNfmL4QJU4/bSyKusQw74uMW+jdezP
-         s2Qhxvoc8zz0hGTnNSeZiCCbaC5VIktLN2eoFhphN3f0+FZ1l2x4tvc+OC5pRbUvogrx
-         G47jgvhkJLoN5waJEbyKEPfOc6P2lJSIqpeYUWRigmmp7rhIzi0NlVbdklvZPCXlo8vT
-         F81BnBCYMu9nVYMnEiYbvDJCm6cIMJfo7iIX9lq/+T7PHhuGuNRPgR22cxFn4p3AK/rI
-         QjhPMaj2UIeLQYXGt5zhoeMIa40zmz56XVfP7Vtr2/vqmOx1Zy3qCe7zT6Kr1/vmwhQt
-         03hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wpep2LyOTWtiIBc4HmPe2hGyBzwA/CaDAWU9SYsEWFM=;
-        b=Qexc0rwwq9QZyWMoac/NazCOH8lqstkODa6REUWi3sBB0Sij9X07q24774dDbWt/gJ
-         yr0GVqticw2NhNxggVl2Q8TGExijaXd6nu+WlmmXn2ETxHSXRrDB9YDiV23VBHupsNTN
-         GAqwMt+NzF67VA1LYNFy8IfbVYmo+S0pB7Z6Ea8cxQngq+6fvmBDR7hPE/aY2/hlOfOG
-         /+N+tPgzCYYAi9GW1BWfB8VCIvc0OGlujzasu9uutR+0UpOhWl5/foSVBlyzhBixEDet
-         tkNEMgeBFNC8NdozZ4z2tn27F6u0Jc5qxoJvjOEygu0/GFjdVNBhEPuI7Yq876qKU58c
-         Wf4g==
-X-Gm-Message-State: APjAAAWBiqXyLOfHbGhD9O42V4gEC8YHbnjMgaCG7YqscF8nrq4FjXJc
-        tv8+f9eNIsWoy0NHXtsiZAl9hd2Ftv78F7Ty+bE=
-X-Google-Smtp-Source: APXvYqxGOM8h4zs6M0NDN3CDz20A1GiW6udPDCyH0rOObfk69vEJdPv/8XPStExdnQdvhgxSQl9udO7OimAFT8AhK2A=
-X-Received: by 2002:a63:6eca:: with SMTP id j193mr35727925pgc.74.1567625815434;
- Wed, 04 Sep 2019 12:36:55 -0700 (PDT)
+        Wed, 4 Sep 2019 15:38:45 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i5b73-0003Lx-OF; Wed, 04 Sep 2019 19:38:41 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net/mlx5: fix spelling mistake "offlaods" -> "offloads"
+Date:   Wed,  4 Sep 2019 20:38:41 +0100
+Message-Id: <20190904193841.20138-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190830231817.76862-1-joel@joelfernandes.org>
- <201909041108.RSjNvfDL%lkp@intel.com> <20190904050419.GA102582@google.com>
- <CAHp75Vdeoc1S_0Dn_vk2ULPRLk_sevWoxs8+Gscv9ki_kkPx4Q@mail.gmail.com> <CAEXW_YQyXSuT9o6pTdMJBM=7xRhUAGtVoteswY5hNcNZBc9bgg@mail.gmail.com>
-In-Reply-To: <CAEXW_YQyXSuT9o6pTdMJBM=7xRhUAGtVoteswY5hNcNZBc9bgg@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 4 Sep 2019 22:36:43 +0300
-Message-ID: <CAHp75VeyxiamNvLJXDCWOwAP9v264b4KmUL82w2JvYj2EWpkXQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pci: Convert to use built-in RCU list checking
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 9:01 PM Joel Fernandes <joel@joelfernandes.org> wrote:
-> On Wed, Sep 4, 2019 at 1:13 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wed, Sep 4, 2019 at 8:07 AM Joel Fernandes <joel@joelfernandes.org> wrote:
-> > > On Wed, Sep 04, 2019 at 12:06:43PM +0800, kbuild test robot wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> > > > [auto build test ERROR on linus/master]
+There is a spelling mistake in a NL_SET_ERR_MSG_MOD error message.
+Fix it.
 
-^^^ (1)
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/devlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > > > [cannot apply to v5.3-rc7 next-20190903]
-
-^^^ (2)
-
-
-> The dependency is already in -next and I pulled it and applied the
-> patch.
-
-This is a problem. You must provide dependency even for maintainers
-(in form of immutable branch / tag).
-The easier way to provide Depends-on (when it's one patch), though
-kbuild bot doesn't support it. Yet?
-
->  It is testing -next right?
-
-It testing (1) and (2). (it was unable to apply against next by some
-reason, but the build error is against latest vanilla failed. And this
-is completely correct. Just follow the process (see above).
-
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+index 7bf7b6fbc776..381925c90d94 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+@@ -133,7 +133,7 @@ static int mlx5_devlink_fs_mode_validate(struct devlink *devlink, u32 id,
+ 
+ 		else if (eswitch_mode == MLX5_ESWITCH_OFFLOADS) {
+ 			NL_SET_ERR_MSG_MOD(extack,
+-					   "Software managed steering is not supported when eswitch offlaods enabled.");
++					   "Software managed steering is not supported when eswitch offloads enabled.");
+ 			err = -EOPNOTSUPP;
+ 		}
+ 	} else {
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
