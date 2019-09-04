@@ -3,89 +3,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A207FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F4DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819F62077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D0C2077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 11:00:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfIDKzh (ORCPT
+        id S1729532AbfIDLAv convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:55:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:51884 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbfIDKzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:55:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6473C337;
-        Wed,  4 Sep 2019 03:55:36 -0700 (PDT)
-Received: from [192.168.0.8] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D94B23F246;
-        Wed,  4 Sep 2019 03:55:34 -0700 (PDT)
-Subject: Re: [PATCH v3] sched/core: Fix uclamp ABI bug, clean up and robustify
- sched_read_attr() ABI logic and code
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>
-References: <20190903171645.28090-1-cascardo@canonical.com>
- <20190903171645.28090-2-cascardo@canonical.com>
- <20190904075532.GA26751@gmail.com> <20190904084934.GA117671@gmail.com>
- <20190904085519.GA127156@gmail.com>
- <db065b81-c373-f291-ad48-f556a209cc95@arm.com>
- <20190904103925.GA60962@gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <43e9f6ae-7ebc-d3d8-eecf-860cdef7fdec@arm.com>
-Date:   Wed, 4 Sep 2019 12:55:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 07:00:51 -0400
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:46328 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728961AbfIDLAv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 07:00:51 -0400
+Received: from bigeasy by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i5T1j-0002fS-0j; Wed, 04 Sep 2019 13:00:39 +0200
+Date:   Wed, 4 Sep 2019 13:00:38 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Keerthy <j-keerthy@ti.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] random: Support freezable kthreads in
+ add_hwgenerator_randomness()
+Message-ID: <20190904110038.2bx25byitrejlteu@flow>
 MIME-Version: 1.0
-In-Reply-To: <20190904103925.GA60962@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190822055519.GB3860@gondor.apana.org.au>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2019 12:39, Ingo Molnar wrote:
-> 
-> * Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> 
->>> -v3 attached. Build and minimally boot tested.
->>>
->>> Thanks,
->>>
->>> 	Ingo
->>>
->>
->> This patch fixes the issue (almost).
->>
->> LTP's sched_getattr01 passes again. But IMHO the prio 'chrt -p $$'
->> should be 0 instead of -65536.
-> 
-> Yeah, I forgot to zero-initialize the structure ...
-> 
-> Does the attached -v4 work any better for you?
+On 2019-08-22 15:55:19 [+1000], Herbert Xu wrote:
+> Patch applied.  Thanks.
+[ ff296293b3538 ("random: Support freezable kthreads in add_hwgenerator_randomness()") ]
 
-Yeah, looks better now.
+and since kthread_freezable_should_stop() has might_sleep() in it, I get
+this:
 
-# chrt -p $$
-[  258.245786] sched_attr_copy_to_user(): copied 48 bytes. (ksize: 56,
-usize: 48)
-pid 1635's current scheduling policy: SCHED_OTHER
-pid 1635's current scheduling priority: 0
+|: do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000349d1489>] prepare_to_wait_event+0x5a/0x180
+|: WARNING: CPU: 0 PID: 828 at kernel/sched/core.c:6741 __might_sleep+0x6f/0x80
+|: Modules linked in:
+|:
+|: CPU: 0 PID: 828 Comm: hwrng Not tainted 5.3.0-rc7-next-20190903+ #46
+|: RIP: 0010:__might_sleep+0x6f/0x80
+…
+|: Call Trace:
+|:  kthread_freezable_should_stop+0x1b/0x60
+|:  add_hwgenerator_randomness+0xdd/0x130
+|:  hwrng_fillfn+0xbf/0x120
+|:  kthread+0x10c/0x140
+|:  ret_from_fork+0x27/0x50
 
-w/o the extra printk:
-
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Sebastian
