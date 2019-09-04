@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B406AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C22FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4D220820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D68F922CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613181;
-	bh=9bpHPLsDOpYikVS9tUwi031DN+m6WQ/rT07qfg7aNoE=;
+	s=default; t=1567613187;
+	bh=MKKCdTpxrjO/8GLYKplTiRHH7UYUIgrAhr+SMn0bOcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NDQOQeY5+/G/KRNMrN9UiOwfiRm9TxklRBh4YvMo8uxysI4ulva/RN4zDli5u2aTj
-	 +PoWXT6EwBpcXCmja5mdI5KdAlEUayXwCPziCb0Sy5zBNwXGse0H/PZyzrMAXtBTBY
-	 Fd/FvoOdo1bCwY0b5h4Ndq5v5u0FNU2xg2sR3RRE=
+	b=NfVTpiecWnvQXnEYvwoKw9FD9xpKfQu3i/gVXC6pvSWK1CrhPm4bB7mAttbnrNjvk
+	 XGU2DCA+DZKfDGQx5F9wp3fIqpJc93uHQ4JzYUsFIRt0TqQaSgWQkHweNhv8kNQBIw
+	 8IiIhO4X9iBiw6FhTp0oCQEyOB28eRpwsPRe7k2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733309AbfIDQGS (ORCPT
+        id S2387727AbfIDQG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:06:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38510 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733301AbfIDQC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:29 -0400
+        id S1733275AbfIDQC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8B7523404;
-        Wed,  4 Sep 2019 16:02:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BC0922CF5;
+        Wed,  4 Sep 2019 16:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612949;
-        bh=9bpHPLsDOpYikVS9tUwi031DN+m6WQ/rT07qfg7aNoE=;
+        s=default; t=1567612946;
+        bh=MKKCdTpxrjO/8GLYKplTiRHH7UYUIgrAhr+SMn0bOcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B6m0aE0LqroZRPM8dHLPXs0m/1ZVxY5I64E0rQ6Yn45YwogFaI1bDKLSXJI/YTOH9
-         DJcWZl7z32w17SppoECKMY03xb85dhAlgKB/jh3wJa7qGcNZ9Qnty+crFQ7zeO9N89
-         Oasr6jWGPahH9tDprpepVO6XLNMvaFI3mLNvg7P4=
+        b=r9MHDiru3bSwKeNYn9I3n9mQmJ32dk5ePWNtdhIUSZaZbLmipxB55XtxuP6cDMQbG
+         rA7PrkAcusHNN4EjGYVK5CewNbZcaeQCzVaQsaFONgHxXQnTOzsoiiZbTs6AKACLKW
+         VE8EnK/R04plR42kkObj+DGYT/YmQMl1cfBBWwdE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 07/27] NFS: Fix initialisation of I/O result struct in nfs_pgio_rpcsetup
-Date:   Wed,  4 Sep 2019 12:02:00 -0400
-Message-Id: <20190904160220.4545-7-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/27] s390/bpf: use 32-bit index for tail calls
+Date:   Wed,  4 Sep 2019 12:01:57 -0400
+Message-Id: <20190904160220.4545-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160220.4545-1-sashal@kernel.org>
 References: <20190904160220.4545-1-sashal@kernel.org>
@@ -58,34 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 17d8c5d145000070c581f2a8aa01edc7998582ab ]
+[ Upstream commit 91b4db5313a2c793aabc2143efb8ed0cf0fdd097 ]
 
-Initialise the result count to 0 rather than initialising it to the
-argument count. The reason is that we want to ensure we record the
-I/O stats correctly in the case where an error is returned (for
-instance in the layoutstats).
+"p runtime/jit: pass > 32bit index to tail_call" fails when
+bpf_jit_enable=1, because the tail call is not executed.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+This in turn is because the generated code assumes index is 64-bit,
+while it must be 32-bit, and as a result prog array bounds check fails,
+while it should pass. Even if bounds check would have passed, the code
+that follows uses 64-bit index to compute prog array offset.
+
+Fix by using clrj instead of clgrj for comparing index with array size,
+and also by using llgfr for truncating index to 32 bits before using it
+to compute prog array offset.
+
+Fixes: 6651ee070b31 ("s390/bpf: implement bpf_tail_call() helper")
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/pagelist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/net/bpf_jit_comp.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index fad4d5188aafa..b6e25126a0b0f 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -562,7 +562,7 @@ static void nfs_pgio_rpcsetup(struct nfs_pgio_header *hdr,
- 	}
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index e4616090732a4..9b15a1dc66287 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -1062,8 +1062,8 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		/* llgf %w1,map.max_entries(%b2) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0016, REG_W1, REG_0, BPF_REG_2,
+ 			      offsetof(struct bpf_array, map.max_entries));
+-		/* clgrj %b3,%w1,0xa,label0: if %b3 >= %w1 goto out */
+-		EMIT6_PCREL_LABEL(0xec000000, 0x0065, BPF_REG_3,
++		/* clrj %b3,%w1,0xa,label0: if (u32)%b3 >= (u32)%w1 goto out */
++		EMIT6_PCREL_LABEL(0xec000000, 0x0077, BPF_REG_3,
+ 				  REG_W1, 0, 0xa);
  
- 	hdr->res.fattr   = &hdr->fattr;
--	hdr->res.count   = count;
-+	hdr->res.count   = 0;
- 	hdr->res.eof     = 0;
- 	hdr->res.verf    = &hdr->verf;
- 	nfs_fattr_init(&hdr->fattr);
+ 		/*
+@@ -1089,8 +1089,10 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		 *         goto out;
+ 		 */
+ 
+-		/* sllg %r1,%b3,3: %r1 = index * 8 */
+-		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, BPF_REG_3, REG_0, 3);
++		/* llgfr %r1,%b3: %r1 = (u32) index */
++		EMIT4(0xb9160000, REG_1, BPF_REG_3);
++		/* sllg %r1,%r1,3: %r1 *= 8 */
++		EMIT6_DISP_LH(0xeb000000, 0x000d, REG_1, REG_1, REG_0, 3);
+ 		/* lg %r1,prog(%b2,%r1) */
+ 		EMIT6_DISP_LH(0xe3000000, 0x0004, REG_1, BPF_REG_2,
+ 			      REG_1, offsetof(struct bpf_array, ptrs));
 -- 
 2.20.1
 
