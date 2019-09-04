@@ -2,215 +2,162 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE92C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3492FC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE75D206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138C4206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:18:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfIDCSW (ORCPT
+        id S1727845AbfIDCSo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 22:18:22 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:34538 "EHLO huawei.com"
+        Tue, 3 Sep 2019 22:18:44 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3995 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727065AbfIDCSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 22:18:21 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id BC21340E4231C3AB44ED;
-        Wed,  4 Sep 2019 10:18:19 +0800 (CST)
-Received: from dggeme764-chm.china.huawei.com (10.3.19.110) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 4 Sep 2019 10:18:11 +0800
-Received: from [127.0.0.1] (10.184.39.28) by dggeme764-chm.china.huawei.com
- (10.3.19.110) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 4
- Sep 2019 10:18:11 +0800
-Subject: Re: [PATCH] arm: fix page faults in do_alignment
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Russell King - ARM Linux admin" <linux@armlinux.org.uk>
-References: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
- <20190830133522.GZ13294@shell.armlinux.org.uk>
- <87d0gmwi73.fsf@x220.int.ebiederm.org>
- <20190830203052.GG13294@shell.armlinux.org.uk>
- <87y2zav01z.fsf@x220.int.ebiederm.org>
- <20190830222906.GH13294@shell.armlinux.org.uk>
- <87mufmioqv.fsf@x220.int.ebiederm.org>
-CC:     <kstewart@linuxfoundation.org>, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <bhelgaas@google.com>,
-        <tglx@linutronix.de>, <sakari.ailus@linux.intel.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>
-From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
-Message-ID: <5D6F1EC9.5070909@huawei.com>
-Date:   Wed, 4 Sep 2019 10:17:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0
+        id S1727065AbfIDCSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 22:18:43 -0400
+Received: from dggeml406-hub.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 3341017F6BB060C06155;
+        Wed,  4 Sep 2019 10:18:42 +0800 (CST)
+Received: from DGGEML422-HUB.china.huawei.com (10.1.199.39) by
+ dggeml406-hub.china.huawei.com (10.3.17.50) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 4 Sep 2019 10:18:41 +0800
+Received: from DGGEML512-MBX.china.huawei.com ([169.254.2.60]) by
+ dggeml422-hub.china.huawei.com ([10.1.199.39]) with mapi id 14.03.0439.000;
+ Wed, 4 Sep 2019 10:18:38 +0800
+From:   sunqiuyang <sunqiuyang@huawei.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: RE: [PATCH 1/1] mm/migrate: fix list corruption in migration of
+ non-LRU movable pages
+Thread-Topic: [PATCH 1/1] mm/migrate: fix list corruption in migration of
+ non-LRU movable pages
+Thread-Index: AQHVYi7CKRiSaGuZ20KJAhdeZXNZ4qcZaW+AgAFf/lQ=
+Date:   Wed, 4 Sep 2019 02:18:38 +0000
+Message-ID: <157FC541501A9C4C862B2F16FFE316DC190C1B09@dggeml512-mbx.china.huawei.com>
+References: <20190903082746.20736-1-sunqiuyang@huawei.com>,<20190903131737.GB18939@dhcp22.suse.cz>
+In-Reply-To: <20190903131737.GB18939@dhcp22.suse.cz>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.249.127]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <87mufmioqv.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.39.28]
-X-ClientProxiedBy: dggeme718-chm.china.huawei.com (10.1.199.114) To
- dggeme764-chm.china.huawei.com (10.3.19.110)
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/3 1:36, Eric W. Biederman wrote:
-> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
-> 
->> On Fri, Aug 30, 2019 at 04:02:48PM -0500, Eric W. Biederman wrote:
->>> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
->>>
->>>> On Fri, Aug 30, 2019 at 02:45:36PM -0500, Eric W. Biederman wrote:
->>>>> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
->>>>>
->>>>>> On Fri, Aug 30, 2019 at 09:31:17PM +0800, Jing Xiangfeng wrote:
->>>>>>> The function do_alignment can handle misaligned address for user and
->>>>>>> kernel space. If it is a userspace access, do_alignment may fail on
->>>>>>> a low-memory situation, because page faults are disabled in
->>>>>>> probe_kernel_address.
->>>>>>>
->>>>>>> Fix this by using __copy_from_user stead of probe_kernel_address.
->>>>>>>
->>>>>>> Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
->>>>>>> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
->>>>>>
->>>>>> NAK.
->>>>>>
->>>>>> The "scheduling while atomic warning in alignment handling code" is
->>>>>> caused by fixing up the page fault while trying to handle the
->>>>>> mis-alignment fault generated from an instruction in atomic context.
->>>>>>
->>>>>> Your patch re-introduces that bug.
->>>>>
->>>>> And the patch that fixed scheduling while atomic apparently introduced a
->>>>> regression.  Admittedly a regression that took 6 years to track down but
->>>>> still.
->>>>
->>>> Right, and given the number of years, we are trading one regression for
->>>> a different regression.  If we revert to the original code where we
->>>> fix up, we will end up with people complaining about a "new" regression
->>>> caused by reverting the previous fix.  Follow this policy and we just
->>>> end up constantly reverting the previous revert.
->>>>
->>>> The window is very small - the page in question will have had to have
->>>> instructions read from it immediately prior to the handler being entered,
->>>> and would have had to be made "old" before subsequently being unmapped.
->>>
->>>> Rather than excessively complicating the code and making it even more
->>>> inefficient (as in your patch), we could instead retry executing the
->>>> instruction when we discover that the page is unavailable, which should
->>>> cause the page to be paged back in.
->>>
->>> My patch does not introduce any inefficiencies.  It onlys moves the
->>> check for user_mode up a bit.  My patch did duplicate the code.
->>>
->>>> If the page really is unavailable, the prefetch abort should cause a
->>>> SEGV to be raised, otherwise the re-execution should replace the page.
->>>>
->>>> The danger to that approach is we page it back in, and it gets paged
->>>> back out before we're able to read the instruction indefinitely.
->>>
->>> I would think either a little code duplication or a function that looks
->>> at user_mode(regs) and picks the appropriate kind of copy to do would be
->>> the best way to go.  Because what needs to happen in the two cases for
->>> reading the instruction are almost completely different.
->>
->> That is what I mean.  I'd prefer to avoid that with the large chunk of
->> code.  How about instead adding a local replacement for
->> probe_kernel_address() that just sorts out the reading, rather than
->> duplicating all the code to deal with thumb fixup.
-> 
-> So something like this should be fine?
-> 
-> Jing Xiangfeng can you test this please?  I think this fixes your issue
-> but I don't currently have an arm development box where I could test this.
-> 
-Yes, I have tested and it can fix my issue in kernel 4.19.
+The isolate path of non-lru movable pages:
 
-> diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-> index 04b36436cbc0..b07d17ca0ae5 100644
-> --- a/arch/arm/mm/alignment.c
-> +++ b/arch/arm/mm/alignment.c
-> @@ -767,6 +767,23 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
->  	return NULL;
->  }
->  
-> +static inline unsigned long
-> +copy_instr(bool umode, void *dst, unsigned long instrptr, size_t size)
-> +{
-> +	unsigned long result;
-> +	if (umode) {
-> +		void __user *src = (void *)instrptr;
-> +		result = copy_from_user(dst, src, size);
-> +	} else {
-> +		void *src = (void *)instrptr;
-> +		result = probe_kernel_read(dst, src, size);
-> +	}
-> +	/* Convert short reads into -EFAULT */
-> +	if ((result >= 0) && (result < size))
-> +		result = -EFAULT;
-> +	return result;
-> +}
-> +
->  static int
->  do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  {
-> @@ -778,22 +795,24 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  	u16 tinstr = 0;
->  	int isize = 4;
->  	int thumb2_32b = 0;
-> +	bool umode;
->  
->  	if (interrupts_enabled(regs))
->  		local_irq_enable();
->  
->  	instrptr = instruction_pointer(regs);
-> +	umode = user_mode(regs);
->  
->  	if (thumb_mode(regs)) {
-> -		u16 *ptr = (u16 *)(instrptr & ~1);
-> -		fault = probe_kernel_address(ptr, tinstr);
-> +		unsigned long tinstrptr = instrptr & ~1;
-> +		fault = copy_instr(umode, &tinstr, tinstrptr, 2);
->  		tinstr = __mem_to_opcode_thumb16(tinstr);
->  		if (!fault) {
->  			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
->  			    IS_T32(tinstr)) {
->  				/* Thumb-2 32-bit */
->  				u16 tinst2 = 0;
-> -				fault = probe_kernel_address(ptr + 1, tinst2);
-> +				fault = copy_instr(umode, &tinst2, tinstrptr + 2, 2);
->  				tinst2 = __mem_to_opcode_thumb16(tinst2);
->  				instr = __opcode_thumb32_compose(tinstr, tinst2);
->  				thumb2_32b = 1;
-> @@ -803,7 +822,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  			}
->  		}
->  	} else {
-> -		fault = probe_kernel_address((void *)instrptr, instr);
-> +		fault = copy_instr(umode, &instr, instrptr, 4);
->  		instr = __mem_to_opcode_arm(instr);
->  	}
->  
-> @@ -812,7 +831,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  		goto bad_or_fault;
->  	}
->  
-> -	if (user_mode(regs))
-> +	if (umode)
->  		goto user;
->  
->  	ai_sys += 1;
-> 
-> .
-> 
+isolate_migratepages_block
+	isolate_movable_page
+		trylock_page
+		// if PageIsolated, goto out_no_isolated
+		a_ops->isolate_page
+		__SetPageIsolated
+		unlock_page
+	list_add(&page->lru, &cc->migratepages)
+
+The migration path:
+
+unmap_and_move
+	__unmap_and_move
+		lock_page
+		move_to_new_page
+			a_ops->migratepage
+			__ClearPageIsolated
+		unlock_page
+	/* here, the page could be isolated again by another thread, and added into another cc->migratepages,
+	since PG_Isolated has been cleared, and not protected by page_lock */
+	list_del(&page->lru)
+
+Suppose thread A isolates three pages in the order p1, p2, p3, A's cc->migratepages will be like
+	head_A - p3 - p2 - p1
+After p2 is migrated (but before list_del), it is isolated by another thread B. Then list_del will delete p2
+from the cc->migratepages of B (instead of A). When A continues to migrate and delete p1, it will find:
+	p1->prev == p2
+	p2->next == LIST_POISON1. 
+
+So we will end up with a bug like
+"list_del corruption. prev->next should be ffffffbf0a1eb8e0, but was dead000000000100"
+(see __list_del_entry_valid).
 
 
+________________________________________
+From: Michal Hocko [mhocko@kernel.org]
+Sent: Tuesday, September 03, 2019 21:17
+To: sunqiuyang
+Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm/migrate: fix list corruption in migration of non-LRU movable pages
+
+On Tue 03-09-19 16:27:46, sunqiuyang wrote:
+> From: Qiuyang Sun <sunqiuyang@huawei.com>
+>
+> Currently, after a page is migrated, it
+> 1) has its PG_isolated flag cleared in move_to_new_page(), and
+> 2) is deleted from its LRU list (cc->migratepages) in unmap_and_move().
+> However, between steps 1) and 2), the page could be isolated by another
+> thread in isolate_movable_page(), and added to another LRU list, leading
+> to list_del corruption later.
+
+Care to explain the race? Both paths use page_lock AFAICS
+>
+> This patch fixes the bug by moving list_del into the critical section
+> protected by lock_page(), so that a page will not be isolated again before
+> it has been deleted from its LRU list.
+>
+> Signed-off-by: Qiuyang Sun <sunqiuyang@huawei.com>
+> ---
+>  mm/migrate.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
+>
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index a42858d..c58a606 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1124,6 +1124,8 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+>       /* Drop an anon_vma reference if we took one */
+>       if (anon_vma)
+>               put_anon_vma(anon_vma);
+> +     if (rc != -EAGAIN)
+> +             list_del(&page->lru);
+>       unlock_page(page);
+>  out:
+>       /*
+> @@ -1190,6 +1192,7 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
+>                       put_new_page(newpage, private);
+>               else
+>                       put_page(newpage);
+> +             list_del(&page->lru);
+>               goto out;
+>       }
+>
+> @@ -1200,14 +1203,6 @@ static ICE_noinline int unmap_and_move(new_page_t get_new_page,
+>  out:
+>       if (rc != -EAGAIN) {
+>               /*
+> -              * A page that has been migrated has all references
+> -              * removed and will be freed. A page that has not been
+> -              * migrated will have kepts its references and be
+> -              * restored.
+> -              */
+> -             list_del(&page->lru);
+> -
+> -             /*
+>                * Compaction can migrate also non-LRU pages which are
+>                * not accounted to NR_ISOLATED_*. They can be recognized
+>                * as __PageMovable
+> --
+> 1.8.3.1
+
+--
+Michal Hocko
+SUSE Labs
