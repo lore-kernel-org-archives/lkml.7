@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F47C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CEEC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 979C423717
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA76208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620118;
-	bh=0VB7BqRu9KN/fVUW3w2ZNmm1np0Ey2vWM69YPY/eu8U=;
+	s=default; t=1567620121;
+	bh=fdPtkkCWVgSMXBz6MIBKq+9X/pkSEOF4LTBTrmU3I+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICsnOajs/LhBkeKtG5n0Pqn6KpGiFCQkQbPWbp5xOkenkrvULnjaOjtp27RrOPZJh
-	 A2ssVtiZSBBFFflGzL+q2bpxVXlyu33989mTdPneLaredYBOfTfB5bo/jDQjayIzT6
-	 WEspcI9FmMpCzd3jFtF7GCtbFlWzHvwNlgY6g4WA=
+	b=S1sh99ga5VbLQKk/DQeGbyzS0k9S7bdFql73MadzfR/1jJlWKp+E22J8Km/9sE0Be
+	 oBxT+bZcJ/exrJ6All+sfqrLhVZoNRxnWrqcYxZZfLzxDqOdB4CPhGtacRqNpAMzs1
+	 EcDPVU8z30+oMBCbvLPBhxQaBi/EZYYp08unC7AQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388322AbfIDSB5 (ORCPT
+        id S2388673AbfIDSCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41600 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388657AbfIDSBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:54 -0400
+        id S2388665AbfIDSB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26D6123400;
-        Wed,  4 Sep 2019 18:01:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEEC421883;
+        Wed,  4 Sep 2019 18:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620113;
-        bh=0VB7BqRu9KN/fVUW3w2ZNmm1np0Ey2vWM69YPY/eu8U=;
+        s=default; t=1567620116;
+        bh=fdPtkkCWVgSMXBz6MIBKq+9X/pkSEOF4LTBTrmU3I+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qFf3l95b74H8bWw60f0lNIi5FeC41BC0FLX2OYjpD91sFwHSOEvtSOjsVsr18EE6b
-         Wk7nVNmCg3ywUSxAueTsHwjHJDgdZn+GkOCNUXjpoJRA8J5Cv8VcN/w0uxc3rt4DUR
-         YDgFRLNvieqm+bWqTPsKP9TiQK6PHCo17Il/zZhU=
+        b=mTh3vArsaVhpiBP4UdOH5Wf3rv2AOYc0qVjUA8PUHDw+XWZy9TruAhPtSTB3N9pHk
+         6QE79yTnN3ROTZnerI5etLY9nRIlyOBKauOr8seM/SHQ1EqdJ4p6xXtxsJ6Q54+Jv5
+         I/ZW6Sq8oF+rsL4jbddynS+YbTFUqOkEvG7qoqUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.9 37/83] dm btree: fix order of block initialization in btree_split_beneath
-Date:   Wed,  4 Sep 2019 19:53:29 +0200
-Message-Id: <20190904175307.155331427@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Ping Cheng <ping.cheng@wacom.com>,
+        Jason Gerecke <jason.gerecke@wacom.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.9 28/83] HID: wacom: correct misreported EKR ring values
+Date:   Wed,  4 Sep 2019 19:53:20 +0200
+Message-Id: <20190904175306.399304918@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -59,88 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Aaron Armstrong Skomra <skomra@gmail.com>
 
-commit e4f9d6013820d1eba1432d51dd1c5795759aa77f upstream.
+commit fcf887e7caaa813eea821d11bf2b7619a37df37a upstream.
 
-When btree_split_beneath() splits a node to two new children, it will
-allocate two blocks: left and right.  If right block's allocation
-failed, the left block will be unlocked and marked dirty.  If this
-happened, the left block'ss content is zero, because it wasn't
-initialized with the btree struct before the attempot to allocate the
-right block.  Upon return, when flushing the left block to disk, the
-validator will fail when check this block.  Then a BUG_ON is raised.
+The EKR ring claims a range of 0 to 71 but actually reports
+values 1 to 72. The ring is used in relative mode so this
+change should not affect users.
 
-Fix this by completely initializing the left block before allocating and
-initializing the right block.
-
-Fixes: 4dcb8b57df359 ("dm btree: fix leak of bufio-backed block in btree_split_beneath error path")
-Cc: stable@vger.kernel.org
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Fixes: 72b236d60218f ("HID: wacom: Add support for Express Key Remote.")
+Cc: <stable@vger.kernel.org> # v4.3+
+Reviewed-by: Ping Cheng <ping.cheng@wacom.com>
+Reviewed-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-btree.c |   31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/hid/wacom_wac.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/persistent-data/dm-btree.c
-+++ b/drivers/md/persistent-data/dm-btree.c
-@@ -623,39 +623,40 @@ static int btree_split_beneath(struct sh
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -819,7 +819,7 @@ static int wacom_remote_irq(struct wacom
+ 	input_report_key(input, BTN_BASE2, (data[11] & 0x02));
  
- 	new_parent = shadow_current(s);
- 
-+	pn = dm_block_data(new_parent);
-+	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
-+		sizeof(__le64) : s->info->value_type.size;
-+
-+	/* create & init the left block */
- 	r = new_block(s->info, &left);
- 	if (r < 0)
- 		return r;
- 
-+	ln = dm_block_data(left);
-+	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
-+
-+	ln->header.flags = pn->header.flags;
-+	ln->header.nr_entries = cpu_to_le32(nr_left);
-+	ln->header.max_entries = pn->header.max_entries;
-+	ln->header.value_size = pn->header.value_size;
-+	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
-+	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
-+
-+	/* create & init the right block */
- 	r = new_block(s->info, &right);
- 	if (r < 0) {
- 		unlock_block(s->info, left);
- 		return r;
- 	}
- 
--	pn = dm_block_data(new_parent);
--	ln = dm_block_data(left);
- 	rn = dm_block_data(right);
--
--	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
- 	nr_right = le32_to_cpu(pn->header.nr_entries) - nr_left;
- 
--	ln->header.flags = pn->header.flags;
--	ln->header.nr_entries = cpu_to_le32(nr_left);
--	ln->header.max_entries = pn->header.max_entries;
--	ln->header.value_size = pn->header.value_size;
--
- 	rn->header.flags = pn->header.flags;
- 	rn->header.nr_entries = cpu_to_le32(nr_right);
- 	rn->header.max_entries = pn->header.max_entries;
- 	rn->header.value_size = pn->header.value_size;
--
--	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
- 	memcpy(rn->keys, pn->keys + nr_left, nr_right * sizeof(pn->keys[0]));
--
--	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
--		sizeof(__le64) : s->info->value_type.size;
--	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
- 	memcpy(value_ptr(rn, 0), value_ptr(pn, nr_left),
- 	       nr_right * size);
+ 	if (data[12] & 0x80)
+-		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f));
++		input_report_abs(input, ABS_WHEEL, (data[12] & 0x7f) - 1);
+ 	else
+ 		input_report_abs(input, ABS_WHEEL, 0);
  
 
 
