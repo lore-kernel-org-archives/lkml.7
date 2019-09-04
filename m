@@ -2,83 +2,99 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F087C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD10C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A153208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567622131;
-	bh=yjbIx5m7mX/mvZZcdpxUUJpXRLtcX0uCm2sa4PBCsMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A48Uz8c1ef96w6CpSk0SD8fFfbpvV2sPgQWIYM1DCmdrmhT3Joe+5KWzdzSlN7HwO
-	 VCoRg8oxvCumWHnWxNgeypwMjUN8OQr36aOzv5tQnF5mdUltrktErr1pIABw+yo1EM
-	 iKkjnHJyoNXlFg4kUgHu1bhshj7SfeQ6uZ4pZ610=
+	by mail.kernel.org (Postfix) with ESMTP id B6FD220882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733069AbfIDSfa (ORCPT
+        id S1733215AbfIDSfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732542AbfIDSfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:35:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0522220820;
-        Wed,  4 Sep 2019 18:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567622129;
-        bh=yjbIx5m7mX/mvZZcdpxUUJpXRLtcX0uCm2sa4PBCsMA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DYeE0ZtEAdJbL7hmPbcyGggHUG0Kkrhni8rI/1Z2ttLnq1KIglHZUwXh47fwr9RQu
-         d+ku040gMbzGnqVBQDbIu//cVSiZ1O4RDuuTdqYfBIk6QTrV/MW6dDmxiwBKSgONKv
-         dTOAR3xd+I5UIbVUABdPFqAsIGVViLJk2phEOOeM=
-Date:   Wed, 4 Sep 2019 20:35:27 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Ricard Wanderlof <ricardw@axis.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.9 07/83] ASoC: Fail card instantiation if DAI format
- setup fails
-Message-ID: <20190904183527.GA364@kroah.com>
-References: <20190904175303.488266791@linuxfoundation.org>
- <20190904175304.389271806@linuxfoundation.org>
- <20190904181027.GG4348@sirena.co.uk>
+        Wed, 4 Sep 2019 14:35:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51126 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732177AbfIDSfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:35:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 30F66AC0C;
+        Wed,  4 Sep 2019 18:35:52 +0000 (UTC)
+Date:   Wed, 4 Sep 2019 20:35:51 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Hari Bathini <hbathini@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, Yangtao Li <tiny.windzz@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2] powerpc/fadump: when fadump is supported register
+ the fadump sysfs files.
+Message-ID: <20190904203551.5b06abb6@naga>
+In-Reply-To: <15be95b0-4cb2-1cf1-2fc1-ec313b9aa6f0@linux.ibm.com>
+References: <e7fad352-48f3-f01d-1b19-a589a3b95c07@linux.ibm.com>
+        <20190828172742.18378-1-msuchanek@suse.de>
+        <15be95b0-4cb2-1cf1-2fc1-ec313b9aa6f0@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904181027.GG4348@sirena.co.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 07:10:27PM +0100, Mark Brown wrote:
-> On Wed, Sep 04, 2019 at 07:52:59PM +0200, Greg Kroah-Hartman wrote:
-> > [ Upstream commit 40aa5383e393d72f6aa3943a4e7b1aae25a1e43b ]
+On Thu, 29 Aug 2019 10:58:16 +0530
+Hari Bathini <hbathini@linux.ibm.com> wrote:
+
+> On 28/08/19 10:57 PM, Michal Suchanek wrote:
+> > Currently it is not possible to distinguish the case when fadump is
+> > supported by firmware and disabled in kernel and completely unsupported
+> > using the kernel sysfs interface. User can investigate the devicetree
+> > but it is more reasonable to provide sysfs files in case we get some
+> > fadumpv2 in the future.
 > > 
-> > If the DAI format setup fails, there is no valid communication format
-> > between CPU and CODEC, so fail card instantiation, rather than continue
-> > with a card that will most likely not function properly.
+> > With this patch sysfs files are available whenever fadump is supported
+> > by firmware.
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---  
 > 
-> I nacked this patch when Sasha posted it - it only improves diagnostics
-> and might make systems that worked by accident break since it turns 
-> things into a hard failure, it won't make anything that didn't work
-> previously work.
+> [...]
+> 
+> > -	if (!fw_dump.fadump_supported) {
+> > +	if (!fw_dump.fadump_supported && fw_dump.fadump_enabled) {
+> >  		printk(KERN_ERR "Firmware-assisted dump is not supported on"
+> >  			" this hardware\n");
+> > -		return 0;
+> >  	}  
+> 
+> The above hunk is redundant with similar message already logged during
+> early boot in fadump_reserve_mem() function. I am not strongly against
+> this though. So...
 
-This is already in the 4.14.141, 4.19.69, and 5.2.11 releases, have you
-heard any problems there?
+I see this:
+[    0.000000] debug: ignoring loglevel setting.
+[    0.000000] Firmware-assisted dump is not supported on this hardware
+[    0.000000] Reserving 256MB of memory at 128MB for crashkernel (System RAM: 8192MB)
+[    0.000000] Allocated 5832704 bytes for 2048 pacas at c000000007a80000
+[    0.000000] Page sizes from device-tree:
+[    0.000000] base_shift=12: shift=12, sllp=0x0000, avpnm=0x00000000, tlbiel=1, penc=0
+[    0.000000] base_shift=16: shift=16, sllp=0x0110, avpnm=0x00000000, tlbiel=1, penc=1
+[    0.000000] Page orders: linear mapping = 16, virtual = 16, io = 16, vmemmap = 16
+[    0.000000] Using 1TB segments
+[    0.000000] Initializing hash mmu with SLB
 
-I'll be glad to drop this from the 4.9.y and 4.4.y queues, now if you
-wish, but just want you to know it's already out there in some releases.
+Clearly the second message is logged from the above code. The duplicate
+is capitalized: "Firmware-Assisted Dump is not supported on this
+hardware" and I don't see it logged. So if anything is duplicate that
+should be removed it is the message in fadump_reserve_mem(). It is not
+clear why that one is not seen, though.
 
-thanks,
+Thanks
 
-greg k-h
+Michal
