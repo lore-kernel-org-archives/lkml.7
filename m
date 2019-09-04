@@ -2,449 +2,109 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F40C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F5EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF392168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sFYGsFae"
+	by mail.kernel.org (Postfix) with ESMTP id 2DEA12168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731044AbfIDOwt (ORCPT
+        id S1731056AbfIDOzb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:52:49 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38893 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730065AbfIDOwr (ORCPT
+        Wed, 4 Sep 2019 10:55:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39502 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730324AbfIDOza (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:52:47 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h195so6849356pfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 07:52:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qo9btwDVywt5Z4ijSkpPcdJcIxoBud+XrMQP8DLBtZA=;
-        b=sFYGsFaeqOIttaX75Mh0Jt6LsiFSSow8MH7y6a52jVXYkPlB1jD+rvA4kSYVmUJSrq
-         ojaEis6BbnDlau6vVkJKwiWkmN6zMu//M8lERzORRYA28oks7bKvz+fi2QSu5aHhBXJm
-         O/PmjUuBojgWEQa6N+q6OiUTmJ5L9TMtAmd+gBA/NdlmY1MODkn3rLfzDaOCv9tRsacx
-         4dmkg20CXiWx+J7ZAz0xREJaTi8oA5eF/vV3VC3sYSLhW9lwFJRkFdCbQjsqOmODrC3r
-         Jc7rxpY3eSw3R+jZ29b3q93JyDXmqBWLrqLsbJmUM1evPQg9JO6Jb87uqDCH8BQY1hzb
-         0PwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qo9btwDVywt5Z4ijSkpPcdJcIxoBud+XrMQP8DLBtZA=;
-        b=oKZlXIXCmH66BJoxhs5PqxTJSeS2GUeaiiZcwGNlEEe3+l0K5z52aZC9WOrE/xYeie
-         iC270Obx9dHb5fDtVupa76HNnpdKWOD6TT3ubX2a4tgVmqAjlhVjBFY9viDZTJCuJnxz
-         xgD/TuJWMKd5MCnkbxFXnVwDLLSl4dJnyFr+Vq5Yz2o2kDWVmF2oedyCMt1AAX0jWTEY
-         EBuoVvViHkd/gqHbdxNk986DpyTbWmKTV5IZIktWOaCN1fho+WNCu5Ymx3IiPUJKsj9w
-         QfYIOObE/g59rcek8jDqqr3pw0IDb7rFKNpCaqtc75ixCuGRrD9xCAi7rYYjfkGgTPe4
-         dRvg==
-X-Gm-Message-State: APjAAAVeYDtJOCLukNv80Py577t9itFWCcaCqvwyjW4iAcwE1r23XOvj
-        MYbkRZSFMt4zSFi0DHpwvS08dv048kKe7LAF/x3gXg==
-X-Google-Smtp-Source: APXvYqwZikXx2qjQtQDGtXVxmy03OmbTt42Hq77Y/o/GV+iGPZsxsZsTVPVlPZ5ZZxAgajR2zq/oq6os3dIlpFoD/6c=
-X-Received: by 2002:a62:db84:: with SMTP id f126mr21108068pfg.25.1567608765533;
- Wed, 04 Sep 2019 07:52:45 -0700 (PDT)
+        Wed, 4 Sep 2019 10:55:30 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i5Wgx-0006VY-UK; Wed, 04 Sep 2019 16:55:27 +0200
+Date:   Wed, 4 Sep 2019 16:55:27 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Julien Grall <julien.grall@arm.com>
+Subject: [PATCH v2] hrtimer: Add a missing bracket and hide `migration_base'
+ on !SMP
+Message-ID: <20190904145527.eah7z56ntwobqm6j@linutronix.de>
+References: <20190821092409.13225-4-julien.grall@arm.com>
+ <156652633520.11649.15892124550118329976.tip-bot2@tip-bot2>
+ <20190904141540.xucehzbndjmgkrio@linutronix.de>
+ <alpine.DEB.2.21.1909041633580.1902@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <cover.1561386715.git.andreyknvl@google.com> <0999c80cd639b78ae27c0674069d552833227564.1561386715.git.andreyknvl@google.com>
- <6af3f619-4356-2f67-ed76-92beceb1e0a0@arm.com> <CAAeHK+yhbUcuLhoetjGUbqM4j9fX84hbwmxzNPF+e1zXj6nKNw@mail.gmail.com>
- <d6bc5c4b-68b5-0a58-0f52-8bce20986dcf@arm.com>
-In-Reply-To: <d6bc5c4b-68b5-0a58-0f52-8bce20986dcf@arm.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 4 Sep 2019 16:52:34 +0200
-Message-ID: <CAAeHK+xXN_oHt0rAcWdTs0XhkYRhWqf3iv-n+dYmY075xosJnw@mail.gmail.com>
-Subject: Re: [PATCH v18 15/15] selftests, arm64: add a selftest for passing
- tagged pointers to kernel
-To:     Cristian Marussi <cristian.marussi@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <alpine.DEB.2.21.1909041633580.1902@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 23, 2019 at 7:49 PM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
->
->
-> Hi
->
-> On 23/08/2019 18:16, Andrey Konovalov wrote:
-> > On Fri, Aug 23, 2019 at 3:56 PM Cristian Marussi
-> > <cristian.marussi@arm.com> wrote:
-> >>
-> >> Hi Andrey
-> >>
-> >> On 24/06/2019 15:33, Andrey Konovalov wrote:
-> >>> This patch is a part of a series that extends kernel ABI to allow to =
-pass
-> >>> tagged user pointers (with the top byte set to something else other t=
-han
-> >>> 0x00) as syscall arguments.
-> >>>
-> >>> This patch adds a simple test, that calls the uname syscall with a
-> >>> tagged user pointer as an argument. Without the kernel accepting tagg=
-ed
-> >>> user pointers the test fails with EFAULT.
-> >>>
-> >>> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> >>> ---
-> >>>  tools/testing/selftests/arm64/.gitignore      |  1 +
-> >>>  tools/testing/selftests/arm64/Makefile        | 11 +++++++
-> >>>  .../testing/selftests/arm64/run_tags_test.sh  | 12 ++++++++
-> >>>  tools/testing/selftests/arm64/tags_test.c     | 29 +++++++++++++++++=
-++
-> >>>  4 files changed, 53 insertions(+)
-> >>>  create mode 100644 tools/testing/selftests/arm64/.gitignore
-> >>>  create mode 100644 tools/testing/selftests/arm64/Makefile
-> >>>  create mode 100755 tools/testing/selftests/arm64/run_tags_test.sh
-> >>>  create mode 100644 tools/testing/selftests/arm64/tags_test.c
-> >>
-> >> After building a fresh Kernel from arm64/for-next-core from scratch at=
-:
-> >>
-> >> commit 239ab658bea3b387424501e7c416640d6752dc0c
-> >> Merge: 6bfa3134bd3a 42d038c4fb00 1243cb6a676f d55c5f28afaf d06fa5a118f=
-1 34b5560db40d
-> >> Author: Will Deacon <will@kernel.org>
-> >> Date:   Thu Aug 22 18:23:53 2019 +0100
-> >>
-> >>     Merge branches 'for-next/error-injection', 'for-next/tbi', 'for-ne=
-xt/psci-cpuidle', 'for-next/cpu-topology' and 'for-next/52-bit-kva' into fo=
-r-next/core
-> >>
-> >>
-> >> KSFT arm64 tests build is broken for me, both setting or not KBUILD_OU=
-TPUT=3D
-> >>
-> >> 13:30 $ make TARGETS=3Darm64 kselftest-clean
-> >> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux=
-'
-> >> rm -f -r /home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm64/ta=
-gs_test
-> >> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
-> >>
-> >> =E2=9C=94 ~/ARM/dev/src/pdsw/linux [arm64_for_next_core|=E2=80=A68=E2=
-=9A=91 23]
-> >>
-> >> 13:30 $ make TARGETS=3Darm64 kselftest
-> >> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux=
-'
-> >> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the=
- compat vDSO will not be built
-> >> make --no-builtin-rules INSTALL_HDR_PATH=3D$BUILD/usr \
-> >>         ARCH=3Darm64 -C ../../.. headers_install
-> >>   HOSTCC  scripts/basic/fixdep
-> >>   HOSTCC  scripts/unifdef
-> >> ...
-> >> ...
-> >>   HDRINST usr/include/asm/msgbuf.h
-> >>   HDRINST usr/include/asm/shmbuf.h
-> >>   INSTALL /home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/usr/inc=
-lude
-> >> /opt/toolchains/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin/aarch=
-64-linux-gnu-gcc     tags_test.c  -o /home/crimar01/ARM/dev/src/pdsw/out_li=
-nux//kselftest/arm64/tags_test
-> >> tags_test.c: In function =E2=80=98main=E2=80=99:
-> >> tags_test.c:21:12: error: =E2=80=98PR_SET_TAGGED_ADDR_CTRL=E2=80=99 un=
-declared (first use in this function); did you mean =E2=80=98PR_GET_TID_ADD=
-RESS=E2=80=99?
-> >>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) =
-=3D=3D 0)
-> >>             ^~~~~~~~~~~~~~~~~~~~~~~
-> >>             PR_GET_TID_ADDRESS
-> >> tags_test.c:21:12: note: each undeclared identifier is reported only o=
-nce for each function it appears in
-> >> tags_test.c:21:37: error: =E2=80=98PR_TAGGED_ADDR_ENABLE=E2=80=99 unde=
-clared (first use in this function); did you mean =E2=80=98PR_GET_DUMPABLE=
-=E2=80=99?
-> >>   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) =
-=3D=3D 0)
-> >>                                      ^~~~~~~~~~~~~~~~~~~~~
-> >>                                      PR_GET_DUMPABLE
-> >> ../lib.mk:138: recipe for target '/home/crimar01/ARM/dev/src/pdsw/out_=
-linux//kselftest/arm64/tags_test' failed
-> >> make[3]: *** [/home/crimar01/ARM/dev/src/pdsw/out_linux//kselftest/arm=
-64/tags_test] Error 1
-> >> Makefile:136: recipe for target 'all' failed
-> >> make[2]: *** [all] Error 2
-> >> /home/crimar01/ARM/dev/src/pdsw/linux/Makefile:1237: recipe for target=
- 'kselftest' failed
-> >> make[1]: *** [kselftest] Error 2
-> >> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
-> >> Makefile:179: recipe for target 'sub-make' failed
-> >> make: *** [sub-make] Error 2
-> >>
-> >> Despite seeing KSFT installing Kernel Headers, they cannot be found.
-> >>
-> >> Fixing this patch like this make it work for me:
-> >>
-> >> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/se=
-lftests/arm64/Makefile
-> >> index a61b2e743e99..f9f79fb272f0 100644
-> >> --- a/tools/testing/selftests/arm64/Makefile
-> >> +++ b/tools/testing/selftests/arm64/Makefile
-> >> @@ -4,6 +4,7 @@
-> >>  ARCH ?=3D $(shell uname -m 2>/dev/null || echo not)
-> >>
-> >>  ifneq (,$(filter $(ARCH),aarch64 arm64))
-> >> +CFLAGS +=3D -I../../../../usr/include/
-> >>  TEST_GEN_PROGS :=3D tags_test
-> >>  TEST_PROGS :=3D run_tags_test.sh
-> >>  endif
-> >>
-> >> but is not really a proper fix since it does NOT account for case in w=
-hich you have
-> >> installed the Kernel Headers in a non standard location like when you =
-use KBUILD_OUTPUT.
-> >>
-> >> Am I missing something ?
-> >
-> > Hm, PR_SET_TAGGED_ADDR_CTRL is defined in include/uapi/linux/prctl.h,
-> > and the test has #include <sys/prctl.h> so as long as you've updated
-> > your kernel headers this should work.
-> >
-> > (I'm OOO next week, I'll see if I can reproduce this once I'm back).
->
-> Ok. Thanks for the reply.
->
-> I think I've got it in my local tree having cloned arm64/for-next-core:
->
-> 18:32 $ egrep -A 10 PR_SET_TAG ./include/uapi/linux/prctl.h
-> #define PR_SET_TAGGED_ADDR_CTRL         55
-> #define PR_GET_TAGGED_ADDR_CTRL         56
-> # define PR_TAGGED_ADDR_ENABLE          (1UL << 0)
->
-> #endif /* _LINUX_PRCTL_H */
->
-> and Kernel header are locally installed in my kernel src dir (by KSFT ind=
-eed)
->
-> 18:34 $ egrep -RA 10 PR_SET_TAG usr/include/
-> usr/include/linux/prctl.h:#define PR_SET_TAGGED_ADDR_CTRL               5=
-5
-> usr/include/linux/prctl.h-#define PR_GET_TAGGED_ADDR_CTRL               5=
-6
-> usr/include/linux/prctl.h-# define PR_TAGGED_ADDR_ENABLE                (=
-1UL << 0)
-> usr/include/linux/prctl.h-
-> usr/include/linux/prctl.h-#endif /* _LINUX_PRCTL_H */
->
-> but how are they supposed to be found if nor the test Makefile
-> neither the KSFT Makefile who installs them pass any -I options to the
-> compiler ?
-> I suppose <sys/prctl.h> tries to include arch specific headers from the r=
-egular system path,
-> but when you are cross-compiling ?
->
-> 18:34 $ make TARGETS=3Darm64 kselftest
-> make[1]: Entering directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
-> arch/arm64/Makefile:56: CROSS_COMPILE_COMPAT not defined or empty, the co=
-mpat vDSO will not be built
-> make --no-builtin-rules INSTALL_HDR_PATH=3D$BUILD/usr \
->         ARCH=3Darm64 -C ../../.. headers_install
->   INSTALL /home/crimar01/ARM/dev/src/pdsw/out_linux/kselftest/usr/include
-> /opt/toolchains/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin/aarch64-=
-linux-gnu-gcc -Wall -O2 -g    tags_test.c  -o /home/crimar01/ARM/dev/src/pd=
-sw/out_linux/kselftest/arm64/tags/tags_test
-> tags_test.c: In function =E2=80=98main=E2=80=99:
-> tags_test.c:20:12: error: =E2=80=98PR_SET_TAGGED_ADDR_CTRL=E2=80=99 undec=
-lared (first use in this function); did you mean =E2=80=98PR_GET_TID_ADDRES=
-S=E2=80=99?
->   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) =3D=
-=3D 0)
->             ^~~~~~~~~~~~~~~~~~~~~~~
->             PR_GET_TID_ADDRESS
-> tags_test.c:20:12: note: each undeclared identifier is reported only once=
- for each function it appears in
-> tags_test.c:20:37: error: =E2=80=98PR_TAGGED_ADDR_ENABLE=E2=80=99 undecla=
-red (first use in this function); did you mean =E2=80=98PR_GET_DUMPABLE=E2=
-=80=99?
->   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) =3D=
-=3D 0)
->                                      ^~~~~~~~~~~~~~~~~~~~~
->                                      PR_GET_DUMPABLE
-> ../../lib.mk:138: recipe for target '/home/crimar01/ARM/dev/src/pdsw/out_=
-linux/kselftest/arm64/tags/tags_test' failed
-> make[4]: *** [/home/crimar01/ARM/dev/src/pdsw/out_linux/kselftest/arm64/t=
-ags/tags_test] Error 1
-> Makefile:19: recipe for target 'all' failed
-> make[3]: *** [all] Error 2
-> Makefile:137: recipe for target 'all' failed
-> make[2]: *** [all] Error 2
-> /home/crimar01/ARM/dev/src/pdsw/linux/Makefile:1236: recipe for target 'k=
-selftest' failed
-> make[1]: *** [kselftest] Error 2
-> make[1]: Leaving directory '/home/crimar01/ARM/dev/src/pdsw/out_linux'
-> Makefile:179: recipe for target 'sub-make' failed
-> make: *** [sub-make] Error 2
->
->
-> In fact many KSFT testcases seems to brutally add default headers path:
->
-> tools/testing/selftests/memfd/Makefile:CFLAGS +=3D -I../../../../include/=
-uapi/
-> tools/testing/selftests/memfd/Makefile:CFLAGS +=3D -I../../../../include/
-> tools/testing/selftests/memfd/Makefile:CFLAGS +=3D -I../../../../usr/incl=
-ude/
-> tools/testing/selftests/net/Makefile:CFLAGS +=3D -I../../../../usr/includ=
-e/
-> tools/testing/selftests/membarrier/Makefile:CFLAGS +=3D -g -I../../../../=
-usr/include/
-> ...
+The recent change to avoid taking the expiry lock when a timer is
+currently migrated missed to add a bracket at the end of the if
+statement leading to compile errors.
+Since that commit the variable `migration_base' is always used but only
+available on SMP configuration thus leading to another compile error.
+The changelog says
+  "The timer base and base->cpu_base cannot be NULL in the code path"
 
-Hi Cristian!
+so it is safe to limit this check to SMP configurations only.
 
-Indeed, I can reproduce the issue. I don't know what's the proper way
-to resolve this. Adding "CFLAGS +=3D -I../../../../usr/include/" looks
-good to me. AFAICS your series resolves this issue in a similar way,
-but I think we should fix this before the current rc is released. Do
-you want to submit a patch that adds this simple fix or should I do
-that?
+Add the missing bracket to the if statement and hide `migration_base'
+behind CONFIG_SMP bars.
 
-Thanks!
+Fixes: 68b2c8c1e4210 ("hrtimer: Don't take expiry_lock when timer is currently migrated")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+v1…v2:
+	- use is_migration_base() as a helper function
+	- slightly reword the commit message
 
->
-> Cheers
->
-> Cristian
-> >
-> >
-> >
-> >>
-> >> Thanks
-> >>
-> >> Cristian
-> >>
-> >>>
-> >>> diff --git a/tools/testing/selftests/arm64/.gitignore b/tools/testing=
-/selftests/arm64/.gitignore
-> >>> new file mode 100644
-> >>> index 000000000000..e8fae8d61ed6
-> >>> --- /dev/null
-> >>> +++ b/tools/testing/selftests/arm64/.gitignore
-> >>> @@ -0,0 +1 @@
-> >>> +tags_test
-> >>> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/s=
-elftests/arm64/Makefile
-> >>> new file mode 100644
-> >>> index 000000000000..a61b2e743e99
-> >>> --- /dev/null
-> >>> +++ b/tools/testing/selftests/arm64/Makefile
-> >>> @@ -0,0 +1,11 @@
-> >>> +# SPDX-License-Identifier: GPL-2.0
-> >>> +
-> >>> +# ARCH can be overridden by the user for cross compiling
-> >>> +ARCH ?=3D $(shell uname -m 2>/dev/null || echo not)
-> >>> +
-> >>> +ifneq (,$(filter $(ARCH),aarch64 arm64))
-> >>> +TEST_GEN_PROGS :=3D tags_test
-> >>> +TEST_PROGS :=3D run_tags_test.sh
-> >>> +endif
-> >>> +
-> >>> +include ../lib.mk
-> >>> diff --git a/tools/testing/selftests/arm64/run_tags_test.sh b/tools/t=
-esting/selftests/arm64/run_tags_test.sh
-> >>> new file mode 100755
-> >>> index 000000000000..745f11379930
-> >>> --- /dev/null
-> >>> +++ b/tools/testing/selftests/arm64/run_tags_test.sh
-> >>> @@ -0,0 +1,12 @@
-> >>> +#!/bin/sh
-> >>> +# SPDX-License-Identifier: GPL-2.0
-> >>> +
-> >>> +echo "--------------------"
-> >>> +echo "running tags test"
-> >>> +echo "--------------------"
-> >>> +./tags_test
-> >>> +if [ $? -ne 0 ]; then
-> >>> +     echo "[FAIL]"
-> >>> +else
-> >>> +     echo "[PASS]"
-> >>> +fi
-> >>> diff --git a/tools/testing/selftests/arm64/tags_test.c b/tools/testin=
-g/selftests/arm64/tags_test.c
-> >>> new file mode 100644
-> >>> index 000000000000..22a1b266e373
-> >>> --- /dev/null
-> >>> +++ b/tools/testing/selftests/arm64/tags_test.c
-> >>> @@ -0,0 +1,29 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0
-> >>> +
-> >>> +#include <stdio.h>
-> >>> +#include <stdlib.h>
-> >>> +#include <unistd.h>
-> >>> +#include <stdint.h>
-> >>> +#include <sys/prctl.h>
-> >>> +#include <sys/utsname.h>
-> >>> +
-> >>> +#define SHIFT_TAG(tag)               ((uint64_t)(tag) << 56)
-> >>> +#define SET_TAG(ptr, tag)    (((uint64_t)(ptr) & ~SHIFT_TAG(0xff)) |=
- \
-> >>> +                                     SHIFT_TAG(tag))
-> >>> +
-> >>> +int main(void)
-> >>> +{
-> >>> +     static int tbi_enabled =3D 0;
-> >>> +     struct utsname *ptr, *tagged_ptr;
-> >>> +     int err;
-> >>> +
-> >>> +     if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0,=
- 0) =3D=3D 0)
-> >>> +             tbi_enabled =3D 1;
-> >>> +     ptr =3D (struct utsname *)malloc(sizeof(*ptr));
-> >>> +     if (tbi_enabled)
-> >>> +             tagged_ptr =3D (struct utsname *)SET_TAG(ptr, 0x42);
-> >>> +     err =3D uname(tagged_ptr);
-> >>> +     free(ptr);
-> >>> +
-> >>> +     return err;
-> >>> +}
-> >>>
-> >>
->
+ kernel/time/hrtimer.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index f5a1a5e16216c..eaf31ac38efbb 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -140,6 +140,11 @@ static struct hrtimer_cpu_base migration_cpu_base = {
+ 
+ #define migration_base	migration_cpu_base.clock_base[0]
+ 
++static bool is_migration_base(struct hrtimer_clock_base *base)
++{
++	return base == &migration_base;
++}
++
+ /*
+  * We are using hashed locking: holding per_cpu(hrtimer_bases)[n].lock
+  * means that all timers which are tied to this base via timer->base are
+@@ -264,6 +269,11 @@ switch_hrtimer_base(struct hrtimer *timer, struct hrtimer_clock_base *base,
+ 
+ #else /* CONFIG_SMP */
+ 
++static bool is_migration_base(struct hrtimer_clock_base *base)
++{
++	return false;
++}
++
+ static inline struct hrtimer_clock_base *
+ lock_hrtimer_base(const struct hrtimer *timer, unsigned long *flags)
+ {
+@@ -1221,7 +1231,7 @@ void hrtimer_cancel_wait_running(const struct hrtimer *timer)
+ 	 * Just relax if the timer expires in hard interrupt context or if
+ 	 * it is currently on the migration base.
+ 	 */
+-	if (!timer->is_soft || base == &migration_base)
++	if (!timer->is_soft || is_migration_base(base)) {
+ 		cpu_relax();
+ 		return;
+ 	}
+-- 
+2.23.0
+
