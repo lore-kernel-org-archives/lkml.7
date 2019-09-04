@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B20DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B220FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15A9E22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8846E2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612852;
-	bh=8iB2lI3WyLgCxqLP6y4q7SwKtknI0k26DSWibv/8LkA=;
+	s=default; t=1567612856;
+	bh=9ZkUmIAtqapg5V4o9+m2L/LvSQjknh64QISz0pC6Op8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8RBYxtZ1oR2vT64OParl7B08ZSg8eBxojsfVI4QDUeNmtEldBbCjFNWeqGAdPE6V
-	 5LtFG2Ia0fXaARP8J7wqVLE4PwspOA5SfHjXV7Y9SY5GHbn8hdJvszq1UvPGWB73LC
-	 8flGMb6z9HOf+rcFPfQuODeXI3mRhycTW/JR424U=
+	b=mLhjV+I0k7r6x1n8x55WxE9Dz+7ea3H4/zcil9EremCKgOnpzIa5AxHl2Pa7s+hfG
+	 y53wK3EdvCZ6mv/Xz5BVliflOcAgOGnzXSyqg8P5Xj1CjOh6u7+8LtJJ/fWkptjS77
+	 ghFs1UbweUWI2bTAIk86CwEsxXHdrCNe3NAc9i2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732053AbfIDQAv (ORCPT
+        id S1732851AbfIDQAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732097AbfIDQAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:40 -0400
+        id S1732798AbfIDQAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D7432070C;
-        Wed,  4 Sep 2019 16:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76E0B22DBF;
+        Wed,  4 Sep 2019 16:00:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612839;
-        bh=8iB2lI3WyLgCxqLP6y4q7SwKtknI0k26DSWibv/8LkA=;
+        s=default; t=1567612842;
+        bh=9ZkUmIAtqapg5V4o9+m2L/LvSQjknh64QISz0pC6Op8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1olCe+/CliXGEDIlrw04ZjjGMDSlKOIp7OGZncPYk17W5KEwJ1JihuKVD2L467cLs
-         gdPJzuS+a++JD2rb9V4+4/hIvNwRGHVpWLcMMkzb2m27BWmMPyK31u6vSiYdB4Bm7U
-         i98qsimz698/rBaWDEYm3dpfvfvJFIjvIrgaLRQE=
+        b=rYcEtKhscWKtK09W/m1TsUxGrpqfRonVYgnOara5+1nJt2Jsi44flF12YCOC3E/vW
+         HcU2vCfWd44etX9PVP3jWq+2xtc5hsBKSnz0A7xRQRWZrQNsfwLRSdW/bfibOXUzua
+         CKHDYdjx84EWE5qN8/0htpC4SNv/PKWccSWtam20=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>, Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 25/52] ARM: 8874/1: mm: only adjust sections of valid mm structures
-Date:   Wed,  4 Sep 2019 11:59:37 -0400
-Message-Id: <20190904160004.3671-25-sashal@kernel.org>
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/52] batman-adv: Only read OGM2 tvlv_len after buffer len check
+Date:   Wed,  4 Sep 2019 11:59:39 -0400
+Message-Id: <20190904160004.3671-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -66,50 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-[ Upstream commit c51bc12d06b3a5494fbfcbd788a8e307932a06e9 ]
+[ Upstream commit 0ff0f15a32c093381ad1abc06abe85afb561ab28 ]
 
-A timing hazard exists when an early fork/exec thread begins
-exiting and sets its mm pointer to NULL while a separate core
-tries to update the section information.
+Multiple batadv_ogm2_packet can be stored in an skbuff. The functions
+batadv_v_ogm_send_to_if() uses batadv_v_ogm_aggr_packet() to check if there
+is another additional batadv_ogm2_packet in the skb or not before they
+continue processing the packet.
 
-This commit ensures that the mm pointer is not NULL before
-setting its section parameters. The arguments provided by
-commit 11ce4b33aedc ("ARM: 8672/1: mm: remove tasklist locking
-from update_sections_early()") are equally valid for not
-requiring grabbing the task_lock around this check.
+The length for such an OGM2 is BATADV_OGM2_HLEN +
+batadv_ogm2_packet->tvlv_len. The check must first check that at least
+BATADV_OGM2_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
 
-Fixes: 08925c2f124f ("ARM: 8464/1: Update all mm structures with section adjustments")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/batman-adv/bat_v_ogm.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 0cc8e04295a40..66b1568b95e05 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -713,7 +713,8 @@ static void update_sections_early(struct section_perm perms[], int n)
- 		if (t->flags & PF_KTHREAD)
- 			continue;
- 		for_each_thread(t, s)
--			set_section_perms(perms, n, true, s->mm);
-+			if (s->mm)
-+				set_section_perms(perms, n, true, s->mm);
- 	}
- 	set_section_perms(perms, n, true, current->active_mm);
- 	set_section_perms(perms, n, true, &init_mm);
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index 2948b41b06d47..d241ccc0ca027 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -643,17 +643,23 @@ batadv_v_ogm_process_per_outif(struct batadv_priv *bat_priv,
+  * batadv_v_ogm_aggr_packet() - checks if there is another OGM aggregated
+  * @buff_pos: current position in the skb
+  * @packet_len: total length of the skb
+- * @tvlv_len: tvlv length of the previously considered OGM
++ * @ogm2_packet: potential OGM2 in buffer
+  *
+  * Return: true if there is enough space for another OGM, false otherwise.
+  */
+-static bool batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
+-				     __be16 tvlv_len)
++static bool
++batadv_v_ogm_aggr_packet(int buff_pos, int packet_len,
++			 const struct batadv_ogm2_packet *ogm2_packet)
+ {
+ 	int next_buff_pos = 0;
+ 
+-	next_buff_pos += buff_pos + BATADV_OGM2_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm2_packet);
++	if (next_buff_pos > packet_len)
++		return false;
++
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm2_packet->tvlv_len);
+ 
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -830,7 +836,7 @@ int batadv_v_ogm_packet_recv(struct sk_buff *skb,
+ 	ogm_packet = (struct batadv_ogm2_packet *)skb->data;
+ 
+ 	while (batadv_v_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					ogm_packet->tvlv_len)) {
++					ogm_packet)) {
+ 		batadv_v_ogm_process(skb, ogm_offset, if_incoming);
+ 
+ 		ogm_offset += BATADV_OGM2_HLEN;
 -- 
 2.20.1
 
