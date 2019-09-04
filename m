@@ -2,139 +2,123 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A1AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F65C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E4A2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF692339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:43:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfIDKnf (ORCPT
+        id S1729461AbfIDKnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:43:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57592 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 06:43:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:51628 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726010AbfIDKnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:43:35 -0400
-Received: from oasis.local.home (bl11-233-114.dsl.telepac.pt [85.244.233.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E35422DBF;
-        Wed,  4 Sep 2019 10:43:32 +0000 (UTC)
-Date:   Wed, 4 Sep 2019 06:43:27 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     Zhengjun Xing <zhengjun.xing@linux.intel.com>, mingo@redhat.com,
-        tom.zanussi@linux.intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] trace:Add "gfp_t" support in synthetic_events
-Message-ID: <20190904064327.28876d71@oasis.local.home>
-In-Reply-To: <1562947506.12920.0.camel@kernel.org>
-References: <20190712015308.9908-1-zhengjun.xing@linux.intel.com>
-        <1562947506.12920.0.camel@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726010AbfIDKni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:43:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B573B337;
+        Wed,  4 Sep 2019 03:43:37 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE6D33F246;
+        Wed,  4 Sep 2019 03:43:35 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 11:43:33 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jirka =?utf-8?Q?Hladk=C3=BD?= <jhladky@redhat.com>,
+        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
+        x86@kernel.org
+Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
+Message-ID: <20190904104332.ogsjtbtuadhsglxh@e107158-lin.cambridge.arm.com>
+References: <20190903154340.860299-1-rkrcmar@redhat.com>
+ <20190903154340.860299-3-rkrcmar@redhat.com>
+ <a2924d91-df68-42de-0709-af53649346d5@arm.com>
+ <20190904042310.GA159235@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904042310.GA159235@google.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Jul 2019 11:05:06 -0500
-Tom Zanussi <zanussi@kernel.org> wrote:
-
-> Hi Zhengjun,
-> 
-> On Fri, 2019-07-12 at 09:53 +0800, Zhengjun Xing wrote:
-> > Add "gfp_t" support in synthetic_events, then the "gfp_t" type
-> > parameter in some functions can be traced.
+On 09/04/19 00:23, Joel Fernandes wrote:
+> On Tue, Sep 03, 2019 at 05:05:47PM +0100, Valentin Schneider wrote:
+> > On 03/09/2019 16:43, Radim Krčmář wrote:
+> > > The paper "The Linux Scheduler: a Decade of Wasted Cores" used several
+> > > custom data gathering points to better understand what was going on in
+> > > the scheduler.
+> > > Red Hat adapted one of them for the tracepoint framework and created a
+> > > tool to plot a heatmap of nr_running, where the sched_update_nr_running
+> > > tracepoint is being used for fine grained monitoring of scheduling
+> > > imbalance.
+> > > The tool is available from https://github.com/jirvoz/plot-nr-running.
+> > > 
+> > > The best place for the tracepoints is inside the add/sub_nr_running,
+> > > which requires some shenanigans to make it work as they are defined
+> > > inside sched.h.
+> > > The tracepoints have to be included from sched.h, which means that
+> > > CREATE_TRACE_POINTS has to be defined for the whole header and this
+> > > might cause problems if tree-wide headers expose tracepoints in sched.h
+> > > dependencies, but I'd argue it's the other side's misuse of tracepoints.
+> > > 
+> > > Moving the import sched.h line lower would require fixes in s390 and ppc
+> > > headers, because they don't include dependecies properly and expect
+> > > sched.h to do it, so it is simpler to keep sched.h there and
+> > > preventively undefine CREATE_TRACE_POINTS right after.
+> > > 
+> > > Exports of the pelt tracepoints remain because they don't need to be
+> > > protected by CREATE_TRACE_POINTS and moving them closer would be
+> > > unsightly.
+> > > 
 > > 
-> > Prints the gfp flags as hex in addition to the human-readable flag
-> > string.  Example output:
+> > Pure trace events are frowned upon in scheduler world, try going with
+> > trace points. Qais did something very similar recently:
 > > 
-> >   whoopsie-630 [000] ...1 78.969452: testevent: bar=b20
-> > (GFP_ATOMIC|__GFP_ZERO)
-> >     rcuc/0-11  [000] ...1 81.097555: testevent: bar=a20 (GFP_ATOMIC)
-> >     rcuc/0-11  [000] ...1 81.583123: testevent: bar=a20 (GFP_ATOMIC)
+> > https://lore.kernel.org/lkml/20190604111459.2862-1-qais.yousef@arm.com/
 > > 
-> > Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-
-Why is this Signed-off-by Tom? Tom, did you author part of this??
-
--- Steve
-
-> > Signed-off-by: Zhengjun Xing <zhengjun.xing@linux.intel.com>  
+> > You'll have to implement the associated trace events in a module, which
+> > lets you define your own event format and doesn't form an ABI :).
 > 
-> Looks good to me, thanks!
+> Is that really true? eBPF programs loaded from userspace can access
+> tracepoints through BPF_RAW_TRACEPOINT_OPEN, which is UAPI:
+> https://github.com/torvalds/linux/blob/master/include/uapi/linux/bpf.h#L103
 > 
-> Tom
-> 
-> > ---
-> >  kernel/trace/trace_events_hist.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> > 
-> > diff --git a/kernel/trace/trace_events_hist.c
-> > b/kernel/trace/trace_events_hist.c
-> > index ca6b0dff60c5..30f0f32aca62 100644
-> > --- a/kernel/trace/trace_events_hist.c
-> > +++ b/kernel/trace/trace_events_hist.c
-> > @@ -13,6 +13,10 @@
-> >  #include <linux/rculist.h>
-> >  #include <linux/tracefs.h>
-> >  
-> > +/* for gfp flag names */
-> > +#include <linux/trace_events.h>
-> > +#include <trace/events/mmflags.h>
-> > +
-> >  #include "tracing_map.h"
-> >  #include "trace.h"
-> >  #include "trace_dynevent.h"
-> > @@ -752,6 +756,8 @@ static int synth_field_size(char *type)
-> >  		size = sizeof(unsigned long);
-> >  	else if (strcmp(type, "pid_t") == 0)
-> >  		size = sizeof(pid_t);
-> > +	else if (strcmp(type, "gfp_t") == 0)
-> > +		size = sizeof(gfp_t);
-> >  	else if (synth_field_is_string(type))
-> >  		size = synth_field_string_size(type);
-> >  
-> > @@ -792,6 +798,8 @@ static const char *synth_field_fmt(char *type)
-> >  		fmt = "%lu";
-> >  	else if (strcmp(type, "pid_t") == 0)
-> >  		fmt = "%d";
-> > +	else if (strcmp(type, "gfp_t") == 0)
-> > +		fmt = "%x";
-> >  	else if (synth_field_is_string(type))
-> >  		fmt = "%s";
-> >  
-> > @@ -834,9 +842,20 @@ static enum print_line_t
-> > print_synth_event(struct trace_iterator *iter,
-> >  					 i == se->n_fields - 1 ? ""
-> > : " ");
-> >  			n_u64 += STR_VAR_LEN_MAX / sizeof(u64);
-> >  		} else {
-> > +			struct trace_print_flags __flags[] = {
-> > +			    __def_gfpflag_names, {-1, NULL} };
-> > +
-> >  			trace_seq_printf(s, print_fmt, se-  
-> > >fields[i]->name,  
-> >  					 entry->fields[n_u64],
-> >  					 i == se->n_fields - 1 ? ""
-> > : " ");
-> > +
-> > +			if (strcmp(se->fields[i]->type, "gfp_t") ==
-> > 0) {
-> > +				trace_seq_puts(s, " (");
-> > +				trace_print_flags_seq(s, "|",
-> > +						      entry-  
-> > >fields[n_u64],  
-> > +						      __flags);
-> > +				trace_seq_putc(s, ')');
-> > +			}
-> >  			n_u64++;
-> >  		}
-> >  	}  
+> I don't have a strong opinion about considering tracepoints as ABI / API or
+> not, but just want to get the facts straight :)
 
+It is actually true. But you need to make the distinction between a tracepoint
+and a trace event first. What Valentin is talking about here is the *bare*
+tracepoint without any event associated with them like the one I added to the
+scheduler recently. These ones are not accessible via eBPF, unless something
+has changed since I last tried.
+
+The current infrastructure needs to be expanded to allow eBPF to attach these
+bare tracepoints. Something similar to what I have in [1] is needed - but
+instead of creating a new macro it needs to expand the current macro. [2] might
+give full context of when I was trying to come up with alternatives to using
+trace events.
+
+[1] https://github.com/qais-yousef/linux/commit/fb9fea29edb8af327e6b2bf3bc41469a8e66df8b
+[2] https://lore.kernel.org/lkml/20190415144945.tumeop4djyj45v6k@e107158-lin.cambridge.arm.com/
+
+HTH
+
+--
+Qais Yousef
