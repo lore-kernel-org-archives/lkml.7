@@ -2,54 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AC6C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFE8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C91C92087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A082087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731763AbfIDRW0 (ORCPT
+        id S1731950AbfIDRXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:22:26 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38749 "EHLO mga12.intel.com"
+        Wed, 4 Sep 2019 13:23:41 -0400
+Received: from mga04.intel.com ([192.55.52.120]:18319 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731447AbfIDRW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:22:26 -0400
+        id S1731447AbfIDRXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:23:40 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 10:22:26 -0700
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 10:23:40 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
-   d="scan'208";a="173650270"
+   d="scan'208";a="383550359"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 04 Sep 2019 10:22:23 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 04 Sep 2019 10:23:38 -0700
 Received: from andy by smile with local (Exim 4.92.1)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i5Yz8-0004TZ-Pl; Wed, 04 Sep 2019 20:22:22 +0300
-Date:   Wed, 4 Sep 2019 20:22:22 +0300
+        id 1i5Z0L-0004UW-2P; Wed, 04 Sep 2019 20:23:37 +0300
+Date:   Wed, 4 Sep 2019 20:23:37 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-acpi@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+Cc:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        linux-scsi@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v5 11/11] lib/test_printf: Add tests for %pfw printk
- modifier
-Message-ID: <20190904172222.GV2680@smile.fi.intel.com>
-References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
- <20190902135732.23455-12-sakari.ailus@linux.intel.com>
- <20190902161352.GS2680@smile.fi.intel.com>
- <20190904161051.GX5475@paasikivi.fi.intel.com>
+Subject: Re: [PATCH 1/1] scsi: lpfc: Convert existing %pf users to %ps
+Message-ID: <20190904172337.GW2680@smile.fi.intel.com>
+References: <20190904160423.3865-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904161051.GX5475@paasikivi.fi.intel.com>
+In-Reply-To: <20190904160423.3865-1-sakari.ailus@linux.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,25 +55,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 07:10:51PM +0300, Sakari Ailus wrote:
-> On Mon, Sep 02, 2019 at 07:13:52PM +0300, Andy Shevchenko wrote:
-> > On Mon, Sep 02, 2019 at 04:57:32PM +0300, Sakari Ailus wrote:
-> > > Add a test for the %pfw printk modifier using software nodes.
-> > 
-> > > +static void __init fwnode_pointer(void)
-> > > +{
-> > > +	const struct software_node softnodes[] = {
-> > > +		{ .name = "first", },
-> > > +		{ .name = "second", .parent = &softnodes[0], },
-> > > +		{ .name = "third", .parent = &softnodes[1], },
-> > > +		{ NULL /* Guardian */ },
-> > 
-> > Comma is still here :-)
-> 
-> Oops. I ended up removing the comma in a wrong patch which wasn't submitted
-> to the list. Will fix for v6.
+On Wed, Sep 04, 2019 at 07:04:23PM +0300, Sakari Ailus wrote:
+> Convert the remaining %pf users to %ps to prepare for the removal of the
+> old %pf conversion specifier support.
 
-Also you may remove NULL there since it's default.
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Fixes: 323506644972 ("scsi: lpfc: Migrate to %px and %pf in kernel print calls")
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/scsi/lpfc/lpfc_hbadisc.c | 4 ++--
+>  drivers/scsi/lpfc/lpfc_sli.c     | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+> index e7463d561f305..749286acdc173 100644
+> --- a/drivers/scsi/lpfc/lpfc_hbadisc.c
+> +++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+> @@ -6051,7 +6051,7 @@ __lpfc_find_node(struct lpfc_vport *vport, node_filter filter, void *param)
+>  	list_for_each_entry(ndlp, &vport->fc_nodes, nlp_listp) {
+>  		if (filter(ndlp, param)) {
+>  			lpfc_printf_vlog(vport, KERN_INFO, LOG_NODE,
+> -					 "3185 FIND node filter %pf DID "
+> +					 "3185 FIND node filter %ps DID "
+>  					 "ndlp x%px did x%x flg x%x st x%x "
+>  					 "xri x%x type x%x rpi x%x\n",
+>  					 filter, ndlp, ndlp->nlp_DID,
+> @@ -6062,7 +6062,7 @@ __lpfc_find_node(struct lpfc_vport *vport, node_filter filter, void *param)
+>  		}
+>  	}
+>  	lpfc_printf_vlog(vport, KERN_INFO, LOG_NODE,
+> -			 "3186 FIND node filter %pf NOT FOUND.\n", filter);
+> +			 "3186 FIND node filter %ps NOT FOUND.\n", filter);
+>  	return NULL;
+>  }
+>  
+> diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
+> index bb5705267c395..2ff0879a95126 100644
+> --- a/drivers/scsi/lpfc/lpfc_sli.c
+> +++ b/drivers/scsi/lpfc/lpfc_sli.c
+> @@ -2712,7 +2712,7 @@ lpfc_sli_handle_mb_event(struct lpfc_hba *phba)
+>  
+>  		/* Mailbox cmd <cmd> Cmpl <cmpl> */
+>  		lpfc_printf_log(phba, KERN_INFO, LOG_MBOX | LOG_SLI,
+> -				"(%d):0307 Mailbox cmd x%x (x%x/x%x) Cmpl %pf "
+> +				"(%d):0307 Mailbox cmd x%x (x%x/x%x) Cmpl %ps "
+>  				"Data: x%x x%x x%x x%x x%x x%x x%x x%x x%x "
+>  				"x%x x%x x%x\n",
+>  				pmb->vport ? pmb->vport->vpi : 0,
+> -- 
+> 2.20.1
+> 
 
 -- 
 With Best Regards,
