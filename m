@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE69C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C4FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D570222CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F80722CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620134;
-	bh=8XGpZNUio1W7mgwl+llBK/s9QyI+imtyhJPb9C6TdJc=;
+	s=default; t=1567620138;
+	bh=yOuuWbnzDzrVFrx19MYF+nHUQbpLTEStOdeaKYBpv9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l+O25rmQCQNOSdUBkiDxJi1gsVaGq1QuLs52+IfgFTZ53g79C2gFzT4N+z4aXRwAl
-	 TChkcoiN696vpCdEZ5e4Ym+VrvxNEOzsRTcbwFsJYCfXB++heuLHbWhazxwfHfbJlv
-	 7Ow/AyhE8gtGNI2tRV+W4LPxMSuHsCdggepsHjw4=
+	b=ScsheknTopgVvG7IGoyNeWaAqrUJNOOsLKrFEVgoR23uMBQkMz4Z2ZadIpVooGid+
+	 a10KdVoIQFj3N9rgwqHWLfJH2/XsdsSu5y/QabrCl7hdRS9a1KCwOyO4yKnNGuEumv
+	 t/mADpY5ysDQ/dhDzyQWKeV8KWX8NqJ3JHzwWN0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388717AbfIDSCN (ORCPT
+        id S2388722AbfIDSCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41956 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388701AbfIDSCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:10 -0400
+        id S2388357AbfIDSCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 036EB22CF5;
-        Wed,  4 Sep 2019 18:02:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B01122CEA;
+        Wed,  4 Sep 2019 18:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620129;
-        bh=8XGpZNUio1W7mgwl+llBK/s9QyI+imtyhJPb9C6TdJc=;
+        s=default; t=1567620134;
+        bh=yOuuWbnzDzrVFrx19MYF+nHUQbpLTEStOdeaKYBpv9I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gh7Sv+3xsf/+uvYYw6mnvTPJQeUai6iK8IpM0i1If+9bmPjG7F09F+FsTU9TSJdr3
-         +PodMzFCmazL3nPNm8pA4ImAF4dLBf8oqXCWdTFnuQqZ7ZzDb3Apcjs7JnKVjGApHA
-         9v9QE/qXEJIzttBhsQ2wkkqfsMvWt/Qw94oVVMUI=
+        b=v/WQpKSZXx+rNNqEB1fLSs6Xe3dQQ1OGlcDcweYw6KGaK1AjgQSFBWcQw/Xw8SitB
+         aX2RJpAyvpcS0Q8NDaJ8IpSkpGUMEWnczm3LpaHaVL9UcaHt8XQfq9I/tFrWoVgIX6
+         OQfifg4SX4J2+UuXR5kijw1y7USUcwf36mNuZHrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philip Langdale <philipl@overt.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Manuel Presnitz <mail@mpy.de>
-Subject: [PATCH 4.9 75/83] mmc: core: Fix init of SD cards reporting an invalid VDD range
-Date:   Wed,  4 Sep 2019 19:54:07 +0200
-Message-Id: <20190904175310.199461467@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Francois Rigault <rigault.francois@gmail.com>,
+        Jorgen Hansen <jhansen@vmware.com>,
+        Adit Ranadive <aditr@vmware.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Vishnu DASA <vdasa@vmware.com>, Nadav Amit <namit@vmware.com>
+Subject: [PATCH 4.9 77/83] VMCI: Release resource if the work is already queued
+Date:   Wed,  4 Sep 2019 19:54:09 +0200
+Message-Id: <20190904175310.390285040@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,48 +63,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Nadav Amit <namit@vmware.com>
 
-commit 72741084d903e65e121c27bd29494d941729d4a1 upstream.
+commit ba03a9bbd17b149c373c0ea44017f35fc2cd0f28 upstream.
 
-The OCR register defines the supported range of VDD voltages for SD cards.
-However, it has turned out that some SD cards reports an invalid voltage
-range, for example having bit7 set.
+Francois reported that VMware balloon gets stuck after a balloon reset,
+when the VMCI doorbell is removed. A similar error can occur when the
+balloon driver is removed with the following splat:
 
-When a host supports MMC_CAP2_FULL_PWR_CYCLE and some of the voltages from
-the invalid VDD range, this triggers the core to run a power cycle of the
-card to try to initialize it at the lowest common supported voltage.
-Obviously this fails, since the card can't support it.
+[ 1088.622000] INFO: task modprobe:3565 blocked for more than 120 seconds.
+[ 1088.622035]       Tainted: G        W         5.2.0 #4
+[ 1088.622087] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1088.622205] modprobe        D    0  3565   1450 0x00000000
+[ 1088.622210] Call Trace:
+[ 1088.622246]  __schedule+0x2a8/0x690
+[ 1088.622248]  schedule+0x2d/0x90
+[ 1088.622250]  schedule_timeout+0x1d3/0x2f0
+[ 1088.622252]  wait_for_completion+0xba/0x140
+[ 1088.622320]  ? wake_up_q+0x80/0x80
+[ 1088.622370]  vmci_resource_remove+0xb9/0xc0 [vmw_vmci]
+[ 1088.622373]  vmci_doorbell_destroy+0x9e/0xd0 [vmw_vmci]
+[ 1088.622379]  vmballoon_vmci_cleanup+0x6e/0xf0 [vmw_balloon]
+[ 1088.622381]  vmballoon_exit+0x18/0xcc8 [vmw_balloon]
+[ 1088.622394]  __x64_sys_delete_module+0x146/0x280
+[ 1088.622408]  do_syscall_64+0x5a/0x130
+[ 1088.622410]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1088.622415] RIP: 0033:0x7f54f62791b7
+[ 1088.622421] Code: Bad RIP value.
+[ 1088.622421] RSP: 002b:00007fff2a949008 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+[ 1088.622426] RAX: ffffffffffffffda RBX: 000055dff8b55d00 RCX: 00007f54f62791b7
+[ 1088.622426] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055dff8b55d68
+[ 1088.622427] RBP: 000055dff8b55d00 R08: 00007fff2a947fb1 R09: 0000000000000000
+[ 1088.622427] R10: 00007f54f62f5cc0 R11: 0000000000000206 R12: 000055dff8b55d68
+[ 1088.622428] R13: 0000000000000001 R14: 000055dff8b55d68 R15: 00007fff2a94a3f0
 
-Let's fix this problem, by clearing invalid bits from the read OCR register
-for SD cards, before proceeding with the VDD voltage negotiation.
+The cause for the bug is that when the "delayed" doorbell is invoked, it
+takes a reference on the doorbell entry and schedules work that is
+supposed to run the appropriate code and drop the doorbell entry
+reference. The code ignores the fact that if the work is already queued,
+it will not be scheduled to run one more time. As a result one of the
+references would not be dropped. When the code waits for the reference
+to get to zero, during balloon reset or module removal, it gets stuck.
 
+Fix it. Drop the reference if schedule_work() indicates that the work is
+already queued.
+
+Note that this bug got more apparent (or apparent at all) due to
+commit ce664331b248 ("vmw_balloon: VMCI_DOORBELL_SET does not check status").
+
+Fixes: 83e2ec765be03 ("VMCI: doorbell implementation.")
+Reported-by: Francois Rigault <rigault.francois@gmail.com>
+Cc: Jorgen Hansen <jhansen@vmware.com>
+Cc: Adit Ranadive <aditr@vmware.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Vishnu DASA <vdasa@vmware.com>
 Cc: stable@vger.kernel.org
-Reported-by: Philip Langdale <philipl@overt.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Philip Langdale <philipl@overt.org>
-Tested-by: Philip Langdale <philipl@overt.org>
-Tested-by: Manuel Presnitz <mail@mpy.de>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Reviewed-by: Vishnu Dasa <vdasa@vmware.com>
+Link: https://lore.kernel.org/r/20190820202638.49003-1-namit@vmware.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/sd.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/misc/vmw_vmci/vmci_doorbell.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -1259,6 +1259,12 @@ int mmc_attach_sd(struct mmc_host *host)
- 			goto err;
- 	}
+--- a/drivers/misc/vmw_vmci/vmci_doorbell.c
++++ b/drivers/misc/vmw_vmci/vmci_doorbell.c
+@@ -318,7 +318,8 @@ int vmci_dbell_host_context_notify(u32 s
  
-+	/*
-+	 * Some SD cards claims an out of spec VDD voltage range. Let's treat
-+	 * these bits as being in-valid and especially also bit7.
-+	 */
-+	ocr &= ~0x7FFF;
-+
- 	rocr = mmc_select_voltage(host, ocr);
- 
- 	/*
+ 	entry = container_of(resource, struct dbell_entry, resource);
+ 	if (entry->run_delayed) {
+-		schedule_work(&entry->work);
++		if (!schedule_work(&entry->work))
++			vmci_resource_put(resource);
+ 	} else {
+ 		entry->notify_cb(entry->client_data);
+ 		vmci_resource_put(resource);
+@@ -366,7 +367,8 @@ static void dbell_fire_entries(u32 notif
+ 		    atomic_read(&dbell->active) == 1) {
+ 			if (dbell->run_delayed) {
+ 				vmci_resource_get(&dbell->resource);
+-				schedule_work(&dbell->work);
++				if (!schedule_work(&dbell->work))
++					vmci_resource_put(&dbell->resource);
+ 			} else {
+ 				dbell->notify_cb(dbell->client_data);
+ 			}
 
 
