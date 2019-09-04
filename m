@@ -7,154 +7,199 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58424C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93094C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207BB22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567640720;
-	bh=sLD7TWCuuTDypkRVtGgzbHmac5Y57V+ojUVVL0XIqu8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=b7K4AI3VIZVoxSkv7J5gfxWzhsOn7dF4oWHep9kSo5duhsMnDAg5qUKSsLpo2lcAu
-	 CeVIfJhLPgfw1n+uJoWA7xsjHGtL+3ZpBZwlaFVHWoUJxp5TjYrd2I2c38PQM50W/U
-	 wRtiE8f1diLoEbJsIynorvJ64M9Ko+VnP/GSD+tM=
+	by mail.kernel.org (Postfix) with ESMTP id 623562168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mqab7Fib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfIDXpS (ORCPT
+        id S1730582AbfIDXph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:45:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42557 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbfIDXpR (ORCPT
+        Wed, 4 Sep 2019 19:45:37 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33144 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730131AbfIDXph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:45:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so433000lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:45:16 -0700 (PDT)
+        Wed, 4 Sep 2019 19:45:37 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t11so373837plo.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:45:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lkW/YWLZKFkaRlur1cRxiMMOTA0gNhHwo+TbpZCC63g=;
-        b=Cnu5WYs/aAthmsXfnwtWzL5CNjpaY23sMnhFtcX1zve3r2rc/Ho+dRzPF32HPRMBnj
-         gveXLtTDU7YHSGctyOcfke7l1YNaudqputmw6AJ3ZcUOsNYmqHCIu9DY9WHGlywCQ4Su
-         iCCcCFmwH9f6fkeMSqS83pY7B6dx4aSlHZljU=
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:to:from:user-agent:date;
+        bh=vu/9p2fe9GxGN3cNpeW7qpxXHEjWh+kyFDAn4s7xdho=;
+        b=Mqab7Fib6jTd4940cCY9Q0mYQnIuq3We/SHz2mL2Xaguh74hw/YHmMotjdASz5B1b/
+         zuDwDOKTVZWYyT70lCDc+8RSNJ72EYJejYwJclxAyL/16HukhCpLsphM62qK7vaKXJos
+         nIoWYhg2qNnWmXebvnGAyro0j/Nawne7vsdA0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lkW/YWLZKFkaRlur1cRxiMMOTA0gNhHwo+TbpZCC63g=;
-        b=EaqUPcW78B5oR6cQzbxEud0Gt2SY3qKqX25nHEAxhuWp1NzW6UeugyeZLopMIS/NmD
-         9DLFPMsFm5+wQff6ddMHmQL50N/lrlR4JFT6j1U0JsVmTwvpvxSQcqGrHIvS3Kv2Nrba
-         7VLwH5IR7iEQiahVVt+WcNPIIxgSwl/TdBX0h5+E2Ly6kNYW30NbDTaadsG7rmr6nn0U
-         tivPuJ6WgouMe5PN5kTz/3JlZXyOYan+LDhH8NXN3NHqNPvxYtzXwnQ1yVrmzaGXOqwr
-         nlLdHJO0HdnJRlkQlOIbz/y1c3BwYsR6qLlyBu4UghwXusVwTtAoieF+hLw08gnUXZhd
-         JZWw==
-X-Gm-Message-State: APjAAAVjDP+p7YFM5xzaymAQh3n2ncARKgc6XqN6tqQR1y0yD3uEIlQU
-        uVoNdP4K/kUppWJigTJI57DTO8rQUlw=
-X-Google-Smtp-Source: APXvYqzWseCZDd5HmsG43w4827RBRuFZtic8u2x2omP1bF3UheZuxu1Agew06Tdm76KCZ28jgRWqNg==
-X-Received: by 2002:a2e:2953:: with SMTP id u80mr110831lje.233.1567640715401;
-        Wed, 04 Sep 2019 16:45:15 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
-        by smtp.gmail.com with ESMTPSA id v6sm47826ljk.17.2019.09.04.16.45.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2019 16:45:14 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id 7so442005ljw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 16:45:12 -0700 (PDT)
-X-Received: by 2002:a2e:3a0e:: with SMTP id h14mr127121lja.180.1567640710863;
- Wed, 04 Sep 2019 16:45:10 -0700 (PDT)
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
+         :user-agent:date;
+        bh=vu/9p2fe9GxGN3cNpeW7qpxXHEjWh+kyFDAn4s7xdho=;
+        b=CwHymtcq7MN/TchcLMij222poGirwLl1th1c2Go9PH8WiMbtCcuLBg336hRPNzg3IV
+         c3HuKDfzF9DUYNIq8OpRpFl8q88qDmyaTBkmXKNBlOg1PFr5rrR+kBytuDGZ0VO/kB8A
+         ZvM7k8Lf2BEqTAeFtCLm5jOweP4aM96kmhrsbg6ABW3bpsr4aVAqqHr41jWhF1+Mfre7
+         1YyyAtO+EUDSWIiRX4Xj/Q3p921fOCxBfJozqTFLcRsBNzPAgxLcvWpF1T3YzJOGphx6
+         yRyzz/0IfjBau4gE+OMLiTGUHywWraki+2CgF9KZ1bQLbwvrMOFKKi8fTeF60+x5NlLT
+         Cw5Q==
+X-Gm-Message-State: APjAAAU2ruVLJY7QLM3zRL1LQTLV25Y8CsUfF7ML7qJek5Mx7e6QvwoL
+        CZOuG0tWBhOZNTz9AfJhNNcoGw==
+X-Google-Smtp-Source: APXvYqxSeCbsEH7VIZRhORWAP49G1l4WDjZqdXrxRw+p5ofbVPXVM0QFnnhvRjBWMm8NbbdRATHs2g==
+X-Received: by 2002:a17:902:7449:: with SMTP id e9mr376613plt.242.1567640735962;
+        Wed, 04 Sep 2019 16:45:35 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id f62sm190298pfg.74.2019.09.04.16.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 16:45:35 -0700 (PDT)
+Message-ID: <5d704c9f.1c69fb81.a1686.0eb3@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190904201933.10736-1-cyphar@cyphar.com> <20190904201933.10736-11-cyphar@cyphar.com>
- <CAHk-=wiod1rQMU+6Zew=cLE8uX4tUdf42bM5eKngMnNVS2My7g@mail.gmail.com>
- <20190904214856.vnvom7h5xontvngq@yavin.dot.cyphar.com> <CAHk-=wgcJq21Hydh7Tx5-o8empoPp7ULDBw0Am-du_Pa+fcftQ@mail.gmail.com>
- <20592.1567636276@warthog.procyon.org.uk> <CAHk-=wg7Wq1kj8kZ+SSpfU_o991woW60NWca9yBA2ccs2eNx8Q@mail.gmail.com>
- <20190904232911.GN1131@ZenIV.linux.org.uk>
-In-Reply-To: <20190904232911.GN1131@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 4 Sep 2019 16:44:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjx3y1Y7iE6T0yiERc8G5iT1sTABWbX_nFxw9NVHCFCPA@mail.gmail.com>
-Message-ID: <CAHk-=wjx3y1Y7iE6T0yiERc8G5iT1sTABWbX_nFxw9NVHCFCPA@mail.gmail.com>
-Subject: Re: [PATCH v12 10/12] namei: aggressively check for nd->root escape
- on ".." resolution
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     David Howells <dhowells@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190904182732.GE574@tuxbook-pro>
+References: <20190903135052.13827-1-lee.jones@linaro.org> <20190904031922.GC574@tuxbook-pro> <20190904084554.GF26880@dell> <20190904182732.GE574@tuxbook-pro>
+Cc:     agross@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 04 Sep 2019 16:45:34 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 4:29 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Wed, Sep 04, 2019 at 03:38:20PM -0700, Linus Torvalds wrote:
-> > On Wed, Sep 4, 2019 at 3:31 PM David Howells <dhowells@redhat.com> wrote:
-> > >
-> > > It ought to be reasonably easy to make them per-sb at least, I think.  We
-> > > don't allow cross-super rename, right?
-> >
-> > Right now the sequence count handling very much depends on it being a
-> > global entity on the reader side, at least.
-> >
-> > And while the rename sequence count could (and probably should) be
-> > per-sb, the same is very much not true of the mount one.
->
-> Huh?  That will cost us having to have a per-superblock dentry
-> hash table; recall that lockless lockup can give false negatives
-> if something gets moved from chain to chain, and rename_lock is
-> first and foremost used to catch those and retry.  If we split
-> it on per-superblock basis, we can't have dentries from different
-> superblocks in the same chain anymore...
+Quoting Bjorn Andersson (2019-09-04 11:27:32)
+> On Wed 04 Sep 01:45 PDT 2019, Lee Jones wrote:
+>=20
+> > On Tue, 03 Sep 2019, Bjorn Andersson wrote:
+> >=20
+> > > On Tue 03 Sep 06:50 PDT 2019, Lee Jones wrote:
+> > >=20
+> > > > When booting with ACPI, the Geni Serial Engine is not set as the I2=
+C/SPI
+> > > > parent and thus, the wrapper (parent device) is unassigned.  This c=
+auses
+> > > > the kernel to crash with a null dereference error.
+> > > >=20
+> > >=20
+> > > Now I see what you did in 8bc529b25354; i.e. stubbed all the other ca=
+lls
+> > > between the SE and wrapper.
+> > >=20
+> > > Do you think it would be possible to resolve the _DEP link to QGP[01]
+> > > somehow?
+> >=20
+> > I looked at QGP{0,1}, but did not see it represented in the current
+> > Device Tree implementation and thus failed to identify it.  Do you
+> > know what it is?  Does it have a driver in Linux already?
+> >=20
+>=20
+> QGP0 is the same hardware block as &qupv3_id_0, but apparently both are
+> only representing a smaller part - and different ones.
+>=20
+> But conceptually both represents the wrapper...
+>=20
+> > > For the clocks workarounds this could be resolved by us
+> > > representing that relationship using device_link and just rely on
+> > > pm_runtime to propagate the clock state.
+> >=20
+> > That is not allowed when booting ACPI.  The Clock/Regulator frameworks
+> > are not to be used in this use-case, hence why all of the calls to
+> > these frameworks are "stubbed out".  If we wanted to properly
+> > implement power management, we would have to create a driver/subsystem
+> > similar to the "Windows-compatible System Power Management Controller"
+> > (PEP).  Without documentation for the PEP, this would be an impossible
+> > task.  A request for the aforementioned documentation has been put in
+> > to Lenovo/Qualcomm.  Hopefully something appears soon.
+> >=20
+>=20
+> I see, so the PEP states needs to be parsed and associated with each
+> device and we would use pm_runtime to toggle between the states and
+> device_links to ensure that _DEP nodes are powered in appropriate order.
+>=20
+> That seems reasonable and straight forward and the reliance on
+> pm_runtime will make the DT case cleaner as well.
 
-That's exactly the "very much depends on it being a global entity on
-the reader side" thing.
+I think we tried to push for pm_runtime here but it was rejected because
+of a missing interconnect framework? See
+https://marc.info/?l=3Ddevicetree&m=3D152002327106864&w=3D2
 
-I'm not convinced that's the _only_ way to handle things. Maybe a
-combination of (wild handwaving) per-hashqueue sequence count and some
-clever scheme for pathname handling could work.
+>=20
+> > > For the DMA operation, iiuc it's the wrapper that implements the DMA
+> > > engine involved, but I'm guessing the main reason for mapping buffers=
+ on
+> > > the wrapper is so that it ends up being associated with the iommu
+> > > context of the wrapper.
+> >=20
+> > Judging by the code alone, the wrapper doesn't sound like it does much
+> > at all.  It seems to only have a single (version) register (at least
+> > that is the only register that's used).  The only registers it
+> > reads/writes are those of the calling device, whether that be I2C, SPI
+> > or UART.
+> >=20
+> > Device Tree represents the wrapper's relationship with the I2C (and
+> > SPI/UART) Serial Engine (SE) devices as parent-child ones, with the
+> > wrapper being the parent and SE the child.  Whether this is a true
+> > representation of the hardware or just a tactic used for convenience
+> > is not clear, but the same representation does not exist in ACPI.
+> >=20
+> > In the current Linux implementation, the buffer belongs to the SE
+> > (obtained by the child (e.g. I2C) SE by fetching the parent's
+> > (wrapper's) device data using the standard platform helpers) but the
+> > register-set used to control the DMA transactions belong to the SE
+> > devices.
+> >=20
+>=20
+> Yeah, I saw this as well. If all the SEs where the wrappers iommu domain
+> things should work fine by mapping it on the se->dev, regardless of the
+> device's being linked together.
+>=20
+> The remaining relationship to the wrapper would then be reduced to the
+> read of the version to check for 1.0 or 1.1 hardware in the SPI driver,
+> which can be replaced by the assumption that we're on 1.1.
 
-I've not personally seen a load where the global rename lock has been
-a problem (very few things really do a lot of renames), but
-system-wide locks do make me nervous.
+Could this be described in the DT compatible for the SE in the future
+instead of reading it from the wrapper register space?
 
-We have other (and worse) ones. tasklist_lock comes to mind.
+>=20
+> > > Are the SMMU contexts at all represented in the ACPI world and if so =
+do
+> > > you know how the wrapper vs SEs are bound to contexts? Can we map on
+> > > se->dev when wrapper is NULL (or perhaps always?)?
+> >=20
+> > Yes, the SMMU devices are represented in ACPI (MMU0) and (MMU1).  They
+> > share the same register addresses as the SMMU devices located in
+> > arch/arm64/boot/dts/qcom/sdm845.dtsi.
+> >=20
+>=20
+> Right but this only describes the IOMMU devices, I don't see any
+> information about how individual client devices relates to the various
+> IOMMU contexts.
 
-             Linus
+The only thread I recall describing this is
+https://lkml.kernel.org/r/945b6c00-dde6-6ec7-4577-4cc0d034796b@codeaurora.o=
+rg
+
+>=20
+> > With this simple parameter checking patch, the SE falls back to using
+> > FIFO mode to transmit data and continues to work flawlessly.  IMHO
+> > this should be applied in the first instance, as it fixes a real (null
+> > dereference) bug which currently resides in the Mainline kernel.
+> >=20
+>=20
+> Per the current driver design the wrapper device is the parent of the
+> SE, I should have seen that 8bc529b25354 was the beginning of a game of
+> whac-a-mole circumventing this design. Sorry for not spotting this
+> earlier.
+>=20
+> But if this is the one whack left to get the thing to boot then I think
+> we should merge it.
+>=20
+
+Agreed.
+
