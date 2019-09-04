@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BD1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C56C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB00A22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9767C22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613403;
-	bh=MObqDKyCwUFv4ZdRPDIg/JRo1tcGAB+2SCyl6lE37/s=;
+	s=default; t=1567613404;
+	bh=F5CQ1+YvvSFo1TXnBiXKLipZLDPWDY9aNPbQDEsQ2n0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ieXFebKPdkjohXWsbLdGVF1Xv8J4oKa+lj+gVMmN4AVxhQMoYUbpIViCpvoalEJUf
-	 Ioh2xAETCWmulaRjikb+C8dLXULLZ/x47xUXVGmpkydS5qunKynukHgbvPMdk3lRf1
-	 QZg/MqgsMRP1XwLN9gNKzi/kK4PH572/v3bKy3A0=
+	b=gi8RkkjymgKx2r6olEtm5mzS/uAxfi1Ag7Ws2ypqxO5JUdB3ptQI66FOarDZ8wUmD
+	 R4yQzR7Exxk6YZU0j+IZxZoGxEAuQJMXUOt8KOujnXqfYhikVQmTAkhcXaCQ/zzREN
+	 R7P10i7GNdV01LVTWiI+F7MZy+6Zc9T9CW6Aahjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732870AbfIDQBB (ORCPT
+        id S1733057AbfIDQKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:10:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732164AbfIDQAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:46 -0400
+        id S1732868AbfIDQBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C4B022CED;
-        Wed,  4 Sep 2019 16:00:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3E072341C;
+        Wed,  4 Sep 2019 16:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612846;
-        bh=MObqDKyCwUFv4ZdRPDIg/JRo1tcGAB+2SCyl6lE37/s=;
+        s=default; t=1567612860;
+        bh=F5CQ1+YvvSFo1TXnBiXKLipZLDPWDY9aNPbQDEsQ2n0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUORdJQcgI3EpKZKLOywd/VIOAHDPwJwfrjk6CnKJV25ypXqseYI6bpm8SShgqphh
-         3dabOShoQDdf09RPEz0YgdoIKkPNVNNLxeoPMHHcq7CKyWKLoO/Ssg9PoS8/dTjGwj
-         fZlGjFajDq42C282LN4pt2MXeliU/9sv0MSK0P0E=
+        b=rGO/8ah+la9taMk6jwiEMxs3YA2GFORtg44hxnMU6+BEm2l1EdEYm6Yq6YwIfhvQ5
+         7TX0OTSVbb19hANC1oruMN4Q88kXSUOmNbut5OP7bkhaKxY+zwzuNXqCclintXDuUe
+         ShG33QjZDMnGmh40rbPNJ/cPsvBXgV54HMNx1X70=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Prashant Malani <pmalani@chromium.org>,
-        Hayes Wang <hayeswang@realtek.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Nagarjuna Kristam <nkristam@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 29/52] r8152: Set memory to all 0xFFs on failed reg reads
-Date:   Wed,  4 Sep 2019 11:59:41 -0400
-Message-Id: <20190904160004.3671-29-sashal@kernel.org>
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 39/52] usb: host: xhci-tegra: Set DMA mask correctly
+Date:   Wed,  4 Sep 2019 11:59:51 -0400
+Message-Id: <20190904160004.3671-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -61,50 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prashant Malani <pmalani@chromium.org>
+From: Nagarjuna Kristam <nkristam@nvidia.com>
 
-[ Upstream commit f53a7ad189594a112167efaf17ea8d0242b5ac00 ]
+[ Upstream commit 993cc8753453fccfe060a535bbe21fcf1001b626 ]
 
-get_registers() blindly copies the memory written to by the
-usb_control_msg() call even if the underlying urb failed.
+The Falcon microcontroller that runs the XUSB firmware and which is
+responsible for exposing the XHCI interface can address only 40 bits of
+memory. Typically that's not a problem because Tegra devices don't have
+enough system memory to exceed those 40 bits.
 
-This could lead to junk register values being read by the driver, since
-some indirect callers of get_registers() ignore the return values. One
-example is:
-  ocp_read_dword() ignores the return value of generic_ocp_read(), which
-  calls get_registers().
+However, if the ARM SMMU is enable on Tegra186 and later, the addresses
+passed to the XUSB controller can be anywhere in the 48-bit IOV address
+space of the ARM SMMU. Since the DMA/IOMMU API starts allocating from
+the top of the IOVA space, the Falcon microcontroller is not able to
+load the firmware successfully.
 
-So, emulate PCI "Master Abort" behavior by setting the buffer to all
-0xFFs when usb_control_msg() fails.
+Fix this by setting the DMA mask to 40 bits, which will force the DMA
+API to map the buffer for the firmware to an IOVA that is addressable by
+the Falcon.
 
-This patch is copied from the r8152 driver (v2.12.0) published by
-Realtek (www.realtek.com).
-
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Acked-by: Hayes Wang <hayeswang@realtek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/1566989697-13049-1-git-send-email-nkristam@nvidia.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/r8152.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-tegra.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-index f1b5201cc3207..a065a6184f7e4 100644
---- a/drivers/net/usb/r8152.c
-+++ b/drivers/net/usb/r8152.c
-@@ -788,8 +788,11 @@ int get_registers(struct r8152 *tp, u16 value, u16 index, u16 size, void *data)
- 	ret = usb_control_msg(tp->udev, usb_rcvctrlpipe(tp->udev, 0),
- 			      RTL8152_REQ_GET_REGS, RTL8152_REQT_READ,
- 			      value, index, tmp, size, 500);
-+	if (ret < 0)
-+		memset(data, 0xff, size);
-+	else
-+		memcpy(data, tmp, size);
+diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
+index b1cce989bd123..fe37dacc695fc 100644
+--- a/drivers/usb/host/xhci-tegra.c
++++ b/drivers/usb/host/xhci-tegra.c
+@@ -1148,6 +1148,16 @@ static int tegra_xusb_probe(struct platform_device *pdev)
  
--	memcpy(data, tmp, size);
- 	kfree(tmp);
+ 	tegra_xusb_ipfs_config(tegra, regs);
  
- 	return ret;
++	/*
++	 * The XUSB Falcon microcontroller can only address 40 bits, so set
++	 * the DMA mask accordingly.
++	 */
++	err = dma_set_mask_and_coherent(tegra->dev, DMA_BIT_MASK(40));
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to set DMA mask: %d\n", err);
++		goto put_rpm;
++	}
++
+ 	err = tegra_xusb_load_firmware(tegra);
+ 	if (err < 0) {
+ 		dev_err(&pdev->dev, "failed to load firmware: %d\n", err);
 -- 
 2.20.1
 
