@@ -3,67 +3,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D5BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3867C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D712339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B722339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbfIDKQZ (ORCPT
+        id S1729268AbfIDKQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfIDKQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:16:24 -0400
-Received: from oasis.local.home (bl11-233-114.dsl.telepac.pt [85.244.233.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF72E21881;
-        Wed,  4 Sep 2019 10:16:20 +0000 (UTC)
-Date:   Wed, 4 Sep 2019 06:16:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Alessio Balsini <balsini@android.com>, mingo@kernel.org,
-        juri.lelli@redhat.com, linux-kernel@vger.kernel.org,
-        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
-        bristot@redhat.com, dvyukov@google.com, tglx@linutronix.de,
-        vpillai@digitalocean.com, kernel-team@android.com
-Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
- sched_attr::sched_period
-Message-ID: <20190904061616.25ce79e1@oasis.local.home>
-In-Reply-To: <20190902091623.GQ2349@hirez.programming.kicks-ass.net>
-References: <20190726145409.947503076@infradead.org>
-        <20190726161357.397880775@infradead.org>
-        <20190802172104.GA134279@google.com>
-        <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
-        <20190822122949.GA245353@google.com>
-        <20190822165125.GW2369@hirez.programming.kicks-ass.net>
-        <20190831144117.GA133727@google.com>
-        <20190902091623.GQ2349@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 4 Sep 2019 06:16:41 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:53517 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726486AbfIDKQl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:16:41 -0400
+Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x84AGEi7062946;
+        Wed, 4 Sep 2019 19:16:14 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
+ Wed, 04 Sep 2019 19:16:14 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x84AGEGF062937
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 4 Sep 2019 19:16:14 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: general protection fault in smack_socket_sendmsg
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+5fd781d646d4fcbdfeb0@syzkaller.appspotmail.com>
+Cc:     jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com
+References: <20190831053311.15704-1-hdanton@sina.com>
+ <5f34b914-ca5b-e527-9183-64dc0d83ec9f@schaufler-ca.com>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <b2a7cbb6-2243-d591-41e7-955e1e1e4785@I-love.SAKURA.ne.jp>
+Date:   Wed, 4 Sep 2019 19:16:14 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <5f34b914-ca5b-e527-9183-64dc0d83ec9f@schaufler-ca.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Sep 2019 11:16:23 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On 2019/09/04 8:17, Casey Schaufler wrote:
+> On 8/30/2019 10:33 PM, Hillf Danton wrote:
+>>> dashboard link: https://syzkaller.appspot.com/bug?extid=5fd781d646d4fcbdfeb0
+> If you want to add a description and signed-off-by I will take this.
 
-> in sched_dl_period_handler(). And do:
-> 
-> +	preempt_disable();
-> 	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
-> 	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
-> +	preempt_enable();
+Excuse me, but this bug was already closed as dup of "KASAN: use-after-free Read in rxrpc_send_keepalive".
 
-Hmm, I'm curious. Doesn't the preempt_disable/enable() also add
-compiler barriers which would remove the need for the READ_ONCE()s here?
-
--- Steve
