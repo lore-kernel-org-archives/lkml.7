@@ -2,76 +2,85 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BFBC41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D03C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA5E2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:29:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331A72077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="GwHMsNh0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbfIDT3T (ORCPT
+        id S1730821AbfIDTbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:29:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37129 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730584AbfIDT3T (ORCPT
+        Wed, 4 Sep 2019 15:31:33 -0400
+Received: from a9-54.smtp-out.amazonses.com ([54.240.9.54]:43374 "EHLO
+        a9-54.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729803AbfIDTbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:29:19 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i5axv-0002Yt-5v; Wed, 04 Sep 2019 19:29:15 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Maor Gottlieb <maorg@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net/mlx5: fix missing assignment of variable err
-Date:   Wed,  4 Sep 2019 20:29:14 +0100
-Message-Id: <20190904192914.19684-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 4 Sep 2019 15:31:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1567625491;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=PcFJmgXphXAgMTzEqtGAmyZoYWFr5XRnp0kHdbyqz4s=;
+        b=GwHMsNh0TlGnNbVoMm7+dx7dxoBn/weDacqBs00YnSm/6FPhetXhaKq4djrf5Unz
+        rYFSYQZdou6MsJEjMIKrMRLWImApiZkCjzrC6D96ACCVw+/tdIOrAjBncyGYXS5n0Lj
+        /4YdNYH/kmEZmxPCMoUxC3iDBf/wOYGWtdPgu+z4=
+Date:   Wed, 4 Sep 2019 19:31:31 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Matthew Wilcox <willy@infradead.org>
+cc:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm, sl[aou]b: guarantee natural alignment for
+ kmalloc(power-of-two)
+In-Reply-To: <20190903205312.GK29434@bombadil.infradead.org>
+Message-ID: <0100016cfdc2b4a1-355182af-3d27-4ae8-94f3-e3b6e8cc6814-000000@email.amazonses.com>
+References: <20190826111627.7505-1-vbabka@suse.cz> <20190826111627.7505-3-vbabka@suse.cz> <0100016cd98bb2c1-a2af7539-706f-47ba-a68e-5f6a91f2f495-000000@email.amazonses.com> <20190828194607.GB6590@bombadil.infradead.org> <20190829073921.GA21880@dhcp22.suse.cz>
+ <0100016ce39e6bb9-ad20e033-f3f4-4e6d-85d6-87e7d07823ae-000000@email.amazonses.com> <20190901005205.GA2431@bombadil.infradead.org> <0100016cf8c3033d-bbcc9ba3-2d59-4654-a7c2-8ba094f8a7de-000000@email.amazonses.com>
+ <20190903205312.GK29434@bombadil.infradead.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.09.04-54.240.9.54
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, 3 Sep 2019, Matthew Wilcox wrote
 
-The error return from a call to mlx5_flow_namespace_set_peer is not
-being assigned to variable err and hence the error check following
-the call is currently not working.  Fix this by assigning ret as
-intended.
+> > Its enabled in all full debug session as far as I know. Fedora for
+> > example has been running this for ages to find breakage in device drivers
+> > etc etc.
+>
+> Are you telling me nobody uses the ramdisk driver on fedora?  Because
+> that's one of the affected drivers.
 
-Addresses-Coverity: ("Logically dead code")
-Fixes: 8463daf17e80 ("net/mlx5: Add support to use SMFS in switchdev mode")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+How do I know? I dont run these tests.
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-index afa623b15a38..00d71db15f22 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-@@ -1651,7 +1651,7 @@ static int mlx5_esw_offloads_set_ns_peer(struct mlx5_eswitch *esw,
- 		if (err)
- 			return err;
- 
--		mlx5_flow_namespace_set_peer(peer_ns, ns);
-+		err = mlx5_flow_namespace_set_peer(peer_ns, ns);
- 		if (err) {
- 			mlx5_flow_namespace_set_peer(ns, NULL);
- 			return err;
--- 
-2.20.1
+> > decade now) I am having a hard time believing the stories of great
+> > breakage here. These drivers were not tested with debugging on before?
+> > Never ran with a debug kernel?
+>
+> Whatever is being done is clearly not enough to trigger the bug.  So how
+> about it?  Create an option to slab/slub to always return misaligned
+> memory.
+
+It already exists
+
+Add "slub_debug" on the kernel command line.
 
