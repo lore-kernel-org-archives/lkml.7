@@ -2,111 +2,122 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747F5C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906D2C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:25:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2DB22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 639F822DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:25:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iz5ubyrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbfIDOYc (ORCPT
+        id S1730789AbfIDOZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:24:32 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42220 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729809AbfIDOYc (ORCPT
+        Wed, 4 Sep 2019 10:25:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34190 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729809AbfIDOZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:24:32 -0400
-X-UUID: fe267de637764d1c8c1e2ed01f75eca6-20190904
-X-UUID: fe267de637764d1c8c1e2ed01f75eca6-20190904
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1751036984; Wed, 04 Sep 2019 22:24:26 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Sep 2019 22:24:23 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Sep 2019 22:24:22 +0800
-Message-ID: <1567607063.32522.24.camel@mtksdccf07>
-Subject: Re: [PATCH 1/2] mm/kasan: dump alloc/free stack for page allocator
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 4 Sep 2019 22:24:23 +0800
-In-Reply-To: <7998e8f1-e5e2-da84-ea1f-33e696015dce@suse.cz>
-References: <20190904065133.20268-1-walter-zh.wu@mediatek.com>
-         <401064ae-279d-bef3-a8d5-0fe155d0886d@suse.cz>
-         <1567605965.32522.14.camel@mtksdccf07>
-         <7998e8f1-e5e2-da84-ea1f-33e696015dce@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Sep 2019 10:25:32 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so44654350ioa.1;
+        Wed, 04 Sep 2019 07:25:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=J14Deb8/u/x8SPSlK7MOeAWJqG+LQLoxFq5bvKEaz7c=;
+        b=iz5ubyrro5kU3CaILVKZ8g/Z46nRZl2E5EyMh/ddWuMOVV58AfTdZwE1lRlA+/2gC6
+         rrkQv7Bp6R8klnOdkZovLFlAMseafse6HjXYkwlivbDXKrdmit02Xak1fqWHxonDgVV6
+         /THpyJ3YfT/ZPmf9TwGbUj9Eofn+9rujJFBRsMPhzq3z2WxmMmeYhvn/qFEMkL9hX6PM
+         alZD7vxlRLJJ214HETUdqMiNsuZef2T6xZqoD1niihB8KCuW/RE9kZJaw5pTU06Z4Fti
+         x+5IUyhPNbOkcSzgA9xXTC6aAbu+aIpcrugIKDZjoO8KL0P98vOCMjXx4rCJXes0SPCZ
+         AweQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=J14Deb8/u/x8SPSlK7MOeAWJqG+LQLoxFq5bvKEaz7c=;
+        b=kPaXiqTwfNtaB3lF0XPQW2rDdFSjGyMy6n03RnTEpJg39F9AnBfGTNt96ZSspWiEvn
+         NLkIotSqaRY4h5M6PsuiCSU450kzbTJfrWhlLsuqicIAc0NFRy0EhjoGnxzMeiN8eNf1
+         zED88leKCoTQDde0Imzy8xcOpqZX9xpMaSelfPbrATnX1VAP/T/AwjZmBmhHMVJg/HYx
+         FwNj7HQYX6FoZxUWFC8yWkXC7Zg1OYlJ9f+llQUTu1glBiMKdVl7dMdgcLMx7byep3fC
+         At8nlWE2cnZ5RpMMXT2Y7RDKDc6n4TJDPi3EVFct3hE9DDAK1BRUUsthV4VqQ0CC/eYp
+         3Eng==
+X-Gm-Message-State: APjAAAVny7GYfe0SBVUOf7saYsc8x/Cq1HwIa7SnRGkp+cbUzc0HQ80L
+        S23FZdrxpcT7wMIMr4Xy4jO5E8Qj1N31PUeLlu8mkd87
+X-Google-Smtp-Source: APXvYqzeRG/uyzgFU9gsbGJOxvokb0v5sAg3EY0xn/Cbi7tu5fxDRkc9byd7neezSHJcWUe85BzUNRQz0zOhbAy7Xpo=
+X-Received: by 2002:a6b:148b:: with SMTP id 133mr5849872iou.81.1567607130936;
+ Wed, 04 Sep 2019 07:25:30 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
+References: <1567523922.5576.57.camel@lca.pw> <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
+ <20190903211747.GD2899@mit.edu> <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
+ <CAK8P3a0AcPzuGeNFMW=ymO0wH_cmgnynLGYXGjqyrQb65o6aOw@mail.gmail.com>
+ <CABeXuvq0_YsyuFY509XmwFsX6tX5EVHmWGuzHnSyOEX=9X6TFg@mail.gmail.com> <20190904125834.GA3044@mit.edu>
+In-Reply-To: <20190904125834.GA3044@mit.edu>
+From:   Deepa Dinamani <deepa.kernel@gmail.com>
+Date:   Wed, 4 Sep 2019 07:25:19 -0700
+Message-ID: <CABeXuvoKE4VrnAcHff+veyds+JbqzrUtYxBJ4tUv3eaUsec0bw@mail.gmail.com>
+Subject: Re: "beyond 2038" warnings from loopback mount is noisy
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
+        Jeff Layton <jlayton@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 16:13 +0200, Vlastimil Babka wrote:
-> On 9/4/19 4:06 PM, Walter Wu wrote:
-> > On Wed, 2019-09-04 at 14:49 +0200, Vlastimil Babka wrote:
-> >> On 9/4/19 8:51 AM, Walter Wu wrote:
-> >> > This patch is KASAN report adds the alloc/free stacks for page allocator
-> >> > in order to help programmer to see memory corruption caused by page.
-> >> > 
-> >> > By default, KASAN doesn't record alloc/free stack for page allocator.
-> >> > It is difficult to fix up page use-after-free issue.
-> >> > 
-> >> > This feature depends on page owner to record the last stack of pages.
-> >> > It is very helpful for solving the page use-after-free or out-of-bound.
-> >> > 
-> >> > KASAN report will show the last stack of page, it may be:
-> >> > a) If page is in-use state, then it prints alloc stack.
-> >> >    It is useful to fix up page out-of-bound issue.
-> >> 
-> >> I expect this will conflict both in syntax and semantics with my series [1] that
-> >> adds the freeing stack to page_owner when used together with debug_pagealloc,
-> >> and it's now in mmotm. Glad others see the need as well :) Perhaps you could
-> >> review the series, see if it fulfils your usecase (AFAICS the series should be a
-> >> superset, by storing both stacks at once), and perhaps either make KASAN enable
-> >> debug_pagealloc, or turn KASAN into an alternative enabler of the functionality
-> >> there?
-> >> 
-> >> Thanks, Vlastimil
-> >> 
-> >> [1] https://lore.kernel.org/linux-mm/20190820131828.22684-1-vbabka@suse.cz/t/#u
-> >> 
-> > Thanks your information.
-> > We focus on the smartphone, so it doesn't enable
-> > CONFIG_TRANSPARENT_HUGEPAGE, Is it invalid for our usecase?
-> 
-> The THP fix is not required for the rest of the series, it was even merged to
-> mainline separately.
-> 
-> > And It looks like something is different, because we only need last
-> > stack of page, so it can decrease memory overhead.
-> 
-> That would save you depot_stack_handle_t (which is u32) per page. I guess that's
-> nothing compared to KASAN overhead?
-> 
-If we can use less memory, we can achieve what we want. Why not?
+> On Sep 4, 2019, at 5:58 AM, Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+>> On Tue, Sep 03, 2019 at 09:50:09PM -0700, Deepa Dinamani wrote:
+>> If we don't care to warn about the timestamps that are clamped in
+>> memory, maybe we could just warn when they are being written out.
+>> Would something like this be more acceptable? I would also remove the
+>> warning in ext4.h. I think we don't have to check if the inode is 128
+>> bytes here (Please correct me if I am wrong). If this looks ok, I can
+>> post this.
+>
+> That's better, but it's going to be misleading in many cases.  The
+> inode's extra size field is 16 or larger, there will be enough space
+> for the timestamps, so talking about "timestamps on this inode beyond
+> 2038" when ext4 is unable to expand it from say, 24 to 32, won't be
+> true.  Certain certain features won't be available, yes --- such as
+> project-id-based quotas, since there won't be room to store the
+> project ID.  However, it's not going to impact the ability to store
+> timestamps beyond 2038.  The i_extra_isize field is not just about
+> timestamps!
 
-Thanks.
-Walter
+I understand that i_extra_isize is not just about timestamps. It=E2=80=99s
+evident from EXT4_FITS_IN_INODE(). I think we can check for
+EXT4_FITS_IN_INODE() here if that will consistently eliminates false
+positives.
 
+But, I hear you. You think this warning is unnecessary. I think there
+are many file systems and I don=E2=80=99t think anybody would knows in=E2=
+=80=99s and
+outs of each one. I think if I=E2=80=99m mounting an ext4 fs and it has mix=
+ed
+sizes of inodes, I think I would at least expect a dmesg(with a hint
+on how to fix it) considering that this filesystem is restricted in
+more ways than just time. Is this the purpose of the warning you
+already have?:
 
+        if (error && (mnt_count !=3D le16_to_cpu(sbi->s_es->s_mnt_count))) =
+{
+               ext4_warning(inode->i_sb, "Unable to expand inode %lu.
+Delete some EAs or run e2fsck.",
+
+Maybe there should be a warning, but it has nothing to do with just
+time. Do we already have this?
+
+-Deepa
