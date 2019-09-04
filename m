@@ -2,60 +2,165 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42651C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790B3C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0ED22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="mP+Wb2fq"
+	by mail.kernel.org (Postfix) with ESMTP id 4340423400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbfIDT1U (ORCPT
+        id S1730712AbfIDT2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:27:20 -0400
-Received: from a9-34.smtp-out.amazonses.com ([54.240.9.34]:35370 "EHLO
-        a9-34.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729740AbfIDT1T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:27:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1567625238;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=GSADDDUzucjw0izr9jastymBrpAHNMYRyeaYzA8+Uhc=;
-        b=mP+Wb2fqiHE3fKmY0lTJ5cgTL8X56zeovIKhwE5tXL5FGqe/zJl7HMc0vpR0WP9L
-        pGZs89DUthfoOijrI+PGaCd/DuxFWZxVZ+1TjeK/CiriyJQ4vP3haOtVCs2yZB7qwNj
-        X8T9yx92nvnLJkhMYDzkopTHI5cS8NGvFL9Bs/ck=
-Date:   Wed, 4 Sep 2019 19:27:18 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Pengfei Li <lpf.vector@gmail.com>
-cc:     akpm@linux-foundation.org, penberg@kernel.org, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] mm, slab: Make kmalloc_info[] contain all types of
- names
-In-Reply-To: <20190903160430.1368-1-lpf.vector@gmail.com>
-Message-ID: <0100016cfdbed786-8e9441ab-4c0c-4d2d-b9dc-d1d6878481b8-000000@email.amazonses.com>
-References: <20190903160430.1368-1-lpf.vector@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 4 Sep 2019 15:28:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46942 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729803AbfIDT2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 15:28:51 -0400
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C101AC0035AC
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Sep 2019 19:28:50 +0000 (UTC)
+Received: by mail-qt1-f199.google.com with SMTP id b1so2132197qtj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 12:28:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yjhFuNGCVVnCVt6KGmnRVbp0O4Ubgc+nm3QiXx2UytM=;
+        b=T8GEwOqE3UP+QpMaB0imBKDwCC0WKsJrWdNGK47B3tmdFcoTILEJ0FY4WHEuzXAQn3
+         5rFvIT/6QhAAjJiAo3Dd6mttTtfaaO3yDb5m1X4b9UD59IRQ+LTwiGqTzDHb/4EvyC7/
+         07v9eixL71qV3yUC48LZmHv60/SIXf0O2eaD79L09YrN2yk9RoKeAyvD0irbdq/6YPSL
+         Fqi/uPUvKXlpksJZ37Wzjj3ZUow3Cxw4Y9FCvV/3cRPS23EJMGCaewdgAmoONDd/1Zz1
+         7ped62jM7nIH2L1Ll/nd34Tnq+CpIVy8uwgBoeYB2UQl07iif9KEL3phpwOuCd2IoBsz
+         XaRw==
+X-Gm-Message-State: APjAAAXLPRCIfOfQ+TB2rpoF4AcpIBKVY+q2AePF0fL85kPCrM3wpjYd
+        cqlFD8URvvp1y6+qLbwXgqM3CuhAR+azawQvr1C42kJOw6c6vHF0lBsjEb7DVjz47tjrIY9qD9e
+        TdFRyHpZ3G8vZDEJEm760JRtB
+X-Received: by 2002:a37:6789:: with SMTP id b131mr26895339qkc.314.1567625330116;
+        Wed, 04 Sep 2019 12:28:50 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyTcr7UOJ02wFSH/Lm77j8LHfMvnSXy+Cmzc6fLXR0bnU9M8nbYOhGrXWD3d2+DWPFbWpj1zA==
+X-Received: by 2002:a37:6789:: with SMTP id b131mr26895315qkc.314.1567625329847;
+        Wed, 04 Sep 2019 12:28:49 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id c137sm3451372qkg.110.2019.09.04.12.28.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 12:28:48 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 15:28:41 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        dave.hansen@intel.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, virtio-dev@lists.oasis-open.org,
+        osalvador@suse.de, yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        riel@surriel.com, konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Subject: Re: [PATCH v7 5/6] virtio-balloon: Pull page poisoning config out of
+ free page hinting
+Message-ID: <20190904152244-mutt-send-email-mst@kernel.org>
+References: <20190904150920.13848.32271.stgit@localhost.localdomain>
+ <20190904151055.13848.27351.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.09.04-54.240.9.34
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904151055.13848.27351.stgit@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019, Pengfei Li wrote:
+On Wed, Sep 04, 2019 at 08:10:55AM -0700, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> Currently the page poisoning setting wasn't being enabled unless free page
+> hinting was enabled. However we will need the page poisoning tracking logic
+> as well for unused page reporting. As such pull it out and make it a
+> separate bit of config in the probe function.
+> 
+> In addition we can actually wrap the code in a check for NO_SANITY. If we
+> don't care what is actually in the page we can just default to 0 and leave
+> it there.
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> ---
+>  drivers/virtio/virtio_balloon.c |   19 +++++++++++++------
+>  mm/page_reporting.c             |    4 ++++
+>  2 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+> index 226fbb995fb0..2c19457ab573 100644
+> --- a/drivers/virtio/virtio_balloon.c
+> +++ b/drivers/virtio/virtio_balloon.c
+> @@ -842,7 +842,6 @@ static int virtio_balloon_register_shrinker(struct virtio_balloon *vb)
+>  static int virtballoon_probe(struct virtio_device *vdev)
+>  {
+>  	struct virtio_balloon *vb;
+> -	__u32 poison_val;
+>  	int err;
+>  
+>  	if (!vdev->config->get) {
+> @@ -909,11 +908,19 @@ static int virtballoon_probe(struct virtio_device *vdev)
+>  						  VIRTIO_BALLOON_CMD_ID_STOP);
+>  		spin_lock_init(&vb->free_page_list_lock);
+>  		INIT_LIST_HEAD(&vb->free_page_list);
+> -		if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
+> -			memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+> -			virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+> -				      poison_val, &poison_val);
+> -		}
+> +	}
+> +	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
+> +		__u32 poison_val = 0;
+> +
+> +#if !defined(CONFIG_PAGE_POISONING_NO_SANITY)
+> +		/*
+> +		 * Let hypervisor know that we are expecting a specific
+> +		 * value to be written back in unused pages.
+> +		 */
+> +		memset(&poison_val, PAGE_POISON, sizeof(poison_val));
+> +#endif
+> +		virtio_cwrite(vb->vdev, struct virtio_balloon_config,
+> +			      poison_val, &poison_val);
+>  	}
+>  	/*
+>  	 * We continue to use VIRTIO_BALLOON_F_DEFLATE_ON_OOM to decide if a
 
-> There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
-> and KMALLOC_DMA.
+I'm a bit confused by this part. Should we not just clear
+VIRTIO_BALLOON_F_PAGE_POISON completely?
 
-I only got a few patches of this set. Can I see the complete patchset
-somewhere?
+In my mind the value written should be what guest puts in
+free pages - and possibly what it expects to find there later.
 
+If it doesn't expect anything there then it makes sense
+to clear VIRTIO_BALLOON_F_PAGE_POISON so that host does
+not try to put the poison value there.
+But I think that it does not make sense to lie to host about the poison
+value - I think that if we do send poison value to
+host it's reasonable for host to expect free pages
+have that value - and even possibly to validate that.
+
+So I think that the hack belongs in virtballoon_validate,
+near the page_poisoning_enabled check.
+
+
+
+> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+> index 5006b08d5eec..35c0fe4c4471 100644
+> --- a/mm/page_reporting.c
+> +++ b/mm/page_reporting.c
+> @@ -299,6 +299,10 @@ int page_reporting_startup(struct page_reporting_dev_info *phdev)
+>  	struct zone *zone;
+>  	int err = 0;
+>  
+> +	/* No point in enabling this if it cannot handle any pages */
+> +	if (!phdev->capacity)
+> +		return -EINVAL;
+> +
+>  	mutex_lock(&page_reporting_mutex);
+>  
+>  	/* nothing to do if already in use */
