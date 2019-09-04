@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E510C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57198C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E279E21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA2022DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619921;
-	bh=MWE9vv4fO0Kg1gazq0Cd+/PxOqmJ/Wh+Uhc1UGKMuu8=;
+	s=default; t=1567619923;
+	bh=lYKGDhZHrSAdetGgKg2/X9fiFpLIw2ZUBO+sUBzkB1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LROWyxfvGdwyo+zg8qNbE2GHPE2AyWprtkbsF+kRpcl8pu5D8c5jLtn7ud9/GzdcV
-	 FVZzAKNY7upMiN/E5uiFUy7ArowLyAHQkyaRSYmM/Yr0H1assp5Hyoczh2y3bxOYMH
-	 AV70y83f6clfv1BJbhfgAmNA9BPnahVcXoAX/ntY=
+	b=sgLdi4N2FpugsNVcdRu/czMm9AcO8E8/+q3LQ2ttUKFnQbvZH/GO+BDzLWXio1ReH
+	 XFKGODAf8F7tRsNcUK8jYgRpVWdvIGhmLgXfrX+naiDiBlJJ6wKtCoLwAj3PVvItRv
+	 Cq/m+A0Q8Oe672hI71gz+4QMQEfN/wnSRsKD8tu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388093AbfIDR6k (ORCPT
+        id S2388101AbfIDR6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37086 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388083AbfIDR6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:37 -0400
+        id S2388088AbfIDR6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E607422CEA;
-        Wed,  4 Sep 2019 17:58:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A179B208E4;
+        Wed,  4 Sep 2019 17:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619916;
-        bh=MWE9vv4fO0Kg1gazq0Cd+/PxOqmJ/Wh+Uhc1UGKMuu8=;
+        s=default; t=1567619919;
+        bh=lYKGDhZHrSAdetGgKg2/X9fiFpLIw2ZUBO+sUBzkB1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2zABf5HYqrgcG6tlsEOOO+EK6N7B8fG3RFRiYrpwXJneyZz+A+OGmBAyXaY69F1s
-         2JiWvj4MLxxHuoUPnQgad/Jcd+Yn2rUbOpl7/xj9LKmtj97MVIFcu3RGDlL+JEpcZd
-         c01ymzWnTFmP2ltLvRI9wBYkEEcoqDAH+ZgHCN7k=
+        b=fp/Ua+p362TngDOu+Rzj1Udt4jzgo81A7bKd6TYjM7xmncxkDZ/8EqOm6EHtcWS4e
+         lerF+pG3+DiztG5P6toxucqGqKgMhwYEYUzYtD2Cuw3Ycz4/o3z4n/0tNrYq0V31bQ
+         yC388S8kZbDmgPfvsjSHIgHObSy0XeORWGbFYBrM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Henk van der Laan <opensource@henkvdlaan.com>
-Subject: [PATCH 4.4 64/77] usb-storage: Add new JMS567 revision to unusual_devs
-Date:   Wed,  4 Sep 2019 19:53:51 +0200
-Message-Id: <20190904175309.366973964@linuxfoundation.org>
+        syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.4 65/77] USB: cdc-wdm: fix race between write and disconnect due to flag abuse
+Date:   Wed,  4 Sep 2019 19:53:52 +0200
+Message-Id: <20190904175309.458046474@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -59,32 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henk van der Laan <opensource@henkvdlaan.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 08d676d1685c2a29e4d0e1b0242324e564d4589e upstream.
+commit 1426bd2c9f7e3126e2678e7469dca9fd9fc6dd3e upstream.
 
-Revision 0x0117 suffers from an identical issue to earlier revisions,
-therefore it should be added to the quirks list.
+In case of a disconnect an ongoing flush() has to be made fail.
+Nevertheless we cannot be sure that any pending URB has already
+finished, so although they will never succeed, they still must
+not be touched.
+The clean solution for this is to check for WDM_IN_USE
+and WDM_DISCONNECTED in flush(). There is no point in ever
+clearing WDM_IN_USE, as no further writes make sense.
 
-Signed-off-by: Henk van der Laan <opensource@henkvdlaan.com>
+The issue is as old as the driver.
+
+Fixes: afba937e540c9 ("USB: CDC WDM driver")
+Reported-by: syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20190816200847.21366-1-opensource@henkvdlaan.com
+Link: https://lore.kernel.org/r/20190827103436.21143-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_devs.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/class/cdc-wdm.c |   16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/storage/unusual_devs.h
-+++ b/drivers/usb/storage/unusual_devs.h
-@@ -2006,7 +2006,7 @@ UNUSUAL_DEV(  0x14cd, 0x6600, 0x0201, 0x
- 		US_FL_IGNORE_RESIDUE ),
+--- a/drivers/usb/class/cdc-wdm.c
++++ b/drivers/usb/class/cdc-wdm.c
+@@ -577,10 +577,20 @@ static int wdm_flush(struct file *file,
+ {
+ 	struct wdm_device *desc = file->private_data;
  
- /* Reported by Michael Büsch <m@bues.ch> */
--UNUSUAL_DEV(  0x152d, 0x0567, 0x0114, 0x0116,
-+UNUSUAL_DEV(  0x152d, 0x0567, 0x0114, 0x0117,
- 		"JMicron",
- 		"USB to ATA/ATAPI Bridge",
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+-	wait_event(desc->wait, !test_bit(WDM_IN_USE, &desc->flags));
++	wait_event(desc->wait,
++			/*
++			 * needs both flags. We cannot do with one
++			 * because resetting it would cause a race
++			 * with write() yet we need to signal
++			 * a disconnect
++			 */
++			!test_bit(WDM_IN_USE, &desc->flags) ||
++			test_bit(WDM_DISCONNECTING, &desc->flags));
+ 
+ 	/* cannot dereference desc->intf if WDM_DISCONNECTING */
+-	if (desc->werr < 0 && !test_bit(WDM_DISCONNECTING, &desc->flags))
++	if (test_bit(WDM_DISCONNECTING, &desc->flags))
++		return -ENODEV;
++	if (desc->werr < 0)
+ 		dev_err(&desc->intf->dev, "Error in flush path: %d\n",
+ 			desc->werr);
+ 
+@@ -968,8 +978,6 @@ static void wdm_disconnect(struct usb_in
+ 	spin_lock_irqsave(&desc->iuspin, flags);
+ 	set_bit(WDM_DISCONNECTING, &desc->flags);
+ 	set_bit(WDM_READ, &desc->flags);
+-	/* to terminate pending flushes */
+-	clear_bit(WDM_IN_USE, &desc->flags);
+ 	spin_unlock_irqrestore(&desc->iuspin, flags);
+ 	wake_up_all(&desc->wait);
+ 	mutex_lock(&desc->rlock);
 
 
