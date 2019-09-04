@@ -2,91 +2,129 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74705C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEDFC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4063622CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HLCgQx30"
+	by mail.kernel.org (Postfix) with ESMTP id 29DB721670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731565AbfIDRrg (ORCPT
+        id S1731866AbfIDRrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:47:36 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37804 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730236AbfIDRrg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:47:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s7U+WnWbc1hGktvptzKeOfYseeeg3nRJZ5+fdX9uzys=; b=HLCgQx30fbj3bDt5K0UFUQYmN
-        aFtidFqbXsrutc8ApRSxRfYlvZiok4MBC+OeYVQ0D6gZGvOQxY2KSETfhfca49jarfXO/usT4t1Jp
-        g92XShJHHBDYEmtDWo4qtjnr7vw/BoAZp9n7SH9XvA4jVx5cQ97qdh7cXVSD+20u5iX2JhBbS+1nf
-        7Mpx+ylWFAUn1s02mDl1djBgJtD8AYbVgtzCEwISxhP1SvOSeDv9JSYN7+f15gNa2Q1xONov5qmXq
-        g8ob/t19aYpa3AIYBktVYJzxCIg/1T+Ke0jewcFsY1DJIlGyOZOEOTEdr6y5g7lipKFwGLSXHDcTb
-        1ePchfG2w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5ZN7-00018k-HY; Wed, 04 Sep 2019 17:47:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8279C30116F;
-        Wed,  4 Sep 2019 19:46:30 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2A14C29D8ACE6; Wed,  4 Sep 2019 19:47:07 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 19:47:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jirka =?iso-8859-1?Q?Hladk=FD?= <jhladky@redhat.com>,
-        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
-        X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
-Message-ID: <20190904174707.GV2332@hirez.programming.kicks-ass.net>
-References: <20190903154340.860299-1-rkrcmar@redhat.com>
- <20190903154340.860299-3-rkrcmar@redhat.com>
- <a2924d91-df68-42de-0709-af53649346d5@arm.com>
- <20190904042310.GA159235@google.com>
- <20190904104332.ogsjtbtuadhsglxh@e107158-lin.cambridge.arm.com>
- <20190904130628.GE144846@google.com>
- <CAADnVQJzgTRWUAaH+L6qwJvHk0vsLPX3eWdZNUr5X77TuEgvPw@mail.gmail.com>
- <20190904154000.GJ240514@google.com>
- <CAADnVQK+bSzFdZmgTnDSgibhJ81pR19P6hFArqmZa_xKA1r1VQ@mail.gmail.com>
+        Wed, 4 Sep 2019 13:47:48 -0400
+Received: from mga01.intel.com ([192.55.52.88]:21092 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbfIDRrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:47:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 10:47:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="194814201"
+Received: from enagase-mobl1.amr.corp.intel.com (HELO [10.251.133.230]) ([10.251.133.230])
+  by orsmga002.jf.intel.com with ESMTP; 04 Sep 2019 10:47:44 -0700
+Subject: Re: [alsa-devel] [RFC PATCH 3/5] ASoC: SOF: Intel: hda: add SoundWire
+ IP support
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Keyon Jie <yang.jie@linux.intel.com>,
+        Pan Xiuli <xiuli.pan@linux.intel.com>,
+        Fred Oh <fred.oh@linux.intel.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+References: <20190821201720.17768-1-pierre-louis.bossart@linux.intel.com>
+ <20190821201720.17768-4-pierre-louis.bossart@linux.intel.com>
+ <20190904072131.GK2672@vkoul-mobl>
+ <1897e21f-b086-8233-e96e-6024e75a2153@linux.intel.com>
+ <20190904165129.GB2672@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <785cce2e-febe-3bbd-7590-32943fe7ac99@linux.intel.com>
+Date:   Wed, 4 Sep 2019 12:47:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQK+bSzFdZmgTnDSgibhJ81pR19P6hFArqmZa_xKA1r1VQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190904165129.GB2672@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:51:21AM -0700, Alexei Starovoitov wrote:
-> Anything in tracing can be deleted.
-> Tracing is about debugging and introspection.
-> When underlying kernel code changes the introspection points change as well.
 
-Right; except when it breaks widely used tools; like say powertop. Been
-there, done that.
+
+On 9/4/19 11:51 AM, Vinod Koul wrote:
+> On 04-09-19, 08:25, Pierre-Louis Bossart wrote:
+>> On 9/4/19 2:21 AM, Vinod Koul wrote:
+>>> On 21-08-19, 15:17, Pierre-Louis Bossart wrote:
+>>>> The Core0 needs to be powered before the SoundWire IP is initialized.
+>>>>
+>>>> Call sdw_intel_init/exit and store the context. We only have one
+>>>> context, but depending on the hardware capabilities and BIOS settings
+>>>> may enable multiple SoundWire links.
+>>>>
+>>>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>>>> ---
+>>>>    sound/soc/sof/intel/hda.c | 40 +++++++++++++++++++++++++++++++++------
+>>>>    sound/soc/sof/intel/hda.h |  5 +++++
+>>>>    2 files changed, 39 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+>>>> index a968890d0754..e754058e3679 100644
+>>>> --- a/sound/soc/sof/intel/hda.c
+>>>> +++ b/sound/soc/sof/intel/hda.c
+>>>> @@ -57,6 +57,8 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
+>>>>    {
+>>>>    	acpi_handle handle;
+>>>>    	struct sdw_intel_res res;
+>>>> +	struct sof_intel_hda_dev *hdev;
+>>>> +	void *sdw;
+>>>>    	handle = ACPI_HANDLE(sdev->dev);
+>>>> @@ -66,23 +68,32 @@ static int hda_sdw_init(struct snd_sof_dev *sdev)
+>>>>    	res.irq = sdev->ipc_irq;
+>>>>    	res.parent = sdev->dev;
+>>>> -	hda_sdw_int_enable(sdev, true);
+>>>> -
+>>>> -	sdev->sdw = sdw_intel_init(handle, &res);
+>>>> -	if (!sdev->sdw) {
+>>>> +	sdw = sdw_intel_init(handle, &res);
+>>>
+>>> should this be called for platforms without sdw, I was hoping that some
+>>> checks would be performed.. For example how would skl deal with this?
+>>
+>> Good point. For now we rely on CONFIG_SOUNDWIRE_INTEL to use a fallback, but
+>> if the kernel defines this config and we run on an older platform the only
+>> safety would be the hardware capabilities and BIOS dependencies, I need to
+>> test if it works.
+> 
+> Yes I am not sure given the experience with BIOS relying on that is a
+> great idea ! But if that works, that would be better.
+
+I don't think it's going to be that bad, first we need to find the ACPI 
+description for the controller, then see which links are active, and 
+even with all links disabled nothing bad will happen.
+
+What I am more worried about are inconsistencies where e.g we have both 
+I2C/I2S and SoundWire devices exposed at the same time. The BIOS deals 
+with this with dynamic changes depending on user changes, and we are 
+likely to see reports of problems due to BIOS configuration selection, 
+not the BIOS itself.
