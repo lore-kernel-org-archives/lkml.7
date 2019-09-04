@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E85C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52997C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B65121670
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299CB21670
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613905;
-	bh=9ihFwqapVZ8ImWO7Fe8EEFOgFkuhEe0mW9hNiTymonE=;
+	s=default; t=1567613916;
+	bh=gcfw7Pl9wJ1QreK2DJ9KV2FBShwf39zNfDMOs861Vlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WYTtUajvOxZAeGN/OF/F4aEkSWXhPoJordjbN5C4ttLXkoR7PVR0FX/r4gkyDn2gM
-	 p9Prh+Y9oC1BIff3vWDSKaJBkddTMFZYBDqi0MLAyNNkNmXIGd904I+BxwCxzlz0is
-	 hfQ5MOX1TFYrnwcPLbQUb/3mbAyPH1t/cLjeHkx4=
+	b=b8XxJKF5V4RL8JxWscz5L0MkoQ45+q1vKbcvGmjmoRfE0UGnF49+e1znXgCR6vbxG
+	 kxhOdCtT+AJSnBV0+bSczvGn4F+PaiRczfuZKtIBEdWIqsyHcyDXZZy2Swr8Ci9QGT
+	 ThOTtBKe/dfS94tZ0AkcNsBWSMxw/fw+JwQ88AqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbfIDQSY (ORCPT
+        id S2387488AbfIDQSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33002 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731543AbfIDP6t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:49 -0400
+        id S1732082AbfIDP6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF93B22CF7;
-        Wed,  4 Sep 2019 15:58:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8192339D;
+        Wed,  4 Sep 2019 15:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612728;
-        bh=9ihFwqapVZ8ImWO7Fe8EEFOgFkuhEe0mW9hNiTymonE=;
+        s=default; t=1567612721;
+        bh=gcfw7Pl9wJ1QreK2DJ9KV2FBShwf39zNfDMOs861Vlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ohLXILHVZqYXQ7dnTI/nap5vJ4RtGBTzoJiYYfcfqqMqMVgOBxeX3awnRp9+u0tA7
-         9J7Pb9v8Fb5cimz+ASNPkNOecG9nIngO/Xov283NAOjxdzgSOM56CPTwUoz+rbJu+H
-         lS7nHFssubgkJHeLWs4u+SdnRQcgPr/x0UoSopkk=
+        b=p+LDXK+T1k1os6p1NJbzu/qlEBpfUABImLqTmCSAb17HPA3nM03VLAqxgbf7FM3bS
+         dSah5jbMd0yZwYmXra5rGCK2DWJIze7P5D4fqRAVwnDLZxJ2gKqnFPZ/G6okvT5Dwl
+         LpZu1JRO4WRb8YvAcIfXoWvn6plYo0fK1CKABkGg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 45/94] SUNRPC: Handle EADDRINUSE and ENOBUFS correctly
-Date:   Wed,  4 Sep 2019 11:56:50 -0400
-Message-Id: <20190904155739.2816-45-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 42/94] bpf: allow narrow loads of some sk_reuseport_md fields with offset > 0
+Date:   Wed,  4 Sep 2019 11:56:47 -0400
+Message-Id: <20190904155739.2816-42-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -59,70 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 80f455da6cd0998a5be30a8af24ea2a22815c212 ]
+[ Upstream commit 2c238177bd7f4b14bdf7447cc1cd9bb791f147e6 ]
 
-If a connect or bind attempt returns EADDRINUSE, that means we want to
-retry with a different port. It is not a fatal connection error.
-Similarly, ENOBUFS is not fatal, but just indicates a memory allocation
-issue. Retry after a short delay.
+test_select_reuseport fails on s390 due to verifier rejecting
+test_select_reuseport_kern.o with the following message:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+	; data_check.eth_protocol = reuse_md->eth_protocol;
+	18: (69) r1 = *(u16 *)(r6 +22)
+	invalid bpf_context access off=22 size=2
+
+This is because on big-endian machines casts from __u32 to __u16 are
+generated by referencing the respective variable as __u16 with an offset
+of 2 (as opposed to 0 on little-endian machines).
+
+The verifier already has all the infrastructure in place to allow such
+accesses, it's just that they are not explicitly enabled for
+eth_protocol field. Enable them for eth_protocol field by using
+bpf_ctx_range instead of offsetof.
+
+Ditto for ip_protocol, bind_inany and len, since they already allow
+narrowing, and the same problem can arise when working with them.
+
+Fixes: 2dbb9b9e6df6 ("bpf: Introduce BPF_PROG_TYPE_SK_REUSEPORT")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/clnt.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/core/filter.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 9e1743b364ec4..3f090a75f3721 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1926,6 +1926,9 @@ call_bind_status(struct rpc_task *task)
- 		task->tk_rebind_retry--;
- 		rpc_delay(task, 3*HZ);
- 		goto retry_timeout;
-+	case -ENOBUFS:
-+		rpc_delay(task, HZ >> 2);
-+		goto retry_timeout;
- 	case -EAGAIN:
- 		goto retry_timeout;
- 	case -ETIMEDOUT:
-@@ -1949,7 +1952,6 @@ call_bind_status(struct rpc_task *task)
- 	case -ENETDOWN:
- 	case -EHOSTUNREACH:
- 	case -ENETUNREACH:
--	case -ENOBUFS:
- 	case -EPIPE:
- 		dprintk("RPC: %5u remote rpcbind unreachable: %d\n",
- 				task->tk_pid, task->tk_status);
-@@ -2040,8 +2042,6 @@ call_connect_status(struct rpc_task *task)
- 	case -ENETDOWN:
- 	case -ENETUNREACH:
- 	case -EHOSTUNREACH:
--	case -EADDRINUSE:
--	case -ENOBUFS:
- 	case -EPIPE:
- 		xprt_conditional_disconnect(task->tk_rqstp->rq_xprt,
- 					    task->tk_rqstp->rq_connect_cookie);
-@@ -2050,6 +2050,7 @@ call_connect_status(struct rpc_task *task)
- 		/* retry with existing socket, after a delay */
- 		rpc_delay(task, 3*HZ);
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 534c310bb0893..7aee6f368754a 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8553,13 +8553,13 @@ sk_reuseport_is_valid_access(int off, int size,
+ 		return size == size_default;
+ 
+ 	/* Fields that allow narrowing */
+-	case offsetof(struct sk_reuseport_md, eth_protocol):
++	case bpf_ctx_range(struct sk_reuseport_md, eth_protocol):
+ 		if (size < FIELD_SIZEOF(struct sk_buff, protocol))
+ 			return false;
  		/* fall through */
-+	case -EADDRINUSE:
- 	case -ENOTCONN:
- 	case -EAGAIN:
- 	case -ETIMEDOUT:
-@@ -2058,6 +2059,9 @@ call_connect_status(struct rpc_task *task)
- 		clnt->cl_stats->netreconn++;
- 		task->tk_action = call_transmit;
- 		return;
-+	case -ENOBUFS:
-+		rpc_delay(task, HZ >> 2);
-+		goto out_retry;
- 	}
- 	rpc_call_rpcerror(task, status);
- 	return;
+-	case offsetof(struct sk_reuseport_md, ip_protocol):
+-	case offsetof(struct sk_reuseport_md, bind_inany):
+-	case offsetof(struct sk_reuseport_md, len):
++	case bpf_ctx_range(struct sk_reuseport_md, ip_protocol):
++	case bpf_ctx_range(struct sk_reuseport_md, bind_inany):
++	case bpf_ctx_range(struct sk_reuseport_md, len):
+ 		bpf_ctx_record_field_size(info, size_default);
+ 		return bpf_ctx_narrow_access_ok(off, size, size_default);
+ 
 -- 
 2.20.1
 
