@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7290EC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B339BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB28208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6DA206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620361;
-	bh=p6J1OlnuQbD4TmrXw7QSazR41oWiExdKFV7KusJ3NHw=;
+	s=default; t=1567620364;
+	bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+t0nfQajHWkisc6NyW9Suk9/IV2JEzpfOUWRaxP2Brg21+R4E0wAcjKIJ9n4IFCp
-	 8dynB4G2oXETbuEJbVBa3zw+4x4pJ3Ap67tllKJulNSYjoRpLfhaXfKdR1b+zDSulh
-	 3cfLD1u+bCztua6DWvjuhGEBQH3E3YeoL3ad+VN4=
+	b=1LQkA8OtyQ5ULBO4eSiPp1/a+re3LhtMhlv5gIZrdjEjbdoif47NYmEruM6U4tAX2
+	 hWVaxV+yqm40KkVHS6cE5kiAKK5DCQGcvso7Qburz1+uzJI/xp1iw7y7WJKd5p/u/x
+	 j8oTlxop6Xu7GW6/sHT51WaNbM9zun6/MWKJbNLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388999AbfIDSGA (ORCPT
+        id S2389379AbfIDSGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389348AbfIDSF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:05:56 -0400
+        id S2389366AbfIDSGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5442B23400;
-        Wed,  4 Sep 2019 18:05:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCB4B206B8;
+        Wed,  4 Sep 2019 18:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620355;
-        bh=p6J1OlnuQbD4TmrXw7QSazR41oWiExdKFV7KusJ3NHw=;
+        s=default; t=1567620361;
+        bh=IRnDFMFoLiFLP/Eybumclhwuki5Ux8C0dWpNaSumgJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GnQ4YsKBYWdO11U57MPsD0GO3Qy775CN2LxdNkVVWp5Ij8QjhV7UmNsXSq3Crjg5L
-         PvxUeCsryiI3xf9feIZ/px+WxE7h1dtD8zOpGSi6oKApLZMAhjmsWLFQg8vL92V5FC
-         AaM14lOHtkDoQKSy0pbz0FF6KlwR7BUedRF2FTpU=
+        b=FU2erhxTkcFLsy1dlA4USV/GMIDg7F6xpskBHa0PgKRs4i7Afd75MAbG819ufoY+3
+         bTBrJa7tW0WMWiC/+mKJO8jWlTdJk/3mK6nCP5AoDdTH2YDK1WjECdCIjEPOwmx5oi
+         01C43f4ENGqKovD8e0T24qfCU33S2K9SQROIZNa8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Pedro Sousa <sousa@synopsys.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/93] watchdog: bcm2835_wdt: Fix module autoload
-Date:   Wed,  4 Sep 2019 19:53:29 +0200
-Message-Id: <20190904175305.703646005@linuxfoundation.org>
+Subject: [PATCH 4.19 29/93] scsi: ufs: Fix RX_TERMINATION_FORCE_ENABLE define value
+Date:   Wed,  4 Sep 2019 19:53:31 +0200
+Message-Id: <20190904175305.811788415@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -61,33 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 215e06f0d18d5d653d6ea269e4dfc684854d48bf ]
+[ Upstream commit ebcb8f8508c5edf428f52525cec74d28edea7bcb ]
 
-The commit 5e6acc3e678e ("bcm2835-pm: Move bcm2835-watchdog's DT probe
-to an MFD.") broke module autoloading on Raspberry Pi. So add a
-module alias this fix this.
+Fix RX_TERMINATION_FORCE_ENABLE define value from 0x0089 to 0x00A9
+according to MIPI Alliance MPHY specification.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: e785060ea3a1 ("ufs: definitions for phy interface")
+Signed-off-by: Pedro Sousa <sousa@synopsys.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/bcm2835_wdt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/ufs/unipro.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/bcm2835_wdt.c b/drivers/watchdog/bcm2835_wdt.c
-index ed05514cc2dce..e6c27b71b136d 100644
---- a/drivers/watchdog/bcm2835_wdt.c
-+++ b/drivers/watchdog/bcm2835_wdt.c
-@@ -249,6 +249,7 @@ module_param(nowayout, bool, 0);
- MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
- 
-+MODULE_ALIAS("platform:bcm2835-wdt");
- MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
- MODULE_DESCRIPTION("Driver for Broadcom BCM2835 watchdog timer");
- MODULE_LICENSE("GPL");
+diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
+index 23129d7b2678d..c77e365264478 100644
+--- a/drivers/scsi/ufs/unipro.h
++++ b/drivers/scsi/ufs/unipro.h
+@@ -52,7 +52,7 @@
+ #define RX_HS_UNTERMINATED_ENABLE		0x00A6
+ #define RX_ENTER_HIBERN8			0x00A7
+ #define RX_BYPASS_8B10B_ENABLE			0x00A8
+-#define RX_TERMINATION_FORCE_ENABLE		0x0089
++#define RX_TERMINATION_FORCE_ENABLE		0x00A9
+ #define RX_MIN_ACTIVATETIME_CAPABILITY		0x008F
+ #define RX_HIBERN8TIME_CAPABILITY		0x0092
+ #define RX_REFCLKFREQ				0x00EB
 -- 
 2.20.1
 
