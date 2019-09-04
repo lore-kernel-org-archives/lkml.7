@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8395CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B20DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5333622CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15A9E22CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612843;
-	bh=Ts8e8Hns3t4/ykTZIfN892InRBKDgKoLX54YAaNvoyM=;
+	s=default; t=1567612852;
+	bh=8iB2lI3WyLgCxqLP6y4q7SwKtknI0k26DSWibv/8LkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/+RWOhZe7aUSbS1khky7I7yr2BG+AFK4QG86U1/Jg+yD1ZNI3p747zjDW/NcT8Mq
-	 kcrZkLbbT7GazXRkEGHMk8LqRj5FOaD63O3Nu14bvnwTPYxnvrxUO97o+QqRv1GpAc
-	 yEGWftw9iaa0NzP5+jOl58sfAA0icIBBXM++GU3Y=
+	b=x8RBYxtZ1oR2vT64OParl7B08ZSg8eBxojsfVI4QDUeNmtEldBbCjFNWeqGAdPE6V
+	 5LtFG2Ia0fXaARP8J7wqVLE4PwspOA5SfHjXV7Y9SY5GHbn8hdJvszq1UvPGWB73LC
+	 8flGMb6z9HOf+rcFPfQuODeXI3mRhycTW/JR424U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732797AbfIDQAm (ORCPT
+        id S1732053AbfIDQAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35528 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732764AbfIDQAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:36 -0400
+        id S1732097AbfIDQAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A0872087E;
-        Wed,  4 Sep 2019 16:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D7432070C;
+        Wed,  4 Sep 2019 16:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612836;
-        bh=Ts8e8Hns3t4/ykTZIfN892InRBKDgKoLX54YAaNvoyM=;
+        s=default; t=1567612839;
+        bh=8iB2lI3WyLgCxqLP6y4q7SwKtknI0k26DSWibv/8LkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zBaNiAom9twA/6aFb4r8Ub+FSAKUK412xQAMvwuUgv4xIggJST1EvtN7Fn8J+3A5Z
-         SzVa8jNrPgefYCnO78TkdzmYtsKwG9T3C1B47vYZNc6XcWj1FYbpyoEl1tNvnS1JsS
-         3yq3o6a1pwu6rt9iv6Yj2RW0FUQGzyJcdqNuwPFQ=
+        b=1olCe+/CliXGEDIlrw04ZjjGMDSlKOIp7OGZncPYk17W5KEwJ1JihuKVD2L467cLs
+         gdPJzuS+a++JD2rb9V4+4/hIvNwRGHVpWLcMMkzb2m27BWmMPyK31u6vSiYdB4Bm7U
+         i98qsimz698/rBaWDEYm3dpfvfvJFIjvIrgaLRQE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/52] xdp: unpin xdp umem pages in error path
-Date:   Wed,  4 Sep 2019 11:59:35 -0400
-Message-Id: <20190904160004.3671-23-sashal@kernel.org>
+Cc:     Doug Berger <opendmb@gmail.com>, Laura Abbott <labbott@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 25/52] ARM: 8874/1: mm: only adjust sections of valid mm structures
+Date:   Wed,  4 Sep 2019 11:59:37 -0400
+Message-Id: <20190904160004.3671-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -61,43 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Doug Berger <opendmb@gmail.com>
 
-[ Upstream commit fb89c39455e4b49881c5a42761bd71f03d3ef888 ]
+[ Upstream commit c51bc12d06b3a5494fbfcbd788a8e307932a06e9 ]
 
-Fix mem leak caused by missed unpin routine for umem pages.
+A timing hazard exists when an early fork/exec thread begins
+exiting and sets its mm pointer to NULL while a separate core
+tries to update the section information.
 
-Fixes: 8aef7340ae9695 ("xsk: introduce xdp_umem_page")
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+This commit ensures that the mm pointer is not NULL before
+setting its section parameters. The arguments provided by
+commit 11ce4b33aedc ("ARM: 8672/1: mm: remove tasklist locking
+from update_sections_early()") are equally valid for not
+requiring grabbing the task_lock around this check.
+
+Fixes: 08925c2f124f ("ARM: 8464/1: Update all mm structures with section adjustments")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Acked-by: Laura Abbott <labbott@redhat.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xdp_umem.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/mm/init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index a3b037fbfecde..8cab91c482ff5 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -322,7 +322,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 	umem->pages = kcalloc(umem->npgs, sizeof(*umem->pages), GFP_KERNEL);
- 	if (!umem->pages) {
- 		err = -ENOMEM;
--		goto out_account;
-+		goto out_pin;
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 0cc8e04295a40..66b1568b95e05 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -713,7 +713,8 @@ static void update_sections_early(struct section_perm perms[], int n)
+ 		if (t->flags & PF_KTHREAD)
+ 			continue;
+ 		for_each_thread(t, s)
+-			set_section_perms(perms, n, true, s->mm);
++			if (s->mm)
++				set_section_perms(perms, n, true, s->mm);
  	}
- 
- 	for (i = 0; i < umem->npgs; i++)
-@@ -330,6 +330,8 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 
- 	return 0;
- 
-+out_pin:
-+	xdp_umem_unpin_pages(umem);
- out_account:
- 	xdp_umem_unaccount_pages(umem);
- 	return err;
+ 	set_section_perms(perms, n, true, current->active_mm);
+ 	set_section_perms(perms, n, true, &init_mm);
 -- 
 2.20.1
 
