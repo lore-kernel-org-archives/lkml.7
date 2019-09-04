@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A2CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9295FC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2924B20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63837208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621603;
-	bh=rHytPNhQkF8ov8Qv+LZTByPCoP/QEAlGbsW/DS6uliA=;
+	s=default; t=1567621608;
+	bh=XBqv6luQ5CXrM3bvctgYpcF6Xz+G0qfVbm9g6i0gai8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PSzP85V/JL3Tg2UY/QiBd5KTSueBepOVWoEuJ3yGDhDcbpgf/RGViop0zq9Tx2Adh
-	 CESuy0e4ZCyS1wTht8Wz3rtj8eoFL2Rzyd+e2+d6ZP+pnS/013FDOKg8Sz2wcFQTAO
-	 qdhvmKWFGccY9xYEuCLGthr5ecKSFvYSGw3wqAH0=
+	b=oKUr9JBAsdvotPfN8AnlRG4K6AdicoUh8bdt5Nw4VMJ8Mg6eyBopH9FpfHVvdgyTk
+	 bLKjwQXaN9WrGUL3gUw+c2L3v1rTBdJ5tgxGjhvnfjZLUl0L3NJx+ju9ApenPqCtF0
+	 tRQZJYohA/bBD9DEwOu+DJ3LeXo1tZPGv8DuP5Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388187AbfIDS0m (ORCPT
+        id S2387852AbfIDR50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732934AbfIDR5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:35 -0400
+        id S2387834AbfIDR5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5360C22CF5;
-        Wed,  4 Sep 2019 17:57:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10812339D;
+        Wed,  4 Sep 2019 17:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619854;
-        bh=rHytPNhQkF8ov8Qv+LZTByPCoP/QEAlGbsW/DS6uliA=;
+        s=default; t=1567619841;
+        bh=XBqv6luQ5CXrM3bvctgYpcF6Xz+G0qfVbm9g6i0gai8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gADxGfuuJN71FJ6NhGTEBaTjr308dn6feKcdbzc5QdvHHLWl3AjwuYhvQNkbfIT7/
-         QI2NQAnQ7pnI9kx8q1lWrw4GDxoggApCibuLam+codMN67GLfekuVjQemP/VlybgXa
-         3zUmj0Sef0mTQx/wjfivI/O+zLSHT5/ZpSdAfqrk=
+        b=scnxmbe3IEf2D2d2vtaLatFUDsaMqeCrFfNQFU8kwg8uA1arP/i6OkquRHmAQR2gz
+         No1pil25rMAUk0NI0Kj0TQaib1bqzRh3lAdmSjh8paNSR4Iax/heLWlTrfMnIbxTXm
+         6s7gLmr3GgzZCoBCR+lSdWegyJHKnIfRNFnPj+GQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 19/77] net: hisilicon: fix hip04-xmit never return TX_BUSY
-Date:   Wed,  4 Sep 2019 19:53:06 +0200
-Message-Id: <20190904175305.429511694@linuxfoundation.org>
+Subject: [PATCH 4.4 53/77] usb: host: fotg2: restart hcd after port reset
+Date:   Wed,  4 Sep 2019 19:53:40 +0200
+Message-Id: <20190904175308.345191767@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,39 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
+[ Upstream commit 777758888ffe59ef754cc39ab2f275dc277732f4 ]
 
-TX_DESC_NUM is 256, in tx_count, the maximum value of
-mod(TX_DESC_NUM - 1) is 254, the variable "count" in
-the hip04_mac_start_xmit function is never equal to
-(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
-return NETDEV_TX_BUSY.
+On the Gemini SoC the FOTG2 stalls after port reset
+so restart the HCD after each port reset.
 
-tx_count is modified to mod(TX_DESC_NUM) so that
-the maximum value of tx_count can reach
-(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
-NETDEV_TX_BUSY.
-
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190810150458.817-1-linus.walleij@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/fotg210-hcd.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index fdf8a477bec9c..a88d233df4e82 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -185,7 +185,7 @@ struct hip04_priv {
+diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+index 2341af4f34909..11b3a8c57eabc 100644
+--- a/drivers/usb/host/fotg210-hcd.c
++++ b/drivers/usb/host/fotg210-hcd.c
+@@ -1653,6 +1653,10 @@ static int fotg210_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+ 			/* see what we found out */
+ 			temp = check_reset_complete(fotg210, wIndex, status_reg,
+ 					fotg210_readl(fotg210, status_reg));
++
++			/* restart schedule */
++			fotg210->command |= CMD_RUN;
++			fotg210_writel(fotg210, fotg210->command, &fotg210->regs->command);
+ 		}
  
- static inline unsigned int tx_count(unsigned int head, unsigned int tail)
- {
--	return (head - tail) % (TX_DESC_NUM - 1);
-+	return (head - tail) % TX_DESC_NUM;
- }
- 
- static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
+ 		if (!(temp & (PORT_RESUME|PORT_RESET))) {
 -- 
 2.20.1
 
