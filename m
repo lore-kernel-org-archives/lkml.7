@@ -2,268 +2,117 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E4DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A041C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF6A023400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733A421883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="FUDKTFx3";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="jxiItgvM"
+	dkim=pass (1024-bit key) header.d=one-eyed-alien.net header.i=@one-eyed-alien.net header.b="TUlK0rc1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387723AbfIDQQU (ORCPT
+        id S2387803AbfIDQQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:16:20 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:1357 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732724AbfIDQQT (ORCPT
+        Wed, 4 Sep 2019 12:16:25 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36958 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387604AbfIDQQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:16:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1567613778; x=1599149778;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=i0dBuMtm4qYdmPHDPdzjlUG780xav8sFb1mfXlmWgr8=;
-  b=FUDKTFx38UgliSsRDF8EvuBevzh/DpD5Y3oPBC6cTuIpY1Qhs4jXGpTO
-   q4dSECqwB0PUrOIcUhjV7IxeOBYgOvHsCgXl6d65Iq6Y/tx+NPItFogML
-   Imo/iLigQnbwNGYg+E43UFVPPTT9VI8ZglEWi5D+Qq63/9LbjptV/6Vua
-   jwCj6SJj9pr/KHXpFh2rz+UgttHZPq/tjdfQcy7Ipr6dqD0M+ArU3M6Mf
-   BAy8dw9/ElN2tdMn2Oy1HLCM3m0yxwRgUqI2xGcQPWHIviEytll2vktsW
-   228G0Qd1tcFXhIlPCDHRuXY9AO0QzCuezCwnQMAvubYvOwvyBr5Z2F45J
-   g==;
-IronPort-SDR: 3wfHu7/y9YsErmAI2BBD12gfGZixHfxgYe0qcpMOB2ofdvSlhjY3rULJE70xt9yrjXZyM5qfq6
- 8UFPBS/zUbEiyHRGWG4bYlD3+WB3OxmlV9mr9Jo4D+2pR6Mn+NxZYtwqvpRrrTAhZluONWAP/q
- UUuziFs42UWcPeJiMHCjVMjjcIQOXLTYTHwlzdv0BS0ch59mINUinxPj6QLSlo80wwaJZABD86
- ndluVV54pQvNpcZ0O6CbFXrz0WZw2jh7tLQ4ni9SxUC90C6XD6rsZs/en2NLjNq5aIqx+Z1qv5
- Kzo=
-X-IronPort-AV: E=Sophos;i="5.64,467,1559491200"; 
-   d="scan'208";a="121994088"
-Received: from mail-dm3nam05lp2051.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.51])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Sep 2019 00:16:17 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eXDwen0SX4wjQof89S1y+e/bqW1lipt2pVmBfnjM9fwUKMwDUcpF32wZoKcLqcMMTBokyb43tQYRWGGKTP7wOujxW5yb2mI+6Px4Pd7Vaw2UjczNbk5LsQ9cAx/4CLov982eVtEEeN37fqZkbJGqa2VW8Y/AEDIjBFhRCqO8aPs//SpIvT6tIVxbWU2s2/o/5cpIY7h0m4kffCVHGarXZa76vyAAQJJGKQEChTodVdD3SCFjTxLODLg/T1pzYteJnL26P0HG19N0Nah5YYUIqdgShLjHXZFw8oeqEruZy2Hx5xd4Kd0EXd1VChYWSdvVfY2awYU7uvqohQo1c/625g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6V1q6hJtlrVrDqgWao5UQv7SJqACoYta45fGWJ5PcbU=;
- b=g1h1NPdi3gVYO7NevllJzmyn3S5W2zkubLQNZbSu8kwAk/Ww90adyQSDbDO2W7gAK254CecElHRy6VP3VK/h0ZBYjlqM+fe7ZD2t4GUmXR2HB1zpEo65Z3XrpfNlGXpAkLdrZvEb2mdBKusEiIuJM073vo0EGJsRwbBenZ8k0/e7atbyejCfhyLws6PRthNBBfY2JFQZtbO2jcC4RpO7DfToobqBjs9txD4Vdg/M597xLSeyTZbXuu9+b1IdykrS+kUL3ETrdP6RLGW0yCEQAItGBWVEj166Aa7ZHzTOxxUYMnZiKXnR6pvFuUSnL/0odhVlCeGouXjNTCcQI4fpOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Wed, 4 Sep 2019 12:16:21 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t14so20261406lji.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:16:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6V1q6hJtlrVrDqgWao5UQv7SJqACoYta45fGWJ5PcbU=;
- b=jxiItgvM64x8b6kpw4PUQHjVo6MMc019oHENk7tXFni6MeYDQDBrXMpgoMqY1/IY461jLlwY+65oEx3OlxLVICAeERN9KeowsqdTFoLLev4iwgeWGu6SaeeEdwaZCZxBbIqGxRwVI3V7srS9mlYESTkBFyEiBY4OJVyca57kp2c=
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
- MN2PR04MB5504.namprd04.prod.outlook.com (20.178.247.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2178.16; Wed, 4 Sep 2019 16:16:16 +0000
-Received: from MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::e1a5:8de2:c3b1:3fb0]) by MN2PR04MB6061.namprd04.prod.outlook.com
- ([fe80::e1a5:8de2:c3b1:3fb0%7]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
- 16:16:16 +0000
-From:   Anup Patel <Anup.Patel@wdc.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim K <rkrcmar@redhat.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Graf <graf@amazon.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Anup Patel <anup@brainfault.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anup Patel <Anup.Patel@wdc.com>
-Subject: [PATCH v7 20/21] RISC-V: Enable VIRTIO drivers in RV64 and RV32
- defconfig
-Thread-Topic: [PATCH v7 20/21] RISC-V: Enable VIRTIO drivers in RV64 and RV32
- defconfig
-Thread-Index: AQHVYzwT/TmE4RVItEaEX+vtCf8idA==
-Date:   Wed, 4 Sep 2019 16:16:16 +0000
-Message-ID: <20190904161245.111924-22-anup.patel@wdc.com>
-References: <20190904161245.111924-1-anup.patel@wdc.com>
-In-Reply-To: <20190904161245.111924-1-anup.patel@wdc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MA1PR01CA0084.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::24)
- To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Anup.Patel@wdc.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [49.207.53.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 338a4857-dd19-4f28-1299-08d731533661
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5504;
-x-ms-traffictypediagnostic: MN2PR04MB5504:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR04MB5504F3CC4C57DBFCD3E09B408DB80@MN2PR04MB5504.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:238;
-x-forefront-prvs: 0150F3F97D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(396003)(346002)(366004)(39860400002)(199004)(189003)(66556008)(66446008)(7416002)(7736002)(8676002)(478600001)(25786009)(386003)(66946007)(99286004)(256004)(14444005)(50226002)(14454004)(66476007)(64756008)(6506007)(6512007)(102836004)(6436002)(8936002)(54906003)(6116002)(3846002)(486006)(26005)(55236004)(86362001)(1076003)(53936002)(476003)(316002)(71200400001)(71190400001)(81156014)(76176011)(52116002)(305945005)(5660300002)(6486002)(36756003)(186003)(11346002)(2616005)(66066001)(44832011)(4326008)(2906002)(446003)(81166006)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5504;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oQTc7cANtd0XH0H6ysANcC+aXYP/fJV24wJMlOyWmd1x1anNmaO0nigy81otTOZRdwLEmkJEVs7duqicnxLPX5jC82wbxihLsXsNka0RTED6aXROlOxqcuPio7NlEbMBgRJ8ql9E9BZlfPb0Q+1H0U2RamJ1fI2KIMWBixNBZ969BkRSjhRqgp7sWfKwaO7iNY9N4M3nmyi9pGWCWjLvLyz9Sv3K7isL3mPLStijIhP+VW/1XHRXvbBvZK+y3OnGQ+Il49O2g3TNe1KdcEONQoHugbFXgy6Mfzw1bQoN5su0atkh8BS3xV1ubNyTVY+FLGsP0qjntLx2iWN/UEsSb90kUNcUuZ5B3dxB44PbpcziebHfEILc1niHbhAjemzOmJ9V7NOThSeFzYFRSnKjdIQg4at31yxOwpFTiz3WecE=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=one-eyed-alien.net; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3OkOI3j0Oo0CjA3trKCkMR2MwBR7d8kErbi/HKpfcyM=;
+        b=TUlK0rc196VsjDYABXU7yCCcQ4sTNOl47V6TQt/Z6Y4FZj6TevmCuFWT9dKCaAnTkd
+         ii+pt9kyT4tMSieTNWDBUkxJWxisf3YEfmljgf/j7puwe7joaJGEU4O2426wowD5IuNU
+         CQLeaZs18KcpY8ipXZwRFzvDYcdReO/oyNEP4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3OkOI3j0Oo0CjA3trKCkMR2MwBR7d8kErbi/HKpfcyM=;
+        b=XEgDLyPu/SvN9NeKyYSdnLLj3yS+HpWX1119NHwIUU4FrLStfyUVEpd3tEC11xS6g0
+         AU1CMj0cZ5lyrRgsvrN+p+BbCCbu90mtKaCRq5m9n3E5Pn8svjYkj/cg8PCR+EXcUev9
+         UXe4niD6onUaUS4ml2jzQNRy7KJHpVoXawBITM30qVN9p3ZQpKQI8ArKIr48jr4vaTYd
+         hxFq2uP+Ua8Lo1JanU+wC0pser8Ecn9uBsgHAp40qoDF1486C3sCWLRAfNYHlPYdIZzI
+         5usUsoenKt6FgiAlnhjkiWX/e5UJqbcic/u9R7AyMUci0cq8eQYq8MIGDoOSZEzarCOy
+         /xqg==
+X-Gm-Message-State: APjAAAXiwB8SYTN1qRTuou8+aftc/K9iAXMN0IXprZzYRXdkVQCM7JMI
+        Yeqt6Esyp/Hngn7mRZEq2En1DQhf9l99djSWuX4kkg==
+X-Google-Smtp-Source: APXvYqwjBs0W5/qIegdlz+i6Wn/+JSt4M3u1OfLNwPhUCj4In1akz/3V+ycUi8EU6qZzBMs2ICtcju1RZEnxtZQrP/k=
+X-Received: by 2002:a2e:9ad4:: with SMTP id p20mr24178237ljj.49.1567613778648;
+ Wed, 04 Sep 2019 09:16:18 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 338a4857-dd19-4f28-1299-08d731533661
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 16:16:16.2221
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HkooxODKxAIWkrYNjyEeyUqsNU8/48F6aUzhqo+9t2CApFgaKP9WahbzgPoTlQ9ofX423wwLAB47GCSt4ARq0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5504
+References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
+ <20190903150638.242049-13-maennich@google.com> <20190903161045.GA22754@roeck-us.net>
+ <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com> <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net>
+In-Reply-To: <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net>
+From:   Matthew Dharm <mdharm-usb@one-eyed-alien.net>
+Date:   Wed, 4 Sep 2019 09:16:07 -0700
+Message-ID: <CAA6KcBBeP9xYbVws4=RMFNA4kyrodE-R3mifhbkee-Q+jFRcoQ@mail.gmail.com>
+Subject: Re: [usb-storage] Re: [PATCH v4 12/12] RFC: watchdog: export core
+ symbols in WATCHDOG_CORE namespace
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        maco@android.com, sspatil@google.com,
+        Will Deacon <will@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        linux-usb <linux-usb@vger.kernel.org>,
+        USB Mass Storage on Linux 
+        <usb-storage@lists.one-eyed-alien.net>,
+        linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables more VIRTIO drivers (such as console, rpmsg, 9p,
-rng, etc.) which are usable on KVM RISC-V Guest and Xvisor RISC-V
-Guest.
+On Wed, Sep 4, 2019 at 5:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Note that I don't object to the patch set in general. There may be symbols
+> which only need be exported in the context of a single subsystem or even
+> driver (if a driver consists of more than one module). For example, a mfd
+> driver may export symbols which should only be called by its client drivers.
+> In such a situation, it may well be beneficial to limit the use of exported
+> symbols.
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
----
- arch/riscv/configs/defconfig      | 11 +++++++++++
- arch/riscv/configs/rv32_defconfig | 11 +++++++++++
- 2 files changed, 22 insertions(+)
+I can appreciate this benefit.
 
-diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-index 3efff552a261..420a0dbef386 100644
---- a/arch/riscv/configs/defconfig
-+++ b/arch/riscv/configs/defconfig
-@@ -29,6 +29,8 @@ CONFIG_IP_PNP_DHCP=3Dy
- CONFIG_IP_PNP_BOOTP=3Dy
- CONFIG_IP_PNP_RARP=3Dy
- CONFIG_NETLINK_DIAG=3Dy
-+CONFIG_NET_9P=3Dy
-+CONFIG_NET_9P_VIRTIO=3Dy
- CONFIG_PCI=3Dy
- CONFIG_PCIEPORTBUS=3Dy
- CONFIG_PCI_HOST_GENERIC=3Dy
-@@ -39,6 +41,7 @@ CONFIG_BLK_DEV_LOOP=3Dy
- CONFIG_VIRTIO_BLK=3Dy
- CONFIG_BLK_DEV_SD=3Dy
- CONFIG_BLK_DEV_SR=3Dy
-+CONFIG_SCSI_VIRTIO=3Dy
- CONFIG_ATA=3Dy
- CONFIG_SATA_AHCI=3Dy
- CONFIG_SATA_AHCI_PLATFORM=3Dy
-@@ -54,6 +57,7 @@ CONFIG_SERIAL_8250_CONSOLE=3Dy
- CONFIG_SERIAL_OF_PLATFORM=3Dy
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=3Dy
- CONFIG_HVC_RISCV_SBI=3Dy
-+CONFIG_VIRTIO_CONSOLE=3Dy
- CONFIG_HW_RANDOM=3Dy
- CONFIG_HW_RANDOM_VIRTIO=3Dy
- CONFIG_SPI=3Dy
-@@ -61,6 +65,7 @@ CONFIG_SPI_SIFIVE=3Dy
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=3Dy
- CONFIG_DRM_RADEON=3Dy
-+CONFIG_DRM_VIRTIO_GPU=3Dy
- CONFIG_FRAMEBUFFER_CONSOLE=3Dy
- CONFIG_USB=3Dy
- CONFIG_USB_XHCI_HCD=3Dy
-@@ -73,7 +78,12 @@ CONFIG_USB_STORAGE=3Dy
- CONFIG_USB_UAS=3Dy
- CONFIG_MMC=3Dy
- CONFIG_MMC_SPI=3Dy
-+CONFIG_VIRTIO_PCI=3Dy
-+CONFIG_VIRTIO_BALLOON=3Dy
-+CONFIG_VIRTIO_INPUT=3Dy
- CONFIG_VIRTIO_MMIO=3Dy
-+CONFIG_RPMSG_CHAR=3Dy
-+CONFIG_RPMSG_VIRTIO=3Dy
- CONFIG_EXT4_FS=3Dy
- CONFIG_EXT4_FS_POSIX_ACL=3Dy
- CONFIG_AUTOFS4_FS=3Dy
-@@ -86,6 +96,7 @@ CONFIG_NFS_V4=3Dy
- CONFIG_NFS_V4_1=3Dy
- CONFIG_NFS_V4_2=3Dy
- CONFIG_ROOT_NFS=3Dy
-+CONFIG_9P_FS=3Dy
- CONFIG_CRYPTO_USER_API_HASH=3Dy
- CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
-diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_de=
-fconfig
-index 7da93e494445..87ee6e62b64b 100644
---- a/arch/riscv/configs/rv32_defconfig
-+++ b/arch/riscv/configs/rv32_defconfig
-@@ -29,6 +29,8 @@ CONFIG_IP_PNP_DHCP=3Dy
- CONFIG_IP_PNP_BOOTP=3Dy
- CONFIG_IP_PNP_RARP=3Dy
- CONFIG_NETLINK_DIAG=3Dy
-+CONFIG_NET_9P=3Dy
-+CONFIG_NET_9P_VIRTIO=3Dy
- CONFIG_PCI=3Dy
- CONFIG_PCIEPORTBUS=3Dy
- CONFIG_PCI_HOST_GENERIC=3Dy
-@@ -39,6 +41,7 @@ CONFIG_BLK_DEV_LOOP=3Dy
- CONFIG_VIRTIO_BLK=3Dy
- CONFIG_BLK_DEV_SD=3Dy
- CONFIG_BLK_DEV_SR=3Dy
-+CONFIG_SCSI_VIRTIO=3Dy
- CONFIG_ATA=3Dy
- CONFIG_SATA_AHCI=3Dy
- CONFIG_SATA_AHCI_PLATFORM=3Dy
-@@ -54,11 +57,13 @@ CONFIG_SERIAL_8250_CONSOLE=3Dy
- CONFIG_SERIAL_OF_PLATFORM=3Dy
- CONFIG_SERIAL_EARLYCON_RISCV_SBI=3Dy
- CONFIG_HVC_RISCV_SBI=3Dy
-+CONFIG_VIRTIO_CONSOLE=3Dy
- CONFIG_HW_RANDOM=3Dy
- CONFIG_HW_RANDOM_VIRTIO=3Dy
- # CONFIG_PTP_1588_CLOCK is not set
- CONFIG_DRM=3Dy
- CONFIG_DRM_RADEON=3Dy
-+CONFIG_DRM_VIRTIO_GPU=3Dy
- CONFIG_FRAMEBUFFER_CONSOLE=3Dy
- CONFIG_USB=3Dy
- CONFIG_USB_XHCI_HCD=3Dy
-@@ -69,7 +74,12 @@ CONFIG_USB_OHCI_HCD=3Dy
- CONFIG_USB_OHCI_HCD_PLATFORM=3Dy
- CONFIG_USB_STORAGE=3Dy
- CONFIG_USB_UAS=3Dy
-+CONFIG_VIRTIO_PCI=3Dy
-+CONFIG_VIRTIO_BALLOON=3Dy
-+CONFIG_VIRTIO_INPUT=3Dy
- CONFIG_VIRTIO_MMIO=3Dy
-+CONFIG_RPMSG_CHAR=3Dy
-+CONFIG_RPMSG_VIRTIO=3Dy
- CONFIG_SIFIVE_PLIC=3Dy
- CONFIG_EXT4_FS=3Dy
- CONFIG_EXT4_FS_POSIX_ACL=3Dy
-@@ -83,6 +93,7 @@ CONFIG_NFS_V4=3Dy
- CONFIG_NFS_V4_1=3Dy
- CONFIG_NFS_V4_2=3Dy
- CONFIG_ROOT_NFS=3Dy
-+CONFIG_9P_FS=3Dy
- CONFIG_CRYPTO_USER_API_HASH=3Dy
- CONFIG_CRYPTO_DEV_VIRTIO=3Dy
- CONFIG_PRINTK_TIME=3Dy
---=20
-2.17.1
+> I am not sure what good that does in practice (if I understand correctly,
+> a driver only has to declare that it wants to use a restricted use symbol
+> if it wants to use it), but that is a different question.
 
+I think this question implies that you are coming from the perspective
+of "security" or wanting to restrict access to the underlying
+functions, rather than wanting to clean-up the way symbols are handled
+for manageability / maintainability purposes (which is the goal, as I
+understand it).
+
+HOWEVER, I have one question:  If these patches are included, and
+someone wants to introduce a bit of code which needs to use two
+symbols from different namespaces but with the same name, can that be
+done?  That is, if driver A has symbol 'foo' and driver B has symbol
+'foo' (both in their respective namespaces), and driver C wants to use
+A.foo and B.foo, can that be supported?
+
+Matt
+
+
+-- 
+Matthew Dharm
+Former Maintainer, USB Mass Storage driver for Linux
