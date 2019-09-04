@@ -2,134 +2,83 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D480CC41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AC6C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE26222CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:19:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bxDni1+R"
+	by mail.kernel.org (Postfix) with ESMTP id C91C92087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbfIDRTt (ORCPT
+        id S1731763AbfIDRW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:19:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40786 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731466AbfIDRTs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:19:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x127so967771pfb.7;
-        Wed, 04 Sep 2019 10:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=09xouYfGtM7P/+Szurweb+Wo4prOf3fUjEfXXhSPvME=;
-        b=bxDni1+RWIcCrmcmzKZQBT7cquE1szM+Rm10Syh+xw44EBp11UXsk0Zc5eo59dnbyr
-         Ox9VL0O3wgC9uBUAlNkC9RBa/Sjk753Igi3sCtiB4BKPQv8Mg1v0IZktFKSbMVg1scyA
-         FAZUOYfe11oasXe+cMmbFHMxcerzZvp0R65AVCvE8DtaZitzI+9Zpoi2hJSFsjP3+JhO
-         BXV9F+Qwa0ha9xmxnIPvSBF9Dxovp7Jrrc7V7JRWUe9xIY8+I5j9VnQw8EYBJLpVlWxn
-         hU83BGp2e75k5uOvyQ1/nbcDPdpqx5tGktn9Usl7STni53tGJYSGs3knulQDQ+l57PPo
-         zofg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=09xouYfGtM7P/+Szurweb+Wo4prOf3fUjEfXXhSPvME=;
-        b=QbFEJMiH74czil1seJ5411+jyKScOCwV+kdrfZl4G/CNkslwrXxDg1Hkkc7hLsjChP
-         H9UOzjmZX+Xs2XqwL/QDghazm13TE1sqjc1To4npDxvSzJIRaSQ97PgWM3rrex8OFv7E
-         ypj/ndfMm97adf3MEJ0snKX67gJGC+LS3wJ2aXTWLAaIBW+S2Jc8LZqRjZqgPSeij7uN
-         z1tW7RnI2midcydySO4H0v9QotF8wh2qhvTIiJLdj2gDAZ9aSpLno8DqsdnWuGmyEKGO
-         PoS49dMu9iXce2Sx9ukSz4Lr/ipfh0BEco62l29SBH99+YtwvD9qC7xUcrfWLT5v9lfk
-         A+Rw==
-X-Gm-Message-State: APjAAAWHeFQRPA5mjiSTGUK2fSro2q5qlxvDM3je3Vn52vAHFSne5Ugt
-        QpFhWn2tIhPpvcxTC3nHJI4=
-X-Google-Smtp-Source: APXvYqzYc/xI1nMtMO8Q1TmWhNupziMCqcsew+YiGdEK3/Q/34lirq+6VDV81HR7x7yQFYWo9F0bUw==
-X-Received: by 2002:aa7:96c1:: with SMTP id h1mr9951490pfq.111.1567617587533;
-        Wed, 04 Sep 2019 10:19:47 -0700 (PDT)
-Received: from localhost ([100.118.89.196])
-        by smtp.gmail.com with ESMTPSA id z23sm1407891pfn.45.2019.09.04.10.19.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 10:19:46 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/msm: Use the correct dma_sync calls harder
-Date:   Wed,  4 Sep 2019 10:17:23 -0700
-Message-Id: <20190904171723.2956-1-robdclark@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 4 Sep 2019 13:22:26 -0400
+Received: from mga12.intel.com ([192.55.52.136]:38749 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731447AbfIDRW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:22:26 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 10:22:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,467,1559545200"; 
+   d="scan'208";a="173650270"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga007.jf.intel.com with ESMTP; 04 Sep 2019 10:22:23 -0700
+Received: from andy by smile with local (Exim 4.92.1)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1i5Yz8-0004TZ-Pl; Wed, 04 Sep 2019 20:22:22 +0300
+Date:   Wed, 4 Sep 2019 20:22:22 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-acpi@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v5 11/11] lib/test_printf: Add tests for %pfw printk
+ modifier
+Message-ID: <20190904172222.GV2680@smile.fi.intel.com>
+References: <20190902135732.23455-1-sakari.ailus@linux.intel.com>
+ <20190902135732.23455-12-sakari.ailus@linux.intel.com>
+ <20190902161352.GS2680@smile.fi.intel.com>
+ <20190904161051.GX5475@paasikivi.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904161051.GX5475@paasikivi.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+On Wed, Sep 04, 2019 at 07:10:51PM +0300, Sakari Ailus wrote:
+> On Mon, Sep 02, 2019 at 07:13:52PM +0300, Andy Shevchenko wrote:
+> > On Mon, Sep 02, 2019 at 04:57:32PM +0300, Sakari Ailus wrote:
+> > > Add a test for the %pfw printk modifier using software nodes.
+> > 
+> > > +static void __init fwnode_pointer(void)
+> > > +{
+> > > +	const struct software_node softnodes[] = {
+> > > +		{ .name = "first", },
+> > > +		{ .name = "second", .parent = &softnodes[0], },
+> > > +		{ .name = "third", .parent = &softnodes[1], },
+> > > +		{ NULL /* Guardian */ },
+> > 
+> > Comma is still here :-)
+> 
+> Oops. I ended up removing the comma in a wrong patch which wasn't submitted
+> to the list. Will fix for v6.
 
-Looks like the dma_sync calls don't do what we want on armv7 either.
-Fixes:
+Also you may remove NULL there since it's default.
 
-  Unable to handle kernel paging request at virtual address 50001000
-  pgd = (ptrval)
-  [50001000] *pgd=00000000
-  Internal error: Oops: 805 [#1] SMP ARM
-  Modules linked in:
-  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc6-00271-g9f159ae07f07 #4
-  Hardware name: Freescale i.MX53 (Device Tree Support)
-  PC is at v7_dma_clean_range+0x20/0x38
-  LR is at __dma_page_cpu_to_dev+0x28/0x90
-  pc : [<c011c76c>]    lr : [<c01181c4>]    psr: 20000013
-  sp : d80b5a88  ip : de96c000  fp : d840ce6c
-  r10: 00000000  r9 : 00000001  r8 : d843e010
-  r7 : 00000000  r6 : 00008000  r5 : ddb6c000  r4 : 00000000
-  r3 : 0000003f  r2 : 00000040  r1 : 50008000  r0 : 50001000
-  Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-  Control: 10c5387d  Table: 70004019  DAC: 00000051
-  Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Fixes: 3de433c5b38a ("drm/msm: Use the correct dma_sync calls in msm_gem")
-Tested-by: Fabio Estevam <festevam@gmail.com>
----
- drivers/gpu/drm/msm/msm_gem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 7263f4373f07..5a6a79fbc9d6 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -52,7 +52,7 @@ static void sync_for_device(struct msm_gem_object *msm_obj)
- {
- 	struct device *dev = msm_obj->base.dev->dev;
- 
--	if (get_dma_ops(dev)) {
-+	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
- 		dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
- 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	} else {
-@@ -65,7 +65,7 @@ static void sync_for_cpu(struct msm_gem_object *msm_obj)
- {
- 	struct device *dev = msm_obj->base.dev->dev;
- 
--	if (get_dma_ops(dev)) {
-+	if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
- 		dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
- 			msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
- 	} else {
 -- 
-2.21.0
+With Best Regards,
+Andy Shevchenko
+
 
