@@ -2,211 +2,133 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0323EC3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48B9C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EDE21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FD321883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:34:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I6pw9B5r";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I2aSP4zU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfIDEdL (ORCPT
+        id S1728092AbfIDEee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 00:33:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38924 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbfIDEdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 00:33:10 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 4 Sep 2019 00:34:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55088 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfIDEed (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 00:34:33 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 59917602EF; Wed,  4 Sep 2019 04:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567571672;
+        bh=yD7jddCeDQh/QLkdALenruhc6/Bis0ve+odm+lJNIpc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=I6pw9B5rr26zjf9F8xAcaV9hOA1N438qnSW6RXBSDF2vqmEqZw6tmqy0QALhuYHLj
+         O4sKsaEvGajDPBfDMWc81zdA/1YxO6y9C5kEysZ/G0IzEUwEeKL1n6jdPgeBmX0Aa0
+         32/OFYNYF8FAzDR2ENGUW9Z5zNiiPZEYXTs4f4o4=
+Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 00CA43082E20;
-        Wed,  4 Sep 2019 04:33:10 +0000 (UTC)
-Received: from [10.72.12.87] (ovpn-12-87.pek2.redhat.com [10.72.12.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 95BC75C220;
-        Wed,  4 Sep 2019 04:32:58 +0000 (UTC)
-Subject: Re: [RFC v3] vhost: introduce mdev based hardware vhost backend
-To:     Tiwei Bie <tiwei.bie@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     alex.williamson@redhat.com, maxime.coquelin@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, lingshan.zhu@intel.com
-References: <20190828053712.26106-1-tiwei.bie@intel.com>
- <20190903043704-mutt-send-email-mst@kernel.org> <20190904024801.GA5671@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <5972f30a-4f01-c953-0785-1c82b20cec58@redhat.com>
-Date:   Wed, 4 Sep 2019 12:32:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190904024801.GA5671@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 04 Sep 2019 04:33:10 +0000 (UTC)
+        (Authenticated sender: c-hbandi@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2DFCE607EB;
+        Wed,  4 Sep 2019 04:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567571671;
+        bh=yD7jddCeDQh/QLkdALenruhc6/Bis0ve+odm+lJNIpc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=I2aSP4zUWyN5R+xWOmkIdddBX4q7VtpEp8StdzSVkyn8Yfe5BwBwf5HJVdRvViP94
+         +CnP44E9ZXvhH27gigVLcaGDTUaymlzH7W18sgqlXUtYuBc7hgKOTvFPpKAQtHRYR0
+         AA1zPgMsHJGmJ8rT14/Cy9JLfidd+zH6RuXDb2wA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2DFCE607EB
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
+From:   Harish Bandi <c-hbandi@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        anubhavg@codeaurora.org, Harish Bandi <c-hbandi@codeaurora.org>
+Subject: [PATCH v1] bluetooth: hci_qca: disable irqs when spinlock is acquired
+Date:   Wed,  4 Sep 2019 10:04:16 +0530
+Message-Id: <1567571656-32403-1-git-send-email-c-hbandi@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Looks like Deadlock is observed in hci_qca while performing
+stress and stability tests. Since same lock is getting
+acquired from qca_wq_awake_rx and hci_ibs_tx_idle_timeout
+seeing spinlock recursion, irqs should be disable while
+acquiring the spinlock always.
 
-On 2019/9/4 上午10:48, Tiwei Bie wrote:
-> On Tue, Sep 03, 2019 at 07:26:03AM -0400, Michael S. Tsirkin wrote:
->> On Wed, Aug 28, 2019 at 01:37:12PM +0800, Tiwei Bie wrote:
->>> Details about this can be found here:
->>>
->>> https://lwn.net/Articles/750770/
->>>
->>> What's new in this version
->>> ==========================
->>>
->>> There are three choices based on the discussion [1] in RFC v2:
->>>
->>>> #1. We expose a VFIO device, so we can reuse the VFIO container/group
->>>>      based DMA API and potentially reuse a lot of VFIO code in QEMU.
->>>>
->>>>      But in this case, we have two choices for the VFIO device interface
->>>>      (i.e. the interface on top of VFIO device fd):
->>>>
->>>>      A) we may invent a new vhost protocol (as demonstrated by the code
->>>>         in this RFC) on VFIO device fd to make it work in VFIO's way,
->>>>         i.e. regions and irqs.
->>>>
->>>>      B) Or as you proposed, instead of inventing a new vhost protocol,
->>>>         we can reuse most existing vhost ioctls on the VFIO device fd
->>>>         directly. There should be no conflicts between the VFIO ioctls
->>>>         (type is 0x3B) and VHOST ioctls (type is 0xAF) currently.
->>>>
->>>> #2. Instead of exposing a VFIO device, we may expose a VHOST device.
->>>>      And we will introduce a new mdev driver vhost-mdev to do this.
->>>>      It would be natural to reuse the existing kernel vhost interface
->>>>      (ioctls) on it as much as possible. But we will need to invent
->>>>      some APIs for DMA programming (reusing VHOST_SET_MEM_TABLE is a
->>>>      choice, but it's too heavy and doesn't support vIOMMU by itself).
->>> This version is more like a quick PoC to try Jason's proposal on
->>> reusing vhost ioctls. And the second way (#1/B) in above three
->>> choices was chosen in this version to demonstrate the idea quickly.
->>>
->>> Now the userspace API looks like this:
->>>
->>> - VFIO's container/group based IOMMU API is used to do the
->>>    DMA programming.
->>>
->>> - Vhost's existing ioctls are used to setup the device.
->>>
->>> And the device will report device_api as "vfio-vhost".
->>>
->>> Note that, there are dirty hacks in this version. If we decide to
->>> go this way, some refactoring in vhost.c/vhost.h may be needed.
->>>
->>> PS. The direct mapping of the notify registers isn't implemented
->>>      in this version.
->>>
->>> [1] https://lkml.org/lkml/2019/7/9/101
->>>
->>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
->> ....
->>
->>> +long vhost_mdev_ioctl(struct mdev_device *mdev, unsigned int cmd,
->>> +		      unsigned long arg)
->>> +{
->>> +	void __user *argp = (void __user *)arg;
->>> +	struct vhost_mdev *vdpa;
->>> +	unsigned long minsz;
->>> +	int ret = 0;
->>> +
->>> +	if (!mdev)
->>> +		return -EINVAL;
->>> +
->>> +	vdpa = mdev_get_drvdata(mdev);
->>> +	if (!vdpa)
->>> +		return -ENODEV;
->>> +
->>> +	switch (cmd) {
->>> +	case VFIO_DEVICE_GET_INFO:
->>> +	{
->>> +		struct vfio_device_info info;
->>> +
->>> +		minsz = offsetofend(struct vfio_device_info, num_irqs);
->>> +
->>> +		if (copy_from_user(&info, (void __user *)arg, minsz)) {
->>> +			ret = -EFAULT;
->>> +			break;
->>> +		}
->>> +
->>> +		if (info.argsz < minsz) {
->>> +			ret = -EINVAL;
->>> +			break;
->>> +		}
->>> +
->>> +		info.flags = VFIO_DEVICE_FLAGS_VHOST;
->>> +		info.num_regions = 0;
->>> +		info.num_irqs = 0;
->>> +
->>> +		if (copy_to_user((void __user *)arg, &info, minsz)) {
->>> +			ret = -EFAULT;
->>> +			break;
->>> +		}
->>> +
->>> +		break;
->>> +	}
->>> +	case VFIO_DEVICE_GET_REGION_INFO:
->>> +	case VFIO_DEVICE_GET_IRQ_INFO:
->>> +	case VFIO_DEVICE_SET_IRQS:
->>> +	case VFIO_DEVICE_RESET:
->>> +		ret = -EINVAL;
->>> +		break;
->>> +
->>> +	case VHOST_MDEV_SET_STATE:
->>> +		ret = vhost_set_state(vdpa, argp);
->>> +		break;
->>> +	case VHOST_GET_FEATURES:
->>> +		ret = vhost_get_features(vdpa, argp);
->>> +		break;
->>> +	case VHOST_SET_FEATURES:
->>> +		ret = vhost_set_features(vdpa, argp);
->>> +		break;
->>> +	case VHOST_GET_VRING_BASE:
->>> +		ret = vhost_get_vring_base(vdpa, argp);
->>> +		break;
->>> +	default:
->>> +		ret = vhost_dev_ioctl(&vdpa->dev, cmd, argp);
->>> +		if (ret == -ENOIOCTLCMD)
->>> +			ret = vhost_vring_ioctl(&vdpa->dev, cmd, argp);
->>> +	}
->>> +
->>> +	return ret;
->>> +}
->>> +EXPORT_SYMBOL(vhost_mdev_ioctl);
->>
->> I don't have a problem with this approach. A small question:
->> would it make sense to have two fds: send vhost ioctls
->> on one and vfio ioctls on another?
->> We can then pass vfio fd to the vhost fd with a
->> SET_BACKEND ioctl.
->>
->> What do you think?
-> I like this idea! I will give it a try.
-> So we can introduce /dev/vhost-mdev to have the vhost fd,
+Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+---
+ drivers/bluetooth/hci_qca.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index d33828f..e3164c2 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -309,13 +309,14 @@ static void qca_wq_awake_device(struct work_struct *work)
+ 					    ws_awake_device);
+ 	struct hci_uart *hu = qca->hu;
+ 	unsigned long retrans_delay;
++	unsigned long flags;
+ 
+ 	BT_DBG("hu %p wq awake device", hu);
+ 
+ 	/* Vote for serial clock */
+ 	serial_clock_vote(HCI_IBS_TX_VOTE_CLOCK_ON, hu);
+ 
+-	spin_lock(&qca->hci_ibs_lock);
++	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
+ 
+ 	/* Send wake indication to device */
+ 	if (send_hci_ibs_cmd(HCI_IBS_WAKE_IND, hu) < 0)
+@@ -327,7 +328,7 @@ static void qca_wq_awake_device(struct work_struct *work)
+ 	retrans_delay = msecs_to_jiffies(qca->wake_retrans);
+ 	mod_timer(&qca->wake_retrans_timer, jiffies + retrans_delay);
+ 
+-	spin_unlock(&qca->hci_ibs_lock);
++	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+ 
+ 	/* Actually send the packets */
+ 	hci_uart_tx_wakeup(hu);
+@@ -338,12 +339,13 @@ static void qca_wq_awake_rx(struct work_struct *work)
+ 	struct qca_data *qca = container_of(work, struct qca_data,
+ 					    ws_awake_rx);
+ 	struct hci_uart *hu = qca->hu;
++	unsigned long flags;
+ 
+ 	BT_DBG("hu %p wq awake rx", hu);
+ 
+ 	serial_clock_vote(HCI_IBS_RX_VOTE_CLOCK_ON, hu);
+ 
+-	spin_lock(&qca->hci_ibs_lock);
++	spin_lock_irqsave(&qca->hci_ibs_lock, flags);
+ 	qca->rx_ibs_state = HCI_IBS_RX_AWAKE;
+ 
+ 	/* Always acknowledge device wake up,
+@@ -354,7 +356,7 @@ static void qca_wq_awake_rx(struct work_struct *work)
+ 
+ 	qca->ibs_sent_wacks++;
+ 
+-	spin_unlock(&qca->hci_ibs_lock);
++	spin_unlock_irqrestore(&qca->hci_ibs_lock, flags);
+ 
+ 	/* Actually send the packets */
+ 	hci_uart_tx_wakeup(hu);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-You still need to think about how to connect it to current sysfs based 
-mdev management interface, or you want to invent another API, or just 
-use the /dev/vhost-net but pass vfio fd through ioctl to the file.
-
-Thanks
-
-
->   and let
-> userspace pass vfio fd to the vhost fd with a SET_BACKEND ioctl.
->
-> Thanks a lot!
-> Tiwei
->
->> -- 
->> MST
