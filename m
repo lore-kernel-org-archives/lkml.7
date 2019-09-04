@@ -2,123 +2,88 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A94C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A84C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1512339E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 09:58:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Quwnzrze"
+	by mail.kernel.org (Postfix) with ESMTP id CB435233A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:00:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567591224;
+	bh=5/PwM0o9LxuZZilmoCSNsDGRTChIxEaGEQJWKTq/Ovo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vth0jeJQsVXnWTEIx0dd0C5IM4YjsfYv1idsrGC8KsdX+LK5PF2x8OWvtG6JmA/Kj
+	 HjFEurt3dGEaD3bAMQIOrOZHNSiia1IIdre0cnExfenP6w8SIEZOmAz6Vt+oAfvH1N
+	 P7I7ry1pIEbEEhqVG7XaWgvGHivw9wq8oN0XKovQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfIDJ6T (ORCPT
+        id S1729456AbfIDKAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 05:58:19 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35113 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfIDJ6T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 05:58:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n10so2929713wmj.0;
-        Wed, 04 Sep 2019 02:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=lkR2Ca+FaxVlWbFtmtut4HN81Y4TL/IiykdxaBdNlG0=;
-        b=QuwnzrzeBewqrpNyHGaKvRTyDkGOzIXzcyfOiCvBiJCs1ugvHmgM1uckgJJDM12US3
-         GjnAt/uKck5kjK0ndm5gk59EO1raWdStt2ghmrHmfNl8KGxshQfQrZuSyW7Z9wgEyes1
-         8zB7zMg7KHLwnBQhL/cQmZycl5Y69vQMAfy74wxdfKwBivxYWu0pWnAiHfuuOPbL2PFu
-         6oVDao+lxcmYwdQ157sx4b/QcjIGOoPvBqAfulfzIi4Akzs+WfxuUzAkunk6dXv8cOeZ
-         KQ0qwPnZF4B0Gsr7NYrcpZpyZjTqDRBk8SR3FZZdO+WyCVzmrv9Nr91hSg5ngSPkkyrF
-         EzPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=lkR2Ca+FaxVlWbFtmtut4HN81Y4TL/IiykdxaBdNlG0=;
-        b=le6hVlxqF+UVh9v1zDtPTCNfAZu1puSV3OsoVUlXAcnrLEuQC5eu8TOFezhzHosYU6
-         X//xRggVslhxdJpxjDnirXr1BJ1IRIg0bBpRUN+uozzLNG3ByzxxleZvYGyuGu1iFaVq
-         qQWZlx5335gY/PFEDlGnHiqdKKr/SDaAslgCOVSFb/aeXqEfRxpdGhgoADdFmVdavh+J
-         RDwNAr/6jJP9ZEN6iQOWOhnz8K/RZHjHTd8VQV2gf1sIBPyy/zXIP7uf1X4liDUA57dh
-         VglBhy+9CPLlaz+CTFE7XnGI9NZShrHycUj1isS+VoLrJ2fckNUHTaywOJxtD3UbJVL9
-         +FFA==
-X-Gm-Message-State: APjAAAW8jxoRND5oj9yzqB34YXjQljjJ8hX+cOriL2ZAbeVLpjahzdav
-        EHDoHAB9Nam0E1oGdue1Xqjn23UP2LKXZNecAVk=
-X-Google-Smtp-Source: APXvYqyfITegUY7/GGfU2Yb5L7f+Fc4UoA9mAMRhHsgK0IA3qxBFEzEtTJLYW1QDy1dULlmkGUCBwejmA83IPr3fQ2I=
-X-Received: by 2002:a7b:c8ca:: with SMTP id f10mr3477750wml.36.1567591097217;
- Wed, 04 Sep 2019 02:58:17 -0700 (PDT)
+        Wed, 4 Sep 2019 06:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfIDKAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:00:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BDF22339E;
+        Wed,  4 Sep 2019 10:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567591222;
+        bh=5/PwM0o9LxuZZilmoCSNsDGRTChIxEaGEQJWKTq/Ovo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CttzYDrc/HgLAawFgOF7jarM0w81UzFv/BYjyhyDLd9zvBaCPRKGM54u+vcZriMko
+         Od3dVg8FVFMRVcmduv12ZFc0LRw91t1dGxJnrrSZwt2RozlEhADlAIdi2qXzI56PcT
+         49C0lSZeUNjLcr6khk8wn8Cf0FALXuknQHyPHohI=
+Date:   Wed, 4 Sep 2019 12:00:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Guenter Roeck <linux@roeck-us.net>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: usb dma_mask fixups
+Message-ID: <20190904100019.GA9615@kroah.com>
+References: <20190903084615.19161-1-hch@lst.de>
+ <20190903131648.GA19335@kroah.com>
+ <20190904085736.GH26880@dell>
 MIME-Version: 1.0
-References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
- <20190831162555.31887-2-yamada.masahiro@socionext.com> <CAKwvOdm0zcyaBLdSVc7PmjUa-wyVuCaN=6qZoPLvnoJC1ammog@mail.gmail.com>
- <CA+icZUWzSsFXLmrO2G7ochE62e=kByEV6UKregcJqZrJN1WJxQ@mail.gmail.com> <CA+icZUXboR-0TzpSHf7a8MSjxPWxdC13Oudu8D+b+umtvWCCkg@mail.gmail.com>
-In-Reply-To: <CA+icZUXboR-0TzpSHf7a8MSjxPWxdC13Oudu8D+b+umtvWCCkg@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 4 Sep 2019 11:58:05 +0200
-Message-ID: <CA+icZUVN1zRi5P8PPWMjXoXwtSCkbzTFNreYXi+0HtTjPnfkTQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to KBUILD_EXTRA_WARN
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904085736.GH26880@dell>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 10:07 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Wed, Sep 4, 2019 at 8:58 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
-> >
-> > On Tue, Sep 3, 2019 at 11:50 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > On Sat, Aug 31, 2019 at 9:26 AM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > > >
-> > > > KBUILD_ENABLE_EXTRA_GCC_CHECKS started as a switch to add extra warning
-> > > > options for GCC, but now it is a historical misnomer since we use it
-> > > > also for Clang, DTC, and even kernel-doc.
-> > >
-> > > Thanks for the patch!
-> > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > >
-> >
-> > Thanks for the patch.
-> > I like the backward compatibility and am OK with pointing to 'make
-> > --help' for the documentation part (KISS - Keep It Simple and
-> > Short/Stupid).
-> >
-> > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
->
-> If you will do a next version...
->
-> - @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
-> + @echo  '  make W=n   [targets] Enable extra checks, n=1,2,3 where'
->
-> ...clarify on extra checks for compiler...
->
-> + @echo  '  make W=n   [targets] Enable extra *compiler* checks, n=1,2,3 where'
->
+On Wed, Sep 04, 2019 at 09:57:36AM +0100, Lee Jones wrote:
+> On Tue, 03 Sep 2019, Greg Kroah-Hartman wrote:
+> 
+> > On Tue, Sep 03, 2019 at 10:46:09AM +0200, Christoph Hellwig wrote:
+> > > Hi all,
+> > > 
+> > > the first patch fixes the ohci-sm501 regression that Guenther reported
+> > > due to the platform device dma_mask changes.  The second one ports that
+> > > fix to another driver that works the same way.  The rest cleans up
+> > > various loose ends left over from the dma related usb changes in the
+> > > last two merge windows.
+> > 
+> > Thanks for these, all now queued up.
+> 
+> Did you queue the MFD patch too?
+> 
+> If so (and you can rebase ;) ), please feel free to add my:
+> 
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> 
+> If not, no sweat.
 
-+KBUILD_EXTRA_WARN
-+-----------------
-+Specify the extra build checks. The same value can be assigned by passing
-+W=... from the command line.
+I already applied it, and no, sorry, I can't rebase.  But thanks for the
+review!
 
-For consistency reasons might be better:
-
-- @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
-+ @echo  '  make W=n   [targets] Enable extra build checks, n=1,2,3 where'
-
-- Sedat -
+greg k-h
