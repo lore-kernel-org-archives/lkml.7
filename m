@@ -2,138 +2,98 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC827C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9615DC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1941208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WqjoJjQ8"
+	by mail.kernel.org (Postfix) with ESMTP id 621CA2168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:49:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567608548;
+	bh=RPE8b67fmubiSZrCTV7LHouX1oUclLHCZWI7Yt8Bx6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kjt7iBh/s4ao1ZiLT78M6CusY8W+mWCuVZaKbb7frfEvmiZXfkgoiwa+0fpWPj1mH
+	 7PNFXkTynPeYai15WEPRJTAz4pm26i3/m+aP30ncDEJnGpWJj/vA2FjWiYmp8sARs1
+	 LqelN3hUzjxWGFzltyer6vEhEjNPslBqVFbNRAS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfIDOs4 (ORCPT
+        id S1731016AbfIDOtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:48:56 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46902 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfIDOsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:48:55 -0400
-Received: by mail-pg1-f194.google.com with SMTP id m3so11346912pgv.13;
-        Wed, 04 Sep 2019 07:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Y0Way3KHGFmyr4IdZ55Bi63R1MS1mhVmJWvvJPi7ufE=;
-        b=WqjoJjQ8S4lX609PlOBqGbYMVGDW7BSa431Cl3izLPCn2DMGQleTv8LbHmsWiS7r8y
-         3JBCO4Y7rkL3QwMisIOFGqPHMRGV1eYsP2nTVd7+HwuE+3C0R0aiKGrpBfCK60fVcbX2
-         he68y1N5zS8z7CyMnvMi5M+U7rBvjYxHV/cj1ewYaH+4V/YN13QxCf2oX0yCS/S5kPt5
-         HDYpFbswKqkb6MfUh8lIsVrnwnSBMUUb/2Xj7bVOnd+ieTuy4ee2NK1wYGtdpo1iHMRK
-         5pFsIVK7r+xOWL8aIhfOGEVEuZOWvZ6HNWXP9SlgVmFFA8hEu1/HHk4sys20eOt9tLql
-         6vHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Y0Way3KHGFmyr4IdZ55Bi63R1MS1mhVmJWvvJPi7ufE=;
-        b=amc4aK7FNMxTHqU77ZOucxP5vekC6XzWBMq9w51K31P60UlyGx91KBibpxYZPTRQpf
-         GqytsfvgWe5XlGO7nG0en0Cb8MzkJ4iYJ4j3PufuOT1Tj6bEeRQ56eJ3NVj2g3rFHpL8
-         RXTHQFPX0TJSsaAGmKr/iivVNRoMeueN5E8EQXN8JOYsMbrRPO0v4dJF4a4ylTr0peFV
-         oHlsmf0zcc3U1c90fZd3pTkVDTJWqD7PzQiZmnqCvE53jysu3nwxioKWufx0OoFRI5E6
-         k9vvl+l1xl4RTnj/GkRxLwQMnlb3DgH+PbXzjsraQgMh3QZNoZh0wNQOGwBFkD8H0VBx
-         rjqQ==
-X-Gm-Message-State: APjAAAUp33OBr9rIF9/hN8JyLjSie6hnxTzQlskQnry62z6yqvJMqv2k
-        9a2K/NyalrlMkoj6duJ4fTE=
-X-Google-Smtp-Source: APXvYqxW6zv9Q8MMQUyy/57EoTj5mk4de72N7EcxPzQhS0BTGdBSndFBF7RHG+eJ6QvAnkqTlGVRzA==
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr5434986pjq.143.1567608534744;
-        Wed, 04 Sep 2019 07:48:54 -0700 (PDT)
-Received: from localhost ([121.137.63.184])
-        by smtp.gmail.com with ESMTPSA id m4sm21145034pgs.71.2019.09.04.07.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 07:48:53 -0700 (PDT)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Wed, 4 Sep 2019 23:48:50 +0900
-To:     Qian Cai <cai@lca.pw>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-Message-ID: <20190904144850.GA8296@tigerII.localdomain>
-References: <20190903132231.GC18939@dhcp22.suse.cz>
- <1567525342.5576.60.camel@lca.pw>
- <20190903185305.GA14028@dhcp22.suse.cz>
- <1567546948.5576.68.camel@lca.pw>
- <20190904061501.GB3838@dhcp22.suse.cz>
- <20190904064144.GA5487@jagdpanzerIV>
- <20190904065455.GE3838@dhcp22.suse.cz>
- <20190904071911.GB11968@jagdpanzerIV>
- <20190904074312.GA25744@jagdpanzerIV>
- <1567599263.5576.72.camel@lca.pw>
+        Wed, 4 Sep 2019 10:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726304AbfIDOtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:49:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA5DE208E4;
+        Wed,  4 Sep 2019 14:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567608546;
+        bh=RPE8b67fmubiSZrCTV7LHouX1oUclLHCZWI7Yt8Bx6Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zzUV5wdJcf55ru/t69XtJzcn8Z/+XSbF6iZR7S54V7oL4gSfkcoVrRSfRE4JduwXE
+         TCci2o+DOh0CCKrDDl3bXZcyiR4VFEm+y//A7k2j3GSvvAugEiUoMLoZRUEf3RYkXK
+         vJgR1S9BEPYMOEKn875B6HrQtv2oinTx8EDGkSs0=
+Date:   Wed, 4 Sep 2019 16:49:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        kernel-team <kernel-team@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Martijn Coenen <maco@android.com>
+Subject: Re: [PATCH v3 0/4] Add binder state and statistics to binderfs
+Message-ID: <20190904144903.GA30432@kroah.com>
+References: <20190903161655.107408-1-hridya@google.com>
+ <20190904111934.ya37tlzqjqvt7h6a@wittgenstein>
+ <CAEXW_YSj5tdykM8txae66zd0jX_aJujrnS4jG=fHWRvCH7aR7w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1567599263.5576.72.camel@lca.pw>
+In-Reply-To: <CAEXW_YSj5tdykM8txae66zd0jX_aJujrnS4jG=fHWRvCH7aR7w@mail.gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (09/04/19 08:14), Qian Cai wrote:
-> > Plus one more check - waitqueue_active(&log_wait). printk() adds
-> > pending irq_work only if there is a user-space process sleeping on
-> > log_wait and irq_work is not already scheduled. If the syslog is
-> > active or there is noone to wakeup then we don't queue irq_work.
+On Wed, Sep 04, 2019 at 10:20:32AM -0400, Joel Fernandes wrote:
+> On September 4, 2019 7:19:35 AM EDT, Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >On Tue, Sep 03, 2019 at 09:16:51AM -0700, Hridya Valsaraju wrote:
+> >> Currently, the only way to access binder state and
+> >> statistics is through debugfs. We need a way to
+> >> access the same even when debugfs is not mounted.
+> >> These patches add a mount option to make this
+> >> information available in binderfs without affecting
+> >> its presence in debugfs. The following debugfs nodes
+> >> will be made available in a binderfs instance when
+> >> mounted with the mount option 'stats=global' or 'stats=local'.
+> >>
+> >>  /sys/kernel/debug/binder/failed_transaction_log
+> >>  /sys/kernel/debug/binder/proc
+> >>  /sys/kernel/debug/binder/state
+> >>  /sys/kernel/debug/binder/stats
+> >>  /sys/kernel/debug/binder/transaction_log
+> >>  /sys/kernel/debug/binder/transactions
+> >
+> >Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> >
+> >Btw, I think your counting is off-by-one. :) We usually count the
+> >initial send of a series as 0 and the first rework of that series as
+> >v1.
+> >I think you counted your initial send as v1 and the first rework as v2.
 > 
-> Another possibility for this potential livelock is that those printk() from
-> warn_alloc(), dump_stack() and show_mem() increase the time it needs to process
-> build_skb() allocation failures significantly under memory pressure. As the
-> result, ksoftirqd() could be rescheduled during that time via a different CPU
-> (this is a large x86 NUMA system anyway),
-> 
-> [83605.577256][   C31]  run_ksoftirqd+0x1f/0x40
-> [83605.577256][   C31]  smpboot_thread_fn+0x255/0x440
-> [83605.577256][   C31]  kthread+0x1df/0x200
-> [83605.577256][   C31]  ret_from_fork+0x35/0x40
+> Which is fine. I have done it both ways. Is this a rule written somewhere?
 
-Hum hum hum...
+No where, I can count both ways, it's not a big deal :)
 
-So I can, _probably_, think of several patches.
-
-First, move wake_up_klogd() back to console_unlock().
-
-Second, move `printk_pending' out of per-CPU region and make it global.
-So we will have just one printk irq_work scheduled across all CPUs;
-currently we have one irq_work per CPU. I think I sent a patch a long
-long time ago, but we never discussed it, as far as I remember.
-
-> In addition, those printk() will deal with console drivers or even a networking
-> console, so it is probably not unusual that it could call irq_exit()-
->__do_softirq() at one point and then this livelock.
-
-Do you use netcon? Because this, theoretically, can open up one more
-vector. netcon allocates skbs from ->write() path. We call con drivers'
-->write() from printk_safe context, so should netcon skb allocation
-warn we will scedule one more irq_work on that CPU to flush per-CPU
-printk_safe buffer.
-
-If this is the case, then we can stop calling console_driver() under
-printk_safe. I sent a patch a while ago, but we agreed to keep the
-things the way they are, fot the time being.
-
-Let me think more.
-
-	-ss
+greg k-h
