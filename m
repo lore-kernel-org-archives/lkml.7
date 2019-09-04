@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AC8C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C543C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2E1206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1941322DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620856;
-	bh=auObbfFtxe1vAJIVlAJXLA+5R7odgXX5KYToodQnPi8=;
+	s=default; t=1567620860;
+	bh=sFWfSdZjLyw3QtnBRJOz2vd4Sd60c1HBghFT87T7+/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6PtueYqKx+vo+vGUqNKTu6gtkxnV/pY3aMfISu6lXYIv9H0Uc3MvbOHAvgRFNBBS
-	 8DUKbZAnCJGy9nFgy3m68SiMrH0ybL7MRyYAlbCHOo3orhbFC+l2UHyq19etaIIk4Z
-	 A8w1CH/IRgHj+VLr7E/OVWr3JhvkUIvpM4xDs7Y4=
+	b=Xc/0AzE4RYynDhQjMCKIRGkssqAAHAbQhduv8mA+LyH21v9EpirPLEi14x3SFZ7Bc
+	 olSgHdbJksUoDKTF0kHUiGqVmC51+PfklrkaQzdZ7SgDXESY1X/kRP/QT3lDbimKvc
+	 ev7d6H1M37bU0mssDPmzuVLw/DGJ4FGkvPMBIzwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390754AbfIDSOP (ORCPT
+        id S2390761AbfIDSOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:14:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59316 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390742AbfIDSOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:14:12 -0400
+        id S2390752AbfIDSOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:14:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7578E206BA;
-        Wed,  4 Sep 2019 18:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33793206BA;
+        Wed,  4 Sep 2019 18:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620852;
-        bh=auObbfFtxe1vAJIVlAJXLA+5R7odgXX5KYToodQnPi8=;
+        s=default; t=1567620854;
+        bh=sFWfSdZjLyw3QtnBRJOz2vd4Sd60c1HBghFT87T7+/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=db6KvBD1B+wZJ9MaNQxZdv1QonuTlUsp4S4ZryxHJCjyQ6gPshZUMRnuhTY+HCrK1
-         mAb0VwOMoqc0fMtN903t0+RCUS0693+l8/KkjGAskMQoHD4iSjXPhs5NP4J8a8PFvq
-         P1O0p0x3Uk5sTJX+AwXMa3PpZHsqmWcciEkuuMO8=
+        b=PUaG/yb+LCSFFmCywJ/B59E88irXVRnqcLusKi7iAjWLEBbO3qthLPSkYHBF0wuX7
+         LtmjBlftlh1z7e25pU5xi7fO/hW/ikhiQSFGdLj8aDpA9LrEh0ebV4sh6PQ23YFqgo
+         i7hKxi0V5vJBKd0yy+BvcmmWrjOgS0upDSS3HjcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 5.2 119/143] SUNRPC: Dont handle errors if the bind/connect succeeded
-Date:   Wed,  4 Sep 2019 19:54:22 +0200
-Message-Id: <20190904175319.054317713@linuxfoundation.org>
+        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 120/143] mt76: mt76x0u: do not reset radio on resume
+Date:   Wed,  4 Sep 2019 19:54:23 +0200
+Message-Id: <20190904175319.092622870@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,106 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-commit bd736ed3e2d1088d9b4050f727342e1e619c3841 upstream.
+commit 8f2d163cb26da87e7d8e1677368b8ba1ba4d30b3 upstream.
 
-Don't handle errors in call_bind_status()/call_connect_status()
-if it turns out that a previous call caused it to succeed.
+On some machines mt76x0u firmware can hung during resume,
+what result on messages like below:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v5.1+
+[  475.480062] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  475.990066] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  475.990075] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  476.500003] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  476.500012] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.010046] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  477.010055] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.529997] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  477.530006] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.824907] mt76x0 1-8:1.0: Error: send MCU cmd failed:-71
+[  477.824916] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.825029] usb 1-8: USB disconnect, device number 6
+
+and possible whole system freeze.
+
+This can be avoided, if we do not perform mt76x0_chip_onoff() reset.
+
+Cc: stable@vger.kernel.org
+Fixes: 134b2d0d1fcf ("mt76x0: init files")
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/clnt.c |   35 ++++++++++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 11 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76x0/usb.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1893,6 +1893,7 @@ call_bind(struct rpc_task *task)
- static void
- call_bind_status(struct rpc_task *task)
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
+@@ -136,11 +136,11 @@ static const struct ieee80211_ops mt76x0
+ 	.release_buffered_frames = mt76_release_buffered_frames,
+ };
+ 
+-static int mt76x0u_init_hardware(struct mt76x02_dev *dev)
++static int mt76x0u_init_hardware(struct mt76x02_dev *dev, bool reset)
  {
-+	struct rpc_xprt *xprt = task->tk_rqstp->rq_xprt;
- 	int status = -EIO;
+ 	int err;
  
- 	if (rpc_task_transmitted(task)) {
-@@ -1900,14 +1901,15 @@ call_bind_status(struct rpc_task *task)
- 		return;
- 	}
+-	mt76x0_chip_onoff(dev, true, true);
++	mt76x0_chip_onoff(dev, true, reset);
  
--	if (task->tk_status >= 0) {
--		dprint_status(task);
-+	dprint_status(task);
-+	trace_rpc_bind_status(task);
-+	if (task->tk_status >= 0)
-+		goto out_next;
-+	if (xprt_bound(xprt)) {
- 		task->tk_status = 0;
--		task->tk_action = call_connect;
--		return;
-+		goto out_next;
- 	}
+ 	if (!mt76x02_wait_for_mac(&dev->mt76))
+ 		return -ETIMEDOUT;
+@@ -173,7 +173,7 @@ static int mt76x0u_register_device(struc
+ 	if (err < 0)
+ 		goto out_err;
  
--	trace_rpc_bind_status(task);
- 	switch (task->tk_status) {
- 	case -ENOMEM:
- 		dprintk("RPC: %5u rpcbind out of memory\n", task->tk_pid);
-@@ -1966,7 +1968,9 @@ call_bind_status(struct rpc_task *task)
+-	err = mt76x0u_init_hardware(dev);
++	err = mt76x0u_init_hardware(dev, true);
+ 	if (err < 0)
+ 		goto out_err;
  
- 	rpc_call_rpcerror(task, status);
- 	return;
--
-+out_next:
-+	task->tk_action = call_connect;
-+	return;
- retry_timeout:
- 	task->tk_status = 0;
- 	task->tk_action = call_bind;
-@@ -2013,6 +2017,7 @@ call_connect(struct rpc_task *task)
- static void
- call_connect_status(struct rpc_task *task)
- {
-+	struct rpc_xprt *xprt = task->tk_rqstp->rq_xprt;
- 	struct rpc_clnt *clnt = task->tk_client;
- 	int status = task->tk_status;
+@@ -309,7 +309,7 @@ static int __maybe_unused mt76x0_resume(
+ 	if (ret < 0)
+ 		goto err;
  
-@@ -2022,8 +2027,17 @@ call_connect_status(struct rpc_task *tas
- 	}
+-	ret = mt76x0u_init_hardware(dev);
++	ret = mt76x0u_init_hardware(dev, false);
+ 	if (ret)
+ 		goto err;
  
- 	dprint_status(task);
--
- 	trace_rpc_connect_status(task);
-+
-+	if (task->tk_status == 0) {
-+		clnt->cl_stats->netreconn++;
-+		goto out_next;
-+	}
-+	if (xprt_connected(xprt)) {
-+		task->tk_status = 0;
-+		goto out_next;
-+	}
-+
- 	task->tk_status = 0;
- 	switch (status) {
- 	case -ECONNREFUSED:
-@@ -2054,13 +2068,12 @@ call_connect_status(struct rpc_task *tas
- 	case -EAGAIN:
- 	case -ETIMEDOUT:
- 		goto out_retry;
--	case 0:
--		clnt->cl_stats->netreconn++;
--		task->tk_action = call_transmit;
--		return;
- 	}
- 	rpc_call_rpcerror(task, status);
- 	return;
-+out_next:
-+	task->tk_action = call_transmit;
-+	return;
- out_retry:
- 	/* Check for timeouts before looping back to call_bind */
- 	task->tk_action = call_bind;
 
 
