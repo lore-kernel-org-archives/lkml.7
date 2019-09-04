@@ -7,62 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6737DC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE84C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A2A22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8F82339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619840;
-	bh=cWN8FC5ht4MZFx5IkZRNbAgyXkaDLc7cujPDAc4zT4M=;
+	s=default; t=1567619845;
+	bh=C9yvWTJdzERYfS2Yx6bFhvJqt7qd67vfum1FMfH3rMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CAOx+7Ww66o++SpAFLk+fsvPJbdOU7vOfrkMFRFVzUUcbmxfbbYiEiRbbJYIVFFOX
-	 YoMgD0JXpLwgmSFvrtsUAyIyp+nvD03SrKGb06V5uidty7094BcFEbEuJqXAdlOpXf
-	 LTmgL2ascaflcgpTg9IrSxdFyhl7nwHEqdB4QZ8I=
+	b=e4Hc+73asF6tvX8D6Gzb+ThnO3WDhVoS+QxwJRkBFvNO+B/9cr4zajuqMSkaEzOg7
+	 CyR1L+uMI3r1EI28nU/vxW8p/3iZ+mnnVMmC0RfBqRIpfxSKPeOJpiZsc6ONyeBe5H
+	 usexU+KFUASsmsLztURBQBGM1BzXBOrKlSR2/m4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387827AbfIDR5T (ORCPT
+        id S2387846AbfIDR5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34986 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387796AbfIDR5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:11 -0400
+        id S2387822AbfIDR5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 494D122CED;
-        Wed,  4 Sep 2019 17:57:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EA462339E;
+        Wed,  4 Sep 2019 17:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619830;
-        bh=cWN8FC5ht4MZFx5IkZRNbAgyXkaDLc7cujPDAc4zT4M=;
+        s=default; t=1567619838;
+        bh=C9yvWTJdzERYfS2Yx6bFhvJqt7qd67vfum1FMfH3rMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jsZ0N/M5+ppJtcrdef9sHJUNtODghBZgZOzuJb3fGDub8ydsrrnqkN9VuLFosQE17
-         ihU28fHatUI5SnD5jRhEBSjB42tcqvr3xKZPJpeGeBRJe8x/LmsMWPmKjJeWrvyDca
-         tdpilePsbn14qjp9JE3aYE//FF0cypu7v5Sq0Ry0=
+        b=RRR9mLBN3OT9SeGSx6yD0mMsO5tYavFBiQYF7p6MH6XGwRQIeGSbEvpAsx8NEoCUI
+         +elfDVoTimexS6gj1PUeNvnFkPTrp+DFevcDAQsQHQKD1cIzlZU77EvWV5QWUUFZOb
+         Wxv5R6MnB8V91PQZZWTCMOrc89Kus6O3obf8+tMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 49/77] x86/CPU/AMD: Clear RDRAND CPUID bit on AMD family 15h/16h
-Date:   Wed,  4 Sep 2019 19:53:36 +0200
-Message-Id: <20190904175308.097832825@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 52/77] usb: gadget: composite: Clear "suspended" on reset/disconnect
+Date:   Wed,  4 Sep 2019 19:53:39 +0200
+Message-Id: <20190904175308.295739594@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -75,329 +61,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c49a0a80137c7ca7d6ced4c812c9e07a949f6f24 ]
+[ Upstream commit 602fda17c7356bb7ae98467d93549057481d11dd ]
 
-There have been reports of RDRAND issues after resuming from suspend on
-some AMD family 15h and family 16h systems. This issue stems from a BIOS
-not performing the proper steps during resume to ensure RDRAND continues
-to function properly.
+In some cases, one can get out of suspend with a reset or
+a disconnect followed by a reconnect. Previously we would
+leave a stale suspended flag set.
 
-RDRAND support is indicated by CPUID Fn00000001_ECX[30]. This bit can be
-reset by clearing MSR C001_1004[62]. Any software that checks for RDRAND
-support using CPUID, including the kernel, will believe that RDRAND is
-not supported.
-
-Update the CPU initialization to clear the RDRAND CPUID bit for any family
-15h and 16h processor that supports RDRAND. If it is known that the family
-15h or family 16h system does not have an RDRAND resume issue or that the
-system will not be placed in suspend, the "rdrand=force" kernel parameter
-can be used to stop the clearing of the RDRAND CPUID bit.
-
-Additionally, update the suspend and resume path to save and restore the
-MSR C001_1004 value to ensure that the RDRAND CPUID setting remains in
-place after resuming from suspend.
-
-Note, that clearing the RDRAND CPUID bit does not prevent a processor
-that normally supports the RDRAND instruction from executing it. So any
-code that determined the support based on family and model won't #UD.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Chen Yu <yu.c.chen@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: Nathan Chancellor <natechancellor@gmail.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Link: https://lkml.kernel.org/r/7543af91666f491547bd86cebb1e17c66824ab9f.1566229943.git.thomas.lendacky@amd.com
-[sl: adjust context in docs]
+Signed-off-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/kernel-parameters.txt |  7 +++
- arch/x86/include/asm/msr-index.h    |  1 +
- arch/x86/kernel/cpu/amd.c           | 66 ++++++++++++++++++++++
- arch/x86/power/cpu.c                | 86 ++++++++++++++++++++++++-----
- 4 files changed, 147 insertions(+), 13 deletions(-)
+ drivers/usb/gadget/composite.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index 7a9fd54a0186a..5b94c0bfba859 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -3415,6 +3415,13 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			Run specified binary instead of /init from the ramdisk,
- 			used for early userspace startup. See initrd.
- 
-+	rdrand=		[X86]
-+			force - Override the decision by the kernel to hide the
-+				advertisement of RDRAND support (this affects
-+				certain AMD processors because of buggy BIOS
-+				support, specifically around the suspend/resume
-+				path).
-+
- 	reboot=		[KNL]
- 			Format (x86 or x86_64):
- 				[w[arm] | c[old] | h[ard] | s[oft] | g[pio]] \
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index d4f5b8209393f..30183770132a0 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -311,6 +311,7 @@
- #define MSR_AMD64_PATCH_LEVEL		0x0000008b
- #define MSR_AMD64_TSC_RATIO		0xc0000104
- #define MSR_AMD64_NB_CFG		0xc001001f
-+#define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_PATCH_LOADER		0xc0010020
- #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 6f2483292de0b..424d8a636615a 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -684,6 +684,64 @@ static void init_amd_ln(struct cpuinfo_x86 *c)
- 	msr_set_bit(MSR_AMD64_DE_CFG, 31);
- }
- 
-+static bool rdrand_force;
-+
-+static int __init rdrand_cmdline(char *str)
-+{
-+	if (!str)
-+		return -EINVAL;
-+
-+	if (!strcmp(str, "force"))
-+		rdrand_force = true;
-+	else
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+early_param("rdrand", rdrand_cmdline);
-+
-+static void clear_rdrand_cpuid_bit(struct cpuinfo_x86 *c)
-+{
-+	/*
-+	 * Saving of the MSR used to hide the RDRAND support during
-+	 * suspend/resume is done by arch/x86/power/cpu.c, which is
-+	 * dependent on CONFIG_PM_SLEEP.
-+	 */
-+	if (!IS_ENABLED(CONFIG_PM_SLEEP))
-+		return;
-+
-+	/*
-+	 * The nordrand option can clear X86_FEATURE_RDRAND, so check for
-+	 * RDRAND support using the CPUID function directly.
-+	 */
-+	if (!(cpuid_ecx(1) & BIT(30)) || rdrand_force)
-+		return;
-+
-+	msr_clear_bit(MSR_AMD64_CPUID_FN_1, 62);
-+
-+	/*
-+	 * Verify that the CPUID change has occurred in case the kernel is
-+	 * running virtualized and the hypervisor doesn't support the MSR.
-+	 */
-+	if (cpuid_ecx(1) & BIT(30)) {
-+		pr_info_once("BIOS may not properly restore RDRAND after suspend, but hypervisor does not support hiding RDRAND via CPUID.\n");
-+		return;
-+	}
-+
-+	clear_cpu_cap(c, X86_FEATURE_RDRAND);
-+	pr_info_once("BIOS may not properly restore RDRAND after suspend, hiding RDRAND via CPUID. Use rdrand=force to reenable.\n");
-+}
-+
-+static void init_amd_jg(struct cpuinfo_x86 *c)
-+{
-+	/*
-+	 * Some BIOS implementations do not restore proper RDRAND support
-+	 * across suspend and resume. Check on whether to hide the RDRAND
-+	 * instruction support via CPUID.
-+	 */
-+	clear_rdrand_cpuid_bit(c);
-+}
-+
- static void init_amd_bd(struct cpuinfo_x86 *c)
- {
- 	u64 value;
-@@ -711,6 +769,13 @@ static void init_amd_bd(struct cpuinfo_x86 *c)
- 			wrmsrl_safe(0xc0011021, value);
- 		}
- 	}
-+
-+	/*
-+	 * Some BIOS implementations do not restore proper RDRAND support
-+	 * across suspend and resume. Check on whether to hide the RDRAND
-+	 * instruction support via CPUID.
-+	 */
-+	clear_rdrand_cpuid_bit(c);
- }
- 
- static void init_amd_zn(struct cpuinfo_x86 *c)
-@@ -755,6 +820,7 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	case 0x10: init_amd_gh(c); break;
- 	case 0x12: init_amd_ln(c); break;
- 	case 0x15: init_amd_bd(c); break;
-+	case 0x16: init_amd_jg(c); break;
- 	case 0x17: init_amd_zn(c); break;
- 	}
- 
-diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
-index d5f64996394a9..2e5052b2d2382 100644
---- a/arch/x86/power/cpu.c
-+++ b/arch/x86/power/cpu.c
-@@ -12,6 +12,7 @@
- #include <linux/export.h>
- #include <linux/smp.h>
- #include <linux/perf_event.h>
-+#include <linux/dmi.h>
- 
- #include <asm/pgtable.h>
- #include <asm/proto.h>
-@@ -23,7 +24,7 @@
- #include <asm/debugreg.h>
- #include <asm/cpu.h>
- #include <asm/mmu_context.h>
--#include <linux/dmi.h>
-+#include <asm/cpu_device_id.h>
- 
- #ifdef CONFIG_X86_32
- __visible unsigned long saved_context_ebx;
-@@ -347,15 +348,14 @@ static int __init bsp_pm_check_init(void)
- 
- core_initcall(bsp_pm_check_init);
- 
--static int msr_init_context(const u32 *msr_id, const int total_num)
-+static int msr_build_context(const u32 *msr_id, const int num)
- {
--	int i = 0;
-+	struct saved_msrs *saved_msrs = &saved_context.saved_msrs;
- 	struct saved_msr *msr_array;
-+	int total_num;
-+	int i, j;
- 
--	if (saved_context.saved_msrs.array || saved_context.saved_msrs.num > 0) {
--		pr_err("x86/pm: MSR quirk already applied, please check your DMI match table.\n");
--		return -EINVAL;
--	}
-+	total_num = saved_msrs->num + num;
- 
- 	msr_array = kmalloc_array(total_num, sizeof(struct saved_msr), GFP_KERNEL);
- 	if (!msr_array) {
-@@ -363,19 +363,30 @@ static int msr_init_context(const u32 *msr_id, const int total_num)
- 		return -ENOMEM;
- 	}
- 
--	for (i = 0; i < total_num; i++) {
--		msr_array[i].info.msr_no	= msr_id[i];
-+	if (saved_msrs->array) {
-+		/*
-+		 * Multiple callbacks can invoke this function, so copy any
-+		 * MSR save requests from previous invocations.
-+		 */
-+		memcpy(msr_array, saved_msrs->array,
-+		       sizeof(struct saved_msr) * saved_msrs->num);
-+
-+		kfree(saved_msrs->array);
-+	}
-+
-+	for (i = saved_msrs->num, j = 0; i < total_num; i++, j++) {
-+		msr_array[i].info.msr_no	= msr_id[j];
- 		msr_array[i].valid		= false;
- 		msr_array[i].info.reg.q		= 0;
- 	}
--	saved_context.saved_msrs.num	= total_num;
--	saved_context.saved_msrs.array	= msr_array;
-+	saved_msrs->num   = total_num;
-+	saved_msrs->array = msr_array;
- 
- 	return 0;
- }
- 
- /*
-- * The following section is a quirk framework for problematic BIOSen:
-+ * The following sections are a quirk framework for problematic BIOSen:
-  * Sometimes MSRs are modified by the BIOSen after suspended to
-  * RAM, this might cause unexpected behavior after wakeup.
-  * Thus we save/restore these specified MSRs across suspend/resume
-@@ -390,7 +401,7 @@ static int msr_initialize_bdw(const struct dmi_system_id *d)
- 	u32 bdw_msr_id[] = { MSR_IA32_THERM_CONTROL };
- 
- 	pr_info("x86/pm: %s detected, MSR saving is needed during suspending.\n", d->ident);
--	return msr_init_context(bdw_msr_id, ARRAY_SIZE(bdw_msr_id));
-+	return msr_build_context(bdw_msr_id, ARRAY_SIZE(bdw_msr_id));
- }
- 
- static struct dmi_system_id msr_save_dmi_table[] = {
-@@ -405,9 +416,58 @@ static struct dmi_system_id msr_save_dmi_table[] = {
- 	{}
- };
- 
-+static int msr_save_cpuid_features(const struct x86_cpu_id *c)
-+{
-+	u32 cpuid_msr_id[] = {
-+		MSR_AMD64_CPUID_FN_1,
-+	};
-+
-+	pr_info("x86/pm: family %#hx cpu detected, MSR saving is needed during suspending.\n",
-+		c->family);
-+
-+	return msr_build_context(cpuid_msr_id, ARRAY_SIZE(cpuid_msr_id));
-+}
-+
-+static const struct x86_cpu_id msr_save_cpu_table[] = {
-+	{
-+		.vendor = X86_VENDOR_AMD,
-+		.family = 0x15,
-+		.model = X86_MODEL_ANY,
-+		.feature = X86_FEATURE_ANY,
-+		.driver_data = (kernel_ulong_t)msr_save_cpuid_features,
-+	},
-+	{
-+		.vendor = X86_VENDOR_AMD,
-+		.family = 0x16,
-+		.model = X86_MODEL_ANY,
-+		.feature = X86_FEATURE_ANY,
-+		.driver_data = (kernel_ulong_t)msr_save_cpuid_features,
-+	},
-+	{}
-+};
-+
-+typedef int (*pm_cpu_match_t)(const struct x86_cpu_id *);
-+static int pm_cpu_check(const struct x86_cpu_id *c)
-+{
-+	const struct x86_cpu_id *m;
-+	int ret = 0;
-+
-+	m = x86_match_cpu(msr_save_cpu_table);
-+	if (m) {
-+		pm_cpu_match_t fn;
-+
-+		fn = (pm_cpu_match_t)m->driver_data;
-+		ret = fn(m);
-+	}
-+
-+	return ret;
-+}
-+
- static int pm_check_save_msr(void)
- {
- 	dmi_check_system(msr_save_dmi_table);
-+	pm_cpu_check(msr_save_cpu_table);
-+
- 	return 0;
- }
- 
+diff --git a/drivers/usb/gadget/composite.c b/drivers/usb/gadget/composite.c
+index 8bf54477f4724..351a406b97af7 100644
+--- a/drivers/usb/gadget/composite.c
++++ b/drivers/usb/gadget/composite.c
+@@ -1889,6 +1889,7 @@ void composite_disconnect(struct usb_gadget *gadget)
+ 	 * disconnect callbacks?
+ 	 */
+ 	spin_lock_irqsave(&cdev->lock, flags);
++	cdev->suspended = 0;
+ 	if (cdev->config)
+ 		reset_config(cdev);
+ 	if (cdev->driver->disconnect)
 -- 
 2.20.1
 
