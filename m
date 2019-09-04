@@ -2,74 +2,103 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5A2C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5987EC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A019D22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:55:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NVlcjAzR"
+	by mail.kernel.org (Postfix) with ESMTP id 3990B2073F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbfIDMzj (ORCPT
+        id S1730102AbfIDM6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:55:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34186 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbfIDMzi (ORCPT
+        Wed, 4 Sep 2019 08:58:44 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36366 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727900AbfIDM6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:55:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gdrnI3IApvphw67NNHv0WFysZo4kw+6WTJSwiRiiRWU=; b=NVlcjAzROJCtIAKfEJ54n264cn
-        OiYo3wOq58yhAgz7G3QG8MqJ5wYXIituzytSQ7QLX+/6FO0w5g4RxqAinZWvGr/PRMvjx9d+XwEHt
-        t1AG7BVx+UqoiX3776j/wNGzHsX2/ZkH55B8T1ht+Y6fVbzG6kGLdvTMDJ+eFhnFff7oJycg9xD4N
-        iwcez0sgKS1G+eAM02vcsBBFAWvjZ1LFrFmn/ejfgg0XfXZVUDQX7G+QifN76j2LU1SNn6T/Xb3Fp
-        tAp7hIwv7mNxKULUFymI2I2fwftm3egGZMluZRxP0W1t0YVqFjdiklQZjz5diiIkOkhXYN17lgXn1
-        WQcCEo2g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5Up0-0000gK-HV; Wed, 04 Sep 2019 12:55:38 +0000
-Date:   Wed, 4 Sep 2019 05:55:38 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: dma api errors with swiotlb
-Message-ID: <20190904125538.GA30177@infradead.org>
-References: <e3c4b2e1-7518-ab0e-a6ce-3fae9903dac0@shipmail.org>
- <20190904121722.GA15601@infradead.org>
- <4e21951d-025a-2b3d-14c8-878c6f237525@shipmail.org>
+        Wed, 4 Sep 2019 08:58:44 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-96.corp.google.com [104.133.0.96] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x84CwYVZ022125
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 4 Sep 2019 08:58:35 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id C62D042049E; Wed,  4 Sep 2019 08:58:34 -0400 (EDT)
+Date:   Wed, 4 Sep 2019 08:58:34 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
+        Jeff Layton <jlayton@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Subject: Re: "beyond 2038" warnings from loopback mount is noisy
+Message-ID: <20190904125834.GA3044@mit.edu>
+References: <1567523922.5576.57.camel@lca.pw>
+ <CABeXuvoPdAbDr-ELxNqUPg5n84fubZJZKiryERrXdHeuLhBQjQ@mail.gmail.com>
+ <20190903211747.GD2899@mit.edu>
+ <CABeXuvoYh0mhg049+pXbMqh-eM=rw+Ui1=rDree4Yb=7H7mQRg@mail.gmail.com>
+ <CAK8P3a0AcPzuGeNFMW=ymO0wH_cmgnynLGYXGjqyrQb65o6aOw@mail.gmail.com>
+ <CABeXuvq0_YsyuFY509XmwFsX6tX5EVHmWGuzHnSyOEX=9X6TFg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4e21951d-025a-2b3d-14c8-878c6f237525@shipmail.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <CABeXuvq0_YsyuFY509XmwFsX6tX5EVHmWGuzHnSyOEX=9X6TFg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 02:54:26PM +0200, Thomas Hellström (VMware) wrote:
-> On 9/4/19 2:17 PM, Christoph Hellwig wrote:
-> > A call to dma_max_mapping_size() to limit the maximum I/O size solves
-> > that problem.  With the latest kernel that should actually be done
-> > automatically by the SCSI midlayer for you.
-> 
-> Hmm, OK. I guess with a sufficient queue depth and many mappings waiting for
-> DMA completion, the SWIOTLB may fill up anyway...
-> 
-> I'll see if I can come up with something.
+On Tue, Sep 03, 2019 at 09:50:09PM -0700, Deepa Dinamani wrote:
+> If we don't care to warn about the timestamps that are clamped in
+> memory, maybe we could just warn when they are being written out.
+> Would something like this be more acceptable? I would also remove the
+> warning in ext4.h. I think we don't have to check if the inode is 128
+> bytes here (Please correct me if I am wrong). If this looks ok, I can
+> post this.
 
-You are supposed to return SCSI_MLQUEUE_HOST_BUSY in that case,
-which means that the kernel won't send more commands until another
-one completed.
+That's better, but it's going to be misleading in many cases.  The
+inode's extra size field is 16 or larger, there will be enough space
+for the timestamps, so talking about "timestamps on this inode beyond
+2038" when ext4 is unable to expand it from say, 24 to 32, won't be
+true.  Certain certain features won't be available, yes --- such as
+project-id-based quotas, since there won't be room to store the
+project ID.  However, it's not going to impact the ability to store
+timestamps beyond 2038.  The i_extra_isize field is not just about
+timestamps!
+
+Again, the likelihood that there will be file systems that have this
+problem in 2038 is... extremely low in my judgement.  Storage media
+just doesn't last that long; and distributions such as Red Hat and
+SuSE very strongly encourage people to reformat file systems and do
+*not* support upgrades from ext3 to ext4 by using tune2fs.  If you do
+this, their help desk will laugh at you and refuse to help you.
+
+Companies like Google will do this kind of upgrades[1], sure.  But
+that's because backing up and reformatting vast numbers of file
+systems are not practical at scale.  (And even Google doesn't maintain
+the file system image when the servers are old enough to be TCO
+negative and it's time to replace them.)
+
+In contrast, most companies / users don't do this sort of thing at
+all.  It's not an issue for Cell Phones, for example, or most consumer
+devices, which are lucky if the last more than 3 years before they get
+desupported and stop getting security updates, and then the lithium
+ion batttery dies and the device end up in a landfill.  Those that
+might live 20 years (although good luck with that for something like,
+say, a smart thermostat) aren't going to have a console and no one
+will be paying attention to the kernel messages anyway.  So is it
+really worth it?  For whom are these messages meant?
+
+[1] https://www.youtube.com/watch?v=Wp5Ehw7ByuU
+
+Cheers,
+
+					- Ted
