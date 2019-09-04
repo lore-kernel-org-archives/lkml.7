@@ -2,112 +2,348 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6427C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64380C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91032208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:05:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567623940;
-	bh=lvMVjWFCqXZ7L4F1ewqeBmOTcxBZxWtq6FXmqB4QcT8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NVlQQuepNv5qA6iZtv32Xv5Akl6cI93TMrgPRWwMZfatoMZ3oVigV9FQ7QPNpkWn5
-	 78yXYNkyGDFUKMESr8mLNn9jWVGuMJrTncbsxR6LX1TEvOKxU30uoZUymO9CXxnRLK
-	 2aYlryc27aBWliJE8S/QKyv7IdLsQKXc2zPXsMvk=
+	by mail.kernel.org (Postfix) with ESMTP id 354AA208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:07:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZXp/MTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387987AbfIDTFk (ORCPT
+        id S2388028AbfIDTHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:05:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42238 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729973AbfIDTFj (ORCPT
+        Wed, 4 Sep 2019 15:07:05 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46664 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732280AbfIDTHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:05:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QDYuHGg6Ej+bMPCc78560zCDL+cJryZFlneTfbKuV8E=; b=t//yuqn0TBhqB478H/xqd/KLw
-        z6KC2jF/8BdPGsyrZgKWGCpc4WrXHpjiZG1eCJogeCX+npl7FK4V24snG9+kqaVEuenDYafx0qHm2
-        6z04dyUudYMofcdWKu2504YWQzTJ+wTDrfD4pGArEaC1mP4Qx1yDME0xxSK7c8nkbMrlY=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i5ab1-0000ES-Sx; Wed, 04 Sep 2019 19:05:35 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 66D492742B45; Wed,  4 Sep 2019 20:05:35 +0100 (BST)
-Date:   Wed, 4 Sep 2019 20:05:35 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Ricard Wanderlof <ricardw@axis.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.9 07/83] ASoC: Fail card instantiation if DAI format
- setup fails
-Message-ID: <20190904190535.GH4348@sirena.co.uk>
-References: <20190904175303.488266791@linuxfoundation.org>
- <20190904175304.389271806@linuxfoundation.org>
- <20190904181027.GG4348@sirena.co.uk>
- <20190904183527.GA364@kroah.com>
+        Wed, 4 Sep 2019 15:07:04 -0400
+Received: by mail-ed1-f66.google.com with SMTP id i8so9775008edn.13;
+        Wed, 04 Sep 2019 12:07:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=apGoi9X+ogX+ZruIV5PdFSOf2SyAWGsMsq9BNS7Cu8w=;
+        b=EZXp/MTsZukgCTKbuSBP6/YxWXSfqhyRJwLumb4paZWb79nWcsAhaMkhYSOVjTmkLS
+         IBeyBhtMU64ChqKiJEpFtxYdAAxfZJJ/YIa/6xnekYJbDhmSe1HLjtswubkI2CyQ7dqm
+         X4BgkSgNc6OhQo8Ot2FzsvIkLn1igmWycmqmTACcNODz1pT4+SQ/303uIh2P6qhnapE3
+         5JLkVrlmoomUCbEZND49B9PcdHOOncgKU4zoQCMXFJ6ELDNjqK/ewOKli4Kxicq3HpoZ
+         588kyKzJQcjAruiYsDqvF+bsabG/UaLFerHT+qdm3FwPzY9749Ny5cLcaDWN/7t9OeMV
+         N3Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=apGoi9X+ogX+ZruIV5PdFSOf2SyAWGsMsq9BNS7Cu8w=;
+        b=WW4Hf5sIYAdqbu4zr3gBP2HdxWhW4QmtVGeDPbWAI1TvoqW7tlCzMA3Fj2hVRUnr4V
+         S7Y3PWyF3zjthbu4cxxUfWt1pI1TE/4kMHsRzBpjX9sk91TXepmvpxQvlJz/oTVBs/KO
+         CBDYLx9ZIjSDqyK25bQEXfeC4Rh9EsPYtZNskcGQD8b0+riBDb5xF/kxaJ/i4NGqsAwB
+         Zby5bqyGMy+M6CNu39gWzEc0s+5690awDJ6Anr9su1ttXiWhVNDvlIPJnf14uktpLDs8
+         y8ynCSpZsGdKnDNBy2MzoA9NeKwuhPmVWiJz1qdXQ4KL01dEbXUaumtexXwGBFE8RU+J
+         NnPQ==
+X-Gm-Message-State: APjAAAW3xi9ag1vYmHT5a17El1fjinLnPj6WoFspJDdrHh+LqI5Oh+DM
+        llwTI0QaFqNFSP6Rkm/TFCjAZGZ2AQo57A==
+X-Google-Smtp-Source: APXvYqwDJkfiIcMOE/7K45iVsVNTxmYCdp6uC8rvX43Dm8Cq77aCkX1YplxX6Eh95sFbCVzTmuDF5Q==
+X-Received: by 2002:a50:f285:: with SMTP id f5mr43208493edm.109.1567624022294;
+        Wed, 04 Sep 2019 12:07:02 -0700 (PDT)
+Received: from hv-1.home ([188.187.106.181])
+        by smtp.gmail.com with ESMTPSA id h21sm294231ejq.92.2019.09.04.12.07.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 12:07:01 -0700 (PDT)
+From:   ivan.lazeev@gmail.com
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ivan Lazeev <ivan.lazeev@gmail.com>
+Subject: [PATCH] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Date:   Wed,  4 Sep 2019 22:03:32 +0300
+Message-Id: <20190904190332.25019-1-ivan.lazeev@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SUk9VBj82R8Xhb8H"
-Content-Disposition: inline
-In-Reply-To: <20190904183527.GA364@kroah.com>
-X-Cookie: Help fight continental drift.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ivan Lazeev <ivan.lazeev@gmail.com>
 
---SUk9VBj82R8Xhb8H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
 
-On Wed, Sep 04, 2019 at 08:35:27PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Sep 04, 2019 at 07:10:27PM +0100, Mark Brown wrote:
+cmd/rsp buffers are expected to be in the same ACPI region.
+For Zen+ CPUs BIOS's might report two different regions, some of
+them also report region sizes inconsistent with values from TPM
+registers.
 
-> > I nacked this patch when Sasha posted it - it only improves diagnostics
-> > and might make systems that worked by accident break since it turns=20
-> > things into a hard failure, it won't make anything that didn't work
-> > previously work.
+Work around the issue by storing ACPI regions declared for the
+device in a list, then using it to find entry corresponding
+to each buffer. Use information from the entry to map each resource
+at most once and make buffer size consistent with the length of the
+region.
 
-> This is already in the 4.14.141, 4.19.69, and 5.2.11 releases, have you
-> heard any problems there?
+Signed-off-by: Ivan Lazeev <ivan.lazeev@gmail.com>
+---
 
-Ugh, how did that happen?  I've not heard any reports but I'd be a lot
-more comfortable if this was reverted, these releases haven't been out
-that long and the users who'd be affected are mostly doing embedded
-stuff.
+Tested on ASRock x470 ITX motherboard with Ryzen 2600X CPU.
+However, I don't have any other hardware to test the changes on and no
+expertise to be sure that other TPMs won't break as a result.
 
-> I'll be glad to drop this from the 4.9.y and 4.4.y queues, now if you
-> wish, but just want you to know it's already out there in some releases.
+ drivers/char/tpm/tpm_crb.c | 137 +++++++++++++++++++++++++++----------
+ 1 file changed, 101 insertions(+), 36 deletions(-)
 
-Yes, please.
+diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
+index e59f1f91d7f3..0bcfe52db5d6 100644
+--- a/drivers/char/tpm/tpm_crb.c
++++ b/drivers/char/tpm/tpm_crb.c
+@@ -91,7 +91,6 @@ enum crb_status {
+ struct crb_priv {
+ 	u32 sm;
+ 	const char *hid;
+-	void __iomem *iobase;
+ 	struct crb_regs_head __iomem *regs_h;
+ 	struct crb_regs_tail __iomem *regs_t;
+ 	u8 __iomem *cmd;
+@@ -108,6 +107,12 @@ struct tpm2_crb_smc {
+ 	u32 smc_func_id;
+ };
+ 
++struct crb_resource {
++	struct resource io_res;
++	void __iomem *iobase;
++	struct list_head node;
++};
++
+ static bool crb_wait_for_reg_32(u32 __iomem *reg, u32 mask, u32 value,
+ 				unsigned long timeout)
+ {
+@@ -432,23 +437,57 @@ static const struct tpm_class_ops tpm_crb = {
+ 	.req_complete_val = CRB_DRV_STS_COMPLETE,
+ };
+ 
++static void crb_free_resource_list(struct list_head *resources)
++{
++	struct crb_resource *cres, *tmp;
++
++	list_for_each_entry_safe(cres, tmp, resources, node)
++		kfree(cres);
++}
++
++static inline bool crb_resource_contains(const struct resource *io_res,
++					 u64 address)
++{
++	return address >= io_res->start && address <= io_res->end;
++}
++
++static struct crb_resource *crb_containing_resource(
++		const struct list_head *resources, u64 start)
++{
++	struct crb_resource *cres;
++
++	list_for_each_entry(cres, resources, node) {
++		if (crb_resource_contains(&cres->io_res, start))
++			return cres;
++	}
++
++	return NULL;
++}
++
+ static int crb_check_resource(struct acpi_resource *ares, void *data)
+ {
+-	struct resource *io_res = data;
++	struct list_head *list = data;
++	struct crb_resource *cres;
+ 	struct resource_win win;
+ 	struct resource *res = &(win.res);
+ 
+ 	if (acpi_dev_resource_memory(ares, res) ||
+ 	    acpi_dev_resource_address_space(ares, &win)) {
+-		*io_res = *res;
+-		io_res->name = NULL;
++		cres = kzalloc(sizeof(*cres), GFP_KERNEL);
++		if (!cres)
++			return -ENOMEM;
++
++		cres->io_res = *res;
++		cres->io_res.name = NULL;
++
++		list_add_tail(&cres->node, list);
+ 	}
+ 
+ 	return 1;
+ }
+ 
+-static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+-				 struct resource *io_res, u64 start, u32 size)
++static void __iomem *crb_map_res(struct device *dev, struct crb_resource *cres,
++				 u64 start, u32 size)
+ {
+ 	struct resource new_res = {
+ 		.start	= start,
+@@ -460,10 +499,16 @@ static void __iomem *crb_map_res(struct device *dev, struct crb_priv *priv,
+ 	if (start != new_res.start)
+ 		return (void __iomem *) ERR_PTR(-EINVAL);
+ 
+-	if (!resource_contains(io_res, &new_res))
++	if (!cres)
+ 		return devm_ioremap_resource(dev, &new_res);
+ 
+-	return priv->iobase + (new_res.start - io_res->start);
++	if (!cres->iobase) {
++		cres->iobase = devm_ioremap_resource(dev, &cres->io_res);
++		if (IS_ERR(cres->iobase))
++			return cres->iobase;
++	}
++
++	return cres->iobase + (new_res.start - cres->io_res.start);
+ }
+ 
+ /*
+@@ -490,9 +535,9 @@ static u64 crb_fixup_cmd_size(struct device *dev, struct resource *io_res,
+ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 		      struct acpi_table_tpm2 *buf)
+ {
+-	struct list_head resources;
+-	struct resource io_res;
++	struct list_head acpi_resources, crb_resources;
+ 	struct device *dev = &device->dev;
++	struct crb_resource *cres;
+ 	u32 pa_high, pa_low;
+ 	u64 cmd_pa;
+ 	u32 cmd_size;
+@@ -501,21 +546,34 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	u32 rsp_size;
+ 	int ret;
+ 
+-	INIT_LIST_HEAD(&resources);
+-	ret = acpi_dev_get_resources(device, &resources, crb_check_resource,
+-				     &io_res);
++	INIT_LIST_HEAD(&acpi_resources);
++	INIT_LIST_HEAD(&crb_resources);
++	ret = acpi_dev_get_resources(device, &acpi_resources,
++				     crb_check_resource, &crb_resources);
+ 	if (ret < 0)
+-		return ret;
+-	acpi_dev_free_resource_list(&resources);
++		goto out_free_crb_resources;
++
++	acpi_dev_free_resource_list(&acpi_resources);
+ 
+-	if (resource_type(&io_res) != IORESOURCE_MEM) {
++	if (list_empty(&crb_resources)) {
+ 		dev_err(dev, FW_BUG "TPM2 ACPI table does not define a memory resource\n");
+-		return -EINVAL;
++		ret = -EINVAL;
++		goto out_free_crb_resources;
+ 	}
+ 
+-	priv->iobase = devm_ioremap_resource(dev, &io_res);
+-	if (IS_ERR(priv->iobase))
+-		return PTR_ERR(priv->iobase);
++	cres = crb_containing_resource(&crb_resources, buf->control_address);
++
++	if (cres &&
++	    !crb_resource_contains(&cres->io_res, buf->control_address +
++	    sizeof(struct crb_regs_tail) - 1))
++		cres = NULL;
++
++	priv->regs_t = crb_map_res(dev, cres, buf->control_address,
++				   sizeof(struct crb_regs_tail));
++	if (IS_ERR(priv->regs_t)) {
++		ret = PTR_ERR(priv->regs_t);
++		goto out_free_crb_resources;
++	}
+ 
+ 	/* The ACPI IO region starts at the head area and continues to include
+ 	 * the control area, as one nice sane region except for some older
+@@ -523,23 +581,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	 */
+ 	if ((priv->sm == ACPI_TPM2_COMMAND_BUFFER) ||
+ 	    (priv->sm == ACPI_TPM2_MEMORY_MAPPED)) {
+-		if (buf->control_address == io_res.start +
++		if (cres &&
++		    buf->control_address == cres->io_res.start +
+ 		    sizeof(*priv->regs_h))
+-			priv->regs_h = priv->iobase;
++			priv->regs_h = cres->iobase;
+ 		else
+ 			dev_warn(dev, FW_BUG "Bad ACPI memory layout");
+ 	}
+ 
+ 	ret = __crb_request_locality(dev, priv, 0);
+ 	if (ret)
+-		return ret;
+-
+-	priv->regs_t = crb_map_res(dev, priv, &io_res, buf->control_address,
+-				   sizeof(struct crb_regs_tail));
+-	if (IS_ERR(priv->regs_t)) {
+-		ret = PTR_ERR(priv->regs_t);
+-		goto out_relinquish_locality;
+-	}
++		goto out_free_crb_resources;
+ 
+ 	/*
+ 	 * PTT HW bug w/a: wake up the device to access
+@@ -552,13 +604,17 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 	pa_high = ioread32(&priv->regs_t->ctrl_cmd_pa_high);
+ 	pa_low  = ioread32(&priv->regs_t->ctrl_cmd_pa_low);
+ 	cmd_pa = ((u64)pa_high << 32) | pa_low;
+-	cmd_size = crb_fixup_cmd_size(dev, &io_res, cmd_pa,
+-				      ioread32(&priv->regs_t->ctrl_cmd_size));
++	cmd_size = ioread32(&priv->regs_t->ctrl_cmd_size);
++
++	cres = crb_containing_resource(&crb_resources, cmd_pa);
++	if (cres)
++		cmd_size = crb_fixup_cmd_size(dev, &cres->io_res,
++					      cmd_pa, cmd_size);
+ 
+ 	dev_dbg(dev, "cmd_hi = %X cmd_low = %X cmd_size %X\n",
+ 		pa_high, pa_low, cmd_size);
+ 
+-	priv->cmd = crb_map_res(dev, priv, &io_res, cmd_pa, cmd_size);
++	priv->cmd = crb_map_res(dev, cres, cmd_pa, cmd_size);
+ 	if (IS_ERR(priv->cmd)) {
+ 		ret = PTR_ERR(priv->cmd);
+ 		goto out;
+@@ -566,11 +622,16 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	memcpy_fromio(&__rsp_pa, &priv->regs_t->ctrl_rsp_pa, 8);
+ 	rsp_pa = le64_to_cpu(__rsp_pa);
+-	rsp_size = crb_fixup_cmd_size(dev, &io_res, rsp_pa,
+-				      ioread32(&priv->regs_t->ctrl_rsp_size));
++	rsp_size = ioread32(&priv->regs_t->ctrl_rsp_size);
++
++	cres = crb_containing_resource(&crb_resources, rsp_pa);
++
++	if (cres)
++		rsp_size = crb_fixup_cmd_size(dev, &cres->io_res,
++					      rsp_pa, rsp_size);
+ 
+ 	if (cmd_pa != rsp_pa) {
+-		priv->rsp = crb_map_res(dev, priv, &io_res, rsp_pa, rsp_size);
++		priv->rsp = crb_map_res(dev, cres, rsp_pa, rsp_size);
+ 		ret = PTR_ERR_OR_ZERO(priv->rsp);
+ 		goto out;
+ 	}
+@@ -596,6 +657,10 @@ static int crb_map_io(struct acpi_device *device, struct crb_priv *priv,
+ 
+ 	__crb_relinquish_locality(dev, priv, 0);
+ 
++out_free_crb_resources:
++
++	crb_free_resource_list(&crb_resources);
++
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
 
---SUk9VBj82R8Xhb8H
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1wCv4ACgkQJNaLcl1U
-h9AeJQf9H0MpKQMHhK+ySibRaENR2Jv5I7yx0Z9djCM/5UgYOqeHHDCNkfauD6+v
-7ANLz0fTolkI2ebyBHD+bWodk/j3PnPerIP+mec1o7bMm6VvcDhpVrCs5QPtB5Rn
-EP8I6dqRbVBMxy/fKSnzzMgpNFIl06KMfxrkC944NY47Nsr6fKWoz1EVDEYdvzKY
-nemiAfElastgsAqw7pxfhyfYIJICpSuvS7P6jCsIIdD9xGk2QT8W6mfxy9uJH8E9
-Slv5Yd0vrFbM62KmJjzQOSworPQoT25X3tgxUJEc3r52GG35muYEaZAUqH6lntsm
-o/CzxqMt/5IiFxlOF8ULYia6EE8QKQ==
-=QLKC
------END PGP SIGNATURE-----
-
---SUk9VBj82R8Xhb8H--
