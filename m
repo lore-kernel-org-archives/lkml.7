@@ -2,78 +2,145 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645E6C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8901C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487AD2073F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C88E2073F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730154AbfIDNCA (ORCPT
+        id S1730205AbfIDNCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:02:00 -0400
-Received: from gate.crashing.org ([63.228.1.57]:42884 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbfIDNCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:02:00 -0400
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x84D1aT1025468;
-        Wed, 4 Sep 2019 08:01:36 -0500
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id x84D1ZS7025467;
-        Wed, 4 Sep 2019 08:01:35 -0500
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Wed, 4 Sep 2019 08:01:35 -0500
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "'Nathan Chancellor'" <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
-Message-ID: <20190904130135.GN9749@gate.crashing.org>
-References: <20190812023214.107817-1-natechancellor@gmail.com> <878srdv206.fsf@mpe.ellerman.id.au> <20190828175322.GA121833@archlinux-threadripper> <CAKwvOdmXbYrR6n-cxKt3XxkE4Lmj0sSoZBUtHVb0V2LTUFHmug@mail.gmail.com> <20190828184529.GC127646@archlinux-threadripper> <6801a83ed6d54d95b87a41c57ef6e6b0@AcuMS.aculab.com> <20190903055553.GC60296@archlinux-threadripper> <20190903193128.GC9749@gate.crashing.org> <20190904002401.GA70635@archlinux-threadripper> <1bcd7086f3d24dfa82eec03980f30fbc@AcuMS.aculab.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1bcd7086f3d24dfa82eec03980f30fbc@AcuMS.aculab.com>
-User-Agent: Mutt/1.4.2.3i
+        Wed, 4 Sep 2019 09:02:04 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50008 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728238AbfIDNCC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 09:02:02 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 8FD28260B2D
+Message-ID: <37bbd1b8ee7bb82c75aefb675e0c3ddd955dde0b.camel@collabora.com>
+Subject: Re: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution
+ changes
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
+Cc:     kernel@collabora.com,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
+Date:   Wed, 04 Sep 2019 10:01:50 -0300
+In-Reply-To: <1567592011.3041.1.camel@pengutronix.de>
+References: <20190903171256.25052-1-ezequiel@collabora.com>
+         <1567592011.3041.1.camel@pengutronix.de>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:16:45AM +0000, David Laight wrote:
-> From: Nathan Chancellor [mailto:natechancellor@gmail.com]
-> > Fair enough so I guess we are back to just outright disabling the
-> > warning.
+On Wed, 2019-09-04 at 12:13 +0200, Philipp Zabel wrote:
+> Hi Ezequiel,
 > 
-> Just disabling the warning won't stop the compiler generating code
-> that breaks a 'user' implementation of setjmp().
+> On Tue, 2019-09-03 at 14:12 -0300, Ezequiel Garcia wrote:
+> > Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> > changed the conditions under S_FMT was allowed for OUTPUT
+> > CAPTURE buffers.
+> > 
+> > However, and according to the mem-to-mem stateless decoder specification,
+> > in order to support dynamic resolution changes, S_FMT should be allowed
+> > even if OUTPUT buffers have been allocated.
+> > 
+> > Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
+> > modification, provided the pixel format stays the same.
+> > 
+> > Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
+> > 
+> > Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
+> >  1 file changed, 16 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
+> > index 3dae52abb96c..d48b548842cf 100644
+> > --- a/drivers/staging/media/hantro/hantro_v4l2.c
+> > +++ b/drivers/staging/media/hantro/hantro_v4l2.c
+> > @@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+> >  {
+> >  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
+> >  	struct hantro_ctx *ctx = fh_to_ctx(priv);
+> > +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> >  	const struct hantro_fmt *formats;
+> >  	unsigned int num_fmts;
+> > -	struct vb2_queue *vq;
+> >  	int ret;
+> >  
+> > -	/* Change not allowed if queue is busy. */
+> > -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
+> > -	if (vb2_is_busy(vq))
+> > -		return -EBUSY;
+> > -
+> >  	if (!hantro_is_encoder_ctx(ctx)) {
+> >  		struct vb2_queue *peer_vq;
+> >  
+> > +		/*
+> > +		 * In other to support dynamic resolution change,
+> > +		 * the decoder admits a resolution change, as long
+> > +		 * as the pixelformat remains. Can't be done if streaming.
+> > +		 */
+> > +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
+> > +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
+> 
+> Before using contents of the v4l2_format f for comparison, we should run
+> vidioc_try_fmt_out_mplane over it.
 
-Yeah.  I have a patch (will send in an hour or so) that enables the
-"returns_twice" attribute for setjmp (in <asm/setjmp.h>).  In testing
-(with GCC trunk) it showed no difference in code generation, but
-better save than sorry.
+Right, good catch.
 
-It also sets "noreturn" on longjmp, and that *does* help, it saves a
-hundred insns or so (all in xmon, no surprise there).
+>  Also, besides pixelformat, sizeimage
+> shouldn't change either, at least if this is a VB2_MMAP queue.
+> 
 
-I don't think this will make LLVM shut up about this though.  And
-technically it is right: the C standard does say that in hosted mode
-setjmp is a reserved name and you need to include <setjmp.h> to access
-it (not <asm/setjmp.h>).
+This is the OUTPUT queue, so I don't see why the sizeimage
+of the coded buffers should stay the same. Maybe I'm missing
+something? 
 
-So why is the kernel compiled as hosted?  Does adding -ffreestanding
-hurt anything?  Is that actually supported on LLVM, on all relevant
-versions of it?  Does it shut up the warning there (if not, that would
-be an LLVM bug)?
+> > +			return -EBUSY;
+> >  		/*
+> >  		 * Since format change on the OUTPUT queue will reset
+> >  		 * the CAPTURE queue, we can't allow doing so
+> > @@ -389,6 +392,13 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
+> >  					  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+> >  		if (vb2_is_busy(peer_vq))
+> >  			return -EBUSY;
+> > +	} else {
+> > +		/*
+> > +		 * The encoder doesn't admit a format change if
+> > +		 * there are OUTPUT buffers allocated.
+> > +		 */
+> > +		if (vb2_is_busy(vq))
+> > +			return -EBUSY;
+> >  	}
+> >  
+> >  	ret = vidioc_try_fmt_out_mplane(file, priv, f);
+> 
+> I think this needs to be moved up.
+> 
 
+Right.
 
-Segher
+Thanks,
+Ezequiel
+
