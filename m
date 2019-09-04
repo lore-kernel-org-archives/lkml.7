@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0201C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1D7C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8990F206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93636208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620311;
-	bh=F7qSfZQ579l9fDyNnw2bKyUdKLIanbDcfEd1byuRp/o=;
+	s=default; t=1567620313;
+	bh=Yt2sts0ROUDIEP3dWTECPMF1mwbbpSutDTCtM0OHhkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bbQ4VNr8lzenZY6egL5b6vBpqlJ+CispBj6qzeFs0EyPV7GLLCmh2QdOqBvmOF4OD
-	 7OA1zvCNIkIR3rMnicRzcaYjnQW6FYbLSpKkhBEggcd/QGixFy5qRU1JMHdgiwoZ0d
-	 NoSfVrXGjSiAQkBvRlTkR72mwlIV2PTtCO0YSvMo=
+	b=2AulvDMJt0GXzv0euolyPS+qHXdHDLd7GHJYrYp2+yQPdW2uHIZVEkA6ySRRDVcMr
+	 KFLa/060HBHj9pluuvU3rZ9c5v4dZWd0SPT09DNGysX2eb6P2Ez8ydyf8/+jLrvBcK
+	 x5bnm+i2Kj0ny6QLTt0WUvXEpKsY7XSq9OCVtZX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389208AbfIDSFK (ORCPT
+        id S2389217AbfIDSFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:05:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389184AbfIDSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:05:05 -0400
+        id S2389184AbfIDSFK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:05:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98AB0206B8;
-        Wed,  4 Sep 2019 18:05:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E656E206BA;
+        Wed,  4 Sep 2019 18:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620305;
-        bh=F7qSfZQ579l9fDyNnw2bKyUdKLIanbDcfEd1byuRp/o=;
+        s=default; t=1567620310;
+        bh=Yt2sts0ROUDIEP3dWTECPMF1mwbbpSutDTCtM0OHhkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ey0+RXGPkfO16qcUqyEdrAYdejhd2Q8oLhCo1vn9xisrR/gIGR+1DQE760mdh2CoP
-         DdlfGi0Fut3Pevi+0ElLqSvSUwNFrPplOPjzozpKyCEGNxShAaUJgXV7lNoSa2NTlI
-         Zb9FQZevC+TWR4Dlpbn45xbUnRoZUG6amHXHT/aE=
+        b=TAeHrz9Mcb4byQ1/7ihdL2fGGsZA0znoHhIRJlq5mf/aGIS/y5UnbcE8zThg8Cexp
+         kepAEGEtYRayYbZTEmUXJLZkfjhvvVVoScFKZrSjPaJygkdqgHkengC9EX/Nzxgn+6
+         S5ZEvcv5BoWRs00oQoZ8Tdkh++XTNE9ODqpblI0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/93] dmaengine: ste_dma40: fix unneeded variable warning
-Date:   Wed,  4 Sep 2019 19:53:03 +0200
-Message-Id: <20190904175302.977169348@linuxfoundation.org>
+Subject: [PATCH 4.19 11/93] soundwire: cadence_master: fix definitions for INTSTAT0/1
+Date:   Wed,  4 Sep 2019 19:53:13 +0200
+Message-Id: <20190904175304.188959625@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,52 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5d6fb560729a5d5554e23db8d00eb57cd0021083 ]
+[ Upstream commit 664b16589f882202b8fa8149d0074f3159bade76 ]
 
-clang-9 points out that there are two variables that depending on the
-configuration may only be used in an ARRAY_SIZE() expression but not
-referenced:
+Two off-by-one errors: INTSTAT0 missed BIT(31) and INTSTAT1 is only
+defined on first 16 bits.
 
-drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs[] = {
-           ^
-drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
-static u32 d40_backup_regs_chan[] = {
-
-Mark these __maybe_unused to shut up the warning.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20190712091357.744515-1-arnd@arndb.de
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20190725234032.21152-15-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ste_dma40.c | 4 ++--
+ drivers/soundwire/cadence_master.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index f4edfc56f34ef..3d55405c49cac 100644
---- a/drivers/dma/ste_dma40.c
-+++ b/drivers/dma/ste_dma40.c
-@@ -142,7 +142,7 @@ enum d40_events {
-  * when the DMA hw is powered off.
-  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
-  */
--static u32 d40_backup_regs[] = {
-+static __maybe_unused u32 d40_backup_regs[] = {
- 	D40_DREG_LCPA,
- 	D40_DREG_LCLA,
- 	D40_DREG_PRMSE,
-@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
+diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+index d3d7de5a319c5..70f78eda037e8 100644
+--- a/drivers/soundwire/cadence_master.c
++++ b/drivers/soundwire/cadence_master.c
+@@ -96,8 +96,8 @@
+ #define CDNS_MCP_SLAVE_INTMASK0			0x5C
+ #define CDNS_MCP_SLAVE_INTMASK1			0x60
  
- #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
+-#define CDNS_MCP_SLAVE_INTMASK0_MASK		GENMASK(30, 0)
+-#define CDNS_MCP_SLAVE_INTMASK1_MASK		GENMASK(16, 0)
++#define CDNS_MCP_SLAVE_INTMASK0_MASK		GENMASK(31, 0)
++#define CDNS_MCP_SLAVE_INTMASK1_MASK		GENMASK(15, 0)
  
--static u32 d40_backup_regs_chan[] = {
-+static __maybe_unused u32 d40_backup_regs_chan[] = {
- 	D40_CHAN_REG_SSCFG,
- 	D40_CHAN_REG_SSELT,
- 	D40_CHAN_REG_SSPTR,
+ #define CDNS_MCP_PORT_INTSTAT			0x64
+ #define CDNS_MCP_PDI_STAT			0x6C
 -- 
 2.20.1
 
