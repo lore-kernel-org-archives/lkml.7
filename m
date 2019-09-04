@@ -2,145 +2,124 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E0FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38010C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4C22077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B192077B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:09:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731338AbfIDPHn (ORCPT
+        id S1731233AbfIDPJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:07:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:57036 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730717AbfIDPHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:07:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9ED8628;
-        Wed,  4 Sep 2019 08:07:42 -0700 (PDT)
-Received: from [10.1.196.133] (e112269-lin.cambridge.arm.com [10.1.196.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B2783F246;
-        Wed,  4 Sep 2019 08:07:40 -0700 (PDT)
-Subject: Re: [PATCH v4 01/10] KVM: arm64: Document PV-time interface
-To:     Andrew Jones <drjones@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        linux-doc@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-References: <20190830084255.55113-1-steven.price@arm.com>
- <20190830084255.55113-2-steven.price@arm.com>
- <20190830144734.kvj4dvt32qzmhw32@kamzik.brq.redhat.com>
- <7f459290-9c39-cfba-c514-a07469ff120f@arm.com>
- <20190902125254.3w6lnvcbs7sfhjz7@kamzik.brq.redhat.com>
- <118ceeea-5501-05b6-7232-e66a175d5fae@arm.com>
- <20190904142250.ohnkunb5ocwbnx6z@kamzik.brq.redhat.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <9ebbfde3-d592-b9c5-4456-a28a2f6e9125@arm.com>
-Date:   Wed, 4 Sep 2019 16:07:39 +0100
+        Wed, 4 Sep 2019 11:09:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17392 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729944AbfIDPJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:09:13 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x84F90d3041709;
+        Wed, 4 Sep 2019 11:09:11 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2utdrudc2s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Sep 2019 11:09:06 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x84F95pW041840;
+        Wed, 4 Sep 2019 11:09:05 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2utdrudbhm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Sep 2019 11:09:04 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x84F5KDw007894;
+        Wed, 4 Sep 2019 15:08:21 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma04wdc.us.ibm.com with ESMTP id 2us9fn3hk2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Sep 2019 15:08:21 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x84F8GRO54264292
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Sep 2019 15:08:16 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B845E6A04F;
+        Wed,  4 Sep 2019 15:08:16 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7DB86A04D;
+        Wed,  4 Sep 2019 15:08:15 +0000 (GMT)
+Received: from [9.80.231.166] (unknown [9.80.231.166])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Sep 2019 15:08:15 +0000 (GMT)
+Subject: Re: [PATCH 1/1] s390: vfio-ap: fix warning reset not completed
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20190903133618.9122-1-pasic@linux.ibm.com>
+ <20190903184542.2d955111.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <633ff646-de9b-9d6b-2d35-b09a60d33eee@linux.ibm.com>
+Date:   Wed, 4 Sep 2019 11:08:14 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190904142250.ohnkunb5ocwbnx6z@kamzik.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20190903184542.2d955111.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909040148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2019 15:22, Andrew Jones wrote:
-> On Wed, Sep 04, 2019 at 02:55:15PM +0100, Steven Price wrote:
->> On 02/09/2019 13:52, Andrew Jones wrote:
->>> On Fri, Aug 30, 2019 at 04:25:08PM +0100, Steven Price wrote:
->>>> On 30/08/2019 15:47, Andrew Jones wrote:
->>>>> On Fri, Aug 30, 2019 at 09:42:46AM +0100, Steven Price wrote:
->> [...]
->>>>>> +    Return value: (int32)   : NOT_SUPPORTED (-1) or SUCCESS (0) if the relevant
->>>>>> +                              PV-time feature is supported by the hypervisor.
->>>>>> +
->>>>>> +PV_TIME_ST
->>>>>> +    Function ID:  (uint32)  : 0xC5000022
->>>>>> +    Return value: (int64)   : IPA of the stolen time data structure for this
->>>>>> +                              VCPU. On failure:
->>>>>> +                              NOT_SUPPORTED (-1)
->>>>>> +
->>>>>> +The IPA returned by PV_TIME_ST should be mapped by the guest as normal memory
->>>>>> +with inner and outer write back caching attributes, in the inner shareable
->>>>>> +domain. A total of 16 bytes from the IPA returned are guaranteed to be
->>>>>> +meaningfully filled by the hypervisor (see structure below).
->>>>>> +
->>>>>> +PV_TIME_ST returns the structure for the calling VCPU.
->>>>>> +
->>>>>> +Stolen Time
->>>>>> +-----------
->>>>>> +
->>>>>> +The structure pointed to by the PV_TIME_ST hypercall is as follows:
->>>>>> +
->>>>>> +  Field       | Byte Length | Byte Offset | Description
->>>>>> +  ----------- | ----------- | ----------- | --------------------------
->>>>>> +  Revision    |      4      |      0      | Must be 0 for version 0.1
->>>>>> +  Attributes  |      4      |      4      | Must be 0
->>>>>
->>>>> The above fields don't appear to be exposed to userspace in anyway. How
->>>>> will we handle migration from one KVM with one version of the structure
->>>>> to another?
->>>>
->>>> Interesting question. User space does have access to them now it is
->>>> providing the memory, but it's not exactly an easy method. In particular
->>>> user space has no (simple) way of probing the kernel's supported version.
->>>>
->>>> I guess one solution would be to add an extra attribute on the VCPU
->>>> which would provide the revision information. The current kernel would
->>>> then reject any revision other than 0, but this could then be extended
->>>> to support other revision numbers in the future.
->>>>
->>>> Although there's some logic in saying we could add the extra attribute
->>>> when(/if) there is a new version. Future kernels would then be expected
->>>> to use the current version unless user space explicitly set the new
->>>> attribute.
->>>>
->>>> Do you feel this is something that needs to be addressed now, or can it
->>>> be deferred until another version is proposed?
->>>
->>> Assuming we'll want userspace to have the option of choosing version=0,
->>> and that we're fine with version=0 being the implicit choice, when nothing
->>> is selected, then I guess it can be left as is for now. If, OTOH, we just
->>> want migration to fail when attempting to migrate to another host with
->>> an incompatible stolen-time structure (i.e. version=0 is not selectable
->>> on hosts that implement later versions), then we should expose the version
->>> in some way now. Perhaps a VCPU's "PV config" should be described in a
->>> set of pseudo registers?
->>
->> I wouldn't have thought making migration fail if/when the host upgrades
->> to a new version would be particularly helpful - we'd want to provide
->> backwards compatibility. In particular for the suspend/resume case (I
->> want to be able to save my VM to disk, upgrade the host kernel and then
->> resume the VM).
->>
->> The only potential issue I see is the implicit "version=0 if not
->> specified". That seems solvable by rejecting setting the stolen time
->> base address if no version has been specified and the host kernel
->> doesn't support version=0.
+On 9/3/19 12:45 PM, Cornelia Huck wrote:
+> On Tue,  3 Sep 2019 15:36:18 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
 > 
-> I think that's the same failure I was trying avoid by failing the
-> migration instead. Maybe it's equivalent to fail at this vcpu-ioctl
-> time though?
+> "fix warning for not completed reset"?
+> 
+>> The intention seems to be to warn once when we don't wait enough for the
+>> reset to complete. Let's use the right retry counter to accomplish that
+>> semantic.
+>>
+>> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index 0604b49a4d32..5c0f53c6dde7 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -1143,7 +1143,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+>>   				msleep(20);
+>>   				status = ap_tapq(apqn, NULL);
+>>   			}
+>> -			WARN_ON_ONCE(retry <= 0);
+>> +			WARN_ON_ONCE(retry2 <= 0);
+>>   			return 0;
+>>   		case AP_RESPONSE_RESET_IN_PROGRESS:
+>>   		case AP_RESPONSE_BUSY:
+> 
+> Makes sense.
+> 
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-Yes this is effectively the same failure. But since we require the
-vcpu-ioctl to enable stolen time this gives an appropriate place to
-fail. Indeed this is the failure if migrating from a host with these
-patches to one running an existing kernel with no stolen time support.
+Agreed:
+Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> 
 
-Steve
