@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F74C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7330EC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195692339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5452E23401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbfIDOBI (ORCPT
+        id S1730521AbfIDOBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:01:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6659 "EHLO huawei.com"
+        Wed, 4 Sep 2019 10:01:10 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51618 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730405AbfIDOBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:01:07 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 49CC1CEFD21B4AE55E7F;
-        Wed,  4 Sep 2019 22:00:57 +0800 (CST)
+        id S1731061AbfIDOBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 10:01:09 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 65D85D2556F9941EA3F0;
+        Wed,  4 Sep 2019 22:01:07 +0800 (CST)
 Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
  (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 22:00:47 +0800
+ 22:00:56 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -50,9 +51,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 27/36] spi: sirf: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:59:09 +0800
-Message-ID: <20190904135918.25352-28-yuehaibing@huawei.com>
+Subject: [PATCH -next 30/36] spi: sun6i: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:59:12 +0800
+Message-ID: <20190904135918.25352-31-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -71,31 +72,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-sirf.c | 4 +---
+ drivers/spi/spi-sun6i.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-sirf.c b/drivers/spi/spi-sirf.c
-index 71b882a..e1e6391 100644
---- a/drivers/spi/spi-sirf.c
-+++ b/drivers/spi/spi-sirf.c
-@@ -1070,7 +1070,6 @@ static int spi_sirfsoc_probe(struct platform_device *pdev)
+diff --git a/drivers/spi/spi-sun6i.c b/drivers/spi/spi-sun6i.c
+index 1cf3051..ec7967b 100644
+--- a/drivers/spi/spi-sun6i.c
++++ b/drivers/spi/spi-sun6i.c
+@@ -435,7 +435,6 @@ static int sun6i_spi_probe(struct platform_device *pdev)
  {
- 	struct sirfsoc_spi *sspi;
  	struct spi_master *master;
--	struct resource *mem_res;
- 	const struct sirf_spi_comp_data *spi_comp_data;
- 	int irq;
- 	int ret;
-@@ -1097,8 +1096,7 @@ static int spi_sirfsoc_probe(struct platform_device *pdev)
- 	sspi->fifo_level_chk_mask = (sspi->fifo_size / 4) - 1;
- 	sspi->dat_max_frm_len = spi_comp_data->dat_max_frm_len;
- 	sspi->fifo_size = spi_comp_data->fifo_size;
--	mem_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	sspi->base = devm_ioremap_resource(&pdev->dev, mem_res);
-+	sspi->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(sspi->base)) {
- 		ret = PTR_ERR(sspi->base);
- 		goto free_master;
+ 	struct sun6i_spi *sspi;
+-	struct resource	*res;
+ 	int ret = 0, irq;
+ 
+ 	master = spi_alloc_master(&pdev->dev, sizeof(struct sun6i_spi));
+@@ -447,8 +446,7 @@ static int sun6i_spi_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, master);
+ 	sspi = spi_master_get_devdata(master);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	sspi->base_addr = devm_ioremap_resource(&pdev->dev, res);
++	sspi->base_addr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(sspi->base_addr)) {
+ 		ret = PTR_ERR(sspi->base_addr);
+ 		goto err_free_master;
 -- 
 2.7.4
 
