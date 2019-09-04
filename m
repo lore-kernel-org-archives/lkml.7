@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D89DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AADCC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44BB9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8337233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619990;
-	bh=tB8hZZLTRyVlHXribobIoKvzLcGtcR5wqsf4cKX4VkQ=;
+	s=default; t=1567619994;
+	bh=KgNdbC20ELXY7Ab0NaCZqHkgJjJCyw6zYHJpBtEw1Ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLptac5nYS5HdcfDJYMezT8KdX+zRAyBgxMTe/eCdCadqNG6pfyhm1hsmK3LFRIYM
-	 a9b0rJmdUSt5Fr/n78JcEQ/11G/7l1uaxQnUp77JvTFn9qOL7le160Rns0h68Ba2Cg
-	 lgrwAPKYpq1oKRzMRRHoVTQlQbYlkgeYbfJ3/uas=
+	b=rgXn83nLRgestCVaLBd4I0Hfigy5R6syO7n0oUSmUWtSRgz2BgD5sc+EsZXjuCheB
+	 edgT+yTx3ByCLgrS+X6BteT+HLegEyY4eI4v2j6St5NsMBDhZ+QgbysJNo6vEC3YgS
+	 14I/Pept2NtZku1iisfxtRWSh8DHqxmeR0CqPSDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388281AbfIDR7t (ORCPT
+        id S2388301AbfIDR7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:59:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38664 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:59:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388271AbfIDR7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:59:44 -0400
+        id S2387899AbfIDR7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:59:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC80822CEA;
-        Wed,  4 Sep 2019 17:59:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C841208E4;
+        Wed,  4 Sep 2019 17:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619983;
-        bh=tB8hZZLTRyVlHXribobIoKvzLcGtcR5wqsf4cKX4VkQ=;
+        s=default; t=1567619986;
+        bh=KgNdbC20ELXY7Ab0NaCZqHkgJjJCyw6zYHJpBtEw1Ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rJa9tTYqVl+3TcMOg7O+LTQbbnlrjCAecoJj4jPCFTTfxcInnH5k+Z76qsBjckV79
-         iF6g5ujQd8Xa9VOzi/YQWVq+F3XCEYuTE0EZCSkVeVUur8Y3XNUdMCI1wXeoU9zX7U
-         XboodobdYZk6X3mGjJgBG9tpLls/N76uaDOLi6yA=
+        b=ERBwi7/hGiuAHZpL79hWm0nHy2QKVt0vwPTPmSxMtKcEHje9XB6WIdK4jKjRslRrV
+         loWE81TevbHHi2wHxvC/Hw0tJtulfxh29TwkYUo5QfrwiT0Z6ddAEoq9r6+pswGiDj
+         RU1GE9/aD7grNy5MxA80pbxLDpw+YnOq5ejBhoiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 04/83] ASoC: dapm: Fix handling of custom_stop_condition on DAPM graph walks
-Date:   Wed,  4 Sep 2019 19:52:56 +0200
-Message-Id: <20190904175304.059475061@linuxfoundation.org>
+Subject: [PATCH 4.9 05/83] bonding: Force slave speed check after link state recovery for 802.3ad
+Date:   Wed,  4 Sep 2019 19:52:57 +0200
+Message-Id: <20190904175304.188632945@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -61,74 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8dd26dff00c0636b1d8621acaeef3f6f3a39dd77 ]
+[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
 
-DPCM uses snd_soc_dapm_dai_get_connected_widgets to build a
-list of the widgets connected to a specific front end DAI so it
-can search through this list for available back end DAIs. The
-custom_stop_condition was added to is_connected_ep to facilitate this
-list not containing more widgets than is necessary. Doing so both
-speeds up the DPCM handling as less widgets need to be searched and
-avoids issues with CODEC to CODEC links as these would be confused
-with back end DAIs if they appeared in the list of available widgets.
+The following scenario was encountered during testing of logical
+partition mobility on pseries partitions with bonded ibmvnic
+adapters in LACP mode.
 
-custom_stop_condition was implemented by aborting the graph walk
-when the condition is triggered, however there is an issue with this
-approach. Whilst walking the graph is_connected_ep should update the
-endpoints cache on each widget, if the walk is aborted the number
-of attached end points is unknown for that sub-graph. When the stop
-condition triggered, the original patch ignored the triggering widget
-and returned zero connected end points; a later patch updated this
-to set the triggering widget's cache to 1 and return that. Both of
-these approaches result in inaccurate values being stored in various
-end point caches as the values propagate back through the graph,
-which can result in later issues with widgets powering/not powering
-unexpectedly.
+1. Driver receives a signal that the device has been
+   swapped, and it needs to reset to initialize the new
+   device.
 
-As the original goal was to reduce the size of the widget list passed
-to the DPCM code, the simplest solution is to limit the functionality
-of the custom_stop_condition to the widget list. This means the rest
-of the graph will still be processed resulting in correct end point
-caches, but only widgets up to the stop condition will be added to the
-returned widget list.
+2. Driver reports loss of carrier and begins initialization.
 
-Fixes: 6742064aef7f ("ASoC: dapm: support user-defined stop condition in dai_get_connected_widgets")
-Fixes: 5fdd022c2026 ("ASoC: dpcm: play nice with CODEC<->CODEC links")
-Fixes: 09464974eaa8 ("ASoC: dapm: Fix to return correct path list in is_connected_ep.")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20190718084333.15598-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+3. Bonding driver receives NETDEV_CHANGE notifier and checks
+   the slave's current speed and duplex settings. Because these
+   are unknown at the time, the bond sets its link state to
+   BOND_LINK_FAIL and handles the speed update, clearing
+   AD_PORT_LACP_ENABLE.
+
+4. Driver finishes recovery and reports that the carrier is on.
+
+5. Bond receives a new notification and checks the speed again.
+   The speeds are valid but miimon has not altered the link
+   state yet.  AD_PORT_LACP_ENABLE remains off.
+
+Because the slave's link state is still BOND_LINK_FAIL,
+no further port checks are made when it recovers. Though
+the slave devices are operational and have valid speed
+and duplex settings, the bond will not send LACPDU's. The
+simplest fix I can see is to force another speed check
+in bond_miimon_commit. This way the bond will update
+AD_PORT_LACP_ENABLE if needed when transitioning from
+BOND_LINK_FAIL to BOND_LINK_UP.
+
+CC: Jarod Wilson <jarod@redhat.com>
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/bonding/bond_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index ab647f1fe11bd..08bfc91c686f0 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -1104,8 +1104,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
- 		list_add_tail(&widget->work_list, list);
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index d338c319b30e2..8820fb1aec5b4 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2131,6 +2131,15 @@ static void bond_miimon_commit(struct bonding *bond)
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		switch (slave->new_link) {
+ 		case BOND_LINK_NOCHANGE:
++			/* For 802.3ad mode, check current slave speed and
++			 * duplex again in case its port was disabled after
++			 * invalid speed/duplex reporting but recovered before
++			 * link monitoring could make a decision on the actual
++			 * link status
++			 */
++			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
++			    slave->link == BOND_LINK_UP)
++				bond_3ad_adapter_speed_duplex_changed(slave);
+ 			continue;
  
- 	if (custom_stop_condition && custom_stop_condition(widget, dir)) {
--		widget->endpoints[dir] = 1;
--		return widget->endpoints[dir];
-+		list = NULL;
-+		custom_stop_condition = NULL;
- 	}
- 
- 	if ((widget->is_ep & SND_SOC_DAPM_DIR_TO_EP(dir)) && widget->connected) {
-@@ -1142,8 +1142,8 @@ static __always_inline int is_connected_ep(struct snd_soc_dapm_widget *widget,
-  *
-  * Optionally, can be supplied with a function acting as a stopping condition.
-  * This function takes the dapm widget currently being examined and the walk
-- * direction as an arguments, it should return true if the walk should be
-- * stopped and false otherwise.
-+ * direction as an arguments, it should return true if widgets from that point
-+ * in the graph onwards should not be added to the widget list.
-  */
- static int is_connected_output_ep(struct snd_soc_dapm_widget *widget,
- 	struct list_head *list,
+ 		case BOND_LINK_UP:
 -- 
 2.20.1
 
