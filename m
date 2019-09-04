@@ -2,51 +2,53 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985D1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362EEC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 712C422CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09145208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620728;
-	bh=pfHA4ghX1sdzBre+QSIFvxbGOXnT+CmSpcZh5msUerA=;
+	s=default; t=1567620731;
+	bh=koAIJkUdUSSuqVjfYC76UrPAJthYulamgGKUFle+VMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UroL/624vLPL5DHXOiVb8eOX4lZq44ip4//B6wKrC1UQEthV4OAbyWpmcImzVZGfv
-	 6Jui2Uufx81Ub2IT7Et0B7/g/9QDX8iMPTWbC8/eIIBqnZ+A78vpTR37GHg55QHvgQ
-	 fQg1JtyzZN/6X/TZ/D7wwzzIg8Mj7OgrVPxndrYg=
+	b=QuaVx2zOGI3fPxO1BblYR7Db4QaL6/BIwbyvT508gkBof4xSSSWX/PO9+QpnrSQnq
+	 T++6rBPdMNkhXNzXzeUuE94Mvgj8a+sBaPZgvHYB3jGDMwoxUicJn4aoIfeeZciitR
+	 p5cwUthHvyD5FeHj5qGOqzi4/zwcHIHVlmvRZBwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390451AbfIDSMH (ORCPT
+        id S2390447AbfIDSMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:12:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56348 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:12:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390442AbfIDSME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:12:04 -0400
+        id S1731429AbfIDSMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:12:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F7D206BA;
-        Wed,  4 Sep 2019 18:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C56C2087E;
+        Wed,  4 Sep 2019 18:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620723;
-        bh=pfHA4ghX1sdzBre+QSIFvxbGOXnT+CmSpcZh5msUerA=;
+        s=default; t=1567620728;
+        bh=koAIJkUdUSSuqVjfYC76UrPAJthYulamgGKUFle+VMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JX42eqny7++XwhZ/KMIafdmlmEOEZ7cMOF10H+rphqjUtOujAKXrHrm8RN19TUoLI
-         Tj31jt6vHIPIqNZG8abqGYuOdfPrugNwTmiAhlbtVTv9wUhbQngamb5RIzDnfF2cMb
-         3LT/5Dc2AK3QAgzuE59+kbTZCCkd1AMQ10XAyZ5I=
+        b=KbjHXUjWCGI4M3fHvd4A4kBSgYhUHFXpremCSCoN8wf5DkC6fG3Y1nihw/NyOhfM/
+         tctQdmto+k5ljMVn29XDIu1/ZUKsTdIiHfzCzuCvGYg/JFEk1msKKCFss8kP6qI/SC
+         z4WtkDyDsc1LFZFHWHvY5tHXlxzQ0mgqO6yVXfxc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Bandan Das <bsd@redhat.com>
-Subject: [PATCH 5.2 072/143] x86/apic: Do not initialize LDR and DFR for bigsmp
-Date:   Wed,  4 Sep 2019 19:53:35 +0200
-Message-Id: <20190904175316.874622073@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 074/143] HID: logitech-hidpp: remove support for the G700 over USB
+Date:   Wed,  4 Sep 2019 19:53:37 +0200
+Message-Id: <20190904175316.949077684@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -59,83 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bandan Das <bsd@redhat.com>
+[ Upstream commit a3384b8d9f63cc042711293bb97bdc92dca0391d ]
 
-commit bae3a8d3308ee69a7dbdf145911b18dfda8ade0d upstream.
+The G700 suffers from the same issue than the G502:
+when plugging it in, the driver tries to contact it but it fails.
 
-Legacy apic init uses bigsmp for smp systems with 8 and more CPUs. The
-bigsmp APIC implementation uses physical destination mode, but it
-nevertheless initializes LDR and DFR. The LDR even ends up incorrectly with
-multiple bit being set.
+This timeout is problematic as it introduce a delay in the boot,
+and having only the mouse event node means that the hardware
+macros keys can not be relayed to the userspace.
 
-This does not cause a functional problem because LDR and DFR are ignored
-when physical destination mode is active, but it triggered a problem on a
-32-bit KVM guest which jumps into a kdump kernel.
-
-The multiple bits set unearthed a bug in the KVM APIC implementation. The
-code which creates the logical destination map for VCPUs ignores the
-disabled state of the APIC and ends up overwriting an existing valid entry
-and as a result, APIC calibration hangs in the guest during kdump
-initialization.
-
-Remove the bogus LDR/DFR initialization.
-
-This is not intended to work around the KVM APIC bug. The LDR/DFR
-ininitalization is wrong on its own.
-
-The issue goes back into the pre git history. The fixes tag is the commit
-in the bitkeeper import which introduced bigsmp support in 2003.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
-
-Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190826101513.5080-2-bsd@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://github.com/libratbag/libratbag/issues/797
+Fixes: 91cf9a98ae41 ("HID: logitech-hidpp: make .probe usbhid capable")
+Cc: stable@vger.kernel.org # v5.2
+Reviewed-by: Filipe Laíns <lains@archlinux.org>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/apic/bigsmp_32.c |   24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 2 --
+ 1 file changed, 2 deletions(-)
 
---- a/arch/x86/kernel/apic/bigsmp_32.c
-+++ b/arch/x86/kernel/apic/bigsmp_32.c
-@@ -38,32 +38,12 @@ static int bigsmp_early_logical_apicid(i
- 	return early_per_cpu(x86_cpu_to_apicid, cpu);
- }
- 
--static inline unsigned long calculate_ldr(int cpu)
--{
--	unsigned long val, id;
--
--	val = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
--	id = per_cpu(x86_bios_cpu_apicid, cpu);
--	val |= SET_APIC_LOGICAL_ID(id);
--
--	return val;
--}
--
- /*
-- * Set up the logical destination ID.
-- *
-- * Intel recommends to set DFR, LDR and TPR before enabling
-- * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
-- * document number 292116).  So here it goes...
-+ * bigsmp enables physical destination mode
-+ * and doesn't use LDR and DFR
-  */
- static void bigsmp_init_apic_ldr(void)
- {
--	unsigned long val;
--	int cpu = smp_processor_id();
--
--	apic_write(APIC_DFR, APIC_DFR_FLAT);
--	val = calculate_ldr(cpu);
--	apic_write(APIC_LDR, val);
- }
- 
- static void bigsmp_setup_apic_routing(void)
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 34e2b3f9d540d..4effce12607b0 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -3769,8 +3769,6 @@ static const struct hid_device_id hidpp_devices[] = {
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC332) },
+ 	{ /* Logitech G502 Hero Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC08B) },
+-	{ /* Logitech G700 Gaming Mouse over USB */
+-	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC06B) },
+ 	{ /* Logitech G700s Gaming Mouse over USB */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, 0xC07C) },
+ 	{ /* Logitech G703 Gaming Mouse over USB */
+-- 
+2.20.1
+
 
 
