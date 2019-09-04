@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3586CC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03497C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D0720820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C793A20820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613476;
-	bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
+	s=default; t=1567613487;
+	bh=au813PDI6FI9tO98w4fyc/QYGAA9QqrIDbR/WbIjSdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ThyGb9u5CFVbznMUMNClv4UItAvzHJ4YHHaoKklTVfWHaa8ytCJ/5o/fPtaMekHJH
-	 k2gFKjJthYj6GMmbc8Lf8W43CJ5EI70lzKT1hz5Gn9bFHe+nYxnPoYUv8hGjDaFEY+
-	 5aM9tP8sigf8BvWHD4NCparcFdk3Nk77JEgCimz4=
+	b=WBebe/jYcKUd29uTthXI6LLn0nNLVJEbXsckSBKB3FNRi2QxnJglWaA4ywDptZLpx
+	 DCxaKOGZbpZxS6iOzBY2VIqKUgbYuYeF5CDV8/WUGs/EqJmvbLitgwaoWl9ktqhGNK
+	 P5feccvSbHDPqOiPNSyWnfbnv9EakV/xNRXOF2J8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbfIDQLO (ORCPT
+        id S1732736AbfIDQAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35482 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732758AbfIDQAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:35 -0400
+        id S1732712AbfIDQAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:00:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE35A2070C;
-        Wed,  4 Sep 2019 16:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA1582339E;
+        Wed,  4 Sep 2019 16:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612834;
-        bh=XFNuF7uzs1Qn5arkiQ4mGqElYb+I6FDtsCAORgQUYos=;
+        s=default; t=1567612829;
+        bh=au813PDI6FI9tO98w4fyc/QYGAA9QqrIDbR/WbIjSdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CaEyaKYiRmx0Fi6sgPuheWuaCxXD5RruUX3LSGJXpT2Eqc5a5KsTSbHsaV3A/ExVq
-         XG1DIgvf2abOpR/PtRgO/PHe4qzBlHdDEWBvPomXH6ps1bqf55mgFPpGluY965llZ7
-         Mmdh0OvatGXQHsLSStSe0SrYFQ6w9JJnFwND5mqA=
+        b=2IAVE3QjME5GQyNqUs+aRlXYj5lYZvrmfXHDwWTqWwiCJtfBWFH6tYEKuhytiXrUV
+         6r6XvJ7Oy9ZXNCcbBfWFaZxmUefyK4xXJ/FfE/5UGoxiSucyw6nKziaBLvmxrA18TX
+         WgImdtzSu0IPHoIUs+jwIxu6C4ozyAcQLgnOD/CQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/52] Kconfig: Fix the reference to the IDT77105 Phy driver in the description of ATM_NICSTAR_USE_IDT77105
-Date:   Wed,  4 Sep 2019 11:59:34 -0400
-Message-Id: <20190904160004.3671-22-sashal@kernel.org>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/52] netfilter: nft_flow_offload: missing netlink attribute policy
+Date:   Wed,  4 Sep 2019 11:59:29 -0400
+Message-Id: <20190904160004.3671-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
@@ -59,32 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit cd9d4ff9b78fcd0fc4708900ba3e52e71e1a7690 ]
+[ Upstream commit 14c415862c0630e01712a4eeaf6159a2b1b6d2a4 ]
 
-This should be IDT77105, not IDT77015.
+The netlink attribute policy for NFTA_FLOW_TABLE_NAME is missing.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a3c90f7a2323 ("netfilter: nf_tables: flow offload expression")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nft_flow_offload.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/atm/Kconfig b/drivers/atm/Kconfig
-index 2e2efa577437e..8c37294f1d1ee 100644
---- a/drivers/atm/Kconfig
-+++ b/drivers/atm/Kconfig
-@@ -200,7 +200,7 @@ config ATM_NICSTAR_USE_SUNI
- 	  make the card work).
+diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+index 6e0c26025ab13..5a838f12052fb 100644
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -146,6 +146,11 @@ static int nft_flow_offload_validate(const struct nft_ctx *ctx,
+ 	return nft_chain_validate_hooks(ctx->chain, hook_mask);
+ }
  
- config ATM_NICSTAR_USE_IDT77105
--	bool "Use IDT77015 PHY driver (25Mbps)"
-+	bool "Use IDT77105 PHY driver (25Mbps)"
- 	depends on ATM_NICSTAR
- 	help
- 	  Support for the PHYsical layer chip in ForeRunner LE25 cards. In
++static const struct nla_policy nft_flow_offload_policy[NFTA_FLOW_MAX + 1] = {
++	[NFTA_FLOW_TABLE_NAME]	= { .type = NLA_STRING,
++				    .len = NFT_NAME_MAXLEN - 1 },
++};
++
+ static int nft_flow_offload_init(const struct nft_ctx *ctx,
+ 				 const struct nft_expr *expr,
+ 				 const struct nlattr * const tb[])
+@@ -204,6 +209,7 @@ static const struct nft_expr_ops nft_flow_offload_ops = {
+ static struct nft_expr_type nft_flow_offload_type __read_mostly = {
+ 	.name		= "flow_offload",
+ 	.ops		= &nft_flow_offload_ops,
++	.policy		= nft_flow_offload_policy,
+ 	.maxattr	= NFTA_FLOW_MAX,
+ 	.owner		= THIS_MODULE,
+ };
 -- 
 2.20.1
 
