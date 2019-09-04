@@ -2,50 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE9AC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3218C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00DA22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DEB22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620144;
-	bh=N2zjJJmXwqJTTqT+gim91VQdFezwO3mO/WmeezHOyXE=;
+	s=default; t=1567620148;
+	bh=Dtb2xlJUXaI7h1jTZ4aYV373tHKBE5AMbf5Ac85jxRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M/nAQ2P/8ceokOP1D+ULsTHsQzvdmRhVqKFnPElJGYe2LvHaAnz2wRocl2wDa/4O+
-	 Q/BBH9SMTkcXsZYsJ1716KbZZeNRp4Khtl3axmfMPcike6/Oz4cvlLNzv2g6Ql6B3L
-	 inZr+io57xA4mkiOv0agX9yoBFlL1Dw2Ov3zwB1I=
+	b=IR2aSqFi3AC07U2LCxkzx4er2H+tmSX9y17PExUgYG20BhsAg0scdQlLBjnwBfzkQ
+	 Vh5/z2gkLNRKLdLZDDiEVE1/M2+vALLeqNBHdrXIPjW6/CN8QrNAP3Dp6EHZ9dNtOz
+	 cPa/1dc1tfG4sQ/nUIeSHCkQNtCKWp1+1XjnX5wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388739AbfIDSCX (ORCPT
+        id S2388743AbfIDSC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42178 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:02:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388191AbfIDSCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:02:21 -0400
+        id S2388738AbfIDSCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:02:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D27F22CEA;
-        Wed,  4 Sep 2019 18:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4671622CEA;
+        Wed,  4 Sep 2019 18:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620140;
-        bh=N2zjJJmXwqJTTqT+gim91VQdFezwO3mO/WmeezHOyXE=;
+        s=default; t=1567620142;
+        bh=Dtb2xlJUXaI7h1jTZ4aYV373tHKBE5AMbf5Ac85jxRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2cM0ovGb9SwG9lrNCBP0oWFVb4Fmll5y/ld9tEQjyAZzb0S42zwzZfQCU4Jw2tJj
-         LItXGPjiRX7yCy+Ki9tYs6eRtKmHJq8Ekcm+987TWRS0p4iq5PwI1aLIFvm9mtqJj5
-         vxxZpe0zMG/hGwxQWBfQzgApwXfpiF8zH12GnrY0=
+        b=Nva/gb+kuXpOzuusUE1ui5RSfmjUpumLjT/VL6cMO71rGT5ffaftJWxYDJm7yUqq5
+         2/GyfRoh8foUnpm7mKb/jkIRNZF0ytX8JeibUFdSweQ2vsH+Z+p3+Qi74ztNKSX5m8
+         ajDRaBrkrBrMMH1zMWVUxg03HbeLksPk10CcMuII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 79/83] mac80211: fix possible sta leak
-Date:   Wed,  4 Sep 2019 19:54:11 +0200
-Message-Id: <20190904175310.587774491@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Heyi Guo <guoheyi@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 80/83] KVM: arm/arm64: vgic: Fix potential deadlock when ap_list is long
+Date:   Wed,  4 Sep 2019 19:54:12 +0200
+Message-Id: <20190904175310.676208472@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -58,47 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+[ Upstream commit d4a8061a7c5f7c27a2dc002ee4cb89b3e6637e44 ]
 
-commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 upstream.
+If the ap_list is longer than 256 entries, merge_final() in list_sort()
+will call the comparison callback with the same element twice, causing
+a deadlock in vgic_irq_cmp().
 
-If TDLS station addition is rejected, the sta memory is leaked.
-Avoid this by moving the check before the allocation.
+Fix it by returning early when irqa == irqb.
 
-Cc: stable@vger.kernel.org
-Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
-Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org # 4.7+
+Fixes: 8e4447457965 ("KVM: arm/arm64: vgic-new: Add IRQ sorting")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+[maz: massaged commit log and patch, added Fixes and Cc-stable]
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ virt/kvm/arm/vgic/vgic.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1418,6 +1418,11 @@ static int ieee80211_add_station(struct
- 	if (is_multicast_ether_addr(mac))
- 		return -EINVAL;
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index 6440b56ec90e2..1934dc8a2ce09 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -196,6 +196,13 @@ static int vgic_irq_cmp(void *priv, struct list_head *a, struct list_head *b)
+ 	bool penda, pendb;
+ 	int ret;
  
-+	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
-+	    sdata->vif.type == NL80211_IFTYPE_STATION &&
-+	    !sdata->u.mgd.associated)
-+		return -EINVAL;
++	/*
++	 * list_sort may call this function with the same element when
++	 * the list is fairly long.
++	 */
++	if (unlikely(irqa == irqb))
++		return 0;
 +
- 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
- 	if (!sta)
- 		return -ENOMEM;
-@@ -1425,10 +1430,6 @@ static int ieee80211_add_station(struct
- 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
- 		sta->sta.tdls = true;
+ 	spin_lock(&irqa->irq_lock);
+ 	spin_lock_nested(&irqb->irq_lock, SINGLE_DEPTH_NESTING);
  
--	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
--	    !sdata->u.mgd.associated)
--		return -EINVAL;
--
- 	err = sta_apply_parameters(local, sta, params);
- 	if (err) {
- 		sta_info_free(local, sta);
+-- 
+2.20.1
+
 
 
