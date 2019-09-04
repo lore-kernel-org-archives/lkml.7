@@ -2,161 +2,123 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE79C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7692BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B92A2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D11422CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JaHnlaAK"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="WBZbEbSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbfIDNlI (ORCPT
+        id S1730391AbfIDNmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:41:08 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:47944 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfIDNlI (ORCPT
+        Wed, 4 Sep 2019 09:42:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40190 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfIDNmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:41:08 -0400
+        Wed, 4 Sep 2019 09:42:05 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x127so581830pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 06:42:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1567604467; x=1599140467;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=9oB9E5RKbz44dWfaaP/ornrMHa8i0/sjYcg4EQ72Tlk=;
-  b=JaHnlaAKWHXf/zOvKW7nmgKpe7bh05Ichpz81dNk01TCIpPeftivvqDb
-   Zkhar7xEjJWecPMEEggWBmSzEzwqTSk/EJJPr/XmmP+XRFzFE84guaJu6
-   htqfkalOr3eI74KQNszVTM0oDNOu3sfy65i8oy69i6hAfMF9QP+mVpuzx
-   A=;
-X-IronPort-AV: E=Sophos;i="5.64,467,1559520000"; 
-   d="scan'208";a="748981686"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 04 Sep 2019 13:41:06 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (Postfix) with ESMTPS id 58B45A22D0;
-        Wed,  4 Sep 2019 13:41:05 +0000 (UTC)
-Received: from EX13D13UWA004.ant.amazon.com (10.43.160.251) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Sep 2019 13:41:05 +0000
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13D13UWA004.ant.amazon.com (10.43.160.251) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 4 Sep 2019 13:41:04 +0000
-Received: from EX13D13UWA001.ant.amazon.com ([10.43.160.136]) by
- EX13D13UWA001.ant.amazon.com ([10.43.160.136]) with mapi id 15.00.1367.000;
- Wed, 4 Sep 2019 13:41:04 +0000
-From:   "Chocron, Jonathan" <jonnyc@amazon.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "Hanoch, Uri" <hanochu@amazon.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "Wasserstrom, Barak" <barakw@amazon.com>,
-        "Saidi, Ali" <alisaidi@amazon.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "Hawa, Hanna" <hhhawa@amazon.com>,
-        "Shenhar, Talel" <talel@amazon.com>,
-        "Krupnik, Ronen" <ronenk@amazon.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "Chocron, Jonathan" <jonnyc@amazon.com>
-Subject: Re: [PATCH v4 0/7] Amazon's Annapurna Labs DT-based PCIe host
- controller driver
-Thread-Topic: [PATCH v4 0/7] Amazon's Annapurna Labs DT-based PCIe host
- controller driver
-Thread-Index: AQHVWDYmsL7M9uiRlE24U3td1zxmYKcYOWkAgANi9IA=
-Date:   Wed, 4 Sep 2019 13:41:04 +0000
-Message-ID: <ed6d45c4d1382aecc5ed5b13b6fcd09e8ed244de.camel@amazon.com>
-References: <20190821153545.17635-1-jonnyc@amazon.com>
-         <20190902095806.GA14841@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190902095806.GA14841@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.161.154]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <FEA5FF204A922A4BB42E764D6D2044B5@amazon.com>
-Content-Transfer-Encoding: base64
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oklghVAYMBOMwnSSWwCYcajaz+bMy8hr9iKM1Yg7aak=;
+        b=WBZbEbSlW3hA4LPKkYyJzd58HTqckuyI9ruChkezZC6jGsyEyWalm/XID+in4XwAcX
+         ushgsDXIys/3Uyob2lacjzvMhD6NTYshvx5ow8YlhokuvapX6Z8eLwn5GE56kIpHJBwM
+         zlAbyidngWUPtIg1wV2lD3MndKSRQhmq4kLro=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oklghVAYMBOMwnSSWwCYcajaz+bMy8hr9iKM1Yg7aak=;
+        b=sX8wG2q4m94rxYwvD0z+iupDWVfgKR0KUGpfBpFq95s0DQffwW686R/8qIh+S0rnDt
+         XdBJhpdvOxBO4JSqW9o+QzcGtaByoiskC8rY7hqjFmzfOzSAx+zAWKcbAQ2lRvmTbZse
+         FUUj4DtEDIP/0oTImRHsYxIweE/KKQHJ8zwEyobZJ2PyZDOFgOBgAn+ca8IGwimJswYU
+         MANcY8TY4LQBGhiJXQta+p5aUcHEUaJkiNSF6KOMQuZS7ePq9q6vhSnEAq8I+LVdZcaN
+         yKLoNwbHZuWXIcWfz8mqRIvlLqMcQzZ37DI5kItSd2INYVMB9vHk2MKATNnpplxdJYnf
+         kq+A==
+X-Gm-Message-State: APjAAAVIiglvupr2JbqROVdhDKyodoRBmqjZOaWTcXgE5/FD+Nld5Rwx
+        dQfj3VYajBCzPPMlSBCfA7Qg7A==
+X-Google-Smtp-Source: APXvYqxtMLqjgzNXqwP58ru84p45VRpR0RWa4wbrgf8WB/8ClopE5Mr9NERja4e4k0aI89Ih5g/0wQ==
+X-Received: by 2002:a62:4d41:: with SMTP id a62mr46382478pfb.155.1567604524993;
+        Wed, 04 Sep 2019 06:42:04 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id c2sm11187176pfd.66.2019.09.04.06.42.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 06:42:04 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 09:42:03 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Viktor Rosendahl <viktor.rosendahl@gmail.com>, paulmck@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] ftrace: Implement fs notification for
+ tracing_max_latency
+Message-ID: <20190904134203.GA240514@google.com>
+References: <20190903132602.3440-1-viktor.rosendahl@gmail.com>
+ <20190903132602.3440-2-viktor.rosendahl@gmail.com>
+ <20190904040039.GB150430@google.com>
+ <20190904081919.GA2349@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904081919.GA2349@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA5LTAyIGF0IDEwOjU4ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gV2VkLCBBdWcgMjEsIDIwMTkgYXQgMDY6MzU6NDBQTSArMDMwMCwgSm9uYXRoYW4g
-Q2hvY3JvbiB3cm90ZToNCj4gPiBUaGlzIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIEFtYXpvbidz
-IEFubmFwdXJuYSBMYWJzIERULWJhc2VkIFBDSWUNCj4gPiBob3N0DQo+ID4gY29udHJvbGxlciBk
-cml2ZXIuDQo+ID4gQWRkaXRpb25hbGx5LCBpdCBhZGRzIDMgcXVpcmtzIChBQ1MsIFZQRCBhbmQg
-TVNJLVgpIGFuZCAyIGdlbmVyaWMNCj4gPiBEV0MgcGF0Y2hlcy4NCj4gPiANCj4gPiBDaGFuZ2Vz
-IHNpbmNlIHYzOg0KPiA+IC0gUmVtb3ZlZCBQQVRDSCA4Lzggc2luY2UgdGhlIHVzYWdlIG9mIHRo
-ZSBQQ0kgZmxhZ3Mgd2lsbCBiZQ0KPiA+IGRpc2N1c3NlZA0KPiA+ICAgaW4gdGhlIHVwY29taW5n
-IExQQw0KPiA+IC0gQWxpZ24gY29tbWl0IHN1YmplY3Qgd2l0aCB0aGUgZm9sZGVyIGNvbnZlbnRp
-b24NCj4gPiAtIEFkZGVkIGV4cGxhbmF0aW9uIHJlZ2FyZGluZyBFQ0FNICJvdmVybG9hZCIgbWVj
-aGFuaXNtDQo+ID4gLSBTd2l0Y2hlZCB0byByZWFkL3dyaXRle19yZWxheGVkfSBBUElzDQo+ID4g
-LSBNb2RpZmllZCBhIGRldl9lcnIgdG8gZGV2X2RiZw0KPiA+IC0gUmVtb3ZlZCB1bm5lY2Vzc2Fy
-eSB2YXJpYWJsZQ0KPiA+IC0gUmVtb3ZlZCBkcml2ZXIgZGV0YWlscyBmcm9tIGR0LWJpbmRpbmcg
-ZGVzY3JpcHRpb24NCj4gPiAtIENoYW5nZWQgdG8gU29DIHNwZWNpZmljIGNvbXBhdGlibGVzDQo+
-ID4gLSBGaXhlZCB0eXBvIGluIGEgY29tbWl0IG1lc3NhZ2UNCj4gPiAtIEFkZGVkIGNvbW1lbnQg
-cmVnYXJkaW5nIE1TSSBpbiB0aGUgTVNJLVggcXVpcmsNCj4gPiANCj4gPiBDaGFuZ2VzIHNpbmNl
-IHYyOg0KPiA+IC0gQWRkZWQgYWxfcGNpZV9jb250cm9sbGVyX3JlYWRsL3dyaXRlbCgpIHdyYXBw
-ZXJzDQo+ID4gLSBSZW9yZ2FuaXplZCBsb2NhbCB2YXJzIGluIHNldmVyYWwgZnVuY3Rpb25zIGFj
-Y29yZGluZyB0byByZXZlcnNlDQo+ID4gICB0cmVlIHN0cnVjdHVyZQ0KPiA+IC0gUmVtb3ZlZCB1
-bm5lY2Vzc2FyeSBjaGVjayBvZiByZXQgdmFsdWUNCj4gPiAtIENoYW5nZWQgcmV0dXJuIHR5cGUg
-b2YgYWxfcGNpZV9jb25maWdfcHJlcGFyZSgpIGZyb20gaW50IHRvIHZvaWQNCj4gPiAtIFJlbW92
-ZWQgY2hlY2sgaWYgbGluayBpcyB1cCBmcm9tIHByb2JlKCkgW2RvbmUgaW50ZXJuYWxseSBpbg0K
-PiA+ICAgZHdfcGNpZV9yZC93cl9jb25mKCldDQo+ID4gDQo+ID4gQ2hhbmdlcyBzaW5jZSB2MToN
-Cj4gPiAtIEFkZGVkIGNvbW1lbnQgcmVnYXJkaW5nIDB4MDAzMSBiZWluZyB1c2VkIGFzIGEgZGV2
-X2lkIGZvciBub24NCj4gPiByb290LXBvcnQgZGV2aWNlcyBhcyB3ZWxsDQo+ID4gLSBGaXhlZCBk
-aWZmZXJlbnQgbWVzc2FnZS9jb21tZW50L3ByaW50IHdvcmRpbmdzDQo+ID4gLSBBZGRlZCBwYW5p
-YyBzdGFja3RyYWNlIHRvIGNvbW1pdCBtZXNzYWdlIG9mIE1TSS14IHF1aXJrIHBhdGNoDQo+ID4g
-LSBDaGFuZ2VkIHRvIHBjaV93YXJuKCkgaW5zdGVhZCBvZiBkZXZfd2FybigpDQo+ID4gLSBBZGRl
-ZCB1bml0X2FkZHJlc3MgYWZ0ZXIgbm9kZV9uYW1lIGluIGR0LWJpbmRpbmcNCj4gPiAtIFVwZGF0
-ZWQgS2NvbmZpZyBoZWxwIGRlc2NyaXB0aW9uDQo+ID4gLSBVc2VkIEdFTk1BU0sgYW5kIEZJRUxE
-X1BSRVAvR0VUIHdoZXJlIGFwcHJvcHJpYXRlDQo+ID4gLSBSZW1vdmVkIGxlZnRvdmVyIGZpZWxk
-IGZyb20gc3RydWN0IGFsX3BjaWUgYW5kIG1vdmVkIGFsbCBwdHJzIHRvDQo+ID4gICB0aGUgYmVn
-aW5uaW5nDQo+ID4gLSBSZS13cmFwcGVkIGZ1bmN0aW9uIGRlZmluaXRpb25zIGFuZCBpbnZvY2F0
-aW9ucyB0byB1c2UgZmV3ZXINCj4gPiBsaW5lcw0KPiA+IC0gQ2hhbmdlICVwIHRvICVweCBpbiBk
-YmcgcHJpbnRzIGluIHJkL3dyX2NvbmYoKSBmdW5jdGlvbnMNCj4gPiAtIFJlbW92ZWQgdmFsaWRh
-dGlvbiB0aGF0IHRoZSBwb3J0IGlzIGNvbmZpZ3VyZWQgdG8gUkMgbW9kZSAoYXMNCj4gPiB0aGlz
-IGlzDQo+ID4gICBhZGRlZCBnZW5lcmljYWxseSBpbiBQQVRDSCA3LzgpDQo+ID4gLSBSZW1vdmVk
-IHVubmVjZXNzYXJ5IHZhcmlhYmxlIGluaXRpYWxpemF0aW9ucw0KPiA+IC0gU3d0aWNoZWQgdG8g
-JXBSIGZvciBwcmludGluZyByZXNvdXJjZXMNCj4gPiANCj4gPiANCj4gPiBBbGkgU2FpZGkgKDEp
-Og0KPiA+ICAgUENJOiBBZGQgQUNTIHF1aXJrIGZvciBBbWF6b24gQW5uYXB1cm5hIExhYnMgcm9v
-dCBwb3J0cw0KPiA+IA0KPiA+IEpvbmF0aGFuIENob2Nyb24gKDYpOg0KPiA+ICAgUENJOiBBZGQg
-QW1hem9uJ3MgQW5uYXB1cm5hIExhYnMgdmVuZG9yIElEDQo+ID4gICBQQ0kvVlBEOiBBZGQgVlBE
-IHJlbGVhc2UgcXVpcmsgZm9yIEFtYXpvbidzIEFubmFwdXJuYSBMYWJzIFJvb3QNCj4gPiBQb3J0
-DQo+ID4gICBQQ0k6IEFkZCBxdWlyayB0byBkaXNhYmxlIE1TSS1YIHN1cHBvcnQgZm9yIEFtYXpv
-bidzIEFubmFwdXJuYQ0KPiA+IExhYnMNCj4gPiAgICAgUm9vdCBQb3J0DQo+ID4gICBkdC1iaW5k
-aW5nczogUENJOiBBZGQgQW1hem9uJ3MgQW5uYXB1cm5hIExhYnMgUENJZSBob3N0IGJyaWRnZQ0K
-PiA+IGJpbmRpbmcNCj4gPiAgIFBDSTogZHdjOiBhbDogQWRkIHN1cHBvcnQgZm9yIERXIGJhc2Vk
-IGRyaXZlciB0eXBlDQo+ID4gICBQQ0k6IGR3YzogQWRkIHZhbGlkYXRpb24gdGhhdCBQQ0llIGNv
-cmUgaXMgc2V0IHRvIGNvcnJlY3QgbW9kZQ0KPiA+IA0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wY2kvcGNpZS1hbC50eHQgICAgICAgfCAgNDYgKysrDQo+ID4gIE1BSU5UQUlORVJTICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMyArLQ0KPiA+ICBkcml2ZXJzL3Bj
-aS9jb250cm9sbGVyL2R3Yy9LY29uZmlnICAgICAgICAgICAgfCAgMTIgKw0KPiA+ICBkcml2ZXJz
-L3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWFsLmMgICAgICAgICAgfCAzNjUNCj4gPiArKysrKysr
-KysrKysrKysrKysNCj4gPiAgLi4uL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndhcmUt
-ZXAuYyAgIHwgICA4ICsNCj4gPiAgLi4uL3BjaS9jb250cm9sbGVyL2R3Yy9wY2llLWRlc2lnbndh
-cmUtaG9zdC5jIHwgICA4ICsNCj4gPiAgZHJpdmVycy9wY2kvcXVpcmtzLmMgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgIDM3ICsrDQo+ID4gIGRyaXZlcnMvcGNpL3ZwZC5jICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAxNiArDQo+ID4gIGluY2x1ZGUvbGludXgvcGNpX2lkcy5oICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgMiArDQo+ID4gIDkgZmlsZXMgY2hhbmdlZCwgNDk2IGlu
-c2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvcGNpZS0NCj4gPiBhbC50eHQNCj4gDQo+
-IEhpIEpvbmF0aGFuLA0KPiANCj4gYXJlIHlvdSBnb2luZyB0byBzZW5kIGEgdjUgZm9yIHRoaXMg
-c2VyaWVzID8gSWYgd2Ugc2hvdWxkIGNvbnNpZGVyDQo+IGl0IGZvciB2NS40IEkgZXhwZWN0IGl0
-IHRvIGJlIG9uIHRoZSBsaXN0IHRoaXMgd2VlayBhcyBzb29uIGFzDQo+IHBvc3NpYmxlLg0KPiAN
-ClllcywgSSdsbCBzZW5kIGl0IGJ5IHRvbW9ycm93Lg0KDQo+IFRoYW5rcywNCj4gTG9yZW56bw0K
+On Wed, Sep 04, 2019 at 10:19:19AM +0200, Peter Zijlstra wrote:
+> On Wed, Sep 04, 2019 at 12:00:39AM -0400, Joel Fernandes wrote:
+> > [ Resending since I messed up my last email's headers! ]
+> > 
+> > On Tue, Sep 03, 2019 at 03:25:59PM +0200, Viktor Rosendahl wrote:
+> > > This patch implements the feature that the tracing_max_latency file,
+> > > e.g. /sys/kernel/debug/tracing/tracing_max_latency will receive
+> > > notifications through the fsnotify framework when a new latency is
+> > > available.
+> > > 
+> > > One particularly interesting use of this facility is when enabling
+> > > threshold tracing, through /sys/kernel/debug/tracing/tracing_thresh,
+> > > together with the preempt/irqsoff tracers. This makes it possible to
+> > > implement a user space program that can, with equal probability,
+> > > obtain traces of latencies that occur immediately after each other in
+> > > spite of the fact that the preempt/irqsoff tracers operate in overwrite
+> > > mode.
+> > 
+> > Adding Paul since RCU faces similar situations, i.e. raising softirq risks
+> > scheduler deadlock in rcu_read_unlock_special() -- but RCU's solution is to
+> > avoid raising the softirq and instead use irq_work.
+> 
+> Which is right.
+
+Cool.
+
+> > I was wondering, if we can rename __raise_softirq_irqoff() to
+> > raise_softirq_irqoff_no_wake() and call that from places where there is risk
+> > of scheduler related deadlocks. Then I think this can be used from Viktor's
+> > code.  Let us discuss - what would happen if the softirq is raised, but
+> > ksoftirqd is not awakened for this latency notification path? Is this really
+> > an issue considering the softirq will execute during the next interrupt exit?
+> 
+> You'd get unbounded latency for processing the softirq and warnings on
+> going idle with softirqs pending.
+
+Thanks for sharing that.
+
+> I really don't see why we should/want to be using softirq here.
+
+Sure. makes sense.
+
+thanks,
+
+ - Joel
+
