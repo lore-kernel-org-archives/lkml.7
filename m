@@ -2,55 +2,142 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D7DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA7BC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A961F20820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BD922CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567613154;
+	bh=i06W84r/nrEmzr2W5QcJX46Ufk1u7WkffUzzypsoHxk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z0Fw2MaxOQyoYFq/7ip66qNo3Rm0mkeJC4zVWWjNZbiU/qKkQWJ5rEA4fV90TtfyJ
+	 BngBQx6TtcY/GG7OWCFTUPFH3l8V0jpjFYSv4XfCBDD3MX01OWB8ceka//N28Ynrbo
+	 8BfMInay1cuyLUV/cwZ837LqP0nfdLXgPck62Pfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387452AbfIDQFt (ORCPT
+        id S1732672AbfIDQCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:05:49 -0400
-Received: from verein.lst.de ([213.95.11.211]:40471 "EHLO verein.lst.de"
+        Wed, 4 Sep 2019 12:02:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732345AbfIDQCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:42 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2D7DC227A8C; Wed,  4 Sep 2019 18:02:36 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 18:02:35 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@fb.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Keith Busch <keith.busch@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
-Message-ID: <20190904160235.GA20691@lst.de>
-References: <20190831000139.7662-1-logang@deltatee.com> <20190831152910.GA29439@localhost.localdomain> <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com> <20190903164620.GA20847@localhost.localdomain> <20190904060558.GA10849@lst.de> <20190904144426.GB21302@localhost.localdomain> <20190904154215.GA20422@lst.de> <20190904155445.GD21302@localhost.localdomain>
+        id S1732702AbfIDQCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E19E023402;
+        Wed,  4 Sep 2019 16:02:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567612955;
+        bh=i06W84r/nrEmzr2W5QcJX46Ufk1u7WkffUzzypsoHxk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0j/wyJ4t88pqKiMAr3q3SjeORj5tFAcfSzQmtBReEI8xcm7Mo3ibXhZE6LDgfW9DL
+         GMLhxf4GbVvWartzv1MfgvX3OxykGz4w8Dqb4VxrzIcyBtBWpJH3K0jvWiMn7TetiJ
+         k7qOLKB45a19POy6RBoxP+qioMVOKkRCmwGT3KnM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sven Eckelmann <sven@narfation.org>,
+        syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/27] batman-adv: Only read OGM tvlv_len after buffer len check
+Date:   Wed,  4 Sep 2019 12:02:04 -0400
+Message-Id: <20190904160220.4545-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904160220.4545-1-sashal@kernel.org>
+References: <20190904160220.4545-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904155445.GD21302@localhost.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 09:54:45AM -0600, Keith Busch wrote:
-> Can we just ensure there is never a matching controller then? This
-> patch will accomplish that and simpler than wrapping the instance in a
-> refcount'ed object:
-> 
-> http://lists.infradead.org/pipermail/linux-nvme/2019-May/024142.html
+From: Sven Eckelmann <sven@narfation.org>
 
-I guess that is fine to.  Btw, what happened to the plan for udev
-rules in that thread?
+[ Upstream commit a15d56a60760aa9dbe26343b9a0ac5228f35d445 ]
+
+Multiple batadv_ogm_packet can be stored in an skbuff. The functions
+batadv_iv_ogm_send_to_if()/batadv_iv_ogm_receive() use
+batadv_iv_ogm_aggr_packet() to check if there is another additional
+batadv_ogm_packet in the skb or not before they continue processing the
+packet.
+
+The length for such an OGM is BATADV_OGM_HLEN +
+batadv_ogm_packet->tvlv_len. The check must first check that at least
+BATADV_OGM_HLEN bytes are available before it accesses tvlv_len (which is
+part of the header. Otherwise it might try read outside of the currently
+available skbuff to get the content of tvlv_len.
+
+Fixes: ef26157747d4 ("batman-adv: tvlv - basic infrastructure")
+Reported-by: syzbot+355cab184197dbbfa384@syzkaller.appspotmail.com
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/batman-adv/bat_iv_ogm.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/net/batman-adv/bat_iv_ogm.c b/net/batman-adv/bat_iv_ogm.c
+index 1ae8c59fcb2dc..780700fcbe63e 100644
+--- a/net/batman-adv/bat_iv_ogm.c
++++ b/net/batman-adv/bat_iv_ogm.c
+@@ -450,17 +450,23 @@ static u8 batadv_hop_penalty(u8 tq, const struct batadv_priv *bat_priv)
+  * batadv_iv_ogm_aggr_packet - checks if there is another OGM attached
+  * @buff_pos: current position in the skb
+  * @packet_len: total length of the skb
+- * @tvlv_len: tvlv length of the previously considered OGM
++ * @ogm_packet: potential OGM in buffer
+  *
+  * Return: true if there is enough space for another OGM, false otherwise.
+  */
+-static bool batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
+-				      __be16 tvlv_len)
++static bool
++batadv_iv_ogm_aggr_packet(int buff_pos, int packet_len,
++			  const struct batadv_ogm_packet *ogm_packet)
+ {
+ 	int next_buff_pos = 0;
+ 
+-	next_buff_pos += buff_pos + BATADV_OGM_HLEN;
+-	next_buff_pos += ntohs(tvlv_len);
++	/* check if there is enough space for the header */
++	next_buff_pos += buff_pos + sizeof(*ogm_packet);
++	if (next_buff_pos > packet_len)
++		return false;
++
++	/* check if there is enough space for the optional TVLV */
++	next_buff_pos += ntohs(ogm_packet->tvlv_len);
+ 
+ 	return (next_buff_pos <= packet_len) &&
+ 	       (next_buff_pos <= BATADV_MAX_AGGREGATION_BYTES);
+@@ -488,7 +494,7 @@ static void batadv_iv_ogm_send_to_if(struct batadv_forw_packet *forw_packet,
+ 
+ 	/* adjust all flags and log packets */
+ 	while (batadv_iv_ogm_aggr_packet(buff_pos, forw_packet->packet_len,
+-					 batadv_ogm_packet->tvlv_len)) {
++					 batadv_ogm_packet)) {
+ 		/* we might have aggregated direct link packets with an
+ 		 * ordinary base packet
+ 		 */
+@@ -1841,7 +1847,7 @@ static int batadv_iv_ogm_receive(struct sk_buff *skb,
+ 
+ 	/* unpack the aggregated packets and process them one by one */
+ 	while (batadv_iv_ogm_aggr_packet(ogm_offset, skb_headlen(skb),
+-					 ogm_packet->tvlv_len)) {
++					 ogm_packet)) {
+ 		batadv_iv_ogm_process(skb, ogm_offset, if_incoming);
+ 
+ 		ogm_offset += BATADV_OGM_HLEN;
+-- 
+2.20.1
 
