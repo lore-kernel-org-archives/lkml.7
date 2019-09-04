@@ -2,56 +2,59 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5411BC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0201C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F455206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8990F206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620309;
-	bh=r3hHmwvr5gwac8HXyAhPmaX+ldpvoyfb/3IuCoowTQ4=;
+	s=default; t=1567620311;
+	bh=F7qSfZQ579l9fDyNnw2bKyUdKLIanbDcfEd1byuRp/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qdb9KqComNFysRO6uKGmnQZCFJpc0OzJfTC6H38liZOJOJs4aPotVwncXSK3ZnlZo
-	 2dPg4rt8Lu2YXnNkH3/eQBo/mEL/YvEw3XjFU7hiIBcD9qOMXE2DQG6sBMEWdlTO9C
-	 RhDLlTjZEXH95BaDGMvy2Jxey6hBnd0NLf2t4IY8=
+	b=bbQ4VNr8lzenZY6egL5b6vBpqlJ+CispBj6qzeFs0EyPV7GLLCmh2QdOqBvmOF4OD
+	 7OA1zvCNIkIR3rMnicRzcaYjnQW6FYbLSpKkhBEggcd/QGixFy5qRU1JMHdgiwoZ0d
+	 NoSfVrXGjSiAQkBvRlTkR72mwlIV2PTtCO0YSvMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389201AbfIDSFI (ORCPT
+        id S2389208AbfIDSFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46308 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:05:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388825AbfIDSFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:05:03 -0400
+        id S2389184AbfIDSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:05:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA3DB2339E;
-        Wed,  4 Sep 2019 18:05:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98AB0206B8;
+        Wed,  4 Sep 2019 18:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620302;
-        bh=r3hHmwvr5gwac8HXyAhPmaX+ldpvoyfb/3IuCoowTQ4=;
+        s=default; t=1567620305;
+        bh=F7qSfZQ579l9fDyNnw2bKyUdKLIanbDcfEd1byuRp/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F2tKM7zzkfFH62XT+jTK9hLNfNbkDTTVa/kg8HeGKsQ+xTiGtr15thAfrL1zRHurC
-         DAZ8mUCKf+OJXAf6mXKnBZcwFkfibf3K0paxLgH3o75nmgSVe9/RrLPNfghiC6Ks7h
-         g/8i5B2pq61ezBJsyWzFOFyw+vJoPMqVm27Cnu70=
+        b=ey0+RXGPkfO16qcUqyEdrAYdejhd2Q8oLhCo1vn9xisrR/gIGR+1DQE760mdh2CoP
+         DdlfGi0Fut3Pevi+0ElLqSvSUwNFrPplOPjzozpKyCEGNxShAaUJgXV7lNoSa2NTlI
+         Zb9FQZevC+TWR4Dlpbn45xbUnRoZUG6amHXHT/aE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.14 41/57] stm class: Fix a double free of stm_source_device
-Date:   Wed,  4 Sep 2019 19:54:09 +0200
-Message-Id: <20190904175306.005214863@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/93] dmaengine: ste_dma40: fix unneeded variable warning
+Date:   Wed,  4 Sep 2019 19:53:03 +0200
+Message-Id: <20190904175302.977169348@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
-References: <20190904175301.777414715@linuxfoundation.org>
+In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
+References: <20190904175302.845828956@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,36 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ding Xiang <dingxiang@cmss.chinamobile.com>
+[ Upstream commit 5d6fb560729a5d5554e23db8d00eb57cd0021083 ]
 
-commit 961b6ffe0e2c403b09a8efe4a2e986b3c415391a upstream.
+clang-9 points out that there are two variables that depending on the
+configuration may only be used in an ARRAY_SIZE() expression but not
+referenced:
 
-In the error path of stm_source_register_device(), the kfree is
-unnecessary, as the put_device() before it ends up calling
-stm_source_device_release() to free stm_source_device, leading to
-a double free at the outer kfree() call. Remove it.
+drivers/dma/ste_dma40.c:145:12: error: variable 'd40_backup_regs' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs[] = {
+           ^
+drivers/dma/ste_dma40.c:214:12: error: variable 'd40_backup_regs_chan' is not needed and will not be emitted [-Werror,-Wunneeded-internal-declaration]
+static u32 d40_backup_regs_chan[] = {
 
-Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Fixes: 7bd1d4093c2fa ("stm class: Introduce an abstraction for System Trace Module devices")
-Link: https://lore.kernel.org/linux-arm-kernel/1563354988-23826-1-git-send-email-dingxiang@cmss.chinamobile.com/
-Cc: stable@vger.kernel.org # v4.4+
-Link: https://lore.kernel.org/r/20190821074955.3925-2-alexander.shishkin@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Mark these __maybe_unused to shut up the warning.
 
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20190712091357.744515-1-arnd@arndb.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/stm/core.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/dma/ste_dma40.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -1107,7 +1107,6 @@ int stm_source_register_device(struct de
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index f4edfc56f34ef..3d55405c49cac 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -142,7 +142,7 @@ enum d40_events {
+  * when the DMA hw is powered off.
+  * TODO: Add save/restore of D40_DREG_GCC on dma40 v3 or later, if that works.
+  */
+-static u32 d40_backup_regs[] = {
++static __maybe_unused u32 d40_backup_regs[] = {
+ 	D40_DREG_LCPA,
+ 	D40_DREG_LCLA,
+ 	D40_DREG_PRMSE,
+@@ -211,7 +211,7 @@ static u32 d40_backup_regs_v4b[] = {
  
- err:
- 	put_device(&src->dev);
--	kfree(src);
+ #define BACKUP_REGS_SZ_V4B ARRAY_SIZE(d40_backup_regs_v4b)
  
- 	return err;
- }
+-static u32 d40_backup_regs_chan[] = {
++static __maybe_unused u32 d40_backup_regs_chan[] = {
+ 	D40_CHAN_REG_SSCFG,
+ 	D40_CHAN_REG_SSELT,
+ 	D40_CHAN_REG_SSPTR,
+-- 
+2.20.1
+
 
 
