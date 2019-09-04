@@ -5,53 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFEBC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA26AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484EF2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C042339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620655;
-	bh=An5nCkic9DIMAchQA8nBNy2dnhyUW1x9ls9wee2wjeA=;
+	s=default; t=1567620658;
+	bh=reqK3qDzV0OY1qcf3LHJVujmnjBe/yW+o7i+jB6muVk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W6zM/vpEfIJv+cVeqZniXYScU7Lsv6fjJljLv0gEx3upeGhjzlPoBqnPJ6QBqCodU
-	 FGcua4eakxNgOe7jxOdEiO2skZec2McIBR/60Nffe4l6/ug9DX7dXmDZtme57rTN8J
-	 XR3TEiHmgMa2CXfVb8zLhltLJVoAbYXeIifMuSEk=
+	b=OX9Zm/VZej47FM3JWsPtVbulbqMF8moMcQN4tESlAJJZ56vKVkAoutW/bQs8oZ0Uy
+	 2oVxO/SNNEJRy/79VzCQrpZ/IeEwmuMS1JM6dpIrUBiHHz5WW2dSXMUpJSadaN8w6I
+	 AO25HyaGdC8l/ABngbUspxUQDrK2xDZfpsloZHFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390188AbfIDSKy (ORCPT
+        id S2389249AbfIDSK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54664 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390170AbfIDSKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:52 -0400
+        id S2390170AbfIDSKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DF1B206B8;
-        Wed,  4 Sep 2019 18:10:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2FC23400;
+        Wed,  4 Sep 2019 18:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620651;
-        bh=An5nCkic9DIMAchQA8nBNy2dnhyUW1x9ls9wee2wjeA=;
+        s=default; t=1567620654;
+        bh=reqK3qDzV0OY1qcf3LHJVujmnjBe/yW+o7i+jB6muVk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNcy2Du8an8wu4lCnBTePdGlrkedudBFwBMsgc61bJ4bv9sWVTRVbKXfzbOc4eMNM
-         3Q4nX/22mwllEjODo3oY1WRDzrRyqytds3gnuQw1NEYdxGBxdHnNaD9t7fSp61YSaQ
-         PdoZ3ksT+y8iUk9/yf8LYmz2wvKAYAKIo4QtKcnY=
+        b=ZGdHn8mdjIWAQY63T0A6/chrIbjfPnQ1yx0kqUFIJoXDD3vdr2EhFBdm85nTsNjbS
+         FW/Ou9mTKslh2Mor0DIIH04N7pYHMpSNQiwGazHqN5Pt0rnagrO3Zv34fOLpHM1jND
+         6sSTAuW3AEimFrukyvia/i9w+XikFjdRtL6YgouI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Stancek <jstancek@redhat.com>,
+        stable@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, dbueso@suse.de,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 043/143] locking/rwsem: Add missing ACQUIRE to read_slowpath exit when queue is empty
-Date:   Wed,  4 Sep 2019 19:53:06 +0200
-Message-Id: <20190904175315.753872440@linuxfoundation.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jan Stancek <jstancek@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 044/143] lcoking/rwsem: Add missing ACQUIRE to read_slowpath sleep loop
+Date:   Wed,  4 Sep 2019 19:53:07 +0200
+Message-Id: <20190904175315.793575310@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -64,69 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e1b98fa316648420d0434d9ff5b92ad6609ba6c3 ]
+[ Upstream commit 99143f82a255e7f054bead8443462fae76dd829e ]
 
-LTP mtest06 has been observed to occasionally hit "still mapped when
-deleted" and following BUG_ON on arm64.
+While reviewing another read_slowpath patch, both Will and I noticed
+another missing ACQUIRE, namely:
 
-The extra mapcount originated from pagefault handler, which handled
-pagefault for vma that has already been detached. vma is detached
-under mmap_sem write lock by detach_vmas_to_be_unmapped(), which
-also invalidates vmacache.
+  X = 0;
 
-When the pagefault handler (under mmap_sem read lock) calls
-find_vma(), vmacache_valid() wrongly reports vmacache as valid.
+  CPU0			CPU1
 
-After rwsem down_read() returns via 'queue empty' path (as of v5.2),
-it does so without an ACQUIRE on sem->count:
+  rwsem_down_read()
+    for (;;) {
+      set_current_state(TASK_UNINTERRUPTIBLE);
 
-  down_read()
-    __down_read()
-      rwsem_down_read_failed()
-        __rwsem_down_read_failed_common()
-          raw_spin_lock_irq(&sem->wait_lock);
-          if (list_empty(&sem->wait_list)) {
-            if (atomic_long_read(&sem->count) >= 0) {
-              raw_spin_unlock_irq(&sem->wait_lock);
-              return sem;
+                        X = 1;
+                        rwsem_up_write();
+                          rwsem_mark_wake()
+                            atomic_long_add(adjustment, &sem->count);
+                            smp_store_release(&waiter->task, NULL);
 
-The problem can be reproduced by running LTP mtest06 in a loop and
-building the kernel (-j $NCPUS) in parallel. It does reproduces since
-v4.20 on arm64 HPE Apollo 70 (224 CPUs, 256GB RAM, 2 nodes). It
-triggers reliably in about an hour.
+      if (!waiter.task)
+        break;
 
-The patched kernel ran fine for 10+ hours.
+      ...
+    }
 
-Signed-off-by: Jan Stancek <jstancek@redhat.com>
+  r = X;
+
+Allows 'r == 0'.
+
+Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reported-by: Will Deacon <will@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Will Deacon <will@kernel.org>
-Acked-by: Waiman Long <longman@redhat.com>
+Acked-by: Will Deacon <will@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: dbueso@suse.de
-Fixes: 4b486b535c33 ("locking/rwsem: Exit read lock slowpath if queue empty & no writer")
-Link: https://lkml.kernel.org/r/50b8914e20d1d62bb2dee42d342836c2c16ebee7.1563438048.git.jstancek@redhat.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Jan Stancek <jstancek@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/rwsem-xadd.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/locking/rwsem-xadd.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index 0b1f779572402..397dedc58432d 100644
+index 397dedc58432d..385ebcfc31a6d 100644
 --- a/kernel/locking/rwsem-xadd.c
 +++ b/kernel/locking/rwsem-xadd.c
-@@ -454,6 +454,8 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
- 		 * been set in the count.
- 		 */
- 		if (atomic_long_read(&sem->count) >= 0) {
-+			/* Provide lock ACQUIRE */
-+			smp_acquire__after_ctrl_dep();
- 			raw_spin_unlock_irq(&sem->wait_lock);
- 			rwsem_set_reader_owned(sem);
- 			lockevent_inc(rwsem_rlock_fast);
+@@ -485,8 +485,10 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
+ 	/* wait to be given the lock */
+ 	while (true) {
+ 		set_current_state(state);
+-		if (!waiter.task)
++		if (!smp_load_acquire(&waiter.task)) {
++			/* Orders against rwsem_mark_wake()'s smp_store_release() */
+ 			break;
++		}
+ 		if (signal_pending_state(state, current)) {
+ 			raw_spin_lock_irq(&sem->wait_lock);
+ 			if (waiter.task)
 -- 
 2.20.1
 
