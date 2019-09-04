@@ -2,106 +2,121 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FCAC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCACC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EAA208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567611028;
-	bh=sAFg6CdO9IgQr2JfCCgKK6YJrHe6h3VwnAnrJdPrq0k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1E0b4vBLh7YH78unBXScVt3Pw5Q7IEMevNa1f8XqOL8W/iNtgK1LkGf2cHi5I2r8c
-	 0O0InAga5QBzwyJsBaM+vCaz0U+ZIh2VIjMUNhbKENnmUf81cc3R67djv4JXVyZWcT
-	 LjMscyZWYQTrya5ukFT7+kGp8GXh0x+7Hc1wM3e4=
+	by mail.kernel.org (Postfix) with ESMTP id 7D92B208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730539AbfIDPa1 (ORCPT
+        id S1731116AbfIDPcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:30:27 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34716 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729888AbfIDPa0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:30:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=c7U5Te26OOkpWZh++wRipeOwfTU9MW2rO16f03qANlE=; b=TtnIL2Lvf76PRgjjGcjO5m6CT
-        f9WndgysisoyfcXDGr8r7su7K21pY4RLBjQ2+AdhVLc0xJvh/Qo9olW1hKGj5gx5NPvEYQBPdcYUL
-        6/PFPA+2dCs9UR5RTMY5S4XsBi5V+gygEqJmxvsKerAKIB0llRn11ACJgLET5EFHJctAQ=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i5XEf-0006KI-Me; Wed, 04 Sep 2019 15:30:17 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D94FC2742B45; Wed,  4 Sep 2019 16:30:16 +0100 (BST)
-Date:   Wed, 4 Sep 2019 16:30:16 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Cc:     David Yang <yangxiaohua@everest-semi.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] ASoC: es8316: judge PCM rate at later timing
-Message-ID: <20190904153016.GD4348@sirena.co.uk>
-References: <20190903165322.20791-1-katsuhiro@katsuster.net>
- <20190903174801.GD7916@sirena.co.uk>
- <85c717bf-d875-016c-a303-867bdca9a645@katsuster.net>
+        Wed, 4 Sep 2019 11:32:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56100 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729773AbfIDPcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:32:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D5B2830A76A2;
+        Wed,  4 Sep 2019 15:32:15 +0000 (UTC)
+Received: from [10.3.116.78] (ovpn-116-78.phx2.redhat.com [10.3.116.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DBABD60606;
+        Wed,  4 Sep 2019 15:32:14 +0000 (UTC)
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
+ permissions from symbolic to octal
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-3-skunberg.kelsey@gmail.com>
+ <20190814053846.GA253360@google.com>
+ <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
+ <20190904062229.GA66871@JATN>
+From:   Don Dutile <ddutile@redhat.com>
+Message-ID: <a7865a6a-4359-e989-7ef5-77d9a8135ae3@redhat.com>
+Date:   Wed, 4 Sep 2019 11:32:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eqp4TxRxnD4KrmFZ"
-Content-Disposition: inline
-In-Reply-To: <85c717bf-d875-016c-a303-867bdca9a645@katsuster.net>
-X-Cookie: Help fight continental drift.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190904062229.GA66871@JATN>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 04 Sep 2019 15:32:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 09/04/2019 02:22 AM, Kelsey Skunberg wrote:
+> On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
+>> On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
+>>> [+cc Bodong, Don, Greg for permission question]
+>>>
+>>> On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
+>>>> Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
+>>>> preferred and octal permissions should be used instead. Change all
+>>>> symbolic permissions to octal permissions.
+>>>>
+>>>> Example of old:
+>>>>
+>>>> "(S_IWUSR | S_IWGRP)"
+>>>>
+>>>> Example of new:
+>>>>
+>>>> "0220"
+>>>
+>>>
+>>>>    static DEVICE_ATTR_RO(sriov_totalvfs);
+>>>> -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
+>>>> -				  sriov_numvfs_show, sriov_numvfs_store);
+>>>> +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+>>>>    static DEVICE_ATTR_RO(sriov_offset);
+>>>>    static DEVICE_ATTR_RO(sriov_stride);
+>>>>    static DEVICE_ATTR_RO(sriov_vf_device);
+>>>> -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
+>>>> -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+>>>> +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+>>>> +		   sriov_drivers_autoprobe_store);
+>>>
+>>> Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
+>>> "unusual" permissions.  These were added by:
+>>>
+>>>     0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+>>>     1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+>>>
+>>> Kelsey's patch correctly preserves the existing permissions, but we
+>>> should double-check that they are the permissions they want, and
+>>> possibly add a comment about why they're different from the rest.
+>>>
+>>> Bjorn
+>>>
+> 
+> Hi Don,
+> 
+>> The rest being? ... 0644 vs 0664 ?
+>> The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
+>>
+>> -dd
+>>
+> 
+> Were you able to see if the unusual permissions (0664) are needed for
+> libvirt? I appreciate your help!
+> 
+> -Kelsey
+> 
+Asking libvirt team in RH; will get back as soon as I hear back.
+LPC time sink may delay the response.
 
---eqp4TxRxnD4KrmFZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+-dd
 
-On Thu, Sep 05, 2019 at 12:06:23AM +0900, Katsuhiro Suzuki wrote:
-
-> Would you tell me one more thing. I don't understand who sets MCLK to 0.
-> Is it needed original machine driver instead of audio-graph-card?
-
-> On my test environment (audio-graph-card + Rockchip I2S + ES8316), it
-> seems audio-graph-card has never called set_sysclk() with freq = 0 after
-> stop play/capture sound. So my env will go to bad scenario as I described in
-> this patch.
-
-You shouldn't need a custom machine driver - you'll just be the first
-person who ran into this with audio-graph-card.  I'd just add this
-support to the audio-graph-card, either with custom startup and shutdown
-callbacks or using a set_bias_level() callback (both get used, I'd guess
-the set_bias_level() is easier since you don't need to reference count
-anything).
-
---eqp4TxRxnD4KrmFZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1v2IgACgkQJNaLcl1U
-h9CzYQgAgkCVkBPAUDivm6m1Ys+xPGbqYO85zw38TRTqnQ8UMpCzpJd0DV1P8jAb
-xx3AaPskCUVjVjY8Nf9ejibjh3Bv0EF75kTr+qcuSCSm1gHjzNOsYym05tMtVOEJ
-wO6Kf95ga1nFkJdUzMlnPYY7Ifsybx29HfT0qdaWny4G6c1JnciMRAqRQx457ZAU
-a2beSvFPAoNAxB2l2N/mUxWM5OkhnYQ+hoy02agR9LoMsYGO3YxVfBRictMw1e8W
-fw3Hq9jULyMR4rY0tIObdsog2kHlwsCQrFzbQ1e4j25r1UntY9whHlctZKJX0onX
-jxre3OCp7c1jZLxxjsU9vsacKvYRxQ==
-=YJma
------END PGP SIGNATURE-----
-
---eqp4TxRxnD4KrmFZ--
