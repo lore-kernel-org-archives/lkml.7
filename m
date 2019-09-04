@@ -2,97 +2,138 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE88C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7975C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B062339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD9223401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ISfgP38V";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CZKc/aty"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfD5oJEN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbfIDGVs (ORCPT
+        id S1728756AbfIDGWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:21:48 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38192 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfIDGVr (ORCPT
+        Wed, 4 Sep 2019 02:22:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34857 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfIDGWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:21:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B6D60611C5; Wed,  4 Sep 2019 06:21:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567578106;
-        bh=TPgwvKctOwymLvmyyZZR51ik0MV3E88Ok8sQi1Pt0ik=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=ISfgP38VuLvEgqxm7IFujKsnfnYGs/t8g3hKuPggbeTb+t5rtdE40G6/1cnQV3r/I
-         Jh78KqRzTzKFiPQ3gq7PiiPBRP3eplxlMLFoQNfFuUIA047CRQ8ktfLNJa2m5Ud4R1
-         wKsWXvYQ8Zaei8K2m2uElNGHp74EA7v1Hidp3Lqw=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78032602A7;
-        Wed,  4 Sep 2019 06:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567578106;
-        bh=TPgwvKctOwymLvmyyZZR51ik0MV3E88Ok8sQi1Pt0ik=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=CZKc/atyhx0Bz9SPu1S3FG5C0jMBpRU3ENSWD0EpysigTTM9J37BVmTea8Y4ya0U9
-         d8pLxn9NOavUJHkDBxBny/ZXv9VwGmOreFWb2qQXeV/KC8PHfRvi2UPd4YlzVUchuO
-         CLcATN06vJ7T63Vi0OOyyMkphPMsx+j0s5JEUMHQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78032602A7
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 4 Sep 2019 02:22:32 -0400
+Received: by mail-io1-f67.google.com with SMTP id b10so41771785ioj.2;
+        Tue, 03 Sep 2019 23:22:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ha13jbBTJ78NMGOciyWwaZeX7xMQMX408d8EPNxVmIs=;
+        b=LfD5oJENpa1oAY/gb/OD2LLz+K2jKvTt8+yeSZEVcHtD1k9VN/Ifr6qI4QB8BZzyjx
+         QOpxxSZ6JJO4O96hJMv8Tq0eL98tb6W+nr6YpnIISDuQcid+4C0k+PfhPVU5r44gSsrr
+         fScRxF2Bxw5otqKfBRhz8GHIIvGmHxXkhOg6OnYFAZeCv/QWY+jAVM0DitJzZ8cOrBNB
+         RQiJq6TKmigyAjxNiJ6+9viTdOt2pX/FyEU65PNHjFu8MAWmhSAeWFTLiph+ci8vDj4z
+         9ZQ39kdDrm4CwcYC4xXV2LBBogfQfOE3iwCxflTIil9N9yKriFL1l1uQ9NUdsjD9JDps
+         oVGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ha13jbBTJ78NMGOciyWwaZeX7xMQMX408d8EPNxVmIs=;
+        b=qFILi6/8WWk26A7lWwN+9eVGOmJ4A83jUT6ymhap7A6o4Psu3O/4Hih78p/yWJfypW
+         F4xbAHeUHn/VfVPSsn51IMJAJE+ZL/1e8a+4RDs4hUhV72id18005FW9Ahi75LZIskSq
+         Hs0PE0MibguhK8jNeszo2BsdotChJZzVaRi6dmVvW4kLbPIwTf+XOKPIPYP3CvTSkhC5
+         ACnggehFAZ454di8TycM3JAXcpHhk4N3ehtzGLKCQXcZVBL7FTVCwoLFHYs2azjd5G01
+         OtSi+lZx/J/rdK3k4ojhrtrvDU3wEjnWCDht/qk0VJpC2CS0Y/aBpLsacfLFu0q2iSLS
+         Tw5Q==
+X-Gm-Message-State: APjAAAXd9a1okt4pt/lHlechqwSkNvLcUfD5Zd28HZQLfxUGkZQxzPxq
+        TGKRPp3y+itWH3yHz0pxWOg=
+X-Google-Smtp-Source: APXvYqyGF/nT7hMCagXQoT3al4s5E9hCIUwMr8muaqs6rrZkEfVxma8D+VTyjUf4JfEBbaY11AwnVw==
+X-Received: by 2002:a5e:8c01:: with SMTP id n1mr1049078ioj.152.1567578151734;
+        Tue, 03 Sep 2019 23:22:31 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id t5sm17061967ios.33.2019.09.03.23.22.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 23:22:31 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 00:22:29 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Don Dutile <ddutile@redhat.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
+ permissions from symbolic to octal
+Message-ID: <20190904062229.GA66871@JATN>
+References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190813204513.4790-3-skunberg.kelsey@gmail.com>
+ <20190814053846.GA253360@google.com>
+ <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath6kl: Fix a possible null-pointer dereference in
- ath6kl_htc_mbox_create()
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190729030305.18410-1-baijiaju1990@gmail.com>
-References: <20190729030305.18410-1-baijiaju1990@gmail.com>
-To:     Jia-Ju Bai <baijiaju1990@gmail.com>
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190904062146.B6D60611C5@smtp.codeaurora.org>
-Date:   Wed,  4 Sep 2019 06:21:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jia-Ju Bai <baijiaju1990@gmail.com> wrote:
+On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
+> On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
+> > [+cc Bodong, Don, Greg for permission question]
+> > 
+> > On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
+> > > Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
+> > > preferred and octal permissions should be used instead. Change all
+> > > symbolic permissions to octal permissions.
+> > > 
+> > > Example of old:
+> > > 
+> > > "(S_IWUSR | S_IWGRP)"
+> > > 
+> > > Example of new:
+> > > 
+> > > "0220"
+> > 
+> > 
+> > >   static DEVICE_ATTR_RO(sriov_totalvfs);
+> > > -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
+> > > -				  sriov_numvfs_show, sriov_numvfs_store);
+> > > +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+> > >   static DEVICE_ATTR_RO(sriov_offset);
+> > >   static DEVICE_ATTR_RO(sriov_stride);
+> > >   static DEVICE_ATTR_RO(sriov_vf_device);
+> > > -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
+> > > -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
+> > > +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+> > > +		   sriov_drivers_autoprobe_store);
+> > 
+> > Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
+> > "unusual" permissions.  These were added by:
+> > 
+> >    0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+> >    1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+> > 
+> > Kelsey's patch correctly preserves the existing permissions, but we
+> > should double-check that they are the permissions they want, and
+> > possibly add a comment about why they're different from the rest.
+> > 
+> > Bjorn
+> > 
 
-> In ath6kl_htc_mbox_create(), when kzalloc() on line 2855 fails,
-> target->dev is assigned to NULL, and ath6kl_htc_mbox_cleanup(target) is
-> called on line 2885.
+Hi Don,
+
+> The rest being? ... 0644 vs 0664 ?
+> The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
 > 
-> In ath6kl_htc_mbox_cleanup(), target->dev is used on line 2895:
->     ath6kl_hif_cleanup_scatter(target->dev->ar);
-> 
-> Thus, a null-pointer dereference may occur.
-> 
-> To fix this bug, kfree(target) is called and NULL is returned when
-> kzalloc() on line 2855 fails.
-> 
-> This bug is found by a static analysis tool STCheck written by us.
-> 
-> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> -dd
+>
 
-Patch applied to ath-next branch of ath.git, thanks.
+Were you able to see if the unusual permissions (0664) are needed for
+libvirt? I appreciate your help!
 
-0e7bf23e4967 ath6kl: Fix a possible null-pointer dereference in ath6kl_htc_mbox_create()
-
--- 
-https://patchwork.kernel.org/patch/11063157/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+-Kelsey
