@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA185C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D35C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76FFE23404
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87172208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620810;
-	bh=3srGCbj7ekQs7/Q2VMppiRyfVO4nSNJpbhCJvTAUeOo=;
+	s=default; t=1567620813;
+	bh=XpVMRruxLN1E2XX5gewbcsvYWzPngDOtSDaa0SDg7os=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Amv8f613en/m3FG6x32cgM3FEksIvRzVkYOOWbLfcq50Ptr7W7o/AG3HQ6EyCs0Cb
-	 5LgPgKpDBzA7rVHr9fKwjDHgJ3mZXFFnLJazEkSHpuqSR4IWaQXioa61LdwV/SrlIn
-	 dzpVEXBtojezhVYCM1UWzTpmF5Zgb31II0POIivg=
+	b=Eu/OriATzT2mowhmWrra70e8+obaCHIjfHlUz8F/Ave8sZ1SYEsa3TpGXUoqslFFS
+	 RoxrYKENCj8s+yvK41l73Mmdo6jlJgD/AEofyqXBwwtnJXT3F6cZNd1tyXlYdffuSq
+	 ssXDFAb1M2LitHvkb1TBeWnmEd1Ox8U3i9QvAEjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390693AbfIDSN3 (ORCPT
+        id S2390389AbfIDSNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390684AbfIDSN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:26 -0400
+        id S2390694AbfIDSN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3866208E4;
-        Wed,  4 Sep 2019 18:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B057208E4;
+        Wed,  4 Sep 2019 18:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620806;
-        bh=3srGCbj7ekQs7/Q2VMppiRyfVO4nSNJpbhCJvTAUeOo=;
+        s=default; t=1567620808;
+        bh=XpVMRruxLN1E2XX5gewbcsvYWzPngDOtSDaa0SDg7os=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bQ6jIuHHkjof0UuCuGhFbbLEdw6i7CcxMligFjFLwZieznYsa54iezwC/QKoDBEJj
-         ZuNpmX2VSOmdE4wOqgS7eX3KpJ9FX0Cc7hxQEd0LC5P91cJYLYVlguZS7iOZyDwNQU
-         Qf+F8BNMg30BcmNoFhdeLsaZWEsg272DiUcO0+LU=
+        b=YH0YKlYcxsY+5nsxOdkin2OTSdERyUtoNTWwuJycj5ark1YOK8D2ger4TbJL8ijY+
+         EE1/6Lw4Jei4c0a8yrFyHASKXOpiwoviVtMBwCEpdCboeIEnD2YSLP0zLL5vkbujdM
+         zPRHQRFojN5Sj60YzLJ+m6P+wJl0EhYoJNzaA6II=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pawe=C5=82=20Rekowski?= <p.rekowski@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 061/143] ALSA: hda/ca0132 - Add new SBZ quirk
-Date:   Wed,  4 Sep 2019 19:53:24 +0200
-Message-Id: <20190904175316.460609767@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.2 062/143] ALSA: line6: Fix memory leak at line6_init_pcm() error path
+Date:   Wed,  4 Sep 2019 19:53:25 +0200
+Message-Id: <20190904175316.499042936@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,32 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paweł Rekowski <p.rekowski@gmail.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 2ca371d847511f97ef991ef612a2ce805489840e upstream.
+commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 upstream.
 
-This patch adds a new PCI subsys ID for the SBZ, as found and tested by
-me and some reddit users.
+I forgot to release the allocated object at the early error path in
+line6_init_pcm().  For addressing it, slightly shuffle the code so
+that the PCM destructor (pcm->private_free) is assigned properly
+before all error paths.
 
-Link: https://lore.kernel.org/lkml/20190819204008.14426-1-p.rekowski@gmail.com
-Signed-off-by: Paweł Rekowski <p.rekowski@gmail.com>
+Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_ca0132.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/line6/pcm.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -1175,6 +1175,7 @@ static const struct snd_pci_quirk ca0132
- 	SND_PCI_QUIRK(0x1028, 0x0708, "Alienware 15 R2 2016", QUIRK_ALIENWARE),
- 	SND_PCI_QUIRK(0x1102, 0x0010, "Sound Blaster Z", QUIRK_SBZ),
- 	SND_PCI_QUIRK(0x1102, 0x0023, "Sound Blaster Z", QUIRK_SBZ),
-+	SND_PCI_QUIRK(0x1102, 0x0027, "Sound Blaster Z", QUIRK_SBZ),
- 	SND_PCI_QUIRK(0x1102, 0x0033, "Sound Blaster ZxR", QUIRK_SBZ),
- 	SND_PCI_QUIRK(0x1458, 0xA016, "Recon3Di", QUIRK_R3DI),
- 	SND_PCI_QUIRK(0x1458, 0xA026, "Gigabyte G1.Sniper Z97", QUIRK_R3DI),
+--- a/sound/usb/line6/pcm.c
++++ b/sound/usb/line6/pcm.c
+@@ -550,6 +550,15 @@ int line6_init_pcm(struct usb_line6 *lin
+ 	line6pcm->volume_monitor = 255;
+ 	line6pcm->line6 = line6;
+ 
++	spin_lock_init(&line6pcm->out.lock);
++	spin_lock_init(&line6pcm->in.lock);
++	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
++
++	line6->line6pcm = line6pcm;
++
++	pcm->private_data = line6pcm;
++	pcm->private_free = line6_cleanup_pcm;
++
+ 	line6pcm->max_packet_size_in =
+ 		usb_maxpacket(line6->usbdev,
+ 			usb_rcvisocpipe(line6->usbdev, ep_read), 0);
+@@ -562,15 +571,6 @@ int line6_init_pcm(struct usb_line6 *lin
+ 		return -EINVAL;
+ 	}
+ 
+-	spin_lock_init(&line6pcm->out.lock);
+-	spin_lock_init(&line6pcm->in.lock);
+-	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
+-
+-	line6->line6pcm = line6pcm;
+-
+-	pcm->private_data = line6pcm;
+-	pcm->private_free = line6_cleanup_pcm;
+-
+ 	err = line6_create_audio_out_urbs(line6pcm);
+ 	if (err < 0)
+ 		return err;
 
 
