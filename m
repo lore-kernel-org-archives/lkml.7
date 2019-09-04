@@ -2,188 +2,129 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3D2C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5356FC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBF321726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29CDA21726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0hH/5KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfIDXOl convert rfc822-to-8bit (ORCPT
+        id S1730253AbfIDXP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:14:41 -0400
-Received: from mailoutvs5.siol.net ([185.57.226.196]:54364 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728286AbfIDXOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:14:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id D7476520A46;
-        Thu,  5 Sep 2019 01:14:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id FM58iBnMidPl; Thu,  5 Sep 2019 01:14:37 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 38A985208D8;
-        Thu,  5 Sep 2019 01:14:37 +0200 (CEST)
-Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 76204520A32;
-        Thu,  5 Sep 2019 01:14:34 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     mchehab@kernel.org, paul.kocialkowski@bootlin.com,
-        mripard@kernel.org, pawel@osciak.com, m.szyprowski@samsung.com,
-        kyungmin.park@samsung.com, tfiga@chromium.org, wens@csie.org,
-        acourbot@chromium.org, gregkh@linuxfoundation.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        ezequiel@collabora.com, jonas@kwiboo.se
-Subject: Re: [PATCH 7/8] media: cedrus: Add support for holding capture buffer
-Date:   Thu, 05 Sep 2019 01:14:34 +0200
-Message-ID: <2397760.v9PcElvEDa@jernej-laptop>
-In-Reply-To: <f105990c-e059-6bdd-433f-074388e3a2dc@xs4all.nl>
-References: <20190822194500.2071-1-jernej.skrabec@siol.net> <20190822194500.2071-8-jernej.skrabec@siol.net> <f105990c-e059-6bdd-433f-074388e3a2dc@xs4all.nl>
+        Wed, 4 Sep 2019 19:15:59 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36606 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfIDXP7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 19:15:59 -0400
+Received: by mail-wm1-f67.google.com with SMTP id p13so585250wmh.1;
+        Wed, 04 Sep 2019 16:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D+jh77ZLgNensDYPn2dN2wL4k27PJ6BpfuVV6pgmL7g=;
+        b=E0hH/5KZPUbuapqt3Z57/i+myQE/X/8+9T1h7ZwzooTZFrauoJKpwhyX2YG21HRAly
+         5ZPac6JEX2A0gPXuwBVMuX4LbTwVUws7ZdBidSR5KDozTQXQYfMwl88kRfMHS/OkTMq0
+         cotN8RM2UrUFC8JZpSkMJm6h4cCwj8lL0cZJF7Z+6vyPR9I2a5lHJ8ltH8gTtqM/a9qk
+         fUR4h3x3Nk03WFcUmF633tW7lJGnGNZx8EoMnrK/hphQ6mCIaQd/sURbEX/UdRfl47L8
+         6WAGON3hJk4HT+fv5HhYXo3BC/w9GTdUPEBETmCLkHQclpPvFkxikQQVE0EQk8MW3m4V
+         U6Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D+jh77ZLgNensDYPn2dN2wL4k27PJ6BpfuVV6pgmL7g=;
+        b=cWLBMsup3Tw5HLl2eyHuNFDrGSqYAbtPki5RyIs+IrRwKP5hRmNdXCxeYiSykuWoNm
+         Aan/YWRB/lrnvxM3YkB2L2l1YJGir88g41xhTgRY512p7p6Iel2c78shbFrnDVkLflqd
+         gnpRmH/fB3fA3NrqujvCd94k5jeQazK+UY07+uqwiBCaPNM9dlg37ak35iD8v2wKh0cS
+         LxXF2Sx+oITUuNStWHbJAcGK/eEpb48lUU491K5YWA0T33u5qysP0jXwwrMBBoiKNY4A
+         zBmfNFzlkAyh2VhnXvbyS2xj2krzBU51OCMGMvU8LG9N1i1760ShHexiyVl3S5TYoiYi
+         2TCw==
+X-Gm-Message-State: APjAAAWIm1vfPwgybhYhkLI4g6tQ+eTy+JX4nTZPBJmA4CMCHML+4Fz0
+        O6+NOvvwnZ8sqSfvq7jAH6E=
+X-Google-Smtp-Source: APXvYqznil+fqfMulqs43QZJNRB7vW35OcADELC0oZ/vgbpO2vg2C3b20RkPKZ41YzhNwbmyWSb20A==
+X-Received: by 2002:a7b:c766:: with SMTP id x6mr514054wmk.51.1567638957553;
+        Wed, 04 Sep 2019 16:15:57 -0700 (PDT)
+Received: from archlinux-threadripper ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id z189sm788009wmc.25.2019.09.04.16.15.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 16:15:56 -0700 (PDT)
+Date:   Wed, 4 Sep 2019 16:15:54 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH] powerpc: Avoid clang warnings around setjmp and longjmp
+Message-ID: <20190904231554.GA42450@archlinux-threadripper>
+References: <878srdv206.fsf@mpe.ellerman.id.au>
+ <20190828175322.GA121833@archlinux-threadripper>
+ <CAKwvOdmXbYrR6n-cxKt3XxkE4Lmj0sSoZBUtHVb0V2LTUFHmug@mail.gmail.com>
+ <20190828184529.GC127646@archlinux-threadripper>
+ <6801a83ed6d54d95b87a41c57ef6e6b0@AcuMS.aculab.com>
+ <20190903055553.GC60296@archlinux-threadripper>
+ <20190903193128.GC9749@gate.crashing.org>
+ <20190904002401.GA70635@archlinux-threadripper>
+ <1bcd7086f3d24dfa82eec03980f30fbc@AcuMS.aculab.com>
+ <20190904130135.GN9749@gate.crashing.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904130135.GN9749@gate.crashing.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 29. avgust 2019 ob 13:23:29 CEST je Hans Verkuil napisal(a):
-> On 8/22/19 9:44 PM, Jernej Skrabec wrote:
-> > When frame contains multiple slices and driver works in slice mode, it's
-> > more efficient to hold capture buffer in queue until all slices of a
-> > same frame are decoded.
+On Wed, Sep 04, 2019 at 08:01:35AM -0500, Segher Boessenkool wrote:
+> On Wed, Sep 04, 2019 at 08:16:45AM +0000, David Laight wrote:
+> > From: Nathan Chancellor [mailto:natechancellor@gmail.com]
+> > > Fair enough so I guess we are back to just outright disabling the
+> > > warning.
 > > 
-> > Add support for that to Cedrus driver by exposing and implementing
-> > V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF capability.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >  drivers/staging/media/sunxi/cedrus/cedrus_dec.c   | 9 +++++++++
-> >  drivers/staging/media/sunxi/cedrus/cedrus_hw.c    | 8 +++++---
-> >  drivers/staging/media/sunxi/cedrus/cedrus_video.c | 1 +
-> >  3 files changed, 15 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c index
-> > d7b54accfe83..68462b99750e 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> > @@ -31,6 +31,14 @@ void cedrus_device_run(void *priv)
-> > 
-> >  	run.src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
-> >  	run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> > 
-> > +
-> > +	if (v4l2_m2m_release_capture_buf(run.src, run.dst)) {
-> > +		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
-> > +		v4l2_m2m_buf_done(run.dst, VB2_BUF_STATE_DONE);
-> > +		run.dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> > +	}
-> > +	run.dst->is_held = run.src->flags & 
-V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF;
-> > +
-> > 
-> >  	run.first_slice =
-> >  	
-> >  		run.src->vb2_buf.timestamp != run.dst-
->vb2_buf.timestamp;
-> > 
-> > @@ -46,6 +54,7 @@ void cedrus_device_run(void *priv)
-> > 
-> >  			V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS);
-> >  		
-> >  		run.mpeg2.quantization = cedrus_find_control_data(ctx,
-> >  		
-> >  			V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION);
-> > 
-> > +		run.dst->is_held = false;
-> > 
-> >  		break;
-> >  	
-> >  	case V4L2_PIX_FMT_H264_SLICE:
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c index
-> > a942cd9bed57..99fedec80224 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > @@ -122,7 +122,7 @@ static irqreturn_t cedrus_irq(int irq, void *data)
-> > 
-> >  	dev->dec_ops[ctx->current_codec]->irq_clear(ctx);
-> >  	
-> >  	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
-> > 
-> > -	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
-> > +	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-> > 
-> >  	if (!src_buf || !dst_buf) {
-> >  	
-> >  		v4l2_err(&dev->v4l2_dev,
-> > 
-> > @@ -136,8 +136,10 @@ static irqreturn_t cedrus_irq(int irq, void *data)
-> > 
-> >  		state = VB2_BUF_STATE_DONE;
-> >  	
-> >  	v4l2_m2m_buf_done(src_buf, state);
-> > 
-> > -	v4l2_m2m_buf_done(dst_buf, state);
-> > -
-> > +	if (!dst_buf->is_held) {
-> > +		v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
-> > +		v4l2_m2m_buf_done(dst_buf, state);
-> > +	}
-> > 
-> >  	v4l2_m2m_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx);
-> >  	
-> >  	return IRQ_HANDLED;
-> > 
-> > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> > b/drivers/staging/media/sunxi/cedrus/cedrus_video.c index
-> > eeee3efd247b..5153b2bba21e 100644
-> > --- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> > @@ -515,6 +515,7 @@ int cedrus_queue_init(void *priv, struct vb2_queue
-> > *src_vq,> 
-> >  	src_vq->type = V4L2_BUF_TYPE_VIDEO_OUTPUT;
-> >  	src_vq->io_modes = VB2_MMAP | VB2_DMABUF;
-> >  	src_vq->drv_priv = ctx;
-> > 
-> > +	src_vq->subsystem_flags = 
-VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF;
+> > Just disabling the warning won't stop the compiler generating code
+> > that breaks a 'user' implementation of setjmp().
 > 
-> This isn't quite right: this flag should only be set for formats that
-> support slicing. So cedrus_s_fmt_vid_out() should set this for H264, but
-> clear it for MPEG2.
+> Yeah.  I have a patch (will send in an hour or so) that enables the
+> "returns_twice" attribute for setjmp (in <asm/setjmp.h>).  In testing
+> (with GCC trunk) it showed no difference in code generation, but
+> better save than sorry.
 > 
-> Looking at the cedrus code it seems that it does not set an initial default
-> output format after opening the video device. This seems wrong to me. If it
-> did set a default output format, then src_vq->subsystem_flags should set
-> this flag corresponding to the default output format.
-
-Ok, I'll base v2 series on your "cedrus: v4l2-compliance fixes", because it has 
-some useful changes for this case.
-
-Best regards,
-Jernej
-
+> It also sets "noreturn" on longjmp, and that *does* help, it saves a
+> hundred insns or so (all in xmon, no surprise there).
 > 
-> >  	src_vq->buf_struct_size = sizeof(struct cedrus_buffer);
-> >  	src_vq->min_buffers_needed = 1;
-> >  	src_vq->ops = &cedrus_qops;
-> 
-> Regards,
-> 
-> 	Hans
+> I don't think this will make LLVM shut up about this though.  And
+> technically it is right: the C standard does say that in hosted mode
+> setjmp is a reserved name and you need to include <setjmp.h> to access
+> it (not <asm/setjmp.h>).
 
+It does not fix the warning, I tested your patch.
 
+> So why is the kernel compiled as hosted?  Does adding -ffreestanding
+> hurt anything?  Is that actually supported on LLVM, on all relevant
+> versions of it?  Does it shut up the warning there (if not, that would
+> be an LLVM bug)?
 
+It does fix this warning because -ffreestanding implies -fno-builtin,
+which also solves the warning. LLVM has supported -ffreestanding since
+at least 3.0.0. There are some parts of the kernel that are compiled
+with this and it probably should be used in more places but it sounds
+like there might be some good codegen improvements that are disabled
+with it:
 
+https://lore.kernel.org/lkml/CAHk-=wi-epJZfBHDbKKDZ64us7WkF=LpUfhvYBmZSteO8Q0RAg@mail.gmail.com/
+
+Cheers,
+Nathan
