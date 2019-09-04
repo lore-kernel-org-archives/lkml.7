@@ -2,118 +2,168 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5EAC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2032AC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FAE2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A832339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:19:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g4HZH/NS"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="NFYOBONJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfIDGTB (ORCPT
+        id S1728756AbfIDGTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:19:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46846 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfIDGTA (ORCPT
+        Wed, 4 Sep 2019 02:19:42 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:55575 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbfIDGTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:19:00 -0400
-Received: by mail-io1-f67.google.com with SMTP id x4so41578470iog.13;
-        Tue, 03 Sep 2019 23:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QsBF1dQsIvTEdVXFaueG4wdJlmUypORqD6GvIQNikE0=;
-        b=g4HZH/NS+4MfDVTP4D/xX0doMFNKP1flWdbGufYwEDn3zHRdCxceO5cGBjPs9ifQI6
-         qJG/K7b1CI3NwaWZkAkeBbKZkoxKGEVfCvFHC2IjtbBEvxESd+px28MwpK45dMxhoUDI
-         2sToxJZhS6h682DFVE9YfR6xwpROPJly2bvFQ7CRQ1H8PYFnVAX83FHxY8sBUqCSSTOF
-         o9/X5JE5YPboEKk2o8YFlhJySlCS0Gy/zH2gT6zT8f0epOdBcmH/HyA80N2IgS/W6sNu
-         RHbz+k+HWTTQZQHkGJwOx8PJ+zstdtbl0MmNm7TfV5oi0kR3SubVDXwnDBtW4ws7yOP/
-         RB+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QsBF1dQsIvTEdVXFaueG4wdJlmUypORqD6GvIQNikE0=;
-        b=A3BBG5PUTSr4AOsrPDQqSwFmUx+SY6BSLJt8q04zYOdssL+tb/iQ/9KpCAipRwjOyh
-         MDIu63yByZCKja5FX1/rr15H+/QtqNNOLN1fwurUKr1CHjUnrSDif0J4V+9ZKVLQ6trG
-         wDagCoPK7UJ62u1E+pPvWdonTQJhWhCNG9xX6YUr7/DHBVzu5O3m0itLlpXScFaq/ooz
-         2WnMnHP5Lpae5eCLqxcui8s4Yh9oqn3p272kO2l3W9YKXN4WE94Tl4D3Vr/SMFidZAV7
-         NM8MPQ/6u/XsLZtBGz740BWHCxY6k5/hosldxkHdxrBMK5Gtemj50DadxahroY7I0v25
-         AGXQ==
-X-Gm-Message-State: APjAAAUxvPpJosA5QRcgY5epBz5hSRaMfYZUgoHC3YPbgmAwTO6mepo/
-        SoQPHMYIviwWbHjLZ2ZXe/bWMU8ZZeIwKRJXkhQ=
-X-Google-Smtp-Source: APXvYqxBHegpJH9h6BKXc+D5BhjsNhQ1QdtP62zH71vPMmQKuZz6qskjwLZSVJ790/0C762HDrly44uC5h+c2qit/5Y=
-X-Received: by 2002:a5d:9591:: with SMTP id a17mr18209960ioo.303.1567577939643;
- Tue, 03 Sep 2019 23:18:59 -0700 (PDT)
+        Wed, 4 Sep 2019 02:19:41 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x846JWTl031934;
+        Wed, 4 Sep 2019 15:19:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x846JWTl031934
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567577973;
+        bh=KcfNyd0d6qNZe5po5Im8NYxMh43Vdsb11cvHEmcz+PU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=NFYOBONJGnDm89krh6tmh/c8NV0RUljxr598tyzlAbpSSOaVDb87+GVW4MsSfaON6
+         S4QKPqIosZT1KHKY8MdVlNwS55LxMR4DCI90fCS0H5aarqAFr0yAmBST3cp9kY9eHb
+         Xa3g6vPXnjryY96J0APPuerVKK1/HpwmCHvAJteKQb6SkTfFVRmYe24DG5K3lyDNhN
+         9/vTU0ppedz8raShu8Klo827RW2HKq98AZSReapijmt+7sXBRm9Pn4+aaCVYStEh88
+         TCVcGZYg+2emGCBdK24mzGhgjQeWKeJUo3GSIb7h3f5Al12Na2feckj29W9/6+ScKH
+         fZaxPHjZLqSaw==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id w16so561374uap.9;
+        Tue, 03 Sep 2019 23:19:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAVpRN4eZF+ZbilvY3pw16/WlpqiL48VzgqOeZc421+9uaaJV9Nd
+        ej0kqy3jBnZ7+s6Yx53neFMs47WPFDdP5Vd6Sz0=
+X-Google-Smtp-Source: APXvYqzoSSq06AWlxLOXNs6NXjP7RWzDcrzRDyOUl33juPGfn0YLfNVF/6LIYBBz8pfzQph1UskTHf1y0APVT0gkpOg=
+X-Received: by 2002:ab0:32d8:: with SMTP id f24mr18756941uao.121.1567577971564;
+ Tue, 03 Sep 2019 23:19:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190818051647.17475-1-jassisinghbrar@gmail.com>
- <20190818051754.17548-1-jassisinghbrar@gmail.com> <20190904055037.GC2672@vkoul-mobl>
-In-Reply-To: <20190904055037.GC2672@vkoul-mobl>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 4 Sep 2019 01:18:48 -0500
-Message-ID: <CABb+yY1RT2TuUyuU2C+m6w=AOVzXkuG7cOwbWsccywxU7HwkQg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: milbeaut-m10v-hdmac: Add Socionext
- Milbeaut HDMAC bindings
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dmaengine@vger.kernel.org,
-        Devicetree List <devicetree@vger.kernel.org>,
+References: <20190904160021.72d104f1@canb.auug.org.au>
+In-Reply-To: <20190904160021.72d104f1@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 4 Sep 2019 15:18:55 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQEU6uu-Z=VeR2KNa8ezCLA7VHtpvM2tvAKsWtUTi6Eug@mail.gmail.com>
+Message-ID: <CAK7LNAQEU6uu-Z=VeR2KNa8ezCLA7VHtpvM2tvAKsWtUTi6Eug@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 12:51 AM Vinod Koul <vkoul@kernel.org> wrote:
+On Wed, Sep 4, 2019 at 3:00 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> On 18-08-19, 00:17, jassisinghbrar@gmail.com wrote:
-> > From: Jassi Brar <jaswinder.singh@linaro.org>
-> >
-> > Document the devicetree bindings for Socionext Milbeaut HDMAC
-> > controller. Controller has upto 8 floating channels, that need
-> > a predefined slave-id to work from a set of slaves.
-> >
-> > Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
-> > ---
-> >  .../bindings/dma/milbeaut-m10v-hdmac.txt      | 32 +++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > new file mode 100644
-> > index 000000000000..f0960724f1c7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/dma/milbeaut-m10v-hdmac.txt
-> > @@ -0,0 +1,32 @@
-> > +* Milbeaut AHB DMA Controller
-> > +
-> > +Milbeaut AHB DMA controller has transfer capability bellow.
+> Hi all,
 >
-> s/bellow/below:
+> After merging the net-next tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
 >
-> > + - device to memory transfer
-> > + - memory to device transfer
-> > +
-> > +Required property:
-> > +- compatible:       Should be  "socionext,milbeaut-m10v-hdmac"
-> > +- reg:              Should contain DMA registers location and length.
-> > +- interrupts:       Should contain all of the per-channel DMA interrupts.
-> > +                     Number of channels is configurable - 2, 4 or 8, so
-> > +                     the number of interrupts specfied should be {2,4,8}.
+> scripts/link-vmlinux.sh: 74: Bad substitution
 >
-> s/specfied/specified
+> Caused by commit
 >
-Hi Vinod,
-  Do you want me to spin yet another revision for the two types in text?
+>   341dfcf8d78e ("btf: expose BTF info through sysfs")
+>
+> interacting with commit
+>
+>   1267f9d3047d ("kbuild: add $(BASH) to run scripts with bash-extension")
+>
+> from the kbuild tree.
 
-thnx
+
+I knew that they were using bash-extension
+in the #!/bin/sh script.  :-D
+
+
+In fact, I wrote my patch in order to break their code
+and  make btf people realize that they were doing wrong.
+
+
+
+> The change in the net-next tree turned link-vmlinux.sh into a bash script
+> (I think).
+>
+> I have applied the following patch for today:
+
+
+But, this is a temporary fix only for linux-next.
+
+scripts/link-vmlinux.sh does not need to use the
+bash-extension ${@:2} in the first place.
+
+I hope btf people will write the correct code.
+
+Thanks.
+
+
+
+
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 4 Sep 2019 15:43:41 +1000
+> Subject: [PATCH] link-vmlinux.sh is now a bash script
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  Makefile                | 4 ++--
+>  scripts/link-vmlinux.sh | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index ac97fb282d99..523d12c5cebe 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1087,7 +1087,7 @@ ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+>
+>  # Final link of vmlinux with optional arch pass after final link
+>  cmd_link-vmlinux =                                                 \
+> -       $(CONFIG_SHELL) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
+> +       $(BASH) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
+>         $(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+>
+>  vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
+> @@ -1403,7 +1403,7 @@ clean: rm-files := $(CLEAN_FILES)
+>  PHONY += archclean vmlinuxclean
+>
+>  vmlinuxclean:
+> -       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/link-vmlinux.sh clean
+> +       $(Q)$(BASH) $(srctree)/scripts/link-vmlinux.sh clean
+>         $(Q)$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) clean)
+>
+>  clean: archclean vmlinuxclean
+> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> index f7edb75f9806..ea1f8673869d 100755
+> --- a/scripts/link-vmlinux.sh
+> +++ b/scripts/link-vmlinux.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>  #
+>  # link vmlinux
+> --
+> 2.23.0.rc1
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+--
+Best Regards
+Masahiro Yamada
