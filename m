@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9D7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E6DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31B52070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15C42070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613021;
-	bh=HQVLVihA9ng0KNu2loCHAgQaGkrPun9sOzN75JWuSiE=;
+	s=default; t=1567613029;
+	bh=EGeevMO/gUf+Nnn2/iDfa/HkxbyhqMByHJ3zeC0NUl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FXJAVkpvMJ2bUDfQkmVmeMXJjineHVTIVDB9ser48ZD6lwurvT414oJorrJbJ6CMB
-	 UxVVfOTzgw/0i1neMjG/qUGqNfIvhH4BBr+t8reWinQv6Ligk4MCKstet1LW81k02G
-	 11neWa+od9CZwXpGYayllIaPxz0NU6n8jV1iJHmk=
+	b=GbbqCQdeMxuDN3cEmpmA8gV/MvQx1DIsWwFrmBKQc87DLYxTds5BYrNS21QVRj39C
+	 gNNbtA63RegLIjqQ7G1IP4L3fiJUcFiL+JH20AP/pHKJQ536s2fiw5wBGIMaW3pi9W
+	 qlRAG34cErLy8VDS/9guzn57YVdtzjBeyDkxQPy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387726AbfIDQDj (ORCPT
+        id S2387690AbfIDQDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40280 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:03:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731482AbfIDQDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:35 -0400
+        id S2387660AbfIDQDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6844B2070C;
-        Wed,  4 Sep 2019 16:03:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC7AD20820;
+        Wed,  4 Sep 2019 16:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567613014;
-        bh=HQVLVihA9ng0KNu2loCHAgQaGkrPun9sOzN75JWuSiE=;
+        s=default; t=1567613004;
+        bh=EGeevMO/gUf+Nnn2/iDfa/HkxbyhqMByHJ3zeC0NUl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuAE4VhAr8GZgoWK3u33QHKo7D/K+LzaMaPBGvByGuNN5E8pUeMBG2/gmIsctWO60
-         YeLbo1HjIDCrdFtSUyKw4Gm3MTyKGbvaqn8Gq0FU0b0+WQeGqo7N8xn+N0kknOc1CK
-         YfFKsVJ21SjWICT3trSZuLpZ0VKMVo3nO3aqT4F8=
+        b=xBy2b0blYYYXewohL2/tQtcakeB/HHbwTPWS17MEHjzvMp33YpBs84+mRjd7oWrf/
+         rd0ehg9kv7BxknHJIxZgKkuv5v+sQMsXFZIsEFGG5beBQBbcdu9+q93Nbuw8HNApVw
+         PvO5E58r2U/UBvpVh4fNHwmVNFMdS+8uMvfFCC+E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 20/20] net: seeq: Fix the function used to release some memory in an error handling path
-Date:   Wed,  4 Sep 2019 12:03:03 -0400
-Message-Id: <20190904160303.5062-20-sashal@kernel.org>
+Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 13/20] cifs: set domainName when a domain-key is used in multiuser
+Date:   Wed,  4 Sep 2019 12:02:56 -0400
+Message-Id: <20190904160303.5062-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
 References: <20190904160303.5062-1-sashal@kernel.org>
@@ -60,53 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit e1e54ec7fb55501c33b117c111cb0a045b8eded2 ]
+[ Upstream commit f2aee329a68f5a907bcff11a109dfe17c0b41aeb ]
 
-In commit 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv"),
-a call to 'get_zeroed_page()' has been turned into a call to
-'dma_alloc_coherent()'. Only the remove function has been updated to turn
-the corresponding 'free_page()' into 'dma_free_attrs()'.
-The error hndling path of the probe function has not been updated.
+RHBZ: 1710429
 
-Fix it now.
+When we use a domain-key to authenticate using multiuser we must also set
+the domainnmame for the new volume as it will be used and passed to the server
+in the NTLMSSP Domain-name.
 
-Rename the corresponding label to something more in line.
-
-Fixes: 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/seeq/sgiseeq.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/cifs/connect.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/net/ethernet/seeq/sgiseeq.c b/drivers/net/ethernet/seeq/sgiseeq.c
-index ca73366057486..2e5f7bbd30bfa 100644
---- a/drivers/net/ethernet/seeq/sgiseeq.c
-+++ b/drivers/net/ethernet/seeq/sgiseeq.c
-@@ -792,15 +792,16 @@ static int sgiseeq_probe(struct platform_device *pdev)
- 		printk(KERN_ERR "Sgiseeq: Cannot register net device, "
- 		       "aborting.\n");
- 		err = -ENODEV;
--		goto err_out_free_page;
-+		goto err_out_free_attrs;
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 9cb72fd40eff3..90e0c51ac0450 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2466,6 +2466,7 @@ static int
+ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ {
+ 	int rc = 0;
++	int is_domain = 0;
+ 	const char *delim, *payload;
+ 	char *desc;
+ 	ssize_t len;
+@@ -2513,6 +2514,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 			rc = PTR_ERR(key);
+ 			goto out_err;
+ 		}
++		is_domain = 1;
  	}
  
- 	printk(KERN_INFO "%s: %s %pM\n", dev->name, sgiseeqstr, dev->dev_addr);
+ 	down_read(&key->sem);
+@@ -2570,6 +2572,26 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+ 		goto out_key_put;
+ 	}
  
- 	return 0;
- 
--err_out_free_page:
--	free_page((unsigned long) sp->srings);
-+err_out_free_attrs:
-+	dma_free_attrs(&pdev->dev, sizeof(*sp->srings), sp->srings,
-+		       sp->srings_dma, DMA_ATTR_NON_CONSISTENT);
- err_out_free_dev:
- 	free_netdev(dev);
- 
++	/*
++	 * If we have a domain key then we must set the domainName in the
++	 * for the request.
++	 */
++	if (is_domain && ses->domainName) {
++		vol->domainname = kstrndup(ses->domainName,
++					   strlen(ses->domainName),
++					   GFP_KERNEL);
++		if (!vol->domainname) {
++			cifs_dbg(FYI, "Unable to allocate %zd bytes for "
++				 "domain\n", len);
++			rc = -ENOMEM;
++			kfree(vol->username);
++			vol->username = NULL;
++			kfree(vol->password);
++			vol->password = NULL;
++			goto out_key_put;
++		}
++	}
++
+ out_key_put:
+ 	up_read(&key->sem);
+ 	key_put(key);
 -- 
 2.20.1
 
