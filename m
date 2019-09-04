@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD6AC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B985AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2B32087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906FC2341F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612918;
-	bh=cz8gFurWnBpxuSWFcIrMIt/2/3SrCjZwpN/ECWAf+vg=;
+	s=default; t=1567612921;
+	bh=74nf5UnRKvBiWWXFw3xnxICQuYxH0BWLfryXXrsDYPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z2Cd8vY42MTgV/QpVUUojZMvVWh1IpbBXWjTJonpvz/c0kYEkvB7g7KbkMd6jjBcc
-	 8zONvu27ujpJ3wHJ4qF5sZCnGPWZtVWLCWMPVlFx1kiuaVl7ujAIN+mr6b915bQV8A
-	 wGwNL7P9SlV/mcbFpx2raH9VkMbyFzL6qgQI66M8=
+	b=fGtF2iBysNjsirgGJLqq2WZO5cbe/WLikOKEv+x8WK1qoFpiG/g2GLwIN3/IeXLea
+	 3SSPfcx8NeGL2w1taesi0ZR7TSQE5jA3Sj7WiaPVcnD/VUDT+m+XREZeXZ9Z33bpwg
+	 WIFeshLs8NW51k0oqJvDbzI+KEIayj8ZuDvIKK+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733147AbfIDQB6 (ORCPT
+        id S1733159AbfIDQCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37516 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733108AbfIDQBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:01:54 -0400
+        id S1733148AbfIDQB7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BDD920820;
-        Wed,  4 Sep 2019 16:01:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3193C20820;
+        Wed,  4 Sep 2019 16:01:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612913;
-        bh=cz8gFurWnBpxuSWFcIrMIt/2/3SrCjZwpN/ECWAf+vg=;
+        s=default; t=1567612918;
+        bh=74nf5UnRKvBiWWXFw3xnxICQuYxH0BWLfryXXrsDYPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqIk9Mmuk7rZNdEzt+OaMSo+1wgETUKKA/9vJ7DSNEdmyweV775uh/hU69xL0EXUD
-         +nh6aDdoJsn9zvcCrVWKBne90SAP+OGr4p35hR/VsLNb3To7wDzHDcYHKJWe1zsdlA
-         b+kwWNrpPzhxfNPzHWCwqnMiMIuJ1nmIOWMcwZOI=
+        b=YZ13u3fC+qNj8YE95yKgAGVGZ6XEIgLYFeNTaQrQdC+/NyN2qZuaLt7m/Fwgz4sxp
+         zL7xsH4YsLdyfOIOF9CNt9fm5ASg2Th6y5Iz+xZOBRGKowEiQ/Ywa1q1NpWR8g+iEn
+         Ub3TvfkovO8c87cjEDXSDgnIQWkwcHkTEtOiaA3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 20/36] NFSv2: Fix eof handling
-Date:   Wed,  4 Sep 2019 12:01:06 -0400
-Message-Id: <20190904160122.4179-20-sashal@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 22/36] kallsyms: Don't let kallsyms_lookup_size_offset() fail on retrieving the first symbol
+Date:   Wed,  4 Sep 2019 12:01:08 -0400
+Message-Id: <20190904160122.4179-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
 References: <20190904160122.4179-1-sashal@kernel.org>
@@ -58,33 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit 71affe9be45a5c60b9772e1b2701710712637274 ]
+[ Upstream commit 2a1a3fa0f29270583f0e6e3100d609e09697add1 ]
 
-If we received a reply from the server with a zero length read and
-no error, then that implies we are at eof.
+An arm64 kernel configured with
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+  CONFIG_KPROBES=y
+  CONFIG_KALLSYMS=y
+  # CONFIG_KALLSYMS_ALL is not set
+  CONFIG_KALLSYMS_BASE_RELATIVE=y
+
+reports the following kprobe failure:
+
+  [    0.032677] kprobes: failed to populate blacklist: -22
+  [    0.033376] Please take care of using kprobes.
+
+It appears that kprobe fails to retrieve the symbol at address
+0xffff000010081000, despite this symbol being in System.map:
+
+  ffff000010081000 T __exception_text_start
+
+This symbol is part of the first group of aliases in the
+kallsyms_offsets array (symbol names generated using ugly hacks in
+scripts/kallsyms.c):
+
+  kallsyms_offsets:
+          .long   0x1000 // do_undefinstr
+          .long   0x1000 // efi_header_end
+          .long   0x1000 // _stext
+          .long   0x1000 // __exception_text_start
+          .long   0x12b0 // do_cp15instr
+
+Looking at the implementation of get_symbol_pos(), it returns the
+lowest index for aliasing symbols. In this case, it return 0.
+
+But kallsyms_lookup_size_offset() considers 0 as a failure, which
+is obviously wrong (there is definitely a valid symbol living there).
+In turn, the kprobe blacklisting stops abruptly, hence the original
+error.
+
+A CONFIG_KALLSYMS_ALL kernel wouldn't fail as there is always
+some random symbols at the beginning of this array, which are never
+looked up via kallsyms_lookup_size_offset.
+
+Fix it by considering that get_symbol_pos() is always successful
+(which is consistent with the other uses of this function).
+
+Fixes: ffc5089196446 ("[PATCH] Create kallsyms_lookup_size_offset()")
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/kallsyms.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-index f7fd9192d4bc8..73d1f7277e482 100644
---- a/fs/nfs/proc.c
-+++ b/fs/nfs/proc.c
-@@ -589,7 +589,8 @@ static int nfs_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- 		/* Emulate the eof flag, which isn't normally needed in NFSv2
- 		 * as it is guaranteed to always return the file attributes
- 		 */
--		if (hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
-+		if ((hdr->res.count == 0 && hdr->args.count > 0) ||
-+		    hdr->args.offset + hdr->res.count >= hdr->res.fattr->size)
- 			hdr->res.eof = 1;
- 	}
- 	return 0;
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 127e7cfafa552..3e1b66366ac23 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -296,8 +296,10 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
+ {
+ 	char namebuf[KSYM_NAME_LEN];
+ 
+-	if (is_ksym_addr(addr))
+-		return !!get_symbol_pos(addr, symbolsize, offset);
++	if (is_ksym_addr(addr)) {
++		get_symbol_pos(addr, symbolsize, offset);
++		return 1;
++	}
+ 	return !!module_address_lookup(addr, symbolsize, offset, NULL, namebuf) ||
+ 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
+ }
 -- 
 2.20.1
 
