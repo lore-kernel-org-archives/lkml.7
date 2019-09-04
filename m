@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AD3C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3C0C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E32CA22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D662339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619733;
-	bh=ykLzgQ2M+stSgkxSdBahC71YW717D4EkVNvvDv6Pqbo=;
+	s=default; t=1567619736;
+	bh=hHHjSbiQsAjEEctleSS533vZ2M8xIgEBQTPowA2D9+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUOyGabkdHzwSHj5lGccMIn2cHgzi0MF3I3F7rBMg3W6c+mS7xVG3JI/eZKZ/mFhM
-	 PuFXQ2ieXc5s00vmUYB3pSlKSZ1Eaz08+hNo6zGkU4U+SO47FGkniz4RBMtEQUbGdn
-	 t4ZP9QLpZ+YfL+tVTp7WyrkZbNMg5tJd+uFRIPIg=
+	b=nGZFxahqG0S06h5DP4/VqDvSzkEIUKPapkXMGypJrSKyqyGTnMAGmTn/d7d34g3ev
+	 fp7ucfnVfdJ5MhToo9XRZ/nYYZhk/6oKy43ETEzMTUaYAs3GJnoMgwnYDqLhrKyYAq
+	 mvJIOiDuVx8tjqWJUqU72R8W4d3LFwX7Vv2ks+Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732690AbfIDRzc (ORCPT
+        id S1732731AbfIDRzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60554 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:55:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732659AbfIDRza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:30 -0400
+        id S1732659AbfIDRzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:55:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F387221883;
-        Wed,  4 Sep 2019 17:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA6AE22CEA;
+        Wed,  4 Sep 2019 17:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619729;
-        bh=ykLzgQ2M+stSgkxSdBahC71YW717D4EkVNvvDv6Pqbo=;
+        s=default; t=1567619732;
+        bh=hHHjSbiQsAjEEctleSS533vZ2M8xIgEBQTPowA2D9+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rvxB19IaPM8Wrr7PMgZpz7I8THEUwxWJPzJoo7RhZ0bpORrxnhf7ZjcpLOUE65nyX
-         Y3qT1t4oqrAj9tQvOxiCZlnWRgW32yTDXCNap/ABwH1HIexEVqI7A5KayA+mrWBJiS
-         hBLrVc9RsGZhPV7oSTpeQFIK+O8s90Z2pLY7Fofs=
+        b=eCeuUo/OnwnRSc7kPZPszNJ0Kx4wBMOKS/4VKS06t4jEfWJmWqckBJPck2OUyDqcy
+         3ud2AWmhZLMrM+kln764gjZljwojlpVi8SMpL+DOYBvq48IT7ITIawPmQ2Ldx/gcFG
+         VUdj2B7zUf9QpYZWlaeegfFpL6lWMtfbIfeJXqfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 13/77] perf bench numa: Fix cpu0 binding
-Date:   Wed,  4 Sep 2019 19:53:00 +0200
-Message-Id: <20190904175304.940339603@linuxfoundation.org>
+Subject: [PATCH 4.4 02/77] MIPS: kernel: only use i8253 clocksource with periodic clockevent
+Date:   Wed,  4 Sep 2019 19:52:49 +0200
+Message-Id: <20190904175303.589784339@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -66,55 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6bbfe4e602691b90ac866712bd4c43c51e546a60 ]
+[ Upstream commit a07e3324538a989b7cdbf2c679be6a7f9df2544f ]
 
-Michael reported an issue with perf bench numa failing with binding to
-cpu0 with '-0' option.
+i8253 clocksource needs a free running timer. This could only
+be used, if i8253 clockevent is set up as periodic.
 
-  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
-  # Running 'numa/mem' benchmark:
-
-   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
-  binding to node 0, mask: 0000000000000001 => -1
-  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
-  Aborted (core dumped)
-
-This happens when the cpu0 is not part of node0, which is the benchmark
-assumption and we can see that's not the case for some powerpc servers.
-
-Using correct node for cpu0 binding.
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/mips/kernel/i8253.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index df41deed0320e..3bfba81d19118 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -370,8 +370,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+diff --git a/arch/mips/kernel/i8253.c b/arch/mips/kernel/i8253.c
+index c5bc344fc745c..73039746ae364 100644
+--- a/arch/mips/kernel/i8253.c
++++ b/arch/mips/kernel/i8253.c
+@@ -31,7 +31,8 @@ void __init setup_pit_timer(void)
  
- 	/* Allocate and initialize all memory on CPU#0: */
- 	if (init_cpu0) {
--		orig_mask = bind_to_node(0);
--		bind_to_memnode(0);
-+		int node = numa_node_of_cpu(0);
-+
-+		orig_mask = bind_to_node(node);
-+		bind_to_memnode(node);
- 	}
+ static int __init init_pit_clocksource(void)
+ {
+-	if (num_possible_cpus() > 1) /* PIT does not scale! */
++	if (num_possible_cpus() > 1 || /* PIT does not scale! */
++	    !clockevent_state_periodic(&i8253_clockevent))
+ 		return 0;
  
- 	bytes = bytes0 + HPSIZE;
+ 	return clocksource_i8253_init();
 -- 
 2.20.1
 
