@@ -2,57 +2,50 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C0FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F71C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7C422CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BA723400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620021;
-	bh=deVjjfaCeWmOjv0MfVPs/hd7Na32HAkwkj1M6fy46S4=;
+	s=default; t=1567620026;
+	bh=sT01fR+XnH3y3f0Hio8gBB8oGNSugXeFEJqbhWXUlTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vnzev8a1upv3Zf5Xu9QlWymYP+j1tdf8tpMKAhgqct3L/5eTHwZwV0qT2+2nb0OgN
-	 alwwr7SBcYv9IGviDfR2CTYFL3wrqQ0eZy5UTr1cpSGStEo3j7TsMZ9bjGELnqQOsU
-	 yh5rB5QiVaWkYpN9qehwseAfh/27vX5ANbBU3kHI=
+	b=IJl9/1zbsEye+2TZ4BUMArZFVKWZ/BVOeobopBXCzs+YaLq870TP4/K2Z0iniQW+R
+	 +a5LX0To12jKtBo62/1ADNj54Tclo6tp0qZuQt9dfF4iIpAl0MWp8xAF6A9yBrDPhE
+	 /1rZB1QTVWdDLYX6GAUq/qTemR816X5HWe/bUiL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388384AbfIDSAU (ORCPT
+        id S2388388AbfIDSAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:00:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:00:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731866AbfIDSAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:00:16 -0400
+        id S2388004AbfIDSAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:00:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5EAE2339E;
-        Wed,  4 Sep 2019 18:00:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16F3D21883;
+        Wed,  4 Sep 2019 18:00:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620015;
-        bh=deVjjfaCeWmOjv0MfVPs/hd7Na32HAkwkj1M6fy46S4=;
+        s=default; t=1567620020;
+        bh=sT01fR+XnH3y3f0Hio8gBB8oGNSugXeFEJqbhWXUlTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ybq39GsVF8TRsVc4hh0gfb1lFR9l9rCMvK7IqBmG6h6ebYBbYc1NFK5mom+zEpG7d
-         F2RbAe089RAUdZgl/6OF+e1dL+PZbZx7L6EcdJCH05zA23C1xwGpomeIHrCDv8nizh
-         mSbBOMPHxaGIfIQISGOP56v34uNNSWbBRjCvYKds=
+        b=ObKryKXq8Vzoy4t6MfFsrScbMooHdFNQ4bfj27DatMw3BG3jL4+881OBBQTocN7hZ
+         3K1MA5xQ1ph+jz9MS0l5/tr2Fmj1EmO4VNL2gz8gslAAaIAdhJ2MEjoor8TD3l+4eh
+         K3mtNo43cJU0FlfHpL/797teUPZLJJ9GcZg8yuYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Burns <henryburns@google.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Henry Burns <henrywolfeburns@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jonathan Adams <jwadams@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 42/83] mm/zsmalloc.c: migration can leave pages in ZS_EMPTY indefinitely
-Date:   Wed,  4 Sep 2019 19:53:34 +0200
-Message-Id: <20190904175307.501570321@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 44/83] Revert "perf test 6: Fix missing kvm module load for s390"
+Date:   Wed,  4 Sep 2019 19:53:36 +0200
+Message-Id: <20190904175307.727656314@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -65,87 +58,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Burns <henryburns@google.com>
+This reverts commit 9a501cdb05348fa8f85db8df5a82f4b8cd11594e.
 
-commit 1a87aa03597efa9641e92875b883c94c7f872ccb upstream.
+Which was upstream commit 53fe307dfd309e425b171f6272d64296a54f4dff.
 
-In zs_page_migrate() we call putback_zspage() after we have finished
-migrating all pages in this zspage.  However, the return value is
-ignored.  If a zs_free() races in between zs_page_isolate() and
-zs_page_migrate(), freeing the last object in the zspage,
-putback_zspage() will leave the page in ZS_EMPTY for potentially an
-unbounded amount of time.
+Ben Hutchings reports that this commit depends on new code added in
+v4.18, and so is irrelevant on older kernels, and breaks the build.
 
-To fix this, we need to do the same thing as zs_page_putback() does:
-schedule free_work to occur.
-
-To avoid duplicated code, move the sequence to a new
-putback_zspage_deferred() function which both zs_page_migrate() and
-zs_page_putback() call.
-
-Link: http://lkml.kernel.org/r/20190809181751.219326-1-henryburns@google.com
-Fixes: 48b4800a1c6a ("zsmalloc: page migration support")
-Signed-off-by: Henry Burns <henryburns@google.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Henry Burns <henrywolfeburns@gmail.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Jonathan Adams <jwadams@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/zsmalloc.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ tools/perf/tests/parse-events.c | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -1939,6 +1939,18 @@ static void dec_zspage_isolation(struct
- 	zspage->isolated--;
- }
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 9134a0c3e99df..aa9276bfe3e9b 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -12,32 +12,6 @@
+ #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
+ 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
  
-+static void putback_zspage_deferred(struct zs_pool *pool,
-+				    struct size_class *class,
-+				    struct zspage *zspage)
-+{
-+	enum fullness_group fg;
-+
-+	fg = putback_zspage(class, zspage);
-+	if (fg == ZS_EMPTY)
-+		schedule_work(&pool->free_work);
-+
-+}
-+
- static void replace_sub_page(struct size_class *class, struct zspage *zspage,
- 				struct page *newpage, struct page *oldpage)
+-#if defined(__s390x__)
+-/* Return true if kvm module is available and loaded. Test this
+- * and retun success when trace point kvm_s390_create_vm
+- * exists. Otherwise this test always fails.
+- */
+-static bool kvm_s390_create_vm_valid(void)
+-{
+-	char *eventfile;
+-	bool rc = false;
+-
+-	eventfile = get_events_file("kvm-s390");
+-
+-	if (eventfile) {
+-		DIR *mydir = opendir(eventfile);
+-
+-		if (mydir) {
+-			rc = true;
+-			closedir(mydir);
+-		}
+-		put_events_file(eventfile);
+-	}
+-
+-	return rc;
+-}
+-#endif
+-
+ static int test__checkevent_tracepoint(struct perf_evlist *evlist)
  {
-@@ -2097,7 +2109,7 @@ int zs_page_migrate(struct address_space
- 	 * the list if @page is final isolated subpage in the zspage.
- 	 */
- 	if (!is_zspage_isolated(zspage))
--		putback_zspage(class, zspage);
-+		putback_zspage_deferred(pool, class, zspage);
- 
- 	reset_page(page);
- 	put_page(page);
-@@ -2144,14 +2156,13 @@ void zs_page_putback(struct page *page)
- 	spin_lock(&class->lock);
- 	dec_zspage_isolation(zspage);
- 	if (!is_zspage_isolated(zspage)) {
--		fg = putback_zspage(class, zspage);
- 		/*
- 		 * Due to page_lock, we cannot free zspage immediately
- 		 * so let's defer.
- 		 */
--		if (fg == ZS_EMPTY)
--			schedule_work(&pool->free_work);
-+		putback_zspage_deferred(pool, class, zspage);
- 	}
-+
- 	spin_unlock(&class->lock);
- }
- 
+ 	struct perf_evsel *evsel = perf_evlist__first(evlist);
+@@ -1619,7 +1593,6 @@ static struct evlist_test test__events[] = {
+ 	{
+ 		.name  = "kvm-s390:kvm_s390_create_vm",
+ 		.check = test__checkevent_tracepoint,
+-		.valid = kvm_s390_create_vm_valid,
+ 		.id    = 100,
+ 	},
+ #endif
+-- 
+2.20.1
+
 
 
