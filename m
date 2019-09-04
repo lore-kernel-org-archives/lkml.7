@@ -2,139 +2,150 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30415C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B495C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C2622CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CC9233A1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="OsihSA8X"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JbMqweJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfIDHcm (ORCPT
+        id S1729099AbfIDHdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:32:42 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:40132 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbfIDHcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:32:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id A493C3F364;
-        Wed,  4 Sep 2019 09:32:34 +0200 (CEST)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=OsihSA8X;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9lLkUit6PVre; Wed,  4 Sep 2019 09:32:33 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 276693F2FD;
-        Wed,  4 Sep 2019 09:32:31 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 99CB036117F;
-        Wed,  4 Sep 2019 09:32:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1567582351; bh=+HPJwYMkUXNNDiZsZ1mMLmsIhLPoZN+GWDYqMvcXGy0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OsihSA8XiQNtpZi4LHiOjmVKAjfHxhpSkrnaLq3orK8hVpSl/Py8OtmiHGj20Wmwb
-         y9LUQeVfzilM5iuRCPUMl3v1Y/pn92u88ghe02GGFXLUsf0p0rPeQctvZZIm6MHp0a
-         MdKNeE2NyMS/CI5DYx5qu4/Phd1HiNMQMy7dvJFQ=
-Subject: Re: [PATCH v2 1/4] x86/mm: Export force_dma_unencrypted
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com, linux-kernel@vger.kernel.org,
+        Wed, 4 Sep 2019 03:33:31 -0400
+Received: from mail-eopbgr820075.outbound.protection.outlook.com ([40.107.82.75]:60768
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726033AbfIDHdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:33:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RqIMUmtgUBS81lXLCSSN/uvUAcKHYx/AWhLeCbt/Jx95QJOnrmd7OxJLQzEI/gG1T66JQY/P1FzO4dHpi+BbnycA87VAIsACoCVTMddOAedD72iK+jGSGxfIPl+UNE9I8vHQVtRTKhhdOsf6s+k2MtGlqLEI7v72pLET9FEVf0NUShgdyf/cCDt5r/GsbwrDROK6+lu87ZoJO+39mMFIlusSo4Q20eairSDRjgKNKqWAaFwQAhOEx596pPbx+344fikH7qGB2O0rZzVNREbGhKhubbp6TxmUkhI7+08b9JbUqwpXEcqDbxsrmm8ZBdozKqhZ6xxu+isnskFg/X1icA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f1IJBzZJFjTp9JhivkBo/TKz83nWdQrsk7fk/t/61p4=;
+ b=ZyK29c/uGk+JLeydEniswU9E2bgjQ0kLJEGG6AnZSrC4lf7F60BtK+maDxOBFPR4cQbvsvPUSVhHb5Tj+5Ktp7T4/c4tzjaya1PGxpAEt+PRhcQIJKfBFzT3jZ3zAb5Nmqai2OVPi5RsMbYCs3v4M59jPx3KT0TUFD3pBYUZERdgmoEvtr/YCVfZT9VGQkyoAJBC+kxarQ3kJ2ZyJwSiKMfyQMvMv9v6vBivnXFU8flGlIJnjExZzsPscCkVSllSTVrf1A+BVtASode7Ro2Px3s7mJT0uy1vwlpWtKe9jZw5gn9uUxMk+I5idmvbEFCMtxCGBRSiLxKwXH36YcNJYg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f1IJBzZJFjTp9JhivkBo/TKz83nWdQrsk7fk/t/61p4=;
+ b=JbMqweJtRUvsyCs/FHBT8/0S4ojvmVUwjq4U1y0Eeuk9SohTVG/BGoVnIce7JManxtFPcw9qmkHZkFoT2zIwCxb0szlBJmEPSlGdqnOhO0mQLArfo0hN1GvKGCJ1O2mbw+Ozq9kvJV3q63dDyqFKrseUqNnXMeX+VhqoBBEAjv4=
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1225.namprd12.prod.outlook.com (10.168.240.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Wed, 4 Sep 2019 07:33:27 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::9d43:b3d4:9ef:29fc]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::9d43:b3d4:9ef:29fc%8]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
+ 07:33:27 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     =?utf-8?B?VGhvbWFzIEhlbGxzdHLDtm0gKFZNd2FyZSk=?= 
+        <thomas_os@shipmail.org>, Dave Hansen <dave.hansen@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
         Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support AMD
+ memory encryption
+Thread-Topic: [PATCH v2 3/4] drm/ttm, drm/vmwgfx: Correctly support support
+ AMD memory encryption
+Thread-Index: AQHVYlmrEsqRn+3n2UyO+FRNS69TaKcaWZqAgAADnYCAAAEogIAAC2+AgAAENQCAAAPnAIAAr2oA
+Date:   Wed, 4 Sep 2019 07:33:27 +0000
+Message-ID: <cfe46eda-66b5-b40d-6721-84e6e0e1f5de@amd.com>
 References: <20190903131504.18935-1-thomas_os@shipmail.org>
- <20190903131504.18935-2-thomas_os@shipmail.org>
- <20190903134627.GA2951@infradead.org>
- <f85e7fa6-54e1-7ac5-ce6c-96349c7af322@shipmail.org>
- <20190903162204.GB23281@infradead.org>
- <558f1224-d157-5848-1752-1430a5b3947e@shipmail.org>
- <20190904065823.GA31794@infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <8698dc21-8679-b4a7-3179-71589fa33ab7@shipmail.org>
-Date:   Wed, 4 Sep 2019 09:32:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190904065823.GA31794@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <20190903131504.18935-4-thomas_os@shipmail.org>
+ <b54bd492-9702-5ad7-95da-daf20918d3d9@intel.com>
+ <CAKMK7uFv+poZq43as8XoQaSuoBZxCQ1p44VCmUUTXOXt4Y+Bjg@mail.gmail.com>
+ <6d0fafcc-b596-481b-7b22-1f26f0c02c5c@intel.com>
+ <bed2a2d9-17f0-24bd-9f4a-c7ee27f6106e@shipmail.org>
+ <7fa3b178-b9b4-2df9-1eee-54e24d48342e@intel.com>
+ <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+In-Reply-To: <ba77601a-d726-49fa-0c88-3b02165a9a21@shipmail.org>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: PR2P264CA0009.FRAP264.PROD.OUTLOOK.COM (2603:10a6:101::21)
+ To DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5d52c5be-54cd-4319-387a-08d7310a2cee
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1225;
+x-ms-traffictypediagnostic: DM5PR12MB1225:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB12250BA7AC689A5DF4F20FC283B80@DM5PR12MB1225.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0150F3F97D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(366004)(51444003)(199004)(189003)(478600001)(110136005)(5660300002)(54906003)(58126008)(71190400001)(71200400001)(66946007)(76176011)(7416002)(81166006)(8936002)(8676002)(14454004)(81156014)(36756003)(46003)(6486002)(4326008)(186003)(64756008)(99286004)(66476007)(386003)(6506007)(53546011)(102836004)(66556008)(2906002)(316002)(229853002)(86362001)(53936002)(6246003)(52116002)(65956001)(65806001)(31696002)(476003)(31686004)(6436002)(6512007)(305945005)(7736002)(446003)(2616005)(6116002)(256004)(11346002)(25786009)(66446008)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1225;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 5ot6W/CwzLTTu6GGkv0Lp5piVMrCSsXj6bqAdfPyTJvIcDBZrnJpxkbcBfkPEO2wSn0tOHQcfB1RtkyUvWraxHi4zrpQ0KCqztaVoTz1ab2NXEQJMZrCbhHI3LZ8ZO2nyBo6YWXjLMVHdtOY7CylOC9OMQyTmyiFLcmwTHwvUWpkthe9DsrH9aP4OhcNtFCc/SvHuH5iIXBjfgNsWcoJMH9pPzahYRjQmG2wWKMFkyxGwhZD2LefpCiPMJNfr/DLVFMBJ2Js8Qe8+sgynFi9WqHvMT4DpdmDtnQQ2L5Gjd454E1lsfFtFNFse7iEEaa2AY6dxmmlmbVIVtLK7S3hYnFlcjBMzbuhNzBHXNri71jJgSVDyndB+3NWe3AkpsG6leL0apK8NuMNL9biY8u9QcOH/vmiXm8ydORNrmaRKn4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EC6A318B0D8592409E7975FC2E0B079E@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d52c5be-54cd-4319-387a-08d7310a2cee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 07:33:27.2586
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fNjpiJrUZ/TO62DNbfuv/FeljFLDUlNyDcrF+mV9s+GsmKNzX1EMEMPjk+ZUhb6x
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1225
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 8:58 AM, Christoph Hellwig wrote:
-> On Tue, Sep 03, 2019 at 10:46:18PM +0200, Thomas Hellström (VMware) wrote:
->> What I mean with "from an engineering perspective" is that drivers would end
->> up with a non-trivial amount of code supporting purely academic cases:
->> Setups where software rendering would be faster than gpu accelerated, and
->> setups on platforms where the driver would never run anyway because the
->> device would never be supported on that platform...
-> And actually work on cases you previously called academic and which now
-> matter to you because your employer has a suddent interest in SEV.
-> Academic really is in the eye of the beholder (and of those who pay
-> the bills).
-
-But in this particular case we *do* adhere to the dma api, at least as 
-far as we can. But we're missing functionality.
-
->
->> That is not really true. The dma API can't handle faulting of coherent pages
->> which is what this series is really all about supporting also with SEV
->> active. To handle the case where we move graphics buffers or send them to
->> swap space while user-space have them mapped.
-> And the only thing we need to support the fault handler is to add an
-> offset to the dma_mmap_* APIs.  Which I had planned to do for Christian
-> (one of the few grapics developers who actually tries to play well
-> with the rest of the kernel instead of piling hacks over hacks like
-> many others) anyway, but which hasn't happened yet.
-
-That sounds great. Is there anything I can do to help out? I thought 
-this was more or less a dead end since the current dma_mmap_ API 
-requires the mmap_sem to be held in write mode (modifying the 
-vma->vm_flags) whereas fault() only offers read mode. But that would 
-definitely work.
-
->
->> Still, I need a way forward and my questions weren't really answered by
->> this.
-> This is pretty demanding.  If you "need" a way forward just work with
-> all the relevant people instead of piling ob local hacks.
-
-But I think that was what I was trying to initiate. The question was
-
-"If it's the latter, then I would like to reiterate that it would be 
-better that we work to come up with a long term plan to add what's 
-missing to the DMA api to help graphics drivers use coherent memory?"
-
-And since you NAK'd the original patches, I was sort of hoping for a 
-point in the right direction.
-
-Thanks,
-
-Thomas
-
-
-
-
+QW0gMDMuMDkuMTkgdW0gMjM6MDUgc2NocmllYiBUaG9tYXMgSGVsbHN0csO2bSAoVk13YXJlKToN
+Cj4gT24gOS8zLzE5IDEwOjUxIFBNLCBEYXZlIEhhbnNlbiB3cm90ZToNCj4+IE9uIDkvMy8xOSAx
+OjM2IFBNLCBUaG9tYXMgSGVsbHN0csO2bSAoVk13YXJlKSB3cm90ZToNCj4+PiBTbyB0aGUgcXVl
+c3Rpb24gaGVyZSBzaG91bGQgcmVhbGx5IGJlLCBjYW4gd2UgZGV0ZXJtaW5lIGFscmVhZHkgYXQg
+bW1hcA0KPj4+IHRpbWUgd2hldGhlciBiYWNraW5nIG1lbW9yeSB3aWxsIGJlIHVuZW5jcnlwdGVk
+IGFuZCBhZGp1c3QgdGhlICpyZWFsKg0KPj4+IHZtYS0+dm1fcGFnZV9wcm90IHVuZGVyIHRoZSBt
+bWFwX3NlbT8NCj4+Pg0KPj4+IFBvc3NpYmx5LCBidXQgdGhhdCByZXF1aXJlcyBwb3B1bGF0aW5n
+IHRoZSBidWZmZXIgd2l0aCBtZW1vcnkgYXQgbW1hcA0KPj4+IHRpbWUgcmF0aGVyIHRoYW4gYXQg
+Zmlyc3QgZmF1bHQgdGltZS4NCj4+IEknbSBub3QgY29ubmVjdGluZyB0aGUgZG90cy4NCj4+DQo+
+PiB2bWEtPnZtX3BhZ2VfcHJvdCBpcyB1c2VkIHRvIGNyZWF0ZSBhIFZNQSdzIFBURXMgcmVnYXJk
+bGVzcyBvZiBpZiB0aGV5DQo+PiBhcmUgY3JlYXRlZCBhdCBtbWFwKCkgb3IgZmF1bHQgdGltZS7C
+oCBJZiB3ZSBlc3RhYmxpc2ggYSBnb29kDQo+PiB2bWEtPnZtX3BhZ2VfcHJvdCwgY2FuJ3Qgd2Ug
+anVzdCB1c2UgaXQgZm9yZXZlciBmb3IgZGVtYW5kIGZhdWx0cz8NCj4NCj4gV2l0aCBTRVYgSSB0
+aGluayB0aGF0IHdlIGNvdWxkIHBvc3NpYmx5IGVzdGFibGlzaCB0aGUgZW5jcnlwdGlvbiBmbGFn
+cyANCj4gYXQgdm1hIGNyZWF0aW9uIHRpbWUuIEJ1dCB0aGlua2luZyBvZiBpdCwgaXQgd291bGQg
+YWN0dWFsbHkgYnJlYWsgd2l0aCANCj4gU01FIHdoZXJlIGJ1ZmZlciBjb250ZW50IGNhbiBiZSBt
+b3ZlZCBiZXR3ZWVuIGVuY3J5cHRlZCBzeXN0ZW0gbWVtb3J5IA0KPiBhbmQgdW5lbmNyeXB0ZWQg
+Z3JhcGhpY3MgY2FyZCBQQ0kgbWVtb3J5IGJlaGluZCB1c2VyLXNwYWNlJ3MgYmFjay4gDQo+IFRo
+YXQgd291bGQgaW1wbHkga2lsbGluZyBhbGwgdXNlci1zcGFjZSBlbmNyeXB0ZWQgUFRFcyBhbmQg
+YXQgZmF1bHQgDQo+IHRpbWUgc2V0IHVwIG5ldyBvbmVzIHBvaW50aW5nIHRvIHVuZW5jcnlwdGVk
+IFBDSSBtZW1vcnkuLg0KDQpXZWxsIG15IHByb2JsZW0gaXMgd2hlcmUgZG8geW91IHNlZSBlbmNy
+eXB0ZWQgc3lzdGVtIG1lbW9yeSBoZXJlPw0KDQpBdCBsZWFzdCBmb3IgQU1EIEdQVXMgYWxsIG1l
+bW9yeSBhY2Nlc3NlZCBtdXN0IGJlIHVuZW5jcnlwdGVkIGFuZCB0aGF0IA0KY291bnRzIGZvciBi
+b3RoIHN5c3RlbSBhcyB3ZWxsIGFzIFBDSSBtZW1vcnkuDQoNClNvIEkgZG9uJ3QgZ2V0IHdoeSB3
+ZSBjYW4ndCBhc3N1bWUgYWx3YXlzIHVuZW5jcnlwdGVkIGFuZCBrZWVwIGl0IGxpa2UgdGhhdC4N
+Cg0KUmVnYXJkcywNCkNocmlzdGlhbi4NCg==
