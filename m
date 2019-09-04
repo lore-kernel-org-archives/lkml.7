@@ -2,122 +2,102 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A320C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EC4C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1055B2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XfzOvHMW"
+	by mail.kernel.org (Postfix) with ESMTP id 9C59321883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731643AbfIDRfy (ORCPT
+        id S1730099AbfIDRjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:35:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34690 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727809AbfIDRfx (ORCPT
+        Wed, 4 Sep 2019 13:39:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44051 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727809AbfIDRjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:35:53 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84HXaJ6178061;
-        Wed, 4 Sep 2019 17:35:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=oKAkTwSIfkLy1nyeOp7Bhpf8xnCuOFObRzurrxywKfg=;
- b=XfzOvHMWY/mrSSg9OA3+35NYIVw1A8UGcpvQvqJfD4G+PPLpa4dvKXqyaeQFs+Ik99Hk
- gclX6tHZ/fAbx6AAnqpSQXewCEhk4kKchGGNdQ39SjqA2ThB7h6i/JzAAKUshzbKsPRz
- aoVIm4fv7GzuKBriNZsIICBVIjsMdjr8hsN0J2/RcjoI7C1CWzUKyAsRrOqxSvBgRkMa
- dascJ8PVldmFQETpIop4ryhCxsVGJTGRC5AqUxmXU24c7Jn0tvVO2D83ZCNaLKt/bKoJ
- DZWMMgXOFb2j9CpYXw3v088ByYCXqCPPWiipTG70FBaZBJ4daVkfMiJ7er07ZT4OqHXr XQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2uthkbr35c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 17:35:41 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x84HXLJS194806;
-        Wed, 4 Sep 2019 17:35:41 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2usu53e1ej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Sep 2019 17:35:41 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x84HZe9E026221;
-        Wed, 4 Sep 2019 17:35:40 GMT
-Received: from [10.209.243.89] (/10.209.243.89)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Sep 2019 10:35:39 -0700
-Subject: Re: [GIT PULL] SOC: TI soc updates for 5.4
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     arm-soc <arm@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1566875507-8067-1-git-send-email-santosh.shilimkar@oracle.com>
- <CAK8P3a3_NWWBFrpNpbPH9+47Segi_EaYx2jx5jvPhYJJqR+a7A@mail.gmail.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <3af4da24-2246-ff94-b83d-2b6ada4fc362@oracle.com>
-Date:   Wed, 4 Sep 2019 10:35:38 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.2
+        Wed, 4 Sep 2019 13:39:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q21so8654771pfn.11;
+        Wed, 04 Sep 2019 10:39:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KnvfsSXVbwlDdjXbwbCBJbJBscMecP2Y83R9nu77QrY=;
+        b=W0m8p/8M5k1Vf4lOjxwRazjXPVDZWgSpR+qgH6StaPwOejJv5NzV9jvwP/3CuhNwkI
+         T/mTtNCnRg4fLeqso22vLhRUZi07GTOFRn7tCJOK1QGkBlS0pLh1RJPHAn7DVhcxv6e7
+         WDBMbP8D0iY60BAVP2FUXUcP9HvHo63216NccbvAPyLHnvrPmZGtT5aSLhtHiQSFNhah
+         8FDzxM+5icfIw5kkSUOVOyiLp/oNl/f2LKSSB8XtLHbsZy6hrHgw2H7pl4aTUMnMZq5D
+         YZRqY2q2L9vOzwo+TTkC9MVmCmtvndP6l+mMBI4jFL8yoEPziYC3ande2J+ktG44efRP
+         Xe5w==
+X-Gm-Message-State: APjAAAVXZqRElTbH3tvrxvtwqByjaICjLD7kQlgaEsH0HpK13TNla6iC
+        ay3gg9n/ekDxQVhyc7+7Ryk=
+X-Google-Smtp-Source: APXvYqzrk/gkg2yGQWmQ4/JeJVdU8iF4leHlHSGlyvREresBS+YkyH/0INQtThrw0f/ygpLmb9mz8g==
+X-Received: by 2002:a63:ff65:: with SMTP id s37mr35380567pgk.102.1567618741236;
+        Wed, 04 Sep 2019 10:39:01 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id v15sm23521222pfn.69.2019.09.04.10.38.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Sep 2019 10:39:00 -0700 (PDT)
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Ming Lei <ming.lei@redhat.com>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-scsi@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Long Li <longli@microsoft.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190827225827.GA5263@ming.t460p>
+ <alpine.DEB.2.21.1908280104330.1939@nanos.tec.linutronix.de>
+ <20190828110633.GC15524@ming.t460p>
+ <alpine.DEB.2.21.1908281316230.1869@nanos.tec.linutronix.de>
+ <20190828135054.GA23861@ming.t460p>
+ <alpine.DEB.2.21.1908281605190.23149@nanos.tec.linutronix.de>
+ <20190903033001.GB23861@ming.t460p>
+ <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+ <20190903063125.GA21022@ming.t460p>
+ <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+ <20190903072848.GA22170@ming.t460p>
+ <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+ <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
+ <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <de16de12-fa1a-666c-ea19-fea5d096c1ca@acm.org>
+Date:   Wed, 4 Sep 2019 10:38:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3_NWWBFrpNpbPH9+47Segi_EaYx2jx5jvPhYJJqR+a7A@mail.gmail.com>
+In-Reply-To: <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909040175
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9370 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909040175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 6:13 AM, Arnd Bergmann wrote:
-> On Tue, Aug 27, 2019 at 5:12 AM Santosh Shilimkar
-> <santosh.shilimkar@oracle.com> wrote:
+On 9/4/19 10:31 AM, Daniel Lezcano wrote:
+> On 04/09/2019 19:07, Bart Van Assche wrote:
+>> Only if CONFIG_IRQ_TIME_ACCOUNTING has been enabled. However, I don't
+>> know any Linux distro that enables that option. That's probably because
+>> that option introduces two rdtsc() calls in each interrupt. Given the
+>> overhead introduced by this option, I don't think this is the solution
+>> Ming is looking for.
 > 
->> ----------------------------------------------------------------
->> soc: TI soc updates for 5.4
->>
->>   -  Update firmware to support PM domain shared and exclusive support
->>   -  Update driver and dt binding docs for the same.
->>
->> ----------------------------------------------------------------
->>
->> Lokesh Vutla (3):
->>    firmware: ti_sci: Allow for device shared and exclusive requests
->>    dt-bindings: ti_sci_pm_domains: Add support for exclusive and shared
->>      access
->>    soc: ti: ti_sci_pm_domains: Add support for exclusive and shared
->>      access
-> 
-> Hi Santosh,
-> 
-> I noticed that your branch is based on top of v5.3-rc2, while my
-> arm/drivers branch started out from -rc1.
-> 
-> Do you have any dependencies on -rc2 in your changes? If not,
-> could you please resubmit after rebasing? I can also just
-> cherry-pick those three commits if that's easier.
-> 
-No dependencies. Can you please cherry pick them this time ?
-Will use rc1 for future pull request(s). Thanks !!
+> Was this overhead reported somewhere ?
+  I think it is widely known that rdtsc is a relatively slow x86 
+instruction. So I expect that using that instruction will cause a 
+measurable overhead if it is called frequently enough. I'm not aware of 
+any publicly available measurement data however.
 
-Regards,
-Santosh
+Bart.
