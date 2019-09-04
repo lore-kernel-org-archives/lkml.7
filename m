@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48700C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A580C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2294920870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5561C20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621500;
-	bh=rHsfZKh5hpl3Tpw9S1bcEiNI0pKboFXwI6tWd6Robn4=;
+	s=default; t=1567621504;
+	bh=8Z6HD5HY8h6D4M2p5+ETPaKm+ftuV/xNmNbAIFxiHrg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLCJaYtIgiEpakCcNx1dQpCxMbEUL6ECITv+F63OHQahPjhA6fx+wM4wsmJKeCeyI
-	 aSfmVi+ZAmIp4T9fXE268T4555VDriBJQYkLwZkIFwOBwQvxRPQBG/cn3kXNY9AeMU
-	 R4ZueO8Rh3EWs5s7u1SBMYvE4+r2qvwpQghdnRyg=
+	b=zhV0jaQ/HBqvj8Hwe4U5XHxMlAMBhSmoSLnIzKoxYWVL9/LEQ3BmPMUoFMnUgZEXX
+	 MbMJrtZWQWL/CnVoOTh3PMp0lKoQ3hMOPU+iUyaNFZrPs/k989Ncr2PVQAJuaErMC4
+	 62Dxfof0cOtJrwmtcvNbjGJIYsyLYmDl9J1LdZFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbfIDSAl (ORCPT
+        id S2388106AbfIDSAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39958 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387843AbfIDSAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:00:40 -0400
+        id S2388048AbfIDSA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:00:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C50A721883;
-        Wed,  4 Sep 2019 18:00:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 101E42339D;
+        Wed,  4 Sep 2019 18:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620039;
-        bh=rHsfZKh5hpl3Tpw9S1bcEiNI0pKboFXwI6tWd6Robn4=;
+        s=default; t=1567620028;
+        bh=8Z6HD5HY8h6D4M2p5+ETPaKm+ftuV/xNmNbAIFxiHrg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ZTEvrvy2YPUzg0ZI6pzObCbo1Zgw//PMTuO4IbX0KnYoCFr4W/UKE5sGRJdwpOGw
-         rbf0ZRPcHICWRPUcrglnYusFBJfGTWO6tSVMDGv3IqdPshSiIkxZiNPJUfTNI9qU+D
-         XUq9CiDHFoDJmk5GaKMEzbkxbhjNIV2rvw3LiXyI=
+        b=lfH+VmUx2R9z00DFh9YPCMz90jBL2z/dYNp8k4T96w76YiTCyB6Yu0oZOYmsc0uIS
+         gaM9d7reTlXvSmhdNKWNdT79/+LJ1ISohe1EHt5BiyGm71DMxaZnRDQ4BtuJWPqJql
+         DAZl3boqiTShF3i8GziCpl37lFCJADkzmY3JVe58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 50/83] i2c: emev2: avoid race when unregistering slave client
-Date:   Wed,  4 Sep 2019 19:53:42 +0200
-Message-Id: <20190904175308.178336374@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 47/83] iommu/dma: Handle SG length overflow better
+Date:   Wed,  4 Sep 2019 19:53:39 +0200
+Message-Id: <20190904175307.951889740@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -62,76 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7437fc0d8291181debe032671a289b6bd93f46f ]
+[ Upstream commit ab2cbeb0ed301a9f0460078e91b09f39958212ef ]
 
-After we disabled interrupts, there might still be an active one
-running. Sync before clearing the pointer to the slave device.
+Since scatterlist dimensions are all unsigned ints, in the relatively
+rare cases where a device's max_segment_size is set to UINT_MAX, then
+the "cur_len + s_length <= max_len" check in __finalise_sg() will always
+return true. As a result, the corner case of such a device mapping an
+excessively large scatterlist which is mergeable to or beyond a total
+length of 4GB can lead to overflow and a bogus truncated dma_length in
+the resulting segment.
 
-Fixes: c31d0a00021d ("i2c: emev2: add slave support")
-Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+As we already assume that any single segment must be no longer than
+max_len to begin with, this can easily be addressed by reshuffling the
+comparison.
+
+Fixes: 809eac54cdd6 ("iommu/dma: Implement scatterlist segment merging")
+Reported-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Tested-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-emev2.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/iommu/dma-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-emev2.c b/drivers/i2c/busses/i2c-emev2.c
-index 96bb4e7490128..0218ba6eb26ab 100644
---- a/drivers/i2c/busses/i2c-emev2.c
-+++ b/drivers/i2c/busses/i2c-emev2.c
-@@ -72,6 +72,7 @@ struct em_i2c_device {
- 	struct completion msg_done;
- 	struct clk *sclk;
- 	struct i2c_client *slave;
-+	int irq;
- };
- 
- static inline void em_clear_set_bit(struct em_i2c_device *priv, u8 clear, u8 set, u8 reg)
-@@ -342,6 +343,12 @@ static int em_i2c_unreg_slave(struct i2c_client *slave)
- 
- 	writeb(0, priv->base + I2C_OFS_SVA0);
- 
-+	/*
-+	 * Wait for interrupt to finish. New slave irqs cannot happen because we
-+	 * cleared the slave address and, thus, only extension codes will be
-+	 * detected which do not use the slave ptr.
-+	 */
-+	synchronize_irq(priv->irq);
- 	priv->slave = NULL;
- 
- 	return 0;
-@@ -358,7 +365,7 @@ static int em_i2c_probe(struct platform_device *pdev)
- {
- 	struct em_i2c_device *priv;
- 	struct resource *r;
--	int irq, ret;
-+	int ret;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -391,8 +398,8 @@ static int em_i2c_probe(struct platform_device *pdev)
- 
- 	em_i2c_reset(&priv->adap);
- 
--	irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(&pdev->dev, irq, em_i2c_irq_handler, 0,
-+	priv->irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_irq(&pdev->dev, priv->irq, em_i2c_irq_handler, 0,
- 				"em_i2c", priv);
- 	if (ret)
- 		goto err_clk;
-@@ -402,7 +409,8 @@ static int em_i2c_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk;
- 
--	dev_info(&pdev->dev, "Added i2c controller %d, irq %d\n", priv->adap.nr, irq);
-+	dev_info(&pdev->dev, "Added i2c controller %d, irq %d\n", priv->adap.nr,
-+		 priv->irq);
- 
- 	return 0;
- 
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 1520e7f02c2f1..89d191b6a0e0f 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -493,7 +493,7 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+ 		 * - and wouldn't make the resulting output segment too long
+ 		 */
+ 		if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
+-		    (cur_len + s_length <= max_len)) {
++		    (max_len - cur_len >= s_length)) {
+ 			/* ...then concatenate it with the previous one */
+ 			cur_len += s_length;
+ 		} else {
 -- 
 2.20.1
 
