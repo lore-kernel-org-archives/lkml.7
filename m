@@ -2,127 +2,124 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E6DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA557C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15C42070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613029;
-	bh=EGeevMO/gUf+Nnn2/iDfa/HkxbyhqMByHJ3zeC0NUl0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GbbqCQdeMxuDN3cEmpmA8gV/MvQx1DIsWwFrmBKQc87DLYxTds5BYrNS21QVRj39C
-	 gNNbtA63RegLIjqQ7G1IP4L3fiJUcFiL+JH20AP/pHKJQ536s2fiw5wBGIMaW3pi9W
-	 qlRAG34cErLy8VDS/9guzn57YVdtzjBeyDkxQPy8=
+	by mail.kernel.org (Postfix) with ESMTP id 826902070C
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:03:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N8gFXNfw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387690AbfIDQDa (ORCPT
+        id S1733117AbfIDQDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:03:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387660AbfIDQDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC7AD20820;
-        Wed,  4 Sep 2019 16:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567613004;
-        bh=EGeevMO/gUf+Nnn2/iDfa/HkxbyhqMByHJ3zeC0NUl0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xBy2b0blYYYXewohL2/tQtcakeB/HHbwTPWS17MEHjzvMp33YpBs84+mRjd7oWrf/
-         rd0ehg9kv7BxknHJIxZgKkuv5v+sQMsXFZIsEFGG5beBQBbcdu9+q93Nbuw8HNApVw
-         PvO5E58r2U/UBvpVh4fNHwmVNFMdS+8uMvfFCC+E=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>, linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 13/20] cifs: set domainName when a domain-key is used in multiuser
-Date:   Wed,  4 Sep 2019 12:02:56 -0400
-Message-Id: <20190904160303.5062-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
-References: <20190904160303.5062-1-sashal@kernel.org>
+        Wed, 4 Sep 2019 12:03:52 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46576 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731541AbfIDQDt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:49 -0400
+Received: by mail-lf1-f66.google.com with SMTP id t8so3927783lfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 09:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qdkpjv/bZ2lIEk5X+tFdEgL+mJhBRPFpnDdvWwMX9Xc=;
+        b=N8gFXNfwqngfpITkERemx7Ltu0Dlkimbs/trkm5uy96D6tIWPHX+pNnCgQH1JxBihu
+         IUrf7jLBw1JFSWWDRnalf9mB+yNxxdG069bZzIjwJ4zwb/qe7WxIcKRgxPPfGKgR6AGk
+         4cnEy7ibBSOP6zo70HU5OxGp7HUKh81yvJsJ2YsMSEHK6/LXkPSokNqCrVMYSD3+bB4e
+         kS75lVIGNArGDrvZt0feVALLQxuzWS+xVJQxen3vpDfiaItT/4Y+cy1RBN1sxFZ96kAI
+         E9/nkH2UsoZHaIdiXJmDlCysFakZHUVnixHRNlY6m99sKIXP1K2Iej7CxYqjC5k4ZoQJ
+         d98g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qdkpjv/bZ2lIEk5X+tFdEgL+mJhBRPFpnDdvWwMX9Xc=;
+        b=Qa80BenDG4+gBaDdLh8e1waXmm3zptqv149IY3bLsGs43n3lWxUFBimAluIaKjSvhD
+         /Z92eC/JKuRATcj3yp/5730aq0Veaq4iBa/LJ3OOXdQH4W5ZkR+WrzG3anj+vIsitR5g
+         F+AmvsRlRipfsxyfPZj1KbBFEN1Mu8kv7eHhkLZM71BDb+sK2QDrKeE3yy5KxGLxzCs1
+         O6KwqZvxAAtu46erw9k5+OcV60U/GSpaOQhcWVzPvpySg67whoMr6/Idr8s07H6SxSOp
+         wTMagVXhHwVWitUA1xgaQPfCBE4CGM6zpUd8hVLQFbM83ueRBZMGSn1tysG9vBhpNGWd
+         5NdQ==
+X-Gm-Message-State: APjAAAUna2PIO4IoK6TppRgT04EGYRq0eL0b83ScTn0KXMyrj+cZuPKH
+        xZf2dH/kuBVpOcSQlrm/xSY+FA==
+X-Google-Smtp-Source: APXvYqxcl6N2Os+hsM2CmBabXDD2UjVXYfZOm8va/9JhvYkTJcOmfYODnBTLkrUxHpBd/2Gc/balpg==
+X-Received: by 2002:a19:6549:: with SMTP id c9mr3188567lfj.99.1567613027790;
+        Wed, 04 Sep 2019 09:03:47 -0700 (PDT)
+Received: from localhost.localdomain (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
+        by smtp.gmail.com with ESMTPSA id r8sm556064lfm.71.2019.09.04.09.03.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 09:03:47 -0700 (PDT)
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: dwc: fix find_next_bit() usage
+Date:   Wed,  4 Sep 2019 18:03:38 +0200
+Message-Id: <20190904160339.2800-1-niklas.cassel@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+find_next_bit() takes a parameter of size long, and performs arithmetic
+that assumes that the argument is of size long.
 
-[ Upstream commit f2aee329a68f5a907bcff11a109dfe17c0b41aeb ]
+Therefore we cannot pass a u32, since this will cause find_next_bit()
+to read outside the stack buffer and will produce the following print:
+BUG: KASAN: stack-out-of-bounds in find_next_bit+0x38/0xb0
 
-RHBZ: 1710429
-
-When we use a domain-key to authenticate using multiuser we must also set
-the domainnmame for the new volume as it will be used and passed to the server
-in the NTLMSSP Domain-name.
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1b497e6493c4 ("PCI: dwc: Fix uninitialized variable in dw_handle_msi_irq()")
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 ---
- fs/cifs/connect.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 9cb72fd40eff3..90e0c51ac0450 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -2466,6 +2466,7 @@ static int
- cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index d3156446ff27..45f21640c977 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -78,7 +78,8 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
+ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
  {
- 	int rc = 0;
-+	int is_domain = 0;
- 	const char *delim, *payload;
- 	char *desc;
- 	ssize_t len;
-@@ -2513,6 +2514,7 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 			rc = PTR_ERR(key);
- 			goto out_err;
- 		}
-+		is_domain = 1;
- 	}
+ 	int i, pos, irq;
+-	u32 val, num_ctrls;
++	unsigned long val;
++	u32 status, num_ctrls;
+ 	irqreturn_t ret = IRQ_NONE;
  
- 	down_read(&key->sem);
-@@ -2570,6 +2572,26 @@ cifs_set_cifscreds(struct smb_vol *vol, struct cifs_ses *ses)
- 		goto out_key_put;
- 	}
+ 	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
+@@ -86,14 +87,14 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+ 	for (i = 0; i < num_ctrls; i++) {
+ 		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
+ 					(i * MSI_REG_CTRL_BLOCK_SIZE),
+-				    4, &val);
+-		if (!val)
++				    4, &status);
++		if (!status)
+ 			continue;
  
-+	/*
-+	 * If we have a domain key then we must set the domainName in the
-+	 * for the request.
-+	 */
-+	if (is_domain && ses->domainName) {
-+		vol->domainname = kstrndup(ses->domainName,
-+					   strlen(ses->domainName),
-+					   GFP_KERNEL);
-+		if (!vol->domainname) {
-+			cifs_dbg(FYI, "Unable to allocate %zd bytes for "
-+				 "domain\n", len);
-+			rc = -ENOMEM;
-+			kfree(vol->username);
-+			vol->username = NULL;
-+			kfree(vol->password);
-+			vol->password = NULL;
-+			goto out_key_put;
-+		}
-+	}
-+
- out_key_put:
- 	up_read(&key->sem);
- 	key_put(key);
+ 		ret = IRQ_HANDLED;
++		val = status;
+ 		pos = 0;
+-		while ((pos = find_next_bit((unsigned long *) &val,
+-					    MAX_MSI_IRQS_PER_CTRL,
++		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+ 					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
+ 			irq = irq_find_mapping(pp->irq_domain,
+ 					       (i * MAX_MSI_IRQS_PER_CTRL) +
 -- 
-2.20.1
+2.21.0
 
