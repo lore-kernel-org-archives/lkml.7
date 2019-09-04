@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9BDC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C691C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B8F208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0580F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620785;
-	bh=OLFtpclpiY3L431sI5w25mUeBSBh2tQ9Un+0qIjRWU8=;
+	s=default; t=1567620791;
+	bh=QfaEHryzVEL2hXwWkCzJ3WcurmZFn+JfnVJi9dnQP8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqyeYDoYG0aqvLSadAeGTOyzAn9Tu+s5J+RjtaxLSTecVjDAUfxbdjXfVxD393wPs
-	 ETmf71EFQyjfcd1PnPTTqfl3rZ1r+cs+VmOKe8d4iNfB4UpaUlyhdCcVgjop0xDsBO
-	 drWZwIoly0Q+xLiHuADX1a9UuxDROCRZcRKsw/YY=
+	b=udUo6/XyHqepQK0kj1nkUY0wOOcQxSfz2MnPbZhTxKZdt4rSvIPSHw4gUxmVxWIXQ
+	 9kWpQ8eo2vFFzBiligpvTFczAZzXXkU2wlrA367NYB0wyTlCtRmWXd1oWMDO72aMap
+	 RB+f9L2Dn1fo029l9igbMT+mZuvFNvylEEwOIFPg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390612AbfIDSNE (ORCPT
+        id S2390631AbfIDSNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57652 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390179AbfIDSND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:03 -0400
+        id S2389432AbfIDSNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B27A5206BA;
-        Wed,  4 Sep 2019 18:13:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2064B208E4;
+        Wed,  4 Sep 2019 18:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620782;
-        bh=OLFtpclpiY3L431sI5w25mUeBSBh2tQ9Un+0qIjRWU8=;
+        s=default; t=1567620787;
+        bh=QfaEHryzVEL2hXwWkCzJ3WcurmZFn+JfnVJi9dnQP8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nFrNQGyLr75UfmrHpusiopadiOZLTwtZLf13ecZ2WNMF4bTndEK51CkC3YEMDAPE
-         SIc86Ns1wtqmfMfDd31cTmdjWdX2Xz0kXdqMTEjjFlc+IcCpa8JtqtxHE/G1Bza2iX
-         aIk4wTmFpktMooc/k74LZPJVDJF+ktpc92wc/7fo=
+        b=losMKIiGeaIrMhlVfgZgve3+KoQZde7uAtUrG1a6N9Xs+L3LkFFvBgasvtl2hqO0l
+         wwt9wXKBE0DyhBfK6Y2UqSwNc3uuz/j/WXNTWQ5QENHoYGlNe1SRH1F2kWZ22CYmWO
+         2NrCnM7E4ygh9MGLqCphHyvN7i28Y53lxaoMw4XU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.2 092/143] Revert "mmc: sdhci-tegra: drop ->get_ro() implementation"
-Date:   Wed,  4 Sep 2019 19:53:55 +0200
-Message-Id: <20190904175317.714028721@linuxfoundation.org>
+Subject: [PATCH 5.2 094/143] mmc: sdhci-cadence: enable v4_mode to fix ADMA 64-bit addressing
+Date:   Wed,  4 Sep 2019 19:53:57 +0200
+Message-Id: <20190904175317.813874728@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -61,79 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit 0f686ca933597cfcc0636253fc1740423c062ec7 upstream.
+commit e73a3896eaca95ea5fc895720502a3f040eb4b39 upstream.
 
-The WRITE_PROTECT bit is always in a "protected mode" on Tegra and
-WP-GPIO state need to be used instead. In a case of the GPIO absence,
-write-enable should be assumed. External SD is writable once again as
-a result of this patch because the offending commit changed behaviour for
-the case of a missing WP-GPIO to fall back to WRITE_PROTECT bit-checking,
-which is incorrect for Tegra.
+The IP datasheet says this controller is compatible with SD Host
+Specification Version v4.00.
 
-Cc: stable@vger.kernel.org # v5.1+
-Fixes: e8391453e27f ("mmc: sdhci-tegra: drop ->get_ro() implementation")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+As it turned out, the ADMA of this IP does not work with 64-bit mode
+when it is in the Version 3.00 compatible mode; it understands the
+old 64-bit descriptor table (as defined in SDHCI v2), but the ADMA
+System Address Register (SDHCI_ADMA_ADDRESS) cannot point to the
+64-bit address.
+
+I noticed this issue only after commit bd2e75633c80 ("dma-contiguous:
+use fallback alloc_pages for single pages"). Prior to that commit,
+dma_set_mask_and_coherent() returned the dma address that fits in
+32-bit range, at least for the default arm64 configuration
+(arch/arm64/configs/defconfig). Now the host->adma_addr exceeds the
+32-bit limit, causing the real problem for the Socionext SoCs.
+(As a side-note, I was also able to reproduce the issue for older
+kernels by turning off CONFIG_DMA_CMA.)
+
+Call sdhci_enable_v4_mode() to fix this.
+
+Cc: <stable@vger.kernel.org> # v4.20+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-tegra.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/mmc/host/sdhci-cadence.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -258,6 +258,16 @@ static void tegra210_sdhci_writew(struct
- 	}
- }
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -369,6 +369,7 @@ static int sdhci_cdns_probe(struct platf
+ 	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
+ 	host->mmc_host_ops.hs400_enhanced_strobe =
+ 				sdhci_cdns_hs400_enhanced_strobe;
++	sdhci_enable_v4_mode(host);
  
-+static unsigned int tegra_sdhci_get_ro(struct sdhci_host *host)
-+{
-+	/*
-+	 * Write-enable shall be assumed if GPIO is missing in a board's
-+	 * device-tree because SDHCI's WRITE_PROTECT bit doesn't work on
-+	 * Tegra.
-+	 */
-+	return mmc_gpio_get_ro(host->mmc);
-+}
-+
- static bool tegra_sdhci_is_pad_and_regulator_valid(struct sdhci_host *host)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -1224,6 +1234,7 @@ static const struct cqhci_host_ops sdhci
- };
+ 	sdhci_get_of_property(pdev);
  
- static const struct sdhci_ops tegra_sdhci_ops = {
-+	.get_ro     = tegra_sdhci_get_ro,
- 	.read_w     = tegra_sdhci_readw,
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
-@@ -1279,6 +1290,7 @@ static const struct sdhci_tegra_soc_data
- };
- 
- static const struct sdhci_ops tegra114_sdhci_ops = {
-+	.get_ro     = tegra_sdhci_get_ro,
- 	.read_w     = tegra_sdhci_readw,
- 	.write_w    = tegra_sdhci_writew,
- 	.write_l    = tegra_sdhci_writel,
-@@ -1332,6 +1344,7 @@ static const struct sdhci_tegra_soc_data
- };
- 
- static const struct sdhci_ops tegra210_sdhci_ops = {
-+	.get_ro     = tegra_sdhci_get_ro,
- 	.read_w     = tegra_sdhci_readw,
- 	.write_w    = tegra210_sdhci_writew,
- 	.write_l    = tegra_sdhci_writel,
-@@ -1366,6 +1379,7 @@ static const struct sdhci_tegra_soc_data
- };
- 
- static const struct sdhci_ops tegra186_sdhci_ops = {
-+	.get_ro     = tegra_sdhci_get_ro,
- 	.read_w     = tegra_sdhci_readw,
- 	.write_l    = tegra_sdhci_writel,
- 	.set_clock  = tegra_sdhci_set_clock,
 
 
