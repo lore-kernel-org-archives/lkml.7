@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C34C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20492C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390CE21883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D1721883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:20:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613993;
-	bh=kjk+EoecReY9IsVOLIcpYHJWi8ERUAkv7rkSi+iBvn8=;
+	s=default; t=1567614007;
+	bh=1mpdEmxlulUxMm5dMbUBfyxVH2N8bAtQhPgQoAI14Lk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6SrkctibblhcjiPaFW4KfIabugBZtGJZb0AmoWl29itGHEdTxaVkdLa9lfuNF0O9
-	 I4x/EHLFxtP8SNGCDh8DVI2vdGJqQzAokpbaHKgoa8MvmdRdsOlpkv59907tdKzAI/
-	 NasvN8ZWzpebn0j+eEhjKuo5za6KL9Eazve0q72E=
+	b=Qcnzj48M0BZHx7YGS2uslXXeI5Ct32TIZ5kK4YqEXgaT7IIcOvNTgep1nSHQINRSU
+	 /AETCMpxcFfjGukUwHiLZ3XEZMLajcPJsdmS1hpvLXgNP9OhSfAXCGrvDLEpyqA8qK
+	 Cl5om8pajoDjJh1+NzF3QfV/auMSjWIgT+MR94Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387502AbfIDQTw (ORCPT
+        id S1731841AbfIDP6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:19:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60272 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731828AbfIDP6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:17 -0400
+        id S1731774AbfIDP6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF86D23401;
-        Wed,  4 Sep 2019 15:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 454C723401;
+        Wed,  4 Sep 2019 15:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612696;
-        bh=kjk+EoecReY9IsVOLIcpYHJWi8ERUAkv7rkSi+iBvn8=;
+        s=default; t=1567612692;
+        bh=1mpdEmxlulUxMm5dMbUBfyxVH2N8bAtQhPgQoAI14Lk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvpVcIGINZxeYl0g8X4Myh0LTN4n5GAfjI2avWEMt4qObn+dh1H33+Ws32/b0PDj3
-         B6vTjXDWpHUETYPcD37SFZ85ou/3yC5pMZnW4+FgNA3xSl36C9CkshiyYBpklcYvIj
-         fUXcQrWTYGoj7q5v362Fm5iSaCMrJL9g2JplLm6E=
+        b=zX1dHb6bNxMJCpAEth9ULEbpuaGzsz6HsdtL/4+tbvG8/qK/NBwKUfoYktRnZopF4
+         ghwDbU5K2P9xngGuj9yzZhUM4iYOOtU3JFOsCi7PwL65BwAEK/ojz5ApEoWwmKOEM3
+         hop2H++4kZGLr2ISPUL5Zk889pxnLP/ppi6fU4+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 24/94] netfilter: xt_nfacct: Fix alignment mismatch in xt_nfacct_match_info
-Date:   Wed,  4 Sep 2019 11:56:29 -0400
-Message-Id: <20190904155739.2816-24-sashal@kernel.org>
+Cc:     Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 20/94] tools: bpftool: close prog FD before exit on showing a single program
+Date:   Wed,  4 Sep 2019 11:56:25 -0400
+Message-Id: <20190904155739.2816-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -62,105 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+From: Quentin Monnet <quentin.monnet@netronome.com>
 
-[ Upstream commit 89a26cd4b501e9511d3cd3d22327fc76a75a38b3 ]
+[ Upstream commit d34b044038bfb0e19caa8b019910efc465f41d5f ]
 
-When running a 64-bit kernel with a 32-bit iptables binary, the size of
-the xt_nfacct_match_info struct diverges.
+When showing metadata about a single program by invoking
+"bpftool prog show PROG", the file descriptor referring to the program
+is not closed before returning from the function. Let's close it.
 
-    kernel: sizeof(struct xt_nfacct_match_info) : 40
-    iptables: sizeof(struct xt_nfacct_match_info)) : 36
-
-Trying to append nfacct related rules results in an unhelpful message.
-Although it is suggested to look for more information in dmesg, nothing
-can be found there.
-
-    # iptables -A <chain> -m nfacct --nfacct-name <acct-object>
-    iptables: Invalid argument. Run `dmesg' for more information.
-
-This patch fixes the memory misalignment by enforcing 8-byte alignment
-within the struct's first revision. This solution is often used in many
-other uapi netfilter headers.
-
-Signed-off-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+Signed-off-by: Quentin Monnet <quentin.monnet@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_nfacct.h |  5 ++++
- net/netfilter/xt_nfacct.c                | 36 ++++++++++++++++--------
- 2 files changed, 30 insertions(+), 11 deletions(-)
+ tools/bpf/bpftool/prog.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/netfilter/xt_nfacct.h b/include/uapi/linux/netfilter/xt_nfacct.h
-index 5c8a4d760ee34..b5123ab8d54a8 100644
---- a/include/uapi/linux/netfilter/xt_nfacct.h
-+++ b/include/uapi/linux/netfilter/xt_nfacct.h
-@@ -11,4 +11,9 @@ struct xt_nfacct_match_info {
- 	struct nf_acct	*nfacct;
- };
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 7a4e21a315236..d41651afe5f64 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -362,7 +362,9 @@ static int do_show(int argc, char **argv)
+ 		if (fd < 0)
+ 			return -1;
  
-+struct xt_nfacct_match_info_v1 {
-+	char		name[NFACCT_NAME_MAX];
-+	struct nf_acct	*nfacct __attribute__((aligned(8)));
-+};
-+
- #endif /* _XT_NFACCT_MATCH_H */
-diff --git a/net/netfilter/xt_nfacct.c b/net/netfilter/xt_nfacct.c
-index d0ab1adf5bff8..5aab6df74e0f2 100644
---- a/net/netfilter/xt_nfacct.c
-+++ b/net/netfilter/xt_nfacct.c
-@@ -54,25 +54,39 @@ nfacct_mt_destroy(const struct xt_mtdtor_param *par)
- 	nfnl_acct_put(info->nfacct);
- }
+-		return show_prog(fd);
++		err = show_prog(fd);
++		close(fd);
++		return err;
+ 	}
  
--static struct xt_match nfacct_mt_reg __read_mostly = {
--	.name       = "nfacct",
--	.family     = NFPROTO_UNSPEC,
--	.checkentry = nfacct_mt_checkentry,
--	.match      = nfacct_mt,
--	.destroy    = nfacct_mt_destroy,
--	.matchsize  = sizeof(struct xt_nfacct_match_info),
--	.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
--	.me         = THIS_MODULE,
-+static struct xt_match nfacct_mt_reg[] __read_mostly = {
-+	{
-+		.name       = "nfacct",
-+		.revision   = 0,
-+		.family     = NFPROTO_UNSPEC,
-+		.checkentry = nfacct_mt_checkentry,
-+		.match      = nfacct_mt,
-+		.destroy    = nfacct_mt_destroy,
-+		.matchsize  = sizeof(struct xt_nfacct_match_info),
-+		.usersize   = offsetof(struct xt_nfacct_match_info, nfacct),
-+		.me         = THIS_MODULE,
-+	},
-+	{
-+		.name       = "nfacct",
-+		.revision   = 1,
-+		.family     = NFPROTO_UNSPEC,
-+		.checkentry = nfacct_mt_checkentry,
-+		.match      = nfacct_mt,
-+		.destroy    = nfacct_mt_destroy,
-+		.matchsize  = sizeof(struct xt_nfacct_match_info_v1),
-+		.usersize   = offsetof(struct xt_nfacct_match_info_v1, nfacct),
-+		.me         = THIS_MODULE,
-+	},
- };
- 
- static int __init nfacct_mt_init(void)
- {
--	return xt_register_match(&nfacct_mt_reg);
-+	return xt_register_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
- }
- 
- static void __exit nfacct_mt_exit(void)
- {
--	xt_unregister_match(&nfacct_mt_reg);
-+	xt_unregister_matches(nfacct_mt_reg, ARRAY_SIZE(nfacct_mt_reg));
- }
- 
- module_init(nfacct_mt_init);
+ 	if (argc)
 -- 
 2.20.1
 
