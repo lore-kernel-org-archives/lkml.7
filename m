@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C07C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88126C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BACB2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE102339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620071;
-	bh=MUTO3g991shrs0aNYP3y/Q8wgM/a8IkSaMH382n+5G0=;
+	s=default; t=1567620074;
+	bh=SukYggwGcFDiVrMyR9vCcwGi1x6yMdhUrF/1+UKg93I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ybbw24lKPX3ZR8AttlT6JuJxXbf4OH3s0DqhTd89kySDdQKIOgR+YNTGdHRu+hUUu
-	 MNhU8fC9VggCV3bJJpyoYCHH1DSM+VIvaKV9r3hXRTSSc1hHvCZbj6MkPT5yWrAZ6W
-	 K2AZccGB6AXHXmIs6cXb70eY+7VHydQ4S/RORSbU=
+	b=PQpnndcYAbRxApDnSumGu3EykzUVxRMrOguw/l8tG4n7GJuy2v6klzGKk1tVtf3Zm
+	 RN0koFYelqINB35hHXfygcbYTzNpR/aAFtnMpcd3jFdA60DhgcK9qINKnqtQnMzu/Q
+	 YTwWuzQMR963HDCtAwMvl1YIPnGhJWa0Qbb6IPvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388515AbfIDSBK (ORCPT
+        id S2388524AbfIDSBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:01:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387794AbfIDSBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:09 -0400
+        id S1733156AbfIDSBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE04E21883;
-        Wed,  4 Sep 2019 18:01:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F44A21883;
+        Wed,  4 Sep 2019 18:01:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620068;
-        bh=MUTO3g991shrs0aNYP3y/Q8wgM/a8IkSaMH382n+5G0=;
+        s=default; t=1567620071;
+        bh=SukYggwGcFDiVrMyR9vCcwGi1x6yMdhUrF/1+UKg93I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gHj02a3FP4t7bR9BeKyAVcJVlGYLjdgWegQJaaGn7cst0e8TqZJ3Ck2s6nqDgnk5R
-         VAUgjLHH5dt4P/0d0ZY0eeb0khwMrXD+OCN8DpITPSrCGgCO2+tYBTooN8Uch+8gDv
-         Ld/TMeXkiefPMTfxo0V/dz2NQSB7B/4JfH6YpEcU=
+        b=bHjHWPk7yWMuWU2aQeJTTsnIRzDK+lP4D/iq6RaqZ2tPxZ6kUWAkR7G5XpdS4bd2A
+         Qj9DuCs4BNNegNGYKWzotcXB71jvmH16bYOQvrLLt6BsdLw84JtlcUeZPU5Z6+u95T
+         vdbdGMeIsJkM9jkbayS/0qyAfM7cwEKAo1dUPzTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 60/83] ALSA: seq: Fix potential concurrent access to the deleted pool
-Date:   Wed,  4 Sep 2019 19:53:52 +0200
-Message-Id: <20190904175308.879196769@linuxfoundation.org>
+        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH 4.9 61/83] KVM: x86: Dont update RIP or do single-step on faulting emulation
+Date:   Wed,  4 Sep 2019 19:53:53 +0200
+Message-Id: <20190904175308.960212726@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -60,70 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 75545304eba6a3d282f923b96a466dc25a81e359 upstream.
+commit 75ee23b30dc712d80d2421a9a547e7ab6e379b44 upstream.
 
-The input pool of a client might be deleted via the resize ioctl, the
-the access to it should be covered by the proper locks.  Currently the
-only missing place is the call in snd_seq_ioctl_get_client_pool(), and
-this patch papers over it.
+Don't advance RIP or inject a single-step #DB if emulation signals a
+fault.  This logic applies to all state updates that are conditional on
+clean retirement of the emulation instruction, e.g. updating RFLAGS was
+previously handled by commit 38827dbd3fb85 ("KVM: x86: Do not update
+EFLAGS on faulting emulation").
 
-Reported-by: syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Not advancing RIP is likely a nop, i.e. ctxt->eip isn't updated with
+ctxt->_eip until emulation "retires" anyways.  Skipping #DB injection
+fixes a bug reported by Andy Lutomirski where a #UD on SYSCALL due to
+invalid state with EFLAGS.TF=1 would loop indefinitely due to emulation
+overwriting the #UD with #DB and thus restarting the bad SYSCALL over
+and over.
+
+Cc: Nadav Amit <nadav.amit@gmail.com>
+Cc: stable@vger.kernel.org
+Reported-by: Andy Lutomirski <luto@kernel.org>
+Fixes: 663f4c61b803 ("KVM: x86: handle singlestep during emulation")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Radim Krčmář <rkrcmar@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_clientmgr.c |    3 +--
- sound/core/seq/seq_fifo.c      |   17 +++++++++++++++++
- sound/core/seq/seq_fifo.h      |    2 ++
- 3 files changed, 20 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1822,8 +1822,7 @@ static int snd_seq_ioctl_get_client_pool
- 	if (cptr->type == USER_CLIENT) {
- 		info->input_pool = cptr->data.user.fifo_pool_size;
- 		info->input_free = info->input_pool;
--		if (cptr->data.user.fifo)
--			info->input_free = snd_seq_unused_cells(cptr->data.user.fifo->pool);
-+		info->input_free = snd_seq_fifo_unused_cells(cptr->data.user.fifo);
- 	} else {
- 		info->input_pool = 0;
- 		info->input_free = 0;
---- a/sound/core/seq/seq_fifo.c
-+++ b/sound/core/seq/seq_fifo.c
-@@ -278,3 +278,20 @@ int snd_seq_fifo_resize(struct snd_seq_f
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -5823,12 +5823,13 @@ restart:
+ 		unsigned long rflags = kvm_x86_ops->get_rflags(vcpu);
+ 		toggle_interruptibility(vcpu, ctxt->interruptibility);
+ 		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
+-		kvm_rip_write(vcpu, ctxt->eip);
+-		if (r == EMULATE_DONE && ctxt->tf)
+-			kvm_vcpu_do_singlestep(vcpu, &r);
+ 		if (!ctxt->have_exception ||
+-		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
++		    exception_type(ctxt->exception.vector) == EXCPT_TRAP) {
++			kvm_rip_write(vcpu, ctxt->eip);
++			if (r == EMULATE_DONE && ctxt->tf)
++				kvm_vcpu_do_singlestep(vcpu, &r);
+ 			__kvm_set_rflags(vcpu, ctxt->eflags);
++		}
  
- 	return 0;
- }
-+
-+/* get the number of unused cells safely */
-+int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f)
-+{
-+	unsigned long flags;
-+	int cells;
-+
-+	if (!f)
-+		return 0;
-+
-+	snd_use_lock_use(&f->use_lock);
-+	spin_lock_irqsave(&f->lock, flags);
-+	cells = snd_seq_unused_cells(f->pool);
-+	spin_unlock_irqrestore(&f->lock, flags);
-+	snd_use_lock_free(&f->use_lock);
-+	return cells;
-+}
---- a/sound/core/seq/seq_fifo.h
-+++ b/sound/core/seq/seq_fifo.h
-@@ -68,5 +68,7 @@ int snd_seq_fifo_poll_wait(struct snd_se
- /* resize pool in fifo */
- int snd_seq_fifo_resize(struct snd_seq_fifo *f, int poolsize);
- 
-+/* get the number of unused cells safely */
-+int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f);
- 
- #endif
+ 		/*
+ 		 * For STI, interrupts are shadowed; so KVM_REQ_EVENT will
 
 
