@@ -2,53 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08A1C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEB9C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC60206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB924208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620551;
-	bh=AlYrLLd2/oNTqAUY81/sN6/lWfyg0HvsynexbqdfeLI=;
+	s=default; t=1567620554;
+	bh=DnrHmSJpqDeIhtpXZ1Tbd3urK6dLmwpYYGMRDUeovSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V7ZRzmUUD3moHtxrCPCKG9l9ycbl6SnVoSqiLEqEMm/X1WTGrJhlKOkW60Ey1b2O6
-	 HfsRcWqOiE5kpyDsq9zIz1TY/FVBgMqM8aWxAaheZO/UgUWtBp9reZz2TeMQ//nTAW
-	 +YYZj3p84gzGRfAgj+XHb7lvNzwokOyoEEvbjp2M=
+	b=q3PYmEZEfP1d57Gnf1R3I9xpKMyfEt5h9IVsG6emCRveqEfFK+rPBJSl6WgSmXXha
+	 KChAVT+tcFebuHMwjoFdbNWuVS/wIBAN5S2Y7hQUKW4rYPmjy+MXvseEKXtdaLFEkS
+	 M5yJpvUo+puHM01mjhZGe7HRLBlpkMU4+qjmP3tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389901AbfIDSJK (ORCPT
+        id S2388832AbfIDSJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52250 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:09:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389547AbfIDSJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:07 -0400
+        id S2389137AbfIDSJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D06FB22CF7;
-        Wed,  4 Sep 2019 18:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FD78206BA;
+        Wed,  4 Sep 2019 18:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620547;
-        bh=AlYrLLd2/oNTqAUY81/sN6/lWfyg0HvsynexbqdfeLI=;
+        s=default; t=1567620550;
+        bh=DnrHmSJpqDeIhtpXZ1Tbd3urK6dLmwpYYGMRDUeovSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dhaYhs7uYTdv0skAmkq2uTbWpv5MqGEZYZdxzYLw7gOBzLf3dz4dgPUggl/xzxqDi
-         Y7otOur0UAhp723f4cZgIk04rv/aKENPhaVuPEPe9mFw1I4TFzKJEAXWE1rgxQLYqf
-         rrOcXOeWnle7FCui/Tk9gKjkq3FlqwHIeYqowQ50=
+        b=sHlelJjefZcCjMyMBtcUMHonVc7jlRFZkpZ4uuA9u70luNQF8L/aLWpwQdUYexh4H
+         wlI386ZuogawDeYJ6JwkmhQvUXsdPF73usnIkRp7x2dO6WY3ADZqpMgyGioS4Vzl2d
+         sXFLt43cxUPl1GGWNWxtbeWDs31/YTQFdRjCkl+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brad Spengler <spender@grsecurity.net>,
-        Dianzhang Chen <dianzhangchen0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        hpa@zytor.com
-Subject: [PATCH 4.19 92/93] x86/ptrace: fix up botched merge of spectrev1 fix
-Date:   Wed,  4 Sep 2019 19:54:34 +0200
-Message-Id: <20190904175311.064634147@linuxfoundation.org>
+        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 93/93] mt76: mt76x0u: do not reset radio on resume
+Date:   Wed,  4 Sep 2019 19:54:35 +0200
+Message-Id: <20190904175311.152213295@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -61,40 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+commit 8f2d163cb26da87e7d8e1677368b8ba1ba4d30b3 upstream.
 
-I incorrectly merged commit 31a2fbb390fe ("x86/ptrace: Fix possible
-spectre-v1 in ptrace_get_debugreg()") when backporting it, as was
-graciously pointed out at
-https://grsecurity.net/teardown_of_a_failed_linux_lts_spectre_fix.php
+On some machines mt76x0u firmware can hung during resume,
+what result on messages like below:
 
-Resolve the upstream difference with the stable kernel merge to properly
-protect things.
+[  475.480062] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  475.990066] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  475.990075] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  476.500003] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  476.500012] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.010046] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  477.010055] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.529997] mt76x0 1-8:1.0: Error: send MCU cmd failed:-110
+[  477.530006] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.824907] mt76x0 1-8:1.0: Error: send MCU cmd failed:-71
+[  477.824916] mt76x0 1-8:1.0: Error: MCU response pre-completed!
+[  477.825029] usb 1-8: USB disconnect, device number 6
 
-Reported-by: Brad Spengler <spender@grsecurity.net>
-Cc: Dianzhang Chen <dianzhangchen0@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: <bp@alien8.de>
-Cc: <hpa@zytor.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+and possible whole system freeze.
+
+This can be avoided, if we do not perform mt76x0_chip_onoff() reset.
+
+Cc: stable@vger.kernel.org
+Fixes: 134b2d0d1fcf ("mt76x0: init files")
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt76x0/init.c   | 4 ++--
+ drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x0/usb.c    | 4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -652,11 +652,10 @@ static unsigned long ptrace_get_debugreg
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/init.c b/drivers/net/wireless/mediatek/mt76/mt76x0/init.c
+index 0a3e046d78db3..da2ba51dec352 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/init.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/init.c
+@@ -369,7 +369,7 @@ static void mt76x0_stop_hardware(struct mt76x0_dev *dev)
+ 	mt76x0_chip_onoff(dev, false, false);
+ }
+ 
+-int mt76x0_init_hardware(struct mt76x0_dev *dev)
++int mt76x0_init_hardware(struct mt76x0_dev *dev, bool reset)
  {
- 	struct thread_struct *thread = &tsk->thread;
- 	unsigned long val = 0;
--	int index = n;
+ 	static const u16 beacon_offsets[16] = {
+ 		/* 512 byte per beacon */
+@@ -382,7 +382,7 @@ int mt76x0_init_hardware(struct mt76x0_dev *dev)
  
- 	if (n < HBP_NUM) {
-+		int index = array_index_nospec(n, HBP_NUM);
- 		struct perf_event *bp = thread->ptrace_bps[index];
--		index = array_index_nospec(index, HBP_NUM);
+ 	dev->beacon_offsets = beacon_offsets;
  
- 		if (bp)
- 			val = bp->hw.info.address;
+-	mt76x0_chip_onoff(dev, true, true);
++	mt76x0_chip_onoff(dev, true, reset);
+ 
+ 	ret = mt76x0_wait_asic_ready(dev);
+ 	if (ret)
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h b/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h
+index fc9857f61771c..f9dfe5097b099 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/mt76x0.h
+@@ -279,7 +279,7 @@ void mt76x0_addr_wr(struct mt76x0_dev *dev, const u32 offset, const u8 *addr);
+ 
+ /* Init */
+ struct mt76x0_dev *mt76x0_alloc_device(struct device *dev);
+-int mt76x0_init_hardware(struct mt76x0_dev *dev);
++int mt76x0_init_hardware(struct mt76x0_dev *dev, bool reset);
+ int mt76x0_register_device(struct mt76x0_dev *dev);
+ void mt76x0_cleanup(struct mt76x0_dev *dev);
+ void mt76x0_chip_onoff(struct mt76x0_dev *dev, bool enable, bool reset);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c b/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
+index 54ae1f113be23..5aacb1f6a841d 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/usb.c
+@@ -300,7 +300,7 @@ static int mt76x0_probe(struct usb_interface *usb_intf,
+ 	if (!(mt76_rr(dev, MT_EFUSE_CTRL) & MT_EFUSE_CTRL_SEL))
+ 		dev_warn(dev->mt76.dev, "Warning: eFUSE not present\n");
+ 
+-	ret = mt76x0_init_hardware(dev);
++	ret = mt76x0_init_hardware(dev, true);
+ 	if (ret)
+ 		goto err;
+ 
+@@ -354,7 +354,7 @@ static int mt76x0_resume(struct usb_interface *usb_intf)
+ 	struct mt76x0_dev *dev = usb_get_intfdata(usb_intf);
+ 	int ret;
+ 
+-	ret = mt76x0_init_hardware(dev);
++	ret = mt76x0_init_hardware(dev, false);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.20.1
+
 
 
