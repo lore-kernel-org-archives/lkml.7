@@ -2,52 +2,55 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE8FC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5A6C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC65223401
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8140A23401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:53:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Ai2bzEbJ"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="m3MD009m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbfIDNxN (ORCPT
+        id S1730324AbfIDNxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:53:13 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:59224 "EHLO
+        Wed, 4 Sep 2019 09:53:17 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:59320 "EHLO
         forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726304AbfIDNxM (ORCPT
+        by vger.kernel.org with ESMTP id S1726304AbfIDNxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:53:12 -0400
-Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 5723E2E1AF9;
-        Wed,  4 Sep 2019 16:53:09 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id VODvC8jeNf-r9Nu2Lhc;
-        Wed, 04 Sep 2019 16:53:09 +0300
+        Wed, 4 Sep 2019 09:53:16 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 4931F2E1AFB;
+        Wed,  4 Sep 2019 16:53:13 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id g8uxin0UDo-rCWKDxqx;
+        Wed, 04 Sep 2019 16:53:13 +0300
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1567605189; bh=9NG/dDnFeKeZHp7gq4Bt3jk12l8IcLQ6rwdO1YD1xvQ=;
-        h=Message-ID:Date:To:From:Subject:Cc;
-        b=Ai2bzEbJdK+baGdRKLO3SHZG+trevrPdYggz78BEbE91uKDRhP/r9odOJkZ2Dga3G
-         FRTz0fb1uTJTZwcwqMnA44/U1x/ocUIpHSlF7wqoKjKBtWlvjg/cs2pLxaO+QAOYKF
-         ZnbqrmTnFEbaAXSvZhbTEvvJhjBU5YXvFV3SbSTs=
-Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+        t=1567605193; bh=Nk9h8il5OEPYVOEQt3XS8DDQ8EFzu/mVMbOut2gTstg=;
+        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
+        b=m3MD009msbTOFyJaC9thdsye5NnOnu3jYpUpiliIYoehZ9INDqRDGTHc3PrykUde1
+         A1kZlWlicjI2ukKTsXo140gJH7cRyMvTLE4Q8k1CcgCTxV5pRLuHfI7gL5gy9OioCz
+         LjXyuLHHJSpAWh38qPV2sxMPPqkkYM5ftDK9lUwA=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
 Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:c142:79c2:9d86:677a])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id qxrH47Cxp8-r8D0XNmB;
-        Wed, 04 Sep 2019 16:53:09 +0300
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id pnctDuk8zu-rC78k0tw;
+        Wed, 04 Sep 2019 16:53:12 +0300
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (Client certificate not present)
-Subject: [PATCH v1 0/7] mm/memcontrol: recharge mlocked pages
+Subject: [PATCH v1 2/7] mm/memcontrol: add mem_cgroup_recharge
 From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         cgroups@vger.kernel.org
 Cc:     Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
         Johannes Weiner <hannes@cmpxchg.org>
-Date:   Wed, 04 Sep 2019 16:53:08 +0300
-Message-ID: <156760509382.6560.17364256340940314860.stgit@buzz>
+Date:   Wed, 04 Sep 2019 16:53:12 +0300
+Message-ID: <156760519254.6560.3180815463616863318.stgit@buzz>
+In-Reply-To: <156760509382.6560.17364256340940314860.stgit@buzz>
+References: <156760509382.6560.17364256340940314860.stgit@buzz>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -57,48 +60,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently mlock keeps pages in cgroups where they were accounted.
-This way one container could affect another if they share file cache.
-Typical case is writing (downloading) file in one container and then
-locking in another. After that first container cannot get rid of cache.
-Also removed cgroup stays pinned by these mlocked pages.
+This function tries to move page into other cgroup.
+Caller must lock page and isolate it from LRU.
 
-This patchset implements recharging pages to cgroup of mlock user.
-
-There are three cases:
-* recharging at first mlock
-* recharging at munlock to any remaining mlock
-* recharging at 'culling' in reclaimer to any existing mlock
-
-To keep things simple recharging ignores memory limit. After that memory
-usage temporary could be higher than limit but cgroup will reclaim memory
-later or trigger oom, which is valid outcome when somebody mlock too much.
-
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
+ include/linux/memcontrol.h |    9 +++++++++
+ mm/memcontrol.c            |   40 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-Konstantin Khlebnikov (7):
-      mm/memcontrol: move locking page out of mem_cgroup_move_account
-      mm/memcontrol: add mem_cgroup_recharge
-      mm/mlock: add vma argument for mlock_vma_page()
-      mm/mlock: recharge memory accounting to first mlock user
-      mm/mlock: recharge memory accounting to second mlock user at munlock
-      mm/vmscan: allow changing page memory cgroup during reclaim
-      mm/mlock: recharge mlocked pages at culling by vmscan
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 2cd4359cb38c..d94950584f60 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -352,6 +352,8 @@ void mem_cgroup_uncharge(struct page *page);
+ void mem_cgroup_uncharge_list(struct list_head *page_list);
+ 
+ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage);
++int mem_cgroup_try_recharge(struct page *page, struct mm_struct *mm,
++			    gfp_t gfp_mask);
+ 
+ static struct mem_cgroup_per_node *
+ mem_cgroup_nodeinfo(struct mem_cgroup *memcg, int nid)
+@@ -857,6 +859,13 @@ static inline void mem_cgroup_migrate(struct page *old, struct page *new)
+ {
+ }
+ 
++static inline int mem_cgroup_try_recharge(struct page *page,
++					  struct mm_struct *mm,
++					  gfp_t gfp_mask)
++{
++	return 0;
++}
++
+ static inline struct lruvec *mem_cgroup_lruvec(struct pglist_data *pgdat,
+ 				struct mem_cgroup *memcg)
+ {
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 40ddc233e973..953a0bbb9f43 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -6507,6 +6507,46 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
+ 	local_irq_restore(flags);
+ }
+ 
++/*
++ * mem_cgroup_try_recharge - try to recharge page to mm's memcg.
++ *
++ * Page must be locked and isolated.
++ */
++int mem_cgroup_try_recharge(struct page *page, struct mm_struct *mm,
++			    gfp_t gfp_mask)
++{
++	struct mem_cgroup *from, *to;
++	int nr_pages;
++	int err = 0;
++
++	VM_BUG_ON_PAGE(!PageLocked(page), page);
++	VM_BUG_ON_PAGE(PageLRU(page), page);
++
++	if (mem_cgroup_disabled())
++		return 0;
++
++	from = page->mem_cgroup;
++	to = get_mem_cgroup_from_mm(mm);
++
++	if (likely(from == to) || !from)
++		goto out;
++
++	nr_pages = hpage_nr_pages(page);
++	err = try_charge(to, gfp_mask, nr_pages);
++	if (err)
++		goto out;
++
++	err = mem_cgroup_move_account(page, nr_pages > 1, from, to);
++	if (err)
++		cancel_charge(to, nr_pages);
++	else
++		cancel_charge(from, nr_pages);
++out:
++	css_put(&to->css);
++
++	return err;
++}
++
+ DEFINE_STATIC_KEY_FALSE(memcg_sockets_enabled_key);
+ EXPORT_SYMBOL(memcg_sockets_enabled_key);
+ 
 
-
- Documentation/admin-guide/cgroup-v1/memory.rst |    5 +
- include/linux/memcontrol.h                     |    9 ++
- include/linux/rmap.h                           |    3 -
- mm/gup.c                                       |    2 
- mm/huge_memory.c                               |    4 -
- mm/internal.h                                  |    6 +
- mm/ksm.c                                       |    2 
- mm/memcontrol.c                                |  104 ++++++++++++++++--------
- mm/migrate.c                                   |    2 
- mm/mlock.c                                     |   14 +++
- mm/rmap.c                                      |    5 +
- mm/vmscan.c                                    |   17 ++--
- 12 files changed, 121 insertions(+), 52 deletions(-)
-
---
-Signature
