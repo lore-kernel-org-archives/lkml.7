@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB139C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0794FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAED022CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:57:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C873122CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612679;
-	bh=17rbaqT/jginQt/FhvS50ubtnD5Kp84zT/frCb6KDG8=;
+	s=default; t=1567612681;
+	bh=YGUky5l4b/jTQwvCUKgf0yLafhrXcctKofNMlj9R7Ao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SrayRwfs5+3WMvICDe/SqLuRu/9rHZnebM2cAqGZIydiPyLiWz2YovgqVPILlHm95
-	 ZtR16qooDzOJ/Kuo7Aiv06Rgc+ublLZkVL1m1cPXLpXXMljEpeoTio1WfOfjz6abzF
-	 62YgYFT4SOHvHLGU94PNSELnAM0nnmmsQVNTxgZY=
+	b=KOgRN4qTSJXXpdfXmxNfc5cWVGiI9dmas6Vmmb2ZP7v1IcG0yyM8LBZMAibTO9MRr
+	 DC81SFMy9H7W3wvtMBerbY6MRvE1SoZ0AsAzLuOjOkDfIE1NsZg+T7kFXwlzrUtdx1
+	 o6mAv71Nj3E/StYKSs5nprZpjCLaKGnt+tlC0VK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbfIDP57 (ORCPT
+        id S1731706AbfIDP6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59646 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731667AbfIDP55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:57:57 -0400
+        id S1731676AbfIDP57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:57:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C780520820;
-        Wed,  4 Sep 2019 15:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5C9A2339D;
+        Wed,  4 Sep 2019 15:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612676;
-        bh=17rbaqT/jginQt/FhvS50ubtnD5Kp84zT/frCb6KDG8=;
+        s=default; t=1567612677;
+        bh=YGUky5l4b/jTQwvCUKgf0yLafhrXcctKofNMlj9R7Ao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FCEo2fQkhlUnOJGvGphMe2TCyzdeahSR10TbiYnUYrXO+sftk3JBNVnkGA933SwqL
-         sLVRiyBSV3fIlHBLYxXe5OF4EEq1JXKZgeS1WcmgR9DilhxSdhZBIeNiCjvuUW9oN5
-         lrLPXVTnBOE93OdwqirMhAOmldqbWvM1nkwBeNE8=
+        b=njD40NO5VII8q3Bwcr/8N0eljOmAa9T5kqgvD1iT0CVk+wVr/n5CzPb2TTeV18H4Z
+         td1ze3C75fYc24MOZxOc5jf/nVoLDbfsj4J/WCBqcGWq+A85U5XP4qtFHDYEoPCNOQ
+         ZPaSqIA+rHKBOjFClrJUigmLAJRO6C8GOaMxn+MY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.2 09/94] arm64: dts: meson-g12a: add missing dwc2 phy-names
-Date:   Wed,  4 Sep 2019 11:56:14 -0400
-Message-Id: <20190904155739.2816-9-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 10/94] s390/bpf: fix lcgr instruction encoding
+Date:   Wed,  4 Sep 2019 11:56:15 -0400
+Message-Id: <20190904155739.2816-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -60,41 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 3d4bacdc207a7b62941700b374e7199cbb184a43 ]
+[ Upstream commit bb2d267c448f4bc3a3389d97c56391cb779178ae ]
 
-The G12A USB2 OTG capable PHY uses a 8bit large UTMI bus, and the OTG
-controller gets the PHY but width by probing the associated phy.
+"masking, test in bounds 3" fails on s390, because
+BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, 0) ignores the top 32 bits of
+BPF_REG_2. The reason is that JIT emits lcgfr instead of lcgr.
+The associated comment indicates that the code was intended to
+emit lcgr in the first place, it's just that the wrong opcode
+was used.
 
-By default it will use 16bit wide settings if a phy is not specified,
-in our case we specified the phy, but not the phy-names.
+Fix by using the correct opcode.
 
-The dwc2 bindings specifies that if phys is present, phy-names shall be
-"usb2-phy".
-
-Adding phy-names = "usb2-phy" solves the OTG PHY bus configuration.
-
-Fixes: 9baf7d6be730 ("arm64: dts: meson: g12a: Add G12A USB nodes")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Fixes: 054623105728 ("s390/bpf: Add s390x eBPF JIT compiler backend")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/net/bpf_jit_comp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 9f72396ba7103..4c92c197aeb8a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -591,6 +591,7 @@
- 				clocks = <&clkc CLKID_USB1_DDR_BRIDGE>;
- 				clock-names = "ddr";
- 				phys = <&usb2_phy1>;
-+				phy-names = "usb2-phy";
- 				dr_mode = "peripheral";
- 				g-rx-fifo-size = <192>;
- 				g-np-tx-fifo-size = <128>;
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index 5e7c630331590..9a711472cbdc0 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -853,7 +853,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		break;
+ 	case BPF_ALU64 | BPF_NEG: /* dst = -dst */
+ 		/* lcgr %dst,%dst */
+-		EMIT4(0xb9130000, dst_reg, dst_reg);
++		EMIT4(0xb9030000, dst_reg, dst_reg);
+ 		break;
+ 	/*
+ 	 * BPF_FROM_BE/LE
 -- 
 2.20.1
 
