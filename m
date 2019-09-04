@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2212C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A7DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A44D20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBEE20882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621465;
-	bh=HmqFCPFCKaJpoZao2sHYtfAsKC5MuJ2xbU/4FCfXwvU=;
+	s=default; t=1567621473;
+	bh=d+AOmtSRkPLxq726y6RApsJJKUrt5FlgLRur9jxsM3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2uJ7uqttp2pccGRshcSMc/DnOYn3kfkk4ztPSvFdNETn3GwB1IpO7q1RsY0Y9b95+
-	 GIlWwRfEHjdMVp/tck+b1v7I7Zr7ABGRQflef1XV6oQwHUSj041fLa6ZXr3rDeQ00d
-	 DxFtvE23xkbcKXFcs8OC1tdCiAy4ijfapV9mxNhE=
+	b=juQGeN4IRJoX3IY5K+bCGZuhB5tyjw5pAkhWSzJAIt8dmhm277azyf1vnMQwJ0RTo
+	 p1YDz9R80dT8A9RMWavCmBMadanQayVGboyEOHYzyHLF6Qefq4s6NJpH23P9tkSS3K
+	 hUPavdMsduaQmIdUWC7uj7SFoH2COsb06p9YjJm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388572AbfIDSBb (ORCPT
+        id S2388553AbfIDSBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41008 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:01:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387984AbfIDSB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:27 -0400
+        id S2388533AbfIDSBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B9D42341E;
-        Wed,  4 Sep 2019 18:01:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6E792339D;
+        Wed,  4 Sep 2019 18:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620087;
-        bh=HmqFCPFCKaJpoZao2sHYtfAsKC5MuJ2xbU/4FCfXwvU=;
+        s=default; t=1567620076;
+        bh=d+AOmtSRkPLxq726y6RApsJJKUrt5FlgLRur9jxsM3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MP9ulvXZfFe7dYsRF4f2NMP8K28FubBVo9cUIOGS9T0bdMMAti/dCjtEBAyHLZKlR
-         UyIpQzAZ3nI6Tu6ccK89vvzMT3xUqJ+T0Qxr5nZ3L0X9Np7gCZz1pT/acs2GUbr0id
-         J9C0oSQI8SyFNjM/ih5ukfC6wv1ogrGM6DU6n+C8=
+        b=MAwR+zVYg/UJ28mhB7LkQH0EX5ebOrsAcHI4S6bDi4XWUkrpQPvTYUqi6qmeMZ+WM
+         UT+2yJTIr0dNhNCx6Y0mdg70NTCk0hGelHUA+Uf1tXwfn9q2Et9y8LGS74H8unai5F
+         mLB37yKOaNP+NW7vHBp+IlXv0yiUqGcZhBbCy7aM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 4.9 67/83] usb: chipidea: udc: dont do hardware access if gadget has stopped
-Date:   Wed,  4 Sep 2019 19:53:59 +0200
-Message-Id: <20190904175309.517424909@linuxfoundation.org>
+        stable@vger.kernel.org, Bandan Das <bsd@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.9 63/83] x86/apic: Include the LDR when clearing out APIC registers
+Date:   Wed,  4 Sep 2019 19:53:55 +0200
+Message-Id: <20190904175309.164387222@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -58,118 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Bandan Das <bsd@redhat.com>
 
-commit cbe85c88ce80fb92956a0793518d415864dcead8 upstream.
+commit 558682b5291937a70748d36fd9ba757fb25b99ae upstream.
 
-After _gadget_stop_activity is executed, we can consider the hardware
-operation for gadget has finished, and the udc can be stopped and enter
-low power mode. So, any later hardware operations (from usb_ep_ops APIs
-or usb_gadget_ops APIs) should be considered invalid, any deinitializatons
-has been covered at _gadget_stop_activity.
+Although APIC initialization will typically clear out the LDR before
+setting it, the APIC cleanup code should reset the LDR.
 
-I meet this problem when I plug out usb cable from PC using mass_storage
-gadget, my callstack like: vbus interrupt->.vbus_session->
-composite_disconnect ->pm_runtime_put_sync(&_gadget->dev),
-the composite_disconnect will call fsg_disable, but fsg_disable calls
-usb_ep_disable using async way, there are register accesses for
-usb_ep_disable. So sometimes, I get system hang due to visit register
-without clock, sometimes not.
+This was discovered with a 32-bit KVM guest jumping into a kdump
+kernel. The stale bits in the LDR triggered a bug in the KVM APIC
+implementation which caused the destination mapping for VCPUs to be
+corrupted.
 
-The Linux Kernel USB maintainer Alan Stern suggests this kinds of solution.
-See: http://marc.info/?l=linux-usb&m=138541769810983&w=2.
+Note that this isn't intended to paper over the KVM APIC bug. The kernel
+has to clear the LDR when resetting the APIC registers except when X2APIC
+is enabled.
 
-Cc: <stable@vger.kernel.org> #v4.9+
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20190820020503.27080-2-peter.chen@nxp.com
+This lacks a Fixes tag because missing to clear LDR goes way back into pre
+git history.
+
+[ tglx: Made x2apic_enabled a function call as required ]
+
+Signed-off-by: Bandan Das <bsd@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190826101513.5080-3-bsd@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/chipidea/udc.c |   32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+ arch/x86/kernel/apic/apic.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -709,12 +709,6 @@ static int _gadget_stop_activity(struct
- 	struct ci_hdrc    *ci = container_of(gadget, struct ci_hdrc, gadget);
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&ci->lock, flags);
--	ci->gadget.speed = USB_SPEED_UNKNOWN;
--	ci->remote_wakeup = 0;
--	ci->suspended = 0;
--	spin_unlock_irqrestore(&ci->lock, flags);
--
- 	/* flush all endpoints */
- 	gadget_for_each_ep(ep, gadget) {
- 		usb_ep_fifo_flush(ep);
-@@ -732,6 +726,12 @@ static int _gadget_stop_activity(struct
- 		ci->status = NULL;
- 	}
- 
-+	spin_lock_irqsave(&ci->lock, flags);
-+	ci->gadget.speed = USB_SPEED_UNKNOWN;
-+	ci->remote_wakeup = 0;
-+	ci->suspended = 0;
-+	spin_unlock_irqrestore(&ci->lock, flags);
-+
- 	return 0;
- }
- 
-@@ -1306,6 +1306,10 @@ static int ep_disable(struct usb_ep *ep)
- 		return -EBUSY;
- 
- 	spin_lock_irqsave(hwep->lock, flags);
-+	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
-+		spin_unlock_irqrestore(hwep->lock, flags);
-+		return 0;
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1067,6 +1067,10 @@ void clear_local_APIC(void)
+ 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
+ 	v = apic_read(APIC_LVT1);
+ 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
++	if (!x2apic_enabled()) {
++		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
++		apic_write(APIC_LDR, v);
 +	}
- 
- 	/* only internal SW should disable ctrl endpts */
- 
-@@ -1395,6 +1399,10 @@ static int ep_queue(struct usb_ep *ep, s
- 		return -EINVAL;
- 
- 	spin_lock_irqsave(hwep->lock, flags);
-+	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
-+		spin_unlock_irqrestore(hwep->lock, flags);
-+		return 0;
-+	}
- 	retval = _ep_queue(ep, req, gfp_flags);
- 	spin_unlock_irqrestore(hwep->lock, flags);
- 	return retval;
-@@ -1418,8 +1426,8 @@ static int ep_dequeue(struct usb_ep *ep,
- 		return -EINVAL;
- 
- 	spin_lock_irqsave(hwep->lock, flags);
--
--	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
-+	if (hwep->ci->gadget.speed != USB_SPEED_UNKNOWN)
-+		hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
- 
- 	list_for_each_entry_safe(node, tmpnode, &hwreq->tds, td) {
- 		dma_pool_free(hwep->td_pool, node->ptr, node->dma);
-@@ -1490,6 +1498,10 @@ static void ep_fifo_flush(struct usb_ep
- 	}
- 
- 	spin_lock_irqsave(hwep->lock, flags);
-+	if (hwep->ci->gadget.speed == USB_SPEED_UNKNOWN) {
-+		spin_unlock_irqrestore(hwep->lock, flags);
-+		return;
-+	}
- 
- 	hw_ep_flush(hwep->ci, hwep->num, hwep->dir);
- 
-@@ -1558,6 +1570,10 @@ static int ci_udc_wakeup(struct usb_gadg
- 	int ret = 0;
- 
- 	spin_lock_irqsave(&ci->lock, flags);
-+	if (ci->gadget.speed == USB_SPEED_UNKNOWN) {
-+		spin_unlock_irqrestore(&ci->lock, flags);
-+		return 0;
-+	}
- 	if (!ci->remote_wakeup) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
+ 	if (maxlvt >= 4) {
+ 		v = apic_read(APIC_LVTPC);
+ 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
 
 
