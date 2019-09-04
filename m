@@ -2,125 +2,77 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D7DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1688C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1959D22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qaQbLSu3"
+	by mail.kernel.org (Postfix) with ESMTP id B4C2A22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfIDIq3 (ORCPT
+        id S1729412AbfIDIqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:46:29 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:23311 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfIDIq2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:46:28 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x848kMS9010699;
-        Wed, 4 Sep 2019 17:46:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x848kMS9010699
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567586783;
-        bh=rl11GH89ZlbuZX4guUp4Pw5JS7QAnPdbjduMTKste4M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=qaQbLSu3X2Z3Psx1j5HJJJEFgFBgqUt3fTs5oIDcf7KPwOItCEKJy0GVvIHVc6IZx
-         hWmxRH/hYIiLb3oVnJ5tBbdy2yOsIo5niB6VXOFO2CO2mF9YXGiWBlneWN7FKchBvI
-         DXl5wVRYU2ktI8xGGyJ9k0s09qAp9zFqwD+blGJJKb2cMAnSD/f6Uj7/IyXqRVyERU
-         nPCPf68u5qgEkO6kZJRvKB/omcKRqc2rUsVhcsZbc5ofvqkLQl4TfCP09fdUJK9cVu
-         lrRwVu8QP84j5Nf4nOMimNXKnJwHmvAbCmCNnXxq1znMTe4CddZADvFZYATUHiDFv1
-         5oaS9erWFMPGg==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id q9so7139250vsl.4;
-        Wed, 04 Sep 2019 01:46:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAXukg15R+prZUW9q4X0D85DhnG/drnHMDKW+YVB6DNtNjUYp6oN
-        xKlgf7M88qtvAry2+Tn35VVijcq/JJJpE42Ov6U=
-X-Google-Smtp-Source: APXvYqwoMX+iGMXtuj9+/GXZEDE/HhrJcM8ZW5hEjW8nX5c7VdUbVtMjZ3kbHt2QTmtFsrYXsZt7wEMb783MlVl7kqE=
-X-Received: by 2002:a67:e9cc:: with SMTP id q12mr11685253vso.181.1567586782082;
- Wed, 04 Sep 2019 01:46:22 -0700 (PDT)
+        Wed, 4 Sep 2019 04:46:35 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5754 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726358AbfIDIqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 04:46:34 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 51BDD35D8587737A1EBA;
+        Wed,  4 Sep 2019 16:46:30 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 16:46:21 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] usb: phy: keystone: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 16:45:58 +0800
+Message-ID: <20190904084558.24484-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
- <20190903150638.242049-13-maennich@google.com> <20190903161045.GA22754@roeck-us.net>
-In-Reply-To: <20190903161045.GA22754@roeck-us.net>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 4 Sep 2019 17:45:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
-Message-ID: <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
-Subject: Re: [PATCH v4 12/12] RFC: watchdog: export core symbols in
- WATCHDOG_CORE namespace
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        maco@android.com, sspatil@google.com,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-modules@vger.kernel.org,
-        linux-usb <linux-usb@vger.kernel.org>,
-        usb-storage@lists.one-eyed-alien.net,
-        linux-watchdog@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 1:10 AM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On Tue, Sep 03, 2019 at 04:06:38PM +0100, Matthias Maennich wrote:
-> > Modules using symbols from the WATCHDOG_CORE namespace are required to
-> > explicitly import the namespace. This patch was generated with the
-> > following steps and serves as a reference to use the symbol namespace
-> > feature:
-> >
-> >  1) Use EXPORT_SYMBOL_NS* macros instead of EXPORT_SYMBOL* for symbols
-> >     in watchdog_core.c
-> >  2) make  (see warnings during modpost about missing imports)
-> >  3) make nsdeps
-> >
-> > I used 'allmodconfig' for the above steps to ensure all occurrences are
-> > patched.
-> >
-> > Defining DEFAULT_SYMBOL_NAMESPACE in the Makefile is not trivial in this
-> > case as not only watchdog_core is defined in drivers/watchdog/Makefile.
-> > Hence this patch uses the variant of using the EXPORT_SYMBOL_NS* macros
-> > to export into a different namespace.
-> >
-> > An alternative to this patch would be a single definition line before
-> > any use of EXPORT_SYMBOL*:
-> >  #define DEFAULT_SYMBOL_NAMESPACE WATCHDOG_CORE
-> >
-> > This patch serves as a reference on how to use the symbol namespaces.
-> >
-> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Matthias Maennich <maennich@google.com>
->
-> As mentioned before, I am opposed to this set of changes. I don't see
-> the point of restricting the use of exported symbols in WATCHDOG_CORE.
->
-> Guenter
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/usb/phy/phy-keystone.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/usb/phy/phy-keystone.c b/drivers/usb/phy/phy-keystone.c
+index 1987126..110e6e9 100644
+--- a/drivers/usb/phy/phy-keystone.c
++++ b/drivers/usb/phy/phy-keystone.c
+@@ -66,15 +66,13 @@ static int keystone_usbphy_probe(struct platform_device *pdev)
+ {
+ 	struct device		*dev = &pdev->dev;
+ 	struct keystone_usbphy	*k_phy;
+-	struct resource		*res;
+ 	int ret;
+ 
+ 	k_phy = devm_kzalloc(dev, sizeof(*k_phy), GFP_KERNEL);
+ 	if (!k_phy)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	k_phy->phy_ctrl = devm_ioremap_resource(dev, res);
++	k_phy->phy_ctrl = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(k_phy->phy_ctrl))
+ 		return PTR_ERR(k_phy->phy_ctrl);
+ 
+-- 
+2.7.4
 
 
-I agree.
-
-I do not like this patch set either.
-
-Anyway, the last two patches (usb-stroage, watchdog)
-are useful to demonstrate
-that this has a bad taste.
-
-
---
-Best Regards
-Masahiro Yamada
