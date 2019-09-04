@@ -2,206 +2,116 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE8FC3A5A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6756FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F26D21897
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E9EC21897
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 04:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FS+bxCoU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726163AbfIDEIF (ORCPT
+        id S1726067AbfIDEKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 00:08:05 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:10701 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726012AbfIDEIF (ORCPT
+        Wed, 4 Sep 2019 00:10:46 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46158 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725908AbfIDEKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 00:08:05 -0400
-X-UUID: c8c948f33d2047f3bdfa7905ae66264b-20190904
-X-UUID: c8c948f33d2047f3bdfa7905ae66264b-20190904
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <houlong.wei@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 561403735; Wed, 04 Sep 2019 12:07:57 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 4 Sep
- 2019 12:07:54 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Sep 2019 12:07:53 +0800
-Message-ID: <1567570074.31301.19.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 06/14] media: mtk-mdp: Get rid of mtk_smi_larb_get/put
-From:   houlong wei <houlong.wei@mediatek.com>
-To:     Yong Wu <yong.wu@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yong.wu@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>, <anan.sun@mediatek.com>,
-        <cui.zhang@mediatek.com>, <chao.hao@mediatek.com>,
-        <ming-fan.chen@mediatek.com>, <minghsiu.tsai@mediatek.com>,
-        <houlong.wei@mediatek.com>
-Date:   Wed, 4 Sep 2019 12:07:54 +0800
-In-Reply-To: <mailman.21807.1567503573.19300.linux-mediatek@lists.infradead.org>
-References: <mailman.21807.1567503573.19300.linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 4 Sep 2019 00:10:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so4500384pfg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Sep 2019 21:10:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dcYAzYNxQfFqfgdx0zCpj/KDgBQyEbUaQn4XvdZRh0o=;
+        b=FS+bxCoUQzMvxNRSiuwbjLMktNYmoSyiiTcfCGtEnw7oz/RaknS05DuDykC403577e
+         aynw2TKjaDfAEI23jPVLOhc/3G/rkAz7G2O2HHg72LBDavjfVPwQra/xf+dEjHoI8kOg
+         IuWAw1rPOjzVw796xT4ci53dIXgxwE4RflDxmwDNlGVJJP4z73z7kX1HxNZgPVd/y3uf
+         ZiaFmvt6+NBqLMfUefRGhd3q/L9SptsrKfBO5fc/AT324K1GAYNVE2yOMjEDtVE6hqD9
+         YT8wZYLepIB8cl/py+xsQeevHiNdcHFOnB8+icy62A7ytTqLZZZp90F2cuiuOY7NGrmD
+         E8TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dcYAzYNxQfFqfgdx0zCpj/KDgBQyEbUaQn4XvdZRh0o=;
+        b=nUKLBdV0OyV1e+kb5LzpRX52/ufjEQL4qFUuLqbY1+DAsLKGwkevCZZO8yvmvHMocP
+         RJXvKLsD3C7H8XcwBOqkDRJqxdNhPU9ADXTGKXeq4xz4qQrscKVLJAwE7T/CFgo7VHpB
+         nk3qeBLE33VZ8uOdYpk+cO0Qor00L/6ckvtOzGyPHaAM3DMEC8HucyNcubefSDNtMpdd
+         9UIpEOKb/PFPFct0g1eJ7r+dmQRy4l2XOTnH/LfEIG2C0QVeHd8AJ4NjzisrNMY8L29Q
+         azqHWjxX0/+M2rJ/HKn7+cyrj/SEjQcGpUrKpKCrUIdnMUXkPDS+yzZubolru8ckqEYQ
+         TeSA==
+X-Gm-Message-State: APjAAAUbUjBuKY9AKGKOJHYHh5TlJ4WBzeVi45k9lMkpDQG4Wf8Wdu1H
+        gV9MkX8sMSEwCEkj3Rg5tLZbIg==
+X-Google-Smtp-Source: APXvYqwXBC7IUWS8hioJj3UhbdiVmNX4j6uLKBpFtP+lG8xcx7bnu+iFYAnbEW6qGLSWRKczEYAZHQ==
+X-Received: by 2002:aa7:851a:: with SMTP id v26mr43247304pfn.238.1567570245048;
+        Tue, 03 Sep 2019 21:10:45 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v12sm17321805pgr.86.2019.09.03.21.10.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2019 21:10:44 -0700 (PDT)
+Date:   Tue, 3 Sep 2019 21:10:42 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: sdm845: Fix UFS_RESET pin
+Message-ID: <20190904041042.GA3081@tuxbook-pro>
+References: <20190830060227.12792-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 500850E9C33D38436DBF3DA1D3DC54035EACB51BDE85BE19A0327058E6BBD5A42000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830060227.12792-1-swboyd@chromium.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yong,
+On Thu 29 Aug 23:02 PDT 2019, Stephen Boyd wrote:
 
-I have inline comment below.
-
-> MediaTek IOMMU has already added the device_link between the consumer
-> and smi-larb device. If the mdp device call the pm_runtime_get_sync,
-> the smi-larb's pm_runtime_get_sync also be called automatically.
+> The UFS_RESET pin is the magical pin #150 now, not 153 per the
+> sdm845_groups array declared in this file. Fix the order of pins so that
+> UFS_RESET is 150 and the SDC pins follow after.
 > 
-> CC: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
+
+Woops, thanks
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Fixes: 53a5372ce326 ("pinctrl: qcom: sdm845: Expose ufs_reset as gpio")
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c | 38 ---------------------------
->  drivers/media/platform/mtk-mdp/mtk_mdp_comp.h |  2 --
->  drivers/media/platform/mtk-mdp/mtk_mdp_core.c |  1 -
->  3 files changed, 41 deletions(-)
+>  drivers/pinctrl/qcom/pinctrl-sdm845.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> index 9afe816..5985a9b 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.c
-> @@ -9,7 +9,6 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
-> -#include <soc/mediatek/smi.h>
->  
->  #include "mtk_mdp_comp.h"
->  
-> @@ -58,14 +57,6 @@ void mtk_mdp_comp_clock_on(struct device *dev, struct mtk_mdp_comp *comp)
->  {
->  	int i, err;
->  
-> -	if (comp->larb_dev) {
-> -		err = mtk_smi_larb_get(comp->larb_dev);
-> -		if (err)
-> -			dev_err(dev,
-> -				"failed to get larb, err %d. type:%d id:%d\n",
-> -				err, comp->type, comp->id);
-> -	}
-
-In previous design,mtk_mdp_comp_clock_on() is called by each MDP
-hardware component, and mtk_smi_larb_get() is also called for each MDP
-hardware component which accesses DRAM via SMI larb.
-
-Since mdp device only contains mdp_rdma component, so
-pm_runtime_get_sync() will ignore other smi-larb clock. We need consider
-how to enable clocks of other smi-larb associated with other mdp
-component, e.g. mdp_wdma, mdp_wrot.
-
-
->  	for (i = 0; i < ARRAY_SIZE(comp->clk); i++) {
->  		if (IS_ERR(comp->clk[i]))
->  			continue;
-> @@ -86,16 +77,11 @@ void mtk_mdp_comp_clock_off(struct device *dev, struct mtk_mdp_comp *comp)
->  			continue;
->  		clk_disable_unprepare(comp->clk[i]);
->  	}
-> -
-> -	if (comp->larb_dev)
-> -		mtk_smi_larb_put(comp->larb_dev);
->  }
->  
->  int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
->  		      struct mtk_mdp_comp *comp, enum mtk_mdp_comp_id comp_id)
->  {
-> -	struct device_node *larb_node;
-> -	struct platform_device *larb_pdev;
->  	int i;
->  
->  	if (comp_id < 0 || comp_id >= MTK_MDP_COMP_ID_MAX) {
-> @@ -116,30 +102,6 @@ int mtk_mdp_comp_init(struct device *dev, struct device_node *node,
->  			break;
->  	}
->  
-> -	/* Only DMA capable components need the LARB property */
-> -	comp->larb_dev = NULL;
-> -	if (comp->type != MTK_MDP_RDMA &&
-> -	    comp->type != MTK_MDP_WDMA &&
-> -	    comp->type != MTK_MDP_WROT)
-> -		return 0;
-> -
-> -	larb_node = of_parse_phandle(node, "mediatek,larb", 0);
-> -	if (!larb_node) {
-> -		dev_err(dev,
-> -			"Missing mediadek,larb phandle in %pOF node\n", node);
-> -		return -EINVAL;
-> -	}
-> -
-> -	larb_pdev = of_find_device_by_node(larb_node);
-> -	if (!larb_pdev) {
-> -		dev_warn(dev, "Waiting for larb device %pOF\n", larb_node);
-> -		of_node_put(larb_node);
-> -		return -EPROBE_DEFER;
-> -	}
-> -	of_node_put(larb_node);
-> -
-> -	comp->larb_dev = &larb_pdev->dev;
-> -
->  	return 0;
->  }
->  
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-> index 998a4b9..a2da8df 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_comp.h
-> @@ -39,7 +39,6 @@ enum mtk_mdp_comp_id {
->   * @dev_node:	component device node
->   * @clk:	clocks required for component
->   * @regs:	Mapped address of component registers.
-> - * @larb_dev:	SMI device required for component
->   * @type:	component type
->   * @id:		component ID
->   */
-> @@ -47,7 +46,6 @@ struct mtk_mdp_comp {
->  	struct device_node	*dev_node;
->  	struct clk		*clk[2];
->  	void __iomem		*regs;
-> -	struct device		*larb_dev;
->  	enum mtk_mdp_comp_type	type;
->  	enum mtk_mdp_comp_id	id;
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm845.c b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> index 39f498c09906..ce495970459d 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sdm845.c
+> @@ -262,10 +262,10 @@ static const struct pinctrl_pin_desc sdm845_pins[] = {
+>  	PINCTRL_PIN(147, "GPIO_147"),
+>  	PINCTRL_PIN(148, "GPIO_148"),
+>  	PINCTRL_PIN(149, "GPIO_149"),
+> -	PINCTRL_PIN(150, "SDC2_CLK"),
+> -	PINCTRL_PIN(151, "SDC2_CMD"),
+> -	PINCTRL_PIN(152, "SDC2_DATA"),
+> -	PINCTRL_PIN(153, "UFS_RESET"),
+> +	PINCTRL_PIN(150, "UFS_RESET"),
+> +	PINCTRL_PIN(151, "SDC2_CLK"),
+> +	PINCTRL_PIN(152, "SDC2_CMD"),
+> +	PINCTRL_PIN(153, "SDC2_DATA"),
 >  };
-> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> index fc9faec..c237ed9 100644
-> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
-> @@ -17,7 +17,6 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/workqueue.h>
-> -#include <soc/mediatek/smi.h>
 >  
->  #include "mtk_mdp_core.h"
->  #include "mtk_mdp_m2m.h"
-
-
-
+>  #define DECLARE_MSM_GPIO_PINS(pin) \
+> -- 
+> Sent by a computer through tubes
+> 
