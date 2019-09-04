@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77302C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE29C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E82A2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B885620870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620505;
-	bh=ZpgqCahdWLjUGrJzsstly2a0tcnXBJqNHV38YJRzlYg=;
+	s=default; t=1567620508;
+	bh=cKh9PNFoHdWk83tn6Qbei9u/Hkn4unYXuL6IU++rW9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1F1xfM6pP9lm5RXplsoYFvU/UmsAKZ13GRHD0YVTSpvFvAq201pw48KVxnwF2UNZ0
-	 yj35TmiHTdDEe9nqGt5sB8jnxBnB9ZUDaWn642KMVQM450DXsCFHHfuMSoL1KlIpc1
-	 7C6IqJXo6gfJ3eeE/lUdlpcdhXYB229G8djBgw44=
+	b=BxniPsSbytcdroVvjOeBNFiWmSVCggLVkAuwiuaX+hOphC+5X8gbRNZbHd1Y0Q44R
+	 spH/824sqphjNnqy8q5VcC7EOD0X1rOED3GFM75hHGbkZqarouIVR7mOYNRNceS9Q5
+	 ONl/378QtP4FWBZ8hqvzTqKown+uLcpprmWIfxW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389785AbfIDSIY (ORCPT
+        id S2389380AbfIDSI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51234 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:08:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389179AbfIDSIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:22 -0400
+        id S2389179AbfIDSIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97B9120870;
-        Wed,  4 Sep 2019 18:08:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6BB20870;
+        Wed,  4 Sep 2019 18:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620502;
-        bh=ZpgqCahdWLjUGrJzsstly2a0tcnXBJqNHV38YJRzlYg=;
+        s=default; t=1567620504;
+        bh=cKh9PNFoHdWk83tn6Qbei9u/Hkn4unYXuL6IU++rW9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J9PRUl3fpvc05OdW1z6veWcS6iV7BU/Y4FITxPtYegpYD7L4mn/PZmig/5JbLcZe+
-         77S1RhBoq1bUPxczwR9D+KO+JWjrdia8N0sKUwWj1nm/QvgijYOe3f17kBLdxyNYjm
-         YN64LuPfF8oLUzj3awg5+xK2z3+IuElaXVjDOqnQ=
+        b=gkXJnovZtcEgNqWeneF4WQvRWJvEzrZVTiZAh3FDeEtNazF5w8hZc8QdcC5P1oYLN
+         vQB/wqQSyymM+zU+UWyHsWUoZ4dVryxKb/VsoRFaBDWt6qrFqRThH7ZuZ4OBf2pcX4
+         ayh1z2dBQGTbIlcBURU4LUvawrvJYvvy7Ra9Dcqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 45/93] ALSA: usb-audio: Add implicit fb quirk for Behringer UFX1604
-Date:   Wed,  4 Sep 2019 19:53:47 +0200
-Message-Id: <20190904175307.085988364@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 81/93] mac80211: fix possible sta leak
+Date:   Wed,  4 Sep 2019 19:54:23 +0200
+Message-Id: <20190904175310.093185949@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -58,31 +58,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 1a15718b41df026cffd0e42cfdc38a1384ce19f9 upstream.
+commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 upstream.
 
-Behringer UFX1604 requires the similar quirk to apply implicit fb like
-another Behringer model UFX1204 in order to fix the noisy playback.
+If TDLS station addition is rejected, the sta memory is leaked.
+Avoid this by moving the check before the allocation.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=204631
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
+Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/pcm.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/mac80211/cfg.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -350,6 +350,7 @@ static int set_sync_ep_implicit_fb_quirk
- 		ep = 0x81;
- 		ifnum = 2;
- 		goto add_sync_ep_from_ifnum;
-+	case USB_ID(0x1397, 0x0001): /* Behringer UFX1604 */
- 	case USB_ID(0x1397, 0x0002): /* Behringer UFX1204 */
- 		ep = 0x81;
- 		ifnum = 1;
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1471,6 +1471,11 @@ static int ieee80211_add_station(struct
+ 	if (is_multicast_ether_addr(mac))
+ 		return -EINVAL;
+ 
++	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
++	    sdata->vif.type == NL80211_IFTYPE_STATION &&
++	    !sdata->u.mgd.associated)
++		return -EINVAL;
++
+ 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
+ 	if (!sta)
+ 		return -ENOMEM;
+@@ -1478,10 +1483,6 @@ static int ieee80211_add_station(struct
+ 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
+ 		sta->sta.tdls = true;
+ 
+-	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
+-	    !sdata->u.mgd.associated)
+-		return -EINVAL;
+-
+ 	err = sta_apply_parameters(local, sta, params);
+ 	if (err) {
+ 		sta_info_free(local, sta);
 
 
