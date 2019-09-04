@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5914DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780D4C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E22B22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5081B22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567612752;
-	bh=xBkj8GB32KkFsE/GwKypiAlolOQzVn5JCvq+Tp/7DnI=;
+	s=default; t=1567612755;
+	bh=BwMnitDcDnhJKya16RLdKbbWRgE9L65diLVyxaRj83g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=evX61oAnw8Aq0vw5tINOcGpSJY3VqjRx+mpqadNteat0c9dwBSsKk6VAuyGvSnTGM
-	 nqkAQ4c7pMnuc1+DJMJ3i/Xmts18hqcrAPlAiyL4IcJ3Rtd9CouTmcvXw0a1wSFuET
-	 BpWbNAuFQbOpqElrBwFBBp4ERZtE4BDK9ZnG4WzE=
+	b=D3mvEDkvR8PUNBz3xriN8iJyVyr1F21nZZNhMlw/lPGLZnqM0Xcvlj5m+Vtb7iR0v
+	 wz6ALIlj4M8HVrKp4oqTA4P/3OOXoSFPeT6TmOqaMPPIJhW1j6NW0T/vZH8XU8diH3
+	 3RIHtOA8rOHA/UOTkDf3gshqRt8paMhSQ4/X3c3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732288AbfIDP7L (ORCPT
+        id S1732324AbfIDP7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33466 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731561AbfIDP7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:59:09 -0400
+        id S1732295AbfIDP7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:59:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F100022CF7;
-        Wed,  4 Sep 2019 15:59:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B62E20820;
+        Wed,  4 Sep 2019 15:59:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612748;
-        bh=xBkj8GB32KkFsE/GwKypiAlolOQzVn5JCvq+Tp/7DnI=;
+        s=default; t=1567612752;
+        bh=BwMnitDcDnhJKya16RLdKbbWRgE9L65diLVyxaRj83g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAdm5a6gqBhTq+AISgdaV8id3kx9FHJp/6BS1VAwqNgqfei/UPpCxd35zXL5sIqXU
-         meYzuy2LunOZi9bVM+W8yn9aLF0cLoboGg96Ru2HMoQybx5BZrpVhUDxyzF8nb+IRn
-         oilenJoQQL65QIWIh1rZGNmK3/k6cJinK0bssdpo=
+        b=sCdi/6GxWYVFjbhIBFwVq3AiBqfbWyR81ZAkNKXMwbwMcLS13JdunQCW2SoiWK256
+         CjBqKIyA5LyeR7CBZkCH9/iwltPZbA9q26oFVyI0MXZoTChWu8JTPi8RZXpKSf4nyT
+         Yve7X6W6P5Slu4HyIqitrm33IvOmcadzi0qcEBGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.2 58/94] drm/amd/powerplay: correct Vega20 dpm level related settings
-Date:   Wed,  4 Sep 2019 11:57:03 -0400
-Message-Id: <20190904155739.2816-58-sashal@kernel.org>
+Cc:     Marco Hartmann <marco.hartmann@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 61/94] Add genphy_c45_config_aneg() function to phy-c45.c
+Date:   Wed,  4 Sep 2019 11:57:06 -0400
+Message-Id: <20190904155739.2816-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -60,120 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Marco Hartmann <marco.hartmann@nxp.com>
 
-[ Upstream commit 83e09d5bddbee749fc83063890244397896a1971 ]
+[ Upstream commit 94acaeb50ced653bfe2c4d8037c70b107af14124 ]
 
-Correct the settings for auto mode and skip the unnecessary
-settings for dcefclk and fclk.
+Commit 34786005eca3 ("net: phy: prevent PHYs w/o Clause 22 regs from calling
+genphy_config_aneg") introduced a check that aborts phy_config_aneg()
+if the phy is a C45 phy.
+This causes phy_state_machine() to call phy_error() so that the phy
+ends up in PHY_HALTED state.
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Instead of returning -EOPNOTSUPP, call genphy_c45_config_aneg()
+(analogous to the C22 case) so that the state machine can run
+correctly.
+
+genphy_c45_config_aneg() closely resembles mv3310_config_aneg()
+in drivers/net/phy/marvell10g.c, excluding vendor specific
+configurations for 1000BaseT.
+
+Fixes: 22b56e827093 ("net: phy: replace genphy_10g_driver with genphy_c45_driver")
+
+Signed-off-by: Marco Hartmann <marco.hartmann@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../drm/amd/powerplay/hwmgr/vega20_hwmgr.c    | 60 +++++++++++++++++--
- 1 file changed, 54 insertions(+), 6 deletions(-)
+ drivers/net/phy/phy-c45.c | 26 ++++++++++++++++++++++++++
+ drivers/net/phy/phy.c     |  2 +-
+ include/linux/phy.h       |  1 +
+ 3 files changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-index 9b9f87b84910c..d98fe481cd365 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
-@@ -2288,12 +2288,16 @@ static int vega20_force_dpm_highest(struct pp_hwmgr *hwmgr)
- 		data->dpm_table.soc_table.dpm_state.soft_max_level =
- 		data->dpm_table.soc_table.dpm_levels[soft_level].value;
+diff --git a/drivers/net/phy/phy-c45.c b/drivers/net/phy/phy-c45.c
+index 58bb25e4af106..7935593debb11 100644
+--- a/drivers/net/phy/phy-c45.c
++++ b/drivers/net/phy/phy-c45.c
+@@ -523,6 +523,32 @@ int genphy_c45_read_status(struct phy_device *phydev)
+ }
+ EXPORT_SYMBOL_GPL(genphy_c45_read_status);
  
--	ret = vega20_upload_dpm_min_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_min_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload boot level to highest!",
- 			return ret);
- 
--	ret = vega20_upload_dpm_max_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_max_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload dpm max level to highest!",
- 			return ret);
-@@ -2326,12 +2330,16 @@ static int vega20_force_dpm_lowest(struct pp_hwmgr *hwmgr)
- 		data->dpm_table.soc_table.dpm_state.soft_max_level =
- 		data->dpm_table.soc_table.dpm_levels[soft_level].value;
- 
--	ret = vega20_upload_dpm_min_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_min_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload boot level to highest!",
- 			return ret);
- 
--	ret = vega20_upload_dpm_max_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_max_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload dpm max level to highest!",
- 			return ret);
-@@ -2342,14 +2350,54 @@ static int vega20_force_dpm_lowest(struct pp_hwmgr *hwmgr)
- 
- static int vega20_unforce_dpm_levels(struct pp_hwmgr *hwmgr)
- {
-+	struct vega20_hwmgr *data =
-+			(struct vega20_hwmgr *)(hwmgr->backend);
-+	uint32_t soft_min_level, soft_max_level;
- 	int ret = 0;
- 
--	ret = vega20_upload_dpm_min_level(hwmgr, 0xFFFFFFFF);
-+	/* gfxclk soft min/max settings */
-+	soft_min_level =
-+		vega20_find_lowest_dpm_level(&(data->dpm_table.gfx_table));
-+	soft_max_level =
-+		vega20_find_highest_dpm_level(&(data->dpm_table.gfx_table));
++/**
++ * genphy_c45_config_aneg - restart auto-negotiation or forced setup
++ * @phydev: target phy_device struct
++ *
++ * Description: If auto-negotiation is enabled, we configure the
++ *   advertising, and then restart auto-negotiation.  If it is not
++ *   enabled, then we force a configuration.
++ */
++int genphy_c45_config_aneg(struct phy_device *phydev)
++{
++	bool changed = false;
++	int ret;
 +
-+	data->dpm_table.gfx_table.dpm_state.soft_min_level =
-+		data->dpm_table.gfx_table.dpm_levels[soft_min_level].value;
-+	data->dpm_table.gfx_table.dpm_state.soft_max_level =
-+		data->dpm_table.gfx_table.dpm_levels[soft_max_level].value;
++	if (phydev->autoneg == AUTONEG_DISABLE)
++		return genphy_c45_pma_setup_forced(phydev);
 +
-+	/* uclk soft min/max settings */
-+	soft_min_level =
-+		vega20_find_lowest_dpm_level(&(data->dpm_table.mem_table));
-+	soft_max_level =
-+		vega20_find_highest_dpm_level(&(data->dpm_table.mem_table));
++	ret = genphy_c45_an_config_aneg(phydev);
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		changed = true;
 +
-+	data->dpm_table.mem_table.dpm_state.soft_min_level =
-+		data->dpm_table.mem_table.dpm_levels[soft_min_level].value;
-+	data->dpm_table.mem_table.dpm_state.soft_max_level =
-+		data->dpm_table.mem_table.dpm_levels[soft_max_level].value;
++	return genphy_c45_check_and_restart_aneg(phydev, changed);
++}
++EXPORT_SYMBOL_GPL(genphy_c45_config_aneg);
 +
-+	/* socclk soft min/max settings */
-+	soft_min_level =
-+		vega20_find_lowest_dpm_level(&(data->dpm_table.soc_table));
-+	soft_max_level =
-+		vega20_find_highest_dpm_level(&(data->dpm_table.soc_table));
-+
-+	data->dpm_table.soc_table.dpm_state.soft_min_level =
-+		data->dpm_table.soc_table.dpm_levels[soft_min_level].value;
-+	data->dpm_table.soc_table.dpm_state.soft_max_level =
-+		data->dpm_table.soc_table.dpm_levels[soft_max_level].value;
-+
-+	ret = vega20_upload_dpm_min_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload DPM Bootup Levels!",
- 			return ret);
+ /* The gen10g_* functions are the old Clause 45 stub */
  
--	ret = vega20_upload_dpm_max_level(hwmgr, 0xFFFFFFFF);
-+	ret = vega20_upload_dpm_max_level(hwmgr, FEATURE_DPM_GFXCLK_MASK |
-+						 FEATURE_DPM_UCLK_MASK |
-+						 FEATURE_DPM_SOCCLK_MASK);
- 	PP_ASSERT_WITH_CODE(!ret,
- 			"Failed to upload DPM Max Levels!",
- 			return ret);
+ int gen10g_config_aneg(struct phy_device *phydev)
+diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+index e8885429293ad..57b3376877821 100644
+--- a/drivers/net/phy/phy.c
++++ b/drivers/net/phy/phy.c
+@@ -499,7 +499,7 @@ static int phy_config_aneg(struct phy_device *phydev)
+ 	 * allowed to call genphy_config_aneg()
+ 	 */
+ 	if (phydev->is_c45 && !(phydev->c45_ids.devices_in_package & BIT(0)))
+-		return -EOPNOTSUPP;
++		return genphy_c45_config_aneg(phydev);
+ 
+ 	return genphy_config_aneg(phydev);
+ }
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 6424586fe2d65..7c5a9fb9c9f49 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1108,6 +1108,7 @@ int genphy_c45_an_disable_aneg(struct phy_device *phydev);
+ int genphy_c45_read_mdix(struct phy_device *phydev);
+ int genphy_c45_pma_read_abilities(struct phy_device *phydev);
+ int genphy_c45_read_status(struct phy_device *phydev);
++int genphy_c45_config_aneg(struct phy_device *phydev);
+ 
+ /* The gen10g_* functions are the old Clause 45 stub */
+ int gen10g_config_aneg(struct phy_device *phydev);
 -- 
 2.20.1
 
