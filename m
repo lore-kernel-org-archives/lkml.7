@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482E7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B66C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCAB22CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFFE22CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619861;
-	bh=gYq1iicek7v5D8s4QWFYPuV+1lvGYw3hEj1hAAt8ffQ=;
+	s=default; t=1567619863;
+	bh=54VtRoqU8kvRGwbrBOQmMbSEAWo9D7ld9pRs7Lg+DvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t663vUs7NlCcvLoVOizGHt0NNEupuvCSDIz0cu27MbobwMQHMagwjuq+JcJ/EJwI+
-	 p3lSp8muqtiXQAHwsErm93K5PoaAnSltB4EhPeP3LJJZySEJdMtL/2WF6njBwmiSAL
-	 1so0P2dFCwCH78MzCPoAJfvm46v4QLiDkoVehiPQ=
+	b=2RU2lM7I3m3nzLtVNoni7QaVDsIufr+phUwkLVmRb2nyKRvUorjoYr8Hyrv6wumsE
+	 +KoOSNCEEOKMKxOSjgnAqDv+7YJexQ1zuxXW7a2Ywj3wK897Ohr56jkDqUOqowWhPv
+	 Kn3anObdlNIJzWhQSm4TjBx048EkOPq44FgWMlrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387897AbfIDR5k (ORCPT
+        id S2387907AbfIDR5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35658 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732926AbfIDR5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:38 -0400
+        id S2387898AbfIDR5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07F8322CED;
-        Wed,  4 Sep 2019 17:57:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7B2621883;
+        Wed,  4 Sep 2019 17:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619857;
-        bh=gYq1iicek7v5D8s4QWFYPuV+1lvGYw3hEj1hAAt8ffQ=;
+        s=default; t=1567619860;
+        bh=54VtRoqU8kvRGwbrBOQmMbSEAWo9D7ld9pRs7Lg+DvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOK93+chiFxjFna7Pn5EAdIdhkTsR/hSSb/RwP/qzlu1D03rrsdDS6FZATPb08H+B
-         vxRYpz7Eeusuw4jc0NiO9ONisv2G4RytqHs6Yv7xGP4wnijcFykCyfwUdFTs8g1dfc
-         r5szj17wCj6UMAOA+vErDj7LdnlI0O5WD55ln/KI=
+        b=v3Wv9BUfyZcTp6e6CCaE+msozJ+63A1a+LlErdHMg8nBEZ2PEKYiKByuEattDHiID
+         Ta9Yfhv7y3RYjOe3cekXCaW/zhq3umDb8Quwya+pBwXfktuxLnvfY4P9PEhDNtg4lI
+         4FnP4uY8YzsgalzerVbPiSaRrr8boCczbQ5jJfMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 20/77] net: hisilicon: Fix dma_map_single failed on arm64
-Date:   Wed,  4 Sep 2019 19:53:07 +0200
-Message-Id: <20190904175305.503358141@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 21/77] libata: add SG safety checks in SFF pio transfers
+Date:   Wed,  4 Sep 2019 19:53:08 +0200
+Message-Id: <20190904175305.616064032@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,105 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 96a50c0d907ac8f5c3d6b051031a19eb8a2b53e3 ]
+[ Upstream commit 752ead44491e8c91e14d7079625c5916b30921c5 ]
 
-On the arm64 platform, executing "ifconfig eth0 up" will fail,
-returning "ifconfig: SIOCSIFFLAGS: Input/output error."
+Abort processing of a command if we run out of mapped data in the
+SG list. This should never happen, but a previous bug caused it to
+be possible. Play it safe and attempt to abort nicely if we don't
+have more SG segments left.
 
-ndev->dev is not initialized, dma_map_single->get_dma_ops->
-dummy_dma_ops->__dummy_map_page will return DMA_ERROR_CODE
-directly, so when we use dma_map_single, the first parameter
-is to use the device of platform_device.
-
-Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hip04_eth.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/ata/libata-sff.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
-index a88d233df4e82..def831c89d354 100644
---- a/drivers/net/ethernet/hisilicon/hip04_eth.c
-+++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
-@@ -157,6 +157,7 @@ struct hip04_priv {
- 	unsigned int reg_inten;
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index 18de4c4570682..1d8901fc0bfa9 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -703,6 +703,10 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
+ 	unsigned int offset;
+ 	unsigned char *buf;
  
- 	struct napi_struct napi;
-+	struct device *dev;
- 	struct net_device *ndev;
++	if (!qc->cursg) {
++		qc->curbytes = qc->nbytes;
++		return;
++	}
+ 	if (qc->curbytes == qc->nbytes - qc->sect_size)
+ 		ap->hsm_task_state = HSM_ST_LAST;
  
- 	struct tx_desc *tx_desc;
-@@ -387,7 +388,7 @@ static int hip04_tx_reclaim(struct net_device *ndev, bool force)
- 		}
+@@ -742,6 +746,8 @@ static void ata_pio_sector(struct ata_queued_cmd *qc)
  
- 		if (priv->tx_phys[tx_tail]) {
--			dma_unmap_single(&ndev->dev, priv->tx_phys[tx_tail],
-+			dma_unmap_single(priv->dev, priv->tx_phys[tx_tail],
- 					 priv->tx_skb[tx_tail]->len,
- 					 DMA_TO_DEVICE);
- 			priv->tx_phys[tx_tail] = 0;
-@@ -437,8 +438,8 @@ static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		return NETDEV_TX_BUSY;
+ 	if (qc->cursg_ofs == qc->cursg->length) {
+ 		qc->cursg = sg_next(qc->cursg);
++		if (!qc->cursg)
++			ap->hsm_task_state = HSM_ST_LAST;
+ 		qc->cursg_ofs = 0;
  	}
- 
--	phys = dma_map_single(&ndev->dev, skb->data, skb->len, DMA_TO_DEVICE);
--	if (dma_mapping_error(&ndev->dev, phys)) {
-+	phys = dma_map_single(priv->dev, skb->data, skb->len, DMA_TO_DEVICE);
-+	if (dma_mapping_error(priv->dev, phys)) {
- 		dev_kfree_skb(skb);
- 		return NETDEV_TX_OK;
- 	}
-@@ -506,7 +507,7 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
- 		if (unlikely(!skb))
- 			net_dbg_ratelimited("build_skb failed\n");
- 
--		dma_unmap_single(&ndev->dev, priv->rx_phys[priv->rx_head],
-+		dma_unmap_single(priv->dev, priv->rx_phys[priv->rx_head],
- 				 RX_BUF_SIZE, DMA_FROM_DEVICE);
- 		priv->rx_phys[priv->rx_head] = 0;
- 
-@@ -534,9 +535,9 @@ static int hip04_rx_poll(struct napi_struct *napi, int budget)
- 		buf = netdev_alloc_frag(priv->rx_buf_size);
- 		if (!buf)
- 			goto done;
--		phys = dma_map_single(&ndev->dev, buf,
-+		phys = dma_map_single(priv->dev, buf,
- 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
--		if (dma_mapping_error(&ndev->dev, phys))
-+		if (dma_mapping_error(priv->dev, phys))
- 			goto done;
- 		priv->rx_buf[priv->rx_head] = buf;
- 		priv->rx_phys[priv->rx_head] = phys;
-@@ -639,9 +640,9 @@ static int hip04_mac_open(struct net_device *ndev)
- 	for (i = 0; i < RX_DESC_NUM; i++) {
- 		dma_addr_t phys;
- 
--		phys = dma_map_single(&ndev->dev, priv->rx_buf[i],
-+		phys = dma_map_single(priv->dev, priv->rx_buf[i],
- 				      RX_BUF_SIZE, DMA_FROM_DEVICE);
--		if (dma_mapping_error(&ndev->dev, phys))
-+		if (dma_mapping_error(priv->dev, phys))
- 			return -EIO;
- 
- 		priv->rx_phys[i] = phys;
-@@ -675,7 +676,7 @@ static int hip04_mac_stop(struct net_device *ndev)
- 
- 	for (i = 0; i < RX_DESC_NUM; i++) {
- 		if (priv->rx_phys[i]) {
--			dma_unmap_single(&ndev->dev, priv->rx_phys[i],
-+			dma_unmap_single(priv->dev, priv->rx_phys[i],
- 					 RX_BUF_SIZE, DMA_FROM_DEVICE);
- 			priv->rx_phys[i] = 0;
- 		}
-@@ -826,6 +827,7 @@ static int hip04_mac_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	priv = netdev_priv(ndev);
-+	priv->dev = d;
- 	priv->ndev = ndev;
- 	platform_set_drvdata(pdev, ndev);
- 
+ }
 -- 
 2.20.1
 
