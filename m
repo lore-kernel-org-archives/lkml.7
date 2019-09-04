@@ -2,190 +2,125 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04057C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D7DC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C81BA22CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1959D22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 08:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WcrfGics"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qaQbLSu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbfIDIqA (ORCPT
+        id S1729364AbfIDIq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 04:46:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51363 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfIDIp7 (ORCPT
+        Wed, 4 Sep 2019 04:46:29 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:23311 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfIDIq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 04:45:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id k1so2332581wmi.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 01:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UjxPLpoRTJDahkA20/YcDxWDLvHQIg0O7GSl3PV0lsA=;
-        b=WcrfGicsOynEl7OkjgRdiLsuOPydRuyRn+4n1s6rO21+LFfWOpl0FghRZJI1Ef98WI
-         cWd+g0HUb99J67J8QlASd1rE76yYeW9uBqbfIqS/d3FU89IAUFCJFCgAYjnxLrzGsvsH
-         f/Fsj9E7guyAxHJIwOr7DNZAjKYtYGUdNWefvJVfSLG2fhs799yW7lxXp9UV/xfuQRmR
-         +rpqBrqUxrCI9YPJu0Hi1uVMU4Js15p7OB2AKSdxSZN368zykUol1jt3VtUiXOrXjBct
-         JuMo+E1yCHy6g0vZ+b1nDxb0b5JO+BnFpwgeeisQJtIyuYm7GmY0AzHU5irTfagIpLmu
-         +oAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UjxPLpoRTJDahkA20/YcDxWDLvHQIg0O7GSl3PV0lsA=;
-        b=ud7WWiqWigsk+NsW0kyjdVDAmMjr9kEytbiBa5t7rJOcPFv4zT6m7B5brBa/cHYCJD
-         JWQ9IMwhs2SSK5DqLMLPSxjxSWMgVdBoyiNXZpYUkA1XrCPNanNxUZOVByXgDdS+mcLF
-         lg3ifVPpKsHI4L5kDe/zVNUpXhnciRXxAdpJDgCyol7qx2XsK1+LiONKvVWUv4WfziLb
-         mNARsSTfsvt01pi8rWiCwBDdbl/Ol/3+CT6k4zYMKS7s0mFTgEG5I9ndhjj17OEVgNOh
-         Qgm1HdQJW040Bi3pUT2bG0t6dCHKbdUWT6KJSNeXj429caBiyLJPVlobZxUy22cCjOaY
-         7F3g==
-X-Gm-Message-State: APjAAAUIN5DdfQxOEmyhxQIB+7nC05hOKqB4w64RdbdxK2AJN7sbCI3x
-        PKkOgNedpMNGviMhgknKivIKpg==
-X-Google-Smtp-Source: APXvYqzgk+6NoC5ihZJP9WaAtvy/AF4VregIt4YQm3V0VC3hTz2SNpcE7xwKl4SyuMFlT5hJt8A/TA==
-X-Received: by 2002:a1c:1aca:: with SMTP id a193mr3556661wma.120.1567586756696;
-        Wed, 04 Sep 2019 01:45:56 -0700 (PDT)
-Received: from dell ([95.147.198.36])
-        by smtp.gmail.com with ESMTPSA id c132sm3367486wme.27.2019.09.04.01.45.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Sep 2019 01:45:56 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 09:45:54 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/1] soc: qcom: geni: Provide parameter error checking
-Message-ID: <20190904084554.GF26880@dell>
-References: <20190903135052.13827-1-lee.jones@linaro.org>
- <20190904031922.GC574@tuxbook-pro>
+        Wed, 4 Sep 2019 04:46:28 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x848kMS9010699;
+        Wed, 4 Sep 2019 17:46:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x848kMS9010699
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567586783;
+        bh=rl11GH89ZlbuZX4guUp4Pw5JS7QAnPdbjduMTKste4M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=qaQbLSu3X2Z3Psx1j5HJJJEFgFBgqUt3fTs5oIDcf7KPwOItCEKJy0GVvIHVc6IZx
+         hWmxRH/hYIiLb3oVnJ5tBbdy2yOsIo5niB6VXOFO2CO2mF9YXGiWBlneWN7FKchBvI
+         DXl5wVRYU2ktI8xGGyJ9k0s09qAp9zFqwD+blGJJKb2cMAnSD/f6Uj7/IyXqRVyERU
+         nPCPf68u5qgEkO6kZJRvKB/omcKRqc2rUsVhcsZbc5ofvqkLQl4TfCP09fdUJK9cVu
+         lrRwVu8QP84j5Nf4nOMimNXKnJwHmvAbCmCNnXxq1znMTe4CddZADvFZYATUHiDFv1
+         5oaS9erWFMPGg==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id q9so7139250vsl.4;
+        Wed, 04 Sep 2019 01:46:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAXukg15R+prZUW9q4X0D85DhnG/drnHMDKW+YVB6DNtNjUYp6oN
+        xKlgf7M88qtvAry2+Tn35VVijcq/JJJpE42Ov6U=
+X-Google-Smtp-Source: APXvYqwoMX+iGMXtuj9+/GXZEDE/HhrJcM8ZW5hEjW8nX5c7VdUbVtMjZ3kbHt2QTmtFsrYXsZt7wEMb783MlVl7kqE=
+X-Received: by 2002:a67:e9cc:: with SMTP id q12mr11685253vso.181.1567586782082;
+ Wed, 04 Sep 2019 01:46:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904031922.GC574@tuxbook-pro>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
+ <20190903150638.242049-13-maennich@google.com> <20190903161045.GA22754@roeck-us.net>
+In-Reply-To: <20190903161045.GA22754@roeck-us.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 4 Sep 2019 17:45:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
+Message-ID: <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
+Subject: Re: [PATCH v4 12/12] RFC: watchdog: export core symbols in
+ WATCHDOG_CORE namespace
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        maco@android.com, sspatil@google.com,
+        Will Deacon <will@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        linux-usb <linux-usb@vger.kernel.org>,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 03 Sep 2019, Bjorn Andersson wrote:
+On Wed, Sep 4, 2019 at 1:10 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Tue, Sep 03, 2019 at 04:06:38PM +0100, Matthias Maennich wrote:
+> > Modules using symbols from the WATCHDOG_CORE namespace are required to
+> > explicitly import the namespace. This patch was generated with the
+> > following steps and serves as a reference to use the symbol namespace
+> > feature:
+> >
+> >  1) Use EXPORT_SYMBOL_NS* macros instead of EXPORT_SYMBOL* for symbols
+> >     in watchdog_core.c
+> >  2) make  (see warnings during modpost about missing imports)
+> >  3) make nsdeps
+> >
+> > I used 'allmodconfig' for the above steps to ensure all occurrences are
+> > patched.
+> >
+> > Defining DEFAULT_SYMBOL_NAMESPACE in the Makefile is not trivial in this
+> > case as not only watchdog_core is defined in drivers/watchdog/Makefile.
+> > Hence this patch uses the variant of using the EXPORT_SYMBOL_NS* macros
+> > to export into a different namespace.
+> >
+> > An alternative to this patch would be a single definition line before
+> > any use of EXPORT_SYMBOL*:
+> >  #define DEFAULT_SYMBOL_NAMESPACE WATCHDOG_CORE
+> >
+> > This patch serves as a reference on how to use the symbol namespaces.
+> >
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Matthias Maennich <maennich@google.com>
+>
+> As mentioned before, I am opposed to this set of changes. I don't see
+> the point of restricting the use of exported symbols in WATCHDOG_CORE.
+>
+> Guenter
 
-> On Tue 03 Sep 06:50 PDT 2019, Lee Jones wrote:
-> 
-> > When booting with ACPI, the Geni Serial Engine is not set as the I2C/SPI
-> > parent and thus, the wrapper (parent device) is unassigned.  This causes
-> > the kernel to crash with a null dereference error.
-> > 
-> 
-> Now I see what you did in 8bc529b25354; i.e. stubbed all the other calls
-> between the SE and wrapper.
-> 
-> Do you think it would be possible to resolve the _DEP link to QGP[01]
-> somehow?
 
-I looked at QGP{0,1}, but did not see it represented in the current
-Device Tree implementation and thus failed to identify it.  Do you
-know what it is?  Does it have a driver in Linux already?
+I agree.
 
-> For the clocks workarounds this could be resolved by us
-> representing that relationship using device_link and just rely on
-> pm_runtime to propagate the clock state.
+I do not like this patch set either.
 
-That is not allowed when booting ACPI.  The Clock/Regulator frameworks
-are not to be used in this use-case, hence why all of the calls to
-these frameworks are "stubbed out".  If we wanted to properly
-implement power management, we would have to create a driver/subsystem
-similar to the "Windows-compatible System Power Management Controller"
-(PEP).  Without documentation for the PEP, this would be an impossible
-task.  A request for the aforementioned documentation has been put in
-to Lenovo/Qualcomm.  Hopefully something appears soon.
+Anyway, the last two patches (usb-stroage, watchdog)
+are useful to demonstrate
+that this has a bad taste.
 
-> For the DMA operation, iiuc it's the wrapper that implements the DMA
-> engine involved, but I'm guessing the main reason for mapping buffers on
-> the wrapper is so that it ends up being associated with the iommu
-> context of the wrapper.
 
-Judging by the code alone, the wrapper doesn't sound like it does much
-at all.  It seems to only have a single (version) register (at least
-that is the only register that's used).  The only registers it
-reads/writes are those of the calling device, whether that be I2C, SPI
-or UART.
-
-Device Tree represents the wrapper's relationship with the I2C (and
-SPI/UART) Serial Engine (SE) devices as parent-child ones, with the
-wrapper being the parent and SE the child.  Whether this is a true
-representation of the hardware or just a tactic used for convenience
-is not clear, but the same representation does not exist in ACPI.
-
-In the current Linux implementation, the buffer belongs to the SE
-(obtained by the child (e.g. I2C) SE by fetching the parent's
-(wrapper's) device data using the standard platform helpers) but the
-register-set used to control the DMA transactions belong to the SE
-devices.
-
-> Are the SMMU contexts at all represented in the ACPI world and if so do
-> you know how the wrapper vs SEs are bound to contexts? Can we map on
-> se->dev when wrapper is NULL (or perhaps always?)?
-
-Yes, the SMMU devices are represented in ACPI (MMU0) and (MMU1).  They
-share the same register addresses as the SMMU devices located in
-arch/arm64/boot/dts/qcom/sdm845.dtsi.
-
-With this simple parameter checking patch, the SE falls back to using
-FIFO mode to transmit data and continues to work flawlessly.  IMHO
-this should be applied in the first instance, as it fixes a real (null
-dereference) bug which currently resides in the Mainline kernel.
-
-Moving forward we can try to come up with a suitable plan to implement
-DMA in the ACPI use-case - but again, this is feature adding work
-which should be carried out against -next, where as this patch needs
-to go in via the current -rcs ASAP.
-
-> > Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> > Since we are already at -rc7 this patch should be processed ASAP - thank you.
-> > 
-> > drivers/soc/qcom/qcom-geni-se.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-> > index d5cf953b4337..7d622ea1274e 100644
-> > --- a/drivers/soc/qcom/qcom-geni-se.c
-> > +++ b/drivers/soc/qcom/qcom-geni-se.c
-> > @@ -630,6 +630,9 @@ int geni_se_tx_dma_prep(struct geni_se *se, void *buf, size_t len,
-> >  	struct geni_wrapper *wrapper = se->wrapper;
-> >  	u32 val;
-> >  
-> > +	if (!wrapper)
-> > +		return -EINVAL;
-> > +
-> >  	*iova = dma_map_single(wrapper->dev, buf, len, DMA_TO_DEVICE);
-> >  	if (dma_mapping_error(wrapper->dev, *iova))
-> >  		return -EIO;
-> > @@ -663,6 +666,9 @@ int geni_se_rx_dma_prep(struct geni_se *se, void *buf, size_t len,
-> >  	struct geni_wrapper *wrapper = se->wrapper;
-> >  	u32 val;
-> >  
-> > +	if (!wrapper)
-> > +		return -EINVAL;
-> > +
-> >  	*iova = dma_map_single(wrapper->dev, buf, len, DMA_FROM_DEVICE);
-> >  	if (dma_mapping_error(wrapper->dev, *iova))
-> >  		return -EIO;
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+Best Regards
+Masahiro Yamada
