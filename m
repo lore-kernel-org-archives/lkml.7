@@ -2,111 +2,115 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0094C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07227C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D8220820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613242;
-	bh=n4O69lSB8nwj9edhHifkBr0eP+IfjyRsjVkeu8i6mzw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tt+0IQNYh67iarhiy0NLDHUdE+5LDjTMXZzoRUPgsijkJ6XzBMUu8f/wILDWA6Iqj
-	 qD/JVzYyeoXQwPLNY1dkgSYS5JTHFEowtBji3PbWNyPL6V1NW1rxaeui4tsLrQsPZ8
-	 kts9rxjdJkxAOXxN1uI3M//rl+OCmkX6QadYtb6M=
+	by mail.kernel.org (Postfix) with ESMTP id D8B1720820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732673AbfIDQHV (ORCPT
+        id S2387412AbfIDQH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37706 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:07:27 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:57316 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732163AbfIDQCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:02 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9322622CF5;
-        Wed,  4 Sep 2019 16:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612921;
-        bh=n4O69lSB8nwj9edhHifkBr0eP+IfjyRsjVkeu8i6mzw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gz8yh6LcYEdqewQCeUwC3sKS8d+tgPTb11xxBjt3xdz3Pd5GO4Q3LjKxeWYJf2NIC
-         LtO+kVezy+j4PoNDPeHVqlqT9KGe0G17TFLYvq9AUht9KU9TQDnv/uS0PnHvLb1RP+
-         buFRFlwZPGtnjfQQhg/LlTCzPdEpROVxhnmzXgek=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 25/36] x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
-Date:   Wed,  4 Sep 2019 12:01:11 -0400
-Message-Id: <20190904160122.4179-25-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190904160122.4179-1-sashal@kernel.org>
-References: <20190904160122.4179-1-sashal@kernel.org>
+        id S1728878AbfIDQHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:07:20 -0400
+Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1i5XoS-0006yr-3P; Wed, 04 Sep 2019 10:07:17 -0600
+To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@fb.com>, Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>
+References: <20190831000139.7662-1-logang@deltatee.com>
+ <20190831152910.GA29439@localhost.localdomain>
+ <33af4d94-9f6d-9baa-01fa-0f75ccee263e@deltatee.com>
+ <20190903164620.GA20847@localhost.localdomain>
+ <20190904060558.GA10849@lst.de>
+ <20190904144426.GB21302@localhost.localdomain>
+ <20190904154215.GA20422@lst.de>
+ <20190904155445.GD21302@localhost.localdomain>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <ef3bf93b-cb47-95c5-7d96-f81d9acfdb55@deltatee.com>
+Date:   Wed, 4 Sep 2019 10:07:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904155445.GD21302@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.73.163.230
+X-SA-Exim-Rcpt-To: keith.busch@intel.com, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, martin.petersen@oracle.com, sagi@grimberg.me, hare@suse.com, axboe@fb.com, hch@lst.de, kbusch@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH] nvme-core: Fix subsystem instance mismatches
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 42e0e95474fc6076b5cd68cab8fa0340a1797a72 ]
 
-One of the very few warnings I have in the current build comes from
-arch/x86/boot/edd.c, where I get the following with a gcc9 build:
+On 2019-09-04 9:54 a.m., Keith Busch wrote:
+> On Wed, Sep 04, 2019 at 05:42:15PM +0200, Christoph Hellwig wrote:
+>> On Wed, Sep 04, 2019 at 08:44:27AM -0600, Keith Busch wrote:
+>>> Let me step through an example:
+>>>
+>>>   Ctrl A gets instance 0.
+>>>
+>>>   Its subsystem gets the same instance, and takes ref count on it:
+>>>   all namespaces in this subsystem will use '0'.
+>>>
+>>>   Ctrl B gets instance 1, and it's in the same subsystem as Ctrl A so
+>>>   no new subsytem is allocated.
+>>>
+>>>   Ctrl A is disconnected, dropping its ref on instance 0, but the
+>>>   subsystem still has its refcount, making it unavailable.
+>>>
+>>>   Ctrl A is reconnected, and allocates instance 2 because 0 is still in
+>>>   use.
+>>>
+>>> Now all the namespaces in this subsystem are prefixed with nvme0, but no
+>>> controller exists with the same prefix. We still have inevitable naming
+>>> mismatch, right?
+>>
+>> I think th major confusion was that we can use the same handle for
+>> and unrelated subsystem vs controller, and that would avoid it.
+>>
+>> I don't see how we can avoid the controller is entirely different
+>> from namespace problem ever.
 
-   arch/x86/boot/edd.c: In function ‘query_edd’:
-   arch/x86/boot/edd.c:148:11: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
-     148 |  mbrptr = boot_params.edd_mbr_sig_buffer;
-         |           ^~~~~~~~~~~
 
-This warning triggers because we throw away all the CFLAGS and then make
-a new set for REALMODE_CFLAGS, so the -Wno-address-of-packed-member we
-added in the following commit is not present:
+Yes, I agree, we can't solve the mismatch problem in the general case:
+with sequences of hot plug events there will always be a case that
+mismatches. I just think we can do better in the simple common default case.
 
-  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
 
-The simplest solution for now is to adjust the warning for this version
-of CFLAGS as well, but it would definitely make sense to examine whether
-REALMODE_CFLAGS could be derived from CFLAGS, so that it picks up changes
-in the compiler flags environment automatically.
+> Can we just ensure there is never a matching controller then? This
+> patch will accomplish that and simpler than wrapping the instance in a
+> refcount'ed object:
+> 
+> http://lists.infradead.org/pipermail/linux-nvme/2019-May/024142.html
 
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+I don't really like that idea. It reduces the confusion caused by
+mismatching numbers, but causes the controller to never match the
+namespace, which is also confusing but in a different way.
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index b4c72da8a7adb..cd596ca609010 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -39,6 +39,7 @@ REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os -D__KERNEL__ \
- 
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
-+REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
- REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
- export REALMODE_CFLAGS
- 
--- 
-2.20.1
+I like the nvme_instance idea. It's not going to be perfect but it has
+some nice properties: the subsystem will try to match the controller's
+instance whenever possible, but in cases where it doesn't, the instance
+number of the subsystem will never be the same as an existing controller.
 
+I'll see if I can work up a quick patch set and see what people think.
+
+Logan
