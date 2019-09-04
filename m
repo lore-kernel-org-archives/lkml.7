@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B06C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84ADC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF4922CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC4B22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620612;
-	bh=k9djja5ly5uwE2OFtHOxsuV0pvkx9VzB3lHm8awq8tY=;
+	s=default; t=1567620615;
+	bh=dQ1SFDjgCSInOxteCI1SVB9kLKMUxh7ABJ8IJAwqUNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nu7rB8vJNkS1tmGBM2FrlzL7odIGxaj2uEarIn4QWOxP2AX1L94aWImQTl/oxEHUq
-	 ZurbtRw++4l2n/IeqXfAT7UP2FlKd8U2oBpMHfypWikj70kRTClKRRGyJ1Jz+vdNGQ
-	 hcg6SqaD5Ruwn0sa+tzO1AXFj6qAzB8rKNFyQSqI=
+	b=crqoQRtMdmwClj9pnQm7Zgk+qEzfenYTyq7fVLfLUhKsGglS/zsgP6vBeNCdggvWo
+	 nsAy/wHYO8mZizIMJj9101OAPXW2kJDwYF3HzitvA3zA1fAOgI46RmVIHfVfTxvPI6
+	 1gNReOEsuvdxXdsmGLausAAHbqeUrpKn+scyRr+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390051AbfIDSKL (ORCPT
+        id S2390062AbfIDSKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:10:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53576 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389303AbfIDSKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:10:07 -0400
+        id S2389303AbfIDSKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:10:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E615206B8;
-        Wed,  4 Sep 2019 18:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EE7B208E4;
+        Wed,  4 Sep 2019 18:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620606;
-        bh=k9djja5ly5uwE2OFtHOxsuV0pvkx9VzB3lHm8awq8tY=;
+        s=default; t=1567620612;
+        bh=dQ1SFDjgCSInOxteCI1SVB9kLKMUxh7ABJ8IJAwqUNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dtDKsixV09BwaTW0FTgShtMyHOA8OunyFnCTU1d9jzhnmVz3ov+9RXEsjbTQlNdkl
-         hVY+BXxAbgZ8d6UYV+WGIOmLoloVQO7kh8TgidsRXADbLyCEam+MvmILG/D6LPwKTT
-         xLD709nR7Y+HEHbMZwAIG36WsS1bKBzqVOStQgUI=
+        b=vJ/FR/23SKSSFbrn/bI4MbZ8nEVE0hyLjO5D2vlvupIqOfzrSNiq/PjvrhwQvBNA0
+         4gmFvsHvSlx9PdIF2aVCddh+16CxXEQzqaNEQaxDsrWfRRBLIBv6m6AalXjrq8MDrE
+         yCnloL50R/t14yeg6xR3qCzBmFFz+eb5dIJqAo5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomer Tayar <ttayar@habana.ai>,
+        stable@vger.kernel.org, Ben Segal <bpsegal20@gmail.com>,
         Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 028/143] habanalabs: fix DRAM usage accounting on context tear down
-Date:   Wed,  4 Sep 2019 19:52:51 +0200
-Message-Id: <20190904175315.161061753@linuxfoundation.org>
+Subject: [PATCH 5.2 030/143] habanalabs: fix completion queue handling when host is BE
+Date:   Wed,  4 Sep 2019 19:52:53 +0200
+Message-Id: <20190904175315.236361927@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,33 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c8113756ba27298d6e95403c087dc5881b419a99 ]
+[ Upstream commit 4e87334a0ef43663019dbaf3638ad10fd8c3320c ]
 
-The patch fix the DRAM usage accounting by adding a missing update of
-the DRAM memory consumption, when a context is being torn down without an
-organized release of the allocated memory.
+This patch fix the CQ irq handler to work in hosts with BE architecture.
+It adds the correct endian-swapping macros around the relevant memory
+accesses.
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
+Signed-off-by: Ben Segal <bpsegal20@gmail.com>
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/memory.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/misc/habanalabs/irq.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index 693877e37fd87..924a438ba9736 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -1629,6 +1629,8 @@ void hl_vm_ctx_fini(struct hl_ctx *ctx)
- 			dev_dbg(hdev->dev,
- 				"page list 0x%p of asid %d is still alive\n",
- 				phys_pg_list, ctx->asid);
-+			atomic64_sub(phys_pg_list->total_size,
-+					&hdev->dram_used_mem);
- 			free_phys_pg_pack(hdev, phys_pg_list);
- 			idr_remove(&vm->phys_pg_pack_handles, i);
+diff --git a/drivers/misc/habanalabs/irq.c b/drivers/misc/habanalabs/irq.c
+index ea9f72ff456cf..199791b57caf2 100644
+--- a/drivers/misc/habanalabs/irq.c
++++ b/drivers/misc/habanalabs/irq.c
+@@ -80,8 +80,7 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 	struct hl_cs_job *job;
+ 	bool shadow_index_valid;
+ 	u16 shadow_index;
+-	u32 *cq_entry;
+-	u32 *cq_base;
++	struct hl_cq_entry *cq_entry, *cq_base;
+ 
+ 	if (hdev->disabled) {
+ 		dev_dbg(hdev->dev,
+@@ -90,29 +89,29 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	cq_base = (u32 *) (uintptr_t) cq->kernel_address;
++	cq_base = (struct hl_cq_entry *) (uintptr_t) cq->kernel_address;
+ 
+ 	while (1) {
+-		bool entry_ready = ((cq_base[cq->ci] & CQ_ENTRY_READY_MASK)
++		bool entry_ready = ((le32_to_cpu(cq_base[cq->ci].data) &
++					CQ_ENTRY_READY_MASK)
+ 						>> CQ_ENTRY_READY_SHIFT);
+ 
+ 		if (!entry_ready)
+ 			break;
+ 
+-		cq_entry = (u32 *) &cq_base[cq->ci];
++		cq_entry = (struct hl_cq_entry *) &cq_base[cq->ci];
+ 
+-		/*
+-		 * Make sure we read CQ entry contents after we've
++		/* Make sure we read CQ entry contents after we've
+ 		 * checked the ownership bit.
+ 		 */
+ 		dma_rmb();
+ 
+-		shadow_index_valid =
+-			((*cq_entry & CQ_ENTRY_SHADOW_INDEX_VALID_MASK)
++		shadow_index_valid = ((le32_to_cpu(cq_entry->data) &
++					CQ_ENTRY_SHADOW_INDEX_VALID_MASK)
+ 					>> CQ_ENTRY_SHADOW_INDEX_VALID_SHIFT);
+ 
+-		shadow_index = (u16)
+-			((*cq_entry & CQ_ENTRY_SHADOW_INDEX_MASK)
++		shadow_index = (u16) ((le32_to_cpu(cq_entry->data) &
++					CQ_ENTRY_SHADOW_INDEX_MASK)
+ 					>> CQ_ENTRY_SHADOW_INDEX_SHIFT);
+ 
+ 		queue = &hdev->kernel_queues[cq->hw_queue_id];
+@@ -122,8 +121,7 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 			queue_work(hdev->cq_wq, &job->finish_work);
  		}
+ 
+-		/*
+-		 * Update ci of the context's queue. There is no
++		/* Update ci of the context's queue. There is no
+ 		 * need to protect it with spinlock because this update is
+ 		 * done only inside IRQ and there is a different IRQ per
+ 		 * queue
+@@ -131,7 +129,8 @@ irqreturn_t hl_irq_handler_cq(int irq, void *arg)
+ 		queue->ci = hl_queue_inc_ptr(queue->ci);
+ 
+ 		/* Clear CQ entry ready bit */
+-		cq_base[cq->ci] &= ~CQ_ENTRY_READY_MASK;
++		cq_entry->data = cpu_to_le32(le32_to_cpu(cq_entry->data) &
++						~CQ_ENTRY_READY_MASK);
+ 
+ 		cq->ci = hl_cq_inc_ptr(cq->ci);
+ 
 -- 
 2.20.1
 
