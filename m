@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCF6C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7276C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313B0206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B334723400
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620722;
-	bh=nouHerGrXPnoXMMI4fIT3V+rFH4wKkog429RpcVoetI=;
+	s=default; t=1567620724;
+	bh=5S9ox43KCcEMnUOn2PQ6DQ0gzqXSLPSYZm5AqhUbdfc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4mwPtvhe3zDnGY1IqK/dBdABfhZrXQtFvoWpBs2Yb01kgEK1ELeoEb8QhPp1cB1P
-	 10DfxksJAFz0f5EZQUUemzyiYHiwwE/Ctuq1VAC7ADJxvQ299crBNFPwWsGTJQnfY/
-	 umDWlqTw+Zl/d9qlYUUg+L3LqARwxzo6FOWzrMGI=
+	b=0KrzXq/ptIYguBbejlb90jScd0dLb2j+C5jfCcePmg0oS8KIN50KxkApejRtZ/uC8
+	 GKmt9xrK5/Ggqna3Xjq33OD+Vcovqm1r0GZaW04EXhE+XofXQDT9QlSnH/D9oBGwCC
+	 0fmKcGOUr/b9eJTNW4y2u+qMLyNRftetUtqizaBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390437AbfIDSMB (ORCPT
+        id S2390443AbfIDSMD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:12:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:12:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390424AbfIDSL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:11:59 -0400
+        id S2390435AbfIDSMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:12:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16932087E;
-        Wed,  4 Sep 2019 18:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A48222CF7;
+        Wed,  4 Sep 2019 18:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620718;
-        bh=nouHerGrXPnoXMMI4fIT3V+rFH4wKkog429RpcVoetI=;
+        s=default; t=1567620720;
+        bh=5S9ox43KCcEMnUOn2PQ6DQ0gzqXSLPSYZm5AqhUbdfc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0G+0cv5Ov5s+MjWjiyT/qD4h1Cfo2nqewQg3unTHcsjXpXCBDzr/msgt/MQeMnLH
-         IXPNX55EBFFFQT5khdhTiXEKSqdktBHgW0qQGaKD3DT1QvJXy6Ze+1d35nJXftZeBN
-         tGjKCVe7NOXLVa6fVneu3vlJV7EG3sKOgCi+onzg=
+        b=l32z6/zUMgZRYBPQHuR7zzH/lE+ZoBx+3EbFygZcgsotGaAwxE00V4RVuLptYcRkx
+         ExX/iz7b15pzI079HDMgH+uoWTOoTFH19hHg5+EvdT0fJqpU5/MHERNZx6MO3EN3ey
+         mkYrQpUa1rctipcDpQsNq1mAUCEzwMjl841ozfGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Mayr <me@sam.st>,
+        stable@vger.kernel.org, Song Liu <songliubraving@fb.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Dmitry Safonov <dsafonov@virtuozzo.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: [PATCH 5.2 070/143] uprobes/x86: Fix detection of 32-bit user mode
-Date:   Wed,  4 Sep 2019 19:53:33 +0200
-Message-Id: <20190904175316.799339893@linuxfoundation.org>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 5.2 071/143] x86/mm/cpa: Prevent large page split when ftrace flips RW on kernel text
+Date:   Wed,  4 Sep 2019 19:53:34 +0200
+Message-Id: <20190904175316.836809015@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -63,128 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Mayr <me@sam.st>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 9212ec7d8357ea630031e89d0d399c761421c83b upstream.
+commit 7af0145067bc429a09ac4047b167c0971c9f0dc7 upstream.
 
-32-bit processes running on a 64-bit kernel are not always detected
-correctly, causing the process to crash when uretprobes are installed.
+ftrace does not use text_poke() for enabling trace functionality. It uses
+its own mechanism and flips the whole kernel text to RW and back to RO.
 
-The reason for the crash is that in_ia32_syscall() is used to determine the
-process's mode, which only works correctly when called from a syscall.
+The CPA rework removed a loop based check of 4k pages which tried to
+preserve a large page by checking each 4k page whether the change would
+actually cover all pages in the large page.
 
-In the case of uretprobes, however, the function is called from a exception
-and always returns 'false' on a 64-bit kernel. In consequence this leads to
-corruption of the process's return address.
+This resulted in endless loops for nothing as in testing it turned out that
+it actually never preserved anything. Of course testing missed to include
+ftrace, which is the one and only case which benefitted from the 4k loop.
 
-Fix this by using user_64bit_mode() instead of in_ia32_syscall(), which
-is correct in any situation.
+As a consequence enabling function tracing or ftrace based kprobes results
+in a full 4k split of the kernel text, which affects iTLB performance.
 
-[ tglx: Add a comment and the following historical info ]
+The kernel RO protection is the only valid case where this can actually
+preserve large pages.
 
-This should have been detected by the rename which happened in commit
+All other static protections (RO data, data NX, PCI, BIOS) are truly
+static.  So a conflict with those protections which results in a split
+should only ever happen when a change of memory next to a protected region
+is attempted. But these conflicts are rightfully splitting the large page
+to preserve the protected regions. In fact a change to the protected
+regions itself is a bug and is warned about.
 
-  abfb9498ee13 ("x86/entry: Rename is_{ia32,x32}_task() to in_{ia32,x32}_syscall()")
+Add an exception for the static protection check for kernel text RO when
+the to be changed region spawns a full large page which allows to preserve
+the large mappings. This also prevents the syslog to be spammed about CPA
+violations when ftrace is used.
 
-which states in the changelog:
+The exception needs to be removed once ftrace switched over to text_poke()
+which avoids the whole issue.
 
-    The is_ia32_task()/is_x32_task() function names are a big misnomer: they
-    suggests that the compat-ness of a system call is a task property, which
-    is not true, the compatness of a system call purely depends on how it
-    was invoked through the system call layer.
-    .....
-
-and then it went and blindly renamed every call site.
-
-Sadly enough this was already mentioned here:
-
-   8faaed1b9f50 ("uprobes/x86: Introduce sizeof_long(), cleanup adjust_ret_addr() and
-arch_uretprobe_hijack_return_addr()")
-
-where the changelog says:
-
-    TODO: is_ia32_task() is not what we actually want, TS_COMPAT does
-    not necessarily mean 32bit. Fortunately syscall-like insns can't be
-    probed so it actually works, but it would be better to rename and
-    use is_ia32_frame().
-
-and goes all the way back to:
-
-    0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
-
-Oh well. 7+ years until someone actually tried a uretprobe on a 32bit
-process on a 64bit kernel....
-
-Fixes: 0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
-Signed-off-by: Sebastian Mayr <me@sam.st>
+Fixes: 585948f4f695 ("x86/mm/cpa: Avoid the 4k pages check completely")
+Reported-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Dmitry Safonov <dsafonov@virtuozzo.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Tested-by: Song Liu <songliubraving@fb.com>
+Reviewed-by: Song Liu <songliubraving@fb.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190728152617.7308-1-me@sam.st
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908282355340.1938@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/uprobes.c |   17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/x86/mm/pageattr.c |   26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -508,9 +508,12 @@ struct uprobe_xol_ops {
- 	void	(*abort)(struct arch_uprobe *, struct pt_regs *);
- };
- 
--static inline int sizeof_long(void)
-+static inline int sizeof_long(struct pt_regs *regs)
+--- a/arch/x86/mm/pageattr.c
++++ b/arch/x86/mm/pageattr.c
+@@ -516,7 +516,7 @@ static inline void check_conflict(int wa
+  */
+ static inline pgprot_t static_protections(pgprot_t prot, unsigned long start,
+ 					  unsigned long pfn, unsigned long npg,
+-					  int warnlvl)
++					  unsigned long lpsize, int warnlvl)
  {
--	return in_ia32_syscall() ? 4 : 8;
+ 	pgprotval_t forbidden, res;
+ 	unsigned long end;
+@@ -535,9 +535,17 @@ static inline pgprot_t static_protection
+ 	check_conflict(warnlvl, prot, res, start, end, pfn, "Text NX");
+ 	forbidden = res;
+ 
+-	res = protect_kernel_text_ro(start, end);
+-	check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
+-	forbidden |= res;
 +	/*
-+	 * Check registers for mode as in_xxx_syscall() does not apply here.
++	 * Special case to preserve a large page. If the change spawns the
++	 * full large page mapping then there is no point to split it
++	 * up. Happens with ftrace and is going to be removed once ftrace
++	 * switched to text_poke().
 +	 */
-+	return user_64bit_mode(regs) ? 8 : 4;
- }
++	if (lpsize != (npg * PAGE_SIZE) || (start & (lpsize - 1))) {
++		res = protect_kernel_text_ro(start, end);
++		check_conflict(warnlvl, prot, res, start, end, pfn, "Text RO");
++		forbidden |= res;
++	}
  
- static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
-@@ -521,9 +524,9 @@ static int default_pre_xol_op(struct arc
- 
- static int emulate_push_stack(struct pt_regs *regs, unsigned long val)
- {
--	unsigned long new_sp = regs->sp - sizeof_long();
-+	unsigned long new_sp = regs->sp - sizeof_long(regs);
- 
--	if (copy_to_user((void __user *)new_sp, &val, sizeof_long()))
-+	if (copy_to_user((void __user *)new_sp, &val, sizeof_long(regs)))
- 		return -EFAULT;
- 
- 	regs->sp = new_sp;
-@@ -556,7 +559,7 @@ static int default_post_xol_op(struct ar
- 		long correction = utask->vaddr - utask->xol_vaddr;
- 		regs->ip += correction;
- 	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
--		regs->sp += sizeof_long(); /* Pop incorrect return address */
-+		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
- 		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
- 			return -ERESTART;
- 	}
-@@ -675,7 +678,7 @@ static int branch_post_xol_op(struct arc
- 	 * "call" insn was executed out-of-line. Just restore ->sp and restart.
- 	 * We could also restore ->ip and try to call branch_emulate_op() again.
+ 	/* Check the PFN directly */
+ 	res = protect_pci_bios(pfn, pfn + npg - 1);
+@@ -819,7 +827,7 @@ static int __should_split_large_page(pte
+ 	 * extra conditional required here.
  	 */
--	regs->sp += sizeof_long();
-+	regs->sp += sizeof_long(regs);
- 	return -ERESTART;
- }
+ 	chk_prot = static_protections(old_prot, lpaddr, old_pfn, numpages,
+-				      CPA_CONFLICT);
++				      psize, CPA_CONFLICT);
  
-@@ -1056,7 +1059,7 @@ bool arch_uprobe_skip_sstep(struct arch_
- unsigned long
- arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs)
- {
--	int rasize = sizeof_long(), nleft;
-+	int rasize = sizeof_long(regs), nleft;
- 	unsigned long orig_ret_vaddr = 0; /* clear high bits for 32-bit apps */
+ 	if (WARN_ON_ONCE(pgprot_val(chk_prot) != pgprot_val(old_prot))) {
+ 		/*
+@@ -855,7 +863,7 @@ static int __should_split_large_page(pte
+ 	 * protection requirement in the large page.
+ 	 */
+ 	new_prot = static_protections(req_prot, lpaddr, old_pfn, numpages,
+-				      CPA_DETECT);
++				      psize, CPA_DETECT);
  
- 	if (copy_from_user(&orig_ret_vaddr, (void __user *)regs->sp, rasize))
+ 	/*
+ 	 * If there is a conflict, split the large page.
+@@ -906,7 +914,8 @@ static void split_set_pte(struct cpa_dat
+ 	if (!cpa->force_static_prot)
+ 		goto set;
+ 
+-	prot = static_protections(ref_prot, address, pfn, npg, CPA_PROTECT);
++	/* Hand in lpsize = 0 to enforce the protection mechanism */
++	prot = static_protections(ref_prot, address, pfn, npg, 0, CPA_PROTECT);
+ 
+ 	if (pgprot_val(prot) == pgprot_val(ref_prot))
+ 		goto set;
+@@ -1503,7 +1512,8 @@ repeat:
+ 		pgprot_val(new_prot) |= pgprot_val(cpa->mask_set);
+ 
+ 		cpa_inc_4k_install();
+-		new_prot = static_protections(new_prot, address, pfn, 1,
++		/* Hand in lpsize = 0 to enforce the protection mechanism */
++		new_prot = static_protections(new_prot, address, pfn, 1, 0,
+ 					      CPA_PROTECT);
+ 
+ 		new_prot = pgprot_clear_protnone_bits(new_prot);
 
 
