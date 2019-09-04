@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6C2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0224DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2928121883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1C9D22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619890;
-	bh=71JlX85HloXRuFk35f6G10fhXpqx61Us6ZgYwqEoDeA=;
+	s=default; t=1567619892;
+	bh=DKhQ2Ka0T+6bE1iWjHPMunDT9W+81VOX+TbTao7hZZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fmwZOaHCV4KW0Jue4wgQ9WP6rpKpf6HYIFeFGbRw2NgQfHjUbFGZzl4f9ohfMjZR5
-	 6J+YnYfnr+I7flmJeJs6YLlVf1JTy31XqBm5wMTfZKkPX1sUfzCcvQGnrzbtWpI3Ry
-	 MYfQ4qdlixfpmmHzcH6A8DksX/RJKtRJDMFZ0kDw=
+	b=Q/DT44E+LhPfdcMUIN9no0k4z0WXpzD+tSbVqeay1532EHSkCeOfaeIGdJJVj7ICN
+	 9acCtyAMamLmSL1kN8S1bhbm1skbEYaXu8RwrPcbfNd6RG4F8mvAgavJcB8Wqgk/UW
+	 hTdSONz/LNSRN1/kHatAItygLOu/PoDPe4NHAYe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbfIDR6J (ORCPT
+        id S2388007AbfIDR6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36466 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:58:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387991AbfIDR6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:58:07 -0400
+        id S2387991AbfIDR6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:58:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 769C522CF7;
-        Wed,  4 Sep 2019 17:58:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 270B322CED;
+        Wed,  4 Sep 2019 17:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619887;
-        bh=71JlX85HloXRuFk35f6G10fhXpqx61Us6ZgYwqEoDeA=;
+        s=default; t=1567619889;
+        bh=DKhQ2Ka0T+6bE1iWjHPMunDT9W+81VOX+TbTao7hZZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=leG1P1Mm2C22K5VPiq+Kpz/8qovMBXguxPh/2rspN8cDzyZ2bzZB0XwRsCRxXOEoR
-         V9ygc126N1kuCqw73o4UQg+NkbWfguEJCc49S6IyD8cSrkCkBUsx1Aj1Fz8yajdDfv
-         pJzz5HVyiCby80PMtPyrBa8QBZ+mp3adeoQxnfh4=
+        b=Ij8aw1wxN0Jz7wbV5LASxmYYQyjv/o/iLPVUJM1U7dEFZ0rYjz2iVNqQ60+KCHnkR
+         3+UuCwfwMSuEHdxT4Y33c0sFM4zBS/RJ4mrlVrgH7qWYIVH6gtVQSpqOm4gJnD5KAB
+         OmWJPGRPHVc5LIg7N8HdTIs27dQDjXHLJ4+GDv2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philip Langdale <philipl@overt.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Manuel Presnitz <mail@mpy.de>
-Subject: [PATCH 4.4 72/77] mmc: core: Fix init of SD cards reporting an invalid VDD range
-Date:   Wed,  4 Sep 2019 19:53:59 +0200
-Message-Id: <20190904175310.073705023@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4.4 73/77] stm class: Fix a double free of stm_source_device
+Date:   Wed,  4 Sep 2019 19:54:00 +0200
+Message-Id: <20190904175310.160996505@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,48 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-commit 72741084d903e65e121c27bd29494d941729d4a1 upstream.
+commit 961b6ffe0e2c403b09a8efe4a2e986b3c415391a upstream.
 
-The OCR register defines the supported range of VDD voltages for SD cards.
-However, it has turned out that some SD cards reports an invalid voltage
-range, for example having bit7 set.
+In the error path of stm_source_register_device(), the kfree is
+unnecessary, as the put_device() before it ends up calling
+stm_source_device_release() to free stm_source_device, leading to
+a double free at the outer kfree() call. Remove it.
 
-When a host supports MMC_CAP2_FULL_PWR_CYCLE and some of the voltages from
-the invalid VDD range, this triggers the core to run a power cycle of the
-card to try to initialize it at the lowest common supported voltage.
-Obviously this fails, since the card can't support it.
-
-Let's fix this problem, by clearing invalid bits from the read OCR register
-for SD cards, before proceeding with the VDD voltage negotiation.
-
-Cc: stable@vger.kernel.org
-Reported-by: Philip Langdale <philipl@overt.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Philip Langdale <philipl@overt.org>
-Tested-by: Philip Langdale <philipl@overt.org>
-Tested-by: Manuel Presnitz <mail@mpy.de>
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Fixes: 7bd1d4093c2fa ("stm class: Introduce an abstraction for System Trace Module devices")
+Link: https://lore.kernel.org/linux-arm-kernel/1563354988-23826-1-git-send-email-dingxiang@cmss.chinamobile.com/
+Cc: stable@vger.kernel.org # v4.4+
+Link: https://lore.kernel.org/r/20190821074955.3925-2-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/core/sd.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/hwtracing/stm/core.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -1232,6 +1232,12 @@ int mmc_attach_sd(struct mmc_host *host)
- 			goto err;
- 	}
+--- a/drivers/hwtracing/stm/core.c
++++ b/drivers/hwtracing/stm/core.c
+@@ -1020,7 +1020,6 @@ int stm_source_register_device(struct de
  
-+	/*
-+	 * Some SD cards claims an out of spec VDD voltage range. Let's treat
-+	 * these bits as being in-valid and especially also bit7.
-+	 */
-+	ocr &= ~0x7FFF;
-+
- 	rocr = mmc_select_voltage(host, ocr);
+ err:
+ 	put_device(&src->dev);
+-	kfree(src);
  
- 	/*
+ 	return err;
+ }
 
 
