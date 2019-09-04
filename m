@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC72C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C399C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9568722CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D7F21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613414;
-	bh=DePtoH0g5oRyEKgg/e/21m31LEGE3uN55cqb/WCUfxQ=;
+	s=default; t=1567613417;
+	bh=d/hVih3hULDbHZ5rGWhVY9LL8fwt2SWTxV6oJ2ouMKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmcIGOODZRZVy2/mtAK600Wj4ooLJerIfoaxzpBYTbrMjU3bZ8TqYc/BqHLF/QJz1
-	 ZcUJCHE5WgaRV4cebJvHbObiCKl4aLv8rufNr9h8eCSj/UurCruO+b+QnPCniwGh5m
-	 sVSyat26ovqDtCP9kSQX2MIW2zwhF+Rs06MicDtM=
+	b=YEJaNdJBktBllsLh/i9tclXkyL9NeoMAXmRuEGRjyiuJNQUJJlGkW/0YPvrIvEAB3
+	 W8skiwbrgGr0BorCRuox/gLFZlWze6KXzsOsGRcVKFQmVGKypuGpuGQfh5F9pPph/v
+	 l5ZKw8oorbxZGn/QLd0XPjhElnHqohrzOH4sfgqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732861AbfIDQA6 (ORCPT
+        id S1733241AbfIDQKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35684 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:10:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732801AbfIDQAo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:00:44 -0400
+        id S1732267AbfIDQBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:01:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 957132339E;
-        Wed,  4 Sep 2019 16:00:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8316F22CF7;
+        Wed,  4 Sep 2019 16:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612843;
-        bh=DePtoH0g5oRyEKgg/e/21m31LEGE3uN55cqb/WCUfxQ=;
+        s=default; t=1567612859;
+        bh=d/hVih3hULDbHZ5rGWhVY9LL8fwt2SWTxV6oJ2ouMKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONsQmELHhZWkQqgE8frpfr67MWrO7b5ulaOtx1uA5bCaDmToNb2ciAwZ9lm16gnOO
-         68morDPwmZuK0kYOjyMU1An5B9XmL4hpNfLszsVyoW4thO9dJj3RnRW+k/rUfsK5lJ
-         ESuytiwqdmeddZRrG07E3+0YJXQcEfSzObkdlARI=
+        b=RY1fz6n8tgi79/ZxNqcXoBXZ6T+HNkNIuD/KwfY4ZsD0ajiVpSu1Pasoi0Pwrleu8
+         lcemus1bPw9syqX0Z+ohBWecWGskMQxKIr3M9Ky2U9nG8jfrKru9Tm+s10Ea2qOqky
+         Xez79ADKTKwBwGDgH/ABYlRcDUG+evko7zVlkYeY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 28/52] bpf: allow narrow loads of some sk_reuseport_md fields with offset > 0
-Date:   Wed,  4 Sep 2019 11:59:40 -0400
-Message-Id: <20190904160004.3671-28-sashal@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 38/52] x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
+Date:   Wed,  4 Sep 2019 11:59:50 -0400
+Message-Id: <20190904160004.3671-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160004.3671-1-sashal@kernel.org>
 References: <20190904160004.3671-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,58 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 2c238177bd7f4b14bdf7447cc1cd9bb791f147e6 ]
+[ Upstream commit 42e0e95474fc6076b5cd68cab8fa0340a1797a72 ]
 
-test_select_reuseport fails on s390 due to verifier rejecting
-test_select_reuseport_kern.o with the following message:
+One of the very few warnings I have in the current build comes from
+arch/x86/boot/edd.c, where I get the following with a gcc9 build:
 
-	; data_check.eth_protocol = reuse_md->eth_protocol;
-	18: (69) r1 = *(u16 *)(r6 +22)
-	invalid bpf_context access off=22 size=2
+   arch/x86/boot/edd.c: In function ‘query_edd’:
+   arch/x86/boot/edd.c:148:11: warning: taking address of packed member of ‘struct boot_params’ may result in an unaligned pointer value [-Waddress-of-packed-member]
+     148 |  mbrptr = boot_params.edd_mbr_sig_buffer;
+         |           ^~~~~~~~~~~
 
-This is because on big-endian machines casts from __u32 to __u16 are
-generated by referencing the respective variable as __u16 with an offset
-of 2 (as opposed to 0 on little-endian machines).
+This warning triggers because we throw away all the CFLAGS and then make
+a new set for REALMODE_CFLAGS, so the -Wno-address-of-packed-member we
+added in the following commit is not present:
 
-The verifier already has all the infrastructure in place to allow such
-accesses, it's just that they are not explicitly enabled for
-eth_protocol field. Enable them for eth_protocol field by using
-bpf_ctx_range instead of offsetof.
+  6f303d60534c ("gcc-9: silence 'address-of-packed-member' warning")
 
-Ditto for ip_protocol, bind_inany and len, since they already allow
-narrowing, and the same problem can arise when working with them.
+The simplest solution for now is to adjust the warning for this version
+of CFLAGS as well, but it would definitely make sense to examine whether
+REALMODE_CFLAGS could be derived from CFLAGS, so that it picks up changes
+in the compiler flags environment automatically.
 
-Fixes: 2dbb9b9e6df6 ("bpf: Introduce BPF_PROG_TYPE_SK_REUSEPORT")
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Borislav Petkov <bp@alien8.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index c996380f29597..e6fa88506c00d 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -7234,13 +7234,13 @@ sk_reuseport_is_valid_access(int off, int size,
- 		return size == size_default;
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index ce0d0424a53d6..4833dd7e2cc03 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -38,6 +38,7 @@ REALMODE_CFLAGS	:= $(M16_CFLAGS) -g -Os -DDISABLE_BRANCH_PROFILING \
  
- 	/* Fields that allow narrowing */
--	case offsetof(struct sk_reuseport_md, eth_protocol):
-+	case bpf_ctx_range(struct sk_reuseport_md, eth_protocol):
- 		if (size < FIELD_SIZEOF(struct sk_buff, protocol))
- 			return false;
- 		/* fall through */
--	case offsetof(struct sk_reuseport_md, ip_protocol):
--	case offsetof(struct sk_reuseport_md, bind_inany):
--	case offsetof(struct sk_reuseport_md, len):
-+	case bpf_ctx_range(struct sk_reuseport_md, ip_protocol):
-+	case bpf_ctx_range(struct sk_reuseport_md, bind_inany):
-+	case bpf_ctx_range(struct sk_reuseport_md, len):
- 		bpf_ctx_record_field_size(info, size_default);
- 		return bpf_ctx_narrow_access_ok(off, size, size_default);
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -ffreestanding)
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -fno-stack-protector)
++REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), -Wno-address-of-packed-member)
+ REALMODE_CFLAGS += $(call __cc-option, $(CC), $(REALMODE_CFLAGS), $(cc_stack_align4))
+ export REALMODE_CFLAGS
  
 -- 
 2.20.1
