@@ -2,54 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A2FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D25C4C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F54620882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECD520882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621366;
-	bh=bDqaOAqZaQ/yWjCQx8MNS98le6D4MfuFmZmP7M9nAeo=;
+	s=default; t=1567621391;
+	bh=3M5ixd/WOK2yddgQVzoxlVi3ZV7hybbQmQGDd2w2B8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKztGfUoiq2qteU/qyZ+4ahadf4bpVtSDHTB9Z0XWgyHHI3A1dcoZWPClh3jkAXTk
-	 vK7vhp6Zz7He3kbttdH3Fgo0CC7l8/N5VCineZRZhWzAR6lTjKbgaa1pimagkICf1+
-	 +6J9SJ1wBBbCdfecNLp3AX6YoxLw+BYofKqhlODc=
+	b=dNAKEiVpKTJwxUiHsSq9jk67E/OzZbicTLk6KgWt5lAtPkJHu5IAisu0/z40J/V93
+	 b4wrpa7zaeKrP48D5bpz434gUBZkF34dkIzcqZu9YWqBZtJY9V99LSu9ktbH6qQYyZ
+	 OXcIpZjAjdsvxwUI/f1C8G+VxLeTTQhmjR4KFuCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388808AbfIDSWp (ORCPT
+        id S2388890AbfIDSDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:22:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45102 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388346AbfIDSEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:09 -0400
+        id S2388316AbfIDSDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:03:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C581E208E4;
-        Wed,  4 Sep 2019 18:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9F4522CEA;
+        Wed,  4 Sep 2019 18:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620249;
-        bh=bDqaOAqZaQ/yWjCQx8MNS98le6D4MfuFmZmP7M9nAeo=;
+        s=default; t=1567620190;
+        bh=3M5ixd/WOK2yddgQVzoxlVi3ZV7hybbQmQGDd2w2B8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TjyhN9xZs3JAu+cJ7EA1oNbck3zEd28jp1+YUgNjEBvbtKjecV0Y7LvzT+BKtR9sO
-         LeMkiqqhNpxUbv6n/q+aCv9Me7/NJ3Y/ypkgyLwhvd9xQTL3jPcIKE3+whaBZMxDK1
-         +5OwIe2pf2ejJtURlr9mgMn/0J9+xqLwx6vtSJeQ=
+        b=A7YCm8PtMpAC7oDwnA2axl9NGoXVvPiVUYCFZpcn01sUAnFP64giwzH3Y5TMZtpF8
+         Lf4fcnet7Wsv3TCVyTmYfBaMMdNzs4Wn0n0BImdgMvowAHYKPSUIHlJ3g40JK4DJmr
+         49beiVQvcjHjipO4fDrUNO6EkVWMo3+RoQy9qlLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 07/57] i2c: rcar: avoid race when unregistering slave client
-Date:   Wed,  4 Sep 2019 19:53:35 +0200
-Message-Id: <20190904175302.625496869@linuxfoundation.org>
+        syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 23/57] ALSA: seq: Fix potential concurrent access to the deleted pool
+Date:   Wed,  4 Sep 2019 19:53:51 +0200
+Message-Id: <20190904175304.218543213@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -62,70 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7b814d852af6944657c2961039f404c4490771c0 ]
+From: Takashi Iwai <tiwai@suse.de>
 
-After we disabled interrupts, there might still be an active one
-running. Sync before clearing the pointer to the slave device.
+commit 75545304eba6a3d282f923b96a466dc25a81e359 upstream.
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The input pool of a client might be deleted via the resize ioctl, the
+the access to it should be covered by the proper locks.  Currently the
+only missing place is the call in snd_seq_ioctl_get_client_pool(), and
+this patch papers over it.
+
+Reported-by: syzbot+4a75454b9ca2777f35c7@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/i2c/busses/i2c-rcar.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ sound/core/seq/seq_clientmgr.c |    3 +--
+ sound/core/seq/seq_fifo.c      |   17 +++++++++++++++++
+ sound/core/seq/seq_fifo.h      |    2 ++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 3415733a93645..132c4a405bf83 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -144,6 +144,7 @@ struct rcar_i2c_priv {
- 	enum dma_data_direction dma_direction;
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1821,8 +1821,7 @@ static int snd_seq_ioctl_get_client_pool
+ 	if (cptr->type == USER_CLIENT) {
+ 		info->input_pool = cptr->data.user.fifo_pool_size;
+ 		info->input_free = info->input_pool;
+-		if (cptr->data.user.fifo)
+-			info->input_free = snd_seq_unused_cells(cptr->data.user.fifo->pool);
++		info->input_free = snd_seq_fifo_unused_cells(cptr->data.user.fifo);
+ 	} else {
+ 		info->input_pool = 0;
+ 		info->input_free = 0;
+--- a/sound/core/seq/seq_fifo.c
++++ b/sound/core/seq/seq_fifo.c
+@@ -280,3 +280,20 @@ int snd_seq_fifo_resize(struct snd_seq_f
  
- 	struct reset_control *rstc;
-+	int irq;
- };
+ 	return 0;
+ }
++
++/* get the number of unused cells safely */
++int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f)
++{
++	unsigned long flags;
++	int cells;
++
++	if (!f)
++		return 0;
++
++	snd_use_lock_use(&f->use_lock);
++	spin_lock_irqsave(&f->lock, flags);
++	cells = snd_seq_unused_cells(f->pool);
++	spin_unlock_irqrestore(&f->lock, flags);
++	snd_use_lock_free(&f->use_lock);
++	return cells;
++}
+--- a/sound/core/seq/seq_fifo.h
++++ b/sound/core/seq/seq_fifo.h
+@@ -68,5 +68,7 @@ int snd_seq_fifo_poll_wait(struct snd_se
+ /* resize pool in fifo */
+ int snd_seq_fifo_resize(struct snd_seq_fifo *f, int poolsize);
  
- #define rcar_i2c_priv_to_dev(p)		((p)->adap.dev.parent)
-@@ -813,9 +814,11 @@ static int rcar_unreg_slave(struct i2c_client *slave)
++/* get the number of unused cells safely */
++int snd_seq_fifo_unused_cells(struct snd_seq_fifo *f);
  
- 	WARN_ON(!priv->slave);
- 
-+	/* disable irqs and ensure none is running before clearing ptr */
- 	rcar_i2c_write(priv, ICSIER, 0);
- 	rcar_i2c_write(priv, ICSCR, 0);
- 
-+	synchronize_irq(priv->irq);
- 	priv->slave = NULL;
- 
- 	pm_runtime_put(rcar_i2c_priv_to_dev(priv));
-@@ -866,7 +869,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 	struct i2c_adapter *adap;
- 	struct device *dev = &pdev->dev;
- 	struct i2c_timings i2c_t;
--	int irq, ret;
-+	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(struct rcar_i2c_priv), GFP_KERNEL);
- 	if (!priv)
-@@ -927,10 +930,10 @@ static int rcar_i2c_probe(struct platform_device *pdev)
- 		pm_runtime_put(dev);
- 
- 
--	irq = platform_get_irq(pdev, 0);
--	ret = devm_request_irq(dev, irq, rcar_i2c_irq, 0, dev_name(dev), priv);
-+	priv->irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_irq(dev, priv->irq, rcar_i2c_irq, 0, dev_name(dev), priv);
- 	if (ret < 0) {
--		dev_err(dev, "cannot get irq %d\n", irq);
-+		dev_err(dev, "cannot get irq %d\n", priv->irq);
- 		goto out_pm_disable;
- 	}
- 
--- 
-2.20.1
-
+ #endif
 
 
