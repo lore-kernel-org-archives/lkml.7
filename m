@@ -2,114 +2,155 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C07C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D7BC3A5A2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 156B6208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YsHRUH31"
+	by mail.kernel.org (Postfix) with ESMTP id 81992208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 02:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728576AbfIDCgU (ORCPT
+        id S1728068AbfIDChI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 22:36:20 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40093 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbfIDCfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 22:35:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w16so12213479pfn.7;
-        Tue, 03 Sep 2019 19:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Kt0n6bzsKyTFfjulhfhV37Mi2N4194QFhOH4tXXRRAc=;
-        b=YsHRUH31fnI6bd0ZA0gAPNFt0v8ZXWq7ADbdpRPeLHyqusI3ibbDAteDhCwxIVu/u6
-         MohQ0/76rMSujjkA2HDpl+mLOP2N3iGee0LgKPQxm3SJ1i/k/tGJnpW+H4ScTRGuN6S1
-         q65bEV2rreX4ubjnRxE6i5JQfKW9XiRPmLV9MSSg+r4o4H0WFWn5FiRh9mN6MdAgm+Io
-         ulhCkCYTfeuScYCp5RfIuI6UwoLPxZ/kEwQfsmS51Qzm2pyr5xh/1QWm/78uV5GBQGcl
-         PzQGN0JKFxU/sRbVFwNW/82FKrW31c/IT5up8TI3shTqLSglJLw8oloceEC7qFpfw8Vp
-         b/0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Kt0n6bzsKyTFfjulhfhV37Mi2N4194QFhOH4tXXRRAc=;
-        b=iNVCl9UbN1X0eq7x5SbN7GP0CQCyy2maJKvr/zb77XSwP7u3D06+0WtQdshGfUtXjp
-         KzoDhGO5/bDAf3B2i5f5UcvhbP6MBFcYS972iotjrQ1rnP5PLr8xgLe/HRfmHTE4t5NN
-         WPhu4XASILekodS4k3Vm9qlHhY49aNJC0CUJIV+/qu56/J7Rp27w0FhVEPbGuY96axL+
-         erwzb37OmxX59kKq5oUlu7Wd+WND+4d9yT0I+hx7xSIuEUaJPTYwUN1B8sHXmBCBo9X3
-         VnaXKmEh6KI8mQTd6Q5S7icWhy2i5Zukq1Gkb7GfRqSPt9U+dRo9g3WO+7DNvxpLT3AF
-         iAOQ==
-X-Gm-Message-State: APjAAAWLxcuu43WFndYIsC+ZkpIg9lCAFKtGKGiSU2dMb2vu4J8KF6I0
-        oHo2YpoOTvBQABQYxZTQq8clg0utrCE=
-X-Google-Smtp-Source: APXvYqwM5QlTGTCCjesiCSHjb3QdWxA+jovpNDbl8leRnGMYBMG5GxsNU72mZeWskh2rDIivFDtNQA==
-X-Received: by 2002:a63:fb14:: with SMTP id o20mr32595287pgh.136.1567564535077;
-        Tue, 03 Sep 2019 19:35:35 -0700 (PDT)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id i74sm7480250pfe.28.2019.09.03.19.35.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2019 19:35:34 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/12] crypto: caam - check irq_of_parse_and_map for errors
-Date:   Tue,  3 Sep 2019 19:35:06 -0700
-Message-Id: <20190904023515.7107-4-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190904023515.7107-1-andrew.smirnov@gmail.com>
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+        Tue, 3 Sep 2019 22:37:08 -0400
+Received: from mail5.windriver.com ([192.103.53.11]:42056 "EHLO mail5.wrs.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727499AbfIDChI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 22:37:08 -0400
+Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
+        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x842a533009007
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Tue, 3 Sep 2019 19:36:20 -0700
+Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 3 Sep
+ 2019 19:36:03 -0700
+Subject: Re: Bug Report: Btrfs can't allocate space for delete when block size
+ arounds 512M
+To:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <josef@toxicpanda.com>, <dsterba@suse.com>
+References: <b501bcff-8be0-4303-8789-363fda4658e5@windriver.com>
+From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
+Message-ID: <3eca92d0-5a57-3fff-63e1-edd3217341d5@windriver.com>
+Date:   Wed, 4 Sep 2019 10:36:00 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <b501bcff-8be0-4303-8789-363fda4658e5@windriver.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [128.224.162.188]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Irq_of_parse_and_map will return zero in case of error, so add a error
-check for that.
+Anybody notice this?
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Horia Geantă <horia.geanta@nxp.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/crypto/caam/jr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+--Hongzhi
 
-diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-index 7947d61a25cf..2732f3a0725a 100644
---- a/drivers/crypto/caam/jr.c
-+++ b/drivers/crypto/caam/jr.c
-@@ -537,6 +537,10 @@ static int caam_jr_probe(struct platform_device *pdev)
- 
- 	/* Identify the interrupt */
- 	jrpriv->irq = irq_of_parse_and_map(nprop, 0);
-+	if (!jrpriv->irq) {
-+		dev_err(jrdev, "irq_of_parse_and_map failed\n");
-+		return -EINVAL;
-+	}
- 
- 	/* Now do the platform independent part */
- 	error = caam_jr_init(jrdev); /* now turn on hardware */
--- 
-2.21.0
 
+On 7/17/19 4:34 PM, Hongzhi, Song wrote:
+> Hi friends,
+>
+> *Description:*
+>
+>
+>     One LTP testcase, fs_fill.c, fails on btrfs with kernel error when 
+> unlink files on Btrfs device:
+>
+>     "BTRFS warning (device loop0): could not allocate space for a 
+> delete; will truncate on mount".
+>
+>
+>     I found the loop block device formatted with btrfs roughly rangs 
+> from 460M to 560M will cause the error.
+>
+>     256M and 1G all pass.
+>
+>
+>     The fs_fill.c source code:
+>
+> [https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/fs_fill/fs_fill.c] 
+>
+>
+>     The fs_fill.c calls unlink which triggers the error.
+>
+> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/testcases/kernel/fs/fs_fill/fs_fill.c#L55] 
+>
+>
+> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/lib/safe_macros.c#L358] 
+>
+>
+>
+> *Error info:*
+>
+>     The issue maybe not reproduced everytime but four fifths chance.
+>
+>     fs_fill.c:53: INFO: Unlinking mntpoint/thread5/file0
+>     safe_macros.c:360: BROK: fs_fill.c:55: 
+> unlink(mntpoint/thread10/file0) failed: ENOSPC
+>     safe_macros.c:360: BROK: fs_fill.c:55: 
+> unlink(mntpoint/thread11/file0) failed: ENOSPC
+>     [62477.378848] BTRFS warning (device loop0): could not allocate 
+> space for a delete; will truncate on mount
+>     [62477.378905] BTRFS warning (device loop0): could not allocate 
+> space for a delete; will truncate on mount
+>
+>
+>
+> *Kernel:*
+>
+>     After v5.2-rc1, qemux86-64
+>
+>     # make -j40 ARCH=x86_64 CROSS_COMPILE=x86-64-gcc
+>     use qemu to bootup kernel
+>
+>
+> *LTP:*
+>
+>     master branch: I tested on 20190625
+>     Reproduce:
+>
+>     // build Ltp
+>     # cd Ltp-source
+>     # ./build.sh
+>
+>     // copy files to qemu
+>     # cp runltp testcases/kernel/fs/fs_fill/fs_fill to qemu
+>
+>     // login to qemu:
+>     // adjust block device size to 512M
+>     # vi runltp
+>     in function: create_block()
+>         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=262144
+>         --->
+>         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=524288
+>
+>     // execute testcase
+>     # runltp -f fs -s fs_fill
+>
+>
+> *Analysis:*
+>
+>     One new kernel commit contained in v5.2-rc1 introduces the issue.
+>
+>     commit c8eaeac7b734347c3afba7008b7af62f37b9c140
+>     Author: Josef Bacik <josef@toxicpanda.com>
+>     Date:   Wed Apr 10 15:56:10 2019 -0400
+>
+>         btrfs: reserve delalloc metadata differently
+>         ...
+>
+>
+> Anyone's reply will be appreciated.
+>
+> --Hongzhi
+>
+>
+>
+>
+>
+>
