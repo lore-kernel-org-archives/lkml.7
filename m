@@ -2,123 +2,100 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B2EC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4F8C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 683EE20820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E5520882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567622084;
+	bh=lwfhFWEw1GDvDXgbWijr6GQ8/AKMzevbX4RrPrOHkOE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RN0q4y1Gr5Y5stN8tYMmN6ygA4WjoOqSpYcVGuzK1U7I/5Jd5u8jxP1Ova9QcGGui
+	 TjMJ5bM/5cdTnbcndKHf8WuzNZvIc7aCZZx6HTxsR/yCog1VFY+IuaHVBCY7RYTCgo
+	 9jHgUs2UQWlYFtNuC7Kcqjt8rms4DjpyIRdlKdnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbfIDSdq (ORCPT
+        id S1732723AbfIDSen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:33:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41840 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731813AbfIDSdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:33:46 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A23E0878E43;
-        Wed,  4 Sep 2019 18:33:45 +0000 (UTC)
-Received: from [10.3.116.78] (ovpn-116-78.phx2.redhat.com [10.3.116.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AA81260606;
-        Wed,  4 Sep 2019 18:33:44 +0000 (UTC)
-Subject: Re: [Linux-kernel-mentees] [PATCH v2 2/3] PCI: sysfs: Change
- permissions from symbolic to octal
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190809195721.34237-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190813204513.4790-3-skunberg.kelsey@gmail.com>
- <20190814053846.GA253360@google.com>
- <b4c0d5b4-7243-ba96-96d1-041a264ac499@redhat.com>
- <20190904062229.GA66871@JATN>
-From:   Don Dutile <ddutile@redhat.com>
-Message-ID: <850cf536-0b72-d78c-efaf-855dcb391087@redhat.com>
-Date:   Wed, 4 Sep 2019 14:33:44 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 4 Sep 2019 14:34:43 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35500 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732542AbfIDSem (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:34:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Ds49y17sqsey6bLG9HYNFHWOBPX9Xy1jtmWz58gVjoM=; b=MYPIDkyBrmmPMnRCXu2ztElLv
+        p9EEcCOyHBJhSQNiQCgxplTmjSCQ3mdzR/Vwz9lnX0DKBRgRUeD8LTALnaSTw6Gn6wXhLBJ/FM5qx
+        b5m91y5ULdMk2qTHnAaRMOYexXVk4R+b2mu3S58q/+yjszJeBS81OmxNcW/MK3qT/6KfrIdchlqSI
+        Arq5wLiE2yLjX4qNwnkuOM4O2/DRZHTnwiEsWCslkefov9UITf5z0C72LPqFC+mbPHcr8oilTKWNB
+        pZWqGmz/gpmuSMkggxr0GR+RT/s4Ud48ieW4OX0DN7TtgCmwZYJSvwHa5P0zVWZUYT4Mg899r/xDI
+        w3w3JtRJA==;
+Received: from 177.17.137.173.dynamic.adsl.gvt.net.br ([177.17.137.173] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5a72-0007lW-IU; Wed, 04 Sep 2019 18:34:37 +0000
+Date:   Wed, 4 Sep 2019 15:34:32 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20190904153432.7fb54f02@coco.lan>
+In-Reply-To: <20190831151147.GA7082@nishad>
+References: <20190831151147.GA7082@nishad>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190904062229.GA66871@JATN>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 04 Sep 2019 18:33:45 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/04/2019 02:22 AM, Kelsey Skunberg wrote:
-> On Thu, Aug 15, 2019 at 10:37:13AM -0400, Don Dutile wrote:
->> On 08/14/2019 01:38 AM, Bjorn Helgaas wrote:
->>> [+cc Bodong, Don, Greg for permission question]
->>>
->>> On Tue, Aug 13, 2019 at 02:45:12PM -0600, Kelsey Skunberg wrote:
->>>> Symbolic permissions such as "(S_IWUSR | S_IWGRP)" are not
->>>> preferred and octal permissions should be used instead. Change all
->>>> symbolic permissions to octal permissions.
->>>>
->>>> Example of old:
->>>>
->>>> "(S_IWUSR | S_IWGRP)"
->>>>
->>>> Example of new:
->>>>
->>>> "0220"
->>>
->>>
->>>>    static DEVICE_ATTR_RO(sriov_totalvfs);
->>>> -static DEVICE_ATTR(sriov_numvfs, (S_IRUGO | S_IWUSR | S_IWGRP),
->>>> -				  sriov_numvfs_show, sriov_numvfs_store);
->>>> +static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
->>>>    static DEVICE_ATTR_RO(sriov_offset);
->>>>    static DEVICE_ATTR_RO(sriov_stride);
->>>>    static DEVICE_ATTR_RO(sriov_vf_device);
->>>> -static DEVICE_ATTR(sriov_drivers_autoprobe, (S_IRUGO | S_IWUSR | S_IWGRP),
->>>> -		   sriov_drivers_autoprobe_show, sriov_drivers_autoprobe_store);
->>>> +static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
->>>> +		   sriov_drivers_autoprobe_store);
->>>
->>> Greg noticed that sriov_numvfs and sriov_drivers_autoprobe have
->>> "unusual" permissions.  These were added by:
->>>
->>>     0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
->>>     1789382a72a5 ("PCI: SRIOV control and status via sysfs")
->>>
->>> Kelsey's patch correctly preserves the existing permissions, but we
->>> should double-check that they are the permissions they want, and
->>> possibly add a comment about why they're different from the rest.
->>>
->>> Bjorn
->>>
-> 
-> Hi Don,
-> 
->> The rest being? ... 0644 vs 0664 ?
->> The file is read & written, thus the (first) 6; I'll have to dig through very old (7 yr) notes to see if the second 6 is needed for libvirt (so it doesn't have to be root to enable).
->>
->> -dd
->>
-> 
-> Were you able to see if the unusual permissions (0664) are needed for
-> libvirt? I appreciate your help!
-> 
-> -Kelsey
-> 
-Daniel Berrangé reported that libvirt runs as root when dealing with anything PCI, and chowns files for qemu needs, so there is no need for the 664 permission.
-For all I know, it's a simple typo that was allowed to creep in. :-/
+Em Sat, 31 Aug 2019 20:41:51 +0530
+Nishad Kamdar <nishadkamdar@gmail.com> escreveu:
 
-Feel free to modify to 644.
+> This patch corrects the SPDX License Identifier style
+> in header file related to Siano Mobile Silicon Digital TV.
+> For C header files Documentation/process/license-rules.rst
+> mandates C-like comments (opposed to C source files where
+> C++ style should be used)
+> 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> ---
+>  drivers/media/common/siano/smsir.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/common/siano/smsir.h b/drivers/media/common/siano/smsir.h
+> index b2c54c256e86..ada41d5c4e83 100644
+> --- a/drivers/media/common/siano/smsir.h
+> +++ b/drivers/media/common/siano/smsir.h
+> @@ -1,5 +1,5 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+>  /*
+> - * SPDX-License-Identifier: GPL-2.0+
+>   *
+>   * Siano Mobile Silicon, Inc.
+>   * MDTV receiver kernel modules.
 
--dd
+What's wrong with that? The above is a perfectly fine SPDX header.
 
+Thanks,
+Mauro
