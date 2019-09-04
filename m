@@ -2,51 +2,54 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82449C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A2FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5073520882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F54620882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621362;
-	bh=s1J+EgK/eEEIFFe3Vw/B9PmlejgcCiCTsLeyKievWXM=;
+	s=default; t=1567621366;
+	bh=bDqaOAqZaQ/yWjCQx8MNS98le6D4MfuFmZmP7M9nAeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BSW2kd/Ekezu89xv97m1RB3exX2ras3czgAIeKuFSZ4WdsC1FZTVVdpLrdjmcWueG
-	 7e365/rM6iZf7QLkm0Sg5hjGjwXrFLqeJKRLeSrpwPw4VN1+n2nDxqvKjA9WFn/ylQ
-	 77i8yW4VI7wgRplyrAKdjI0bjtt93HXABBrGlScQ=
+	b=VKztGfUoiq2qteU/qyZ+4ahadf4bpVtSDHTB9Z0XWgyHHI3A1dcoZWPClh3jkAXTk
+	 vK7vhp6Zz7He3kbttdH3Fgo0CC7l8/N5VCineZRZhWzAR6lTjKbgaa1pimagkICf1+
+	 +6J9SJ1wBBbCdfecNLp3AX6YoxLw+BYofKqhlODc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389245AbfIDSWl (ORCPT
+        id S2388808AbfIDSWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45358 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:22:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732179AbfIDSEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:20 -0400
+        id S2388346AbfIDSEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FF3208E4;
-        Wed,  4 Sep 2019 18:04:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C581E208E4;
+        Wed,  4 Sep 2019 18:04:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620260;
-        bh=s1J+EgK/eEEIFFe3Vw/B9PmlejgcCiCTsLeyKievWXM=;
+        s=default; t=1567620249;
+        bh=bDqaOAqZaQ/yWjCQx8MNS98le6D4MfuFmZmP7M9nAeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=llP2s0E76uaPi2z44rbqTHsK3iTC/i7jLe4zZXYSaIs1Ol/IqavuZKpts2ViF84sH
-         GvU8tWe1c/2txa92sEZ2zYJgghBRgYmwmuSrZmEPGeTLhNwFJ4V325bKkzj1ESZByo
-         mgH+AEdid5XGUvcXfU095qHwPx5kwO2UI0a+v+6Y=
+        b=TjyhN9xZs3JAu+cJ7EA1oNbck3zEd28jp1+YUgNjEBvbtKjecV0Y7LvzT+BKtR9sO
+         LeMkiqqhNpxUbv6n/q+aCv9Me7/NJ3Y/ypkgyLwhvd9xQTL3jPcIKE3+whaBZMxDK1
+         +5OwIe2pf2ejJtURlr9mgMn/0J9+xqLwx6vtSJeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 4.14 42/57] intel_th: pci: Add support for another Lewisburg PCH
-Date:   Wed,  4 Sep 2019 19:54:10 +0200
-Message-Id: <20190904175306.218467754@linuxfoundation.org>
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 07/57] i2c: rcar: avoid race when unregistering slave client
+Date:   Wed,  4 Sep 2019 19:53:35 +0200
+Message-Id: <20190904175302.625496869@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -59,34 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+[ Upstream commit 7b814d852af6944657c2961039f404c4490771c0 ]
 
-commit 164eb56e3b64f3a816238d410c9efec7567a82ef upstream.
+After we disabled interrupts, there might still be an active one
+running. Sync before clearing the pointer to the slave device.
 
-Add support for the Trace Hub in another Lewisburg PCH.
-
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: stable@vger.kernel.org # v4.14+
-Link: https://lore.kernel.org/r/20190821074955.3925-4-alexander.shishkin@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/intel_th/pci.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/i2c/busses/i2c-rcar.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -149,6 +149,11 @@ static const struct pci_device_id intel_
- 		.driver_data = (kernel_ulong_t)0,
- 	},
- 	{
-+		/* Lewisburg PCH */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa226),
-+		.driver_data = (kernel_ulong_t)0,
-+	},
-+	{
- 		/* Gemini Lake */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x318e),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 3415733a93645..132c4a405bf83 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -144,6 +144,7 @@ struct rcar_i2c_priv {
+ 	enum dma_data_direction dma_direction;
+ 
+ 	struct reset_control *rstc;
++	int irq;
+ };
+ 
+ #define rcar_i2c_priv_to_dev(p)		((p)->adap.dev.parent)
+@@ -813,9 +814,11 @@ static int rcar_unreg_slave(struct i2c_client *slave)
+ 
+ 	WARN_ON(!priv->slave);
+ 
++	/* disable irqs and ensure none is running before clearing ptr */
+ 	rcar_i2c_write(priv, ICSIER, 0);
+ 	rcar_i2c_write(priv, ICSCR, 0);
+ 
++	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+ 
+ 	pm_runtime_put(rcar_i2c_priv_to_dev(priv));
+@@ -866,7 +869,7 @@ static int rcar_i2c_probe(struct platform_device *pdev)
+ 	struct i2c_adapter *adap;
+ 	struct device *dev = &pdev->dev;
+ 	struct i2c_timings i2c_t;
+-	int irq, ret;
++	int ret;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(struct rcar_i2c_priv), GFP_KERNEL);
+ 	if (!priv)
+@@ -927,10 +930,10 @@ static int rcar_i2c_probe(struct platform_device *pdev)
+ 		pm_runtime_put(dev);
+ 
+ 
+-	irq = platform_get_irq(pdev, 0);
+-	ret = devm_request_irq(dev, irq, rcar_i2c_irq, 0, dev_name(dev), priv);
++	priv->irq = platform_get_irq(pdev, 0);
++	ret = devm_request_irq(dev, priv->irq, rcar_i2c_irq, 0, dev_name(dev), priv);
+ 	if (ret < 0) {
+-		dev_err(dev, "cannot get irq %d\n", irq);
++		dev_err(dev, "cannot get irq %d\n", priv->irq);
+ 		goto out_pm_disable;
+ 	}
+ 
+-- 
+2.20.1
+
 
 
