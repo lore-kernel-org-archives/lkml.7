@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149BDC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798ADC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E174C20820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5232720820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613162;
-	bh=U7yRzAYMW30TIjYy8RlK1FZ5pZc4dDGGUPsgsBmMOss=;
+	s=default; t=1567613168;
+	bh=uIJ/qXrVA5TDqANFCndn0F8SKWCcjEj0dGLzNlGQtWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=061GGoXGuOdH+H4MKT3tRP6ilMWDwEVV5VTMCxH6nKYzYjtOXj8Pqe8NNSTF7ClNO
-	 dQ5mHi9nb8hOWMZkyHpVEHcKcrl+ogqSMxV8IuJUpGGWRA/5SKGHcwdVbtxVUXMSzv
-	 GmwHiZUWI4y4kuwdY7sH6Xx1fP8eYlULHZaSHW2c=
+	b=Paz2svvLSatw51YpYa2ib9slCefbt1TU9d6Mrc5kUW0taptgLwx1o4w22bBF8CvFO
+	 mCyPbsBAXugYGDDB81ZdE2mgyOeTq8lXlbwJorUbTFrW/v11GLd7M1tNrjorCPf8yx
+	 7INe8m+ZbzRP7P1M7wod2kXbO65ZjgIOhndymvdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732998AbfIDQGB (ORCPT
+        id S2387413AbfIDQCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:06:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38626 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733309AbfIDQCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:02:35 -0400
+        id S1733289AbfIDQC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:02:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 451A52339D;
-        Wed,  4 Sep 2019 16:02:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C95B123400;
+        Wed,  4 Sep 2019 16:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612954;
-        bh=U7yRzAYMW30TIjYy8RlK1FZ5pZc4dDGGUPsgsBmMOss=;
+        s=default; t=1567612947;
+        bh=uIJ/qXrVA5TDqANFCndn0F8SKWCcjEj0dGLzNlGQtWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GBLoD5UQrt7T/8wE00/9MPi4Rnn5U0uMPQ6bM+0BxEUmGhlkDAhzsn1+9uUoUGUfh
-         pKtLFb/WMMvUYg/JEkUQklJdY6JVlV3bx70RcyEwtFgES6B15ZrQSqQbsuuLp+VAZn
-         zmz94xcZ73JPEDqYO0Jqb1yzQBJY89woi0Y67yDA=
+        b=dpNhKRBQcBaWmeHu35p6QqZ6BQF8J/rXuS1V79JAf3Gt/C7VmeMPYrNrZlDwEj5fR
+         2072kz0mSRjew0K1Fj0UuQjGwgu+pO34pWFfg+1zOND2DFhMoVDb3RcQ9S2pZqvQBL
+         uxqys6apEppDbeyQb+SVdx0+QU3ISuyp+ZX6pV/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>, Laura Abbott <labbott@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 10/27] ARM: 8874/1: mm: only adjust sections of valid mm structures
-Date:   Wed,  4 Sep 2019 12:02:03 -0400
-Message-Id: <20190904160220.4545-10-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/27] batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
+Date:   Wed,  4 Sep 2019 12:01:58 -0400
+Message-Id: <20190904160220.4545-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160220.4545-1-sashal@kernel.org>
 References: <20190904160220.4545-1-sashal@kernel.org>
@@ -66,50 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit c51bc12d06b3a5494fbfcbd788a8e307932a06e9 ]
+[ Upstream commit 3ee1bb7aae97324ec9078da1f00cb2176919563f ]
 
-A timing hazard exists when an early fork/exec thread begins
-exiting and sets its mm pointer to NULL while a separate core
-tries to update the section information.
+batadv_netlink_get_ifindex() needs to make sure user passed
+a correct u32 attribute.
 
-This commit ensures that the mm pointer is not NULL before
-setting its section parameters. The arguments provided by
-commit 11ce4b33aedc ("ARM: 8672/1: mm: remove tasklist locking
-from update_sections_early()") are equally valid for not
-requiring grabbing the task_lock around this check.
+syzbot reported :
+BUG: KMSAN: uninit-value in batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
+CPU: 1 PID: 11705 Comm: syz-executor888 Not tainted 5.1.0+ #1
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+ kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:622
+ __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+ batadv_netlink_dump_hardif+0x70d/0x880 net/batman-adv/netlink.c:968
+ genl_lock_dumpit+0xc6/0x130 net/netlink/genetlink.c:482
+ netlink_dump+0xa84/0x1ab0 net/netlink/af_netlink.c:2253
+ __netlink_dump_start+0xa3a/0xb30 net/netlink/af_netlink.c:2361
+ genl_family_rcv_msg net/netlink/genetlink.c:550 [inline]
+ genl_rcv_msg+0xfc1/0x1a40 net/netlink/genetlink.c:627
+ netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2486
+ genl_rcv+0x63/0x80 net/netlink/genetlink.c:638
+ netlink_unicast_kernel net/netlink/af_netlink.c:1311 [inline]
+ netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1337
+ netlink_sendmsg+0x127e/0x12f0 net/netlink/af_netlink.c:1926
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg net/socket.c:661 [inline]
+ ___sys_sendmsg+0xcc6/0x1200 net/socket.c:2260
+ __sys_sendmsg net/socket.c:2298 [inline]
+ __do_sys_sendmsg net/socket.c:2307 [inline]
+ __se_sys_sendmsg+0x305/0x460 net/socket.c:2305
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2305
+ do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+ entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x440209
 
-Fixes: 08925c2f124f ("ARM: 8464/1: Update all mm structures with section adjustments")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Laura Abbott <labbott@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: b60620cf567b ("batman-adv: netlink: hardif query")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/batman-adv/netlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
-index 1565d6b671636..4fb1474141a61 100644
---- a/arch/arm/mm/init.c
-+++ b/arch/arm/mm/init.c
-@@ -698,7 +698,8 @@ static void update_sections_early(struct section_perm perms[], int n)
- 		if (t->flags & PF_KTHREAD)
- 			continue;
- 		for_each_thread(t, s)
--			set_section_perms(perms, n, true, s->mm);
-+			if (s->mm)
-+				set_section_perms(perms, n, true, s->mm);
- 	}
- 	read_unlock(&tasklist_lock);
- 	set_section_perms(perms, n, true, current->active_mm);
+diff --git a/net/batman-adv/netlink.c b/net/batman-adv/netlink.c
+index 64cb6acbe0a64..d7ba4fd24e3de 100644
+--- a/net/batman-adv/netlink.c
++++ b/net/batman-adv/netlink.c
+@@ -114,7 +114,7 @@ batadv_netlink_get_ifindex(const struct nlmsghdr *nlh, int attrtype)
+ {
+ 	struct nlattr *attr = nlmsg_find_attr(nlh, GENL_HDRLEN, attrtype);
+ 
+-	return attr ? nla_get_u32(attr) : 0;
++	return (attr && nla_len(attr) == sizeof(u32)) ? nla_get_u32(attr) : 0;
+ }
+ 
+ /**
 -- 
 2.20.1
 
