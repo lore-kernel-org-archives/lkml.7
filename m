@@ -2,166 +2,128 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6F3C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD801C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5A7206BB
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YjCi67RR";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PSn84YQk"
+	by mail.kernel.org (Postfix) with ESMTP id 868FD206BB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:54:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567583677;
+	bh=rhMUEjPXy+iiT52ohIfHS1rvBJVyxfMA+dv9BFyZ0IE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=RXyjjhHfQS9wXhU6AtLE551PI8aiTU4RqfdUCuRuS1eXBfxBaeGa0CNQQKyRiCeta
+	 PTjbIP2nriyHlB4685kwOAYzwlUotcAtiayWHIgT/ExjjqdGFgU0L+ifHjkT8k0J6r
+	 LVrHRm50/yWvaXsBzPssw0bMzQa/RmSnr7EPGvOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbfIDHyI (ORCPT
+        id S1729251AbfIDHyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:54:08 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57088 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728526AbfIDHyG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:54:06 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1EF366013C; Wed,  4 Sep 2019 07:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567583646;
-        bh=ZfLR1YEu1X4rVSuz+01cnPj1qh9JDAVads5Zz46yCig=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YjCi67RRtgDJe8H4UIOaoB9SGUBhvwToiUrifxdUZN8EpnpZznXJbezdYocsHfU3V
-         YqOl8/QrBTWJjRwjpAczhLBP3gsBA/McnAptixvz0yL8GkfrEIVXTHLlrYieCgLge7
-         FwG5grEIjXhVx3GWNNvSzdntRhP/uSyCIY4HF09g=
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3A29A6085C;
-        Wed,  4 Sep 2019 07:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1567583645;
-        bh=ZfLR1YEu1X4rVSuz+01cnPj1qh9JDAVads5Zz46yCig=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PSn84YQkYRqzlbB6ARnPmvWPVF+kGw+uNfoaoE/PAvF29VRrd+lMdJYWoF2PpVpgT
-         tvxEXlrBxGQtRwn9lqw2XiJgIqgZplK0ZvEwU/MTk4b9nbhqBOatbrVcnptx+KvJay
-         kUfziTeNgHrNTMa/U7mKX+EGmYgm4Ptf7nparABc=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3A29A6085C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f50.google.com with SMTP id r12so21514460edo.5;
-        Wed, 04 Sep 2019 00:54:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAVRig2ab+MKoA6P+OGQkZGiULmXqsW4OkLSwKZzyPP65uZvVmeI
-        iXed13YFzhNDgdAS1KhyCLlFpIibVI0R0ib/NrU=
-X-Google-Smtp-Source: APXvYqxl16lDYkKjVb/zuHMs0WdKDQs5m8eyKUOOqaqa4GkxbpgQ8vAEd4fbQhpLi3sa3E/4pr2Gjy23NyDUzjn4Sig=
-X-Received: by 2002:aa7:ca42:: with SMTP id j2mr26782407edt.197.1567583643945;
- Wed, 04 Sep 2019 00:54:03 -0700 (PDT)
+        Wed, 4 Sep 2019 03:54:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20282 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728526AbfIDHyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:54:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 00:54:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
+   d="asc'?scan'208";a="185033564"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga003.jf.intel.com with ESMTP; 04 Sep 2019 00:54:32 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Jacky.Cao@sony.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     Kento.A.Kobayashi@sony.com, Jacky.Cao@sony.com
+Subject: Re: [PATCH] USB: dummy-hcd: fix power budget for SuperSpeed mode
+In-Reply-To: <16EA1F625E922C43B00B9D82250220500871C862@APYOKXMS108.ap.sony.com>
+References: <16EA1F625E922C43B00B9D82250220500871C862@APYOKXMS108.ap.sony.com>
+Date:   Wed, 04 Sep 2019 10:54:28 +0300
+Message-ID: <87sgpcmr7v.fsf@gmail.com>
 MIME-Version: 1.0
-References: <20190718130238.11324-1-vivek.gautam@codeaurora.org>
- <CAFp+6iE7224G4k8XE6Oz1S82iMgSza-n_zMN-ppOUWnuz+hFLQ@mail.gmail.com>
- <CAFp+6iE6zwrOUoCoOJO0mgYJGrWj+wUjXQ7RnxSPsV34ndYGbw@mail.gmail.com> <20190904044252.GD3081@tuxbook-pro>
-In-Reply-To: <20190904044252.GD3081@tuxbook-pro>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Wed, 4 Sep 2019 13:23:52 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iGTG6mBerAHSQesJyHO=yn2QHKR1TWuQQDduaPWusqPvg@mail.gmail.com>
-Message-ID: <CAFp+6iGTG6mBerAHSQesJyHO=yn2QHKR1TWuQQDduaPWusqPvg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] soc: qcom: llcc cleanups
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        rishabhb@codeaurora.org, Evan Green <evgreen@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 4, 2019 at 10:13 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Tue 27 Aug 04:01 PDT 2019, Vivek Gautam wrote:
->
-> > On Fri, Aug 2, 2019 at 11:43 AM Vivek Gautam
-> > <vivek.gautam@codeaurora.org> wrote:
-> > >
-> > > On Thu, Jul 18, 2019 at 6:33 PM Vivek Gautam
-> > > <vivek.gautam@codeaurora.org> wrote:
-> > > >
-> > > > To better support future versions of llcc, consolidating the
-> > > > driver to llcc-qcom driver file, and taking care of the dependencies.
-> > > > v1 series is availale at:
-> > > > https://lore.kernel.org/patchwork/patch/1099573/
-> > > >
-> > > > Changes since v1:
-> > > > Addressing Bjorn's comments -
-> > > >  * Not using llcc-plat as the platform driver rather using a single
-> > > >    driver file now - llcc-qcom.
-> > > >  * Removed SCT_ENTRY macro.
-> > > >  * Moved few structure definitions from include/linux path to llcc-qcom
-> > > >    driver as they are not exposed to other subsystems.
-> > >
-> > > Hi Bjorn,
-> > >
-> > > How does this cleanup look now? Let me know if there are any
-> > > improvements to make here.
-> > >
-> >
-> > Hi Bjorn,
-> >
-> > Are you planning to pull this series in the next merge window?
-> > There's a dt patch as well for llcc on sdm845 [1] that has been lying around.
-> >
-> > Let me know if you have concerns with this series. I will be happy to
-> > incorporate the suggestions.
-> >
->
-> No concerns, this is exactly what we discussed before. Sorry for missing
-> it. I've picked the patches now.
->
-> > [1] https://lore.kernel.org/patchwork/patch/1099318/
-> >
->
-> This is part of the v5.4 pull request.
-
-Thanks a lot Bjorn.
-
-Best regards
-Vivek
-
->
-> Thanks,
-> Bjorn
->
-> > Thanks & Regards
-> > Vivek
-> >
-> > > Best Regards
-> > > Vivek
-> > > >
-> > > > Vivek Gautam (3):
-> > > >   soc: qcom: llcc cleanup to get rid of sdm845 specific driver file
-> > > >   soc: qcom: Rename llcc-slice to llcc-qcom
-> > > >   soc: qcom: Make llcc-qcom a generic driver
-> > > >
-> > > >  drivers/soc/qcom/Kconfig                       |  14 +--
-> > > >  drivers/soc/qcom/Makefile                      |   3 +-
-> > > >  drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} | 155 +++++++++++++++++++++++--
-> > > >  drivers/soc/qcom/llcc-sdm845.c                 | 100 ----------------
-> > > >  include/linux/soc/qcom/llcc-qcom.h             | 104 -----------------
-> > > >  5 files changed, 152 insertions(+), 224 deletions(-)
-> > > >  rename drivers/soc/qcom/{llcc-slice.c => llcc-qcom.c} (64%)
-> > > >  delete mode 100644 drivers/soc/qcom/llcc-sdm845.c
-> > > >
-> >
-> >
-> >
-> > --
-> > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > of Code Aurora Forum, hosted by The Linux Foundation
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
+Hi,
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+<Jacky.Cao@sony.com> writes:
+
+> The power budget for SuperSpeed mode should be 900 mA
+> according to USB3.0 specification, so set the power
+> budget to 900 mA for dummy_start_ss which is only used
+> for SuperSpeed mode.
+>
+> If the max power consumption of SuperSpeed device is
+> larger than 500 mA, insufficient available bus power
+> error happens in usb_choose_configuration function
+> when the device connects to dummy hcd.
+>
+> Signed-off-by: Jacky Cao <Jacky.Cao@sony.com>
+> ---
+> drivers/usb/gadget/udc/dummy_hcd.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/=
+dummy_hcd.c
+> index 8414fac..52f2cf5 100644
+> --- a/drivers/usb/gadget/udc/dummy_hcd.c
+> +++ b/drivers/usb/gadget/udc/dummy_hcd.c
+> @@ -48,6 +48,7 @@
+> #define DRIVER_VERSION "02 May 2005"
+>
+>  #define POWER_BUDGET  500  /* in mA; use 8 for low-power port testing */
+> +#define POWER_BUDGET_3_0  900  /* in mA */
+>
+>  static const char  driver_name[] =3D "dummy_hcd";
+> static const char  driver_desc[] =3D "USB Host+Gadget Emulator";
+> @@ -2432,7 +2433,7 @@ static int dummy_start_ss(struct dummy_hcd *dum_hcd)
+>      dum_hcd->rh_state =3D DUMMY_RH_RUNNING;
+>      dum_hcd->stream_en_ep =3D 0;
+>      INIT_LIST_HEAD(&dum_hcd->urbp_list);
+> -     dummy_hcd_to_hcd(dum_hcd)->power_budget =3D POWER_BUDGET;
+> +     dummy_hcd_to_hcd(dum_hcd)->power_budget =3D POWER_BUDGET_3_0;
+>      dummy_hcd_to_hcd(dum_hcd)->state =3D HC_STATE_RUNNING;
+>      dummy_hcd_to_hcd(dum_hcd)->uses_new_polling =3D 1;
+> #ifdef CONFIG_USB_OTG
+
+Alan, I suppose you're okay with this change?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1vbbQACgkQzL64meEa
+mQYEag/8CNh1XxPX+xromrb3wEL2ptcSNpiSoaTbtGEGO0NrebNOWnfyQIJGP9OR
+p9eEMlQuTSulxCi+bsDORBhxZ+f/hlEK/ix/7U6g+BzeW0ex8U0DIpOFXa3Q0riS
+f7h5vPDYGy+HZMBiGZQc4J4A8ejh5XCRLo7fOf9RgL7tUOoT1ud9vi0J/unIsFmc
+zoz3Bt3SVMtKJf86L1x5/EP7U5V2QM/dZhYzW6Ux+++zqYlYm3IEocHYLeZ2OmYc
+b81z9yePo1xjavtZ1wX39xhdJpV4GqDVnJkqjPeut9sJQSntsSQcVsXh49Vk9s5l
+lTalG0+BwIAqvHKkQAoT8kXnSYQbShGF7qIlGoO7sHDs0btvcBQAE+PKPcm1M5W4
+iryECIsp2T5DowXbw3eukXS3EoMT+fIbVuNn41I4owwRDlgeP7FFUnDdqwINjHBu
+I0Fg37W9x2FLqJx+5cETMlUo11BgDkd0wo/QOG0t5kqL/c4zyKpyJxtAjLM2jxkU
+/al2yuL0okMNS23cZxNdjGIeVA5wsAsjzWbYHIGa9ZAfUCyQpdtkoIL0NSDDeOXm
+PRc3LYXNRshYawW1pTx917u2iFz/gKl8VrECgXiOd1tuzd+uIU6wCiZRGnVyEPe1
+HGBvfsMl9E76IbGkNCYd+W+uBsG0Diq7NQ9uMGnEgiI+eZVn/gw=
+=NvCb
+-----END PGP SIGNATURE-----
+--=-=-=--
