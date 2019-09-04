@@ -2,90 +2,154 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09318C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA76AC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3ACB22CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m89abydh"
+	by mail.kernel.org (Postfix) with ESMTP id A7CAC22CF5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbfIDGuW (ORCPT
+        id S1728796AbfIDGvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 02:50:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48448 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbfIDGuW (ORCPT
+        Wed, 4 Sep 2019 02:51:43 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:5894 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725267AbfIDGvn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:50:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=SSDyoF1tdrcOZz+6up0yqcnQw7uwk6EJ2fNkkSXZVNA=; b=m89abydh10d6Emc94UXol8Fjx
-        qt84+LQ4oJ43cptYc5XQpaTA74Q3PS1JVKdRkO999cF7R50xPvhIibzJi3XUgC+neL+iERjoMroaF
-        RVLhxIOJBL/ka/8b3eHDkT2bnVnwl5RHdFoOVz5OfzmmhT9wqI+zsSgI4xFlOfoqFjsF/RdK06ut/
-        rZ4djzvhhE455jaHYPxutSzzjvkfaIewZL7xygT6ZlSTP9JwUJNol9QNzGD5jEdQ8cCzOrB7WYjPN
-        jupWD7kUDlP/Fk85PlA4OOqj1h8tA2ylJOA6geIc0cQMFjlogCLvTDeChMtYWMXCdpHRKB5k437mw
-        4iaxUSzlQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5P7N-0005w2-MZ; Wed, 04 Sep 2019 06:50:13 +0000
-Date:   Tue, 3 Sep 2019 23:50:13 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Wed, 4 Sep 2019 02:51:43 -0400
+X-UUID: d6949eddd6d848458f0e91f382beab44-20190904
+X-UUID: d6949eddd6d848458f0e91f382beab44-20190904
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 4046662; Wed, 04 Sep 2019 14:51:38 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 4 Sep 2019 14:51:35 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 4 Sep 2019 14:51:35 +0800
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/8] x86/platform/uv: Return UV Hubless System Type
-Message-ID: <20190904065013.GA18003@infradead.org>
-References: <20190903001815.504418099@stormcage.eag.rdlabs.hpecorp.net>
- <20190903001815.893030884@stormcage.eag.rdlabs.hpecorp.net>
- <20190903064914.GA9914@infradead.org>
- <0eee6d96-e4fc-763b-a8b9-52c85ddd5531@hpe.com>
- <20190903154109.GB2791@infradead.org>
- <b342b250-a427-60cf-6189-3eb3225e5c91@hpe.com>
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+CC:     <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Subject: [PATCH 1/2] mm/kasan: dump alloc/free stack for page allocator
+Date:   Wed, 4 Sep 2019 14:51:33 +0800
+Message-ID: <20190904065133.20268-1-walter-zh.wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b342b250-a427-60cf-6189-3eb3225e5c91@hpe.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-TM-SNTS-SMTP: E693BB34C42D4B73B3B2B12EEB54C8F30BF059021EA46B52BEF177F393CF9F522000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 11:49:53AM -0700, Mike Travis wrote:
-> 
-> That is always being considered for everything we include into the community
-> kernel source.  The problem is a couple of the kernel modules (hwperf being
-> the prime example) is much more tied to hardware and BIOS/FW updates so has
-> to be updated much more often than the current submittal/acceptance process
-> allows.  We do opensource these modules but they are built from single
-> source directories and have to be released as a module into a package that
-> can be installed on different distros. There is not a source version for
-> each kernel version.
+This patch is KASAN report adds the alloc/free stacks for page allocator
+in order to help programmer to see memory corruption caused by page.
 
-Well, tought luck then.  We do not support interface for out of tree
-modules only.  I actually found a few in uv and will send patches to
-drop that dead weight.
+By default, KASAN doesn't record alloc/free stack for page allocator.
+It is difficult to fix up page use-after-free issue.
 
-> I have seen this method (declare the function with a leading underscore and
-> a #define for the function reference) which is why I'm assuming it's a
-> standard kernel practice?  (I'll find some examples if necessary?)
+This feature depends on page owner to record the last stack of pages.
+It is very helpful for solving the page use-after-free or out-of-bound.
 
-No, it isn't.
+KASAN report will show the last stack of page, it may be:
+a) If page is in-use state, then it prints alloc stack.
+   It is useful to fix up page out-of-bound issue.
+
+BUG: KASAN: slab-out-of-bounds in kmalloc_pagealloc_oob_right+0x88/0x90
+Write of size 1 at addr ffffffc0d64ea00a by task cat/115
+...
+Allocation stack of page:
+ prep_new_page+0x1a0/0x1d8
+ get_page_from_freelist+0xd78/0x2748
+ __alloc_pages_nodemask+0x1d4/0x1978
+ kmalloc_order+0x28/0x58
+ kmalloc_order_trace+0x28/0xe0
+ kmalloc_pagealloc_oob_right+0x2c/0x90
+
+b) If page is freed state, then it prints free stack.
+   It is useful to fix up page use-after-free issue.
+
+BUG: KASAN: use-after-free in kmalloc_pagealloc_uaf+0x70/0x80
+Write of size 1 at addr ffffffc0d651c000 by task cat/115
+...
+Free stack of page:
+ kasan_free_pages+0x68/0x70
+ __free_pages_ok+0x3c0/0x1328
+ __free_pages+0x50/0x78
+ kfree+0x1c4/0x250
+ kmalloc_pagealloc_uaf+0x38/0x80
+
+
+This has been discussed, please refer below link.
+https://bugzilla.kernel.org/show_bug.cgi?id=203967
+
+Signed-off-by: Walter Wu <walter-zh.wu@mediatek.com>
+---
+ lib/Kconfig.kasan | 9 +++++++++
+ mm/kasan/common.c | 6 ++++++
+ 2 files changed, 15 insertions(+)
+
+diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+index 4fafba1a923b..ba17f706b5f8 100644
+--- a/lib/Kconfig.kasan
++++ b/lib/Kconfig.kasan
+@@ -135,6 +135,15 @@ config KASAN_S390_4_LEVEL_PAGING
+ 	  to 3TB of RAM with KASan enabled). This options allows to force
+ 	  4-level paging instead.
+ 
++config KASAN_DUMP_PAGE
++	bool "Dump the page last stack information"
++	depends on KASAN && PAGE_OWNER
++	help
++	  By default, KASAN doesn't record alloc/free stack for page allocator.
++	  It is difficult to fix up page use-after-free issue.
++	  This feature depends on page owner to record the last stack of page.
++	  It is very helpful for solving the page use-after-free or out-of-bound.
++
+ config TEST_KASAN
+ 	tristate "Module for testing KASAN for bug detection"
+ 	depends on m && KASAN
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index 2277b82902d8..2a32474efa74 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -35,6 +35,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/bug.h>
+ #include <linux/uaccess.h>
++#include <linux/page_owner.h>
+ 
+ #include "kasan.h"
+ #include "../slab.h"
+@@ -227,6 +228,11 @@ void kasan_alloc_pages(struct page *page, unsigned int order)
+ 
+ void kasan_free_pages(struct page *page, unsigned int order)
+ {
++#ifdef CONFIG_KASAN_DUMP_PAGE
++	gfp_t gfp_flags = GFP_KERNEL;
++
++	set_page_owner(page, order, gfp_flags);
++#endif
+ 	if (likely(!PageHighMem(page)))
+ 		kasan_poison_shadow(page_address(page),
+ 				PAGE_SIZE << order,
+-- 
+2.18.0
+
