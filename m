@@ -2,315 +2,173 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660C0C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD06C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326472053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFEA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:13:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="GNa5o+Fl";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Gu0FXVrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733037AbfIDQNd (ORCPT
+        id S1732997AbfIDQNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:13:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:58182 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733149AbfIDQNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:13:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3214B28;
-        Wed,  4 Sep 2019 09:13:30 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB383F246;
-        Wed,  4 Sep 2019 09:13:29 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id AB0BE6827F6; Wed,  4 Sep 2019 17:13:28 +0100 (BST)
-Date:   Wed, 4 Sep 2019 17:13:28 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Wen He <wen.he_1@nxp.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Wed, 4 Sep 2019 12:13:38 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:2432 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732618AbfIDQNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:13:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1567613616; x=1599149616;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=nZCuWC/hnGtV9NjNtwQ2+V9SQNWW7WUp/eygotDSJhg=;
+  b=GNa5o+FlSMy1v1eEecSQZmCe0UKIizOuGJfVsc4JnSDVEFz1cbZD0gFc
+   M+S6Va7J22EQlJJaq9xZGAFG/pycYpHtY/mgl+3e2AAnvmizFEYQq159y
+   OOZZkLQc8AdU+VYNRZE+ShAvF7KSnTDkp92giXITmnpw/oWyeqnXdI/yF
+   ckxVsz9iMHtT99y3HqAvKAZjP6SZ0a+gi/du1byFDR7RWXi1BzO1/q5Z4
+   FeUzLwxztcC4rRUtCIScgdryfrZktb9sGa42v+5y1f6mgP4tx5g05QuLa
+   nTg9mSozs+loxD4oVKSX5VhEclquwoT+u9RpaIug07QE4rBjSSOFaFk7n
+   A==;
+IronPort-SDR: Cs6FDtRhPPTCGUxUTxXrskBl2zcP7f6AjnOBmLKwraM4FH1Sdn0UWBf1lqpdkn3N4P8cceynaa
+ 6m/tqIUIm04GPHYoxvnpOnBiiWAlxHm1JGGrMIvUodjGOZ4PuXPySxL3kTgHSZWX2uEpJvWNSi
+ cleonoSgDogIINW5WgyjJlSy7Cyk5nAiPQYBkZzSf2eFDCCJMBNsOMNtN59Ot/5ZoYDY6J4W49
+ slDrfCB+7xF8mIj3sI+7O7/scdlqG4a5grp4qy82HVrNA9VbrmY6u0y6ydwbDdTdo5WyCRTrn6
+ Zi4=
+X-IronPort-AV: E=Sophos;i="5.64,467,1559491200"; 
+   d="scan'208";a="118323734"
+Received: from mail-sn1nam01lp2055.outbound.protection.outlook.com (HELO NAM01-SN1-obe.outbound.protection.outlook.com) ([104.47.32.55])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Sep 2019 00:13:35 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gOtcnTIVNbpx8WacUZw1xJmY98I32fTIvOO5OCnNuid8bI3DoKNhj+7YHJEndIVfdBNskJ3qVHwQAz24Qp3+rvdAwE/2XVcOY1qEPdNEPlBMFC+BQeVRp4n8UrGLwV/AUI/5olFAFPfEYuXQwMM1FYpTORufhraJjZt1ff2kn41mADBlQxE7pdk9dIrorBKu4XVDu2IkFK/4CKOwDlQ+zrjAsvc6hYl06P+4rZhdUTNDnkBsdjo8hv28gUBJCDCP9E/NAKg+g84Uq12pBGKxqnWrCsHRqj9OB/MSPAC4Vn6zOrjuwzW2DZ3v0ARK6V3mPryBVBIWGGmmAKgbzUt61g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TOipub1TnFw27ovAl2/T5jjXZd6domDugx5jcUvgwqk=;
+ b=S99MBX9kevL/BfDgNiBeXI2e6EmzjrXtI6J+WYPskYDQlQcVC/TF37nQj0ll0VaiIA1RPjXa21h7wEalwL8OZl8lWmlMIZnYrui8RnI1R+UCeKYZ3oluLexITkvSW40khwOV2iDHYJO0Jiy85uvhRHE7/+DgGtYTnmbAJxHwbQcbBEzrXS7YgJld5FbZOoBuql7L9VRgXvIibCmhEe9Ef2vKrK07n7N+/3TotCb0E9qYmAIsh4L65jKci0yS9P6cMHmfkxY00F78x9k0nsnji9G6WiB/2pjxr3EbSzbxKsvNyJ7F5AGYYmhrWWJPjQqhy0BreoY81WyQKuaPl5vxSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TOipub1TnFw27ovAl2/T5jjXZd6domDugx5jcUvgwqk=;
+ b=Gu0FXVrY3hMbQJc539ijhBlAnAiD+70m4a350yP2jKwiqgYWwQc+8FrHGtsNbvWxP0/2Qe1wsq893zsIaeiqT3TVJUEJtORNfu4pHumbgJNhVzPs2GYiqbSDUdGm0hW8IdOxNuE0STfathYfnCMCSnlhiSNdJU0+5CshuCrmaZU=
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com (20.178.246.15) by
+ MN2PR04MB5504.namprd04.prod.outlook.com (20.178.247.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2178.16; Wed, 4 Sep 2019 16:13:33 +0000
+Received: from MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::e1a5:8de2:c3b1:3fb0]) by MN2PR04MB6061.namprd04.prod.outlook.com
+ ([fe80::e1a5:8de2:c3b1:3fb0%7]) with mapi id 15.20.2220.022; Wed, 4 Sep 2019
+ 16:13:33 +0000
+From:   Anup Patel <Anup.Patel@wdc.com>
+To:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim K <rkrcmar@redhat.com>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Graf <graf@amazon.com>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Anup Patel <anup@brainfault.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "brian.starkey@arm.com" <brian.starkey@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>, Leo Li <leoyang.li@nxp.com>
-Subject: Re: [EXT] Re: [v2 1/3] drm/arm/mali-dp: Add display QoS interface
- configuration for Mali DP500
-Message-ID: <20190904161328.35k7s6knfzpvlsyr@e110455-lin.cambridge.arm.com>
-References: <20190719095445.11575-1-wen.he_1@nxp.com>
- <20190719114624.GB16673@e110455-lin.cambridge.arm.com>
- <DB7PR04MB5195BD852798B113D4CB8BA4E2C40@DB7PR04MB5195.eurprd04.prod.outlook.com>
- <20190722093241.GC15612@e110455-lin.cambridge.arm.com>
- <DB7PR04MB519533DF619D0E114EBA4C3AE2AC0@DB7PR04MB5195.eurprd04.prod.outlook.com>
+        Anup Patel <Anup.Patel@wdc.com>
+Subject: [PATCH] RISC-V: Enable KVM for RV64 and RV32
+Thread-Topic: [PATCH] RISC-V: Enable KVM for RV64 and RV32
+Thread-Index: AQHVYzuyyrykUVeDWECqlh8462FGQQ==
+Date:   Wed, 4 Sep 2019 16:13:33 +0000
+Message-ID: <20190904161245.111924-3-anup.patel@wdc.com>
+References: <20190904161245.111924-1-anup.patel@wdc.com>
+In-Reply-To: <20190904161245.111924-1-anup.patel@wdc.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR01CA0084.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00::24)
+ To MN2PR04MB6061.namprd04.prod.outlook.com (2603:10b6:208:d8::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Anup.Patel@wdc.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [49.207.53.222]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 16664c58-bd50-4a8f-90f4-08d73152d526
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB5504;
+x-ms-traffictypediagnostic: MN2PR04MB5504:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB5504451E93789675C9BB87DC8DB80@MN2PR04MB5504.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:296;
+x-forefront-prvs: 0150F3F97D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(396003)(346002)(366004)(39860400002)(199004)(189003)(66556008)(66446008)(7416002)(7736002)(8676002)(478600001)(25786009)(386003)(66946007)(99286004)(256004)(50226002)(14454004)(66476007)(64756008)(6506007)(6512007)(102836004)(6436002)(8936002)(54906003)(6116002)(3846002)(486006)(26005)(55236004)(86362001)(1076003)(53936002)(476003)(316002)(71200400001)(71190400001)(81156014)(76176011)(52116002)(305945005)(5660300002)(6486002)(36756003)(186003)(11346002)(2616005)(66066001)(44832011)(4744005)(4326008)(2906002)(446003)(81166006)(110136005);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB5504;H:MN2PR04MB6061.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BPyCsdtE7qOZ2gSNTCy1oe7EoedqlEezFHqDOVUnCNHJP9Yq6InaDppbcyowPQHNHZBjZNQNRAiOMZyo23P6Rf0Gl4RKSnw4LtpKI7c0Nu/R2CFKYfMZQjf4AgKrsre1o5WUp/ozvRMFRNP9vhiBshuWWLaUr/q0dVbJuMhP+mrFMYo/+ZFVAS/LM341ClvaJTkcMjPxenHzEM4fjmkXS55Qg21uDrA9j6T6TsvqJ6MM50p4xOFJxvHypD7E3eiUGdat+kKMBCUk6DJfeOSLjORbKPVSNd0fA2GE8FQnsEGBL47CQdnsv/aI8s8PwR8U9KwjKGcWvre5xvluHAh6qzBv0sUx0g8h1qDhIR/px0+N5ZOgPjconyGOUMZL3Zq1oiXesMRJmrIHxFt96r1xyvWozStfo7gslYEri8rfI/8=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DB7PR04MB519533DF619D0E114EBA4C3AE2AC0@DB7PR04MB5195.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 16664c58-bd50-4a8f-90f4-08d73152d526
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2019 16:13:33.3905
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DDIvp0NxByGwpC7Eb1idEhBgkPPTpSZ56myCh6hBPGwEYV/2sAca1QODcQ1leqKZCvm+ntNX7jQwF+roVv6aZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB5504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 11:14:17AM +0000, Wen He wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Liviu Dudau <liviu.dudau@arm.com>
-> > Sent: 2019年7月22日 17:33
-> > To: Wen He <wen.he_1@nxp.com>
-> > Cc: dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org;
-> > brian.starkey@arm.com; airlied@linux.ie; daniel@ffwll.ch; Leo Li
-> > <leoyang.li@nxp.com>
-> > Subject: Re: [EXT] Re: [v2 1/3] drm/arm/mali-dp: Add display QoS interface
-> > configuration for Mali DP500
-> > 
-> > Caution: EXT Email
-> > 
-> > On Mon, Jul 22, 2019 at 02:12:08AM +0000, Wen He wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Liviu Dudau <liviu.dudau@arm.com>
-> > > > Sent: 2019年7月19日 19:46
-> > > > To: Wen He <wen.he_1@nxp.com>
-> > > > Cc: dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org;
-> > > > brian.starkey@arm.com; airlied@linux.ie; daniel@ffwll.ch; Leo Li
-> > > > <leoyang.li@nxp.com>
-> > > > Subject: [EXT] Re: [v2 1/3] drm/arm/mali-dp: Add display QoS
-> > > > interface configuration for Mali DP500
-> > > >
-> > > > Caution: EXT Email
-> > > >
-> > > > On Fri, Jul 19, 2019 at 05:54:45PM +0800, Wen He wrote:
-> > > > > Configure the display Quality of service (QoS) levels priority if
-> > > > > the optional property node "arm,malidp-aqros-value" is defined in DTS
-> > file.
-> > > > >
-> > > > > QoS signaling using AQROS and AWQOS AXI interface signals, the
-> > > > > AQROS is driven from the "RQOS" register, so needed to program the
-> > > > > RQOS register to avoid the 4k resolution flicker issue on the LS1028A
-> > platform.
-> > > > >
-> > > > > Signed-off-by: Wen He <wen.he_1@nxp.com>
-> > > > > ---
-> > > > > change in v2:
-> > > > >         - modify some content based on feedback from maintainers
-> > > > >
-> > > > >  drivers/gpu/drm/arm/malidp_drv.c  |  6 ++++++
-> > > > >  drivers/gpu/drm/arm/malidp_hw.c   | 13 +++++++++++++
-> > > > >  drivers/gpu/drm/arm/malidp_hw.h   |  3 +++
-> > > > >  drivers/gpu/drm/arm/malidp_regs.h | 10 ++++++++++
-> > > > >  4 files changed, 32 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/arm/malidp_drv.c
-> > > > > b/drivers/gpu/drm/arm/malidp_drv.c
-> > > > > index f25ec4382277..61c49a0668a7 100644
-> > > > > --- a/drivers/gpu/drm/arm/malidp_drv.c
-> > > > > +++ b/drivers/gpu/drm/arm/malidp_drv.c
-> > > > > @@ -818,6 +818,12 @@ static int malidp_bind(struct device *dev)
-> > > > >
-> > > > >       malidp->core_id = version;
-> > > > >
-> > > > > +     ret = of_property_read_u32(dev->of_node,
-> > > > > +                                     "arm,malidp-arqos-value",
-> > > > > +                                     &hwdev->arqos_value);
-> > > > > +     if (ret)
-> > > > > +             hwdev->arqos_value = 0x0;
-> > > >
-> > > > Is zero the default value that you want? I thought it was 0x00010001.
-> > >
-> > > Actually, the register default value always is 0x00010001(can be found in RM
-> > document).
-> > 
-> > Exactly, but with your code you are overwriting it to 0 if the DT doesn't have
-> > the arm,malidp-arqos-value property.
-> > 
-> > >
-> > > >
-> > > > > +
-> > > > >       /* set the number of lines used for output of RGB data */
-> > > > >       ret = of_property_read_u8_array(dev->of_node,
-> > > > >
-> > > > > "arm,malidp-output-port-lines", diff --git
-> > > > > a/drivers/gpu/drm/arm/malidp_hw.c
-> > > > > b/drivers/gpu/drm/arm/malidp_hw.c index 50af399d7f6f..323683b1e9f7
-> > > > > 100644
-> > > > > --- a/drivers/gpu/drm/arm/malidp_hw.c
-> > > > > +++ b/drivers/gpu/drm/arm/malidp_hw.c
-> > > > > @@ -374,6 +374,19 @@ static void malidp500_modeset(struct
-> > > > malidp_hw_device *hwdev, struct videomode *
-> > > > >               malidp_hw_setbits(hwdev, MALIDP_DISP_FUNC_ILACED,
-> > > > MALIDP_DE_DISPLAY_FUNC);
-> > > > >       else
-> > > > >               malidp_hw_clearbits(hwdev,
-> > MALIDP_DISP_FUNC_ILACED,
-> > > > > MALIDP_DE_DISPLAY_FUNC);
-> > > > > +
-> > > > > +     /*
-> > > > > +      * Program the RQoS register to avoid 4k resolution flicker
-> > > > > +      * on the LS1028A.
-> > > > > +      */
-> > > > > +     if (hwdev->arqos_value) {
-> > > > > +             val = hwdev->arqos_value;
-> > > > > +
-> > > > > +             if (mode->pixelclock == 594000000)
-> > > >
-> > > > If I remember correctly, you declare the pixelclocks in the device
-> > > > tree, so I wonder if this is needed here. We should just set what
-> > > > value was in the DT regardless of the pixelclock, and then you
-> > > > manipulate the DT to choose one of your fixed resolutions and also set the
-> > QoS value.
-> > >
-> > > Yes, you remember correctly, but
-> > > 1. declare the pixelclocks in the device tree.
-> > > About this, I was hoping to discuss it with you. I want to implement
-> > > another patch that just declare 27MHz reference clock in the device
-> > > tree and add a fake clock subsystem to enable/display prepare to set PLL. I
-> > am thinking what to do next.
-> > > As I remember, I sent out a patch that "Disable checking for required
-> > > pixel clock", I think should be cancel it.
-> > >
-> > > 2. declare the fixed resolutions list in DTS.
-> > > Yes, Although I put four resolutions for supported list in DTS file,
-> > > but this just a workaround that If not enable EDID OR EDID is not
-> > > available. Once EDID is enabled, these resolutions list declare will
-> > > be remove in DTS. so we can't use it as a condition to set the QoS value.
-> > 
-> > 3. Actually enable the clock provider. I've had a look at the public
-> > documentation and it looks like the the pixelclock is provided by an IDT
-> > VersaClock 5 generator, for which there is a kernel driver. I've started playing
-> > with it but got pulled back by other more immediate tasks.
-> > 
-> > Anyway, what I was trying to hint was that putting in the code the exact
-> > pixelclock value might not be the best thing. In my view, pixelclock reflects the
-> > need for a certain bandwidth, with is usually a product of output (number of
-> > pixels) and refresh frequency. I'm guessing going above 4k@60 will also trigger
-> > the flicker, but with your patch we will not react correctly.
-> > 
-> > Best regards,
-> > Liviu
-> >
-> 
-> Hmm.. I've already written the pixel clock provider driver of the LS1028A and upstreamed..
-> So more resolutions will be support on LS1028A.
-> Thank you for the comments that which made me determined to get this done.
-> 
-> For this change, I would be remove this condition "if (mode->pixelclock == 594000000)"
-> And apply this change for all resolutions on LS1028A.
-> 
-> How do you think?  
+DO NOT UPSTREAM !!!!!
 
-Hi Wen,
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+---
+ arch/riscv/configs/defconfig      | 2 ++
+ arch/riscv/configs/rv32_defconfig | 2 ++
+ 2 files changed, 4 insertions(+)
 
-Sorry, I was away on sabbatical until now.
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index 420a0dbef386..320a7f1da4fc 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -16,6 +16,8 @@ CONFIG_EXPERT=3Dy
+ CONFIG_BPF_SYSCALL=3Dy
+ CONFIG_SOC_SIFIVE=3Dy
+ CONFIG_SMP=3Dy
++CONFIG_VIRTUALIZATION=3Dy
++CONFIG_KVM=3Dy
+ CONFIG_MODULES=3Dy
+ CONFIG_MODULE_UNLOAD=3Dy
+ CONFIG_NET=3Dy
+diff --git a/arch/riscv/configs/rv32_defconfig b/arch/riscv/configs/rv32_de=
+fconfig
+index 87ee6e62b64b..6223e47cc5f0 100644
+--- a/arch/riscv/configs/rv32_defconfig
++++ b/arch/riscv/configs/rv32_defconfig
+@@ -16,6 +16,8 @@ CONFIG_EXPERT=3Dy
+ CONFIG_BPF_SYSCALL=3Dy
+ CONFIG_ARCH_RV32I=3Dy
+ CONFIG_SMP=3Dy
++CONFIG_VIRTUALIZATION=3Dy
++CONFIG_KVM=3Dy
+ CONFIG_MODULES=3Dy
+ CONFIG_MODULE_UNLOAD=3Dy
+ CONFIG_NET=3Dy
+--=20
+2.17.1
 
-Not sure if I got your message right: do you want to apply the RQOS value regardless
-of the resolution (but only if defined to a non-zero value in the DTS)? If so, then
-I'm fine with that idea. Can you send a refreshed patch?
-
-Best regards,
-Liviu
-
-
-> 
-> Best Regards,
-> Wen
-> > 
-> > >
-> > > Best Regards,
-> > > Wen
-> > >
-> > > >
-> > > > Best regards,
-> > > > Liviu
-> > > >
-> > > > > +                     malidp_hw_setbits(hwdev, val,
-> > > > MALIDP500_RQOS_QUALITY);
-> > > > > +             else
-> > > > > +                     malidp_hw_clearbits(hwdev, val,
-> > > > MALIDP500_RQOS_QUALITY);
-> > > > > +     }
-> > > > >  }
-> > > > >
-> > > > >  int malidp_format_get_bpp(u32 fmt) diff --git
-> > > > > a/drivers/gpu/drm/arm/malidp_hw.h
-> > > > > b/drivers/gpu/drm/arm/malidp_hw.h index
-> > 968a65eed371..e4c36bc90bda
-> > > > > 100644
-> > > > > --- a/drivers/gpu/drm/arm/malidp_hw.h
-> > > > > +++ b/drivers/gpu/drm/arm/malidp_hw.h
-> > > > > @@ -251,6 +251,9 @@ struct malidp_hw_device {
-> > > > >
-> > > > >       /* size of memory used for rotating layers, up to two banks
-> > > > > available
-> > > > */
-> > > > >       u32 rotation_memory[2];
-> > > > > +
-> > > > > +     /* priority level of RQOS register used for driven the ARQOS signal
-> > */
-> > > > > +     u32 arqos_value;
-> > > > >  };
-> > > > >
-> > > > >  static inline u32 malidp_hw_read(struct malidp_hw_device *hwdev,
-> > > > > u32
-> > > > > reg) diff --git a/drivers/gpu/drm/arm/malidp_regs.h
-> > > > > b/drivers/gpu/drm/arm/malidp_regs.h
-> > > > > index 993031542fa1..514c50dcb74d 100644
-> > > > > --- a/drivers/gpu/drm/arm/malidp_regs.h
-> > > > > +++ b/drivers/gpu/drm/arm/malidp_regs.h
-> > > > > @@ -210,6 +210,16 @@
-> > > > >  #define MALIDP500_CONFIG_VALID               0x00f00
-> > > > >  #define MALIDP500_CONFIG_ID          0x00fd4
-> > > > >
-> > > > > +/*
-> > > > > + * The quality of service (QoS) register on the DP500. RQOS
-> > > > > +register values
-> > > > > + * are driven by the ARQOS signal, using AXI transacations,
-> > > > > +dependent on the
-> > > > > + * FIFO input level.
-> > > > > + * The RQOS register can also set QoS levels for:
-> > > > > + *    - RED_ARQOS   @ A 4-bit signal value for close to underflow
-> > > > conditions
-> > > > > + *    - GREEN_ARQOS @ A 4-bit signal value for normal conditions
-> > > > > + */
-> > > > > +#define MALIDP500_RQOS_QUALITY          0x00500
-> > > > > +
-> > > > >  /* register offsets and bits specific to DP550/DP650 */
-> > > > >  #define MALIDP550_ADDR_SPACE_SIZE    0x10000
-> > > > >  #define MALIDP550_DE_CONTROL         0x00010
-> > > > > --
-> > > > > 2.17.1
-> > > > >
-> > > >
-> > > > --
-> > > > ====================
-> > > > | I would like to |
-> > > > | fix the world,  |
-> > > > | but they're not |
-> > > > | giving me the   |
-> > > >  \ source code!  /
-> > > >   ---------------
-> > > >     ¯\_(ツ)_/¯
-> > 
-> > --
-> > ====================
-> > | I would like to |
-> > | fix the world,  |
-> > | but they're not |
-> > | giving me the   |
-> >  \ source code!  /
-> >   ---------------
-> >     ¯\_(ツ)_/¯
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
