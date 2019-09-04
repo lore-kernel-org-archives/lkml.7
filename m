@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C50FC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0E3C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2D22087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E2BD22DBF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620838;
-	bh=lrCFZBgs7taAitb//K8nDjMil3QsaNgZqYnMNkSRP94=;
+	s=default; t=1567620841;
+	bh=0qnFdWszRctW5Yc3OLMs8/do88zi4L5hr+8kWol5ZO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nuiuV+F3rwNRzt0ExJ+SgTpPyt8igoygRXAI9NQ9oYIaGNfjTR3zi1v+hQrAouA3Q
-	 syV2MG2EyAfgwDKsgyD2o4Xwb2NBp3k0CIR5wg+8QDuJ8eqy6GwDC3bJZZxrKmhcXC
-	 sFJuHrwOZso6vf1S3w3Ln2uu4GUxDLOPwQngl4DM=
+	b=oqU0AtcTvDe+jFcN0PeWbBIgMOAxnVNAQZj2USty4ggqwH7itGLIp5pB82UEMnFjG
+	 rbUC4bkEuk5MOycSdmQkCN0BXGHirLz2wmXQbIm1v+TsSGYdk9Djdxhy7qChIzLF3B
+	 ELiajn21oJivR64I2i+yWGpHfP9cAFcb1KC3cSy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390240AbfIDSN6 (ORCPT
+        id S2390423AbfIDSOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58838 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:14:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390146AbfIDSNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:54 -0400
+        id S2389036AbfIDSN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A72C8206BA;
-        Wed,  4 Sep 2019 18:13:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54BEE22DBF;
+        Wed,  4 Sep 2019 18:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620833;
-        bh=lrCFZBgs7taAitb//K8nDjMil3QsaNgZqYnMNkSRP94=;
+        s=default; t=1567620835;
+        bh=0qnFdWszRctW5Yc3OLMs8/do88zi4L5hr+8kWol5ZO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BgtmedK53JzJLQgmypoDy+AFI6MTim1xoIxhDrSxhB1mBzyQGJ+0jutqApXfaidAn
-         cSnpQJll97QlbZ5/NMV62kMYs3m8UIxI5Qo+zvkNw3Bw9aiaqNxVtqDMTROPYqbVHf
-         HSSZ547pqzC21PXufYVPuEqGuWbYezfPmkh3hdXY=
+        b=Xot1CW3TRfr9SfDvPVzGG/hO3payEFwe2TE8rRRbdewt3CO76XfhBljMWJE0KEH+V
+         wu8UqI8iiVt93lKWIV6SjzEskBfi8CaPxwl623TNEEa1KNmgjlzX4zpubwWm5Z8EcY
+         iPeR4ZylB0lgIVJ3uXKpv4xoQ8o1CzYl5E1fCcG4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.2 113/143] drm/i915: Call dma_set_max_seg_size() in i915_driver_hw_probe()
-Date:   Wed,  4 Sep 2019 19:54:16 +0200
-Message-Id: <20190904175318.818342280@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Cooks <andrew.cooks@opengear.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>
+Subject: [PATCH 5.2 114/143] i2c: piix4: Fix port selection for AMD Family 16h Model 30h
+Date:   Wed,  4 Sep 2019 19:54:17 +0200
+Message-Id: <20190904175318.855124160@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,85 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lyude Paul <lyude@redhat.com>
+From: Andrew Cooks <andrew.cooks@opengear.com>
 
-commit 32f0a982650b123bdab36865617d3e03ebcacf3b upstream.
+commit c7c06a1532f3fe106687ac82a13492c6a619ff1c upstream.
 
-Currently, we don't call dma_set_max_seg_size() for i915 because we
-intentionally do not limit the segment length that the device supports.
-However, this results in a warning being emitted if we try to map
-anything larger than SZ_64K on a kernel with CONFIG_DMA_API_DEBUG_SG
-enabled:
+Family 16h Model 30h SMBus controller needs the same port selection fix
+as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
+selection for AMD Family 17h chips")
 
-[    7.751926] DMA-API: i915 0000:00:02.0: mapping sg segment longer
-than device claims to support [len=98304] [max=65536]
-[    7.751934] WARNING: CPU: 5 PID: 474 at kernel/dma/debug.c:1220
-debug_dma_map_sg+0x20f/0x340
+commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
+register") also fixed the port selection for Hudson2, but unfortunately
+this is not the exact same device and the AMD naming and PCI Device IDs
+aren't particularly helpful here.
 
-This was originally brought up on
-https://bugs.freedesktop.org/show_bug.cgi?id=108517 , and the consensus
-there was it wasn't really useful to set a limit (and that dma-debug
-isn't really all that useful for i915 in the first place). Unfortunately
-though, CONFIG_DMA_API_DEBUG_SG is enabled in the debug configs for
-various distro kernels. Since a WARN_ON() will disable automatic problem
-reporting (and cause any CI with said option enabled to start
-complaining), we really should just fix the problem.
+The SMBus port selection register is common to the following Families
+and models, as documented in AMD's publicly available BIOS and Kernel
+Developer Guides:
 
-Note that as me and Chris Wilson discussed, the other solution for this
-would be to make DMA-API not make such assumptions when a driver hasn't
-explicitly set a maximum segment size. But, taking a look at the commit
-which originally introduced this behavior, commit 78c47830a5cb
-("dma-debug: check scatterlist segments"), there is an explicit mention
-of this assumption and how it applies to devices with no segment size:
+ 50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+ 55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+ 52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
 
-	Conversely, devices which are less limited than the rather
-	conservative defaults, or indeed have no limitations at all
-	(e.g. GPUs with their own internal MMU), should be encouraged to
-	set appropriate dma_parms, as they may get more efficient DMA
-	mapping performance out of it.
+The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
+between Bolton FCH and Family 16h Model 30h, but the location of the
+SmBus0Sel port selection bits are different:
 
-So unless there's any concerns (I'm open to discussion!), let's just
-follow suite and call dma_set_max_seg_size() with UINT_MAX as our limit
-to silence any warnings.
+ 51192 - Bolton Register Reference Guide
 
-Changes since v3:
-* Drop patch for enabling CONFIG_DMA_API_DEBUG_SG in CI. It looks like
-  just turning it on causes the kernel to spit out bogus WARN_ONs()
-  during some igt tests which would otherwise require teaching igt to
-  disable the various DMA-API debugging options causing this. This is
-  too much work to be worth it, since DMA-API debugging is useless for
-  us. So, we'll just settle with this single patch to squelch WARN_ONs()
-  during driver load for users that have CONFIG_DMA_API_DEBUG_SG turned
-  on for some reason.
-* Move dma_set_max_seg_size() call into i915_driver_hw_probe() - Chris
-  Wilson
+We distinguish between Bolton and Family 16h Model 30h using the PCI
+Revision ID:
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: <stable@vger.kernel.org> # v4.18+
-Link: https://patchwork.freedesktop.org/patch/msgid/20190823205251.14298-1-lyude@redhat.com
-(cherry picked from commit acd674af95d3f627062007429b9c195c6b32361d)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+  Bolton is device 0x780b, revision 0x15
+  Family 16h Model 30h is device 0x780b, revision 0x1F
+  Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
+
+The following additional public AMD BKDG documents were checked and do
+not share the same port selection register:
+
+ 42301 - Family 15h Model 00h-0Fh doesn't mention any
+ 42300 - Family 15h Model 10h-1Fh doesn't mention any
+ 49125 - Family 15h Model 30h-3Fh doesn't mention any
+
+ 48751 - Family 16h Model 00h-0Fh uses the previously supported
+         index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
+
+Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: stable@vger.kernel.org [v4.6+]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/i915_drv.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-piix4.c |   12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
---- a/drivers/gpu/drm/i915/i915_drv.c
-+++ b/drivers/gpu/drm/i915/i915_drv.c
-@@ -1569,6 +1569,12 @@ static int i915_driver_init_hw(struct dr
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -91,7 +91,7 @@
+ #define SB800_PIIX4_PORT_IDX_MASK	0x06
+ #define SB800_PIIX4_PORT_IDX_SHIFT	1
  
- 	pci_set_master(pdev);
- 
-+	/*
-+	 * We don't have a max segment size, so set it to the max so sg's
-+	 * debugging layer doesn't complain
-+	 */
-+	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
-+
- 	/* overlay on gen2 is broken and can't address above 1G */
- 	if (IS_GEN(dev_priv, 2)) {
- 		ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(30));
+-/* On kerncz, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
++/* On kerncz and Hudson2, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
+ #define SB800_PIIX4_PORT_IDX_KERNCZ		0x02
+ #define SB800_PIIX4_PORT_IDX_MASK_KERNCZ	0x18
+ #define SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ	3
+@@ -358,18 +358,16 @@ static int piix4_setup_sb800(struct pci_
+ 	/* Find which register is used for port selection */
+ 	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD ||
+ 	    PIIX4_dev->vendor == PCI_VENDOR_ID_HYGON) {
+-		switch (PIIX4_dev->device) {
+-		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
++		if (PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
++		    (PIIX4_dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
++		     PIIX4_dev->revision >= 0x1F)) {
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
+ 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK_KERNCZ;
+ 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ;
+-			break;
+-		case PCI_DEVICE_ID_AMD_HUDSON2_SMBUS:
+-		default:
++		} else {
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_ALT;
+ 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK;
+ 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT;
+-			break;
+ 		}
+ 	} else {
+ 		if (!request_muxed_region(SB800_PIIX4_SMB_IDX, 2,
 
 
