@@ -2,52 +2,55 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBC7C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD35C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7002087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFFC320882
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621192;
-	bh=KWRkPpHq4GKG0B43OYfuAYJdaXvoifvfYz9Fl7bcoeU=;
+	s=default; t=1567621200;
+	bh=BUpWZua4Q0BuGJqmrzcOimefWihH3zULKUdnDNsQTDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8iyGOyWDHb5mZtum0+Z7eutpiRg/Gq9atzH9QwK26v3iwFbqTfibzDwjAAZnkpzO
-	 2RRBQcdTLKB3OV7xmXLeJd1/5FdEXJl3LKaJL1HF/XDWbGPgFAZlD/3bcxKYoGtITQ
-	 Wi2zU/jWvuL9URQIrZQQvR/aJXx8X/s1Y17jWk4w=
+	b=RZhQvsmkflk1WTJg0ym2Xfff6FHSfl2SGk5epxpoYlkMwJQspyPGZEhZ3kCU9V112
+	 m/+y7SWqpIwfrqZDbX/j56qR2yxtoYZvSNUBJUXf1c/Z46yJ4ebFA0BCvFPuSZjhun
+	 7oD2KF9D98f8ZZeFmqPM25vKf8mRV1ZTXK7rK5MY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388327AbfIDSTv (ORCPT
+        id S2389831AbfIDSIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:19:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52006 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389476AbfIDSI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:57 -0400
+        id S2389536AbfIDSIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E2A7206B8;
-        Wed,  4 Sep 2019 18:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25FC82339E;
+        Wed,  4 Sep 2019 18:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620536;
-        bh=KWRkPpHq4GKG0B43OYfuAYJdaXvoifvfYz9Fl7bcoeU=;
+        s=default; t=1567620520;
+        bh=BUpWZua4Q0BuGJqmrzcOimefWihH3zULKUdnDNsQTDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MlVVTnlTVEWCV2UG3kPo30GnFezzmp6bo4VS8Zw6tciMmQkvdyiBPIJbUwFfP3LQN
-         x0EFV1XvWaFZAIUDjFrcN9XTz+am0xBZ5ZhN3LD+mNlbq/THxpv2mH82K+gJURVR2n
-         BExoMxbBRdqC0sPBUi4d8o8UNUBDrwyBT6E3CKxI=
+        b=q5wO4ay9simPVTash6j548gB0Fhzj4q14jwWastot8h3XNVjrhEbgxMpjBDDYUBc4
+         sLZ6Jc1nbI02i+wWN3FxbEJ30I1QLK2pvVmlzWGpbssHx0LCLGdayvsQHnhTF+vmDs
+         QvsSNtX86SNf8T5euaSynwQH2PLwd2mOb/6wQc8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 88/93] NFSv4/pnfs: Fix a page lock leak in nfs_pageio_resend()
-Date:   Wed,  4 Sep 2019 19:54:30 +0200
-Message-Id: <20190904175310.728158872@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Mayr <me@sam.st>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dmitry Safonov <dsafonov@virtuozzo.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Subject: [PATCH 4.19 48/93] uprobes/x86: Fix detection of 32-bit user mode
+Date:   Wed,  4 Sep 2019 19:53:50 +0200
+Message-Id: <20190904175307.231956862@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,55 +63,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f4340e9314dbfadc48758945f85fc3b16612d06f ]
+From: Sebastian Mayr <me@sam.st>
 
-If the attempt to resend the pages fails, we need to ensure that we
-clean up those pages that were not transmitted.
+commit 9212ec7d8357ea630031e89d0d399c761421c83b upstream.
 
-Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org # v4.5+
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+32-bit processes running on a 64-bit kernel are not always detected
+correctly, causing the process to crash when uretprobes are installed.
+
+The reason for the crash is that in_ia32_syscall() is used to determine the
+process's mode, which only works correctly when called from a syscall.
+
+In the case of uretprobes, however, the function is called from a exception
+and always returns 'false' on a 64-bit kernel. In consequence this leads to
+corruption of the process's return address.
+
+Fix this by using user_64bit_mode() instead of in_ia32_syscall(), which
+is correct in any situation.
+
+[ tglx: Add a comment and the following historical info ]
+
+This should have been detected by the rename which happened in commit
+
+  abfb9498ee13 ("x86/entry: Rename is_{ia32,x32}_task() to in_{ia32,x32}_syscall()")
+
+which states in the changelog:
+
+    The is_ia32_task()/is_x32_task() function names are a big misnomer: they
+    suggests that the compat-ness of a system call is a task property, which
+    is not true, the compatness of a system call purely depends on how it
+    was invoked through the system call layer.
+    .....
+
+and then it went and blindly renamed every call site.
+
+Sadly enough this was already mentioned here:
+
+   8faaed1b9f50 ("uprobes/x86: Introduce sizeof_long(), cleanup adjust_ret_addr() and
+arch_uretprobe_hijack_return_addr()")
+
+where the changelog says:
+
+    TODO: is_ia32_task() is not what we actually want, TS_COMPAT does
+    not necessarily mean 32bit. Fortunately syscall-like insns can't be
+    probed so it actually works, but it would be better to rename and
+    use is_ia32_frame().
+
+and goes all the way back to:
+
+    0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
+
+Oh well. 7+ years until someone actually tried a uretprobe on a 32bit
+process on a 64bit kernel....
+
+Fixes: 0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
+Signed-off-by: Sebastian Mayr <me@sam.st>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Dmitry Safonov <dsafonov@virtuozzo.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190728152617.7308-1-me@sam.st
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/nfs/pagelist.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ arch/x86/kernel/uprobes.c |   17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index d40bf560f3ca7..9cbd829b4ed5f 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1232,20 +1232,22 @@ static void nfs_pageio_complete_mirror(struct nfs_pageio_descriptor *desc,
- int nfs_pageio_resend(struct nfs_pageio_descriptor *desc,
- 		      struct nfs_pgio_header *hdr)
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -521,9 +521,12 @@ struct uprobe_xol_ops {
+ 	void	(*abort)(struct arch_uprobe *, struct pt_regs *);
+ };
+ 
+-static inline int sizeof_long(void)
++static inline int sizeof_long(struct pt_regs *regs)
  {
--	LIST_HEAD(failed);
-+	LIST_HEAD(pages);
- 
- 	desc->pg_io_completion = hdr->io_completion;
- 	desc->pg_dreq = hdr->dreq;
--	while (!list_empty(&hdr->pages)) {
--		struct nfs_page *req = nfs_list_entry(hdr->pages.next);
-+	list_splice_init(&hdr->pages, &pages);
-+	while (!list_empty(&pages)) {
-+		struct nfs_page *req = nfs_list_entry(pages.next);
- 
- 		if (!nfs_pageio_add_request(desc, req))
--			nfs_list_move_request(req, &failed);
-+			break;
- 	}
- 	nfs_pageio_complete(desc);
--	if (!list_empty(&failed)) {
--		list_move(&failed, &hdr->pages);
--		return desc->pg_error < 0 ? desc->pg_error : -EIO;
-+	if (!list_empty(&pages)) {
-+		int err = desc->pg_error < 0 ? desc->pg_error : -EIO;
-+		hdr->completion_ops->error_cleanup(&pages, err);
-+		return err;
- 	}
- 	return 0;
+-	return in_ia32_syscall() ? 4 : 8;
++	/*
++	 * Check registers for mode as in_xxx_syscall() does not apply here.
++	 */
++	return user_64bit_mode(regs) ? 8 : 4;
  }
--- 
-2.20.1
-
+ 
+ static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+@@ -534,9 +537,9 @@ static int default_pre_xol_op(struct arc
+ 
+ static int emulate_push_stack(struct pt_regs *regs, unsigned long val)
+ {
+-	unsigned long new_sp = regs->sp - sizeof_long();
++	unsigned long new_sp = regs->sp - sizeof_long(regs);
+ 
+-	if (copy_to_user((void __user *)new_sp, &val, sizeof_long()))
++	if (copy_to_user((void __user *)new_sp, &val, sizeof_long(regs)))
+ 		return -EFAULT;
+ 
+ 	regs->sp = new_sp;
+@@ -569,7 +572,7 @@ static int default_post_xol_op(struct ar
+ 		long correction = utask->vaddr - utask->xol_vaddr;
+ 		regs->ip += correction;
+ 	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
+-		regs->sp += sizeof_long(); /* Pop incorrect return address */
++		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
+ 		if (emulate_push_stack(regs, utask->vaddr + auprobe->defparam.ilen))
+ 			return -ERESTART;
+ 	}
+@@ -688,7 +691,7 @@ static int branch_post_xol_op(struct arc
+ 	 * "call" insn was executed out-of-line. Just restore ->sp and restart.
+ 	 * We could also restore ->ip and try to call branch_emulate_op() again.
+ 	 */
+-	regs->sp += sizeof_long();
++	regs->sp += sizeof_long(regs);
+ 	return -ERESTART;
+ }
+ 
+@@ -1068,7 +1071,7 @@ bool arch_uprobe_skip_sstep(struct arch_
+ unsigned long
+ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs)
+ {
+-	int rasize = sizeof_long(), nleft;
++	int rasize = sizeof_long(regs), nleft;
+ 	unsigned long orig_ret_vaddr = 0; /* clear high bits for 32-bit apps */
+ 
+ 	if (copy_from_user(&orig_ret_vaddr, (void __user *)regs->sp, rasize))
 
 
