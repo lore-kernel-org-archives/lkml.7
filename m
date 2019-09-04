@@ -2,130 +2,99 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AD8C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A2CC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E66AF20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jFaDXlIx"
+	by mail.kernel.org (Postfix) with ESMTP id 2924B20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567621603;
+	bh=rHytPNhQkF8ov8Qv+LZTByPCoP/QEAlGbsW/DS6uliA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PSzP85V/JL3Tg2UY/QiBd5KTSueBepOVWoEuJ3yGDhDcbpgf/RGViop0zq9Tx2Adh
+	 CESuy0e4ZCyS1wTht8Wz3rtj8eoFL2Rzyd+e2+d6ZP+pnS/013FDOKg8Sz2wcFQTAO
+	 qdhvmKWFGccY9xYEuCLGthr5ecKSFvYSGw3wqAH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388142AbfIDS0g (ORCPT
+        id S2388187AbfIDS0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:26:36 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38906 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730209AbfIDS0f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:26:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=s77u1k+rZJN6iSCbRoduEfOWdKA/7h9aaKfVHtc+CJw=; b=jFaDXlIx/OxYa+ytg8ebhfp27
-        E37dN3upZd3PsOfL2E0F81O3rPSaZ0mE6WXgF6HdIizgXHeU26Sk2FQhzSwqGmy+t+TIkCAGovloI
-        2OJcrHDs22d9vji2GLvzkeOtd+Hsw/nWV5CHvY2DFwrzIj2iq9CN5CJ3vCvs3VbmzJEpzi3Ytm37F
-        YP8BTbGaXiJt1t5+Pa2ukY7KDVMp6tqjfNzn6oRzce2t1olJjZZKwWtU15uV2lCyPgjjqJbhFHvYg
-        ep8ljixm4zwNixNS95lKfRbEVfDkU5LxNncNhREXzEEcikdxl1tuc9dFOCtU2xWILl/aJW7wddrKc
-        t7Hp916AQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5Zyk-0002Ja-Ih; Wed, 04 Sep 2019 18:26:02 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 985D3980BFC; Wed,  4 Sep 2019 20:26:07 +0200 (CEST)
-Date:   Wed, 4 Sep 2019 20:26:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        paulmck <paulmck@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Russell King, ARM Linux" <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Chris Lameter <cl@linux.com>, Kirill Tkhai <tkhai@yandex.ru>,
-        Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [RFC PATCH 1/2] Fix: sched/membarrier: p->mm->membarrier_state
- racy load
-Message-ID: <20190904182607.GG17205@worktop.programming.kicks-ass.net>
-References: <20190903201135.1494-1-mathieu.desnoyers@efficios.com>
- <20190903202434.GX2349@hirez.programming.kicks-ass.net>
- <CAHk-=whfYb5RnJGqDV3W3093XGwOwePV-SxixaWcWM6hmidArg@mail.gmail.com>
- <1604807537.1565.1567610340030.JavaMail.zimbra@efficios.com>
- <20190904160953.GU2332@hirez.programming.kicks-ass.net>
- <1825272223.1740.1567617173011.JavaMail.zimbra@efficios.com>
+        Wed, 4 Sep 2019 14:26:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732934AbfIDR5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5360C22CF5;
+        Wed,  4 Sep 2019 17:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567619854;
+        bh=rHytPNhQkF8ov8Qv+LZTByPCoP/QEAlGbsW/DS6uliA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gADxGfuuJN71FJ6NhGTEBaTjr308dn6feKcdbzc5QdvHHLWl3AjwuYhvQNkbfIT7/
+         QI2NQAnQ7pnI9kx8q1lWrw4GDxoggApCibuLam+codMN67GLfekuVjQemP/VlybgXa
+         3zUmj0Sef0mTQx/wjfivI/O+zLSHT5/ZpSdAfqrk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiangfeng Xiao <xiaojiangfeng@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 19/77] net: hisilicon: fix hip04-xmit never return TX_BUSY
+Date:   Wed,  4 Sep 2019 19:53:06 +0200
+Message-Id: <20190904175305.429511694@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
+References: <20190904175303.317468926@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1825272223.1740.1567617173011.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 01:12:53PM -0400, Mathieu Desnoyers wrote:
-> ----- On Sep 4, 2019, at 12:09 PM, Peter Zijlstra peterz@infradead.org wrote:
-> 
-> > On Wed, Sep 04, 2019 at 11:19:00AM -0400, Mathieu Desnoyers wrote:
-> >> ----- On Sep 3, 2019, at 4:36 PM, Linus Torvalds torvalds@linux-foundation.org
-> >> wrote:
-> > 
-> >> > I wonder if the easiest model might be to just use a percpu variable
-> >> > instead for the membarrier stuff? It's not like it has to be in
-> >> > 'struct task_struct' at all, I think. We only care about the current
-> >> > runqueues, and those are percpu anyway.
-> >> 
-> >> One issue here is that membarrier iterates over all runqueues without
-> >> grabbing any runqueue lock. If we copy that state from mm to rq on
-> >> sched switch prepare, we would need to ensure we have the proper
-> >> memory barriers between:
-> >> 
-> >> prior user-space memory accesses  /  setting the runqueue membarrier state
-> >> 
-> >> and
-> >> 
-> >> setting the runqueue membarrier state / following user-space memory accesses
-> >> 
-> >> Copying the membarrier state into the task struct leverages the fact that
-> >> we have documented and guaranteed those barriers around the rq->curr update
-> >> in the scheduler.
-> > 
-> > Should be the same as the barriers we already rely on for rq->curr, no?
-> > That is, if we put this before switch_mm() then we have
-> > smp_mb__after_spinlock() and switch_mm() itself.
-> 
-> Yes, I think we can piggy-back on the already documented barriers documented around
-> rq->curr store.
-> 
-> > Also, if we place mm->membarrier_state in the same cacheline as mm->pgd
-> > (which switch_mm() is bound to load) then we should be fine, I think.
-> 
-> Yes, if we make sure membarrier_prepare_task_switch only updates the
-> rq->membarrier_state if prev->mm != next->mm, we should be able to avoid
-> loading next->mm->membarrier_state when switch_mm() is not invoked.
-> 
-> I'll prepare RFC patch implementing this approach.
+[ Upstream commit f2243b82785942be519016067ee6c55a063bbfe2 ]
 
-Thinking about this a bit; switching it 'on' still requires some
-thinking. Consider register on an already threaded process of which
-multiple threads are 'current' on multiple CPUs. In that case none of
-the rq bits will be set.
+TX_DESC_NUM is 256, in tx_count, the maximum value of
+mod(TX_DESC_NUM - 1) is 254, the variable "count" in
+the hip04_mac_start_xmit function is never equal to
+(TX_DESC_NUM - 1), so hip04_mac_start_xmit never
+return NETDEV_TX_BUSY.
 
-Not even synchronize_rcu() is sufficient to force it either, since we
-only update on switch_mm() and nothing guarantees we pass that.
+tx_count is modified to mod(TX_DESC_NUM) so that
+the maximum value of tx_count can reach
+(TX_DESC_NUM - 1), then hip04_mac_start_xmit can reurn
+NETDEV_TX_BUSY.
 
-One possible approach would be to IPI broadcast (after setting the
-->mm->membarrier_State) and having the IPI update the rq state from
-'current->mm'.
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/hisilicon/hip04_eth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-But possible I'm just confusing evryone again. I'm not having a good day
-today.
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index fdf8a477bec9c..a88d233df4e82 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -185,7 +185,7 @@ struct hip04_priv {
+ 
+ static inline unsigned int tx_count(unsigned int head, unsigned int tail)
+ {
+-	return (head - tail) % (TX_DESC_NUM - 1);
++	return (head - tail) % TX_DESC_NUM;
+ }
+ 
+ static void hip04_config_port(struct net_device *ndev, u32 speed, u32 duplex)
+-- 
+2.20.1
+
+
+
