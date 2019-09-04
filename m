@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C919EC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7B0C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96DFC20657
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6AD22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619874;
-	bh=Lkez0H8g512vv4Kuq61c+tVEtrjq9LRaNj4FxuXnCEw=;
+	s=default; t=1567619877;
+	bh=OrImN/qivchi1pS5W/mb+sSlQy3W25ZkcjvKBEXVwWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VIL3a8Ssykett0Ae7jD4rVVe24KMlV9YVIdFFmA8L/PQqLtVKE+ne/gZI4pyflip5
-	 VX4NI5we/xAs5J7g5S10bZpM0KieqWVODA1sRy3/uUJamyy3kQjm4lIwwEM6fzVtIF
-	 bE3lBCsfI7M47FwR+UddX11AJwKF2+WwW9yWOSNQ=
+	b=G8zreeBQ5S+SCNJPZWClgSreKVx6p7wtNET7De4o8YwWjI1uhcnsZGjzmdv5Q+6bE
+	 ZescYsEQrtRHGv50lyogQ7GvGNHlSCqg6rEMFCpuCDpGnaSO/6FYdpE6zz4/cFhlXN
+	 L0ONxF8tPM82U8uT7MA4INqKSXJSAErTorI9FVrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387946AbfIDR5x (ORCPT
+        id S2387956AbfIDR54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36022 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733061AbfIDR5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:52 -0400
+        id S1733061AbfIDR5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93D53208E4;
-        Wed,  4 Sep 2019 17:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C3D1208E4;
+        Wed,  4 Sep 2019 17:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619871;
-        bh=Lkez0H8g512vv4Kuq61c+tVEtrjq9LRaNj4FxuXnCEw=;
+        s=default; t=1567619873;
+        bh=OrImN/qivchi1pS5W/mb+sSlQy3W25ZkcjvKBEXVwWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUXOyB+b9gi7roU8Oy3vzzAKswaBj8bSD/l1zjcw5vAQMqCw+hR/c0Zhlwo/6+i6X
-         XPTL7JAyk4z5SWrcO1eRcYdDc/PCT5qCHtI+QzdTJaVV1Lj0AtfqsE0LmN3ZsiLxBd
-         H36M0zfsgHhHZ0S+DQw+0BbEV8VFe8V9xH0Uu31k=
+        b=etrRmR2PVCxIGobeWo4JztGfPG89RnTxWKch6YiQpHOis7hHsGoiKyJmKxzl43LiS
+         YhP1gBVn1CtuNNzhloa6tHB4w+yHQ4boSar2Lf/U4kP+AbzT0Hws87dBzf1TAptpFs
+         nRac+TR3vTasZYW/cXnJOZsfP1DWeVVQ5ywQp6AA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 58/77] ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
-Date:   Wed,  4 Sep 2019 19:53:45 +0200
-Message-Id: <20190904175308.742764660@linuxfoundation.org>
+        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 4.4 67/77] USB: storage: ums-realtek: Update module parameter description for auto_delink_en
+Date:   Wed,  4 Sep 2019 19:53:54 +0200
+Message-Id: <20190904175309.629953004@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,52 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit daac07156b330b18eb5071aec4b3ddca1c377f2c upstream.
+commit f6445b6b2f2bb1745080af4a0926049e8bca2617 upstream.
 
-The `uac_mixer_unit_descriptor` shown as below is read from the
-device side. In `parse_audio_mixer_unit`, `baSourceID` field is
-accessed from index 0 to `bNrInPins` - 1, the current implementation
-assumes that descriptor is always valid (the length  of descriptor
-is no shorter than 5 + `bNrInPins`). If a descriptor read from
-the device side is invalid, it may trigger out-of-bound memory
-access.
+The option named "auto_delink_en" is a bit misleading, as setting it to
+false doesn't really disable auto-delink but let auto-delink be firmware
+controlled.
 
-```
-struct uac_mixer_unit_descriptor {
-	__u8 bLength;
-	__u8 bDescriptorType;
-	__u8 bDescriptorSubtype;
-	__u8 bUnitID;
-	__u8 bNrInPins;
-	__u8 baSourceID[];
-}
-```
+Update the description to reflect the real usage of this parameter.
 
-This patch fixes the bug by add a sanity check on the length of
-the descriptor.
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20190827173450.13572-1-kai.heng.feng@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/storage/realtek_cr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1647,6 +1647,7 @@ static int parse_audio_mixer_unit(struct
- 	int pin, ich, err;
+--- a/drivers/usb/storage/realtek_cr.c
++++ b/drivers/usb/storage/realtek_cr.c
+@@ -50,7 +50,7 @@ MODULE_VERSION("1.03");
  
- 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
-+	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
- 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
- 		usb_audio_err(state->chip,
- 			      "invalid MIXER UNIT descriptor %d\n",
+ static int auto_delink_en = 1;
+ module_param(auto_delink_en, int, S_IRUGO | S_IWUSR);
+-MODULE_PARM_DESC(auto_delink_en, "enable auto delink");
++MODULE_PARM_DESC(auto_delink_en, "auto delink mode (0=firmware, 1=software [default])");
+ 
+ #ifdef CONFIG_REALTEK_AUTOPM
+ static int ss_en = 1;
 
 
