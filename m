@@ -2,135 +2,68 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7017CC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D5BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464762339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D712339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 10:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfIDKNk (ORCPT
+        id S1728951AbfIDKQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 06:13:40 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49103 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbfIDKNk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 06:13:40 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1i5SIA-0000GT-8m; Wed, 04 Sep 2019 12:13:34 +0200
-Message-ID: <1567592011.3041.1.camel@pengutronix.de>
-Subject: Re: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution
- changes
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Wed, 04 Sep 2019 12:13:31 +0200
-In-Reply-To: <20190903171256.25052-1-ezequiel@collabora.com>
-References: <20190903171256.25052-1-ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
+        Wed, 4 Sep 2019 06:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbfIDKQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 06:16:24 -0400
+Received: from oasis.local.home (bl11-233-114.dsl.telepac.pt [85.244.233.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF72E21881;
+        Wed,  4 Sep 2019 10:16:20 +0000 (UTC)
+Date:   Wed, 4 Sep 2019 06:16:16 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alessio Balsini <balsini@android.com>, mingo@kernel.org,
+        juri.lelli@redhat.com, linux-kernel@vger.kernel.org,
+        dietmar.eggemann@arm.com, luca.abeni@santannapisa.it,
+        bristot@redhat.com, dvyukov@google.com, tglx@linutronix.de,
+        vpillai@digitalocean.com, kernel-team@android.com
+Subject: Re: [RFC][PATCH 01/13] sched/deadline: Impose global limits on
+ sched_attr::sched_period
+Message-ID: <20190904061616.25ce79e1@oasis.local.home>
+In-Reply-To: <20190902091623.GQ2349@hirez.programming.kicks-ass.net>
+References: <20190726145409.947503076@infradead.org>
+        <20190726161357.397880775@infradead.org>
+        <20190802172104.GA134279@google.com>
+        <20190805115309.GJ2349@hirez.programming.kicks-ass.net>
+        <20190822122949.GA245353@google.com>
+        <20190822165125.GW2369@hirez.programming.kicks-ass.net>
+        <20190831144117.GA133727@google.com>
+        <20190902091623.GQ2349@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel,
+On Mon, 2 Sep 2019 11:16:23 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-On Tue, 2019-09-03 at 14:12 -0300, Ezequiel Garcia wrote:
-> Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> changed the conditions under S_FMT was allowed for OUTPUT
-> CAPTURE buffers.
+> in sched_dl_period_handler(). And do:
 > 
-> However, and according to the mem-to-mem stateless decoder specification,
-> in order to support dynamic resolution changes, S_FMT should be allowed
-> even if OUTPUT buffers have been allocated.
-> 
-> Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
-> modification, provided the pixel format stays the same.
-> 
-> Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
-> 
-> Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
->  drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-> index 3dae52abb96c..d48b548842cf 100644
-> --- a/drivers/staging/media/hantro/hantro_v4l2.c
-> +++ b/drivers/staging/media/hantro/hantro_v4l2.c
-> @@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
->  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
->  	const struct hantro_fmt *formats;
->  	unsigned int num_fmts;
-> -	struct vb2_queue *vq;
->  	int ret;
->  
-> -	/* Change not allowed if queue is busy. */
-> -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> -	if (vb2_is_busy(vq))
-> -		return -EBUSY;
-> -
->  	if (!hantro_is_encoder_ctx(ctx)) {
->  		struct vb2_queue *peer_vq;
->  
-> +		/*
-> +		 * In other to support dynamic resolution change,
-> +		 * the decoder admits a resolution change, as long
-> +		 * as the pixelformat remains. Can't be done if streaming.
-> +		 */
-> +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
-> +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
+> +	preempt_disable();
+> 	max = (u64)READ_ONCE(sysctl_sched_dl_period_max) * NSEC_PER_USEC;
+> 	min = (u64)READ_ONCE(sysctl_sched_dl_period_min) * NSEC_PER_USEC;
+> +	preempt_enable();
 
-Before using contents of the v4l2_format f for comparison, we should run
-vidioc_try_fmt_out_mplane over it. Also, besides pixelformat, sizeimage
-shouldn't change either, at least if this is a VB2_MMAP queue.
+Hmm, I'm curious. Doesn't the preempt_disable/enable() also add
+compiler barriers which would remove the need for the READ_ONCE()s here?
 
-> +			return -EBUSY;
->  		/*
->  		 * Since format change on the OUTPUT queue will reset
->  		 * the CAPTURE queue, we can't allow doing so
-> @@ -389,6 +392,13 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
->  					  V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
->  		if (vb2_is_busy(peer_vq))
->  			return -EBUSY;
-> +	} else {
-> +		/*
-> +		 * The encoder doesn't admit a format change if
-> +		 * there are OUTPUT buffers allocated.
-> +		 */
-> +		if (vb2_is_busy(vq))
-> +			return -EBUSY;
->  	}
->  
->  	ret = vidioc_try_fmt_out_mplane(file, priv, f);
-
-I think this needs to be moved up.
-
-regards
-Philipp
+-- Steve
