@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B623EC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74031C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8A42087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5AB22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620537;
-	bh=JEiG6Dy27j7ZODpzmrYkgxRrMO3t6AHP83ZMOOZ8TH4=;
+	s=default; t=1567620540;
+	bh=1dniF9NpLvVqob9pU5F/mchFpYLmem9i+BXrwjoJXu4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OVnn05Arofcoh4ZKZ3pZOV9YWC+Wu1AiaQhPQg3CmcqXrbWeJxGw20G//IFyq+Yey
-	 C6CJvLe+sSAqkxHc4pjVuxXgL9y/XZiTr6RykRIk9E9KWQTpPn3SQw+V7tTiGA7pWh
-	 KbFyjjiaHO9TFI/ab97a3zVHUQGt9tAnNdpDnhHw=
+	b=MXbB/3V7SG3zK6Pev+BG0DCy6JUjJvhTUgDWJf860iHEfX2bK1+FkfnoKLWicKKEa
+	 3mpzebieXWAbUXXOvv2pLBwIszACEjwjt3m3yrD2mntw3q68+AaFlDD0bjo9bjjmPc
+	 QPJDjWm+kw5FN+oQOmKqPuvmMbN7yJEhrsUpstjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfIDSI4 (ORCPT
+        id S2389874AbfIDSI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:08:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51876 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:08:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389864AbfIDSIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:52 -0400
+        id S2388327AbfIDSIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD50C206B8;
-        Wed,  4 Sep 2019 18:08:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 938C52087E;
+        Wed,  4 Sep 2019 18:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620531;
-        bh=JEiG6Dy27j7ZODpzmrYkgxRrMO3t6AHP83ZMOOZ8TH4=;
+        s=default; t=1567620534;
+        bh=1dniF9NpLvVqob9pU5F/mchFpYLmem9i+BXrwjoJXu4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xn3NcSd2oDHauucnabC/byQbxonYebZiHMVTVZZU4WZHb2Nl6v0V0j2RostSW8YyG
-         wXoJg4w40BUMKiPrDuHN+Uq3Jg8gKYXpftJKx5B4b4emC6qDNJqeghta6mY6dzsNSn
-         oA8lTOzCwNnhCMDpnsE8YPpH4YjQO/yh4D5OI/o0=
+        b=zEdzxxWmg0Kuy1gsJpXLqjw21CCRi57uhkqLZCQxTWvoQd08T7vo6hLboaJYsPkae
+         QDxM0Qfu4kE9MOswHu4wlJEfsWAI2LaQN5O5tSLJB1RvEu++maSlGRVTiQQp5LbMQN
+         of9woGZ9Hbff90CDFQAMv9TlND7UTtdyuiXj7Q3A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 86/93] KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI
-Date:   Wed,  4 Sep 2019 19:54:28 +0200
-Message-Id: <20190904175310.545595742@linuxfoundation.org>
+Subject: [PATCH 4.19 87/93] NFS: Clean up list moves of struct nfs_page
+Date:   Wed,  4 Sep 2019 19:54:29 +0200
+Message-Id: <20190904175310.641035897@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,101 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 82e40f558de566fdee214bec68096bbd5e64a6a4 ]
+[ Upstream commit 078b5fd92c4913dd367361db6c28568386077c89 ]
 
-A guest is not allowed to inject a SGI (or clear its pending state)
-by writing to GICD_ISPENDR0 (resp. GICD_ICPENDR0), as these bits are
-defined as WI (as per ARM IHI 0048B 4.3.7 and 4.3.8).
+In several places we're just moving the struct nfs_page from one list to
+another by first removing from the existing list, then adding to the new
+one.
 
-Make sure we correctly emulate the architecture.
-
-Fixes: 96b298000db4 ("KVM: arm/arm64: vgic-new: Add PENDING registers handlers")
-Cc: stable@vger.kernel.org # 4.7+
-Reported-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/vgic/vgic-mmio.c | 18 ++++++++++++++++++
- virt/kvm/arm/vgic/vgic-v2.c   |  5 ++++-
- virt/kvm/arm/vgic/vgic-v3.c   |  5 ++++-
- 3 files changed, 26 insertions(+), 2 deletions(-)
+ fs/nfs/direct.c          |  3 +--
+ fs/nfs/pagelist.c        | 12 ++++--------
+ include/linux/nfs_page.h | 10 ++++++++++
+ 3 files changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
-index ceeda7e04a4d9..762f81900529e 100644
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -203,6 +203,12 @@ static void vgic_hw_irq_spending(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
- 	vgic_irq_set_phys_active(irq, true);
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 33824a0a57bfe..1377ee20ecf91 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -664,8 +664,7 @@ static void nfs_direct_write_reschedule(struct nfs_direct_req *dreq)
+ 
+ 	list_for_each_entry_safe(req, tmp, &reqs, wb_list) {
+ 		if (!nfs_pageio_add_request(&desc, req)) {
+-			nfs_list_remove_request(req);
+-			nfs_list_add_request(req, &failed);
++			nfs_list_move_request(req, &failed);
+ 			spin_lock(&cinfo.inode->i_lock);
+ 			dreq->flags = 0;
+ 			if (desc.pg_error < 0)
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index 0ec6bce3dd692..d40bf560f3ca7 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -769,8 +769,7 @@ int nfs_generic_pgio(struct nfs_pageio_descriptor *desc,
+ 	pageused = 0;
+ 	while (!list_empty(head)) {
+ 		req = nfs_list_entry(head->next);
+-		nfs_list_remove_request(req);
+-		nfs_list_add_request(req, &hdr->pages);
++		nfs_list_move_request(req, &hdr->pages);
+ 
+ 		if (!last_page || last_page != req->wb_page) {
+ 			pageused++;
+@@ -962,8 +961,7 @@ static int nfs_pageio_do_add_request(struct nfs_pageio_descriptor *desc,
+ 	}
+ 	if (!nfs_can_coalesce_requests(prev, req, desc))
+ 		return 0;
+-	nfs_list_remove_request(req);
+-	nfs_list_add_request(req, &mirror->pg_list);
++	nfs_list_move_request(req, &mirror->pg_list);
+ 	mirror->pg_count += req->wb_bytes;
+ 	return 1;
+ }
+@@ -995,8 +993,7 @@ nfs_pageio_cleanup_request(struct nfs_pageio_descriptor *desc,
+ {
+ 	LIST_HEAD(head);
+ 
+-	nfs_list_remove_request(req);
+-	nfs_list_add_request(req, &head);
++	nfs_list_move_request(req, &head);
+ 	desc->pg_completion_ops->error_cleanup(&head);
  }
  
-+static bool is_vgic_v2_sgi(struct kvm_vcpu *vcpu, struct vgic_irq *irq)
+@@ -1242,9 +1239,8 @@ int nfs_pageio_resend(struct nfs_pageio_descriptor *desc,
+ 	while (!list_empty(&hdr->pages)) {
+ 		struct nfs_page *req = nfs_list_entry(hdr->pages.next);
+ 
+-		nfs_list_remove_request(req);
+ 		if (!nfs_pageio_add_request(desc, req))
+-			nfs_list_add_request(req, &failed);
++			nfs_list_move_request(req, &failed);
+ 	}
+ 	nfs_pageio_complete(desc);
+ 	if (!list_empty(&failed)) {
+diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
+index e27572d30d977..ad69430fd0eb5 100644
+--- a/include/linux/nfs_page.h
++++ b/include/linux/nfs_page.h
+@@ -164,6 +164,16 @@ nfs_list_add_request(struct nfs_page *req, struct list_head *head)
+ 	list_add_tail(&req->wb_list, head);
+ }
+ 
++/**
++ * nfs_list_move_request - Move a request to a new list
++ * @req: request
++ * @head: head of list into which to insert the request.
++ */
++static inline void
++nfs_list_move_request(struct nfs_page *req, struct list_head *head)
 +{
-+	return (vgic_irq_is_sgi(irq->intid) &&
-+		vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2);
++	list_move_tail(&req->wb_list, head);
 +}
-+
- void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 			      gpa_t addr, unsigned int len,
- 			      unsigned long val)
-@@ -215,6 +221,12 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 	for_each_set_bit(i, &val, len * 8) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
  
-+		/* GICD_ISPENDR0 SGI bits are WI */
-+		if (is_vgic_v2_sgi(vcpu, irq)) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
- 		spin_lock_irqsave(&irq->irq_lock, flags);
- 		if (irq->hw)
- 			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
-@@ -262,6 +274,12 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
- 	for_each_set_bit(i, &val, len * 8) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
-+		/* GICD_ICPENDR0 SGI bits are WI */
-+		if (is_vgic_v2_sgi(vcpu, irq)) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
- 		spin_lock_irqsave(&irq->irq_lock, flags);
- 
- 		if (irq->hw)
-diff --git a/virt/kvm/arm/vgic/vgic-v2.c b/virt/kvm/arm/vgic/vgic-v2.c
-index 57281c1594d0f..91b14dfacd1dd 100644
---- a/virt/kvm/arm/vgic/vgic-v2.c
-+++ b/virt/kvm/arm/vgic/vgic-v2.c
-@@ -195,7 +195,10 @@ void vgic_v2_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
- 		if (vgic_irq_is_sgi(irq->intid)) {
- 			u32 src = ffs(irq->source);
- 
--			BUG_ON(!src);
-+			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
-+					   irq->intid))
-+				return;
-+
- 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
- 			irq->source &= ~(1 << (src - 1));
- 			if (irq->source) {
-diff --git a/virt/kvm/arm/vgic/vgic-v3.c b/virt/kvm/arm/vgic/vgic-v3.c
-index 5c55995a1a164..8b958ed05306e 100644
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -179,7 +179,10 @@ void vgic_v3_populate_lr(struct kvm_vcpu *vcpu, struct vgic_irq *irq, int lr)
- 		    model == KVM_DEV_TYPE_ARM_VGIC_V2) {
- 			u32 src = ffs(irq->source);
- 
--			BUG_ON(!src);
-+			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
-+					   irq->intid))
-+				return;
-+
- 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
- 			irq->source &= ~(1 << (src - 1));
- 			if (irq->source) {
+ /**
+  * nfs_list_remove_request - Remove a request from its wb_list
 -- 
 2.20.1
 
