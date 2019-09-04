@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E22C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DD5C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BF121883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C1C233FF
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619425;
-	bh=atbT7s4nkjvbhxmdwbnCIhN5SlzuKsVKwEKH1bulJRo=;
+	s=default; t=1567619428;
+	bh=vYxoB/up+rjfB1ERqXN7TXj5LMSimQQfJSk7f9YeKgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXf6c9wDSyMZpT2EbZOeD3SFw2oZbggfs5M6f9vYxb07qohO67NJLAavsmx1i5VYm
-	 dwjlwNCUyLeGzoPmy4hO3nyxeJtUERRMauUqTs6bvC7RSujbwdydGh9+7k11jRtoJu
-	 ciQ73X0SN15TmVGTt3zBB5nbZI3iieXrD6vzyNbw=
+	b=q/zz2+OA9RjYb1kGwjwepCtmDHsbtK/uErbNpngeC9/nalvTMxM1J4M/+YqVjjswg
+	 EQsCNaOe538EacfsQvDnsgFZbY8MZiDa3vYo47w8NItGOqm2CB0MwzjcJL8bo7L9wZ
+	 JhX4h7wB+TWnegd0SKM3rdQ9KiHd7Qu9l8J8affo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732266AbfIDRuY (ORCPT
+        id S1732363AbfIDRu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:50:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56548 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbfIDRuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:50:22 -0400
+        id S1729594AbfIDRu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:50:26 -0400
 Received: from localhost.localdomain (unknown [194.230.155.145])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9D8721883;
-        Wed,  4 Sep 2019 17:50:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5248822CF5;
+        Wed,  4 Sep 2019 17:50:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619422;
-        bh=atbT7s4nkjvbhxmdwbnCIhN5SlzuKsVKwEKH1bulJRo=;
+        s=default; t=1567619425;
+        bh=vYxoB/up+rjfB1ERqXN7TXj5LMSimQQfJSk7f9YeKgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMTjTbKg++CGOzBWaUsr+7ZgA19CfHgJhUMl7nX8mIwAk5hoe6Pv8hNC8W2CuF5GW
-         3X8dARXLh8lqllvJ4f+2t8exl8vAJoQhhCDgegGzxTmoXHih2zgJ3e3eKha98H+CFe
-         IbFPJO6UPY7sfG97oBHOrNaglLdCPwICV5dDNVyc=
+        b=AmMnqNJ44eVCJ8zYAD1pddQms4p5U9Yvd8CXPjhaUl+ck9U2ztm/PAie1i/ZJYgyH
+         LZczOToKCN3Bf4mU114eCYrczmtNntDFaMRBDTKPTN1xnjg3NGtRw6LcNRXZT2xL6Q
+         +gLIEsHpKFsZvvABSa0tmM9q1Vev1oiqcCK26XPY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
         arm@kernel.org, soc@kernel.org
@@ -46,9 +46,9 @@ Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         Kukjin Kim <kgene@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL 2/5] soc: samsung: Second pull for v5.4
-Date:   Wed,  4 Sep 2019 19:49:59 +0200
-Message-Id: <20190904175002.10487-3-krzk@kernel.org>
+Subject: [GIT PULL 3/5] ARM: dts: exynos: Second pull for v5.4
+Date:   Wed,  4 Sep 2019 19:50:00 +0200
+Message-Id: <20190904175002.10487-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190904175002.10487-1-krzk@kernel.org>
 References: <20190904175002.10487-1-krzk@kernel.org>
@@ -65,31 +65,42 @@ Best regards,
 Krzysztof
 
 
-The following changes since commit 40d8aff614f71ab3cab20785b4f213e3802d4e87:
+The following changes since commit bfb77169306d5d560a8b62eebaf6d69d02e8d152:
 
-  soc: samsung: chipid: Convert exynos-chipid driver to use the regmap API (2019-08-15 20:25:25 +0200)
+  ARM: dts: exynos: Add CAM power domain to Exynos5422/5800 (2019-08-12 19:02:59 +0200)
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-5.4-2
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-5.4-2
 
-for you to fetch changes up to 28578825ede61834a2c46e7f9a89012c4c7a667f:
+for you to fetch changes up to 51c88919e52873c83f8be0c8f5d0ffd654f1ef4a:
 
-  soc: samsung: chipid: Select missing dependency for EXYNOS_CHIPID (2019-08-22 20:16:20 +0200)
-
-----------------------------------------------------------------
-Samsung soc drivers changes for v5.4, part 2
-
-Fixes and cleanups for recently introduced Exynos chipid driver.
+  ARM: dts: exynos: Enable GPU/Mali T604 on Arndale board (2019-09-04 19:25:33 +0200)
 
 ----------------------------------------------------------------
-Colin Ian King (1):
-      soc: samsung: chipid: Fix memory leak in error path
+Samsung DTS ARM changes for v5.4, part 2
 
-Sylwester Nawrocki (2):
-      soc: samsung: chipid: Remove the regmap lookup error log
-      soc: samsung: chipid: Select missing dependency for EXYNOS_CHIPID
+1. Fix Exynos542x Chromebooks boot with multi_v7 defconfig,
+2. Add GPU (Mali) support to Exynos5250 boards,
+3. Minor cleanup for Exynos3250 ADC.
 
- drivers/soc/samsung/Kconfig         |  1 +
- drivers/soc/samsung/exynos-chipid.c | 18 +++++++++++-------
- 2 files changed, 12 insertions(+), 7 deletions(-)
+----------------------------------------------------------------
+Guillaume Gardet (4):
+      ARM: dts: exynos: Fix min/max buck4 for GPU on Arndale board
+      ARM: dts: exynos: Add GPU/Mali T604 node to Exynos5250
+      ARM: dts: exynos: Enable GPU/Mali T604 on Chromebook Snow
+      ARM: dts: exynos: Enable GPU/Mali T604 on Arndale board
+
+Krzysztof Kozlowski (1):
+      ARM: dts: exynos: Remove not accurate secondary ADC compatible
+
+Marek Szyprowski (1):
+      ARM: dts: exynos: Mark LDO10 as always-on on Peach Pit/Pi Chromebooks
+
+ arch/arm/boot/dts/exynos3250.dtsi             |  3 +-
+ arch/arm/boot/dts/exynos5250-arndale.dts      |  9 +++--
+ arch/arm/boot/dts/exynos5250-snow-common.dtsi |  5 +++
+ arch/arm/boot/dts/exynos5250.dtsi             | 47 +++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts    |  1 +
+ arch/arm/boot/dts/exynos5800-peach-pi.dts     |  1 +
+ 6 files changed, 62 insertions(+), 4 deletions(-)
