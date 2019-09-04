@@ -2,236 +2,152 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3767C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F73C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8C320820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5CC2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yaru825M"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nOilGNTc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbfIDM1f (ORCPT
+        id S1729806AbfIDM2l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:27:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35305 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729122AbfIDM1e (ORCPT
+        Wed, 4 Sep 2019 08:28:41 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35162 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbfIDM2l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:27:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id n10so3515831wmj.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 05:27:32 -0700 (PDT)
+        Wed, 4 Sep 2019 08:28:41 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d26so11779421qkk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 05:28:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6NZ96D9puEHxfzquVc6He7xf5nQpmZ8JSWavhp3HobU=;
-        b=Yaru825MEoJOrDpdYOPMTkVcccBcPenEdQ38DAGjE1qc4fRskhwLtC4sJyTty778D5
-         Uva/akBI4ltEngcEiL8vK8QLEMSP8DStf2kuaEYfuxb59YZzk6I+it15TzFgudqSIvm/
-         JYpzqxdJcD9EL+6GNXO/cyWhsQ14m8hncM7bmi+RTx5+S797gfEX5t2+OzH4n+ct+r/z
-         6FZ/weoORBRjeNqBDdaPoxQkdkoxGF8yahuvLAse5qJrS6lwTsTBOhtBCaZdOqn9veCO
-         MQ+IroPD1KkuKJJH2ArS+/EAJfr5baX4eVXajylVTqGhD5eDTRm0JuGROl9JrnJVlMfb
-         b0iQ==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Phz7WXzv6Ct7YpQWtzarTC/I6lNnHjJSWTLNUVbUJ58=;
+        b=nOilGNTc9cCP6FpwLk6qvpoQyoZl90VbEwFYl8NT8jOuHHiEjdeuahcPADU2Pebmis
+         NijtefwV+KczPPFXMxNGu848/zzUIUIHi7U7Kn54Ihw+oftFwHim8kSIuZXRuWSdyI9t
+         rYubQ8WNr6ppRxODnaQA68xxtNtiOtjNLZCvxbMa3LqKylO4tRazqeqLTLc5KP2d2kRI
+         H3pYMcxK0edI+HQoIZlXLPNbUcntA1lwOmyr4l0vGMh9DRI8ZoueYi7w6J7caUqpsGQ4
+         JvSM+RxE/a9xhYQKsaQ0g7N6TGlo4U7JXoFfnW3yM9DUWkC+ZYaEq3vzyYjgewiSsaHN
+         Tmdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6NZ96D9puEHxfzquVc6He7xf5nQpmZ8JSWavhp3HobU=;
-        b=ufS8nT3juIVFKFKUCJOy6gZQ1hhjPku+4vWB6GwUDe0dZpE5/3teAVhU7ixZOY14uC
-         zxyaIlUC+lrxYL6NHGO6sJQUPmMfNbRwZWMoJKRN6gOPb9P0HJbw0CoJWR1BNi5pv3/z
-         N4G3aLKWctOMKERRVOpaeydun00cPeEfO8hndvkvGr48niOpEbbzEz8LaS7K/vKJvTM3
-         iPPDneGLsFOUfpz07T5Lyi/1p3fNKTXqyYPWo6iZRLy66cCiUvjipzSIlxiU3PrbxdJN
-         AqUL/Gcp8C+SG6lSOYFm3UzzG0Nv0vtGldVFR9GFOM62ixg+pCfDVvv4kqr40usrAsHV
-         k/eQ==
-X-Gm-Message-State: APjAAAUD/r9FNuaP//c6wOz+YOKCeVKOdnmPqu5ZhNOKh3Clu8Iuif8O
-        zifAdRsSfDiAIq0N7cp5aINzoF3JJkiBV/LEOktj3A==
-X-Google-Smtp-Source: APXvYqzGSenGL1fOlhaP3eM0Wsxh9RQpnRMxJXsQ9c/jnvFT1eATCwySYBcKoufjBaezNjWYU7RdZ9CpNR/9m9WlHbc=
-X-Received: by 2002:a1c:2546:: with SMTP id l67mr4370373wml.10.1567600051587;
- Wed, 04 Sep 2019 05:27:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190902141910.1080-1-yuehaibing@huawei.com> <20190903014518.20880-1-yuehaibing@huawei.com>
- <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
- <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com> <MN2PR20MB297342698B98343D49FC2C82CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
-In-Reply-To: <MN2PR20MB297342698B98343D49FC2C82CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 4 Sep 2019 05:27:19 -0700
-Message-ID: <CAKv+Gu_EA8-=Vc3aAdJSz7399Y5WBeKNjw_T3LEq7yOY2XQ+BA@mail.gmail.com>
-Subject: Re: [PATCH v2 -next] crypto: inside-secure - Fix build error without CONFIG_PCI
-To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Phz7WXzv6Ct7YpQWtzarTC/I6lNnHjJSWTLNUVbUJ58=;
+        b=J34giqYBVni2NGpwVhDRC85GBw00Vll/qxl9sxoMzJZE40s+8iTg/Oz1qXIFIN140w
+         lCaKrFI8YwQpit8dtrkLN5khi6KoBYC9PoGs+aV2spMWZsmJv5EP/GKT2eqzCd1NcAth
+         l6tg151bsZ1hHa4Q+P+0zj/r7ep6omaQ1W4WEUPYVBJJle0Zs/3mlrWK5G3k/kaEsJpf
+         K+fDq4muYacCdCUL/uiDWXHx7b3NzS9M0pCFhnxudooEdaTa1VnYhccC1FagT/00eIwN
+         Mi2hNbf02vL/hacmg2JlEubwANRM/AaR1u8AWRoO1Ceu07uFRpSLmuG6NWHsOedjEzt7
+         LVzg==
+X-Gm-Message-State: APjAAAXzPjPUs5lgv23K+upEMSeHuZvOxAFO5F1op2MS2vZQjWkYchq5
+        8gRHUpqxo8mdzY9XurH8rEHTpw==
+X-Google-Smtp-Source: APXvYqx8rN7sFPqe6qrKVFbdcUKWdMjPHWcg92o9NcYsHU72G8AgpHj4Tr5vJugp098iNgH2ZDH9rQ==
+X-Received: by 2002:a05:620a:1539:: with SMTP id n25mr12867915qkk.0.1567600119605;
+        Wed, 04 Sep 2019 05:28:39 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id y23sm9544425qki.118.2019.09.04.05.28.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 05:28:38 -0700 (PDT)
+Message-ID: <1567600117.5576.74.camel@lca.pw>
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Date:   Wed, 04 Sep 2019 08:28:37 -0400
+In-Reply-To: <20190904120707.GU3838@dhcp22.suse.cz>
+References: <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
+         <20190903132231.GC18939@dhcp22.suse.cz> <1567525342.5576.60.camel@lca.pw>
+         <20190903185305.GA14028@dhcp22.suse.cz> <1567546948.5576.68.camel@lca.pw>
+         <20190904061501.GB3838@dhcp22.suse.cz> <20190904064144.GA5487@jagdpanzerIV>
+         <20190904070042.GA11968@jagdpanzerIV>
+         <20190904082540.GI3838@dhcp22.suse.cz> <1567598357.5576.70.camel@lca.pw>
+         <20190904120707.GU3838@dhcp22.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 at 05:25, Pascal Van Leeuwen
-<pvanleeuwen@verimatrix.com> wrote:
->
-> > -----Original Message-----
-> > From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Sent: Wednesday, September 4, 2019 2:11 PM
-> > To: Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
-> > Cc: YueHaibing <yuehaibing@huawei.com>; antoine.tenart@bootlin.com;
-> > herbert@gondor.apana.org.au; davem@davemloft.net; pvanleeuwen@insidesecure.com; linux-
-> > crypto@vger.kernel.org; linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH v2 -next] crypto: inside-secure - Fix build error without CONFIG_PCI
-> >
-> > On Wed, 4 Sep 2019 at 04:57, Pascal Van Leeuwen
-> > <pvanleeuwen@verimatrix.com> wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.org> On
-> > Behalf Of
-> > > > YueHaibing
-> > > > Sent: Tuesday, September 3, 2019 3:45 AM
-> > > > To: antoine.tenart@bootlin.com; herbert@gondor.apana.org.au; davem@davemloft.net;
-> > > > pvanleeuwen@insidesecure.com
-> > > > Cc: linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org; YueHaibing
-> > > > <yuehaibing@huawei.com>
-> > > > Subject: [PATCH v2 -next] crypto: inside-secure - Fix build error without CONFIG_PCI
-> > > >
-> > > > If CONFIG_PCI is not set, building fails:
-> > > >
-> > > > rivers/crypto/inside-secure/safexcel.c: In function safexcel_request_ring_irq:
-> > > > drivers/crypto/inside-secure/safexcel.c:944:9: error: implicit declaration of function
-> > > > pci_irq_vector;
-> > > >  did you mean rcu_irq_enter? [-Werror=implicit-function-declaration]
-> > > >    irq = pci_irq_vector(pci_pdev, irqid);
-> > > >          ^~~~~~~~~~~~~~
-> > > >
-> > > > Use #ifdef block to guard this.
-> > > >
-> > > Actually, this is interesting. My *original* implementation was using
-> > > straight #ifdefs, but then I got review feedback stating that I should not
-> > > do that, as it's not compile testable, suggesting to use regular C if's
-> > > instead. Then there was quite some back-and-forth on the actual
-> > > implementation and I ended up with this.
-> > >
-> > > So now it turns out that doesn't work and I'm suggested to go full-circle
-> > > back to straight #ifdef's? Or is there some other way to make this work?
-> > > Because I don't know where to go from here ...
-> > >
-> >
-> >
-> > C conditionals are preferred over preprocessor conditional, but if the
-> > conditional code refers to symbols that are not declared when the
-> > Kconfig symbol is not defined, preprocessor conditionals are the only
-> > option.
-> >
-> Sure, I get that. But I *had* the #ifdef's and then other people told me
-> to get rid of them. How is one supposed to know when which symbols are
-> declared exactly? Moreover, I feel that if #ifdef's are sometimes the
-> only way, then you should be careful providing feedback on the subject.
->
+On Wed, 2019-09-04 at 14:07 +0200, Michal Hocko wrote:
+> On Wed 04-09-19 07:59:17, Qian Cai wrote:
+> > On Wed, 2019-09-04 at 10:25 +0200, Michal Hocko wrote:
+> > > On Wed 04-09-19 16:00:42, Sergey Senozhatsky wrote:
+> > > > On (09/04/19 15:41), Sergey Senozhatsky wrote:
+> > > > > But the thing is different in case of dump_stack() + show_mem() +
+> > > > > some other output. Because now we ratelimit not a single printk()
+> > > > > line,
+> > > > > but hundreds of them. The ratelimit becomes - 10 * $$$ lines in 5
+> > > > > seconds
+> > > > > (IOW, now we talk about thousands of lines).
+> > > > 
+> > > > And on devices with slow serial consoles this can be somewhat close to
+> > > > "no ratelimit". *Suppose* that warn_alloc() adds 700 lines each time.
+> > > > Within 5 seconds we can call warn_alloc() 10 times, which will add 7000
+> > > > lines to the logbuf. If printk() can evict only 6000 lines in 5 seconds
+> > > > then we have a growing number of pending logbuf messages.
+> > > 
+> > > Yes, ratelimit is problematic when the ratelimited operation is slow. I
+> > > guess that is a well known problem and we would need to rework both the
+> > > api and the implementation to make it work in those cases as well.
+> > > Essentially we need to make the ratelimit act as a gatekeeper to an
+> > > operation section - something like a critical section except you can
+> > > tolerate more code executions but not too many. So effectively
+> > > 
+> > > 	start_throttle(rate, number);
+> > > 	/* here goes your operation */
+> > > 	end_throttle();
+> > > 
+> > > one operation is not considered done until the whole section ends.
+> > > Or something along those lines.
+> > > 
+> > > In this particular case we can increase the rate limit parameters of
+> > > course but I think that longterm we need a better api.
+> > 
+> > The problem is when a system is under heavy memory pressure, everything is
+> > becoming slower, so I don't know how to come up with a sane default for rate
+> > limit parameters as a generic solution that would work for every machine out
+> > there. Sure, it is possible to set a limit as low as possible that would
+> > work
+> > for the majority of systems apart from people may complain that they are now
+> > missing important warnings, but using __GFP_NOWARN in this code would work
+> > for
+> > all systems. You could even argument there is even a separate benefit that
+> > it
+> > could reduce the noise-level overall from those build_skb() allocation
+> > failures
+> > as it has a fall-back mechanism anyway.
+> 
+> As Vlastimil already pointed out, __GFP_NOWARN would hide that reserves
+> might be configured too low.
 
-If you compile your code with and without the Kconfig symbol defined,
-the compiler will tell you if there is a problem or not.
+Tune "min_free_kbytes" is also an unreliable solution and situational as the
+same reason mentioned previously. It may also need a lot of testing to find out
+the right value of it on one particular system.
 
-> > This is the reason we have so many empty static inline functions in
-> > header files - it ensures that the symbols are declared even if the
-> > only invocations are from dead code.
-> >
-> This ties back into my previous question: how am I supposed to know whether
-> stuff is nicely covered by these empty static inlines or not? If this
-> happens to be a hit-and-miss affair.
->
+"
+When there is a heavy memory pressure, the system is trying hard to reclaim
+memory to fill up the watermark. However, the IO is slow to page out, but the
+memory pressure keep draining atomic reservoir, and some of those skb_build()
+will fail eventually.
 
-Indeed.
+Only if there is a fast IO, it will finish swapping sooner and then invoke the
+OOM to end the memory pressure.
+"
 
-> Note that I tested the code with the 2 platforms at my disposal - actually
-> the only 2 relevant platforms for this driver, if you ask me - and they
-> both compiled just fine, so I had no way of finding this "problem" myself.
->
-
-Did you try disabling CONFIG_PCI?
-
-> >
-> > > > Fixes: 625f269a5a7a ("crypto: inside-secure - add support for PCI based FPGA
-> > development
-> > > > board")
-> > > > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > > > ---
-> > > > v2: use 'ifdef' instead of 'IS_ENABLED'
-> > > > ---
-> > > >  drivers/crypto/inside-secure/safexcel.c | 13 ++++++++++---
-> > > >  1 file changed, 10 insertions(+), 3 deletions(-)
-> > > >
-> > > > diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-
-> > > > secure/safexcel.c
-> > > > index e12a2a3..5253900 100644
-> > > > --- a/drivers/crypto/inside-secure/safexcel.c
-> > > > +++ b/drivers/crypto/inside-secure/safexcel.c
-> > > > @@ -937,7 +937,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
-> > > >       int ret, irq;
-> > > >       struct device *dev;
-> > > >
-> > > > -     if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
-> > > > +#ifdef CONFIG_PCI
-> > > > +     if (is_pci_dev) {
-> > > >               struct pci_dev *pci_pdev = pdev;
-> > > >
-> > > >               dev = &pci_pdev->dev;
-> > > > @@ -947,7 +948,10 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
-> > > >                               irqid, irq);
-> > > >                       return irq;
-> > > >               }
-> > > > -     } else if (IS_ENABLED(CONFIG_OF)) {
-> > > > +     } else
-> > > > +#endif
-> > > > +     {
-> > > > +#ifdef CONFIG_OF
-> > > >               struct platform_device *plf_pdev = pdev;
-> > > >               char irq_name[6] = {0}; /* "ringX\0" */
-> > > >
-> > > > @@ -960,6 +964,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
-> > > >                               irq_name, irq);
-> > > >                       return irq;
-> > > >               }
-> > > > +#endif
-> > > >       }
-> > > >
-> > > >       ret = devm_request_threaded_irq(dev, irq, handler,
-> > > > @@ -1137,7 +1142,8 @@ static int safexcel_probe_generic(void *pdev,
-> > > >
-> > > >       safexcel_configure(priv);
-> > > >
-> > > > -     if (IS_ENABLED(CONFIG_PCI) && priv->version == EIP197_DEVBRD) {
-> > > > +#ifdef CONFIG_PCI
-> > > > +     if (priv->version == EIP197_DEVBRD) {
-> > > >               /*
-> > > >                * Request MSI vectors for global + 1 per ring -
-> > > >                * or just 1 for older dev images
-> > > > @@ -1153,6 +1159,7 @@ static int safexcel_probe_generic(void *pdev,
-> > > >                       return ret;
-> > > >               }
-> > > >       }
-> > > > +#endif
-> > > >
-> > > >       /* Register the ring IRQ handlers and configure the rings */
-> > > >       priv->ring = devm_kcalloc(dev, priv->config.rings,
-> > > > --
-> > > > 2.7.4
-> > > >
-> > >
-> > > Regards,
-> > > Pascal van Leeuwen
-> > > Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-> > > www.insidesecure.com
->
-> Regards,
-> Pascal van Leeuwen
-> Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
-> www.insidesecure.com
->
+It also have a drawback that "waste" precious memory resources, as allocations
+other than GPF_ATOMIC are unable to use those reserved memory anymore.
