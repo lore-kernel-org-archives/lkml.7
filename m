@@ -2,146 +2,112 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE71DC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6427C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FA5208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:04:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A0KTYkOg"
+	by mail.kernel.org (Postfix) with ESMTP id 91032208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567623940;
+	bh=lvMVjWFCqXZ7L4F1ewqeBmOTcxBZxWtq6FXmqB4QcT8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NVlQQuepNv5qA6iZtv32Xv5Akl6cI93TMrgPRWwMZfatoMZ3oVigV9FQ7QPNpkWn5
+	 78yXYNkyGDFUKMESr8mLNn9jWVGuMJrTncbsxR6LX1TEvOKxU30uoZUymO9CXxnRLK
+	 2aYlryc27aBWliJE8S/QKyv7IdLsQKXc2zPXsMvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387977AbfIDTEH (ORCPT
+        id S2387987AbfIDTFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:04:07 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39209 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732485AbfIDTEG (ORCPT
+        Wed, 4 Sep 2019 15:05:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42238 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729973AbfIDTFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:04:06 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s12so6845194pfe.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 12:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AmoktrUsrRAX/D4sytItWL2rgYOOGje/KPRLW7QLU2g=;
-        b=A0KTYkOgIyHzo9L3f04wY0gGoxEWXXUdQETF2gDIFnYoYkS/UXcKD1TwTTPRDGs/RN
-         ECGCHjaeV/CeGMNx2VC0eTvEswu34MZ4XBvC+4st0YLL2/65/RXS3Se7+EU8RtCyZnUl
-         C8QH+OpZxbe5rry8EpXvNeWYuHC30FPM4NlzbTx5IlpCt0QvMdHOJnosBKfJGD76cvcd
-         QjZOQrMiKsmqCLYMki0M0i3xNVZSRL+w0IDWfw5N2XKlQF0yEFtTpsIgyyiK2HfniNRH
-         s32N9l8VKqHOaYm501YGsFBgOTiMRDuCY6BXuqkLp2M/l1UaSqWvTeSw30nIClnvgwOU
-         dkNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AmoktrUsrRAX/D4sytItWL2rgYOOGje/KPRLW7QLU2g=;
-        b=gaOVhRyM3pYWnvcbEPq7ztMsawzGINyHOFis+fpK4SenbQMu1s1/7w13Y5T0D+ZRCx
-         v+Yt4f50gJjFwvz30gBM1WJbMIPjcIbgIc14mmOSGgCmqmU9oz/NiRqlTKBopf2P+4h1
-         h3vy2qQXI0iVmpvqBPRvDD7Woth5RumXR4CntIzg2gpPuQw8fYAM+r2CY3w1YCXu5D6y
-         7HJdyjiQ14xIsII5uFGjiU9wAXOM20b3itrc4NfmpQ4H00u/Mnq4hZBSSRaQuJXckv8l
-         lG8PDv/CCuBMzhuh2ynoQL0KEvwKHgQOqh5+Q0hOGO8bRfMHCdTB/7FtBd1NydIufmAD
-         y/OA==
-X-Gm-Message-State: APjAAAXWF7UmvicERwIF8WgJUPJZJLounmxkn1jlhJ49DIzXZXJv1Iru
-        CU/52dlGihCtqTNbigm3NBpdFw==
-X-Google-Smtp-Source: APXvYqyLbdpj6NVEnHDBQfONCSx6oW2K/cCEUa552ZtfzTvAyHwrHE3OVT3AzSfVmlets6DTJe9AxQ==
-X-Received: by 2002:a63:9245:: with SMTP id s5mr37182454pgn.123.1567623845637;
-        Wed, 04 Sep 2019 12:04:05 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j128sm22473181pfg.51.2019.09.04.12.04.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 12:04:05 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 12:03:57 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     georgi.djakov@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/2] dt-bindings: interconnect: qcom: add msm8974
- bindings
-Message-ID: <20190904190357.GI574@tuxbook-pro>
-References: <20190902211925.27169-1-masneyb@onstation.org>
- <20190902211925.27169-2-masneyb@onstation.org>
- <20190904050103.GE3081@tuxbook-pro>
- <20190904102042.GA14484@onstation.org>
+        Wed, 4 Sep 2019 15:05:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QDYuHGg6Ej+bMPCc78560zCDL+cJryZFlneTfbKuV8E=; b=t//yuqn0TBhqB478H/xqd/KLw
+        z6KC2jF/8BdPGsyrZgKWGCpc4WrXHpjiZG1eCJogeCX+npl7FK4V24snG9+kqaVEuenDYafx0qHm2
+        6z04dyUudYMofcdWKu2504YWQzTJ+wTDrfD4pGArEaC1mP4Qx1yDME0xxSK7c8nkbMrlY=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i5ab1-0000ES-Sx; Wed, 04 Sep 2019 19:05:35 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 66D492742B45; Wed,  4 Sep 2019 20:05:35 +0100 (BST)
+Date:   Wed, 4 Sep 2019 20:05:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Ricard Wanderlof <ricardw@axis.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.9 07/83] ASoC: Fail card instantiation if DAI format
+ setup fails
+Message-ID: <20190904190535.GH4348@sirena.co.uk>
+References: <20190904175303.488266791@linuxfoundation.org>
+ <20190904175304.389271806@linuxfoundation.org>
+ <20190904181027.GG4348@sirena.co.uk>
+ <20190904183527.GA364@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SUk9VBj82R8Xhb8H"
 Content-Disposition: inline
-In-Reply-To: <20190904102042.GA14484@onstation.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190904183527.GA364@kroah.com>
+X-Cookie: Help fight continental drift.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 04 Sep 03:20 PDT 2019, Brian Masney wrote:
 
-> On Tue, Sep 03, 2019 at 10:01:03PM -0700, Bjorn Andersson wrote:
-> > On Mon 02 Sep 14:19 PDT 2019, Brian Masney wrote:
-> > > +      mmssnoc: interconnect@fc478000 {
-> > > +              reg = <0xfc478000 0x4000>;
-> > > +              compatible = "qcom,msm8974-mmssnoc";
-> > > +              #interconnect-cells = <1>;
-> > > +              clock-names = "bus", "bus_a";
-> > > +              clocks = <&rpmcc RPM_SMD_MMSSNOC_AHB_CLK>,
-> > > +                       <&rpmcc RPM_SMD_MMSSNOC_AHB_A_CLK>;
-> > 
-> > Isn't MMSS_S0_AXI_CLK the bus clock of the mmssnoc (which somehow seems
-> > to depend on mmssnoc_ahb_clk)?
-> 
-> I'll give that a try. Do you know which clock I should use for bus_a
-> here? On the mmcc, I see the following mmss clocks available:
-> 
-> MMSS_AHB_CLK_SRC
-> MMSS_AXI_CLK_SRC
-> MMSS_RBCPR_CLK_SRC
-> MMSS_MISC_AHB_CLK
-> MMSS_MMSSNOC_AHB_CLK
-> MMSS_MMSSNOC_BTO_AHB_CLK
-> MMSS_MMSSNOC_AXI_CLK
-> MMSS_S0_AXI_CLK
-> 
-> I'm also unsure of what's going on at the hardware level that the second
-> clock (bus_a) is needed.
-> 
+--SUk9VBj82R8Xhb8H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In msm-3.4 clock-8974.c both bus and bus_a is defined as
-mmss_s0_axi_clk. But iirc I also needed mmssnoc_axi_clk to get DSI
-working on my devices, which is listed as .depends of the s0_axi clock.
+On Wed, Sep 04, 2019 at 08:35:27PM +0200, Greg Kroah-Hartman wrote:
+> On Wed, Sep 04, 2019 at 07:10:27PM +0100, Mark Brown wrote:
 
-So that probably needs some more investigation...But easiest would
-probably be to just have the mmss_noc use them both listed as bus
-clocks?
+> > I nacked this patch when Sasha posted it - it only improves diagnostics
+> > and might make systems that worked by accident break since it turns=20
+> > things into a hard failure, it won't make anything that didn't work
+> > previously work.
 
-Regards,
-Bjorn
+> This is already in the 4.14.141, 4.19.69, and 5.2.11 releases, have you
+> heard any problems there?
 
-> > > +      mdss: mdss@fd900000 {
-> > 
-> > I think you can omit the client, as this adheres to the standard binding
-> > for interconnect clients. And you don't need to have an example that
-> > covers all compatibles either...
-> 
-> OK, I'll drop some of these.
-> 
-> > > diff --git a/include/dt-bindings/interconnect/qcom,msm8974.h b/include/dt-bindings/interconnect/qcom,msm8974.h
-> > > new file mode 100644
-> > > index 000000000000..58acf7196410
-> > > --- /dev/null
-> > > +++ b/include/dt-bindings/interconnect/qcom,msm8974.h
-> > > @@ -0,0 +1,146 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > 
-> > Would you mind dual licensing this part as well?
-> 
-> Sure, that was an oversight on my part.
-> 
-> > Apart from that, I think this binding looks good.
-> 
-> Thanks,
-> 
-> Brian
+Ugh, how did that happen?  I've not heard any reports but I'd be a lot
+more comfortable if this was reverted, these releases haven't been out
+that long and the users who'd be affected are mostly doing embedded
+stuff.
+
+> I'll be glad to drop this from the 4.9.y and 4.4.y queues, now if you
+> wish, but just want you to know it's already out there in some releases.
+
+Yes, please.
+
+--SUk9VBj82R8Xhb8H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1wCv4ACgkQJNaLcl1U
+h9AeJQf9H0MpKQMHhK+ySibRaENR2Jv5I7yx0Z9djCM/5UgYOqeHHDCNkfauD6+v
+7ANLz0fTolkI2ebyBHD+bWodk/j3PnPerIP+mec1o7bMm6VvcDhpVrCs5QPtB5Rn
+EP8I6dqRbVBMxy/fKSnzzMgpNFIl06KMfxrkC944NY47Nsr6fKWoz1EVDEYdvzKY
+nemiAfElastgsAqw7pxfhyfYIJICpSuvS7P6jCsIIdD9xGk2QT8W6mfxy9uJH8E9
+Slv5Yd0vrFbM62KmJjzQOSworPQoT25X3tgxUJEc3r52GG35muYEaZAUqH6lntsm
+o/CzxqMt/5IiFxlOF8ULYia6EE8QKQ==
+=QLKC
+-----END PGP SIGNATURE-----
+
+--SUk9VBj82R8Xhb8H--
