@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5342C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0443DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6D82087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF21B206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:09:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620546;
-	bh=GwjaFitsPL1y49Eew2LnmJ+5syCb7fZcOQw3mkqM5xI=;
+	s=default; t=1567620548;
+	bh=nyHFDJKYzA+t0neNF48mnqaUBiG7rN3n6CQ7J3o0yIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PdTrP0jxC8JnwFkLi4XaOshheRBnhd1oywdQkVntREWvzRYNJI6f2Q75UEz7i7QVj
-	 ajsDdLt4t/m3PSyQAMsgxqxcOI8Stt2b8dLguLxTRT0oyBIDWq/N7mXqQawICXm7No
-	 M3iyHh0VsqDb63N+Sama7IAoYXns191qo9/2jgsY=
+	b=1rZDnUGBZ3RnMDkpetij5J+a84DmUesOcwdFjIhXNOC0rUKdGEpquhchzRlcvQryf
+	 hy/UoEw3OGdQzsJd7Dk1uWZoOQ37zEOL/OFG9t95eNBLDWbRk2QX8qJOGhdCD+OkNd
+	 vOupC71DxrlCy6wLyU8fshtSYJGxXXp7vl8+oEJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389889AbfIDSJF (ORCPT
+        id S2389895AbfIDSJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52120 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:09:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389875AbfIDSJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:09:02 -0400
+        id S2389883AbfIDSJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:09:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 863522087E;
-        Wed,  4 Sep 2019 18:09:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31A3F206B8;
+        Wed,  4 Sep 2019 18:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620542;
-        bh=GwjaFitsPL1y49Eew2LnmJ+5syCb7fZcOQw3mkqM5xI=;
+        s=default; t=1567620544;
+        bh=nyHFDJKYzA+t0neNF48mnqaUBiG7rN3n6CQ7J3o0yIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BahYWwd3qtLVpXA5GVb887mFzNlYF3oSBeXYV552xt7p9HorcF2EyJYSIzt+VV8KO
-         xgvvEmFDm4+hbFKbGR1zZb5AteFOadRF4wjGthJLxBmViVgbY95aAC1SpeHo3+QkF8
-         /BZ94KVMs7UjlTRTs3BjV2QUx9nlwR1lvmUFdh+4=
+        b=LlG3LUkpcsJyTdWxzkpBjQhJsuoIxCFjsrJIR5f/hrSi8A2t1o7Q2Wk7vNrcfOBtR
+         updofmwLrY6PWbT+TpY/7fz1hJ8hTQCFPXnJSbMBQbI3DStOXlGE3fCUwLFlzyOPg2
+         Xo2dyyTDffTOb2Hbhu67xUMMUaGDpimpMWRXcRj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Andrew Cooks <andrew.cooks@opengear.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 90/93] NFS: Ensure O_DIRECT reports an error if the bytes read/written is 0
-Date:   Wed,  4 Sep 2019 19:54:32 +0200
-Message-Id: <20190904175310.901670763@linuxfoundation.org>
+Subject: [PATCH 4.19 91/93] i2c: piix4: Fix port selection for AMD Family 16h Model 30h
+Date:   Wed,  4 Sep 2019 19:54:33 +0200
+Message-Id: <20190904175310.979552507@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -60,87 +61,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eb2c50da9e256dbbb3ff27694440e4c1900cfef8 ]
+[ Upstream commit c7c06a1532f3fe106687ac82a13492c6a619ff1c ]
 
-If the attempt to resend the I/O results in no bytes being read/written,
-we must ensure that we report the error.
+Family 16h Model 30h SMBus controller needs the same port selection fix
+as described and fixed in commit 0fe16195f891 ("i2c: piix4: Fix SMBus port
+selection for AMD Family 17h chips")
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Fixes: 0a00b77b331a ("nfs: mirroring support for direct io")
-Cc: stable@vger.kernel.org # v3.20+
+commit 6befa3fde65f ("i2c: piix4: Support alternative port selection
+register") also fixed the port selection for Hudson2, but unfortunately
+this is not the exact same device and the AMD naming and PCI Device IDs
+aren't particularly helpful here.
+
+The SMBus port selection register is common to the following Families
+and models, as documented in AMD's publicly available BIOS and Kernel
+Developer Guides:
+
+ 50742 - Family 15h Model 60h-6Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+ 55072 - Family 15h Model 70h-7Fh (PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)
+ 52740 - Family 16h Model 30h-3Fh (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS)
+
+The Hudson2 PCI Device ID (PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) is shared
+between Bolton FCH and Family 16h Model 30h, but the location of the
+SmBus0Sel port selection bits are different:
+
+ 51192 - Bolton Register Reference Guide
+
+We distinguish between Bolton and Family 16h Model 30h using the PCI
+Revision ID:
+
+  Bolton is device 0x780b, revision 0x15
+  Family 16h Model 30h is device 0x780b, revision 0x1F
+  Family 15h Model 60h and 70h are both device 0x790b, revision 0x4A.
+
+The following additional public AMD BKDG documents were checked and do
+not share the same port selection register:
+
+ 42301 - Family 15h Model 00h-0Fh doesn't mention any
+ 42300 - Family 15h Model 10h-1Fh doesn't mention any
+ 49125 - Family 15h Model 30h-3Fh doesn't mention any
+
+ 48751 - Family 16h Model 00h-0Fh uses the previously supported
+         index register SB800_PIIX4_PORT_IDX_ALT at 0x2e
+
+Signed-off-by: Andrew Cooks <andrew.cooks@opengear.com>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Cc: stable@vger.kernel.org [v4.6+]
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c   | 27 ++++++++++++++++++---------
- fs/nfs/pagelist.c |  1 +
- 2 files changed, 19 insertions(+), 9 deletions(-)
+ drivers/i2c/busses/i2c-piix4.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 0fd811ac08b52..f516ace8f45d3 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -400,15 +400,21 @@ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
- 	unsigned long bytes = 0;
- 	struct nfs_direct_req *dreq = hdr->dreq;
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index 90946a8b9a75a..9ff3371ec385d 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -98,7 +98,7 @@
+ #define SB800_PIIX4_PORT_IDX_MASK	0x06
+ #define SB800_PIIX4_PORT_IDX_SHIFT	1
  
--	if (test_bit(NFS_IOHDR_REDO, &hdr->flags))
--		goto out_put;
--
- 	spin_lock(&dreq->lock);
--	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags) && (hdr->good_bytes == 0))
-+	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
- 		dreq->error = hdr->error;
--	else
-+
-+	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
-+		spin_unlock(&dreq->lock);
-+		goto out_put;
-+	}
-+
-+	if (hdr->good_bytes != 0)
- 		nfs_direct_good_bytes(dreq, hdr);
+-/* On kerncz, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
++/* On kerncz and Hudson2, SmBus0Sel is at bit 20:19 of PMx00 DecodeEn */
+ #define SB800_PIIX4_PORT_IDX_KERNCZ		0x02
+ #define SB800_PIIX4_PORT_IDX_MASK_KERNCZ	0x18
+ #define SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ	3
+@@ -362,18 +362,16 @@ static int piix4_setup_sb800(struct pci_dev *PIIX4_dev,
  
-+	if (test_bit(NFS_IOHDR_EOF, &hdr->flags))
-+		dreq->error = 0;
-+
- 	spin_unlock(&dreq->lock);
- 
- 	while (!list_empty(&hdr->pages)) {
-@@ -774,16 +780,19 @@ static void nfs_direct_write_completion(struct nfs_pgio_header *hdr)
- 	bool request_commit = false;
- 	struct nfs_page *req = nfs_list_entry(hdr->pages.next);
- 
--	if (test_bit(NFS_IOHDR_REDO, &hdr->flags))
--		goto out_put;
--
- 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
- 
- 	spin_lock(&dreq->lock);
- 
- 	if (test_bit(NFS_IOHDR_ERROR, &hdr->flags))
- 		dreq->error = hdr->error;
--	if (dreq->error == 0) {
-+
-+	if (test_bit(NFS_IOHDR_REDO, &hdr->flags)) {
-+		spin_unlock(&dreq->lock);
-+		goto out_put;
-+	}
-+
-+	if (hdr->good_bytes != 0) {
- 		nfs_direct_good_bytes(dreq, hdr);
- 		if (nfs_write_need_commit(hdr)) {
- 			if (dreq->flags == NFS_ODIRECT_RESCHED_WRITES)
-diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
-index 7f0b9409202cc..d23ea74b5d203 100644
---- a/fs/nfs/pagelist.c
-+++ b/fs/nfs/pagelist.c
-@@ -1248,6 +1248,7 @@ int nfs_pageio_resend(struct nfs_pageio_descriptor *desc,
- 	if (!list_empty(&pages)) {
- 		int err = desc->pg_error < 0 ? desc->pg_error : -EIO;
- 		hdr->completion_ops->error_cleanup(&pages, err);
-+		nfs_set_pgio_error(hdr, err, hdr->io_start);
- 		return err;
- 	}
- 	return 0;
+ 	/* Find which register is used for port selection */
+ 	if (PIIX4_dev->vendor == PCI_VENDOR_ID_AMD) {
+-		switch (PIIX4_dev->device) {
+-		case PCI_DEVICE_ID_AMD_KERNCZ_SMBUS:
++		if (PIIX4_dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS ||
++		    (PIIX4_dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS &&
++		     PIIX4_dev->revision >= 0x1F)) {
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_KERNCZ;
+ 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK_KERNCZ;
+ 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT_KERNCZ;
+-			break;
+-		case PCI_DEVICE_ID_AMD_HUDSON2_SMBUS:
+-		default:
++		} else {
+ 			piix4_port_sel_sb800 = SB800_PIIX4_PORT_IDX_ALT;
+ 			piix4_port_mask_sb800 = SB800_PIIX4_PORT_IDX_MASK;
+ 			piix4_port_shift_sb800 = SB800_PIIX4_PORT_IDX_SHIFT;
+-			break;
+ 		}
+ 	} else {
+ 		if (!request_muxed_region(SB800_PIIX4_SMB_IDX, 2,
 -- 
 2.20.1
 
