@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D35C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D422DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87172208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBB722CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620813;
-	bh=XpVMRruxLN1E2XX5gewbcsvYWzPngDOtSDaa0SDg7os=;
+	s=default; t=1567620816;
+	bh=I9c8+mI73wBB/l3wPqRLRS5mw5uBMutPW2XFFFwYECs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Eu/OriATzT2mowhmWrra70e8+obaCHIjfHlUz8F/Ave8sZ1SYEsa3TpGXUoqslFFS
-	 RoxrYKENCj8s+yvK41l73Mmdo6jlJgD/AEofyqXBwwtnJXT3F6cZNd1tyXlYdffuSq
-	 ssXDFAb1M2LitHvkb1TBeWnmEd1Ox8U3i9QvAEjw=
+	b=b5175k3Dy3YAPIyvgmmr4fdIZhsTVYPsObkiga4sfbuZukrz+spfWeQKOOCwCfRIB
+	 xmmbQ52optkYO993N56OO+NSRzgyOXhG46N2VizWNV4FfXoWzUlB02GYzOeXtiTAqU
+	 lJcm3YX2JLBeiPmFHsxfSysvXeSROS/oAX+5PHnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390389AbfIDSNc (ORCPT
+        id S2390709AbfIDSNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58364 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390694AbfIDSN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:29 -0400
+        id S2390700AbfIDSNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B057208E4;
-        Wed,  4 Sep 2019 18:13:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16E9B2341B;
+        Wed,  4 Sep 2019 18:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620808;
-        bh=XpVMRruxLN1E2XX5gewbcsvYWzPngDOtSDaa0SDg7os=;
+        s=default; t=1567620811;
+        bh=I9c8+mI73wBB/l3wPqRLRS5mw5uBMutPW2XFFFwYECs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YH0YKlYcxsY+5nsxOdkin2OTSdERyUtoNTWwuJycj5ark1YOK8D2ger4TbJL8ijY+
-         EE1/6Lw4Jei4c0a8yrFyHASKXOpiwoviVtMBwCEpdCboeIEnD2YSLP0zLL5vkbujdM
-         zPRHQRFojN5Sj60YzLJ+m6P+wJl0EhYoJNzaA6II=
+        b=Ka28y/ar0RCnu8rXb4eHQjRG76ABXnT+sl6sRjZxVVVvZvBa8f9hHZ76Dk4yoojuz
+         m+Dhpl95JK//DR6IxMo1foWAsmb7DKKBF1Vd02iQjDIMbDJUILMm2WGnaXPnSiXFWD
+         5ipbCtoag7f9MtjUk1+i9AlTGiKXGD4+wAFu3Yzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.2 062/143] ALSA: line6: Fix memory leak at line6_init_pcm() error path
-Date:   Wed,  4 Sep 2019 19:53:25 +0200
-Message-Id: <20190904175316.499042936@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Jeronimo Borque <jeronimo@borque.com.ar>
+Subject: [PATCH 5.2 063/143] ALSA: hda - Fixes inverted Conexant GPIO mic mute led
+Date:   Wed,  4 Sep 2019 19:53:26 +0200
+Message-Id: <20190904175316.537139719@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -58,57 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jeronimo Borque <jeronimo@borque.com.ar>
 
-commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 upstream.
+commit f9ef724d4896763479f3921afd1ee61552fc9836 upstream.
 
-I forgot to release the allocated object at the early error path in
-line6_init_pcm().  For addressing it, slightly shuffle the code so
-that the PCM destructor (pcm->private_free) is assigned properly
-before all error paths.
+"enabled" parameter historically referred to the device input or
+output, not to the led indicator. After the changes added with the led
+helper functions the mic mute led logic refers to the led and not to
+the mic input which caused led indicator to be negated.
+Fixing logic in cxt_update_gpio_led and updated
+cxt_fixup_gpio_mute_hook
+Also updated debug messages to ease further debugging if necessary.
 
-Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
+Fixes: 184e302b46c9 ("ALSA: hda/conexant - Use the mic-mute LED helper")
+Suggested-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Jeronimo Borque <jeronimo@borque.com.ar>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/pcm.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ sound/pci/hda/patch_conexant.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
---- a/sound/usb/line6/pcm.c
-+++ b/sound/usb/line6/pcm.c
-@@ -550,6 +550,15 @@ int line6_init_pcm(struct usb_line6 *lin
- 	line6pcm->volume_monitor = 255;
- 	line6pcm->line6 = line6;
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -611,18 +611,20 @@ static void cxt_fixup_hp_gate_mic_jack(s
  
-+	spin_lock_init(&line6pcm->out.lock);
-+	spin_lock_init(&line6pcm->in.lock);
-+	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
-+
-+	line6->line6pcm = line6pcm;
-+
-+	pcm->private_data = line6pcm;
-+	pcm->private_free = line6_cleanup_pcm;
-+
- 	line6pcm->max_packet_size_in =
- 		usb_maxpacket(line6->usbdev,
- 			usb_rcvisocpipe(line6->usbdev, ep_read), 0);
-@@ -562,15 +571,6 @@ int line6_init_pcm(struct usb_line6 *lin
- 		return -EINVAL;
- 	}
+ /* update LED status via GPIO */
+ static void cxt_update_gpio_led(struct hda_codec *codec, unsigned int mask,
+-				bool enabled)
++				bool led_on)
+ {
+ 	struct conexant_spec *spec = codec->spec;
+ 	unsigned int oldval = spec->gpio_led;
  
--	spin_lock_init(&line6pcm->out.lock);
--	spin_lock_init(&line6pcm->in.lock);
--	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
+ 	if (spec->mute_led_polarity)
+-		enabled = !enabled;
++		led_on = !led_on;
+ 
+-	if (enabled)
+-		spec->gpio_led &= ~mask;
+-	else
++	if (led_on)
+ 		spec->gpio_led |= mask;
++	else
++		spec->gpio_led &= ~mask;
++	codec_dbg(codec, "mask:%d enabled:%d gpio_led:%d\n",
++			mask, led_on, spec->gpio_led);
+ 	if (spec->gpio_led != oldval)
+ 		snd_hda_codec_write(codec, 0x01, 0, AC_VERB_SET_GPIO_DATA,
+ 				    spec->gpio_led);
+@@ -633,8 +635,8 @@ static void cxt_fixup_gpio_mute_hook(voi
+ {
+ 	struct hda_codec *codec = private_data;
+ 	struct conexant_spec *spec = codec->spec;
 -
--	line6->line6pcm = line6pcm;
--
--	pcm->private_data = line6pcm;
--	pcm->private_free = line6_cleanup_pcm;
--
- 	err = line6_create_audio_out_urbs(line6pcm);
- 	if (err < 0)
- 		return err;
+-	cxt_update_gpio_led(codec, spec->gpio_mute_led_mask, enabled);
++	/* muted -> LED on */
++	cxt_update_gpio_led(codec, spec->gpio_mute_led_mask, !enabled);
+ }
+ 
+ /* turn on/off mic-mute LED via GPIO per capture hook */
+@@ -656,7 +658,6 @@ static void cxt_fixup_mute_led_gpio(stru
+ 		{ 0x01, AC_VERB_SET_GPIO_DIRECTION, 0x03 },
+ 		{}
+ 	};
+-	codec_info(codec, "action: %d gpio_led: %d\n", action, spec->gpio_led);
+ 
+ 	if (action == HDA_FIXUP_ACT_PRE_PROBE) {
+ 		spec->gen.vmaster_mute.hook = cxt_fixup_gpio_mute_hook;
 
 
