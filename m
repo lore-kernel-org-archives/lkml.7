@@ -2,98 +2,93 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A356C3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 01:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB39DC41514
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 01:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5807723402
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 01:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A14021897
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 01:50:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbfIDBpe (ORCPT
+        id S1727692AbfIDBu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 21:45:34 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:2184 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726009AbfIDBpe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 21:45:34 -0400
-X-UUID: 5c38dde2fada4ebe8a8d115cecb95beb-20190904
-X-UUID: 5c38dde2fada4ebe8a8d115cecb95beb-20190904
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2020941060; Wed, 04 Sep 2019 09:45:25 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Sep 2019 09:45:23 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Sep 2019 09:45:23 +0800
-Message-ID: <1567561524.6949.3.camel@mtksdaap41>
-Subject: Re: [PATCH v5, 05/32] dt-bindings: mediatek: add mutex description
- for mt8183 display
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 4 Sep 2019 09:45:24 +0800
-In-Reply-To: <1567090254-15566-6-git-send-email-yongqiang.niu@mediatek.com>
-References: <1567090254-15566-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1567090254-15566-6-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 3 Sep 2019 21:50:58 -0400
+Received: from mx1.math.uh.edu ([129.7.128.32]:56502 "EHLO mx1.math.uh.edu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726589AbfIDBu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 21:50:58 -0400
+Received: from epithumia.math.uh.edu ([129.7.128.2])
+        by mx1.math.uh.edu with esmtp (Exim 4.92)
+        (envelope-from <tibbs@math.uh.edu>)
+        id 1i5KRT-0006fx-6c; Tue, 03 Sep 2019 20:50:54 -0500
+Received: by epithumia.math.uh.edu (Postfix, from userid 7225)
+        id 21319801554; Tue,  3 Sep 2019 20:50:39 -0500 (CDT)
+From:   Jason L Tibbitts III <tibbs@math.uh.edu>
+To:     Wolfgang Walter <linux@stwm.de>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org, km@cm4all.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: Regression in 5.1.20: Reading long directory fails
+References: <ufak1bhyuew.fsf@epithumia.math.uh.edu>
+        <4418877.15LTP4gqqJ@stwm.de> <ufapnkhqjwm.fsf@epithumia.math.uh.edu>
+        <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de>
+Date:   Tue, 03 Sep 2019 20:50:39 -0500
+In-Reply-To: <4198657.JbNDGbLXiX@h2o.as.studentenwerk.mhn.de> (Wolfgang
+        Walter's message of "Tue, 03 Sep 2019 23:37:30 +0200")
+Message-ID: <ufad0ggrfrk.fsf@epithumia.math.uh.edu>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 2B43CD65603ED4AB08CC18D9A82E694F69EA0ED0FA128A915F2107D73C7920E12000:8
-X-MTK:  N
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+I asked the XFS folks who mentioned that the issues with 64 bit inodes
+are old, constrained to larger filesystems than what I'm using, not an
+issue with nfsv4, and not present on anything but 32bit clients with old
+userspace.
 
-On Thu, 2019-08-29 at 22:50 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> 
-> This patch add mutex description for mt8183 display
+In any case, I have been experimenting a bit and somehow the issue seems
+to be related to exporting with sec=krb5i:krb5p or sec=krb5i.  If I
+export with just sec=krb5p, things magically begin to work.
 
-Applied to mediatek-drm-next-5.5 [1], thanks.
+So basically:
 
-[1]
-https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-next-5.5
+[root@ld00 ~]# ls -l ~tester|wc -l; grep tester /proc/mounts
+7685
+nas00:/export/misc-00/tester /home/tester nfs4 rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5p,clientaddr=172.21.84.191,local_lock=none,addr=172.21.86.77 0 0
 
-Regards,
-CK
+(unmount, then re-export with krb5i on the server)
 
-> 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> index afd3c90..c7e2eb8 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
-> @@ -52,6 +52,7 @@ Required properties (all function blocks):
->    For most function blocks this is just a single clock input. Only the DSI and
->    DPI controller nodes have multiple clock inputs. These are documented in
->    mediatek,dsi.txt and mediatek,dpi.txt, respectively.
-> +  An exception is that the mt8183 mutex is always free running with no clocks property.
->  
->  Required properties (DMA function blocks):
->  - compatible: Should be one of
+[root@ld00 ~]# ls -l ~tester|wc -l; grep tester /proc/mounts
+ls: reading directory '/home/tester': Input/output error
+5623
+nas00:/export/misc-00/tester /home/tester nfs4 rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5i,clientaddr=172.21.84.191,local_lock=none,addr=172.21.86.77 0 0
 
+(umount, then re-export with krb5i:krb5p on the server)
 
+[root@ld00 ~]# ls -l ~tester|wc -l; grep tester /proc/mounts
+ls: reading directory '/home/tester': Input/output error
+5623
+nas00:/export/misc-00/tester /home/tester nfs4 rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5i,clientaddr=172.21.84.191,local_lock=none,addr=172.21.86.77 0 0
+
+(umount, switch back to plain krb5p)
+
+[root@ld00 ~]# ls -l ~tester|wc -l; grep tester /proc/mounts
+7685
+nas00:/export/misc-00/tester /home/tester nfs4 rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5p,clientaddr=172.21.84.191,local_lock=none,addr=172.21.86.77 0 0
+
+Sometimes the number of files it lists before it fails changes (and in
+this case has been as small as a few hundred) but I don't know what
+causes it to change.
+
+Anyway, I hope this helps to pinpoint the problem.  I now have a really
+easy way to reproduce this without having to kick people off of the
+server, and if the successes aren't just some kind of false positives
+then I guess I also have a workaround.  I'm still at a loss as to why a
+revert of the readdir changes makes any difference at all here.
+
+ - J<
