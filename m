@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D18C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19866C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC5D22DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9FBE206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620833;
-	bh=CSRHk86gh5WIy5DIPkqYlXmBSEzXVknhxkEwMMZeuSM=;
+	s=default; t=1567620836;
+	bh=q1h3wBIpEygtj0TyIhZNZ2gIK5Dvwof6yKn0nAdg9ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HY1fYOrRPCfasoVzAQ6cB4zLPjKb42juTPkiHn7RiYjdx1y57hatmfl4jHJW180vA
-	 RaYIkZS14jwHkxPybMkqSDeQXJT7h2aQvOUavHj3Ky6FsifA1cEwLm7BPDS9ATK+uC
-	 POSTGYm87HOi2l4KPOPzrmfmwAeq8WQYu0eT+AVY=
+	b=Rf8xrKilkOsKyYjFom/ooPgi8JcFxZEgGK3XtLWnjgMze2U/o7ioCuymLdD2cGHdw
+	 6Cyc4jP4hjVqsbcGjwjoc886y0G606e9fMM9NOX6553fLxuCEQckJdgg5FD7dySthe
+	 ccPRAiqT2B8ECx5iNeWPub9caSqEHNhWPhtXoTAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389991AbfIDSNw (ORCPT
+        id S2390300AbfIDSNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58736 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390346AbfIDSNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:48 -0400
+        id S2390355AbfIDSNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D05A208E4;
-        Wed,  4 Sep 2019 18:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE5F2208E4;
+        Wed,  4 Sep 2019 18:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620827;
-        bh=CSRHk86gh5WIy5DIPkqYlXmBSEzXVknhxkEwMMZeuSM=;
+        s=default; t=1567620830;
+        bh=q1h3wBIpEygtj0TyIhZNZ2gIK5Dvwof6yKn0nAdg9ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CSCetijhJDItUGbKzHbuImpXpkSc8oRb1Ko3yKRPifpzRlruhsb5OI11FrJodvbAm
-         u6ps7+9LkYaFHEpsmvXecia12qOomu65596Vy7Ppoc3z/RIoZWwOvfPhXGoVrM3yyj
-         +JWsnZet3PrhQk6QJJn1mPKN5wFwHfHm9yJjzNco=
+        b=EA84o6ZdPfC87zT9cTF97C//W6Ic4VtRQaxAwB5xgsWk/BHV49fp1hoVNnBAkkjWE
+         1NK4fQkAhbWdWVXIHQHEetHc7hDIjOXx8zDthJ0MQMh5JoRP92YMCAAIo9Z5r1MUuz
+         I4nP1O6XnRQ2Te5PBBrG4sQ5LE5mx2VdRPfnWhzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huang Rui <ray.huang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Aaron Liu <aaron.liu@amd.com>
-Subject: [PATCH 5.2 111/143] drm/amdgpu: fix GFXOFF on Picasso and Raven2
-Date:   Wed,  4 Sep 2019 19:54:14 +0200
-Message-Id: <20190904175318.740365280@linuxfoundation.org>
+        stable@vger.kernel.org, Xiong Zhang <xiong.y.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.2 112/143] drm/i915: Dont deballoon unused ggtt drm_mm_node in linux guest
+Date:   Wed,  4 Sep 2019 19:54:15 +0200
+Message-Id: <20190904175318.780438544@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,50 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Liu <aaron.liu@amd.com>
+From: Xiong Zhang <xiong.y.zhang@intel.com>
 
-commit 41940ff50f6c347f3541163702566cd526200d98 upstream.
+commit 0a3dfbb5cd9033752639ef33e319c2f2863c713a upstream.
 
-For picasso(adev->pdev->device == 0x15d8)&raven2(adev->rev_id >= 0x8),
-firmware is sufficient to support gfxoff.
-In commit 98f58ada2d37e, for picasso&raven2,
-return directly and cause gfxoff disabled.
+The following call trace may exist in linux guest dmesg when guest i915
+driver is unloaded.
+[   90.776610] [drm:vgt_deballoon_space.isra.0 [i915]] deballoon space: range [0x0 - 0x0] 0 KiB.
+[   90.776621] BUG: unable to handle kernel NULL pointer dereference at 00000000000000c0
+[   90.776691] IP: drm_mm_remove_node+0x4d/0x320 [drm]
+[   90.776718] PGD 800000012c7d0067 P4D 800000012c7d0067 PUD 138e4c067 PMD 0
+[   90.777091] task: ffff9adab60f2f00 task.stack: ffffaf39c0fe0000
+[   90.777142] RIP: 0010:drm_mm_remove_node+0x4d/0x320 [drm]
+[   90.777573] Call Trace:
+[   90.777653]  intel_vgt_deballoon+0x4c/0x60 [i915]
+[   90.777729]  i915_ggtt_cleanup_hw+0x121/0x190 [i915]
+[   90.777792]  i915_driver_unload+0x145/0x180 [i915]
+[   90.777856]  i915_pci_remove+0x15/0x20 [i915]
+[   90.777890]  pci_device_remove+0x3b/0xc0
+[   90.777916]  device_release_driver_internal+0x157/0x220
+[   90.777945]  driver_detach+0x39/0x70
+[   90.777967]  bus_remove_driver+0x51/0xd0
+[   90.777990]  pci_unregister_driver+0x23/0x90
+[   90.778019]  SyS_delete_module+0x1da/0x240
+[   90.778045]  entry_SYSCALL_64_fastpath+0x24/0x87
+[   90.778072] RIP: 0033:0x7f34312af067
+[   90.778092] RSP: 002b:00007ffdea3da0d8 EFLAGS: 00000206
+[   90.778297] RIP: drm_mm_remove_node+0x4d/0x320 [drm] RSP: ffffaf39c0fe3dc0
+[   90.778344] ---[ end trace f4b1bc8305fc59dd ]---
 
-Fixes: 98f58ada2d37 ("drm/amdgpu/gfx9: update pg_flags after determining if gfx off is possible")
-Reviewed-by: Huang Rui <ray.huang@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Aaron Liu <aaron.liu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Four drm_mm_node are used to reserve guest ggtt space, but some of them
+may be skipped and not initialised due to space constraints in
+intel_vgt_balloon(). If drm_mm_remove_node() is called with
+uninitialized drm_mm_node, the above call trace occurs.
+
+This patch check drm_mm_node's validity before calling
+drm_mm_remove_node().
+
+Fixes: ff8f797557c7("drm/i915: return the correct usable aperture size under gvt environment")
 Cc: stable@vger.kernel.org
+Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
+Acked-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/1566279978-9659-1-git-send-email-xiong.y.zhang@intel.com
+(cherry picked from commit 4776f3529d6b1e47f02904ad1d264d25ea22b27b)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/i915/i915_vgpu.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -588,14 +588,14 @@ static void gfx_v9_0_check_if_need_gfxof
- 	case CHIP_VEGA20:
- 		break;
- 	case CHIP_RAVEN:
--		if (adev->rev_id >= 0x8 || adev->pdev->device == 0x15d8)
--			break;
--		if ((adev->gfx.rlc_fw_version != 106 &&
--		     adev->gfx.rlc_fw_version < 531) ||
--		    (adev->gfx.rlc_fw_version == 53815) ||
--		    (adev->gfx.rlc_feature_version < 1) ||
--		    !adev->gfx.rlc.is_rlc_v2_1)
-+		if (!(adev->rev_id >= 0x8 || adev->pdev->device == 0x15d8)
-+			&&((adev->gfx.rlc_fw_version != 106 &&
-+			     adev->gfx.rlc_fw_version < 531) ||
-+			    (adev->gfx.rlc_fw_version == 53815) ||
-+			    (adev->gfx.rlc_feature_version < 1) ||
-+			    !adev->gfx.rlc.is_rlc_v2_1))
- 			adev->pm.pp_feature &= ~PP_GFXOFF_MASK;
+--- a/drivers/gpu/drm/i915/i915_vgpu.c
++++ b/drivers/gpu/drm/i915/i915_vgpu.c
+@@ -101,6 +101,9 @@ static struct _balloon_info_ bl_info;
+ static void vgt_deballoon_space(struct i915_ggtt *ggtt,
+ 				struct drm_mm_node *node)
+ {
++	if (!drm_mm_node_allocated(node))
++		return;
 +
- 		if (adev->pm.pp_feature & PP_GFXOFF_MASK)
- 			adev->pg_flags |= AMD_PG_SUPPORT_GFX_PG |
- 				AMD_PG_SUPPORT_CP |
+ 	DRM_DEBUG_DRIVER("deballoon space: range [0x%llx - 0x%llx] %llu KiB.\n",
+ 			 node->start,
+ 			 node->start + node->size,
 
 
