@@ -2,279 +2,141 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5A4C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A99FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA2621726
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:13:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567638833;
-	bh=yYjOoOHFpY/2te3Kqt2elSogWYh5XMg5mlrkr2JEXLY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Cs7rwe609Krfl76jMS4DgXdlY5RLMTRjO69nR/zmF7XW2QU4q8P7M0hDZVaL32Ykl
-	 +fZaWrCUekvroaOc0a3HFr1hqnImJONYA5MhKh1eThEKTm5Oc3ig5tPr+UnH15y6r0
-	 hg2588p3VaAFrJs44QT2Z2O4u48W1kUxyD2z1UhM=
+	by mail.kernel.org (Postfix) with ESMTP id 0FB2B21726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 23:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbfIDXNw (ORCPT
+        id S1730291AbfIDXOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 19:13:52 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43386 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728286AbfIDXNw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 19:13:52 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x84NCYwa061652;
-        Wed, 4 Sep 2019 19:13:09 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2utmfamb4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 19:13:09 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x84ND9Ga063593;
-        Wed, 4 Sep 2019 19:13:09 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2utmfamb3w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 19:13:08 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x84NA26u010149;
-        Wed, 4 Sep 2019 23:13:08 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma04dal.us.ibm.com with ESMTP id 2uqgh73fm2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 23:13:07 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x84ND7cP13828750
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Sep 2019 23:13:07 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1FA3CB2067;
-        Wed,  4 Sep 2019 23:13:07 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E4E5DB205F;
-        Wed,  4 Sep 2019 23:13:06 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Sep 2019 23:13:06 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 3941316C3CAB; Wed,  4 Sep 2019 16:13:08 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 16:13:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH -rcu dev 1/2] Revert b8c17e6664c4 ("rcu: Maintain special
- bits at bottom of ->dynticks counter")
-Message-ID: <20190904231308.GB4125@linux.ibm.com>
-Reply-To: paulmck@kernel.org
-References: <20190830162348.192303-1-joel@joelfernandes.org>
- <20190903200249.GD4125@linux.ibm.com>
- <20190904045910.GC144846@google.com>
- <20190904101210.GM4125@linux.ibm.com>
- <20190904135420.GB240514@google.com>
+        Wed, 4 Sep 2019 19:14:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:2683 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728286AbfIDXOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 19:14:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 16:14:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,468,1559545200"; 
+   d="scan'208";a="187784257"
+Received: from ray.jf.intel.com (HELO [10.7.201.140]) ([10.7.201.140])
+  by orsmga006.jf.intel.com with ESMTP; 04 Sep 2019 16:14:08 -0700
+Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        "Shutemov, Kirill" <kirill.shutemov@intel.com>
+References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
+ <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <3b67e4d8-ba67-e7b2-f4d1-1276262d349e@intel.com>
+Date:   Wed, 4 Sep 2019 16:14:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904135420.GB240514@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909040225
+In-Reply-To: <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 09:54:20AM -0400, Joel Fernandes wrote:
-> On Wed, Sep 04, 2019 at 03:12:10AM -0700, Paul E. McKenney wrote:
-> > On Wed, Sep 04, 2019 at 12:59:10AM -0400, Joel Fernandes wrote:
-> > > On Tue, Sep 03, 2019 at 01:02:49PM -0700, Paul E. McKenney wrote:
+On 9/3/19 1:01 AM, Anshuman Khandual wrote:
+> This adds a test module which will validate architecture page table helpers
+> and accessors regarding compliance with generic MM semantics expectations.
+> This will help various architectures in validating changes to the existing
+> page table helpers or addition of new ones.
 
-[ . . . ]
+This looks really cool.  The "only" complication on x86 is the large
+number of compile and runtime options that we have.  When this gets
+merged, it would be really nice to make sure that the 0day guys have
+good coverage of all the configurations.
 
-> > If this task gets delayed betweentimes, rcu_implicit_dynticks_qs() would
-> > fail to set .rcu_need_heavy_qs because it saw it already being set,
-> > even though the corresponding ->dynticks update had already happened.
-> > (It might be a new grace period, given that the old grace period might
-> > have ended courtesy of the atomic_add_return().)
-> 
-> Makes sense and I agree.
-> 
-> Also, I would really appreciate if you can correct the nits in the above
-> patch we're reviewing, and apply them (if you can).
-> I think, there are only 2 changes left:
-> - rename special to seq.
-> - reorder the rcu_need_heavy_qs write.
-> 
->  On a related point, when I was working on the NOHZ_FULL testing I noticed a
->  weird issue where rcu_urgent_qs was reset but rcu_need_heavy_qs was still
->  set indefinitely. I am a bit afraid our hints are not being cleared
->  appropriately and I believe I fixed a similar issue a few months ago. I
->  would rather have them cleared once they are no longer needed.  What do you
->  think about the below patch? I did not submit it yet because I was working
->  on other patches. 
-> 
-> ---8<-----------------------
-> 
-> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> Subject: [RFC] rcu/tree: Reset CPU hints when reporting a quiescent state
-> 
-> While tracing, I am seeing cases where need_heavy_qs is still set even
-> though urgent_qs was cleared, after a quiescent state is reported. One
-> such case is when the softirq reports that a CPU has passed quiescent
-> state.
-> 
-> Previously in 671a63517cf9 ("rcu: Avoid unnecessary softirq when system
-> is idle"), I had fixed a bug where core_needs_qs was not being cleared.
-> I worry we keep running into similar situations. Let us just add a
-> function to clear hints and call it from all relevant places to make the
-> code more robust and avoid such stale hints which could in theory at
-> least, cause false hints after the quiescent state was already reported.
-> 
-> Tested overnight with rcutorture running for 60 minutes on all
-> configurations of RCU.
-> 
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-
-Excellent point!  But how about if we combine it with the existing
-disabling of the scheduler tick, perhaps something like the following?
-
-Note that the FQS clearing can come from some other CPU, hence the added
-{READ,WRITE}_ONCE() calls.  The call is moved down in rcu_report_qs_rdp()
-because something would have had to clear the bit to prevent execution
-from getting there, and I believe that the other bit-clearing events
-have calls to rcu_disable_urgency_upon_qs().  (But I easily could have
-missed something!)
-
-I am OK leaving RCU urgency set on offline CPUs, hence clearing things
-at online time.
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 68ebf0eb64c8..2b74b6c94086 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -827,7 +827,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
- 		incby = 1;
- 	} else if (tick_nohz_full_cpu(rdp->cpu) &&
- 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
--		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-+		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
- 		rdp->rcu_forced_tick = true;
- 		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
- 	}
-@@ -892,11 +892,15 @@ void rcu_irq_enter_irqson(void)
- }
- 
- /*
-- * If the scheduler-clock interrupt was enabled on a nohz_full CPU
-- * in order to get to a quiescent state, disable it.
-+ * If any sort of urgency was applied to the current CPU (for example,
-+ * the scheduler-clock interrupt was enabled on a nohz_full CPU) in order
-+ * to get to a quiescent state, disable it.
-  */
--void rcu_disable_tick_upon_qs(struct rcu_data *rdp)
-+void rcu_disable_urgency_upon_qs(struct rcu_data *rdp)
- {
-+	WRITE_ONCE(rdp->core_needs_qs, false);
-+	WRITE_ONCE(rdp->rcu_urgent_qs, false);
-+	WRITE_ONCE(rdp->rcu_need_heavy_qs, false);
- 	if (tick_nohz_full_cpu(rdp->cpu) && rdp->rcu_forced_tick) {
- 		tick_dep_clear_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
- 		rdp->rcu_forced_tick = false;
-@@ -1417,7 +1421,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
- 		trace_rcu_grace_period(rcu_state.name, rnp->gp_seq, TPS("cpustart"));
- 		need_gp = !!(rnp->qsmask & rdp->grpmask);
- 		rdp->cpu_no_qs.b.norm = need_gp;
--		rdp->core_needs_qs = need_gp;
-+		WRITE_ONCE(rdp->core_needs_qs, need_gp);
- 		zero_cpu_stall_ticks(rdp);
- 	}
- 	rdp->gp_seq = rnp->gp_seq;  /* Remember new grace-period state. */
-@@ -1987,7 +1991,6 @@ rcu_report_qs_rdp(int cpu, struct rcu_data *rdp)
- 		return;
- 	}
- 	mask = rdp->grpmask;
--	rdp->core_needs_qs = false;
- 	if ((rnp->qsmask & mask) == 0) {
- 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	} else {
-@@ -1998,7 +2001,7 @@ rcu_report_qs_rdp(int cpu, struct rcu_data *rdp)
- 		if (!offloaded)
- 			needwake = rcu_accelerate_cbs(rnp, rdp);
- 
--		rcu_disable_tick_upon_qs(rdp);
-+		rcu_disable_urgency_upon_qs(rdp);
- 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
- 		/* ^^^ Released rnp->lock */
- 		if (needwake)
-@@ -2022,7 +2025,7 @@ rcu_check_quiescent_state(struct rcu_data *rdp)
- 	 * Does this CPU still need to do its part for current grace period?
- 	 * If no, return and let the other CPUs do their part as well.
- 	 */
--	if (!rdp->core_needs_qs)
-+	if (!READ_ONCE(rdp->core_needs_qs))
- 		return;
- 
- 	/*
-@@ -2316,7 +2319,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
- 				rdp = per_cpu_ptr(&rcu_data, cpu);
- 				if (f(rdp)) {
- 					mask |= bit;
--					rcu_disable_tick_upon_qs(rdp);
-+					rcu_disable_urgency_upon_qs(rdp);
- 				}
- 			}
- 		}
-@@ -3004,7 +3007,7 @@ static int rcu_pending(void)
- 		return 0;
- 
- 	/* Is the RCU core waiting for a quiescent state from this CPU? */
--	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm)
-+	if (READ_ONCE(rdp->core_needs_qs) && !rdp->cpu_no_qs.b.norm)
- 		return 1;
- 
- 	/* Does this CPU have callbacks ready to invoke? */
-@@ -3244,7 +3247,6 @@ int rcutree_prepare_cpu(unsigned int cpu)
- 	rdp->gp_seq = rnp->gp_seq;
- 	rdp->gp_seq_needed = rnp->gp_seq;
- 	rdp->cpu_no_qs.b.norm = true;
--	rdp->core_needs_qs = false;
- 	rdp->rcu_iw_pending = false;
- 	rdp->rcu_iw_gp_seq = rnp->gp_seq - 1;
- 	trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuonl"));
-@@ -3359,7 +3361,7 @@ void rcu_cpu_starting(unsigned int cpu)
- 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
- 	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
- 	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
--		rcu_disable_tick_upon_qs(rdp);
-+		rcu_disable_urgency_upon_qs(rdp);
- 		/* Report QS -after- changing ->qsmaskinitnext! */
- 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
- 	} else {
+I'm not _quite_ sure what kind of bugs it will catch on x86 and I
+suspect it'll have more value for the other architectures, but it seems
+harmless enough.
