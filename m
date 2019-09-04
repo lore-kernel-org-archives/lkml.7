@@ -2,50 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64C4C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690E2C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE25208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 449A522CF7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620399;
-	bh=Y3WTWkG85/3eRaBnKPhC5oucDyL+QcYVnYaPUi5pWaI=;
+	s=default; t=1567620401;
+	bh=VByHN+JhKK1rTl7BBvMhaT4Wo6ZFnH8N0Gy5znAXg8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JtiK/Xc6Co3ZuI5CkUJHv0kMdQrIAuPv1wlp9XYrkilD5NjMCqyfEZ7jW4R70sKXt
-	 0243C+ttFlusgTY2jSKj1heobsKO+sJMjnzdCuM0UL1Ipy0AGxAur1FBGPm3I6JWCT
-	 0HYd3OvTJLgPavV0EfkVlukvD8GxJNllHU0d+rfU=
+	b=TVNag3Ej1ZZYyFe1lddwggzjqCsyoHPVzr6aY35WFPaGlr1cVPNAOdCHgTAU8/p/c
+	 Uw2K940e0KUGVzqWfkI9nbvGn3jWLX9yybHN686SNJ+AxCldkdTODu3GFdz7PHvi/D
+	 fMb2lR/D+XskXfgJi0TsUzIYu3b7TCSssALvNEoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389471AbfIDSGi (ORCPT
+        id S2389479AbfIDSGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:06:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48640 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388511AbfIDSGg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:06:36 -0400
+        id S2389452AbfIDSGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:06:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2053B208E4;
-        Wed,  4 Sep 2019 18:06:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9606208E4;
+        Wed,  4 Sep 2019 18:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620395;
-        bh=Y3WTWkG85/3eRaBnKPhC5oucDyL+QcYVnYaPUi5pWaI=;
+        s=default; t=1567620398;
+        bh=VByHN+JhKK1rTl7BBvMhaT4Wo6ZFnH8N0Gy5znAXg8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9gDpulvItrcrU35YaG0j37brLd2IxGZFNpZIqt7r+K16h1QC+4cJvctGIOnVXvO8
-         cMectUaNgPdxRiW4iVywJlIy67yYGF5mqLwKak7lZb6Cxjgd7ALer/AP6y2s7iR7PZ
-         Kn97lnx1AM7/0J9ZK7imgXRi09BtzgUqxu71q7ZQ=
+        b=KjriZjMBUeGFO3fbIhfWaj/3YZl58UrBUeDqEfDLyDAcq5pD75qAzmgd2VB5DZ8vS
+         Vbuflgbs8uboS256i+1r1mMcRjs7vcq+K8Awor4Tssjh2+amhqKs0SQWb/aW+txxRw
+         YN/FahizGi1voO2gFjyLbR9Izt8zSnviOeeoaRbY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 40/93] ALSA: usb-audio: Check mixer unit bitmap yet more strictly
-Date:   Wed,  4 Sep 2019 19:53:42 +0200
-Message-Id: <20190904175306.656801287@linuxfoundation.org>
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 05/93] fs: afs: Fix a possible null-pointer dereference in afs_put_read()
+Date:   Wed,  4 Sep 2019 19:53:07 +0200
+Message-Id: <20190904175303.450657522@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -58,96 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+[ Upstream commit a6eed4ab5dd4bfb696c1a3f49742b8d1846a66a0 ]
 
-commit f9f0e9ed350e15d51ad07364b4cf910de50c472a upstream.
+In afs_read_dir(), there is an if statement on line 255 to check whether
+req->pages is NULL:
+	if (!req->pages)
+		goto error;
 
-The bmControls (for UAC1) or bmMixerControls (for UAC2/3) bitmap has a
-variable size depending on both input and output pins.  Its size is to
-fit with input * output bits.  The problem is that the input size
-can't be determined simply from the unit descriptor itself but it
-needs to parse the whole connected sources.  Although the
-uac_mixer_unit_get_channels() tries to check some possible overflow of
-this bitmap, it's incomplete due to the lack of the  evaluation of
-input pins.
+If req->pages is NULL, afs_put_read() on line 337 is executed.
+In afs_put_read(), req->pages[i] is used on line 195.
+Thus, a possible null-pointer dereference may occur in this case.
 
-For covering possible overflows, this patch adds the bitmap overflow
-check in the loop of input pins in parse_audio_mixer_unit().
+To fix this possible bug, an if statement is added in afs_put_read() to
+check req->pages.
 
-Fixes: 0bfe5e434e66 ("ALSA: usb-audio: Check mixer unit descriptors more strictly")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This bug is found by a static analysis tool STCheck written by us.
 
+Fixes: f3ddee8dc4e2 ("afs: Fix directory handling")
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c |   36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+ fs/afs/file.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -754,7 +754,6 @@ static int uac_mixer_unit_get_channels(s
- 				       struct uac_mixer_unit_descriptor *desc)
- {
- 	int mu_channels;
--	void *c;
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index 7d4f26198573d..843d3b970b845 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -193,11 +193,13 @@ void afs_put_read(struct afs_read *req)
+ 	int i;
  
- 	if (desc->bLength < sizeof(*desc))
- 		return -EINVAL;
-@@ -777,13 +776,6 @@ static int uac_mixer_unit_get_channels(s
- 		break;
+ 	if (refcount_dec_and_test(&req->usage)) {
+-		for (i = 0; i < req->nr_pages; i++)
+-			if (req->pages[i])
+-				put_page(req->pages[i]);
+-		if (req->pages != req->array)
+-			kfree(req->pages);
++		if (req->pages) {
++			for (i = 0; i < req->nr_pages; i++)
++				if (req->pages[i])
++					put_page(req->pages[i]);
++			if (req->pages != req->array)
++				kfree(req->pages);
++		}
+ 		kfree(req);
  	}
- 
--	if (!mu_channels)
--		return 0;
--
--	c = uac_mixer_unit_bmControls(desc, state->mixer->protocol);
--	if (c - (void *)desc + (mu_channels - 1) / 8 >= desc->bLength)
--		return 0; /* no bmControls -> skip */
--
- 	return mu_channels;
  }
- 
-@@ -2028,6 +2020,31 @@ static int parse_audio_feature_unit(stru
-  * Mixer Unit
-  */
- 
-+/* check whether the given in/out overflows bmMixerControls matrix */
-+static bool mixer_bitmap_overflow(struct uac_mixer_unit_descriptor *desc,
-+				  int protocol, int num_ins, int num_outs)
-+{
-+	u8 *hdr = (u8 *)desc;
-+	u8 *c = uac_mixer_unit_bmControls(desc, protocol);
-+	size_t rest; /* remaining bytes after bmMixerControls */
-+
-+	switch (protocol) {
-+	case UAC_VERSION_1:
-+	default:
-+		rest = 1; /* iMixer */
-+		break;
-+	case UAC_VERSION_2:
-+		rest = 2; /* bmControls + iMixer */
-+		break;
-+	case UAC_VERSION_3:
-+		rest = 6; /* bmControls + wMixerDescrStr */
-+		break;
-+	}
-+
-+	/* overflow? */
-+	return c + (num_ins * num_outs + 7) / 8 + rest > hdr + hdr[0];
-+}
-+
- /*
-  * build a mixer unit control
-  *
-@@ -2156,6 +2173,9 @@ static int parse_audio_mixer_unit(struct
- 		if (err < 0)
- 			return err;
- 		num_ins += iterm.channels;
-+		if (mixer_bitmap_overflow(desc, state->mixer->protocol,
-+					  num_ins, num_outs))
-+			break;
- 		for (; ich < num_ins; ich++) {
- 			int och, ich_has_controls = 0;
- 
+-- 
+2.20.1
+
 
 
