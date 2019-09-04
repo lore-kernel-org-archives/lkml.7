@@ -2,99 +2,125 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D95BC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02CAC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52E82339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A34F2339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 14:06:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Ctf67tOB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbfIDOGN (ORCPT
+        id S1730846AbfIDOGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 10:06:13 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:44382 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730462AbfIDOGM (ORCPT
+        Wed, 4 Sep 2019 10:06:18 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:60220 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730462AbfIDOGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 10:06:12 -0400
-X-UUID: f362c8a6c104411aa10ef7ebe1987d5b-20190904
-X-UUID: f362c8a6c104411aa10ef7ebe1987d5b-20190904
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2107079500; Wed, 04 Sep 2019 22:06:06 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Sep 2019 22:06:05 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Sep 2019 22:06:04 +0800
-Message-ID: <1567605965.32522.14.camel@mtksdccf07>
-Subject: Re: [PATCH 1/2] mm/kasan: dump alloc/free stack for page allocator
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Vlastimil Babka <vbabka@suse.cz>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Date:   Wed, 4 Sep 2019 22:06:05 +0800
-In-Reply-To: <401064ae-279d-bef3-a8d5-0fe155d0886d@suse.cz>
-References: <20190904065133.20268-1-walter-zh.wu@mediatek.com>
-         <401064ae-279d-bef3-a8d5-0fe155d0886d@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Sep 2019 10:06:18 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x84E65FQ012074;
+        Wed, 4 Sep 2019 23:06:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x84E65FQ012074
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567605966;
+        bh=EIcW7nuR2BwIgm+8fvmv+3/OtKATqWDtbykL5X1yVEI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ctf67tOBMnzuIGRVtw7qPYg87jOjmZTf9vdUjarlrSrcrPC2pYi/twYuqrhQBYtgP
+         pt0NB0gigDE2jQbTGoQHX4/5V3ELKocKEC+gvE/K2fbUTsmj35x02tpHmTCVTKAePi
+         8Zc+S9nQtNbWlsfRq/huhIh/9ScT4+96hDLOuAYbv8h/jh/0UXUbfhTweA5uTA0EFj
+         pPYOEQIM8aF6MaV8EdYmfT9Xs5hXT3n1M+LO/cJ958Ga2INt0bxig9/uwJhQVRVcI2
+         knVovMKLNQL7J21XGPRIMwV/BN6WufKxGQelj3/blPczhZMs7jxcYDmDtJRTi4ouhZ
+         Zhn0s5/R3subg==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id h23so2703851uao.10;
+        Wed, 04 Sep 2019 07:06:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAWphMMClKxjHmWFpQ+IBr5I4tc04w0F4qWaOsKyjEyr90knVDQI
+        qeonlTO9FZRjNz92EQmAz5yvhk/oXVwrn8s1GbU=
+X-Google-Smtp-Source: APXvYqyDmWQLlXmtoyVyouREoqmPaMLGw1tPpcxgighXpcAcoFK3ScNooPQI4LTe/+po0y7FdOnWYKnxlyKUaYtiwFY=
+X-Received: by 2002:ab0:32d8:: with SMTP id f24mr19579922uao.121.1567605964838;
+ Wed, 04 Sep 2019 07:06:04 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
+References: <20190831162555.31887-1-yamada.masahiro@socionext.com>
+ <20190831162555.31887-2-yamada.masahiro@socionext.com> <CAKwvOdm0zcyaBLdSVc7PmjUa-wyVuCaN=6qZoPLvnoJC1ammog@mail.gmail.com>
+ <CA+icZUWzSsFXLmrO2G7ochE62e=kByEV6UKregcJqZrJN1WJxQ@mail.gmail.com>
+ <CA+icZUXboR-0TzpSHf7a8MSjxPWxdC13Oudu8D+b+umtvWCCkg@mail.gmail.com> <CA+icZUVN1zRi5P8PPWMjXoXwtSCkbzTFNreYXi+0HtTjPnfkTQ@mail.gmail.com>
+In-Reply-To: <CA+icZUVN1zRi5P8PPWMjXoXwtSCkbzTFNreYXi+0HtTjPnfkTQ@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 4 Sep 2019 23:05:28 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ28VedOdiHX-tKatT1ebzDNXM8b5CxcxKek3b271PgzA@mail.gmail.com>
+Message-ID: <CAK7LNAQ28VedOdiHX-tKatT1ebzDNXM8b5CxcxKek3b271PgzA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to KBUILD_EXTRA_WARN
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 14:49 +0200, Vlastimil Babka wrote:
-> On 9/4/19 8:51 AM, Walter Wu wrote:
-> > This patch is KASAN report adds the alloc/free stacks for page allocator
-> > in order to help programmer to see memory corruption caused by page.
-> > 
-> > By default, KASAN doesn't record alloc/free stack for page allocator.
-> > It is difficult to fix up page use-after-free issue.
-> > 
-> > This feature depends on page owner to record the last stack of pages.
-> > It is very helpful for solving the page use-after-free or out-of-bound.
-> > 
-> > KASAN report will show the last stack of page, it may be:
-> > a) If page is in-use state, then it prints alloc stack.
-> >    It is useful to fix up page out-of-bound issue.
-> 
-> I expect this will conflict both in syntax and semantics with my series [1] that
-> adds the freeing stack to page_owner when used together with debug_pagealloc,
-> and it's now in mmotm. Glad others see the need as well :) Perhaps you could
-> review the series, see if it fulfils your usecase (AFAICS the series should be a
-> superset, by storing both stacks at once), and perhaps either make KASAN enable
-> debug_pagealloc, or turn KASAN into an alternative enabler of the functionality
-> there?
-> 
-> Thanks, Vlastimil
-> 
-> [1] https://lore.kernel.org/linux-mm/20190820131828.22684-1-vbabka@suse.cz/t/#u
-> 
-Thanks your information.
-We focus on the smartphone, so it doesn't enable
-CONFIG_TRANSPARENT_HUGEPAGE, Is it invalid for our usecase?
-And It looks like something is different, because we only need last
-stack of page, so it can decrease memory overhead.
-I will try to enable debug_pagealloc(with your patch) and KASAN, then we
-see the result.
+On Wed, Sep 4, 2019 at 6:58 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Wed, Sep 4, 2019 at 10:07 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> >
+> > On Wed, Sep 4, 2019 at 8:58 AM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+> > >
+> > > On Tue, Sep 3, 2019 at 11:50 PM Nick Desaulniers
+> > > <ndesaulniers@google.com> wrote:
+> > > >
+> > > > On Sat, Aug 31, 2019 at 9:26 AM Masahiro Yamada
+> > > > <yamada.masahiro@socionext.com> wrote:
+> > > > >
+> > > > > KBUILD_ENABLE_EXTRA_GCC_CHECKS started as a switch to add extra warning
+> > > > > options for GCC, but now it is a historical misnomer since we use it
+> > > > > also for Clang, DTC, and even kernel-doc.
+> > > >
+> > > > Thanks for the patch!
+> > > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> > > >
+> > >
+> > > Thanks for the patch.
+> > > I like the backward compatibility and am OK with pointing to 'make
+> > > --help' for the documentation part (KISS - Keep It Simple and
+> > > Short/Stupid).
+> > >
+> > > Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> >
+> > If you will do a next version...
+> >
+> > - @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
+> > + @echo  '  make W=n   [targets] Enable extra checks, n=1,2,3 where'
+> >
+> > ...clarify on extra checks for compiler...
+> >
+> > + @echo  '  make W=n   [targets] Enable extra *compiler* checks, n=1,2,3 where'
+> >
+>
+> +KBUILD_EXTRA_WARN
+> +-----------------
+> +Specify the extra build checks. The same value can be assigned by passing
+> +W=... from the command line.
+>
+> For consistency reasons might be better:
+>
+> - @echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
+> + @echo  '  make W=n   [targets] Enable extra build checks, n=1,2,3 where'
+>
 
-Thanks.
-Walter 
+OK, I will squash this. Thanks.
 
+
+-- 
+Best Regards
+Masahiro Yamada
