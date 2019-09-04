@@ -2,50 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BD2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C3B5C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3BB0206BA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E5F2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:05:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620299;
-	bh=/c0E3IhlUuK29sMKO5Ld2wcLO2NHBouIlgrO37+mFDo=;
+	s=default; t=1567620300;
+	bh=zV6Oz1eNYxYgplHgnqQsHbvKLHOd2FEQv/eSx8SQHxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sgxDOoB01PT/LR6I6SySFeDRaampXHez37lau1HL9wSBKShjEodH4KImX8M0IWBl/
-	 Ts8Naj849/+0iUaz2762WH6ZDDJLmpfneqGhNJKjLSHMFA69qJxdQObOS/bCUSwCuN
-	 lKjX4kVv03FsnCRqN8KxtHEOKSI2RmE+31vGMBDE=
+	b=Rho0W/25zURvXaHJ/NNFKQAJuX2Coe332UN9i9kreqIRTyOuyourSuhhOlY20gxZ6
+	 ESFbUZ6t70hOjJRk4ChvnJp4JJCXx1d6msm1hADtoIeYu91GY/tlatG88LVTN5X9n7
+	 ACQVePlfmuXOyDMkHFjrJvi7pBHq1p/lNg5iPAbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389175AbfIDSE5 (ORCPT
+        id S2388429AbfIDSFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:04:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46118 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:05:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389143AbfIDSEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:04:55 -0400
+        id S2389173AbfIDSE6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:04:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE7FB206B8;
-        Wed,  4 Sep 2019 18:04:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DEF7206B8;
+        Wed,  4 Sep 2019 18:04:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620294;
-        bh=/c0E3IhlUuK29sMKO5Ld2wcLO2NHBouIlgrO37+mFDo=;
+        s=default; t=1567620297;
+        bh=zV6Oz1eNYxYgplHgnqQsHbvKLHOd2FEQv/eSx8SQHxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nklbeQGzP9xjR1u0cmIkFl4PFyGC/IQC8kEzl3us5hu9gt7rLf0CyfsptJCa8/EOn
-         o6cTnqZBxAbiCRDFrr06uzBB/YY+zzQ4fos8fMhf1kK7K5qAwJOXaF9Dws/GxdAx4B
-         kN9ngAav3qF2B/CftxvwpFiHHceFI+cYWN0XhoJE=
+        b=FWa1TN/QQzTpu2hnUYAac6w6GnHuQF904jJ2GdDWfWH8FINbT0ZBBJNRhZc8ei6qG
+         Rj4G/tHQVIoyzfky3pk7k0KBig4i4dCkGuUGGJW/sT1tQPhrJSEp8uI8TvXAQhx2z5
+         PgcRXP5aTWVzDphbSNmedKuOQynQjAidLvhpLXcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.14 48/57] mac80211: fix possible sta leak
-Date:   Wed,  4 Sep 2019 19:54:16 +0200
-Message-Id: <20190904175306.641592543@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 49/57] KVM: PPC: Book3S: Fix incorrect guest-to-user-translation error handling
+Date:   Wed,  4 Sep 2019 19:54:17 +0200
+Message-Id: <20190904175306.689260889@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
 References: <20190904175301.777414715@linuxfoundation.org>
@@ -58,47 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+[ Upstream commit ddfd151f3def9258397fcde7a372205a2d661903 ]
 
-commit 5fd2f91ad483baffdbe798f8a08f1b41442d1e24 upstream.
+H_PUT_TCE_INDIRECT handlers receive a page with up to 512 TCEs from
+a guest. Although we verify correctness of TCEs before we do anything
+with the existing tables, there is a small window when a check in
+kvmppc_tce_validate might pass and right after that the guest alters
+the page of TCEs, causing an early exit from the handler and leaving
+srcu_read_lock(&vcpu->kvm->srcu) (virtual mode) or lock_rmap(rmap)
+(real mode) locked.
 
-If TDLS station addition is rejected, the sta memory is leaked.
-Avoid this by moving the check before the allocation.
+This fixes the bug by jumping to the common exit code with an appropriate
+unlock.
 
-Cc: stable@vger.kernel.org
-Fixes: 7ed5285396c2 ("mac80211: don't initiate TDLS connection if station is not associated to AP")
-Link: https://lore.kernel.org/r/20190801073033.7892-1-johannes@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org # v4.11+
+Fixes: 121f80ba68f1 ("KVM: PPC: VFIO: Add in-kernel acceleration for VFIO")
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/cfg.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/book3s_64_vio.c    | 6 ++++--
+ arch/powerpc/kvm/book3s_64_vio_hv.c | 6 ++++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
---- a/net/mac80211/cfg.c
-+++ b/net/mac80211/cfg.c
-@@ -1459,6 +1459,11 @@ static int ieee80211_add_station(struct
- 	if (is_multicast_ether_addr(mac))
- 		return -EINVAL;
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index e14cec6bc3398..2c6cce8e7cfd0 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -566,8 +566,10 @@ long kvmppc_h_put_tce_indirect(struct kvm_vcpu *vcpu,
  
-+	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER) &&
-+	    sdata->vif.type == NL80211_IFTYPE_STATION &&
-+	    !sdata->u.mgd.associated)
-+		return -EINVAL;
-+
- 	sta = sta_info_alloc(sdata, mac, GFP_KERNEL);
- 	if (!sta)
- 		return -ENOMEM;
-@@ -1466,10 +1471,6 @@ static int ieee80211_add_station(struct
- 	if (params->sta_flags_set & BIT(NL80211_STA_FLAG_TDLS_PEER))
- 		sta->sta.tdls = true;
+ 		if (kvmppc_gpa_to_ua(vcpu->kvm,
+ 				tce & ~(TCE_PCI_READ | TCE_PCI_WRITE),
+-				&ua, NULL))
+-			return H_PARAMETER;
++				&ua, NULL)) {
++			ret = H_PARAMETER;
++			goto unlock_exit;
++		}
  
--	if (sta->sta.tdls && sdata->vif.type == NL80211_IFTYPE_STATION &&
--	    !sdata->u.mgd.associated)
--		return -EINVAL;
--
- 	err = sta_apply_parameters(local, sta, params);
- 	if (err) {
- 		sta_info_free(local, sta);
+ 		list_for_each_entry_lockless(stit, &stt->iommu_tables, next) {
+ 			ret = kvmppc_tce_iommu_map(vcpu->kvm,
+diff --git a/arch/powerpc/kvm/book3s_64_vio_hv.c b/arch/powerpc/kvm/book3s_64_vio_hv.c
+index 648cf6c013489..23d6d1592f117 100644
+--- a/arch/powerpc/kvm/book3s_64_vio_hv.c
++++ b/arch/powerpc/kvm/book3s_64_vio_hv.c
+@@ -475,8 +475,10 @@ long kvmppc_rm_h_put_tce_indirect(struct kvm_vcpu *vcpu,
+ 		ua = 0;
+ 		if (kvmppc_gpa_to_ua(vcpu->kvm,
+ 				tce & ~(TCE_PCI_READ | TCE_PCI_WRITE),
+-				&ua, NULL))
+-			return H_PARAMETER;
++				&ua, NULL)) {
++			ret = H_PARAMETER;
++			goto unlock_exit;
++		}
+ 
+ 		list_for_each_entry_lockless(stit, &stt->iommu_tables, next) {
+ 			ret = kvmppc_rm_tce_iommu_map(vcpu->kvm,
+-- 
+2.20.1
+
 
 
