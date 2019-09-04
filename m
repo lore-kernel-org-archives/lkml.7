@@ -2,121 +2,141 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7C2C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613C2C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F8A2339D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:19:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kAd/S4It"
+	by mail.kernel.org (Postfix) with ESMTP id 2C96A2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:19:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567581574;
+	bh=agWnI6rJaNdK4UMwnHBLhmqSgnDlx6mMyBHN9X1yZg0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0EDiL18C27Wo7wZfJisV7OMqhJFz2kTdaA1ACj40y+eE2nX2KkVp6vpXfKJ3hdPNN
+	 pAtqqJ0VXo4Z/ATtk8oA5LFneV//8ByI5aUD+d9Tpi0s4eZKYfkEWjmynDPSgQMyMk
+	 U9uBi4+eKa+fx2bG52iRJjoZW4RqhOLKzJZ9VyDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfIDHTR (ORCPT
+        id S1729017AbfIDHTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:19:17 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42408 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfIDHTQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:19:16 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p3so10720340pgb.9;
-        Wed, 04 Sep 2019 00:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=n1xJLcKf6G7UK7Awxu+0eoxUIpLlcPu/xrtHp78aqKs=;
-        b=kAd/S4ItI9NfrNpl4fV3Iwmom3OvfqoEARr0paqvmqdlwOatMUrX35wBFrH+vd34o9
-         82skrRaOLz+25PCNJzD0/wanlpygzPg4D94SOqVmK/bwNXKcBwMzLSFKW/Q7F+IqqNDb
-         16E+YzXxzTGFrevpw+oPQmLAZM5kPNxfjwalJJYMA1qL8+8uW5KPSkiQ0V/HgF3o6Y6l
-         W8uRNNygMdlbhE5G9awFudVHh6GGQNxcMNKbrcxGnP3n5b+PlGCKUyHA563NZ3p0gEnD
-         z6vvHdrJ3GcWZb2eNVn6uzYfAr6rYxjuAAO5N9Fmpg0ZwxTcXakFTj40FpBFWyIgOodq
-         N3Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n1xJLcKf6G7UK7Awxu+0eoxUIpLlcPu/xrtHp78aqKs=;
-        b=L+Ecjg3f4Pg0K0rtSQ7RbD2gT8I3DFPgzgtSLykD4tuK4evhSQI0RRQiAc64+9EhuU
-         tdnuTYytVo6mSBgK6AN/4WQew42YLmDP0Jy9N6ce53I7dseZACmiJVxGIGXCI/bd4d7v
-         dUQ9PIcDm3YFv+3kxgjU3646nMd1dIXD3l6wwKsDvm7CZsnrkWzu8RuMrd5+Zx9UQtw8
-         WRUdJiK8FXvWNp8BACzayHxvbY+K++M2ALdzJVSkqxQp7Mpxn4ia8x8Z2WLskZv+BK1n
-         tLSimpSI3k2A/tBD9+LXvk9Qj5/Wfw0JdWd/wMULAhQOKtIm21XO/RsPRSW1Ed2OXpzF
-         kuNQ==
-X-Gm-Message-State: APjAAAVOCaQULiHU7sJb11FeeDFEsnNy9i1cAmWjVcWv8hXDzue12k7K
-        2ivOSs+BimYycRxUyFyc3dg=
-X-Google-Smtp-Source: APXvYqzRaeXZEO+6LGaGeK4K4LMnx1yY/nhZrTQwTO0+RRnG1IFJHv+PBZ1wPsB7+32Gq0gbpGAb7Q==
-X-Received: by 2002:a17:90a:8996:: with SMTP id v22mr3517563pjn.131.1567581555849;
-        Wed, 04 Sep 2019 00:19:15 -0700 (PDT)
-Received: from localhost ([175.223.23.37])
-        by smtp.gmail.com with ESMTPSA id s5sm21619783pfm.97.2019.09.04.00.19.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 00:19:14 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 16:19:11 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
-        davem@davemloft.net, netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-Message-ID: <20190904071911.GB11968@jagdpanzerIV>
-References: <6109dab4-4061-8fee-96ac-320adf94e130@gmail.com>
- <1567178728.5576.32.camel@lca.pw>
- <229ebc3b-1c7e-474f-36f9-0fa603b889fb@gmail.com>
- <20190903132231.GC18939@dhcp22.suse.cz>
- <1567525342.5576.60.camel@lca.pw>
- <20190903185305.GA14028@dhcp22.suse.cz>
- <1567546948.5576.68.camel@lca.pw>
- <20190904061501.GB3838@dhcp22.suse.cz>
- <20190904064144.GA5487@jagdpanzerIV>
- <20190904065455.GE3838@dhcp22.suse.cz>
+        Wed, 4 Sep 2019 03:19:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfIDHTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:19:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 634872339D;
+        Wed,  4 Sep 2019 07:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567581571;
+        bh=agWnI6rJaNdK4UMwnHBLhmqSgnDlx6mMyBHN9X1yZg0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w9wfwQhZZgfWDk5hLe7xZr/Nozm/Tm6ZFe7ClleLnfdOCIAXfsvTuJ4a7SlzOGqGD
+         YN+HZIrs+6145OnTEBQ8AipFGiZwEWRDXPxCySmjhyxobbjV8tXSDaiNHeZWUZF4B0
+         4khMHThIJpaBxaYCCjWpdX9f+wH3UPw3vrfmFY3E=
+Date:   Wed, 4 Sep 2019 09:19:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hridya Valsaraju <hridya@google.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        devel@driverdev.osuosl.org, kernel-team@android.com,
+        Todd Kjos <tkjos@android.com>, linux-kernel@vger.kernel.org,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Martijn Coenen <maco@android.com>
+Subject: Re: [PATCH v3 2/2] binder: Validate the default binderfs device
+ names.
+Message-ID: <20190904071929.GA19830@kroah.com>
+References: <20190808222727.132744-1-hridya@google.com>
+ <20190808222727.132744-3-hridya@google.com>
+ <20190809145508.GD16262@kroah.com>
+ <20190809181439.qrs2k7l23ot4am4s@wittgenstein>
+ <CA+wgaPPK0fY2a+pCEFHrw8p8WCb459yw41s_6xppWFfEa=P7Og@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904065455.GE3838@dhcp22.suse.cz>
+In-Reply-To: <CA+wgaPPK0fY2a+pCEFHrw8p8WCb459yw41s_6xppWFfEa=P7Og@mail.gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (09/04/19 08:54), Michal Hocko wrote:
-> I am sorry, I could have been more explicit when CCing you.
+On Fri, Aug 09, 2019 at 11:41:12AM -0700, Hridya Valsaraju wrote:
+> On Fri, Aug 9, 2019 at 11:14 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Fri, Aug 09, 2019 at 04:55:08PM +0200, Greg Kroah-Hartman wrote:
+> > > On Thu, Aug 08, 2019 at 03:27:26PM -0700, Hridya Valsaraju wrote:
+> > > > Length of a binderfs device name cannot exceed BINDERFS_MAX_NAME.
+> > > > This patch adds a check in binderfs_init() to ensure the same
+> > > > for the default binder devices that will be created in every
+> > > > binderfs instance.
+> > > >
+> > > > Co-developed-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > > > Signed-off-by: Hridya Valsaraju <hridya@google.com>
+> > > > ---
+> > > >  drivers/android/binderfs.c | 12 ++++++++++++
+> > > >  1 file changed, 12 insertions(+)
+> > > >
+> > > > diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+> > > > index aee46dd1be91..55c5adb87585 100644
+> > > > --- a/drivers/android/binderfs.c
+> > > > +++ b/drivers/android/binderfs.c
+> > > > @@ -570,6 +570,18 @@ static struct file_system_type binder_fs_type = {
+> > > >  int __init init_binderfs(void)
+> > > >  {
+> > > >     int ret;
+> > > > +   const char *name;
+> > > > +   size_t len;
+> > > > +
+> > > > +   /* Verify that the default binderfs device names are valid. */
+> > >
+> > > And by "valid" you only mean "not bigger than BINDERFS_MAX_NAME, right?
+> > >
+> > > > +   name = binder_devices_param;
+> > > > +   for (len = strcspn(name, ","); len > 0; len = strcspn(name, ",")) {
+> > > > +           if (len > BINDERFS_MAX_NAME)
+> > > > +                   return -E2BIG;
+> > > > +           name += len;
+> > > > +           if (*name == ',')
+> > > > +                   name++;
+> > > > +   }
+> > >
+> > > We already tokenize the binderfs device names in binder_init(), why not
+> > > check this there instead?  Parsing the same string over and over isn't
+> > > the nicest.
+> >
+> > non-binderfs binder devices do not have their limit set to
+> > BINDERFS_NAME_MAX. That's why the check has likely been made specific to
+> > binderfs binder devices which do have that limit.
+> 
+> 
+> Thank you Greg and Christian, for taking another look. Yes,
+> non-binderfs binder devices not having this limitation is the reason
+> why the check was made specific to binderfs devices. Also, when
+> CONFIG_ANDROID_BINDERFS is set, patch 1/2 disabled the same string
+> being parsed in binder_init().
+> 
+> >
+> > But, in practice, 255 is the standard path-part limit that no-one really
+> > exceeds especially not for stuff such as device nodes which usually have
+> > rather standard naming schemes (e.g. binder, vndbinder, hwbinder, etc.).
+> > So yes, we can move that check before both the binderfs binder device
+> > and non-binderfs binder device parsing code and treat it as a generic
+> > check.
+> > Then we can also backport that check as you requested in the other mail.
+> > Unless Hridya or Todd have objections, of course.
+> 
+> I do not have any objections to adding a generic check in binder_init() instead.
 
-Oh, sorry! My bad!
+Was this patchset going to be redone based on this?
 
-> Sure the ratelimit is part of the problem. But I was more interested
-> in the potential livelock (infinite loop) mentioned by Qian Cai. It
-> is not important whether we generate one or more lines of output from
-> the softirq context as long as the printk generates more irq processing
-> which might end up doing the same. Is this really possible?
+thanks,
 
-Hmm. I need to look at this more... wake_up_klogd() queues work only once
-on particular CPU: irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
-
-bool irq_work_queue()
-{
-	/* Only queue if not already pending */
-	if (!irq_work_claim(work))
-		return false;
-
-	 __irq_work_queue_local(work);
-}
-
-softirqs are processed in batches, right? The softirq batch can add XXXX
-lines to printk logbuf, but there will be only one PRINTK_PENDING_WAKEUP
-queued. Qian Cai mentioned that "net_rx_action softirqs again which are
-plenty due to connected via ssh etc." so the proportion still seems to be
-N:1 - we process N softirqs, add 1 printk irq_work.
-
-But need to think more.
-Interesting question.
-
-	-ss
+greg k-h
