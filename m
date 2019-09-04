@@ -2,125 +2,79 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAACC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C635AC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABDF208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952F72168B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="jv5RYYTH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C91q5g6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733159AbfIDSjZ (ORCPT
+        id S2387530AbfIDSkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:39:25 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41448 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732887AbfIDSjY (ORCPT
+        Wed, 4 Sep 2019 14:40:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35638 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730209AbfIDSkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:39:24 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m9so9973454pls.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 11:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=RFVxIo+Qn+D3l74R0gbfOnsQVErdkpTLqYjhLCUkAbw=;
-        b=jv5RYYTHFRDQwQoavPr+s26IndTLQO1TBV8cq+L3X/QMkeT0/ARB3rrjSwpb5wT7pf
-         HtAMic+J1yHXdWpxSKcqVbMIg1qIjlRvQrl2FC694er0m9eDz9r15q7fzqREYWveN3q/
-         INbD175q4V8GheY5yqsIeOAt2YahZu+uSA5DZVxnb+U2tUCevLqsvSO4ddZ8xDU8dwt1
-         xDID7Ea5A1yayF/lfUXOZ/7V8pNUnkbju8VHPFtEuCHaNyc+qDXu1EtssjenusvKOXof
-         R67M83ORZEZQVKvh8VIOJeFUUOkfriI2Q8FLCGJTLS4s7Df2JvUiqA4G8r1sJhp9runZ
-         yeOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=RFVxIo+Qn+D3l74R0gbfOnsQVErdkpTLqYjhLCUkAbw=;
-        b=n/9sT7cSving/h73O7+/6Edm98gjhFyXLBdSVBvz7EretyVdyZ+4nBXX8ofkvTEcFR
-         V2hIQkY80MIUaTgOgErxHMnozma+k2AqSouLPGZY5srZPdomi6VL2vwsPX4ft9OLGuj7
-         FkF+HU6Bt5pMtigzNjvNENj2ckJE7E539vKl1sS+VtFkIT8GZAlCOmf5Srt8tW488e7M
-         oqW4/zch8xT/W36iEn+0vO1TtTFR2AJuspZ7kvKPWduB8K7mZ7fuuUgkxDg8SDilkF9q
-         WFldLlHGiYEixXN38QsBHnVn34uCc+c7vR1QJYjgksNRX/QrWSWEX5SoPo2O/rsJy2d0
-         pZ4w==
-X-Gm-Message-State: APjAAAVJZmB5CWStYE/FLAhTgZq0M5RkZus0ZPPyIAS+4eczmP327HcT
-        pqplhV6gY1FfyjXJMaCH4NhbzErO5VhcKg==
-X-Google-Smtp-Source: APXvYqxW4kSbEq+gLWZofsFSTIckmnFnzgI+tc5jk4KG+Xa2V1PDira6ogt0MI+oocn1p8X2+FPZow==
-X-Received: by 2002:a17:902:b201:: with SMTP id t1mr8923386plr.144.1567622363810;
-        Wed, 04 Sep 2019 11:39:23 -0700 (PDT)
-Received: from [192.168.10.175] (S0106a84e3fe4b223.cg.shawcable.net. [70.77.216.213])
-        by smtp.gmail.com with ESMTPSA id k31sm6938153pjb.14.2019.09.04.11.39.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 11:39:23 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] ext4: Reduce ext4 timestamp warnings
-From:   Andreas Dilger <adilger@dilger.ca>
-X-Mailer: iPhone Mail (16G102)
-In-Reply-To: <20190904150251.27004-1-deepa.kernel@gmail.com>
-Date:   Wed, 4 Sep 2019 12:39:22 -0600
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, cai@lca.pw, jlayton@kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        viro@zeniv.linux.org.uk
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <ECBC97E7-53C5-4B4C-BC4C-1FCDC4C371B9@dilger.ca>
-References: <31a671ea-a00b-37da-5f30-558c3ab6d690@thelounge.net> <20190904150251.27004-1-deepa.kernel@gmail.com>
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
+        Wed, 4 Sep 2019 14:40:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yERScqNIF39dI0X95RDXlycUNcqsABfDkiiYU0N0y6w=; b=C91q5g6wf8Un02twMhuc1wem4
+        lh8cE7eHxYptydS+Kuq23QypIA6dXMbY1OEEpkBg8JXSWwuvbFQajQodSHGbTIBA2O+eLFX0ui/rn
+        rgWcKNIcmfFIdqoXFWRoLkVHFiVC10rUfMqDGISiy3nEpDiLUnp5QBVWCUivvZyU9odUyNeSykLMG
+        tCpJydUovjDXSf0QeWfCfIinn0YqJ36HnF5x2Ldp/jYB5HPz7RSPZXHGU/ZSJv8TkcDAADsuO0H5I
+        xTfAOtk8GUoNzV231PSwWa3BMNqfu77YUCYp9058XMvELRsY/oIBjsmJQqBSDt1GBzWK38c/FKKW8
+        qKMuhhwpQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5aCE-0000h3-PQ; Wed, 04 Sep 2019 18:39:58 +0000
+Date:   Wed, 4 Sep 2019 11:39:58 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     "Weiny, Ira" <ira.weiny@intel.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        zhong jiang <zhongjiang@huawei.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+Subject: Re: [PATCH] mm: Unsigned 'nr_pages' always larger than zero
+Message-ID: <20190904183958.GM29434@bombadil.infradead.org>
+References: <1567592763-25282-1-git-send-email-zhongjiang@huawei.com>
+ <5505fa16-117e-8890-0f48-38555a61a036@suse.cz>
+ <2807E5FD2F6FDA4886F6618EAC48510E898E9559@CRSMSX101.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2807E5FD2F6FDA4886F6618EAC48510E898E9559@CRSMSX101.amr.corp.intel.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sep 4, 2019, at 09:02, Deepa Dinamani <deepa.kernel@gmail.com> wrote:
->=20
-> When ext4 file systems were created intentionally with 128 byte inodes,
-> the rate-limited warning of eventual possible timestamp overflow are
-> still emitted rather frequently.  Remove the warning for now.
->=20
-> Discussion for whether any warning is needed,
-> and where it should be emitted, can be found at
-> https://lore.kernel.org/lkml/1567523922.5576.57.camel@lca.pw/.
-> I can post a separate follow-up patch after the conclusion.
->=20
-> Reported-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Deepa Dinamani <deepa.kernel@gmail.com>
+On Wed, Sep 04, 2019 at 06:25:19PM +0000, Weiny, Ira wrote:
+> > On 9/4/19 12:26 PM, zhong jiang wrote:
+> > > With the help of unsigned_lesser_than_zero.cocci. Unsigned 'nr_pages"'
+> > > compare with zero. And __get_user_pages_locked will return an long
+> > value.
+> > > Hence, Convert the long to compare with zero is feasible.
+> > 
+> > It would be nicer if the parameter nr_pages was long again instead of
+> > unsigned long (note there are two variants of the function, so both should be
+> > changed).
+> 
+> Why?  What does it mean for nr_pages to be negative?  The check below seems valid.  Unsigned can be 0 so the check can fail.  IOW Checking unsigned > 0 seems ok.
+> 
+> What am I missing?
 
-I'd be in favor of a severely rare-limited warning in the actual case
-that Y2038 timestamps cannot be stored, but the current message is
-too verbose for now and I agree it is better to remove it while discussions
-on the best solution are underway.=20
-
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-
-> ---
-> fs/ext4/ext4.h | 4 +---
-> 1 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 9e3ae3be3de9..24b14bd3feab 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -833,10 +833,8 @@ do {                                        \
->        (raw_inode)->xtime ## _extra =3D                    \
->                ext4_encode_extra_time(&(inode)->xtime);    \
->        }                                \
-> -    else    {\
-> +    else    \
->        (raw_inode)->xtime =3D cpu_to_le32(clamp_t(int32_t, (inode)->xtime.=
-tv_sec, S32_MIN, S32_MAX));    \
-> -        ext4_warning_inode(inode, "inode does not support timestamps beyo=
-nd 2038"); \
-> -    } \
-> } while (0)
->=20
-> #define EXT4_EINODE_SET_XTIME(xtime, einode, raw_inode)                   \=
-
-> --=20
-> 2.17.1
->=20
+__get_user_pages can return a negative errno.
