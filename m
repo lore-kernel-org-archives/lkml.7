@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B176AC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 359FEC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9371B23404
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A772339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 13:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbfIDN7y (ORCPT
+        id S1730647AbfIDN76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 09:59:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6649 "EHLO huawei.com"
+        Wed, 4 Sep 2019 09:59:58 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6651 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730606AbfIDN7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 09:59:53 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 59E9CD79D72CBD7EF2FA;
-        Wed,  4 Sep 2019 21:59:50 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
- 21:59:40 +0800
+        id S1730607AbfIDN75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 09:59:57 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 729EE5833AF8F1FAC38D;
+        Wed,  4 Sep 2019 21:59:52 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 21:59:46 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
 To:     <broonie@kernel.org>, <f.fainelli@gmail.com>, <rjui@broadcom.com>,
         <sbranden@broadcom.com>, <eric@anholt.net>, <wahrenst@gmx.net>,
@@ -50,9 +50,9 @@ CC:     <bcm-kernel-feedback-list@broadcom.com>,
         <linux-samsung-soc@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
         YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next 04/36] spi: spi-axi: use devm_platform_ioremap_resource() to simplify code
-Date:   Wed, 4 Sep 2019 21:58:46 +0800
-Message-ID: <20190904135918.25352-5-yuehaibing@huawei.com>
+Subject: [PATCH -next 06/36] spi: bcm2835: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 21:58:48 +0800
+Message-ID: <20190904135918.25352-7-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 In-Reply-To: <20190904135918.25352-1-yuehaibing@huawei.com>
 References: <20190904135918.25352-1-yuehaibing@huawei.com>
@@ -71,31 +71,31 @@ This is detected by coccinelle.
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/spi/spi-axi-spi-engine.c | 4 +---
+ drivers/spi/spi-bcm2835.c | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-axi-spi-engine.c b/drivers/spi/spi-axi-spi-engine.c
-index 3b1833e..74842f6 100644
---- a/drivers/spi/spi-axi-spi-engine.c
-+++ b/drivers/spi/spi-axi-spi-engine.c
-@@ -460,7 +460,6 @@ static int spi_engine_probe(struct platform_device *pdev)
- 	struct spi_engine *spi_engine;
- 	struct spi_master *master;
- 	unsigned int version;
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index fd2bfb4..fbd6d1a 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -1001,7 +1001,6 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
+ {
+ 	struct spi_controller *ctlr;
+ 	struct bcm2835_spi *bs;
 -	struct resource *res;
- 	int irq;
- 	int ret;
+ 	int err;
  
-@@ -480,8 +479,7 @@ static int spi_engine_probe(struct platform_device *pdev)
+ 	ctlr = spi_alloc_master(&pdev->dev, sizeof(*bs));
+@@ -1022,8 +1021,7 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
  
- 	spin_lock_init(&spi_engine->lock);
+ 	bs = spi_controller_get_devdata(ctlr);
  
 -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	spi_engine->base = devm_ioremap_resource(&pdev->dev, res);
-+	spi_engine->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(spi_engine->base)) {
- 		ret = PTR_ERR(spi_engine->base);
- 		goto err_put_master;
+-	bs->regs = devm_ioremap_resource(&pdev->dev, res);
++	bs->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(bs->regs)) {
+ 		err = PTR_ERR(bs->regs);
+ 		goto out_controller_put;
 -- 
 2.7.4
 
