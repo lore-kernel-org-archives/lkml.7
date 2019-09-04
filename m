@@ -2,154 +2,108 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFEF9C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245E1C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857E9206B8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621049;
-	bh=dzkmYbPsikkI1IIQQJOdu4RtdrB3+69Je+S4ujQejnQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BHFn9MuvIYpzQrRbv2FBYq080zjuy1T5u8p5w+iUJSFuzy0Oz1hPIuGKevaIyUjdR
-	 hkudngUuOBZJnXmvl/R7J8eKZlKtwbLhxR6F/XbLphS8AmA+aReMLnKVXWcdZt6Yvf
-	 +xKHQH5qnLdC85MDWEBsAWK3MiaxgOLOC1Ako2HQ=
+	by mail.kernel.org (Postfix) with ESMTP id F2C73206B8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:17:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6PKN1h7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390510AbfIDSR2 (ORCPT
+        id S2390424AbfIDSR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389964AbfIDSM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:12:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E25F208E4;
-        Wed,  4 Sep 2019 18:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620776;
-        bh=dzkmYbPsikkI1IIQQJOdu4RtdrB3+69Je+S4ujQejnQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FNC4yPlHgyR7qv1E3dq1vadDtx+E74wSKEkOcP7w8/svwSl7Kuo6dCGbeEbjrc+jN
-         Aarw3tSXQobFtmGpOBz25LSx3QYZcARe72dxKggD87QTvVjPk0fXDR5Jm1uewcoQvQ
-         immhjiPYyUnyoF184s3m5RedmYme9c/eNVCL4Ego=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Subject: [PATCH 5.2 090/143] KVM: arm/arm64: vgic-v2: Handle SGI bits in GICD_I{S,C}PENDR0 as WI
-Date:   Wed,  4 Sep 2019 19:53:53 +0200
-Message-Id: <20190904175317.621687275@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
-References: <20190904175314.206239922@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 4 Sep 2019 14:17:26 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42872 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390136AbfIDSRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:17:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id n197so44404989iod.9;
+        Wed, 04 Sep 2019 11:17:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jnf8E1B10U/rZLorYmCb+yTjJ2/FF27pXtV4pEIHWJ0=;
+        b=L6PKN1h75ntIi1hddTwn5fOXeCxCPppqjd/YrkdL5yYs7EU3vZ5oDR4M/GQBy57/Z8
+         xWRRcnQKszDv1BqJs6/5TuEK2B1akvMvgIgk4YgCAA+0xl6Qx7mrHMtG4BoESAE1T/TP
+         xHD6WT8kfPQDYULdNTUgikCKoz9lIuMFYGZjJOyhnUJagv52rk+qjBvB4VW/Ji+qSvmn
+         5uaNnbHbcRdukqYekxvI5olN9RVutymKyiOnFr4+4940zXpkHjrWCJIKg5uRyqK2DDz5
+         p935Nk511rkIgkcSVB+h6j9EMIW+sSej+2hfpcPEvESvHLSdESvaKuif11AkNtXpNEQU
+         KejA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jnf8E1B10U/rZLorYmCb+yTjJ2/FF27pXtV4pEIHWJ0=;
+        b=WnL8Ii8uLV7+ubRzpuZqR2PtC2VghNKo+PCEjrbipAw4XhK9UIPMzSnqphoVa+BIMo
+         9zYPSa0uhtuf1ev18NYiUojDkoht/Ueqj1jZgMF20EXDngMp/ghBfAQvH8Es5Epv6jDM
+         30p0I7TxGyEQkPAB8A0UPXJ9X4mRSqQJbR38JfaAN0y0a8r1zaF338KpgB2EeGxyg/Ln
+         XbNJvHLNDxg1AdAVFI1W/4Mj3oB0K9QNvRINhW40VPDxO2SxooHnLDW4gduU8pIivBDD
+         f8v9bZ+mvbGxLmmDwjwv9/uC4lpyQSkMGdD58uCABBefL2doDf8qgaT9P/4DijeQb0YD
+         qbGA==
+X-Gm-Message-State: APjAAAUEE4dKH8lgvH6aRmt6CQ7ZKqISZHQz+vcKAie3/92Pohw2mVdp
+        gaD9xU8dbgdUBNxIkIxTHVYE68yuEQ==
+X-Google-Smtp-Source: APXvYqyZAEsHdr+O6sWnZYGZk2KlpCsOIz9qthXXldoAac9Gbaef+GHeHMxDxTgj7gaJf5/xLeJDNw==
+X-Received: by 2002:a02:a516:: with SMTP id e22mr30362312jam.77.1567621042372;
+        Wed, 04 Sep 2019 11:17:22 -0700 (PDT)
+Received: from [192.168.1.99] ([92.117.176.185])
+        by smtp.googlemail.com with ESMTPSA id s201sm28603484ios.83.2019.09.04.11.17.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 11:17:21 -0700 (PDT)
+Subject: Re: [PATCH v5 1/4] ftrace: Implement fs notification for
+ tracing_max_latency
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Cc:     paulmck@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+References: <20190903132602.3440-1-viktor.rosendahl@gmail.com>
+ <20190903132602.3440-2-viktor.rosendahl@gmail.com>
+ <20190904040039.GB150430@google.com>
+ <20190904081919.GA2349@hirez.programming.kicks-ass.net>
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Message-ID: <5bd4f538-f205-1134-d491-5a8727855b51@gmail.com>
+Date:   Wed, 4 Sep 2019 20:17:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904081919.GA2349@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+On 9/4/19 10:19 AM, Peter Zijlstra wrote:
 
-commit 82e40f558de566fdee214bec68096bbd5e64a6a4 upstream.
+>>
+>> Adding Paul since RCU faces similar situations, i.e. raising softirq risks
+>> scheduler deadlock in rcu_read_unlock_special() -- but RCU's solution is to
+>> avoid raising the softirq and instead use irq_work.
+> 
+> Which is right.
+> 
 
-A guest is not allowed to inject a SGI (or clear its pending state)
-by writing to GICD_ISPENDR0 (resp. GICD_ICPENDR0), as these bits are
-defined as WI (as per ARM IHI 0048B 4.3.7 and 4.3.8).
+Thanks Joel and Peter for suggesting the irq_work facility.
 
-Make sure we correctly emulate the architecture.
+I was ignorant of the existence of this facility.
 
-Fixes: 96b298000db4 ("KVM: arm/arm64: vgic-new: Add PENDING registers handlers")
-Cc: stable@vger.kernel.org # 4.7+
-Reported-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It looks like it is the Holy Grail of deferred work, for this particular 
+type of problem :)
 
----
- virt/kvm/arm/vgic/vgic-mmio.c |   18 ++++++++++++++++++
- virt/kvm/arm/vgic/vgic-v2.c   |    5 ++++-
- virt/kvm/arm/vgic/vgic-v3.c   |    5 ++++-
- 3 files changed, 26 insertions(+), 2 deletions(-)
+It looks like it will be possible to both avoid deadlock and also avoid 
+the ugly additions to the sched and idle code. In addition, the rest of 
+the code will become a lot simpler.
 
---- a/virt/kvm/arm/vgic/vgic-mmio.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio.c
-@@ -195,6 +195,12 @@ static void vgic_hw_irq_spending(struct
- 	vgic_irq_set_phys_active(irq, true);
- }
- 
-+static bool is_vgic_v2_sgi(struct kvm_vcpu *vcpu, struct vgic_irq *irq)
-+{
-+	return (vgic_irq_is_sgi(irq->intid) &&
-+		vcpu->kvm->arch.vgic.vgic_model == KVM_DEV_TYPE_ARM_VGIC_V2);
-+}
-+
- void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
- 			      gpa_t addr, unsigned int len,
- 			      unsigned long val)
-@@ -207,6 +213,12 @@ void vgic_mmio_write_spending(struct kvm
- 	for_each_set_bit(i, &val, len * 8) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
-+		/* GICD_ISPENDR0 SGI bits are WI */
-+		if (is_vgic_v2_sgi(vcpu, irq)) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 		if (irq->hw)
- 			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
-@@ -254,6 +266,12 @@ void vgic_mmio_write_cpending(struct kvm
- 	for_each_set_bit(i, &val, len * 8) {
- 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
- 
-+		/* GICD_ICPENDR0 SGI bits are WI */
-+		if (is_vgic_v2_sgi(vcpu, irq)) {
-+			vgic_put_irq(vcpu->kvm, irq);
-+			continue;
-+		}
-+
- 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
- 
- 		if (irq->hw)
---- a/virt/kvm/arm/vgic/vgic-v2.c
-+++ b/virt/kvm/arm/vgic/vgic-v2.c
-@@ -184,7 +184,10 @@ void vgic_v2_populate_lr(struct kvm_vcpu
- 		if (vgic_irq_is_sgi(irq->intid)) {
- 			u32 src = ffs(irq->source);
- 
--			BUG_ON(!src);
-+			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
-+					   irq->intid))
-+				return;
-+
- 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
- 			irq->source &= ~(1 << (src - 1));
- 			if (irq->source) {
---- a/virt/kvm/arm/vgic/vgic-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-v3.c
-@@ -167,7 +167,10 @@ void vgic_v3_populate_lr(struct kvm_vcpu
- 		    model == KVM_DEV_TYPE_ARM_VGIC_V2) {
- 			u32 src = ffs(irq->source);
- 
--			BUG_ON(!src);
-+			if (WARN_RATELIMIT(!src, "No SGI source for INTID %d\n",
-+					   irq->intid))
-+				return;
-+
- 			val |= (src - 1) << GICH_LR_PHYSID_CPUID_SHIFT;
- 			irq->source &= ~(1 << (src - 1));
- 			if (irq->source) {
+best regards,
 
-
+Viktor
