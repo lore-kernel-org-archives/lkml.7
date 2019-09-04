@@ -2,52 +2,52 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CDDC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C919EC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F7221883
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96DFC20657
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:57:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619872;
-	bh=wfm3p1mSjCIv3JJ5U8S/ye/6/qwD8rPoPH5Qc/F+lTQ=;
+	s=default; t=1567619874;
+	bh=Lkez0H8g512vv4Kuq61c+tVEtrjq9LRaNj4FxuXnCEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GYTrryAIMOVKLBsYJYzIkg4HDK5ymEPHRL/Pvju2dHtJv8hK4x9LuDuMH4uWYqh6J
-	 jc4UQ9C7uZzLUU1M/Mpv4l1BBcsB2CMSHFGqIn1fLhuCEYZ/gnuCPLO3oau2eKDpTD
-	 RsKsQ0UWUG6EPCLWpDNWdYIl54PO2NUja9go7+uQ=
+	b=VIL3a8Ssykett0Ae7jD4rVVe24KMlV9YVIdFFmA8L/PQqLtVKE+ne/gZI4pyflip5
+	 VX4NI5we/xAs5J7g5S10bZpM0KieqWVODA1sRy3/uUJamyy3kQjm4lIwwEM6fzVtIF
+	 bE3lBCsfI7M47FwR+UddX11AJwKF2+WwW9yWOSNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387938AbfIDR5v (ORCPT
+        id S2387946AbfIDR5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:57:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387914AbfIDR5s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:57:48 -0400
+        id S1733061AbfIDR5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:57:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DADB822CED;
-        Wed,  4 Sep 2019 17:57:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93D53208E4;
+        Wed,  4 Sep 2019 17:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619868;
-        bh=wfm3p1mSjCIv3JJ5U8S/ye/6/qwD8rPoPH5Qc/F+lTQ=;
+        s=default; t=1567619871;
+        bh=Lkez0H8g512vv4Kuq61c+tVEtrjq9LRaNj4FxuXnCEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V9ww5E2SBzU9ueiFIiI8z3i5ywjP5aJb8v3eQGyf/cG+mjPClF0731/nymWGUGQFu
-         BsWPizDxHxObXtrSnTpaRx/CTyKjrSgYZbGKYcRsGIksjJR7kWSSFXU774EfHLNqE8
-         0MDG/bJVExN7d6PwUKCGtnOCmD8LwsMdjCTDM9ZU=
+        b=BUXOyB+b9gi7roU8Oy3vzzAKswaBj8bSD/l1zjcw5vAQMqCw+hR/c0Zhlwo/6+i6X
+         XPTL7JAyk4z5SWrcO1eRcYdDc/PCT5qCHtI+QzdTJaVV1Lj0AtfqsE0LmN3ZsiLxBd
+         H36M0zfsgHhHZ0S+DQw+0BbEV8VFe8V9xH0Uu31k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xiayang <xywang.sjtu@sjtu.edu.cn>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 14/77] can: sja1000: force the string buffer NULL-terminated
-Date:   Wed,  4 Sep 2019 19:53:01 +0200
-Message-Id: <20190904175305.037468625@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 58/77] ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
+Date:   Wed,  4 Sep 2019 19:53:45 +0200
+Message-Id: <20190904175308.742764660@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -60,38 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd28aa2e056cd1ea79fc5f24eed0ce868c6cab5c ]
+From: Hui Peng <benquike@gmail.com>
 
-strncpy() does not ensure NULL-termination when the input string size
-equals to the destination buffer size IFNAMSIZ. The output string
-'name' is passed to dev_info which relies on NULL-termination.
+commit daac07156b330b18eb5071aec4b3ddca1c377f2c upstream.
 
-Use strlcpy() instead.
+The `uac_mixer_unit_descriptor` shown as below is read from the
+device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+accessed from index 0 to `bNrInPins` - 1, the current implementation
+assumes that descriptor is always valid (the length  of descriptor
+is no shorter than 5 + `bNrInPins`). If a descriptor read from
+the device side is invalid, it may trigger out-of-bound memory
+access.
 
-This issue is identified by a Coccinelle script.
+```
+struct uac_mixer_unit_descriptor {
+	__u8 bLength;
+	__u8 bDescriptorType;
+	__u8 bDescriptorSubtype;
+	__u8 bUnitID;
+	__u8 bNrInPins;
+	__u8 baSourceID[];
+}
+```
 
-Signed-off-by: Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch fixes the bug by add a sanity check on the length of
+the descriptor.
+
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/can/sja1000/peak_pcmcia.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/can/sja1000/peak_pcmcia.c b/drivers/net/can/sja1000/peak_pcmcia.c
-index dd56133cc4616..fc9f8b01ecae2 100644
---- a/drivers/net/can/sja1000/peak_pcmcia.c
-+++ b/drivers/net/can/sja1000/peak_pcmcia.c
-@@ -487,7 +487,7 @@ static void pcan_free_channels(struct pcan_pccard *card)
- 		if (!netdev)
- 			continue;
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -1647,6 +1647,7 @@ static int parse_audio_mixer_unit(struct
+ 	int pin, ich, err;
  
--		strncpy(name, netdev->name, IFNAMSIZ);
-+		strlcpy(name, netdev->name, IFNAMSIZ);
- 
- 		unregister_sja1000dev(netdev);
- 
--- 
-2.20.1
-
+ 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
++	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
+ 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
+ 		usb_audio_err(state->chip,
+ 			      "invalid MIXER UNIT descriptor %d\n",
 
 
