@@ -2,119 +2,85 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BE3C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8589FC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39DBA22CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="avLB/K+6"
+	by mail.kernel.org (Postfix) with ESMTP id 6328422CED
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 07:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbfIDHr2 (ORCPT
+        id S1729148AbfIDHsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 03:47:28 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:26660 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727144AbfIDHr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 03:47:27 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x847bAmM000836;
-        Wed, 4 Sep 2019 09:47:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=4UyuBYEhSmaJWCoduBpGAY7jENPHNN3jaF8lnYU4bFY=;
- b=avLB/K+6dY1CH0Jiwo9EBM5miectu4+Tap6y9Zoritd2dLPoZcLD1Dwpl8D9oCB3J2Db
- ULwNIdfpicC7HVHo8X7839kHq/yt7EGMps7uItCDQFhABO5T6SM0VM/HE5tEvjtjdO9p
- /3BU6I0Qkgfc/iYkWYvRFBsws+mOklltKTUGZzlqmiXGGtJUdUrx3RJdOjsFqrfh60Ur
- SDLYlCTnRnBPUaVfoL81ZPNOg83zjEzLqE+B+iUi+5m/csvhwPx/ECXDhLx2k/TxaihG
- uLnV0r/Ixi7nnpAKDgedAU6gZyF0pwLsBMmD914k4waeTETbLoP5koubBxysrtTNg/z4 jQ== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2uqe19r07v-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 04 Sep 2019 09:47:17 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7F74E54;
-        Wed,  4 Sep 2019 07:47:09 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 35A4A2BA693;
-        Wed,  4 Sep 2019 09:47:09 +0200 (CEST)
-Received: from [10.48.1.93] (10.75.127.45) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Sep
- 2019 09:47:08 +0200
-Subject: Re: [PATCH] i2c: stm32f7: Make structure stm32f7_i2c_algo constant
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>
-CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190815055857.1944-1-nishkadg.linux@gmail.com>
- <20190903180552.GI2171@ninjato>
-From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Message-ID: <662b171f-37e2-f58e-3e05-41a52737b1f3@st.com>
-Date:   Wed, 4 Sep 2019 09:47:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 03:48:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46328 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727787AbfIDHsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 03:48:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E7216B67C;
+        Wed,  4 Sep 2019 07:48:30 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 793BC1E37A2; Wed,  4 Sep 2019 09:48:30 +0200 (CEST)
+Date:   Wed, 4 Sep 2019 09:48:30 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Jan Kara <jack@suse.com>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fs-udf: Delete an unnecessary check before brelse()
+Message-ID: <20190904074830.GD8225@quack2.suse.cz>
+References: <a254c1d1-0109-ab51-c67a-edc5c1c4b4cd@web.de>
 MIME-Version: 1.0
-In-Reply-To: <20190903180552.GI2171@ninjato>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-04_01:2019-09-03,2019-09-04 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a254c1d1-0109-ab51-c67a-edc5c1c4b4cd@web.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram
-
-Sorry for the delay.
-
-Acked-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-
-BR
-
-On 9/3/19 8:05 PM, Wolfram Sang wrote:
-> On Thu, Aug 15, 2019 at 11:28:57AM +0530, Nishka Dasgupta wrote:
->> Static structure stm32f7_i2c_algo, of type i2c_algorithm, is used only
->> when it is assigned to constant field algo of a variable having type
->> i2c_adapter. As stm32f7_i2c_algo is therefore never modified, make it
->> const as well to protect it from unintended modification.
->> Issue found with Coccinelle.
->>
->> Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
->> ---
+On Tue 03-09-19 21:15:58, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 3 Sep 2019 21:12:09 +0200
 > 
-> Are you guys okay with this patch?
+> The brelse() function tests whether its argument is NULL
+> and then returns immediately.
+> Thus the test around the call is not needed.
 > 
->>  drivers/i2c/busses/i2c-stm32f7.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
->> index 266d1c269b83..d36cf08461f7 100644
->> --- a/drivers/i2c/busses/i2c-stm32f7.c
->> +++ b/drivers/i2c/busses/i2c-stm32f7.c
->> @@ -1809,7 +1809,7 @@ static u32 stm32f7_i2c_func(struct i2c_adapter *adap)
->>  		I2C_FUNC_SMBUS_I2C_BLOCK;
->>  }
->>  
->> -static struct i2c_algorithm stm32f7_i2c_algo = {
->> +static const struct i2c_algorithm stm32f7_i2c_algo = {
->>  	.master_xfer = stm32f7_i2c_xfer,
->>  	.smbus_xfer = stm32f7_i2c_smbus_xfer,
->>  	.functionality = stm32f7_i2c_func,
->> -- 
->> 2.19.1
->>
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+
+Thanks for the patch. Added to my tree.
+
+								Honza
+
+> ---
+>  fs/udf/super.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/udf/super.c b/fs/udf/super.c
+> index 56da1e1680ea..0cd0be642a2f 100644
+> --- a/fs/udf/super.c
+> +++ b/fs/udf/super.c
+> @@ -273,8 +273,7 @@ static void udf_sb_free_bitmap(struct udf_bitmap *bitmap)
+>  	int nr_groups = bitmap->s_nr_groups;
+> 
+>  	for (i = 0; i < nr_groups; i++)
+> -		if (bitmap->s_block_bitmap[i])
+> -			brelse(bitmap->s_block_bitmap[i]);
+> +		brelse(bitmap->s_block_bitmap[i]);
+> 
+>  	kvfree(bitmap);
+>  }
+> --
+> 2.23.0
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
