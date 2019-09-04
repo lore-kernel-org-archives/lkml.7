@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34828C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48700C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052F620882
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2294920870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567621497;
-	bh=rKcKTAwOxO2EtfS7kWHq1WZeZt00dBbN/IL6cor0zLQ=;
+	s=default; t=1567621500;
+	bh=rHsfZKh5hpl3Tpw9S1bcEiNI0pKboFXwI6tWd6Robn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VeBWvVycTDX+8sL2j7ZrqYNhNyydx7uzOpV7azhw803WymQzxeK1hkPRKPPS84Fsv
-	 Ec00q2ZcngE6seLE9Ivv6SC7yXfGK6Nt9Y+JXhNmfn2WWgZz6kje3k0bsUv0Sdc+Dp
-	 3z06fd3bHTMV7EmeLap9+haOt4lHENHBoTNI42Hs=
+	b=kLCJaYtIgiEpakCcNx1dQpCxMbEUL6ECITv+F63OHQahPjhA6fx+wM4wsmJKeCeyI
+	 aSfmVi+ZAmIp4T9fXE268T4555VDriBJQYkLwZkIFwOBwQvxRPQBG/cn3kXNY9AeMU
+	 R4ZueO8Rh3EWs5s7u1SBMYvE4+r2qvwpQghdnRyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388442AbfIDSAq (ORCPT
+        id S2388426AbfIDSAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:00:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40084 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387883AbfIDSAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:00:45 -0400
+        id S2387843AbfIDSAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:00:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2134822CF5;
-        Wed,  4 Sep 2019 18:00:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C50A721883;
+        Wed,  4 Sep 2019 18:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620044;
-        bh=rKcKTAwOxO2EtfS7kWHq1WZeZt00dBbN/IL6cor0zLQ=;
+        s=default; t=1567620039;
+        bh=rHsfZKh5hpl3Tpw9S1bcEiNI0pKboFXwI6tWd6Robn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bB1E59apIz4bFf5JQ7MiBJk0PODGilmzH9CHqqxIMNZL+jwln9naWEbp5ibH1Bspg
-         u35XWsQNdy6E5iwXfQeESiBWg5NNRRGPxld6rLgmPRmxeIsjgB11mrSKqslDekGP5+
-         N2m/LLS09HS8z1gpjN580jSbRoUMU8IHO4V0Bvs0=
+        b=2ZTEvrvy2YPUzg0ZI6pzObCbo1Zgw//PMTuO4IbX0KnYoCFr4W/UKE5sGRJdwpOGw
+         rbf0ZRPcHICWRPUcrglnYusFBJfGTWO6tSVMDGv3IqdPshSiIkxZiNPJUfTNI9qU+D
+         XUq9CiDHFoDJmk5GaKMEzbkxbhjNIV2rvw3LiXyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Adrian Vladu <avladu@cloudbasesolutions.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alessandro Pilotti <apilotti@cloudbasesolutions.com>
-Subject: [PATCH 4.9 52/83] tools: hv: fix KVP and VSS daemons exit code
-Date:   Wed,  4 Sep 2019 19:53:44 +0200
-Message-Id: <20190904175308.270769641@linuxfoundation.org>
+        Krzysztof Adamski <krzysztof.adamski@nokia.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 50/83] i2c: emev2: avoid race when unregistering slave client
+Date:   Wed,  4 Sep 2019 19:53:42 +0200
+Message-Id: <20190904175308.178336374@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -64,50 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b0995156071b0ff29a5902964a9dc8cfad6f81c0 ]
+[ Upstream commit d7437fc0d8291181debe032671a289b6bd93f46f ]
 
-HyperV KVP and VSS daemons should exit with 0 when the '--help'
-or '-h' flags are used.
+After we disabled interrupts, there might still be an active one
+running. Sync before clearing the pointer to the slave device.
 
-Signed-off-by: Adrian Vladu <avladu@cloudbasesolutions.com>
-
-Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-Cc: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Stephen Hemminger <sthemmin@microsoft.com>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Alessandro Pilotti <apilotti@cloudbasesolutions.com>
+Fixes: c31d0a00021d ("i2c: emev2: add slave support")
+Reported-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Krzysztof Adamski <krzysztof.adamski@nokia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/hv/hv_kvp_daemon.c | 2 ++
- tools/hv/hv_vss_daemon.c | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/i2c/busses/i2c-emev2.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
-index 1774800668168..fffc7c4184599 100644
---- a/tools/hv/hv_kvp_daemon.c
-+++ b/tools/hv/hv_kvp_daemon.c
-@@ -1379,6 +1379,8 @@ int main(int argc, char *argv[])
- 			daemonize = 0;
- 			break;
- 		case 'h':
-+			print_usage(argv);
-+			exit(0);
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
-diff --git a/tools/hv/hv_vss_daemon.c b/tools/hv/hv_vss_daemon.c
-index e0829809c8970..bdc1891e0a9a3 100644
---- a/tools/hv/hv_vss_daemon.c
-+++ b/tools/hv/hv_vss_daemon.c
-@@ -164,6 +164,8 @@ int main(int argc, char *argv[])
- 			daemonize = 0;
- 			break;
- 		case 'h':
-+			print_usage(argv);
-+			exit(0);
- 		default:
- 			print_usage(argv);
- 			exit(EXIT_FAILURE);
+diff --git a/drivers/i2c/busses/i2c-emev2.c b/drivers/i2c/busses/i2c-emev2.c
+index 96bb4e7490128..0218ba6eb26ab 100644
+--- a/drivers/i2c/busses/i2c-emev2.c
++++ b/drivers/i2c/busses/i2c-emev2.c
+@@ -72,6 +72,7 @@ struct em_i2c_device {
+ 	struct completion msg_done;
+ 	struct clk *sclk;
+ 	struct i2c_client *slave;
++	int irq;
+ };
+ 
+ static inline void em_clear_set_bit(struct em_i2c_device *priv, u8 clear, u8 set, u8 reg)
+@@ -342,6 +343,12 @@ static int em_i2c_unreg_slave(struct i2c_client *slave)
+ 
+ 	writeb(0, priv->base + I2C_OFS_SVA0);
+ 
++	/*
++	 * Wait for interrupt to finish. New slave irqs cannot happen because we
++	 * cleared the slave address and, thus, only extension codes will be
++	 * detected which do not use the slave ptr.
++	 */
++	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+ 
+ 	return 0;
+@@ -358,7 +365,7 @@ static int em_i2c_probe(struct platform_device *pdev)
+ {
+ 	struct em_i2c_device *priv;
+ 	struct resource *r;
+-	int irq, ret;
++	int ret;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+@@ -391,8 +398,8 @@ static int em_i2c_probe(struct platform_device *pdev)
+ 
+ 	em_i2c_reset(&priv->adap);
+ 
+-	irq = platform_get_irq(pdev, 0);
+-	ret = devm_request_irq(&pdev->dev, irq, em_i2c_irq_handler, 0,
++	priv->irq = platform_get_irq(pdev, 0);
++	ret = devm_request_irq(&pdev->dev, priv->irq, em_i2c_irq_handler, 0,
+ 				"em_i2c", priv);
+ 	if (ret)
+ 		goto err_clk;
+@@ -402,7 +409,8 @@ static int em_i2c_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_clk;
+ 
+-	dev_info(&pdev->dev, "Added i2c controller %d, irq %d\n", priv->adap.nr, irq);
++	dev_info(&pdev->dev, "Added i2c controller %d, irq %d\n", priv->adap.nr,
++		 priv->irq);
+ 
+ 	return 0;
+ 
 -- 
 2.20.1
 
