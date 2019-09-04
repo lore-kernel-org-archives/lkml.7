@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD915C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B36C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F602053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1BFF2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613965;
-	bh=BJV4xn+dCqPEYrNnYRxOCtNh4EYW7nfGMGy0JjAm954=;
+	s=default; t=1567613973;
+	bh=7gN4oGxskhNmUiNRGD1LOaJ12Rz2xRgqnnMm885HDkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TH71NvRogirXRWabrEjOqsNqcLwQF06VFp/n/goDS/sQEvakKkb0D5raWDwF795MA
-	 o7dOxVQaZY4Jg7dsWZvN8/tnkl5myHmjBl/FzHXR9RYYocEdaTN3LUfXseIvYjj+sK
-	 pyOgTY9sHME+JYl6ejilnCdOeLJ76XwiNxoy480s=
+	b=aXdKuFxWJiR6AgEGvzSqS1HpyuMsU3O60/GX01ggvCrSdMoMsOXsfpImKKoCmbTs/
+	 nNbQU9l/A0PmPrDNeUPbFMkqcy5lFTpAdeFA0zI1YpigIip/fifAJKfvEtSn72zL2B
+	 6NMKwcKHgGGRqSCws6RdFM2fVAwbETHt2jMpWVto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732851AbfIDQTY (ORCPT
+        id S1731921AbfIDP6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:19:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60466 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 11:58:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731936AbfIDP6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:58:23 -0400
+        id S1731893AbfIDP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:58:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1775A2341C;
-        Wed,  4 Sep 2019 15:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40C3B2342D;
+        Wed,  4 Sep 2019 15:58:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567612702;
-        bh=BJV4xn+dCqPEYrNnYRxOCtNh4EYW7nfGMGy0JjAm954=;
+        s=default; t=1567612697;
+        bh=7gN4oGxskhNmUiNRGD1LOaJ12Rz2xRgqnnMm885HDkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QcyCd7g1r/YX/msrp9c+X9VI3BfdKXQLfcKq+t5GsH19OAuKz2WJewdbySMievCJi
-         6WEcfQK0gvdiDLrhEMr2MCBwIdt1MJ0nLubfy1RlIVY5wYcHGTsEYmu4TrS+rzHNmo
-         lxF7glNordrfDdAZQNTbZieZhquFZQM5InSnLHoo=
+        b=oBRfGjuz0NELG9IYDkeZOLDmt/3138DPrxlsbkisxkX2MdSGOGYCaeSGkOaw4owNM
+         fXvR3sVxPUnLHmfbkW97IaMeiUCo3TcIczyl1ukwy53gy2hw/HmVKdcEoqW58gzDgy
+         iA4yuLtK/8xJqmML0hvm0FLTexLFd6HP+tU7+IDg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 30/94] xdp: unpin xdp umem pages in error path
-Date:   Wed,  4 Sep 2019 11:56:35 -0400
-Message-Id: <20190904155739.2816-30-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 25/94] NFSv4: Fix return values for nfs4_file_open()
+Date:   Wed,  4 Sep 2019 11:56:30 -0400
+Message-Id: <20190904155739.2816-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
 References: <20190904155739.2816-1-sashal@kernel.org>
@@ -61,43 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit fb89c39455e4b49881c5a42761bd71f03d3ef888 ]
+[ Upstream commit 90cf500e338ab3f3c0f126ba37e36fb6a9058441 ]
 
-Fix mem leak caused by missed unpin routine for umem pages.
+Currently, we are translating RPC level errors such as timeouts,
+as well as interrupts etc into EOPENSTALE, which forces a single
+replay of the open attempt. What we actually want to do is
+force the replay only in the cases where the returned error
+indicates that the file may have changed on the server.
 
-Fixes: 8aef7340ae9695 ("xsk: introduce xdp_umem_page")
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Acked-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+So the fix is to spell out the exact set of errors where we want
+to return EOPENSTALE.
+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xdp_umem.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4file.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 9c6de4f114f84..9bd7b96027c12 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -368,7 +368,7 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 	umem->pages = kcalloc(umem->npgs, sizeof(*umem->pages), GFP_KERNEL);
- 	if (!umem->pages) {
- 		err = -ENOMEM;
--		goto out_account;
-+		goto out_pin;
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 3a507c42c1cae..113be154a1ec6 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -73,13 +73,13 @@ nfs4_file_open(struct inode *inode, struct file *filp)
+ 	if (IS_ERR(inode)) {
+ 		err = PTR_ERR(inode);
+ 		switch (err) {
+-		case -EPERM:
+-		case -EACCES:
+-		case -EDQUOT:
+-		case -ENOSPC:
+-		case -EROFS:
+-			goto out_put_ctx;
+ 		default:
++			goto out_put_ctx;
++		case -ENOENT:
++		case -ESTALE:
++		case -EISDIR:
++		case -ENOTDIR:
++		case -ELOOP:
+ 			goto out_drop;
+ 		}
  	}
- 
- 	for (i = 0; i < umem->npgs; i++)
-@@ -376,6 +376,8 @@ static int xdp_umem_reg(struct xdp_umem *umem, struct xdp_umem_reg *mr)
- 
- 	return 0;
- 
-+out_pin:
-+	xdp_umem_unpin_pages(umem);
- out_account:
- 	xdp_umem_unaccount_pages(umem);
- 	return err;
 -- 
 2.20.1
 
