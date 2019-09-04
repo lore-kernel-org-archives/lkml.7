@@ -2,142 +2,114 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEEDC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EA2C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA787208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:00:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567623619;
-	bh=c+xai1VbUrRBD86z7OkSEKkYyQyQJc7EqmKXnqTO744=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1RGUq6vLkfEM4WG5lP3MvH7uGBvaRXelnhtE30mNnau3mc76PCYh4e7wwHwFeK7yh
-	 ELimAPImqwPudHnLbVdcjoZbfbAjhVFFHdgqa/LMpWEEibKJkj6bH0LjOuhT0OrVzN
-	 mYypgJe7ojhc0Zly0ljvQorNZe8LYiHIeyodan4s=
+	by mail.kernel.org (Postfix) with ESMTP id 825902087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 19:00:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WoWlN9yx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387943AbfIDTAS (ORCPT
+        id S2387967AbfIDTAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 15:00:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40862 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730410AbfIDTAS (ORCPT
+        Wed, 4 Sep 2019 15:00:39 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38901 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730410AbfIDTAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 15:00:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Sejf0oWfAeAKqRQ87axzuT3ob7JqA1ggbTpZQADCRRE=; b=Ina1+ncMJiIa2/Hv6tNTIad67
-        vw9okY15X/BYQJI8+2B0fpmY5XX8onNDnYlwaP7gJ9aJ3/m6ZlCIYQOF48CdEUm/PBSSN1GOq/C7S
-        s3iB/hy6/7caOPjSpOWZL+J4gmOlhLPq/b2RPZqPS4HocLbyo/LsrwqOJhJrTTLFUgJ2lpdEiKOkJ
-        GNgKTF69Z2kr0W+Up8DsJSnQ7asO7fqpGxpK23YfzqixL7fF4LQlCSYidp3AdWmkRKAPmxyYMZSJM
-        W2zm64H9AoaSrCLfk/8B5F+wVsqtoMP9B5m452svfvSVTdoLnpXaclGaV2Zo6O1sZVDyR48IiVdzz
-        CKU61AR2A==;
-Received: from 177.17.137.173.dynamic.adsl.gvt.net.br ([177.17.137.173] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5aVq-0000Tv-K2; Wed, 04 Sep 2019 19:00:15 +0000
-Date:   Wed, 4 Sep 2019 16:00:10 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
- Identifier
-Message-ID: <20190904160010.4532c3f5@coco.lan>
-In-Reply-To: <20190904183608.GA495@kroah.com>
-References: <20190831151147.GA7082@nishad>
-        <20190904153432.7fb54f02@coco.lan>
-        <20190904183608.GA495@kroah.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 4 Sep 2019 15:00:39 -0400
+Received: by mail-io1-f68.google.com with SMTP id p12so46678213iog.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 12:00:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YS/oRA+KV/UBzoz/WnnIu9hGtCWMQgkzh1fKr4+obk0=;
+        b=WoWlN9yxWDFjkBERDEvSZtnHj2s/6B92wbrXvUeunbJWmcdnO2QqghZnXrW2DQrZ8D
+         7Be9aVcLZ0OVYxDnq7dBhIilw+oR4PZCWFiXsKbwzXhj+G40DVmH3FQnMzJlYzzJHOc2
+         ypFG3yTMilx5701aG1DxMYXRLMtBm2B3JybVTcpdxkXTnzgRA+T8KbEz5PqCi5zLA3aH
+         vf8ta/AqS9n82mA0LdCNxoC82m8LNekvY/1RW01VUxir3YvJJH8ePd5NfKQCELrqdj3t
+         g3aycJU6W3VqBGFVrRSXjaaJtsNNRCN8kNYKuYqmS2wbWMwXaf+cQ98ySSnFYaXxCdYg
+         wJoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YS/oRA+KV/UBzoz/WnnIu9hGtCWMQgkzh1fKr4+obk0=;
+        b=FMMKakyl6X8PjpmfkeGDwDVktxy5ejpcTf8/8hNyDkFPS+BTCHcUNGxiK31ozGFhLL
+         Kt3EFMCxcYSEXf+kMk4jRMS3WQYwlInQJczp8z849HfdV6ULXBfWwccjLXhz6RHeQlee
+         6/uJYymYXWQStwalsQo8P4cL4RLLG2UmrY9eCkN79oZ8JUG/h3GFGKggU9xKoKH+VkQI
+         OLJcnm4lBFYpzX5JAdIrIocJb9IhJs4uXfM0kMAPgnJfIblHDJltKo00zuhxwVLKTnBL
+         3m0M9O8hHjgm27Hj+FsCm/FM1m0+3LyN1o+w7pU9Ybfegvrx39uYYDb95DmgVVSMjuVd
+         l2Zw==
+X-Gm-Message-State: APjAAAWdDghkduBOi7oeL7YQ/hnEA0oCHN8PjtQtizDeOjaqEmxk2Mql
+        3muyyZ9S9PfHfwqctMSE7g==
+X-Google-Smtp-Source: APXvYqwl47gvKXOASt4UpIqyuvgLMoKmPU1FeoteayOagm8oZNzs66COHn0Cui2b9+jrt1WRbJrYmw==
+X-Received: by 2002:a5d:8196:: with SMTP id u22mr9364546ion.280.1567623636995;
+        Wed, 04 Sep 2019 12:00:36 -0700 (PDT)
+Received: from [192.168.1.99] ([92.117.176.185])
+        by smtp.googlemail.com with ESMTPSA id 80sm32670032iou.13.2019.09.04.12.00.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 12:00:36 -0700 (PDT)
+Subject: Re: [PATCH v5 1/4] ftrace: Implement fs notification for
+ tracing_max_latency
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190903132602.3440-1-viktor.rosendahl@gmail.com>
+ <20190903132602.3440-2-viktor.rosendahl@gmail.com>
+ <20190904073915.4a145a91@oasis.local.home>
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Message-ID: <d8377cbd-8c3c-d699-153d-8af7b44d6b87@gmail.com>
+Date:   Wed, 4 Sep 2019 21:00:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190904073915.4a145a91@oasis.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 4 Sep 2019 20:36:08 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
-
-> On Wed, Sep 04, 2019 at 03:34:32PM -0300, Mauro Carvalho Chehab wrote:
-> > Em Sat, 31 Aug 2019 20:41:51 +0530
-> > Nishad Kamdar <nishadkamdar@gmail.com> escreveu:
-> >   
-> > > This patch corrects the SPDX License Identifier style
-> > > in header file related to Siano Mobile Silicon Digital TV.
-> > > For C header files Documentation/process/license-rules.rst
-> > > mandates C-like comments (opposed to C source files where
-> > > C++ style should be used)
-> > > 
-> > > Changes made by using a script provided by Joe Perches here:
-> > > https://lkml.org/lkml/2019/2/7/46
-> > > 
-> > > Suggested-by: Joe Perches <joe@perches.com>
-> > > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> > > ---
-> > >  drivers/media/common/siano/smsir.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/media/common/siano/smsir.h b/drivers/media/common/siano/smsir.h
-> > > index b2c54c256e86..ada41d5c4e83 100644
-> > > --- a/drivers/media/common/siano/smsir.h
-> > > +++ b/drivers/media/common/siano/smsir.h
-> > > @@ -1,5 +1,5 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > >  /*
-> > > - * SPDX-License-Identifier: GPL-2.0+
-> > >   *
-> > >   * Siano Mobile Silicon, Inc.
-> > >   * MDTV receiver kernel modules.  
-> > 
-> > What's wrong with that? The above is a perfectly fine SPDX header.  
+On 9/4/19 1:39 PM, Steven Rostedt wrote:
+> On Tue,  3 Sep 2019 15:25:59 +0200
+> Viktor Rosendahl <viktor.rosendahl@gmail.com> wrote:
 > 
-> It is not the first line of the file :(
+>> +void latency_fsnotify_stop(void)
+>> +{
+>> +	/* Make sure all CPUs see caller's previous actions to stop tracer */
+>> +	smp_wmb();
+> 
+> These memory barriers just look wrong. What exactly are you trying to protect here?
+> 
+> Where's the matching rmbs?
 > 
 
-A requirement for having it at the first line is not realistic.
-I'd say more: some script that would check for SPDX only at the 
-first line won't work.
+Thanks for reviewing.
 
-The reason is simple: we have some scripts at the Kernel tree.
+However, since these functions will disappear when I take the irq_work
+facility into use, we should perhaps not spend too much time discussing
+what would have been.
 
-Since ever, Unix shells use the first line to interpret what
-program will handle it, e. g.:
+There are no matching rmbs, I was thinking that the smp_wmb() would
+merely enforce the order of the memory writes, as seen by other CPUs, so 
+that the tracer would be stopped, before the latency fsnotify is disabled.
 
-	#! /usr/bin/perl
+E.g. in case of the preemptirqsoff tracer the idea was that it doesn't
+matter exactly when a CPU sees the "tracer_enabled = 0;" in
+stop_irqsoff_tracer() but that it needs to be seen before the writes in
+latency_fsnotify_stop() are seen.
 
-So, all perl/python scripts should reserve the first line for such
-usage.
+best regards,
 
-With Python, you can't even use the second line, as it is reserved
-for charset encoding. 
-
-So, realistically, the SPDX header could be up to the third line of
-a given file.
-
-Besides that, I vaguely remember some discussions we had, back on the
-days SPDX was introduced, envolving Thomas, Linus and others. My 
-understanding for such discussions is that something like this:
-
-/*
- * SPDX-License-Identifier: GPL-2.0+
- *
- * some other notes about the file
- */
-
-Would be acceptable, as the first line of the comment (with is at
-the beginning of the file) is the SPDX tag.
-
-Thanks,
-Mauro
+Viktor
