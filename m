@@ -2,101 +2,73 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 671FEC3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A45BC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5C222CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567611483;
-	bh=AKawEZgQyjTKSRtTHeHh9Xyr+24+V3DlM/zrWOKaALU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GMSWisYIxrRuMAxJzFndE6vDds86ZwKJbk9argzld6hIb4Zj0TTG4dferf3AxCOPo
-	 hs1O2g7sf9l73lh1M5pluIMQ+GZ0b1W2pnb06r01tBpkc2C8A4SA5XAOIMFvaOcWmH
-	 oHTjUtsQ7NN7kmRkJ5PhUwV8UjDQMnz3olzaoiYg=
+	by mail.kernel.org (Postfix) with ESMTP id 7631522CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 15:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731360AbfIDPiC (ORCPT
+        id S1731436AbfIDPiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 11:38:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45060 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbfIDPiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 11:38:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 50AEAB01E;
-        Wed,  4 Sep 2019 15:38:00 +0000 (UTC)
-Date:   Wed, 4 Sep 2019 17:37:59 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
-        carmenjackson@google.com, mayankgupta@google.com,
-        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
-        akpm@linux-foundation.org, kernel-team@android.com,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-Message-ID: <20190904153759.GC3838@dhcp22.suse.cz>
-References: <20190903200905.198642-1-joel@joelfernandes.org>
- <20190904084508.GL3838@dhcp22.suse.cz>
- <20190904153258.GH240514@google.com>
+        Wed, 4 Sep 2019 11:38:09 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:50193 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731421AbfIDPiI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:38:08 -0400
+Received: by mail-io1-f72.google.com with SMTP id 15so27864980ioo.17
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 08:38:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=0k3qV3xaQgjB90yqypxStujSAob81gXbGHRySZeZj6g=;
+        b=K7P+Udc3OkCh/huA5xZ6+6YuGGkaLA9iaHEBtoz+0wXsq1OI4t2ZwzpXvX7cF2138c
+         MXgcBmpQvwvLkkUZw5jkVHeA6C3LO/ciEtrOUyvaa1ZFEFxyw1RL8spm+MhmzNLPMooB
+         xBhMx6J+wpIEYZ4tyFpX6IMmRPdt6ubWjW+j9rDx8FNSDOwB4SJzo8+KYe4SwwzNvGdR
+         GdAdj2B4fKwGtMUtcRRLnaQly18LRJdpEkzD/qfJBVyvD2SEyYQr/iHAM7M5Y8ZC3z/g
+         HcsCFfwewGkWAp3dYStZ7Lpz5DECPdHSD8H9vtm/TLiVe/PLKQK2yyJWjFrliPOGVlBF
+         oyyQ==
+X-Gm-Message-State: APjAAAUqseADKgSGMqSLuSlLNB4Vm29m/U2ulxpGMxqOo0TALYge2XGT
+        mkoUOVX9YgdmRiViaUxhrWPvgs5XmBdP5eaavqbQrKaw+0Jv
+X-Google-Smtp-Source: APXvYqzYfwE0aX841BI9ig17iaQn0xyKjbt9nyuB3czN7cN/I/IiWjwE6X6Vku+lcLw4NwADB6I2ii6+88oi5vn0AjWXPpyjnYfp
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904153258.GH240514@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5d:9b06:: with SMTP id y6mr5883532ion.77.1567611487843;
+ Wed, 04 Sep 2019 08:38:07 -0700 (PDT)
+Date:   Wed, 04 Sep 2019 08:38:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e100dc0591bbfdd7@google.com>
+Subject: linux-next build error (5)
+From:   syzbot <syzbot+5d7739bb829b8f3b47fa@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
-> On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
-> > On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
-> > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
-> > > memory hogs. Several Android teams have been using this patch in various
-> > > kernel trees for half a year now. Many reported to me it is really
-> > > useful so I'm posting it upstream.
-> > > 
-> > > Initial patch developed by Tim Murray. Changes I made from original patch:
-> > > o Prevent any additional space consumed by mm_struct.
-> > > o Keep overhead low by checking if tracing is enabled.
-> > > o Add some noise reduction and lower overhead by emitting only on
-> > >   threshold changes.
-> > 
-> > Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
-> > the Linus tree (nor in linux-next).
-> 
-> No, this is generated automatically by the tracepoint infrastructure when a
-> tracepoint is added.
-
-OK, I was not aware of that.
-
-> > Besides that why do we need batching in the first place. Does this have a
-> > measurable overhead? How does it differ from any other tracepoints that we
-> > have in other hotpaths (e.g.  page allocator doesn't do any checks).
-> 
-> We do need batching not only for overhead reduction,
-
-What is the overhead?
-
-> but also for reducing
-> tracing noise. Flooding the traces makes it less useful for long traces and
-> post-processing of traces. IOW, the overhead reduction is a bonus.
-
-This is not really anything special for this tracepoint though.
-Basically any tracepoint in a hot path is in the same situation and I do
-not see a point why each of them should really invent its own way to
-throttle. Maybe there is some way to do that in the tracing subsystem
-directly.
--- 
-Michal Hocko
-SUSE Labs
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgMzUzOTRkMDMgQWRkIGxpbnV4LW5leHQgc3BlY2lmaWMgZmlsZXMgZm9yIDIwMTkw
+OTA0DQpnaXQgdHJlZTogICAgICAgbGludXgtbmV4dA0KY29uc29sZSBvdXRwdXQ6IGh0dHBzOi8v
+c3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvbG9nLnR4dD94PTEwYTRiMWZlNjAwMDAwDQprZXJuZWwg
+Y29uZmlnOiAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC8uY29uZmlnP3g9NzQzZTY0
+ZWNiMGQ5Y2U0ZQ0KZGFzaGJvYXJkIGxpbms6IGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29t
+L2J1Zz9leHRpZD01ZDc3MzliYjgyOWI4ZjNiNDdmYQ0KY29tcGlsZXI6ICAgICAgIGdjYyAoR0ND
+KSA5LjAuMCAyMDE4MTIzMSAoZXhwZXJpbWVudGFsKQ0KDQpVbmZvcnR1bmF0ZWx5LCBJIGRvbid0
+IGhhdmUgYW55IHJlcHJvZHVjZXIgZm9yIHRoaXMgY3Jhc2ggeWV0Lg0KDQpJTVBPUlRBTlQ6IGlm
+IHlvdSBmaXggdGhlIGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29t
+bWl0Og0KUmVwb3J0ZWQtYnk6IHN5emJvdCs1ZDc3MzliYjgyOWI4ZjNiNDdmYUBzeXprYWxsZXIu
+YXBwc3BvdG1haWwuY29tDQoNCi4vaW5jbHVkZS9saW51eC9ncGlvL2RyaXZlci5oOjcyMjoxOTog
+ZXJyb3I6IHN0YXRpYyBkZWNsYXJhdGlvbiBvZiAgDQrigJhncGlvY2hpcF9sb2NrX2FzX2lyceKA
+mSBmb2xsb3dzIG5vbi1zdGF0aWMgZGVjbGFyYXRpb24NCg0KLS0tDQpUaGlzIGJ1ZyBpcyBnZW5l
+cmF0ZWQgYnkgYSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBodHRwczovL2dvby5n
+bC90cHNtRUogZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0Kc3l6Ym90IGVuZ2lu
+ZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBzLmNvbS4NCg0Kc3l6
+Ym90IHdpbGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToNCmh0dHBzOi8vZ29v
+LmdsL3Rwc21FSiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRoIHN5emJvdC4NCg==
