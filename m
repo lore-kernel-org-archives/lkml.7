@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E793EC41514
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A568DC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91B62341B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7205F2339E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620531;
-	bh=KVwgip2uVDEjFfTLBhbmQuMxgOlaw238L4b1EGR4Vkk=;
+	s=default; t=1567620534;
+	bh=Ww5/T6cnbcNwLzs2Ajt50HYOnOQRkPAt0nadsaaNCvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFDWWPBeb4dHbJ/rwXmnfiurbFzvjubL7g7l/6qG6aPl0zon66JvTIdQtPVUxL9OT
-	 Sgy6PLrjlsFuQFF821MLZuOLWFU6iFxB/XkeJJ5bAHzRxsObxQ8EAKPHbjXHxGkK9f
-	 QQLRSfthQTxR1eS47VCUf7imcF2TNkZmsQyv4aic=
+	b=D1GChPWMedqCEtBgCD1SyzZJQAKGvT327fPRE+8fU7EszS9lPIVkGZShHOCc4oT81
+	 xVJEmUt147zc8irhu4n8BeNPb34reQhVmwfmT3beKlgsx4D+9L2X3L0l9EMZYi+35u
+	 +ndeOyGQuRdnN6S+C0FhgLxLDG/FLVjcj7HDUOVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389080AbfIDSIv (ORCPT
+        id S2389073AbfIDSIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51778 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389852AbfIDSIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:08:47 -0400
+        id S2389492AbfIDSIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:08:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8344123401;
-        Wed,  4 Sep 2019 18:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 334092087E;
+        Wed,  4 Sep 2019 18:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620526;
-        bh=KVwgip2uVDEjFfTLBhbmQuMxgOlaw238L4b1EGR4Vkk=;
+        s=default; t=1567620528;
+        bh=Ww5/T6cnbcNwLzs2Ajt50HYOnOQRkPAt0nadsaaNCvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KIrXsf8D0uTc7cK4pe46db+QRIy+9A92q8kPmWjoM7GL6nsbOZXfBQgrdmSceTsSw
-         IKrbC/7lBeNX8yHsOPMH4XPIc/ETwjt2iQgwviXT0RrQFmLvxvK+YclmVmDlbeZmDU
-         Gm2gytxGcPSODa0NLwzNkkH6qBJXshA+U/OQs87E=
+        b=J5fic3g+s08y5ev6qed2yZ1rZxS2WM6Veighy3M1ltltE2FW/LIqCpce6T5GfFEYv
+         S9HdmoxvyBIvCySSrCQTqHxxL1mMhg/q3+xzbNgZ1NnDYruukxJkKerUN/8Jb+LOrw
+         G3KJ9Azy7e+ZaSk8Qx7RRfsqyo/AkyVhWUSm/LKI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bandan Das <bsd@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 50/93] x86/apic: Include the LDR when clearing out APIC registers
-Date:   Wed,  4 Sep 2019 19:53:52 +0200
-Message-Id: <20190904175307.333483848@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 41/93] ALSA: line6: Fix memory leak at line6_init_pcm() error path
+Date:   Wed,  4 Sep 2019 19:53:43 +0200
+Message-Id: <20190904175306.749082109@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
 References: <20190904175302.845828956@linuxfoundation.org>
@@ -59,49 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bandan Das <bsd@redhat.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 558682b5291937a70748d36fd9ba757fb25b99ae upstream.
+commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 upstream.
 
-Although APIC initialization will typically clear out the LDR before
-setting it, the APIC cleanup code should reset the LDR.
+I forgot to release the allocated object at the early error path in
+line6_init_pcm().  For addressing it, slightly shuffle the code so
+that the PCM destructor (pcm->private_free) is assigned properly
+before all error paths.
 
-This was discovered with a 32-bit KVM guest jumping into a kdump
-kernel. The stale bits in the LDR triggered a bug in the KVM APIC
-implementation which caused the destination mapping for VCPUs to be
-corrupted.
-
-Note that this isn't intended to paper over the KVM APIC bug. The kernel
-has to clear the LDR when resetting the APIC registers except when X2APIC
-is enabled.
-
-This lacks a Fixes tag because missing to clear LDR goes way back into pre
-git history.
-
-[ tglx: Made x2apic_enabled a function call as required ]
-
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190826101513.5080-3-bsd@redhat.com
+Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/apic.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/usb/line6/pcm.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1140,6 +1140,10 @@ void clear_local_APIC(void)
- 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
- 	v = apic_read(APIC_LVT1);
- 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
-+	if (!x2apic_enabled()) {
-+		v = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
-+		apic_write(APIC_LDR, v);
-+	}
- 	if (maxlvt >= 4) {
- 		v = apic_read(APIC_LVTPC);
- 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
+--- a/sound/usb/line6/pcm.c
++++ b/sound/usb/line6/pcm.c
+@@ -554,6 +554,15 @@ int line6_init_pcm(struct usb_line6 *lin
+ 	line6pcm->volume_monitor = 255;
+ 	line6pcm->line6 = line6;
+ 
++	spin_lock_init(&line6pcm->out.lock);
++	spin_lock_init(&line6pcm->in.lock);
++	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
++
++	line6->line6pcm = line6pcm;
++
++	pcm->private_data = line6pcm;
++	pcm->private_free = line6_cleanup_pcm;
++
+ 	line6pcm->max_packet_size_in =
+ 		usb_maxpacket(line6->usbdev,
+ 			usb_rcvisocpipe(line6->usbdev, ep_read), 0);
+@@ -566,15 +575,6 @@ int line6_init_pcm(struct usb_line6 *lin
+ 		return -EINVAL;
+ 	}
+ 
+-	spin_lock_init(&line6pcm->out.lock);
+-	spin_lock_init(&line6pcm->in.lock);
+-	line6pcm->impulse_period = LINE6_IMPULSE_DEFAULT_PERIOD;
+-
+-	line6->line6pcm = line6pcm;
+-
+-	pcm->private_data = line6pcm;
+-	pcm->private_free = line6_cleanup_pcm;
+-
+ 	err = line6_create_audio_out_urbs(line6pcm);
+ 	if (err < 0)
+ 		return err;
 
 
