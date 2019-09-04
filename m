@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C691C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4123C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0580F208E4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC864206BA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620791;
-	bh=QfaEHryzVEL2hXwWkCzJ3WcurmZFn+JfnVJi9dnQP8Q=;
+	s=default; t=1567620788;
+	bh=r0SrvcMLry7DKvNjs2Ldsrbj9Ap89oj8kRRUbcQ4JpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=udUo6/XyHqepQK0kj1nkUY0wOOcQxSfz2MnPbZhTxKZdt4rSvIPSHw4gUxmVxWIXQ
-	 9kWpQ8eo2vFFzBiligpvTFczAZzXXkU2wlrA367NYB0wyTlCtRmWXd1oWMDO72aMap
-	 RB+f9L2Dn1fo029l9igbMT+mZuvFNvylEEwOIFPg=
+	b=yRUR+empzcq5wTTKL1nOD9kQzIlsLGonYZzIth9vKZgbG9bC7Jle7sp1mam/wGasc
+	 Mzw9LN79CzLpvDztP6MDLIOgjabBJR/+cMrD4Z/ssCa8wxqwrZ29eIfBZxP3tdDUwF
+	 jQXQPU7TW+8wZB2WA78AryLybScHbD6MMbVm9sW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390631AbfIDSNK (ORCPT
+        id S2390619AbfIDSNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57782 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389432AbfIDSNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:08 -0400
+        id S2390179AbfIDSNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2064B208E4;
-        Wed,  4 Sep 2019 18:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6143C206BA;
+        Wed,  4 Sep 2019 18:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620787;
-        bh=QfaEHryzVEL2hXwWkCzJ3WcurmZFn+JfnVJi9dnQP8Q=;
+        s=default; t=1567620784;
+        bh=r0SrvcMLry7DKvNjs2Ldsrbj9Ap89oj8kRRUbcQ4JpA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=losMKIiGeaIrMhlVfgZgve3+KoQZde7uAtUrG1a6N9Xs+L3LkFFvBgasvtl2hqO0l
-         wwt9wXKBE0DyhBfK6Y2UqSwNc3uuz/j/WXNTWQ5QENHoYGlNe1SRH1F2kWZ22CYmWO
-         2NrCnM7E4ygh9MGLqCphHyvN7i28Y53lxaoMw4XU=
+        b=f561hXANtH2y2cip/X8RMBk3UU/EGv58L0vjQ6UH+sMf1dWeXNb1TtIhFpFMRQTtJ
+         rGwTRucInIJaaOpvs4LhIKVot4hv+r8a0LpPkl1Ji9aSp2kNFg8qMLFXxv3pEa/mQZ
+         1JMaHtgeWyYyCDPGMW/e7z3FW1tDBugOPPakdffQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.2 094/143] mmc: sdhci-cadence: enable v4_mode to fix ADMA 64-bit addressing
-Date:   Wed,  4 Sep 2019 19:53:57 +0200
-Message-Id: <20190904175317.813874728@linuxfoundation.org>
+Subject: [PATCH 5.2 093/143] mmc: sdhci-of-at91: add quirk for broken HS200
+Date:   Wed,  4 Sep 2019 19:53:56 +0200
+Message-Id: <20190904175317.760831237@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,48 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit e73a3896eaca95ea5fc895720502a3f040eb4b39 upstream.
+commit 7871aa60ae0086fe4626abdf5ed13eeddf306c61 upstream.
 
-The IP datasheet says this controller is compatible with SD Host
-Specification Version v4.00.
+HS200 is not implemented in the driver, but the controller claims it
+through caps. Remove it via a quirk, to make sure the mmc core do not try
+to enable HS200, as it causes the eMMC initialization to fail.
 
-As it turned out, the ADMA of this IP does not work with 64-bit mode
-when it is in the Version 3.00 compatible mode; it understands the
-old 64-bit descriptor table (as defined in SDHCI v2), but the ADMA
-System Address Register (SDHCI_ADMA_ADDRESS) cannot point to the
-64-bit address.
-
-I noticed this issue only after commit bd2e75633c80 ("dma-contiguous:
-use fallback alloc_pages for single pages"). Prior to that commit,
-dma_set_mask_and_coherent() returned the dma address that fits in
-32-bit range, at least for the default arm64 configuration
-(arch/arm64/configs/defconfig). Now the host->adma_addr exceeds the
-32-bit limit, causing the real problem for the Socionext SoCs.
-(As a side-note, I was also able to reproduce the issue for older
-kernels by turning off CONFIG_DMA_CMA.)
-
-Call sdhci_enable_v4_mode() to fix this.
-
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: bb5f8ea4d514 ("mmc: sdhci-of-at91: introduce driver for the Atmel SDMMC")
+Cc: stable@vger.kernel.org # v4.4+
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-cadence.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci-of-at91.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -369,6 +369,7 @@ static int sdhci_cdns_probe(struct platf
- 	host->mmc_host_ops.execute_tuning = sdhci_cdns_execute_tuning;
- 	host->mmc_host_ops.hs400_enhanced_strobe =
- 				sdhci_cdns_hs400_enhanced_strobe;
-+	sdhci_enable_v4_mode(host);
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -357,6 +357,9 @@ static int sdhci_at91_probe(struct platf
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
  
- 	sdhci_get_of_property(pdev);
- 
++	/* HS200 is broken at this moment */
++	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
++
+ 	ret = sdhci_add_host(host);
+ 	if (ret)
+ 		goto pm_runtime_disable;
 
 
