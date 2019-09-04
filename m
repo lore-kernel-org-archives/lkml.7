@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE75C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F677C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5462070C
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A06A20820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 16:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567613068;
-	bh=K8B7Wh6y9l9FoIrhqj54BavdltGdVVE0/GiOLd8E3Jc=;
+	s=default; t=1567613076;
+	bh=rng0vklXFVK0a4LP4agVcs4rvO5G2fgDSggZLO0gOwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QR66WKPJTS0ViKUiy6+ULdMcTjHV3KJx4ncweZR98lUFxES8SrsmEh5iyEOQLdJa8
-	 uvCyCU0YbS7SFdrF5xQXpmbOdaqEUTeCHS/RHaVuLfg3LwD3W3r6T8xgz2JU/ndh+P
-	 l8b4ODEuBp4IOlJ9t87Zxaz/pgc3506XXzNxPAwc=
+	b=pj0Faxe6E2/zSjHmKclkmkJczK9XdGCjlHnZcYqXuO+Kbi7COpmP1YCb4r4twu4C7
+	 bp+YDGiPf6YsHATQ1y8jD27qouAk7MLiN11OaXEmc14glbinvuWQmVfaWI/lfl+NHj
+	 e040iA2I1Ywv1fXatLNGdLiLDF0FjGlMZrsCMNO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387746AbfIDQE1 (ORCPT
+        id S2387751AbfIDQEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 12:04:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39836 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 12:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732988AbfIDQDW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 12:03:22 -0400
+        id S1731439AbfIDQDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 12:03:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D6F920820;
-        Wed,  4 Sep 2019 16:03:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8FCF20820;
+        Wed,  4 Sep 2019 16:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567613001;
-        bh=K8B7Wh6y9l9FoIrhqj54BavdltGdVVE0/GiOLd8E3Jc=;
+        s=default; t=1567612996;
+        bh=rng0vklXFVK0a4LP4agVcs4rvO5G2fgDSggZLO0gOwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGnhgpe+6KUyoGHuqo8fKfbfa1DuMaAcjyPz0iidtTJmzceI13LbP7XHRQhRQkEAu
-         jBkTpccUT3Dbm+kCKbuHBUIGuWrbld7sS3K47ywVHOr2QE7L+hsmuyYSyCbiMBCxd0
-         +soZJVr/C+pnFNXOvNqnkwD1axXb1M1DarVWlnZg=
+        b=ZQ/u77R5fGloaBXA34GIrjLs1bXZFWx4Z3LFUhsVMSrXicgbc2HxbFXIBmWDUDpQy
+         YJIGROm0yxPmha5bYqL5o+xLBM+rmJQgfW2u4Q1j5pUDkMbaDQGE6xZXC0Wn/geAzg
+         K/rvQ5qbJrHoa141u+1JEUUMfdZEvEzOBhbR4HHY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Jarosch <thomas.jarosch@intra2net.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        Hayes Wang <hayeswang@realtek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 10/20] netfilter: nf_conntrack_ftp: Fix debug output
-Date:   Wed,  4 Sep 2019 12:02:53 -0400
-Message-Id: <20190904160303.5062-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 08/20] r8152: Set memory to all 0xFFs on failed reg reads
+Date:   Wed,  4 Sep 2019 12:02:51 -0400
+Message-Id: <20190904160303.5062-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190904160303.5062-1-sashal@kernel.org>
 References: <20190904160303.5062-1-sashal@kernel.org>
@@ -61,45 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Jarosch <thomas.jarosch@intra2net.com>
+From: Prashant Malani <pmalani@chromium.org>
 
-[ Upstream commit 3a069024d371125227de3ac8fa74223fcf473520 ]
+[ Upstream commit f53a7ad189594a112167efaf17ea8d0242b5ac00 ]
 
-The find_pattern() debug output was printing the 'skip' character.
-This can be a NULL-byte and messes up further pr_debug() output.
+get_registers() blindly copies the memory written to by the
+usb_control_msg() call even if the underlying urb failed.
 
-Output without the fix:
-kernel: nf_conntrack_ftp: Pattern matches!
-kernel: nf_conntrack_ftp: Skipped up to `<7>nf_conntrack_ftp: find_pattern `PORT': dlen = 8
-kernel: nf_conntrack_ftp: find_pattern `EPRT': dlen = 8
+This could lead to junk register values being read by the driver, since
+some indirect callers of get_registers() ignore the return values. One
+example is:
+  ocp_read_dword() ignores the return value of generic_ocp_read(), which
+  calls get_registers().
 
-Output with the fix:
-kernel: nf_conntrack_ftp: Pattern matches!
-kernel: nf_conntrack_ftp: Skipped up to 0x0 delimiter!
-kernel: nf_conntrack_ftp: Match succeeded!
-kernel: nf_conntrack_ftp: conntrack_ftp: match `172,17,0,100,200,207' (20 bytes at 4150681645)
-kernel: nf_conntrack_ftp: find_pattern `PORT': dlen = 8
+So, emulate PCI "Master Abort" behavior by setting the buffer to all
+0xFFs when usb_control_msg() fails.
 
-Signed-off-by: Thomas Jarosch <thomas.jarosch@intra2net.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This patch is copied from the r8152 driver (v2.12.0) published by
+Realtek (www.realtek.com).
+
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+Acked-by: Hayes Wang <hayeswang@realtek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_ftp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/r8152.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_ftp.c b/net/netfilter/nf_conntrack_ftp.c
-index b666959f17c08..b7c13179fa40a 100644
---- a/net/netfilter/nf_conntrack_ftp.c
-+++ b/net/netfilter/nf_conntrack_ftp.c
-@@ -334,7 +334,7 @@ static int find_pattern(const char *data, size_t dlen,
- 		i++;
- 	}
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index 2d83689374bbb..10dd307593e89 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -671,8 +671,11 @@ int get_registers(struct r8152 *tp, u16 value, u16 index, u16 size, void *data)
+ 	ret = usb_control_msg(tp->udev, usb_rcvctrlpipe(tp->udev, 0),
+ 			      RTL8152_REQ_GET_REGS, RTL8152_REQT_READ,
+ 			      value, index, tmp, size, 500);
++	if (ret < 0)
++		memset(data, 0xff, size);
++	else
++		memcpy(data, tmp, size);
  
--	pr_debug("Skipped up to `%c'!\n", skip);
-+	pr_debug("Skipped up to 0x%hhx delimiter!\n", skip);
+-	memcpy(data, tmp, size);
+ 	kfree(tmp);
  
- 	*numoff = i;
- 	*numlen = getnum(data + i, dlen - i, cmd, term, numoff);
+ 	return ret;
 -- 
 2.20.1
 
