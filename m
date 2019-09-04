@@ -2,150 +2,79 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D57C6C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8764FC3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF8F20820
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E6C20820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbfIDM0i (ORCPT
+        id S1729893AbfIDM0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:26:38 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60328 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDM0i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:26:38 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i5UMR-0000kS-HM; Wed, 04 Sep 2019 22:26:08 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 04 Sep 2019 22:26:00 +1000
-Date:   Wed, 4 Sep 2019 22:26:00 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: PCI: Add stub pci_irq_vector and others
-Message-ID: <20190904122600.GA28660@gondor.apana.org.au>
-References: <20190902141910.1080-1-yuehaibing@huawei.com>
- <20190903014518.20880-1-yuehaibing@huawei.com>
- <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
- <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
+        Wed, 4 Sep 2019 08:26:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5759 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725938AbfIDM0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:26:44 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4A74BF3FA70A6108B030;
+        Wed,  4 Sep 2019 20:26:42 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Sep 2019
+ 20:26:33 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linux@prisktech.co.nz>, <b.zolnierkie@samsung.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-fbdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] fbdev: wm8505fb: use devm_platform_ioremap_resource() to simplify code
+Date:   Wed, 4 Sep 2019 20:01:32 +0800
+Message-ID: <20190904120132.25524-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 05:10:34AM -0700, Ard Biesheuvel wrote:
->
-> This is the reason we have so many empty static inline functions in
-> header files - it ensures that the symbols are declared even if the
-> only invocations are from dead code.
+Use devm_platform_ioremap_resource() to simplify the code a bit.
+This is detected by coccinelle.
 
-Does this patch work?
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/video/fbdev/wm8505fb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
----8<---
-This patch adds stub functions pci_alloc_irq_vectors_affinity and
-pci_irq_vector when CONFIG_PCI is off so that drivers can use them
-without resorting to ifdefs.
-
-It also moves the PCI_IRQ_* macros outside of the ifdefs so that
-they are always available.
-
-Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 9e700d9f9f28..74415ee62211 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -925,6 +925,11 @@ enum {
- 	PCI_SCAN_ALL_PCIE_DEVS	= 0x00000040,	/* Scan all, not just dev 0 */
- };
+diff --git a/drivers/video/fbdev/wm8505fb.c b/drivers/video/fbdev/wm8505fb.c
+index 17c7803..351d27b 100644
+--- a/drivers/video/fbdev/wm8505fb.c
++++ b/drivers/video/fbdev/wm8505fb.c
+@@ -261,7 +261,6 @@ static struct fb_ops wm8505fb_ops = {
+ static int wm8505fb_probe(struct platform_device *pdev)
+ {
+ 	struct wm8505fb_info	*fbi;
+-	struct resource	*res;
+ 	struct display_timings *disp_timing;
+ 	void			*addr;
+ 	int ret;
+@@ -299,8 +298,7 @@ static int wm8505fb_probe(struct platform_device *pdev)
+ 	addr = addr + sizeof(struct wm8505fb_info);
+ 	fbi->fb.pseudo_palette	= addr;
  
-+#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
-+#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
-+#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
-+#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
-+
- /* These external functions are only available when PCI support is enabled */
- #ifdef CONFIG_PCI
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	fbi->regbase = devm_ioremap_resource(&pdev->dev, res);
++	fbi->regbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(fbi->regbase))
+ 		return PTR_ERR(fbi->regbase);
  
-@@ -1408,11 +1413,6 @@ resource_size_t pcibios_window_alignment(struct pci_bus *bus,
- int pci_set_vga_state(struct pci_dev *pdev, bool decode,
- 		      unsigned int command_bits, u32 flags);
- 
--#define PCI_IRQ_LEGACY		(1 << 0) /* Allow legacy interrupts */
--#define PCI_IRQ_MSI		(1 << 1) /* Allow MSI interrupts */
--#define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
--#define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
--
- /*
-  * Virtual interrupts allow for more interrupts to be allocated
-  * than the device has interrupts for. These are not programmed
-@@ -1517,14 +1517,6 @@ static inline int pci_irq_get_node(struct pci_dev *pdev, int vec)
- }
- #endif
- 
--static inline int
--pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
--		      unsigned int max_vecs, unsigned int flags)
--{
--	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
--					      NULL);
--}
--
- /**
-  * pci_irqd_intx_xlate() - Translate PCI INTx value to an IRQ domain hwirq
-  * @d: the INTx IRQ domain
-@@ -1780,8 +1772,29 @@ static inline const struct pci_device_id *pci_match_id(const struct pci_device_i
- 							 struct pci_dev *dev)
- { return NULL; }
- static inline bool pci_ats_disabled(void) { return true; }
-+
-+static inline int pci_irq_vector(struct pci_dev *dev, unsigned int nr)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline int
-+pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
-+			       unsigned int max_vecs, unsigned int flags,
-+			       struct irq_affinity *aff_desc)
-+{
-+	return -ENOSPC;
-+}
- #endif /* CONFIG_PCI */
- 
-+static inline int
-+pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-+		      unsigned int max_vecs, unsigned int flags)
-+{
-+	return pci_alloc_irq_vectors_affinity(dev, min_vecs, max_vecs, flags,
-+					      NULL);
-+}
-+
- #ifdef CONFIG_PCI_ATS
- /* Address Translation Service */
- void pci_ats_init(struct pci_dev *dev);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.7.4
+
+
