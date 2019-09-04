@@ -2,167 +2,70 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD45EC3A5A2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB50C3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C19A207E0
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:45:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B812F21883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 03:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfIDDpu (ORCPT
+        id S1728108AbfIDDt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Sep 2019 23:45:50 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:42584 "EHLO mail5.wrs.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfIDDpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Sep 2019 23:45:49 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x843iPe2010272
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Tue, 3 Sep 2019 20:44:35 -0700
-Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 3 Sep
- 2019 20:44:14 -0700
-Subject: Re: Bug Report: Btrfs can't allocate space for delete when block size
- arounds 512M
-To:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <josef@toxicpanda.com>, <dsterba@suse.com>
-References: <b501bcff-8be0-4303-8789-363fda4658e5@windriver.com>
- <3eca92d0-5a57-3fff-63e1-edd3217341d5@windriver.com>
-From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
-Message-ID: <780c3a4f-23da-45d1-6ada-26b7a380e0c2@windriver.com>
-Date:   Wed, 4 Sep 2019 11:44:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 3 Sep 2019 23:49:28 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55714 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726770AbfIDDt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Sep 2019 23:49:27 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5BD1BE39B1A16764AF13;
+        Wed,  4 Sep 2019 11:49:25 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Sep 2019 11:49:18 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+To:     <davem@davemloft.net>, <kvalo@codeaurora.org>, <pkshih@realtek.com>
+CC:     <zhongjiang@huawei.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/3] net: remove an redundant continue
+Date:   Wed, 4 Sep 2019 11:46:21 +0800
+Message-ID: <1567568784-9669-1-git-send-email-zhongjiang@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <3eca92d0-5a57-3fff-63e1-edd3217341d5@windriver.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.188]
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I remake the test case to be more simply.
+With the help of Coccinelle. we find some place to replace.
 
-And the send the new email.
+@@
 
-Thanks,
+for (...;...;...) {
+   ...
+   if (...) {
+     ...
+-   continue;
+   }
+}
 
---Hongzhi
 
+zhong jiang (3):
+  rtlwifi: Remove an unnecessary continue in
+    _rtl8723be_phy_config_bb_with_pgheaderfile
+  nfp: Drop unnecessary continue in nfp_net_pf_alloc_vnics
+  ath10k: Drop unnecessary continue in ath10k_mac_update_vif_chan
 
-On 9/4/19 10:36 AM, Hongzhi, Song wrote:
-> Anybody notice this?
->
-> --Hongzhi
->
->
-> On 7/17/19 4:34 PM, Hongzhi, Song wrote:
->> Hi friends,
->>
->> *Description:*
->>
->>
->>     One LTP testcase, fs_fill.c, fails on btrfs with kernel error 
->> when unlink files on Btrfs device:
->>
->>     "BTRFS warning (device loop0): could not allocate space for a 
->> delete; will truncate on mount".
->>
->>
->>     I found the loop block device formatted with btrfs roughly rangs 
->> from 460M to 560M will cause the error.
->>
->>     256M and 1G all pass.
->>
->>
->>     The fs_fill.c source code:
->>
->> [https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/fs_fill/fs_fill.c] 
->>
->>
->>     The fs_fill.c calls unlink which triggers the error.
->>
->> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/testcases/kernel/fs/fs_fill/fs_fill.c#L55] 
->>
->>
->> [https://github.com/linux-test-project/ltp/blob/e3457e42c1b93f54bb81da746eba314fd34ad40e/lib/safe_macros.c#L358] 
->>
->>
->>
->> *Error info:*
->>
->>     The issue maybe not reproduced everytime but four fifths chance.
->>
->>     fs_fill.c:53: INFO: Unlinking mntpoint/thread5/file0
->>     safe_macros.c:360: BROK: fs_fill.c:55: 
->> unlink(mntpoint/thread10/file0) failed: ENOSPC
->>     safe_macros.c:360: BROK: fs_fill.c:55: 
->> unlink(mntpoint/thread11/file0) failed: ENOSPC
->>     [62477.378848] BTRFS warning (device loop0): could not allocate 
->> space for a delete; will truncate on mount
->>     [62477.378905] BTRFS warning (device loop0): could not allocate 
->> space for a delete; will truncate on mount
->>
->>
->>
->> *Kernel:*
->>
->>     After v5.2-rc1, qemux86-64
->>
->>     # make -j40 ARCH=x86_64 CROSS_COMPILE=x86-64-gcc
->>     use qemu to bootup kernel
->>
->>
->> *LTP:*
->>
->>     master branch: I tested on 20190625
->>     Reproduce:
->>
->>     // build Ltp
->>     # cd Ltp-source
->>     # ./build.sh
->>
->>     // copy files to qemu
->>     # cp runltp testcases/kernel/fs/fs_fill/fs_fill to qemu
->>
->>     // login to qemu:
->>     // adjust block device size to 512M
->>     # vi runltp
->>     in function: create_block()
->>         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=262144
->>         --->
->>         dd if=/dev/zero of=${TMP}/test.img bs=1024 count=524288
->>
->>     // execute testcase
->>     # runltp -f fs -s fs_fill
->>
->>
->> *Analysis:*
->>
->>     One new kernel commit contained in v5.2-rc1 introduces the issue.
->>
->>     commit c8eaeac7b734347c3afba7008b7af62f37b9c140
->>     Author: Josef Bacik <josef@toxicpanda.com>
->>     Date:   Wed Apr 10 15:56:10 2019 -0400
->>
->>         btrfs: reserve delalloc metadata differently
->>         ...
->>
->>
->> Anyone's reply will be appreciated.
->>
->> --Hongzhi
->>
->>
->>
->>
->>
->>
->
+ drivers/net/ethernet/netronome/nfp/nfp_net_main.c    | 4 +---
+ drivers/net/wireless/ath/ath10k/mac.c                | 4 +---
+ drivers/net/wireless/realtek/rtlwifi/rtl8723be/phy.c | 1 -
+ 3 files changed, 2 insertions(+), 7 deletions(-)
+
+-- 
+1.7.12.4
+
