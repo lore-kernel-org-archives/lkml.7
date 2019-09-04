@@ -5,53 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6CC5C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C78C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819C422CF7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D5D22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 17:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567619741;
-	bh=JdSjEyUhh5TbeyQIPddKuF11nDjV/fdzbvCoRy3LNR8=;
+	s=default; t=1567619744;
+	bh=yr4ch9rwju2SqQkK8tFH0pysm3ex2mVPb9iB2D/7cMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nW05BMw399fzZ4R2YOso/MCfj88JpcWfIb/V0c1tJBg8PEmHuNAdM3bOdDRtBURuv
-	 VUdDjvwHhGESHijPkRu3l0BnTroqaZjDfbZVh9zEPxqRsiFQw5EXnw/7rtxyWM3VcS
-	 l15SA69ZU2n3jbirdX/LWahfbJRjQrVW8FSajYnc=
+	b=AtV+Z+JHD8NgRQPRJCtfmRAsiy3aPrg1tHUlPLlzxCh4/B/AzaSTfykafJqTu8DE9
+	 BlJk9XgOTUhfopf7BkCW6ry+MxFXpO6wbq6VL1mkWo5+o7KiP/033Fqk4PVuK5Racp
+	 HbCHxgi0nexVkW64q+I9ax0lrpirC/R1qK4S/slo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732803AbfIDRzk (ORCPT
+        id S1732861AbfIDRzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 13:55:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60784 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 13:55:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732749AbfIDRzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 13:55:38 -0400
+        id S1732799AbfIDRzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 13:55:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 068B82339D;
-        Wed,  4 Sep 2019 17:55:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B045622CEA;
+        Wed,  4 Sep 2019 17:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567619737;
-        bh=JdSjEyUhh5TbeyQIPddKuF11nDjV/fdzbvCoRy3LNR8=;
+        s=default; t=1567619740;
+        bh=yr4ch9rwju2SqQkK8tFH0pysm3ex2mVPb9iB2D/7cMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X52XV70I36HvaUQ/hZlkvlWhsKrcIDMhyTGLHkiPR3SqvDiQ2RHnjqG6bb6xLFu/U
-         OkQSweF40LtbCkYRMbWdONXCGLwL1Qbz1Wvz0jC4jviF+GK1ZedKYNL0Uncl6n6Qp0
-         UAYK+Zl5q536pdr6LeH86xgONyc3p4AKnsfGGfZQ=
+        b=mJsQUIXGUNKlXAsoGFA5pp6cmvL+XcmNg8z6FIahpm2xCdrGSl4+ZODN2aIw1c7dT
+         h8CHr7GPmwD7HWh+Xx/4MwaWxihl+S9nXSpoK3zhP1uSH2CMIJxZUnNRexwYPeMVg9
+         zqfk0fV9oyF3kN2vyHaTijYJHuQJ2znF8e9mG79c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Willem de Bruijn <willemb@google.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 04/77] bonding: Force slave speed check after link state recovery for 802.3ad
-Date:   Wed,  4 Sep 2019 19:52:51 +0200
-Message-Id: <20190904175303.815046169@linuxfoundation.org>
+Subject: [PATCH 4.4 05/77] can: dev: call netif_carrier_off() in register_candev()
+Date:   Wed,  4 Sep 2019 19:52:52 +0200
+Message-Id: <20190904175303.919845972@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
 References: <20190904175303.317468926@linuxfoundation.org>
@@ -64,70 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 12185dfe44360f814ac4ead9d22ad2af7511b2e9 ]
+[ Upstream commit c63845609c4700488e5eacd6ab4d06d5d420e5ef ]
 
-The following scenario was encountered during testing of logical
-partition mobility on pseries partitions with bonded ibmvnic
-adapters in LACP mode.
+CONFIG_CAN_LEDS is deprecated. When trying to use the generic netdev
+trigger as suggested, there's a small inconsistency with the link
+property: The LED is on initially, stays on when the device is brought
+up, and then turns off (as expected) when the device is brought down.
 
-1. Driver receives a signal that the device has been
-   swapped, and it needs to reset to initialize the new
-   device.
+Make sure the LED always reflects the state of the CAN device.
 
-2. Driver reports loss of carrier and begins initialization.
-
-3. Bonding driver receives NETDEV_CHANGE notifier and checks
-   the slave's current speed and duplex settings. Because these
-   are unknown at the time, the bond sets its link state to
-   BOND_LINK_FAIL and handles the speed update, clearing
-   AD_PORT_LACP_ENABLE.
-
-4. Driver finishes recovery and reports that the carrier is on.
-
-5. Bond receives a new notification and checks the speed again.
-   The speeds are valid but miimon has not altered the link
-   state yet.  AD_PORT_LACP_ENABLE remains off.
-
-Because the slave's link state is still BOND_LINK_FAIL,
-no further port checks are made when it recovers. Though
-the slave devices are operational and have valid speed
-and duplex settings, the bond will not send LACPDU's. The
-simplest fix I can see is to force another speed check
-in bond_miimon_commit. This way the bond will update
-AD_PORT_LACP_ENABLE if needed when transitioning from
-BOND_LINK_FAIL to BOND_LINK_UP.
-
-CC: Jarod Wilson <jarod@redhat.com>
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/can/dev.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index 168f2331194ff..fd6aff9f0052e 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -2081,6 +2081,15 @@ static void bond_miimon_commit(struct bonding *bond)
- 	bond_for_each_slave(bond, slave, iter) {
- 		switch (slave->new_link) {
- 		case BOND_LINK_NOCHANGE:
-+			/* For 802.3ad mode, check current slave speed and
-+			 * duplex again in case its port was disabled after
-+			 * invalid speed/duplex reporting but recovered before
-+			 * link monitoring could make a decision on the actual
-+			 * link status
-+			 */
-+			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
-+			    slave->link == BOND_LINK_UP)
-+				bond_3ad_adapter_speed_duplex_changed(slave);
- 			continue;
- 
- 		case BOND_LINK_UP:
+diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+index 8b7c6425b681d..9dd968ee792e0 100644
+--- a/drivers/net/can/dev.c
++++ b/drivers/net/can/dev.c
+@@ -1065,6 +1065,8 @@ static struct rtnl_link_ops can_link_ops __read_mostly = {
+ int register_candev(struct net_device *dev)
+ {
+ 	dev->rtnl_link_ops = &can_link_ops;
++	netif_carrier_off(dev);
++
+ 	return register_netdev(dev);
+ }
+ EXPORT_SYMBOL_GPL(register_candev);
 -- 
 2.20.1
 
