@@ -2,131 +2,236 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF61C3A5A7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3767C3A5A7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F4822DBF
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C8C320820
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 12:27:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yaru825M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfIDM1I (ORCPT
+        id S1729968AbfIDM1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 08:27:08 -0400
-Received: from mga09.intel.com ([134.134.136.24]:49461 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfIDM1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 08:27:08 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 05:27:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,465,1559545200"; 
-   d="scan'208";a="382496209"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Sep 2019 05:27:05 -0700
-Received: from andy by smile with local (Exim 4.92.1)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1i5UNM-0000iu-Hy; Wed, 04 Sep 2019 15:27:04 +0300
-Date:   Wed, 4 Sep 2019 15:27:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Chris Chiu <chiu@endlessm.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH] mfd: intel-lpss: Add default I2C device properties for
- Gemini Lake
-Message-ID: <20190904122704.GJ2680@smile.fi.intel.com>
-References: <20190904055625.12037-1-jarkko.nikula@linux.intel.com>
+        Wed, 4 Sep 2019 08:27:35 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35305 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729122AbfIDM1e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 08:27:34 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n10so3515831wmj.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 05:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6NZ96D9puEHxfzquVc6He7xf5nQpmZ8JSWavhp3HobU=;
+        b=Yaru825MEoJOrDpdYOPMTkVcccBcPenEdQ38DAGjE1qc4fRskhwLtC4sJyTty778D5
+         Uva/akBI4ltEngcEiL8vK8QLEMSP8DStf2kuaEYfuxb59YZzk6I+it15TzFgudqSIvm/
+         JYpzqxdJcD9EL+6GNXO/cyWhsQ14m8hncM7bmi+RTx5+S797gfEX5t2+OzH4n+ct+r/z
+         6FZ/weoORBRjeNqBDdaPoxQkdkoxGF8yahuvLAse5qJrS6lwTsTBOhtBCaZdOqn9veCO
+         MQ+IroPD1KkuKJJH2ArS+/EAJfr5baX4eVXajylVTqGhD5eDTRm0JuGROl9JrnJVlMfb
+         b0iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6NZ96D9puEHxfzquVc6He7xf5nQpmZ8JSWavhp3HobU=;
+        b=ufS8nT3juIVFKFKUCJOy6gZQ1hhjPku+4vWB6GwUDe0dZpE5/3teAVhU7ixZOY14uC
+         zxyaIlUC+lrxYL6NHGO6sJQUPmMfNbRwZWMoJKRN6gOPb9P0HJbw0CoJWR1BNi5pv3/z
+         N4G3aLKWctOMKERRVOpaeydun00cPeEfO8hndvkvGr48niOpEbbzEz8LaS7K/vKJvTM3
+         iPPDneGLsFOUfpz07T5Lyi/1p3fNKTXqyYPWo6iZRLy66cCiUvjipzSIlxiU3PrbxdJN
+         AqUL/Gcp8C+SG6lSOYFm3UzzG0Nv0vtGldVFR9GFOM62ixg+pCfDVvv4kqr40usrAsHV
+         k/eQ==
+X-Gm-Message-State: APjAAAUD/r9FNuaP//c6wOz+YOKCeVKOdnmPqu5ZhNOKh3Clu8Iuif8O
+        zifAdRsSfDiAIq0N7cp5aINzoF3JJkiBV/LEOktj3A==
+X-Google-Smtp-Source: APXvYqzGSenGL1fOlhaP3eM0Wsxh9RQpnRMxJXsQ9c/jnvFT1eATCwySYBcKoufjBaezNjWYU7RdZ9CpNR/9m9WlHbc=
+X-Received: by 2002:a1c:2546:: with SMTP id l67mr4370373wml.10.1567600051587;
+ Wed, 04 Sep 2019 05:27:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904055625.12037-1-jarkko.nikula@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190902141910.1080-1-yuehaibing@huawei.com> <20190903014518.20880-1-yuehaibing@huawei.com>
+ <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com> <MN2PR20MB297342698B98343D49FC2C82CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+In-Reply-To: <MN2PR20MB297342698B98343D49FC2C82CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Wed, 4 Sep 2019 05:27:19 -0700
+Message-ID: <CAKv+Gu_EA8-=Vc3aAdJSz7399Y5WBeKNjw_T3LEq7yOY2XQ+BA@mail.gmail.com>
+Subject: Re: [PATCH v2 -next] crypto: inside-secure - Fix build error without CONFIG_PCI
+To:     Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 08:56:25AM +0300, Jarkko Nikula wrote:
-> It turned out Intel Gemini Lake doesn't use the same I2C timing
-> parameters as Broxton.
-> 
-> I got confirmation from the Windows team that Gemini Lake systems should
-> use updated timing parameters that differ from those used in Broxton
-> based systems.
-> 
+On Wed, 4 Sep 2019 at 05:25, Pascal Van Leeuwen
+<pvanleeuwen@verimatrix.com> wrote:
+>
+> > -----Original Message-----
+> > From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Sent: Wednesday, September 4, 2019 2:11 PM
+> > To: Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>
+> > Cc: YueHaibing <yuehaibing@huawei.com>; antoine.tenart@bootlin.com;
+> > herbert@gondor.apana.org.au; davem@davemloft.net; pvanleeuwen@insidesecure.com; linux-
+> > crypto@vger.kernel.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH v2 -next] crypto: inside-secure - Fix build error without CONFIG_PCI
+> >
+> > On Wed, 4 Sep 2019 at 04:57, Pascal Van Leeuwen
+> > <pvanleeuwen@verimatrix.com> wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: linux-crypto-owner@vger.kernel.org <linux-crypto-owner@vger.kernel.org> On
+> > Behalf Of
+> > > > YueHaibing
+> > > > Sent: Tuesday, September 3, 2019 3:45 AM
+> > > > To: antoine.tenart@bootlin.com; herbert@gondor.apana.org.au; davem@davemloft.net;
+> > > > pvanleeuwen@insidesecure.com
+> > > > Cc: linux-crypto@vger.kernel.org; linux-kernel@vger.kernel.org; YueHaibing
+> > > > <yuehaibing@huawei.com>
+> > > > Subject: [PATCH v2 -next] crypto: inside-secure - Fix build error without CONFIG_PCI
+> > > >
+> > > > If CONFIG_PCI is not set, building fails:
+> > > >
+> > > > rivers/crypto/inside-secure/safexcel.c: In function safexcel_request_ring_irq:
+> > > > drivers/crypto/inside-secure/safexcel.c:944:9: error: implicit declaration of function
+> > > > pci_irq_vector;
+> > > >  did you mean rcu_irq_enter? [-Werror=implicit-function-declaration]
+> > > >    irq = pci_irq_vector(pci_pdev, irqid);
+> > > >          ^~~~~~~~~~~~~~
+> > > >
+> > > > Use #ifdef block to guard this.
+> > > >
+> > > Actually, this is interesting. My *original* implementation was using
+> > > straight #ifdefs, but then I got review feedback stating that I should not
+> > > do that, as it's not compile testable, suggesting to use regular C if's
+> > > instead. Then there was quite some back-and-forth on the actual
+> > > implementation and I ended up with this.
+> > >
+> > > So now it turns out that doesn't work and I'm suggested to go full-circle
+> > > back to straight #ifdef's? Or is there some other way to make this work?
+> > > Because I don't know where to go from here ...
+> > >
+> >
+> >
+> > C conditionals are preferred over preprocessor conditional, but if the
+> > conditional code refers to symbols that are not declared when the
+> > Kconfig symbol is not defined, preprocessor conditionals are the only
+> > option.
+> >
+> Sure, I get that. But I *had* the #ifdef's and then other people told me
+> to get rid of them. How is one supposed to know when which symbols are
+> declared exactly? Moreover, I feel that if #ifdef's are sometimes the
+> only way, then you should be careful providing feedback on the subject.
+>
 
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+If you compile your code with and without the Kconfig symbol defined,
+the compiler will tell you if there is a problem or not.
 
-> Fixes: f80e78aa11ad ("mfd: intel-lpss: Add Intel Gemini Lake PCI IDs")
-> Tested-by: Chris Chiu <chiu@endlessm.com>
-> Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> ---
-> This is not immediate stable material since there is no regression
-> related to this. Those machines that need updated parameters have
-> obviously never worked and I don't want this to cause regression either
-> so better to let this get some test coverage first.
-> ---
->  drivers/mfd/intel-lpss-pci.c | 28 ++++++++++++++++++++--------
->  1 file changed, 20 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-> index ade6e1ce5a98..269cb851a596 100644
-> --- a/drivers/mfd/intel-lpss-pci.c
-> +++ b/drivers/mfd/intel-lpss-pci.c
-> @@ -120,6 +120,18 @@ static const struct intel_lpss_platform_info apl_i2c_info = {
->  	.properties = apl_i2c_properties,
->  };
->  
-> +static struct property_entry glk_i2c_properties[] = {
-> +	PROPERTY_ENTRY_U32("i2c-sda-hold-time-ns", 313),
-> +	PROPERTY_ENTRY_U32("i2c-sda-falling-time-ns", 171),
-> +	PROPERTY_ENTRY_U32("i2c-scl-falling-time-ns", 290),
-> +	{ },
-> +};
-> +
-> +static const struct intel_lpss_platform_info glk_i2c_info = {
-> +	.clk_rate = 133000000,
-> +	.properties = glk_i2c_properties,
-> +};
-> +
->  static const struct intel_lpss_platform_info cnl_i2c_info = {
->  	.clk_rate = 216000000,
->  	.properties = spt_i2c_properties,
-> @@ -172,14 +184,14 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
->  	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
->  	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
->  	/* GLK */
-> -	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&bxt_i2c_info },
-> -	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&bxt_i2c_info },
-> -	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&bxt_i2c_info },
-> -	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&bxt_i2c_info },
-> -	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&bxt_i2c_info },
-> -	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&bxt_i2c_info },
-> -	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&bxt_i2c_info },
-> -	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&bxt_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31b0), (kernel_ulong_t)&glk_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31b2), (kernel_ulong_t)&glk_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31b4), (kernel_ulong_t)&glk_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31b6), (kernel_ulong_t)&glk_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31b8), (kernel_ulong_t)&glk_i2c_info },
-> +	{ PCI_VDEVICE(INTEL, 0x31ba), (kernel_ulong_t)&glk_i2c_info },
->  	{ PCI_VDEVICE(INTEL, 0x31bc), (kernel_ulong_t)&bxt_uart_info },
->  	{ PCI_VDEVICE(INTEL, 0x31be), (kernel_ulong_t)&bxt_uart_info },
->  	{ PCI_VDEVICE(INTEL, 0x31c0), (kernel_ulong_t)&bxt_uart_info },
-> -- 
-> 2.23.0.rc1
-> 
+> > This is the reason we have so many empty static inline functions in
+> > header files - it ensures that the symbols are declared even if the
+> > only invocations are from dead code.
+> >
+> This ties back into my previous question: how am I supposed to know whether
+> stuff is nicely covered by these empty static inlines or not? If this
+> happens to be a hit-and-miss affair.
+>
 
--- 
-With Best Regards,
-Andy Shevchenko
+Indeed.
 
+> Note that I tested the code with the 2 platforms at my disposal - actually
+> the only 2 relevant platforms for this driver, if you ask me - and they
+> both compiled just fine, so I had no way of finding this "problem" myself.
+>
 
+Did you try disabling CONFIG_PCI?
+
+> >
+> > > > Fixes: 625f269a5a7a ("crypto: inside-secure - add support for PCI based FPGA
+> > development
+> > > > board")
+> > > > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > > > ---
+> > > > v2: use 'ifdef' instead of 'IS_ENABLED'
+> > > > ---
+> > > >  drivers/crypto/inside-secure/safexcel.c | 13 ++++++++++---
+> > > >  1 file changed, 10 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/crypto/inside-secure/safexcel.c b/drivers/crypto/inside-
+> > > > secure/safexcel.c
+> > > > index e12a2a3..5253900 100644
+> > > > --- a/drivers/crypto/inside-secure/safexcel.c
+> > > > +++ b/drivers/crypto/inside-secure/safexcel.c
+> > > > @@ -937,7 +937,8 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+> > > >       int ret, irq;
+> > > >       struct device *dev;
+> > > >
+> > > > -     if (IS_ENABLED(CONFIG_PCI) && is_pci_dev) {
+> > > > +#ifdef CONFIG_PCI
+> > > > +     if (is_pci_dev) {
+> > > >               struct pci_dev *pci_pdev = pdev;
+> > > >
+> > > >               dev = &pci_pdev->dev;
+> > > > @@ -947,7 +948,10 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+> > > >                               irqid, irq);
+> > > >                       return irq;
+> > > >               }
+> > > > -     } else if (IS_ENABLED(CONFIG_OF)) {
+> > > > +     } else
+> > > > +#endif
+> > > > +     {
+> > > > +#ifdef CONFIG_OF
+> > > >               struct platform_device *plf_pdev = pdev;
+> > > >               char irq_name[6] = {0}; /* "ringX\0" */
+> > > >
+> > > > @@ -960,6 +964,7 @@ static int safexcel_request_ring_irq(void *pdev, int irqid,
+> > > >                               irq_name, irq);
+> > > >                       return irq;
+> > > >               }
+> > > > +#endif
+> > > >       }
+> > > >
+> > > >       ret = devm_request_threaded_irq(dev, irq, handler,
+> > > > @@ -1137,7 +1142,8 @@ static int safexcel_probe_generic(void *pdev,
+> > > >
+> > > >       safexcel_configure(priv);
+> > > >
+> > > > -     if (IS_ENABLED(CONFIG_PCI) && priv->version == EIP197_DEVBRD) {
+> > > > +#ifdef CONFIG_PCI
+> > > > +     if (priv->version == EIP197_DEVBRD) {
+> > > >               /*
+> > > >                * Request MSI vectors for global + 1 per ring -
+> > > >                * or just 1 for older dev images
+> > > > @@ -1153,6 +1159,7 @@ static int safexcel_probe_generic(void *pdev,
+> > > >                       return ret;
+> > > >               }
+> > > >       }
+> > > > +#endif
+> > > >
+> > > >       /* Register the ring IRQ handlers and configure the rings */
+> > > >       priv->ring = devm_kcalloc(dev, priv->config.rings,
+> > > > --
+> > > > 2.7.4
+> > > >
+> > >
+> > > Regards,
+> > > Pascal van Leeuwen
+> > > Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
+> > > www.insidesecure.com
+>
+> Regards,
+> Pascal van Leeuwen
+> Silicon IP Architect, Multi-Protocol Engines @ Verimatrix
+> www.insidesecure.com
+>
