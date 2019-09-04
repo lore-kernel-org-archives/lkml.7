@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7838BC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E23C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A3522CF5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D0C22CEA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620059;
-	bh=XqceKEptIwGk8H5m03WkbUCfHdSr+UUp3TD51WBICh0=;
+	s=default; t=1567620063;
+	bh=BfhlLiLUo+otcdw2PhxmxNxKrM1EJHiwJIqAWc5ijxc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L7q6w783//bQZIW4VOEInWSH5+zaYpMokCnqAWvnn4Kf+D54cpiJ2fiGGC8yKH22u
-	 PrfxflOiTdZHFALjwMhcGuo9WEqTWbxq24e8Gn65mi9d1Cikn4FkSXme4yn3kX1lE/
-	 ntPLzkxjTejZXXLV77nhW4Ru4XZf5HkDMIdk3KOI=
+	b=LWb9EW0sSHgJC+acqqCtbn+g6uF1cwFp2StLs+KLo4z0WV/Lsq0cpUpuXGKkRV3Ex
+	 VbPrjoZ9vELvaRSMEPCqWeCYO4n3wFFSJU/ivfl0b0IFsgKx257Su7gkNnPb1QzeFO
+	 g8sMLI08Ta/ZWxynzs3zqp+C0Y/wbrtVXq97fYts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388483AbfIDSA6 (ORCPT
+        id S2387921AbfIDSBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40312 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388473AbfIDSA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:00:56 -0400
+        id S2387777AbfIDSA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:00:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82D8122CF5;
-        Wed,  4 Sep 2019 18:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D99721883;
+        Wed,  4 Sep 2019 18:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620055;
-        bh=XqceKEptIwGk8H5m03WkbUCfHdSr+UUp3TD51WBICh0=;
+        s=default; t=1567620057;
+        bh=BfhlLiLUo+otcdw2PhxmxNxKrM1EJHiwJIqAWc5ijxc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3LQsmX7bp/D+Hnrny87fuCYUhhU3dzkWO4opT7HY0mWOzR0CzjLyAQzkKaRZBgOx
-         E0/F6aqZe13ofLwHehJ0BgOFtYHTX2YDmluE8a1Fivhu+g6e1kCjLLGR933/nwFotA
-         mPiVgZqkCoAApz8t2Zfv+Jq97+rcN2Mmy0CS0BrM=
+        b=GQVvVxE+uQqK0KUMvJ/3qNr2D81LH9x35XoD2bsg1us8ys52AZfGHx53Sk8x7nCd6
+         r2ShakgSAbd/KsB2zNn3a+zEFfBR0wWSWWFRxIG2KD1i+c5eW3e9sJEv2rVFF4UBxv
+         7s00dNKAJm4AjwbfOadXEBHfeZI/N2QXKvGRl46c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
         Mathias Payer <mathias.payer@nebelwelt.net>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 56/83] ALSA: usb-audio: Fix a stack buffer overflow bug in check_input_term
-Date:   Wed,  4 Sep 2019 19:53:48 +0200
-Message-Id: <20190904175308.494095805@linuxfoundation.org>
+Subject: [PATCH 4.9 57/83] ALSA: usb-audio: Fix an OOB bug in parse_audio_mixer_unit
+Date:   Wed,  4 Sep 2019 19:53:49 +0200
+Message-Id: <20190904175308.585489773@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -62,102 +62,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hui Peng <benquike@gmail.com>
 
-commit 19bce474c45be69a284ecee660aa12d8f1e88f18 upstream.
+commit daac07156b330b18eb5071aec4b3ddca1c377f2c upstream.
 
-`check_input_term` recursively calls itself with input from
-device side (e.g., uac_input_terminal_descriptor.bCSourceID)
-as argument (id). In `check_input_term`, if `check_input_term`
-is called with the same `id` argument as the caller, it triggers
-endless recursive call, resulting kernel space stack overflow.
+The `uac_mixer_unit_descriptor` shown as below is read from the
+device side. In `parse_audio_mixer_unit`, `baSourceID` field is
+accessed from index 0 to `bNrInPins` - 1, the current implementation
+assumes that descriptor is always valid (the length  of descriptor
+is no shorter than 5 + `bNrInPins`). If a descriptor read from
+the device side is invalid, it may trigger out-of-bound memory
+access.
 
-This patch fixes the bug by adding a bitmap to `struct mixer_build`
-to keep track of the checked ids and stop the execution if some id
-has been checked (similar to how parse_audio_unit handles unitid
-argument).
+```
+struct uac_mixer_unit_descriptor {
+	__u8 bLength;
+	__u8 bDescriptorType;
+	__u8 bDescriptorSubtype;
+	__u8 bUnitID;
+	__u8 bNrInPins;
+	__u8 baSourceID[];
+}
+```
+
+This patch fixes the bug by add a sanity check on the length of
+the descriptor.
 
 Reported-by: Hui Peng <benquike@gmail.com>
 Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
 Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Peng <benquike@gmail.com>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- sound/usb/mixer.c |   29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ sound/usb/mixer.c |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/sound/usb/mixer.c
 +++ b/sound/usb/mixer.c
-@@ -82,6 +82,7 @@ struct mixer_build {
- 	unsigned char *buffer;
- 	unsigned int buflen;
- 	DECLARE_BITMAP(unitbitmap, MAX_ID_ELEMS);
-+	DECLARE_BITMAP(termbitmap, MAX_ID_ELEMS);
- 	struct usb_audio_term oterm;
- 	const struct usbmix_name_map *map;
- 	const struct usbmix_selector_map *selector_map;
-@@ -710,15 +711,24 @@ static int get_term_name(struct mixer_bu
-  * parse the source unit recursively until it reaches to a terminal
-  * or a branched unit.
-  */
--static int check_input_term(struct mixer_build *state, int id,
-+static int __check_input_term(struct mixer_build *state, int id,
- 			    struct usb_audio_term *term)
- {
- 	int err;
- 	void *p1;
-+	unsigned char *hdr;
+@@ -1713,6 +1713,7 @@ static int parse_audio_mixer_unit(struct
+ 	int pin, ich, err;
  
- 	memset(term, 0, sizeof(*term));
--	while ((p1 = find_audio_control_unit(state, id)) != NULL) {
--		unsigned char *hdr = p1;
-+	for (;;) {
-+		/* a loop in the terminal chain? */
-+		if (test_and_set_bit(id, state->termbitmap))
-+			return -EINVAL;
-+
-+		p1 = find_audio_control_unit(state, id);
-+		if (!p1)
-+			break;
-+
-+		hdr = p1;
- 		term->id = id;
- 		switch (hdr[2]) {
- 		case UAC_INPUT_TERMINAL:
-@@ -733,7 +743,7 @@ static int check_input_term(struct mixer
- 
- 				/* call recursively to verify that the
- 				 * referenced clock entity is valid */
--				err = check_input_term(state, d->bCSourceID, term);
-+				err = __check_input_term(state, d->bCSourceID, term);
- 				if (err < 0)
- 					return err;
- 
-@@ -765,7 +775,7 @@ static int check_input_term(struct mixer
- 		case UAC2_CLOCK_SELECTOR: {
- 			struct uac_selector_unit_descriptor *d = p1;
- 			/* call recursively to retrieve the channel info */
--			err = check_input_term(state, d->baSourceID[0], term);
-+			err = __check_input_term(state, d->baSourceID[0], term);
- 			if (err < 0)
- 				return err;
- 			term->type = d->bDescriptorSubtype << 16; /* virtual type */
-@@ -812,6 +822,15 @@ static int check_input_term(struct mixer
- 	return -ENODEV;
- }
- 
-+
-+static int check_input_term(struct mixer_build *state, int id,
-+			    struct usb_audio_term *term)
-+{
-+	memset(term, 0, sizeof(*term));
-+	memset(state->termbitmap, 0, sizeof(state->termbitmap));
-+	return __check_input_term(state, id, term);
-+}
-+
- /*
-  * Feature Unit
-  */
+ 	if (desc->bLength < 11 || !(input_pins = desc->bNrInPins) ||
++	    desc->bLength < sizeof(*desc) + desc->bNrInPins ||
+ 	    !(num_outs = uac_mixer_unit_bNrChannels(desc))) {
+ 		usb_audio_err(state->chip,
+ 			      "invalid MIXER UNIT descriptor %d\n",
 
 
