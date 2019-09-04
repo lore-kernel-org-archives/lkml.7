@@ -2,103 +2,148 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051C4C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14C7C3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CA022CED
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65662339D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 06:58:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ot/W1SSw"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CkOyAHvp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfIDG6b (ORCPT
+        id S1729015AbfIDG6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 4 Sep 2019 02:58:34 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43537 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728547AbfIDG6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Sep 2019 02:58:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55106 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728698AbfIDG6a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 02:58:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LwxsS++pYvYblfLkOvFV+VfFX2yFAI6VKMZ/fTRcumY=; b=ot/W1SSwfpc+eEBLUwAWhlt4SU
-        dXKCWlxEfLxw0dPp4+dAG3suK8kkl1aMP1YZNCrET86T5X1Z+Ku6FHG0bozaXjHNPiRDyjV4IICPz
-        j3v+usgopnYGFXFRpFXvyy2wvfx1+NNZZnP3sBiJrBbSV8HiAmLAmQ2PP8F3yOGrgtAGkJ1GKP2BR
-        JcxNKlyRl7gMZEiCIhXKsiR0yJ9lMwbbzde1AqTZ+ZcW3q2Nsn8Pw4dRzaRO2JlmTL25LIFTyIM62
-        7NopOya774u8tCEd3TaWGy2sPCRp1mpITKM/uescjcuaCmps8LqF7bqU4Jt1XW63JS6U9TNT1bgzY
-        lgw6o6zQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5PFH-0000kA-OD; Wed, 04 Sep 2019 06:58:23 +0000
-Date:   Tue, 3 Sep 2019 23:58:23 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        dri-devel@lists.freedesktop.org, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com, linux-kernel@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Subject: Re: [PATCH v2 1/4] x86/mm: Export force_dma_unencrypted
-Message-ID: <20190904065823.GA31794@infradead.org>
-References: <20190903131504.18935-1-thomas_os@shipmail.org>
- <20190903131504.18935-2-thomas_os@shipmail.org>
- <20190903134627.GA2951@infradead.org>
- <f85e7fa6-54e1-7ac5-ce6c-96349c7af322@shipmail.org>
- <20190903162204.GB23281@infradead.org>
- <558f1224-d157-5848-1752-1430a5b3947e@shipmail.org>
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46NZR85F6qz9s3Z;
+        Wed,  4 Sep 2019 16:58:28 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1567580309;
+        bh=+yGdAVnwyl5d/8gD6V7LzJIk4KofIDM7ZLazGYBBPek=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CkOyAHvpR+ngCGoTAbBThOv8Z7D10jM7RUL258rjOuaM0dp0z5Yz5/k4DORvfTvYL
+         91BuDtUSXdoCUzhDvj3BGJ/Cwt5QB5k3SQmaDgB6QwQCWkV6JPivFQWcfRcEMyHtS8
+         RNMUstuoHlt+aVZoGOVW7SsJi2NIWKLPny1QHs+Z7lFhO/++hRg3XyHBHr63Uf3DKd
+         Jq5hfRx21MIykUuPhOWmNRtQFqoh+gdu6AC9bp40A1RyWkewIMNweL8htqy3r5K60g
+         mwHCTnU32y/SRH0MNbqxv9DwO40ZEtZ7FXHNGmlVtxan5N8RAPKfcEdipGaQSOjkKX
+         66OAtCUcfae2w==
+Date:   Wed, 4 Sep 2019 16:58:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Subject: linux-next: manual merge of the amdgpu tree with the kbuild tree
+Message-ID: <20190904165828.72ad8583@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <558f1224-d157-5848-1752-1430a5b3947e@shipmail.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: multipart/signed; boundary="Sig_/bUan/zPyd4y4kT7AX18wOHM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 10:46:18PM +0200, Thomas Hellström (VMware) wrote:
-> What I mean with "from an engineering perspective" is that drivers would end
-> up with a non-trivial amount of code supporting purely academic cases:
-> Setups where software rendering would be faster than gpu accelerated, and
-> setups on platforms where the driver would never run anyway because the
-> device would never be supported on that platform...
+--Sig_/bUan/zPyd4y4kT7AX18wOHM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-And actually work on cases you previously called academic and which now
-matter to you because your employer has a suddent interest in SEV.
-Academic really is in the eye of the beholder (and of those who pay
-the bills).
+Hi all,
 
-> That is not really true. The dma API can't handle faulting of coherent pages
-> which is what this series is really all about supporting also with SEV
-> active. To handle the case where we move graphics buffers or send them to
-> swap space while user-space have them mapped.
+Today's linux-next merge of the amdgpu tree got a conflict in:
 
-And the only thing we need to support the fault handler is to add an
-offset to the dma_mmap_* APIs.  Which I had planned to do for Christian
-(one of the few grapics developers who actually tries to play well
-with the rest of the kernel instead of piling hacks over hacks like
-many others) anyway, but which hasn't happened yet.
+  drivers/gpu/drm/amd/display/dc/dml/Makefile
 
-> Still, I need a way forward and my questions weren't really answered by
-> this.
+between commit:
 
-This is pretty demanding.  If you "need" a way forward just work with
-all the relevant people instead of piling ob local hacks.
+  30851871d5ab ("kbuild: change *FLAGS_<basetarget>.o to take the path rela=
+tive to $(obj)")
+
+from the kbuild tree and commit:
+
+  b04641a3f4c5 ("drm/amd/display: Add Renoir DML")
+
+from the amdgpu tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/amd/display/dc/dml/Makefile
+index 289261b0de50,af2a864a6da0..000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+@@@ -36,16 -36,25 +36,20 @@@ ifdef CONFIG_CC_IS_CLAN
+  dml_ccflags +=3D -msse2
+  endif
+ =20
+ -CFLAGS_display_mode_lib.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o :=3D $(dml_ccflags)
+ =20
+  ifdef CONFIG_DRM_AMD_DC_DCN2_0
+ -CFLAGS_display_mode_vba.o :=3D $(dml_ccflags)
+ -CFLAGS_display_mode_vba_20.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_calc_20.o :=3D $(dml_ccflags)
+ -CFLAGS_display_mode_vba_20v2.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_calc_20v2.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o :=3D $(dml_ccflag=
+s)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o :=3D $(dml_ccf=
+lags)
+  endif
++ ifdef CONFIG_DRM_AMD_DC_DCN2_1
+ -CFLAGS_display_mode_vba_21.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_calc_21.o :=3D $(dml_ccflags)
+++CFLAGS_$(AMDDALPATH)dc/dml/dcn21/display_mode_vba_21.o :=3D $(dml_ccflags)
+++CFLAGS_$(AMDDALPATH)dc/dml/dcn21/display_rq_dlg_calc_21.o :=3D $(dml_ccfl=
+ags)
++ endif
+ -ifdef CONFIG_DRM_AMD_DCN3AG
+ -CFLAGS_display_mode_vba_3ag.o :=3D $(dml_ccflags)
+ -endif
+ -CFLAGS_dml1_display_rq_dlg_calc.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_helpers.o :=3D $(dml_ccflags)
+ -CFLAGS_dml_common_defs.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dml1_display_rq_dlg_calc.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/display_rq_dlg_helpers.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dml_common_defs.o :=3D $(dml_ccflags)
+ =20
+  DML =3D display_mode_lib.o display_rq_dlg_helpers.o dml1_display_rq_dlg_c=
+alc.o \
+  	dml_common_defs.o
+
+--Sig_/bUan/zPyd4y4kT7AX18wOHM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1vYJQACgkQAVBC80lX
+0Gwa4wf9Gh5ogsF9MVQZGX4Ts+E8DVdBHdw7EyVxhggTj3PC5GlPk7sbubiq5oqe
+WMGGUH8vN80bZCBy2qYO1UDDpiwIp3R/U9N+Vbln3KWUeBGrzsjHtCaBRwMXDPyz
+TjAvx0FzcuOVO0P0O4kUlSZybIyWsMJY4UGNKd6OVlnMMEplWIsv8r1tANdtL5sR
+RQ3kGUp74sx6ve/GrVNKaIl0u+x4Pen0S6/8BCeBpIU5u/zihi9Uee4R8vhF8FBO
+CaimGDMFaiIeXb68NaG2bwLZ+4kBurJk7tbRlYymZFwsBW5bAYIe9Q7MY0S5azNX
+L6/VN5V7QOcF9NfvtRoC4IhtafYqgw==
+=6Hw3
+-----END PGP SIGNATURE-----
+
+--Sig_/bUan/zPyd4y4kT7AX18wOHM--
