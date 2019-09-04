@@ -2,52 +2,51 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3172DC3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970BDC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E52022CEA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FEF23401
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620822;
-	bh=ynBtC09Evgr3eVUFBLyZhJcRTnkYVtUlu6SMzMg/fKE=;
+	s=default; t=1567620824;
+	bh=SIH8vaCU85oUl4d2SIKODjwMV8Xc/C/wfblyTo2v+6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rp6aHd8DV3T0feRCR9xmTR0tYippKygM29qi0hftekBVrgHve4kC6t2ixPKmibQ8s
-	 4RxQ5/3TChIS+LVdtV4oTjTtgttjC/1kNJLDt2c8m9Msbxu36lSOE4znW9xIWw55P/
-	 r2gm7xrejh9Vii/QamdQSZubsVE+/pzgyNXnXZJw=
+	b=ZR4fSyBtHrxW3/A3JkiLSC0JnHxhLBzk/aM1Cuptko80YhKpv7dxfNrdsYaIA/FRF
+	 bBmV50czSdpPQmdvJf/+1Y/YaVm82BI7GZN0d9d+c0nslEJI8HQziU7ziuJcj6Ov5h
+	 FHPykJNlhjcthNmpz9/1728njhr2F+j21h+8ymRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390314AbfIDSNl (ORCPT
+        id S2390330AbfIDSNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:13:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58534 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388984AbfIDSNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:13:37 -0400
+        id S2389777AbfIDSNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:13:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7884E208E4;
-        Wed,  4 Sep 2019 18:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2809122CEA;
+        Wed,  4 Sep 2019 18:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620817;
-        bh=ynBtC09Evgr3eVUFBLyZhJcRTnkYVtUlu6SMzMg/fKE=;
+        s=default; t=1567620819;
+        bh=SIH8vaCU85oUl4d2SIKODjwMV8Xc/C/wfblyTo2v+6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQDWHfjwGTCiIfRkVQW+AGVIyr4Na0rzeTneufJKX6LQfa+YJW64imj/2AU9+F3Fx
-         VOWpx9SItVEeI1MSuIMMhtZdYXWpEkiSCoqAz7O3grLo01VrxzESUguZbstgekMR9/
-         0leoVJoHV9PY5ErwXSGNJ3+qBlRZNA/4YqpT1IdQ=
+        b=loPHmErjFYKtjxXKS50FX2Vp/kbvdBNDc0MWNI1pnz7sWhTZcuCzFMwU0qHfUNcjz
+         1Fj7pFLC2Wk2zUi1yXgu4dwlU8UfVTkT7WB3t6R8QOQMkcMZ7HX27hY7GNTpHRV2Kc
+         fd9avBOc2b2Tt4o3XrZM8qmMX7YUBc4v0qxdQPR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kodanev <alexey.kodanev@oracle.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 055/143] ipv4: mpls: fix mpls_xmit for iptunnel
-Date:   Wed,  4 Sep 2019 19:53:18 +0200
-Message-Id: <20190904175316.228828422@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 5.2 100/143] intel_th: pci: Add Tiger Lake support
+Date:   Wed,  4 Sep 2019 19:54:03 +0200
+Message-Id: <20190904175318.198659037@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175314.206239922@linuxfoundation.org>
 References: <20190904175314.206239922@linuxfoundation.org>
@@ -60,44 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kodanev <alexey.kodanev@oracle.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-[ Upstream commit 803f3e22ae10003a83c781498c0ac34cfe3463ff ]
+commit 9c78255fdde45c6b9a1ee30f652f7b34c727f5c7 upstream.
 
-When using mpls over gre/gre6 setup, rt->rt_gw4 address is not set, the
-same for rt->rt_gw_family.  Therefore, when rt->rt_gw_family is checked
-in mpls_xmit(), neigh_xmit() call is skipped. As a result, such setup
-doesn't work anymore.
+This adds support for the Trace Hub in Tiger Lake PCH.
 
-This issue was found with LTP mpls03 tests.
-
-Fixes: 1550c171935d ("ipv4: Prepare rtable for IPv6 gateway")
-Signed-off-by: Alexey Kodanev <alexey.kodanev@oracle.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.14+
+Link: https://lore.kernel.org/r/20190821074955.3925-5-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/mpls/mpls_iptunnel.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/net/mpls/mpls_iptunnel.c
-+++ b/net/mpls/mpls_iptunnel.c
-@@ -133,12 +133,12 @@ static int mpls_xmit(struct sk_buff *skb
- 	mpls_stats_inc_outucastpkts(out_dev, skb);
+---
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -204,6 +204,11 @@ static const struct pci_device_id intel_
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x45c5),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	},
++	{
++		/* Tiger Lake PCH */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
++		.driver_data = (kernel_ulong_t)&intel_th_2x,
++	},
+ 	{ 0 },
+ };
  
- 	if (rt) {
--		if (rt->rt_gw_family == AF_INET)
--			err = neigh_xmit(NEIGH_ARP_TABLE, out_dev, &rt->rt_gw4,
--					 skb);
--		else if (rt->rt_gw_family == AF_INET6)
-+		if (rt->rt_gw_family == AF_INET6)
- 			err = neigh_xmit(NEIGH_ND_TABLE, out_dev, &rt->rt_gw6,
- 					 skb);
-+		else
-+			err = neigh_xmit(NEIGH_ARP_TABLE, out_dev, &rt->rt_gw4,
-+					 skb);
- 	} else if (rt6) {
- 		if (ipv6_addr_v4mapped(&rt6->rt6i_gateway)) {
- 			/* 6PE (RFC 4798) */
 
 
