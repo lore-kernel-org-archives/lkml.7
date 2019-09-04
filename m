@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79771C3A5A8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949FDC3A5A8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D04A23400
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1F521883
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 18:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567620107;
-	bh=0003ByG6b9O5NZSVw/xKA5MKM+Ca8Yf80dbdGezGKPI=;
+	s=default; t=1567620110;
+	bh=+53Q+EU2tryXha6WTapNQg8k7LYAIJZaIDagmdNGxg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=id9xm8BmS0NahUoUJzGWZUjukwqROgNguMUVNS/2uAJ4vJbICv+QPlugLFz5oJKul
-	 9gLub9aLc5gTMn96f3ihWD/lB6y8Q8TGTDsiFS9ir1fr0S+1f7r9JLJ6fJZvDBAcxp
-	 HNW9ZKf3FuMODqT9bSa7X0el2q+PWBpv+5J2HDAI=
+	b=c6d614uIVqTRQJvcp2Kuxkco/P6xO80vsmYg+QOhc50Os/J/IChyuOzxXd1sporMG
+	 xd5FPQmUh8TKK3LPuxGrE//6FS96sFrW40p6qValW1pvFaIb0+MNcKsbt/MPDMGsIK
+	 RcaCG6ZQrKEBVsB21/8BBT1snc2JO7TSk8zVRA/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388637AbfIDSBq (ORCPT
+        id S2388644AbfIDSBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 14:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41358 "EHLO mail.kernel.org"
+        Wed, 4 Sep 2019 14:01:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732774AbfIDSBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 14:01:44 -0400
+        id S2388633AbfIDSBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 14:01:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47A72208E4;
-        Wed,  4 Sep 2019 18:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED53922CEA;
+        Wed,  4 Sep 2019 18:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567620102;
-        bh=0003ByG6b9O5NZSVw/xKA5MKM+Ca8Yf80dbdGezGKPI=;
+        s=default; t=1567620105;
+        bh=+53Q+EU2tryXha6WTapNQg8k7LYAIJZaIDagmdNGxg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CuU4zEbXru2Sa3Y/2NmFN/gj22eZPhwE65vr+wbaPyds4YTahjwmBZIWE62BFije/
-         QE/Uq9rk5GkvDxyeEev2K2bdn42MDQt0fEAe+0i27LX54E71M3SxX0C5Ww0vOgSZJX
-         2atspVPbac9578EPz/de3jWhCv4q6rfW+pOgvlDA=
+        b=k2fhBu3pkqFBdk29HgR5/tAgPesZ9O2MfY/mXOiGeWvlgN35kzrKYFRAbU7AtpYe5
+         JYD6dfSf5jptger8zmBZOH/uX7jADpUsdfNpAfqwwHIlaTdTKPwMXVW3eJxVBiO5AQ
+         JhfsrjkTgYJ9gNBSwQnz6P9FNG4Q7riTXGzZMtpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 4.9 33/83] x86/retpoline: Dont clobber RFLAGS during CALL_NOSPEC on i386
-Date:   Wed,  4 Sep 2019 19:53:25 +0200
-Message-Id: <20190904175306.726785502@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.9 34/83] x86/apic: Handle missing global clockevent gracefully
+Date:   Wed,  4 Sep 2019 19:53:26 +0200
+Message-Id: <20190904175306.833293046@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
 References: <20190904175303.488266791@linuxfoundation.org>
@@ -61,79 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit b63f20a778c88b6a04458ed6ffc69da953d3a109 upstream.
+commit f897e60a12f0b9146357780d317879bce2a877dc upstream.
 
-Use 'lea' instead of 'add' when adjusting %rsp in CALL_NOSPEC so as to
-avoid clobbering flags.
+Some newer machines do not advertise legacy timers. The kernel can handle
+that situation if the TSC and the CPU frequency are enumerated by CPUID or
+MSRs and the CPU supports TSC deadline timer. If the CPU does not support
+TSC deadline timer the local APIC timer frequency has to be known as well.
 
-KVM's emulator makes indirect calls into a jump table of sorts, where
-the destination of the CALL_NOSPEC is a small blob of code that performs
-fast emulation by executing the target instruction with fixed operands.
+Some Ryzens machines do not advertize legacy timers, but there is no
+reliable way to determine the bus frequency which feeds the local APIC
+timer when the machine allows overclocking of that frequency.
 
-  adcb_al_dl:
-     0x000339f8 <+0>:   adc    %dl,%al
-     0x000339fa <+2>:   ret
+As there is no legacy timer the local APIC timer calibration crashes due to
+a NULL pointer dereference when accessing the not installed global clock
+event device.
 
-A major motiviation for doing fast emulation is to leverage the CPU to
-handle consumption and manipulation of arithmetic flags, i.e. RFLAGS is
-both an input and output to the target of CALL_NOSPEC.  Clobbering flags
-results in all sorts of incorrect emulation, e.g. Jcc instructions often
-take the wrong path.  Sans the nops...
+Switch the calibration loop to a non interrupt based one, which polls
+either TSC (if frequency is known) or jiffies. The latter requires a global
+clockevent. As the machines which do not have a global clockevent installed
+have a known TSC frequency this is a non issue. For older machines where
+TSC frequency is not known, there is no known case where the legacy timers
+do not exist as that would have been reported long ago.
 
-  asm("push %[flags]; popf; " CALL_NOSPEC " ; pushf; pop %[flags]\n"
-     0x0003595a <+58>:  mov    0xc0(%ebx),%eax
-     0x00035960 <+64>:  mov    0x60(%ebx),%edx
-     0x00035963 <+67>:  mov    0x90(%ebx),%ecx
-     0x00035969 <+73>:  push   %edi
-     0x0003596a <+74>:  popf
-     0x0003596b <+75>:  call   *%esi
-     0x000359a0 <+128>: pushf
-     0x000359a1 <+129>: pop    %edi
-     0x000359a2 <+130>: mov    %eax,0xc0(%ebx)
-     0x000359b1 <+145>: mov    %edx,0x60(%ebx)
-
-  ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK);
-     0x000359a8 <+136>: mov    -0x10(%ebp),%eax
-     0x000359ab <+139>: and    $0x8d5,%edi
-     0x000359b4 <+148>: and    $0xfffff72a,%eax
-     0x000359b9 <+153>: or     %eax,%edi
-     0x000359bd <+157>: mov    %edi,0x4(%ebx)
-
-For the most part this has gone unnoticed as emulation of guest code
-that can trigger fast emulation is effectively limited to MMIO when
-running on modern hardware, and MMIO is rarely, if ever, accessed by
-instructions that affect or consume flags.
-
-Breakage is almost instantaneous when running with unrestricted guest
-disabled, in which case KVM must emulate all instructions when the guest
-has invalid state, e.g. when the guest is in Big Real Mode during early
-BIOS.
-
-Fixes: 776b043848fd2 ("x86/retpoline: Add initial retpoline support")
-Fixes: 1a29b5b7f347a ("KVM: x86: Make indirect calls in emulator speculation safe")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reported-by: Daniel Drake <drake@endlessm.com>
+Reported-by: Jiri Slaby <jslaby@suse.cz>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Daniel Drake <drake@endlessm.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190822211122.27579-1-sean.j.christopherson@intel.com
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1908091443030.21433@nanos.tec.linutronix.de
+Link: http://bugzilla.opensuse.org/show_bug.cgi?id=1142926#c12
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/nospec-branch.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/apic/apic.c |   68 ++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 15 deletions(-)
 
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -196,7 +196,7 @@
- 	"    	lfence;\n"					\
- 	"       jmp    902b;\n"					\
- 	"       .align 16\n"					\
--	"903:	addl   $4, %%esp;\n"				\
-+	"903:	lea    4(%%esp), %%esp;\n"			\
- 	"       pushl  %[thunk_target];\n"			\
- 	"       ret;\n"						\
- 	"       .align 16\n"					\
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -629,7 +629,7 @@ static __initdata unsigned long lapic_ca
+ static __initdata unsigned long lapic_cal_j1, lapic_cal_j2;
+ 
+ /*
+- * Temporary interrupt handler.
++ * Temporary interrupt handler and polled calibration function.
+  */
+ static void __init lapic_cal_handler(struct clock_event_device *dev)
+ {
+@@ -713,7 +713,8 @@ calibrate_by_pmtimer(long deltapm, long
+ static int __init calibrate_APIC_clock(void)
+ {
+ 	struct clock_event_device *levt = this_cpu_ptr(&lapic_events);
+-	void (*real_handler)(struct clock_event_device *dev);
++	u64 tsc_perj = 0, tsc_start = 0;
++	unsigned long jif_start;
+ 	unsigned long deltaj;
+ 	long delta, deltatsc;
+ 	int pm_referenced = 0;
+@@ -742,29 +743,65 @@ static int __init calibrate_APIC_clock(v
+ 	apic_printk(APIC_VERBOSE, "Using local APIC timer interrupts.\n"
+ 		    "calibrating APIC timer ...\n");
+ 
++	/*
++	 * There are platforms w/o global clockevent devices. Instead of
++	 * making the calibration conditional on that, use a polling based
++	 * approach everywhere.
++	 */
+ 	local_irq_disable();
+ 
+-	/* Replace the global interrupt handler */
+-	real_handler = global_clock_event->event_handler;
+-	global_clock_event->event_handler = lapic_cal_handler;
+-
+ 	/*
+ 	 * Setup the APIC counter to maximum. There is no way the lapic
+ 	 * can underflow in the 100ms detection time frame
+ 	 */
+ 	__setup_APIC_LVTT(0xffffffff, 0, 0);
+ 
+-	/* Let the interrupts run */
++	/*
++	 * Methods to terminate the calibration loop:
++	 *  1) Global clockevent if available (jiffies)
++	 *  2) TSC if available and frequency is known
++	 */
++	jif_start = READ_ONCE(jiffies);
++
++	if (tsc_khz) {
++		tsc_start = rdtsc();
++		tsc_perj = div_u64((u64)tsc_khz * 1000, HZ);
++	}
++
++	/*
++	 * Enable interrupts so the tick can fire, if a global
++	 * clockevent device is available
++	 */
+ 	local_irq_enable();
+ 
+-	while (lapic_cal_loops <= LAPIC_CAL_LOOPS)
+-		cpu_relax();
++	while (lapic_cal_loops <= LAPIC_CAL_LOOPS) {
++		/* Wait for a tick to elapse */
++		while (1) {
++			if (tsc_khz) {
++				u64 tsc_now = rdtsc();
++				if ((tsc_now - tsc_start) >= tsc_perj) {
++					tsc_start += tsc_perj;
++					break;
++				}
++			} else {
++				unsigned long jif_now = READ_ONCE(jiffies);
++
++				if (time_after(jif_now, jif_start)) {
++					jif_start = jif_now;
++					break;
++				}
++			}
++			cpu_relax();
++		}
++
++		/* Invoke the calibration routine */
++		local_irq_disable();
++		lapic_cal_handler(NULL);
++		local_irq_enable();
++	}
+ 
+ 	local_irq_disable();
+ 
+-	/* Restore the real event handler */
+-	global_clock_event->event_handler = real_handler;
+-
+ 	/* Build delta t1-t2 as apic timer counts down */
+ 	delta = lapic_cal_t1 - lapic_cal_t2;
+ 	apic_printk(APIC_VERBOSE, "... lapic delta = %ld\n", delta);
+@@ -814,10 +851,11 @@ static int __init calibrate_APIC_clock(v
+ 	levt->features &= ~CLOCK_EVT_FEAT_DUMMY;
+ 
+ 	/*
+-	 * PM timer calibration failed or not turned on
+-	 * so lets try APIC timer based calibration
++	 * PM timer calibration failed or not turned on so lets try APIC
++	 * timer based calibration, if a global clockevent device is
++	 * available.
+ 	 */
+-	if (!pm_referenced) {
++	if (!pm_referenced && global_clock_event) {
+ 		apic_printk(APIC_VERBOSE, "... verify APIC timer\n");
+ 
+ 		/*
 
 
