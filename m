@@ -2,191 +2,184 @@ Return-Path: <SRS0=tMFY=W7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55793C3A59E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C3FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 196E62168B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B7F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Sep 2019 22:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sOU7Av1J"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j45t4Wou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbfIDW1C (ORCPT
+        id S1730355AbfIDW2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 18:27:02 -0400
-Received: from mail-io1-f51.google.com ([209.85.166.51]:42391 "EHLO
-        mail-io1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727789AbfIDW1B (ORCPT
+        Wed, 4 Sep 2019 18:28:15 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34152 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727562AbfIDW2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 18:27:01 -0400
-Received: by mail-io1-f51.google.com with SMTP id n197so99455iod.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 15:27:01 -0700 (PDT)
+        Wed, 4 Sep 2019 18:28:14 -0400
+Received: by mail-io1-f67.google.com with SMTP id s21so200122ioa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 15:28:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=v80n4rXbkShFgebQ5FICTxVnnlRSUULZ8/gy7pHLeh8=;
-        b=sOU7Av1JfUZVGNSUO8hYl2UV5cekBaoLdvH9Jj9Dpf2HwWXaidWa0dZm4JIYsixbEk
-         obLF3hcaSy1wrxU73q8L85ND+K3Ckv18SPO0z+MIDjPew1BND3+BIxErgT6hhn/HkwoW
-         uGqM3dPWHuLcPHu8hOi/bu6U8sqFQ2Hx8B/qIIgvAJ4fagjRK2oP+eiSGAPBMXAYieAv
-         JTC8VPNLd4/o1+K2kCxN4aET4e09C9+Q1OfNJt+C6DwKewDn2vfgqX2wFmK0lVKQWVqo
-         vrI/tnVUTxkNfYwNPn44C/XTGV5bhIpsFOpUKrUY3zcfAbPiC9wzA4LJbQzL7AJYaaoH
-         M7jQ==
+        bh=126flrf1A3cL3mz+nUSHlYojF+EVKVDxSC6U82okBVY=;
+        b=j45t4WouLX5NDL22pWBGeIDHoUkIf57zOrKuKTrDdXFkdhudfHr4rKqTyrdi9CCmIS
+         co7xFmgjIgHRqewrmO/UxS3Pe5F4UICZt3Gpz++LSvHF24mMe0y+zVVhRG0B1pEbtG7R
+         APuSG5h3M7zYSsNXNK1r7iTFCJIOGpQeaTw8GkmvDGWe/2q7O5Ngzey49dzjK3A/MPiw
+         lyueua7ePwhicylVYuL84W2ooF874zW1YHUj1AdlbVymi1tbFQuA1T+h59OJp5sMG33G
+         tRE0Tybv0voiNCbGI0QyPexlDQiCxnYmOCvTOPWJjAT9kimUrXGcXKl8JTRL1zNtbaPl
+         cPdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=v80n4rXbkShFgebQ5FICTxVnnlRSUULZ8/gy7pHLeh8=;
-        b=nPAiszwDEwZeZAQlENJTzjCq0ouMslCXT1najIxSDt63rIDefLeHUUi+cq6RdaYrRm
-         /IH2ajiGbZMDd2AhuCPmkXGq9FThLnzQMiNE+XrPuo6fJpW0Q/4NxzOrWQoV81rl6I28
-         gmOmET+PIAtbFhO1Vc3EWisLSqoPS0ATbH+zuU/SqFx/nqzJsauMawN7i81kYD2FIO/t
-         cJr0Ccicc4eloYZyHO9QXgoWdiXC2LnOj7xJDL+cJ4nVd4Apuj58zqKNoJATbdutvKdw
-         NOcFGx68BApon9OvCknYgKO/BUOM+nmjt2fchdf2DVP7X263w+2wn1Gq7sVU/RfXLL3Q
-         IppQ==
-X-Gm-Message-State: APjAAAW5sakU/mUHjpjLRsPdfITQE1JrUQ63XcLYz0Wrh/dQVw4n2l3w
-        W2/+sZUXCRM9P2pvcDQO/7/mNKyYIdX7Tt0UE5w=
-X-Google-Smtp-Source: APXvYqxACw1EXq4uIdOI7CJyO7UyP+1ZXGBZQYOvghT0n0Tbuenh4J7du10svLvKeNIA9o3Pc5CticXAL6o0zcY2MIg=
-X-Received: by 2002:a6b:8d84:: with SMTP id p126mr375199iod.111.1567636020233;
- Wed, 04 Sep 2019 15:27:00 -0700 (PDT)
+        bh=126flrf1A3cL3mz+nUSHlYojF+EVKVDxSC6U82okBVY=;
+        b=tL6zn/+UjQzs7WykH4a3Cid6204ChWO+7bsCBT5f/018aUqXYCzUbumcqukGmh3OWm
+         RI+RFP/fHwkMnjl+xlFXs4dFwQvJhAM1Ny9yp6johx6+nIXRUl5IQm/xDuZuLlQYRpWe
+         M3sPgX4spW2yeR7917987qkYRAUZpvCQjgZm6I4lN+OWbWnD30baO+bL288T6YiqSC6F
+         FzxtJcXjYe7nnc9Q0pv6aM8Ud1CGTrxhW4JCq5h75mjXvl26AfN74vw169uqxgdQFo7g
+         lKkVuONQcp6Rs7vobsYB8vCJ+BhjbMp+VI6mrAqh/SWUbXduT9thUwB7AqFoe6M3UwQf
+         D8NA==
+X-Gm-Message-State: APjAAAXJRX8L4ucQwWtRju22cfea0kJ2t9lS9iZQqmPFHJCYrVqHqc0p
+        xYH81S/q8A38TtXZ4aK5//jprBDhsQhA5GeFNSvSMQ==
+X-Google-Smtp-Source: APXvYqyUB21xkViFEt8SKBxm/JQUeSbWb1SQPBt2RmoEHfwOq5hImo+XL0pA+sUuTuQC5+BwsIUxlPsoP7y1VeffMmY=
+X-Received: by 2002:a02:93e5:: with SMTP id z92mr672371jah.8.1567636093257;
+ Wed, 04 Sep 2019 15:28:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190830032948.13516-1-hdanton@sina.com> <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
- <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
- <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
- <CAKMK7uH9q09XadTV5Ezm=9aODErD=w_+8feujviVnF5LO_fggA@mail.gmail.com>
- <5d6f10a6.1c69fb81.6b104.af73SMTPIN_ADDED_MISSING@mx.google.com> <20190904083747.GE2112@phenom.ffwll.local>
-In-Reply-To: <20190904083747.GE2112@phenom.ffwll.local>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Thu, 5 Sep 2019 03:26:49 +0500
-Message-ID: <CABXGCsMEjP-UQ5A1xpL-xWHxtFEsOUO14+cmWJUS1ff1hgReFA@mail.gmail.com>
-Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
-To:     Hillf Danton <hdanton@sina.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux kernel <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        Harry Wentland <hwentlan@amd.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>
+References: <20190904214505.GA15093@swahl-linux> <CAKwvOdnX3qVq1wGovViyGJSnySKzCATU4SU_ASsL-9XfDZ8+Eg@mail.gmail.com>
+In-Reply-To: <CAKwvOdnX3qVq1wGovViyGJSnySKzCATU4SU_ASsL-9XfDZ8+Eg@mail.gmail.com>
+From:   Vaibhav Rustagi <vaibhavrustagi@google.com>
+Date:   Wed, 4 Sep 2019 15:28:01 -0700
+Message-ID: <CAMVonLiOB4PnbnLGo9gP8MK8kGd_e9vW_t+GOPuHMO_RqmkKNA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86/purgatory: Change compiler flags to avoid
+ relocation errors.
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Steve Wahl <steve.wahl@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        russ.anderson@hpe.com, dimitri.sivanich@hpe.com,
+        mike.travis@hpe.com, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 at 13:37, Daniel Vetter <daniel@ffwll.ch> wrote:
+On Wed, Sep 4, 2019 at 3:19 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
 >
-> Extend your backtrac warning slightly like
+> + (folks recommended by ./scripts/get_maintainer.pl <patchfile>)
+> (See also, step 7:
+> https://nickdesaulniers.github.io/blog/2017/05/16/submitting-your-first-patch-to-the-linux-kernel-and-responding-to-feedback/)
 >
->         WARN(r, "we're stuck on fence %pS\n", fence->ops);
+> On Wed, Sep 4, 2019 at 2:45 PM Steve Wahl <steve.wahl@hpe.com> wrote:
+> >
+> > The last change to this Makefile caused relocation errors when loading
 >
-> Also adding Harry and Alex, I'm not really working on amdgpu ...
+> It's good to add a fixes tag like below when a patch fixes a
+> regression, so that stable backports the fix as far back as the
+> regression:
+> Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than
+> reset KBUILD_CFLAGS")
+>
+> > a kdump kernel.  This change restores the appropriate flags, without
+> > reverting to the former practice of resetting KBUILD_CFLAGS.
+> >
+> > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> > ---
+> >  arch/x86/purgatory/Makefile | 35 +++++++++++++++++++----------------
+> >  1 file changed, 19 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+> > index 8901a1f89cf5..9f0bfef1f5db 100644
+> > --- a/arch/x86/purgatory/Makefile
+> > +++ b/arch/x86/purgatory/Makefile
+> > @@ -18,37 +18,40 @@ targets += purgatory.ro
+> >  KASAN_SANITIZE := n
+> >  KCOV_INSTRUMENT := n
+> >
+> > +# These are adjustments to the compiler flags used for objects that
+> > +# make up the standalone porgatory.ro
+> > +
+> > +PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+> > +PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
+>
+> Thanks for confirming the fix.  While it sounds like -mcmodel=large is
+> the only necessary change, I don't object to -ffreestanding of
+> -fno-zero-initialized-in-bss being readded, especially since I think
+> what you've done with PURGATORY_CFLAGS_REMOVE is more concise.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Vaibhav, do you still have an environment setup to quickly test this
+> again w/ Clang builds?
 
-[ 3511.998320] ------------[ cut here ]------------
-[ 3511.998714] we're stuck on fence
-amdgpu_fence_ops+0x0/0xffffffffffffc220 [amdgpu]
-[ 3511.998991] WARNING: CPU: 10 PID: 1811 at
-drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c:332
-amdgpu_fence_wait_empty+0x1c6/0x240 [amdgpu]
-[ 3511.999009] Modules linked in: rfcomm fuse xt_CHECKSUM
-xt_MASQUERADE nf_nat_tftp nf_conntrack_tftp tun bridge stp llc
-nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_REJECT
-nf_reject_ipv6 ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack
-ebtable_nat ip6table_nat ip6table_mangle ip6table_raw
-ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw
-iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c
-ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables
-iptable_filter cmac bnep sunrpc vfat fat edac_mce_amd kvm_amd
-snd_hda_codec_realtek rtwpci snd_hda_codec_generic kvm ledtrig_audio
-snd_hda_codec_hdmi uvcvideo rtw88 videobuf2_vmalloc snd_hda_intel
-videobuf2_memops videobuf2_v4l2 irqbypass snd_usb_audio snd_hda_codec
-videobuf2_common crct10dif_pclmul snd_usbmidi_lib crc32_pclmul
-mac80211 snd_rawmidi videodev snd_hda_core ghash_clmulni_intel btusb
-snd_hwdep btrtl snd_seq btbcm btintel snd_seq_device eeepc_wmi
-bluetooth xpad joydev mc snd_pcm
-[ 3511.999076]  asus_wmi ff_memless cfg80211 sparse_keymap video
-wmi_bmof ecdh_generic snd_timer ecc sp5100_tco k10temp snd i2c_piix4
-ccp rfkill soundcore libarc4 gpio_amdpt gpio_generic acpi_cpufreq
-binfmt_misc ip_tables hid_logitech_hidpp hid_logitech_dj amdgpu
-amd_iommu_v2 gpu_sched ttm drm_kms_helper drm crc32c_intel igb dca
-nvme i2c_algo_bit nvme_core wmi pinctrl_amd
-[ 3511.999126] CPU: 10 PID: 1811 Comm: Xorg Not tainted
-5.3.0-0.rc6.git2.1c.fc32.x86_64 #1
-[ 3511.999131] Hardware name: System manufacturer System Product
-Name/ROG STRIX X470-I GAMING, BIOS 2703 08/20/2019
-[ 3511.999253] RIP: 0010:amdgpu_fence_wait_empty+0x1c6/0x240 [amdgpu]
-[ 3511.999278] Code: fe ff ff 31 c0 c3 48 89 ef e8 36 29 04 cb 84 c0
-74 08 48 89 ef e8 8a a9 21 cb 48 8b 75 08 48 c7 c7 2c 16 86 c0 e8 82
-b8 b9 ca <0f> 0b b8 ea ff ff ff 5d c3 e8 ec 57 c3 ca 84 c0 0f 85 6f ff
-ff ff
-[ 3511.999282] RSP: 0018:ffffb9c04170f798 EFLAGS: 00210282
-[ 3511.999288] RAX: 0000000000000000 RBX: ffff8d2ce5205a80 RCX: 0000000000000006
-[ 3511.999292] RDX: 0000000000000007 RSI: ffff8d2c5bea4070 RDI: ffff8d2cfb5d9e00
-[ 3511.999296] RBP: ffff8d28becae480 R08: 00000331b36fd503 R09: 0000000000000000
-[ 3511.999299] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8d2ce5200000
-[ 3511.999303] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8d2ce1540000
-[ 3511.999308] FS:  00007f59a5bc6f00(0000) GS:ffff8d2cfb400000(0000)
-knlGS:0000000000000000
-[ 3511.999311] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3511.999315] CR2: 00001108bc475960 CR3: 000000075bf32000 CR4: 00000000003406e0
-[ 3511.999319] Call Trace:
-[ 3511.999394]  amdgpu_pm_compute_clocks+0x70/0x5f0 [amdgpu]
-[ 3511.999503]  dm_pp_apply_display_requirements+0x1a8/0x1c0 [amdgpu]
-[ 3511.999609]  dce12_update_clocks+0xd8/0x110 [amdgpu]
-[ 3511.999712]  dc_commit_state+0x414/0x590 [amdgpu]
-[ 3511.999725]  ? find_held_lock+0x32/0x90
-[ 3511.999832]  amdgpu_dm_atomic_commit_tail+0xd18/0x1cf0 [amdgpu]
-[ 3511.999844]  ? reacquire_held_locks+0xed/0x210
-[ 3511.999859]  ? ttm_eu_backoff_reservation+0xa5/0x160 [ttm]
-[ 3511.999866]  ? find_held_lock+0x32/0x90
-[ 3511.999872]  ? find_held_lock+0x32/0x90
-[ 3511.999881]  ? __lock_acquire+0x247/0x1910
-[ 3511.999893]  ? find_held_lock+0x32/0x90
-[ 3511.999901]  ? mark_held_locks+0x50/0x80
-[ 3511.999907]  ? _raw_spin_unlock_irq+0x29/0x40
-[ 3511.999913]  ? lockdep_hardirqs_on+0xf0/0x180
-[ 3511.999919]  ? _raw_spin_unlock_irq+0x29/0x40
-[ 3511.999924]  ? wait_for_completion_timeout+0x75/0x190
-[ 3511.999952]  ? commit_tail+0x3c/0x70 [drm_kms_helper]
-[ 3511.999966]  commit_tail+0x3c/0x70 [drm_kms_helper]
-[ 3511.999979]  drm_atomic_helper_commit+0xe3/0x150 [drm_kms_helper]
-[ 3512.000002]  drm_mode_atomic_ioctl+0x793/0x9b0 [drm]
-[ 3512.000014]  ? __lock_acquire+0x247/0x1910
-[ 3512.000044]  ? drm_atomic_set_property+0xa50/0xa50 [drm]
-[ 3512.000066]  drm_ioctl_kernel+0xaa/0xf0 [drm]
-[ 3512.000088]  drm_ioctl+0x208/0x390 [drm]
-[ 3512.000108]  ? drm_atomic_set_property+0xa50/0xa50 [drm]
-[ 3512.000120]  ? lockdep_hardirqs_on+0xf0/0x180
-[ 3512.000205]  amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
-[ 3512.000216]  do_vfs_ioctl+0x411/0x750
-[ 3512.000229]  ksys_ioctl+0x5e/0x90
-[ 3512.000237]  __x64_sys_ioctl+0x16/0x20
-[ 3512.000242]  do_syscall_64+0x5c/0xb0
-[ 3512.000249]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[ 3512.000254] RIP: 0033:0x7f59a603d00b
-[ 3512.000259] Code: 0f 1e fa 48 8b 05 7d 9e 0c 00 64 c7 00 26 00 00
-00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00
-00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4d 9e 0c 00 f7 d8 64 89
-01 48
-[ 3512.000263] RSP: 002b:00007ffc493bcc08 EFLAGS: 00000246 ORIG_RAX:
-0000000000000010
-[ 3512.000267] RAX: ffffffffffffffda RBX: 00007ffc493bcc50 RCX: 00007f59a603d00b
-[ 3512.000271] RDX: 00007ffc493bcc50 RSI: 00000000c03864bc RDI: 000000000000000e
-[ 3512.000275] RBP: 00000000c03864bc R08: 000055aa62e41d00 R09: 0000000000000001
-[ 3512.000278] R10: 0000000000000001 R11: 0000000000000246 R12: 000055aa61a99d00
-[ 3512.000282] R13: 000000000000000e R14: 000055aa628f7430 R15: 000055aa62e34540
-[ 3512.000297] irq event stamp: 258283232
-[ 3512.000303] hardirqs last  enabled at (258283231):
-[<ffffffff8b170beb>] console_unlock+0x46b/0x5d0
-[ 3512.000309] hardirqs last disabled at (258283232):
-[<ffffffff8b0038da>] trace_hardirqs_off_thunk+0x1a/0x20
-[ 3512.000314] softirqs last  enabled at (258282448):
-[<ffffffff8be0035d>] __do_softirq+0x35d/0x45d
-[ 3512.000319] softirqs last disabled at (258282413):
-[<ffffffff8b0f1e57>] irq_exit+0xf7/0x100
-[ 3512.000323] ---[ end trace 55ed0c80b95aef99 ]---
+I will setup the environment and will try the changes.
 
-https://pastebin.com/DfqVGDgc
+> Tglx, we'll likely want to get this into 5.3 if it's not too late (I
+> saw Miguel Ojeda mention there might be an -rc8)?
+>
+> > +
+> >  # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+> >  # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+> >  # sure how to relocate those.
+> >  ifdef CONFIG_FUNCTION_TRACER
+> > -CFLAGS_REMOVE_sha256.o         += $(CC_FLAGS_FTRACE)
+> > -CFLAGS_REMOVE_purgatory.o      += $(CC_FLAGS_FTRACE)
+> > -CFLAGS_REMOVE_string.o         += $(CC_FLAGS_FTRACE)
+> > -CFLAGS_REMOVE_kexec-purgatory.o        += $(CC_FLAGS_FTRACE)
+> > +PURGATORY_CFLAGS_REMOVE                += $(CC_FLAGS_FTRACE)
+> >  endif
+> >
+> >  ifdef CONFIG_STACKPROTECTOR
+> > -CFLAGS_REMOVE_sha256.o         += -fstack-protector
+> > -CFLAGS_REMOVE_purgatory.o      += -fstack-protector
+> > -CFLAGS_REMOVE_string.o         += -fstack-protector
+> > -CFLAGS_REMOVE_kexec-purgatory.o        += -fstack-protector
+> > +PURGATORY_CFLAGS_REMOVE                += -fstack-protector
+> >  endif
+> >
+> >  ifdef CONFIG_STACKPROTECTOR_STRONG
+> > -CFLAGS_REMOVE_sha256.o         += -fstack-protector-strong
+> > -CFLAGS_REMOVE_purgatory.o      += -fstack-protector-strong
+> > -CFLAGS_REMOVE_string.o         += -fstack-protector-strong
+> > -CFLAGS_REMOVE_kexec-purgatory.o        += -fstack-protector-strong
+> > +PURGATORY_CFLAGS_REMOVE                += -fstack-protector-strong
+> >  endif
+> >
+> >  ifdef CONFIG_RETPOLINE
+> > -CFLAGS_REMOVE_sha256.o         += $(RETPOLINE_CFLAGS)
+> > -CFLAGS_REMOVE_purgatory.o      += $(RETPOLINE_CFLAGS)
+> > -CFLAGS_REMOVE_string.o         += $(RETPOLINE_CFLAGS)
+> > -CFLAGS_REMOVE_kexec-purgatory.o        += $(RETPOLINE_CFLAGS)
+> > +PURGATORY_CFLAGS_REMOVE                += $(RETPOLINE_CFLAGS)
+> >  endif
+> >
+> > +CFLAGS_REMOVE_purgatory.o      += $(PURGATORY_CFLAGS_REMOVE)
+> > +CFLAGS_purgatory.o             += $(PURGATORY_CFLAGS)
+> > +
+> > +CFLAGS_REMOVE_sha256.o         += $(PURGATORY_CFLAGS_REMOVE)
+> > +CFLAGS_sha256.o                        += $(PURGATORY_CFLAGS)
+> > +
+> > +CFLAGS_REMOVE_string.o         += $(PURGATORY_CFLAGS_REMOVE)
+> > +CFLAGS_string.o                        += $(PURGATORY_CFLAGS)
+> > +
+> >  $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+> >                 $(call if_changed,ld)
+> >
+> > --
+> > 2.12.3
+> >
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
