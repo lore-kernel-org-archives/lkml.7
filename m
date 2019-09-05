@@ -2,165 +2,315 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969A5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCD3C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2631205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:08:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JLLvyaVa"
+	by mail.kernel.org (Postfix) with ESMTP id 731FC20674
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:11:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388323AbfIEXIP (ORCPT
+        id S2388347AbfIEXLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 19:08:15 -0400
-Received: from mail-eopbgr740102.outbound.protection.outlook.com ([40.107.74.102]:56048
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726626AbfIEXIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:08:14 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e8qlrodEcqIRyzRhYCqlYy3KKA6QZg5ZhIaOcrqxClRbrlhmZFFCqby5HRBs/wUpCMbPdggHWXCIACXPZvOH6OaTCYTGivwLoQz+DzyzbxyzOVhwqnWAuJrdE29g4zs9wQ3Rg7OGl38AzlgECNlrrKaeV3PTPn6+hcp2z6nUrP3etOqOiwR0AkKdlMuQ74cmDyjvT+48urMQ9dlLBXP2losS2UZHmaSGoqd743ldl2M+6mBdYyTcVMUE/COGbWsDg4z/SjOICQe8zr+v/vjHIDqcVfNUPYwx0sPYD7sAeHlLnyEfrMsnaW6T9lPX4DA7jJ0Z2B1uQVQH0KQ1ojYhdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gtMAG5qxbOZu6s6pC+n+AdcM8AUGaXFamTe4x60QX54=;
- b=PGK1vehlinKN+Ski3ZwVmV+Sjz0+77bflzeArhunRJfKa8ZR4agZVLBWEod4yuW8paQgcOyak6D5C+cx5EuE+1vfXyDsN+y23CubAu8K4r4jTHFvmjB0xTHIQrUMZoLb1yjxDJvxnyBKDj0mGWt9iaBMXkAzPJRlmEtRrPgeoSwZrTYPM+UOdf8XU/ZV++nWTjUxtN8r25QEb+JkTm3LGxSoLsY7KLpSfm4M78JTimv00wwgcaLE0EwjbhvOc9CK6yACWUXZEbV5K4uWGMRuwshoDDDIUUETISCH1I8Tarmk/lTnmybRAVBfPU61UEY/GOmB9itIh9DNPH76MSduvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gtMAG5qxbOZu6s6pC+n+AdcM8AUGaXFamTe4x60QX54=;
- b=JLLvyaVaCNuwdTJ9Lo50yoLdvUp/f7m+vAMlfHM2E5eqwdqAN3E9oayfMePgFOQl849SB17b/uKuc41cCCdj+095dxg/uxQA9EZHfMYmuyR7Is2Wn8m16O5p3QYM7EXkjXecuxEHEG240FwhvPadk21ym3jnya/x1sgZVT3jHyI=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1417.namprd21.prod.outlook.com (20.180.21.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.4; Thu, 5 Sep 2019 23:07:32 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::2cde:35d7:e09a:5639]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::2cde:35d7:e09a:5639%6]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
- 23:07:32 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Bloch <markb@mellanox.com>
-Subject: RE: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to VF
- NIC
-Thread-Topic: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to VF
- NIC
-Thread-Index: AQHVXuVjZEYmBu9A80OagVmDV3gGfqcUUN2AgAlrzFA=
-Date:   Thu, 5 Sep 2019 23:07:32 +0000
-Message-ID: <DM6PR21MB13373166435FD2FC5543D349CABB0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <1567136656-49288-1-git-send-email-haiyangz@microsoft.com>
-        <1567136656-49288-3-git-send-email-haiyangz@microsoft.com>
- <20190830160451.43a61cf9@cakuba.netronome.com>
-In-Reply-To: <20190830160451.43a61cf9@cakuba.netronome.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-05T23:07:30.9040322Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f1f33891-0eb0-440a-9ebe-a5e6eb79496f;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ff0464a8-2242-4c64-ad68-08d73255d50b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1417;
-x-ms-traffictypediagnostic: DM6PR21MB1417:|DM6PR21MB1417:|DM6PR21MB1417:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <DM6PR21MB1417EC4451D151C89F163658CABB0@DM6PR21MB1417.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(189003)(199004)(13464003)(9686003)(316002)(10090500001)(66066001)(6246003)(54906003)(53936002)(22452003)(3846002)(6116002)(6436002)(4326008)(6916009)(2906002)(55016002)(5660300002)(66446008)(66556008)(66476007)(76116006)(52536014)(66946007)(64756008)(6506007)(8990500004)(11346002)(8936002)(26005)(478600001)(305945005)(102836004)(186003)(74316002)(229853002)(486006)(7736002)(81156014)(8676002)(81166006)(7696005)(14454004)(76176011)(446003)(86362001)(53546011)(476003)(33656002)(99286004)(25786009)(71200400001)(10290500003)(256004)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1417;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: d4Y5YAHQC+x4MYOfU4eiGVL1GWtyblaKJ4W9rN5U2LHRkRy21IZiqWxKuX0NpiEllCPleSAR5BHeuPecCQ76BK1hQSJ91pSC2wSDqDYhYgMdKnTlB/A67YXeHQs6CMuapyxR86KcxUntx90qVUf/BF2w2RXR0R2gf6Z/iVKvJpXabGqS7PKFmdmtPvRjMb/GJEoL44ONw1qhSMapJ+Ll/+4r2bppDq/8m9d/7E4vb6ujXHBWSWbg+Y2tFmEjkU0HlDehFMgsLU1NRpMBt35oGDIxNZ+V3aE+TPhkvLXU0RQ4tHgJ3Xmx+Ggw8XmeplVYnSRtV5FvTvHbWrVa9zM+D4+OGr2TnYYCkuAw+2zS4Y/bad2dzBKUnOWFgCM8k2ZQyz8oLl0l6h8mKGcOz7GpfBpbhfr5mHa2JX2tRomH+hA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Sep 2019 19:11:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17642 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726008AbfIEXLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 19:11:23 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85N1qxm035525
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 19:11:22 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uu37n9q72-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 19:11:22 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 6 Sep 2019 00:11:18 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 6 Sep 2019 00:11:15 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85NBB0H57933914
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 23:11:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53CC8AE058;
+        Thu,  5 Sep 2019 23:11:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD3A1AE053;
+        Thu,  5 Sep 2019 23:11:10 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.76.185])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Sep 2019 23:11:10 +0000 (GMT)
+Date:   Fri, 6 Sep 2019 01:10:49 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        pasic@linux.vnet.ibm.com, frankja@linux.ibm.com,
+        jjherne@linux.ibm.com
+Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
+ queue interrupts
+In-Reply-To: <839467aa-5743-3d56-44e2-05ba5533a31c@linux.ibm.com>
+References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+        <20190830180250.79804f76.pasic@linux.ibm.com>
+        <839467aa-5743-3d56-44e2-05ba5533a31c@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff0464a8-2242-4c64-ad68-08d73255d50b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 23:07:32.3687
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gIIi0+bs9zrW6ckkEJ0itoeBXAYCnEF9gJuUZfAZg1DMJ7nPb0Uzwu5amEWxzczDPp5JPjVXU1By2m+jwAAfIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1417
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090523-0028-0000-0000-000003983B0A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090523-0029-0000-0000-0000245A923A
+Message-Id: <20190906011049.50d8a476.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 5 Sep 2019 12:26:15 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
+> On 8/30/19 12:02 PM, Halil Pasic wrote:
+[..]
+> >> @@ -1177,7 +1179,18 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+> >>   			 */
+> >>   			if (ret)
+> >>   				rc = ret;
+> >> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+> >> +
+> >> +			/*
+> >> +			 * Resetting a queue disables interrupts as a side
+> >> +			 * effect, so there is no need to disable interrupts
+> >> +			 * here. Note that an error on reset indicates the
+> >> +			 * queue is inaccessible, so an attempt to disable
+> >> +			 * interrupts would fail and is therefore unnecessary.
+> >> +			 * Just free up the resources used by IRQ processing.
+> >> +			 */
+> > 
+> > I have some concerns about this patch. One thing we must ensure is that
+> > the machine does not poke freed memory (NIB, GISA). With the current
+> > design that means we must ensure that there won't be any interruption
+> > conditions indicated (and interrupts made pending) after this point.
+> 
+> If reset disables interrupts, why would we need to turn around and
+> disable interrupts after completion of the reset, unless reset disables
+> interrupts only for the duration of the reset processing?
 
-> -----Original Message-----
-> From: Jakub Kicinski <jakub.kicinski@netronome.com>
-> Sent: Friday, August 30, 2019 7:05 PM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org;
-> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
-> Hemminger <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
-> <vkuznets@redhat.com>; davem@davemloft.net; linux-
-> kernel@vger.kernel.org; Mark Bloch <markb@mellanox.com>
-> Subject: Re: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to=
- VF
-> NIC
->=20
-> On Fri, 30 Aug 2019 03:45:38 +0000, Haiyang Zhang wrote:
-> > VF NIC may go down then come up during host servicing events. This
-> > causes the VF NIC offloading feature settings to roll back to the
-> > defaults. This patch can synchronize features from synthetic NIC to
-> > the VF NIC during ndo_set_features (ethtool -K), and
-> > netvsc_register_vf when VF comes back after host events.
-> >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > Cc: Mark Bloch <markb@mellanox.com>
->=20
-> If we want to make this change in behaviour we should change net_failover
-> at the same time.
+That a successful queue reset disables interrupts on the queue is beyond
+any doubt. My concern is about the fact that a part of the reset itself
+is done asynchronously with respect to the PQAP ZAPQ that asks for the
+reset.
 
-After checking the net_failover, I found it's for virtio based SRIOV, and v=
-ery=20
-different from what we did for Hyper-V based SRIOV.
+> If interrupts
+> are disabled only for the duration of the reset, then I question whether
+> we need to be at all concerned about interrupts in the context of
+> resetting a queue.
+> 
 
-We let the netvsc driver acts as both the synthetic (PV) driver and the tra=
-nsparent=20
-bonding master for the VF NIC. But net_failover acts as a master device on =
-top=20
-of both virtio PV NIC, and VF NIC. And the net_failover doesn't implemented=
-=20
-operations, like ndo_set_features.
-So the code change for our netvsc driver cannot be applied to net_failover =
-driver.
+We need to clean up the NIB. We must avoid use after free like stuff, so
+my concern is about the waits.
 
-I will re-submit my two patches (fixing the extra tab in the 1st one as you=
- pointed=20
-out). Thanks!
+> > 
+> > I'm not entirely convinced this is ensured after your change. The
+> > relevant bits of the  documentation are particularly hard to figure out.
+> > I could use some clarifications for sure.
+> > 
+> > This hunk removes the wait implemented by vfio_ap_wait_for_irqclear()
+> > along with the hopefully overkill AQIC.
+> > 
+> > Let me name some of the scenarios I'm concerned about, along with the
+> > code that is currently supposed to handle these.
+> > 
+> > 
+> > int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> >                               unsigned int retry)
+> > {
+> >          struct ap_queue_status status;
+> >          int retry2 = 2;
+> >          int apqn = AP_MKQID(apid, apqi);
+> >                                                                                  
+> >          do {
+> >                  status = ap_zapq(apqn);
+> >                  switch (status.response_code) {
+> >                  case AP_RESPONSE_NORMAL:
+> >                          while (!status.queue_empty && retry2--) {
+> >                                  msleep(20);
+> >                                  status = ap_tapq(apqn, NULL);
+> >                          }
+> >                          WARN_ON_ONCE(retry <= 0);
+> >                          return 0;
+> >                  case AP_RESPONSE_RESET_IN_PROGRESS:
+> >                  case AP_RESPONSE_BUSY:
+> >                          msleep(20);
+> >                          break;
+> >                  default:
+> >                          /* things are really broken, give up */
+> >                          return -EIO;
+> >                  }
+> >          } while (retry--);
+> >                                                                                  
+> >          return -EBUSY;
+> > 
+> > Scenario 1)
+> > 
+> > ap_zapq() returns status.response_code == AP_RESPONSE_RESET_IN_PROGRESS,
+> > because for example G2 did a ZAPQ before us.
+> > 
+> > The current logic retries ap_zapq() once after 20 msec. I have no idea
+> > if that is sufficient under all circumstances. If we get a
+> > AP_RESPONSE_RESET_IN_PROGRESS again, we return with -EBUSY and do nothing
+> > about it if the whole process was triggered by vfio_ap_mdev_release().
+> > Not even a warning.
+> 
+> I'm not sure this is a major concern, If the response code is
+> AP_RESPONSE_RESET_IN_PROGRESS due to a ZAPQ issued by G2 before us,
+> then once that completes the queue will be reset which accomplishes
+> the goal anyway. Maybe what should be done in this case is to wait
+> for the queue to empty?
+> 
 
-- Haiyang
+Yes I'm concerned about do we wait long enough because we need to avoid
+HW poking memory that could be used for something else at that point
+(NIB, GISA.IPM).
+
+> > 
+> > Please notice that this was almost fine before IRQ support, because the
+> > queue will get reset ASAP, and ...
+> 
+> I'm not sure what IRQ support has to do with how soon the queue is
+> reset.
+> 
+
+If there is no IRQs AP HW won't just poke guest memory like it does with
+the NIB. And since the AP instructions are bound to get reset in progress
+response code even there is no danger of queue state leaking because the
+reset is not fully completed yet.
+
+> > 
+> > Scenario 2)
+> > 
+> > It takes longer than 40 msec for the reset to complete. I don't know if
+> > this is a possibility, but before your patch we used to wait of 1 sec.
+> 
+> Where are you coming up with 1 sec?
+
+My bad, it was supposed to be 0.1 sec == 5 X 20ms (wait after AQIC that
+got kicked by this patch). What I want to say is this patch
+substantially reduces the wait time.
+
+> The only thing my patch did was
+> remove the disable IRQ. Even if you include the the wait for IRQ disable
+> to complete, I don't see 1 second of wait time. By my calculations:
+> 
+> 5 x 20ms = 100ms  Max wait for ZAPQ response code 0
+> 2 x 20ms =  40ms  Max wait time for qempty
+> 5 x 20ms = 100ms  Max wait for AQIC response code 0
+> 5 x 20ms = 100ms  Max wait time for IRQ clear
+> ----------------
+>             340ms  Max total wait time
+> 
+> > 
+> > I guess the we need the timeouts because do this with matrix_dev->lock
+> > held. I'm not sure it's a good idea long term.
+> 
+> It looks like your concern here is making sure we wait a
+> sufficient amount of time for the reset to complete. That may be
+> a question for the firmware folks.
+> 
+
+Yes, my concern is making sure we don't clean up/give up stuff
+prematurely. The current code seems to do the waits for this purpose.
+I'm not sure what is actually necessary. Clarifying stuff with firmware
+or somebody else that knows better than I do is probably a good idea.
+
+> > 
+> > Scenario 3)
+> > 
+> > ap_zapq() returns status.response_code == AP_RESPONSE_DECONFIGURED. In
+> > this case we would give up right away. Again so that we don't even know
+> > we hit this case. There ain't much I can think about we could do here.
+> 
+> The only thing I can think of is to log an error. I am introducing
+> logging in the dynamic configuration series if that helps.
+> 
+
+I don't think it is an error.
+
+> > 
+> > I hope we are guaranteed to  not get any bits set at this point, but I could
+> > use some help.
+> 
+> I don't know what your concern is here. If the card is not in the
+> configuration, then no activity can take place until it is reconfigured.
+> 
+
+Yes, I also think that is the only way this make sense. But I usually
+don't assume complex things happen atomically unless I have a guarantee
+they do. I will explain what I mean by this offline.
+
+> > 
+> >                                    *
+> > 
+> > The good thing is I'm pretty sure that we are safe (i.e. no bits will be
+> > poked by the hardware) after seeing the queue empty after we issued a
+> > reset request.
+> 
+> You expressed several concerns above, yet now you say you think we're
+> safe; I don't understand.
+
+We are safe after we see the E bit set to one (queue empty) after the
+reset. Above I describe the scenarios where we don't wait for that to
+happen (in scenario 3 because it won't happen because the card is gone,
+and in the other two because of the implemented timeouts).
+
+> 
+> > 
+> > So my concerns basically boil down to are the cumulative timeouts big enough
+> > so we never time out (including are timeouts really the way to go)?
+> > 
+> > We should probably take any discussion about from which point on is it safe
+> > to assume that NIB and GISA won't be poked by HW offline as the guys
+> > without documentation can't contribute.
+> 
+> Just a couple of thoughts. The only reason the vfio_ap driver is
+> concerned with interrupts is because it is intercepting the PQAP(AQIC)
+> instruction. Shouldn't enabling and disabling interrupts, therefore, be 
+> solely under the control of the guest? In other words, maybe the vfio_ap
+> driver should only allocate/deallocate the interrupt controls (i.e., the
+> NIB and GISA) in response to PQAP(AQIC) interception.
+
+GISA is a 1 per guest entity in the hypervisor. The NIB is a byte of the
+guest memory.
+
+> When the guest
+> shuts down, I assume that the PQAP(AQIC) will be executed to disable
+> interrupts. 
+
+I would not assume that.
+
+> The driver can do a final cleanup if the NIB and GISA when
+> the mdev fd is released by the guest if they are still hanging around.
+> 
+
+You have to also consider stuff like subsystem resets. Yes the last line
+of defense should be release(). This is what we do today AFAIU.
+
+Regards,
+Halil
 
