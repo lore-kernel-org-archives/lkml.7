@@ -2,68 +2,136 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8D3C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DA6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24B0206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23F420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567692999;
+	bh=CGAJUIJz+juuwAaJD4ZTV4RiFqhOn/XNcDZ6VtvCqQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mWa6CN8h3si0Tc5V6wwVttWk3XAnvvrXMC9zaOd4z041XpH96y6gD6N9rAlkZveai
+	 OkAt00bu/Axc3qek4Ysm8oUqEKI4X0FRujvld6ZUPxjlhdem+IDaKquuIMbGMeKqsi
+	 udQEGKE3Rfj71teIuwYpnX89VRXMMTVkq1QBlC7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbfIEOP6 (ORCPT
+        id S1731918AbfIEOQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:15:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35991 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729157AbfIEOP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:15:58 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i5sYF-0002ES-FE; Thu, 05 Sep 2019 14:15:55 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: hal: remove redundant assignment to variable n
-Date:   Thu,  5 Sep 2019 15:15:55 +0100
-Message-Id: <20190905141555.31582-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 5 Sep 2019 10:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727009AbfIEOQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:16:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1020206CD;
+        Thu,  5 Sep 2019 14:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567692997;
+        bh=CGAJUIJz+juuwAaJD4ZTV4RiFqhOn/XNcDZ6VtvCqQw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f82WwUyhWlg1KGh1JlWsm4/jFYe6mQURSfoZk74KmI+LI0ag2Nv+w5+Fy3Q9hPgiP
+         9biuGKfs28GCH4InwYj9oLfNVlleVY1i6jMDopx/doQhjnBRE2pSeFtu+D9r4g2R7q
+         Y9EGuhxbi1d2bok7vkkMpwYm0aZytY7+itZclZCw=
+Date:   Thu, 5 Sep 2019 16:16:34 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mike Travis <mike.travis@hpe.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
+Message-ID: <20190905141634.GA25790@kroah.com>
+References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
+ <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, Sep 05, 2019 at 08:02:58AM -0500, Mike Travis wrote:
+> Decode the hubless UVsystab passed from BIOS to the kernel saving
+> pertinent info in a similar manner that hubbed UVsystabs are decoded.
+> 
+> Signed-off-by: Mike Travis <mike.travis@hpe.com>
+> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+> Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+> To: Thomas Gleixner <tglx@linutronix.de>
+> To: Ingo Molnar <mingo@redhat.com>
+> To: H. Peter Anvin <hpa@zytor.com>
+> To: Andrew Morton <akpm@linux-foundation.org>
+> To: Borislav Petkov <bp@alien8.de>
+> To: Christoph Hellwig <hch@infradead.org>
+> Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+> Cc: Russ Anderson <russ.anderson@hpe.com>
+> Cc: Hedi Berriche <hedi.berriche@hpe.com>
+> Cc: Steve Wahl <steve.wahl@hpe.com>
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/x86/kernel/apic/x2apic_uv_x.c |   16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
 
-The variable n is being assigned a value that is never read, the
-assignment is redundant and can be removed.
+If you are trying to get one of my automated "WTF: patch XXXX was
+seriously submitted to be applied to the stable tree?" emails, you are
+on track for it...
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c | 1 -
- 1 file changed, 1 deletion(-)
+Please go read the documentation link I sent you last time and figure
+out how you can justify any of this patch series for a stable kernel
+tree.
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-index 032d01834f3f..adfc96d24150 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
-@@ -525,7 +525,6 @@ void rtl8723bs_free_recv_priv(struct adapter *padapter)
- 	}
- 
- 	if (precvpriv->pallocated_recv_buf) {
--		n = NR_RECVBUFF * sizeof(struct recv_buf) + 4;
- 		kfree(precvpriv->pallocated_recv_buf);
- 		precvpriv->pallocated_recv_buf = NULL;
- 	}
--- 
-2.20.1
+Also, nit:
 
+> --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
+> +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+> @@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
+>  	struct uv_systab *st;
+>  	int i;
+>  
+> -	if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
+> +	/* Select only UV4 (hubbed or hubless) and higher */
+> +	if (is_uv_hubbed(-2) < uv(4) && is_uv_hubless(-2) < uv(4))
+>  		return 0;	/* No extended UVsystab required */
+>  
+>  	st = uv_systab;
+> @@ -1554,8 +1555,19 @@ static __init int uv_system_init_hubless
+>  
+>  	/* Init kernel/BIOS interface */
+>  	rc = uv_bios_init();
+> +	if (rc < 0) {
+> +		pr_err("UV: BIOS init error:%d\n", rc);
+
+Why isn't that function printing an error?
+
+
+> +		return rc;
+> +	}
+> +
+> +	/* Process UVsystab */
+> +	rc = decode_uv_systab();
+> +	if (rc < 0) {
+> +		pr_err("UV: UVsystab decode error:%d\n", rc);
+
+Same here, have the function itself print the error, makes this type of
+stuff much cleaner.
+
+greg k-h
