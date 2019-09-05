@@ -5,47 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D19C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0E8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81175206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51720212CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JeJHFwNW"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KwGe9GeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391223AbfIEXB0 (ORCPT
+        id S2403809AbfIEXBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 19:01:26 -0400
+        Thu, 5 Sep 2019 19:01:31 -0400
 Received: from mail-eopbgr700134.outbound.protection.outlook.com ([40.107.70.134]:14272
         "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389666AbfIEXBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:01:23 -0400
+        id S2389666AbfIEXB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 19:01:27 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IiOFgZKD9OaLJAFEjAEYxlubCnFDXkNgwawwRcrM3MwZpZqErRELFB2fU9QM1O3dEkVKOkL4MYXzhqDDkRxgyITTLODvnBlDIu4ZwlclpK4FUcGwlj4oIPdm5hkUhVOwUoB/F/xldQemi8IjhJENNmaJQTa3WpNe7/3L9+B0wCmaW8jL0KX4fsHjYAMrYCVWSv0rndd5ffsdyYW6vxb55mYP4gChmqF1bb+bZ0/cs6XmyBWzq1XOGPK269d9il/VgqS5RAlEMVOmciIjmrSiKUnYj0vACoX2z1DgW+Iq560vpc2ydtdXKDRXNMhySghRVE/v3zaQOVRlh4HJ8FwGlQ==
+ b=STO5RZ4cGbVKFRXBzzxht3vKE6kqQgjJWAbkrCBga6Eu35p9Dvzx6trikNAyOFpRfA1WdO40BdtOSBAAgEp+nsFZrjqWXPrixVQ6w5DYUJ06fX3hiSPNwwekv3sQLM5SuZknPooIzFzCYzKw+XXSrarqpeDUStg7r9n4u046h9jxVIftSIImntLju9zSx97MUOpH/Ye5zL8B17B71eswXAylxHJ6w9R5l7oZAlQTu0PLBrawPtQyyrvjsBqq6qOmXHwB20k3foyPoZh8I4gTVvt8aGR4Ksa7hUur5e6yxycoxpWEeFPiGwzzdG4kaLWcjqS2zNvBUtWZiCDmIsyv/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gdbl4Mr6/6tJasYiOiOMwwSMMYRGnhnEIC1pd3WvOvg=;
- b=EjLJauubQKTURaNVG/YJb1yGR/Xl0pYGFYYSJlGprEFNeSu5BfSf23GcFhqrk2ibI2SeAVsTXATWZhWnPT9pg2y305AUrHSbkShzoZzJKKibF5pxC6hSPqNzzfukjLmNMWZpRR00OyFbm7GC6UDl+CVFZEpeT4eZpmE3uGbHtW0xeY5bSOh3+VT/lWV6mlvK+mXIDfq+kwag5uTaSRWnffEsH2CvSpglRxpxDQ4k0XT8+7oFU1qoYVnblQ7H8yigUuiLbYa5L64WB2W5Ak++azEtZF4lWrs01TAWoMdTT5BDS8NXtTxyRyFIYEeXo+HBNsn0DgNaVceUf44u3xLwOA==
+ bh=aDQL47Obz9qLdX9kqrsbhoodsVUqAN/2EGMDc6DU0Ec=;
+ b=RuElDWTJAIl4CEwJPUPRTd+hEmjeGYyuqAs/DkNPwVfVkgcNrW7eXSW52fV8oba/r8KsYTmpOJzbGNWykVHiQErSxw5Z6WvUoy/4OTmCZDd+GzAa1lkj56cXEWPm+3bxmDESy6XuakpDWzLxv6JvPpHCuOUVSl9TT/NXmhaLLnKOjnYHW9QZwhQsoQ4KtU/Yk5303BxleOl+PaBtHQVYXS/h7X+Ql7YoQruBexos7uLx7DrWmi1Gua20wSQbYpKL1J4Hgf2INi7Ywk62Vg2mJymnx8ZWP1PPFP+kq4l6CqR2WTk4Na4JEGLHT5VOdOrR5UIAfw4wej2t9GgbOMuL5w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gdbl4Mr6/6tJasYiOiOMwwSMMYRGnhnEIC1pd3WvOvg=;
- b=JeJHFwNWdxXxlGXZR65lVDsruT/63945ErPOUPaL1GCJLi3PNLvMwre8CVPD2S2loG8JluZ9Qwc8uc6RNKB3JNOD9EySRMHn5wOPk/571eh2YuAoYWL/HjEFgxkUlgvvwndPi8ONFlZUniWTeuetRHBw4d47Bglby3xGK86l2IQ=
+ bh=aDQL47Obz9qLdX9kqrsbhoodsVUqAN/2EGMDc6DU0Ec=;
+ b=KwGe9GeKPBh/0V77x5HdVEbeRqm9e9I9Or1XTUzD4F6m3a3jp6DUwRabO+c6PT+Eo3FgyppYU8DnIKNRFQqfKs2QwZqlOsplBLuj3zTBNN2G/LuJrLSjDnCxeg2lbJk1m6jkOrankmkFcFwxiGkWIL43SLjRPtaKVURlwSVIvtQ=
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
  SN6PR2101MB1038.namprd21.prod.outlook.com (52.132.115.11) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.4; Thu, 5 Sep 2019 23:01:19 +0000
+ 15.20.2263.4; Thu, 5 Sep 2019 23:01:20 +0000
 Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::dd56:aa4f:204f:86a4]) by SN6PR2101MB0942.namprd21.prod.outlook.com
  ([fe80::dd56:aa4f:204f:86a4%3]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
- 23:01:18 +0000
+ 23:01:20 +0000
 From:   Dexuan Cui <decui@microsoft.com>
 To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
         Stephen Hemminger <sthemmin@microsoft.com>,
@@ -58,13 +58,13 @@ To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
 CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v5 4/9] Drivers: hv: vmbus: Implement suspend/resume for VSC
- drivers for hibernation
-Thread-Topic: [PATCH v5 4/9] Drivers: hv: vmbus: Implement suspend/resume for
- VSC drivers for hibernation
-Thread-Index: AQHVZD3TSgcM00JbJEK+uBOsXhhSqw==
-Date:   Thu, 5 Sep 2019 23:01:17 +0000
-Message-ID: <1567724446-30990-5-git-send-email-decui@microsoft.com>
+Subject: [PATCH v5 6/9] Drivers: hv: vmbus: Suspend/resume the vmbus itself
+ for hibernation
+Thread-Topic: [PATCH v5 6/9] Drivers: hv: vmbus: Suspend/resume the vmbus
+ itself for hibernation
+Thread-Index: AQHVZD3UFEOseB0gRU+reD9zfGQl7Q==
+Date:   Thu, 5 Sep 2019 23:01:19 +0000
+Message-ID: <1567724446-30990-7-git-send-email-decui@microsoft.com>
 References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
 In-Reply-To: <1567724446-30990-1-git-send-email-decui@microsoft.com>
 Reply-To: Dexuan Cui <decui@microsoft.com>
@@ -81,132 +81,168 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 1.8.3.1
 x-originating-ip: [13.77.154.182]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dfbd3e97-ef3c-4686-737f-08d73254f5a9
+x-ms-office365-filtering-correlation-id: e9cb8299-d0ea-4724-058b-08d73254f6b4
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1038;
 x-ms-traffictypediagnostic: SN6PR2101MB1038:|SN6PR2101MB1038:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB10389358501E1579C94CBC5EBFBB0@SN6PR2101MB1038.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
+x-microsoft-antispam-prvs: <SN6PR2101MB1038FB546851E9554B8675B6BFBB0@SN6PR2101MB1038.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
 x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(6506007)(66446008)(256004)(14444005)(10290500003)(478600001)(476003)(102836004)(186003)(36756003)(52116002)(64756008)(71200400001)(26005)(11346002)(3450700001)(6512007)(71190400001)(5024004)(305945005)(15650500001)(107886003)(4326008)(446003)(66946007)(316002)(76176011)(7736002)(6436002)(66556008)(386003)(22452003)(66476007)(6486002)(486006)(53936002)(2616005)(25786009)(14454004)(54906003)(110136005)(5660300002)(2501003)(3846002)(2906002)(6116002)(81156014)(8676002)(81166006)(86362001)(50226002)(4720700003)(66066001)(10090500001)(1511001)(99286004)(8936002)(43066004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1038;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(6506007)(66446008)(256004)(14444005)(10290500003)(478600001)(476003)(102836004)(186003)(36756003)(52116002)(64756008)(71200400001)(26005)(11346002)(3450700001)(6512007)(71190400001)(305945005)(15650500001)(107886003)(4326008)(446003)(66946007)(316002)(76176011)(7736002)(6436002)(66556008)(386003)(22452003)(66476007)(6486002)(486006)(53936002)(2616005)(25786009)(14454004)(54906003)(110136005)(5660300002)(2501003)(3846002)(2906002)(6116002)(81156014)(8676002)(81166006)(86362001)(50226002)(4720700003)(66066001)(10090500001)(1511001)(99286004)(8936002)(43066004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1038;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: eBkjgtsoTrAmFajFGAmvmZdJy/mTUFEVEo5CrifZjkJI/DWX/y6yI5H1LeREIRT9W3ymXkP5ibi4mYWuhO0xzG36QqSyzU+BgGoa6EXR/RkaAA7J+gEHoLFy1aHHwLx96Tuck6JRQR6pFt+ZtIzplX4px3E/Nzxp+ichhorb/WR8YQQateANnkxbv7aF6qx1j5jRqxZRqtI/fJ8NXdd9MS70rFhLL+1R+SfEiVJ/IetfT6fLhTY+HeD1Vb/3XAWmcVvTqHyMviTtdE2I2DeVFO44iYpG8glO07M+DISgjJgp59KRC/3FVObZEW6F5znnmmBX/ILyfvrkqXJO07H4noRqVBpdWEWAiMNGIX6LPqTk/b/Rv1nItS72zP8No9qyr31yijpyjbllfX5zh7SRB6CzPC25xH7rDbhPgLK/PLk=
+x-microsoft-antispam-message-info: VemsxEICkdZJOZtIRTLi4j7+Je8a1rYTJgECcNZnaWR1EEgG2613n+l0r0qRxZTU+BQzuO//U4HR/ra+O54QUrKCv+6uE9tr28gIRcK2kOFL8Atl45MMyUmE4vQWBOaDNZUz/dnO9g+HM4w3yJUGazJK35hyzLaZlKHryCyov2e5H8/OLcn9Kxel9ApSWvK5HFDrceeqsfJajHnqhgbAc0pwCgXumwO6ueR9eRBUOtydZGKEDjJzeta42h7q9oFBuZkIkGWFvb9abtUuuccalqMvnsWFYO7EsNtXpPcbEeUUjNyYKrslocKQyj7Vx5xh8jHSY9nsa6etoSoZGg5EQqIc3Fa1JfzAozvFM7IN7S6GcyMh1VtnzWYRE59kYx+1eJ8Eh2DD4v9Tj6p7U0JlIsUfks2t0oSKiCa8xW8eokI=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfbd3e97-ef3c-4686-737f-08d73254f5a9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 23:01:17.7798
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9cb8299-d0ea-4724-058b-08d73254f6b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 23:01:19.5588
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: e3FcxON5OOXvuS3mUL1cBwOSIoCS1tIsCFk4iBdre7iLZrTZjL6hs35+3M0aZj1rwCVh9pF85gxKS7/RGvguVA==
+X-MS-Exchange-CrossTenant-userprincipalname: JfHkIPkfHKeHDkpJKeREXgwaa1u1uTaXv8AEYX5Ce6xRnZBwh8QaK3QtKXsggdYjTbC8aYZ3vDTNM0H4wVeRYQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The high-level VSC drivers will implement device-specific callbacks.
+Before Linux enters hibernation, it sends the CHANNELMSG_UNLOAD message to
+the host so all the offers are gone. After hibernation, Linux needs to
+re-negotiate with the host using the same vmbus protocol version (which
+was in use before hibernation), and ask the host to re-offer the vmbus
+devices.
 
 Signed-off-by: Dexuan Cui <decui@microsoft.com>
 Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 ---
- drivers/hv/vmbus_drv.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/hyperv.h |  3 +++
- 2 files changed, 49 insertions(+)
+ drivers/hv/connection.c   |  3 +--
+ drivers/hv/hyperv_vmbus.h |  2 ++
+ drivers/hv/vmbus_drv.c    | 59 +++++++++++++++++++++++++++++++++++++++++++=
+++++
+ 3 files changed, 62 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+index 09829e1..806319c 100644
+--- a/drivers/hv/connection.c
++++ b/drivers/hv/connection.c
+@@ -59,8 +59,7 @@ static __u32 vmbus_get_next_version(__u32 current_version=
+)
+ 	}
+ }
+=20
+-static int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo,
+-					__u32 version)
++int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 ver=
+sion)
+ {
+ 	int ret =3D 0;
+ 	unsigned int cur_cpu;
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 26ea161..e657197 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -274,6 +274,8 @@ struct vmbus_msginfo {
+=20
+ extern struct vmbus_connection vmbus_connection;
+=20
++int vmbus_negotiate_version(struct vmbus_channel_msginfo *msginfo, u32 ver=
+sion);
++
+ static inline void vmbus_send_interrupt(u32 relid)
+ {
+ 	sync_set_bit(relid, vmbus_connection.send_int_page);
 diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 2ef375c..a30c70a 100644
+index a30c70a..ce9974b 100644
 --- a/drivers/hv/vmbus_drv.c
 +++ b/drivers/hv/vmbus_drv.c
-@@ -911,6 +911,43 @@ static void vmbus_shutdown(struct device *child_device=
+@@ -2089,6 +2089,51 @@ static int vmbus_acpi_add(struct acpi_device *device=
 )
- 		drv->shutdown(dev);
+ 	return ret_val;
  }
 =20
-+/*
-+ * vmbus_suspend - Suspend a vmbus device
-+ */
-+static int vmbus_suspend(struct device *child_device)
++static int vmbus_bus_suspend(struct device *dev)
 +{
-+	struct hv_driver *drv;
-+	struct hv_device *dev =3D device_to_hv_device(child_device);
++	vmbus_initiate_unload(false);
 +
-+	/* The device may not be attached yet */
-+	if (!child_device->driver)
-+		return 0;
++	vmbus_connection.conn_state =3D DISCONNECTED;
 +
-+	drv =3D drv_to_hv_drv(child_device->driver);
-+	if (!drv->suspend)
-+		return -EOPNOTSUPP;
-+
-+	return drv->suspend(dev);
++	return 0;
 +}
 +
-+/*
-+ * vmbus_resume - Resume a vmbus device
-+ */
-+static int vmbus_resume(struct device *child_device)
++static int vmbus_bus_resume(struct device *dev)
 +{
-+	struct hv_driver *drv;
-+	struct hv_device *dev =3D device_to_hv_device(child_device);
++	struct vmbus_channel_msginfo *msginfo;
++	size_t msgsize;
++	int ret;
 +
-+	/* The device may not be attached yet */
-+	if (!child_device->driver)
-+		return 0;
++	/*
++	 * We only use the 'vmbus_proto_version', which was in use before
++	 * hibernation, to re-negotiate with the host.
++	 */
++	if (vmbus_proto_version =3D=3D VERSION_INVAL ||
++	    vmbus_proto_version =3D=3D 0) {
++		pr_err("Invalid proto version =3D 0x%x\n", vmbus_proto_version);
++		return -EINVAL;
++	}
 +
-+	drv =3D drv_to_hv_drv(child_device->driver);
-+	if (!drv->resume)
-+		return -EOPNOTSUPP;
++	msgsize =3D sizeof(*msginfo) +
++		  sizeof(struct vmbus_channel_initiate_contact);
 +
-+	return drv->resume(dev);
++	msginfo =3D kzalloc(msgsize, GFP_KERNEL);
++
++	if (msginfo =3D=3D NULL)
++		return -ENOMEM;
++
++	ret =3D vmbus_negotiate_version(msginfo, vmbus_proto_version);
++
++	kfree(msginfo);
++
++	if (ret !=3D 0)
++		return ret;
++
++	vmbus_request_offers();
++
++	return 0;
 +}
-=20
- /*
-  * vmbus_device_release - Final callback release of the vmbus child device
-@@ -926,6 +963,14 @@ static void vmbus_device_release(struct device *device=
++
+ static const struct acpi_device_id vmbus_acpi_device_ids[] =3D {
+ 	{"VMBUS", 0},
+ 	{"VMBus", 0},
+@@ -2096,6 +2141,19 @@ static int vmbus_acpi_add(struct acpi_device *device=
 )
- 	kfree(hv_dev);
- }
+ };
+ MODULE_DEVICE_TABLE(acpi, vmbus_acpi_device_ids);
 =20
 +/*
 + * Note: we must use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS rather than
-+ * SET_SYSTEM_SLEEP_PM_OPS: see the comment before vmbus_bus_pm.
++ * SET_SYSTEM_SLEEP_PM_OPS, otherwise NIC SR-IOV can not work, because the
++ * "pci_dev_pm_ops" uses the "noirq" callbacks: in the resume path, the
++ * pci "noirq" restore callback runs before "non-noirq" callbacks (see
++ * resume_target_kernel() -> dpm_resume_start(), and hibernation_restore()=
+ ->
++ * dpm_resume_end()). This means vmbus_bus_resume() and the pci-hyperv's
++ * resume callback must also run via the "noirq" callbacks.
 + */
-+static const struct dev_pm_ops vmbus_pm =3D {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_suspend, vmbus_resume)
++static const struct dev_pm_ops vmbus_bus_pm =3D {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(vmbus_bus_suspend, vmbus_bus_resume)
 +};
 +
- /* The one and only one */
- static struct bus_type  hv_bus =3D {
- 	.name =3D		"vmbus",
-@@ -936,6 +981,7 @@ static void vmbus_device_release(struct device *device)
- 	.uevent =3D		vmbus_uevent,
- 	.dev_groups =3D		vmbus_dev_groups,
- 	.drv_groups =3D		vmbus_drv_groups,
-+	.pm =3D			&vmbus_pm,
+ static struct acpi_driver vmbus_acpi_driver =3D {
+ 	.name =3D "vmbus",
+ 	.ids =3D vmbus_acpi_device_ids,
+@@ -2103,6 +2161,7 @@ static int vmbus_acpi_add(struct acpi_device *device)
+ 		.add =3D vmbus_acpi_add,
+ 		.remove =3D vmbus_acpi_remove,
+ 	},
++	.drv.pm =3D &vmbus_bus_pm,
  };
 =20
- struct onmessage_work_context {
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 2d39248..8a60e77 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1157,6 +1157,9 @@ struct hv_driver {
- 	int (*remove)(struct hv_device *);
- 	void (*shutdown)(struct hv_device *);
-=20
-+	int (*suspend)(struct hv_device *);
-+	int (*resume)(struct hv_device *);
-+
- };
-=20
- /* Base device object */
+ static void hv_kexec_handler(void)
 --=20
 1.8.3.1
 
