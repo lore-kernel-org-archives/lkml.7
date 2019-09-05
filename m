@@ -2,180 +2,174 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D16BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2349AC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742B7207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:31:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RYrRG0cT"
+	by mail.kernel.org (Postfix) with ESMTP id 4564520CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567693941;
+	bh=YZ00u3G643be6EwjzrDLyPKC4ld2QppjrkomdSGvM7U=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=HY+RmI0y14pzmzjqIMWLBvT2O078faqZt5HvEEi1lMryYo2++FeWNQ4VKW18y5I5F
+	 P0n58TJyKOP+gotk0EpPyfWBCD7liWaGW6I1pCkzyvQfE0K/SwNDwV2GvX2cjZal4r
+	 bRZS34byfBO8u37POQTIc8gE7UTUroSfrujVBo4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfIEObh (ORCPT
+        id S1729727AbfIEOcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:31:37 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:45870 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbfIEObg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:31:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AhwZHS8zUJZ6Gu2eJctKeuPpXhbUkrdHOEk+XcNJ2GI=; b=RYrRG0cTtClPqZbRLIB+Sv54M
-        gLP9vtJFQwJkKKVP7e34AeSEts9LAQiePASBpjRb3rLxsdDCxZPfUoaO3JnrgeHvNkAYWVLgafYR5
-        xUYb4S3egpT7ewRUvRHLllUcQa2Yo6wx+18288xX/6eo3ExgNLYJLAeBsQ04UPlybetE6IHtezPzv
-        gEP3T1eASHh9EIpE/xbpRMoxzaRZt2FstcLjxwR+D8DoI35lGdTR64CcVGX2N5QwtQppyNnARMJWl
-        SBca4nSoabdd+1YW6b2Ug9aQUZJWUZH1GWkKvXta7rph19AEvVGau2HfAlJyCmzIJTkIYzd7Xaq+Z
-        WMBXoUq4A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5snB-00006n-1q; Thu, 05 Sep 2019 14:31:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A60B5303121;
-        Thu,  5 Sep 2019 16:30:41 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9880729D35369; Thu,  5 Sep 2019 16:31:18 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 16:31:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v4 0/9] printk: new ringbuffer implementation
-Message-ID: <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190904123531.GA2369@hirez.programming.kicks-ass.net>
- <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+        Thu, 5 Sep 2019 10:32:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:46154 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726626AbfIEOcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:32:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F291728;
+        Thu,  5 Sep 2019 07:32:18 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDCBC3F67D;
+        Thu,  5 Sep 2019 07:32:17 -0700 (PDT)
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     John Garry <john.garry@huawei.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+ <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+ <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+ <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
+ <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
+ <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
+ <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
+ <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
+ <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
+ <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
+ <ecdb638b-d5d3-efdc-becd-478ce6e6ff96@huawei.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <e3a4a04a-4669-5a03-5115-84c6573b99e9@kernel.org>
+Date:   Thu, 5 Sep 2019 15:32:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ecdb638b-d5d3-efdc-becd-478ce6e6ff96@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 03:05:13PM +0200, Petr Mladek wrote:
-
-> The serialized approach used a lock. It was re-entrant and thus less
-> error-prone but still a lock.
+On 05/09/2019 15:23, John Garry wrote:
+> On 05/09/2019 14:50, Marc Zyngier wrote:
+>> On 05/09/2019 14:26, John Garry wrote:
+>>> On 05/09/2019 12:22, Marc Zyngier wrote:
+>>>> OK, debug was slightly off, but it is interesting that the driver didn't
+>>>> unmap the device, either because it is flagged as shared (with what?) or
+>>>> that additional interrupts are allocated in the lpi_map for this
+>>>> instance.
+>>>>
+>>>> Here's an updated debug patch. Can you please run the same thing again?
+>>>>
+>>>
+>>> As requested:
+>>>
+>>> root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
+>>>
+>>> <snip>
+>>>
+>>> [   78.593897] Freed devid 7410 event 0 LPI 0
+>>> [   78.597990] Freed devid 7410 event 1 LPI 0
+>>> [   78.602080] Freed devid 7410 event 2 LPI 0
+>>> [   78.606169] Freed devid 7410 event 3 LPI 0
+>>> [   78.610253] Freed devid 7410 event 4 LPI 0
+>>> [   78.614337] Freed devid 7410 event 5 LPI 0
+>>> [   78.618422] Freed devid 7410 event 6 LPI 0
+>>> [   78.622506] Freed devid 7410 event 7 LPI 0
+>>> [   78.626590] Freed devid 7410 event 8 LPI 0
+>>> [   78.630674] Freed devid 7410 event 9 LPI 0
+>>> [   78.634758] Freed devid 7410 event 10 LPI 0
+>>> [   78.638930] Freed devid 7410 event 11 LPI 0
+>>> [   78.643101] Freed devid 7410 event 12 LPI 0
+>>> [   78.647272] Freed devid 7410 event 13 LPI 0
+>>> [   78.651445] Freed devid 7410 event 14 LPI 0
+>>> [   78.655616] Freed devid 7410 event 15 LPI 0
+>>> [   78.659787] Freed devid 7410 event 16 LPI 0
+>>> [   78.663959] Unmap devid 7410 shared 0 lpi_map 17-31
+>>
+>> Bah. Try this for size...
+>>
 > 
-> The lock was planed to be used not only to access the buffer but also
-> for eventual locking inside lockless consoles. It might allow to
-> have some synchronization even in lockless consoles. But it
-> would be big-kernel-lock-like style. It might create yet
-> another maze of problems.
-
-I really don't see your point. All it does is limit buffer writers to a
-single CPU, and does the same for the atomic/early console output.
-
-But it must very much be a leaf lock -- that is, there must not be any
-locking inside it -- and that is fine, if a console cannot do lockless
-output, it simply cannot be marked as having an atomic/early console.
-
-You've seen the force_earlyprintk patches I use [*], that stuff works
-and is infinitely better than the current printk trainwreck -- and it
-uses exactly such serialization -- although I only added it to make the
-output actually readable. And _that_ is exactly why I propose adding it,
-you need it _anyway_.
-
-So the argument goes like:
-
- - synchronous output to lockless consoles (early serial) is mandatory
- - such output needs to be CPU serialized, otherwise it becomes
-   unreadable garbage.
- - since we need that serialization anyway, might as well lift it up one
-   layer an put it around the buffer.
-
-Since a single-cpu buffer writer can be wait free (and relatively
-simple), the only possible waiting is on the lockless console (polling
-until the UART is ready for it's next byte). There is nothing else. It
-will make progress.
-
-> If we remove per-CPU buffers in NMI. We would need to synchronize
-> again printing backtraces from all CPUs. Otherwise they would get
-> mixed and hard to read. It might be solved by some prefix and
-> sorting in userspace but...
-
-It must have cpu prefixes anyway; the multi-writer thing will equally
-mix them together. This is a complete non sequitur.
-
-That current printk stuff is just pure and utter crap. Those NMI buffers
-are a trainwreck and need to die a horrible death.
-
-> I agree that this lockless variant is really complicated. I am not
-> able to prove that it is race free as it is now. I understand
-> the algorithm. But there are too many synchronization points.
+> It fits:
 > 
-> Peter, have you seen my alternative approach, please. See
-> https://lore.kernel.org/lkml/20190704103321.10022-1-pmladek@suse.com/
+> root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
 > 
-> It uses two tricks:
+> <snip>
 > 
->    1. Two bits in the sequence number are used to track the state
->       of the related data. It allows to implement the entire
->       life cycle of each entry using atomic operation on a single
->       variable.
+> [   34.806156] Freed devid 7410 LPI 0
+> [   34.809555] Freed devid 7410 LPI 0
+> [   34.812951] Freed devid 7410 LPI 0
+> [   34.816344] Freed devid 7410 LPI 0
+> [   34.819734] Freed devid 7410 LPI 0
+> [   34.823122] Freed devid 7410 LPI 0
+> [   34.826512] Freed devid 7410 LPI 0
+> [   34.829901] Freed devid 7410 LPI 0
+> [   34.833291] Freed devid 7410 LPI 0
+> [   34.836680] Freed devid 7410 LPI 0
+> [   34.840071] Freed devid 7410 LPI 0
+> [   34.843461] Freed devid 7410 LPI 0
+> [   34.846848] Freed devid 7410 LPI 0
+> [   34.850238] Freed devid 7410 LPI 0
+> [   34.853627] Freed devid 7410 LPI 0
+> [   34.857017] Freed devid 7410 LPI 0
+> [   34.860406] Freed devid 7410 LPI 0
+> [   34.863797] Unmap devid 7410 shared 0 lpi_map
+> [   34.868229] Unmap devid 7410
+> root@(none)$
+> root@(none)$
+> root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
+> [   39.158802] scsi host0: hisi_sas_v3_hw
+> [   40.383384] ITS: alloc 9920:32
+> [   40.386429] ITT 32 entries, 5 bits
+> [   40.389970] ID:0 pID:9920 vID:23
+> [   40.393188] ID:1 pID:9921 vID:24
+> [   40.396404] ID:2 pID:9922 vID:25
+> [   40.399621] ID:3 pID:9923 vID:26
+> [   40.402836] ID:4 pID:9924 vID:27
+> [   40.406053] ID:5 pID:9925 vID:28
+> [   40.409269] ID:6 pID:9926 vID:29
+> [   40.412485] ID:7 pID:9927 vID:30
+> [   40.415702] ID:8 pID:9928 vID:31
+> [   40.418916] ID:9 pID:9929 vID:32
+> [   40.422132] ID:10 pID:9930 vID:33
+> [   40.425435] ID:11 pID:9931 vID:34
+> [   40.428739] ID:12 pID:9932 vID:35
+> [   40.432042] ID:13 pID:9933 vID:36
+> [   40.435345] ID:14 pID:9934 vID:37
+> [   40.438648] ID:15 pID:9935 vID:38
+> [   40.441951] ID:16 pID:9936 vID:39
 > 
->    2. There is a helper function to read valid data for each entry,
->       see prb_read_desc(). It checks the state before and after
->       reading the data to make sure that they are valid. And
->       it includes the needed read barriers. As a result there
->       are only three explicit barriers in the code. All other
->       are implicitly done by cmpxchg() atomic operations.
 > 
-> The alternative lockless approach is still more complicated than
-> the serialized one. But I think that it is manageable thanks to
-> the simplified state tracking. And I might safe use some pain
-> in the long term.
+> <snip>
 
-I've not looked at it yet, sorry. But per the above argument of needing
-the CPU serialization _anyway_, I don't see a compelling reason not to
-use it.
+Awesome. Can I take this as a Tested-by?
 
-It is simple, it works. Let's use it.
+> Btw, I hacked the "Freed devid %x event %d LPI %ld\n" print to remove 
+> the "event" value, as you may have noticed.
 
-If you really fancy a multi-writer buffer, you can always switch to one
-later, if you can convince someone it actually brings benefits and not
-just head-aches.
+Yup, not meaningful for the problem at hand.
 
-So I have something roughly like the below; I'm suggesting you add the
-line with + on:
+Thanks again for your help!
 
-  int early_vprintk(const char *fmt, va_list args)
-  {
-	char buf[256]; // teh suck!
-	int old, n = vscnprintf(buf, sizeof(buf), fmt, args);
-
-	old = cpu_lock();
-+	printk_buffer_store(buf, n);
-	early_console->write(early_console, buf, n);
-	cpu_unlock(old);
-
-	return n;
-  }
-
-(yes, yes, we can get rid of the on-stack @buf thing with a
-reserve+commit API, but who cares :-))
-
-
-
-[*] git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git debug/experimental
+	M.
+-- 
+Jazz is not dead, it just smells funny...
