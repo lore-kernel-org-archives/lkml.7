@@ -2,116 +2,144 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5CFC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D26C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63609206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 497CA2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:39:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jwhgx2px"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbfIENhs (ORCPT
+        id S1730232AbfIENjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:37:48 -0400
-Received: from sauhun.de ([88.99.104.3]:57244 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727143AbfIENhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:37:46 -0400
-Received: from localhost (p54B335F6.dip0.t-ipconnect.de [84.179.53.246])
-        by pokefinder.org (Postfix) with ESMTPSA id 31A312C00C0;
-        Thu,  5 Sep 2019 15:37:44 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 15:37:43 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, alokc@codeaurora.org,
-        agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thu, 5 Sep 2019 09:39:14 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55624 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfIENjO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:39:14 -0400
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 98B5526D;
+        Thu,  5 Sep 2019 15:39:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1567690751;
+        bh=b3KOuttUiB2EelRovaVecGiYFMN3AldXDLjxRMlXjhk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jwhgx2pxxHSjX7GaaFLi+jq16LH1ajMUk+bPprjKFjMCRXI85GuGACbKvWQcCTmx9
+         +Gv5Xwnf60GMV4XjfcDcY9KRpH7dHhWEswVZFb3ZBdrzqk5dkJl2aay4DQU2Z0RChH
+         9U0Q8tx9RIT61cB9EAinoS2G2+LWnyneEecbsIU8=
+Date:   Thu, 5 Sep 2019 16:39:05 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
- processing
-Message-ID: <20190905133743.GE1157@kunai>
-References: <20190904113613.14997-1-lee.jones@linaro.org>
- <20190904203548.GC580@tuxbook-pro>
- <20190904212337.GF23608@ninjato>
- <20190905071103.GX26880@dell>
- <20190905091617.GC1157@kunai>
- <20190905093444.GE26880@dell>
+Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
+Message-ID: <20190905133905.GN5035@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-9-jacopo+renesas@jmondi.org>
+ <20190827002422.GQ5031@pendragon.ideasonboard.com>
+ <20190827145619.33s7gkv7tgtsr6nz@uno.localdomain>
+ <20190827163423.GB5054@pendragon.ideasonboard.com>
+ <20190905095757.gg6s5pse5tvivxbs@uno.localdomain>
+ <20190905111712.GG5035@pendragon.ideasonboard.com>
+ <20190905131453.7ortosddn4afxd5j@uno.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gMR3gsNFwZpnI/Ts"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190905093444.GE26880@dell>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190905131453.7ortosddn4afxd5j@uno.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jacopo,
 
---gMR3gsNFwZpnI/Ts
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Sep 05, 2019 at 03:14:53PM +0200, Jacopo Mondi wrote:
+> On Thu, Sep 05, 2019 at 02:17:12PM +0300, Laurent Pinchart wrote:
+> > Hi Jacopo,
+> >
+> >>>>>> +/**
+> >>>>>> + * rcar_cmm_enable() - enable the CMM unit
+> >>>>>> + *
+> >>>>>> + * @pdev: The platform device associated with the CMM instance
+> >>>>>> + *
+> >>>>>> + * Enable the CMM unit by enabling the parent clock and enabling the CMM
+> >>>>>> + * components, such as 1-D LUT, if requested.
+> >>>>>> + */
+> >>>>>> +int rcar_cmm_enable(struct platform_device *pdev)
+> >>>>>> +{
+> >>>>>> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> >>>>>> +	int ret;
+> >>>>>> +
+> >>>>>> +	if (!rcmm)
+> >>>>>> +		return -EPROBE_DEFER;
+> >>>>>
+> >>>>> This function is called in rcar_du_crtc_atomic_enable(), so that's not
+> >>>>> the right error code. It seems we need another function for the CMM API
+> >>>>> to defer probing :-/ I would call it rcar_cmm_init(). This check would
+> >>>>> then be removed.
+> >>>>
+> >>>> I agree about the return code, but not the name, as this function
+> >>>> actually enables the CMM.
+> >>>
+> >>> I meant creating a new rcar_cmm_init() function that would just have the
+> >>> !rcmm check.
+> >>>
+> >>>> PROBE_DEFER does not make any sense here, I
+> >>>> wonder where it come from, as the probing of CMM and DU has long
+> >>>> happened once we get here (at least, I assume so, if we receive a
+> >>>> gamma_table, userspace has already been running, and both DU and CMM
+> >>>> should have probed. Otherwise, we can exploit the newly created device
+> >>>> link, and make sure DU probes after the CMM).
+> >>>>
+> >>>> I would just change the return value here, and possibly use the device
+> >>>> link to ensure the correct probing sequence.
+> >>>
+> >>> How does device link help here ?
+> >>
+> >> Currently it doesn't, as we are creating a stateless link.
+> >>
+> >> But if we go for a managed device link (which is the default, by the
+> >> way, you have to opt-out from it) we can guarantee the CMM has probed
+> >> before the DU probes, so that we have a guarantee when we get here
+> >> !rcmm cannot happen.
+> >>
+> >> https://www.kernel.org/doc/html/v5.2-rc7/driver-api/device_link.html
+> >> "The consumer devices are not probed before the supplier is bound to a driver,
+> >>  and they’re unbound before the supplier is unbound."
+> >>
+> >> As we create the link, the CMM is the supplier of DU, so we could just
+> >> drop the DL_FLAG_STATELESS flag in device_link_add() in 10/14.
+> >>
+> >> Does this match your understanding ?
+> >
+> > Except there's a bit of a chicken and egg issue, as you call
+> > device_link_add() from rcar_du_cmm_init(), which thus require the DU
+> > driver to probe first :-) For this to work we would probably need an
+> > early initcall in the DU driver.
+> 
+> Yes indeed, the point where the link is created at the moment is too
+> late... Is it worth an early initcall, or should we just assume that
+> at the point where the LUT is operated userspace has already been
+> running and both the CMM and the DU have probed already?
 
+We should at least guard against crashes, that's why I've proposed an
+init function in the CMM driver for the sole purpose of making sure the
+device has been probed, and deferring probe of the DU.
 
-> > So, are there investigations running why this reboot happens?
->=20
-> Yes, but they have been running for months, literally.
+-- 
+Regards,
 
-I see. This is good to know. Just so I also know where we are with this.
-
-> > Which is a clear disadvantage of that solution. It won't fix older
-> > kernels. My suggestion above should fix them, too.
->=20
-> Not sure how this is possible.  Unless you mean LTS?
-
-Why not? Using of_machine_is_compatible() makes the patch 100% self
-contained (no extra binding needed). It will work wherever the machine
-description fits.
-
-> > Unless we know why the reboot happens on your platform, I'd be careful
-> > with saying "work obviously well" on other platforms.
->=20
-> Someone must have tested it?  Surely ... ;)
-
-It seems to work mostly, I won't deny that. But we don't know if the
-buggy situation can be triggered on these platforms as well by something
-else later. We just don't know.
-
-> > My suggestion:
-> >=20
-> > For 5.3, use of_machine_is_compatible() and we backport that. For later,
-> > try to find out the root cause and fix it. If that can't be done, try to
-> > set up a generic "disable-dma" property and use it.
-> >=20
-> > What do you think about that?
->=20
-> Sounds okay to me.  Let me code that up.
-
-Glad you like it.
-
-
---gMR3gsNFwZpnI/Ts
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1xD6MACgkQFA3kzBSg
-KbbjbRAAoIoQeZCMH5wLWkFBosilnEpvLFsBKQ9e1UoyHCK9wZiPoKduvpoo2g4R
-RLSwko3R49cuGKCMy3e7WeX+bOekY7xaP4M79/b/jOp7JBm3rhbKj2NjHNl7hz2b
-GRgIR9rCK7LbzfT47jf2p8rYGXTa2e4285Z6LqLwncf3E2ZGIntEE7Trc9hZbn2c
-MI+dMDgRvUUotGXQ0H5+XVRLjpPLi2p4MJhSE1wQpsAl1q2vD3sOdnG1ewpj2akI
-O3H+tupA5EU3MEMeWLN2LLhTAllw5uopqX74r4TCwfFl8QYOYZ/7Z4UfTsKLiY9q
-I/VbXn8NmghJTbnFogH8Ne6fm/omHZDPzO44bznJeDKtfAc2P+LKQOjAXpA0Iaof
-Qv6zBX7P6eILRJtxr6IeYbrmvaV85wyVeAf2Kxucxo5BIq5HwulcjX3Qxu6GGal8
-9zhmaOu8RmL9DYHWXr5IaG8+Lx88ftTspUHD4AiYxDbMWkRTbrENV7m6lLWtDTgZ
-VQ5hDBtx7HZEFb9I/ToOTBkL8zwiHRCKvAhtRNfMTBHixl5q5Hy68RI77Jywp3+G
-ku1M7uMksLAgH7u8UGxWtxkimxcEcYGAvXwaffbqfQnswOSPD7l3iL6k9uv5hYC8
-ZKwMfYXGXIcWI6l7qWcFkoTpIVsb3Sflshc1I7iHAGJov017tSI=
-=0if5
------END PGP SIGNATURE-----
-
---gMR3gsNFwZpnI/Ts--
+Laurent Pinchart
