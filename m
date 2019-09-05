@@ -2,105 +2,75 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274C8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4C7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA06920825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:28:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567711698;
-	bh=KZ9rmodiru/nKgzoWgIaSFGY1ydbqtkOnntZoLPbdG8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cuetlBO1W5GTDBuTxTD0A4cY24O+jSHWC5YNm53viACreJE6pF77ClkE3JgpT0TId
-	 hVTVNwC1HxfiTj6hojbmLIAjxwBSborBSGH/rehYttB5XGMrdNNaD4CpS4TuYC5LpN
-	 +DwK9ey9cUh86DmVZ6p/Hjbc+4Z1zl7nlxtdsvYY=
+	by mail.kernel.org (Postfix) with ESMTP id C98B82137B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389005AbfIET2R (ORCPT
+        id S2389045AbfIETaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:28:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53140 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbfIET2Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:28:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t1YcN3+xCiz85eBAEfj1FyAohnsFYzHvEYbyJqPQyIM=; b=FR+n5e6W5gAAqw6FLtvlHnO8I
-        DAO1WnOgf6bCa8BdoE8oC3frfV8mIxyk6aoGSSkoPiocwBedukffIe4a/UpxP8Grh/JR6ltPh4IjY
-        TfS+jCTZLqJWUgHDwnDvGPCn2NLvn2iOpmd6h8XD1SE8n3OAbYTrZmVJbnQFIHux2Qub3Y88izqNt
-        G4UvtPFAWEhZ/OQjSy5J41PIoI5NyvKYNWNcNImVocCD8cQlLFNb4HHrE8lmquZnftchqnWY/vnzW
-        LapmaQbSLFvZUnLv6hU8TzQRjP2mMacHCB9gSjVMQABoWuGrjeCFxq1t3Qnc6+oAfwaWIXrRQPww0
-        H/27M46Cw==;
-Received: from [177.159.253.249] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5xQV-0007Yf-EO; Thu, 05 Sep 2019 19:28:15 +0000
-Date:   Thu, 5 Sep 2019 16:28:10 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
- scripts
-Message-ID: <20190905162810.2388d532@coco.lan>
-In-Reply-To: <20190905065701.4744e66a@lwn.net>
-References: <20190905055614.7958918b@coco.lan>
-        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
-        <20190905065701.4744e66a@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 5 Sep 2019 15:30:22 -0400
+Received: from mga05.intel.com ([192.55.52.43]:49262 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727514AbfIETaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:30:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 12:30:21 -0700
+X-IronPort-AV: E=Sophos;i="5.64,471,1559545200"; 
+   d="scan'208";a="177408318"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 12:30:19 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] New Intel CPU model numbers
+Date:   Thu,  5 Sep 2019 12:30:16 -0700
+Message-Id: <20190905193020.14707-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 5 Sep 2019 06:57:01 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+I'm going to be more aggressive about pushing new CPU model
+numbers into <asm/intel-family.h>. Basically as soon as Intel
+talks publicly about some new model and I have the model
+number, then I'll post the update.
 
-> On Thu,  5 Sep 2019 06:23:13 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > Python's PEP-263 [1] dictates that an script that needs to default to
-> > UTF-8 encoding has to follow this rule:
-> > 
-> > 	'Python will default to ASCII as standard encoding if no other
-> > 	 encoding hints are given.
-> > 
-> > 	 To define a source code encoding, a magic comment must be placed
-> > 	 into the source files either as first or second line in the file'  
-> 
-> So this is only Python 2, right?  Python 3 is UTF8 by default.  Given that
-> Python 2 is EOL in January, is this something we should be concerned
-> about?  Or should we instead be making sure that all the Python we have
-> in-tree works properly with Python 3 and be done with it?
+Changes to the rest of the kernel will follow at the
+pace of the various groups that have model specific
+code ready to be made public.
 
-I don't think we can count that python 3 uses utf-8 per default.
+This series has just the model numbers for Tiger Lake and
+Elkhart Lake. The new Airmont variant also comes with a
+patch of other spots in the kernel that need updates.
 
-I strongly suspect that, if one uses a Python3 version < 3.7, it will
-still default to ASCII.
+Gayatri Kammela (2):
+  x86/cpu: Add Tiger Lake to Intel family
+  x86/cpu: Add Elkhart Lake to Intel family
 
-On a quick look, the new UTF-8 mode was added on PEP-540:
+Rahul Tanwar (2):
+  x86/cpu: Add new Airmont variant to Intel family
+  x86/cpu: Update init data for new Airmont CPU model
 
-	https://www.python.org/dev/peps/pep-0540/
+ arch/x86/include/asm/intel-family.h | 5 +++++
+ arch/x86/kernel/cpu/common.c        | 1 +
+ arch/x86/kernel/cpu/intel.c         | 1 +
+ arch/x86/kernel/tsc_msr.c           | 5 +++++
+ 4 files changed, 12 insertions(+)
 
-Such change happened at Python 3.7. 
+-- 
+2.20.1
 
-Yet, according with PEP, it defaults to off, unless when using POSIX 
-locale.
-
-Thanks,
-Mauro
