@@ -2,127 +2,112 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE45C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C203AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5C9206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09D4E20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="BBf28Ja+"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="W66qD9Mv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390086AbfIEOtx (ORCPT
+        id S2390096AbfIEOuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:49:53 -0400
-Received: from mail-eopbgr140044.outbound.protection.outlook.com ([40.107.14.44]:23710
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728590AbfIEOtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:49:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EIylbdGE1EVlj9wu9nwaCJuRrI707OhvwBGnTgTIhnv/HFDWfKAaUsUBUwlrHMJ0KG0TBtpO3ElbGXMW9+FrZuF5TDS/VffHLW/0uyrqZi0Kt2MImW4agCHKkAJrDdu5ebG5JQ7mrQVigrnGOyB9rCiwWEuHOzUX3+P6A56MPvIHY8+jCAq01ZOd9MsW70LfQVNh6pU10TH/GrDHjSbUjj/KQ1tlTxJH1oaWTdIvF2b1NBd2Sa52Zzb6LG80a5WrjJ9X3fI8UJwgv5iDiSJvy7hHePg9nqaD3vmIODQ/TIa4iVv+i9TYZIb1iRN9vxryicEmK0GLeThTzvOTqorZ+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4CGgpiMxwsL6igR7+QqgBRYU93mG2jYhT5ek8gk7QPE=;
- b=Bfp3h+z6XMc1f1IKxjdCpuQSTlOwmjqPVKBtxiP1IzNE0bvEDV18HKww3ioDv3ySbkA+HxYEopNFZN3UR/JbhQ2Z+s/J+aMT0qw04avZQHp22bChGjcJyq+2cfW6oB+R4Ea+d0gUc/cQ84l/xLYXrKkJEJ7lZrlLR6fL+6deFhKhLskRXOFWE6PO6gIJY7MnzgVf3uUD0dIFYhncOGgQILFHUPPuxsEnbhmH0oM03aPB0im41KqzSJ42iU1NyvmMyRp3qxXOEoyvYqIOvaqdiyAf57bNHqK0byiWjD2vIPMq8g5D1KtU1TECUWeIGHw/51L5uBmxO/cyVc5yKsBvsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4CGgpiMxwsL6igR7+QqgBRYU93mG2jYhT5ek8gk7QPE=;
- b=BBf28Ja+0dNr9KWmHIa2SU1e/zf8LROnAapoZjHUyUVlJ+ZqqGqO4UNL36G1FIx4Hp4lQecePb9nUKdsE8BG/mBdJxAVcipod4qUaqvHl7hhadTGAQBXARWgk0R+imwOTDY04L7CfFHCmwHcXsWD4ooSB3ZC3AfYrHoulYcFxUw=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB4256.eurprd05.prod.outlook.com (52.133.12.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.14; Thu, 5 Sep 2019 14:49:49 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
- 14:49:49 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-CC:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH 0/5] mmu notifer debug annotations
-Thread-Topic: [PATCH 0/5] mmu notifer debug annotations
-Thread-Index: AQHVY/kqS7drW7tYS0OaX2gILgkMmw==
-Date:   Thu, 5 Sep 2019 14:49:49 +0000
-Message-ID: <20190905144946.GA22237@mellanox.com>
-References: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
-In-Reply-To: <20190826201425.17547-1-daniel.vetter@ffwll.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0425.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a0::29) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bd59b6ed-9733-4cb9-93a1-08d732104cd9
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4256;
-x-ms-traffictypediagnostic: VI1PR05MB4256:
-x-microsoft-antispam-prvs: <VI1PR05MB4256562AB84B0844F93239FCCFBB0@VI1PR05MB4256.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(366004)(39860400002)(136003)(376002)(199004)(53754006)(189003)(8676002)(8936002)(386003)(3846002)(81156014)(76176011)(54906003)(53936002)(86362001)(102836004)(6246003)(6116002)(7736002)(2906002)(6506007)(305945005)(52116002)(316002)(81166006)(6916009)(25786009)(6486002)(229853002)(99286004)(26005)(4326008)(66946007)(5660300002)(6512007)(33656002)(36756003)(66476007)(1076003)(486006)(66446008)(64756008)(66556008)(71190400001)(71200400001)(66066001)(6436002)(14454004)(4744005)(446003)(256004)(478600001)(2616005)(11346002)(476003)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4256;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: geCeaHgd+mTKJRfX0h8gvuKXdvU/D8ZbTSHB4mhrm2Me8VcHwpHYJc+wlFsXtVITXFTkDADEQrLgVkhX3xvCrSBvJ4rLeopOBUEB02R6wacHlBME4CxFnlLj0TvdU0KaOL0QrZUegiIoukQmR/BoFLvdD+EJL8/6Q7pOGI1ZZ9wVZzgWrMm54CdPLVO5zjqQCYhrrNm6FjMhexWllbWaOVjSlHjqiFJeHDrmiqdTRsB3/29e8Pzxhiw9ZjvUj503cIlB4EHlebiG3W5EEbQDbKE6Fq7HhiPBz19wGhhpOnc1U2s3iCJKzTm+l3pCMwMtTRET8T6YBI4AsKsTSkV0Qp1+9t+xwSwD1U/aMXpTkTs7TEYJUQvtqy8OzP9DRdCgqo6kQY6MweqwH+HzYgMidcUmsDmg5MPqEdgIyMn7cH8=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <04647BF6CC7E11449F589A453BE4B4E0@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Sep 2019 10:50:15 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40266 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728590AbfIEOuP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:50:15 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w13so3136823wru.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mu8BT/Kq3mPuYq+U/eVsorSAUs8xgY+5qDBWnOuM4zQ=;
+        b=W66qD9MvYU71Ltt1+svthcd4Eoc/pruAOb+Cxc90hPn6hTfAgyvlaOO5x3Lxv+iONe
+         u+OeRB4Ivd38m7NLTHtfKXTI2QPUFnTNX1e6UmAj/8IWnELOAi2cyKe4BfEXafIeVFV+
+         Cd+xw0mNiyifqxwttGfBk76Wy7iM/hPNl3Ybeg8Dm3H6wKu0YHPiiY6hmQ6y42tLyMmU
+         dNP98tzMgAk80zg1rmNyijzpDIwtlXCx1dofF863CNnaIoHlKB+k/K0n31oNfql04UA0
+         54T96xq6Zqjzr5A+BEJmE+euIAIZIrZkmyi/YqvS/CJdu7FZ9UIVIW2dtBoAtUDVwLWM
+         iGYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=mu8BT/Kq3mPuYq+U/eVsorSAUs8xgY+5qDBWnOuM4zQ=;
+        b=k02DKON++wIPejNzpgRiuZJ4H8OR3JlKDETM01tq8qC2EXw3A26UACTktcKVpxI62v
+         /B+gJEDjF8T/sPcPZlLeWVwv3eKa9P8ZE0VoSL6Nyk8DLAMcKrXHfan0GptRVSeNHM90
+         wGtnPuM0ZvMbsSLzksTrH0p0ofkQQzKsfJNfaFcQAuI8FdFMETdVfAfEwZatFlGKjj1t
+         IYQXvd0i+OfoqMIVRzrL27dL38A62FFPk/BPGI2JDdqhvewaI/Sf2n+7Xbj0RlF9SC6K
+         DishnXuqXfEJGzoTwxHbtI88w6eBGUV3SNHXqyXbbdwg/AHrXJpr3gYwUP4E8FNNZ7oh
+         W1Uw==
+X-Gm-Message-State: APjAAAVt/w8JkrG828lAGf2TnjqEplhBzHZ/2R20J4nfb1HOpNgCgTBe
+        o8nDuPQj5rdraSJA0jftZRtDcw==
+X-Google-Smtp-Source: APXvYqxhnotNQfdCvF70keJJMv1v/fWZi9iXhJD03KhF9FGYj9u21+olcp6OoVLCSYjYjB3O6KVk6Q==
+X-Received: by 2002:adf:fd41:: with SMTP id h1mr2844478wrs.315.1567695013033;
+        Thu, 05 Sep 2019 07:50:13 -0700 (PDT)
+Received: from ziepe.ca ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id m17sm3175786wrs.9.2019.09.05.07.50.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Sep 2019 07:50:12 -0700 (PDT)
+Received: from jgg by jggl.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1i5t5P-0005nN-80; Thu, 05 Sep 2019 11:50:11 -0300
+Date:   Thu, 5 Sep 2019 11:50:11 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] libnvdimm: Enable unit test infrastructure compile
+ checks
+Message-ID: <20190905145011.GA11796@ziepe.ca>
+References: <156763690875.2556198.15786177395425033830.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd59b6ed-9733-4cb9-93a1-08d732104cd9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 14:49:49.6232
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nIf7WPDv3hzOOYMebUEEqA6sns02aoy3i+7TzAv8K6XpVea92/6MStbqsC3FkWMLN9kpmF/pokNlZ7rRT63uWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <156763690875.2556198.15786177395425033830.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 10:14:20PM +0200, Daniel Vetter wrote:
-> Hi all,
->=20
-> Next round. Changes:
->=20
-> - I kept the two lockdep annotations patches since when I rebased this
->   before retesting linux-next didn't yet have them. Otherwise unchanged
->   except for a trivial conflict.
->=20
-> - Ack from Peter Z. on the kernel.h patch.
->=20
-> - Added annotations for non_block to invalidate_range_end. I can't test
->   that readily since i915 doesn't use it.
->=20
-> - Added might_sleep annotations to also make sure the mm side keeps up
->   it's side of the contract here around what's allowed and what's not.
->=20
-> Comments, feedback, review as usual very much appreciated.
->=20
->=20
-> Daniel Vetter (5):
->   kernel.h: Add non_block_start/end()
->   mm, notifier: Catch sleeping/blocking for !blockable
+On Wed, Sep 04, 2019 at 03:43:31PM -0700, Dan Williams wrote:
+> The infrastructure to mock core libnvdimm routines for unit testing
+> purposes is prone to bitrot relative to refactoring of that core.
+> Arrange for the unit test core to be built when CONFIG_COMPILE_TEST=y.
+> This does not result in a functional unit test environment, it is only a
+> helper for 0day to catch unit test build regressions.
+> 
+> Note that there are a few x86isms in the implementation, so this does
+> not bother compile testing this architectures other than 64-bit x86.
+> 
+> Cc: Jérôme Glisse <jglisse@redhat.com>
+> Cc: Jason Gunthorpe <jgg@mellanox.com>
+> Reported-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> Link: https://lore.kernel.org/r/156097224232.1086847.9463861924683372741.stgit@dwillia2-desk3.amr.corp.intel.com
+> Changes since v3:
+> 
+> - Switch the Makefile operator from := to += to make sure the unit test
+>   infrastructure is incrementally included.
+> 
+> Jason, lets try this again. This seems to resolve the build error for
+> me. I believe ":=" would have intermittent results in a parallel build
+> and sometimes result in other targets in drivers/nvdimm/Makefile being
+> bypassed. This has been exposed to the 0day robot for a day with no
+> reports.
 
-These two applied to hmm.git, with the small check patch edit, thanks!
+Okay, again we go
 
 Jason
