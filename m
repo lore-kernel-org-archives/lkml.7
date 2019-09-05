@@ -2,241 +2,286 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBCEC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37723C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3B9C20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:00:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mp29bxwu"
+	by mail.kernel.org (Postfix) with ESMTP id 53D88206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567717266;
+	bh=NQJ3aMo3ua2SkkGbIaCQJL4Vu0OkMWqaAQcWo+0TUok=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1Q4dpXIPU/u8RBMSGH5OOBOjZ7CxX/bFCei5u50b7VK14NZqc+9HiV8c7cnl0hGlx
+	 GU57DVWl9msUuZAUN1c7cC5tADwtFPUk5dyrVaFm6Ha+6Mg51Q7/RhmUQMpdSBhoaN
+	 q6KnCSs8HzUFpfQJQ/BW0T5+UvtTbCKYwdZO6vrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390603AbfIEVAu (ORCPT
+        id S2390707AbfIEVBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:00:50 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38659 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387545AbfIEVAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:00:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l11so4315579wrx.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3nnDoHPMMqk2BqcrsZAHoETbkS1IHUKarK3YqBqfkWc=;
-        b=mp29bxwuxcKXa6CxuC8MdfDEU8Gl4WV38Qt61LUV3pUO/YxqUzHCCTtc008aej+JV6
-         sj7iYZPRDelw8H+IZyeHB+VauqP9Kocl+OkOev/6253abQrjeBNVEha4KY2wXEijrX3/
-         S8XBP2UOiY5oDVvjxSbIWcarF/y09xQYt2lAYoHe+mRBfivPVg/8xp/Ehtp6dAE+UXX9
-         N3MU6Z2XWLzKw5zV+wpLqV+kcg0dY0dOwax3tUQPzdVX9CTdOAEw+W9Y/gXA8KalIN9k
-         3+ygLZt3+3BDnKg7kehRWL7u6060dTQ+Czfi9RupEVQ0lcfC0x7ulGSBmFO8A3Ezz7Yp
-         FHuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3nnDoHPMMqk2BqcrsZAHoETbkS1IHUKarK3YqBqfkWc=;
-        b=OcGF4x7ZeqQGjh0c95+qY0NBkifmzpsTe0UN++4VhtVGrf3h+xt3pd11b4JWCuOs8R
-         pWfO1dRW9x34YWUzJq39UqXxAGobhe2MgWMW3VfkAiGUCG0exngjyKoXwQh6BO25Tf+l
-         LzxvLucLzc24YLX8NVgTotMvYu5OV0tdPe3YQhwX7sl5Q5KoicV9Sw+G6aOTT8mhfA+e
-         AO44ym4UoP2ZZ9yJQy6eXGFhP10LW+kdahAR+0tPs7LzNRndi9g1OxXcQuMD8fwAQ2Te
-         7UlHOvh+2bqlR+rmjFYhSc2pZMM9QijAVPLyZ0jURBde0zS+h8Lvu9Dr0PanejWaQ+J8
-         iyng==
-X-Gm-Message-State: APjAAAXl8loS15jlg2LsuWXmXBqm8k2yqL4H1a7JlhYgfJS/fl30mdbM
-        SgIwJVpOAOb0Y9DeQ2UgB+sgkg==
-X-Google-Smtp-Source: APXvYqzibqT3lsfWxmAKV6EIArkBJaPRFSTn+tf8kWxM+dDG27zmfSNTMEboTtU9NcD1GoKe/xSbYw==
-X-Received: by 2002:a5d:680e:: with SMTP id w14mr258331wru.3.1567717246455;
-        Thu, 05 Sep 2019 14:00:46 -0700 (PDT)
-Received: from localhost.localdomain (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id q25sm2484253wmj.22.2019.09.05.14.00.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 05 Sep 2019 14:00:45 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, agross@kernel.org,
-        linux@roeck-us.net, wim@linux-watchdog.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Thu, 5 Sep 2019 17:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728685AbfIEVBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:01:05 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0985C20640;
+        Thu,  5 Sep 2019 21:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567717264;
+        bh=NQJ3aMo3ua2SkkGbIaCQJL4Vu0OkMWqaAQcWo+0TUok=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jxK4M1SySAK/POxJrgL2hnYRRW35WOe71MMWin7nd+L6+B9hKBA88KV8dWx7avqm6
+         cUAYFL7rKgzD3eTJSz52A7T6wiFjNMPTZtE6U3nBxfvWHCdG2hbwT8rMm7R2yW8m6s
+         4/wN8YSJCinAy2IiucIWPII4LrnGz5XNN8DHXPNk=
+Date:   Thu, 5 Sep 2019 16:01:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4] watchdog: qcom: support pre-timeout when the bark irq is available
-Date:   Thu,  5 Sep 2019 23:00:35 +0200
-Message-Id: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.23.0
+Subject: Re: [PATCH v4 0/4] Simplify PCIe hotplug indicator control
+Message-ID: <20190905210102.GG103977@google.com>
+References: <20190903111021.1559-1-efremov@linux.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190903111021.1559-1-efremov@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the bark interrupt as the pre-timeout notifier whenever this
-interrupt is available.
+On Tue, Sep 03, 2019 at 02:10:17PM +0300, Denis Efremov wrote:
+> PCIe defines two optional hotplug indicators: a Power indicator and an
+> Attention indicator. Both are controlled by the same register, and each
+> can be on, off or blinking. The current interfaces
+> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
+> non-uniform and require two register writes in many cases where we could
+> do one.
+> 
+> This patchset introduces the new function pciehp_set_indicators(). It
+> allows one to set two indicators with a single register write. All
+> calls to previous interfaces (pciehp_green_led_* and
+> pciehp_set_attention_status()) are replaced with a new one. Thus,
+> the amount of duplicated code for setting indicators is reduced.
+> 
+> Changes in v4:
+>   - Changed the inputs validation in pciehp_set_indicators()
+>   - Moved PCI_EXP_SLTCTL_ATTN_IND_NONE, PCI_EXP_SLTCTL_PWR_IND_NONE
+>     to drivers/pci/hotplug/pciehp.h and set to -1 for not interfering
+>     with reserved values in the PCIe Base spec
+>   - Added set_power_indicator define
+> 
+> Changes in v3:
+>   - Changed pciehp_set_indicators() to work with existing
+>     PCI_EXP_SLTCTL_* macros
+>   - Reworked the inputs validation in pciehp_set_indicators()
+>   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
+>     completely
+> 
+> Denis Efremov (4):
+>   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
+>   PCI: pciehp: Switch LED indicators with a single write
+>   PCI: pciehp: Remove pciehp_set_attention_status()
+>   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
+> 
+>  drivers/pci/hotplug/pciehp.h      | 12 ++++--
+>  drivers/pci/hotplug/pciehp_core.c |  7 ++-
+>  drivers/pci/hotplug/pciehp_ctrl.c | 26 +++++------
+>  drivers/pci/hotplug/pciehp_hpc.c  | 72 +++++++------------------------
+>  include/uapi/linux/pci_regs.h     |  1 +
+>  5 files changed, 45 insertions(+), 73 deletions(-)
 
-By default, the pretimeout notification shall occur one second earlier
-than the timeout.
+Thanks, Denis, I applied these to pci/pciehp for v5.4.  I think this
+is a great improvement.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- v4:
-     address Guenter Roeck comments as follows:
-       remove unnecessary include and private variable
-       provide macro for WDT EN register values
-       use pretimeout as per its API intent
-       handle EPROBE_DEFER on get_irq
-     also:
-       handle the irq registration as done in pm8916_wdt.c
- v3:
-    remove unnecesary variable added to private.
+I tweaked a few things:
 
- v2:
-    register the pre-timeout notifier instead.
+  - Updated comments to refer to "Power" intead of "green",
+    "Attention" instead of "amber", and "Indicator" instead of "LED".
 
- v1:
- drivers/watchdog/qcom-wdt.c | 64 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 59 insertions(+), 5 deletions(-)
+  - Replaced PCI_EXP_SLTCTL_ATTN_IND_NONE and
+    PCI_EXP_SLTCTL_PWR_IND_NONE with INDICATOR_NOOP because I didn't
+    want them to look like definitions from the spec.
 
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-index 7be7f87be28f..0f1d29eeb81d 100644
---- a/drivers/watchdog/qcom-wdt.c
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -10,6 +10,7 @@
- #include <linux/platform_device.h>
- #include <linux/watchdog.h>
- #include <linux/of_device.h>
-+#include <linux/interrupt.h>
+  - Dropped set_power_indicator().  It does make things locally easier
+    to read, but I think the overall benefit of having fewer
+    interfaces outweighs that.
+
+The interdiff from your v4 is below.  Let me know if I broke anything.
+
+
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index dcbf790b7508..654c972b8ea0 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -110,9 +110,9 @@ struct controller {
+  *
+  * @OFF_STATE: slot is powered off, no subordinate devices are enumerated
+  * @BLINKINGON_STATE: slot will be powered on after the 5 second delay,
+- *	green led is blinking
++ *	Power Indicator is blinking
+  * @BLINKINGOFF_STATE: slot will be powered off after the 5 second delay,
+- *	green led is blinking
++ *	Power Indicator is blinking
+  * @POWERON_STATE: slot is currently powering on
+  * @POWEROFF_STATE: slot is currently powering off
+  * @ON_STATE: slot is powered on, subordinate devices have been enumerated
+@@ -167,9 +167,7 @@ int pciehp_power_on_slot(struct controller *ctrl);
+ void pciehp_power_off_slot(struct controller *ctrl);
+ void pciehp_get_power_status(struct controller *ctrl, u8 *status);
  
- enum wdt_reg {
- 	WDT_RST,
-@@ -19,6 +20,9 @@ enum wdt_reg {
- 	WDT_BITE_TIME,
- };
+-/* Special values for leaving indicators unchanged */
+-#define PCI_EXP_SLTCTL_ATTN_IND_NONE -1 /* Attention Indicator noop */
+-#define PCI_EXP_SLTCTL_PWR_IND_NONE  -1 /* Power Indicator noop */
++#define INDICATOR_NOOP -1	/* Leave indicator unchanged */
+ void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn);
  
-+#define QCOM_WDT_ENABLE		BIT(0)
-+#define QCOM_WDT_ENABLE_IRQ	BIT(1)
-+
- static const u32 reg_offset_data_apcs_tmr[] = {
- 	[WDT_RST] = 0x38,
- 	[WDT_EN] = 0x40,
-@@ -54,15 +58,38 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
- 	return container_of(wdd, struct qcom_wdt, wdd);
+ void pciehp_get_latch_status(struct controller *ctrl, u8 *status);
+@@ -187,9 +185,6 @@ int pciehp_get_attention_status(struct hotplug_slot *hotplug_slot, u8 *status);
+ int pciehp_set_raw_indicator_status(struct hotplug_slot *h_slot, u8 status);
+ int pciehp_get_raw_indicator_status(struct hotplug_slot *h_slot, u8 *status);
+ 
+-#define set_power_indicator(ctrl, x) \
+-	pciehp_set_indicators(ctrl, (x), PCI_EXP_SLTCTL_ATTN_IND_NONE)
+-
+ static inline const char *slot_name(struct controller *ctrl)
+ {
+ 	return hotplug_slot_name(&ctrl->hotplug_slot);
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index 7a86ea90ed94..b3122c151b80 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -95,7 +95,7 @@ static void cleanup_slot(struct controller *ctrl)
  }
  
-+static inline int qcom_get_enable(struct watchdog_device *wdd)
-+{
-+	int enable = QCOM_WDT_ENABLE;
-+
-+	if (wdd->info->options & WDIOF_PRETIMEOUT)
-+		enable |= QCOM_WDT_ENABLE_IRQ;
-+
-+	return enable;
-+}
-+
-+static irqreturn_t qcom_wdt_isr(int irq, void *arg)
-+{
-+	struct watchdog_device *wdd = arg;
-+
-+	watchdog_notify_pretimeout(wdd);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int qcom_wdt_start(struct watchdog_device *wdd)
+ /*
+- * set_attention_status - Turns the Amber LED for a slot on, off or blink
++ * set_attention_status - Turns the Attention Indicator on, off or blinking
+  */
+ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
  {
- 	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+	unsigned int bark = wdd->timeout;
-+
-+	if (wdd->pretimeout)
-+		bark = bark - wdd->pretimeout;
+@@ -108,7 +108,7 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
+ 		status = PCI_EXP_SLTCTL_ATTN_IND_OFF;
  
- 	writel(0, wdt_addr(wdt, WDT_EN));
- 	writel(1, wdt_addr(wdt, WDT_RST));
--	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
-+	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
- 	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
--	writel(1, wdt_addr(wdt, WDT_EN));
-+	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
+ 	pci_config_pm_runtime_get(pdev);
+-	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_NONE, status);
++	pciehp_set_indicators(ctrl, INDICATOR_NOOP, status);
+ 	pci_config_pm_runtime_put(pdev);
+ 	return 0;
+ }
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index d0f55f695770..21af7b16d7a4 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -30,7 +30,10 @@
+ 
+ static void set_slot_off(struct controller *ctrl)
+ {
+-	/* turn off slot, turn on Amber LED, turn off Green LED if supported*/
++	/*
++	 * Turn off slot, turn on attention indicator, turn off power
++	 * indicator
++	 */
+ 	if (POWER_CTRL(ctrl)) {
+ 		pciehp_power_off_slot(ctrl);
+ 
+@@ -65,7 +68,8 @@ static int board_added(struct controller *ctrl)
+ 			return retval;
+ 	}
+ 
+-	set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK);
++	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
++			      INDICATOR_NOOP);
+ 
+ 	/* Check link training status */
+ 	retval = pciehp_check_link_status(ctrl);
+@@ -100,7 +104,7 @@ static int board_added(struct controller *ctrl)
+ }
+ 
+ /**
+- * remove_board - Turns off slot and LEDs
++ * remove_board - Turn off slot and Power Indicator
+  * @ctrl: PCIe hotplug controller where board is being removed
+  * @safe_removal: whether the board is safely removed (versus surprise removed)
+  */
+@@ -123,8 +127,8 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
+ 			   &ctrl->pending_events);
+ 	}
+ 
+-	/* turn off Green LED */
+-	set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF);
++	pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
++			      INDICATOR_NOOP);
+ }
+ 
+ static int pciehp_enable_slot(struct controller *ctrl);
+@@ -171,7 +175,7 @@ void pciehp_handle_button_press(struct controller *ctrl)
+ 			ctrl_info(ctrl, "Slot(%s) Powering on due to button press\n",
+ 				  slot_name(ctrl));
+ 		}
+-		/* blink green LED and turn off amber */
++		/* blink power indicator and turn off attention */
+ 		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_BLINK,
+ 				      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+ 		schedule_delayed_work(&ctrl->button_work, 5 * HZ);
+@@ -312,7 +316,8 @@ static int pciehp_enable_slot(struct controller *ctrl)
+ 	ret = __pciehp_enable_slot(ctrl);
+ 	if (ret && ATTN_BUTTN(ctrl))
+ 		/* may be blinking */
+-		set_power_indicator(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF);
++		pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
++				      INDICATOR_NOOP);
+ 	pm_runtime_put(&ctrl->pcie->port->dev);
+ 
+ 	mutex_lock(&ctrl->state_lock);
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 9fd8f99132bb..1a522c1c4177 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -418,17 +418,32 @@ int pciehp_set_raw_indicator_status(struct hotplug_slot *hotplug_slot,
  	return 0;
  }
  
-@@ -89,6 +116,13 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
- 	return qcom_wdt_start(wdd);
- }
- 
-+static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
-+				   unsigned int timeout)
-+{
-+	wdd->pretimeout = timeout;
-+	return qcom_wdt_start(wdd);
-+}
-+
- static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
- 			    void *data)
++/**
++ * pciehp_set_indicators() - set attention indicator, power indicator, or both
++ * @ctrl: PCIe hotplug controller
++ * @pwr: one of:
++ *	PCI_EXP_SLTCTL_PWR_IND_ON
++ *	PCI_EXP_SLTCTL_PWR_IND_BLINK
++ *	PCI_EXP_SLTCTL_PWR_IND_OFF
++ * @attn: one of:
++ *	PCI_EXP_SLTCTL_ATTN_IND_ON
++ *	PCI_EXP_SLTCTL_ATTN_IND_BLINK
++ *	PCI_EXP_SLTCTL_ATTN_IND_OFF
++ *
++ * Either @pwr or @attn can also be INDICATOR_NOOP to leave that indicator
++ * unchanged.
++ */
+ void pciehp_set_indicators(struct controller *ctrl, int pwr, int attn)
  {
-@@ -105,7 +139,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
- 	writel(1, wdt_addr(wdt, WDT_RST));
- 	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
- 	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
--	writel(1, wdt_addr(wdt, WDT_EN));
-+	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
+ 	u16 cmd = 0, mask = 0;
  
- 	/*
- 	 * Actually make sure the above sequence hits hardware before sleeping.
-@@ -121,6 +155,7 @@ static const struct watchdog_ops qcom_wdt_ops = {
- 	.stop		= qcom_wdt_stop,
- 	.ping		= qcom_wdt_ping,
- 	.set_timeout	= qcom_wdt_set_timeout,
-+	.set_pretimeout	= qcom_wdt_set_pretimeout,
- 	.restart        = qcom_wdt_restart,
- 	.owner		= THIS_MODULE,
- };
-@@ -133,6 +168,15 @@ static const struct watchdog_info qcom_wdt_info = {
- 	.identity	= KBUILD_MODNAME,
- };
- 
-+static const struct watchdog_info qcom_wdt_pt_info = {
-+	.options	= WDIOF_KEEPALIVEPING
-+			| WDIOF_MAGICCLOSE
-+			| WDIOF_SETTIMEOUT
-+			| WDIOF_PRETIMEOUT
-+			| WDIOF_CARDRESET,
-+	.identity	= KBUILD_MODNAME,
-+};
-+
- static void qcom_clk_disable_unprepare(void *data)
- {
- 	clk_disable_unprepare(data);
-@@ -146,7 +190,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	const u32 *regs;
- 	u32 percpu_offset;
--	int ret;
-+	int irq, ret;
- 
- 	regs = of_device_get_match_data(dev);
- 	if (!regs) {
-@@ -204,7 +248,17 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 		return -EINVAL;
+-	if (PWR_LED(ctrl) && pwr > 0) {
+-		cmd |= pwr;
++	if (PWR_LED(ctrl) && pwr != INDICATOR_NOOP) {
++		cmd |= (pwr & PCI_EXP_SLTCTL_PIC);
+ 		mask |= PCI_EXP_SLTCTL_PIC;
  	}
  
--	wdt->wdd.info = &qcom_wdt_info;
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq > 0) {
-+		if (devm_request_irq(dev, irq, qcom_wdt_isr,
-+				     IRQF_TRIGGER_RISING, "wdt_bark",
-+				     &wdt->wdd))
-+			irq = 0;
-+	} else if (irq == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	wdt->wdd.info = irq > 0 ? &qcom_wdt_pt_info : &qcom_wdt_info;
-+	wdt->wdd.pretimeout = irq > 0 ? 1 : 0;
- 	wdt->wdd.ops = &qcom_wdt_ops;
- 	wdt->wdd.min_timeout = 1;
- 	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
--- 
-2.23.0
-
+-	if (ATTN_LED(ctrl) && attn > 0) {
+-		cmd |= attn;
++	if (ATTN_LED(ctrl) && attn != INDICATOR_NOOP) {
++		cmd |= (attn & PCI_EXP_SLTCTL_AIC);
+ 		mask |= PCI_EXP_SLTCTL_AIC;
+ 	}
+ 
