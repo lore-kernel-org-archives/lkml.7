@@ -2,156 +2,288 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CC7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40A8C00307
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD258206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B5620825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="m5TQ/l8/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e2FjTi/f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390464AbfIESnl (ORCPT
+        id S2391325AbfIESqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:43:41 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42646 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728258AbfIESnk (ORCPT
+        Thu, 5 Sep 2019 14:46:18 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45157 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728258AbfIESqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:43:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id p3so1892554pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:43:40 -0700 (PDT)
+        Thu, 5 Sep 2019 14:46:17 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x3so1702473plr.12;
+        Thu, 05 Sep 2019 11:46:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Fn8SAMa0kHIf62H+0ZvQwfwKj3AOqtxXz/Ns6Tf+0hg=;
-        b=m5TQ/l8/gpBIBBYyzHTkSLKUh00lD/2kUVoHlrS31oAm2wuKupko2sk49zGnZeRC5w
-         XETHnJsuQSxmL+X2PatVMr3RHntKClFgnxL2YuqJhMGVKTpYzE3xq0hvhXy0+BS5n3tN
-         AvUD4Lcosyd8BO3ed/74ILca3jY3et4g3zES0=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=siHAGnev+oRtiAEuv8gvwTdohhZkRI0o8v2bCUzHI20=;
+        b=e2FjTi/fx4FMylM53V9cXNMpMuvTBSe8SxhX7sjPf+qY0sbxiru++/CYSxkfEVJQrq
+         ykDkshMXsVlwt3OJ2SOXvLXvR2cf63jAJ6Pa5wSwewBMElrDuxvzrSbV4io/+z5CRLvS
+         3v1DF/ml/Ws9pcMgi2RYgUKenqdIKtQO2eClGPYh8fymSFVBcc4aNoAuEm7XAtXB8sk1
+         RNSIVitW6LMB9HwjjySxuaBlkLEIOi2ffDK/DVggActLLbDWBVJpnu20qP1GE4Z4rrhT
+         Sa3XXrdoAkI4q8oynEesVCfbclvtVBZQskc/kZZS9y7HjpkS1ZvLDEfK7g4gYSdpUdic
+         dQSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fn8SAMa0kHIf62H+0ZvQwfwKj3AOqtxXz/Ns6Tf+0hg=;
-        b=ONeKfehTQeeHRFWU6A0ByEEc3PHH+TlqMWj3i7qvzIQ8OkFqIkeYem5z2UmLGuOXVa
-         ggYB9NqA8ikBp6JKoK4kfCB0RsaLlopoTRGKxEjsu9itS8Uas0qyck4fNl0S7fAbopIr
-         L9289kpJun72xiMyoznw6cKaj4fdIFomnSWAkXt+wb+7FvpsOn+YhJaG0y6mOu0UOZd7
-         HY8ax1RjiWnGP+KKbzIL3ve08RYNpg+W8ZXv1DdPQLlb609wDM/JONrjAy0KpQj7j4lr
-         flT+Ud+KBS9N74N+/lGRYwzV+0KIdry6+ls3cxwcqiDt2eFdmdzJkJP080TFeR2TSt4n
-         hi7w==
-X-Gm-Message-State: APjAAAWSkqyQYZ9iQT9ccqA9ApiBeyDT/WWpZZgoXEnoW5U/ZXJskV94
-        VFl+7UwPCjnwVVGTncHxF04PVPiRPic=
-X-Google-Smtp-Source: APXvYqxsoC2iAUPy8yQ6zCuWue0mOAZvhGJlSFrzwhw4M7Z/y03wd0Fknx/UhdR/a62nnuLNXPy0rA==
-X-Received: by 2002:aa7:8592:: with SMTP id w18mr5708116pfn.237.1567709019909;
-        Thu, 05 Sep 2019 11:43:39 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id d14sm6312439pfh.36.2019.09.05.11.43.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 11:43:39 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 11:43:37 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Yong Mao <yong.mao@mediatek.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 08/11] mmc: core: Fixup processing of SDIO IRQs during
- system suspend/resume
-Message-ID: <20190905184337.GA133864@google.com>
-References: <20190903142207.5825-1-ulf.hansson@linaro.org>
- <20190903142207.5825-9-ulf.hansson@linaro.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=siHAGnev+oRtiAEuv8gvwTdohhZkRI0o8v2bCUzHI20=;
+        b=XXRlDoqPc6S57DI5kGKXvRsJpmudCzKljGBQ+LYH7smVKsx+c79/7JYz8Wj0tGToKg
+         a2zz/iT31ZPrijHE0Nr4lnl6lDgbV0WW2yC3jWroCYdJ/vsYqgvxKWxXGxUzKrj+z9gA
+         Stupdn57eef48X+t7+pxWxgmD7KbvwxnBXBBDJsyV0NG4DtBoz6XjKw3mNhzzNECOo+w
+         g1fPbx271AjlajUc3TWrvFD9BqPC02YQm5C84W+uXL2Esmk/AC1/6vsGlzdlrxhLGsd+
+         HpPMYSElZYHP2B432tNbdCFKoIgZQ76/WpHPryHaDk6/STMC5eo0xLoEjF6VzqcLL+2l
+         k/8Q==
+X-Gm-Message-State: APjAAAU5X5Hb7PB8qOSJ+FFJ/oFb66g2gsoLgS6VqGiVvb2/SipqNPjY
+        oc5gI9P+d/PqidjsHOmCTmI=
+X-Google-Smtp-Source: APXvYqxlL0sh+nZKHN93mQwfTX1Xt8QyS1b0ABdGenndC+xrS8QZwgHiKT1l+HDUTDom6sM0kLlsfA==
+X-Received: by 2002:a17:902:e48d:: with SMTP id cj13mr4989009plb.177.1567709176693;
+        Thu, 05 Sep 2019 11:46:16 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z12sm3420995pfg.21.2019.09.05.11.46.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 11:46:15 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 11:46:14 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     agross@kernel.org, wim@linux-watchdog.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] watchdog: qcom: support pre-timeout when the bark irq
+ is available
+Message-ID: <20190905184614.GA28923@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190903142207.5825-9-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:22:04PM +0200, Ulf Hansson wrote:
-> System suspend/resume of SDIO cards, with SDIO IRQs enabled and when using
-> MMC_CAP2_SDIO_IRQ_NOTHREAD is unfortunate still suffering from a fragile
-> behaviour. Some problems have been taken care of so far, but more issues
-> remains.
+On Thu, Sep 05, 2019 at 08:12:57PM +0200, Jorge Ramirez-Ortiz wrote:
+> Use the bark interrupt as the pre-timeout notifier whenever this
+> interrupt is available.
 > 
-> For example, calling the ->ack_sdio_irq() callback to let host drivers
-> re-enable the SDIO IRQs is a bad idea, unless the IRQ have been consumed,
-> which may not be the case during system suspend/resume. This may lead to
-> that a host driver re-signals the same SDIO IRQ over and over again,
-> causing a storm of IRQs and gives a ping-pong effect towards the
-> sdio_irq_work().
+> By default, the pretimeout notification shall occur one second earlier
+> than the timeout.
 > 
-> Moreover, calling the ->enable_sdio_irq() callback at system resume to
-> re-enable already enabled SDIO IRQs for the host, causes the runtime PM
-> count for some host drivers to become in-balanced. This then leads to the
-> host to remain runtime resumed, no matter if it's needed or not.
-> 
-> To fix these problems, let's check if process_sdio_pending_irqs() actually
-> consumed the SDIO IRQ, before we continue to ack the IRQ by invoking the
-> ->ack_sdio_irq() callback.
-> 
-> Additionally, there should be no need to re-enable SDIO IRQs as the host
-> driver already knows if they were enabled at system suspend, thus also
-> whether it needs to re-enable them at system resume. For this reason, drop
-> the call to ->enable_sdio_irq() during system resume.
-> 
-> In regards to these changes there is yet another issue, which is when there
-> is an SDIO IRQ being signaled by the host driver, but after the SDIO card
-> has been system suspended. Currently these IRQs are just thrown away, while
-> we should at least make sure to try to consume them when the SDIO card has
-> been system resumed. Fix this by calling sdio_signal_irq() after system
-> resumed the SDIO card.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > ---
->  drivers/mmc/core/sdio.c     | 2 +-
->  drivers/mmc/core/sdio_irq.c | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
+>  drivers/watchdog/qcom-wdt.c | 63 ++++++++++++++++++++++++++++++++++---
+>  1 file changed, 58 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/mmc/core/sdio.c b/drivers/mmc/core/sdio.c
-> index c557f1519b77..3114d496495a 100644
-> --- a/drivers/mmc/core/sdio.c
-> +++ b/drivers/mmc/core/sdio.c
-> @@ -1015,7 +1015,7 @@ static int mmc_sdio_resume(struct mmc_host *host)
->  		if (!(host->caps2 & MMC_CAP2_SDIO_IRQ_NOTHREAD))
->  			wake_up_process(host->sdio_irq_thread);
->  		else if (host->caps & MMC_CAP_SDIO_IRQ)
-> -			host->ops->enable_sdio_irq(host, 1);
-> +			sdio_signal_irq(host);
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> index 7be7f87be28f..2dd36914aa82 100644
+> --- a/drivers/watchdog/qcom-wdt.c
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -10,6 +10,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/watchdog.h>
+>  #include <linux/of_device.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/watchdog.h>
 
-You could possibly limit this to cards that remain powered during
-suspend, but doing it always should do no harm.
+Why include linux/watchdog.h twice ?
 
->  	}
 >  
->  out:
-> diff --git a/drivers/mmc/core/sdio_irq.c b/drivers/mmc/core/sdio_irq.c
-> index d7965b53a6d2..900871073bd7 100644
-> --- a/drivers/mmc/core/sdio_irq.c
-> +++ b/drivers/mmc/core/sdio_irq.c
-> @@ -115,7 +115,8 @@ static void sdio_run_irqs(struct mmc_host *host)
->  	mmc_claim_host(host);
->  	if (host->sdio_irqs) {
->  		process_sdio_pending_irqs(host);
-> -		host->ops->ack_sdio_irq(host);
-> +		if (!host->sdio_irq_pending)
-> +			host->ops->ack_sdio_irq(host);
->  	}
->  	mmc_release_host(host);
+>  enum wdt_reg {
+>  	WDT_RST,
+> @@ -41,6 +43,7 @@ struct qcom_wdt {
+>  	unsigned long		rate;
+>  	void __iomem		*base;
+>  	const u32		*layout;
+> +	const struct device	*dev;
+
+I fail to see what this is used for.
+
+>  };
+>  
+>  static void __iomem *wdt_addr(struct qcom_wdt *wdt, enum wdt_reg reg)
+> @@ -54,15 +57,37 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
+>  	return container_of(wdd, struct qcom_wdt, wdd);
 >  }
+>  
+> +static inline int qcom_wdt_enable(struct qcom_wdt *wdt)
+> +{
+> +	/* enable the bark interrupt */
+> +	if (wdt->wdd.info->options & WDIOF_PRETIMEOUT)
 
-I'm by no means a SDIO expert, but as far as I can tell this looks
-good. I verified that this patch fixes a problem with SDIO interrupts
-that are ignored while suspending.
+This needs to check if pretimeout has been enabled
+(wdt.pretimeout != 0), not if pretimeout functionality is
+supported.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> +		return 3;
+
+I would suggest to use defines for the bits.
+
+> +
+> +	return 1;
+> +}
+> +
+> +static irqreturn_t qcom_wdt_irq(int irq, void *cookie)
+> +{
+> +	struct watchdog_device *wdd = (struct watchdog_device *) cookie;
+
+Extra space before 'cookie'.
+
+> +
+> +	watchdog_notify_pretimeout(wdd);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int qcom_wdt_start(struct watchdog_device *wdd)
+>  {
+>  	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +	unsigned int bark = wdd->pretimeout;
+> +
+> +	if (!(wdd->info->options & WDIOF_PRETIMEOUT))
+> +		bark = wdd->timeout;
+
+This is not the deciding factor. The deciding factor
+is wdd->pretimeout == 0. Also, per API, pretimeout is
+the time difference to 'timeout', not an absolute time.
+
+>  
+>  	writel(0, wdt_addr(wdt, WDT_EN));
+>  	writel(1, wdt_addr(wdt, WDT_RST));
+> -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+> +	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+>  	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
+> -	writel(1, wdt_addr(wdt, WDT_EN));
+> +	writel(qcom_wdt_enable(wdt), wdt_addr(wdt, WDT_EN));
+>  	return 0;
+>  }
+>  
+> @@ -86,9 +111,18 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
+>  				unsigned int timeout)
+>  {
+>  	wdd->timeout = timeout;
+> +
+>  	return qcom_wdt_start(wdd);
+
+Side note: This is wrong. Setting the timeout should not unconditionally
+start the watchdog. This should be something like
+
+	if (watchdog_active(wdd))
+		qcom_wdt_start(wdd);
+	return 0;
+
+>  }
+>  
+> +static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
+> +				   unsigned int timeout)
+> +{
+> +	wdd->pretimeout = timeout;
+> +
+> +	return 0;
+> +}
+> +
+
+Per API:
+
+"A value of 0 disables pretimeout notification."
+
+Also, qcom_wdt_start() has to be called if the watchdog is running.
+
+>  static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+>  			    void *data)
+>  {
+> @@ -105,7 +139,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+>  	writel(1, wdt_addr(wdt, WDT_RST));
+>  	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
+>  	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
+> -	writel(1, wdt_addr(wdt, WDT_EN));
+> +	writel(qcom_wdt_enable(wdt), wdt_addr(wdt, WDT_EN));
+>  
+>  	/*
+>  	 * Actually make sure the above sequence hits hardware before sleeping.
+> @@ -121,11 +155,12 @@ static const struct watchdog_ops qcom_wdt_ops = {
+>  	.stop		= qcom_wdt_stop,
+>  	.ping		= qcom_wdt_ping,
+>  	.set_timeout	= qcom_wdt_set_timeout,
+> +	.set_pretimeout	= qcom_wdt_set_pretimeout,
+>  	.restart        = qcom_wdt_restart,
+>  	.owner		= THIS_MODULE,
+>  };
+>  
+> -static const struct watchdog_info qcom_wdt_info = {
+> +static struct watchdog_info qcom_wdt_info = {
+>  	.options	= WDIOF_KEEPALIVEPING
+>  			| WDIOF_MAGICCLOSE
+>  			| WDIOF_SETTIMEOUT
+> @@ -146,7 +181,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	struct device_node *np = dev->of_node;
+>  	const u32 *regs;
+>  	u32 percpu_offset;
+> -	int ret;
+> +	int irq, ret;
+>  
+>  	regs = of_device_get_match_data(dev);
+>  	if (!regs) {
+> @@ -210,6 +245,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+>  	wdt->wdd.parent = dev;
+>  	wdt->layout = regs;
+> +	wdt->dev = &pdev->dev;
+>  
+>  	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
+>  		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+> @@ -222,6 +258,23 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
+>  	watchdog_init_timeout(&wdt->wdd, 0, dev);
+>  
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq >= 0) {
+> +		/* enable the pre-timeout notification */
+> +		qcom_wdt_info.options |= WDIOF_PRETIMEOUT;
+> +
+> +		ret = devm_request_irq(&pdev->dev, irq, qcom_wdt_irq,
+
+Any reason for using &pdev->dev instead of dev ?
+
+> +				       IRQF_TRIGGER_RISING, "wdog_bark",
+> +				       &wdt->wdd);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to request irq\n");
+
+Same here. Also, at least nominally, platform_get_irq() 
+can return -EPROBE_DEFER. The error message seems undesirable
+in that situation.
+
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (qcom_wdt_info.options & WDIOF_PRETIMEOUT)
+> +		wdt->wdd.pretimeout = wdt->wdd.timeout - 1;
+
+Per API:
+
+"The timeout value is not an absolute time, but the number of
+  seconds before the actual timeout would happen"
+
+Also, why set this here with an extra if and not above where
+WDIOF_PRETIMEOUT is set ?
+
+> +
+>  	ret = devm_watchdog_register_device(dev, &wdt->wdd);
+>  	if (ret)
+>  		return ret;
+> -- 
+> 2.23.0
+> 
