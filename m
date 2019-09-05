@@ -2,113 +2,229 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B704EC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363E7C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B51C2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:32:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YVHezsn8"
+	by mail.kernel.org (Postfix) with ESMTP id 0CD592080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389420AbfIEMcH (ORCPT
+        id S2389434AbfIEMcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:32:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33157 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732410AbfIEMcG (ORCPT
+        Thu, 5 Sep 2019 08:32:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28370 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732410AbfIEMcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:32:06 -0400
-Received: by mail-wr1-f67.google.com with SMTP id u16so2601920wrr.0;
-        Thu, 05 Sep 2019 05:32:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xuzP+vnCO2xAl32UsUr1yZq/4EL5LN563c95drnPuDA=;
-        b=YVHezsn8/40byllVUiMPUITf/cYMaBIGTm+rn+siVdtZq7jfAbSg54rrCLxSIfZImr
-         qQu4WCFZdnotEBEJbisjCiY+i/D+GCLb3ZDxVSo0fj1NAzoEP1NHviR8krHYR28cHY4y
-         HUgLTkdrkBDhYMxe58zH3odBfm0gQW4OAOofSJ8+nLQnLTUrkve4352kKie9+pD9vefQ
-         w6Yur/wqZtUMjub7iHlynuc0UO/HmKG9gVgpSJR52Br+rOkNs7Jq0GuCuWjjuFUyMStm
-         lMzdOzTZu6H3r+bEVzrCjsr3mUJZc2ZSkp4JuTitJbPKMyCTLUfme2l3NXI0TPgYzZzz
-         thoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=xuzP+vnCO2xAl32UsUr1yZq/4EL5LN563c95drnPuDA=;
-        b=QoPMwnwcGw+i2/5q+pUDTjbBhmNuSfdfPkE+U5iGVCQMfrm0ll447H3EWZoTjuMv+j
-         CSkjTEFims45qr5/uzBG5ZkA0K/pIbfrtMAEpRanj56Ej6cXP8sg8Dvur3Nmo7O6Wn2J
-         2TR8qRGJsl/nflmIcCT2on5I/uW6ygmSghfuVoKxqGR29jvEGZk7bntEqe9LaEP6CHzz
-         DD2BWpN1sH41dKBTCHFr/7VfB2mIANxPKfadIEtpMy7SDbvfdzu3ijOfpORVL5L8tTfb
-         xiN0I0eApg7nCHVdcPkqPlkDqyWi7oPKrqpYUfQxwpgOcibhGrWqmt6BpBEkd+joGwXI
-         7POg==
-X-Gm-Message-State: APjAAAWrLcXnht3KO+D0kYmt9ZMOeldco4kYfofPBBp+t+pN6YgB5Zql
-        8luoTmpN7RM4pOiXfRBLcOU=
-X-Google-Smtp-Source: APXvYqyY5+R3jS7MmxUz3+8/IxXEe+qctgB4B9IZRZ+7x6oJRXKgAiEdvgW/q9wKkCY06WzNP26bjA==
-X-Received: by 2002:a5d:6585:: with SMTP id q5mr2323071wru.162.1567686724272;
-        Thu, 05 Sep 2019 05:32:04 -0700 (PDT)
-Received: from localhost.localdomain (ip5b4096c3.dynamic.kabel-deutschland.de. [91.64.150.195])
-        by smtp.gmail.com with ESMTPSA id t203sm3184535wmf.42.2019.09.05.05.32.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 05:32:03 -0700 (PDT)
-From:   Krzysztof Wilczynski <kw@linux.com>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Inki Dae <inki.dae@samsung.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/exynos: Move static keyword to the front of declaration
-Date:   Thu,  5 Sep 2019 14:32:02 +0200
-Message-Id: <20190905123202.28001-1-kw@linux.com>
-X-Mailer: git-send-email 2.23.0
+        Thu, 5 Sep 2019 08:32:09 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85CUxp6072330;
+        Thu, 5 Sep 2019 08:31:51 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uu23511x9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 08:31:50 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x85CVL6n002239;
+        Thu, 5 Sep 2019 12:31:49 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma04dal.us.ibm.com with ESMTP id 2uqgh79bj1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 12:31:49 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85CVl8C46989710
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 12:31:47 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEBE26A054;
+        Thu,  5 Sep 2019 12:31:47 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C11B36A04D;
+        Thu,  5 Sep 2019 12:31:45 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.196.15])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Sep 2019 12:31:45 +0000 (GMT)
+Subject: Re: [PATCH v5 2/2] powerpc: Add support to initialize ima policy
+ rules
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Elaine Palmer <erpalmer@us.ibm.com>,
+        George Wilson <gcwilson@linux.ibm.com>,
+        Eric Ricther <erichte@linux.ibm.com>
+References: <1566218108-12705-1-git-send-email-nayna@linux.ibm.com>
+ <1566218108-12705-3-git-send-email-nayna@linux.ibm.com>
+ <87sgpesynl.fsf@mpe.ellerman.id.au>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <de10425d-4d63-29e1-63be-1566099a5ab6@linux.vnet.ibm.com>
+Date:   Thu, 5 Sep 2019 08:31:45 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <87sgpesynl.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the static keyword to the front of declaration of modes,
-and resolve the following compiler warning that can be seen
-when building with warnings enabled (W=1):
 
-drivers/gpu/drm/exynos/exynos_mixer.c:1074:2: warning:
-  ‘static’ is not at beginning of declaration [-Wold-style-declaration]
 
-Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
----
-Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
+On 09/02/2019 07:52 AM, Michael Ellerman wrote:
+> Hi Nayna,
 
- drivers/gpu/drm/exynos/exynos_mixer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Michael,
 
-diff --git a/drivers/gpu/drm/exynos/exynos_mixer.c b/drivers/gpu/drm/exynos/exynos_mixer.c
-index 7b24338fad3c..6cfdb95fef2f 100644
---- a/drivers/gpu/drm/exynos/exynos_mixer.c
-+++ b/drivers/gpu/drm/exynos/exynos_mixer.c
-@@ -1069,9 +1069,9 @@ static bool mixer_mode_fixup(struct exynos_drm_crtc *crtc,
- 	struct mixer_context *ctx = crtc->ctx;
- 	int width = mode->hdisplay, height = mode->vdisplay, i;
- 
--	struct {
-+	static const struct {
- 		int hdisplay, vdisplay, htotal, vtotal, scan_val;
--	} static const modes[] = {
-+	} modes[] = {
- 		{ 720, 480, 858, 525, MXR_CFG_SCAN_NTSC | MXR_CFG_SCAN_SD },
- 		{ 720, 576, 864, 625, MXR_CFG_SCAN_PAL | MXR_CFG_SCAN_SD },
- 		{ 1280, 720, 1650, 750, MXR_CFG_SCAN_HD_720 | MXR_CFG_SCAN_HD },
--- 
-2.22.1
+>
+> Some more comments below.
+>
+> Nayna Jain <nayna@linux.ibm.com> writes:
+>> POWER secure boot relies on the kernel IMA security subsystem to
+>> perform the OS kernel image signature verification.
+> Again this is just a design choice we've made, it's not specified
+> anywhere or anything like that. And it only applies to bare metal secure
+> boot, at least so far. AIUI.
 
+Yes. I will make it consistent to use "PowerNV".
+
+>> Since each secure
+>> boot mode has different IMA policy requirements, dynamic definition of
+>> the policy rules based on the runtime secure boot mode of the system is
+>> required. On systems that support secure boot, but have it disabled,
+>> only measurement policy rules of the kernel image and modules are
+>> defined.
+> It's probably worth mentioning that we intend to use this in our
+> Linux-based boot loader, which uses kexec, and that's one of the reasons
+> why we're particularly interested in defining the rules for kexec?
+
+Yes. Agreed. I will update patch description to add this.
+
+>
+>> This patch defines the arch-specific implementation to retrieve the
+>> secure boot mode of the system and accordingly configures the IMA policy
+>> rules.
+>>
+>> This patch provides arch-specific IMA policies if PPC_SECURE_BOOT
+>> config is enabled.
+>>
+>> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+>> ---
+>>   arch/powerpc/Kconfig           |  2 ++
+>>   arch/powerpc/kernel/Makefile   |  2 +-
+>>   arch/powerpc/kernel/ima_arch.c | 50 ++++++++++++++++++++++++++++++++++
+>>   include/linux/ima.h            |  3 +-
+>>   4 files changed, 55 insertions(+), 2 deletions(-)
+>>   create mode 100644 arch/powerpc/kernel/ima_arch.c
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index c902a39124dc..42109682b727 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -917,6 +917,8 @@ config PPC_SECURE_BOOT
+>>   	bool
+>>   	default n
+>>   	depends on PPC64
+>> +	depends on IMA
+>> +	depends on IMA_ARCH_POLICY
+>>   	help
+>>   	  Linux on POWER with firmware secure boot enabled needs to define
+>>   	  security policies to extend secure boot to the OS.This config
+>> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+>> index d310ebb4e526..520b1c814197 100644
+>> --- a/arch/powerpc/kernel/Makefile
+>> +++ b/arch/powerpc/kernel/Makefile
+>> @@ -157,7 +157,7 @@ endif
+>>   obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
+>>   obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
+>>   
+>> -obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o
+>> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o ima_arch.o
+>>   
+>>   # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>>   GCOV_PROFILE_prom_init.o := n
+>> diff --git a/arch/powerpc/kernel/ima_arch.c b/arch/powerpc/kernel/ima_arch.c
+>> new file mode 100644
+>> index 000000000000..ac90fac83338
+>> --- /dev/null
+>> +++ b/arch/powerpc/kernel/ima_arch.c
+>> @@ -0,0 +1,50 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2019 IBM Corporation
+>> + * Author: Nayna Jain <nayna@linux.ibm.com>
+>> + *
+>> + * ima_arch.c
+>> + *      - initialize ima policies for PowerPC Secure Boot
+>> + */
+>> +
+>> +#include <linux/ima.h>
+>> +#include <asm/secboot.h>
+>> +
+>> +bool arch_ima_get_secureboot(void)
+>> +{
+>> +	return get_powerpc_secureboot();
+>> +}
+>> +
+>> +/*
+>> + * File signature verification is not needed, include only measurements
+>> + */
+>> +static const char *const default_arch_rules[] = {
+>> +	"measure func=KEXEC_KERNEL_CHECK",
+>> +	"measure func=MODULE_CHECK",
+>> +	NULL
+>> +};
+> The rules above seem fairly self explanatory.
+>
+>> +
+>> +/* Both file signature verification and measurements are needed */
+>> +static const char *const sb_arch_rules[] = {
+>> +	"measure func=KEXEC_KERNEL_CHECK template=ima-modsig",
+>> +	"appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig",
+>> +#if IS_ENABLED(CONFIG_MODULE_SIG)
+>> +	"measure func=MODULE_CHECK",
+>> +#else
+>> +	"measure func=MODULE_CHECK template=ima-modsig",
+>> +	"appraise func=MODULE_CHECK appraise_type=imasig|modsig",
+>> +#endif
+> But these ones are not so obvious, at least to me who knows very little
+> about IMA.
+>
+> Can you add a one line comment to each of the ones in here saying what
+> it does and why we want it?
+
+Sure.
+
+>
+>> +	NULL
+>> +};
+>> +
+>> +/*
+>> + * On PowerPC, file measurements are to be added to the IMA measurement list
+>> + * irrespective of the secure boot state of the system.
+> Why? Just because we think it's useful? Would be good to provide some
+> further justification.
+
+Sure. I will clarify this in the next version.
+
+Thanks & Regards,
+         - Nayna
