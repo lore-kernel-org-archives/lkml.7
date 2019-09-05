@@ -2,106 +2,128 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90728C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA7CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB0C20693
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567704177;
-	bh=aVhEQtqSMjs1vLoaEKRn69IAUX9ujdgC14lBzwc7J4Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MkDlEQ1WZTr23v8FRIsmjbDCnxvyizMle8yR4zkqzKTQanVqWy4dvIp0u5PfOHf/g
-	 FJJZie7RUW1c4HlA8+ZD7ypSd4fF4MSOL3JiIx1M01jhe+9SlwVydfmKsb13MghZbz
-	 bSSXGqSq/AYYe1P9lnvlZl5kbB8zvwZt1oxkuUvw=
+	by mail.kernel.org (Postfix) with ESMTP id B86D4206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:23:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="ChmBqPy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390013AbfIERWy (ORCPT
+        id S2390844AbfIERXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:22:54 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37119 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387700AbfIERWw (ORCPT
+        Thu, 5 Sep 2019 13:23:39 -0400
+Received: from us-smtp-delivery-168.mimecast.com ([63.128.21.168]:49250 "EHLO
+        us-smtp-delivery-168.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731361AbfIERXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:22:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t14so3344496lji.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:22:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tmlyESraaU291QJUIsvfH7FyXZWDE8ub8JEIcxQG6sE=;
-        b=eGZQuxs3EB4CKkRcVzaZkG91ZTsthu/3MCVcUAmI19FZDHyPEOG/eMEjOa8IU9oMKM
-         DId//Vm4d5y/ai/hVwmOo3zUhrnEE0ufsvGcEZnKqGrqqiIHMpCuHu0lcWna7aTLEbez
-         WrsriTiHVIUjQpHi25iBaTgzUOdcaZL3QNQhk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tmlyESraaU291QJUIsvfH7FyXZWDE8ub8JEIcxQG6sE=;
-        b=OznF55SvfH76eXDMAF28NyuO+syPDFYFvgza5hMHinw6D/prnZV9MIzIJuGM5JRBnf
-         DIMphnF8jAV/VPIbymTdydj81KtU4nhsS8qXNHgg3C5cD1ZgVUWuk33mfQHpbfswwNuD
-         xa9WFUbst3WpdMkMOquy62+aLM5UA2SFnZqszj8YVv5T/pPsW/LpbzANoA382HtWtFNZ
-         nrWeNpgx2sg1NXvaZgbE4b6yB8s87/9ZiP5ZufecJIwPLTIMfVqFswhk3pKw+cgfOZpO
-         I4cFVFgmGqO6hILNPxoENdjSuuGxz3piE954poVu6TV+kh/VrC96fr/WNZokER7pMWE7
-         LdaA==
-X-Gm-Message-State: APjAAAWKq0+DMQKIBaBym2vni9nKQv9GaD4mUuB2quq7/8kPiJ/mZmHy
-        nYoMvMO/il4Q4eoA+vYp8oatupYFCNE=
-X-Google-Smtp-Source: APXvYqxv4R7OQCWciR0kcU2A5k6Q4WDhAfrcXXpB4ybokDT9nUJiQ0+NH0RVXMOTPKo1tO/aTK8vQQ==
-X-Received: by 2002:a2e:974c:: with SMTP id f12mr2922029ljj.15.1567704169666;
-        Thu, 05 Sep 2019 10:22:49 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id f8sm484583ljm.44.2019.09.05.10.22.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 10:22:48 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id r134so2665533lff.12
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:22:48 -0700 (PDT)
-X-Received: by 2002:ac2:47f8:: with SMTP id b24mr3219447lfp.134.1567704168405;
- Thu, 05 Sep 2019 10:22:48 -0700 (PDT)
+        Thu, 5 Sep 2019 13:23:38 -0400
+X-Greylist: delayed 1032 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Sep 2019 13:23:36 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
+        s=mimecast20190405; t=1567704216;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gf6jfM7rdt5Q4+6guZE62JzUBQ9yVcnMN5zBZSqZvig=;
+        b=ChmBqPy1ItRQNXwlWvDhx815dQdpNoI4IFIHhFKLeC6Z11Kxm+3ux9UtSWIj7NY83axTM0
+        gBcb3pYCY/3ZVcm0OUhlQw4P/tKyAe3aj+BOOBVyLLbvahOJt+EYv51oTSzFABuRMo4ZAB
+        Z3jSBpZ12dX9zFIGZVsgXLs/o4RT+/A=
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com
+ (mail-bn3nam01lp2055.outbound.protection.outlook.com [104.47.33.55]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-BJgYo9w9OjyOHSO1FD-7lw-1; Thu, 05 Sep 2019 13:06:23 -0400
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
+ MWHPR0601MB3659.namprd06.prod.outlook.com (10.167.236.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.14; Thu, 5 Sep 2019 17:06:17 +0000
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::60b3:e38a:69b0:3f95]) by MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::60b3:e38a:69b0:3f95%7]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
+ 17:06:17 +0000
+From:   Trent Piepho <tpiepho@impinj.com>
+To:     "vitaly.gaiduk@cloudbear.ru" <vitaly.gaiduk@cloudbear.ru>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
+ type
+Thread-Topic: [PATCH 1/2] net: phy: dp83867: Add documentation for SGMII mode
+ type
+Thread-Index: AQHVZAe9yk928RLMPka3wG1dYOEMaacdUGUA
+Date:   Thu, 5 Sep 2019 17:06:17 +0000
+Message-ID: <1567703176.6344.4.camel@impinj.com>
+References: <1567700761-14195-1-git-send-email-vitaly.gaiduk@cloudbear.ru>
+         <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+In-Reply-To: <1567700761-14195-2-git-send-email-vitaly.gaiduk@cloudbear.ru>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [216.207.205.253]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53904907-2f58-4aca-ee8c-08d732235dce
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR0601MB3659;
+x-ms-traffictypediagnostic: MWHPR0601MB3659:
+x-microsoft-antispam-prvs: <MWHPR0601MB36599C9E052F795EFC031910D3BB0@MWHPR0601MB3659.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(346002)(136003)(396003)(39850400004)(376002)(199004)(189003)(71200400001)(64756008)(3846002)(316002)(66446008)(6246003)(53936002)(71190400001)(99286004)(54906003)(256004)(6512007)(66556008)(66476007)(110136005)(66066001)(478600001)(4326008)(14454004)(25786009)(2906002)(6436002)(6486002)(229853002)(5660300002)(36756003)(6506007)(7736002)(8676002)(305945005)(26005)(476003)(11346002)(2616005)(446003)(486006)(76176011)(102836004)(6116002)(91956017)(66946007)(76116006)(14444005)(186003)(2201001)(103116003)(81156014)(81166006)(8936002)(86362001)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3659;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: y01FR+au3D4natsqwzSZb3wU2I53LAkzRp7w6cfU8yBL2tH52JhNkQjxMg5m3LIsFMii1Eoqk1Tf6tcGknEEoCHXHPv277M773/ExhNJi4cTSOQp+9lwjWg5Vm5Ja08k0VdmM3KMpZZb+zI/Nanpwq2Yb4JGlqE0W8mo1H5u5z/J/SLG8URKDMquXwXq6HnIx+m7f/OO1cQ7g52pS03TjGT3iHfkiH06VTr8rHKHpCv+9lH9UmRcWzcJx2zm61lkIxj2057/6ItNKizmMRnacCZPGwnlV0wYbAKZtb3KPgZ34uYQhHkuSBmOEzhqr6T1YPg6YLkphcMyytfUN7EZe+Ak7vpNl+DDgppw+TmmICxpTHjzr/B24eUWrI6xLhlqWb82gBiCBjcZzuCbs6Eobk+GTb0gpiF8TCPoXHkrMuM=
+x-ms-exchange-transport-forked: True
+Content-ID: <A5BA510434E86445A2548D318A9B8682@namprd06.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190904181740.GA19688@gmail.com> <CAHk-=wi2VOPoweqnDhxXKJ9fcLQzkV1oEDjteV=z-C7KXrpomg@mail.gmail.com>
- <CAKwvOdm3CbZ1Uad4b8+9HU8qDgTwSFw2oqjcAvFkR8jaQQN-5g@mail.gmail.com>
-In-Reply-To: <CAKwvOdm3CbZ1Uad4b8+9HU8qDgTwSFw2oqjcAvFkR8jaQQN-5g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Sep 2019 10:22:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjBsC0bWrCy++Gzimwwfx2+3kSaac9_PbBWmH9hrWdC8g@mail.gmail.com>
-Message-ID: <CAHk-=wjBsC0bWrCy++Gzimwwfx2+3kSaac9_PbBWmH9hrWdC8g@mail.gmail.com>
-Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: impinj.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53904907-2f58-4aca-ee8c-08d732235dce
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 17:06:17.3532
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jvHCVECOOlmP7xarwEf8MTmkUzibuspuJforPob25HeiwAfk0/O0vWUk59O+KYOtATkqUQ2N64w2Ywg4at25ZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3659
+X-MC-Unique: BJgYo9w9OjyOHSO1FD-7lw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 10:18 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> Please consider picking up just:
-> https://github.com/ojeda/linux/commit/c97e82b97f4bba00304905fe7965f923abd2d755
-> That lone patch is the one that fixes the particularly observed Oops.
-> The rest are just cleanup; if I made that change in the more important
-> patch, why not clean up the rest of the instances in the kernel?
+T24gVGh1LCAyMDE5LTA5LTA1IGF0IDE5OjI2ICswMzAwLCBWaXRhbHkgR2FpZHVrIHdyb3RlOg0K
+PiBBZGQgZG9jdW1lbnRhdGlvbiBvZiB0aSxzZ21paS10eXBlIHdoaWNoIGNhbiBiZSB1c2VkIHRv
+IHNlbGVjdA0KPiBTR01JSSBtb2RlIHR5cGUgKDQgb3IgNi13aXJlKS4NCj4gDQo+IFNpZ25lZC1v
+ZmYtYnk6IFZpdGFseSBHYWlkdWsgPHZpdGFseS5nYWlkdWtAY2xvdWRiZWFyLnJ1Pg0KPiAtLS0N
+Cj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQg
+fCAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiANCj4gZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3RpLGRwODM4NjcudHh0DQo+
+IGluZGV4IGRiNmFhM2YyMjE1Yi4uMThlN2ZkNTI4OTdmIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3RpLGRwODM4NjcudHh0DQo+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvdGksZHA4Mzg2Ny50eHQNCj4gQEAg
+LTM3LDYgKzM3LDcgQEAgT3B0aW9uYWwgcHJvcGVydHk6DQo+ICAJCQkgICAgICBmb3IgYXBwbGlj
+YWJsZSB2YWx1ZXMuICBUaGUgQ0xLX09VVCBwaW4gY2FuIGFsc28NCj4gIAkJCSAgICAgIGJlIGRp
+c2FibGVkIGJ5IHRoaXMgcHJvcGVydHkuICBXaGVuIG9taXR0ZWQsIHRoZQ0KPiAgCQkJICAgICAg
+UEhZJ3MgZGVmYXVsdCB3aWxsIGJlIGxlZnQgYXMgaXMuDQo+ICsJLSB0aSxzZ21paS10eXBlIC0g
+VGhpcyBkZW5vdGVzIHRoZSBmYWN0IHdoaWNoIFNHTUlJIG1vZGUgaXMgdXNlZCAoNCBvciA2LXdp
+cmUpLg0KDQpSZWFsbHkgc2hvdWxkIGV4cGxhaW4gd2hhdCBraW5kIG9mIHZhbHVlIGl0IGlzIGFu
+ZCB3aGF0IHRoZSB2YWx1ZXMNCm1lYW4uICBJLmUuLCBzaG91bGQgdGhpcyBiZSB0aSxzZ2ltaWkt
+dHlwZSA9IDw0PiB0byBzZWxlY3QgNCB3aXJlPw0KDQpNYXliZSBhIGJvb2xlYW4sICJzZ21paS1j
+bG9jayIsIHRvIGluZGljYXRlIHRoZSBwcmVzZW5jZSBvZiBzZ21paSByeA0KY2xvY2sgbGluZXMs
+IHdvdWxkIG1ha2UgbW9yZSBzZW5zZT8NCg0KSSBhbHNvIHdvbmRlciBpZiBwaHktbW9kZSA9ICJz
+Z21paS1jbGsiIG9yICJzZ21paS02d2lyZSIsIHZzIHRoZQ0KZXhpc3RpbmcgcGh5LW1vZGUgPSAi
+c2dtaWkiLCBtaWdodCBhbHNvIGJlIGEgYmV0dGVyIHdheSB0byBkZXNjcmliZQ0KdGhpcyBpbnN0
+ZWFkIG9mIGEgbmV3IHByb3BlcnR5Lg0K
 
-"Why not just clean up the rest" is how bugs happen.
-
-If it's not a fix, and it's not marked for stable (or a regression
-from the merge window) it shouldn't go in this late in the rc period.
-
-Send me _fixes_. Don't send me stuff that is "fixes plus random
-cleanups that were noticed at the same time".
-
-                     Linus
