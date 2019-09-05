@@ -2,149 +2,145 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267D0C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2678DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32812184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567677736;
-	bh=gcFm+bRqEmfCSpXqAXsi3tvcBuO4wVohWAaR4h+dEuw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=QnG3Rd7Shgu8OsCKVSukTMgJQkifyQ8OrfzIoE3VcmI3BEvsZvynvk/8ooJH4F65q
-	 C5ha814SjRVLx9TcN4OXN7rQ8byda1nSnmw2OgtpX3bzlD6jdR9W1/jJUi+NR28xdN
-	 Jv+HmkG2c5732LTleEQsfD6ZErimx+q1JH1VVAmw=
+	by mail.kernel.org (Postfix) with ESMTP id 0392B206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732365AbfIEKCP (ORCPT
+        id S1732432AbfIEKDx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:02:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:40868 "EHLO foss.arm.com"
+        Thu, 5 Sep 2019 06:03:53 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52358 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728267AbfIEKCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:02:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D53DB1576;
-        Thu,  5 Sep 2019 03:02:13 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A4C93F67D;
-        Thu,  5 Sep 2019 03:02:12 -0700 (PDT)
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     John Garry <john.garry@huawei.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
- <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
- <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
-Date:   Thu, 5 Sep 2019 11:02:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730959AbfIEKDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:03:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 03:03:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="asc'?scan'208";a="182779968"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Sep 2019 03:03:50 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davem@davemloft.net
+Subject: Re: [PATCH v2 2/2] PTP: add support for one-shot output
+In-Reply-To: <20190831144732.GA1692@localhost>
+References: <20190829095825.2108-1-felipe.balbi@linux.intel.com> <20190829095825.2108-2-felipe.balbi@linux.intel.com> <20190829172509.GB2166@localhost> <20190829172848.GC2166@localhost> <87r253ulpn.fsf@gmail.com> <20190831144732.GA1692@localhost>
+Date:   Thu, 05 Sep 2019 13:03:46 +0300
+Message-ID: <87h85roy9p.fsf@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 10:39, John Garry wrote:
->>
->> That's a "feature" of the architecture. The ITT is sized by the number
->> of bits used to index the table, meaning that you can only describe a
->> power of two >= 2.
->>
->> John, could you stick a "#define DEBUG 1" at the top of irq-gic-v3-its.c
->> and report the LPI allocations for this device?
->>
-> 
-> Hi Marc,
-> 
-> As requested, I enabled debug for that driver and here are some kernel 
-> log snippets:
-> 
-> [    8.435707] hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 0
-> [    8.461467] scsi host0: hisi_sas_v3_hw
-> [    9.683463] ITS: alloc 9920:32
-> [    9.686509] ITT 32 entries, 5 bits
-> [    9.690044] ID:0 pID:9920 vID:23
-> [    9.693263] ID:1 pID:9921 vID:24
-> [    9.696480] ID:2 pID:9922 vID:25
-> [    9.699696] ID:3 pID:9923 vID:26
-> [    9.702911] ID:4 pID:9924 vID:27
-> [    9.706128] ID:5 pID:9925 vID:28
-> [    9.709344] ID:6 pID:9926 vID:29
-> [    9.712560] ID:7 pID:9927 vID:30
-> [    9.715776] ID:8 pID:9928 vID:31
-> [    9.718990] ID:9 pID:9929 vID:32
-> [    9.722207] ID:10 pID:9930 vID:33
-> [    9.725510] ID:11 pID:9931 vID:34
-> [    9.728813] ID:12 pID:9932 vID:35
-> [    9.732116] ID:13 pID:9933 vID:36
-> [    9.735419] ID:14 pID:9934 vID:37
-> [    9.738721] ID:15 pID:9935 vID:38
-> [    9.742024] ID:16 pID:9936 vID:39
-> 
-> <snip>
-> 
-> (none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
-> 
-> <snip>
-> 
-> root@(none)$
-> $ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
-> [   41.110557] scsi host0: hisi_sas_v3_hw
-> [   42.335455] Reusing ITT for devID 7410
-> [   42.359151] hisi_sas_v3_hw: probe of 0000:74:02.0 failed with error -2
-> sh: echo: write error: No such device
-> root@(none)$
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Very interesting. Somehow, we think that this is a *new* device that 
-aliases with itself. Needless to say, that's unexpected. My hunch is 
-that something goes wrong when freeing the device. Can you try adding 
-the patch below and report what is happening on unbind?
 
-Thanks,
+Hi,
 
-	M.
+Richard Cochran <richardcochran@gmail.com> writes:
+> On Fri, Aug 30, 2019 at 11:00:20AM +0300, Felipe Balbi wrote:
+>> >> @@ -177,9 +177,8 @@ long ptp_ioctl(struct posix_clock *pc, unsigned i=
+nt cmd, unsigned long arg)
+>> >>  			err =3D -EFAULT;
+>> >>  			break;
+>> >>  		}
+>> >> -		if ((req.perout.flags || req.perout.rsv[0] || req.perout.rsv[1]
+>> >> -				|| req.perout.rsv[2] || req.perout.rsv[3])
+>> >> -			&& cmd =3D=3D PTP_PEROUT_REQUEST2) {
+>> >> +		if ((req.perout.rsv[0] || req.perout.rsv[1] || req.perout.rsv[2]
+>> >> +			|| req.perout.rsv[3]) && cmd =3D=3D PTP_PEROUT_REQUEST2) {
+>> >
+>> > Please check that the reserved bits of req.perout.flags, namely
+>> > ~PTP_PEROUT_ONE_SHOT, are clear.
+>>=20
+>> Actually, we should check more. PEROUT_FEATURE_ENABLE is still valid
+>> here, right? So are RISING and FALLING edges, no?
+>
+> No.  The ptp_extts_request.flags are indeed defined:
+>
+> struct ptp_extts_request {
+> 	...
+> 	unsigned int flags;  /* Bit field for PTP_xxx flags. */
+> 	...
+> };
+>
+> But the ptp_perout_request.flags are reserved:
+>
+> struct ptp_perout_request {
+> 	...
+> 	unsigned int flags;           /* Reserved for future use. */
+> 	...
+> };
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 1b5c3672aea2..3fed87e551d9 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2651,6 +2651,8 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 
- 		/* Nuke the entry in the domain */
- 		irq_domain_reset_irq_data(data);
-+
-+		pr_debug("Freed devid %x LPI %ld\n", its_dev->device_id, data->hwirq);
- 	}
- 
- 	mutex_lock(&its->dev_alloc_lock);
-@@ -2667,6 +2669,7 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 			     its_dev->event_map.nr_lpis);
- 		kfree(its_dev->event_map.col_map);
- 
-+		pr_debug("Unmap devid %x\n", its_dev->device_id);
- 		/* Unmap device/itt */
- 		its_send_mapd(its_dev, 0);
- 		its_free_device(its_dev);
+This a bit confusing, really. Specially when the comment right above
+those flags states:
 
--- 
-Jazz is not dead, it just smells funny...
+/* PTP_xxx bits, for the flags field within the request structures. */
+
+The request "structures" include EXTTS and PEROUT:
+
+struct ptp_clock_request {
+	enum {
+		PTP_CLK_REQ_EXTTS,
+		PTP_CLK_REQ_PEROUT,
+		PTP_CLK_REQ_PPS,
+	} type;
+	union {
+		struct ptp_extts_request extts;
+		struct ptp_perout_request perout;
+	};
+};
+
+Seems like we will, at least, make it clear which flags are valid for
+which request structures.
+
+> For this ioctl, the test for enable/disable is
+> ptp_perout_request.period is zero:
+>
+> 		enable =3D req.perout.period.sec || req.perout.period.nsec;
+> 		err =3D ops->enable(ops, &req, enable);
+>
+> The usage pattern here is taken from timer_settime(2).
+
+got it
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1w3YIACgkQzL64meEa
+mQZ4Tw//aydsxj0fUogJ3Owf7UEMyY3lxgJ/ksnZi3Yu5c/0i6uhPysMUQC+oKQ/
+SnY8pPTRe/4cwHwP/GQlCM0Ke5kGW6O48EY3JAO2/19gfEYU1PAb3/nhkngNVLnE
+YGry+95dB54oOPo7RhyKddidttqC4dkf5vbSQVtMOG4qP1AxFq0k7YZ8qfJXxtrQ
+Wuko8VL3JfG2uqJgQ6/20i1W6yC61cKLUhaXJxEsSuQaE9QbdkDuPfJ3L37uLQPM
+zhx1uedyUwUyrRbOfnICTK5xqXLWmTOstYckK+Wh4/LjFquyyPCsFHNs0ZmtrQWV
+aAkrX3NA6QrBSqwj3/iUr+6+xFMYrVCuj1haUuRbhSVNfSg9hkQXgP+m8kJbTCGX
+yX2wzKe7wl7M0CEln2QEbSmuMKP5oqY0lo9Nj+s/ZDk17EkgQ9g7djYY59osO/MP
+92DRp4ys63ajR3DLB6YlUi8yW5iC3R0kCJfxfbvnJIn3QJ3fmlC5l5P+eCZISoxq
+p4/QlJNscCI/BFffs861sM2bRipPf7wVHo13PJ8IWrQtlrrYKQCcPvArqke1xB/Y
+rPuXPWt/DEzVwH/kxoKQYq3V8yDqOhW477NmLKKub8X6CY4itGg+PHdGXMxfD6BT
+/vtnPtWCQVyB5ZNh+BivXv9+Vyo/ZHhtoUF2eKqRUugH51YuDqI=
+=SuGX
+-----END PGP SIGNATURE-----
+--=-=-=--
