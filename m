@@ -2,113 +2,149 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF1AC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267D0C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6952184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="alkwKZZb"
+	by mail.kernel.org (Postfix) with ESMTP id F32812184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567677736;
+	bh=gcFm+bRqEmfCSpXqAXsi3tvcBuO4wVohWAaR4h+dEuw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=QnG3Rd7Shgu8OsCKVSukTMgJQkifyQ8OrfzIoE3VcmI3BEvsZvynvk/8ooJH4F65q
+	 C5ha814SjRVLx9TcN4OXN7rQ8byda1nSnmw2OgtpX3bzlD6jdR9W1/jJUi+NR28xdN
+	 Jv+HmkG2c5732LTleEQsfD6ZErimx+q1JH1VVAmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387799AbfIEKBM (ORCPT
+        id S1732365AbfIEKCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:01:12 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:49716 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387698AbfIEKAw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:00:52 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 53ACFC29A4;
-        Thu,  5 Sep 2019 10:00:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567677651; bh=jpITmRkSQ88mmTqXmv0bcx69vjIs1qPZ/IAyeZ+eQaE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=alkwKZZbijz8D15wvpQoRDEUHSvPmmf4FLJlRs5Ui0rBfAr1TTmU/P9T/Ji9qqv+m
-         EusdrrFJtRD0CyyrcVlRpNYnsc7F1TudS2mU37F9pYirZcBoXBJoAOkXfmlZci7n0w
-         YmldJqxB9bCUsG1zVOuHmpaKbHp4BB72PYT1KqnuEqNuHGGdOHphnoNamdiq7RGKZ8
-         yBD+mCvvGk0yxtNe8lXXsPZxzSfhN6MySVUdOzTZtvQS7uT5wXlyCYON60CjrJ+/GF
-         UChPioNmcFtjHCf4QeeWZxFSSdQaqLurzB7XWhbVgtbyg361q2W7UcKDysOLg2ZS09
-         4hPOw9ftUsYuA==
-Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id B2110A0064;
-        Thu,  5 Sep 2019 10:00:49 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 9374F3F3BF;
-        Thu,  5 Sep 2019 12:00:49 +0200 (CEST)
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-i3c@lists.infradead.org
-Cc:     bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        pgaj@cadence.com, Joao.Pinto@synopsys.com,
-        Vitor Soares <Vitor.Soares@synopsys.com>
-Subject: [PATCH v3 5/5] i3c: master: dw: reattach device on first available location of address table
-Date:   Thu,  5 Sep 2019 12:00:38 +0200
-Message-Id: <245de28c177b3169ce5b8c26d807f5fd46c2921c.1567608245.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
-References: <cover.1567608245.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
-References: <cover.1567608245.git.vitor.soares@synopsys.com>
+        Thu, 5 Sep 2019 06:02:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:40868 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728267AbfIEKCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:02:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D53DB1576;
+        Thu,  5 Sep 2019 03:02:13 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A4C93F67D;
+        Thu,  5 Sep 2019 03:02:12 -0700 (PDT)
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     John Garry <john.garry@huawei.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+ <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+ <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+ <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
+ <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
+Date:   Thu, 5 Sep 2019 11:02:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For today the reattach function only update the device address on the
-controller.
+On 05/09/2019 10:39, John Garry wrote:
+>>
+>> That's a "feature" of the architecture. The ITT is sized by the number
+>> of bits used to index the table, meaning that you can only describe a
+>> power of two >= 2.
+>>
+>> John, could you stick a "#define DEBUG 1" at the top of irq-gic-v3-its.c
+>> and report the LPI allocations for this device?
+>>
+> 
+> Hi Marc,
+> 
+> As requested, I enabled debug for that driver and here are some kernel 
+> log snippets:
+> 
+> [    8.435707] hisi_sas_v3_hw 0000:74:02.0: Adding to iommu group 0
+> [    8.461467] scsi host0: hisi_sas_v3_hw
+> [    9.683463] ITS: alloc 9920:32
+> [    9.686509] ITT 32 entries, 5 bits
+> [    9.690044] ID:0 pID:9920 vID:23
+> [    9.693263] ID:1 pID:9921 vID:24
+> [    9.696480] ID:2 pID:9922 vID:25
+> [    9.699696] ID:3 pID:9923 vID:26
+> [    9.702911] ID:4 pID:9924 vID:27
+> [    9.706128] ID:5 pID:9925 vID:28
+> [    9.709344] ID:6 pID:9926 vID:29
+> [    9.712560] ID:7 pID:9927 vID:30
+> [    9.715776] ID:8 pID:9928 vID:31
+> [    9.718990] ID:9 pID:9929 vID:32
+> [    9.722207] ID:10 pID:9930 vID:33
+> [    9.725510] ID:11 pID:9931 vID:34
+> [    9.728813] ID:12 pID:9932 vID:35
+> [    9.732116] ID:13 pID:9933 vID:36
+> [    9.735419] ID:14 pID:9934 vID:37
+> [    9.738721] ID:15 pID:9935 vID:38
+> [    9.742024] ID:16 pID:9936 vID:39
+> 
+> <snip>
+> 
+> (none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
+> 
+> <snip>
+> 
+> root@(none)$
+> $ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
+> [   41.110557] scsi host0: hisi_sas_v3_hw
+> [   42.335455] Reusing ITT for devID 7410
+> [   42.359151] hisi_sas_v3_hw: probe of 0000:74:02.0 failed with error -2
+> sh: echo: write error: No such device
+> root@(none)$
 
-Update the location to the first available too, will optimize the
-enumeration process avoiding additional checks to keep the available
-positions on address table consecutive.
+Very interesting. Somehow, we think that this is a *new* device that 
+aliases with itself. Needless to say, that's unexpected. My hunch is 
+that something goes wrong when freeing the device. Can you try adding 
+the patch below and report what is happening on unbind?
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
-Change in v3:
-  - None
+Thanks,
 
-Change in v2:
-  - Add Boris rb-tag
+	M.
 
- drivers/i3c/master/dw-i3c-master.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 1d83c97..62261ac 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -898,6 +898,22 @@ static int dw_i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev,
- 	struct dw_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
- 	struct i3c_master_controller *m = i3c_dev_get_master(dev);
- 	struct dw_i3c_master *master = to_dw_i3c_master(m);
-+	int pos;
-+
-+	pos = dw_i3c_master_get_free_pos(master);
-+
-+	if (data->index > pos && pos > 0) {
-+		writel(0,
-+		       master->regs +
-+		       DEV_ADDR_TABLE_LOC(master->datstartaddr, data->index));
-+
-+		master->addrs[data->index] = 0;
-+		master->free_pos |= BIT(data->index);
-+
-+		data->index = pos;
-+		master->addrs[pos] = dev->info.dyn_addr;
-+		master->free_pos &= ~BIT(pos);
-+	}
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 1b5c3672aea2..3fed87e551d9 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2651,6 +2651,8 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
  
- 	writel(DEV_ADDR_TABLE_DYNAMIC_ADDR(dev->info.dyn_addr),
- 	       master->regs +
--- 
-2.7.4
+ 		/* Nuke the entry in the domain */
+ 		irq_domain_reset_irq_data(data);
++
++		pr_debug("Freed devid %x LPI %ld\n", its_dev->device_id, data->hwirq);
+ 	}
+ 
+ 	mutex_lock(&its->dev_alloc_lock);
+@@ -2667,6 +2669,7 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+ 			     its_dev->event_map.nr_lpis);
+ 		kfree(its_dev->event_map.col_map);
+ 
++		pr_debug("Unmap devid %x\n", its_dev->device_id);
+ 		/* Unmap device/itt */
+ 		its_send_mapd(its_dev, 0);
+ 		its_free_device(its_dev);
 
+-- 
+Jazz is not dead, it just smells funny...
