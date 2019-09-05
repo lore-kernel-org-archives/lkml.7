@@ -7,66 +7,68 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF61C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11633C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:45:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B598C20674
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:45:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB20920674
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OSAA4j8n"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SajC19KK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbfIEEpD (ORCPT
+        id S1730820AbfIEEpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:45:03 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35231 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731002AbfIEEpC (ORCPT
+        Thu, 5 Sep 2019 00:45:13 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44181 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731142AbfIEEpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:45:02 -0400
-Received: by mail-pl1-f193.google.com with SMTP id gn20so679390plb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 21:45:01 -0700 (PDT)
+        Thu, 5 Sep 2019 00:45:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q21so869310pfn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 21:45:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bRGvB4FsX3sc1y+CdvVLnmW4v02ZV/EIsDQEKYPXa6Y=;
-        b=OSAA4j8nmaX7rGp5FGQ/BWiigxzA61SWkLVMEwwZEK8yQmh2Ex0vACaRCmPIsCTHAI
-         ddScWGXflunjmklKMOrYyb4FzWWtx73pxf/PFcvgkTGVL4imaCSn0cyJvC7w4H+ItH9w
-         8km87L3d4+qK/tuEIxnVis2yfzZpvdnBRSPMA=
+        bh=7VF9YheeXhAjJyIl6t7c6PBAXPHMp5xAy2HeigDHRwg=;
+        b=SajC19KKIOWUFXSNHogt2YAD8LpKAtF7I3Nx9j762W1mZnHqg2Te8Y7InfFgU8f+Ni
+         DP2Ye9sc51qZ6jB/0GVOoJyU0Am7a9yX9rQ1mlkXyxXvo++Uf2q6zXXITEHmEpSEKMFu
+         SAfdfnomboehsJtwgY0tyQzJhO/GyhhxMjIcM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bRGvB4FsX3sc1y+CdvVLnmW4v02ZV/EIsDQEKYPXa6Y=;
-        b=S9G1u8rImOgXOsNAWxS8GxX2cR+vtSY/TL3XE1vb6qsjE8DoBYztd5B380wGZfZGLF
-         3tM7QeoDFnm4zphy3S1tKyMoQFsewpoMO7IIQjGuJ3bwGpDVIuh6ZoXMwC64dDfJjsx4
-         ZTt/FCzuAMLmj42UeJ1HB93LpvCmgKZqPB840t0KuAaqNzcYip6R2XSIto0Xwje2lKSa
-         LrAqlmHHTHCIbNGP6WjjFKYSHnaW/hu/ReG9gk85hyEQd8H+FuMzfPrK8Y7W6haAZkzt
-         FZBijh5DyHMYHyRBR6k1VpvEvtjpHhM6ZHOPkiKEOwaXd7WBBRLbHNOagHomM9h+jgZh
-         HheA==
-X-Gm-Message-State: APjAAAV7DnvItgxzGdxT42qnRkOMKACxtGeQ7pOpUdgjMQcS6+eI6b8F
-        tHaNJijl0RnDxxQup/4Tia+Kbg==
-X-Google-Smtp-Source: APXvYqwiCbsGQKLJ5eIBi1U8SH0ZnsjhRgoYCr/N83FOJbHQw9IrILoCMx2N/hDWq7+LpwW/LWuODw==
-X-Received: by 2002:a17:902:ac94:: with SMTP id h20mr1304243plr.117.1567658701196;
-        Wed, 04 Sep 2019 21:45:01 -0700 (PDT)
+        bh=7VF9YheeXhAjJyIl6t7c6PBAXPHMp5xAy2HeigDHRwg=;
+        b=UZHQcDlqosHNffTXkDLYLtEScx6+yE+hjVoJIzuCFEek2Ovfe1FJRK26AQlut0Ahbq
+         f2t0nVt/dEVQkhyZsgFVPoWtggIy8Cnm0lZVMHu3Ll2dAKNaYPFBf4JFkNPAghNV2K92
+         ZS2CCfR/JMFW5924C+db/OfnLhBiwaTLX4H55lXs1dBk9ohqI9ygCjEaxl49X9WrkBVl
+         uqMpS9m1UfDkgoJFrh8RtaKseTGwgYrRpTPTPJtLpA3kDc4nTcgJTQfXtYvhU01HiA7a
+         ktbyVyoZw9dKlIVf2ITiH4OdlKvD9HGS3UiC0wWYEfuXJ8LteG9KAGpJIXrig4oAXd1E
+         7G7w==
+X-Gm-Message-State: APjAAAWkt0XOlqlo5srppbY1avHHMuXfcqTMBHvoDhmwQ3tdh6EX2pgu
+        zIsy7KG2ju9grF4OQW3pBQWDFQ==
+X-Google-Smtp-Source: APXvYqxMZptxYLI7o+CommVkXXgzuDHSDKU8IMNUv5EHbjLZDURSjXKksZbRJEvMgcsFw0LnKW3sAQ==
+X-Received: by 2002:aa7:9253:: with SMTP id 19mr1501529pfp.126.1567658708199;
+        Wed, 04 Sep 2019 21:45:08 -0700 (PDT)
 Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id v22sm602272pgk.69.2019.09.04.21.44.58
+        by smtp.googlemail.com with ESMTPSA id v22sm602272pgk.69.2019.09.04.21.45.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 21:45:00 -0700 (PDT)
+        Wed, 04 Sep 2019 21:45:07 -0700 (PDT)
 From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-remoteproc@vger.kernel.org (open list:REMOTE PROCESSOR
-        (REMOTEPROC) SUBSYSTEM),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
         support),
         linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
         support), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v18 3/5] remoteproc: mt8183: add reserved memory manager API
-Date:   Thu,  5 Sep 2019 12:44:24 +0800
-Message-Id: <20190905044432.150131-4-pihsun@chromium.org>
+Subject: [PATCH v18 5/5] arm64: dts: mt8183: add scp node
+Date:   Thu,  5 Sep 2019 12:44:26 +0800
+Message-Id: <20190905044432.150131-6-pihsun@chromium.org>
 X-Mailer: git-send-email 2.23.0.187.g17f5b7556c-goog
 In-Reply-To: <20190905044432.150131-1-pihsun@chromium.org>
 References: <20190905044432.150131-1-pihsun@chromium.org>
@@ -78,252 +80,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erin Lo <erin.lo@mediatek.com>
+From: Eddie Huang <eddie.huang@mediatek.com>
 
-Add memory table mapping API for other driver to lookup
-reserved physical and virtual memory
+Add scp node to mt8183 and mt8183-evb
 
 Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 ---
-Changes from v17, v16, v15:
+Changes from v17, v16, v15, v14:
  - No change.
-
-Changes from v14:
- - Fix a typo in variable name in DEBUG section.
 
 Changes from v13:
- - Add one more reserved region.
- - Rename scp_get_reserve_* to scp_get_reserved_*.
- - Minor fixes addressing comment.
+ - Change the size of the cfg register region.
 
-Changes from v12:
- - Reformat a line to fit 80 character width.
-
-Changes from v11:
+Changes from v12, v11, v10:
  - No change.
-
-Changes from v10:
- - Fix some type mismatch warnings when printing debug messages.
 
 Changes from v9:
- - No change.
+ - Remove extra reserve-memory-vpu_share node.
 
 Changes from v8:
- - Add more reserved regions for camera ISP.
-
-Changes from v7, v6, v5:
- - No change.
-
-Changes from v4:
  - New patch.
 ---
- drivers/remoteproc/mtk_scp.c       | 145 +++++++++++++++++++++++++++++
- include/linux/remoteproc/mtk_scp.h |  25 +++++
- 2 files changed, 170 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
-index c7dcc385d6a7..abfcbdd0dd4d 100644
---- a/drivers/remoteproc/mtk_scp.c
-+++ b/drivers/remoteproc/mtk_scp.c
-@@ -375,11 +375,142 @@ void *scp_mapping_dm_addr(struct platform_device *pdev, u32 mem_addr)
- }
- EXPORT_SYMBOL_GPL(scp_mapping_dm_addr);
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+index 1fb195c683c3..ddb7a7ac9655 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+@@ -24,6 +24,17 @@
+ 	chosen {
+ 		stdout-path = "serial0:921600n8";
+ 	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		scp_mem_reserved: scp_mem_region {
++			compatible = "shared-dma-pool";
++			reg = <0 0x50000000 0 0x2900000>;
++			no-map;
++		};
++	};
+ };
  
-+#if SCP_RESERVED_MEM
-+static phys_addr_t scp_mem_base_phys;
-+static phys_addr_t scp_mem_base_virt;
-+static size_t scp_mem_size;
-+
-+static struct scp_reserve_mblock scp_reserve_mblock[] = {
-+	{
-+		.num = SCP_ISP_MEM_ID,
-+		.start_phys = 0x0,
-+		.start_virt = 0x0,
-+		.size = 0x200000, /*2MB*/
-+	},
-+	{
-+		.num = SCP_ISP_MEM2_ID,
-+		.start_phys = 0x0,
-+		.start_virt = 0x0,
-+		.size = 0x800000, /*8MB*/
-+	},
-+	{
-+		.num = SCP_MDP_MEM_ID,
-+		.start_phys = 0x0,
-+		.start_virt = 0x0,
-+		.size = 0x600000, /*6MB*/
-+	},
-+	{
-+		.num = SCP_DIP_MEM_ID,
-+		.start_phys = 0x0,
-+		.start_virt = 0x0,
-+		.size = 0x900000, /*9MB*/
-+	},
-+	{
-+		.num = SCP_FD_MEM_ID,
-+		.start_phys = 0x0,
-+		.start_virt = 0x0,
-+		.size = 0x100000, /*1MB*/
-+	},
-+	{
-+		.num = SCP_FD_MEM2_ID,
-+		.start_phys = 0x0,
-+		.start_virt = 0x0,
-+		.size = 0x100000, /*1MB*/
-+	},
-+};
-+
-+static int scp_reserve_mem_init(struct mtk_scp *scp)
-+{
-+	enum scp_reserve_mem_id_t id;
-+	phys_addr_t accumlate_memory_size = 0;
-+
-+	scp_mem_base_phys = (phys_addr_t) (scp->phys_addr + MAX_CODE_SIZE);
-+	scp_mem_size = scp->dram_size - MAX_CODE_SIZE;
-+
-+	dev_info(scp->dev,
-+		 "phys:0x%llx - 0x%llx (0x%llx)\n",
-+		 (unsigned long long)scp_mem_base_phys,
-+		 (unsigned long long)(scp_mem_base_phys + scp_mem_size),
-+		 (unsigned long long)scp_mem_size);
-+	accumlate_memory_size = 0;
-+	for (id = 0; id < SCP_NUMS_MEM_ID; id++) {
-+		scp_reserve_mblock[id].start_phys =
-+			scp_mem_base_phys + accumlate_memory_size;
-+		accumlate_memory_size += scp_reserve_mblock[id].size;
-+		dev_info(
-+			scp->dev,
-+			"[reserve_mem:%d]: phys:0x%llx - 0x%llx (0x%llx)\n", id,
-+			(unsigned long long)scp_reserve_mblock[id].start_phys,
-+			(unsigned long long)(scp_reserve_mblock[id].start_phys +
-+					     scp_reserve_mblock[id].size),
-+			(unsigned long long)scp_reserve_mblock[id].size);
-+	}
-+	return 0;
-+}
-+
-+static int scp_reserve_memory_ioremap(struct mtk_scp *scp)
-+{
-+	enum scp_reserve_mem_id_t id;
-+	phys_addr_t accumlate_memory_size = 0;
-+
-+	scp_mem_base_virt = (phys_addr_t)(size_t)ioremap_wc(scp_mem_base_phys,
-+							    scp_mem_size);
-+
-+	dev_info(scp->dev,
-+		 "virt:0x%llx - 0x%llx (0x%llx)\n",
-+		(unsigned long long)scp_mem_base_virt,
-+		(unsigned long long)(scp_mem_base_virt + scp_mem_size),
-+		(unsigned long long)scp_mem_size);
-+	for (id = 0; id < SCP_NUMS_MEM_ID; id++) {
-+		scp_reserve_mblock[id].start_virt =
-+			scp_mem_base_virt + accumlate_memory_size;
-+		accumlate_memory_size += scp_reserve_mblock[id].size;
-+	}
-+	/* the reserved memory should be larger then expected memory
-+	 * or scp_reserve_mblock does not match dts
-+	 */
-+	WARN_ON(accumlate_memory_size > scp_mem_size);
-+	return 0;
-+}
-+phys_addr_t scp_get_reserved_mem_phys(enum scp_reserve_mem_id_t id)
-+{
-+	if (id >= SCP_NUMS_MEM_ID) {
-+		pr_err("[SCP] no reserve memory for %d", id);
-+		return 0;
-+	}
-+	return scp_reserve_mblock[id].start_phys;
-+}
-+EXPORT_SYMBOL_GPL(scp_get_reserved_mem_phys);
-+
-+phys_addr_t scp_get_reserved_mem_virt(enum scp_reserve_mem_id_t id)
-+{
-+	if (id >= SCP_NUMS_MEM_ID) {
-+		pr_err("[SCP] no reserve memory for %d", id);
-+		return 0;
-+	}
-+	return scp_reserve_mblock[id].start_virt;
-+}
-+EXPORT_SYMBOL_GPL(scp_get_reserved_mem_virt);
-+
-+size_t scp_get_reserved_mem_size(enum scp_reserve_mem_id_t id)
-+{
-+	if (id >= SCP_NUMS_MEM_ID) {
-+		pr_err("[SCP] no reserve memory for %d", id);
-+		return 0;
-+	}
-+	return scp_reserve_mblock[id].size;
-+}
-+EXPORT_SYMBOL_GPL(scp_get_reserved_mem_size);
-+#endif
-+
- static int scp_map_memory_region(struct mtk_scp *scp)
- {
- 	struct device_node *node;
- 	struct resource r;
- 	int ret;
-+#ifdef DEBUG
-+	enum scp_reserve_mem_id_t id;
-+#endif
+ &auxadc {
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 97f84aa9fc6e..3dd1b76bbaf5 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -269,6 +269,18 @@
+ 			clock-names = "spi", "wrap";
+ 		};
  
- 	node = of_parse_phandle(scp->dev->of_node, "memory-region", 0);
- 	if (!node) {
-@@ -402,6 +533,20 @@ static int scp_map_memory_region(struct mtk_scp *scp)
- 		return -EBUSY;
- 	}
- 
-+#if SCP_RESERVED_MEM
-+	scp_reserve_mem_init(scp);
-+	scp_reserve_memory_ioremap(scp);
-+#ifdef DEBUG
-+	for (id = 0; id < SCP_NUMS_MEM_ID; id++) {
-+		dev_info(scp->dev,
-+			 "[mem_reserve-%d] phys:0x%llx,virt:0x%llx,size:0x%llx\n",
-+			 id,
-+			 scp_get_reserved_mem_phys(id),
-+			 scp_get_reserved_mem_virt(id),
-+			 scp_get_reserved_mem_size(id));
-+	}
-+#endif
-+#endif
- 	return 0;
- }
- 
-diff --git a/include/linux/remoteproc/mtk_scp.h b/include/linux/remoteproc/mtk_scp.h
-index 535a51ce3233..4e037af2b126 100644
---- a/include/linux/remoteproc/mtk_scp.h
-+++ b/include/linux/remoteproc/mtk_scp.h
-@@ -138,4 +138,29 @@ unsigned int scp_get_venc_hw_capa(struct platform_device *pdev);
- void *scp_mapping_dm_addr(struct platform_device *pdev,
- 			  u32 mem_addr);
- 
-+#define SCP_RESERVED_MEM	(1)
-+#if SCP_RESERVED_MEM
-+/* scp reserve memory ID definition*/
-+enum scp_reserve_mem_id_t {
-+	SCP_ISP_MEM_ID,
-+	SCP_ISP_MEM2_ID,
-+	SCP_MDP_MEM_ID,
-+	SCP_DIP_MEM_ID,
-+	SCP_FD_MEM_ID,
-+	SCP_FD_MEM2_ID,
-+	SCP_NUMS_MEM_ID,
-+};
++		scp: scp@10500000 {
++			compatible = "mediatek,mt8183-scp";
++			reg = <0 0x10500000 0 0x80000>,
++			      <0 0x105c0000 0 0x19080>;
++			reg-names = "sram", "cfg";
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_SCPSYS>;
++			clock-names = "main";
++			memory-region = <&scp_mem_reserved>;
++			status = "disabled";
++		};
 +
-+struct scp_reserve_mblock {
-+	enum scp_reserve_mem_id_t num;
-+	u64 start_phys;
-+	u64 start_virt;
-+	u64 size;
-+};
-+
-+extern phys_addr_t scp_get_reserved_mem_phys(enum scp_reserve_mem_id_t id);
-+extern phys_addr_t scp_get_reserved_mem_virt(enum scp_reserve_mem_id_t id);
-+extern size_t scp_get_reserved_mem_size(enum scp_reserve_mem_id_t id);
-+#endif
-+
- #endif /* _MTK_SCP_H */
+ 		auxadc: auxadc@11001000 {
+ 			compatible = "mediatek,mt8183-auxadc",
+ 				     "mediatek,mt8173-auxadc";
 -- 
 2.23.0.187.g17f5b7556c-goog
 
