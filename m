@@ -2,142 +2,166 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C620CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D83EC43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D414206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43A920870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:02:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tIYrAWAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388218AbfIEP7e (ORCPT
+        id S2389422AbfIEQCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:59:34 -0400
-Received: from mga07.intel.com ([134.134.136.100]:63618 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731857AbfIEP7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:59:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 08:59:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
-   d="scan'208";a="188019496"
-Received: from unknown (HELO [10.7.201.140]) ([10.7.201.140])
-  by orsmga006.jf.intel.com with ESMTP; 05 Sep 2019 08:59:33 -0700
-Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
- encryption bit
-To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, pv-drivers@vmware.com
-Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
- <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <1badd275-91aa-45a6-0a89-ded65c7c3829@intel.com>
-Date:   Thu, 5 Sep 2019 08:59:32 -0700
+        Thu, 5 Sep 2019 12:02:13 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51554 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730937AbfIEQCM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:02:12 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85G1k8B024599;
+        Thu, 5 Sep 2019 18:02:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=9aNLD8I30iSCXYQuoK3fnEQebuHYYFccizzyDOOMuIA=;
+ b=tIYrAWARMx++UdA4uU7k6oR72UH7TwVXEoFVmS4UiBNxJEO+PInhoDnJaWSka5FNyje+
+ lYEgpKfMCcMNpa4WK5KbhQyHtAm2nroBwpHXNci89kpwnEoKo5VngQT7XklD+rggnmU4
+ O/BWljUvIok0S0s5kjjhNoAltc0ejt3Z/vZ2+ihIrZFCHcWG4CMgBxHDSIX5r7RKzNsz
+ 2UlqId7PszmPkwwqgCB5tVBxZJxji+Y2bvn1RLiO8C8gySQBh3LfO2I/1MQS/wWP32xq
+ 6zyhtYPJcGs5Gak5CN9a5DlBAEne5Vgur7nEgERl2kyVbOgI7QbMMcUYPeKdl2UMDuXh /g== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2uqfsj90jk-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 05 Sep 2019 18:02:05 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D40A64E;
+        Thu,  5 Sep 2019 16:02:01 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 382102FF5EA;
+        Thu,  5 Sep 2019 18:02:01 +0200 (CEST)
+Received: from [10.48.0.131] (10.75.127.48) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
+ 2019 18:02:00 +0200
+Subject: Re: [PATCH 1/3] rpmsg: core: add API to get message length
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <1567693630-27544-1-git-send-email-arnaud.pouliquen@st.com>
+ <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
+ <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com>
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Message-ID: <8e87ccff-1bdb-255c-0be4-db34869f0d13@st.com>
+Date:   Thu, 5 Sep 2019 18:02:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_05:2019-09-04,2019-09-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 8:21 AM, Thomas Hellström (VMware) wrote:
->>>   #define pgprot_modify pgprot_modify
->>>   static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t
->>> newprot)
->>>   {
->>> -    pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
->>> -    pgprotval_t addbits = pgprot_val(newprot);
->>> +    pgprotval_t preservebits = pgprot_val(oldprot) &
->>> +        (_PAGE_CHG_MASK | sme_me_mask);
->>> +    pgprotval_t addbits = pgprot_val(newprot) & ~sme_me_mask;
->>>       return __pgprot(preservebits | addbits);
->>>   }
->> _PAGE_CHG_MASK is claiming similar functionality about preserving bits
->> when changing PTEs:
-...
->>> #define _PAGE_CHG_MASK  (PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT
->>> |         \
->>>                           _PAGE_SPECIAL | _PAGE_ACCESSED |
->>> _PAGE_DIRTY | \
->>>                           _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
->> This makes me wonder if we should be including sme_me_mask in
->> _PAGE_CHG_MASK (logically).
+Hi Jeffrey,
+
+
+On 9/5/19 4:42 PM, Jeffrey Hugo wrote:
+> On Thu, Sep 5, 2019 at 8:35 AM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
+>>
+>> Return the rpmsg buffer size for sending message, so rpmsg users
+>> can split a long message in several sub rpmsg buffers.
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>>   drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+>>   drivers/rpmsg/rpmsg_internal.h   |  2 ++
+>>   drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+>>   include/linux/rpmsg.h            | 10 ++++++++++
+>>   4 files changed, 43 insertions(+)
+>>
+>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+>> index e330ec4dfc33..a6ef54c4779a 100644
+>> --- a/drivers/rpmsg/rpmsg_core.c
+>> +++ b/drivers/rpmsg/rpmsg_core.c
+>> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>>   }
+>>   EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+>>
+>> +/**
+>> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
+>> + * @ept: the rpmsg endpoint
+>> + *
+>> + * This function returns maximum buffer size available for a single message.
+>> + *
+>> + * Return: the maximum transmission size on success and an appropriate error
+>> + * value on failure.
+>> + */
 > 
-> I was thinking the same. But what confuses me is that addbits isn't
-> masked with ~_PAGE_CHG_MASK, which is needed for sme_me_mask, since the
-> problem otherwise is typically that the encryption bit is incorrectly
-> set in addbits. I wonder whether it's an optimization or intentional.
+> What is the intent of this?
+> 
+> The term "mtu" is "maximum transfer unit" - ie the largest payload of
+> data that could possibly be sent, however at any one point in time,
+> that might not be able to be accommodated.
+I was not aware that the MTU has to be static in time. And I'm not 
+enough expert to be able challenge this.
+The use of the MTU initially came from a Bjorn request and IMHO makes 
+sense in RPMSG protocol as other protocols. The aim here is not to 
+guaranty the available size but to provide to rpmsg client a packet size 
+information that is not available today at rpmsg client level.
+For instance for the virtio rpmsg bus we provide the size of a vring 
+buffer, not the total size available in the vring.
 
-I think there's a built-in assumption that 'newprot' won't have any of
-the _PAGE_CHG_MASK bits set.  That makes sense because there are no
-protection bits in the mask.  But, the code certainly doesn't enforce that.
+> 
+> I don't think this is implemented correctly.  In GLINK and SMD, you've
+> not implemented MTU, you've implemented "how much can I send at this
+> point in time".  To me, this is not mtu.
+If MTU has to be static i agree with you.
+> 
+> In the case of SMD, you could get the fifo size and return that as the
+> mtu, but since you seem to be wanting to use this from the TTY layer
+> to determine how much can be sent at a particular point in time, I
+> don't think you actually want mtu.
+Please forget the TTY for the moment, The mtu is used to help the tty 
+framework to split the buffer to write. The size is then adjusted on write.
+For SMD i can provide the fifo_size,or a division of this size to 
+"limit" congestion.
+would this make sense for you?
+> 
+> For GLINK, I don't actually think you can get a mtu based on the
+> design, but I'm trying to remember from 5-6 years ago when we designed
+> it.  It would be possible that a larger intent would be made available
+> later.
+Is it possible to have the largest intent? or it's not deterministic.
+> 
+> I think you need to first determine if you are actually looking for
+> mtu, or "how much data can I send right now", because right now, it
+> isn't clear.
+> 
+In my view it is the MTU. "how much data can I send right now" is an 
+information that is very volatile as buffers can be shared between 
+several clients, therefore unusable.
 
-Are you seeing 'sme_me_mask' bits set in 'newprot'?
+An alternative would be to make this ops optional, but that would mean
+that some generic clients would not be compatible with SMD and/or Glink 
+drivers.
+
+Thanks,
+Arnaud
