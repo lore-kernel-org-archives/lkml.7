@@ -2,153 +2,104 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46453C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E881C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1906220820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6479422CF6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:28:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pfkV95Bv"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Vfqvh8VB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387445AbfIEJ2V (ORCPT
+        id S2387454AbfIEJ2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:28:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44738 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731084AbfIEJ2U (ORCPT
+        Thu, 5 Sep 2019 05:28:53 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45004 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731058AbfIEJ2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:28:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 30so1834595wrk.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 02:28:19 -0700 (PDT)
+        Thu, 5 Sep 2019 05:28:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id u14so1660437ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 02:28:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZSFUJO3Cl5xfTH0Oz2n3wB3n0rI8IaAXjOBMneGW988=;
-        b=pfkV95Bv0UZfPijf04Lw+S5gWyPrZBf6nMW16xOvbNgBkOqbuTXKqhjFYAv9E+FprC
-         642QNfMlNoxFq2F0pUWRVLDLWtQL7aLFtrD6IJKWfeyGn3AkKPJwPOFVJ8qunlmtFhMp
-         GKKYEIOvFTsJKHXCODaxCEyFcLgMBLlDjFYCqomKC9NKxAyn9Q72U1ovQrgfqEmTUG8o
-         cYVriYNXSKLlGpnAn4pKQiheoN5zetXQ5lk4piehoTmcslfppIi5ZIQJdodEIIMRMZTE
-         uvjWfyt0nD1xjB3h3EBMWIFAJvJyWlLFfsoGRS4tTUQzwhypCN4lrWEl8Ms7o4ipyBNB
-         Yn4g==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Pd2UPdvvD+h9euSH/b2Ha6i1J1cxWWmD8DxQgZdlMow=;
+        b=Vfqvh8VB+TQCr/1YAAh44tR0CTOoHwLGtsFVHlH5469opXykcUm4yQoii3AHfUtcMO
+         7KE9sdAXgWDrJg65gILD23+hUkm8AqoRtjTlTgiz8aw/1ni5z0aI/5f8CHn25HG/C23N
+         msR2psKpN77/WoO/4RD5cdMuV4Bs0MHiN+NrU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZSFUJO3Cl5xfTH0Oz2n3wB3n0rI8IaAXjOBMneGW988=;
-        b=J8bK799fChH2nWZuc0AqpZY0eFzZL7zEVpmgrAKh5j5Hs18JPtjCg/cEoFZsIwNPiC
-         6dRsGlGUMfmoCKzmv+2mjluUn1lXzYaW3Pws/c4IFRp4AsOnYEYOns6nR6+J3f4S1747
-         nDGcaLuIc0RtyM74MbMowU9VQuIleuT3zKInxX6jNDaWBt8G2IlTkFZ8qoxgONhI+hLd
-         0lJPAhGRYlKcMPnTkYXp7zR1rYj72gjLw9FUxdMF6kL/aIFCEgDr4xtG5wZPlZXTbdGI
-         mZYEUNSrYIYl2ZOTyXdaoV0HC9tp2aTKuoEvTTo33NFFT2oOexk8JNgUDNgvaLD4qTLP
-         kEjw==
-X-Gm-Message-State: APjAAAX5fmSIZ13xdOrwi17GL8JCqM9ZBMQ+xa5lWZTv6BhgHvbIE0oS
-        dS6PVtM9tRTV0pzDC7z9CxDa6w==
-X-Google-Smtp-Source: APXvYqzXqv86R+TXN5EBeFSzsw4TbvqcdMpFUJoJuOdwhoetcsejRn2RxvT5UuPS+bGgwEyO0gPGzw==
-X-Received: by 2002:adf:e7cc:: with SMTP id e12mr1706018wrn.299.1567675698218;
-        Thu, 05 Sep 2019 02:28:18 -0700 (PDT)
-Received: from dell ([95.147.198.36])
-        by smtp.gmail.com with ESMTPSA id t7sm1796620wrr.37.2019.09.05.02.28.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 02:28:17 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 10:28:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, bjorn.andersson@linaro.org,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, vkoul@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Message-ID: <20190905092816.GD26880@dell>
-References: <20190905075213.13260-1-lee.jones@linaro.org>
- <20190905075213.13260-2-lee.jones@linaro.org>
- <20190905091800.GD1157@kunai>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Pd2UPdvvD+h9euSH/b2Ha6i1J1cxWWmD8DxQgZdlMow=;
+        b=MrSogpwK3YGd9tzq6LTGlMK9XWGATmk+4SpWiy+z9nYrM9dxXewQU2Zk3q62rUdLf2
+         cwDt85B/oCRD7lGgtWllIj7x2U6RkQQlBizPMw86iAdKADPIDLFaJMUkunPiQKb9yo6N
+         +NVnYcqZsXW+6QrwqzCwGn9KbtbVdkdq5OkMQssyLfXXsGVMJRWsZUydKAjud/gQ09UE
+         +k1z/cTmMp4xGIvN/JR+DQhhOyupJC6qcrn+pSLuMqZsev1nUWNIsNRyS3H6cETFH3ze
+         TfCe/EM5SiTYhZV0h1bbdbhFze9gjNltB8IUqVx1Q/8B6sfSU0dL7e4ifniLIwYn9tsq
+         eJqg==
+X-Gm-Message-State: APjAAAX0Omh/usCoZvok1osNArXDA30hY+Ldj5KXZkd9mdOcdZGjLuHo
+        Sp0sw10YjrAL0ZFlDdykdQYDMw==
+X-Google-Smtp-Source: APXvYqx/z14ur2ox4B55jBpMZwFWwALPiBFomhx0uNpuKNrvsgKUOnh1BLWsBCocl2vzNU0/VtqfrA==
+X-Received: by 2002:a2e:8651:: with SMTP id i17mr1414517ljj.136.1567675731031;
+        Thu, 05 Sep 2019 02:28:51 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id p8sm274392ljn.93.2019.09.05.02.28.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 02:28:50 -0700 (PDT)
+Subject: Re: [PATCH v2 2/6] lib/zstd/mem.h: replace __inline by inline
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+ <20190830231527.22304-1-linux@rasmusvillemoes.dk>
+ <20190830231527.22304-3-linux@rasmusvillemoes.dk>
+ <CAKwvOdnZE7pCTykwjX_DDh0wKcUAVKA8eSYXSUFWG2e3swFEJQ@mail.gmail.com>
+ <CANiq72kQb7VYBnfho_joF3p_-vi24WgYETE19EO3Ou6T5ixLew@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <f6ab2429-eb08-b723-221a-9b2ad62bc284@rasmusvillemoes.dk>
+Date:   Thu, 5 Sep 2019 11:28:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <CANiq72kQb7VYBnfho_joF3p_-vi24WgYETE19EO3Ou6T5ixLew@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190905091800.GD1157@kunai>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 05 Sep 2019, Wolfram Sang wrote:
-
+On 05/09/2019 02.07, Miguel Ojeda wrote:
+> On Thu, Sep 5, 2019 at 2:00 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>>
+>> While you're here, would you mind replacing `__attribute__((unused))`
+>> with `__unused`?  I would consider "naked attributes" (haven't been
+>> feature tested in include/linux/compiler_attributes.h and are verbose)
+>> to be an antipattern.
 > 
-> > Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
+> +1 We should aim to avoid them entirely where possible.
 > 
-> Are you sure? From visual inspection, I don't see a correlation between
-> this commit and the fix here.
+> We have __always_unused and __maybe_unused, please choose whatever
+> fits best (both map to "unused", we don't have __unused).
 
-This patch should have been part of the commit, or at the very least,
-part of the set, alluded to above.  Unfortunately, I was carrying
-Bjorn's hack which simply returned early from geni_se_rx_dma_prep()
-with an error, so it masked the issue.
+Well, I agree in principle, but was trying to keep this minimal. FTR, if
+anything, I think the __attribute__((unused)) should simply be removed
+since it's implied by our (re)definition of inline/__inline/__inline__.
 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
-> >  1 file changed, 10 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> > index a89bfce5388e..8822dea82980 100644
-> > --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> > @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
-> >  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> >  				u32 m_param)
-> >  {
-> > +	struct device_node *np = gi2c->se.dev->of_node;
-> >  	dma_addr_t rx_dma;
-> >  	unsigned long time_left;
-> > -	void *dma_buf;
-> > +	void *dma_buf = NULL;
-> >  	struct geni_se *se = &gi2c->se;
-> >  	size_t len = msg->len;
-> >  
-> > -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > +	if (!of_property_read_bool(np, "qcom,geni-se-no-dma"))
-> > +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > +
-> >  	if (dma_buf)
-> >  		geni_se_select_mode(se, GENI_SE_DMA);
-> >  	else
-> > @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> >  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> >  				u32 m_param)
-> >  {
-> > +	struct device_node *np = gi2c->se.dev->of_node;
-> >  	dma_addr_t tx_dma;
-> >  	unsigned long time_left;
-> > -	void *dma_buf;
-> > +	void *dma_buf = NULL;
-> >  	struct geni_se *se = &gi2c->se;
-> >  	size_t len = msg->len;
-> >  
-> > -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > +	if (!of_property_read_bool(np, "qcom,geni-se-no-dma"))
-> > +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > +
-> >  	if (dma_buf)
-> >  		geni_se_select_mode(se, GENI_SE_DMA);
-> >  	else
+Rasmus
 
 
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
