@@ -2,123 +2,105 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06565C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC96C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3245F20828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:47:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567720036;
-	bh=kfe2TGoSTMVF1/lVPOYosFc6NnbRFTGJzAeJes9ucdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mfQ6P52SxGKb+OepO9sqYtYw/nT2eSOJ043clwP+jl2kecHN1l/sExs9uKOu4ip2y
-	 My8JghglkxC//Bex/oTclsFtap8bHINKTP0mjzLkiwgwDitzK7S3wbaMujwZvXDg5k
-	 WSGhiSSP6L2KI3c1fRBuSpOSEQUQZu5aWjaAGFu8=
+	by mail.kernel.org (Postfix) with ESMTP id 0C8F5206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:54:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391852AbfIEVrP (ORCPT
+        id S2391096AbfIEVyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:47:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41522 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 17:54:01 -0400
+Received: from muru.com ([72.249.23.125]:59862 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726323AbfIEVrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:47:14 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A939206DE;
-        Thu,  5 Sep 2019 21:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567720034;
-        bh=kfe2TGoSTMVF1/lVPOYosFc6NnbRFTGJzAeJes9ucdY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lJrk1arZaeNOtOpuajdQpPAcomvfAw0ARumnmmzubiwh+8xg/NmKgMjIy6AU98gg4
-         YCaEtpw71IjfGteEK2wL6fnZ6vySMSYo/GmDlBh89oZXh01azrjYFs2R6C4rV8i9gI
-         /Xym/nOejdfvTsNlZPhXXqirp8wOWajjR0oqhdvU=
-Date:   Thu, 5 Sep 2019 16:47:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] PCI: Use GFP_ATOMIC in resource_alignment_store()
-Message-ID: <20190905214712.GJ103977@google.com>
-References: <20190831124932.18759-1-yuehaibing@huawei.com>
- <20190902075006.GB754@infradead.org>
- <9d2094f7-eb71-4975-eb9b-166a1483afa0@deltatee.com>
+        id S1731215AbfIEVyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:54:01 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id AA813810D;
+        Thu,  5 Sep 2019 21:54:29 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] bus: ti-sysc: Fix handling of invalid clocks
+Date:   Thu,  5 Sep 2019 14:53:56 -0700
+Message-Id: <20190905215356.8168-1-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9d2094f7-eb71-4975-eb9b-166a1483afa0@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 09:51:05AM -0600, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-09-02 1:50 a.m., Christoph Hellwig wrote:
-> > On Sat, Aug 31, 2019 at 12:49:32PM +0000, YueHaibing wrote:
-> >> When allocating memory, the GFP_KERNEL cannot be used during the
-> >> spin_lock period. It may cause scheduling when holding spin_lock.
-> >>
-> >> Fixes: f13755318675 ("PCI: Move pci_[get|set]_resource_alignment_param() into their callers")
-> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> >> ---
-> >>  drivers/pci/pci.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> >> index 484e35349565..0b5fc6736f3f 100644
-> >> --- a/drivers/pci/pci.c
-> >> +++ b/drivers/pci/pci.c
-> >> @@ -6148,7 +6148,7 @@ static ssize_t resource_alignment_store(struct bus_type *bus,
-> >>  	spin_lock(&resource_alignment_lock);
-> >>  
-> >>  	kfree(resource_alignment_param);
-> >> -	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
-> >> +	resource_alignment_param = kstrndup(buf, count, GFP_ATOMIC);
-> >>  
-> >>  	spin_unlock(&resource_alignment_lock);
-> > 
-> > Why not move the allocation outside the lock? Something like this
-> > seems much more sensible:
-> 
-> Yes, that seems like a good way to do it. Bjorn, can you squash
-> Christoph's patch or do you want me to resend a new one?
+We can currently get "Unable to handle kernel paging request at
+virtual address" for invalid clocks with dts node but no driver:
 
-I folded Christoph's fix into it, thanks!
+(__clk_get_hw) from [<c0138ebc>] (ti_sysc_find_one_clockdomain+0x18/0x34)
+(ti_sysc_find_one_clockdomain) from [<c0138f0c>] (ti_sysc_clkdm_init+0x34/0xdc)
+(ti_sysc_clkdm_init) from [<c0584660>] (sysc_probe+0xa50/0x10e8)
+(sysc_probe) from [<c065c6ac>] (platform_drv_probe+0x58/0xa8)
 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 484e35349565..fe205829f676 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -6145,14 +6145,16 @@ static ssize_t resource_alignment_show(struct bus_type *bus, char *buf)
-> >  static ssize_t resource_alignment_store(struct bus_type *bus,
-> >  					const char *buf, size_t count)
-> >  {
-> > -	spin_lock(&resource_alignment_lock);
-> > +	char *param = kstrndup(buf, count, GFP_KERNEL);
-> >  
-> > -	kfree(resource_alignment_param);
-> > -	resource_alignment_param = kstrndup(buf, count, GFP_KERNEL);
-> > +	if (!param)
-> > +		return -ENOMEM;
-> >  
-> > +	spin_lock(&resource_alignment_lock);
-> > +	kfree(resource_alignment_param);
-> > +	resource_alignment_param = param;
-> >  	spin_unlock(&resource_alignment_lock);
-> > -
-> > -	return resource_alignment_param ? count : -ENOMEM;
-> > +	return count;
-> >  }
-> >  
-> >  static BUS_ATTR_RW(resource_alignment);
-> > 
+Let's add IS_ERR checks to ti_sysc_clkdm_init() as And let's start treating
+clk_get() with -ENOENT as a proper error. If the clock name is specified
+in device tree we must succeed with clk_get() to continue. For modules with
+no clock names specified in device tree we will just ignore the clocks.
+
+Fixes: 2b2f7def058a ("bus: ti-sysc: Add support for missing clockdomain handling")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/mach-omap2/pdata-quirks.c | 4 ++--
+ drivers/bus/ti-sysc.c              | 5 +----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -491,11 +491,11 @@ static int ti_sysc_clkdm_init(struct device *dev,
+ 			      struct clk *fck, struct clk *ick,
+ 			      struct ti_sysc_cookie *cookie)
+ {
+-	if (fck)
++	if (!IS_ERR(fck))
+ 		cookie->clkdm = ti_sysc_find_one_clockdomain(fck);
+ 	if (cookie->clkdm)
+ 		return 0;
+-	if (ick)
++	if (!IS_ERR(ick))
+ 		cookie->clkdm = ti_sysc_find_one_clockdomain(ick);
+ 	if (cookie->clkdm)
+ 		return 0;
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -280,9 +280,6 @@ static int sysc_get_one_clock(struct sysc *ddata, const char *name)
+ 
+ 	ddata->clocks[index] = devm_clk_get(ddata->dev, name);
+ 	if (IS_ERR(ddata->clocks[index])) {
+-		if (PTR_ERR(ddata->clocks[index]) == -ENOENT)
+-			return 0;
+-
+ 		dev_err(ddata->dev, "clock get error for %s: %li\n",
+ 			name, PTR_ERR(ddata->clocks[index]));
+ 
+@@ -357,7 +354,7 @@ static int sysc_get_clocks(struct sysc *ddata)
+ 			continue;
+ 
+ 		error = sysc_get_one_clock(ddata, name);
+-		if (error && error != -ENOENT)
++		if (error)
+ 			return error;
+ 	}
+ 
+-- 
+2.23.0
