@@ -2,96 +2,165 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5851C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969A5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECBF205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2631205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:08:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JLLvyaVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388320AbfIEXF6 (ORCPT
+        id S2388323AbfIEXIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 19:05:58 -0400
-Received: from mga09.intel.com ([134.134.136.24]:49498 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726626AbfIEXF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:05:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 16:05:57 -0700
-X-IronPort-AV: E=Sophos;i="5.64,471,1559545200"; 
-   d="scan'208";a="334712141"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.251.155.245])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 16:05:56 -0700
-Message-ID: <e02287479ad936142a21cbd7c6c00947ca0c5088.camel@linux.intel.com>
-Subject: Re: [PATCH v2 0/9] tools-power-x86-intel-speed-select: Fixes and
- updates for output
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Prarit Bhargava <prarit@redhat.com>,
-        platform-driver-x86@vger.kernel.org
-Cc:     andriy.shevchenko@intel.com, David Arcari <darcari@redhat.com>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 05 Sep 2019 16:05:55 -0700
-In-Reply-To: <20190905120311.15286-1-prarit@redhat.com>
-References: <20190905120311.15286-1-prarit@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-1.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Sep 2019 19:08:15 -0400
+Received: from mail-eopbgr740102.outbound.protection.outlook.com ([40.107.74.102]:56048
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726626AbfIEXIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 19:08:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e8qlrodEcqIRyzRhYCqlYy3KKA6QZg5ZhIaOcrqxClRbrlhmZFFCqby5HRBs/wUpCMbPdggHWXCIACXPZvOH6OaTCYTGivwLoQz+DzyzbxyzOVhwqnWAuJrdE29g4zs9wQ3Rg7OGl38AzlgECNlrrKaeV3PTPn6+hcp2z6nUrP3etOqOiwR0AkKdlMuQ74cmDyjvT+48urMQ9dlLBXP2losS2UZHmaSGoqd743ldl2M+6mBdYyTcVMUE/COGbWsDg4z/SjOICQe8zr+v/vjHIDqcVfNUPYwx0sPYD7sAeHlLnyEfrMsnaW6T9lPX4DA7jJ0Z2B1uQVQH0KQ1ojYhdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gtMAG5qxbOZu6s6pC+n+AdcM8AUGaXFamTe4x60QX54=;
+ b=PGK1vehlinKN+Ski3ZwVmV+Sjz0+77bflzeArhunRJfKa8ZR4agZVLBWEod4yuW8paQgcOyak6D5C+cx5EuE+1vfXyDsN+y23CubAu8K4r4jTHFvmjB0xTHIQrUMZoLb1yjxDJvxnyBKDj0mGWt9iaBMXkAzPJRlmEtRrPgeoSwZrTYPM+UOdf8XU/ZV++nWTjUxtN8r25QEb+JkTm3LGxSoLsY7KLpSfm4M78JTimv00wwgcaLE0EwjbhvOc9CK6yACWUXZEbV5K4uWGMRuwshoDDDIUUETISCH1I8Tarmk/lTnmybRAVBfPU61UEY/GOmB9itIh9DNPH76MSduvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gtMAG5qxbOZu6s6pC+n+AdcM8AUGaXFamTe4x60QX54=;
+ b=JLLvyaVaCNuwdTJ9Lo50yoLdvUp/f7m+vAMlfHM2E5eqwdqAN3E9oayfMePgFOQl849SB17b/uKuc41cCCdj+095dxg/uxQA9EZHfMYmuyR7Is2Wn8m16O5p3QYM7EXkjXecuxEHEG240FwhvPadk21ym3jnya/x1sgZVT3jHyI=
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
+ DM6PR21MB1417.namprd21.prod.outlook.com (20.180.21.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.4; Thu, 5 Sep 2019 23:07:32 +0000
+Received: from DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::2cde:35d7:e09a:5639]) by DM6PR21MB1337.namprd21.prod.outlook.com
+ ([fe80::2cde:35d7:e09a:5639%6]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
+ 23:07:32 +0000
+From:   Haiyang Zhang <haiyangz@microsoft.com>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mark Bloch <markb@mellanox.com>
+Subject: RE: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to VF
+ NIC
+Thread-Topic: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to VF
+ NIC
+Thread-Index: AQHVXuVjZEYmBu9A80OagVmDV3gGfqcUUN2AgAlrzFA=
+Date:   Thu, 5 Sep 2019 23:07:32 +0000
+Message-ID: <DM6PR21MB13373166435FD2FC5543D349CABB0@DM6PR21MB1337.namprd21.prod.outlook.com>
+References: <1567136656-49288-1-git-send-email-haiyangz@microsoft.com>
+        <1567136656-49288-3-git-send-email-haiyangz@microsoft.com>
+ <20190830160451.43a61cf9@cakuba.netronome.com>
+In-Reply-To: <20190830160451.43a61cf9@cakuba.netronome.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-05T23:07:30.9040322Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f1f33891-0eb0-440a-9ebe-a5e6eb79496f;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=haiyangz@microsoft.com; 
+x-originating-ip: [96.61.92.94]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ff0464a8-2242-4c64-ad68-08d73255d50b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1417;
+x-ms-traffictypediagnostic: DM6PR21MB1417:|DM6PR21MB1417:|DM6PR21MB1417:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM6PR21MB1417EC4451D151C89F163658CABB0@DM6PR21MB1417.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(189003)(199004)(13464003)(9686003)(316002)(10090500001)(66066001)(6246003)(54906003)(53936002)(22452003)(3846002)(6116002)(6436002)(4326008)(6916009)(2906002)(55016002)(5660300002)(66446008)(66556008)(66476007)(76116006)(52536014)(66946007)(64756008)(6506007)(8990500004)(11346002)(8936002)(26005)(478600001)(305945005)(102836004)(186003)(74316002)(229853002)(486006)(7736002)(81156014)(8676002)(81166006)(7696005)(14454004)(76176011)(446003)(86362001)(53546011)(476003)(33656002)(99286004)(25786009)(71200400001)(10290500003)(256004)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1417;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: d4Y5YAHQC+x4MYOfU4eiGVL1GWtyblaKJ4W9rN5U2LHRkRy21IZiqWxKuX0NpiEllCPleSAR5BHeuPecCQ76BK1hQSJ91pSC2wSDqDYhYgMdKnTlB/A67YXeHQs6CMuapyxR86KcxUntx90qVUf/BF2w2RXR0R2gf6Z/iVKvJpXabGqS7PKFmdmtPvRjMb/GJEoL44ONw1qhSMapJ+Ll/+4r2bppDq/8m9d/7E4vb6ujXHBWSWbg+Y2tFmEjkU0HlDehFMgsLU1NRpMBt35oGDIxNZ+V3aE+TPhkvLXU0RQ4tHgJ3Xmx+Ggw8XmeplVYnSRtV5FvTvHbWrVa9zM+D4+OGr2TnYYCkuAw+2zS4Y/bad2dzBKUnOWFgCM8k2ZQyz8oLl0l6h8mKGcOz7GpfBpbhfr5mHa2JX2tRomH+hA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff0464a8-2242-4c64-ad68-08d73255d50b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 23:07:32.3687
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gIIi0+bs9zrW6ckkEJ0itoeBXAYCnEF9gJuUZfAZg1DMJ7nPb0Uzwu5amEWxzczDPp5JPjVXU1By2m+jwAAfIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1417
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-05 at 08:03 -0400, Prarit Bhargava wrote:
-> Some general fixes and updates for intel-speed-select.  Fixes include
-> some
-> typos as well as an off-by-one cpu count reporting error.  Updates
-> for the
-> output are
-> 
-> - switching to MHz as a standard
-> - reporting CPU frequencies instead of ratios as a standard
-> - viewing a human-readable CPU list.
-> - avoiding reporting "0|1" as success|fail as these can be confusing
-> for a
->   user.
-> 
-> v2: Add additional patch to fix memory leak and remove help text in
-> 8/9.
 
-For the series
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> -----Original Message-----
+> From: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Sent: Friday, August 30, 2019 7:05 PM
+> To: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: sashal@kernel.org; linux-hyperv@vger.kernel.org;
+> netdev@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; olaf@aepfle.de; vkuznets
+> <vkuznets@redhat.com>; davem@davemloft.net; linux-
+> kernel@vger.kernel.org; Mark Bloch <markb@mellanox.com>
+> Subject: Re: [PATCH net-next, 2/2] hv_netvsc: Sync offloading features to=
+ VF
+> NIC
+>=20
+> On Fri, 30 Aug 2019 03:45:38 +0000, Haiyang Zhang wrote:
+> > VF NIC may go down then come up during host servicing events. This
+> > causes the VF NIC offloading feature settings to roll back to the
+> > defaults. This patch can synchronize features from synthetic NIC to
+> > the VF NIC during ndo_set_features (ethtool -K), and
+> > netvsc_register_vf when VF comes back after host events.
+> >
+> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+> > Cc: Mark Bloch <markb@mellanox.com>
+>=20
+> If we want to make this change in behaviour we should change net_failover
+> at the same time.
 
-> 
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: David Arcari <darcari@redhat.com>
-> Cc: linux-kernel@vger.kernel.org
-> 
-> Prarit Bhargava (9):
->   tools/power/x86/intel-speed-select: Fix package typo
->   tools/power/x86/intel-speed-select: Fix help option typo
->   tools/power/x86/intel-speed-select: Fix cpu-count output
->   tools/power/x86/intel-speed-select: Simplify output for turbo-freq
-> and
->     base-freq
->   tools/power/x86/intel-speed-select: Switch output to MHz
->   tools/power/x86/intel-speed-select: Change turbo ratio output to
->     maximum turbo frequency
->   tools/power/x86/intel-speed-select: Output human readable CPU list
->   tools/power/x86/intel-speed-select: Output success/failed for
-> command
->     output
->   tools/power/x86/intel-speed-select: Fix memory leak
-> 
->  .../x86/intel-speed-select/isst-config.c      |  21 +--
->  .../x86/intel-speed-select/isst-display.c     | 120 +++++++++++++---
-> --
->  2 files changed, 98 insertions(+), 43 deletions(-)
-> 
+After checking the net_failover, I found it's for virtio based SRIOV, and v=
+ery=20
+different from what we did for Hyper-V based SRIOV.
+
+We let the netvsc driver acts as both the synthetic (PV) driver and the tra=
+nsparent=20
+bonding master for the VF NIC. But net_failover acts as a master device on =
+top=20
+of both virtio PV NIC, and VF NIC. And the net_failover doesn't implemented=
+=20
+operations, like ndo_set_features.
+So the code change for our netvsc driver cannot be applied to net_failover =
+driver.
+
+I will re-submit my two patches (fixing the extra tab in the 1st one as you=
+ pointed=20
+out). Thanks!
+
+- Haiyang
 
