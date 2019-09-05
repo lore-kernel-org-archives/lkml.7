@@ -4,59 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3321DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035EE2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F662070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567705158;
-	bh=U2UzW/qldgBvlfclLo6riwWC9hJ/ZbM1VL2ZW4RpmzU=;
+	s=default; t=1567705164;
+	bh=5Lhchaze/Dznf0W+sGDXrWRr60hWmSStR3h/iLAwQlA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=bFpnywbZRtOGXcMPqPiq7r+Q8sqy7fj7C6iMSnskJ3WqGypGJ0+BlZDmVN5ZVw5iG
-	 KftX8iHhndUpu5DzAh+uFkr1K1DNUTxbkz1bhhqdr1gSNDnyYRa2FcKtZXT0wgW9oG
-	 JYawoz8apQfLfIexafPlh6P2lGUIuFgMA6KCVI7I=
+	b=DJJ11TeA96hV65vRs1z2NTTmGIS57ola0AfAUTMFKKEmSL198DckgAsPXPGbYrus+
+	 yCxKgjEE8k3lOcq7UmSsfCALkrnwRt64ZVQ2wmO15o0V+zugD0xz0h2aEyglG9h+1e
+	 UuMBFD+NzewwRbgkvqEtmzBYvUNLkA2/upO+5qpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391117AbfIERjQ (ORCPT
+        id S2391128AbfIERjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:39:16 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57744 "EHLO
+        Thu, 5 Sep 2019 13:39:21 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57506 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391089AbfIERjH (ORCPT
+        with ESMTP id S2391046AbfIERi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:39:07 -0400
+        Thu, 5 Sep 2019 13:38:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=u/jyKCR0c7O6hZK0BTOZC8fGSA/TBitpvpVeuX5oSeg=; b=X1aHfL7dDGT4
-        4sdiGhPr11mNXThpPVHqTtxeO0JqBg4a8hCYnY6CHEJ9OkelbhUTd+PVE4Dr7sAMWtfzvu4iYkI8B
-        XAo9rw+yB8C2qvPzEOJGG1VQukRA7Tml9rh6TMr59379boExPf1R/lr+FzTDuYdPU0rzNH5JnYszs
-        eFIzg=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        List-Archive; bh=Kw7Sc8/OUQI+XpZIlQtPa4/jzKwmZbnxhfallE10YPc=; b=mowcuX34XcKt
+        v+4geV1ZMQnB+/NsSasJjxDooP6ryicAAxa2GfxQOvQXvY5uXFahofnXDH0mkfgyl2LucPgBKTx54
+        apbFNdNeEZoGMNZouDybLLDbQ5SHMZbKY9WDLP08+JlXLpIFY0Zba52Mk5gufIa7JXA4wMYv5Fxvq
+        Q6FHU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i5vim-0005I9-PM; Thu, 05 Sep 2019 17:39:00 +0000
+        id 1i5vih-0005HM-B8; Thu, 05 Sep 2019 17:38:55 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 4B98F2742D17; Thu,  5 Sep 2019 18:39:00 +0100 (BST)
+        id CD1272742D1C; Thu,  5 Sep 2019 18:38:54 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     avifishman70@gmail.com, benjaminfair@google.com,
-        broonie@kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        openbmc@lists.ozlabs.org, tali.perry1@gmail.com,
-        tmaimon77@gmail.com, venture@google.com, yuenn@google.com
-Subject: Applied "spi: npcm-fiu: remove set but not used variable 'retlen'" to the spi tree
-In-Reply-To: <20190905072436.23932-1-yuehaibing@huawei.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        Kevin Hilman <khilman@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: meson: add sm1 compatibles" to the asoc tree
+In-Reply-To: <20190905120120.31752-2-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190905173900.4B98F2742D17@ypsilon.sirena.org.uk>
-Date:   Thu,  5 Sep 2019 18:39:00 +0100 (BST)
+Message-Id: <20190905173854.CD1272742D1C@ypsilon.sirena.org.uk>
+Date:   Thu,  5 Sep 2019 18:38:54 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: npcm-fiu: remove set but not used variable 'retlen'
+   ASoC: meson: add sm1 compatibles
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -89,45 +89,112 @@ to this mail.
 Thanks,
 Mark
 
-From a0ce1fd11e587be803eb2f299d478c962df3706f Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 5 Sep 2019 15:24:36 +0800
-Subject: [PATCH] spi: npcm-fiu: remove set but not used variable 'retlen'
+From f466309534b6f21304e1ee0573a60df9c4590272 Mon Sep 17 00:00:00 2001
+From: Jerome Brunet <jbrunet@baylibre.com>
+Date: Thu, 5 Sep 2019 14:01:13 +0200
+Subject: [PATCH] ASoC: meson: add sm1 compatibles
 
-drivers/spi/spi-npcm-fiu.c: In function npcm_fiu_read:
-drivers/spi/spi-npcm-fiu.c:472:9: warning:
- variable retlen set but not used [-Wunused-but-set-variable]
+Document the compatible strings of the audio devices of the sm1 SoC
+family
 
-It is never used, so remove it.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20190905072436.23932-1-yuehaibing@huawei.com
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lore.kernel.org/r/20190905120120.31752-2-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-npcm-fiu.c | 3 ---
- 1 file changed, 3 deletions(-)
+ Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt  | 4 +++-
+ Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt   | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-spdifin.txt         | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-spdifout.txt        | 3 ++-
+ .../devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt  | 4 +++-
+ .../devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt       | 3 ++-
+ 6 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi-npcm-fiu.c b/drivers/spi/spi-npcm-fiu.c
-index d9e2f58b104b..cb52fd8008d0 100644
---- a/drivers/spi/spi-npcm-fiu.c
-+++ b/drivers/spi/spi-npcm-fiu.c
-@@ -469,7 +469,6 @@ static int npcm_fiu_read(struct spi_mem *mem, const struct spi_mem_op *op)
- {
- 	u8 *data = op->data.buf.in;
- 	int i, readlen, currlen;
--	size_t retlen = 0;
- 	u8 *buf_ptr;
- 	u32 addr;
- 	int ret;
-@@ -494,8 +493,6 @@ static int npcm_fiu_read(struct spi_mem *mem, const struct spi_mem_op *op)
- 		currlen -= 16;
- 	} while (currlen > 0);
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+index 4330fc9dca6d..4b17073c8f8c 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-fifo.txt
+@@ -4,7 +4,9 @@ Required properties:
+ - compatible: 'amlogic,axg-toddr' or
+ 	      'amlogic,axg-toddr' or
+ 	      'amlogic,g12a-frddr' or
+-	      'amlogic,g12a-toddr'
++	      'amlogic,g12a-toddr' or
++	      'amlogic,sm1-frddr' or
++	      'amlogic,sm1-toddr'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - interrupts: interrupt specifier for the fifo.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
+index 73f473a9365f..b3f097976e6b 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.txt
+@@ -2,7 +2,8 @@
  
--	retlen = i;
--
- 	return 0;
- }
+ Required properties:
+ - compatible: 'amlogic,axg-pdm' or
+-	      'amlogic,g12a-pdm'
++	      'amlogic,g12a-pdm' or
++	      'amlogic,sm1-pdm'
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - clocks: list of clock phandle, one for each entry clock-names.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+index 0b82504fa419..62e5bca71664 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifin.txt
+@@ -2,7 +2,8 @@
  
+ Required properties:
+ - compatible: 'amlogic,axg-spdifin' or
+-	      'amlogic,g12a-spdifin'
++	      'amlogic,g12a-spdifin' or
++	      'amlogic,sm1-spdifin'
+ - interrupts: interrupt specifier for the spdif input.
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
+index 826152730508..d38aa35ec630 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-spdifout.txt
+@@ -2,7 +2,8 @@
+ 
+ Required properties:
+ - compatible: 'amlogic,axg-spdifout' or
+-	      'amlogic,g12a-spdifout'
++	      'amlogic,g12a-spdifout' or
++	      'amlogic,sm1-spdifout'
+ - clocks: list of clock phandle, one for each entry clock-names.
+ - clock-names: should contain the following:
+   * "pclk" : peripheral clock.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+index 8835a43edfbb..5996c0cd89c2 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,axg-tdm-formatters.txt
+@@ -4,7 +4,9 @@ Required properties:
+ - compatible: 'amlogic,axg-tdmin' or
+ 	      'amlogic,axg-tdmout' or
+ 	      'amlogic,g12a-tdmin' or
+-	      'amlogic,g12a-tdmout'
++	      'amlogic,g12a-tdmout' or
++	      'amlogic,sm1-tdmin' or
++	      'amlogic,sm1-tdmout
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - clocks: list of clock phandle, one for each entry clock-names.
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
+index aa6c35570d31..173a95045540 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
++++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
+@@ -1,7 +1,8 @@
+ * Amlogic HDMI Tx control glue
+ 
+ Required properties:
+-- compatible: "amlogic,g12a-tohdmitx"
++- compatible: "amlogic,g12a-tohdmitx" or
++	      "amlogic,sm1-tohdmitx"
+ - reg: physical base address of the controller and length of memory
+        mapped region.
+ - #sound-dai-cells: should be 1.
 -- 
 2.20.1
 
