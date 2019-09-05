@@ -2,135 +2,104 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417EAC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924EBC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCC620828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:35:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567719313;
-	bh=v2fQCvGYm46BeRXfxC+1ZlpNLHHP4uol+ATDKOQNCzI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uHRjQ4TPzSd3OBFBxceKGFpMTS+qHran+h/IVw/FCA+Pe8xxSpYrOQfj83ce37BBf
-	 jEkc/TLjBZad/8h4cUjivl34mzLXMsnHVa+NTTjeW7LqigXicfi5nP9F3MrEOS4bAk
-	 hOs9BIs3VicEZNoDo7T46Zqy6zwCBXbegTpzrajs=
+	by mail.kernel.org (Postfix) with ESMTP id C0B3120825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403760AbfIEVfM (ORCPT
+        id S1733299AbfIEViC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730485AbfIEVfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:35:11 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1536F206BB;
-        Thu,  5 Sep 2019 21:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567719311;
-        bh=v2fQCvGYm46BeRXfxC+1ZlpNLHHP4uol+ATDKOQNCzI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZO6/FWDAr38eGqj49jBGMpzmVP61WBxI+2QqvGqfd1IZqmcbyuuPO3gsILOUyU/DE
-         FOxbRK9SK/QY4HLGrd8IXExDR0WGslMq8R9/1Vi9Cuk1loxrhC5qznfOTeBk1D6tSe
-         229BNm14HnaqpvX2AAkpQQyWPHbMEcG5zkSQmfTg=
-Date:   Thu, 5 Sep 2019 16:35:09 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     tiwai@suse.com, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] ALSA: hda: Allow HDA to be runtime suspended when
- dGPU is not bound
-Message-ID: <20190905213509.GI103977@google.com>
-References: <20190827134756.10807-2-kai.heng.feng@canonical.com>
- <20190828180128.1732-1-kai.heng.feng@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190828180128.1732-1-kai.heng.feng@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 5 Sep 2019 17:38:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46820 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730193AbfIEViC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:38:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0A7C5ABC7;
+        Thu,  5 Sep 2019 21:38:01 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 23:38:00 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
+Message-Id: <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
+In-Reply-To: <20190905154747.GB3650@rapoport-lnx>
+References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
+        <20190905152150.f7ff6ef70726085de63df828@suse.de>
+        <20190905133251.GA3650@rapoport-lnx>
+        <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
+        <20190905154747.GB3650@rapoport-lnx>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 29, 2019 at 02:01:28AM +0800, Kai-Heng Feng wrote:
-> It's a common practice to let dGPU unbound and use PCI platform power
-> management to disable its power through _OFF method of power resource,
-> which is listed by _PR3.
-> When the dGPU comes with an HDA function, the HDA won't be suspended if
-> the dGPU is unbound, so the power resource can't be turned off.
+On Thu, 5 Sep 2019 18:47:49 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-I'm not involved in applying this patch, but from the peanut gallery:
-
-  - The above looks like it might be two paragraphs missing a blank
-    line between?  Or maybe it's one paragraph that needs to be
-    rewrapped?
-
-  - I can't parse the first sentence.  I guess "dGPU" and "HDA" are
-    hardware devices, but I don't know what "unbound" means.  Is that
-    something to do with a driver being bound to the dGPU?  Or is it
-    some connection between the dGPU and the HDA?
-
-  - "PCI platform power management" is still confusing -- I think we
-    either have "PCI power management" that uses the PCI PM Capability
-    (i.e., writing PCI_PM_CTRL as in pci_raw_set_power_state()) OR we
-    have "platform power management" that uses some other method,
-    typically ACPI.  Since you refer to _OFF and _PR3, I guess you're
-    referring to platform power management here.
-
-  - "It's common practice to let dGPU unbound" -- does that refer to
-    some programming technique common in drivers, or some user-level
-    thing like unloading a driver, or ...?  My guess is it probably
-    means "unbind the driver from the dGPU" but I still don't know
-    what makes it common practice.
-
-This probably all makes perfect sense to the graphics cognoscenti, but
-for the rest of us there are a lot of dots here that are not
-connected.
-
-> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
-> discrete GPU") only allows HDA to be runtime-suspended once GPU is
-> bound, to keep APU's HDA working.
+> On Thu, Sep 05, 2019 at 03:48:31PM +0200, Thomas Bogendoerfer wrote:
+> > On Thu, 5 Sep 2019 16:32:53 +0300
+> > Mike Rapoport <rppt@kernel.org> wrote:
+> > 
+> > > On Thu, Sep 05, 2019 at 03:21:50PM +0200, Thomas Bogendoerfer wrote:
+> > > > On Thu,  5 Sep 2019 08:47:57 +0300
+> > > > Mike Rapoport <rppt@kernel.org> wrote:
+> > > > 
+> > > > > From: Mike Rapoport <rppt@linux.ibm.com>
+> > > > > 
+> > > > > The memory initialization of SGI-IP27 is already half-way to support
+> > > > > SPARSEMEM and only a call to sparse_init() was missing. Add it to
+> > > > > prom_meminit() and adjust arch/mips/Kconfig to enable SPARSEMEM and
+> > > > > SPARSEMEM_EXTREME for SGI-IP27
+> > > > > 
+> > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > > > > ---
+> > > > > 
+> > > > > Thomas, could you please test this on your Origin machine?
+> > > > 
+> > > > it crashes in sparse_early_usemaps_alloc_pgdat_section(). Since there is
+> > > > already a sparse_init() in arch_mem_setup() I removed it from ip27-memory.c.
+> > > 
+> > > Oops, missed that.
+> > > 
+> > > > With this booting made more progress but I get an unaligned access in
+> > > > kernel_init_free_pages(). 
+> > > 
+> > > Can you please share the log?
+> > 
+> > sure
 > 
-> However, HDA on dGPU isn't that useful if dGPU is unbound. So let's
-> relax the runtime suspend requirement for dGPU's HDA function, to save
-> lots of power.
+> Nothing looked particularly suspicious, but I've found that I've missed the
+> definition of pfn_to_nid() is for DISCONTIGMEM only, maybe making it
+> available for SPARSE would help :)
 > 
-> BugLink: https://bugs.launchpad.net/bugs/1840835
-> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllersâ€)
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2:
-> - Change wording.
-> - Rebase to Tiwai's branch.
-> 
->  sound/pci/hda/hda_intel.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index 91e71be42fa4..c3654d22795a 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1284,7 +1284,11 @@ static void init_vga_switcheroo(struct azx *chip)
->  		dev_info(chip->card->dev,
->  			 "Handle vga_switcheroo audio client\n");
->  		hda->use_vga_switcheroo = 1;
-> -		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
-> +
-> +		/* cleared in either gpu_bound op or codec probe, or when its
-> +		 * root port has _PR3 (i.e. dGPU).
-> +		 */
-> +		chip->bus.keep_power = !pci_pr3_present(p);
->  		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
->  		pci_dev_put(p);
->  	}
-> -- 
-> 2.17.1
-> 
+> I'm pretty much shooting in the dark here, but can you please try the patch
+> below on top of the original one:
+
+doesn't compile: 
+
+/home/tbogendoerfer/wip/mips/linux/include/linux/mmzone.h:1367:0: warning: "pfn_to_nid" redefined
+ #define pfn_to_nid(pfn)       \
+
+
+For testing I've removed the version in linux/mmzone.h, but kernel still crashes. Only
+difference is that several CPUs are printing the oops in unaligned handler in parallel.
+With the sparse_init() in prom_meminit() kernel dies at the same spot as before.
+
+Thomas.
+
+-- 
+SUSE Software Solutions Germany GmbH
+HRB 247165 (AG München)
+Geschäftsführer: Felix Imendörffer
