@@ -2,158 +2,101 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C644C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD51C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EE621743
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:34:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sIWDPSa7"
+	by mail.kernel.org (Postfix) with ESMTP id BC0A221743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:34:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387480AbfIEJet (ORCPT
+        id S2387501AbfIEJey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:34:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46038 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731084AbfIEJet (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:34:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l16so1854540wrv.12
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 02:34:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pXNJ5zxAZdffoIhjgeNEzW79E8dcv18vdpXa7euQmqw=;
-        b=sIWDPSa762NqP0jAqYvtDgXKYGJDvi3INGD/xgBdvJFSKvCGi0oicG9EtoYeblRFIH
-         VbYG3uNcqdBzCiaVs5YAHpMFhVsfpQ5Y7jzBuGrP5uP5ndrIhK8RvE5YB+TqjCT/Pqee
-         o2FnNt245G4HhUbLeNVwmiC0gfkWavIs1JKKYUG+hVq/G+eqJczbl1u7eBjWvPiOsGRE
-         qTD0JVm4lLDxG79xIOJhVLLVOvDQPs+hAH++0sIRB2xNadNOmlTg9VP8ih5lUr1YUUTP
-         OP4YiTMiqAe4xI/yI2VK1PRF7lq9AyltPtunxBiWSqv06+MVn60oLAw8qnWkclrJnzWI
-         rbqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=pXNJ5zxAZdffoIhjgeNEzW79E8dcv18vdpXa7euQmqw=;
-        b=ZsqcjrzQapAhxe7VDqjUh0MhfKtHDHBnMXz6YuTVOUcm0W0VXTVCi8tom+//n+aweE
-         PC000O+8DS/SskGJpbwNoCsqBYCMmgpvEqLWLDunJE5n+hMNphiAkSl9kUSrXYGNSRyF
-         W6mdCIJeVqhrSx3s2vwMQ4aqgkpz8uwJJsGLWaUJ9HGhBfnzyl/e5Oytwu1/H1GFLkRn
-         XbOh6srSURI2sqo8Z+a6dCrwY441G61lbjacQA9DozbbHPCqDlTei4ghzUop2rESctbC
-         MuuGOTyORpmdKA91WdGZSr+Am6iXBDYicTyRmMbU+F/9XMHDG1VRFU89dO1JBjf6bi7Y
-         EYzw==
-X-Gm-Message-State: APjAAAXeczqeap7oR/xyaIeORo3tm0qQpJJbfEKFyLx9ZS2AdvSiNzAZ
-        EWPBB6kt7CXd04uZBMNJjiz9wQ==
-X-Google-Smtp-Source: APXvYqz+PlZ2++c+1pdnHHC8kczGTCTfRXI8OA/X49x2MsnB2O2SZaoocQz3z6r0C4XzJrFHZuK99g==
-X-Received: by 2002:a5d:4247:: with SMTP id s7mr1786602wrr.110.1567676086829;
-        Thu, 05 Sep 2019 02:34:46 -0700 (PDT)
-Received: from dell ([95.147.198.36])
-        by smtp.gmail.com with ESMTPSA id o9sm2221110wrh.46.2019.09.05.02.34.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 02:34:46 -0700 (PDT)
+        Thu, 5 Sep 2019 05:34:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:40346 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731084AbfIEJew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:34:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 366941576;
+        Thu,  5 Sep 2019 02:34:51 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0E9E3F67D;
+        Thu,  5 Sep 2019 02:34:48 -0700 (PDT)
 Date:   Thu, 5 Sep 2019 10:34:44 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, alokc@codeaurora.org,
-        agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
- processing
-Message-ID: <20190905093444.GE26880@dell>
-References: <20190904113613.14997-1-lee.jones@linaro.org>
- <20190904203548.GC580@tuxbook-pro>
- <20190904212337.GF23608@ninjato>
- <20190905071103.GX26880@dell>
- <20190905091617.GC1157@kunai>
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V3 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
+ in p2972-0000 platform
+Message-ID: <20190905093444.GA16642@e121166-lin.cambridge.arm.com>
+References: <20190828172850.19871-1-vidyas@nvidia.com>
+ <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190905091617.GC1157@kunai>
+In-Reply-To: <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 05 Sep 2019, Wolfram Sang wrote:
-> > > It looks like a workaround to me. It would be interesting to hear which
-> > > I2C client breaks with DMA and if it's driver can't be fixed somehow
-> > > instead. But even if we agree on a workaround short term, adding a
+On Thu, Sep 05, 2019 at 01:44:46PM +0530, Vidya Sagar wrote:
+> Hi Lorenzo / Bjorn,
+> Can you please review this series?
+> I have Reviewed-by and Acked-by from Rob, Thierry and Andrew already.
+
+Rebase it on top of my pci/tegra branch (it does not apply),
+resend it and I will merge it.
+
+Thanks,
+Lorenzo
+
+> Thanks,
+> Vidya Sagar
 > 
-> So, are there investigations running why this reboot happens?
-
-Yes, but they have been running for months, literally.
-
-Unfortunately, since these are production level platforms, all of the
-usual low-level debugging avenues (JTAG) have been closed off.  Also,
-only a very small number of people have access to documentation, but
-even those who are in possession are stumped.
-
-Andy Gross did have one idea as to what might be happening, but it
-turned out to be a red herring.
-
-> > > Is there no other way to disable DMA which is local to this driver so we
-> > > can easily revert the workaround later?
+> On 8/28/2019 10:58 PM, Vidya Sagar wrote:
+> > This patch series enables Tegra194's C5 controller which owns x16 slot in
+> > p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+> > output and bi-directional signals by default and hence they need to be
+> > configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+> > through GPIOs and hence they need to be enabled through regulator framework.
+> > This patch series adds required infrastructural support to address both the
+> > aforementioned requirements.
+> > Testing done on p2972-0000 platform
+> > - Able to enumerate devices connected to x16 slot (owned by C5 controller)
+> > - Enumerated device's functionality verified
+> > - Suspend-Resume sequence is verified with device connected to x16 slot
 > > 
-> > This is the most local low-impact solution (nomenclature aside).
+> > V3:
+> > * Addressed some more review comments from Andrew Murray and Thierry Reding
+> > 
+> > V2:
+> > * Changed the order of patches in the series for easy merging
+> > * Addressed review comments from Thierry Reding and Andrew Murray
+> > 
+> > Vidya Sagar (6):
+> >    dt-bindings: PCI: tegra: Add sideband pins configuration entries
+> >    dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+> >    PCI: tegra: Add support to configure sideband pins
+> >    PCI: tegra: Add support to enable slot regulators
+> >    arm64: tegra: Add configuration for PCIe C5 sideband signals
+> >    arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+> > 
+> >   .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
+> >   .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
+> >   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
+> >   arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
+> >   drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
+> >   5 files changed, 172 insertions(+), 4 deletions(-)
+> > 
 > 
-> I disagree. You could use of_machine_is_compatible() and disable DMA for
-> that machine. Less impact because we save the workaround binding.
-
-That could also work.
-
-> > The beautiful thing about this approach is that, *if* the Geni SE DMA
-> 
-> I'd say 'advantage' instead of 'beautiful' ;)
-
-Okay, "the advantage thing about ..." ;)
-
-> > ever starts working, we can remove the C code and any old properties
-> > left in older DTs just become NOOP.  Older kernels with newer DTs
-> > (less of a priority) *still* won't work, but they don't work now
-> > anyway.
-> 
-> Which is a clear disadvantage of that solution. It won't fix older
-> kernels. My suggestion above should fix them, too.
-
-Not sure how this is possible.  Unless you mean LTS?
-
-> > The offending line can be found at [0].  There is no obvious bug to
-> > fix and this code obviously works well on some of the hardware
-> > platforms using it.  But on our platform (Lenovo Yoga C630 - QCom
-> > SMD850) that final command, which initiates the DMA transaction, ends
-> > up rebooting the machine.
-> 
-> Unless we know why the reboot happens on your platform, I'd be careful
-> with saying "work obviously well" on other platforms.
-
-Someone must have tested it?  Surely ... ;)
-
-> > With regards to the nomenclature, my original suggestion was
-> > 'qcom,geni-se-no-dma'.  Would that better suit your request?
-> 
-> My suggestion:
-> 
-> For 5.3, use of_machine_is_compatible() and we backport that. For later,
-> try to find out the root cause and fix it. If that can't be done, try to
-> set up a generic "disable-dma" property and use it.
-> 
-> What do you think about that?
-
-Sounds okay to me.  Let me code that up.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
