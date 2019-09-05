@@ -2,225 +2,98 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2969C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7054FC3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8E7C206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4747B20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:01:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lQNQsZxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbfIEE7u (ORCPT
+        id S1731214AbfIEFB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:59:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37696 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725921AbfIEE7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:59:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2985CB60E;
-        Thu,  5 Sep 2019 04:59:48 +0000 (UTC)
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     akpm@linux-foundation.org
-Cc:     walken@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, dave@stgolabs.net,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH -next] mm: introduce vma_interval_tree_foreach_stab()
-Date:   Wed,  4 Sep 2019 21:59:35 -0700
-Message-Id: <20190905045935.5228-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.16.4
+        Thu, 5 Sep 2019 01:01:29 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36959 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731163AbfIEFB2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 01:01:28 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b10so694408plr.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 22:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SUBeohh+HfbbNLC2vNWJGf1wy1Gdj58+BXfyMUrKjoc=;
+        b=lQNQsZxYsESZuNfE0/YmQ6QEjfkBMP2b5Cq9hW5SSuH4ZmInwZ+bEdgwHTQBKexs0l
+         mm0PIiuvSihKeJKrtU55xFyIXXKbfpkaUUHA6LciwO+kh3SqCIR9dRisUpjIKrdmLCH/
+         aEU5hKRqdQraaaOa2/U1+8xQssGgrCYcV84OknuhvYOam+Zusks1aoH2zBwhNfOdrPqw
+         WPpvMOU8e5zTBL/stzc3L/IDjgE+sj3e8ePSTkncNQklhRJacblNFNi5XBs2m3VZpkLp
+         PzcLlF6mvd+UN7b3K2oVTrAaCu+B9Jc1ZCiBw1+rbT9eITC/YqJtkEA2jAMHxi6euTGE
+         tnoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SUBeohh+HfbbNLC2vNWJGf1wy1Gdj58+BXfyMUrKjoc=;
+        b=sZznDlapGtvo/LYFHjabtMpTrkkjjF7pVQvn9OQpoPwCMwGZe9Ch3BaIZh9m1sgGF3
+         VgbADJm14Ueb6YunKH4dychZj2Rnf3rPVrhoVZuLorD3bjcOzV697t0TSRjyBCJuKELv
+         PikxSiurfqGWFt5bBD70xtxmRV86pUsXzyMWjp4FL2l2KI+Qdn6VPMs21OjzU+SBXR5Y
+         ujVpPBieQyCRiZdmxYrR7FbvVVMGtku5M+WCmBuLsC3o5GZ1eg3XcZpJiyDQtIGf/DJj
+         10MYWUOZldKbpVDTLyu9TXK70bF5fEM9f4VJT+bJGjklaIRQT9u2/LrVv0/9exHb2Xz8
+         2r+g==
+X-Gm-Message-State: APjAAAUNDFHaOIhQdlzd82Kw+yfy8qzg/wpYOwuNbbOSvCeuOUSynEga
+        2yfqheNFL4H3NhYMBeZeaf/Szg==
+X-Google-Smtp-Source: APXvYqxLKp/hQTBJFZg4bq2XsgfOo5v+1kCisfZEZTN8ZhsozLd3tLyYaMrWDgM/E+T8p4eXRva++Q==
+X-Received: by 2002:a17:902:a58c:: with SMTP id az12mr1410313plb.129.1567659688106;
+        Wed, 04 Sep 2019 22:01:28 -0700 (PDT)
+Received: from localhost ([122.167.132.221])
+        by smtp.gmail.com with ESMTPSA id p189sm1181543pfp.163.2019.09.04.22.01.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 22:01:26 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 10:31:24 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>, krzk@kernel.org,
+        robh+dt@kernel.org, vireshk@kernel.org, devicetree@vger.kernel.org,
+        kgene@kernel.org, pankaj.dubey@samsung.com,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.zolnierkie@samsung.com
+Subject: Re: [PATCH v2 0/9] Exynos Adaptive Supply Voltage support
+Message-ID: <20190905050124.kopzxxouuuta37n6@vireshk-i7>
+References: <562dd2e7-2b24-8492-d1c1-2dc4973f07be@samsung.com>
+ <20190819090928.pke6cov52n4exlbp@vireshk-i7>
+ <b831d7c5-c830-fd65-20cf-02e209889c28@samsung.com>
+ <20190819112533.bvfyinw7fsebkufr@vireshk-i7>
+ <b7093aaf-ea56-c390-781f-6f9d0780bd8e@samsung.com>
+ <20190820030114.6flnn2omeys3lih3@vireshk-i7>
+ <06ccff05-2152-4bcc-7537-8f24da75f163@samsung.com>
+ <CGME20190820092123epcas2p2170ae19467a5fb19fcfc1acdbecf9381@epcas2p2.samsung.com>
+ <20190820092113.gojhe3romdnvm7eu@vireshk-i7>
+ <4e6379a7-0d4b-8e0d-c225-49976b2587e0@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e6379a7-0d4b-8e0d-c225-49976b2587e0@samsung.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This documents better the nature of the stab lookup/query.
+On 04-09-19, 14:37, Sylwester Nawrocki wrote:
+> I have changed the code to use dev_pm_opp_adjust_voltage(). I was wondering 
+> though, what did you mean by "triplet" when commenting on this patch
+> https://patchwork.kernel.org/patch/11092245 ?
 
-In addition, this is a step that will make the conversion
-of interval tree nodes from [a,b] to [a,b[ easier to review.
+The voltage value in the OPP core is stored as a triplet,
+min/max/target kind of stuff. You can check DT binding for OPPs and
+see the details. That's called as triplet.
 
-For symmetry with vma_interval_tree, the anon equivalent is
-also introduced, albeit a single user. This patch does not
-change any semantics.
-
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
----
- arch/arm/mm/fault-armv.c   | 2 +-
- arch/arm/mm/flush.c        | 2 +-
- arch/nios2/mm/cacheflush.c | 2 +-
- arch/parisc/kernel/cache.c | 2 +-
- fs/dax.c                   | 2 +-
- include/linux/mm.h         | 6 ++++++
- kernel/events/uprobes.c    | 2 +-
- mm/hugetlb.c               | 4 ++--
- mm/khugepaged.c            | 2 +-
- mm/memory-failure.c        | 6 ++----
- 10 files changed, 17 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm/mm/fault-armv.c b/arch/arm/mm/fault-armv.c
-index ae857f41f68d..85bb69f1decb 100644
---- a/arch/arm/mm/fault-armv.c
-+++ b/arch/arm/mm/fault-armv.c
-@@ -143,7 +143,7 @@ make_coherent(struct address_space *mapping, struct vm_area_struct *vma,
- 	 * cache coherency.
- 	 */
- 	flush_dcache_mmap_lock(mapping);
--	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
-+	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
- 		/*
- 		 * If this VMA is not in our MM, we can ignore it.
- 		 * Note that we intentionally mask out the VMA
-diff --git a/arch/arm/mm/flush.c b/arch/arm/mm/flush.c
-index 6d89db7895d1..b04384406c0f 100644
---- a/arch/arm/mm/flush.c
-+++ b/arch/arm/mm/flush.c
-@@ -249,7 +249,7 @@ static void __flush_dcache_aliases(struct address_space *mapping, struct page *p
- 	pgoff = page->index;
- 
- 	flush_dcache_mmap_lock(mapping);
--	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
-+	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
- 		unsigned long offset;
- 
- 		/*
-diff --git a/arch/nios2/mm/cacheflush.c b/arch/nios2/mm/cacheflush.c
-index 65de1bd6a760..8abe26b8e29d 100644
---- a/arch/nios2/mm/cacheflush.c
-+++ b/arch/nios2/mm/cacheflush.c
-@@ -79,7 +79,7 @@ static void flush_aliases(struct address_space *mapping, struct page *page)
- 	pgoff = page->index;
- 
- 	flush_dcache_mmap_lock(mapping);
--	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
-+	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
- 		unsigned long offset;
- 
- 		if (mpnt->vm_mm != mm)
-diff --git a/arch/parisc/kernel/cache.c b/arch/parisc/kernel/cache.c
-index a82b3eaa5398..c5f8aab749c1 100644
---- a/arch/parisc/kernel/cache.c
-+++ b/arch/parisc/kernel/cache.c
-@@ -348,7 +348,7 @@ void flush_dcache_page(struct page *page)
- 	 * to flush one address here for them all to become coherent */
- 
- 	flush_dcache_mmap_lock(mapping);
--	vma_interval_tree_foreach(mpnt, &mapping->i_mmap, pgoff, pgoff) {
-+	vma_interval_tree_foreach_stab(mpnt, &mapping->i_mmap, pgoff) {
- 		offset = (pgoff - mpnt->vm_pgoff) << PAGE_SHIFT;
- 		addr = mpnt->vm_start + offset;
- 
-diff --git a/fs/dax.c b/fs/dax.c
-index 6bf81f931de3..f24c035defb7 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -781,7 +781,7 @@ static void dax_entry_mkclean(struct address_space *mapping, pgoff_t index,
- 	spinlock_t *ptl;
- 
- 	i_mmap_lock_read(mapping);
--	vma_interval_tree_foreach(vma, &mapping->i_mmap, index, index) {
-+	vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, index) {
- 		struct mmu_notifier_range range;
- 		unsigned long address;
- 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 66f296181bcc..14c5eb514bfe 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2244,6 +2244,9 @@ struct vm_area_struct *vma_interval_tree_iter_next(struct vm_area_struct *node,
- 	for (vma = vma_interval_tree_iter_first(root, start, last);	\
- 	     vma; vma = vma_interval_tree_iter_next(vma, start, last))
- 
-+#define vma_interval_tree_foreach_stab(vma, root, start)		\
-+	vma_interval_tree_foreach(vma, root, start, start)
-+
- void anon_vma_interval_tree_insert(struct anon_vma_chain *node,
- 				   struct rb_root_cached *root);
- void anon_vma_interval_tree_remove(struct anon_vma_chain *node,
-@@ -2261,6 +2264,9 @@ void anon_vma_interval_tree_verify(struct anon_vma_chain *node);
- 	for (avc = anon_vma_interval_tree_iter_first(root, start, last); \
- 	     avc; avc = anon_vma_interval_tree_iter_next(avc, start, last))
- 
-+#define anon_vma_interval_tree_foreach_stab(vma, root, start)		\
-+	anon_vma_interval_tree_foreach(vma, root, start, start)
-+
- /* mmap.c */
- extern int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin);
- extern int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 94d38a39d72e..6a70dbe0b4b2 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -975,7 +975,7 @@ build_map_info(struct address_space *mapping, loff_t offset, bool is_register)
- 
-  again:
- 	i_mmap_lock_read(mapping);
--	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
-+	vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, pgoff) {
- 		if (!valid_vma(vma, is_register))
- 			continue;
- 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index ef37c85423a5..1a6b133ca66d 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3643,7 +3643,7 @@ static void unmap_ref_private(struct mm_struct *mm, struct vm_area_struct *vma,
- 	 * __unmap_hugepage_range() is called as the lock is already held
- 	 */
- 	i_mmap_lock_write(mapping);
--	vma_interval_tree_foreach(iter_vma, &mapping->i_mmap, pgoff, pgoff) {
-+	vma_interval_tree_foreach_stab(iter_vma, &mapping->i_mmap, pgoff) {
- 		/* Do not unmap the current VMA */
- 		if (iter_vma == vma)
- 			continue;
-@@ -4844,7 +4844,7 @@ pte_t *huge_pmd_share(struct mm_struct *mm, unsigned long addr, pud_t *pud)
- 		return (pte_t *)pmd_alloc(mm, pud, addr);
- 
- 	i_mmap_lock_write(mapping);
--	vma_interval_tree_foreach(svma, &mapping->i_mmap, idx, idx) {
-+	vma_interval_tree_foreach_stab(svma, &mapping->i_mmap, idx) {
- 		if (svma == vma)
- 			continue;
- 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 00cec6a127aa..a5536e7c4d4c 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1420,7 +1420,7 @@ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- 	pmd_t *pmd, _pmd;
- 
- 	i_mmap_lock_write(mapping);
--	vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff, pgoff) {
-+	vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, pgoff) {
- 		/*
- 		 * Check vma->anon_vma to exclude MAP_PRIVATE mappings that
- 		 * got written to. These VMAs are likely not worth investing
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 7ef849da8278..79934fd00146 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -451,8 +451,7 @@ static void collect_procs_anon(struct page *page, struct list_head *to_kill,
- 
- 		if (!t)
- 			continue;
--		anon_vma_interval_tree_foreach(vmac, &av->rb_root,
--					       pgoff, pgoff) {
-+		anon_vma_interval_tree_foreach_stab(vmac, &av->rb_root, pgoff) {
- 			vma = vmac->vma;
- 			if (!page_mapped_in_vma(page, vma))
- 				continue;
-@@ -482,8 +481,7 @@ static void collect_procs_file(struct page *page, struct list_head *to_kill,
- 
- 		if (!t)
- 			continue;
--		vma_interval_tree_foreach(vma, &mapping->i_mmap, pgoff,
--				      pgoff) {
-+		vma_interval_tree_foreach_stab(vma, &mapping->i_mmap, pgoff) {
- 			/*
- 			 * Send early kill signal to tasks where a vma covers
- 			 * the page but the corrupted page is not necessarily
 -- 
-2.16.4
-
+viresh
