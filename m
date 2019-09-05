@@ -2,186 +2,136 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F86C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF170C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AB720882
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:45:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L+wWW+zq"
+	by mail.kernel.org (Postfix) with ESMTP id ADC3120882
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbfIEBpB (ORCPT
+        id S1730518AbfIEBq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 21:45:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39919 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730219AbfIEBpB (ORCPT
+        Wed, 4 Sep 2019 21:46:27 -0400
+Received: from lgeamrelo11.lge.com ([156.147.23.51]:44377 "EHLO
+        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfIEBq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 21:45:01 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w144so455533oia.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 18:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kOF+ZPHpYR3Xq1yEKnmzXHsOmTQNpIQkThMXvnUhVnc=;
-        b=L+wWW+zqfhvIK5s50CRQN9eMZcVRT3Jh5t+ZjUc2Wt5L7v0CeTyHEFh6irH8z7niKo
-         JCq/2CckgEaRzgtT9BJ1H5qP0GBJ3HtrjQ5Ifn17S2utsp59l/WzQq5YSvZT5GHSBX2O
-         KyQ1ybyjX5Yg9SmMRVFTrG5GzXWNkAzVOWFwSCKe53W9eK5VBIsYbCiWGp2XTHUI90BZ
-         C0mWjQsrL07iTQ1XvMRKfg9eD8fDoX7qXRzIV56G7N9xhlDdHpBWTj2XPb8DxolG1VM3
-         2wY09qTLZTJUmN22H6lJcH0dGsFCQdY0ThP6meYY8D+9zQgHjyJzLMG7xSnjaeD5lbTu
-         YwKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kOF+ZPHpYR3Xq1yEKnmzXHsOmTQNpIQkThMXvnUhVnc=;
-        b=NG0m4/47J71iyboBFX01gAJOb1IuO0JWQZdQ5Em4lNSLiKTo/rYeoB2EH2+LG9BhMm
-         wv3nCgfY5/MgNKyoqnOyz4ThLo/v1stFcWF53tA7EWT20KJBStq0VFvH7Z6cfVvV94YR
-         FroGozIj+2g0up9GV8dVygrwApMBKwpW7VXExvGxrGIQrgrQGyTwwQO0O1MWTPoLyS2h
-         AZZ4ZRhW+K+s1DzlMp37IFDXQ4g+8XZ6+sNYIrIizUUMvi5RFCxC7igovpr+3aFe14ey
-         vktudnELcghc1BwGmL687r7si/YBrm1tgXwdAbFQVrOxu9hI3ONbR7/UYBe5OSgIWW7x
-         86iQ==
-X-Gm-Message-State: APjAAAV9SqfHFcCApWatDmhMSIdIqSrCpTIPifsuMDlxg3BYgue7/bqC
-        4Dkxq1XIomBkvkUG7OGLhPgvfiYKRs/OvBzCgCKbxg==
-X-Google-Smtp-Source: APXvYqzfiqJq/DMGiXcEwCOAMX5aRkF63SEJA1OgBe7uOUrr5rCBSNyt2Orw+TH4LR2eUQun3bC3KcwkSlZ/jlhrL7E=
-X-Received: by 2002:aca:f48e:: with SMTP id s136mr746525oih.57.1567647899440;
- Wed, 04 Sep 2019 18:44:59 -0700 (PDT)
+        Wed, 4 Sep 2019 21:46:27 -0400
+Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
+        by 156.147.23.51 with ESMTP; 5 Sep 2019 10:46:24 +0900
+X-Original-SENDERIP: 156.147.1.121
+X-Original-MAILFROM: sangwoo2.park@lge.com
+Received: from unknown (HELO LGEARND18B2) (10.168.178.132)
+        by 156.147.1.121 with ESMTP; 5 Sep 2019 10:46:24 +0900
+X-Original-SENDERIP: 10.168.178.132
+X-Original-MAILFROM: sangwoo2.park@lge.com
+Date:   Thu, 5 Sep 2019 10:46:24 +0900
+From:   Park Sangwoo <sangwoo2.park@lge.com>
+To:     mhocko@kernel.org
+Cc:     hannes@cmpxchg.org, arunks@codeaurora.org, guro@fb.com,
+        richard.weiyang@gmail.com, glider@google.com, jannh@google.com,
+        dan.j.williams@intel.com, akpm@linux-foundation.org,
+        alexander.h.duyck@linux.intel.com, rppt@linux.vnet.ibm.com,
+        gregkh@linuxfoundation.org, janne.huttunen@nokia.com,
+        pasha.tatashin@soleen.com, vbabka@suse.cz, osalvador@suse.de,
+        mgorman@techsingularity.net, khlebnikov@yandex-team.ru,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: Add nr_free_highatomimic to fix incorrect watermatk
+ routine
+Message-ID: <20190905014624.GA25551@LGEARND18B2>
 MIME-Version: 1.0
-References: <cover.1567492316.git.baolin.wang@linaro.org> <5723d9006de706582fb46f9e1e3eb8ce168c2126.1567492316.git.baolin.wang@linaro.org>
- <878sr442t8.fsf@intel.com>
-In-Reply-To: <878sr442t8.fsf@intel.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Thu, 5 Sep 2019 09:44:48 +0800
-Message-ID: <CAMz4kuJVTaDnDEKD77G_X=iVZf98e3isgSt0w7Yvb+_KnSfc9Q@mail.gmail.com>
-Subject: Re: [BACKPORT 4.14.y 1/8] drm/i915/fbdev: Actually configure untiled displays
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     "# 3.4.x" <stable@vger.kernel.org>, chris@chris-wilson.co.uk,
-        airlied@linux.ie, Vincent Guittot <vincent.guittot@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, intel-gfx@lists.freedesktop.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, Orson Zhai <orsonzhai@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 at 21:19, Jani Nikula <jani.nikula@linux.intel.com> wrote:
->
-> On Tue, 03 Sep 2019, Baolin Wang <baolin.wang@linaro.org> wrote:
-> > From: Chris Wilson <chris@chris-wilson.co.uk>
-> >
-> > If we skipped all the connectors that were not part of a tile, we would
-> > leave conn_seq=0 and conn_configured=0, convincing ourselves that we
-> > had stagnated in our configuration attempts. Avoid this situation by
-> > starting conn_seq=ALL_CONNECTORS, and repeating until we find no more
-> > connectors to configure.
-> >
-> > Fixes: 754a76591b12 ("drm/i915/fbdev: Stop repeating tile configuration on stagnation")
-> > Reported-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Link: https://patchwork.freedesktop.org/patch/msgid/20190215123019.32283-1-chris@chris-wilson.co.uk
-> > Cc: <stable@vger.kernel.org> # v3.19+
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->
-> Please look into the scripts to avoid picking up stuff that has
-> subsequently been reverted:
+> On Wed 04-09-19 15:54:57, Park Sangwoo wrote:
+> > On Tue 03-09-19 18:59:59, Park Sangwoo wrote:
+> > > On Mon 02-09-19 13:34:54, Sangwoo� wrote:
+> > >>> On Fri 30-08-19 18:25:53, Sangwoo wrote:
+> > >>>> The highatomic migrate block can be increased to 1% of Total memory.
+> > >>>> And, this is for only highorder ( > 0 order). So, this block size is
+> > >>>> excepted during check watermark if allocation type isn't alloc_harder.
+> > >>>>
+> > >>>> It has problem. The usage of highatomic is already calculated at
+> > >>> NR_FREE_PAGES.
+> > >>>>> So, if we except total block size of highatomic, it's twice minus size of
+> > >>> allocated
+> > >>>>> highatomic.
+> > >>>>> It's cause allocation fail although free pages enough.
+> > >>>>>
+> > >>>>> We checked this by random test on my target(8GB RAM).
+> > >>>>>
+> > >>>>>  Binder:6218_2: page allocation failure: order:0, mode:0x14200ca
+> > >>> (GFP_HIGHUSER_MOVABLE), nodemask=(null)
+> > >>>>>  Binder:6218_2 cpuset=background mems_allowed=0
+> > >>>>
+> > >>>> How come this order-0 sleepable allocation fails? The upstream kernel
+> > >>>> doesn't fail those allocations unless the process context is killed by
+> > >>>> the oom killer.
+> > >>> 
+> > > >>> Most calltacks are zsmalloc, as shown below.
+> > > >>
+> > > >> What makes those allocations special so that they fail unlike any other
+> > > >> normal order-0 requests? Also do you see the same problem with the
+> > > >> current upstream kernel? Is it possible this is an Android specific
+> > > >> issue?
+> > > >
+> > > > There is the other case of fail order-0 fail.
+> > > > ----
+> > > > hvdcp_opti: page allocation failure: order:0, mode:0x1004000(GFP_NOWAIT|__GFP_COMP), nodemask=(null)
+> > > 
+> > > This is an atomic allocation and failing that one is not a problem
+> > > usually. High atomic reservations might prevent GFP_NOWAIT allocation
+> > > from suceeding but I do not see that as a problem. This is the primary
+> > > purpose of the reservation. 
+> > 
+> > Thanks, your answer helped me. However, my suggestion is not to modify the use and management of the high atomic region,
+> > but to calculate the exact free size of the highatomic so that fail does not occur for previously shared cases.
+> > 
+> > In __zone_water_mark_ok(...) func, if it is not atomic allocation, high atomic size is excluded.
+> > 
+> > bool __zone_watermark_ok(struct zone *z,
+> > ...
+> > {
+> >     ...
+> >     if (likely(!alloc_harder)) {
+> >         free_pages -= z->nr_reserved_highatomic;
+> >     ...
+> > }
+> > 
+> > However, free_page excludes the size already allocated by hiahtomic.
+> > If highatomic block is small(Under 4GB RAM), it could be no problem.
+> > But, the larger the memory size, the greater the chance of problems.
+> > (Becasue highatomic size can be increased up to 1% of memory)
+> 
+> I still do not understand. NR_FREE_PAGES should include the amount of
+> hhighatomic reserves, right. So reducing the free_pages for normal
+> allocations just makes sense. Or what do I miss?
 
-I am very sorry, I missed this patch had been reverted, I will check
-why this revert patch was not in our product kernel. Thanks for your
-comments.
+You are right. But z->nr_reserved_highatomic value is total size of
+highatomic migrate type per zone.
 
->
-> commit 9fa246256e09dc30820524401cdbeeaadee94025
-> Author: Dave Airlie <airlied@redhat.com>
-> Date:   Wed Apr 24 10:47:56 2019 +1000
->
->     Revert "drm/i915/fbdev: Actually configure untiled displays"
->
->     This reverts commit d179b88deb3bf6fed4991a31fd6f0f2cad21fab5.
->
->     This commit is documented to break userspace X.org modesetting driver in certain configurations.
->
->     The X.org modesetting userspace driver is broken. No fixes are available yet. In order for this patch to be applied it either needs a config option or a workaround developed.
->
->     This has been reported a few times, saying it's a userspace problem is clearly against the regression rules.
->
->     Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109806
->     Signed-off-by: Dave Airlie <airlied@redhat.com>
->     Cc: <stable@vger.kernel.org> # v3.19+
->
->
->
-> BR,
-> Jani.
->
->
-> > ---
-> >  drivers/gpu/drm/i915/intel_fbdev.c |   12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/i915/intel_fbdev.c b/drivers/gpu/drm/i915/intel_fbdev.c
-> > index da2d309..14eb8a0 100644
-> > --- a/drivers/gpu/drm/i915/intel_fbdev.c
-> > +++ b/drivers/gpu/drm/i915/intel_fbdev.c
-> > @@ -326,8 +326,8 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
-> >                                   bool *enabled, int width, int height)
-> >  {
-> >       struct drm_i915_private *dev_priv = to_i915(fb_helper->dev);
-> > -     unsigned long conn_configured, conn_seq, mask;
-> >       unsigned int count = min(fb_helper->connector_count, BITS_PER_LONG);
-> > +     unsigned long conn_configured, conn_seq;
-> >       int i, j;
-> >       bool *save_enabled;
-> >       bool fallback = true, ret = true;
-> > @@ -345,10 +345,9 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
-> >               drm_modeset_backoff(&ctx);
-> >
-> >       memcpy(save_enabled, enabled, count);
-> > -     mask = GENMASK(count - 1, 0);
-> > +     conn_seq = GENMASK(count - 1, 0);
-> >       conn_configured = 0;
-> >  retry:
-> > -     conn_seq = conn_configured;
-> >       for (i = 0; i < count; i++) {
-> >               struct drm_fb_helper_connector *fb_conn;
-> >               struct drm_connector *connector;
-> > @@ -361,7 +360,8 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
-> >               if (conn_configured & BIT(i))
-> >                       continue;
-> >
-> > -             if (conn_seq == 0 && !connector->has_tile)
-> > +             /* First pass, only consider tiled connectors */
-> > +             if (conn_seq == GENMASK(count - 1, 0) && !connector->has_tile)
-> >                       continue;
-> >
-> >               if (connector->status == connector_status_connected)
-> > @@ -465,8 +465,10 @@ static bool intel_fb_initial_config(struct drm_fb_helper *fb_helper,
-> >               conn_configured |= BIT(i);
-> >       }
-> >
-> > -     if ((conn_configured & mask) != mask && conn_configured != conn_seq)
-> > +     if (conn_configured != conn_seq) { /* repeat until no more are found */
-> > +             conn_seq = conn_configured;
-> >               goto retry;
-> > +     }
-> >
-> >       /*
-> >        * If the BIOS didn't enable everything it could, fall back to have the
->
-> --
-> Jani Nikula, Intel Open Source Graphics Center
+nr_reserved_highatomic = (# of allocated of highatomic) + (# of free list of highatomic).
 
+And (# of allocated of hiagatomic) is already excluded at NR_FREE_PAGES.
+So, if reducing nr_reserved_highatomic at NR_FREE_PAGES,
+the (# of allocated of highatomic) is double reduced.
 
+So I proposal that only (# of free list of highatomic) is reduced at NR_FREE_PAGE.
 
--- 
-Baolin Wang
-Best Regards
+    if (likely(!alloc_harder)) {
+-       free_pages -= z->nr_reserved_highatomic;
++       free_pages -= zone_page_state(z, NR_FREE_HIGHATOMIC_PAGES);
+    } else {
+
+> 
+> I am sorry but I find your reasoning really hard to follow.
+
