@@ -2,148 +2,191 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC2DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:55:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561EEC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D50E21883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:55:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2309821883
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="0gu0zwfz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K2qbfLgX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387577AbfIELzN (ORCPT
+        id S2387603AbfIEL4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:55:13 -0400
-Received: from mail-eopbgr740088.outbound.protection.outlook.com ([40.107.74.88]:59664
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725921AbfIELzN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:55:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eqx1UV76iK5o9g+kCHLnT2wgpyqs4LPnIX/CVlhzuvem/lDss87dtXDXuF8cGv72yn/dePwc7qPo0Tr7sU2+emp2vwCpXh8OZa47nomgjih+2VmDHztQIXFqzE5+2mK5KIJf9lCBiXYofK1LNCsVvGnHGD4DOR+UYOqb5bvqK5YgK3/uHkHtJnjhMnKvN/PSA3m3uBQqaZLLS+8g0x9X/Prbm06WjttZQXj8A6jXOBcUBOkKJ2vPiLp7CE3aCu7Oi82V9LpQ+iKsy5QrmukbMI/7GIyfGmMl4wHyWn+f93v7EZM346o9qR7waCybq2EOCVOAgzl17gUaDwlanlnyOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OZEp0HFQ6BLNzJ436lZ+H1Aohse7hxCKIhcVEoPc5QE=;
- b=hegd4fwAs46uX6NVin7aHfqiyDBWEzUyGQnc61dkQK0kMgkSftHUlbtJ70fHfmnkNM3Cwogj6GFOeQzSN/MB0IjP6aL645tPG6+8CZUmUmPdMyEusiSSwxg5C4ngFqPdwfwuzZcCogVyn8lEn7/jzd45FS7uj+L4FkxfU8VQKQ6ykKpVcb9FdRG9ENohygPb1HeZoJ1CgCtkzEDoGbt+bAB6NX8I/4rqGvhNt+OiWxMadd0t6yGn5Tjw6/4KfsQdZyEN+yMxb1u0LZj6ocIzvndSnLySqXnDgGzlCd1IeCRZpnT0cPGXtTOTH1cUWwruU3wS/O8cYujHSnfogblYAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OZEp0HFQ6BLNzJ436lZ+H1Aohse7hxCKIhcVEoPc5QE=;
- b=0gu0zwfz/ZNiaDKMIKglnRs0VXnfLGTOEpoHAhggPx1hAAb7ZDtiZPHvSCgLz6KA1acetExh7JHnf8jzT3OeRe8T7j0a+63/jHRTEnJ6Eg087UVwzeetInQVw2ghk5rT6cJ4dUbiGBi2NfTO0q4k8hZZfHGrIWZCP03PnZ6r0uM=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6143.namprd05.prod.outlook.com (20.178.244.96) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.4; Thu, 5 Sep 2019 11:54:47 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::9861:5501:d72f:d977]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::9861:5501:d72f:d977%2]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
- 11:54:46 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "colin.king@canonical.com" <colin.king@canonical.com>,
-        "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>
-CC:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] drm/vmwgfx: Fix double free in vmw_recv_msg()
-Thread-Topic: [PATCH] drm/vmwgfx: Fix double free in vmw_recv_msg()
-Thread-Index: AQHVU0PQkTqRNIUlckSPpJbkwjPDv6b74yUAgCE3voA=
-Date:   Thu, 5 Sep 2019 11:54:46 +0000
-Message-ID: <830c68e5591dd197e098028227148106739e5591.camel@vmware.com>
-References: <20190815083050.GC27238@mwanda>
-         <08f19935-97fe-4c8b-ca7b-707586ed89a1@canonical.com>
-In-Reply-To: <08f19935-97fe-4c8b-ca7b-707586ed89a1@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a3bb59c-dfd1-4728-063b-08d731f7d961
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR05MB6143;
-x-ms-traffictypediagnostic: MN2PR05MB6143:|MN2PR05MB6143:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR05MB6143A59F49C682BBD08CFC12A1BB0@MN2PR05MB6143.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(366004)(136003)(346002)(199004)(189003)(26005)(118296001)(81156014)(6116002)(71190400001)(71200400001)(8676002)(316002)(102836004)(81166006)(478600001)(86362001)(3846002)(25786009)(6506007)(256004)(66066001)(76116006)(91956017)(6636002)(2906002)(66476007)(476003)(66946007)(53546011)(11346002)(6512007)(66556008)(14454004)(446003)(64756008)(6436002)(66446008)(4326008)(6486002)(186003)(2501003)(54906003)(229853002)(6246003)(5660300002)(8936002)(36756003)(305945005)(486006)(110136005)(2616005)(7736002)(99286004)(53936002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6143;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YMmoPIADNER+DnpYiA/yfsI9A7PK8YeCQUKtum2fmOzeWRpFNWXdmi3KX+kiY4bBV2zr0BTU7Ai0q5Fr47EwELGobeiS4RpiJN6dOrnKkj7gSBLqoTLdLb2y+f2C/me7nZfCjtdikK3VoERROAIkkpMinrV9qlIyVgqok+G9SOBacvQ2gYtwIOyC2UDFMgfyUG4g0Lz1L69cdDMGYudXvIqNs1BA9HGFMSKMGXAb2bpDM9o2bRTOg/sDcgEhpUXlnsNoXbVgsTnUbkZmnkpEg+Hq0104zMxUwNKoHeUmg5ZMInccHU+hfHJOdZs1Ib8B2O2x0QSPFX2MHuoFBIcUF6XTw54wVNQlBmA5tXHUYlXyKzR3XUwvpNYtD8qPQdRo1ZRID8I0rslFxEbbWuuGvlRSu+I0/HvtLf00HJoNzbg=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AA51AFC9B7C36441B8DE00A3BA11FC96@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 5 Sep 2019 07:56:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42374 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIEL4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:56:30 -0400
+Received: by mail-pg1-f195.google.com with SMTP id p3so1301429pgb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hQjgBHGvmm6cLhWASKb+Bb7AwJCJUdb2bnFuCs7Jtms=;
+        b=K2qbfLgXLyDMYx3CT4itk56rqQZeUYICpAiwxY+bHziP0L0EtB4dRdLUgUM2QcBUfs
+         W7ppzriDhlwCscxbAou1vfl55NzgsdM/0MfsnTKUslHf2cpjRrtDYcWKvv+eEN5mB/j6
+         X71J+wI280prcddvuW9IFUeZsBbaG5I4ddkKgV/iEwWuXAx/Jid/VFlsrCi//5CfsCFu
+         aASElFfTRJI+hIXO1uASEtUJJ+xUuYUxWMeEKPGoGDGbni065nojqjwzRb11k7bjF9Ab
+         a2fsWOxEiemX0WN8auAnjYEtaAMBC4KNkA4Z9qS3fAPJCanYldj2VCni38+ux4H264oC
+         YGiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hQjgBHGvmm6cLhWASKb+Bb7AwJCJUdb2bnFuCs7Jtms=;
+        b=rF2F6PR7izXlhnzKTsjUTbdl1eiW953+BOhLMklaRf4t3W9pYkWvIXT40PSZJk8H7r
+         xGCVw0w1wAgOZ4XqeCVtCNx4pAinmqxPInUAnDqqj5bEMCQee1iZLtNpabqojtvqtdXa
+         zyAPb1s8tI9t5hSm0V7gJcCxLR3DdLujuA3n/gpDU/QmpKbchPQvQacXti8NZ5Qv85ko
+         7bCA5c/3kt/k1/yF30VMANphuICczyu8HQof/RCUh4iRK9dstBrYGiwXhJ0WElPM2D1+
+         JNvVtvRiHGAdtrQkBC/iDhNutliul4DsWD1EejYnnBKEBX/uY0+g8wYx3nfG6txLhcSZ
+         wD9A==
+X-Gm-Message-State: APjAAAUxZQHf2r3HYBuXmCQGbgOjLZG16h346TtasAJTCVxyeTkxYh6d
+        ao0V9Yo3vdeG5//0W1CP/4SnFasgARgL8xJAWbE5wWqM4/1ZLA==
+X-Google-Smtp-Source: APXvYqzc8tR+1Eei1+UeBt7tujh4w17l1GmAOgfTaJEUhSU/o2sU9X3F/1/mpAjyhMhQh1pRjBZvA67ly+YggunTZ0g=
+X-Received: by 2002:a63:3006:: with SMTP id w6mr2822471pgw.440.1567684589317;
+ Thu, 05 Sep 2019 04:56:29 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a3bb59c-dfd1-4728-063b-08d731f7d961
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 11:54:46.8792
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JLlUxf/DLovRQg1HZnUdFFF7vvknZtOq7EWUVNMM85TCQ0OZ9mzPyDEg9P90/vgaZQdC/y+sxRGjgKlpba+2pA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6143
+References: <00000000000005ae9c058ee5245c@google.com>
+In-Reply-To: <00000000000005ae9c058ee5245c@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 5 Sep 2019 13:56:18 +0200
+Message-ID: <CAAeHK+zxTpfNE9cT4u-PCQv6pgX=z4MXsbBM9h3iFG6Bf0_qXQ@mail.gmail.com>
+Subject: Re: WARNING in mxl111sf_ctrl_msg
+To:     syzbot <syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Krufky <mkrufky@linuxtv.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA4LTE1IGF0IDA5OjM4ICswMTAwLCBDb2xpbiBJYW4gS2luZyB3cm90ZToN
-Cj4gT24gMTUvMDgvMjAxOSAwOTozMCwgRGFuIENhcnBlbnRlciB3cm90ZToNCj4gPiBXZSByZWNl
-bnRseSBhZGRlZCBhIGtmcmVlKCkgYWZ0ZXIgdGhlIGVuZCBvZiB0aGUgbG9vcDoNCj4gPiANCj4g
-PiAJaWYgKHJldHJpZXMgPT0gUkVUUklFUykgew0KPiA+IAkJa2ZyZWUocmVwbHkpOw0KPiA+IAkJ
-cmV0dXJuIC1FSU5WQUw7DQo+ID4gCX0NCj4gPiANCj4gPiBUaGVyZSBhcmUgdHdvIHByb2JsZW1z
-LiAgRmlyc3QgdGhlIHRlc3QgaXMgd3JvbmcgYW5kIGJlY2F1c2UNCj4gPiByZXRyaWVzDQo+ID4g
-ZXF1YWxzIFJFVFJJRVMgaWYgd2Ugc3VjY2VlZCBvbiB0aGUgbGFzdCBpdGVyYXRpb24gdGhyb3Vn
-aCB0aGUNCj4gPiBsb29wLg0KPiA+IFNlY29uZCBpZiB3ZSBmYWlsIG9uIHRoZSBsYXN0IGl0ZXJh
-dGlvbiB0aHJvdWdoIHRoZSBsb29wIHRoZW4gdGhlDQo+ID4ga2ZyZWUNCj4gPiBpcyBhIGRvdWJs
-ZSBmcmVlLg0KPiA+IA0KPiA+IFdoZW4geW91J3JlIHJlYWRpbmcgdGhpcyBjb2RlLCBwbGVhc2Ug
-bm90ZSB0aGUgYnJlYWsgc3RhdGVtZW50IGF0DQo+ID4gdGhlDQo+ID4gZW5kIG9mIHRoZSB3aGls
-ZSBsb29wLiAgVGhpcyBwYXRjaCBjaGFuZ2VzIHRoZSBsb29wIHNvIHRoYXQgaWYgaXQncw0KPiA+
-IG5vdA0KPiA+IHN1Y2Nlc3NmdWwgdGhlbiAicmVwbHkiIGlzIE5VTEwgYW5kIHdlIGNhbiB0ZXN0
-IGZvciB0aGF0IGFmdGVyd2FyZC4NCj4gPiANCj4gPiBGaXhlczogNmI3YzNiODZmMGI2ICgiZHJt
-L3Ztd2dmeDogZml4IG1lbW9yeSBsZWFrIHdoZW4gdG9vIG1hbnkNCj4gPiByZXRyaWVzIGhhdmUg
-b2NjdXJyZWQiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IERhbiBDYXJwZW50ZXIgPGRhbi5jYXJwZW50
-ZXJAb3JhY2xlLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL3Ztd2dmeC92bXdn
-ZnhfbXNnLmMgfCA4ICsrKy0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMo
-KyksIDUgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS92bXdnZngvdm13Z2Z4X21zZy5jDQo+ID4gYi9kcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dm
-eF9tc2cuYw0KPiA+IGluZGV4IDU5ZTlkMDVhYjkyOC4uMGFmMDQ4ZDFhODE1IDEwMDY0NA0KPiA+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS92bXdnZngvdm13Z2Z4X21zZy5jDQo+ID4gKysrIGIvZHJp
-dmVycy9ncHUvZHJtL3Ztd2dmeC92bXdnZnhfbXNnLmMNCj4gPiBAQCAtMzUzLDcgKzM1Myw3IEBA
-IHN0YXRpYyBpbnQgdm13X3JlY3ZfbXNnKHN0cnVjdCBycGNfY2hhbm5lbA0KPiA+ICpjaGFubmVs
-LCB2b2lkICoqbXNnLA0KPiA+ICAJCQkJICAgICAhIShISUdIX1dPUkQoZWN4KSAmDQo+ID4gTUVT
-U0FHRV9TVEFUVVNfSEIpKTsNCj4gPiAgCQlpZiAoKEhJR0hfV09SRChlYngpICYgTUVTU0FHRV9T
-VEFUVVNfU1VDQ0VTUykgPT0gMCkgew0KPiA+ICAJCQlrZnJlZShyZXBseSk7DQo+ID4gLQ0KPiA+
-ICsJCQlyZXBseSA9IE5VTEw7DQo+ID4gIAkJCWlmICgoSElHSF9XT1JEKGVieCkgJiBNRVNTQUdF
-X1NUQVRVU19DUFQpICE9IDApDQo+ID4gew0KPiA+ICAJCQkJLyogQSBjaGVja3BvaW50IG9jY3Vy
-cmVkLiBSZXRyeS4gKi8NCj4gPiAgCQkJCWNvbnRpbnVlOw0KPiA+IEBAIC0zNzcsNyArMzc3LDcg
-QEAgc3RhdGljIGludCB2bXdfcmVjdl9tc2coc3RydWN0IHJwY19jaGFubmVsDQo+ID4gKmNoYW5u
-ZWwsIHZvaWQgKiptc2csDQo+ID4gIA0KPiA+ICAJCWlmICgoSElHSF9XT1JEKGVjeCkgJiBNRVNT
-QUdFX1NUQVRVU19TVUNDRVNTKSA9PSAwKSB7DQo+ID4gIAkJCWtmcmVlKHJlcGx5KTsNCj4gPiAt
-DQo+ID4gKwkJCXJlcGx5ID0gTlVMTDsNCj4gPiAgCQkJaWYgKChISUdIX1dPUkQoZWN4KSAmIE1F
-U1NBR0VfU1RBVFVTX0NQVCkgIT0gMCkNCj4gPiB7DQo+ID4gIAkJCQkvKiBBIGNoZWNrcG9pbnQg
-b2NjdXJyZWQuIFJldHJ5LiAqLw0KPiA+ICAJCQkJY29udGludWU7DQo+ID4gQEAgLTM4OSwxMCAr
-Mzg5LDggQEAgc3RhdGljIGludCB2bXdfcmVjdl9tc2coc3RydWN0IHJwY19jaGFubmVsDQo+ID4g
-KmNoYW5uZWwsIHZvaWQgKiptc2csDQo+ID4gIAkJYnJlYWs7DQo+ID4gIAl9DQo+ID4gIA0KPiA+
-IC0JaWYgKHJldHJpZXMgPT0gUkVUUklFUykgew0KPiA+IC0JCWtmcmVlKHJlcGx5KTsNCj4gPiAr
-CWlmICghcmVwbHkpDQo+ID4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gLQl9DQo+ID4gIA0KPiA+
-ICAJKm1zZ19sZW4gPSByZXBseV9sZW47DQo+ID4gIAkqbXNnICAgICA9IHJlcGx5Ow0KPiA+IA0K
-PiANCj4gRGFuLCBUaGFua3MgZm9yIGZpeGluZyB1cCBteSBtaXN0YWtlLg0KDQpUaGFua3MsIERh
-bi4gU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5LiANClJldmlld2VkLWJ5OiBUaG9tYXMgSGVsbHN0
-csO2bSA8dGhlbGxzdHJvbUB2bXdhcmUuY29tPg0KV2lsbCBwdXNoIHRoaXMgdG8gZml4ZXMuDQoN
-Ci9UaG9tYXMNCg0K
+On Tue, Jul 30, 2019 at 2:28 PM syzbot
+<syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11a7957c600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
+> dashboard link: https://syzkaller.appspot.com/bug?extid=48eb85867b8a4c16adf0
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ac50f8600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1718c75c600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com
+>
+> usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
+> software demuxer
+> dvbdev: DVB: registering new adapter (Hauppauge 126xxx ATSC+)
+> usb 1-1: media controller created
+> dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
+> usb 1-1: selecting invalid altsetting 1
+> set interface failed
+> ------------[ cut here ]------------
+> DEBUG_LOCKS_WARN_ON(lock->magic != lock)
+> WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912 __mutex_lock_common
+> kernel/locking/mutex.c:912 [inline]
+> WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912
+> __mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #23
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   panic+0x2a3/0x6da kernel/panic.c:219
+>   __warn.cold+0x20/0x4a kernel/panic.c:576
+>   report_bug+0x262/0x2a0 lib/bug.c:186
+>   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+>   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+>   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
+> RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:912 [inline]
+> RIP: 0010:__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
+> Code: d2 0f 85 f6 05 00 00 44 8b 05 bb 99 0a 02 45 85 c0 0f 85 0a f4 ff ff
+> 48 c7 c6 00 87 a6 85 48 c7 c7 a0 84 a6 85 e8 f4 24 b8 fb <0f> 0b e9 f0 f3
+> ff ff 65 48 8b 1c 25 00 ef 01 00 be 08 00 00 00 48
+> RSP: 0018:ffff8881da206f40 EFLAGS: 00010282
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff812830fd RDI: ffffed103b440dda
+> RBP: ffff8881da2070b0 R08: ffff8881da1f1800 R09: fffffbfff0d5eb25
+> R10: fffffbfff0d5eb24 R11: ffffffff86af5923 R12: 0000000000000000
+> R13: dffffc0000000000 R14: ffff8881d2ee6ec8 R15: ffff8881d2ee6ec8
+>   mxl111sf_ctrl_msg+0xb8/0x210 drivers/media/usb/dvb-usb-v2/mxl111sf.c:66
+>   mxl111sf_write_reg+0x8b/0x120 drivers/media/usb/dvb-usb-v2/mxl111sf.c:123
+>   mxl1x1sf_soft_reset+0x6b/0x190
+> drivers/media/usb/dvb-usb-v2/mxl111sf-phy.c:47
+>   mxl111sf_lgdt3305_frontend_attach.constprop.0+0x23e/0x790
+> drivers/media/usb/dvb-usb-v2/mxl111sf.c:447
+>   mxl111sf_frontend_attach_atsc_mh+0x13/0x70
+> drivers/media/usb/dvb-usb-v2/mxl111sf.c:984
+>   dvb_usbv2_adapter_frontend_init
+> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:641 [inline]
+>   dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
+> [inline]
+>   dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
+>   dvb_usbv2_probe.cold+0x1e04/0x2567
+> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x650 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
+>   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:882
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2114
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+
+Looks like the same issue as:
+https://syzkaller.appspot.com/bug?id=d7240bc21ef4b00a01e5ac7a7e616bdb7da26104
+
+#syz dup: INFO: trying to register non-static key in mxl111sf_ctrl_msg
