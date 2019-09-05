@@ -2,160 +2,110 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C61DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627E8C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FB920828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567715964;
-	bh=RSkSn9n0VYq6sHsxkptF3DWqaIDhNkIX2gQgyw9ZrNs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=L0rYX/unR5Tn2uc8EBvgN28JT/N5OuvmWOQbU8xf1CL6etasctcGzXODKqnObqs9Z
-	 MuFht7d6B7hd48ULA2w+axpElfvzkfPzQek/ze2t/Z54kTT3b/wvY+vtlkalmG1pvh
-	 aaVFJYVYufHii+IfD5vFPZKBFyNZ1fXzRWoADIbg=
+	by mail.kernel.org (Postfix) with ESMTP id 8407520828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:40:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Gey3+CNr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391696AbfIEUjW (ORCPT
+        id S2404023AbfIEUkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:39:22 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37377 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391316AbfIEUjW (ORCPT
+        Thu, 5 Sep 2019 16:40:12 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41933 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388834AbfIEUkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:39:22 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w67so3150991lff.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:39:21 -0700 (PDT)
+        Thu, 5 Sep 2019 16:40:11 -0400
+Received: by mail-pl1-f194.google.com with SMTP id m9so1925197pls.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JszmXlgx1+xgmZVB9Ngs6u7Ky/QX8naYvJJhJ3ScXns=;
-        b=dUEsT8ouSuhTdLO9XeIJ7j2pUQ/Jzy9iWK7dNbuhxCeiK9q0D7pXpiEMTKij3qFmLF
-         /0ePwe6D4PLTWPKkntRM1vtWtPyFUYzwKF5X1Vep8dqqrs4xqpQeioJiw+0evrb+dVxs
-         mvw4lOCfYV3TKiH7AH5TB6rlYwT5QQmegELDY=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=VpJQlHdzOL058GU4wP50cEjksEXzOUX3pb5wvWLJu64=;
+        b=Gey3+CNrdw64IW7vegKv4QWSElXeflb3/Gxy6dQ2wD/aUu5pkiNOpTrKaCmRUsOMSy
+         zUTs/UyK7dICk5MzNYx5SWhQYTmIZ8CGeYZNwFv5FytESHKQucDLj12213hLkrRiA3h0
+         ZW9R8hEaNJzR+xxm0cVuXW+OxS+SEHN3+KPDdandS5SRTgiO5VNlTu1Ano4df2zNrEMd
+         DjA2BWRrdgJOoQjA61B4zk0ntC2jme7mMIdmWVUpW/u9JS2Dps+6Uq7BT0kaAOvlJGxi
+         Hi4xiO33WQEvM9fSPVzsTXSMhtoegaqTVyCWvY2ocYACd2ZMXC0DDzsX74dttYU01bXd
+         M+PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JszmXlgx1+xgmZVB9Ngs6u7Ky/QX8naYvJJhJ3ScXns=;
-        b=Iuwc5dsIErjQAJiiVWj98Vq5p1knviqUGAZwmI43bznfP7Dt9iIpIzgpJ1I8xCnXRD
-         lGDw+HL3yV2MoIzGS/r/j0lLGYgb92dbTWydaDAwAKpSrEsapEfzba4eWOZ7/t3TeQMp
-         ymzOWCPy53RQxK+t1/lZ2Lcuk60EpDxpYjGPM1+xy4b2gUb4KrP+escZkbwnOwPxxBDW
-         ms97kgbCRTdSedYCiilWVWw0lFxi3Jigtgvq+n7j9AIF01tWUGbPylooD/5fw1fxqG9u
-         skVaxL8P98im3zkV9ZZIxIsCmrUUKGQyZwTm3/6ik/y+40zEwXpgM8d+F8f6csAp0C/B
-         nIOA==
-X-Gm-Message-State: APjAAAUFTleuS7dkEG7qocyyDfKf6RS5ewYtP0i8kE3tSfHOxvxI447B
-        UDIpiXZKmOPIo3fDDIj+GtGFBQdFcuc=
-X-Google-Smtp-Source: APXvYqyHC5FJ5506GFAEWat6T0nk+fi+7fdnWltVvefQyP62ot1GPfP22gM/X+FB37c2MzEvRwo2Ng==
-X-Received: by 2002:ac2:4a70:: with SMTP id q16mr3771590lfp.4.1567715959060;
-        Thu, 05 Sep 2019 13:39:19 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id r16sm643239lfi.77.2019.09.05.13.39.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 13:39:18 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id u29so3142004lfk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:39:17 -0700 (PDT)
-X-Received: by 2002:ac2:47f8:: with SMTP id b24mr3791028lfp.134.1567715957179;
- Thu, 05 Sep 2019 13:39:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=VpJQlHdzOL058GU4wP50cEjksEXzOUX3pb5wvWLJu64=;
+        b=uQ90lPdoRpi0+aBGTnbIZJiTAr1rRamaxYqTUBKNEk4f/s725Cc0B+0jPPKH8vt66C
+         aALqnmrOqDO49vRDXYAOeyO9QFJPlpSfjGa/WssncbKQ/laBjgOzCFrb7z/1DQPSjLWp
+         usrFf4BBNHBgvt/IqsntvKjeYimhNVJSuhrgFocnd/mRTXpH7LyYrijCVW9OqXXjmoGB
+         TEFmejCitpInMMk/s5VjxzHu97xj9FZNiiS8Fwo4XYbXt25C9eZrq4y9Jfk0IXSXEfhM
+         k1Uwt7xyU9ocW44iyArE16o/yig8ek0OPSBQU2eWTb5/LG45NlLtGU/B2rp4DoKgyUgg
+         dxCQ==
+X-Gm-Message-State: APjAAAU00WADNw6oPQfkQpMWQ25U3/MJMvSHoevtRfwnfBs+Tk2kHf+g
+        2mOCn4iabEmYpswTI4BS/ZUcbw==
+X-Google-Smtp-Source: APXvYqyAQ4j/FUjC8TaAxYwTxb/knA75vtgilVu+e635/0e4hiV75mi8XILgeD8bJPqHj3zWdWW4jw==
+X-Received: by 2002:a17:902:708c:: with SMTP id z12mr5615924plk.173.1567716010812;
+        Thu, 05 Sep 2019 13:40:10 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id m4sm4706664pgs.71.2019.09.05.13.40.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Sep 2019 13:40:10 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson: sm1: set gpio interrupt controller compatible
+In-Reply-To: <20190902160334.14321-1-jbrunet@baylibre.com>
+References: <20190902160334.14321-1-jbrunet@baylibre.com>
+Date:   Thu, 05 Sep 2019 13:40:09 -0700
+Message-ID: <7hpnkeqxxy.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
- <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
- <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
- <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
-In-Reply-To: <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Sep 2019 13:39:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
-Message-ID: <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com>
-Subject: Re: Why add the general notification queue and its sources
-To:     Ray Strode <rstrode@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray, Debarshi" <debarshi.ray@gmail.com>,
-        Robbie Harwood <rharwood@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 11:33 AM Ray Strode <rstrode@redhat.com> wrote:
+Jerome Brunet <jbrunet@baylibre.com> writes:
+
+> Set the appropriate gpio interrupt controller compatible for the
+> sm1 SoC family. This newer version of the controller can now
+> trig irq on both edge of the input signal
 >
-> Hi,
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+
+Queued.
+
+I may do a late round for the dev cycle of v5.4, otherwise this will go
+for v5.5.  If it goes for v5.5, it should probably have a Fixes tag, no?
+
+Kevin
+
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> On Thu, Sep 5, 2019 at 1:20 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> > You've at least now answered part of the "Why", but you didn't
-> > actually answer the whole "another developer" part.
-> It's certainly something we've wanted in the GNOME world for a long time:
->
-> See for instance
->
-> https://bugzilla.redhat.com/show_bug.cgi?id=991110
-
-That is *way* too specific to make for any kind of generic
-notification mechanism.
-
-Also, what is the security model here? Open a special character
-device, and you get access to random notifications from random
-sources?
-
-That makes no sense. Do they have the same security permissions?
-
-USB error reporting is one thing - and has completely different
-security rules than some per-user key thing (or system? or namespace?
-Or what?)
-
-And why would you do a broken big-key thing in the kernel in the first
-place? Why don't you just have a kernel key to indirectly encrypt
-using a key and "additional user space data". The kernel should simply
-not take care of insane 1MB keys.
-
-Big keys just don't make sense for a kernel. Just use the backing
-store THAT YOU HAVE TO HAVE ANYWAY. Introduce some "indirect key"
-instead that is used to encrypt and authenticate the backing store.
-
-And mix in /proc/mounts tracking, which has a namespace component and
-completely different events and security model (likely "none" - since
-you can always read your own /proc/mounts).
-
-So honestly, this all just makes me go "user interfaces are hard, all
-the users seem to have *completely* different requirements, and nobody
-has apparently really tested this in practice".
-
-Maybe a generic notification mechanism is sensible. But I don't see
-how security issues could *possibly* be unified, and some of the
-examples given (particularly "track changes to /proc/mounts") seem to
-have obviously better alternatives (as in "just support poll() on
-it").
-
-All this discussion has convinced me of is that this whole thing is
-half-baked and not ready even on a conceptual level.
-
-So as far as I'm concerned, I think I want things like actual
-"Tested-by:" lines from actual users, because it's not clear that this
-makes sense. Gnome certainly should work as a regular user, if you
-need a system daemon for it with root privileges you might as well
-just do any notification entirely inside that daemon in user space.
-Same goes for /proc/mounts - which as mentioned has a much more
-obvious interface for waiting anyway.
-
-User interfaces need a lot of thought and testing. They shouldn't be
-ad-hoc "maybe this could work for X, Y and Z" theories.
-
-                    Linus
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> index 521573f3a5ba..6152e928aef2 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> @@ -134,6 +134,11 @@
+>  	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
+>  };
+>  
+> +&gpio_intc {
+> +	compatible = "amlogic,meson-sm1-gpio-intc",
+> +		     "amlogic,meson-gpio-intc";
+> +};
+> +
+>  &pwrc {
+>  	compatible = "amlogic,meson-sm1-pwrc";
+>  };
+> -- 
+> 2.21.0
