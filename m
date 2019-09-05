@@ -2,74 +2,176 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4554DC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBCCC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF45233A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D0320882
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730939AbfIECtp (ORCPT
+        id S1730960AbfIECvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:49:45 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:33532 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730074AbfIECto (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:49:44 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08002193|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0740845-0.00454813-0.921367;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03278;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.FOyO4sV_1567651782;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FOyO4sV_1567651782)
-          by smtp.aliyun-inc.com(10.147.42.253);
-          Thu, 05 Sep 2019 10:49:42 +0800
-Date:   Thu, 5 Sep 2019 10:49:41 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org
-Subject: Re: [PATCH V6 3/3] riscv: Add support for libdw
-Message-ID: <20190905024940.GB3949@vmh-VirtualBox>
-References: <cover.1567060834.git.han_mao@c-sky.com>
- <4cba2dfb6b1ef0df01185c6bce78a0a2867d0a7d.1567060834.git.han_mao@c-sky.com>
- <alpine.DEB.2.21.9999.1909041422220.13502@viisi.sifive.com>
+        Wed, 4 Sep 2019 22:51:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45350 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725965AbfIECvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:51:00 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 56697C0578F8;
+        Thu,  5 Sep 2019 02:51:00 +0000 (UTC)
+Received: from treble (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 051B11001958;
+        Thu,  5 Sep 2019 02:50:56 +0000 (UTC)
+Date:   Wed, 4 Sep 2019 21:50:55 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>, jikos@kernel.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+Message-ID: <20190905025055.36loaatxtkhdo4q5@treble>
+References: <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
+ <20190814151244.5xoaxib5iya2qjco@treble>
+ <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
+ <20190822223649.ptg6e7qyvosrljqx@treble>
+ <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
+ <20190826145449.wyo7avwpqyriem46@treble>
+ <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
+ <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
+ <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+ <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.9999.1909041422220.13502@viisi.sifive.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 05 Sep 2019 02:51:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 02:24:57PM -0700, Paul Walmsley wrote:
-> Hello Mao Han,
+On Wed, Sep 04, 2019 at 10:49:32AM +0200, Petr Mladek wrote:
+> On Tue 2019-09-03 15:02:34, Miroslav Benes wrote:
+> > On Mon, 2 Sep 2019, Joe Lawrence wrote:
+> > 
+> > > On 9/2/19 12:13 PM, Miroslav Benes wrote:
+> > > >> I can easily foresee more problems like those in the future.  Going
+> > > >> forward we have to always keep track of which special sections are
+> > > >> needed for which architectures.  Those special sections can change over
+> > > >> time, or can simply be overlooked for a given architecture.  It's
+> > > >> fragile.
+> > > > 
+> > > > Indeed. It bothers me a lot. Even x86 "port" is not feature complete in
+> > > > this regard (jump labels, alternatives,...) and who knows what lurks in
+> > > > the corners of the other architectures we support.
+> > > > 
+> > > > So it is in itself reason enough to do something about late module
+> > > > patching.
+> > > > 
+> > > 
+> > > Hi Miroslav,
+> > > 
+> > > I was tinkering with the "blue-sky" ideas that I mentioned to Josh the other
+> > > day.
+> > 
+> > > I dunno if you had a chance to look at what removing that code looks
+> > > like, but I can continue to flesh out that idea if it looks interesting:
+> > 
+> > Unfortunately no and I don't think I'll come up with something useful 
+> > before LPC, so anything is really welcome.
+> > 
+> > > 
+> > >   https://github.com/joe-lawrence/linux/tree/blue-sky
+> > > 
+> > > A full demo would require packaging up replacement .ko's with a livepatch, as
+> > > well as "blacklisting" those deprecated .kos, etc.  But that's all I had time
+> > > to cook up last week before our holiday weekend here.
+> > 
+> > Frankly, I'm not sure about this approach. I'm kind of torn. The current 
+> > solution is far from ideal, but I'm not excited about the other options 
+> > either. It seems like the choice is basically between "general but 
+> > technically complicated fragile solution with nontrivial maintenance 
+> > burden", or "something safer and maybe cleaner, but limiting for 
+> > users/distros". Of course it depends on whether the limitation is even 
+> > real and how big it is. Unfortunately we cannot quantify it much and that 
+> > is probably why our opinions (in the email thread) differ.
 > 
-> On Thu, 29 Aug 2019, Mao Han wrote:
+> I wonder what is necessary for a productive discussion on Plumbers:
 > 
-> > This patch add support for DWARF register mappings and libdw registers
-> > initialization, which is used by perf callchain analyzing when
-> > --call-graph=dwarf is given.
-> 
-> > diff --git a/tools/arch/riscv/include/uapi/asm/perf_regs.h b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-> > new file mode 100644
-> > index 0000000..df1a581
-> > --- /dev/null
-> > +++ b/tools/arch/riscv/include/uapi/asm/perf_regs.h
-> > @@ -0,0 +1,42 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> 
-> As with 
-> 
-> https://lore.kernel.org/linux-riscv/CAJF2gTRXH_bx0rwsTZMTnX+umZfVTL_iVnewPtVM50sLaqJPTg@mail.gmail.com/T/#t
-> 
-> is it possible to change this license string to "GPL-2.0 WITH 
-> Linux-syscall-note" to match the other Linux architectures? 
->
-Thanks for suggestion. I didn't notice the UAPI headers are supposed to 
-have the exception notes. I'll update the license string and resend them.
+>   + Josh would like to see what code can get removed when late
+>     handling of modules gets removed. I think that it might be
+>     partially visible from Joe's blue-sky patches.
 
-Thanks,
-Mao Han
+Yes, and I like what I see.  Especially the removal of the .klp.arch
+nastiness!
+
+>   + I would like to better understand the scope of the current
+>     problems. It is about modifying code in the livepatch that
+>     depends on position of the related code:
+> 
+>       + relocations are rather clear; we will need them anyway
+> 	to access non-public (static) API from the original code.
+> 
+>       + What are the other changes?
+
+I think the .klp.arch sections are the big ones:
+
+  .klp.arch.altinstructions
+  .klp.arch.parainstructions
+  .klp.arch.jump_labels (doesn't exist yet)
+
+And that's just x86...
+
+And then of course there's the klp coming/going notifiers which have
+also been an additional source of complexity.
+
+>       + Do we use them in livepatches? How often?
+
+I don't have a number, but it's very common to patch a function which
+uses jump labels or alternatives.
+
+>       + How often new problematic features appear?
+
+I'm not exactly sure what you mean, but it seems that anytime we add a
+new feature, we have to try to wrap our heads around how it interacts
+with the weirdness of late module patching.
+
+>       + Would be possible to detect potential problems, for example
+> 	by comparing the code in the binary and in memory when
+> 	the module is loaded the normal way?
+
+Perhaps, though I assume this would be some out-of-band testing thing.
+
+>       + Would be possible to reset the livepatch code in memory
+> 	when the related module is unloaded and safe us half
+> 	of the troubles?
+
+Maybe, but I think that would solve a much lower percentage of our
+troubles than half :-/
+
+>     + It might be useful to prepare overview of the existing proposals
+>       and agree on the positives and negatives. I am afraid that some
+>       of them might depend on the customer base and
+>       use cases. Sometimes we might not have enough information.
+>       But it might be good to get on the same page where possible.
+
+I think we've already done that for the existing proposals.  Maybe
+Miroslav can summarize them at the LPC session.
+
+>       Anyway, it might rule out some variants so that we could better
+>       concentrate on the acceptable ones. Or come with yet another
+>       proposal that would avoid the real blockers.
+
+I'd like to hear more specific negatives about Joe's recent patches,
+which IMO, are the best option we've discussed so far.
+
+-- 
+Josh
