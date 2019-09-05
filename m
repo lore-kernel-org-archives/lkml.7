@@ -2,227 +2,147 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB77C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C2EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48E4A206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF409206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:09:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nCscRghQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fm92g6MJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389544AbfIERJQ (ORCPT
+        id S2390936AbfIERJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:09:16 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55850 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732403AbfIERJQ (ORCPT
+        Thu, 5 Sep 2019 13:09:51 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40502 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731215AbfIERJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:09:16 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85H3tji168969;
-        Thu, 5 Sep 2019 17:07:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=TFj6m5l1ONKxOpEbsJmE/2UNSnom/9p9C9uWukqia2o=;
- b=nCscRghQMASXQeAZgxSV2ZLBWeoUL7k9/YQ+5Or7S+h4NoVd2RBQYHQ3EzRwmRMiVioq
- ghWLHxwzcdivg3Dv2QGzet9ZE3rK+RXjdzvIv/sRhZa1AaK9ovLhIJfgmTqz0Mmzfnt3
- sD+IZA+iNDeVVNPOSwk6SC7jTTY++/SRx3cUsK02i+EBIdGcJiMMNgNsHOczhEBCp/pg
- MUTlv5x4RXaq6Z3WPDcLGgY3t4z8YOc7gkuNgLUus0P8Q17zxHtxnuserLdqo138hJnH
- gm08jSvtTgDE8eCS5emmT0wCm81XYfJPsmnVgDCmWdWj1AJAlgD1eO0V2yb4uSstBm3K TQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2uu66e03pp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Sep 2019 17:07:17 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85H3jJs094501;
-        Thu, 5 Sep 2019 17:07:17 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2uthq1yb9s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Sep 2019 17:07:17 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85H7DQV003379;
-        Thu, 5 Sep 2019 17:07:13 GMT
-Received: from [192.168.14.112] (/79.182.237.80)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 10:07:13 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v3] KVM: x86: Disable posted interrupts for odd IRQs
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20190905125818.22395-1-graf@amazon.com>
-Date:   Thu, 5 Sep 2019 20:07:07 +0300
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <867E8A7D-645B-45BE-A6C8-8D59C3D09C53@oracle.com>
-References: <20190905125818.22395-1-graf@amazon.com>
-To:     Alexander Graf <graf@amazon.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909050163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909050163
+        Thu, 5 Sep 2019 13:09:50 -0400
+Received: by mail-ot1-f67.google.com with SMTP id y39so2931774ota.7
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=zvuZJm/OeGnitqg6mopzWwdjJ0Sb1OWjOsDK5ScpN2k=;
+        b=fm92g6MJUiNSxClpUlSh5+9QxkTe9Rh6e+PN6S0HdCgK1xYCEHylPDWfFgsXzbSzVY
+         8tic8eObcyj6QB4OGaqYMR4F+jAqIOecKiDKfOk69dUs5tbdt4MD1Pmle3ypkjcUOF6C
+         swexo56txxBOz0g++imEeemrFWDsG135wPPweBXrlulhzJGbK9yqHYoycVPku+PHJrfA
+         1TY767slE0gfetOwrAVel0tqMZnuoEMMjhAVFEcC+SwUvQzTg3t7grtqShIuShmYfrw7
+         7tMV+ktncJrXHJK1cU+oTbA1O1hC150dGKuz+mgVa3IGffGWcu2d+XnBtjQkMe86xo5H
+         rzPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=zvuZJm/OeGnitqg6mopzWwdjJ0Sb1OWjOsDK5ScpN2k=;
+        b=uAJIGdyPNtp6S6RRckwrpIJnI7EI9jv0ndeCjtYz5JZjpgxS7qAXJw/68OdyGk0dhc
+         cQhYh/HsiLF86Zx8JacL6Zvx9Q5mYYxe1F4BIEd01klzioIAZYIB1WFrlw447vS1LqvM
+         mX0x0nrUHcwJNBiF9l5YrSLFHoxn8ndrmgLduBDJfsGbHpp0IX7WGhe9llEUuNVtCaAm
+         L69iCWl20ZZ1wkSieqwdFVQEjfucYqb9r39H1hLuAtdfxP29vM6cHatFLI+UrNXDdl9M
+         HXcrrcLwcFMCDss81JpbERYjG+WgZTmJ6JF+ed+CWzfpE8PDTQxPAVqtuJvKjFkEOpCb
+         YeKg==
+X-Gm-Message-State: APjAAAVGkDnQEDj6PVbhsuxES58zY2Q++rxXJ0QhYBa9zbkKPvj1I+t9
+        A8pmddyRcHtzN5ef/Np2vrk=
+X-Google-Smtp-Source: APXvYqw3BxLF96Sw44HP46EvQNq1DGMg29f4vt4sDfe3puJSl55/vBXNEzcOWlxI+Vt4PHHLENUNxQ==
+X-Received: by 2002:a05:6830:6:: with SMTP id c6mr3285609otp.331.1567703389824;
+        Thu, 05 Sep 2019 10:09:49 -0700 (PDT)
+Received: from [100.71.96.87] ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id b10sm669790oie.27.2019.09.05.10.09.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 10:09:49 -0700 (PDT)
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH] amd/iommu: flush old domains in kdump kernel
+To:     jroedel@suse.de
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org
+Message-ID: <9d271f88-949a-7356-c516-be95b1566c94@gmail.com>
+Date:   Thu, 5 Sep 2019 12:09:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When devices are attached to the amd_iommu in a kdump kernel, the old device
+table entries (DTEs), which were copied from the crashed kernel, will be
+overwritten with a new domain number.  When the new DTE is written, the IOMMU
+is told to flush the DTE from its internal cache--but it is not told to flush
+the translation cache entries for the old domain number.
+
+Without this patch, AMD systems using the tg3 network driver fail when kdump
+tries to save the vmcore to a network system, showing network timeouts and
+(sometimes) IOMMU errors in the kernel log.
+
+This patch will flush IOMMU translation cache entries for the old domain when
+a DTE gets overwritten with a new domain number.
 
 
-> On 5 Sep 2019, at 15:58, Alexander Graf <graf@amazon.com> wrote:
->=20
-> We can easily route hardware interrupts directly into VM context when
-> they target the "Fixed" or "LowPriority" delivery modes.
->=20
-> However, on modes such as "SMI" or "Init", we need to go via KVM code
-> to actually put the vCPU into a different mode of operation, so we can
-> not post the interrupt
->=20
-> Add code in the VMX and SVM PI logic to explicitly refuse to establish
-> posted mappings for advanced IRQ deliver modes. This reflects the =
-logic
-> in __apic_accept_irq() which also only ever passes Fixed and =
-LowPriority
-> interrupts as posted interrupts into the guest.
->=20
-> This fixes a bug I have with code which configures real hardware to
-> inject virtual SMIs into my guest.
->=20
-> Signed-off-by: Alexander Graf <graf@amazon.com>
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
+---
 
->=20
-> ---
->=20
-> v1 -> v2:
->=20
->  - Make error message more unique
->  - Update commit message to point to __apic_accept_irq()
->=20
-> v2 -> v3:
->=20
->  - Use if() rather than switch()
->  - Move abort logic into existing if() branch for broadcast irqs
->  -> remove the updated error message again (thus remove R-B tag from =
-Liran)
->  - Fold VMX and SVM changes into single commit
->  - Combine postability check into helper function =
-kvm_irq_is_postable()
-> ---
-> arch/x86/include/asm/kvm_host.h | 7 +++++++
-> arch/x86/kvm/svm.c              | 4 +++-
-> arch/x86/kvm/vmx/vmx.c          | 6 +++++-
-> 3 files changed, 15 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/x86/include/asm/kvm_host.h =
-b/arch/x86/include/asm/kvm_host.h
-> index 44a5ce57a905..5b14aa1fbeeb 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1581,6 +1581,13 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, =
-struct kvm_lapic_irq *irq,
-> void kvm_set_msi_irq(struct kvm *kvm, struct =
-kvm_kernel_irq_routing_entry *e,
-> 		     struct kvm_lapic_irq *irq);
->=20
-> +static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
-> +{
-> +	/* We can only post Fixed and LowPrio IRQs */
-> +	return (irq->delivery_mode =3D=3D dest_Fixed ||
-> +		irq->delivery_mode =3D=3D dest_LowestPrio);
-> +}
-> +
-> static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
-> {
-> 	if (kvm_x86_ops->vcpu_blocking)
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 1f220a85514f..f5b03d0c9bc6 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5260,7 +5260,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct =
-kvm_kernel_irq_routing_entry *e,
->=20
-> 	kvm_set_msi_irq(kvm, e, &irq);
->=20
-> -	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-> +	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> +	    !kvm_irq_is_postable(&irq)) {
-> 		pr_debug("SVM: %s: use legacy intr remap mode for irq =
-%u\n",
-> 			 __func__, irq.vector);
-> 		return -1;
-> @@ -5314,6 +5315,7 @@ static int svm_update_pi_irte(struct kvm *kvm, =
-unsigned int host_irq,
-> 		 * 1. When cannot target interrupt to a specific vcpu.
-> 		 * 2. Unsetting posted interrupt.
-> 		 * 3. APIC virtialization is disabled for the vcpu.
-> +		 * 4. IRQ has incompatible delivery mode (SMI, INIT, =
-etc)
-> 		 */
-> 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set =
-&&
-> 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 570a233e272b..63f3d88b36cc 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7382,10 +7382,14 @@ static int vmx_update_pi_irte(struct kvm *kvm, =
-unsigned int host_irq,
-> 		 * irqbalance to make the interrupts single-CPU.
-> 		 *
-> 		 * We will support full lowest-priority interrupt later.
-> +		 *
-> +		 * In addition, we can only inject generic interrupts =
-using
-> +		 * the PI mechanism, refuse to route others through it.
-> 		 */
->=20
-> 		kvm_set_msi_irq(kvm, e, &irq);
-> -		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-> +		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-> +		    !kvm_irq_is_postable(&irq)) {
-> 			/*
-> 			 * Make sure the IRTE is in remapped mode if
-> 			 * we don't handle it in posted mode.
-> --=20
-> 2.17.1
->=20
->=20
->=20
->=20
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
->=20
->=20
->=20
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index b607a92..f853b96 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1143,6 +1143,17 @@ static void amd_iommu_flush_tlb_all(struct amd_iommu *iommu)
+ 	iommu_completion_wait(iommu);
+ }
+ 
++static void amd_iommu_flush_tlb_domid(struct amd_iommu *iommu, u32 dom_id)
++{
++	struct iommu_cmd cmd;
++
++	build_inv_iommu_pages(&cmd, 0, CMD_INV_IOMMU_ALL_PAGES_ADDRESS,
++			      dom_id, 1);
++	iommu_queue_command(iommu, &cmd);
++
++	iommu_completion_wait(iommu);
++}
++
+ static void amd_iommu_flush_all(struct amd_iommu *iommu)
+ {
+ 	struct iommu_cmd cmd;
+@@ -1873,6 +1884,7 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
+ {
+ 	u64 pte_root = 0;
+ 	u64 flags = 0;
++	u32 old_domid;
+ 
+ 	if (domain->mode != PAGE_MODE_NONE)
+ 		pte_root = iommu_virt_to_phys(domain->pt_root);
+@@ -1922,8 +1934,20 @@ static void set_dte_entry(u16 devid, struct protection_domain *domain,
+ 	flags &= ~DEV_DOMID_MASK;
+ 	flags |= domain->id;
+ 
++	old_domid = amd_iommu_dev_table[devid].data[1] & DEV_DOMID_MASK;
+ 	amd_iommu_dev_table[devid].data[1]  = flags;
+ 	amd_iommu_dev_table[devid].data[0]  = pte_root;
++
++	/*
++	 * A kdump kernel might be replacing a domain ID that was copied from
++	 * the previous kernel--if so, it needs to flush the translation cache
++	 * entries for the old domain ID that is being overwritten
++	 */
++	if (old_domid) {
++		struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
++
++		amd_iommu_flush_tlb_domid(iommu, old_domid);
++	}
+ }
+ 
+ static void clear_dte_entry(u16 devid)
+
 
