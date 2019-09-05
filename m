@@ -2,194 +2,65 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E07C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F89C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E25C2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="By8LGyTh"
+	by mail.kernel.org (Postfix) with ESMTP id 61D242341B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:14:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731841AbfIEHLJ (ORCPT
+        id S1731758AbfIEHOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:11:09 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36167 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfIEHLJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:11:09 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y19so1358514wrd.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 00:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=DFvvnaHLzFEzaTnNYzUt4Q2hQTFq/NK+O6UpsbmEMb0=;
-        b=By8LGyThV3tQ7KpjUQafQj2mWoVF3UaQyPDD/AsSXb+5tk4zZFZVekW3CeEG2npb2B
-         Jmy5Qb0Gklgk/axCGfbNZJSWL5JklgbojPM3DCPn25IMckFHtdSMHFMkMKwn7/d9ZmWv
-         NLlXUPiedZKGcQzpUT6V3EIMJJci8gkcWnpcauUrUpDTBdDfs6O8etqFgheEto1vISaT
-         rTOEicKYLY89K5mHry30Y6vbjFHGz2jb/uZ/4t9ZzErtlzLlh8SbtbMZiSpSdYxh5rsz
-         Kv529cVvW8zneJb4OdeHcTYd38NSZx322XL6q16Xz2Oj3s9WMBkYdcj0JhBNbdVGNIE9
-         JkqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=DFvvnaHLzFEzaTnNYzUt4Q2hQTFq/NK+O6UpsbmEMb0=;
-        b=L5yUcbfj9kDPXjX5Jdcgo7MScNwHIPFcqHW4ymhp7gPwF+1J9eUTjNcUPmQIdDD0Fv
-         J/vwJ2wWULSs79Pj6dLG6kb0Z0qbrPSW09TFSO/ouZIlasuMjA4dzmGAh3xEzDBiASL9
-         2a5an4BO0Lh98dl9YYS1LSXBwFcUQFh0Rvivzz4FrUMCaxtKvbQCoX1WH+Ys6hVY7R2G
-         Su3IEkQHKz23nW7vf7YzvBmAAB7vQE5nOXuFFmkgmCmSMu2dwot97H4gIlMJlbXnVCHr
-         gpRv502SswaxvweXBo6WSvssxs632Q71BIAXdW0W34sDaeleYFCjf0c82MpPIuQZjWDo
-         H7EA==
-X-Gm-Message-State: APjAAAXKe2VlS5T5fzAiV/73QPlF+6Vknf8l7kvClaW5CGh8nIg7ADpY
-        ekXeLKY6c960HuSW71AY2SwH3A==
-X-Google-Smtp-Source: APXvYqwmUfGIDO2UDqtQ8Ewygc0VpleSUBO6Yhj2gmAs7eRwG0RusGrqdiNi/OFtceHOm46lPN3l5g==
-X-Received: by 2002:a5d:528a:: with SMTP id c10mr1153426wrv.111.1567667466248;
-        Thu, 05 Sep 2019 00:11:06 -0700 (PDT)
-Received: from dell ([95.147.198.36])
-        by smtp.gmail.com with ESMTPSA id m18sm1455462wrg.97.2019.09.05.00.11.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 00:11:05 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 08:11:03 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, alokc@codeaurora.org,
-        agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Thu, 5 Sep 2019 03:14:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58232 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731067AbfIEHOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 03:14:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D698A10567;
+        Thu,  5 Sep 2019 07:14:08 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-72.ams2.redhat.com [10.36.117.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D87B60606;
+        Thu,  5 Sep 2019 07:14:08 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 4BA8531E76; Thu,  5 Sep 2019 09:14:07 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 09:14:07 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Jaak Ristioja <jaak@ristioja.ee>
+Cc:     Dave Airlie <airlied@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        virtualization@lists.linux-foundation.org,
+        spice-devel@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
- processing
-Message-ID: <20190905071103.GX26880@dell>
-References: <20190904113613.14997-1-lee.jones@linaro.org>
- <20190904203548.GC580@tuxbook-pro>
- <20190904212337.GF23608@ninjato>
+Subject: Re: Xorg indefinitely hangs in kernelspace
+Message-ID: <20190905071407.47iywqcqomizs3yr@sirius.home.kraxel.org>
+References: <92785039-0941-4626-610b-f4e3d9613069@ristioja.ee>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190904212337.GF23608@ninjato>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <92785039-0941-4626-610b-f4e3d9613069@ristioja.ee>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 05 Sep 2019 07:14:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 04 Sep 2019, Wolfram Sang wrote:
-
-> On Wed, Sep 04, 2019 at 01:35:48PM -0700, Bjorn Andersson wrote:
-> > On Wed 04 Sep 04:36 PDT 2019, Lee Jones wrote:
-> > 
-> > The subject implies that we select FIFO mode instead of DMA, but that's
-> > not really true, because with DMA enabled we still fall back to FIFO for
-> > messages below 32 bytes. 
-
-Do you mean, we fall back to DMA?
-
-> > So what this does it to disable DMA, which neither the subject or the DT
-> > property describes.
-> > 
-> > Also missing is a description of why this is needed.
+On Tue, Aug 06, 2019 at 09:00:10PM +0300, Jaak Ristioja wrote:
+> Hello!
 > 
-> Yes.
-> 
-> I am willing to help to get this resolved soonish. However, I have
-> issues with the approach.
-> 
-> It looks like a workaround to me. It would be interesting to hear which
-> I2C client breaks with DMA and if it's driver can't be fixed somehow
-> instead. But even if we agree on a workaround short term, adding a
-> binding for this workaround seems like a no-go to me. We have to live
-> with this binding forever. Sidenote: I could think of a generic
-> 'disable-dma' which could be reused everywhere but we probably won't get
-> that upstream that late in the cycle.
-> 
-> Is there no other way to disable DMA which is local to this driver so we
-> can easily revert the workaround later?
+> I'm writing to report a crash in the QXL / DRM code in the Linux kernel.
+> I originally filed the issue on LaunchPad and more details can be found
+> there, although I doubt whether these details are useful.
 
-This is the most local low-impact solution (nomenclature aside).
+Any change with kernel 5.3-rc7 ?
 
-The beautiful thing about this approach is that, *if* the Geni SE DMA
-ever starts working, we can remove the C code and any old properties
-left in older DTs just become NOOP.  Older kernels with newer DTs
-(less of a priority) *still* won't work, but they don't work now
-anyway.
+cheers,
+  Gerd
 
-NB: QCom have also made it pretty clear that DTBs *must* match their
-kernel version.  I know this is controversial amongst DT purists, but
-it's still how QCom operate.
-
-The offending line can be found at [0].  There is no obvious bug to
-fix and this code obviously works well on some of the hardware
-platforms using it.  But on our platform (Lenovo Yoga C630 - QCom
-SMD850) that final command, which initiates the DMA transaction, ends
-up rebooting the machine.
-
-With regards to the nomenclature, my original suggestion was
-'qcom,geni-se-no-dma'.  Would that better suit your request?
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/soc/qcom/qcom-geni-se.c#n644
-
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
-> > >  1 file changed, 10 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > index a89bfce5388e..dfdbce067827 100644
-> > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
-> > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
-> > > @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
-> > >  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> > >  				u32 m_param)
-> > >  {
-> > > +	struct device_node *np = gi2c->se.dev->of_node;
-> > >  	dma_addr_t rx_dma;
-> > >  	unsigned long time_left;
-> > > -	void *dma_buf;
-> > > +	void *dma_buf = NULL;
-> > >  	struct geni_se *se = &gi2c->se;
-> > >  	size_t len = msg->len;
-> > >  
-> > > -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > > +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
-> > > +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > > +
-> > >  	if (dma_buf)
-> > >  		geni_se_select_mode(se, GENI_SE_DMA);
-> > >  	else
-> > > @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> > >  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
-> > >  				u32 m_param)
-> > >  {
-> > > +	struct device_node *np = gi2c->se.dev->of_node;
-> > >  	dma_addr_t tx_dma;
-> > >  	unsigned long time_left;
-> > > -	void *dma_buf;
-> > > +	void *dma_buf = NULL;
-> > >  	struct geni_se *se = &gi2c->se;
-> > >  	size_t len = msg->len;
-> > >  
-> > > -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > > +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
-> > > +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
-> > > +
-> > >  	if (dma_buf)
-> > >  		geni_se_select_mode(se, GENI_SE_DMA);
-> > >  	else
-
-
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
