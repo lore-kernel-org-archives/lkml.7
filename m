@@ -2,119 +2,101 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECACC3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1B1C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54104206B8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F5E206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:15:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WIVl99L8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CX6NCYFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbfIEAO0 (ORCPT
+        id S1730190AbfIEAP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 20:14:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45410 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728008AbfIEAO0 (ORCPT
+        Wed, 4 Sep 2019 20:15:58 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42388 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfIEAP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:14:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 4so322220pgm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:14:25 -0700 (PDT)
+        Wed, 4 Sep 2019 20:15:57 -0400
+Received: by mail-oi1-f193.google.com with SMTP id o6so300936oic.9;
+        Wed, 04 Sep 2019 17:15:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=diieQ8EBqgcQJUrsXwTks6b1z96zAex0NF2Hmz0b35Y=;
-        b=WIVl99L8/3T6fM8Qgw/RlwMDG4yQ4lvjWot/XZl5PBbk/kD0JKwwUm56I1dtDYyLwW
-         EbNogigWPITfoCAGHHoo2CyZjLbCZ0LZMo79QjpWLEt+kwDH/dFAts4deR8hBKFvIZAH
-         7bOOI7qM9Q5BcfwHOaFOkHv5yGdO7+smZzn14=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sifjxETRYiP3/dI94LWW+EPsjWJBvoBD1awu87P5YhM=;
+        b=CX6NCYFoE0gXba0Ao/upp+gvt8TOaazyHEYHn3cYWF3MLq614j1a2vlELwKOyGPX8V
+         nFH8Do2s50msebXYbJwxi5oc6EMtv5NfIPNFb7frNHMkUc4hTKlfBbUoWfS/FBJz2oWO
+         e+cW5DJOl4CF7bsHkuqwOOtQagDsAglF+05dxJCxSQkVPoOGNqZ3+UjW8w/I3vG9URgZ
+         tQ9GzOEyDl7ROQAi/nXPca5VscXKhlr8n+ILWCX8g4OyeQt6ZEaOvd9VuuojxuF0y9HW
+         WhtM2va9pY/NHejYj9+nZz7dn0krZZg8GyzcUvjDmWTKTd3Hfxfz+NrYLaT/9MOW1neY
+         dh+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=diieQ8EBqgcQJUrsXwTks6b1z96zAex0NF2Hmz0b35Y=;
-        b=X5NzzP2ecxsc19q73YTq1WdWCFCguJnwyKGypPkfm/b/vFymnDUw8znltdJHbkkXhe
-         zGcEzM/IAukLZleW2nGK/nd3TTRAs7hyjNe4BhKLnOhJGefc+aetbYwrD1xQ5HohgPl1
-         CnZ/s8FN+l235TwtV5qlICR7Dmm0648955aJxlpHqlZWIVV6eNQ9ioT7rQwDl3o4ex2u
-         FiVR61sqrKpMbtcwCKIPvo0VqVMX47ST3uJ2qBQjAsWLp46tKQoTo0n0fMn+U2i+J8zA
-         n/k+j+v6f+VgpDDqLHcV4RpOO8ePYO2IcNSX6LqW2CJA7WQkC0i7+hyyaQ89029GEOWR
-         ERnA==
-X-Gm-Message-State: APjAAAWmxNU6dUTEKh414VbsBRMSkrj/1ue9qbPheirpHY6pxsS49FTy
-        Ezyc7KS5MW0M2hfLJgf+oOzvPStu9pM=
-X-Google-Smtp-Source: APXvYqx644/2GrLekucQUWiowFO+GAususlTMvtOyZ2eD2nVHynyZdKXd6+std7V+dgBr1PQJyrzjw==
-X-Received: by 2002:a65:6256:: with SMTP id q22mr668090pgv.408.1567642464887;
-        Wed, 04 Sep 2019 17:14:24 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id q71sm163292pjb.26.2019.09.04.17.14.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2019 17:14:24 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 17:14:22 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Jaehoon Chung <jh80.chung@samsung.com>,
-        Yong Mao <yong.mao@mediatek.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/11] mmc: dw_mmc: Re-store SDIO IRQs mask at system
- resume
-Message-ID: <20190905001422.GH70797@google.com>
-References: <20190903142207.5825-1-ulf.hansson@linaro.org>
- <20190903142207.5825-3-ulf.hansson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sifjxETRYiP3/dI94LWW+EPsjWJBvoBD1awu87P5YhM=;
+        b=Rr0hKdHUpzXWZZx5oi9QVNXgtX0f0c6an/cZnKnOdKEHE9TmKmshZrNyeTz/ZakAsj
+         RbBDrdX7jyeGytKQtlNw/c7XQd+xw9cuipVe/tG9ZWmAwAMOtvEQlnMQ9vPy/pTmS14p
+         qRNpx8TIpeDIZo0AU6zAXAVGHD9qN6Hp3d711xEx8koF+B56t+5qATx51S9MsJLz4+f0
+         Md6+LOBVuv/1vLgQjs3R0b6SfMvXJjaTUW1tfBKeT5a0bEOKstXxaYWGDqv4EPKJma3x
+         IkxsT1LaV2EIDcRG2CnsF5HThOlUoX9GfIQP6eb0w/rca+90tgNiAZ4QvkONbprckmEE
+         nqAA==
+X-Gm-Message-State: APjAAAUJXB/LAcoI0K0YM7gaELC7rCfp254NP4Juv1neb/rNIMdVQvLE
+        fTzJ+FgV/j8B5oINe6fQvSZRaDzmjMZ/1WN4QWE=
+X-Google-Smtp-Source: APXvYqy6DO2HoL48JbpGVvb47rr337PM1oVuO/LS/a0NiV3grYCFIM824yV6VZ5S2cHKBMOzEOEfD71uHAnVuFBsewY=
+X-Received: by 2002:aca:5a84:: with SMTP id o126mr564762oib.5.1567642556538;
+ Wed, 04 Sep 2019 17:15:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190903142207.5825-3-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1567068597-22419-1-git-send-email-wanpengli@tencent.com> <a70aeec2-1572-ea09-a0c5-299cd70ddc8a@intel.com>
+In-Reply-To: <a70aeec2-1572-ea09-a0c5-299cd70ddc8a@intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 5 Sep 2019 08:15:44 +0800
+Message-ID: <CANRm+Czb07GGy7pP2NRLhaXV4yy01ozdqH34CTSMCSJPR1ZfPw@mail.gmail.com>
+Subject: Re: [PATCH v2] cpuidle-haltpoll: Enable kvm guest polling when
+ dedicated physical CPUs are available
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 04:21:58PM +0200, Ulf Hansson wrote:
-> In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
-> the driver. However, this still means dw_mci_runtime_suspend|resume() gets
-> called during system suspend/resume, via pm_runtime_force_suspend|resume().
-> This means during system suspend/resume, the register context of the dw_mmc
-> device most likely loses its register context, even in cases when SDIO IRQs
-> have been enabled.
-> 
-> To re-enable the SDIO IRQs during system resume, the dw_mmc driver
-> currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
-> the SDIO card, but this isn't the recommended solution. Instead, it's
-> better to deal with this locally in the dw_mmc driver, so let's do that.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/mmc/host/dw_mmc.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index eea52e2c5a0c..f114710e82b4 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -3460,6 +3460,10 @@ int dw_mci_runtime_resume(struct device *dev)
->  	/* Force setup bus to guarantee available clock output */
->  	dw_mci_setup_bus(host->slot, true);
->  
-> +	/* Re-enable SDIO interrupts. */
-> +	if (sdio_irq_enabled(host->slot->mmc))
-> +		__dw_mci_enable_sdio_irq(host->slot, 1);
-> +
->  	/* Now that slots are all setup, we can enable card detect */
->  	dw_mci_enable_cd(host);
+On Wed, 4 Sep 2019 at 17:48, Rafael J. Wysocki
+<rafael.j.wysocki@intel.com> wrote:
+>
+> On 8/29/2019 10:49 AM, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > The downside of guest side polling is that polling is performed even
+> > with other runnable tasks in the host. However, even if poll in kvm
+> > can aware whether or not other runnable tasks in the same pCPU, it
+> > can still incur extra overhead in over-subscribe scenario. Now we can
+> > just enable guest polling when dedicated pCPUs are available.
+> >
+> > Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>
+> As stated before, I'm going to queue up this change for 5.4, with the
+> Paolo's ACK.
+>
+> BTW, in the future please CC power management changes to
+> linux-pm@vger.kernel.org for easier handling.
 
-Looks reasonable to me, besides the bikeshedding over
-'sdio_irq_enabled' (in "mmc: core: Add helper function to indicate
-if SDIO IRQs is enabled").
+Ok, thanks.
 
-One thing I wonder is why this change is only needed for dw_mmc and
-mtk-sd, but not for others like sunxi_mmc. Any insights for a SDIO
-newb?
+Wanpeng
