@@ -2,129 +2,91 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D755C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DD7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE792082C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIontiK2"
+	by mail.kernel.org (Postfix) with ESMTP id 8C6AE206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567694594;
+	bh=Be2GZJp0KKr2/w+lQ1U7ppjQgyQjZbokUIubYRKfjyY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GL5iabsuGBrDI7eIKIgcl0XM2JKKy6BvxTmeHCIO5ZTqfKC0Wqdz4jB9Cj6VhCQBs
+	 lijtgiKKin6oU6cVvDCBJbZ2SnPP7GMCfW3AEPCLwOnhQiC7ao9a5QKMBLhEK1iR3e
+	 /HE0SvAohM57VfsncDO7FY+3dXhccHmWkWtB460A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389729AbfIEOmU (ORCPT
+        id S2389730AbfIEOnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:42:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:42769 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfIEOmT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:42:19 -0400
-Received: by mail-io1-f67.google.com with SMTP id n197so5378463iod.9;
-        Thu, 05 Sep 2019 07:42:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bdAudQZ0HCJ8TRBm9ijNYepraRe/QpJqgeTn8uQsQX8=;
-        b=BIontiK2DTv/qpkcw8bqo+nSW7AR/xoHc7DGBgv5kPqhit+aqYI4uEyMy/Ss6RSaK5
-         hmWpjMQ9lfx7I0535vhSC3ozL00wKYYG5TSEaDh5y1MS7n/m0GkpcsbpLw+EjYfGS6rW
-         +nHaGhOCacxctPQGekqTXVouPBMX5i4VlYb++4o/GQSyiogo2erqjE7dYL7ho0IOYQhe
-         +1Bosh4NY01j5tPmU+lrHJkAyw2dMmGuI6RmMLaMrnc0UJMA5g4oCZ1xVHG4f1O1cG3N
-         h5Kq7PuHfOedJ/uZYlRHf+nxz1eyncsLhwmH5eGZ7wO60AXazvUiqrC4F+QNc35/SPSu
-         w3Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bdAudQZ0HCJ8TRBm9ijNYepraRe/QpJqgeTn8uQsQX8=;
-        b=fCB7YinBVO9uzr56IJMESH2PA8nMXzXHApVFy5DPTPpkj6mwIUZZEG8PuI6oQQxZv5
-         zpVoz03L1vGgla7tygbzBhiQfDBoFnyrR6PXl4IEDJi7joerh56F6z0F2010M6Yzi7vf
-         Gpwfi56Czg5clD0qetLTguQxVkbkQa+OaDJ8/owYMQiebvE7TOaEBNvN5wbTamdt/GpM
-         3a1xzyhbOYRpKpbEGpsUfgQstJTxvMY1YqzRQosHk32YirvRj0rwzGjFUpfiYxVTvgW6
-         VM5cx65z912MnaZMGWDi3xvPii2wRFyYWlMSQOfPDVb94VtXT1aRul9EvYpqqBNpsrat
-         4ZzA==
-X-Gm-Message-State: APjAAAXNegE5ULNr9wMafUs3qnpT1XO53fXo0yd8xlSCGFokx3/AG+UL
-        eUPhiO8zaebOMAx4UoV9kHHxNHZUbvQUbRsPOBQ=
-X-Google-Smtp-Source: APXvYqyX2pWhcTrhvray5HVD4t5UgZhCevIB50IwYtht6X5wox9aszGhaDh07sqZYAAepAbIq9CCwMnECTOlso4Ws3A=
-X-Received: by 2002:a02:a90a:: with SMTP id n10mr4223757jam.140.1567694539038;
- Thu, 05 Sep 2019 07:42:19 -0700 (PDT)
+        Thu, 5 Sep 2019 10:43:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37644 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726080AbfIEOnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:43:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ABAC9B0BA;
+        Thu,  5 Sep 2019 14:43:11 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 16:43:10 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
+        carmenjackson@google.com, mayankgupta@google.com,
+        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
+        akpm@linux-foundation.org, kernel-team@android.com,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190905144310.GA14491@dhcp22.suse.cz>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz>
+ <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz>
+ <20190904162808.GO240514@google.com>
 MIME-Version: 1.0
-References: <1567693630-27544-1-git-send-email-arnaud.pouliquen@st.com> <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
-In-Reply-To: <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Thu, 5 Sep 2019 08:42:08 -0600
-Message-ID: <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] rpmsg: core: add API to get message length
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-remoteproc@vger.kernel.org,
-        MSM <linux-arm-msm@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904162808.GO240514@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 8:35 AM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
->
-> Return the rpmsg buffer size for sending message, so rpmsg users
-> can split a long message in several sub rpmsg buffers.
->
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->  drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
->  drivers/rpmsg/rpmsg_internal.h   |  2 ++
->  drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
->  include/linux/rpmsg.h            | 10 ++++++++++
->  4 files changed, 43 insertions(+)
->
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index e330ec4dfc33..a6ef54c4779a 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->  }
->  EXPORT_SYMBOL(rpmsg_trysend_offchannel);
->
-> +/**
-> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
-> + * @ept: the rpmsg endpoint
-> + *
-> + * This function returns maximum buffer size available for a single message.
-> + *
-> + * Return: the maximum transmission size on success and an appropriate error
-> + * value on failure.
-> + */
+[Add Steven]
 
-What is the intent of this?
+On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+[...]
+> > > but also for reducing
+> > > tracing noise. Flooding the traces makes it less useful for long traces and
+> > > post-processing of traces. IOW, the overhead reduction is a bonus.
+> >
+> > This is not really anything special for this tracepoint though.
+> > Basically any tracepoint in a hot path is in the same situation and I do
+> > not see a point why each of them should really invent its own way to
+> > throttle. Maybe there is some way to do that in the tracing subsystem
+> > directly.
+> 
+> I am not sure if there is a way to do this easily. Add to that, the fact that
+> you still have to call into trace events. Why call into it at all, if you can
+> filter in advance and have a sane filtering default?
+> 
+> The bigger improvement with the threshold is the number of trace records are
+> almost halved by using a threshold. The number of records went from 4.6K to
+> 2.6K.
 
-The term "mtu" is "maximum transfer unit" - ie the largest payload of
-data that could possibly be sent, however at any one point in time,
-that might not be able to be accommodated.
-
-I don't think this is implemented correctly.  In GLINK and SMD, you've
-not implemented MTU, you've implemented "how much can I send at this
-point in time".  To me, this is not mtu.
-
-In the case of SMD, you could get the fifo size and return that as the
-mtu, but since you seem to be wanting to use this from the TTY layer
-to determine how much can be sent at a particular point in time, I
-don't think you actually want mtu.
-
-For GLINK, I don't actually think you can get a mtu based on the
-design, but I'm trying to remember from 5-6 years ago when we designed
-it.  It would be possible that a larger intent would be made available
-later.
-
-I think you need to first determine if you are actually looking for
-mtu, or "how much data can I send right now", because right now, it
-isn't clear.
+Steven, would it be feasible to add a generic tracepoint throttling?
+-- 
+Michal Hocko
+SUSE Labs
