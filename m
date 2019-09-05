@@ -2,129 +2,85 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD56BC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C69C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A144A2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF302082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbfIEGtT (ORCPT
+        id S1731573AbfIEGu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:49:19 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59690 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730914AbfIEGtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:49:19 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9DF1744DE8704112B55E;
-        Thu,  5 Sep 2019 14:49:17 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 14:49:10 +0800
-Subject: Re: [PATCH RFC] driver core: ensure a device has valid node id in
- device_add()
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <peterz@infradead.org>, <mingo@kernel.org>, <mhocko@kernel.org>,
-        <linuxarm@huawei.com>
-References: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
- <20190905055727.GB23826@kroah.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <e5905af2-5a8d-7b00-d2a6-a961f3eee120@huawei.com>
-Date:   Thu, 5 Sep 2019 14:48:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        Thu, 5 Sep 2019 02:50:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48563 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbfIEGu3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:50:29 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i5lan-0002ZF-Lq; Thu, 05 Sep 2019 08:50:05 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1i5laZ-0001pD-N3; Thu, 05 Sep 2019 08:49:51 +0200
+Date:   Thu, 5 Sep 2019 08:49:51 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ian Campbell <ijc+devicetree@hellion.org.uk>,
+        linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Ajay Kumar <ajaykumar.rs@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Rahul Sharma <rahul.sharma@samsung.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        Sascha Hauer <kernel@pengutronix.de>,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com
+Subject: Re: [PATCH v6 0/7] Support dsi for mt8183
+Message-ID: <20190905064951.mttzwrg7muhfimdw@pengutronix.de>
+References: <20190811104008.53372-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905055727.GB23826@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190811104008.53372-1-jitao.shi@mediatek.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/5 13:57, Greg KH wrote:
-> On Thu, Sep 05, 2019 at 09:33:50AM +0800, Yunsheng Lin wrote:
->> Currently a device does not belong to any of the numa nodes
->> (dev->numa_node is NUMA_NO_NODE) when the FW does not provide
->> the node id and the device has not no parent device.
->>
->> According to discussion in [1]:
->> Even if a device's numa node is not set by fw, the device
->> really does belong to a node.
->>
->> This patch sets the device node to node 0 in device_add() if
->> the fw has not specified the node id and it either has no
->> parent device, or the parent device also does not have a valid
->> node id.
->>
->> There may be explicit handling out there relying on NUMA_NO_NODE,
->> like in nvme_probe().
->>
->> [1] https://lkml.org/lkml/2019/9/2/466
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->>  drivers/base/core.c  | 17 ++++++++++++++---
->>  include/linux/numa.h |  2 ++
->>  2 files changed, 16 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/base/core.c b/drivers/base/core.c
->> index 1669d41..466b8ff 100644
->> --- a/drivers/base/core.c
->> +++ b/drivers/base/core.c
->> @@ -2107,9 +2107,20 @@ int device_add(struct device *dev)
->>  	if (kobj)
->>  		dev->kobj.parent = kobj;
->>  
->> -	/* use parent numa_node */
->> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
->> -		set_dev_node(dev, dev_to_node(parent));
->> +	/* use parent numa_node or default node 0 */
->> +	if (!numa_node_valid(dev_to_node(dev))) {
->> +		int nid = parent ? dev_to_node(parent) : NUMA_NO_NODE;
-> 
-> Can you expand this to be a "real" if statement please?
+Hello,
 
-Sure. May I ask why "? :" is not appropriate here?
+I somehow fail to see how this is relevant for the linux-pwm list. Did
+you add this list to the recipents by accident, or is there something I
+missed?
 
-> 
->> +
->> +		if (numa_node_valid(nid)) {
->> +			set_dev_node(dev, nid);
->> +		} else {
->> +			if (nr_node_ids > 1U)
->> +				pr_err("device: '%s': has invalid NUMA node(%d)\n",
->> +				       dev_name(dev), dev_to_node(dev));
-> 
-> dev_err() will show you the exact device properly, instead of having to
-> rely on dev_name().
-> 
-> And what is a user to do if this message happens?  How do they fix this?
-> If they can not, what good is this error message?
+Best regards
+Uwe
 
-If user know about their system's topology well enough and node 0
-is not the nearest node to the device, maybe user can readjust that by
-writing the nearest node to /sys/class/pci_bus/XXXX/device/numa_node,
-if not, then maybe user need to contact the vendor for info or updates.
-
-Maybe print error message as below:
-
-dev_err(dev, FW_BUG "has invalid NUMA node(%d). Readjust it by writing to sysfs numa_node or contact your vendor for updates.\n",
-	dev_to_node(dev));
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> .
-> 
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
