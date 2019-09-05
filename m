@@ -2,134 +2,121 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A1C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D32C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F197206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="iKQy7pcK"
+	by mail.kernel.org (Postfix) with ESMTP id 78678206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404039AbfIEUrg (ORCPT
+        id S2391705AbfIEUt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:47:36 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34167 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731142AbfIEUrf (ORCPT
+        Thu, 5 Sep 2019 16:49:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44576 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728072AbfIEUt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:47:35 -0400
-Received: by mail-ot1-f65.google.com with SMTP id c7so3664722otp.1;
-        Thu, 05 Sep 2019 13:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hpe67X407tYeVqfqBtx1jH+uTg6tH8jR8FjjDadQp48=;
-        b=iKQy7pcK0+Aeu3voToJo4z1xhtUcKL/cjAGPDL1dk5XMxb+QXiVvcJoGUZtgExUzeI
-         0hKt0/2ycoBwf5Z5px0oYNSi7eDdWCwY1ozNcT6q2VFHCaOwxI3WE9BvckNlXDy/i9hJ
-         V+2OFzq+TS1o62Qa8oTi0Gi5XnvMDgkhQ9d3EJkUCkce02hswivWIozI2vLA3iLBcfOT
-         EKuLOV494WmLcFsmKFRHBw7xtch424iX/B3Rc0WDxErtSkb5t/zMcVjpVArtPZwcXPTv
-         343poVAErivgK65+70F89MRATt/aK8bBqAkttohiPgY+X5jaAjAxw1azr+yv0RasNH07
-         SpcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hpe67X407tYeVqfqBtx1jH+uTg6tH8jR8FjjDadQp48=;
-        b=K4P+HdWUL0H+u3UvA1wLCvqLQSycYyncCE5cLlBoDAt84fkdBJBU1QpiWNjc0ITPbW
-         oc/f49eIzfWSqAZ7a3HrDT5MNRsHfF40dXfaffmY9MbgsZ0VWCpsFxH2l/iZ/KunurLm
-         Y4p850vsdpseeCC9noyT8LdC3XbK3v6WlKYJghDbVNZ9iQEXUo2hQ2lhdTyyFyXqGChl
-         OKcAe+9OpfFnWAPHTl23Z4m/BhRW7szrF1pgdGw8enkRq7OUmOIc5G3BCE4veJbmNV7Z
-         NLh1Xee1ua8tcLFLzAv/7y0SniIhVVmWCZUA2xCEUFQ11Q/bKjOIfXkG5PWJy6a08SDQ
-         z1kQ==
-X-Gm-Message-State: APjAAAVEhcjrkzo3Eez7GqLG1GEbAcd5Jn1I3DQl6fhgxZvho+Qwcdtq
-        039NlITugVA+wIoQhblW46dsK5mDAfNUenTvdXc=
-X-Google-Smtp-Source: APXvYqxBMSHXDs1QQOhrT5ERhwwBvzG1utnZHIaaBimzhgUetRGpQI2B9o8vZcXvI+RHZcyVr430j2kSYmOU1uYY5Ps=
-X-Received: by 2002:a9d:12e7:: with SMTP id g94mr3041613otg.6.1567716454237;
- Thu, 05 Sep 2019 13:47:34 -0700 (PDT)
+        Thu, 5 Sep 2019 16:49:57 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1i5yhW-0001jt-7d; Thu, 05 Sep 2019 22:49:54 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A20691C0DEC;
+        Thu,  5 Sep 2019 22:49:53 +0200 (CEST)
+Date:   Thu, 05 Sep 2019 20:49:53 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: refs/heads/perf/core] kprobes: Prohibit probing on BUG() and
+ WARN() address
+Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com>
- <20190902222015.11360-1-martin.blumenstingl@googlemail.com>
- <d9e96dab-96be-0c14-b7af-e1f2dc07ebd2@linux.intel.com> <CAFBinCARQJ7q9q3r6c6Yr2SD0Oo_Drah-kxss3Obs-g=B1M28A@mail.gmail.com>
- <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com>
-In-Reply-To: <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 5 Sep 2019 22:47:23 +0200
-Message-ID: <CAFBinCA+J-HnXfRnquqviXvX0Jo84hoLC9=_uHbyWKZycwyAFw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com,
-        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
-        robh@kernel.org, sboyd@kernel.org, yixin.zhu@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <156771659359.12994.2378632133614050120.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rahul,
+The following commit has been merged into the refs/heads/perf/core branch of tip:
 
-On Wed, Sep 4, 2019 at 10:04 AM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
->
->
-> Hi Martin,
->
-> On 4/9/2019 2:53 AM, Martin Blumenstingl wrote:
-> >> My understanding is that if we do not use syscon, then there is no
-> >> point in using regmap because this driver uses simple 32 bit register
-> >> access. Can directly read/write registers using readl() & writel().
-> >>
-> >> Would you agree ?
-> > if there was only the LGM SoC then I would say: drop regmap
-> >
-> > however, last year a driver for the GRX350/GRX550 SoCs was proposed: [0]
-> > this was never updated but it seems to use the same "framework" as the
-> > LGM driver
-> > with this in mind I am for keeping regmap support because.
-> > I think it will be easier to add support for old SoCs like
-> > GRX350/GRX550 (but also VRX200), because the PLL sub-driver (I am
-> > assuming that it is similar on all SoCs) or some other helpers can be
-> > re-used across various SoCs instead of "duplicating" code (where one
-> > variant would use regmap and the other readl/writel).
->
->
-> Earlier, we had discussed about it in our team.  There are no plans to
-> upstream mips based platform code, past up-streaming efforts for mips
-> platforms were also dropped. GRX350/GRX550/VRX200 are all mips
-> based platforms. Plan is to upstream only x86 based platforms. In-fact,
-> i had removed GRX & other older SoCs support from this driver before
-> sending for review. So we can consider only x86 based LGM family of
-> SoCs for this driver & all of them will be reusing same IP.
-this is very sad news
-as far as I can tell many IP cores are similar/identical on
-GRX350/GRX550, LGM and even VRX200
+Commit-ID:     e336b4027775cb458dc713745e526fa1a1996b2a
+Gitweb:        https://git.kernel.org/tip/e336b4027775cb458dc713745e526fa1a1996b2a
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Tue, 03 Sep 2019 20:08:21 +09:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 05 Sep 2019 10:15:16 +02:00
 
-I already know that VRX200 is a legacy product and you won't be supporting it
-once LGM support lands upstream you could add support for
-GRX350/GRX550 with small to medium effort
-that is a big win (in my opinion) because it means happier end-users
-(see XWAY and VRX200 support in OpenWrt for example: while support
-from Intel/Lantiq has died long ago these devices can still run a
-recent LTS kernel and get security updates. without OpenWrt these
-devices would probably end up as electronic waste)
+kprobes: Prohibit probing on BUG() and WARN() address
 
-maybe implementing a re-usable regmap clock driver (for mux, gate and
-divider) means less effort (compared to converting everything to
-standard clock ops) for you.
-(we did the switch from standard clock ops to regmap for the Amlogic
-Meson clock drivers when we discovered that there were some non-clock
-registers that belong to other IP blocks in it and it was a lot of
-effort)
-this will allow you to add support for GRX350/GRX550 in the future if
-demand for upstream drivers rises.
+Since BUG() and WARN() may use a trap (e.g. UD2 on x86) to
+get the address where the BUG() has occurred, kprobes can not
+do single-step out-of-line that instruction. So prohibit
+probing on such address.
 
+Without this fix, if someone put a kprobe on WARN(), the
+kernel will crash with invalid opcode error instead of
+outputing warning message, because kernel can not find
+correct bug address.
 
-Martin
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/156750890133.19112.3393666300746167111.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/bug.h | 5 +++++
+ kernel/kprobes.c    | 3 ++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/bug.h b/include/linux/bug.h
+index fe59165..f639bd0 100644
+--- a/include/linux/bug.h
++++ b/include/linux/bug.h
+@@ -47,6 +47,11 @@ void generic_bug_clear_once(void);
+ 
+ #else	/* !CONFIG_GENERIC_BUG */
+ 
++static inline void *find_bug(unsigned long bugaddr)
++{
++	return NULL;
++}
++
+ static inline enum bug_trap_type report_bug(unsigned long bug_addr,
+ 					    struct pt_regs *regs)
+ {
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index d9770a5..ebe8315 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1514,7 +1514,8 @@ static int check_kprobe_address_safe(struct kprobe *p,
+ 	/* Ensure it is not in reserved area nor out of text */
+ 	if (!kernel_text_address((unsigned long) p->addr) ||
+ 	    within_kprobe_blacklist((unsigned long) p->addr) ||
+-	    jump_label_text_reserved(p->addr, p->addr)) {
++	    jump_label_text_reserved(p->addr, p->addr) ||
++	    find_bug((unsigned long)p->addr)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
