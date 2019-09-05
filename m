@@ -2,80 +2,91 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A173C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C03BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2659212CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5D4120828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:54:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="ExajxodJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387817AbfIEWx7 (ORCPT
+        id S2388219AbfIEWyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:53:59 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60700 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbfIEWx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:53:59 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i60dH-0003db-Tc; Fri, 06 Sep 2019 08:53:41 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 06 Sep 2019 08:53:32 +1000
-Date:   Fri, 6 Sep 2019 08:53:32 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-pci@vger.kernel.org,
-        Pascal Van Leeuwen <pvanleeuwen@verimatrix.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "pvanleeuwen@insidesecure.com" <pvanleeuwen@insidesecure.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: PCI: Add stub pci_irq_vector and others
-Message-ID: <20190905225332.GA4123@gondor.apana.org.au>
-References: <20190902141910.1080-1-yuehaibing@huawei.com>
- <20190903014518.20880-1-yuehaibing@huawei.com>
- <MN2PR20MB29732EEECB217DDDF822EDA5CAB80@MN2PR20MB2973.namprd20.prod.outlook.com>
- <CAKv+Gu8PVYyA-mzjrhR6r6upMc=xzpAhsbkuKRtb8T2noo_2XQ@mail.gmail.com>
- <20190904122600.GA28660@gondor.apana.org.au>
- <20190905210722.GH103977@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905210722.GH103977@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 5 Sep 2019 18:54:38 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:35788 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfIEWyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 18:54:37 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id 3941E20B7186; Thu,  5 Sep 2019 15:54:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3941E20B7186
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
+        s=default; t=1567724077;
+        bh=C1jqP35TMmGSoib6LMXOoVRVdpiCFnrupJ4pnWJ4zms=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ExajxodJhxktzC8UJzWhnU0TGhekodshFJ+8NkFp1nNRsMlUVKWL4kLZw+6K7WYDC
+         3DlafSyBFNHr1GFWM/4VnI3W5BK2QOUh9D6TU27+yZK6I8sRldhWR37LGsALPhQR++
+         0jG64gpsg1k54G43damuOgEHiQfNUvAKcp74nRPg=
+From:   longli@linuxonhyperv.com
+To:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [Patch v3] storvsc: setup 1:1 mapping between hardware queue and CPU queue
+Date:   Thu,  5 Sep 2019 15:54:33 -0700
+Message-Id: <1567724073-30192-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 04:07:22PM -0500, Bjorn Helgaas wrote:
->
-> > This patch adds stub functions pci_alloc_irq_vectors_affinity and
-> > pci_irq_vector when CONFIG_PCI is off so that drivers can use them
-> > without resorting to ifdefs.
-> > 
-> > It also moves the PCI_IRQ_* macros outside of the ifdefs so that
-> > they are always available.
-> > 
-> > Fixes: 625f269a5a7a ("crypto: inside-secure - add support for...")
-> 
-> I don't see this commit in Linus' tree yet.
-> 
-> I'd like to include the actual reason for this patch in the commit
-> log.  I assume it's fixing a build issue, but I'd like to be a little
-> more specific about it.
+From: Long Li <longli@microsoft.com>
 
-The patch in question is
+storvsc doesn't use a dedicated hardware queue for a given CPU queue. When
+issuing I/O, it selects returning CPU (hardware queue) dynamically based on
+vmbus channel usage across all channels.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git/commit/?id=625f269a5a7a3643771320387e474bd0a61d9654
+This patch advertises num_present_cpus() as number of hardware queues. This
+will have upper layer setup 1:1 mapping between hardware queue and CPU queue
+and avoid unnecessary locking when issuing I/O.
 
-Thanks,
+Changes:
+v2: rely on default upper layer function to map queues. (suggested by Ming Lei
+<tom.leiming@gmail.com>)
+v3: use num_present_cpus() instead of num_online_cpus(). Hyper-v doesn't
+support hot-add CPUs. (suggested by Michael Kelley <mikelley@microsoft.com>)
+
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ drivers/scsi/storvsc_drv.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index b89269120a2d..cf987712041a 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -1836,8 +1836,7 @@ static int storvsc_probe(struct hv_device *device,
+ 	/*
+ 	 * Set the number of HW queues we are supporting.
+ 	 */
+-	if (stor_device->num_sc != 0)
+-		host->nr_hw_queues = stor_device->num_sc + 1;
++	host->nr_hw_queues = num_present_cpus();
+ 
+ 	/*
+ 	 * Set the error handler work queue.
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.17.1
+
