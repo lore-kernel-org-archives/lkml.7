@@ -2,169 +2,97 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B1EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7146CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D471C2137B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E432082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567698284;
+	bh=7a2Kh0bbur1P82JOpkA0aiw3kRggM0voFXBHaO7YY/c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xe90QhMLR+s8O/ZtS6IisRcOGlSsbgPEB1A2xTtJHem5dk10Dhme4N8WFjMx0oXaa
+	 FQkI2ld+J/93wwXC+o2wbX/RVtL8jJw/FgYr9+MtyTBkdO5A3pOTV1NTt1ZfK0HXbX
+	 um/2xT6/7lZhc2e+WN6gkxOnvBeca+re07YlnEvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388633AbfIEPod (ORCPT
+        id S2390734AbfIEPom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:44:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35646 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 11:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390537AbfIEPno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:43:44 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S2390713AbfIEPoc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 11:44:32 -0400
+Received: from localhost (unknown [62.28.240.114])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C9321907;
-        Thu,  5 Sep 2019 15:43:44 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1i5tvC-0007at-S6; Thu, 05 Sep 2019 11:43:42 -0400
-Message-Id: <20190905154342.751522961@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Thu, 05 Sep 2019 11:43:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matt Helsley <mhelsley@vmware.com>
-Subject: [for-next][PATCH 18/25] recordmcount: Kernel style function signature formatting
-References: <20190905154258.573706229@goodmis.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B69C2082C;
+        Thu,  5 Sep 2019 15:44:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567698272;
+        bh=7a2Kh0bbur1P82JOpkA0aiw3kRggM0voFXBHaO7YY/c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ml7qLSuNqjg1UBZnkxl1oKa+hyxi1Xdf8QCcw+SUVhrjATDzr427/gLMAq+X2bDHS
+         n22hdd5dr+OpDLiJq5UldHzbbuWQVKWwKRF+LOfUje8LV6P6XND14QvUI/bEh3hxWT
+         vVFnWnDlWgZlQZ1nYS5wxamIpSqlZhvt4YvBIi3o=
+Date:   Thu, 5 Sep 2019 11:44:29 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 01/12] x86/hyper-v: Suspend/resume the hypercall page
+ for hibernation
+Message-ID: <20190905154429.GC1616@sasha-vm>
+References: <1567470139-119355-1-git-send-email-decui@microsoft.com>
+ <1567470139-119355-2-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1567470139-119355-2-git-send-email-decui@microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Helsley <mhelsley@vmware.com>
+On Tue, Sep 03, 2019 at 12:23:16AM +0000, Dexuan Cui wrote:
+>This is needed for hibernation, e.g. when we resume the old kernel, we need
+>to disable the "current" kernel's hypercall page and then resume the old
+>kernel's.
+>
+>Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 
-The uwrite() and ulseek() functions are formatted inconsistently
-with the rest of the file and the kernel overall. While we're
-making other changes here let's fix this.
+Hi Dexuan,
 
-Link: http://lkml.kernel.org/r/4c67698f734be9867a2aba7035fe0ce59e1e4423.1564596289.git.mhelsley@vmware.com
+When sending patches upstream, please make sure you send them to all
+maintainers and mailing lists that it needs to go to according to
+MAINTAINERS/get_maintainers.py rather than cherry-picking names off the
+list.
 
-Signed-off-by: Matt Helsley <mhelsley@vmware.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- scripts/recordmcount.c | 21 +++++++--------------
- scripts/recordmcount.h | 13 ++++++-------
- 2 files changed, 13 insertions(+), 21 deletions(-)
+This is specially important in subsystems like x86 where it's a group
+maintainers model, and it's very possible that Thomas is sipping
+margaritas on a beach while one of the other x86 maintainers is covering
+the tree.
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index c6d395b8ff29..67f9c45b824f 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -52,8 +52,7 @@ static void *file_append; /* added to the end of the file */
- static size_t file_append_size; /* how much is added to end of file */
- 
- /* Per-file resource cleanup when multiple files. */
--static void
--cleanup(void)
-+static void cleanup(void)
- {
- 	if (!mmap_failed)
- 		munmap(file_map, sb.st_size);
-@@ -68,8 +67,7 @@ cleanup(void)
- 
- /* ulseek, uwrite, ...:  Check return value for errors. */
- 
--static off_t
--ulseek(off_t const offset, int const whence)
-+static off_t ulseek(off_t const offset, int const whence)
- {
- 	switch (whence) {
- 	case SEEK_SET:
-@@ -89,8 +87,7 @@ ulseek(off_t const offset, int const whence)
- 	return file_ptr - file_map;
- }
- 
--static ssize_t
--uwrite(void const *const buf, size_t const count)
-+static ssize_t uwrite(void const *const buf, size_t const count)
- {
- 	size_t cnt = count;
- 	off_t idx = 0;
-@@ -127,8 +124,7 @@ uwrite(void const *const buf, size_t const count)
- 	return count;
- }
- 
--static void *
--umalloc(size_t size)
-+static void * umalloc(size_t size)
- {
- 	void *const addr = malloc(size);
- 	if (addr == 0) {
-@@ -394,8 +390,7 @@ static uint32_t (*w)(uint32_t);
- static uint32_t (*w2)(uint16_t);
- 
- /* Names of the sections that could contain calls to mcount. */
--static int
--is_mcounted_section_name(char const *const txtname)
-+static int is_mcounted_section_name(char const *const txtname)
- {
- 	return strncmp(".text",          txtname, 5) == 0 ||
- 		strcmp(".init.text",     txtname) == 0 ||
-@@ -448,8 +443,7 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
- 	}).r_info;
- }
- 
--static int
--do_file(char const *const fname)
-+static int do_file(char const *const fname)
- {
- 	Elf32_Ehdr *const ehdr = mmap_file(fname);
- 	unsigned int reltype = 0;
-@@ -597,8 +591,7 @@ do_file(char const *const fname)
- 	return rc;
- }
- 
--int
--main(int argc, char *argv[])
-+int main(int argc, char *argv[])
- {
- 	const char ftrace[] = "/ftrace.o";
- 	int ftrace_size = sizeof(ftrace) - 1;
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 3796eb37fb12..ca9aaac89bfb 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -468,11 +468,10 @@ static int find_secsym_ndx(unsigned const txtndx,
- }
- 
- /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
--static char const *
--__has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
--		 Elf_Shdr const *const shdr0,
--		 char const *const shstrtab,
--		 char const *const fname)
-+static char const * __has_rel_mcount(Elf_Shdr const *const relhdr, /* reltype */
-+				     Elf_Shdr const *const shdr0,
-+				     char const *const shstrtab,
-+				     char const *const fname)
- {
- 	/* .sh_info depends on .sh_type == SHT_REL[,A] */
- 	Elf_Shdr const *const txthdr = &shdr0[w(relhdr->sh_info)];
-@@ -524,8 +523,8 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
- 
- 
- /* Overall supervision for Elf32 ET_REL file. */
--static int
--do_func(Elf_Ehdr *const ehdr, char const *const fname, unsigned const reltype)
-+static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
-+		   unsigned const reltype)
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
--- 
-2.20.1
+This is quite easy with git-send-email and get_maintainers.py, something
+like this:
 
+	git send-email --cc-cmd="scripts/get_maintainer.pl --separator=, --no-rolestats" your-work.patch
 
+Will do all of that automatically for you.
+
+--
+Thanks,
+Sasha
