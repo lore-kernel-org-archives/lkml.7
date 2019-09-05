@@ -2,127 +2,82 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46D6C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7BFC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D98F21883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED1D21883
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567682366;
+	bh=trWSMNdPAGCrEWjjBN4gvX5GSpUep8UtgXKdzyHMgGI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eMKEp2VukWCsFrSVqzqgdt0Jyb6UouHRKgwv3zlKdBnZCrECoIhGqxrrrXy3A64dY
+	 UhLZdCgjwSzK5WIEBowVbIEGJ2QduYP1xLP2gF26RFHoRsWVPwZOBdX2KBeV+0e380
+	 UhjT/NoFSno1YLceW5Rl5gX4wD13mA0LDdmrgtsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732748AbfIELTA (ORCPT
+        id S1733182AbfIELTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:19:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:42418 "EHLO foss.arm.com"
+        Thu, 5 Sep 2019 07:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfIELTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:19:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DE8E28;
-        Thu,  5 Sep 2019 04:18:59 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C984F3F718;
-        Thu,  5 Sep 2019 04:18:57 -0700 (PDT)
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <20190905083127.GA2332@hirez.programming.kicks-ass.net> <87r24v2i14.fsf@arm.com> <20190905104616.GD2332@hirez.programming.kicks-ass.net>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-In-reply-to: <20190905104616.GD2332@hirez.programming.kicks-ass.net>
-Date:   Thu, 05 Sep 2019 12:18:55 +0100
-Message-ID: <87imq72dpc.fsf@arm.com>
+        id S1725921AbfIELTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:19:24 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648B321883;
+        Thu,  5 Sep 2019 11:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567682363;
+        bh=trWSMNdPAGCrEWjjBN4gvX5GSpUep8UtgXKdzyHMgGI=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=OgWjamNnWPljlkWynEYUq06hDNTq6oUnb7qTDfkELOCS8a8E5ovwXwfLwHNjHaflY
+         ePkzdy8A+LqrWYziDMGqUJ7bKYtzU7JHOGYvjtDL58Czo+usqCcSITcLj/uRQQzk/m
+         paBfn8l8NDTZOVM5vRT2eAao5PwOLMiwQGpll8Nk=
+Date:   Thu, 5 Sep 2019 13:19:06 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+In-Reply-To: <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
+Message-ID: <nycvar.YFH.7.76.1909051317550.31470@cbobk.fhfr.pm>
+References: <20190814151244.5xoaxib5iya2qjco@treble> <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz> <20190822223649.ptg6e7qyvosrljqx@treble> <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz> <20190826145449.wyo7avwpqyriem46@treble>
+ <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz> <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com> <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz> <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz> <20190905025055.36loaatxtkhdo4q5@treble>
+ <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 5 Sep 2019, Petr Mladek wrote:
 
-On Thu, Sep 05, 2019 at 11:46:16 +0100, Peter Zijlstra wrote...
+> > I don't have a number, but it's very common to patch a function which 
+> > uses jump labels or alternatives.
+> 
+> Really? My impression is that both alternatives and jump_labels
+> are used in hot paths. I would expect them mostly in core code
+> that is always loaded.
+> 
+> Alternatives are often used in assembly that we are not able
+> to livepatch anyway.
+> 
+> Or are they spread widely via some macros or inlined functions?
 
-> On Thu, Sep 05, 2019 at 10:45:27AM +0100, Patrick Bellasi wrote:
->
->> > From just reading the above, I would expect it to have the range
->> > [-20,19] just like normal nice. Apparently this is not so.
->> 
->> Regarding the range for the latency-nice values, I guess we have two
->> options:
->> 
->>   - [-20..19], which makes it similar to priorities
->>   downside: we quite likely end up with a kernel space representation
->>   which does not match the user-space one, e.g. look at
->>   task_struct::prio.
->> 
->>   - [0..1024], which makes it more similar to a "percentage"
->> 
->> Being latency-nice a new concept, we are not constrained by POSIX and
->> IMHO the [0..1024] scale is a better fit.
->> 
->> That will translate into:
->> 
->>   latency-nice=0 : default (current mainline) behaviour, all "biasing"
->>   policies are disabled and we wakeup up as fast as possible
->> 
->>   latency-nice=1024 : maximum niceness, where for example we can imaging
->>   to turn switch a CFS task to be SCHED_IDLE?
->
-> There's a few things wrong there; I really feel that if we call it nice,
-> it should be like nice. Otherwise we should call it latency-bias and not
-> have the association with nice to confuse people.
->
-> Secondly; the default should be in the middle of the range. Naturally
-> this would be a signed range like nice [-(x+1),x] for some x. but if you
-> want [0,1024], then the default really should be 512, but personally I
-> like 0 better as a default, in which case we need negative numbers.
->
-> This is important because we want to be able to bias towards less
-> importance to (tail) latency as well as more importantance to (tail)
-> latency.
->
-> Specifically, Oracle wants to sacrifice (some) latency for throughput.
-> Facebook OTOH seems to want to sacrifice (some) throughput for latency.
-
-Right, we have this dualism to deal with and current mainline behaviour
-is somehow in the middle.
-
-BTW, the FB requirement is the same we have in Android.
-We want some CFS tasks to have very small latency and a low chance
-to be preempted by the wake-up of less-important "background" tasks.
-
-I'm not totally against the usage of a signed range, but I'm thinking
-that since we are introducing a new (non POSIX) concept we can get the
-chance to make it more human friendly.
-
-Give the two extremes above, would not be much simpler and intuitive to
-have 0 implementing the FB/Android (no latency) case and 1024 the
-(max latency) Oracle case?
-
-Moreover, we will never match completely the nice semantic, give that
-a 1 nice unit has a proper math meaning, isn't something like 10% CPU
-usage change for each step?
-
-For latency-nice instead we will likely base our biasing strategies on
-some predefined (maybe system-wide configurable) const thresholds.
-
-Could changing the name to "latency-tolerance" break the tie by marking
-its difference wrt prior/nice levels? AFAIR, that was also the original
-proposal [1] by PaulT during the OSPM discussion.
-
-Best,
-Patrick
-
-[1] https://youtu.be/oz43thSFqmk?t=1302
+All the indirect jumps are turned into alternatives when retpolines are in 
+place.
 
 -- 
-#include <best/regards.h>
+Jiri Kosina
+SUSE Labs
 
-Patrick Bellasi
