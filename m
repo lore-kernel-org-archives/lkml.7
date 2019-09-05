@@ -2,99 +2,187 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E597DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BA4C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F64221D80
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567688632;
-	bh=5A97SrUDUqyVKNx4DSBp3SVRp3CJEByfutDERGx+WWs=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wcpQcjw0jEgyTWp5EutlGfcpJG0YTtFB9JmO3LDkdfOCxniyPFk+tAyRvcj9ARW5L
-	 eoKZAmCp6deqkVLgWEW8rRFRLiShsW2x7TEIAI5sNmbVYSExsEkIOFnYiRCNdKbvMT
-	 f2fKD6J63oIkT/ZqOKnOMNFKuIT4XjHdMSIVGuDY=
+	by mail.kernel.org (Postfix) with ESMTP id B769E21D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389706AbfIENDw (ORCPT
+        id S2389709AbfIENEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:03:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388180AbfIENDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:03:50 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A0DF21D7F;
-        Thu,  5 Sep 2019 13:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567688628;
-        bh=5A97SrUDUqyVKNx4DSBp3SVRp3CJEByfutDERGx+WWs=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=gEiMjB6HERBAz+GaBgIR5yO9T13FFCRmvjD84jb2uUtvX7vQrw1CCrmq+8gs+DPfv
-         l7l0umFeo2NdYzHiwfgIbhu5BfDHaZnkuloRVqbeoavkh5nUMJsaRjlwBqAPIbcEp9
-         Qr21N097KTIaylGDRz4ZB/0ZQxOUiNvC+jN6NFTU=
-Date:   Thu, 5 Sep 2019 15:03:33 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-cc:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] HID: hid-prodikeys: Fix general protection fault during
- probe
-In-Reply-To: <Pine.LNX.4.44L0.1909041149390.1722-100000@iolanthe.rowland.org>
-Message-ID: <nycvar.YFH.7.76.1909051503210.31470@cbobk.fhfr.pm>
-References: <Pine.LNX.4.44L0.1909041149390.1722-100000@iolanthe.rowland.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 5 Sep 2019 09:04:00 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:33256 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388012AbfIENDf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:03:35 -0400
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85D2N0N005623;
+        Thu, 5 Sep 2019 13:02:54 GMT
+Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2uttq6kqes-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 13:02:54 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
+        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 3CA7EA3;
+        Thu,  5 Sep 2019 13:02:53 +0000 (UTC)
+Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
+        id EC6E9201EA1BF; Thu,  5 Sep 2019 08:02:52 -0500 (CDT)
+Message-Id: <20190905130252.861491461@stormcage.eag.rdlabs.hpecorp.net>
+References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
+User-Agent: quilt/0.46-1
+Date:   Thu, 05 Sep 2019 08:02:54 -0500
+From:   Mike Travis <mike.travis@hpe.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH 2/8] x86/platform/uv: Return UV Hubless System Type
+Content-Disposition: inline; filename=mod-is_uv_hubless
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_04:2019-09-04,2019-09-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 clxscore=1015 suspectscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=828 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1909050128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019, Alan Stern wrote:
+Return the type of UV hubless system for UV specific code that depends
+on that.  Use a define to indicate the change in arg type for this
+function in uv.h.  Add a function to convert UV system type to bit
+pattern needed for is_uv_hubless().
 
-> The syzbot fuzzer provoked a general protection fault in the
-> hid-prodikeys driver:
-> 
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] SMP KASAN
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc5+ #28
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> RIP: 0010:pcmidi_submit_output_report drivers/hid/hid-prodikeys.c:300  [inline]
-> RIP: 0010:pcmidi_set_operational drivers/hid/hid-prodikeys.c:558 [inline]
-> RIP: 0010:pcmidi_snd_initialise drivers/hid/hid-prodikeys.c:686 [inline]
-> RIP: 0010:pk_probe+0xb51/0xfd0 drivers/hid/hid-prodikeys.c:836
-> Code: 0f 85 50 04 00 00 48 8b 04 24 4c 89 7d 10 48 8b 58 08 e8 b2 53 e4 fc  
-> 48 8b 54 24 20 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f  
-> 85 13 04 00 00 48 ba 00 00 00 00 00 fc ff df 49 8b
-> 
-> The problem is caused by the fact that pcmidi_get_output_report() will
-> return an error if the HID device doesn't provide the right sort of
-> output report, but pcmidi_set_operational() doesn't bother to check
-> the return code and assumes the function call always succeeds.
-> 
-> This patch adds the missing check and aborts the probe operation if
-> necessary.
-> 
-> Reported-and-tested-by: syzbot+1088533649dafa1c9004@syzkaller.appspotmail.com
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> CC: <stable@vger.kernel.org>
+Signed-off-by: Mike Travis <mike.travis@hpe.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+To: Ingo Molnar <mingo@redhat.com>
+To: H. Peter Anvin <hpa@zytor.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Borislav Petkov <bp@alien8.de>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Cc: Hedi Berriche <hedi.berriche@hpe.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+---
+v2: remove is_uv_hubless define; remove leading '_' from _is_uv_hubless
+---
+ arch/x86/include/asm/uv/uv.h       |   12 ++++++++++--
+ arch/x86/kernel/apic/x2apic_uv_x.c |   27 ++++++++++++++++++---------
+ 2 files changed, 28 insertions(+), 11 deletions(-)
 
-Applied, thanks a lot Alan.
+--- linux.orig/arch/x86/include/asm/uv/uv.h
++++ linux/arch/x86/include/asm/uv/uv.h
+@@ -12,6 +12,14 @@ struct mm_struct;
+ #ifdef CONFIG_X86_UV
+ #include <linux/efi.h>
+ 
++static inline int uv(int uvtype)
++{
++	/* uv(0) is "any" */
++	if (uvtype >= 0 && uvtype <= 30)
++		return 1 << uvtype;
++	return 1;
++}
++
+ extern unsigned long uv_systab_phys;
+ 
+ extern enum uv_system_type get_uv_system_type(void);
+@@ -20,7 +28,7 @@ static inline bool is_early_uv_system(vo
+ 	return uv_systab_phys && uv_systab_phys != EFI_INVALID_TABLE_ADDR;
+ }
+ extern int is_uv_system(void);
+-extern int is_uv_hubless(void);
++extern int is_uv_hubless(int uvtype);
+ extern void uv_cpu_init(void);
+ extern void uv_nmi_init(void);
+ extern void uv_system_init(void);
+@@ -32,7 +40,7 @@ extern const struct cpumask *uv_flush_tl
+ static inline enum uv_system_type get_uv_system_type(void) { return UV_NONE; }
+ static inline bool is_early_uv_system(void)	{ return 0; }
+ static inline int is_uv_system(void)	{ return 0; }
+-static inline int is_uv_hubless(void)	{ return 0; }
++static inline int is_uv_hubless(int uv) { return 0; }
+ static inline void uv_cpu_init(void)	{ }
+ static inline void uv_system_init(void)	{ }
+ static inline const struct cpumask *
+--- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
++++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -26,7 +26,7 @@
+ static DEFINE_PER_CPU(int, x2apic_extra_bits);
+ 
+ static enum uv_system_type	uv_system_type;
+-static bool			uv_hubless_system;
++static int			uv_hubless_system;
+ static u64			gru_start_paddr, gru_end_paddr;
+ static u64			gru_dist_base, gru_first_node_paddr = -1LL, gru_last_node_paddr;
+ static u64			gru_dist_lmask, gru_dist_umask;
+@@ -268,11 +268,20 @@ static int __init uv_acpi_madt_oem_check
+ 	uv_stringify(sizeof(oem_table_id), oem_table_id, _oem_table_id);
+ 
+ 	if (strncmp(oem_id, "SGI", 3) != 0) {
+-		if (strncmp(oem_id, "NSGI", 4) == 0) {
+-			uv_hubless_system = true;
+-			pr_info("UV: OEM IDs %s/%s, HUBLESS\n",
+-				oem_id, oem_table_id);
+-		}
++		if (strncmp(oem_id, "NSGI", 4) != 0)
++			return 0;
++
++		/* UV4 Hubless, CH, (0x11:UV4+Any) */
++		if (strncmp(oem_id, "NSGI4", 5) == 0)
++			uv_hubless_system = 0x11;
++
++		/* UV3 Hubless, UV300/MC990X w/o hub (0x9:UV3+Any) */
++		else
++			uv_hubless_system = 0x9;
++
++		pr_info("UV: OEM IDs %s/%s, HUBLESS(0x%x)\n",
++			oem_id, oem_table_id, uv_hubless_system);
++
+ 		return 0;
+ 	}
+ 
+@@ -350,9 +359,9 @@ int is_uv_system(void)
+ }
+ EXPORT_SYMBOL_GPL(is_uv_system);
+ 
+-int is_uv_hubless(void)
++int is_uv_hubless(int uvtype)
+ {
+-	return uv_hubless_system;
++	return (uv_hubless_system & uvtype);
+ }
+ EXPORT_SYMBOL_GPL(is_uv_hubless);
+ 
+@@ -1592,7 +1601,7 @@ static void __init uv_system_init_hub(vo
+  */
+ void __init uv_system_init(void)
+ {
+-	if (likely(!is_uv_system() && !is_uv_hubless()))
++	if (likely(!is_uv_system() && !is_uv_hubless(1)))
+ 		return;
+ 
+ 	if (is_uv_system())
 
 -- 
-Jiri Kosina
-SUSE Labs
-
