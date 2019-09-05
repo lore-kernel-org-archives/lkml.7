@@ -2,138 +2,127 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96972C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46D6C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBFC22CEC
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:17:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TmAHYZxq"
+	by mail.kernel.org (Postfix) with ESMTP id 8D98F21883
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388306AbfIELRo (ORCPT
+        id S1732748AbfIELTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:17:44 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33835 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388292AbfIELRn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:17:43 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x18so2068627ljh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:17:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FZQLTiI56V9ejCTERxmKEuoyOsqpXI4ROWUat/u48IQ=;
-        b=TmAHYZxqRc6xu2le8iULfxikI7ku0uT9OqruTeiVIjBtHlSUVtr7xfmu4YCFlsjTOs
-         Rhq1GYmaO5KwXBXGMlzcAxQ/LcO6e9A60OIH5XcxDVVNn2uwqfJXj5l04xQJTBjas8S+
-         rezhJDHHi4QSeAmUuvBdnaXdMHr6k1YEDw8fQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FZQLTiI56V9ejCTERxmKEuoyOsqpXI4ROWUat/u48IQ=;
-        b=HDPBrfZla1c+CKyYE8oZ+E+5YF7vZbtvGbz5xd1dolGvzpPoFwYHyE0hQ7hGMUJI0R
-         BvhN0iv8k84A6qqcgrhyQIFAu2lOxcU/YAqqw0O+9V2z+/0u3Agl6FA5saDrN0/+7Kke
-         oy4/7xD5TF9Hd4GCh0V30tkfX+IWahGLwlHCJL+BRm+UpOVrOsU85RzljoxuDN6s5+ZX
-         n4U1XeM+O+5lJQ0QKqX7ZghSA/wX6D4QvSry5qmFZQGMyRXu+p6EmAyLxTQyJ3p6Xgho
-         jUT1aiOgkhUPmqsGngFQR0pnOhZrZ2rJC3P/bU4dzmOVw6A9G0phwYdaaB+Db5oxCHKs
-         T9jg==
-X-Gm-Message-State: APjAAAXPvGMP4DUHKCp2SO6lGbgJL0XxLA7e/WpZB5S4Mv+0+3V4qIYn
-        CVSJ3rEQM9TgawUuX0ZAmhLarw==
-X-Google-Smtp-Source: APXvYqy+jIyWA4s/Awrv2CCVQWWEoIb0eYt4SAhqVoZ9KSv6Iim6pns0uTxVPV5vb5IsmAlCA9M4vg==
-X-Received: by 2002:a2e:5418:: with SMTP id i24mr1705390ljb.126.1567682261376;
-        Thu, 05 Sep 2019 04:17:41 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id l3sm377157lfc.31.2019.09.05.04.17.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 04:17:40 -0700 (PDT)
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905110544.d6c5t7rx25kvywmi@wittgenstein>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <ae415ea8-4442-d81c-3b46-2ae5fb35bbdf@rasmusvillemoes.dk>
-Date:   Thu, 5 Sep 2019 13:17:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 07:19:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:42418 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726073AbfIELTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:19:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DE8E28;
+        Thu,  5 Sep 2019 04:18:59 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C984F3F718;
+        Thu,  5 Sep 2019 04:18:57 -0700 (PDT)
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <20190905083127.GA2332@hirez.programming.kicks-ass.net> <87r24v2i14.fsf@arm.com> <20190905104616.GD2332@hirez.programming.kicks-ass.net>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+In-reply-to: <20190905104616.GD2332@hirez.programming.kicks-ass.net>
+Date:   Thu, 05 Sep 2019 12:18:55 +0100
+Message-ID: <87imq72dpc.fsf@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905110544.d6c5t7rx25kvywmi@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 13.05, Christian Brauner wrote:
-> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
 
->> +	if (unlikely(!access_ok(dst, usize)))
->> +		return -EFAULT;
->> +
->> +	/* Deal with trailing bytes. */
->> +	if (usize < ksize) {
->> +		if (memchr_inv(src + size, 0, rest))
->> +			return -EFBIG;
->> +	} else if (usize > ksize) {
->> +		if (__memzero_user(dst + size, rest))
->> +			return -EFAULT;
-> 
-> Is zeroing that memory really our job? Seems to me we should just check
-> it is zeroed.
+On Thu, Sep 05, 2019 at 11:46:16 +0100, Peter Zijlstra wrote...
 
-Of course it is, otherwise you'd require userspace to clear the output
-buffer it gives us, which in the majority of cases is wasted work. It's
-much easier to reason about if we just say "the kernel populates [uaddr,
-uaddr + usize)".
+> On Thu, Sep 05, 2019 at 10:45:27AM +0100, Patrick Bellasi wrote:
+>
+>> > From just reading the above, I would expect it to have the range
+>> > [-20,19] just like normal nice. Apparently this is not so.
+>> 
+>> Regarding the range for the latency-nice values, I guess we have two
+>> options:
+>> 
+>>   - [-20..19], which makes it similar to priorities
+>>   downside: we quite likely end up with a kernel space representation
+>>   which does not match the user-space one, e.g. look at
+>>   task_struct::prio.
+>> 
+>>   - [0..1024], which makes it more similar to a "percentage"
+>> 
+>> Being latency-nice a new concept, we are not constrained by POSIX and
+>> IMHO the [0..1024] scale is a better fit.
+>> 
+>> That will translate into:
+>> 
+>>   latency-nice=0 : default (current mainline) behaviour, all "biasing"
+>>   policies are disabled and we wakeup up as fast as possible
+>> 
+>>   latency-nice=1024 : maximum niceness, where for example we can imaging
+>>   to turn switch a CFS task to be SCHED_IDLE?
+>
+> There's a few things wrong there; I really feel that if we call it nice,
+> it should be like nice. Otherwise we should call it latency-bias and not
+> have the association with nice to confuse people.
+>
+> Secondly; the default should be in the middle of the range. Naturally
+> this would be a signed range like nice [-(x+1),x] for some x. but if you
+> want [0,1024], then the default really should be 512, but personally I
+> like 0 better as a default, in which case we need negative numbers.
+>
+> This is important because we want to be able to bias towards less
+> importance to (tail) latency as well as more importantance to (tail)
+> latency.
+>
+> Specifically, Oracle wants to sacrifice (some) latency for throughput.
+> Facebook OTOH seems to want to sacrifice (some) throughput for latency.
 
-It's completely symmetric to copy_struct_from_user doing a memset() of
-the tail of the kernel buffer in case of ksize>usize - you wouldn't want
-to require the kernel callers to pass a zeroed buffer to
-copy_struct_from_user() - it's just that when we memset(__user*),
-there's an error check to do.
+Right, we have this dualism to deal with and current mainline behaviour
+is somehow in the middle.
 
-Rasmus
+BTW, the FB requirement is the same we have in Android.
+We want some CFS tasks to have very small latency and a low chance
+to be preempted by the wake-up of less-important "background" tasks.
+
+I'm not totally against the usage of a signed range, but I'm thinking
+that since we are introducing a new (non POSIX) concept we can get the
+chance to make it more human friendly.
+
+Give the two extremes above, would not be much simpler and intuitive to
+have 0 implementing the FB/Android (no latency) case and 1024 the
+(max latency) Oracle case?
+
+Moreover, we will never match completely the nice semantic, give that
+a 1 nice unit has a proper math meaning, isn't something like 10% CPU
+usage change for each step?
+
+For latency-nice instead we will likely base our biasing strategies on
+some predefined (maybe system-wide configurable) const thresholds.
+
+Could changing the name to "latency-tolerance" break the tie by marking
+its difference wrt prior/nice levels? AFAIR, that was also the original
+proposal [1] by PaulT during the OSPM discussion.
+
+Best,
+Patrick
+
+[1] https://youtu.be/oz43thSFqmk?t=1302
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
