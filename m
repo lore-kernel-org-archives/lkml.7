@@ -2,138 +2,97 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AFFC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD49C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E36D620870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF0F206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:54:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L0jomP63"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390123AbfIEOxs (ORCPT
+        id S2390136AbfIEOyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:53:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47076 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726080AbfIEOxr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:53:47 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A22CFA20C1A2DEF0BBF8;
-        Thu,  5 Sep 2019 22:53:43 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 22:53:34 +0800
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     Marc Zyngier <maz@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
- <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
- <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
- <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
- <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
- <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
- <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
- <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
- <ecdb638b-d5d3-efdc-becd-478ce6e6ff96@huawei.com>
- <e3a4a04a-4669-5a03-5115-84c6573b99e9@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <d48c9e64-2a65-45a5-c61e-b69505531b1e@huawei.com>
-Date:   Thu, 5 Sep 2019 15:53:29 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Thu, 5 Sep 2019 10:54:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41616 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390090AbfIEOyc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:54:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=s6tAAQYhXVNkbT0qRFk7hwIqccKZKc+HllFbPMAhXzQ=; b=L0jomP63rgBFMv/c20KdK1HHI
+        na/AFiiTkpvGZuPuT6Gypw9honlxILA27VWorgleWFoB/8nMjgSKel7vSdDzdLVpNOfptyQdop144
+        wLK0UjdZXIb4HkM1tOBTi0XvjXCitR7WI6YiFycciC9jDjRsIMAggvjUbQcLHiG9cCUqmmnnH9KVY
+        6su+2m9aQoaZAsc2+vMB/qQXgmZOFEeCiWRT+sAeNNFGd9uiZ4l66D5vMgrjH5PShjQJQ3MIbzyWv
+        aHzbbkFtlvVo7Vo9L+P+z+Z6mbb6qPScQCzbAKeREG0DWBQ0tE36Ce29Eo51LIVUfjo4Robd1OKq/
+        mfkyuGXQQ==;
+Received: from [2601:1c0:6200:6e8::e2a8]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5t9a-0001B5-D4; Thu, 05 Sep 2019 14:54:30 +0000
+Subject: Re: linux-next: Tree for Sep 4 (amd/display/)
+To:     Harry Wentland <hwentlan@amd.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>
+References: <20190904233443.3f73c46b@canb.auug.org.au>
+ <6b70fdfd-1f18-1e55-2574-7be5997cfb2a@infradead.org>
+ <752f74d6-f6ff-6013-25ad-a8fdce934d17@amd.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d29463cd-0497-41f2-a502-110b02c7abc8@infradead.org>
+Date:   Thu, 5 Sep 2019 07:54:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <e3a4a04a-4669-5a03-5115-84c6573b99e9@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+In-Reply-To: <752f74d6-f6ff-6013-25ad-a8fdce934d17@amd.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/5/19 6:17 AM, Harry Wentland wrote:
+> 
+> 
+> On 2019-09-04 4:58 p.m., Randy Dunlap wrote:
+>> On 9/4/19 6:34 AM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> News: this will be the last linux-next I will release until Sept 30.
+>>>
+>>> Changes since 20190903:
+>>>
+>>
+>> on x86_64:
+>>
+>> In file included from ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/display_rq_dlg_calc_20v2.c:77:0:
+>> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.h: In function ‘dml_min’:
+>> ../drivers/gpu/drm/amd/amdgpu/../display/dc/dml/dcn20/../dml_inline_defs.h:34:1: error: SSE register return with SSE disabled
+>>
+> 
+> Is that fixed by Stephen's fixup here?
+> 
+> https://lists.freedesktop.org/archives/dri-devel/2019-September/234292.html
 
->> >
->> > root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/unbind
->> >
->> > <snip>
->> >
->> > [   34.806156] Freed devid 7410 LPI 0
->> > [   34.809555] Freed devid 7410 LPI 0
->> > [   34.812951] Freed devid 7410 LPI 0
->> > [   34.816344] Freed devid 7410 LPI 0
->> > [   34.819734] Freed devid 7410 LPI 0
->> > [   34.823122] Freed devid 7410 LPI 0
->> > [   34.826512] Freed devid 7410 LPI 0
->> > [   34.829901] Freed devid 7410 LPI 0
->> > [   34.833291] Freed devid 7410 LPI 0
->> > [   34.836680] Freed devid 7410 LPI 0
->> > [   34.840071] Freed devid 7410 LPI 0
->> > [   34.843461] Freed devid 7410 LPI 0
->> > [   34.846848] Freed devid 7410 LPI 0
->> > [   34.850238] Freed devid 7410 LPI 0
->> > [   34.853627] Freed devid 7410 LPI 0
->> > [   34.857017] Freed devid 7410 LPI 0
->> > [   34.860406] Freed devid 7410 LPI 0
->> > [   34.863797] Unmap devid 7410 shared 0 lpi_map
->> > [   34.868229] Unmap devid 7410
->> > root@(none)$
->> > root@(none)$
->> > root@(none)$ echo 0000:74:02.0 > ./sys/bus/pci/drivers/hisi_sas_v3_hw/bind
->> > [   39.158802] scsi host0: hisi_sas_v3_hw
->> > [   40.383384] ITS: alloc 9920:32
->> > [   40.386429] ITT 32 entries, 5 bits
->> > [   40.389970] ID:0 pID:9920 vID:23
->> > [   40.393188] ID:1 pID:9921 vID:24
->> > [   40.396404] ID:2 pID:9922 vID:25
->> > [   40.399621] ID:3 pID:9923 vID:26
->> > [   40.402836] ID:4 pID:9924 vID:27
->> > [   40.406053] ID:5 pID:9925 vID:28
->> > [   40.409269] ID:6 pID:9926 vID:29
->> > [   40.412485] ID:7 pID:9927 vID:30
->> > [   40.415702] ID:8 pID:9928 vID:31
->> > [   40.418916] ID:9 pID:9929 vID:32
->> > [   40.422132] ID:10 pID:9930 vID:33
->> > [   40.425435] ID:11 pID:9931 vID:34
->> > [   40.428739] ID:12 pID:9932 vID:35
->> > [   40.432042] ID:13 pID:9933 vID:36
->> > [   40.435345] ID:14 pID:9934 vID:37
->> > [   40.438648] ID:15 pID:9935 vID:38
->> > [   40.441951] ID:16 pID:9936 vID:39
->> >
->> >
->> > <snip>
-> Awesome. Can I take this as a Tested-by?
+That patch is already in linux-next, so No, it's not.
 
-Sure, btw, could you please also add:
-
-Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
-
-... as he did initial discovery and analysis on the problem.
+I am using:
+> gcc --version
+gcc (SUSE Linux) 7.4.1 20190424 [gcc-7-branch revision 270538]
 
 
->
->> > Btw, I hacked the "Freed devid %x event %d LPI %ld\n" print to remove
->> > the "event" value, as you may have noticed.
-> Yup, not meaningful for the problem at hand.
->
-> Thanks again for your help!
->
-
-Thanks for the help,
-John
-
-> 	M.
-
-
+-- 
+~Randy
