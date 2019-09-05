@@ -2,225 +2,71 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D2EC3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DF3C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E607420882
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B9E206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730651AbfIECX0 (ORCPT
+        id S1730710AbfIECaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:23:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:12819 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbfIECXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:23:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 19:23:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,469,1559545200"; 
-   d="scan'208";a="173781825"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 04 Sep 2019 19:23:24 -0700
-Received: from [10.226.39.8] (leichuan-mobl.gar.corp.intel.com [10.226.39.8])
-        by linux.intel.com (Postfix) with ESMTP id DAFA658046E;
-        Wed,  4 Sep 2019 19:23:20 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
-From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
-Message-ID: <54ec6a30-69d8-a4af-95fa-2f457d605142@linux.intel.com>
-Date:   Thu, 5 Sep 2019 10:23:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Wed, 4 Sep 2019 22:30:06 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:51400 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730074AbfIECaG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:30:06 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07812042|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0543389-0.00436749-0.941294;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.FOxzzyz_1567650603;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.FOxzzyz_1567650603)
+          by smtp.aliyun-inc.com(10.147.42.197);
+          Thu, 05 Sep 2019 10:30:03 +0800
+Date:   Thu, 5 Sep 2019 10:30:02 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org
+Subject: Re: [PATCH V6 1/3] riscv: Add perf callchain support
+Message-ID: <20190905023002.GA3949@vmh-VirtualBox>
+References: <cover.1567060834.git.han_mao@c-sky.com>
+ <86d18d80affc39cf9579a24f1beb7c8631cfa9bd.1567060834.git.han_mao@c-sky.com>
+ <alpine.DEB.2.21.9999.1909041247560.13502@viisi.sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1909041247560.13502@viisi.sifive.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dilip,
+On Wed, Sep 04, 2019 at 12:54:41PM -0700, Paul Walmsley wrote:
+> Hello Mao Han,
+> 
+> On Thu, 29 Aug 2019, Mao Han wrote:
+> 
+> > This patch add support for perf callchain sampling on riscv platform.
+> > The return address of leaf function is retrieved from pt_regs as
+> > it is not saved in the outmost frame.
+> > 
+> > Signed-off-by: Mao Han <han_mao@c-sky.com>
+> > Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> > Cc: Greentime Hu <green.hu@gmail.com>
+> > Cc: Palmer Dabbelt <palmer@sifive.com>
+> > Cc: linux-riscv <linux-riscv@lists.infradead.org>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Guo Ren <guoren@kernel.org>
+> 
+> There are some 'checkpatch.pl --strict' warnings with this patch (below).  
+> These have been fixed here.  The following patch has been queued for 
+> v5.4-rc1 with Greentime's Tested-by:.  Thanks for your hard work following 
+> up on the feedback with these patches -
+Thanks for the fixes. I'll check patches with --strict next time.
 
-On 9/4/2019 6:10 PM, Dilip Kota wrote:
-> The Intel PCIe RC controller is Synopsys Designware
-> based PCIe core. Add YAML schemas for PCIe in RC mode
-> present in Intel Universal Gateway soc.
->
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
-> changes on v3:
-> 	Add the appropriate License-Identifier
-> 	Rename intel,rst-interval to 'reset-assert-us'
-rst->interval to reset-assert-ms(should be typo error)
-> 	Add additionalProperties: false
-> 	Rename phy-names to 'pciephy'
-> 	Remove the dtsi node split of SoC and board in the example
-> 	Add #interrupt-cells = <1>; or else interrupt parsing will fail
-> 	Name yaml file with compatible name
->
->   .../devicetree/bindings/pci/intel,lgm-pcie.yaml    | 137 +++++++++++++++++++++
->   1 file changed, 137 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
-> new file mode 100644
-> index 000000000000..5e5cc7fd66cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
-> @@ -0,0 +1,137 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel AXI bus based PCI express root complex
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pcie
-> +
-> +  device_type:
-> +    const: pci
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  reg:
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe configuration registers.
-> +      - description: Controller application registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: config
-> +      - const: app
-> +
-> +  ranges:
-> +    description: Ranges for the PCI memory and I/O regions.
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: PCIe registers interface clock.
-> +
-> +  phys:
-> +    maxItems: 1
-> +
-> +  phy-names:
-> +    const: pciephy
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +
-> +  num-lanes:
-> +    description: Number of lanes to use for this port.
-> +
-> +  linux,pci-domain:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: PCI domain ID.
-> +
-> +  interrupts:
-> +    description: PCIe core integrated miscellaneous interrupt.
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  interrupt-map-mask:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  interrupt-map:
-> +    description: Standard PCI IRQ mapping properties.
-> +
-> +  max-link-speed:
-> +    description: Specify PCI Gen for link capability.
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-> +
-> +  reset-assert-ms:
-> +    description: |
-> +      Device reset interval in ms.
-> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-> +  - linux,pci-domain
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-> +      compatible = "intel,lgm-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <
-> +            0xd0e00000 0x1000
-> +            0xd2000000 0x800000
-> +            0xd0a41000 0x1000
-> +            >;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      interrupts = <67 1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
-> +      resets = <&rcu0 0x50 0>;
-> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
-> +      phys = <&cb0phy0>;
-> +      phy-names = "pciephy";
-> +      status = "okay";
-> +      reset-assert-ms = <500>;
-> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
-> +      num-lanes = <2>;
-> +    };
+Thanks,
+Mao Han
