@@ -2,153 +2,251 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6711DC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBACC3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E08521743
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567672692;
-	bh=0P3K55PEd36SxcI4Sg0an6PxdPdJYTbQsleCLdTdI8k=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=KRaOCQU0VKHCWxbVxUqiAecx78CBoQ46brDnHMGzHFYDSObk/l7/FW2n4Li9rjuAD
-	 VmRe8YMNYxUwQB5w7aF8U5Zi/Dr0NsCZLJ64XkNLntj3KoAP4K63Qk1CpuvDgVbExY
-	 Ul0FPyfsu1CQZAYscwoZ6ZwrlMUFHzuzWuqiC3M0=
+	by mail.kernel.org (Postfix) with ESMTP id 4A3C821743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:38:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oIMK4PjL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732722AbfIEIiL (ORCPT
+        id S1732730AbfIEIiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:38:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:39428 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730914AbfIEIiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:38:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C9A5337;
-        Thu,  5 Sep 2019 01:38:10 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14D713F67D;
-        Thu,  5 Sep 2019 01:38:08 -0700 (PDT)
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     Andrew Murray <andrew.murray@arm.com>,
-        John Garry <john.garry@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
-Date:   Thu, 5 Sep 2019 09:38:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 04:38:20 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:63658 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730914AbfIEIiT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:38:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1567672696; x=1599208696;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=JoB5AyJPXadZzdhXc+cFYRaaNL2nQ/XdAjAVfNiK2KA=;
+  b=oIMK4PjLDnLOsgwEoEXlSURrPsxr1v8Plc3z5qnoV/x3x69bFfSJGeAF
+   uIFPn4sqwHGWGoRgKFJUzPorWRjwHvy1iGTogWxxIY/dffs8nurWTmvHi
+   DPiXmg84UsBsRDvxQ9ciH66faVo0EMLp7G2C6+GLnE6h4kMjr3r7v6qHY
+   o=;
+X-IronPort-AV: E=Sophos;i="5.64,470,1559520000"; 
+   d="scan'208";a="749148804"
+Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.124.125.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 Sep 2019 08:38:14 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 1092DA26EA;
+        Thu,  5 Sep 2019 08:38:15 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Sep 2019 08:38:14 +0000
+Received: from ua9e4f3715fbc5f.ant.amazon.com (10.43.161.154) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 5 Sep 2019 08:38:08 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <james.morse@arm.com>
+CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <hhhawa@amazon.com>
+Subject: [PATCH 1/1] edac: Add an API for edac device to report for multiple errors
+Date:   Thu, 5 Sep 2019 09:37:45 +0100
+Message-ID: <20190905083745.6899-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.154]
+X-ClientProxiedBy: EX13d09UWA001.ant.amazon.com (10.43.160.247) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2019 11:25, Andrew Murray wrote:
-> On Wed, Sep 04, 2019 at 09:56:51AM +0100, John Garry wrote:
->> On 03/09/2019 17:16, Marc Zyngier wrote:
->>> Hi John,
->>>
->>> On 03/09/2019 15:09, John Garry wrote:
->>>> Hi Marc, Bjorn, Thomas,
->>
->> Hi Marc,
->>
->>>>
->>>> We've come across a conflict with the kernel/pci msi code and GIC ITS
->>>> driver on our arm64 system, whereby we can't unbind and re-bind a PCI
->>>> device driver under special conditions. I'll explain...
->>>>
->>>> Our PCI device support 32 MSIs. The driver attempts to allocate msi
->>>> vectors with min msi=17, max msi = 32, and affd.pre vectors = 16. For
->>>> our test we make nr_cpus = 1 (just anything less than 16).
->>>
->>> Just to confirm: this PCI device is requiring Multi-MSI, right? As
->>> opposed to MSI-X?
->>
->> Right, Multi-MSI.
->>
->>>
->>>> We find that the pci/kernel msi code gives us 17 vectors, but the GIC
->>>> ITS code reserves 32 lpi maps in its_irq_domain_alloc(). The problem
->>>> then occurs when unbinding the driver in its_irq_domain_free() call,
->>>> where we only clear bits for 17 vectors. So if we unbind the driver and
->>>> then attempt to bind again, it fails.
->>>
->>> Is this device, by any chance, sharing its requested-id with another
->>> device? By being behind a bridge of some sort?There is some code to
->>> deal with it, but I'm not sure it has ever been verified in anger...
->>
->> It's a RC iEP and there should be no requested-id sharing:
->>
->> root@ubuntu:/home/john#  lspci -s 74:02.0 -v
->> 74:02.0 Serial Attached SCSI controller: Huawei Technologies Co., Ltd.
->> HiSilicon SAS 3.0 HBA (rev 20)
->> Flags: bus master, fast devsel, latency 0, IRQ 23, NUMA node 0
->> Memory at a2000000 (32-bit, non-prefetchable) [size=32K]
->> Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
->> Capabilities: [80] MSI: Enable+ Count=32/32 Maskable+ 64bit+
->> Capabilities: [b0] Power Management version 3
->> Kernel driver in use: hisi_sas_v3_hw
->>
->>>
->>>> Where the fault lies, I can't say. Maybe the kernel msi code should
->>>> always give power of 2 vectors - as I understand, the PCI spec mandates
->>>> this. Or maybe the GIC ITS driver has a problem in the free path, as
->>>> above. Or maybe the PCI driver should not be allowed to request !power
->>>> of 2 min/max vectors.
->>>>
->>>> Opinion?
->>>
->>> My hunch is that it is an ITS driver bug: the PCI layer is allowed to
->>> give any number of MSIs to an endpoint driver, as long as they match the
->>> requirements of the allocation for Multi-MSI.
->>
->> I would tend to say that, but isn't the requirement to allocate power of 2
->> msi vectors, which doesn't seem to be enforced in the kernel msi layer?
-> 
-> For a PCI device that supports MSI but not MSI-X - my understanding is that
-> pci_alloc_irq_vectors_affinity and pci_alloc_irq_vectors will request *from
-> the device* a power of 2 msi vectors between the min and max given by the
-> driver - msi_setup_entry rounds up to nearest power of 2.
-> 
-> However this doesn't guarantee that pci_alloc_irq_vectors will return a
-> power of 2. For example if you set maxvec to 17, then it will request
-> 32 from the device and pci_alloc_irq_vectors will return 17 (i.e. it satisfies
-> your request by over allocating, but still gives you what you asked for).
-> 
-> I'm not yet familiar with ITS, however if it is reserving 32 yet you only
-> clear 17, then there is mismatch between the number actually reserved from
-> the hardware, and the value returned from pci_alloc_irq_vectors.
-> 
-> (It looks like its_alloc_device_irq rounds up to the nearest power of 2).
+Add an API for edac device to report multiple errors with same type.
 
-That's a "feature" of the architecture. The ITT is sized by the number
-of bits used to index the table, meaning that you can only describe a
-power of two >= 2.
+Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+---
+ drivers/edac/edac_device.c | 66 +++++++++++++++++++++++++++++---------
+ drivers/edac/edac_device.h | 31 ++++++++++++++++--
+ 2 files changed, 79 insertions(+), 18 deletions(-)
 
-John, could you stick a "#define DEBUG 1" at the top of irq-gic-v3-its.c
-and report the LPI allocations for this device?
-
-Thanks,
-
-	M.
+diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+index 65cf2b9355c4..bf6a4fd9831b 100644
+--- a/drivers/edac/edac_device.c
++++ b/drivers/edac/edac_device.c
+@@ -555,12 +555,15 @@ static inline int edac_device_get_panic_on_ue(struct edac_device_ctl_info
+ 	return edac_dev->panic_on_ue;
+ }
+ 
+-void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+-			int inst_nr, int block_nr, const char *msg)
++static void __edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
++			   u16 error_count, int inst_nr, int block_nr,
++			   const char *msg)
+ {
+ 	struct edac_device_instance *instance;
+ 	struct edac_device_block *block = NULL;
+ 
++	WARN_ON(!error_count);
++
+ 	if ((inst_nr >= edac_dev->nr_instances) || (inst_nr < 0)) {
+ 		edac_device_printk(edac_dev, KERN_ERR,
+ 				"INTERNAL ERROR: 'instance' out of range "
+@@ -582,27 +585,44 @@ void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+ 
+ 	if (instance->nr_blocks > 0) {
+ 		block = instance->blocks + block_nr;
+-		block->counters.ce_count++;
++		block->counters.ce_count += error_count;
+ 	}
+ 
+ 	/* Propagate the count up the 'totals' tree */
+-	instance->counters.ce_count++;
+-	edac_dev->counters.ce_count++;
++	instance->counters.ce_count += error_count;
++	edac_dev->counters.ce_count += error_count;
+ 
+ 	if (edac_device_get_log_ce(edac_dev))
+ 		edac_device_printk(edac_dev, KERN_WARNING,
+-				"CE: %s instance: %s block: %s '%s'\n",
++				"CE: %s instance: %s block: %s count: %d '%s'\n",
+ 				edac_dev->ctl_name, instance->name,
+-				block ? block->name : "N/A", msg);
++				block ? block->name : "N/A", error_count, msg);
++}
++
++void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
++			   int inst_nr, int block_nr, const char *msg)
++{
++	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
+ }
+ EXPORT_SYMBOL_GPL(edac_device_handle_ce);
+ 
+-void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+-			int inst_nr, int block_nr, const char *msg)
++void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
++				 u16 error_count, int inst_nr, int block_nr,
++				 const char *msg)
++{
++	__edac_device_handle_ce(edac_dev, error_count, inst_nr, block_nr, msg);
++}
++EXPORT_SYMBOL_GPL(edac_device_handle_ce_count);
++
++static void __edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
++			   u16 error_count, int inst_nr, int block_nr,
++			   const char *msg)
+ {
+ 	struct edac_device_instance *instance;
+ 	struct edac_device_block *block = NULL;
+ 
++	WARN_ON(!error_count);
++
+ 	if ((inst_nr >= edac_dev->nr_instances) || (inst_nr < 0)) {
+ 		edac_device_printk(edac_dev, KERN_ERR,
+ 				"INTERNAL ERROR: 'instance' out of range "
+@@ -624,22 +644,36 @@ void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+ 
+ 	if (instance->nr_blocks > 0) {
+ 		block = instance->blocks + block_nr;
+-		block->counters.ue_count++;
++		block->counters.ue_count += error_count;
+ 	}
+ 
+ 	/* Propagate the count up the 'totals' tree */
+-	instance->counters.ue_count++;
+-	edac_dev->counters.ue_count++;
++	instance->counters.ue_count += error_count;
++	edac_dev->counters.ue_count += error_count;
+ 
+ 	if (edac_device_get_log_ue(edac_dev))
+ 		edac_device_printk(edac_dev, KERN_EMERG,
+-				"UE: %s instance: %s block: %s '%s'\n",
++				"UE: %s instance: %s block: %s count: %d '%s'\n",
+ 				edac_dev->ctl_name, instance->name,
+-				block ? block->name : "N/A", msg);
++				block ? block->name : "N/A", error_count, msg);
+ 
+ 	if (edac_device_get_panic_on_ue(edac_dev))
+-		panic("EDAC %s: UE instance: %s block %s '%s'\n",
++		panic("EDAC %s: UE instance: %s block %s count: %d '%s'\n",
+ 			edac_dev->ctl_name, instance->name,
+-			block ? block->name : "N/A", msg);
++			block ? block->name : "N/A", error_count, msg);
++}
++
++void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
++			   int inst_nr, int block_nr, const char *msg)
++{
++	__edac_device_handle_ue(edac_dev, 1, inst_nr, block_nr, msg);
+ }
+ EXPORT_SYMBOL_GPL(edac_device_handle_ue);
++
++void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
++				 u16 error_count, int inst_nr, int block_nr,
++				 const char *msg)
++{
++	__edac_device_handle_ue(edac_dev, error_count, inst_nr, block_nr, msg);
++}
++EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
+diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
+index 1aaba74ae411..c8dc83eda64f 100644
+--- a/drivers/edac/edac_device.h
++++ b/drivers/edac/edac_device.h
+@@ -287,7 +287,7 @@ extern struct edac_device_ctl_info *edac_device_del_device(struct device *dev);
+ 
+ /**
+  * edac_device_handle_ue():
+- *	perform a common output and handling of an 'edac_dev' UE event
++ *	perform a common output and handling of an 'edac_dev' single UE event
+  *
+  * @edac_dev: pointer to struct &edac_device_ctl_info
+  * @inst_nr: number of the instance where the UE error happened
+@@ -298,7 +298,7 @@ extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+ 				int inst_nr, int block_nr, const char *msg);
+ /**
+  * edac_device_handle_ce():
+- *	perform a common output and handling of an 'edac_dev' CE event
++ *	perform a common output and handling of an 'edac_dev' single CE event
+  *
+  * @edac_dev: pointer to struct &edac_device_ctl_info
+  * @inst_nr: number of the instance where the CE error happened
+@@ -308,6 +308,33 @@ extern void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+ extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+ 				int inst_nr, int block_nr, const char *msg);
+ 
++/**
++ * edac_device_handle_ue_count():
++ *	perform a common output and handling of an 'edac_dev'
++ *
++ * @edac_dev: pointer to struct &edac_device_ctl_info
++ * @error_count: number of errors of the same type
++ * @inst_nr: number of the instance where the UE error happened
++ * @block_nr: number of the block where the UE error happened
++ * @msg: message to be printed
++ */
++extern void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
++					u16 error_count, int inst_nr,
++					int block_nr, const char *msg);
++/**
++ * edac_device_handle_ce_count():
++ *	perform a common output and handling of an 'edac_dev'
++ *
++ * @edac_dev: pointer to struct &edac_device_ctl_info
++ * @error_count: number of errors of the same type
++ * @inst_nr: number of the instance where the CE error happened
++ * @block_nr: number of the block where the CE error happened
++ * @msg: message to be printed
++ */
++extern void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
++					u16 error_count, int inst_nr,
++					int block_nr, const char *msg);
++
+ /**
+  * edac_device_alloc_index: Allocate a unique device index number
+  *
 -- 
-Jazz is not dead, it just smells funny...
+2.17.1
+
