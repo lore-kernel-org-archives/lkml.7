@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70893C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4656EC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D7D21883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F24D2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:00:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MIlLrbgS"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="MZ1vo3sW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387756AbfIEKAy (ORCPT
+        id S2387773AbfIEKA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:00:54 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:44204 "EHLO
+        Thu, 5 Sep 2019 06:00:57 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:49732 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387592AbfIEKAw (ORCPT
+        by vger.kernel.org with ESMTP id S2387592AbfIEKA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:00:52 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        Thu, 5 Sep 2019 06:00:56 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 47DFFC0DD6;
-        Thu,  5 Sep 2019 10:00:51 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BF8C2C29BA;
+        Thu,  5 Sep 2019 10:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1567677651; bh=Ni9sjBFke5ST6exyzATqN84XzCCoj9ceZGLl4BFE4IY=;
+        t=1567677655; bh=Hd5e4FWS+UlKygYV+pJ0TjvOiFk6XNsxRtjAc94qTX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=MIlLrbgSmKUQ05aYWhiOIFaTIOXKQm/drAB6X9hpRl+V3B4CPuBaGcv/fWmlMcdLi
-         iyZCfvdyfk6AVxSNZ1qlC8Dji5jM9rMbWu2YsceW0Q8DvHtlckMTPzGk9JuufZG3J0
-         oxGSUOZb4jtOnRulUBFS+MaqedwCqVfWFo+VRoltCTKUmI66dygQWGMfzZn9zy3uQB
-         CjBHm3Es5P2CFlZf5rMYcLQmWOMNCmpmX8/zQomBTWKA5iojltBZmo1kCYLmOnMzkM
-         rqr8aklEq+maiYWIipu/XoWHdNEayEA4ihb348I14qBzMZNdExjsgN/jrB28AqSA3n
-         fV5AZoZEybQ1g==
+        b=MZ1vo3sW/wPI1OpakmeAaAyM1I+pluxXz3hhJQbYXfulxarKlaj22QhFcxdnjT4dx
+         /gSE7pjEMvVYjS8tUNFYXo17mky0HGrUfJYDW56DOI6d73xKo0ysQncTiM956GM9HF
+         8UEjFWzj6oSeYMBfs/YsQ5PP28tTJgBRaHtlObIUoChH6AIbCT+zWwHZYLAiSI16AR
+         mQ+5XhsLo3LBZWS/AoYpfojf07xrmPIt4WEVFL2uXdpIPlrU4w6mhuzMWWXGY2n9KT
+         fTBsC3fyRHkOgkcSn2AsQE5SobNVDe0X/tgJ2zTC0vhb0Y6zqBI8rkhwITi5lmOSg7
+         vOTJzA4djQVeQ==
 Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 7B74CA005E;
+        by mailhost.synopsys.com (Postfix) with ESMTP id 8BF84A0064;
         Thu,  5 Sep 2019 10:00:49 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 5E1AC3F3B5;
+        by de02.synopsys.com (Postfix) with ESMTP id 6EB513F3B9;
         Thu,  5 Sep 2019 12:00:49 +0200 (CEST)
 From:   Vitor Soares <Vitor.Soares@synopsys.com>
 To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-i3c@lists.infradead.org
 Cc:     bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         pgaj@cadence.com, Joao.Pinto@synopsys.com,
-        Vitor Soares <Vitor.Soares@synopsys.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v3 2/5] i3c: master: make sure ->boardinfo is initialized in add_i3c_dev_locked()
-Date:   Thu,  5 Sep 2019 12:00:35 +0200
-Message-Id: <ed18fd927b5759a6a1edb351113ceca615283189.1567608245.git.vitor.soares@synopsys.com>
+        Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: [PATCH v3 3/5] dt-bindings: i3c: Make 'assigned-address' valid if static address == 0
+Date:   Thu,  5 Sep 2019 12:00:36 +0200
+Message-Id: <35e317ef6c9c0c729f713e57a55a2cd8bd55899b.1567608245.git.vitor.soares@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
 References: <cover.1567608245.git.vitor.soares@synopsys.com>
@@ -64,88 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The newdev->boardinfo assignment was missing in
-i3c_master_add_i3c_dev_locked() and hence the ->of_node info isn't
-propagated to i3c_dev_desc.
+The I3C devices without a static address can require a specific dynamic
+address for priority reasons.
 
-Fix this by trying to initialize device i3c_dev_boardinfo if available.
+Let's update the binding document to make the 'assigned-address' property
+valid if static address == 0 and add an example with this use case.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
 Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
 Change in v3:
-  - None
+  - Add Rob rb-tag
 
-Changes in v2:
-  - Change commit message
-  - Change i3c_master_search_i3c_boardinfo(newdev) to
-  i3c_master_init_i3c_dev_boardinfo(newdev)
-  - Add fixes, stable tags
+Change in v2:
+  - Fix typo in commit message
 
- drivers/i3c/master.c | 27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/i3c/i3c.txt | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 586e34f..9fb99bc 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -1798,6 +1798,22 @@ i3c_master_search_i3c_dev_duplicate(struct i3c_dev_desc *refdev)
- 	return NULL;
- }
+diff --git a/Documentation/devicetree/bindings/i3c/i3c.txt b/Documentation/devicetree/bindings/i3c/i3c.txt
+index ab729a0..c851e75 100644
+--- a/Documentation/devicetree/bindings/i3c/i3c.txt
++++ b/Documentation/devicetree/bindings/i3c/i3c.txt
+@@ -98,9 +98,7 @@ Required properties
  
-+static void i3c_master_init_i3c_dev_boardinfo(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *master = i3c_dev_get_master(dev);
-+	struct i3c_dev_boardinfo *boardinfo;
-+
-+	if (dev->boardinfo)
-+		return;
-+
-+	list_for_each_entry(boardinfo, &master->boardinfo.i3c, node) {
-+		if (dev->info.pid == boardinfo->pid) {
-+			dev->boardinfo = boardinfo;
-+			return;
-+		}
-+	}
-+}
-+
- /**
-  * i3c_master_add_i3c_dev_locked() - add an I3C slave to the bus
-  * @master: master used to send frames on the bus
-@@ -1818,8 +1834,9 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
- 				  u8 addr)
- {
- 	struct i3c_device_info info = { .dyn_addr = addr };
--	struct i3c_dev_desc *newdev, *olddev;
- 	u8 old_dyn_addr = addr, expected_dyn_addr;
-+	enum i3c_addr_slot_status addrstatus;
-+	struct i3c_dev_desc *newdev, *olddev;
- 	struct i3c_ibi_setup ibireq = { };
- 	bool enable_ibi = false;
- 	int ret;
-@@ -1878,6 +1895,8 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
- 	if (ret)
- 		goto err_detach_dev;
+ Optional properties
+ -------------------
+-- assigned-address: dynamic address to be assigned to this device. This
+-		    property is only valid if the I3C device has a static
+-		    address (first cell of the reg property != 0).
++- assigned-address: dynamic address to be assigned to this device.
  
-+	i3c_master_init_i3c_dev_boardinfo(newdev);
-+
- 	/*
- 	 * Depending on our previous state, the expected dynamic address might
- 	 * differ:
-@@ -1895,7 +1914,11 @@ int i3c_master_add_i3c_dev_locked(struct i3c_master_controller *master,
- 	else
- 		expected_dyn_addr = newdev->info.dyn_addr;
  
--	if (newdev->info.dyn_addr != expected_dyn_addr) {
-+	addrstatus = i3c_bus_get_addr_slot_status(&master->bus,
-+						  expected_dyn_addr);
-+
-+	if (newdev->info.dyn_addr != expected_dyn_addr &&
-+	    addrstatus == I3C_ADDR_SLOT_FREE) {
+ Example:
+@@ -129,6 +127,15 @@ Example:
+ 
  		/*
- 		 * Try to apply the expected dynamic address. If it fails, keep
- 		 * the address assigned by the master.
+ 		 * I3C device without a static I2C address but requiring
++		 * specific dynamic address.
++		 */
++		sensor@0,39200154004 {
++			reg = <0x0 0x6072 0x303904d2>;
++			assigned-address = <0xb>;
++		};
++
++		/*
++		 * I3C device without a static I2C address but requiring
+ 		 * resources described in the DT.
+ 		 */
+ 		sensor@0,39200154004 {
 -- 
 2.7.4
 
