@@ -2,96 +2,158 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7CDC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C644C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F6720828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22EE621743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:34:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HcCxby0x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sIWDPSa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387466AbfIEJbg (ORCPT
+        id S2387480AbfIEJet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:31:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46110 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731306AbfIEJbg (ORCPT
+        Thu, 5 Sep 2019 05:34:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46038 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731084AbfIEJet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:31:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9RD+YDd+bL9dLE8aDPXeDMgQEDl+xz6cGixfqwcR1Rw=; b=HcCxby0xFotVIfK2DaQ8o2pYU
-        0tWCJ+L+DSDMHFkuNYxZOnExkCtDwDp95W7BxW95bo4qnOFfXxeGEZBLFp9fXgQQ9fHiWs5c23H+u
-        kPjtoeJ5yDaq5o4odJszTQ7iLurIWQPuM5YdjvWbZO8V8DQba7NYVIzZwmXBWmYLPuTAjJugiSPFv
-        mlahJqN6I8Oa0Dia48ONZ/0CZGJn+TR7TJcxxNQP3lvrLbRBAr2bASDQv5ruLvKuT1QE//anFkChN
-        EB4qYQqJfYMyv89CRsK9Sv14WpMYA9u7LrZHiVSgXqnC1NlOyJ2ms7LiloK+JwqvqlpKfZX3dALrb
-        /sGRM0Kkw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5o6z-0002UZ-PM; Thu, 05 Sep 2019 09:31:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 040A0305E47;
-        Thu,  5 Sep 2019 11:30:50 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E064820EFA5D9; Thu,  5 Sep 2019 11:31:27 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 11:31:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     subhra mazumdar <subhra.mazumdar@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com,
-        patrick.bellasi@arm.com
-Subject: Re: [RFC PATCH 7/9] sched: search SMT before LLC domain
-Message-ID: <20190905093127.GI2349@hirez.programming.kicks-ass.net>
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-8-subhra.mazumdar@oracle.com>
+        Thu, 5 Sep 2019 05:34:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l16so1854540wrv.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 02:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=pXNJ5zxAZdffoIhjgeNEzW79E8dcv18vdpXa7euQmqw=;
+        b=sIWDPSa762NqP0jAqYvtDgXKYGJDvi3INGD/xgBdvJFSKvCGi0oicG9EtoYeblRFIH
+         VbYG3uNcqdBzCiaVs5YAHpMFhVsfpQ5Y7jzBuGrP5uP5ndrIhK8RvE5YB+TqjCT/Pqee
+         o2FnNt245G4HhUbLeNVwmiC0gfkWavIs1JKKYUG+hVq/G+eqJczbl1u7eBjWvPiOsGRE
+         qTD0JVm4lLDxG79xIOJhVLLVOvDQPs+hAH++0sIRB2xNadNOmlTg9VP8ih5lUr1YUUTP
+         OP4YiTMiqAe4xI/yI2VK1PRF7lq9AyltPtunxBiWSqv06+MVn60oLAw8qnWkclrJnzWI
+         rbqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pXNJ5zxAZdffoIhjgeNEzW79E8dcv18vdpXa7euQmqw=;
+        b=ZsqcjrzQapAhxe7VDqjUh0MhfKtHDHBnMXz6YuTVOUcm0W0VXTVCi8tom+//n+aweE
+         PC000O+8DS/SskGJpbwNoCsqBYCMmgpvEqLWLDunJE5n+hMNphiAkSl9kUSrXYGNSRyF
+         W6mdCIJeVqhrSx3s2vwMQ4aqgkpz8uwJJsGLWaUJ9HGhBfnzyl/e5Oytwu1/H1GFLkRn
+         XbOh6srSURI2sqo8Z+a6dCrwY441G61lbjacQA9DozbbHPCqDlTei4ghzUop2rESctbC
+         MuuGOTyORpmdKA91WdGZSr+Am6iXBDYicTyRmMbU+F/9XMHDG1VRFU89dO1JBjf6bi7Y
+         EYzw==
+X-Gm-Message-State: APjAAAXeczqeap7oR/xyaIeORo3tm0qQpJJbfEKFyLx9ZS2AdvSiNzAZ
+        EWPBB6kt7CXd04uZBMNJjiz9wQ==
+X-Google-Smtp-Source: APXvYqz+PlZ2++c+1pdnHHC8kczGTCTfRXI8OA/X49x2MsnB2O2SZaoocQz3z6r0C4XzJrFHZuK99g==
+X-Received: by 2002:a5d:4247:: with SMTP id s7mr1786602wrr.110.1567676086829;
+        Thu, 05 Sep 2019 02:34:46 -0700 (PDT)
+Received: from dell ([95.147.198.36])
+        by smtp.gmail.com with ESMTPSA id o9sm2221110wrh.46.2019.09.05.02.34.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Sep 2019 02:34:46 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 10:34:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, alokc@codeaurora.org,
+        agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
+ processing
+Message-ID: <20190905093444.GE26880@dell>
+References: <20190904113613.14997-1-lee.jones@linaro.org>
+ <20190904203548.GC580@tuxbook-pro>
+ <20190904212337.GF23608@ninjato>
+ <20190905071103.GX26880@dell>
+ <20190905091617.GC1157@kunai>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190830174944.21741-8-subhra.mazumdar@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190905091617.GC1157@kunai>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 30, 2019 at 10:49:42AM -0700, subhra mazumdar wrote:
-> Search SMT siblings before all CPUs in LLC domain for idle CPU. This helps
-> in L1 cache locality.
-> ---
->  kernel/sched/fair.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, 05 Sep 2019, Wolfram Sang wrote:
+> > > It looks like a workaround to me. It would be interesting to hear which
+> > > I2C client breaks with DMA and if it's driver can't be fixed somehow
+> > > instead. But even if we agree on a workaround short term, adding a
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 8856503..94dd4a32 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6274,11 +6274,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->  			return i;
->  	}
->  
-> -	i = select_idle_cpu(p, sd, target);
-> +	i = select_idle_smt(p, target);
->  	if ((unsigned)i < nr_cpumask_bits)
->  		return i;
->  
-> -	i = select_idle_smt(p, target);
-> +	i = select_idle_cpu(p, sd, target);
->  	if ((unsigned)i < nr_cpumask_bits)
->  		return i;
->  
+> So, are there investigations running why this reboot happens?
 
-But it is absolutely conceptually wrong. An idle core is a much better
-target than an idle sibling.
+Yes, but they have been running for months, literally.
+
+Unfortunately, since these are production level platforms, all of the
+usual low-level debugging avenues (JTAG) have been closed off.  Also,
+only a very small number of people have access to documentation, but
+even those who are in possession are stumped.
+
+Andy Gross did have one idea as to what might be happening, but it
+turned out to be a red herring.
+
+> > > Is there no other way to disable DMA which is local to this driver so we
+> > > can easily revert the workaround later?
+> > 
+> > This is the most local low-impact solution (nomenclature aside).
+> 
+> I disagree. You could use of_machine_is_compatible() and disable DMA for
+> that machine. Less impact because we save the workaround binding.
+
+That could also work.
+
+> > The beautiful thing about this approach is that, *if* the Geni SE DMA
+> 
+> I'd say 'advantage' instead of 'beautiful' ;)
+
+Okay, "the advantage thing about ..." ;)
+
+> > ever starts working, we can remove the C code and any old properties
+> > left in older DTs just become NOOP.  Older kernels with newer DTs
+> > (less of a priority) *still* won't work, but they don't work now
+> > anyway.
+> 
+> Which is a clear disadvantage of that solution. It won't fix older
+> kernels. My suggestion above should fix them, too.
+
+Not sure how this is possible.  Unless you mean LTS?
+
+> > The offending line can be found at [0].  There is no obvious bug to
+> > fix and this code obviously works well on some of the hardware
+> > platforms using it.  But on our platform (Lenovo Yoga C630 - QCom
+> > SMD850) that final command, which initiates the DMA transaction, ends
+> > up rebooting the machine.
+> 
+> Unless we know why the reboot happens on your platform, I'd be careful
+> with saying "work obviously well" on other platforms.
+
+Someone must have tested it?  Surely ... ;)
+
+> > With regards to the nomenclature, my original suggestion was
+> > 'qcom,geni-se-no-dma'.  Would that better suit your request?
+> 
+> My suggestion:
+> 
+> For 5.3, use of_machine_is_compatible() and we backport that. For later,
+> try to find out the root cause and fix it. If that can't be done, try to
+> set up a generic "disable-dma" property and use it.
+> 
+> What do you think about that?
+
+Sounds okay to me.  Let me code that up.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
