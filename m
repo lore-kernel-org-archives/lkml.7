@@ -2,117 +2,166 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 637AEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAABC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D12206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="PTYFDp0k"
+	by mail.kernel.org (Postfix) with ESMTP id 213F220870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390948AbfIERFz (ORCPT
+        id S2387702AbfIERGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:05:55 -0400
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:35120 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387843AbfIERFz (ORCPT
+        Thu, 5 Sep 2019 13:06:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11540 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731289AbfIERGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:05:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 4EBF340398;
-        Thu,  5 Sep 2019 19:05:52 +0200 (CEST)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="PTYFDp0k";
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tXyyiTu5CGNe; Thu,  5 Sep 2019 19:05:47 +0200 (CEST)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id AAAB84038E;
-        Thu,  5 Sep 2019 19:05:44 +0200 (CEST)
-Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id C7C21360160;
-        Thu,  5 Sep 2019 19:05:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1567703143; bh=zbo7MfbN20OAj7pa0T+w7Sryr+tQQ3711/fYDNixx7Y=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PTYFDp0kadm6+tXepdvek8stFaFRRFxkM8IF8Rz9NE15xdppg324LS271aAl+WAUM
-         WdAKEZNq7xwWY4iG21mxxIDn7gtVf11CgKnNDFZEsIVmbOZJp4to+6fWvWLjCm0+nf
-         kHYKWs97WwTV+TwpRQ/2pjvYWtm2m/t0wGcqNP9o=
-Subject: dma_mmap_fault discussion
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "pv-drivers@vmware.com" <pv-drivers@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-References: <20190905103541.4161-1-thomas_os@shipmail.org>
- <20190905103541.4161-2-thomas_os@shipmail.org>
- <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
- <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
- <20190905152438.GA18286@infradead.org>
-From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Organization: VMware Inc.
-Message-ID: <cbbb0e95-8df1-9ab8-59ad-81bd7f3933fa@shipmail.org>
-Date:   Thu, 5 Sep 2019 19:05:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 5 Sep 2019 13:06:54 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85H6g4N053820
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 13:06:53 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut0m81emx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:06:51 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Thu, 5 Sep 2019 18:06:42 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Sep 2019 18:06:33 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85H68Tu33030630
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 17:06:08 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 104054C050;
+        Thu,  5 Sep 2019 17:06:32 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0017A4C044;
+        Thu,  5 Sep 2019 17:06:30 +0000 (GMT)
+Received: from thinkpad (unknown [9.152.96.45])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Sep 2019 17:06:30 +0000 (GMT)
+Date:   Thu, 5 Sep 2019 19:06:29 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+In-Reply-To: <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
+References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
+        <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
+        <20190904221618.1b624a98@thinkpad>
+        <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190905152438.GA18286@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090517-0012-0000-0000-000003471F7D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090517-0013-0000-0000-000021817691
+Message-Id: <20190905190629.523bdb87@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Christoph,
+On Thu, 5 Sep 2019 14:48:14 +0530
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
+> > [...]  
+> >> +
+> >> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
+> >> +static void pud_clear_tests(pud_t *pudp)
+> >> +{
+> >> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
+> >> +	pud_clear(pudp);
+> >> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
+> >> +}  
+> > 
+> > For pgd/p4d/pud_clear(), we only clear if the page table level is present
+> > and not folded. The memset() here overwrites the table type bits, so
+> > pud_clear() will not clear anything on s390 and the pud_none() check will
+> > fail.
+> > Would it be possible to OR a (larger) random value into the table, so that
+> > the lower 12 bits would be preserved?  
+> 
+> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
+> it should OR a large random value preserving lower 12 bits. Hmm, this should
+> still do the trick for other platforms, they just need non zero value. So on
+> s390, the lower 12 bits on the page table entry already has valid value while
+> entering this function which would make sure that pud_clear() really does
+> clear the entry ?
 
-On 9/5/19 5:24 PM, Christoph Hellwig wrote:
-> On Thu, Sep 05, 2019 at 05:21:24PM +0200, Thomas Hellström (VMware) wrote:
->> On 9/5/19 4:15 PM, Dave Hansen wrote:
->>> Hi Thomas,
->>>
->>> Thanks for the second batch of patches!  These look much improved on all
->>> fronts.
->> Yes, although the TTM functionality isn't in yet. Hopefully we won't have to
->> bother you with those though, since this assumes TTM will be using the dma
->> API.
-> Please take a look at dma_mmap_prepare and dma_mmap_fault in this
-> branch:
->
-> 	http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-mmap-improvements
->
-> they should allow to fault dma api pages in the page fault handler.  But
-> this is totally hot off the press and not actually tested for the last
-> few patches.  Note that I've also included your two patches from this
-> series to handle SEV.
+Yes, in theory the table entry on s390 would have the type set in the last
+4 bits, so preserving those would be enough. If it does not conflict with
+others, I would still suggest preserving all 12 bits since those would contain
+arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
+would also work with the memset, but for consistency I think the same logic
+should be used in all pxd_clear_tests.
 
-I took a quick look at the interfaces and have two questions:
+However, there is another issue on s390 which will make this only work
+for pud_clear_tests(), and not for the p4d/pgd_tests. The problem is that
+mm_alloc() will only give you a 3-level page table initially on s390.
+This means that pudp == p4dp == pgdp, and so the p4d/pgd_tests will
+both see the pud level (of course this also affects other tests).
 
-1) dma_mmap_prepare(), would it be possible to drop the references to 
-the actual coherent region? The thing is that TTM doesn't know at mmap 
-time what memory will be backing the region. It can be VRAM, coherent 
-memory or system memory. Also see below:
+Not sure yet how to fix this, i.e. how to initialize/update the page table
+to 5 levels. We can handle 5 level page tables, and it would be good if
+all levels could be tested, but using mm_alloc() to establish the page
+tables might not work on s390. One option could be to provide an arch-hook
+or weak function to allocate/initialize the mm.
 
-2) @cpu_addr and @dma_addr are the values pointing at the beginning of 
-an allocated chunk, right? The reason I'm asking is that TTM's coherent 
-memory pool is sub-allocating from larger chunks into smaller PAGE_SIZE 
-chunks, which means that a TTM buffer object may be randomly split 
-across larger chunks, which means we have to store these values for each 
-PAGE_SiZE chunk.
+IIUC, the (dummy) mm is really only needed to provide an mm->pgd as starting
+point, right?
 
-Thanks,
-Thomas
-
+Regards,
+Gerald
 
