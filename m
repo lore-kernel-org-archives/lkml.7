@@ -2,103 +2,104 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74707C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED696C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45DBF2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kST9Skas"
+	by mail.kernel.org (Postfix) with ESMTP id D1BD72070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbfIELaN (ORCPT
+        id S2388485AbfIELae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:30:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41174 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfIELaN (ORCPT
+        Thu, 5 Sep 2019 07:30:34 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:60466 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIELad (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:30:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3Z6GGxQtw6kGZ90rRUAsKRrfp8SLjkfWxpfQA5HECNQ=; b=kST9SkasBfRkvNAy3jwGSEqAx
-        L5hV5CM0qO23/QJaoYSxUxpqMwhdekI9KbVAvA3Q3J+LOMm6kjJf0t+4RQP0yxfp/J1v1Irv7p20L
-        JU15zzpLAoEiiP/7USl6oOLXMdnYwFAz2UsKeP/b8pvcQOW8izmbSYkTbk4DXe3sel3WoDhE8R0Of
-        9KXIolpsXvHQjfhOeCT9kvsEJEqaN8rMbZyADLjSJ2I2tlfzZ7qfgLEnGSG/HmzjHCs0aTguKxmOl
-        dR7dQMuSw88uIJHMEOx2pLmtfHbKcN9xgJfpxa/gdCymyCSUGNtJkyr2sXlABmPKFWZghNOT5gcpp
-        jIRvB213A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5pxk-0006sr-BV; Thu, 05 Sep 2019 11:30:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 549A4305E47;
-        Thu,  5 Sep 2019 13:29:25 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4B6E829CBE121; Thu,  5 Sep 2019 13:30:02 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 13:30:02 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-Message-ID: <20190905113002.GK2349@hirez.programming.kicks-ass.net>
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-2-subhra.mazumdar@oracle.com>
- <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
+        Thu, 5 Sep 2019 07:30:33 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i5pxg-0002oG-P2; Thu, 05 Sep 2019 11:30:00 +0000
+Date:   Thu, 5 Sep 2019 13:29:59 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
+ helpers
+Message-ID: <20190905112958.ldzyzyuqn5akkhzy@wittgenstein>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <20190905110544.d6c5t7rx25kvywmi@wittgenstein>
+ <ae415ea8-4442-d81c-3b46-2ae5fb35bbdf@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ae415ea8-4442-d81c-3b46-2ae5fb35bbdf@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:13:47PM +0100, Qais Yousef wrote:
-> On 09/05/19 12:46, Peter Zijlstra wrote:
-
-> > This is important because we want to be able to bias towards less
-> > importance to (tail) latency as well as more importantance to (tail)
-> > latency.
+On Thu, Sep 05, 2019 at 01:17:38PM +0200, Rasmus Villemoes wrote:
+> On 05/09/2019 13.05, Christian Brauner wrote:
+> > On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
+> 
+> >> +	if (unlikely(!access_ok(dst, usize)))
+> >> +		return -EFAULT;
+> >> +
+> >> +	/* Deal with trailing bytes. */
+> >> +	if (usize < ksize) {
+> >> +		if (memchr_inv(src + size, 0, rest))
+> >> +			return -EFBIG;
+> >> +	} else if (usize > ksize) {
+> >> +		if (__memzero_user(dst + size, rest))
+> >> +			return -EFAULT;
 > > 
-> > Specifically, Oracle wants to sacrifice (some) latency for throughput.
-> > Facebook OTOH seems to want to sacrifice (some) throughput for latency.
+> > Is zeroing that memory really our job? Seems to me we should just check
+> > it is zeroed.
 > 
-> Another use case I'm considering is using latency-nice to prefer an idle CPU if
-> latency-nice is set otherwise go for the most energy efficient CPU.
-> 
-> Ie: sacrifice (some) energy for latency.
-> 
-> The way I see interpreting latency-nice here as a binary switch. But
-> maybe we can use the range to select what (some) energy to sacrifice
-> mean here. Hmmm.
+> Of course it is, otherwise you'd require userspace to clear the output
+> buffer it gives us, which in the majority of cases is wasted work. It's
+> much easier to reason about if we just say "the kernel populates [uaddr,
+> uaddr + usize)".
 
-It cannot be binary, per definition is must be ternary, that is, <0, ==0
-and >0 (or middle value if you're of that persuasion).
-
-In your case, I'm thinking you mean >0, we want to lower the latency.
-
-Anyway; there were a number of things mentioned at OSPM that we could
-tie into this thing and finding sensible mappings is going to be a bit
-of trial and error I suppose.
-
-But as patrick said; we're very much exporting a BIAS knob, not a set of
-behaviours.
+I don't really mind either way so sure. :)
