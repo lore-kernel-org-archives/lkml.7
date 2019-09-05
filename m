@@ -4,38 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3CCCC0030D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8D3C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF46E214E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24B0206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfIEOJY (ORCPT
+        id S1731829AbfIEOP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:09:24 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35746 "EHLO
+        Thu, 5 Sep 2019 10:15:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35991 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbfIEOJW (ORCPT
+        with ESMTP id S1729157AbfIEOP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:09:22 -0400
+        Thu, 5 Sep 2019 10:15:58 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1i5sRr-0001aJ-Mw; Thu, 05 Sep 2019 14:09:19 +0000
+        id 1i5sYF-0002ES-FE; Thu, 05 Sep 2019 14:15:55 +0000
 From:   Colin King <colin.king@canonical.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: bcm: remove redundant assignment to pointer log
-Date:   Thu,  5 Sep 2019 15:09:19 +0100
-Message-Id: <20190905140919.29283-1-colin.king@canonical.com>
+Subject: [PATCH] staging: rtl8723bs: hal: remove redundant assignment to variable n
+Date:   Thu,  5 Sep 2019 15:15:55 +0100
+Message-Id: <20190905141555.31582-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -47,28 +43,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-The pointer log is being initialized with a value that is never read
-and is being re-assigned a little later on. The assignment is
-redundant and hence can be removed.
+The variable n is being assigned a value that is never read, the
+assignment is redundant and can be removed.
 
 Addresses-Coverity: ("Unused value")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/pinctrl/bcm/pinctrl-cygnus-mux.c | 1 -
+ drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-index 44df35942a43..dcab2204c60c 100644
---- a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-+++ b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
-@@ -923,7 +923,6 @@ static int cygnus_mux_log_init(struct cygnus_pinctrl *pinctrl)
- 	if (!pinctrl->mux_log)
- 		return -ENOMEM;
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+index 032d01834f3f..adfc96d24150 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+@@ -525,7 +525,6 @@ void rtl8723bs_free_recv_priv(struct adapter *padapter)
+ 	}
  
--	log = pinctrl->mux_log;
- 	for (i = 0; i < CYGNUS_NUM_IOMUX_REGS; i++) {
- 		for (j = 0; j < CYGNUS_NUM_MUX_PER_REG; j++) {
- 			log = &pinctrl->mux_log[i * CYGNUS_NUM_MUX_PER_REG
+ 	if (precvpriv->pallocated_recv_buf) {
+-		n = NR_RECVBUFF * sizeof(struct recv_buf) + 4;
+ 		kfree(precvpriv->pallocated_recv_buf);
+ 		precvpriv->pallocated_recv_buf = NULL;
+ 	}
 -- 
 2.20.1
 
