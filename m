@@ -2,112 +2,268 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E5EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E6BC43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11464206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B23206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eEbudfEF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntfcUhOy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389106AbfIEVRN (ORCPT
+        id S2389471AbfIEVTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:17:13 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44737 "EHLO
+        Thu, 5 Sep 2019 17:19:17 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38771 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfIEVRN (ORCPT
+        with ESMTP id S1726073AbfIEVTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:17:13 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so2141022pgl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:17:13 -0700 (PDT)
+        Thu, 5 Sep 2019 17:19:17 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d10so2163998pgo.5;
+        Thu, 05 Sep 2019 14:19:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UIRtWL98QY7LQCCdEU+L5v6PUGcyGbsiZsUBWNy9eQ4=;
-        b=eEbudfEF6neRn1gT0xh0aAkTpqGoCMlJB9O5rTKm9acSrTEXdKWtPk33cPifM5g6k3
-         GZbq5NnlA807jkM3lQuO9Z/QaxJ3QeCEx+/crZSI9REJn7aBcIttEuhV7fA3wYqibDgv
-         FMiXA6sqfjLYieHp21VQRbWSOvw4ffDdIkLcM=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B0B9rVe+oztTYQ7MVJcujht+lAY5H+Eh47sriZyPRxE=;
+        b=ntfcUhOyiJzEKyPsPchHEFqgeVIOnX6R1PGPqSa7Z2GGISjzuX0P/6rQA39JntOHfh
+         lWk7dMb4RzxZKximmHXFMwH/5jigfYj09faMCBuNpJwckqvxs9bKKXof866pRYRAU3N0
+         LXNCCdkqQcJ7zTXPKGnApHZ3bnRZwlRDESWt7R9r/W3lFeQzsbyc5EMs+kLpFYDITBdN
+         Aq9rRQdFBw1dGAIllTeXHnvz4qut5n64gQc76XT8zIEUcJWTo1WiXUiSkhlDoMMCX7kY
+         5krRY5dTV25WinfctjxqMCZS4VBATpiyAHYULEp8lrFrngdfJjIJNmkz8hxV6CUVTYQE
+         C0xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UIRtWL98QY7LQCCdEU+L5v6PUGcyGbsiZsUBWNy9eQ4=;
-        b=DZNBNOVPUzjF2jRbYsySBG6U+dEElw5rubQMou69BKR5/idVH0pKmdP05v3cOL54Ok
-         qubSIt/K1aARYyoiqzHkbAZUHFmNUd4iO7gOT/z1hHXw+a6WMVC81rGwKBrWssqBTiZ8
-         z9vzpBjefuB73ccgmjerawqu6JILvlNvQahkKgwAGJZSd7Q8spqKiR7h0BgSELhBR6zZ
-         /apiXn66bffopSIV6tjSmZu6DYT18bh/pLOGqygtCIY7+PzGpjNRv87/p6C9Kw0V30r0
-         AaLcv8K7ctn3jIEJc/lSH3Dyk/IRHeMaingdYoKLUFbAWZ88tPf6gCR11E+5Uf0Lsp5u
-         lTpA==
-X-Gm-Message-State: APjAAAVqQU+ViTpX7ePTHM6PSxqq+fIZZ0XM5DW3Uj6ls4r6DKC5nzgF
-        TwsDWkiey1rBohUNS+X7a0XdntVr/4I=
-X-Google-Smtp-Source: APXvYqxil/9JhgnFLSMY7nNDIRI9VhMzTmtcNzIddNIVEdT7r8hU3805QipX3phx57LusXkxX2j82w==
-X-Received: by 2002:a65:6415:: with SMTP id a21mr4791629pgv.98.1567718232797;
-        Thu, 05 Sep 2019 14:17:12 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x13sm3598106pfm.157.2019.09.05.14.17.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 14:17:11 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 14:17:10 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/9] thunderbolt: show key using %*s not %*pE
-Message-ID: <201909051416.973A701E@keescook>
-References: <20190905193604.GC31247@fieldses.org>
- <1567712673-1629-1-git-send-email-bfields@redhat.com>
- <1567712673-1629-2-git-send-email-bfields@redhat.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B0B9rVe+oztTYQ7MVJcujht+lAY5H+Eh47sriZyPRxE=;
+        b=grFk5WIsQpMIloyp1q4F8mGP+L4sxnsG1gTeZ8j8mIhCaIdR1HD3jEgbNLiaO+MMmK
+         RMdrdMmmHwV3TjkUeuw4eFolI6TKQjqZRCOpWTvMKHJIaGULYhDlX1N+C6WsdHadKCVU
+         ztBuvey/SybS1qZakv8uu43cWnypU1rlROkfZosTzwBGzUBM6bJYBxuDSmjQ3boInc7Q
+         axPM/lfzLsooR0p4CsJtXVBt/zZvrlXHNfY0aL8atsObQlP+2TqvJuHiJA90UojVPYOz
+         Hm4T4Y3dgrNTTqy510zIScIQ1x0giTNfZHiwVoSIHX66up5sMw1NV1Kwezgd9dRQiSNi
+         PZOw==
+X-Gm-Message-State: APjAAAX4exQT5oi6MIu4rFSQohZbvros4eRgVL2g0+E/ASGaZbQ2Yile
+        vwW+WZ+eL92sLpbNETwB8eY=
+X-Google-Smtp-Source: APXvYqxdP9UfgjNQTqRBysevqD5A1wvksFverLNwhERj8pjIbamJB7FQupBlc+R9IYrTO90bH80kMQ==
+X-Received: by 2002:a63:2157:: with SMTP id s23mr5214387pgm.167.1567718356268;
+        Thu, 05 Sep 2019 14:19:16 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q22sm2763965pgh.49.2019.09.05.14.19.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 14:19:15 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 14:19:13 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     agross@kernel.org, wim@linux-watchdog.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] watchdog: qcom: support pre-timeout when the bark irq
+ is available
+Message-ID: <20190905211913.GA31094@roeck-us.net>
+References: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1567712673-1629-2-git-send-email-bfields@redhat.com>
+In-Reply-To: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 03:44:26PM -0400, J. Bruce Fields wrote:
-> From: "J. Bruce Fields" <bfields@redhat.com>
+On Thu, Sep 05, 2019 at 11:00:35PM +0200, Jorge Ramirez-Ortiz wrote:
+> Use the bark interrupt as the pre-timeout notifier whenever this
+> interrupt is available.
 > 
-> %*pEp (without "h" or "o") is a no-op.  This string could contain
-> arbitrary (non-NULL) characters, so we do want escaping.  Use %*pE like
-> every other caller.
-
-Agreed on all counts. pEp is actively resulting in NO escaping, which is
-a bug here.
-
-Acked-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
+> By default, the pretimeout notification shall occur one second earlier
+> than the timeout.
 > 
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > ---
->  drivers/thunderbolt/xdomain.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  v4:
+>      address Guenter Roeck comments as follows:
+>        remove unnecessary include and private variable
+>        provide macro for WDT EN register values
+>        use pretimeout as per its API intent
+>        handle EPROBE_DEFER on get_irq
+>      also:
+>        handle the irq registration as done in pm8916_wdt.c
+>  v3:
+>     remove unnecesary variable added to private.
 > 
-> diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
-> index 5118d46702d5..4e17a7c7bf0a 100644
-> --- a/drivers/thunderbolt/xdomain.c
-> +++ b/drivers/thunderbolt/xdomain.c
-> @@ -636,7 +636,7 @@ static ssize_t key_show(struct device *dev, struct device_attribute *attr,
->  	 * It should be null terminated but anything else is pretty much
->  	 * allowed.
->  	 */
-> -	return sprintf(buf, "%*pEp\n", (int)strlen(svc->key), svc->key);
-> +	return sprintf(buf, "%*pE\n", (int)strlen(svc->key), svc->key);
->  }
->  static DEVICE_ATTR_RO(key);
+>  v2:
+>     register the pre-timeout notifier instead.
+> 
+>  v1:
+>  drivers/watchdog/qcom-wdt.c | 64 ++++++++++++++++++++++++++++++++++---
+>  1 file changed, 59 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> index 7be7f87be28f..0f1d29eeb81d 100644
+> --- a/drivers/watchdog/qcom-wdt.c
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/watchdog.h>
+>  #include <linux/of_device.h>
+> +#include <linux/interrupt.h>
 >  
-> -- 
-> 2.21.0
-> 
+>  enum wdt_reg {
+>  	WDT_RST,
+> @@ -19,6 +20,9 @@ enum wdt_reg {
+>  	WDT_BITE_TIME,
+>  };
+>  
+> +#define QCOM_WDT_ENABLE		BIT(0)
+> +#define QCOM_WDT_ENABLE_IRQ	BIT(1)
+> +
 
--- 
-Kees Cook
+Using BIT() requires "#include <linux/bits.h>".
+
+>  static const u32 reg_offset_data_apcs_tmr[] = {
+>  	[WDT_RST] = 0x38,
+>  	[WDT_EN] = 0x40,
+> @@ -54,15 +58,38 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
+>  	return container_of(wdd, struct qcom_wdt, wdd);
+>  }
+>  
+> +static inline int qcom_get_enable(struct watchdog_device *wdd)
+> +{
+> +	int enable = QCOM_WDT_ENABLE;
+> +
+> +	if (wdd->info->options & WDIOF_PRETIMEOUT)
+> +		enable |= QCOM_WDT_ENABLE_IRQ;
+> +
+
+Again, the condition needs to be that pretimeout != 0,
+not that it is supported.
+
+> +	return enable;
+> +}
+> +
+> +static irqreturn_t qcom_wdt_isr(int irq, void *arg)
+> +{
+> +	struct watchdog_device *wdd = arg;
+> +
+> +	watchdog_notify_pretimeout(wdd);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static int qcom_wdt_start(struct watchdog_device *wdd)
+>  {
+>  	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+> +	unsigned int bark = wdd->timeout;
+> +
+> +	if (wdd->pretimeout)
+> +		bark = bark - wdd->pretimeout;
+
+The if() just adds code and doesn't otherwise do any good.
+
+>  
+>  	writel(0, wdt_addr(wdt, WDT_EN));
+>  	writel(1, wdt_addr(wdt, WDT_RST));
+> -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+> +	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+>  	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
+> -	writel(1, wdt_addr(wdt, WDT_EN));
+> +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
+>  	return 0;
+>  }
+>  
+> @@ -89,6 +116,13 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
+>  	return qcom_wdt_start(wdd);
+>  }
+>  
+> +static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
+> +				   unsigned int timeout)
+> +{
+> +	wdd->pretimeout = timeout;
+> +	return qcom_wdt_start(wdd);
+> +}
+> +
+>  static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+>  			    void *data)
+>  {
+> @@ -105,7 +139,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+>  	writel(1, wdt_addr(wdt, WDT_RST));
+>  	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
+>  	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
+> -	writel(1, wdt_addr(wdt, WDT_EN));
+> +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
+>  
+>  	/*
+>  	 * Actually make sure the above sequence hits hardware before sleeping.
+> @@ -121,6 +155,7 @@ static const struct watchdog_ops qcom_wdt_ops = {
+>  	.stop		= qcom_wdt_stop,
+>  	.ping		= qcom_wdt_ping,
+>  	.set_timeout	= qcom_wdt_set_timeout,
+> +	.set_pretimeout	= qcom_wdt_set_pretimeout,
+>  	.restart        = qcom_wdt_restart,
+>  	.owner		= THIS_MODULE,
+>  };
+> @@ -133,6 +168,15 @@ static const struct watchdog_info qcom_wdt_info = {
+>  	.identity	= KBUILD_MODNAME,
+>  };
+>  
+> +static const struct watchdog_info qcom_wdt_pt_info = {
+> +	.options	= WDIOF_KEEPALIVEPING
+> +			| WDIOF_MAGICCLOSE
+> +			| WDIOF_SETTIMEOUT
+> +			| WDIOF_PRETIMEOUT
+> +			| WDIOF_CARDRESET,
+> +	.identity	= KBUILD_MODNAME,
+> +};
+> +
+>  static void qcom_clk_disable_unprepare(void *data)
+>  {
+>  	clk_disable_unprepare(data);
+> @@ -146,7 +190,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	struct device_node *np = dev->of_node;
+>  	const u32 *regs;
+>  	u32 percpu_offset;
+> -	int ret;
+> +	int irq, ret;
+>  
+>  	regs = of_device_get_match_data(dev);
+>  	if (!regs) {
+> @@ -204,7 +248,17 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	wdt->wdd.info = &qcom_wdt_info;
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq > 0) {
+> +		if (devm_request_irq(dev, irq, qcom_wdt_isr,
+> +				     IRQF_TRIGGER_RISING, "wdt_bark",
+> +				     &wdt->wdd))
+> +			irq = 0;
+> +	} else if (irq == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+> +	wdt->wdd.info = irq > 0 ? &qcom_wdt_pt_info : &qcom_wdt_info;
+> +	wdt->wdd.pretimeout = irq > 0 ? 1 : 0;
+
+Why repeat the conditional ? It seems to me that something like
+
+	wdt->wdd.info = &qcom_wdt_info;
+	...
+	if (irq > 0) {
+		wdt->wdd.info = &qcom_wdt_pt_info;
+		wdt->wdd.pretimeout = 1;
+		...
+	}
+
+would be much easier and avoid the repeated conditionals.
+
+>  	wdt->wdd.ops = &qcom_wdt_ops;
+>  	wdt->wdd.min_timeout = 1;
+>  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
+> -- 
+> 2.23.0
+> 
