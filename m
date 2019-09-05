@@ -2,101 +2,95 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622BEC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D46C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A72206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D767206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIho/fn0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sYGH2L40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390382AbfIETxN (ORCPT
+        id S2391458AbfIETxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:53:13 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42197 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfIETxN (ORCPT
+        Thu, 5 Sep 2019 15:53:43 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:34659 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfIETxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:53:13 -0400
-Received: by mail-io1-f66.google.com with SMTP id n197so7521497iod.9;
-        Thu, 05 Sep 2019 12:53:12 -0700 (PDT)
+        Thu, 5 Sep 2019 15:53:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z21so3072378lfe.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 12:53:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gG9KTAfYKzS7FOWEmgdcmC13OEeU2qK9XGG/GnKeVVA=;
-        b=fIho/fn0zvgExeCQjHj5HHH/iPRP6Kw7SNaiJKN8JNhP2+RqpFTHGyISd+H8d86xPN
-         n17KZrmmSA280m99UMUt3uLb7FXAmaIKGE6Zd/9jNdioqTaB1DmwbEMoE/HjJl8ScfKp
-         zhV6Hy4PLsPxG7r0PV6iStQ2+UXRVc0ImZbLo6nU0tyQEaMQTG1hvSj1q8VSr/3tRHOP
-         OOd+HRNTBVnZxBw4X8rSVNeH1oHhYrwlU6gLrr8crv1xBRtfF6ei5+DUsZj/ZJOkRjEd
-         890gTpahv1Y2+K324/86qNuK4jTmu04qD/9o2AFdgxDcIn+d89JUsWPHxWY5a8/VuEU5
-         8geQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9zCJtK2i3AG3fO1Xw+tQfg0dDvvG588ofrGHY7FaHlo=;
+        b=sYGH2L40pXPqJzbDiQbnXeTLrE5oymwD0ylq9MIoUNupaLov9bprle3VbSx1S6H7nR
+         dvNF5SN6nDG9uqKvE/vDSDi+d3q38Ou9sYP9c6OPADal64CWjd9sgJjVW0f++3f3+DBn
+         LewH46zTcna/EpVABfOIAVLrrhqQ0EVFZmB95BLNn92ZLKtGcvGUj+SVJC/SkNCI2IwV
+         IdIVhCzP8UUD91ohF8qI1rKrEJoPA8XJY2FGRa9JWsPaxcJMY2FC7oPyip3lQbwkgxb4
+         Gd/UqdRb1gDH+o/e8hPC/89Hi+Kxoh6TLAfivgF4SWkLs7/u70kXigTZ6aU1+/MRNPbl
+         Whtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gG9KTAfYKzS7FOWEmgdcmC13OEeU2qK9XGG/GnKeVVA=;
-        b=Y9qrD4kbctSEHrDcAlvyVnzQlJp60R7G8vyViE6UE8N06te/eodsNEKAQ8WidEsYVk
-         m9Px5Wz9gQxsWnvxanY73Y2ARDhwSwlQGgrdV6mL7r6HAw+IA/JLrAHx0DnCl9S04fck
-         wsxqVoM18Yis4jo9y+gUHCQUetPPbPTQJSt5py5hxGIrOqs//XIwp9URdARc2B3GNW1h
-         T6r5x42I6LAM9RZkyoZGrcS40w695louRrgAwaQVb2qRoObuGD6MULv8eGkXHlIRTPOP
-         nwSPMYjSjIAcX8x3v4WARhcKCxkqGdHd1arUGiANqP6Fd0jDGEZWyA3fWwZZG6WEN+r4
-         d8gQ==
-X-Gm-Message-State: APjAAAUuvP4sfISO95rPRrvCYxSq3woPO9McU+vWkauXgs9R0X6J10BL
-        l8C9rCWUGTBVONwZ4Z/tXM8=
-X-Google-Smtp-Source: APXvYqyT6acH01dQQdfxN3ejBgrevYziuJVmgn4FLVGJCEmSW2FHTW03ETVm+jzt0uCRrq1aM5L6Og==
-X-Received: by 2002:a5d:91ce:: with SMTP id k14mr5856951ior.95.1567713192152;
-        Thu, 05 Sep 2019 12:53:12 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id b7sm2577426iod.78.2019.09.05.12.53.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 12:53:11 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 13:53:09 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/83] 4.9.191-stable review
-Message-ID: <20190905195309.GE3397@JATN>
-References: <20190904175303.488266791@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9zCJtK2i3AG3fO1Xw+tQfg0dDvvG588ofrGHY7FaHlo=;
+        b=V36n2W4w1Hd2yDd0ZOMu6hKp4toLPTzzvV6vEcfuNOk6VmwMGRE3zIm6xmJeVHGMru
+         zvLVLUyFAWNzf3cZZIv7skMj9NDCC6yc8IL9y/A3UV6zxt8MY2arRQOfFbq4Kt1SorhN
+         H9V2Ex0McYS5MPSd3KaVQN4AKggyvt7Kre1JmsalcAYh7myp969Sourz4byClXuKH52e
+         ulKBd13FNnyra+4Q0s/77XZyXRGih8TnOzbaiUNMaEV37MqVfvWGpZAmLGrlm0axlnJ7
+         oXqBMqlL9uEMJpbdUPOWpJJ0CnU+bPa1nnadB/aaf8VxIi3khylZlCVpLvNRBdNiJhpH
+         OHSQ==
+X-Gm-Message-State: APjAAAWC5Sgt8GH/CbSmF0zR0WVHIsyfdo7CXKGQFsENzUDiZk2pZM7P
+        qXFPNHupy8DYBjZxjeLM1HirCmO8Wa4tNjxFVJY=
+X-Google-Smtp-Source: APXvYqyY5bMJg4XnA+kFfos76RwPQPYC2mJjWGCx9v/liXcFaOHy8FjstKArgAjYDhciZiJxCL65dW7ARdCScWnuHvs=
+X-Received: by 2002:ac2:52b8:: with SMTP id r24mr3819533lfm.131.1567713221154;
+ Thu, 05 Sep 2019 12:53:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904175303.488266791@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190904181740.GA19688@gmail.com> <CAHk-=wi2VOPoweqnDhxXKJ9fcLQzkV1oEDjteV=z-C7KXrpomg@mail.gmail.com>
+ <CAKwvOdm3CbZ1Uad4b8+9HU8qDgTwSFw2oqjcAvFkR8jaQQN-5g@mail.gmail.com> <CAHk-=wjBsC0bWrCy++Gzimwwfx2+3kSaac9_PbBWmH9hrWdC8g@mail.gmail.com>
+In-Reply-To: <CAHk-=wjBsC0bWrCy++Gzimwwfx2+3kSaac9_PbBWmH9hrWdC8g@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 5 Sep 2019 21:53:29 +0200
+Message-ID: <CANiq72k-qrvf4C9fn=SaRaTzaLLoym6be=6otLEB3dzfq8musQ@mail.gmail.com>
+Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 07:52:52PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.191 release.
-> There are 83 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.191-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Thu, Sep 5, 2019 at 7:22 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> "Why not just clean up the rest" is how bugs happen.
+>
+> If it's not a fix, and it's not marked for stable (or a regression
+> from the merge window) it shouldn't go in this late in the rc period.
+>
+> Send me _fixes_. Don't send me stuff that is "fixes plus random
+> cleanups that were noticed at the same time".
 
-Compiled, booted, and no regressions on my system.
+Yeah, I was on the fence about this and I imagined you could also
+react this way. I will be more firm next time :-)
 
--Kelsey
+On Nick's defense, he was trying to do his best to clean this up for
+5.3 but AFAIK he got quite busy meanwhile during rc3-5.
 
+Cheers,
+Miguel
