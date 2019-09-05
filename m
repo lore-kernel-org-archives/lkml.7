@@ -2,82 +2,137 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9D5C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C878C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D75B42339D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E304F2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cEPuUO3D"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iCjY2UfL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388421AbfIEL0O (ORCPT
+        id S2388431AbfIEL0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:26:14 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37678 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388377AbfIEL0N (ORCPT
+        Thu, 5 Sep 2019 07:26:16 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:53056 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732049AbfIEL0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:26:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FF586Gx7pagckCQE7fW4rjr03JygAyA2r24BMBu1wCA=; b=cEPuUO3D/lnvG/7YuYlV5fgc2
-        ZxKkpjfOI/M9KXFwqzuDoX4Np91tRGmNAlWTKmaOD9egadePV9Ct5zkXBk3c90dqZQ6jG0qGPJ7im
-        s84I4mjGeKpvQFByHFZlCUB/FmZnj7EkiG+jVHtXDC2pt2xOw6OEMqVypd9TFCAJb0EZdVi8+V2ru
-        MpEIdhdjA9+afAh2c/0tuGoO1q3BpMmB1CuALpwQq3h+UClgy5pfVhEXdedz2xzy2qwn08M9xQWZ6
-        t9Y4dvKyv95VZLaV5hv938Ex6fIrpRkyfPr02P3P63hlE50Zy4s92Bdc/ysMdcQal55wD+xlU38fi
-        IE9KFIIXw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5pty-0005Cr-9h; Thu, 05 Sep 2019 11:26:10 +0000
-Date:   Thu, 5 Sep 2019 04:26:10 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
-Message-ID: <20190905112610.GB10199@infradead.org>
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
- <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
+        Thu, 5 Sep 2019 07:26:14 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x85BQ83R019832;
+        Thu, 5 Sep 2019 20:26:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x85BQ83R019832
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1567682769;
+        bh=eYLn272Sy9fhUXrERxsg5RcSmedtHOfjBVG9VJ4bb5Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iCjY2UfL6jd45sNhs0jxhiNCQWLUr3ZcSneQD6AKR9pu+jxMrDLKVOlLj/ycVHIT1
+         jyvVrPsWl//7r7yQBeXkQbAZxbmtWgERcc7lzJnxg046ZgTqiOSxcxJqO6ozlmOhiP
+         I4Wa/6r9IgYuYFO0hno/hl3yQ6Dv/1MYv7o1DOY8eV3urCwhYHsyowxzRyllHTIg4p
+         AGmLdOdydztJHV/2uGG3KVSIhr5d5hDbpAJNMjlLIdwYSQSUvvcug8rr7VfhfLxbJ/
+         glDa8jIUnR2yrPKmX398FPHc+uyBvh4d8Y79UOjq9fptnzGb8fIHWT5JU6FXpWLvPe
+         /cgK/xB8Z01LA==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id w195so1288686vsw.11;
+        Thu, 05 Sep 2019 04:26:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAXnjgeUux9E4OjdThVuQg342h4JzZl1Td5dLZq87Pv0m9K7ngBY
+        knYZTc0+y34BWjXAwrYHBEu3su986gcQz3mYRnM=
+X-Google-Smtp-Source: APXvYqwOMv33jlhvXcxrJswfOYxSINojKomiw5PHTIePxV8kcg4TNPSESzrAsXtvN5eyFhUDcaxoE1yimV3bVbvTnwM=
+X-Received: by 2002:a67:e9cc:: with SMTP id q12mr1416862vso.181.1567682768019;
+ Thu, 05 Sep 2019 04:26:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
+ <20190903150638.242049-13-maennich@google.com> <20190903161045.GA22754@roeck-us.net>
+ <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
+ <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net> <CAA6KcBBeP9xYbVws4=RMFNA4kyrodE-R3mifhbkee-Q+jFRcoQ@mail.gmail.com>
+ <20190905104147.GA27788@linux-8ccs> <CAK8P3a0rf0PhXK1RdF1mWTyGggBJeH0h0YOCxDvJFgxu8wmWKw@mail.gmail.com>
+ <20190905111617.GB27788@linux-8ccs>
+In-Reply-To: <20190905111617.GB27788@linux-8ccs>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 5 Sep 2019 20:25:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATBWCTJ-FXydob5FUYMymsqCxhenBynb2_NfJdSC2yGDQ@mail.gmail.com>
+Message-ID: <CAK7LNATBWCTJ-FXydob5FUYMymsqCxhenBynb2_NfJdSC2yGDQ@mail.gmail.com>
+Subject: Re: [usb-storage] Re: [PATCH v4 12/12] RFC: watchdog: export core
+ symbols in WATCHDOG_CORE namespace
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Matthew Dharm <mdharm-usb@one-eyed-alien.net>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Martijn Coenen <maco@android.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Will Deacon <will@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        linux-usb <linux-usb@vger.kernel.org>,
+        USB Mass Storage on Linux 
+        <usb-storage@lists.one-eyed-alien.net>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 11:45:18AM +0100, Andrew Murray wrote:
-> > +        depends on OF
-> > +        select PCIE_DW_HOST
-> > +        help
-> > +          Say 'Y' here to enable support for Intel AHB/AXI PCIe Host
-> > +	  controller driver.
-> > +	  The Intel PCIe controller is based on the Synopsys Designware
-> > +	  pcie core and therefore uses the Designware core functions to
-> > +	  implement the driver.
-> 
-> I can see this description is similar to others in the same Kconfig,
-> however I'm not sure what value a user gains by knowing implementation
-> details - it's helpful to know that PCIE_INTEL_AXI is based on the
-> Designware core, but is it helpful to know that the Designware core
-> functions are used?
+On Thu, Sep 5, 2019 at 8:16 PM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Arnd Bergmann [05/09/19 12:52 +0200]:
+> >On Thu, Sep 5, 2019 at 12:41 PM Jessica Yu <jeyu@kernel.org> wrote:
+> >> +++ Matthew Dharm [04/09/19 09:16 -0700]:
+> >> >On Wed, Sep 4, 2019 at 5:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> >> >HOWEVER, I have one question:  If these patches are included, and
+> >> >someone wants to introduce a bit of code which needs to use two
+> >> >symbols from different namespaces but with the same name, can that be
+> >> >done?  That is, if driver A has symbol 'foo' and driver B has symbol
+> >> >'foo' (both in their respective namespaces), and driver C wants to use
+> >> >A.foo and B.foo, can that be supported?
+> >>
+> >> As of now, we currently don't support this - modpost will warn if a
+> >> symbol is exported more than once (across modules + vmlinux), and the
+> >> module loader currently assumes exported symbol names are unique.  Do
+> >> you have a concrete use case? If there is a strong need for this, I
+> >> don't think it'd be too hard to implement.
+> >
+> >I think what would prevent this from working in general is that having
+> >two modules with the same exported symbol in different namespaces
+> >won't link if you try to build both modules into the kernel itself.
+> >
+> >      Arnd
+>
+> Ah yeah, you are right. I only tried building an identically named
+> exported symbol in a module and in the kernel, and there I got away
+> with a modpost warning. But this breaks when building the module into
+> the kernel, so I guess this is out of the question.
+>
+> Thanks,
+>
+> Jessica
+>
 
-Not really.  What would be extremely useful for a user is what Intel
-SOC contains this IP block, or the fact that most of those were
-actually produced by Lantiq, a company bought by Intel.
+
+The cover letter starts with
+"As of Linux 5.3-rc7, there are 31207 [1] exported symbols in the kernel".
+
+Whether or not we apply this patch set,
+we will have to carefully maintain them
+so that 31207 symbols are unique, anyway.
+(And, we can do this with allmodconfig + modpost)
+
+So, what is the point of the namespace,
+where it does not loosen the scope of uniqueness?
+
+
+
+--
+Best Regards
+Masahiro Yamada
