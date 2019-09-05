@@ -2,202 +2,162 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEC9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F412C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B99C206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72732067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:47:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="TjzIp1x/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gicLTwd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389339AbfIEXoF (ORCPT
+        id S2389853AbfIEXrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 19:44:05 -0400
-Received: from mail.codeweavers.com ([50.203.203.244]:33980 "EHLO
-        mail.codeweavers.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfIEXoF (ORCPT
+        Thu, 5 Sep 2019 19:47:21 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32809 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389695AbfIEXrV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:44:05 -0400
-X-Greylist: delayed 964 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Sep 2019 19:44:05 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=Message-Id:Date:Subject:Cc:To:From:Sender:
-        Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rASns3U+6Oa/LoIG4M+RXQqZmudbbKPab+NbWJxo+g0=; b=TjzIp1x/oChw/7uIFnctLEQNYP
-        29PS6hDMe4HNArik8U+9zc2IChTbjg4v1emSxDQZGgVhPh/go6t1DcUVc7gnOg2zNK5WbQpUOjLpq
-        0MKbE0eYl3+hfF/RIgR+0FOS+dZX2RxoErfR0yYxunUupCclVkfFI8y8DbKLUTrCVj4k=;
-Received: from cpe-107-184-2-226.socal.res.rr.com ([107.184.2.226] helo=brendan-dell.bslabs.net)
-        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <bshanks@codeweavers.com>)
-        id 1i61AR-0004DI-Re; Thu, 05 Sep 2019 18:27:57 -0500
-From:   Brendan Shanks <bshanks@codeweavers.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Brendan Shanks <bshanks@codeweavers.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH] x86/umip: Add emulation for 64-bit processes
-Date:   Thu,  5 Sep 2019 16:22:21 -0700
-Message-Id: <20190905232222.14900-1-bshanks@codeweavers.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 5 Sep 2019 19:47:21 -0400
+Received: by mail-io1-f65.google.com with SMTP id m11so8785552ioo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 16:47:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=siNwSdIYFNtVZ3AHic9j9ZXRlU43cbV/eECxgsuYWQ0=;
+        b=gicLTwd9Yg/AWWDtsWsMOScBKzSbHe6y74CyVJLLUU+pK0fluT99gtJrzBRk3xEMr1
+         RXVe+9H9EosBTGKbhvtnZbGwpqQph+kg3r/esw7b+DnXQgWFMwqNrhftMkXkPvjPDQU4
+         AJQ7C1xsKnUa+qe7oAzgOdZkRhzz/18iO7PCI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=siNwSdIYFNtVZ3AHic9j9ZXRlU43cbV/eECxgsuYWQ0=;
+        b=QS9No0ieKii1O78foI1m0FdJXpPfDzngbTaBARucCRu7kepVrgRNtWzRZ8xy9gRMjw
+         L18alj8pqVc5VVMbpdRL5IZzoW3YCEMHTmkahoxVj2Gq+30hLOIln8Y/vrghoFCnEtad
+         BihpgTOIXxdWcyGDd8QTa0bRlsMcvLtagPweijxPGOThkk9h0Dxz+3MMpoaaxYuhslsX
+         +gI8XdMY2FnM0q7ngWwIwSbBWwjgxd+5fz+6K/fa7wk++q+TCifowdGq8ixO2Q6gvUcn
+         FmXpglW9uipY9tJCndusidaGbtx3peqCnIs/CR5CC05zCXwkNf4LRS2j7q+n1+hw8gNc
+         M5Ng==
+X-Gm-Message-State: APjAAAXo+ZwvlQyFtFBFXSmWV04uIgBw7nCciiCAsJ37WFh6oKP5LExJ
+        K7lnPYYjxpin83Vss5T1IhXgVNlp/2A=
+X-Google-Smtp-Source: APXvYqzBgVWrQEMuw7GVAxwYK0L+OAXRFyfLGgKMrcOAYgZrBFyphkk317ggtz48nnsYq2fvEJOaIQ==
+X-Received: by 2002:a6b:cac2:: with SMTP id a185mr7600440iog.142.1567727239874;
+        Thu, 05 Sep 2019 16:47:19 -0700 (PDT)
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com. [209.85.166.41])
+        by smtp.gmail.com with ESMTPSA id u124sm5785602ioe.63.2019.09.05.16.47.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Sep 2019 16:47:18 -0700 (PDT)
+Received: by mail-io1-f41.google.com with SMTP id b136so8764999iof.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 16:47:17 -0700 (PDT)
+X-Received: by 2002:a6b:ee17:: with SMTP id i23mr6820804ioh.168.1567727237453;
+ Thu, 05 Sep 2019 16:47:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190903142207.5825-1-ulf.hansson@linaro.org> <20190903142207.5825-3-ulf.hansson@linaro.org>
+In-Reply-To: <20190903142207.5825-3-ulf.hansson@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 5 Sep 2019 16:47:05 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XaaC=RpCiF09WAuhmDgte3EmFjFxk9y7xpX=HBwaRr9g@mail.gmail.com>
+Message-ID: <CAD=FV=XaaC=RpCiF09WAuhmDgte3EmFjFxk9y7xpX=HBwaRr9g@mail.gmail.com>
+Subject: Re: [PATCH 02/11] mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linux MMC List <linux-mmc@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Jaehoon Chung <jh80.chung@samsung.com>,
+        Yong Mao <yong.mao@mediatek.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add emulation of the sgdt, sidt, and smsw instructions for 64-bit
-processes.
+Hi,
 
-Wine users have encountered a number of 64-bit Windows games that use
-these instructions (particularly sgdt), and were crashing when run on
-UMIP-enabled systems.
+On Tue, Sep 3, 2019 at 7:22 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> In cases when SDIO IRQs have been enabled, runtime suspend is prevented by
+> the driver. However, this still means dw_mci_runtime_suspend|resume() gets
+> called during system suspend/resume, via pm_runtime_force_suspend|resume().
+> This means during system suspend/resume, the register context of the dw_mmc
+> device most likely loses its register context, even in cases when SDIO IRQs
+> have been enabled.
 
-Originally-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Brendan Shanks <bshanks@codeweavers.com>
----
- arch/x86/kernel/umip.c | 55 +++++++++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 22 deletions(-)
+Even if they weren't lost the resume code currently has this statement:
 
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index 5b345add550f..1812e95d2f55 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -51,9 +51,7 @@
-  * The instruction smsw is emulated to return the value that the register CR0
-  * has at boot time as set in the head_32.
-  *
-- * Also, emulation is provided only for 32-bit processes; 64-bit processes
-- * that attempt to use the instructions that UMIP protects will receive the
-- * SIGSEGV signal issued as a consequence of the general protection fault.
-+ * Emulation is provided for both 32-bit and 64-bit processes.
-  *
-  * Care is taken to appropriately emulate the results when segmentation is
-  * used. That is, rather than relying on USER_DS and USER_CS, the function
-@@ -63,17 +61,18 @@
-  * application uses a local descriptor table.
-  */
- 
--#define UMIP_DUMMY_GDT_BASE 0xfffe0000
--#define UMIP_DUMMY_IDT_BASE 0xffff0000
-+#define UMIP_DUMMY_GDT_BASE 0xfffffffffffe0000ULL
-+#define UMIP_DUMMY_IDT_BASE 0xffffffffffff0000ULL
- 
- /*
-  * The SGDT and SIDT instructions store the contents of the global descriptor
-  * table and interrupt table registers, respectively. The destination is a
-  * memory operand of X+2 bytes. X bytes are used to store the base address of
-- * the table and 2 bytes are used to store the limit. In 32-bit processes, the
-- * only processes for which emulation is provided, X has a value of 4.
-+ * the table and 2 bytes are used to store the limit. In 32-bit processes X
-+ * has a value of 4, in 64-bit processes X has a value of 8.
-  */
--#define UMIP_GDT_IDT_BASE_SIZE 4
-+#define UMIP_GDT_IDT_BASE_SIZE_64BIT 8
-+#define UMIP_GDT_IDT_BASE_SIZE_32BIT 4
- #define UMIP_GDT_IDT_LIMIT_SIZE 2
- 
- #define	UMIP_INST_SGDT	0	/* 0F 01 /0 */
-@@ -189,6 +188,7 @@ static int identify_insn(struct insn *insn)
-  * @umip_inst:	A constant indicating the instruction to emulate
-  * @data:	Buffer into which the dummy result is stored
-  * @data_size:	Size of the emulated result
-+ * @x86_64:     true if process is 64-bit, false otherwise
-  *
-  * Emulate an instruction protected by UMIP and provide a dummy result. The
-  * result of the emulation is saved in @data. The size of the results depends
-@@ -202,11 +202,8 @@ static int identify_insn(struct insn *insn)
-  * 0 on success, -EINVAL on error while emulating.
-  */
- static int emulate_umip_insn(struct insn *insn, int umip_inst,
--			     unsigned char *data, int *data_size)
-+			     unsigned char *data, int *data_size, bool x86_64)
- {
--	unsigned long dummy_base_addr, dummy_value;
--	unsigned short dummy_limit = 0;
--
- 	if (!data || !data_size || !insn)
- 		return -EINVAL;
- 	/*
-@@ -219,6 +216,9 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
- 	 * is always returned irrespective of the operand size.
- 	 */
- 	if (umip_inst == UMIP_INST_SGDT || umip_inst == UMIP_INST_SIDT) {
-+		u64 dummy_base_addr;
-+		u16 dummy_limit = 0;
-+
- 		/* SGDT and SIDT do not use registers operands. */
- 		if (X86_MODRM_MOD(insn->modrm.value) == 3)
- 			return -EINVAL;
-@@ -228,13 +228,24 @@ static int emulate_umip_insn(struct insn *insn, int umip_inst,
- 		else
- 			dummy_base_addr = UMIP_DUMMY_IDT_BASE;
- 
--		*data_size = UMIP_GDT_IDT_LIMIT_SIZE + UMIP_GDT_IDT_BASE_SIZE;
-+		/*
-+		 * 64-bit processes use the entire dummy base address.
-+		 * 32-bit processes use the lower 32 bits of the base address.
-+		 * dummy_base_addr is always 64 bits, but we memcpy the correct
-+		 * number of bytes from it to the destination.
-+		 */
-+		if (x86_64)
-+			*data_size = UMIP_GDT_IDT_BASE_SIZE_64BIT;
-+		else
-+			*data_size = UMIP_GDT_IDT_BASE_SIZE_32BIT;
-+
-+		memcpy(data + 2, &dummy_base_addr, *data_size);
- 
--		memcpy(data + 2, &dummy_base_addr, UMIP_GDT_IDT_BASE_SIZE);
-+		*data_size += UMIP_GDT_IDT_LIMIT_SIZE;
- 		memcpy(data, &dummy_limit, UMIP_GDT_IDT_LIMIT_SIZE);
- 
- 	} else if (umip_inst == UMIP_INST_SMSW) {
--		dummy_value = CR0_STATE;
-+		unsigned long dummy_value = CR0_STATE;
- 
- 		/*
- 		 * Even though the CR0 register has 4 bytes, the number
-@@ -291,10 +302,9 @@ static void force_sig_info_umip_fault(void __user *addr, struct pt_regs *regs)
-  * @regs:	Registers as saved when entering the #GP handler
-  *
-  * The instructions sgdt, sidt, str, smsw, sldt cause a general protection
-- * fault if executed with CPL > 0 (i.e., from user space). If the offending
-- * user-space process is not in long mode, this function fixes the exception
-- * up and provides dummy results for sgdt, sidt and smsw; str and sldt are not
-- * fixed up. Also long mode user-space processes are not fixed up.
-+ * fault if executed with CPL > 0 (i.e., from user space). This function fixes
-+ * the exception up and provides dummy results for sgdt, sidt and smsw; str
-+ * and sldt are not fixed up.
-  *
-  * If operands are memory addresses, results are copied to user-space memory as
-  * indicated by the instruction pointed by eIP using the registers indicated in
-@@ -373,13 +383,14 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	umip_pr_warning(regs, "%s instruction cannot be used by applications.\n",
- 			umip_insns[umip_inst]);
- 
--	/* Do not emulate SLDT, STR or user long mode processes. */
--	if (umip_inst == UMIP_INST_STR || umip_inst == UMIP_INST_SLDT || user_64bit_mode(regs))
-+	/* Do not emulate SLDT or STR. */
-+	if (umip_inst == UMIP_INST_STR || umip_inst == UMIP_INST_SLDT)
- 		return false;
- 
- 	umip_pr_warning(regs, "For now, expensive software emulation returns the result.\n");
- 
--	if (emulate_umip_insn(&insn, umip_inst, dummy_data, &dummy_data_size))
-+	if (emulate_umip_insn(&insn, umip_inst, dummy_data, &dummy_data_size,
-+			      user_64bit_mode(regs)))
- 		return false;
- 
- 	/*
--- 
-2.17.1
+mci_writel(host, INTMASK, SDMMC_INT_CMD_DONE | SDMMC_INT_DATA_OVER |
+   SDMMC_INT_TXDR | SDMMC_INT_RXDR |
+   DW_MCI_ERROR_FLAGS);
 
+...so that would have clobbered any existing state even if register
+state wasn't lost.  ;-)
+
+> To re-enable the SDIO IRQs during system resume, the dw_mmc driver
+> currently relies on the mmc core to re-enable the SDIO IRQs when it resumes
+> the SDIO card, but this isn't the recommended solution. Instead, it's
+> better to deal with this locally in the dw_mmc driver, so let's do that.
+>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  drivers/mmc/host/dw_mmc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index eea52e2c5a0c..f114710e82b4 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -3460,6 +3460,10 @@ int dw_mci_runtime_resume(struct device *dev)
+>         /* Force setup bus to guarantee available clock output */
+>         dw_mci_setup_bus(host->slot, true);
+>
+> +       /* Re-enable SDIO interrupts. */
+> +       if (sdio_irq_enabled(host->slot->mmc))
+> +               __dw_mci_enable_sdio_irq(host->slot, 1);
+> +
+
+There's a slight bit of subtleness here and I guess we need to figure
+out if it matters.  From testing things seem to work OK so maybe we're
+fine, but just to explain what's bugging me:
+
+If we got an SDIO interrupt that was never ACKed then this is going to
+act like an implicit ACK.  Notice that dw_mci_ack_sdio_irq() is
+exactly this call because when the SDIO IRQ fires we mask it out.
+...then unmask when Acked.
+
+Specifically after your series is applied, I think this is what
+happens if an interrupt fires while the SDIO bus is officially
+suspended:
+
+1. dw_mci_interrupt() will get called which will mask the SDIO IRQ and
+then call sdio_signal_irq()
+
+2. sdio_signal_irq() will queue some delayed work.
+
+3. The work will call sdio_run_irqs()
+
+4. sdio_run_irqs() _won't_ ack the IRQ, so it will stay disabled.
+
+5. When we get to the resume we'll re-enable the interrupt.
+
+I guess that's fine, but it is a little weird that we might not really
+be restoring it simply because it got disabled due to the clobbering
+of INTMASK but also because we implicitly skipped Acking an interrupt
+that fired.
+
+
+I wonder if the correct fix is to just add an explit zeroing of the
+INTMASK (so mask all interrupts) in dw_mmc's suspend callback.  Then
+there's no possible way we could get an interrupt during suspend...
+
+
+
+-Doug
