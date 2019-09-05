@@ -2,93 +2,119 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C90C00307
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A35C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472C32070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B7172082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:29:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567708183;
+	bh=T0ll8J6r0R1Visw0vbgL4AIx3iScvCP1sF/nv3g3ZCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tqukrRPMKcXjXYhqApyxmHZrXzK6pE2uHA8louAqgHXid7tWGmO4Z28sJLDCFy0e0
+	 Ehv1t7ShOVfmzRn9XpYtkb/FTbJW25nGC3qdd4+Epa8P+9pe1XCbrajBITZrBGMOtP
+	 OtN19CAGxZcsvQWNW4yWvZzQFj4rPyV0ig5P0x+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403896AbfIES2k (ORCPT
+        id S2403905AbfIES3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:28:40 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:39716 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731541AbfIES2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:28:39 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
-        id 1i5wUD-0004ZK-Jy; Thu, 05 Sep 2019 18:28:02 +0000
-Date:   Thu, 5 Sep 2019 19:28:01 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>, Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905182801.GR1131@ZenIV.linux.org.uk>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
- <20190905182303.7f6bxpa2enbgcegv@wittgenstein>
+        Thu, 5 Sep 2019 14:29:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728590AbfIES3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 14:29:41 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F0A920825;
+        Thu,  5 Sep 2019 18:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567708181;
+        bh=T0ll8J6r0R1Visw0vbgL4AIx3iScvCP1sF/nv3g3ZCs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Py/zzvOgfmDbynLZ9gYju9DVSSesq1A4AfxzrmxTBSYpwD+XvDSPH9gJhaRfIYfXU
+         UrboWcXDkqHBYkltpkcFFLa179lH9nqe1bqg/0mdC4M3iryPuJfXAuwo4MSLbRRMDe
+         qM5Qap7bztJQ6dCTRpIm2xOA6LL4rZSVUr4kNH2Q=
+Date:   Thu, 5 Sep 2019 13:29:38 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sathyanarayanan.kuppuswamy@linux.intel.com, berrange@redhat.com,
+        ddutile@redhat.com, bodong@mellanox.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Eli Cohen <eli@mellanox.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH] PCI/IOV: Make SR-IOV attributes
+ with mode 0664 use 0644
+Message-ID: <20190905182938.GD103977@google.com>
+References: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905182303.7f6bxpa2enbgcegv@wittgenstein>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 08:23:03PM +0200, Christian Brauner wrote:
+[+cc Bodong, Eli: just FYI since this affects sriov_drivers_autoprobe,
+which you added with 0e7df22401a3]
 
-> Because every caller of that function right now has that limit set
-> anyway iirc. So we can either remove it from here and place it back for
-> the individual callers or leave it in the helper.
-> Also, I'm really asking, why not? Is it unreasonable to have an upper
-> bound on the size (for a long time probably) or are you disagreeing with
-> PAGE_SIZE being used? PAGE_SIZE limit is currently used by sched, perf,
-> bpf, and clone3 and in a few other places.
+On Thu, Sep 05, 2019 at 12:32:26AM -0600, Kelsey Skunberg wrote:
+> sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
+> with no reported or found reason for allowing group write permissions.
+> libvirt runs as root when dealing with PCI, and chowns files for qemu
+> needs. There is not a need for the "0664" permissions.
+> 
+> sriov_numvfs was introduced in:
+> 	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
+> 
+> sriov_drivers_autoprobe was introduced in:
+> 	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
+> 			      control VF driver binding")
+> 
+> Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
+> "0644" permissions.
+> 
+> Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
+> DEVICE_ATTR() should only be used for "unusual" permissions.
+> 
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 
-For a primitive that can be safely used with any size (OK, any within
-the usual 2Gb limit)?  Why push the random policy into the place where
-it doesn't belong?
+Applied with Greg's Reviewed-by and Don's Acked-by to pci/misc for
+v5.4, thanks!
 
-Seriously, what's the point?  If they want to have a large chunk of
-userland memory zeroed or checked for non-zeroes - why would that
-be a problem?
+> ---
+>  drivers/pci/iov.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
+> index b335db21c85e..b3f972e8cfed 100644
+> --- a/drivers/pci/iov.c
+> +++ b/drivers/pci/iov.c
+> @@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
+>  }
+>  
+>  static DEVICE_ATTR_RO(sriov_totalvfs);
+> -static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
+> +static DEVICE_ATTR_RW(sriov_numvfs);
+>  static DEVICE_ATTR_RO(sriov_offset);
+>  static DEVICE_ATTR_RO(sriov_stride);
+>  static DEVICE_ATTR_RO(sriov_vf_device);
+> -static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
+> -		   sriov_drivers_autoprobe_store);
+> +static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
+>  
+>  static struct attribute *sriov_dev_attrs[] = {
+>  	&dev_attr_sriov_totalvfs.attr,
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Linux-kernel-mentees mailing list
+> Linux-kernel-mentees@lists.linuxfoundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
