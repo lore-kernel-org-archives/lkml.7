@@ -2,65 +2,69 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4B2C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 509DCC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3838720828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D9820828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567710947;
-	bh=p/WXnL93kys4Xsusi5YfOkEr9fenxVutlgLMNmczUH8=;
+	s=default; t=1567710969;
+	bh=1c56GflaBJYpW7I3V954ev68I6Ir7BAtdC3/zgNPSqI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CVBrq/7lugnZYYKwOORvUTV8GKWQDt6gkSsNUA0f6NRtFZVECfUvbm0w7U8qkFECd
-	 eBeeGa0F+c1qChPJ11CfDFCv09TdlUhAIW0Bd6iN2AOqWy5k74gSImp6JfkEFpCHit
-	 E6KD6+LCC0Z8dLUBBMyKrkWQHWg6vQnqj9fw0WUM=
+	b=BcPKyBVO+fe30adT9kF3yb6CQ//lYpnDzP6UqrkMplfXhpKd4asyGwXnwwN/+N1XP
+	 CVQ3PSFIkNXELdRI3QozF3BJrk4cBhTVSN0S5sjRp/6xuHVhdyt++xRn0yw9UPI2tO
+	 9k0689Klqt6OivpCHPQQXJzfYrMBq4sRD7ylVt5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388504AbfIETPp (ORCPT
+        id S2388642AbfIETQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:15:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46902 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 15:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726097AbfIETPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:15:44 -0400
+        id S1726097AbfIETQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:16:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA4102070C;
-        Thu,  5 Sep 2019 19:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C64032070C;
+        Thu,  5 Sep 2019 19:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567710945;
-        bh=p/WXnL93kys4Xsusi5YfOkEr9fenxVutlgLMNmczUH8=;
+        s=default; t=1567710967;
+        bh=1c56GflaBJYpW7I3V954ev68I6Ir7BAtdC3/zgNPSqI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OvvyPTYbbkyZREMPHAwyx0Fkj94ZYu0PnVNivdihPqNea+j/SxcznTdwzJkmE5g1Y
-         wrbF93QO15rgcSJvx2To/Rwgf3ERBAEXgK7oRHJblZiNLfAK1bhaZ89+FTmvcru1rj
-         PO9pMBdNAfxV4g2SyxcSeRZI2EV+rYqEsPT7OdgQ=
-Date:   Thu, 5 Sep 2019 21:15:42 +0200
+        b=E7LjTUVI7y9W4bUUFT0EKaEtlID3NjqyjFY7x8/xLimfn4sx6gjuIBcI6We6P6zs4
+         RqbB3LKdzAzOll1M+g2fQEtZOcn2LkdBOMHrNx+6C7xWwA7xEbaJU9+Fo4DJvTjn/r
+         fx17ENyj1rPGNUTbMwIa+jh6NwIvjlUg8/e6mAZw=
+Date:   Thu, 5 Sep 2019 21:16:04 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
+To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
 Subject: Re: [PATCH 5.2 000/143] 5.2.12-stable review
-Message-ID: <20190905191542.GA15748@kroah.com>
+Message-ID: <20190905191604.GB15748@kroah.com>
 References: <20190904175314.206239922@linuxfoundation.org>
- <20190905165627.GF23158@roeck-us.net>
+ <f1f7fd91-061b-9646-20e8-297dfa2262c4@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190905165627.GF23158@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f1f7fd91-061b-9646-20e8-297dfa2262c4@linaro.org>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 09:56:27AM -0700, Guenter Roeck wrote:
-> On Wed, Sep 04, 2019 at 07:52:23PM +0200, Greg Kroah-Hartman wrote:
+On Thu, Sep 05, 2019 at 12:29:57PM -0500, Daniel Díaz wrote:
+> Hello!
+> 
+> On 9/4/19 12:52 PM, Greg Kroah-Hartman wrote:
 > > This is the start of the stable review cycle for the 5.2.12 release.
 > > There are 143 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
@@ -69,11 +73,18 @@ On Thu, Sep 05, 2019 at 09:56:27AM -0700, Guenter Roeck wrote:
 > > Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
 > > Anything received after that time might be too late.
 > > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.12-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> Build results:
-> 	total: 159 pass: 159 fail: 0
-> Qemu test results:
-> 	total: 390 pass: 390 fail: 0
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
 Thanks for testing all of these and letting me know.
 
