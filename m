@@ -2,130 +2,125 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FB7C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFC8C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6D522CEC
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1337321883
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732906AbfIEMQm (ORCPT
+        id S2389030AbfIEMRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:16:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:43878 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731196AbfIEMQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:16:41 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A3E128;
-        Thu,  5 Sep 2019 05:16:40 -0700 (PDT)
-Received: from localhost (e113682-lin.copenhagen.arm.com [10.32.144.41])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2EA823F718;
-        Thu,  5 Sep 2019 05:16:40 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 14:16:38 +0200
-From:   Christoffer Dall <christoffer.dall@arm.com>
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Daniel =?utf-8?B?UC4gQmVycmFuZ8Op?= <berrange@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-kernel@vger.kernel.org, kvmarm@lists.cs.columbia.edu,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be
- decoded
-Message-ID: <20190905121638.GD4320@e113682-lin.lund.arm.com>
-References: <20190904180736.29009-1-xypron.glpk@gmx.de>
- <20190905092039.GG32415@stefanha-x1.localdomain>
- <561eae08-c5f1-9543-275c-0da0a85cd7df@gmx.de>
+        Thu, 5 Sep 2019 08:17:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51862 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731196AbfIEMRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 08:17:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C137DAB9D;
+        Thu,  5 Sep 2019 12:17:05 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 14:16:51 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+In-Reply-To: <20190905023202.ed7fecc22xze4pwj@treble>
+Message-ID: <alpine.LSU.2.21.1909051403530.25712@pobox.suse.cz>
+References: <20190728200427.dbrojgu7hafphia7@treble> <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz> <20190814151244.5xoaxib5iya2qjco@treble> <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz> <20190822223649.ptg6e7qyvosrljqx@treble>
+ <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz> <20190826145449.wyo7avwpqyriem46@treble> <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz> <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com> <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+ <20190905023202.ed7fecc22xze4pwj@treble>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <561eae08-c5f1-9543-275c-0da0a85cd7df@gmx.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heinrich,
+On Wed, 4 Sep 2019, Josh Poimboeuf wrote:
 
-On Thu, Sep 05, 2019 at 02:01:36PM +0200, Heinrich Schuchardt wrote:
-> On 9/5/19 11:20 AM, Stefan Hajnoczi wrote:
-> > On Wed, Sep 04, 2019 at 08:07:36PM +0200, Heinrich Schuchardt wrote:
-> > > If an application tries to access memory that is not mapped, an error
-> > > ENOSYS, "load/store instruction decoding not implemented" may occur.
-> > > QEMU will hang with a register dump.
-> > > 
-> > > Instead create a data abort that can be handled gracefully by the
-> > > application running in the virtual environment.
-> > > 
-> > > Now the virtual machine can react to the event in the most appropriate
-> > > way - by recovering, by writing an informative log, or by rebooting.
-> > > 
-> > > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> > > ---
-> > >   virt/kvm/arm/mmio.c | 4 ++--
-> > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/virt/kvm/arm/mmio.c b/virt/kvm/arm/mmio.c
-> > > index a8a6a0c883f1..0cbed7d6a0f4 100644
-> > > --- a/virt/kvm/arm/mmio.c
-> > > +++ b/virt/kvm/arm/mmio.c
-> > > @@ -161,8 +161,8 @@ int io_mem_abort(struct kvm_vcpu *vcpu, struct kvm_run *run,
-> > >   		if (ret)
-> > >   			return ret;
-> > >   	} else {
-> > > -		kvm_err("load/store instruction decoding not implemented\n");
-> > > -		return -ENOSYS;
-> > > +		kvm_inject_dabt(vcpu, kvm_vcpu_get_hfar(vcpu));
-> > > +		return 1;
+> On Tue, Sep 03, 2019 at 03:02:34PM +0200, Miroslav Benes wrote:
+> > On Mon, 2 Sep 2019, Joe Lawrence wrote:
 > > 
-> > I see this more as a temporary debugging hack than something to merge.
+> > > On 9/2/19 12:13 PM, Miroslav Benes wrote:
+> > > >> I can easily foresee more problems like those in the future.  Going
+> > > >> forward we have to always keep track of which special sections are
+> > > >> needed for which architectures.  Those special sections can change over
+> > > >> time, or can simply be overlooked for a given architecture.  It's
+> > > >> fragile.
+> > > > 
+> > > > Indeed. It bothers me a lot. Even x86 "port" is not feature complete in
+> > > > this regard (jump labels, alternatives,...) and who knows what lurks in
+> > > > the corners of the other architectures we support.
+> > > > 
+> > > > So it is in itself reason enough to do something about late module
+> > > > patching.
+> > > > 
+> > > 
+> > > Hi Miroslav,
+> > > 
+> > > I was tinkering with the "blue-sky" ideas that I mentioned to Josh the other
+> > > day.
 > > 
-> > It sounds like in your case the guest environment provided good
-> > debugging information and you preferred it over debugging this from the
-> > host side.  That's fine, but allowing the guest to continue running in
-> > the general case makes it much harder to track down the root cause of a
-> > problem because many guest CPU instructions may be executed after the
-> > original problem occurs.  Other guest software may fail silently in
-> > weird ways.  IMO it's best to fail early.
+> > > I dunno if you had a chance to look at what removing that code looks
+> > > like, but I can continue to flesh out that idea if it looks interesting:
 > > 
-> > Stefan
+> > Unfortunately no and I don't think I'll come up with something useful 
+> > before LPC, so anything is really welcome.
 > > 
+> > > 
+> > >   https://github.com/joe-lawrence/linux/tree/blue-sky
 > 
-> As virtual machine are ubiquitous, expect also mission critical system
-> to run on them. At development time halting a machine may be a good
-> idea. In production this is often the worst solution. Rebooting may be
-> essential for survival.
+> I like this a lot.
 > 
-> For an anecdotal example see:
-> https://www.hq.nasa.gov/alsj/a11/a11.1201-pa.html
+> > > A full demo would require packaging up replacement .ko's with a livepatch, as
+> > > well as "blacklisting" those deprecated .kos, etc.  But that's all I had time
+> > > to cook up last week before our holiday weekend here.
+> > 
+> > Frankly, I'm not sure about this approach. I'm kind of torn. The current 
+> > solution is far from ideal, but I'm not excited about the other options 
+> > either. It seems like the choice is basically between "general but 
+> > technically complicated fragile solution with nontrivial maintenance 
+> > burden", or "something safer and maybe cleaner, but limiting for 
+> > users/distros". Of course it depends on whether the limitation is even 
+> > real and how big it is. Unfortunately we cannot quantify it much and that 
+> > is probably why our opinions (in the email thread) differ.
 > 
-> I am convinced that leaving it to the guest to decide how to react is
-> the best choice.
-> 
-Maintaining strong adherence to the architecture is equally important,
-and I'm sure we can find anecdotes to support how not doing the
-expected, can also lead to disastrous outcomes.
+> How would this option be "limiting for users/distros"?  If the packaging
+> part of the solution is done correctly then I don't see how it would be
+> limiting.
 
-Have you had a look at the suggested patch I sent?  The idea is that we
-can preserve existing legacy ABI, allow for a better debugging
-experience, allow userspace to do emulation if it so wishes, and provide
-a better error message if userspace doesn't handle this properly.
+I'll try to explain my worries.
 
-One thing we could change from my proposed patch would be to have KVM
-inject the access as an external abort if the target address also
-doesn't hit an MMIO device, which is by far the common scenario reported
-here on the list.
+Blacklisting first. Yes, I agree that it would make things a lot simpler, 
+but I am afraid it would not fly at SUSE. Petr meanwhile explained 
+elsewhere, but I don't think we can limit our customers that much. We 
+perceive live patching as a product as much transparent as possible and as 
+less intrusive as possible. One thing is to forbid to remove a module, the 
+other is to forbid its loading.
 
-Hopefully, a mission critical deployment based on KVM/Arm (scary as that
-sounds), would use a recent and patched VMM (QEMU) that either causes
-the external abort, or reboots the VM, as per the configuration of the
-particular system in question.
+We could warn the admin. Something like "there is a fix for a module foo, 
+which is not loaded currently. It will not be patched and the system will 
+be still vulnerable if you load the module unless a new fixed version is 
+provided."
 
+Yes, we can distribute the new version of .ko with a livepatch. What is 
+the reason for blacklisting then? I don't probably understand, but either 
+a module is loaded and we can patch it (without late module patching), or 
+it is not and we could replace .ko on disk.
 
-Thanks,
+Now, I don't think that replacing .ko on disk is a good idea. We've 
+already discussed it. It would lead to a maintenance/packaging problem, 
+because you never know which version of the module is loaded in the 
+system. The state space grows rather rapidly there.
 
-    Christoffer
+But I may be wrong in my understanding, so bear with me.
+
+Miroslav
