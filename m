@@ -2,109 +2,192 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52194C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E90AC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92178206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:40:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p23Nw56N"
+	by mail.kernel.org (Postfix) with ESMTP id C56142082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391228AbfIEWk0 (ORCPT
+        id S2391247AbfIEWlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:40:26 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:55660 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731458AbfIEWkZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:40:25 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MXakO060612;
-        Thu, 5 Sep 2019 22:40:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=j4duDJkDTLknvUpbMVOSUtirQmIgH4PjV/EQIrfRAgQ=;
- b=p23Nw56N0c1kF9pYFKppS2aA5ftLjfUjoyYmfwhIykDLBzxcuDJWKu1ooZYmk6vZQC1E
- FNNH7kyJ33KlkHRvmHsfjSEPy0Shw19WlVGGhuunRvhPlHJ9qR0jAqWF3SH/88QwyXgo
- Fja/nvxlShfb2/Jv7lFLoxUpgcv5Afcmgwtn3tyM3F4FqCxmKUaozfsHl8A92DbbK7AZ
- 5Hz2649uVsVEITfD5P/DdiejwkPhsZKYJo+4xXGDCwBmiNCT5XAyBhPIG+cJGOmrPgPm
- +QyJR/45vGn1dDa6ZpSEEXKoYL8tgIZajWWbgsw8/AMypcFtLxEYKKc0PQ2caxEwymHq wA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2uub5yr17v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Sep 2019 22:40:08 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85MXM9Y154410;
-        Thu, 5 Sep 2019 22:40:08 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2uthq289s1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Sep 2019 22:40:08 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85Me6Cm019154;
-        Thu, 5 Sep 2019 22:40:06 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 15:40:06 -0700
-Date:   Thu, 5 Sep 2019 18:40:04 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/9] padata: use unbound workqueues for parallel jobs
-Message-ID: <20190905224004.jjavgjseaf4we3cm@ca-dmjordan1.us.oracle.com>
-References: <20190829173038.21040-1-daniel.m.jordan@oracle.com>
- <20190905043548.GA27131@gondor.apana.org.au>
+        Thu, 5 Sep 2019 18:41:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47238 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726837AbfIEWlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 18:41:05 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A015C300BEB4;
+        Thu,  5 Sep 2019 22:41:04 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 83EDB19C77;
+        Thu,  5 Sep 2019 22:41:02 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 23:41:00 +0100
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Abhinav Ratna <abhinav.ratna@broadcom.com>
+Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
+Message-ID: <20190905234100.4799bad8@x1.home>
+In-Reply-To: <20190905222649.GK103977@google.com>
+References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
+        <20190905222649.GK103977@google.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905043548.GA27131@gondor.apana.org.au>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=882
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909050210
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=946 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909050210
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 22:41:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 02:35:48PM +1000, Herbert Xu wrote:
-> On Thu, Aug 29, 2019 at 01:30:29PM -0400, Daniel Jordan wrote:
-> > Hello,
-> > 
-> > Everything in the Testing section has been rerun after the suggestion
-> > from Herbert last round.  Thanks again to Steffen for giving this a run.
-> > 
-> > Any comments welcome.
-> > 
-> > Daniel
-> > 
-> > v1[*]  -> v2:
-> >  - Updated patch 8 to avoid queueing the reorder work if the next object
-> >    by sequence number isn't ready yet (Herbert)
-> >  - Added Steffen's ack to all but patch 8 since that one changed.
-> 
-> This doesn't apply against cryptodev.  Perhaps it depends on the
-> flushing patch series? If that's the case please combine both into
-> one series.
+On Thu, 5 Sep 2019 17:26:49 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-I had developed this on top of the flushing series, but this doesn't depend on
-it, so I've rebased this onto today's cryptodev and will send it soon.
+> [+cc Alex]
+> 
+> On Tue, Aug 20, 2019 at 10:09:45AM +0530, Srinath Mannam wrote:
+> > From: Abhinav Ratna <abhinav.ratna@broadcom.com>
+> > 
+> > IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> > Add quirk to have separate IOMMU groups for all EPs and functions connected
+> > to root port, by masking RR/CR/SV/UF bits.
+> > 
+> > Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>  
+> 
+> I tentatively applied this to pci/misc with Scott's ack for v5.4.
+> 
+> I tweaked the patch itself to follow the style of similar quirks
+> (interdiff is below, plus a diff of the commit log).  Please make sure
+> I didn't break it.
+> 
+> I also went out on a limb and reworded the comment to give what I
+> *think* is the justification for this patch, as opposed to merely a
+> description of the code.  I'm making a lot of assumptions there, so
+> please confirm that they're correct, or supply alternate justification
+> if they're not.
+
+Agreed, this really needs to be the vendor vouching for ACS equivalent
+functionality, not simply splitting IOMMU groups because it's
+inconvenient.  Thanks,
+
+Alex
+
+> 
+> > ---
+> >  drivers/pci/quirks.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > index 0f16acc..f9584c0 100644
+> > --- a/drivers/pci/quirks.c
+> > +++ b/drivers/pci/quirks.c
+> > @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+> >  	return acs_flags ? 0 : 1;
+> >  }
+> >  
+> > +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+> > +{
+> > +	/*
+> > +	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> > +	 * Add quirk to to have separate IOMMU groups for all EPs and functions
+> > +	 * connected to root port, by masking RR/CR/SV/UF bits.
+> > +	 */
+> > +
+> > +	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+> > +	int ret = acs_flags & ~flags ? 0 : 1;
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +
+> >  static const struct pci_dev_acs_enabled {
+> >  	u16 vendor;
+> >  	u16 device;
+> > @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
+> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> > +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
+> >  	{ 0 }
+> >  };  
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 77c0330ac922..2edbce35e8c5 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4466,21 +4466,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+>  	return acs_flags ? 0 : 1;
+>  }
+>  
+> -static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+> +static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+>  {
+>  	/*
+> -	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> -	 * Add quirk to to have separate IOMMU groups for all EPs and functions
+> -	 * connected to root port, by masking RR/CR/SV/UF bits.
+> +	 * iProc PAXB Root Ports don't advertise an ACS capability, but
+> +	 * they do not allow peer-to-peer transactions between Root Ports.
+> +	 * Allow each Root Port to be in a separate IOMMU group by masking
+> +	 * SV/RR/CR/UF bits.
+>  	 */
+> +	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+>  
+> -	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+> -	int ret = acs_flags & ~flags ? 0 : 1;
+> -
+> -	return ret;
+> +	return acs_flags ? 0 : 1;
+>  }
+>  
+> -
+>  static const struct pci_dev_acs_enabled {
+>  	u16 vendor;
+>  	u16 device;
+> @@ -4574,7 +4572,7 @@ static const struct pci_dev_acs_enabled {
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> -	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
+> +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+>  	{ 0 }
+>  };
+>  
+> 
+> 
+> 
+> @@ -1,49 +1,49 @@
+> -commit b50ae502eff0
+> +commit 46b2c32df7a4
+>  Author: Abhinav Ratna <abhinav.ratna@broadcom.com>
+>  Date:   Tue Aug 20 10:09:45 2019 +0530
+>  
+> -    PCI: Add PCIE ACS quirk for IPROC PAXB
+> +    PCI: Add ACS quirk for iProc PAXB
+>      
+> -    IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> -    Add quirk to have separate IOMMU groups for all EPs and functions connected
+> -    to root port, by masking RR/CR/SV/UF bits.
+> +    iProc PAXB Root Ports don't advertise an ACS capability, but they do not
+> +    allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
+> +    each Root Port can be in a separate IOMMU group.
+>      
+> +    [bhelgaas: commit log, comment, use common implementation style]
+>      Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
+>      Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+>      Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> +    Acked-by: Scott Branden <scott.branden@broadcom.com>
+>  
+
