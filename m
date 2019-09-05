@@ -2,154 +2,178 @@ Return-Path: <SRS0=GGWy=XB=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC412C43331
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B30C43331
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6917207FC
-	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19A2207FC
+	for <linux-kernel@archiver.kernel.org>; Fri,  6 Sep 2019 08:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389899AbfIFIRR convert rfc822-to-8bit (ORCPT
+        id S2390297AbfIFIRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 6 Sep 2019 04:17:17 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:58818 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfIFIRR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 6 Sep 2019 04:17:17 -0400
-Received: from mailgate02.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x868GoAD017898
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 6 Sep 2019 17:16:50 +0900
-Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x868Gn8O006386;
-        Fri, 6 Sep 2019 17:16:49 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x868F0sx023285;
-        Fri, 6 Sep 2019 17:16:49 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.152] [10.38.151.152]) by mail02.kamome.nec.co.jp with ESMTP id BT-MMP-8242729; Fri, 6 Sep 2019 17:09:54 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC24GP.gisp.nec.co.jp ([10.38.151.152]) with mapi id 14.03.0439.000; Fri, 6
- Sep 2019 17:09:54 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Subject: [RFC PATCH v2] mm: initialize struct pages reserved by ZONE_DEVICE
- driver.
-Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFA==
-Date:   Fri, 6 Sep 2019 08:09:52 +0000
-Message-ID: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-TM-AS-MML: disable
+        Fri, 6 Sep 2019 04:17:22 -0400
+Received: from mga11.intel.com ([192.55.52.93]:23720 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389928AbfIFIRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 6 Sep 2019 04:17:22 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Sep 2019 01:17:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,472,1559545200"; 
+   d="scan'208";a="383186101"
+Received: from yiliu-dev.bj.intel.com ([10.238.156.139])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Sep 2019 01:17:19 -0700
+From:   Liu Yi L <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, kwankhede@nvidia.com
+Cc:     kevin.tian@intel.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
+        yi.y.sun@intel.com, joro@8bytes.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, yan.y.zhao@intel.com, shaopeng.he@intel.com,
+        chenbo.xia@intel.com, jun.j.tian@intel.com
+Subject: [PATCH v2 00/13] vfio_pci: wrap pci device as a mediated device
+Date:   Thu,  5 Sep 2019 15:59:17 +0800
+Message-Id: <1567670370-4484-1-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A kernel panic is observed during reading
-/proc/kpage{cgroup,count,flags} for first few pfns allocated by
-pmem namespace:
+This patchset aims to add a vfio-pci-like meta driver as a demo
+user of the vfio changes introduced in "vfio/mdev: IOMMU aware
+mediated device" patchset from Baolu Lu. Besides the test purpose,
+per Alex's comments, it could also be a good base driver for
+experimenting with device specific mdev migration.
 
-BUG: unable to handle page fault for address: fffffffffffffffe
-[  114.495280] #PF: supervisor read access in kernel mode
-[  114.495738] #PF: error_code(0x0000) - not-present page
-[  114.496203] PGD 17120e067 P4D 17120e067 PUD 171210067 PMD 0
-[  114.496713] Oops: 0000 [#1] SMP PTI
-[  114.497037] CPU: 9 PID: 1202 Comm: page-types Not tainted 5.3.0-rc1
-[  114.497621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-[  114.498706] RIP: 0010:stable_page_flags+0x27/0x3f0
-[  114.499142] Code: 82 66 90 66 66 66 66 90 48 85 ff 0f 84 d1 03 00 00 41 54 55 48 89 fd 53 48 8b 57 08 48 8b 1f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 02 0f 84 57 03 00 00 45 31 e4 48 8b 55 08 48 89 ef
-[  114.500788] RSP: 0018:ffffa5e601a0fe60 EFLAGS: 00010202
-[  114.501373] RAX: fffffffffffffffe RBX: ffffffffffffffff RCX: 0000000000000000
-[  114.502009] RDX: 0000000000000001 RSI: 00007ffca13a7310 RDI: ffffd07489000000
-[  114.502637] RBP: ffffd07489000000 R08: 0000000000000001 R09: 0000000000000000
-[  114.503270] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000240000
-[  114.503896] R13: 0000000000080000 R14: 00007ffca13a7310 R15: ffffa5e601a0ff08
-[  114.504530] FS:  00007f0266c7f540(0000) GS:ffff962dbbac0000(0000) knlGS:0000000000000000
-[  114.505245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  114.505754] CR2: fffffffffffffffe CR3: 000000023a204000 CR4: 00000000000006e0
-[  114.506401] Call Trace:
-[  114.506660]  kpageflags_read+0xb1/0x130
-[  114.507051]  proc_reg_read+0x39/0x60
-[  114.507387]  vfs_read+0x8a/0x140
-[  114.507686]  ksys_pread64+0x61/0xa0
-[  114.508021]  do_syscall_64+0x5f/0x1a0
-[  114.508372]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  114.508844] RIP: 0033:0x7f0266ba426b
+Specific interface tested in this proposal:
+ *) int mdev_set_iommu_device(struct device *dev,
+ 				struct device *iommu_device)
+    introduced in the patch as below:
+    "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
 
-The first few pages of ZONE_DEVICE expressed as the range
-(altmap->base_pfn) to (altmap->base_pfn + altmap->reserve) are
-skipped by struct page initialization. Some pfn walkers like
-/proc/kpage{cgroup, count, flags} can't handle these uninitialized
-struct pages, which causes the error.
+Patch Overview:
+ *) patch 1 ~ 7: code refactor for existing vfio-pci module
+                 move the common codes from vfio_pci.c to
+                 vfio_pci_common.c
+ *) patch 8: add protection to perm_bits alloc/free
+ *) patch 9: add vfio-mdev-pci sample driver
+ *) patch 10: refine the sample driver
+ *) patch 11 - 13: make the sample driver work for non-singleton groups
+                   also work for vfio-pci and vfio-mdev-pci mixed usage
+                   includes vfio-mdev-pci driver change and vfio_iommu_type1
+                   changes.
 
-In previous discussion, Dan seemed to have concern that the struct
-page area of some pages indicated by vmem_altmap->reserve may not
-be allocated. (See https://lore.kernel.org/lkml/CAPcyv4i5FjTOnPbXNcTzvt+e6RQYow0JRQwSFuxaa62LSuvzHQ@mail.gmail.com/)
-However, arch_add_memory() called by devm_memremap_pages() allocates
-struct page area for pages containing addresses in the range
-(res.start) to (res.start + resource_size(res)), which include the
-pages indicated by vmem_altmap->reserve. If I read correctly, it is
-allocated as requested at least on x86_64. Also, memmap_init_zone()
-initializes struct pages in the same range.
-So I think the struct pages should be initialized.
+Links:
+ *) Link of "vfio/mdev: IOMMU aware mediated device"
+         https://lwn.net/Articles/780522/
+ *) Previous versions:
+         RFC v1: https://lkml.org/lkml/2019/3/4/529
+         RFC v2: https://lkml.org/lkml/2019/3/13/113
+         RFC v3: https://lkml.org/lkml/2019/4/24/495
+         Patch v1: https://www.spinics.net/lists/kvm/msg188952.html
+ *) may try it with the codes in below repo
+    current version is branch "v5.3-rc7-pci-mdev":
+         https://github.com/luxis1999/vfio-mdev-pci-sample-driver.git
 
-Signed-off-by: Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-Cc: stable@vger.kernel.org
----
-Changes since rev 1:
- Instead of avoiding uninitialized pages on the pfn walker side,
- we initialize struct pages.
+Test done on two NICs which share an iommu group.
 
-mm/page_alloc.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+-------------------------------------------------------------------
+         |  NIC0           |  NIC1      | vIOMMU  | VMs  | Passtrhu
+-------------------------------------------------------------------
+  Test#0 |  vfio-pci       |  vfio-pci  | no      |  1   | pass
+-------------------------------------------------------------------
+  Test#1 |  vfio-pci       |  vfio-pci  | no      |  2   | fail[1]
+-------------------------------------------------------------------
+  Test#2 |  vfio-pci       |  vfio-pci  | yes     |  1   | fail[2]
+-------------------------------------------------------------------
+  Test#3 |  vfio-pci-mdev  |  vfio-pci  | no      |  1   | pass
+-------------------------------------------------------------------
+  Test#4 |  vfio-pci-mdev  |  vfio-pci  | no      |  2   | fail[3]
+-------------------------------------------------------------------
+  Test#5 |  vfio-pci-mdev  |  vfio-pci  | yes     |  1   | fail[4]
+-------------------------------------------------------------------
+Tips:
+[1] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6: 
+     vfio 0000:01:00.1: failed to open /dev/vfio/1: Device or resource busy
+[2] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
+     vfio 0000:01:00.1: group 1 used in multiple address spaces
+[3] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
+     vfio 0000:01:00.1: failed to setup container for group 1: Failed to set
+     iommu for container: Device or resource busy
+[4] qemu-system-x86_64: -device vfio-pci,host=01:00.1,id=hostdev0,addr=0x6:
+     vfio 0000:01:00.1: failed to setup container for group 1: Failed to set
+     iommu for container: Device or resource busy
+    Or
+    qemu-system-x86_64: -device vfio-pci,sysfsdev=/sys/bus/mdev/devices/
+     83b8f4f2-509f-382f-3c1e-e6bfe0fa1003: vfio 83b8f4f2-509f-382f-3c1e-
+     e6bfe0fa1003: failed to setup container for group 11: Failed to set iommu
+     for container: Device or resource busy
+Some other tests are not listed. Like bind NIC0 to vfio-pci-mdev and try to
+passthru it with "vfio-pci,host=01:00.0", kernel will throw a warn log and
+fail the operation.
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 9c91949..6d180ae 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5846,8 +5846,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
- 
- #ifdef CONFIG_ZONE_DEVICE
- 	/*
--	 * Honor reservation requested by the driver for this ZONE_DEVICE
--	 * memory. We limit the total number of pages to initialize to just
-+	 * We limit the total number of pages to initialize to just
- 	 * those that might contain the memory mapping. We will defer the
- 	 * ZONE_DEVICE page initialization until after we have released
- 	 * the hotplug lock.
-@@ -5856,8 +5855,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
- 		if (!altmap)
- 			return;
- 
--		if (start_pfn == altmap->base_pfn)
--			start_pfn += altmap->reserve;
- 		end_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
- 	}
- #endif
+Please feel free give your comments.
+
+Thanks,
+Yi Liu
+
+Change log:
+  patch v1 -> patch v2:
+  - the sample driver implementation refined
+  - the sample driver can work on non-singleton iommu groups
+  - the sample driver can work with vfio-pci, devices from a non-singleton
+    group can either be bound to vfio-mdev-pci or vfio-pci, and the
+    assignment of this group still follows current vfio assignment rule.
+
+  RFC v3 -> patch v1:
+  - split the patchset from 3 patches to 9 patches to better demonstrate
+    the changes step by step
+
+  v2->v3:
+  - use vfio-mdev-pci instead of vfio-pci-mdev
+  - place the new driver under drivers/vfio/pci while define
+    Kconfig in samples/Kconfig to clarify it is a sample driver
+
+  v1->v2:
+  - instead of adding kernel option to existing vfio-pci
+    module in v1, v2 follows Alex's suggestion to add a
+    separate vfio-pci-mdev module.
+  - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
+
+Alex Williamson (1):
+  samples: refine vfio-mdev-pci driver
+
+Liu Yi L (12):
+  vfio_pci: move vfio_pci_is_vga/vfio_vga_disabled to header
+  vfio_pci: refine user config reference in vfio-pci module
+  vfio_pci: refine vfio_pci_driver reference in vfio_pci.c
+  vfio_pci: make common functions be extern
+  vfio_pci: duplicate vfio_pci.c
+  vfio_pci: shrink vfio_pci_common.c
+  vfio_pci: shrink vfio_pci.c
+  vfio/pci: protect cap/ecap_perm bits alloc/free with atomic op
+  samples: add vfio-mdev-pci driver
+  samples/vfio-mdev-pci: call vfio_add_group_dev()
+  vfio/type1: use iommu_attach_group() for wrapping PF/VF as mdev
+  vfio/type1: track iommu backed group attach
+
+ drivers/vfio/pci/Makefile           |    9 +-
+ drivers/vfio/pci/vfio_mdev_pci.c    |  497 ++++++++++++
+ drivers/vfio/pci/vfio_pci.c         | 1449 +---------------------------------
+ drivers/vfio/pci/vfio_pci_common.c  | 1455 +++++++++++++++++++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_config.c  |    9 +
+ drivers/vfio/pci/vfio_pci_private.h |   36 +
+ drivers/vfio/vfio_iommu_type1.c     |  185 ++++-
+ samples/Kconfig                     |   11 +
+ 8 files changed, 2194 insertions(+), 1457 deletions(-)
+ create mode 100644 drivers/vfio/pci/vfio_mdev_pci.c
+ create mode 100644 drivers/vfio/pci/vfio_pci_common.c
+
 -- 
-1.8.3.1
+2.7.4
 
