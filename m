@@ -2,226 +2,135 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A99C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BE3C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4AF221848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="R8BlrmFh"
+	by mail.kernel.org (Postfix) with ESMTP id BAF5822CEC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:00:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567674012;
+	bh=MHozAlL08p/dClPR5LPiHNkarN7p9tL8xXSSQ238VQM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rZGS/c49sFCvp7cj1bjwMAOnsigU/VDcvVorAa+oq1j9YSlObaoam36yt4hPNfy4e
+	 nbUR2bg1PPf6gU0Odkce3yuGvEYQybugHRaQqKKlOOaGs9XSRYfXRUAn00kdfeQ+pC
+	 bRDepLVvyNSqIlLemuXFNhEeCPuME9lyH4oQRv6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732892AbfIEI7P (ORCPT
+        id S1732899AbfIEJAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:59:15 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38062 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfIEI7P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:59:15 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so1919383edo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=SKtJJu4FCFZsJ92b3cW6n8O2xfCEANWfldD9FkzpDzQ=;
-        b=R8BlrmFhCk2x1HCIE9OG+MzqwkVVvHT7xE/I4ZOytjMQkYUn6niG46sVFILMlRZ0wa
-         hnpRdMnQxL0M6N7DzlsNvJtuHrm2YYjqELC8r/mXNrp4n+j5uoHa6nbZiuvc8wrnT/t6
-         4nureBeZq0SanvEKzbmw5Vki4JKtNGpleNIYkZagBCFngBNM3yw6nhahf/tuodmQp0f3
-         Y0ruk0kL+Dj3gQQ29z0NBH6NwktGQzVePR1emsKENHFifDwOfLe9idjet5jyzABWjuRX
-         f39uHKvkUv+7WUzGyUECMghUmTiVEGNrdHlzcBwe02Kaf8vWGnnCAEW53LJ7sKx8wTFX
-         +lTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=SKtJJu4FCFZsJ92b3cW6n8O2xfCEANWfldD9FkzpDzQ=;
-        b=eRloICcYxUhGr6GQtGzdK4B5ezKVnCAHQ3jO0SQ+IOgnfdvHLNYqCLGAfccsBnOrvV
-         Xa5jtYnSXgDb1NWH46I47pM1ygCNJjTrIGrdoWEyM0K/xfQIStSjtar2ZRH7An9e/Vzh
-         tFfvO5/LBHw336F3Cp+ebX7Oz43rTcG8StP7HyfPT1myu84d+wePWpx2dd2aBShGfDcH
-         SAp8pEBiqNmRW0P5cUGGc/dGrybV6bg30u+TIBzn+KJ7rNCFql9vfJ7QIuj/BgCxoPiY
-         bZJ2ipFVcS2ajh1dDA0V+yLU9zsVEJrCdZ7EvIsB6dmn3XYSYAh05QoGBVTk2jdBsxwq
-         n4Fw==
-X-Gm-Message-State: APjAAAWPX0fEqJaRPopLmDWjapmlpA6jB8VXpGOd5OGpA6hUa96/fxeN
-        TSwxBrGbn/ArkSBe+0XPwb8FaA==
-X-Google-Smtp-Source: APXvYqwS8JLF/JnkIaUo5JF41+czQxMqyXPCFFoUEhsPXNX+sGdC7T/bBd4BAC8GGRtwPWaIloZ1rA==
-X-Received: by 2002:a50:f98c:: with SMTP id q12mr2065158edn.75.1567673952348;
-        Thu, 05 Sep 2019 01:59:12 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id u14sm275438edy.55.2019.09.05.01.59.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 01:59:11 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id C58BF104AE5; Thu,  5 Sep 2019 11:59:10 +0300 (+03)
-Date:   Thu, 5 Sep 2019 11:59:10 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
- page table helpers
-Message-ID: <20190905085910.i6dppgnqi4ple22w@box.shutemov.name>
-References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
- <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
- <20190904141950.ykoe3h7b4hcvnysu@box>
- <6d4b989d-8eaa-d26e-6068-4b0e4d7a52f9@arm.com>
+        Thu, 5 Sep 2019 05:00:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37750 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726231AbfIEJAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:00:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9EA39AE39;
+        Thu,  5 Sep 2019 09:00:09 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 11:00:09 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: Re: [rfc 3/4] mm, page_alloc: avoid expensive reclaim when
+ compaction may not succeed
+Message-ID: <20190905090009.GF3838@dhcp22.suse.cz>
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.1909041253390.94813@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6d4b989d-8eaa-d26e-6068-4b0e4d7a52f9@arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <alpine.DEB.2.21.1909041253390.94813@chino.kir.corp.google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 01:48:27PM +0530, Anshuman Khandual wrote:
-> >> +#define VADDR_TEST	(PGDIR_SIZE + PUD_SIZE + PMD_SIZE + PAGE_SIZE)
-> > 
-> > What is special about this address? How do you know if it is not occupied
-> > yet?
-> 
-> We are creating the page table from scratch after allocating an mm_struct
-> for a given random virtual address 'VADDR_TEST'. Hence nothing is occupied
-> just yet. There is nothing special about this address, just that it tries
-> to ensure the page table entries are being created with some offset from
-> beginning of respective page table page at all levels ? The idea is to
-> have a more representative form of page table structure for test.
+[Ccing Mike for checking on the hugetlb side of this change]
 
-Why P4D_SIZE is missing?
-
-Are you sure it will not land into kernel address space on any arch?
-
-I think more robust way to deal with this would be using
-get_unmapped_area() instead of fixed address.
-
-> This makes sense for runtime cases but there is a problem here.
+On Wed 04-09-19 12:54:22, David Rientjes wrote:
+> Memory compaction has a couple significant drawbacks as the allocation
+> order increases, specifically:
 > 
-> On arm64, pgd_populate() which takes (pud_t *) as last argument instead of
-> (p4d_t *) will fail to build when not wrapped in !__PAGETABLE_P4D_FOLDED
-> on certain configurations.
+>  - isolate_freepages() is responsible for finding free pages to use as
+>    migration targets and is implemented as a linear scan of memory
+>    starting at the end of a zone,
 > 
-> ./arch/arm64/include/asm/pgalloc.h:81:75: note:
-> expected ‘pud_t *’ {aka ‘struct <anonymous> *’}
-> but argument is of type ‘pgd_t *’ {aka ‘struct <anonymous> *’}
-> static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgdp, pud_t *pudp)
->                                                                    ~~~~~~~^~~~
-> Wondering if this is something to be fixed on arm64 or its more general
-> problem. Will look into this further.
-
-I think you need wrap this into #ifndef __ARCH_HAS_5LEVEL_HACK.
-
-> >> +	pmd_populate_tests(mm, pmdp, (pgtable_t) page);
-> > 
-> > This is not correct for architectures that defines pgtable_t as pte_t
-> > pointer, not struct page pointer.
+>  - failing order-0 watermark checks in memory compaction does not account
+>    for how far below the watermarks the zone actually is: to enable
+>    migration, there must be *some* free memory available.  Per the above,
+>    watermarks are not always suffficient if isolate_freepages() cannot
+>    find the free memory but it could require hundreds of MBs of reclaim to
+>    even reach this threshold (read: potentially very expensive reclaim with
+>    no indication compaction can be successful), and
 > 
-> Right, a grep on the source confirms that.
+>  - if compaction at this order has failed recently so that it does not even
+>    run as a result of deferred compaction, looping through reclaim can often
+>    be pointless.
 > 
-> These platforms define pgtable_t as struct page *
+> For hugepage allocations, these are quite substantial drawbacks because
+> these are very high order allocations (order-9 on x86) and falling back to
+> doing reclaim can potentially be *very* expensive without any indication
+> that compaction would even be successful.
 > 
-> arch/alpha/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/arm/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/arm64/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/csky/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/hexagon/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/ia64/include/asm/page.h:  typedef struct page *pgtable_t;
-> arch/ia64/include/asm/page.h:    typedef struct page *pgtable_t;
-> arch/m68k/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/microblaze/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/mips/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/nds32/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/nios2/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/openrisc/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/parisc/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/riscv/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/sh/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/sparc/include/asm/page_32.h:typedef struct page *pgtable_t;
-> arch/um/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/unicore32/include/asm/page.h:typedef struct page *pgtable_t;
-> arch/x86/include/asm/pgtable_types.h:typedef struct page *pgtable_t;
-> arch/xtensa/include/asm/page.h:typedef struct page *pgtable_t;
+> Reclaim itself is unlikely to free entire pageblocks and certainly no
+> reliance should be put on it to do so in isolation (recall lumpy reclaim).
+> This means we should avoid reclaim and simply fail hugepage allocation if
+> compaction is deferred.
 > 
-> These platforms define pgtable_t as pte_t *
+> It is also not helpful to thrash a zone by doing excessive reclaim if
+> compaction may not be able to access that memory.  If order-0 watermarks
+> fail and the allocation order is sufficiently large, it is likely better
+> to fail the allocation rather than thrashing the zone.
 > 
-> arch/arc/include/asm/page.h:typedef pte_t * pgtable_t;
-> arch/powerpc/include/asm/mmu.h:typedef pte_t *pgtable_t;
-> arch/s390/include/asm/page.h:typedef pte_t *pgtable_t;
-> arch/sparc/include/asm/page_64.h:typedef pte_t *pgtable_t;
+> Signed-off-by: David Rientjes <rientjes@google.com>
+> ---
+>  mm/page_alloc.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
-> Should we need have two pmd_populate_tests() definitions with
-> different arguments (struct page pointer or pte_t pointer) and then
-> call either one after detecting the given platform ?
-
-Use pte_alloc_one() instead of alloc_mapped_page() to allocate the page
-table.
-
-> >> +	pud_populate_tests(mm, pudp, pmdp);
-> >> +	p4d_populate_tests(mm, p4dp, pudp);
-> >> +	pgd_populate_tests(mm, pgdp, p4dp);
-> > 
-> > This is wrong. All p?dp points to the second entry in page table entry.
-> > This is not valid pointer for page table and triggers p?d_bad() on x86.
-> 
-> Yeah these are second entries because of the way we create the page table.
-> But I guess its applicable only to the second argument in all these above
-> cases because the first argument can be any valid entry on previous page
-> table level.
-
-Yes:
-
-@@ -397,9 +396,9 @@ static int __init arch_pgtable_tests_init(void)
- 	pgd_clear_tests(pgdp);
- 
- 	pmd_populate_tests(mm, pmdp, (pgtable_t) page);
--	pud_populate_tests(mm, pudp, pmdp);
--	p4d_populate_tests(mm, p4dp, pudp);
--	pgd_populate_tests(mm, pgdp, p4dp);
-+	pud_populate_tests(mm, pudp, saved_pmdp);
-+	p4d_populate_tests(mm, p4dp, saved_pudp);
-+	pgd_populate_tests(mm, pgdp, saved_p4dp);
- 
- 	p4d_free(mm, saved_p4dp);
- 	pud_free(mm, saved_pudp);
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4458,6 +4458,28 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>  		if (page)
+>  			goto got_pg;
+>  
+> +		 if (order >= pageblock_order && (gfp_mask & __GFP_IO)) {
+> +			/*
+> +			 * If allocating entire pageblock(s) and compaction
+> +			 * failed because all zones are below low watermarks
+> +			 * or is prohibited because it recently failed at this
+> +			 * order, fail immediately.
+> +			 *
+> +			 * Reclaim is
+> +			 *  - potentially very expensive because zones are far
+> +			 *    below their low watermarks or this is part of very
+> +			 *    bursty high order allocations,
+> +			 *  - not guaranteed to help because isolate_freepages()
+> +			 *    may not iterate over freed pages as part of its
+> +			 *    linear scan, and
+> +			 *  - unlikely to make entire pageblocks free on its
+> +			 *    own.
+> +			 */
+> +			if (compact_result == COMPACT_SKIPPED ||
+> +			    compact_result == COMPACT_DEFERRED)
+> +				goto nopage;
+> +		}
+> +
+>  		/*
+>  		 * Checks for costly allocations with __GFP_NORETRY, which
+>  		 * includes THP page fault allocations
 
 -- 
- Kirill A. Shutemov
+Michal Hocko
+SUSE Labs
