@@ -2,87 +2,225 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB45DC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D2EC3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ECBE2087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E607420882
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730817AbfIECVN (ORCPT
+        id S1730651AbfIECX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:21:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53152 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730447AbfIECVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:21:13 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1C4D95E9A6A9F53753EB;
-        Thu,  5 Sep 2019 10:21:12 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 5 Sep 2019 10:21:03 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <akpm@linux-foundation.org>, <vbabka@suse.cz>
-CC:     <mhocko@kernel.org>, <zhongjiang@huawei.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] mm: Unsigned 'nr_pages' always larger than zero
-Date:   Thu, 5 Sep 2019 10:17:51 +0800
-Message-ID: <1567649871-60594-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Wed, 4 Sep 2019 22:23:26 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12819 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727900AbfIECXZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:23:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 19:23:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,469,1559545200"; 
+   d="scan'208";a="173781825"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 04 Sep 2019 19:23:24 -0700
+Received: from [10.226.39.8] (leichuan-mobl.gar.corp.intel.com [10.226.39.8])
+        by linux.intel.com (Postfix) with ESMTP id DAFA658046E;
+        Wed,  4 Sep 2019 19:23:20 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+From:   "Chuan Hua, Lei" <chuanhua.lei@linux.intel.com>
+Message-ID: <54ec6a30-69d8-a4af-95fa-2f457d605142@linux.intel.com>
+Date:   Thu, 5 Sep 2019 10:23:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+In-Reply-To: <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the help of unsigned_lesser_than_zero.cocci. Unsigned 'nr_pages'
-compare with zero. And __gup_longterm_locked pass an long local variant
-'rc' to check_and_migrate_cma_pages. Hence it is nicer to change the
-parameter to long to fix the issue.
+Hi Dilip,
 
-Fixes: 932f4a630a69 ("mm/gup: replace get_user_pages_longterm() with FOLL_LONGTERM")
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- mm/gup.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/mm/gup.c b/mm/gup.c
-index 23a9f9c..ee0b71f 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -1433,13 +1433,13 @@ static struct page *new_non_cma_page(struct page *page, unsigned long private)
- static long check_and_migrate_cma_pages(struct task_struct *tsk,
- 					struct mm_struct *mm,
- 					unsigned long start,
--					unsigned long nr_pages,
-+					long nr_pages,
- 					struct page **pages,
- 					struct vm_area_struct **vmas,
- 					unsigned int gup_flags)
- {
--	unsigned long i;
--	unsigned long step;
-+	long i;
-+	long step;
- 	bool drain_allow = true;
- 	bool migrate_allow = true;
- 	LIST_HEAD(cma_page_list);
-@@ -1520,7 +1520,7 @@ static long check_and_migrate_cma_pages(struct task_struct *tsk,
- static long check_and_migrate_cma_pages(struct task_struct *tsk,
- 					struct mm_struct *mm,
- 					unsigned long start,
--					unsigned long nr_pages,
-+					long nr_pages,
- 					struct page **pages,
- 					struct vm_area_struct **vmas,
- 					unsigned int gup_flags)
--- 
-1.7.12.4
-
+On 9/4/2019 6:10 PM, Dilip Kota wrote:
+> The Intel PCIe RC controller is Synopsys Designware
+> based PCIe core. Add YAML schemas for PCIe in RC mode
+> present in Intel Universal Gateway soc.
+>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+> ---
+> changes on v3:
+> 	Add the appropriate License-Identifier
+> 	Rename intel,rst-interval to 'reset-assert-us'
+rst->interval to reset-assert-ms(should be typo error)
+> 	Add additionalProperties: false
+> 	Rename phy-names to 'pciephy'
+> 	Remove the dtsi node split of SoC and board in the example
+> 	Add #interrupt-cells = <1>; or else interrupt parsing will fail
+> 	Name yaml file with compatible name
+>
+>   .../devicetree/bindings/pci/intel,lgm-pcie.yaml    | 137 +++++++++++++++++++++
+>   1 file changed, 137 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+> new file mode 100644
+> index 000000000000..5e5cc7fd66cd
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+> @@ -0,0 +1,137 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Intel AXI bus based PCI express root complex
+> +
+> +maintainers:
+> +  - Dilip Kota <eswara.kota@linux.intel.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: intel,lgm-pcie
+> +
+> +  device_type:
+> +    const: pci
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe configuration registers.
+> +      - description: Controller application registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: config
+> +      - const: app
+> +
+> +  ranges:
+> +    description: Ranges for the PCI memory and I/O regions.
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    description: PCIe registers interface clock.
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: pciephy
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  num-lanes:
+> +    description: Number of lanes to use for this port.
+> +
+> +  linux,pci-domain:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: PCI domain ID.
+> +
+> +  interrupts:
+> +    description: PCIe core integrated miscellaneous interrupt.
+> +
+> +  '#interrupt-cells':
+> +    const: 1
+> +
+> +  interrupt-map-mask:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  interrupt-map:
+> +    description: Standard PCI IRQ mapping properties.
+> +
+> +  max-link-speed:
+> +    description: Specify PCI Gen for link capability.
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+> +
+> +  reset-assert-ms:
+> +    description: |
+> +      Device reset interval in ms.
+> +      Some devices need an interval upto 500ms. By default it is 100ms.
+> +
+> +required:
+> +  - compatible
+> +  - device_type
+> +  - reg
+> +  - reg-names
+> +  - ranges
+> +  - resets
+> +  - clocks
+> +  - phys
+> +  - phy-names
+> +  - reset-gpios
+> +  - num-lanes
+> +  - linux,pci-domain
+> +  - interrupts
+> +  - interrupt-map
+> +  - interrupt-map-mask
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pcie10:pcie@d0e00000 {
+> +      compatible = "intel,lgm-pcie";
+> +      device_type = "pci";
+> +      #address-cells = <3>;
+> +      #size-cells = <2>;
+> +      reg = <
+> +            0xd0e00000 0x1000
+> +            0xd2000000 0x800000
+> +            0xd0a41000 0x1000
+> +            >;
+> +      reg-names = "dbi", "config", "app";
+> +      linux,pci-domain = <0>;
+> +      max-link-speed = <4>;
+> +      bus-range = <0x00 0x08>;
+> +      interrupt-parent = <&ioapic1>;
+> +      interrupts = <67 1>;
+> +      #interrupt-cells = <1>;
+> +      interrupt-map-mask = <0 0 0 0x7>;
+> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+> +                      <0 0 0 2 &ioapic1 28 1>,
+> +                      <0 0 0 3 &ioapic1 29 1>,
+> +                      <0 0 0 4 &ioapic1 30 1>;
+> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+> +      resets = <&rcu0 0x50 0>;
+> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+> +      phys = <&cb0phy0>;
+> +      phy-names = "pciephy";
+> +      status = "okay";
+> +      reset-assert-ms = <500>;
+> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+> +      num-lanes = <2>;
+> +    };
