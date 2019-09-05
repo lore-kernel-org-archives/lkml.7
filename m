@@ -2,108 +2,94 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDA5C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3D4C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFC482067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:15:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b+63NMLi"
+	by mail.kernel.org (Postfix) with ESMTP id 8A82A2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388660AbfIENPB (ORCPT
+        id S2388695AbfIENPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:15:01 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36354 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388385AbfIENPA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:15:02 -0400
+Received: from mga18.intel.com ([134.134.136.126]:61741 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388399AbfIENPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Sep 2019 09:15:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x80so2001929lff.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:14:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X6liaIL8n/K+qZNHyRxBvsG3aE56VnalzfSINEJsXSQ=;
-        b=b+63NMLiO6uu9ngd3jzIr8Dsw188HJm9sNb07rlJMnX80r7/h5LUN3/Lpbh3bxpJ9z
-         xYJqjXXgagt+VDuvA3yKvH7qp7A2+W1iv5h1mRb24Jb2adl7EuLWgyNX1JPnrepTNa9Q
-         goCuPYhfmvTDmiz0qWuVckEjqgfqRDoltmXHgdBIf8vad80BD+OtqWFql1CSBxLD7jDL
-         PWs9E6CwQdu80zJAOHSJX+PJNszKu0Zwaywda1OI5fC9bc/t0il8d+aa4SI03VA65BG0
-         pqsIykPn5ko3cJwLwAXbf0ErZ98Dsu+DqnGqOb8fcfaBo5zLC2Uk4FyM9xYDgLnBUVyl
-         HiPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X6liaIL8n/K+qZNHyRxBvsG3aE56VnalzfSINEJsXSQ=;
-        b=Cs3+78NdjWHudoLgbgaFRb/J5i2iPvAUxinQ/JRcHIOPqAl3DrhpAMfTWI4kFwHEzF
-         xK27cgNPWgxdWzBX9L45wZdKUNQqvgwoaX26tPzRJgs9uL+5aqfxST43Rc3lkbDzKK2E
-         ro/FyN8+R1UeidGmHGHqpE5jtfOTW3nbvz3uz5bsiqP0CO8lB6B49BIBTp05BN5cF8VU
-         hwaCw3GZ8+Ws1gAP0Rw++GE9hlCf7VIIz9j3YH6FpxGBsNa+2fwyHvq1Rc20fOLXtIa9
-         3oGnzBl1o5RhWJLXn3zfFXTOVkm4j5PKmHJfTJLu8rzXE48iTS5gvWI0Z2LJa3Oue+aY
-         FWug==
-X-Gm-Message-State: APjAAAUOZSYz+EGvctkwED6POHv23AbivirzEUsCzIFQc45TYeMlo8T4
-        C+B0W4fXhQTH4xBpwXaKBxUuKw==
-X-Google-Smtp-Source: APXvYqzbCMnjO//eiTEa0kZuQw26H3btOjLN9fQPzx/MdOvkhMnN7oM0V3sFQZMv6aa2tmtB3chimQ==
-X-Received: by 2002:a19:4912:: with SMTP id w18mr2283793lfa.93.1567689298714;
-        Thu, 05 Sep 2019 06:14:58 -0700 (PDT)
-Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
-        by smtp.gmail.com with ESMTPSA id b25sm486140lfa.90.2019.09.05.06.14.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 06:14:58 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 15:14:56 +0200
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] rpmsg: glink-smem: Name the edge based on parent
- remoteproc
-Message-ID: <20190905131456.GA26674@centauri>
-References: <20190820041656.17197-1-bjorn.andersson@linaro.org>
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 06:15:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="177298824"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 05 Sep 2019 06:15:00 -0700
+Received: from ravisha1-mobl1.amr.corp.intel.com (unknown [10.255.36.89])
+        by linux.intel.com (Postfix) with ESMTP id 9C73B580105;
+        Thu,  5 Sep 2019 06:14:58 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Fix COMPILE_TEST
+ error
+To:     YueHaibing <yuehaibing@huawei.com>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, daniel.baluta@nxp.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190905064400.24800-1-yuehaibing@huawei.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d5a4b443-7530-75de-731f-b13cde66aea7@linux.intel.com>
+Date:   Thu, 5 Sep 2019 08:14:57 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190820041656.17197-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190905064400.24800-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 19, 2019 at 09:16:56PM -0700, Bjorn Andersson wrote:
-> Naming the glink edge device on the parent of_node short name causes
-> collisions when multiple remoteproc instances with only different unit
-> address are described on the platform_bus in DeviceTree.
+On 9/5/19 1:44 AM, YueHaibing wrote:
+> When do compile test, if SND_SOC_SOF_OF is not set, we get:
 > 
-> Base the edge's name on the parent remoteproc's name instead, to ensure
-> that it's unique.
+> sound/soc/sof/imx/imx8.o: In function `imx8_dsp_handle_request':
+> imx8.c:(.text+0xb0): undefined reference to `snd_sof_ipc_msgs_rx'
+> sound/soc/sof/imx/imx8.o: In function `imx8_ipc_msg_data':
+> imx8.c:(.text+0xf4): undefined reference to `sof_mailbox_read'
+> sound/soc/sof/imx/imx8.o: In function `imx8_dsp_handle_reply':
+> imx8.c:(.text+0x160): undefined reference to `sof_mailbox_read'
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Make SND_SOC_SOF_IMX_TOPLEVEL always depends on SND_SOC_SOF_OF
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 202acc565a1f ("ASoC: SOF: imx: Add i.MX8 HW support")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
 > ---
->  drivers/rpmsg/qcom_glink_smem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   sound/soc/sof/imx/Kconfig | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
-> index 64a5ce324c7f..4238383d8685 100644
-> --- a/drivers/rpmsg/qcom_glink_smem.c
-> +++ b/drivers/rpmsg/qcom_glink_smem.c
-> @@ -201,7 +201,7 @@ struct qcom_glink *qcom_glink_smem_register(struct device *parent,
->  	dev->parent = parent;
->  	dev->of_node = node;
->  	dev->release = qcom_glink_smem_release;
-> -	dev_set_name(dev, "%pOFn:%pOFn", node->parent, node);
-> +	dev_set_name(dev, "%s:%pOFn", dev_name(parent->parent), node);
->  	ret = device_register(dev);
->  	if (ret) {
->  		pr_err("failed to register glink edge\n");
-> -- 
-> 2.18.0
+> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+> index fd73d84..5acae75 100644
+> --- a/sound/soc/sof/imx/Kconfig
+> +++ b/sound/soc/sof/imx/Kconfig
+> @@ -2,7 +2,8 @@
+>   
+>   config SND_SOC_SOF_IMX_TOPLEVEL
+>   	bool "SOF support for NXP i.MX audio DSPs"
+> -	depends on ARM64 && SND_SOC_SOF_OF || COMPILE_TEST
+> +	depends on ARM64|| COMPILE_TEST
+> +	depends on SND_SOC_SOF_OF
+>   	help
+>             This adds support for Sound Open Firmware for NXP i.MX platforms.
+>             Say Y if you have such a device.
 > 
 
-Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
