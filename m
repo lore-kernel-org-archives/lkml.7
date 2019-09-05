@@ -2,149 +2,163 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E1C41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9438EC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE3F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52EE72067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbfIENLi (ORCPT
+        id S2388504AbfIENN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:11:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42652 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfIENLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:11:37 -0400
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0ECD183F4C
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 13:11:37 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id z2so980173wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:11:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=9ANyZ4dBkBOltXnKi+WoWQpmuFWiDil0u88wFq4AYQY=;
-        b=oE8LNOBZixsTSX544jFOLyKVR4WZCvCl6s0xf0DLVduDN+7NKTNgHe7kDN8BMhtvzT
-         Le7WEesoinJDJBk6Vham0/lXFLEmftS0F24LswOkwT/9HlqBlZ7eFFXRVy+YrZECLdS6
-         lRrqp2H91Ph1xMoIvc1VdAuJsReXKB7NgC/7S6aX1EQvXhq930CEaOySHvi6Tt2JH1sc
-         TynRfXMNAaYqqWUWQsDJTC5B3rRYF7MokZwLiwqvC3oehZR6ey5be+i0eBeBrC/1IUUQ
-         RbEVfPAY3YxgqYB0WDyEuB2fguSHF5DXmpF6eMqcdr6N3jGvv7reGFCsmkhOHXOcyuFo
-         ErRA==
-X-Gm-Message-State: APjAAAVkkkQv+Svdu3vGwVGA2iaVgIBK95ckUg/I1JD5eMVHXSyZCEsD
-        PQyAYC5lA0w8OmwbBmHF8Gxo7gnkGyet9Hkp8GDbz1Ss1JCsorzEWN6UhBvAb40lHZTxr3TYWNn
-        Va+CZbUREBPp4uhsOdGQbaI18
-X-Received: by 2002:a1c:80ca:: with SMTP id b193mr2630526wmd.171.1567689095193;
-        Thu, 05 Sep 2019 06:11:35 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyKbK6O+n/cVqLS49y3v2z3Wc3ajQWQx/waHdOI+hpMRHK7GNQBFj0JYwrQL53NYvHAotP2eA==
-X-Received: by 2002:a1c:80ca:: with SMTP id b193mr2630501wmd.171.1567689094909;
-        Thu, 05 Sep 2019 06:11:34 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id x5sm3093960wrg.69.2019.09.05.06.11.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 06:11:34 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>,
-        syzbot <syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, devel@linuxdriverproject.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm <kvm@vger.kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        LKML <linux-kernel@vger.kernel.org>, mikelley@microsoft.com,
-        Ingo Molnar <mingo@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: general protection fault in __apic_accept_irq
-In-Reply-To: <CANRm+CxBdFjVrYzAe_Rs=v6BMSq9Gx+ngDrEitK6aez=kMq2XQ@mail.gmail.com>
-References: <000000000000e3072b0591ca1937@google.com> <CANRm+CxBdFjVrYzAe_Rs=v6BMSq9Gx+ngDrEitK6aez=kMq2XQ@mail.gmail.com>
-Date:   Thu, 05 Sep 2019 15:11:33 +0200
-Message-ID: <87imq6khve.fsf@vitty.brq.redhat.com>
+        Thu, 5 Sep 2019 09:13:28 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56019 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388243AbfIENN1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:13:27 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 9B3B7C0006;
+        Thu,  5 Sep 2019 13:13:19 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 15:14:53 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
+Message-ID: <20190905131453.7ortosddn4afxd5j@uno.localdomain>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-9-jacopo+renesas@jmondi.org>
+ <20190827002422.GQ5031@pendragon.ideasonboard.com>
+ <20190827145619.33s7gkv7tgtsr6nz@uno.localdomain>
+ <20190827163423.GB5054@pendragon.ideasonboard.com>
+ <20190905095757.gg6s5pse5tvivxbs@uno.localdomain>
+ <20190905111712.GG5035@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iuoqgpboxu2vm3n7"
+Content-Disposition: inline
+In-Reply-To: <20190905111712.GG5035@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
 
-> On Thu, 5 Sep 2019 at 16:53, syzbot
-> <syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com> wrote:
->>
->> Hello,
->>
->> syzbot found the following crash on:
->>
->> HEAD commit:    3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=124af12a600000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=144488c6c6c6d2b6
->> dashboard link: https://syzkaller.appspot.com/bug?extid=dff25ee91f0c7d5c1695
->> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
->> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10954676600000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
->>
->> The bug was bisected to:
->>
->> commit 0aa67255f54df192d29aec7ac6abb1249d45bda7
->> Author: Vitaly Kuznetsov <vkuznets@redhat.com>
->> Date:   Mon Nov 26 15:47:29 2018 +0000
->>
->>      x86/hyper-v: move synic/stimer control structures definitions to
->> hyperv-tlfs.h
->>
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=156128c1600000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=136128c1600000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
->> Fixes: 0aa67255f54d ("x86/hyper-v: move synic/stimer control structures
->> definitions to hyperv-tlfs.h")
->>
->> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data
->> 0x94
->> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data
->> 0x48c
->> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data
->> 0x4ac
->> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000005 data
->> 0x1520
->> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000006 data
->> 0x15d4
->> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000007 data
->> 0x15c4
->> kasan: CONFIG_KASAN_INLINE enabled
->> kasan: GPF could be caused by NULL-ptr deref or user memory access
->> general protection fault: 0000 [#1] PREEMPT SMP KASAN
->> CPU: 0 PID: 9347 Comm: syz-executor665 Not tainted 5.3.0-rc7+ #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
->> Google 01/01/2011
->> RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+--iuoqgpboxu2vm3n7
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Laurent,
+
+On Thu, Sep 05, 2019 at 02:17:12PM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
 >
-> Thanks for the report, I found the root cause, will send a patch soon.
+> > >>>> +/**
+> > >>>> + * rcar_cmm_enable() - enable the CMM unit
+> > >>>> + *
+> > >>>> + * @pdev: The platform device associated with the CMM instance
+> > >>>> + *
+> > >>>> + * Enable the CMM unit by enabling the parent clock and enabling =
+the CMM
+> > >>>> + * components, such as 1-D LUT, if requested.
+> > >>>> + */
+> > >>>> +int rcar_cmm_enable(struct platform_device *pdev)
+> > >>>> +{
+> > >>>> +	struct rcar_cmm *rcmm =3D platform_get_drvdata(pdev);
+> > >>>> +	int ret;
+> > >>>> +
+> > >>>> +	if (!rcmm)
+> > >>>> +		return -EPROBE_DEFER;
+> > >>>
+> > >>> This function is called in rcar_du_crtc_atomic_enable(), so that's =
+not
+> > >>> the right error code. It seems we need another function for the CMM=
+ API
+> > >>> to defer probing :-/ I would call it rcar_cmm_init(). This check wo=
+uld
+> > >>> then be removed.
+> > >>
+> > >> I agree about the return code, but not the name, as this function
+> > >> actually enables the CMM.
+> > >
+> > > I meant creating a new rcar_cmm_init() function that would just have =
+the
+> > > !rcmm check.
+> > >
+> > >> PROBE_DEFER does not make any sense here, I
+> > >> wonder where it come from, as the probing of CMM and DU has long
+> > >> happened once we get here (at least, I assume so, if we receive a
+> > >> gamma_table, userspace has already been running, and both DU and CMM
+> > >> should have probed. Otherwise, we can exploit the newly created devi=
+ce
+> > >> link, and make sure DU probes after the CMM).
+> > >>
+> > >> I would just change the return value here, and possibly use the devi=
+ce
+> > >> link to ensure the correct probing sequence.
+> > >
+> > > How does device link help here ?
+> >
+> > Currently it doesn't, as we are creating a stateless link.
+> >
+> > But if we go for a managed device link (which is the default, by the
+> > way, you have to opt-out from it) we can guarantee the CMM has probed
+> > before the DU probes, so that we have a guarantee when we get here
+> > !rcmm cannot happen.
+> >
+> > https://www.kernel.org/doc/html/v5.2-rc7/driver-api/device_link.html
+> > "The consumer devices are not probed before the supplier is bound to a =
+driver,
+> >  and they=E2=80=99re unbound before the supplier is unbound."
+> >
+> > As we create the link, the CMM is the supplier of DU, so we could just
+> > drop the DL_FLAG_STATELESS flag in device_link_add() in 10/14.
+> >
+> > Does this match your understanding ?
+>
+> Except there's a bit of a chicken and egg issue, as you call
+> device_link_add() from rcar_du_cmm_init(), which thus require the DU
+> driver to probe first :-) For this to work we would probably need an
+> early initcall in the DU driver.
 >
 
-I'm really interested in how any issue can be caused by 0aa67255f54d as
-we just moved some definitions from a c file to a common header... (ok,
-we did more than that, some structures gained '__packed' but it all
-still seems legitimate to me and I can't recall any problems with
-genuine Hyper-V...)
+Yes indeed, the point where the link is created at the moment is too
+late... Is it worth an early initcall, or should we just assume that
+at the point where the LUT is operated userspace has already been
+running and both the CMM and the DU have probed already?
 
--- 
-Vitaly
+--iuoqgpboxu2vm3n7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1xCk0ACgkQcjQGjxah
+Vjy4WhAAs0hFWf0KGDxzpxaW2Is+PYr+7r9FJJCvIRLtHJrvMMa7ZiUHu6snKcwi
+c1af164xRrIBq9jUAnWlDfDACdyVgZIAZm1sKTXF8Y7lulTX8prColnNv9PbJkSf
+GFPk2NS60LnPYPDLxa5YnD/wCEluH6zZP0Iec0F60xCs288jmWasZUk1GE/nt6en
+tYOPmEtnGL74VYbqVzx9cYXQ/x/NEwpVRvTGTb5Z8JAWw0fiKoJcbWVNklfy++VE
+up2vaz4OSOJ5LT+KPIGqXW0FrTPHYVyu6FYHrxDzM+/IKmXWtWCNq4iRypltPd5R
+iixHQkqBq/G8aedqIzJbpeVFW/v2LowO/HlDwo2LmLmXkaJeBfX4V7/HK8dGNCjc
+XCnefTL1pFgJ0kP+pO8rybOtt74T/gcjcU3Yxj0EcOUXauzUiFYyKyt0pgyhfJxl
+8AYzAfmLAdQDawPntPIZ011LYVa5oF27Wek05zw3oWRC98VtJMro5CxX8vebKFrA
+gtqfZB2pz6MzO8IbNeAPr+LLcSjgHhSe13JlO9iAxJ0bDYHtnT9TEKxu49LagXnN
+xsKlzgRajJCcJEf5ldjFu0Ew9UM+BoiLuR7AKMiFdxCpCGlsBiUSGMWgEAtfbs4e
+TQ8x0CruiKbwXTirVnSU/mlf6+oh3fJ4CPB1+AhH7Mjjn4L5kXE=
+=ww4d
+-----END PGP SIGNATURE-----
+
+--iuoqgpboxu2vm3n7--
