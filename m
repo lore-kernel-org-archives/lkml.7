@@ -2,131 +2,71 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443A9C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3E6C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB2A206A1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EVdVxDGJ"
+	by mail.kernel.org (Postfix) with ESMTP id D6CEC206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733091AbfIENVL (ORCPT
+        id S2387640AbfIENVw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:21:11 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38420 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731556AbfIENVL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:21:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w11so1308452plp.5;
-        Thu, 05 Sep 2019 06:21:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aaqIxHqXkj1uuSVMqAJQpWwcsWGZCUWACOB9sZn+42g=;
-        b=EVdVxDGJkvE83ZF9G3b7iMdrMC7FWZM6C6Ij0T9kXBJfoS0nJ3+T2x59jTN6RcanQq
-         G5Bi/ZlJFn9PIt5bFoR1hBD8vZzdUZWJcFCJgd2foS/LZNmDRasKbB345QQjaBNo+gl/
-         YNVHx5rUp1t6pZF2ZtDtrGybUpU8pwsN5g48iGih630zad17TnzASg10TAEypNDFGnmq
-         abTreFtzCIaZ8zasoArSatJvc9kVulIoJIi/J3+UQNlJyl+Ubuh/8uz8LFkEwgARrZtJ
-         DyNbkIm+SRT2T9n+z3qg4JSFcLu36R8siXehSoLXBQ2QBt5OWtS/thMSAJyKnhYfaJs5
-         rcSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aaqIxHqXkj1uuSVMqAJQpWwcsWGZCUWACOB9sZn+42g=;
-        b=Sx0PyzUQ/VYIOlRuzMa6HR0vHbCvWRZ5Y0ijBabM3edkQizQnjjviLirR/yHd5zTqB
-         +HxEAXr5GuhOt7m0y0OQ0uyWf8CpwaXosULcoadzZcqRMj4lnPrwpNHyx9+EismGSoIO
-         pWmeaUVTuv27iUIzdEtftoZ10vuDFHA62mBxh1BmFZHVgIyV11KuquDMFwcyWSzE4QUG
-         NQPa0lVdp03+SudpkazQbjCSEfTd8mE0bmNQ6mv5c3DevZPmKMEsJ4TS+Q7kvEU2tq2G
-         UV+gWeGXGkNuYhtPFiYYuK5moZg+I9yKe8Y+L33y5kAALPbpbJ35rkfgj9N2xZZZLoeT
-         D6+w==
-X-Gm-Message-State: APjAAAXvp0Dx+ia8bFOE80P+y55vI4IA2RXcusifzNGmarMmdJrwOepl
-        4EhhkdxOb9p2cZwThgC3/DBQbLZy
-X-Google-Smtp-Source: APXvYqzDMXOush2DRGxOdIyzhIMX1w4EktiiEO6YxugC7cY2TPTX016yrqFI6ZH/6sxJvvA510uJsA==
-X-Received: by 2002:a17:902:343:: with SMTP id 61mr3460800pld.215.1567689669743;
-        Thu, 05 Sep 2019 06:21:09 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o19sm1957841pjr.23.2019.09.05.06.21.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 06:21:08 -0700 (PDT)
-Subject: Re: [PATCH] i2c: muxes: pca9541: use BIT() macro
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>, peda@axentia.se
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190905131318.GA21280@SD.eic.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <1d248333-abe9-cff8-ad29-d3b618643dc6@roeck-us.net>
-Date:   Thu, 5 Sep 2019 06:21:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190905131318.GA21280@SD.eic.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Sep 2019 09:21:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60580 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726097AbfIENVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:21:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 79872B035;
+        Thu,  5 Sep 2019 13:21:50 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 15:21:50 +0200
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
+Message-Id: <20190905152150.f7ff6ef70726085de63df828@suse.de>
+In-Reply-To: <1567662477-27404-1-git-send-email-rppt@kernel.org>
+References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 6:13 AM, Saiyam Doshi wrote:
-> Use bit mask macro BIT() for definition where appropriate.
+On Thu,  5 Sep 2019 08:47:57 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
+
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
-
-linux/bitops.h should be included when using BIT().
-
-Guenter
-
+> The memory initialization of SGI-IP27 is already half-way to support
+> SPARSEMEM and only a call to sparse_init() was missing. Add it to
+> prom_meminit() and adjust arch/mips/Kconfig to enable SPARSEMEM and
+> SPARSEMEM_EXTREME for SGI-IP27
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 > ---
->   drivers/i2c/muxes/i2c-mux-pca9541.c | 28 ++++++++++++++--------------
->   1 file changed, 14 insertions(+), 14 deletions(-)
 > 
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
-> index 9e75d6b9140b..bd4cf8341a06 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca9541.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
-> @@ -43,20 +43,20 @@
->   #define PCA9541_CONTROL		0x01
->   #define PCA9541_ISTAT		0x02
->   
-> -#define PCA9541_CTL_MYBUS	(1 << 0)
-> -#define PCA9541_CTL_NMYBUS	(1 << 1)
-> -#define PCA9541_CTL_BUSON	(1 << 2)
-> -#define PCA9541_CTL_NBUSON	(1 << 3)
-> -#define PCA9541_CTL_BUSINIT	(1 << 4)
-> -#define PCA9541_CTL_TESTON	(1 << 6)
-> -#define PCA9541_CTL_NTESTON	(1 << 7)
-> -
-> -#define PCA9541_ISTAT_INTIN	(1 << 0)
-> -#define PCA9541_ISTAT_BUSINIT	(1 << 1)
-> -#define PCA9541_ISTAT_BUSOK	(1 << 2)
-> -#define PCA9541_ISTAT_BUSLOST	(1 << 3)
-> -#define PCA9541_ISTAT_MYTEST	(1 << 6)
-> -#define PCA9541_ISTAT_NMYTEST	(1 << 7)
-> +#define PCA9541_CTL_MYBUS	BIT(0)
-> +#define PCA9541_CTL_NMYBUS	BIT(1)
-> +#define PCA9541_CTL_BUSON	BIT(2)
-> +#define PCA9541_CTL_NBUSON	BIT(3)
-> +#define PCA9541_CTL_BUSINIT	BIT(4)
-> +#define PCA9541_CTL_TESTON	BIT(6)
-> +#define PCA9541_CTL_NTESTON	BIT(7)
-> +
-> +#define PCA9541_ISTAT_INTIN	BIT(0)
-> +#define PCA9541_ISTAT_BUSINIT	BIT(1)
-> +#define PCA9541_ISTAT_BUSOK	BIT(2)
-> +#define PCA9541_ISTAT_BUSLOST	BIT(3)
-> +#define PCA9541_ISTAT_MYTEST	BIT(6)
-> +#define PCA9541_ISTAT_NMYTEST	BIT(7)
->   
->   #define BUSON		(PCA9541_CTL_BUSON | PCA9541_CTL_NBUSON)
->   #define MYBUS		(PCA9541_CTL_MYBUS | PCA9541_CTL_NMYBUS)
-> 
+> Thomas, could you please test this on your Origin machine?
 
+it crashes in sparse_early_usemaps_alloc_pgdat_section(). Since there is
+already a sparse_init() in arch_mem_setup() I removed it from ip27-memory.c.
+With this booting made more progress but I get an unaligned access in
+kernel_init_free_pages(). 
+
+My time is a little bit limited today to dig deeper, but testing patches
+is easy.
+
+Thomas.
+
+-- 
+SUSE Software Solutions Germany GmbH
+HRB 247165 (AG München)
+Geschäftsführer: Felix Imendörffer
