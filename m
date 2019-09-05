@@ -4,97 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96F1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA14C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F326F20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:49:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C2B720825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390346AbfIETto (ORCPT
+        id S2390382AbfIETts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:49:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38692 "EHLO mx1.redhat.com"
+        Thu, 5 Sep 2019 15:49:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60452 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390132AbfIETte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2390162AbfIETte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 5 Sep 2019 15:49:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 299CC7E423;
+        by mx1.redhat.com (Postfix) with ESMTPS id 4DB32308FBAC;
         Thu,  5 Sep 2019 19:49:34 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 670905D9CA;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 66C2419C77;
         Thu,  5 Sep 2019 19:49:26 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id EFC332253A1; Thu,  5 Sep 2019 15:49:17 -0400 (EDT)
+        id D781822539D; Thu,  5 Sep 2019 15:49:17 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org,
         virtualization@lists.linux-foundation.org, miklos@szeredi.hu
 Cc:     linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
         vgoyal@redhat.com, stefanha@redhat.com, dgilbert@redhat.com,
         mst@redhat.com
-Subject: [PATCH 09/18] virtiofs: Add an helper to start all the queues
-Date:   Thu,  5 Sep 2019 15:48:50 -0400
-Message-Id: <20190905194859.16219-10-vgoyal@redhat.com>
+Subject: [PATCH 05/18] Maintain count of in flight requests for VQ_REQUEST queue
+Date:   Thu,  5 Sep 2019 15:48:46 -0400
+Message-Id: <20190905194859.16219-6-vgoyal@redhat.com>
 In-Reply-To: <20190905194859.16219-1-vgoyal@redhat.com>
 References: <20190905194859.16219-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 05 Sep 2019 19:49:34 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 05 Sep 2019 19:49:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This just marks are the queues are connected and ready to accept the
-request.
+As of now we maintain this count only for VQ_HIPRIO. Maintain it for
+VQ_REQUEST as well so that later it can be used to drain VQ_REQUEST
+queue.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/virtio_fs.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ fs/fuse/virtio_fs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index d5730a50b303..f2936daca39c 100644
+index c46dd4d284d6..5df97dfee37d 100644
 --- a/fs/fuse/virtio_fs.c
 +++ b/fs/fuse/virtio_fs.c
-@@ -112,6 +112,19 @@ static void virtio_fs_drain_all_queues(struct virtio_fs *fs)
+@@ -360,6 +360,9 @@ static void virtio_fs_requests_done_work(struct work_struct *work)
+ 		spin_unlock(&fpq->lock);
+ 
+ 		fuse_request_end(fc, req);
++		spin_lock(&fsvq->lock);
++		fsvq->in_flight--;
++		spin_unlock(&fsvq->lock);
  	}
  }
  
-+static void virtio_fs_start_all_queues(struct virtio_fs *fs)
-+{
-+	struct virtio_fs_vq *fsvq;
-+	int i;
-+
-+	for (i = 0; i < fs->nvqs; i++) {
-+		fsvq = &fs->vqs[i];
-+		spin_lock(&fsvq->lock);
-+		fsvq->connected = true;
-+		spin_unlock(&fsvq->lock);
-+	}
-+}
-+
- /* Add a new instance to the list or return -EEXIST if tag name exists*/
- static int virtio_fs_add_instance(struct virtio_fs *fs)
- {
-@@ -483,10 +496,10 @@ static int virtio_fs_setup_vqs(struct virtio_device *vdev,
- 	if (ret < 0)
+@@ -769,6 +772,7 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
  		goto out;
+ 	}
  
--	for (i = 0; i < fs->nvqs; i++) {
-+	for (i = 0; i < fs->nvqs; i++)
- 		fs->vqs[i].vq = vqs[i];
--		fs->vqs[i].connected = true;
--	}
-+
-+	virtio_fs_start_all_queues(fs);
- out:
- 	kfree(names);
- 	kfree(callbacks);
++	fsvq->in_flight++;
+ 	notify = virtqueue_kick_prepare(vq);
+ 
+ 	spin_unlock(&fsvq->lock);
 -- 
 2.20.1
 
