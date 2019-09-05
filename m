@@ -2,135 +2,53 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D4EC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D64C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC08F2168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=zoho.com header.i=zhouyanjie@zoho.com header.b="dUSE5lBy"
+	by mail.kernel.org (Postfix) with ESMTP id 0C1A22145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbfIEHko (ORCPT
+        id S1732222AbfIEHmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:40:44 -0400
-Received: from sender4-pp-o95.zoho.com ([136.143.188.95]:25521 "EHLO
-        sender4-pp-o95.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730769AbfIEHkn (ORCPT
+        Thu, 5 Sep 2019 03:42:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41633 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfIEHmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:40:43 -0400
-ARC-Seal: i=1; a=rsa-sha256; t=1567669138; cv=none; 
-        d=zoho.com; s=zohoarc; 
-        b=bbyvOXRs9Tcc7kCLTdH0JOWp66Ask/teV8N0yAkNv48JTvvEUDgEhhnXrQodA10ECo4qAoybzPdOKU7HuRIINfedgwsGu7ddyEKPwKroxZtidaGrMcHd3UYHV0UhPMsglZPxPg6fDEZAhAZg2sM6+7bh4fg6a6usIRrJXGKh3Ng=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zoho.com; s=zohoarc; 
-        t=1567669138; h=Cc:Date:From:In-Reply-To:Message-ID:References:Subject:To:ARC-Authentication-Results; 
-        bh=I5Jl+lRwVJSmYK5N04Ftz1awAcGGAYjkgicsp1LfCyk=; 
-        b=T69p+TdOmZIXKkTIxE6daC9rT68eKWGSI7M4Qw1Gg4XZBkfAcuRPg5v7VTzt4JGiy8jBiPqh6UhPYs++ZpGj8ajN94RQ969HQR8cYmknPiX87lHtCxDAkZDGVzTwHekpqYq2QJjn2axa8ym7Ebpig37hjLD4B9obON1g/hAbC/4=
-ARC-Authentication-Results: i=1; mx.zoho.com;
-        dkim=pass  header.i=zoho.com;
-        spf=pass  smtp.mailfrom=zhouyanjie@zoho.com;
-        dmarc=pass header.from=<zhouyanjie@zoho.com> header.from=<zhouyanjie@zoho.com>
-DomainKey-Signature: a=rsa-sha1; q=dns; c=nofws; 
-  s=zapps768; d=zoho.com; 
-  h=from:to:cc:subject:date:message-id:in-reply-to:references; 
-  b=EJYjrjBwwp5bhvwJq7W/6i9l8gYEDG/kQEHJI7Rm5ndzu6VEyqW7m5E/mdYOox0/BEqKrtqWtM8A
-    Eu7A26gfmN9kVyprQG+uEeicCp8eJKNswoXiAnB2Wc+bg1kJKBgW  
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1567669138;
-        s=zm2019; d=zoho.com; i=zhouyanjie@zoho.com;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        l=1944; bh=I5Jl+lRwVJSmYK5N04Ftz1awAcGGAYjkgicsp1LfCyk=;
-        b=dUSE5lByWPHkV4P5NSPYSBiFnFagA3tbZyL/er/zkLkExddUjgqzZ3DiY8GHPhUR
-        mtHNy0WggqLNGv2OiQZvNNBaODLDFfH6HThC8BQleFsPuiOTMDl0aLfxQPWQlNbCcvg
-        m7AcmotbrC9O2ZKYH6GwKXmCOrYW9n3vE8q6GWnY=
-Received: from zhouyanjie-virtual-machine.localdomain (125.71.5.36 [125.71.5.36]) by mx.zohomail.com
-        with SMTPS id 1567669136703108.89236573844028; Thu, 5 Sep 2019 00:38:56 -0700 (PDT)
-From:   Zhou Yanjie <zhouyanjie@zoho.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, ulf.hansson@linaro.org,
-        paul.burton@mips.com, linus.walleij@linaro.org,
-        paul@crapouillou.net, malat@debian.org, yuehaibing@huawei.com,
-        ezequiel@collabora.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        syq@debian.org, jiaxun.yang@flygoat.com
-Subject: [PATCH 4/4] MMC: Ingenic: Add support for JZ4760 and support for LPM.
-Date:   Thu,  5 Sep 2019 15:38:09 +0800
-Message-Id: <1567669089-88693-5-git-send-email-zhouyanjie@zoho.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
-References: <1567669089-88693-1-git-send-email-zhouyanjie@zoho.com>
-X-ZohoMailClient: External
+        Thu, 5 Sep 2019 03:42:03 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1i5mOu-0008Ju-VZ; Thu, 05 Sep 2019 09:41:53 +0200
+Date:   Thu, 5 Sep 2019 09:41:52 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-kernel@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
+        Keerthy <j-keerthy@ti.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] random: Support freezable kthreads in
+ add_hwgenerator_randomness()
+Message-ID: <20190905074152.3oufn7yqr4flu3yc@linutronix.de>
+References: <20190904110038.2bx25byitrejlteu@flow>
+ <5d700756.1c69fb81.77c08.9c82@mx.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5d700756.1c69fb81.77c08.9c82@mx.google.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.add support for probing mmc driver on the JZ4760 Soc from Ingenic.
-2.add support for Low Power Mode of Ingenic's MMC/SD Controller.
+On 2019-09-04 11:49:57 [-0700], Stephen Boyd wrote:
+> Can you try this?
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
----
- drivers/mmc/host/jz4740_mmc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+yes, works.
 
-diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-index d6811a7..1e61f1b 100644
---- a/drivers/mmc/host/jz4740_mmc.c
-+++ b/drivers/mmc/host/jz4740_mmc.c
-@@ -43,6 +43,7 @@
- #define JZ_REG_MMC_RES		0x34
- #define JZ_REG_MMC_RXFIFO	0x38
- #define JZ_REG_MMC_TXFIFO	0x3C
-+#define JZ_REG_MMC_LPM		0x40
- #define JZ_REG_MMC_DMAC		0x44
- 
- #define JZ_MMC_STRPCL_EXIT_MULTIPLE BIT(7)
-@@ -102,11 +103,15 @@
- #define JZ_MMC_DMAC_DMA_SEL BIT(1)
- #define JZ_MMC_DMAC_DMA_EN BIT(0)
- 
-+#define	JZ_MMC_LPM_DRV_RISING BIT(31)
-+#define	JZ_MMC_LPM_LOW_POWER_MODE_EN BIT(0)
-+
- #define JZ_MMC_CLK_RATE 24000000
- 
- enum jz4740_mmc_version {
- 	JZ_MMC_JZ4740,
- 	JZ_MMC_JZ4725B,
-+	JZ_MMC_JZ4760,
- 	JZ_MMC_JZ4780,
- };
- 
-@@ -858,6 +863,16 @@ static int jz4740_mmc_set_clock_rate(struct jz4740_mmc_host *host, int rate)
- 	}
- 
- 	writew(div, host->base + JZ_REG_MMC_CLKRT);
-+
-+	if (host->version >= JZ_MMC_JZ4760) {
-+		if (real_rate > 25000000)
-+			writel(JZ_MMC_LPM_DRV_RISING |
-+				   JZ_MMC_LPM_LOW_POWER_MODE_EN,
-+				   host->base + JZ_REG_MMC_LPM);
-+	} else if (host->version >= JZ_MMC_JZ4725B)
-+		writel(JZ_MMC_LPM_LOW_POWER_MODE_EN,
-+			   host->base + JZ_REG_MMC_LPM);
-+
- 	return real_rate;
- }
- 
-@@ -935,6 +950,7 @@ static const struct mmc_host_ops jz4740_mmc_ops = {
- static const struct of_device_id jz4740_mmc_of_match[] = {
- 	{ .compatible = "ingenic,jz4740-mmc", .data = (void *) JZ_MMC_JZ4740 },
- 	{ .compatible = "ingenic,jz4725b-mmc", .data = (void *)JZ_MMC_JZ4725B },
-+	{ .compatible = "ingenic,jz4760-mmc", .data = (void *) JZ_MMC_JZ4760 },
- 	{ .compatible = "ingenic,jz4780-mmc", .data = (void *) JZ_MMC_JZ4780 },
- 	{},
- };
--- 
-2.7.4
-
-
+Sebastian
