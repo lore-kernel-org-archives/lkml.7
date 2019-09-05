@@ -2,120 +2,180 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4447BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF48C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF7C20692
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567714061;
-	bh=CTlO67h7Upal8HOTBe8Hoyzy7uVAFLy4BJLzOSYOgmc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GlF553tP0Wn70a6I9BM5/Ai1QxtPrDAldzsM65hZabey6Ci6ce9joCA+oF5daQSsR
-	 7Rg/fJNqEnAw110YDuJwFjLvrCSL13LNE07gfdO8WYVh5eUJM7H1r2VLvIkBnPS8Kq
-	 U6qFezQ8HiahogfypmoO7N4f10kzpwBCo746UUbM=
+	by mail.kernel.org (Postfix) with ESMTP id 66DED20692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:07:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fEPR9+4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733118AbfIEUHj (ORCPT
+        id S2387845AbfIEUHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:07:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60896 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfIEUHi (ORCPT
+        Thu, 5 Sep 2019 16:07:44 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41223 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIEUHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:07:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/RMKG1VmtC2gPGmK7VWh8EaeDGToHpuMmS1djuPjg9Y=; b=HzCrgT9ZhXEE69qWsnIA75rFg
-        HxRqmevdQ9RBjSwPeI87YRf+S1bIDVVH5G0EfMlgu2VA1y5WfwjouHPvNEXRKeSUVOhwzqDXqmgCT
-        yENCkE1gW9Np8oGYRMMN8EwCjOZfzjLEyBmOorojrxuVyCunW1dlaaW/iFBU4kaKvWy7sfYoQTqZQ
-        Emo+v0sAFKOH/cOlD+I3bHDXb0y2QC2Ua4dsXJW2sAsQ1RQnWFJ05m6dhtBG2ieV5aWAjg0se3IUQ
-        Rck8s0t0SOcN4UwdOM/FJ2kCLYsf5LiDMJDRp1r+pYH92BSJWhKqBblQB+30wDbY83pBTZqQ41rvi
-        n9yBeNflg==;
-Received: from [177.159.253.249] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5y2c-0003S4-Cm; Thu, 05 Sep 2019 20:07:38 +0000
-Date:   Thu, 5 Sep 2019 17:07:33 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
- scripts
-Message-ID: <20190905170733.3a25dee8@coco.lan>
-In-Reply-To: <20190905134008.57cd3e89@lwn.net>
-References: <20190905055614.7958918b@coco.lan>
-        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
-        <20190905065701.4744e66a@lwn.net>
-        <20190905162810.2388d532@coco.lan>
-        <20190905134008.57cd3e89@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 5 Sep 2019 16:07:42 -0400
+Received: by mail-oi1-f195.google.com with SMTP id h4so2986773oih.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6k7PZuJzGWrD6r0C7js2ghL9hn4vXg63+nMGa3lc03Q=;
+        b=fEPR9+4FnJ/Wuh5lAs7l0q7dg8u+29rxGa1vObZGAYxHLXpMJmWtvQm0WI7yFHpbA9
+         sotwZ5fvHtmhbOOjsGD4XdRWAE+6AYb3s0hVUcTs0ij1ac4cvAJs5swoW2m9fu57OadR
+         o7BrkXPdVisi/74Qj4Up0mSJKh8d9sLEmWMfy0aV0iHYtAC5JGXFYDT9kmIBY8JKcNFQ
+         WvzUvTWDjYTc+t0UA+BITLbIMNqKrTmCn661eeX0fPI9t70tskNE478AIBdUgubiXhlJ
+         3kroS/4vY/n8ro+zwulHYVAcsEsu6RBGxZdPvkeg1EPaxxG7BNg55LP1WNtcedAtAJlo
+         YeMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6k7PZuJzGWrD6r0C7js2ghL9hn4vXg63+nMGa3lc03Q=;
+        b=WxkpD6D5jptQecZeN2h8VLBYJdxHQ8msh34nTGD+1IkepKf2ewVymvY2Ee1c/OCnru
+         reS9WYEtpZ2NYAxiI3B3HXGW5E7qjrXxJ1dkV/uGvTKuZiUcWl4zEUf1IKC2BwF+2EMx
+         GL18BvdD0nIXDbz6wxU/X+Q6CeP8ayGBcV7w7Po69G/AhGNGKA1LGizH4DjXruPkP+MR
+         tMqdn6GJpeJOm4/Wz7hfZf4K8lyPmoReAP9T6bjlvD7LWgMiYQFXNRm9K80jCyhnR/yS
+         VSPCekwhkRVUtrUAUQdzjXH+NQnIbxT58x9ABZxn7FXkuZyU+yeJ1BdKiGH1jp3K/60G
+         gULg==
+X-Gm-Message-State: APjAAAWZk1qGPH+9D2Mxe353JmPMx3a3uSyQI8O0zqU8xp50YFYaqRLX
+        G+Z8TooQ8+n0kri50plKT9eWTe+4ycSDXlqpTyXEew==
+X-Google-Smtp-Source: APXvYqzyY+dI8j4oksYtUG/bs6k+iiXfYPjfr4iAtUt+sQklxzS+bW2yptWP0sznueZLxU0tmkvtO8vWY8nAzmtJJEY=
+X-Received: by 2002:aca:da86:: with SMTP id r128mr4287079oig.103.1567714061086;
+ Thu, 05 Sep 2019 13:07:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190826233240.11524-1-almasrymina@google.com>
+ <20190828112340.GB7466@dhcp22.suse.cz> <CAHS8izPPhPoqh-J9LJ40NJUCbgTFS60oZNuDSHmgtMQiYw72RA@mail.gmail.com>
+ <20190829071807.GR28313@dhcp22.suse.cz> <cb7ebcce-05c5-3384-5632-2bbac9995c15@oracle.com>
+ <e7f91a50-5957-249c-8756-25ea87c77fc4@oracle.com>
+In-Reply-To: <e7f91a50-5957-249c-8756-25ea87c77fc4@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Thu, 5 Sep 2019 13:07:30 -0700
+Message-ID: <CAHS8izMCA9+sY+dxHxuFgANCLD2oNznPqGYvi1+C2xOkv=7EYw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] hugetlb_cgroup: Add hugetlb_cgroup reservation limits
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, shuah <shuah@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 5 Sep 2019 13:40:08 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+On Tue, Sep 3, 2019 at 4:46 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 9/3/19 10:57 AM, Mike Kravetz wrote:
+> > On 8/29/19 12:18 AM, Michal Hocko wrote:
+> >> [Cc cgroups maintainers]
+> >>
+> >> On Wed 28-08-19 10:58:00, Mina Almasry wrote:
+> >>> On Wed, Aug 28, 2019 at 4:23 AM Michal Hocko <mhocko@kernel.org> wrote:
+> >>>>
+> >>>> On Mon 26-08-19 16:32:34, Mina Almasry wrote:
+> >>>>>  mm/hugetlb.c                                  | 493 ++++++++++++------
+> >>>>>  mm/hugetlb_cgroup.c                           | 187 +++++--
+> >>>>
+> >>>> This is a lot of changes to an already subtle code which hugetlb
+> >>>> reservations undoubly are.
+> >>>
+> >>> For what it's worth, I think this patch series is a net decrease in
+> >>> the complexity of the reservation code, especially the region_*
+> >>> functions, which is where a lot of the complexity lies. I removed the
+> >>> race between region_del and region_{add|chg}, refactored the main
+> >>> logic into smaller code, moved common code to helpers and deleted the
+> >>> duplicates, and finally added lots of comments to the hard to
+> >>> understand pieces. I hope that when folks review the changes they will
+> >>> see that! :)
+> >>
+> >> Post those improvements as standalone patches and sell them as
+> >> improvements. We can talk about the net additional complexity of the
+> >> controller much easier then.
+> >
+> > All such changes appear to be in patch 4 of this series.  The commit message
+> > says "region_add() and region_chg() are heavily refactored to in this commit
+> > to make the code easier to understand and remove duplication.".  However, the
+> > modifications were also added to accommodate the new cgroup reservation
+> > accounting.  I think it would be helpful to explain why the existing code does
+> > not work with the new accounting.  For example, one change is because
+> > "existing code coalesces resv_map entries for shared mappings.  new cgroup
+> > accounting requires that resv_map entries be kept separate for proper
+> > uncharging."
+> >
+> > I am starting to review the changes, but it would help if there was a high
+> > level description.  I also like Michal's idea of calling out the region_*
+> > changes separately.  If not a standalone patch, at least the first patch of
+> > the series.  This new code will be exercised even if cgroup reservation
+> > accounting not enabled, so it is very important than no subtle regressions
+> > be introduced.
+>
+> While looking at the region_* changes, I started thinking about this no
+> coalesce change for shared mappings which I think is necessary.  Am I
+> mistaken, or is this a requirement?
+>
 
-> On Thu, 5 Sep 2019 16:28:10 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > I don't think we can count that python 3 uses utf-8 per default.
-> > 
-> > I strongly suspect that, if one uses a Python3 version < 3.7, it will
-> > still default to ASCII.
-> > 
-> > On a quick look, the new UTF-8 mode was added on PEP-540:
-> > 
-> > 	https://www.python.org/dev/peps/pep-0540/
-> > 
-> > Such change happened at Python 3.7.   
-> 
-> That PEP is to override the locale and use utf8 unconditionally.  It
-> says, with regard to the pre-PEP state:
-> 
-> 	UTF-8 is also the default encoding of Python scripts, XML and JSON
-> 	file formats.
-> 
-> Unicode was the reason for much of the Python 3 pain; it seems unlikely
-> that many installations are defaulting to ASCII anyway...?
+No coalesce is a requirement, yes. The idea is that task A can reseve
+range [0-1], and task B can reserve range [1-2]. We want the code to
+put in 2 regions:
 
-Yeah, but I remember that UTF-8 handling changed a few times during python 3
-releases. I didn't really tracked what happened, as I don't usually program
-in Python. So, I'm actually relying on what I can find about that.
+1. [0-1], with cgroup information that points to task A's cgroup.
+2. [1-2], with cgroup information that points to task B's cgroup.
 
-Looking at Python 3.0 release[1], it says:
+If coalescing is happening, then you end up with one region [0-2] with
+cgroup information for one of those cgroups, and someone gets
+uncharged wrong when the reservation is freed.
 
-	"In many cases, but not all, the system default is UTF-8;
-	 you should never count on this default."
+Technically we can still coalesce if the cgroup information is the
+same and I can do that, but the region_* code becomes more
+complicated, and you mentioned on an earlier patchset that you were
+concerned with how complicated the region_* functions are as is.
 
-[1] https://docs.python.org/3.0/whatsnew/3.0.html
+> If it is a requirement, then think about some of the possible scenarios
+> such as:
+> - There is a hugetlbfs file of size 10 huge pages.
+> - Task A has reservations for pages at offset 1 3 5 7 and 9
+> - Task B then mmaps the entire file which should result in reservations
+>   at 0 2 4 6 and 8.
+> - region_chg will return 5, but will also need to allocate 5 resv_map
+>   entries for the subsequent region_add which can not fail.  Correct?
+>   The code does not appear to handle this.
+>
 
-So, at least on early Python 3 releases, the default may not be UTF-8.
+I thought the code did handle this. region_chg calls
+allocate_enough_cache_for_range_and_lock(), which in this scenario
+will put 5 entries in resv_map->region_cache. region_add will use
+these 5 region_cache entries to do its business.
 
-I don't know about you, but, from time to time, people complain about
-UTF-8 chars when I'm handling patches (last time was on a patch series
-for Kernel 5.3 by a core dev in Australia, with was unable to apply a
-patch from me with had some UTF-8 chars). 
+I'll add a test in my suite to test this case to make sure.
 
-So, I'm pretty sure that some devs don't set the locale to UTF8 even
-those days.
+> BTW, this series will BUG when running libhugetlbfs test suite.  It will
+> hit this in resv_map_release().
+>
+>         VM_BUG_ON(resv_map->adds_in_progress);
+>
 
-Thanks,
-Mauro
+Sorry about that, I've been having trouble running the libhugetlbfs
+tests, but I'm still on it. I'll get to the bottom of this by next
+patch series.
+
+> --
+> Mike Kravetz
