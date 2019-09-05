@@ -2,127 +2,111 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F73C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDC1C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 436EF22CF6
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0405522DD3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:46:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ClQTx7QX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kjXCf0+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388097AbfIEKqW (ORCPT
+        id S2388107AbfIEKq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:46:22 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10025 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727900AbfIEKqV (ORCPT
+        Thu, 5 Sep 2019 06:46:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48654 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbfIEKq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:46:21 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d70e77f0001>; Thu, 05 Sep 2019 03:46:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Sep 2019 03:46:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Sep 2019 03:46:20 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
- 2019 10:46:20 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 5 Sep 2019 10:46:20 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d70e7760001>; Thu, 05 Sep 2019 03:46:20 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <andrew.murray@arm.com>
-CC:     <kishon@ti.com>, <gustavo.pimentel@synopsys.com>,
-        <digetx@gmail.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V4 3/6] PCI: tegra: Add support to configure sideband pins
-Date:   Thu, 5 Sep 2019 16:15:50 +0530
-Message-ID: <20190905104553.2884-4-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905104553.2884-1-vidyas@nvidia.com>
-References: <20190905104553.2884-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 5 Sep 2019 06:46:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gnHLwW18GHsqNY1glFxvL0YT/FOtfFV2qvtzl/muhyA=; b=kjXCf0+cZaU+Uq4bITC4armFQ
+        MW7ezSuVSJtE2ZoY7h58hQqHDrjLDLjuKfTk7DyOdKxRCUNPAXr0kE29b0n1cD3XU+2x6RdNnw/Xz
+        kZHQKf+mqmtlxM0Z0r7fDc3hTdEQ9kKnhphBO96TfYHgBYE8152nHFtF7PZ2pxyvsHxzn0FSUfx7Z
+        kxVXBKgZLlPpJuX3s/zdg7TfEWEmujqd2WM6oZaxSHO7uBmJwddV/siCASyURpVqOYoHcbe4B8dHw
+        gBCQ3ytjTSqx5VhyzCvBx3HV4C41STeowQf85ATCcX/O5GanboG5w04KHaGUPrxQzOliuy4coy9+w
+        tbWu+tDaQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5pHO-0002CN-Uk; Thu, 05 Sep 2019 10:46:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6113530604E;
+        Thu,  5 Sep 2019 12:45:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2FBD229BB14BE; Thu,  5 Sep 2019 12:46:16 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 12:46:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+Message-ID: <20190905104616.GD2332@hirez.programming.kicks-ass.net>
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+ <20190830174944.21741-2-subhra.mazumdar@oracle.com>
+ <20190905083127.GA2332@hirez.programming.kicks-ass.net>
+ <87r24v2i14.fsf@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567680383; bh=Y7Wg10MnmbabLowy3sNUh3llEdHALkiyGZAdfNFIl8A=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=ClQTx7QXiJFd/OAOkaKhko6P6Wd+5OZSWkzqTnK6FXhXi0HU+PczvFxlrVvSBGyU/
-         Lsqw6fkjjaWVx6oG39Gu/dTWndrF61/suLn6vb7NO5qI7yKR5cBJwib93UbxwT+yN4
-         vf/2I4O8Uw38ov/u4+RxPjKGbmv0wlshYSO/jS+5bDICW5USrw/p3dIIrPq4OZZO8t
-         1Q95WHw5fVE2fI27tJHt+ND1BOZ03QHAKoTLwe95UdqmYx2e5EE25hJhT1h2CgUY5E
-         MOEU6Lgbd7+M9bfQOH/qoiOPxcq/c/5TPPFDRv9UpbYAK99I5nMPO8AicgqkYxCa4n
-         FPjlQbNUbfMrg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r24v2i14.fsf@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to configure sideband signal pins when information is present
-in respective controller's device-tree node.
+On Thu, Sep 05, 2019 at 10:45:27AM +0100, Patrick Bellasi wrote:
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
-V4:
-* None
+> > From just reading the above, I would expect it to have the range
+> > [-20,19] just like normal nice. Apparently this is not so.
+> 
+> Regarding the range for the latency-nice values, I guess we have two
+> options:
+> 
+>   - [-20..19], which makes it similar to priorities
+>   downside: we quite likely end up with a kernel space representation
+>   which does not match the user-space one, e.g. look at
+>   task_struct::prio.
+> 
+>   - [0..1024], which makes it more similar to a "percentage"
+> 
+> Being latency-nice a new concept, we are not constrained by POSIX and
+> IMHO the [0..1024] scale is a better fit.
+> 
+> That will translate into:
+> 
+>   latency-nice=0 : default (current mainline) behaviour, all "biasing"
+>   policies are disabled and we wakeup up as fast as possible
+> 
+>   latency-nice=1024 : maximum niceness, where for example we can imaging
+>   to turn switch a CFS task to be SCHED_IDLE?
 
-V3:
-* Used 'dev' instead of 'pcie->dev'
+There's a few things wrong there; I really feel that if we call it nice,
+it should be like nice. Otherwise we should call it latency-bias and not
+have the association with nice to confuse people.
 
-V2:
-* Addressed review comment from Andrew Murray
-* Handled failure case of pinctrl_pm_select_default_state() cleanly
+Secondly; the default should be in the middle of the range. Naturally
+this would be a signed range like nice [-(x+1),x] for some x. but if you
+want [0,1024], then the default really should be 512, but personally I
+like 0 better as a default, in which case we need negative numbers.
 
- drivers/pci/controller/dwc/pcie-tegra194.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+This is important because we want to be able to bias towards less
+importance to (tail) latency as well as more importantance to (tail)
+latency.
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index db598beafd92..2048ef6fad90 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -1304,8 +1304,13 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to get runtime sync for PCIe dev: %d\n",
- 			ret);
--		pm_runtime_disable(dev);
--		return ret;
-+		goto fail_pm_get_sync;
-+	}
-+
-+	ret = pinctrl_pm_select_default_state(dev);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to configure sideband pins: %d\n", ret);
-+		goto fail_pinctrl;
- 	}
- 
- 	tegra_pcie_init_controller(pcie);
-@@ -1332,7 +1337,9 @@ static int tegra_pcie_config_rp(struct tegra_pcie_dw *pcie)
- 
- fail_host_init:
- 	tegra_pcie_deinit_controller(pcie);
-+fail_pinctrl:
- 	pm_runtime_put_sync(dev);
-+fail_pm_get_sync:
- 	pm_runtime_disable(dev);
- 	return ret;
- }
--- 
-2.17.1
-
+Specifically, Oracle wants to sacrifice (some) latency for throughput.
+Facebook OTOH seems to want to sacrifice (some) throughput for latency.
