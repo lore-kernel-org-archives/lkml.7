@@ -2,133 +2,94 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F624C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234F4C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2294A20828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E038D20825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:53:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbxwZdSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390180AbfIEQx2 (ORCPT
+        id S2390388AbfIEQxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:53:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:47530 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728254AbfIEQx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:53:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A06128;
-        Thu,  5 Sep 2019 09:53:27 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 529E83F718;
-        Thu,  5 Sep 2019 09:53:25 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 17:53:16 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Jonathan Chocron <jonnyc@amazon.com>, bhelgaas@google.com
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, andrew.murray@arm.com,
-        dwmw@amazon.co.uk, benh@kernel.crashing.org, alisaidi@amazon.com,
-        ronenk@amazon.com, barakw@amazon.com, talel@amazon.com,
-        hanochu@amazon.com, hhhawa@amazon.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 0/7] Amazon's Annapurna Labs DT-based PCIe host
- controller driver
-Message-ID: <20190905165309.GA10248@e121166-lin.cambridge.arm.com>
-References: <20190905140018.5139-1-jonnyc@amazon.com>
+        Thu, 5 Sep 2019 12:53:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37699 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbfIEQxi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:53:38 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y9so2139002pfl.4;
+        Thu, 05 Sep 2019 09:53:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RWnMjjgITJJqdE2woZBvos5GFZ5W8pugG64G2X+tFzM=;
+        b=lbxwZdSkgDsz8thBfK05SolVFonN7ns0WmIQsha4NqlZij7+w9cC8i3INFtRYbZRhj
+         EZVmNIrGWtUqZAZYANLqTiVo+9NkqO74p/Yivm87vBHoTA4jjeUtfZAKOlhV2eqP2gfT
+         0EK+OKsuGeXkWrIc37ztsq2d+ZH86hMUatvBzyyA6VAWfZ4R6/Om+LRll2wS7rvx+Wsr
+         s37QR+aMWh9piE6l+t/qFRTNFU4jtzBGmKAibaA1GpomsO3mdfEf+euc7ZISjzN1RTtz
+         VPUNDeWyYxal1zJvbmNq99KqDPDj9TkES+HCLFsjHKTdaHFlpBBlfGN6m3HzhetJq0Sq
+         Rccg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RWnMjjgITJJqdE2woZBvos5GFZ5W8pugG64G2X+tFzM=;
+        b=BDm0vWGTwooWaRYwcrfoWSFqr4YVhJkjLFgEXhxwiWJC5VtautzBl1BubplV5jP7TH
+         csA6B4ztdw8b7kOVvpDJ0x92zXD5KNvIPJm+jF+fC8+RjslNqxVDyW78+xaXNs/YjKsJ
+         b85f0Yt1b1RXlWjZB2SlmjxtURk5HEMf5lAbPB6Dn9MCsTxiEiYXhPBvMY3e8LZDGVRB
+         IReOP8B+U4RKCCKVn62H56FRmcBrGP/2IARZsKzN5frUGjeZYicQlnzFO+CsGe1IZnOz
+         VaLI5PSz/8GjFbFBR4MrBUSmouYyCTr+s6YE8oAwlocHr83vSKWqgE/5O5rqqeuW468x
+         II7Q==
+X-Gm-Message-State: APjAAAXO8ZcMf/aBMZcBCAvkqFVTeyJGwQyCIVWx1IN4L+AxbRYdoEeg
+        WqmimoTXKOBZ6KZZKTA+ncjjPE7U
+X-Google-Smtp-Source: APXvYqxuur0SmCF/3LNMIqDzfUVkMPZT/G5qyihsk72t9YIOjXosGzQm/HCfA8STogqJAbz+dfBRAw==
+X-Received: by 2002:a17:90a:a611:: with SMTP id c17mr5090767pjq.17.1567702418117;
+        Thu, 05 Sep 2019 09:53:38 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s73sm2684946pjb.15.2019.09.05.09.53.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 09:53:36 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 09:53:35 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Cc:     peda@axentia.se, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: muxes: pca9541: use BIT() macro
+Message-ID: <20190905165335.GA23158@roeck-us.net>
+References: <20190905131318.GA21280@SD.eic.com>
+ <1d248333-abe9-cff8-ad29-d3b618643dc6@roeck-us.net>
+ <20190905154448.GA3378@SD>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905140018.5139-1-jonnyc@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190905154448.GA3378@SD>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 05:00:14PM +0300, Jonathan Chocron wrote:
-> This series adds support for Amazon's Annapurna Labs DT-based PCIe host
-> controller driver.
-> Additionally, it adds 3 quirks (ACS, VPD and MSI-X) and 2 generic DWC patches.
+On Thu, Sep 05, 2019 at 09:15:36PM +0530, Saiyam Doshi wrote:
+> On Thu, Sep 05, 2019 at 06:21:06AM -0700, Guenter Roeck wrote:
+> > linux/bitops.h should be included when using BIT().
 > 
-> Changes since v4:
-> - Moved the HEADER_TYPE validations to after pp->ops->host_init() and
->   ep->ops->ep_init()
-> - Changed to dw_pcie_rd_own_conf() instead of dw_pcie_readb_dbi() for
->   reading the HEADER_TYPE
-> - Used exsitng quirk_blacklist_vpd() instead of quirk_al_vpd_release()
-> - Added a newline in ACS quirk comment
+> It's included from linux/i2c-mux.h and it compiled successfully.
+> But if it's needed I'll update the patch and resend.
 > 
-> Changes since v3:
-> - Removed PATCH 8/8 since the usage of the PCI flags will be discussed
->   in the upcoming LPC
-> - Align commit subject with the folder convention
-> - Added explanation regarding ECAM "overload" mechanism
-> - Switched to read/write{_relaxed} APIs
-> - Modified a dev_err to dev_dbg
-> - Removed unnecessary variable
-> - Removed driver details from dt-binding description
-> - Changed to SoC specific compatibles
-> - Fixed typo in a commit message
-> - Added comment regarding MSI in the MSI-X quirk
+> Just a question - What is the best practice in such case? Should the 
+> header included explicitly?
 > 
-> Changes since v2:
-> - Added al_pcie_controller_readl/writel() wrappers
-> - Reorganized local vars in several functions according to reverse
->   tree structure
-> - Removed unnecessary check of ret value
-> - Changed return type of al_pcie_config_prepare() from int to void
-> - Removed check if link is up from probe() [done internally in
->   dw_pcie_rd/wr_conf()]
-> 
-> Changes since v1:
-> - Added comment regarding 0x0031 being used as a dev_id for non root-port devices as well
-> - Fixed different message/comment/print wordings
-> - Added panic stacktrace to commit message of MSI-x quirk patch
-> - Changed to pci_warn() instead of dev_warn()
-> - Added unit_address after node_name in dt-binding
-> - Updated Kconfig help description
-> - Used GENMASK and FIELD_PREP/GET where appropriate
-> - Removed leftover field from struct al_pcie and moved all ptrs to
->   the beginning
-> - Re-wrapped function definitions and invocations to use fewer lines
-> - Change %p to %px in dbg prints in rd/wr_conf() functions
-> - Removed validation that the port is configured to RC mode (as this is
->   added generically in PATCH 7/8)
-> - Removed unnecessary variable initializations
-> - Swtiched to %pR for printing resources
-> 
-> 
-> Ali Saidi (1):
->   PCI: Add ACS quirk for Amazon Annapurna Labs root ports
-> 
-> Jonathan Chocron (6):
->   PCI: Add Amazon's Annapurna Labs vendor ID
->   PCI/VPD: Prevent VPD access for Amazon's Annapurna Labs Root Port
->   PCI: Add quirk to disable MSI-X support for Amazon's Annapurna Labs
->     Root Port
->   dt-bindings: PCI: Add Amazon's Annapurna Labs PCIe host bridge binding
->   PCI: dwc: al: Add support for DW based driver type
->   PCI: dwc: Add validation that PCIe core is set to correct mode
-> 
->  .../devicetree/bindings/pci/pcie-al.txt       |  46 +++
->  MAINTAINERS                                   |   3 +-
->  drivers/pci/controller/dwc/Kconfig            |  12 +
->  drivers/pci/controller/dwc/pcie-al.c          | 365 ++++++++++++++++++
->  .../pci/controller/dwc/pcie-designware-ep.c   |   8 +
->  .../pci/controller/dwc/pcie-designware-host.c |  16 +
->  drivers/pci/quirks.c                          |  38 ++
->  drivers/pci/vpd.c                             |   6 +
->  include/linux/pci_ids.h                       |   2 +
->  9 files changed, 495 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/pcie-al.txt
 
-Hi Bjorn,
+process/submit-checklist.rst says, as very first point:
 
-I would like to queue this series for v5.4 but I need your ACK on
-patches 2/3/4 for that to happen, please let me know.
+1) If you use a facility then #include the file that defines/declares
+   that facility.  Don't depend on other header files pulling in ones
+   that you use.
 
-Thanks,
-Lorenzo
+Guenter
