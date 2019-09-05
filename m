@@ -2,608 +2,364 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C5DC3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A356C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF1072184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6722184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:57:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="gJ0WkdHs";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="GNwltWTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387621AbfIEJ4c (ORCPT
+        id S2387647AbfIEJ5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:56:32 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:33157 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfIEJ4c (ORCPT
+        Thu, 5 Sep 2019 05:57:13 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:38224 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725290AbfIEJ5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:56:32 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 73BB11C001F;
-        Thu,  5 Sep 2019 09:56:23 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 11:57:57 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
-Message-ID: <20190905095757.gg6s5pse5tvivxbs@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-9-jacopo+renesas@jmondi.org>
- <20190827002422.GQ5031@pendragon.ideasonboard.com>
- <20190827145619.33s7gkv7tgtsr6nz@uno.localdomain>
- <20190827163423.GB5054@pendragon.ideasonboard.com>
+        Thu, 5 Sep 2019 05:57:12 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x859tpAE018195;
+        Thu, 5 Sep 2019 02:56:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=UTDlhxfBr2FRYV4DdhoZowXYS0/D8i5V8jOhiXsuEHE=;
+ b=gJ0WkdHsy/GW2BGLGXqxQWEpTNyLmgmXq2wQE4rgV+kA0RPc/bQXm7D1BANctyY1mPc3
+ FD7SVR9aO7vGW3WsSw08+JB0zdSy3V8sdhS/rTby3RBuNr2xSbicorvTmdtK4XjxDole
+ XuI9yjbp0cZtJoZqUHm+Ut2pGVuL4bmJ8xj55Zugv2yJuljHOit79aSQvnDQohkB3QzK
+ AISX+8TFG7vNdBc5LDJvmeaD5XPxhsx6H/YO2Na6/muMc5T0hQ54sNvW7u1wN5Kelf3q
+ xPSEkpTGY/rTBn7ORzZgR8Sj70LxtgiMIESQdBMBmis6qHQnr4m9lPfcWT8tWtLsMvlL cQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2uqp8pjtgq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 02:56:55 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 5 Sep
+ 2019 02:56:54 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.53) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 5 Sep 2019 02:56:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DHpj75B/CWMQrh7g5IK02G5DzLNDoCOk5nwUOfYK8EkKwEhseEggtGn5KFYT4OooUBRfnwg20JBjuj6hplpbznyBwlCy7n5vQLDdVxLa4DyyDa86qjUjmtFBtskMb5RRkZOVdvrUA6HPB85Yu5rXt/pIvz6kwDb4iWV7DxpgFIdmUaVNSXJebRPp+BgLzR2ltgrWcRMO8T1tl0EYcI8BRgNBdD18t6YoW6tNASy5OdXpMwt/SfFTROTkNgLlNSamUlguW8TZ6zN87kV3FgRRr4dtyGvCw3duZ03exlgpx0uzHMqiW9tTs6cuJXr7r2VGUIQxRYUYh9cmLKSEpTfVAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UTDlhxfBr2FRYV4DdhoZowXYS0/D8i5V8jOhiXsuEHE=;
+ b=LWgMWUdeZ90kQkdEcHFlssMA62MNWKLSEMs/W8tqxr2trtTncUSpXI8Nl070ApaC0Yh8vrWc7xiChMJU8AME8p7PwWPtJuwkyERsQfzbH9EizICjh4R7j1aW/Jnui+RD9V3llJvGFAUnPhXIN9AMZJLca5dbFWL8meNUhvIOT91pIX7H129fXsvfQkduZuxw/VQUOV1LF+zkPwYHRF+LwH/ds/mi4yYT0tMEaQdunRp8cjwYaK66p9xUg+LgJYYJoG94VaBLbXJ7zr60MVcM5piBw2IGyIYlY9ST8k2a7tbZAT6Vs1CVvNrA0s8vR4pm/Ujhu9xaZho6SyQkmvIZeg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UTDlhxfBr2FRYV4DdhoZowXYS0/D8i5V8jOhiXsuEHE=;
+ b=GNwltWTxz4dwbmN3Duyqs54PlgydVNybqHKP1YBTrHsHJ/iEkiOIp2hoKrz6O+m8EcfjeV4zFay3wam6Vfocyde9kzqcuEu+50sk76C6jIRQbfdLoej+26d95v8dd0lMFZCDnsLWM832Fil/Eiv3BaJxlonSEnVJ1z66atweKGs=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
+ MN2PR18MB3199.namprd18.prod.outlook.com (10.255.236.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.18; Thu, 5 Sep 2019 09:56:52 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::8162:62e8:aeeb:ec7b%3]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
+ 09:56:51 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+CC:     "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dwmw@amazon.co.uk" <dwmw@amazon.co.uk>,
+        "benh@amazon.com" <benh@amazon.com>,
+        "ronenk@amazon.com" <ronenk@amazon.com>,
+        "talel@amazon.com" <talel@amazon.com>,
+        "jonnyc@amazon.com" <jonnyc@amazon.com>,
+        "hanochu@amazon.com" <hanochu@amazon.com>
+Subject: Re: [PATCH 1/1] edac: Add an API for edac device to report for
+ multiple errors
+Thread-Topic: [PATCH 1/1] edac: Add an API for edac device to report for
+ multiple errors
+Thread-Index: AQHVY9A9KbbGxFDTYEGZB0MjKa34ew==
+Date:   Thu, 5 Sep 2019 09:56:51 +0000
+Message-ID: <20190905095642.ohqkcllm7wufx6sc@rric.localdomain>
+References: <20190905083745.6899-1-hhhawa@amazon.com>
+In-Reply-To: <20190905083745.6899-1-hhhawa@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0402CA0029.eurprd04.prod.outlook.com
+ (2603:10a6:7:7c::18) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:16c::25)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ce4ff040-1a23-4e27-a61b-08d731e7600b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB3199;
+x-ms-traffictypediagnostic: MN2PR18MB3199:
+x-microsoft-antispam-prvs: <MN2PR18MB3199642E533EEF5458136B7DD9BB0@MN2PR18MB3199.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2449;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39850400004)(396003)(366004)(376002)(346002)(136003)(51914003)(199004)(189003)(66556008)(64756008)(66446008)(81166006)(81156014)(8936002)(99286004)(66476007)(66946007)(2906002)(8676002)(486006)(6916009)(5660300002)(71190400001)(71200400001)(386003)(86362001)(1076003)(53546011)(6506007)(76176011)(102836004)(7416002)(4326008)(25786009)(52116002)(53936002)(478600001)(66066001)(6246003)(11346002)(26005)(6436002)(14454004)(446003)(14444005)(229853002)(476003)(54906003)(6512007)(9686003)(256004)(186003)(7736002)(3846002)(6486002)(6116002)(305945005)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3199;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: isQkmRwuG85snua9lPUpf9w3cfA68ItWD4ymR/e9mNnWuZYEfgvjjbBVmiE6xtZGktd0/+NkIWNiYK6sBQDwaM+KWOqF6eWTtMzhkY3p5SnoSK3MnE9oXxu3udEbSkMOoxzaVnYmY94TivXVCPtu2gUmGL6aZ0t0509TFJmmcvY81dzbXkP82gp9TposFi69jrpXN6+9La8JKDNzRVsmP3fP3bo584TUMLHlM5nUy1YjxpZYp9he3C9fL4iUzhm9HJyeqBw9UREwBx21BUmD5wvYRI958E6nWCWFoQBAxNplLOMuf8+AJ5avZQu5cHsca07agkXctosY5rO5h4MSlFjhhZOHkLGD7iREgrJIQ66LpjtDkoDRed+uNSPqEv72fspQu9vEOVYM0NLzamcx3bhW2LwiS6ysgg/uK1uBBYI=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3981BEE756BD904E93F3326D5C3B809C@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vshdzxkdbqvaeroa"
-Content-Disposition: inline
-In-Reply-To: <20190827163423.GB5054@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+X-MS-Exchange-CrossTenant-Network-Message-Id: ce4ff040-1a23-4e27-a61b-08d731e7600b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 09:56:51.9324
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: byEmWRuG1mrse1oTpJdlJFvmCBYJ3Krz5oelAdZ+lcx0WYiKDJPltNlnwAY62fPPVzg9HbiAItq0/81QB8qE4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3199
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_03:2019-09-04,2019-09-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Hanna,
 
---vshdzxkdbqvaeroa
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+thanks for the update. See below.
 
-Hi Laurent,
+On 05.09.19 09:37:45, Hanna Hawa wrote:
+> Add an API for edac device to report multiple errors with same type.
+>=20
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> ---
+>  drivers/edac/edac_device.c | 66 +++++++++++++++++++++++++++++---------
+>  drivers/edac/edac_device.h | 31 ++++++++++++++++--
+>  2 files changed, 79 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/edac/edac_device.c b/drivers/edac/edac_device.c
+> index 65cf2b9355c4..bf6a4fd9831b 100644
+> --- a/drivers/edac/edac_device.c
+> +++ b/drivers/edac/edac_device.c
+> @@ -555,12 +555,15 @@ static inline int edac_device_get_panic_on_ue(struc=
+t edac_device_ctl_info
+>  	return edac_dev->panic_on_ue;
+>  }
+> =20
+> -void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+> -			int inst_nr, int block_nr, const char *msg)
+> +static void __edac_device_handle_ce(struct edac_device_ctl_info *edac_de=
+v,
+> +			   u16 error_count, int inst_nr, int block_nr,
 
-On Tue, Aug 27, 2019 at 07:34:23PM +0300, Laurent Pinchart wrote:
-> Hi Laurent,
->
-> On Tue, Aug 27, 2019 at 04:56:19PM +0200, Jacopo Mondi wrote:
-> > On Tue, Aug 27, 2019 at 03:24:22AM +0300, Laurent Pinchart wrote:
-> > > On Sun, Aug 25, 2019 at 03:51:48PM +0200, Jacopo Mondi wrote:
-> > > > Add a driver for the R-Car Display Unit Color Correction Module.
-> > > >
-> > > > In most of Gen3 SoCs, each DU output channel is provided with a CMM=
- unit
-> > > > to perform image enhancement and color correction.
-> > > >
-> > > > Add support for CMM through a driver that supports configuration of
-> > > > the 1-dimensional LUT table. More advanced CMM feature will be
-> > > > implemented on top of this basic one.
-> > > >
-> > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > ---
-> > > >  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
-> > > >  drivers/gpu/drm/rcar-du/Makefile   |   1 +
-> > > >  drivers/gpu/drm/rcar-du/rcar_cmm.c | 262 +++++++++++++++++++++++++=
-++++
-> > > >  drivers/gpu/drm/rcar-du/rcar_cmm.h |  38 +++++
-> > > >  4 files changed, 308 insertions(+)
-> > > >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > > >  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > > >
-> > > > diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar=
--du/Kconfig
-> > > > index 1529849e217e..539d232790d1 100644
-> > > > --- a/drivers/gpu/drm/rcar-du/Kconfig
-> > > > +++ b/drivers/gpu/drm/rcar-du/Kconfig
-> > > > @@ -13,6 +13,13 @@ config DRM_RCAR_DU
-> > > >  	  Choose this option if you have an R-Car chipset.
-> > > >  	  If M is selected the module will be called rcar-du-drm.
-> > > >
-> > > > +config DRM_RCAR_CMM
-> > > > +	bool "R-Car DU Color Management Module (CMM) Support"
-> > > > +	depends on DRM && OF
-> > > > +	depends on DRM_RCAR_DU
-> > > > +	help
-> > > > +	  Enable support for R-Car Color Management Module (CMM).
-> > > > +
-> > > >  config DRM_RCAR_DW_HDMI
-> > > >  	tristate "R-Car DU Gen3 HDMI Encoder Support"
-> > > >  	depends on DRM && OF
-> > > > diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rca=
-r-du/Makefile
-> > > > index 6c2ed9c46467..4d1187ccc3e5 100644
-> > > > --- a/drivers/gpu/drm/rcar-du/Makefile
-> > > > +++ b/drivers/gpu/drm/rcar-du/Makefile
-> > > > @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+=3D rcar_du_=
-of.o \
-> > > >  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+=3D rcar_du_vsp.o
-> > > >  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) +=3D rcar_du_writeback.o
-> > > >
-> > > > +obj-$(CONFIG_DRM_RCAR_CMM)		+=3D rcar_cmm.o
-> > > >  obj-$(CONFIG_DRM_RCAR_DU)		+=3D rcar-du-drm.o
-> > > >  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+=3D rcar_dw_hdmi.o
-> > > >  obj-$(CONFIG_DRM_RCAR_LVDS)		+=3D rcar_lvds.o
-> > > > diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/r=
-car-du/rcar_cmm.c
-> > > > new file mode 100644
-> > > > index 000000000000..55361f5701e8
-> > > > --- /dev/null
-> > > > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
-> > > > @@ -0,0 +1,262 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0+
-> > > > +/*
-> > > > + * rcar_cmm.c -- R-Car Display Unit Color Management Module
-> > > > + *
-> > > > + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > + */
-> > > > +
-> > > > +#include <linux/io.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/pm_runtime.h>
-> > > > +
-> > > > +#include <drm/drm_color_mgmt.h>
-> > > > +
-> > > > +#include "rcar_cmm.h"
-> > > > +
-> > > > +#define CM2_LUT_CTRL		0x0000
-> > > > +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
-> > > > +#define CM2_LUT_TBL_BASE	0x0600
-> > > > +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
-> > > > +
-> > > > +struct rcar_cmm {
-> > > > +	void __iomem *base;
-> > > > +	bool enabled;
-> > > > +
-> > > > +	/*
-> > > > +	 * @lut:		1D-LUT status
-> > > > +	 * @lut.enabled:	1D-LUT enabled flag
-> > > > +	 * @lut.size:		Number of entries in the LUT table
-> > >
-> > > Please see my review of patch 13/14, I wonder if we could drop this
-> > > field.
-> > >
-> > > > +	 * @lut.table:		Table of 1D-LUT entries scaled to HW support
-> > > > +	 *			precision (8-bits per color component)
-> > > > +	 */
-> > > > +	struct {
-> > > > +		bool enabled;
-> > > > +		unsigned int size;
-> > > > +		u32 table[CMM_GAMMA_LUT_SIZE];
-> > > > +	} lut;
-> > > > +};
-> > > > +
-> > > > +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
-> > > > +{
-> > > > +	return ioread32(rcmm->base + reg);
-> > > > +}
-> > > > +
-> > > > +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, =
-u32 data)
-> > > > +{
-> > > > +	iowrite32(data, rcmm->base + reg);
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * rcar_cmm_lut_extract() - Scale down to hw precision the DRM LUT=
- table
-> > >
-> > > s/hw/hardware/ (and below too)
-> > >
-> > > > + *			    entries and store them.
-> > > > + * @rcmm: Pointer to the CMM device
-> > > > + * @size: Number of entries in the table
-> > > > + * @drm_lut: DRM LUT table
-> > > > + */
-> > > > +static void rcar_cmm_lut_extract(struct rcar_cmm *rcmm, size_t siz=
-e,
-> > > > +				 const struct drm_color_lut *drm_lut)
-> > > > +{
-> > > > +	unsigned int i;
-> > > > +
-> > > > +	for (i =3D 0; i < size; ++i) {
-> > > > +		const struct drm_color_lut *lut =3D &drm_lut[i];
-> > > > +
-> > > > +		rcmm->lut.table[i] =3D drm_color_lut_extract(lut->red, 8) << 16
-> > > > +				   | drm_color_lut_extract(lut->green, 8) << 8
-> > > > +				   | drm_color_lut_extract(lut->blue, 8);
-> > > > +	}
-> > > > +
-> > > > +	rcmm->lut.size =3D size;
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * rcar_cmm_lut_load() - Write to hw the LUT table entries from th=
-e local table.
-> > > > + *
-> > >
-> > > No need for a blank line
-> > >
-> > > > + * @rcmm: Pointer to the CMM device
-> > > > + */
-> > > > +static void rcar_cmm_lut_load(struct rcar_cmm *rcmm)
-> > >
-> > > I would name this rcar_cmm_lut_write().
-> >
-> > I won't, as I would like to convey the LUT tables is loaded from the
-> > local cache after it has been scaled down to the hardware supported
-> > precision.
->
-> "load" hints a read though, and here you write the LUT to the hardware.
-> Without reading the comments I would have thought this function would
-> read the LUT back from the hardware.
->
-> > > > +{
-> > > > +	unsigned int i;
-> > > > +
-> > > > +	for (i =3D 0; i < rcmm->lut.size; ++i) {
-> > > > +		u32 entry =3D rcmm->lut.table[i];
-> > > > +
-> > > > +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), entry);
-> > >
-> > > You don't need the local entry variable.
-> >
-> > True, but the code is nicer to read and the compiler should be smart
-> > enough to optimize it away
->
-> I'm not sure about nicer to read, I find the opposite personally, but
-> it's your code :-)
->
-> > > > +	}
-> > > > +}
-> > > > +
-> > > > +/**
-> > > > + * rcar_cmm_setup() - configure the CMM unit
-> > >
-> > > s/configure/Configure/ and s/$/./, or the other way around for the ot=
-her
-> > > functions (I don't mine which one, but let's stay consistent).
-> >
-> > Oh right, sorry for the confusion
->
-> It's just my OCD kicking in :-)
->
-> > > > + *
-> > >
-> > > No need for a blank line (same for the functions below).
-> > >
-> > > > + * @pdev: The platform device associated with the CMM instance
-> > > > + * @config: The CRTC-provided configuration.
-> > > > + *
-> > > > + * Configure the CMM unit with the CRTC-provided configuration.
-> > > > + * Currently enabling, disabling and programming of the 1-D LUT un=
-it is
-> > > > + * supported.
-> > > > + */
-> > > > +int rcar_cmm_setup(struct platform_device *pdev,
-> > > > +		   const struct rcar_cmm_config *config)
-> > > > +{
-> > > > +	struct rcar_cmm *rcmm =3D platform_get_drvdata(pdev);
-> > > > +
-> > > > +	if (config->lut.size > CMM_GAMMA_LUT_SIZE)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	/*
-> > > > +	 * As rcar_cmm_setup() is called by atomic commit tail helper, it=
- might
-> > > > +	 * be called when the CMM is disabled. As we can't program the ha=
-rdware
-> > > > +	 * in that case, store the configuration internally and apply it =
-when
-> > > > +	 * the CMM will be enabled by the CRTC through rcar_cmm_enable().
-> > > > +	 */
-> > > > +	if (!rcmm->enabled) {
-> > > > +		if (!config->lut.enable)
-> > > > +			return 0;
-> > > > +
-> > > > +		rcar_cmm_lut_extract(rcmm, config->lut.size, config->lut.table);
-> > > > +		rcmm->lut.enabled =3D true;
-> > > > +
-> > > > +		return 0;
-> > > > +	}
-> > > > +
-> > > > +	/* Stop LUT operations if requested. */
-> > > > +	if (!config->lut.enable) {
-> > > > +		if (rcmm->lut.enabled) {
-> > > > +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> > > > +			rcmm->lut.enabled =3D false;
-> > > > +			rcmm->lut.size =3D 0;
-> > > > +		}
-> > > > +
-> > > > +		return 0;
-> > > > +	}
-> > > > +
-> > > > +	/*
-> > > > +	 * Enable LUT and program the new gamma table values.
-> > > > +	 *
-> > > > +	 * FIXME: In order to have stable operations it is required to fi=
-rst
-> > > > +	 * enable the 1D-LUT and then program its table entries. This see=
-ms to
-> > > > +	 * contradict what the chip manual reports, and will have to be
-> > > > +	 * reconsidered when implementing support for double buffering.
-> > > > +	 */
-> > > > +	if (!rcmm->lut.enabled) {
-> > > > +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
-> > > > +		rcmm->lut.enabled =3D true;
-> > > > +	}
-> > > > +
-> > > > +	rcar_cmm_lut_extract(rcmm, config->lut.size, config->lut.table);
-> > > > +	rcar_cmm_lut_load(rcmm);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
-> > > > +
-> > > > +/**
-> > > > + * rcar_cmm_enable() - enable the CMM unit
-> > > > + *
-> > > > + * @pdev: The platform device associated with the CMM instance
-> > > > + *
-> > > > + * Enable the CMM unit by enabling the parent clock and enabling t=
-he CMM
-> > > > + * components, such as 1-D LUT, if requested.
-> > > > + */
-> > > > +int rcar_cmm_enable(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct rcar_cmm *rcmm =3D platform_get_drvdata(pdev);
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!rcmm)
-> > > > +		return -EPROBE_DEFER;
-> > >
-> > > This function is called in rcar_du_crtc_atomic_enable(), so that's not
-> > > the right error code. It seems we need another function for the CMM A=
-PI
-> > > to defer probing :-/ I would call it rcar_cmm_init(). This check would
-> > > then be removed.
-> >
-> > I agree about the return code, but not the name, as this function
-> > actually enables the CMM.
->
-> I meant creating a new rcar_cmm_init() function that would just have the
-> !rcmm check.
->
-> > PROBE_DEFER does not make any sense here, I
-> > wonder where it come from, as the probing of CMM and DU has long
-> > happened once we get here (at least, I assume so, if we receive a
-> > gamma_table, userspace has already been running, and both DU and CMM
-> > should have probed. Otherwise, we can exploit the newly created device
-> > link, and make sure DU probes after the CMM).
-> >
-> > I would just change the return value here, and possibly use the device
-> > link to ensure the correct probing sequence.
->
-> How does device link help here ?
->
+Just curious, why u16, some register mask size? Maybe just use unsigned int=
+?
 
-Currently it doesn't, as we are creating a stateless link.
+I think the variable can be shortened to 'count', the meaning should
+still be clear.
 
-But if we go for a managed device link (which is the default, by the
-way, you have to opt-out from it) we can guarantee the CMM has probed
-before the DU probes, so that we have a guarantee when we get here
-!rcmm cannot happen.
+> +			   const char *msg)
+>  {
+>  	struct edac_device_instance *instance;
+>  	struct edac_device_block *block =3D NULL;
+> =20
+> +	WARN_ON(!error_count);
 
-https://www.kernel.org/doc/html/v5.2-rc7/driver-api/device_link.html
-"The consumer devices are not probed before the supplier is bound to a driv=
-er,
- and they=E2=80=99re unbound before the supplier is unbound."
+Should return in this case.
 
-As we create the link, the CMM is the supplier of DU, so we could just
-drop the DL_FLAG_STATELESS flag in device_link_add() in 10/14.
+Better use WARN_ON_ONCE() to avoid flooding.
 
-Does this match your understanding ?
+The check should be moved to edac_device_handle_ce_count().
 
-> > > > +
-> > > > +	ret =3D pm_runtime_get_sync(&pdev->dev);
-> > > > +	if (ret < 0)
-> > > > +		return ret;
-> > > > +
-> > > > +	/* Apply the LUT table values saved at rcar_cmm_setup() time. */
-> > > > +	if (rcmm->lut.enabled) {
-> > > > +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
-> > > > +		rcar_cmm_lut_load(rcmm);
-> > >
-> > > You will not like this, but I just realised that we're now reprogramm=
-ing
-> > > the LUT contents every time the CMM is enabled. Do you think that's
-> > > something we should optimise ? And yes, that would require introducing
-> >
-> > Why so? If we receive an enable after a disable which stops the CMM
-> > clock and we have no guarantees the table entries have been kept, or
-> > what we receive from userspace has changed or not. Why is this an
-> > issue in your opinion?
->
-> I thought the hardware preserved the LUT ? Skipping the LUT write is an
-> optimisation, so we could do without it in the initial version. I think
-> it would become more important with the CLU though, as we'll have more
-> data entries there. Maybe we should first check how much time the LUT
-> and CLU writes take before deciding to optimise them.
->
+> +
+>  	if ((inst_nr >=3D edac_dev->nr_instances) || (inst_nr < 0)) {
+>  		edac_device_printk(edac_dev, KERN_ERR,
+>  				"INTERNAL ERROR: 'instance' out of range "
+> @@ -582,27 +585,44 @@ void edac_device_handle_ce(struct edac_device_ctl_i=
+nfo *edac_dev,
+> =20
+>  	if (instance->nr_blocks > 0) {
+>  		block =3D instance->blocks + block_nr;
+> -		block->counters.ce_count++;
+> +		block->counters.ce_count +=3D error_count;
+>  	}
+> =20
+>  	/* Propagate the count up the 'totals' tree */
+> -	instance->counters.ce_count++;
+> -	edac_dev->counters.ce_count++;
+> +	instance->counters.ce_count +=3D error_count;
+> +	edac_dev->counters.ce_count +=3D error_count;
+> =20
+>  	if (edac_device_get_log_ce(edac_dev))
+>  		edac_device_printk(edac_dev, KERN_WARNING,
+> -				"CE: %s instance: %s block: %s '%s'\n",
+> +				"CE: %s instance: %s block: %s count: %d '%s'\n",
+>  				edac_dev->ctl_name, instance->name,
+> -				block ? block->name : "N/A", msg);
+> +				block ? block->name : "N/A", error_count, msg);
+> +}
+> +
+> +void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+> +			   int inst_nr, int block_nr, const char *msg)
+> +{
+> +	__edac_device_handle_ce(edac_dev, 1, inst_nr, block_nr, msg);
+>  }
+>  EXPORT_SYMBOL_GPL(edac_device_handle_ce);
 
-Yeah, let's post-pone optimizations...
+We could just export the __*() version of those functions and make
+everything else inline in the header file? Though, better do this with
+two patches to avoid an ABI breakage in case someone wants to backport
+it. Let's see what others say here.
 
-> > > back an update flag in rcmm->lut :-S Sorry for not realising this whe=
-n I
-> > > proposed dropping it.
-> > >
-> > > > +	}
-> > > > +
-> > > > +	rcmm->enabled =3D true;
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
-> > > > +
-> > > > +/**
-> > > > + * rcar_cmm_disable() - disable the CMM unit
-> > > > + *
-> > > > + * @pdev: The platform device associated with the CMM instance
-> > > > + *
-> > > > + * Disable the CMM unit by stopping the parent clock.
-> > > > + */
-> > > > +void rcar_cmm_disable(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct rcar_cmm *rcmm =3D platform_get_drvdata(pdev);
-> > > > +
-> > > > +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
-> > > > +
-> > > > +	pm_runtime_put(&pdev->dev);
-> > > > +
-> > > > +	rcmm->lut.enabled =3D false;
-> > > > +	rcmm->lut.size =3D 0;
-> > > > +
-> > > > +	rcmm->enabled =3D false;
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
-> > > > +
-> > > > +static int rcar_cmm_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct rcar_cmm *rcmm;
-> > > > +	struct resource *res;
-> > > > +
-> > > > +	rcmm =3D devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
-> > > > +	if (!rcmm)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	platform_set_drvdata(pdev, rcmm);
-> > > > +
-> > > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > > +	rcmm->base =3D devm_ioremap_resource(&pdev->dev, res);
-> > > > +	if (IS_ERR(rcmm->base))
-> > > > +		return PTR_ERR(rcmm->base);
-> > >
-> > > You really don't like combining those two calls, do you ? :-)
-> >
-> > devm_of_iomap() ?
->
-> devm_platform_ioremap_resource()
->
+> =20
+> -void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+> -			int inst_nr, int block_nr, const char *msg)
+> +void edac_device_handle_ce_count(struct edac_device_ctl_info *edac_dev,
+> +				 u16 error_count, int inst_nr, int block_nr,
+> +				 const char *msg)
+> +{
+> +	__edac_device_handle_ce(edac_dev, error_count, inst_nr, block_nr, msg);
+> +}
+> +EXPORT_SYMBOL_GPL(edac_device_handle_ce_count);
+> +
+> +static void __edac_device_handle_ue(struct edac_device_ctl_info *edac_de=
+v,
+> +			   u16 error_count, int inst_nr, int block_nr,
+> +			   const char *msg)
 
-Oh stupid, thanks!
+All the above applies for this function too.
 
-Thanks
-   j
+>  {
+>  	struct edac_device_instance *instance;
+>  	struct edac_device_block *block =3D NULL;
+> =20
+> +	WARN_ON(!error_count);
+> +
+>  	if ((inst_nr >=3D edac_dev->nr_instances) || (inst_nr < 0)) {
+>  		edac_device_printk(edac_dev, KERN_ERR,
+>  				"INTERNAL ERROR: 'instance' out of range "
+> @@ -624,22 +644,36 @@ void edac_device_handle_ue(struct edac_device_ctl_i=
+nfo *edac_dev,
+> =20
+>  	if (instance->nr_blocks > 0) {
+>  		block =3D instance->blocks + block_nr;
+> -		block->counters.ue_count++;
+> +		block->counters.ue_count +=3D error_count;
+>  	}
+> =20
+>  	/* Propagate the count up the 'totals' tree */
+> -	instance->counters.ue_count++;
+> -	edac_dev->counters.ue_count++;
+> +	instance->counters.ue_count +=3D error_count;
+> +	edac_dev->counters.ue_count +=3D error_count;
+> =20
+>  	if (edac_device_get_log_ue(edac_dev))
+>  		edac_device_printk(edac_dev, KERN_EMERG,
+> -				"UE: %s instance: %s block: %s '%s'\n",
+> +				"UE: %s instance: %s block: %s count: %d '%s'\n",
+>  				edac_dev->ctl_name, instance->name,
+> -				block ? block->name : "N/A", msg);
+> +				block ? block->name : "N/A", error_count, msg);
+> =20
+>  	if (edac_device_get_panic_on_ue(edac_dev))
+> -		panic("EDAC %s: UE instance: %s block %s '%s'\n",
+> +		panic("EDAC %s: UE instance: %s block %s count: %d '%s'\n",
+>  			edac_dev->ctl_name, instance->name,
+> -			block ? block->name : "N/A", msg);
+> +			block ? block->name : "N/A", error_count, msg);
+> +}
+> +
+> +void edac_device_handle_ue(struct edac_device_ctl_info *edac_dev,
+> +			   int inst_nr, int block_nr, const char *msg)
+> +{
+> +	__edac_device_handle_ue(edac_dev, 1, inst_nr, block_nr, msg);
+>  }
+>  EXPORT_SYMBOL_GPL(edac_device_handle_ue);
+> +
+> +void edac_device_handle_ue_count(struct edac_device_ctl_info *edac_dev,
+> +				 u16 error_count, int inst_nr, int block_nr,
+> +				 const char *msg)
+> +{
+> +	__edac_device_handle_ue(edac_dev, error_count, inst_nr, block_nr, msg);
+> +}
+> +EXPORT_SYMBOL_GPL(edac_device_handle_ue_count);
+> diff --git a/drivers/edac/edac_device.h b/drivers/edac/edac_device.h
+> index 1aaba74ae411..c8dc83eda64f 100644
+> --- a/drivers/edac/edac_device.h
+> +++ b/drivers/edac/edac_device.h
+> @@ -287,7 +287,7 @@ extern struct edac_device_ctl_info *edac_device_del_d=
+evice(struct device *dev);
+> =20
+>  /**
+>   * edac_device_handle_ue():
+> - *	perform a common output and handling of an 'edac_dev' UE event
+> + *	perform a common output and handling of an 'edac_dev' single UE event
+>   *
+>   * @edac_dev: pointer to struct &edac_device_ctl_info
+>   * @inst_nr: number of the instance where the UE error happened
+> @@ -298,7 +298,7 @@ extern void edac_device_handle_ue(struct edac_device_=
+ctl_info *edac_dev,
+>  				int inst_nr, int block_nr, const char *msg);
+>  /**
+>   * edac_device_handle_ce():
+> - *	perform a common output and handling of an 'edac_dev' CE event
+> + *	perform a common output and handling of an 'edac_dev' single CE event
+>   *
+>   * @edac_dev: pointer to struct &edac_device_ctl_info
+>   * @inst_nr: number of the instance where the CE error happened
+> @@ -308,6 +308,33 @@ extern void edac_device_handle_ue(struct edac_device=
+_ctl_info *edac_dev,
+>  extern void edac_device_handle_ce(struct edac_device_ctl_info *edac_dev,
+>  				int inst_nr, int block_nr, const char *msg);
+> =20
+> +/**
+> + * edac_device_handle_ue_count():
+> + *	perform a common output and handling of an 'edac_dev'
+> + *
+> + * @edac_dev: pointer to struct &edac_device_ctl_info
+> + * @error_count: number of errors of the same type
+> + * @inst_nr: number of the instance where the UE error happened
+> + * @block_nr: number of the block where the UE error happened
+> + * @msg: message to be printed
+> + */
+> +extern void edac_device_handle_ue_count(struct edac_device_ctl_info *eda=
+c_dev,
+> +					u16 error_count, int inst_nr,
+> +					int block_nr, const char *msg);
+> +/**
+> + * edac_device_handle_ce_count():
+> + *	perform a common output and handling of an 'edac_dev'
+> + *
+> + * @edac_dev: pointer to struct &edac_device_ctl_info
+> + * @error_count: number of errors of the same type
+> + * @inst_nr: number of the instance where the CE error happened
+> + * @block_nr: number of the block where the CE error happened
+> + * @msg: message to be printed
+> + */
+> +extern void edac_device_handle_ce_count(struct edac_device_ctl_info *eda=
+c_dev,
+> +					u16 error_count, int inst_nr,
+> +					int block_nr, const char *msg);
+> +
 
-> > > > +
-> > > > +	pm_runtime_enable(&pdev->dev);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int rcar_cmm_remove(struct platform_device *pdev)
-> > > > +{
-> > > > +	pm_runtime_disable(&pdev->dev);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static const struct of_device_id rcar_cmm_of_table[] =3D {
-> > > > +	{ .compatible =3D "renesas,cmm-r8a7795", },
-> > > > +	{ .compatible =3D "renesas,cmm-r8a7796", },
-> > > > +	{ .compatible =3D "renesas,cmm-r8a77965", },
-> > > > +	{ .compatible =3D "renesas,cmm-r8a77990", },
-> > > > +	{ .compatible =3D "renesas,cmm-r8a77995", },
-> > >
-> > > As Geert pointed out, I would drop those entries.
-> >
-> > yes
-> >
-> > > > +	{ .compatible =3D "renesas,rcar-gen3-cmm", },
-> > > > +	{ .compatible =3D "renesas,rcar-gen2-cmm", },
-> > > > +	{ },
-> > > > +};
-> > > > +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
-> > > > +
-> > > > +static struct platform_driver rcar_cmm_platform_driver =3D {
-> > > > +	.probe		=3D rcar_cmm_probe,
-> > > > +	.remove		=3D rcar_cmm_remove,
-> > > > +	.driver		=3D {
-> > > > +		.name	=3D "rcar-cmm",
-> > > > +		.of_match_table =3D rcar_cmm_of_table,
-> > > > +	},
-> > > > +};
-> > > > +
-> > > > +module_platform_driver(rcar_cmm_platform_driver);
-> > > > +
-> > > > +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
-> > > > +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
-> > > > +MODULE_LICENSE("GPL v2");
-> > > > diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/r=
-car-du/rcar_cmm.h
-> > > > new file mode 100644
-> > > > index 000000000000..b0bb7349ebaa
-> > > > --- /dev/null
-> > > > +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
-> > > > @@ -0,0 +1,38 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0+ */
-> > > > +/*
-> > > > + * rcar_cmm.h -- R-Car Display Unit Color Management Module
-> > > > + *
-> > > > + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > + */
-> > > > +
-> > > > +#ifndef __RCAR_CMM_H__
-> > > > +#define __RCAR_CMM_H__
-> > > > +
-> > > > +#define CMM_GAMMA_LUT_SIZE		256
-> > > > +
-> > > > +struct drm_color_lut;
-> > > > +struct platform_device;
-> > > > +
-> > > > +/**
-> > > > + * struct rcar_cmm_config - CMM configuration
-> > > > + *
-> > > > + * @lut:	1D-LUT configuration
-> > > > + * @lut.enable:	1D-LUT enable flag
-> > > > + * @lut.table:	1D-LUT table entries
-> > > > + * @lut.size:	Number of 1D-LUT (max 256)
-> > >
-> > > s/1D-LUT/1D-LUT entries/
-> >
-> > ack, I'll change this.
-> >
-> > > > + */
-> > > > +struct rcar_cmm_config {
-> > > > +	struct {
-> > > > +		bool enable;
-> > > > +		struct drm_color_lut *table;
-> > > > +		unsigned int size;
-> > > > +	} lut;
-> > > > +};
-> > > > +
-> > > > +int rcar_cmm_enable(struct platform_device *pdev);
-> > > > +void rcar_cmm_disable(struct platform_device *pdev);
-> > > > +
-> > > > +int rcar_cmm_setup(struct platform_device *pdev,
-> > > > +		   const struct rcar_cmm_config *config);
-> > > > +
-> > > > +#endif /* __RCAR_CMM_H__ */
->
-> --
-> Regards,
->
-> Laurent Pinchart
+Looks otherwise good to me.
 
---vshdzxkdbqvaeroa
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
+-Robert
 
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1w3CQACgkQcjQGjxah
-VjzbIA/+LgrHbVxVTWMGN8f6AHtJaz4hhI9TQWewAwIjx9A/ZfvtxpOlUVgEXkgM
-XYSEtFdQoxhXGIXlkHsoX/G04DXT63OMWJAI153DwYZ+qyiiA2IDrlmHh6BaOEk3
-aCLg8esrmjomnStfifVvMHcFQ1owXKhfYOG+kZZctZtk7TCZb99zwNVsjgAeXgsl
-1sFocg85PcAFwFv5Lr/ogF+AKa0485rp0tdqMAFrgTojXIiaCNL3VaV+YaydEu6+
-EZv66QkqdtFcEYnAxswhNvH7GZ9EO0at7OYQccWRIU+yUgVJbAG6rqJkEQGGRzP+
-0IT8thyCUOHLoc+Sh6oC9b2rMVPEBS9YWilH4IU0jQqtor1wIdhgZ/P6TBSiBYJk
-+1ADPtK1+owL394Lva9X2J9VgSnpLaOdC7CV4RZZ6Dl0MfN9BiFUQVFAGnk74Rp+
-utBTCoWaSsS4kSi6hHYD9bgXyQWHNR8G8L5SjKRyT9m+LENcUz/6oosMn1xVtdRn
-VJq4voe+YnBhSBIyx20lfBgZyHNCxXianabJ2G1IjuZFcXWdAVmgXCFt3iukY25C
-EXcsGAmLcOwhgGQQ6y2Unm5oKeexNDT20Vi5TcPwOTh8PF6P/Knu9iXYvYLjsl+k
-F67nZC9pjbsqE01RVGJM6FBTywThYOxvgrQCdtNZdpqcpvWEElU=
-=2dT/
------END PGP SIGNATURE-----
-
---vshdzxkdbqvaeroa--
+>  /**
+>   * edac_device_alloc_index: Allocate a unique device index number
+>   *
+> --=20
+> 2.17.1
+>=20
