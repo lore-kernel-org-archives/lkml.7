@@ -2,148 +2,72 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FDFC43630
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A34C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3055D20650
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="ewKJOSDC"
+	by mail.kernel.org (Postfix) with ESMTP id 66E2720650
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388164AbfIEOCW (ORCPT
+        id S1731758AbfIEODg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:02:22 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:44546 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731733AbfIEOCV (ORCPT
+        Thu, 5 Sep 2019 10:03:36 -0400
+Received: from 16.mo6.mail-out.ovh.net ([87.98.139.208]:35033 "EHLO
+        16.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfIEODg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:02:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1567692141; x=1599228141;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=QG5z1+Yu66BGKyW6lgWhjyViSH8l0CaxVJ3tSt66O5U=;
-  b=ewKJOSDCAI9uuq3NsPbug7jalzQDG7TbklnCT6DnynZgx9bS4gWHOVfO
-   fSEEGR1yMQ15okX25U9KwhxKOlVjk/np0BNopRiueO3bNtKc0WXGBHZhO
-   m2HYvccfTnAgKlXMhdffLGYwo0oac558zWEN/PqEvHVzqMxJTJcRRVUvs
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,470,1559520000"; 
-   d="scan'208";a="749192311"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 05 Sep 2019 14:02:19 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 5E46AA1907;
-        Thu,  5 Sep 2019 14:02:16 +0000 (UTC)
-Received: from EX13D13UWA001.ant.amazon.com (10.43.160.136) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Sep 2019 14:02:15 +0000
-Received: from u9ff250417f405e.ant.amazon.com (10.43.160.29) by
- EX13D13UWA001.ant.amazon.com (10.43.160.136) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Sep 2019 14:02:09 +0000
-From:   Jonathan Chocron <jonnyc@amazon.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <andrew.murray@arm.com>, <dwmw@amazon.co.uk>,
-        <benh@kernel.crashing.org>, <alisaidi@amazon.com>,
-        <ronenk@amazon.com>, <barakw@amazon.com>, <talel@amazon.com>,
-        <hanochu@amazon.com>, <hhhawa@amazon.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <jonnyc@amazon.com>
-Subject: [PATCH v5 7/7] PCI: dwc: Add validation that PCIe core is set to correct mode
-Date:   Thu, 5 Sep 2019 17:01:44 +0300
-Message-ID: <20190905140144.7933-3-jonnyc@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905140018.5139-1-jonnyc@amazon.com>
-References: <20190905140018.5139-1-jonnyc@amazon.com>
+        Thu, 5 Sep 2019 10:03:36 -0400
+X-Greylist: delayed 4203 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Sep 2019 10:03:35 EDT
+Received: from player778.ha.ovh.net (unknown [10.108.42.88])
+        by mo6.mail-out.ovh.net (Postfix) with ESMTP id 972BC1DF93F
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 12:26:17 +0200 (CEST)
+Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
+        (Authenticated sender: qperret@qperret.net)
+        by player778.ha.ovh.net (Postfix) with ESMTPSA id 9F16B968B125;
+        Thu,  5 Sep 2019 10:25:59 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 12:25:53 +0200
+From:   Quentin Perret <qperret@qperret.net>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Will Deacon <will@kernel.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, rjw@rjwysocki.net,
+        vincent.guittot@linaro.org, juri.lelli@redhat.com,
+        catalin.marinas@arm.com, morten.rasmussen@arm.com,
+        chris.redpath@arm.com, dietmar.eggemann@arm.com,
+        patrick.bellasi@arm.com, valentin.schneider@arm.com,
+        qais.yousef@arm.com
+Subject: Re: [PATCH] mailmap: Update email address for Quentin Perret
+Message-ID: <20190905102552.GA12097@qperret.net>
+References: <20190902105036.32419-1-quentin.perret@arm.com>
+ <20190903145950.xko5fejupxj3f5nx@willie-the-truck>
+ <20190904144346.396a77f8@lwn.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.29]
-X-ClientProxiedBy: EX13D10UWB004.ant.amazon.com (10.43.161.121) To
- EX13D13UWA001.ant.amazon.com (10.43.160.136)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904144346.396a77f8@lwn.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Ovh-Tracer-Id: 16341592727032519557
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrudejjedgvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some PCIe controllers can be set to either Host or EP according to some
-early boot FW. To make sure there is no discrepancy (e.g. FW configured
-the port to EP mode while the DT specifies it as a host bridge or vice
-versa), a check has been added for each mode.
+Hi Jon,
 
-Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
----
- drivers/pci/controller/dwc/pcie-designware-ep.c  |  8 ++++++++
- .../pci/controller/dwc/pcie-designware-host.c    | 16 ++++++++++++++++
- 2 files changed, 24 insertions(+)
+On Wednesday 04 Sep 2019 at 14:43:46 (-0600), Jonathan Corbet wrote:
+> If there's some value to having an entry in the mailmap file, then
+> obviously it should be added.
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-index 65f479250087..3dd2e2697294 100644
---- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-@@ -498,6 +498,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	int ret;
- 	u32 reg;
- 	void *addr;
-+	u8 hdr_type;
- 	unsigned int nbars;
- 	unsigned int offset;
- 	struct pci_epc *epc;
-@@ -562,6 +563,13 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
- 	if (ep->ops->ep_init)
- 		ep->ops->ep_init(ep);
- 
-+	hdr_type = dw_pcie_readb_dbi(pci, PCI_HEADER_TYPE);
-+	if (hdr_type != PCI_HEADER_TYPE_NORMAL) {
-+		dev_err(pci->dev, "PCIe controller is not set to EP mode (hdr_type:0x%x)!\n",
-+			hdr_type);
-+		return -EIO;
-+	}
-+
- 	ret = of_property_read_u8(np, "max-functions", &epc->max_functions);
- 	if (ret < 0)
- 		epc->max_functions = 1;
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index d3156446ff27..0f36a926059a 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -323,6 +323,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 	struct pci_bus *child;
- 	struct pci_host_bridge *bridge;
- 	struct resource *cfg_res;
-+	u32 hdr_type;
- 	int ret;
- 
- 	raw_spin_lock_init(&pci->pp.lock);
-@@ -464,6 +465,21 @@ int dw_pcie_host_init(struct pcie_port *pp)
- 			goto err_free_msi;
- 	}
- 
-+	ret = dw_pcie_rd_own_conf(pp, PCI_HEADER_TYPE, 1, &hdr_type);
-+	if (ret != PCIBIOS_SUCCESSFUL) {
-+		dev_err(pci->dev, "Failed reading PCI_HEADER_TYPE cfg space reg (ret: 0x%x)\n",
-+			ret);
-+		ret = pcibios_err_to_errno(ret);
-+		goto err_free_msi;
-+	}
-+	if (hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-+		dev_err(pci->dev,
-+			"PCIe controller is not set to bridge type (hdr_type: 0x%x)!\n",
-+			hdr_type);
-+		ret = -EIO;
-+		goto err_free_msi;
-+	}
-+
- 	pp->root_bus_nr = pp->busn->start;
- 
- 	bridge->dev.parent = dev;
--- 
-2.17.1
+So, FWIW, get_maintainers.pl does return my name as 'author' or 'commit
+signer' on few files (include/linux/energy_model.h among others for ex).
+Which is why I thought updating .mailmap would be good practice.
 
+Thanks,
+Quentin
