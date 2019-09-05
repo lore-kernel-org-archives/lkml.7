@@ -4,106 +4,226 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17A2C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23CFC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707B22173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87D6821848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388179AbfIELCB (ORCPT
+        id S2388187AbfIELD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:02:01 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54268 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731215AbfIELCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:02:01 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 324E2C1412B37ADEF3DF;
-        Thu,  5 Sep 2019 19:01:59 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 19:01:50 +0800
-Subject: Re: [PATCH net-next 4/7] net: hns3: add client node validity judgment
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
-        Peng Li <lipeng321@huawei.com>
-References: <1567606006-39598-1-git-send-email-tanhuazhong@huawei.com>
- <1567606006-39598-5-git-send-email-tanhuazhong@huawei.com>
- <b0aa6da6-cd42-dd31-8ff7-ca3f48de58ff@cogentembedded.com>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <88ca250d-0eb5-a150-0142-32b41b89c703@huawei.com>
-Date:   Thu, 5 Sep 2019 19:01:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Thu, 5 Sep 2019 07:03:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24744 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732456AbfIELD5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:03:57 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85AvNb6027494
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 07:03:55 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uu0k2hfr9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:03:55 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 5 Sep 2019 12:03:53 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Sep 2019 12:03:51 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85B3lha40829386
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 11:03:47 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B873842056;
+        Thu,  5 Sep 2019 11:03:47 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A5AE42049;
+        Thu,  5 Sep 2019 11:03:47 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.123])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Sep 2019 11:03:47 +0000 (GMT)
+Date:   Thu, 5 Sep 2019 13:03:46 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        freude@de.ibm.com, cohuck@redhat.com, pasic@linux.vnet.ibm.com,
+        frankja@linux.ibm.com, jjherne@linux.ibm.com
+Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
+ queue interrupts
+In-Reply-To: <206538dc-c86b-6509-78ba-7228d2eb75c9@linux.ibm.com>
+References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+        <20190830180250.79804f76.pasic@linux.ibm.com>
+        <f3e8d65e-bad4-c639-c53e-57585b90986d@de.ibm.com>
+        <206538dc-c86b-6509-78ba-7228d2eb75c9@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <b0aa6da6-cd42-dd31-8ff7-ca3f48de58ff@cogentembedded.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+X-TM-AS-GCONF: 00
+x-cbid: 19090511-0016-0000-0000-000002A70628
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090511-0017-0000-0000-0000330778CD
+Message-Id: <20190905130346.20db4692.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 4 Sep 2019 11:05:24 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
+> On 9/4/19 3:35 AM, Christian Borntraeger wrote:
+> > Halil,
+> > 
+> > can you also send this patch as a separate mail. This also requires a much better
+> > patch description about the why and it certainly should also have an agreement from
+> > Anthony.
+> > 
+> > On 30.08.19 18:02, Halil Pasic wrote:
+> >> From: Halil Pasic <pasic@linux.ibm.com>
+> >> Date: Fri, 30 Aug 2019 17:39:47 +0200
+> >> Subject: [PATCH 2/2] s390: vfio-ap: don't wait after AQIC interpretation
+> >>
+> >> Waiting for the asynchronous part of AQIC to complete as a part
+> >> AQIC implementation is unnecessary and silly.
+> >>
+> >> Let's get rid of vfio_ap_wait_for_irqclear().
+> >>
+> >> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> >> ---
+> >>   drivers/s390/crypto/vfio_ap_ops.c | 50 ++-------------------------------------
+> >>   1 file changed, 2 insertions(+), 48 deletions(-)
+> >>
+> >> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> >> index dd07ebf..8d098f0 100644
+> >> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> >> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> >> @@ -68,47 +68,6 @@ static struct vfio_ap_queue *vfio_ap_get_queue(
+> >>   }
+> >>   
+> >>   /**
+> >> - * vfio_ap_wait_for_irqclear
+> >> - * @apqn: The AP Queue number
+> >> - *
+> >> - * Checks the IRQ bit for the status of this APQN using ap_tapq.
+> >> - * Returns if the ap_tapq function succeeded and the bit is clear.
+> >> - * Returns if ap_tapq function failed with invalid, deconfigured or
+> >> - * checkstopped AP.
+> >> - * Otherwise retries up to 5 times after waiting 20ms.
+> >> - *
+> >> - */
+> >> -static void vfio_ap_wait_for_irqclear(int apqn)
+> >> -{
+> >> -	struct ap_queue_status status;
+> >> -	int retry = 5;
+> >> -
+> >> -	do {
+> >> -		status = ap_tapq(apqn, NULL);
+> >> -		switch (status.response_code) {
+> >> -		case AP_RESPONSE_NORMAL:
+> >> -		case AP_RESPONSE_RESET_IN_PROGRESS:
+> >> -			if (!status.irq_enabled)
+> >> -				return;
+> >> -			/* Fall through */
+> >> -		case AP_RESPONSE_BUSY:
+> >> -			msleep(20);
+> >> -			break;
+> >> -		case AP_RESPONSE_Q_NOT_AVAIL:
+> >> -		case AP_RESPONSE_DECONFIGURED:
+> >> -		case AP_RESPONSE_CHECKSTOPPED:
+> >> -		default:
+> >> -			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
+> >> -				  status.response_code, apqn);
+> >> -			return;
+> >> -		}
+> >> -	} while (--retry);
+> >> -
+> >> -	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
+> >> -		  __func__, status.response_code, apqn);
+> >> -}
+> >> -
+> >> -/**
+> >>    * vfio_ap_free_aqic_resources
+> >>    * @q: The vfio_ap_queue
+> >>    *
+> >> @@ -133,14 +92,10 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+> >>    * @q: The vfio_ap_queue
+> >>    *
+> >>    * Uses ap_aqic to disable the interruption and in case of success, reset
+> >> - * in progress or IRQ disable command already proceeded: calls
+> >> - * vfio_ap_wait_for_irqclear() to check for the IRQ bit to be clear
+> >> - * and calls vfio_ap_free_aqic_resources() to free the resources associated
+> >> + * in progress or IRQ disable command already proceeded :calls
+> >> + * vfio_ap_free_aqic_resources() to free the resources associated
+> >>    * with the AP interrupt handling.
+> >>    *
+> >> - * In the case the AP is busy, or a reset is in progress,
+> >> - * retries after 20ms, up to 5 times.
+> >> - *
+> >>    * Returns if ap_aqic function failed with invalid, deconfigured or
+> >>    * checkstopped AP.
+> >>    */
+> >> @@ -155,7 +110,6 @@ struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+> >>   		switch (status.response_code) {
+> >>   		case AP_RESPONSE_OTHERWISE_CHANGED:
+> >>   		case AP_RESPONSE_NORMAL:
+> >> -			vfio_ap_wait_for_irqclear(q->apqn);
+> 
+> I am not sure why you consider the wait unnecessary and silly. 
 
-On 2019/9/5 18:12, Sergei Shtylyov wrote:
-> On 04.09.2019 17:06, Huazhong Tan wrote:
-> 
->> From: Peng Li <lipeng321@huawei.com>
->>
->> HNS3 driver can only unregister client which included in 
->> hnae3_client_list.
->> This patch adds the client node validity judgment.
->>
->> Signed-off-by: Peng Li <lipeng321@huawei.com>
->> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
->> ---
->>   drivers/net/ethernet/hisilicon/hns3/hnae3.c | 16 ++++++++++++++++
->>   1 file changed, 16 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c 
->> b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
->> index 528f624..6aa5257 100644
->> --- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
->> +++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
->> @@ -138,12 +138,28 @@ EXPORT_SYMBOL(hnae3_register_client);
->>   void hnae3_unregister_client(struct hnae3_client *client)
->>   {
->> +    struct hnae3_client *client_tmp;
->>       struct hnae3_ae_dev *ae_dev;
->> +    bool existed = false;
->>       if (!client)
->>           return;
->>       mutex_lock(&hnae3_common_lock);
->> +
->> +    list_for_each_entry(client_tmp, &hnae3_client_list, node) {
->> +        if (client_tmp->type == client->type) {
->> +            existed = true;
->> +            break;
->> +        }
->> +    }
->> +
->> +    if (!existed) {
->> +        mutex_unlock(&hnae3_common_lock);
->> +        pr_err("client %s not existed!\n", client->name);
-> 
->     Did not exist, you mean?
-> 
+Because the async function associated with AQIC is not supposed/required
+to finish during the execution of AQIC. But yes, there is a problem with
+this patch.
 
-yes
+> Notice
+> the response code AP_RESPONSE_OTHERWISE_CHANGED above which means that
+> the AP queue is already disabled for interrupts or the enablement
+> process has not yet completed.
 
-> [...]
+IMHO we should finish the interpretation of AQIC with response code
+AP_RESPONSE_OTHERWISE_CHANGED without any wait. It's up to the guest
+to respond to this condition in whatever way it likes, and not up to
+us to stall the vcpu.
+
+> Shouldn't we wait for the IRQ to clear
+> in this case? I do agree that there is no need to wait if the
+> response code is 0.
+
+And the problem with this patch of mine is that we may not call 
+vfio_ap_free_aqic_resources(q) before the interrupts are really disabled. The
+nib needs to remain pinned until the interrupts are really disabled for
+the queue. Please notice that this is the case for response code 0 as
+well.
+
+So if we don't want to do error handling and retry and wait
+for the guest, we would need to do the cleanup async -- or don't do
+any cleanup on AQIC with disable.
+
+Honestly I'm not sure any more what is the smallest evil. Opinions?
+
+Regards,
+Halil
+
 > 
-> MBR, Sergei
-> 
-> .
+> >>   			goto end_free;
+> >>   		case AP_RESPONSE_RESET_IN_PROGRESS:
+> >>   		case AP_RESPONSE_BUSY:
+> >> -- 2.5.5
+> > 
 > 
 
