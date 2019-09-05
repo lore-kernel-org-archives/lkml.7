@@ -2,120 +2,117 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BB1C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0748C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D45D217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76C9206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:48:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="b4epihcJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="RSh87SEs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cD9evuKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbfIEDrK (ORCPT
+        id S1730498AbfIEDsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 23:47:10 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:40289 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730628AbfIEDrK (ORCPT
+        Wed, 4 Sep 2019 23:48:11 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38218 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfIEDsL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 23:47:10 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8A30C21391;
-        Wed,  4 Sep 2019 23:47:08 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Wed, 04 Sep 2019 23:47:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=iz5b5ME3PsMsS8QeBujZtb3JCi3nja+
-        Hla+LmculZwk=; b=b4epihcJys2LL8YoCM/nc8qGbEazvW2vWIO1hIVaP9napuP
-        AgLUK/SA4LCbYT07PHOJ76rcWRjJwmhK+SpzqL7QUuBCTXcnnP/NuS/jUcSWKWzR
-        AY8hwGjvJfCsQg7OOdgu5uDvLXf2aR/h1d69gfjGE1RPPjYZLKdfY419TQ1VBZHE
-        LEj5vLwO/Y31rQ//yYbd4S5Hj8fp7R3T9M8tHJmJxXAgwOVFF6bJwPJ8wjnx2N88
-        oKI2W8VJ1Y8Yi/Usv0DAICA8Rs6J/to+LLrz+l2sQWGppJSjp3qsGRg/r6Cv3zGH
-        hQI2yfJdSUzasOhqLIEuQ6yOrP/u1ng0xIZuiXQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=iz5b5M
-        E3PsMsS8QeBujZtb3JCi3nja+Hla+LmculZwk=; b=RSh87SEs4Y5wMEQGhMF4TS
-        cTeVYM8QeCyqZt+S3kg5/alKN3LfJRrDYbL4QebKdEuKDXl/WvhnqtRC/LIH9ufS
-        YH2RPnAIdDbVRv7NWv0/3BVCF4BB6uzAB0BN7X+Q3aoTaYgUL6OBuKR2I/B+szBf
-        CBWcbyXTo06rhy1TceChRX0UlnEP362/efTMCe4Ho+iPbaW/2ZwQwA4sCte2oHj3
-        PbkeQV+WaA7MuB63+2wybuenW63wBIt2Q+4LAgcHVm41dBadp3X8dFHqtRwJSvwb
-        5rooHlU2LFk+U6icJyVPkgFmKUf/GAGABGAoCC1uMsEyrj9ga+YlfSGpxXXIiy4g
-        ==
-X-ME-Sender: <xms:O4VwXXAJe39Xm9VrYIewsp4nenufMiJTMOMxHoALQG_Zr48RAi2MZA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrudejiedgjeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:O4VwXSE4mYfTEweu3O6KFE0pGmhNb_HFsgwDUiQVeh0YpIveJSvaKg>
-    <xmx:O4VwXfsL9wGoQ0JxDaAo2kBs1kK7vFeAGvk_WynV2YxxmiBwhsJyzA>
-    <xmx:O4VwXQktE8PQEzKDSfzOWBM1NB6cjn_43xm_-mJXRwKx2Gl7msm2rg>
-    <xmx:PIVwXXgFkxGGf64YPijCZE9v8cbsk3HfIs7FmFcR8-D7RIG-x8YgbA>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 77709E00A3; Wed,  4 Sep 2019 23:47:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.7-186-gf4cb3c3-fmstable-20190904v1
-Mime-Version: 1.0
-Message-Id: <5f3ec58f-d83b-41f9-80ed-35a5434bb985@www.fastmail.com>
-In-Reply-To: <20190905011635.15902-1-rashmica.g@gmail.com>
-References: <20190905011635.15902-1-rashmica.g@gmail.com>
-Date:   Thu, 05 Sep 2019 13:17:33 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Rashmica Gupta" <rashmica.g@gmail.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
-        "Joel Stanley" <joel@jms.id.au>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] gpio/aspeed: Fix incorrect number of banks
-Content-Type: text/plain
+        Wed, 4 Sep 2019 23:48:11 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w11so614457plp.5;
+        Wed, 04 Sep 2019 20:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pYD81YFETvqhhEH9qUnNjLJMdHyZTdj4QK4cZ/lMPek=;
+        b=cD9evuKSB0BVKnX+c/uRW7iufFoxlxduxxpDz+f9NBHVsiqDEJspt0hff3P45fewet
+         Mvv4AvSJu8jTEl17jBBGAthlsQiI+iEUi1XabZXilivfmP0iBRs5iAuDC5VAI3SxZhlz
+         SJ5NXFYQe8l3eOK/JHtvkkxE3f3dl9rf3HFzoJw8uxRAMV5hf0t8bwnnLSUVCpf2VAxy
+         b10LCaE+fa9TyhMCgHGccPNC85HWevmIZyidPiEkRR6chPQaYsSsbTddyApkCcKE916S
+         a9fBHSWiIG0BLAim13j65hlCKyeJq2n0NDpCoiBjGLgLMYmd2DeR56eXiJT8dZ3ENR/l
+         sfSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pYD81YFETvqhhEH9qUnNjLJMdHyZTdj4QK4cZ/lMPek=;
+        b=ob8RkVn4sybyjMd8NwbsvljrI0rqeZpiByuj/ZyRpFsVgUJ8YHi0rfiBFoR4W7k9Vk
+         1jzZPPmjmzT4PnaI6kiTff7L37zHHYV9jalIh8fv0jh2Emo2LHxKsk9uk4lLru8OXQk4
+         yogH2ub2KM/EuB0ZnnKU5ooU7QYIv9x6/TX9IsJ/QeQL/nFG8OoGl4sEdjCSm56x+qMi
+         0rVHko3BFJBjqRVqdfCKb2gIPuEIxpCC3kB/OVEbLtTxGLicMBsL75W3NwaaHXRVcacI
+         /ljX1YsTEoI02gkSk6sPM4OaGRO62xCUmBUde87U/XHQCdsgr+XX2z8JDiQ0uHPjfvd9
+         /JCg==
+X-Gm-Message-State: APjAAAW2BK6THR/krcOyPx84+xj5Z0FEEA+4WS6Ro4pbrTRh0+p9grGs
+        Z3KJvR6RXI9YyG46fpvsr63uhor/
+X-Google-Smtp-Source: APXvYqyMZZOXqSmlc1OTz0H0TSwBXgj90khqnhvRX5Qm0n1heW9gb0v8FZ6pCLzJK16qvpck85r6RQ==
+X-Received: by 2002:a17:902:7892:: with SMTP id q18mr1127950pll.206.1567655290351;
+        Wed, 04 Sep 2019 20:48:10 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z12sm442165pjp.11.2019.09.04.20.48.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 20:48:09 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/57] 4.14.142-stable review
+To:     Kevin Hilman <khilman@baylibre.com>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190904175301.777414715@linuxfoundation.org>
+ <5d705444.1c69fb81.c4927.1cd1@mx.google.com> <7hlfv3shk0.fsf@baylibre.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <6b9adb14-47ec-cd94-d2a2-c79d22d43d76@roeck-us.net>
+Date:   Wed, 4 Sep 2019 20:48:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <7hlfv3shk0.fsf@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Thu, 5 Sep 2019, at 10:46, Rashmica Gupta wrote:
-> The current calculation for the number of GPIO banks is only correct if
-> the number of GPIOs is a multiple of 32 (if there were 31 GPIOs we would
-> currently say there are 0 banks, which is incorrect).
+On 9/4/19 5:38 PM, Kevin Hilman wrote:
+> "kernelci.org bot" <bot@kernelci.org> writes:
 > 
-> Fixes: 361b79119a4b7 ('gpio: Add Aspeed driver')
+>> stable-rc/linux-4.14.y boot: 144 boots: 5 failed, 131 passed with 8 offline (v4.14.141-58-g39a17ab1edd4)
+>>
+>> Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-4.14.y/kernel/v4.14.141-58-g39a17ab1edd4/
+>> Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.y/kernel/v4.14.141-58-g39a17ab1edd4/
+>>
+>> Tree: stable-rc
+>> Branch: linux-4.14.y
+>> Git Describe: v4.14.141-58-g39a17ab1edd4
+>> Git Commit: 39a17ab1edd4adb3fb732726a36cb54a21cc570d
+>> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+>> Tested: 68 unique boards, 23 SoC families, 14 builds out of 201
+>>
+>> Boot Failures Detected:
+>>
+>> arm:
+>>      vexpress_defconfig:
+>>          gcc-8:
+>>              qemu_arm-virt-gicv3: 5 failed labs
 > 
-> Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
+> All 5 failures are for this same QEMU target in multiple labs
+> 
+> It is also failing in linux-next and on several other stable versions.
+> 
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+linux-next is in bad shape due to some usb issues, but I am not sure otherwise.
+I ran a quick test on 4.14.y-queue, and all my (arm, arm64) qemu tests are fine.
 
-> ---
->  drivers/gpio/gpio-aspeed.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
-> index 9defe25d4721..b83e23aecd18 100644
-> --- a/drivers/gpio/gpio-aspeed.c
-> +++ b/drivers/gpio/gpio-aspeed.c
-> @@ -1165,7 +1165,7 @@ static int __init aspeed_gpio_probe(struct 
-> platform_device *pdev)
->  	gpio->chip.base = -1;
->  
->  	/* Allocate a cache of the output registers */
-> -	banks = gpio->config->nr_gpios >> 5;
-> +	banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
->  	gpio->dcache = devm_kcalloc(&pdev->dev,
->  				    banks, sizeof(u32), GFP_KERNEL);
->  	if (!gpio->dcache)
-> -- 
-> 2.20.1
-> 
->
+Is it possible that this is a new or modified test ?
+
+Guenter
