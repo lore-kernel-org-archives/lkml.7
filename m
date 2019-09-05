@@ -2,95 +2,78 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4D1C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAA6C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44D1207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74DFB2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:45:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Th/mutnX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LRz+Keon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730983AbfIENnl (ORCPT
+        id S1731283AbfIENpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:43:41 -0400
-Received: from sauhun.de ([88.99.104.3]:57322 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfIENnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:43:41 -0400
-Received: from localhost (p54B335F6.dip0.t-ipconnect.de [84.179.53.246])
-        by pokefinder.org (Postfix) with ESMTPSA id 881712C00C0;
-        Thu,  5 Sep 2019 15:43:38 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 15:43:38 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, agross@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, bjorn.andersson@linaro.org,
-        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, vkoul@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Message-ID: <20190905134338.GF1157@kunai>
-References: <20190905075213.13260-1-lee.jones@linaro.org>
- <20190905075213.13260-2-lee.jones@linaro.org>
- <20190905091800.GD1157@kunai>
- <20190905092816.GD26880@dell>
+        Thu, 5 Sep 2019 09:45:44 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:33038 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbfIENpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:45:44 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3F7506058E; Thu,  5 Sep 2019 13:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567691143;
+        bh=w/3IIFOS8nQCteH4ddE4gwv4ezqYRxVFmhWF+d+7VVo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Th/mutnX9LoQy2L+Z2WxUuvkvxHhhZ7Mm7O/CGwZJMHjB86g/C/f4PA1XjaycV9PV
+         U3B7/n8G19cBWyfSOwXEal5vD5gyjeoZEARHBoPulvNndDj5nxkk+4S51SxEQH3jPb
+         hWXKrY+/8tV9xOjkAEhG8jjSPziXnCSyC+Q6NNlc=
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F0148606E1;
+        Thu,  5 Sep 2019 13:45:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1567691141;
+        bh=w/3IIFOS8nQCteH4ddE4gwv4ezqYRxVFmhWF+d+7VVo=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=LRz+KeonYRJHD+DyRA20Bu+pgLL9j/vsbUaKJ1ZP7Ag6GRwlJdDuNNnOeQ/oZk+aj
+         y/50pCEp9lgl9poE40jH8uXGLxlucvMp8HKF+DCjV28XEw1U2G8FYNG9/icUxf4wP9
+         Mqw0Haixr+BmHHHq+FSO0TdRi0Mk6PozxfUFvfzw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F0148606E1
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     <kvalo@codeaurora.org>, <davem@davemloft.net>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] hostap: remove set but not used variable 'copied' in prism2_io_debug_proc_read
+References: <1567497430-22539-1-git-send-email-zhongjiang@huawei.com>
+        <5D6E1DF2.1000109@huawei.com>
+Date:   Thu, 05 Sep 2019 16:45:37 +0300
+In-Reply-To: <5D6E1DF2.1000109@huawei.com> (zhong jiang's message of "Tue, 3
+        Sep 2019 16:01:54 +0800")
+Message-ID: <87zhjij1q6.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jkO+KyKz7TfD21mV"
-Content-Disposition: inline
-In-Reply-To: <20190905092816.GD26880@dell>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+zhong jiang <zhongjiang@huawei.com> writes:
 
---jkO+KyKz7TfD21mV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Please ignore the patch.  Because  the hostap_proc.c is marked as 'obsolete'.
 
-On Thu, Sep 05, 2019 at 10:28:16AM +0100, Lee Jones wrote:
-> On Thu, 05 Sep 2019, Wolfram Sang wrote:
->=20
-> >=20
-> > > Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
-> >=20
-> > Are you sure? From visual inspection, I don't see a correlation between
-> > this commit and the fix here.
->=20
-> This patch should have been part of the commit, or at the very least,
-> part of the set, alluded to above.  Unfortunately, I was carrying
-> Bjorn's hack which simply returned early from geni_se_rx_dma_prep()
-> with an error, so it masked the issue.
+You mean marked in the MAINTAINERS file? I don't see that as a problem,
+I can (and should) still apply any patches submitted to hostap driver.
 
-I still don't see why this basic ACPI enabling code (not touching DMA
-but only clocks and pinctrl) causes and additional handling for DMA. Am
-I overlooking something obvious?
-
-
---jkO+KyKz7TfD21mV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1xEQoACgkQFA3kzBSg
-KbaP5RAAtJRsAeX9DwqHu6OlUfWtnxeVIUmEceiWZ/k1Ad04csZDAuSKX/zEIIUH
-STPHQiXh5QrNJSnU5Wwxu3GmIqY5xO71X2fHKQn+z9hyi6AKrNdxMnTKz9Sq/vlV
-sl7qnk8IwyFEVlx6jFF10jw0ca50yv8IT4ErQAC+gUgAeF85T8tlxx66S3943qKe
-8Tz9J2dazk4Okf3NZHEm7h/V6WnmxDulwocq+gkm28jfBiusxexwoxiBy83eAYe5
-MbCbGD5eYesY24ZE4iJy/lCVspwe0Bgzj+DuBz0x+nwKf59vhQkjx0bV3UuaFH1/
-8VgnDGl4ocIdi9kJYRpHmVaKnrr9CcvWssm7YwmTzg7L2Zq2rwRcr+hi4sM+02Qn
-9Ki81OVixSgU2b8e+sbhQSh74JIAr6fiVFBBOluaT1SAkYclAzZbMETeCuDHowDB
-Sm2tjXkspsahkMM/+Um+X8rQ3xcULWYAckxwlpJPgdVXBOqOHH4fWQfuCvjo+W/p
-45UiRjFQQJzDAzzvjQT6cywv+nVxO3so5i3LH2QxdU+teccqtgjkbVJny9G1VdUc
-e8JBMtake7qqFdgImuTCOhbqu+9ACQmeKpYVVNSepxX25JMoxr9iDZy1i0W5+pQe
-N5vhQJRs0+i0X1IMG6jSuvmffuJJNIF6hI4rmRkg9//l5eHVlAo=
-=Fazi
------END PGP SIGNATURE-----
-
---jkO+KyKz7TfD21mV--
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
