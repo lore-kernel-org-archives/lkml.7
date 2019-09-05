@@ -2,138 +2,100 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F12C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9DDC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A95F2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3302070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rd8Syujr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388449AbfIEL14 (ORCPT
+        id S2388459AbfIEL3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:27:56 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:61762 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfIEL1z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:27:55 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 80455A162A;
-        Thu,  5 Sep 2019 13:27:48 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter05.heinlein-hosting.de (spamfilter05.heinlein-hosting.de [80.241.56.123]) (amavisd-new, port 10030)
-        with ESMTP id bvZM-eYrS-l9; Thu,  5 Sep 2019 13:27:44 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 21:27:18 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905112718.ojg3znly6x3m4mjq@yavin.dot.cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905110915.4vvhicg4ldmpi5u6@wittgenstein>
+        Thu, 5 Sep 2019 07:29:09 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38677 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731402AbfIEL3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:29:09 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h195so1561457pfe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dwvIUziP4fafPY2JOrWPat/xl7RaGutjpB8YJJC4H/U=;
+        b=Rd8SyujrfWfPhmweQ/RJpVjX7e1PVKJ0VbLka9+S335G3HYRFRoBxdeY1BkSk7d56l
+         CpSzg4J/QPMDvXevEgvsbeIm2Zcw4AK9XCKCvTQoszi1k2GHkvtc2ZaKSgceUELVOMSO
+         HiNAdx2jqp0qcdFzYitX2LA7VBvHqTP/cLYzAC+xSvOXDt6CzB/wXIUbu8/tKHVtWAeu
+         qndhi9r7KxCR6gq/NoBh1NftR0yqbfYgluIX/MAqTmdNIZ0iQ2WzgioJ4ktpk61A8e3C
+         fIreFqJnN3harixIOCjxhHoUwnSUa5GY/AoTZlkYJnKPw/1Ct29Lw3fYX+uMIqvTD9Y/
+         4CMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dwvIUziP4fafPY2JOrWPat/xl7RaGutjpB8YJJC4H/U=;
+        b=UN/iTwE6NsqmQ1Vx+0CkIJ8wPJWL+C+X7/gRbkPxUmLQqVeZMWyXkONAFIrz8KVxgi
+         1+K66e8t8z6DzdqhoIxfttIOFBrqTSsYyoZnMevoNtMTPMWEFWZqx+JNwjd+h7AOMblz
+         BRg45vmoC87T7+eO3YErATRiXMaZo0WyLhA+NWD1/UHOJiZMeHQBxXsUdIxLlhLRATQ3
+         t0D3P5sndXlqwZ371KGBif3No+r4NaBVyhJiK4HgdxOGmLPsFIW9hxbI1his/Uzug+JB
+         snET8a1Xx+vnDMnyjd6j+WFrQRXFOQ2+B2+KoiXMZXJUf3D+ePMq8EhOgH9VaYGszZmG
+         FjFg==
+X-Gm-Message-State: APjAAAWsrH5OSfKGFR+XfJvag2o5/1tKXlkVaq3fDybSR9jY3mBzRuk3
+        2K0pP/fgEaUDtLfnBtm9cXi4DfJZdbHfVesmZDZWJg==
+X-Google-Smtp-Source: APXvYqwnHdnf6mymYYDnuovI2OIh+2HMDn+StpZViGrapDrf3a2ZOlbCfC6vrMHEwUlGjl1xvu5Ub0MThTVq0k0Lh94=
+X-Received: by 2002:a65:4b8b:: with SMTP id t11mr2697306pgq.130.1567682948307;
+ Thu, 05 Sep 2019 04:29:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nkbo7v76ghbobp4m"
-Content-Disposition: inline
-In-Reply-To: <20190905110915.4vvhicg4ldmpi5u6@wittgenstein>
+References: <CAAeHK+xJrv1hCbO5qOGTBu=c8STo+-obatOGZ4cHkbuhqmEvrg@mail.gmail.com>
+ <000000000000a2044d0591cc99b2@google.com>
+In-Reply-To: <000000000000a2044d0591cc99b2@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 5 Sep 2019 13:28:57 +0200
+Message-ID: <CAAeHK+xVqvBGJ9dXTijuHusJr6vq85DVnKZbHsdyE8-pbWf-9Q@mail.gmail.com>
+Subject: Re: WARNING: ODEBUG bug in usbhid_disconnect (2)
+To:     syzbot <syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com>
+Cc:     Roderick.Colenbrander@sony.com,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 5, 2019 at 1:27 PM syzbot
+<syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot has tested the proposed patch and the reproducer did not trigger
+> crash:
+>
+> Reported-and-tested-by:
+> syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com
+>
+> Tested on:
+>
+> commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=14b53bfeb17f2b210eb7
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=12b6944e600000
+>
+> Note: testing is done by a robot and is best-effort only.
 
---nkbo7v76ghbobp4m
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Nice! Let's mark this one as fixed:
 
-On 2019-09-05, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> > A common pattern for syscall extensions is increasing the size of a
-> > struct passed from userspace, such that the zero-value of the new fields
-> > result in the old kernel behaviour (allowing for a mix of userspace and
-> > kernel vintages to operate on one another in most cases). This is done
-> > in both directions -- hence two helpers -- though it's more common to
-> > have to copy user space structs into kernel space.
-> >=20
-> > Previously there was no common lib/ function that implemented
-> > the necessary extension-checking semantics (and different syscalls
-> > implemented them slightly differently or incompletely[1]). A future
-> > patch replaces all of the common uses of this pattern to use the new
-> > copy_struct_{to,from}_user() helpers.
-> >=20
-> > [1]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
-> >      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
-> >      always rejects differently-sized struct arguments.
-> >=20
-> > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
->=20
-> I would probably split this out into a separate patchset. It can very
-> well go in before openat2(). Thoughts?
-
-Yeah, I'll split this and the related patches out -- though I will admit
-I'm not sure how you're supposed to deal with multiple independent
-patchsets that depend on each other. How will folks reviewing openat2(2)
-know to include the lib/struct_user.c changes?
-
-Also, whose tree should it go through?
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---nkbo7v76ghbobp4m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXDxEwAKCRCdlLljIbnQ
-EqovAQD8WBncNVUTEL0Y3xtDhqYMDFHga+X5xWtEwl2PAh4uVQEAhuzdaAU+gBqt
-VqtP9IF4PFfoqMmGbekI1BKCWI4gmgo=
-=UsGw
------END PGP SIGNATURE-----
-
---nkbo7v76ghbobp4m--
+#syz fix: HID: sony: Fix memory corruption issue on cleanup.
