@@ -2,112 +2,69 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8A1C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E062C3A5A9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409DD206BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C29A206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730799AbfIECcL (ORCPT
+        id S1730780AbfIECiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:32:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34246 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbfIECcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:32:10 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F0A062D1CE;
-        Thu,  5 Sep 2019 02:32:09 +0000 (UTC)
-Received: from treble (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4EE5260852;
-        Thu,  5 Sep 2019 02:32:03 +0000 (UTC)
-Date:   Wed, 4 Sep 2019 21:32:02 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Joe Lawrence <joe.lawrence@redhat.com>,
-        Petr Mladek <pmladek@suse.com>, jikos@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-Message-ID: <20190905023202.ed7fecc22xze4pwj@treble>
-References: <20190728200427.dbrojgu7hafphia7@treble>
- <alpine.LSU.2.21.1908141256150.16696@pobox.suse.cz>
- <20190814151244.5xoaxib5iya2qjco@treble>
- <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
- <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+        Wed, 4 Sep 2019 22:38:21 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42904 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728008AbfIECiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:38:21 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5F0B68F8FFD0A3B15F8A;
+        Thu,  5 Sep 2019 10:38:19 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 5 Sep 2019 10:38:13 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     YueHaibing <yuehaibing@huawei.com>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] staging: exfat: remove duplicated include from exfat_super.c
+Date:   Thu, 5 Sep 2019 02:56:08 +0000
+Message-ID: <20190905025608.61884-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 05 Sep 2019 02:32:10 +0000 (UTC)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 03:02:34PM +0200, Miroslav Benes wrote:
-> On Mon, 2 Sep 2019, Joe Lawrence wrote:
-> 
-> > On 9/2/19 12:13 PM, Miroslav Benes wrote:
-> > >> I can easily foresee more problems like those in the future.  Going
-> > >> forward we have to always keep track of which special sections are
-> > >> needed for which architectures.  Those special sections can change over
-> > >> time, or can simply be overlooked for a given architecture.  It's
-> > >> fragile.
-> > > 
-> > > Indeed. It bothers me a lot. Even x86 "port" is not feature complete in
-> > > this regard (jump labels, alternatives,...) and who knows what lurks in
-> > > the corners of the other architectures we support.
-> > > 
-> > > So it is in itself reason enough to do something about late module
-> > > patching.
-> > > 
-> > 
-> > Hi Miroslav,
-> > 
-> > I was tinkering with the "blue-sky" ideas that I mentioned to Josh the other
-> > day.
-> 
-> > I dunno if you had a chance to look at what removing that code looks
-> > like, but I can continue to flesh out that idea if it looks interesting:
-> 
-> Unfortunately no and I don't think I'll come up with something useful 
-> before LPC, so anything is really welcome.
-> 
-> > 
-> >   https://github.com/joe-lawrence/linux/tree/blue-sky
+Remove duplicated include.
 
-I like this a lot.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/exfat/exfat_super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> > A full demo would require packaging up replacement .ko's with a livepatch, as
-> > well as "blacklisting" those deprecated .kos, etc.  But that's all I had time
-> > to cook up last week before our holiday weekend here.
-> 
-> Frankly, I'm not sure about this approach. I'm kind of torn. The current 
-> solution is far from ideal, but I'm not excited about the other options 
-> either. It seems like the choice is basically between "general but 
-> technically complicated fragile solution with nontrivial maintenance 
-> burden", or "something safer and maybe cleaner, but limiting for 
-> users/distros". Of course it depends on whether the limitation is even 
-> real and how big it is. Unfortunately we cannot quantify it much and that 
-> is probably why our opinions (in the email thread) differ.
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index 5b5c2ca8c9aa..f202a6588dc3 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -26,7 +26,6 @@
+ #include <linux/sched.h>
+ #include <linux/fs_struct.h>
+ #include <linux/namei.h>
+-#include <linux/time.h>
+ 
+ #include <linux/string.h>
+ #include <linux/nls.h>
 
-How would this option be "limiting for users/distros"?  If the packaging
-part of the solution is done correctly then I don't see how it would be
-limiting.
 
--- 
-Josh
+
+
+
