@@ -2,258 +2,80 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17FEC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE45C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77FDF20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8584820870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="smk8E7Pf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732079AbfIEIbS (ORCPT
+        id S1732187AbfIEIbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:31:18 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38316 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfIEIbS (ORCPT
+        Thu, 5 Sep 2019 04:31:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50172 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfIEIbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:31:18 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x5so1317186qkh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:31:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HfKuAxk9/bRoioSR+a2a8fhqX2PF1AL0BOFS3W9OiGc=;
-        b=TYlMCHyNppXd/fmqOeDLNbnmaWov9AS4NpfzVVy+GxmOpswB4PIM+mKVKGz77kmaXM
-         btNKqrVZsVDAtuxlKVXVkI2bMorvsyrlG8vYEABMyHg08sN/Tmfui7w3t2m1vGzTNC6g
-         WUj4r06jM0tUM34wtpl+5OUpxNpTzLw0mU8VC1Rim8M1JvfI06csLKPcAJS7dsIQQTX+
-         u/3X+XVASIKiN5IDjdSLUG+Mhi6cz8KXi6rI0I9i/Rs/EAbE3CNMrkQkrIoxPJxGvx4b
-         mw7weezLQepE4mCE7ycqcFEg9ndABysecXHMGNcJTAGciwyt9Afm0ODt/Tc2DSkSfneq
-         VLLg==
-X-Gm-Message-State: APjAAAXUwV9mIA6fx5v82pDMDVMPbaQTc8MHRsBeKB0es09klELfrYl1
-        viOlJATcIzwJ5hP/vbvaw4E2veBklXBegdvk9Lo=
-X-Google-Smtp-Source: APXvYqwJP0cESRmEZHpkjp58dScikbAuglfHxNNCW2CGpnwyPfyt43xGIybh72k+p4oPPZxz8/N0O2S7OWaot+tNSmQ=
-X-Received: by 2002:a37:4051:: with SMTP id n78mr1599585qka.138.1567672276936;
- Thu, 05 Sep 2019 01:31:16 -0700 (PDT)
+        Thu, 5 Sep 2019 04:31:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fp8eBYz/kzKBULebM5HWUHnX6du+0lSaxjkyi7TgD2Y=; b=smk8E7Pf118vl5Sb9vHNO/qwp
+        WrgYpMzFq++wmk1vpQ5C5e3uGt20R30eogQ9ar7yKSafJBO58IgNxsauGh+JAAo7MwNeDx/FtTqnc
+        N3EOFeXFPPDEQCcregjIrlpTU+kdson5EHbN4VSECsJCcE5GrT1ImcyRvYfbnXl4mqYppYHHQU3Ul
+        yG0YqXHVfYTac4W/W+gMsXC8YQn947jKfrsuMWcac4U0l1N88OT0vyX4ExCQy9fgnU3ayMciPshB0
+        QhLJL5inEGAGV1qw6EWScu/AcTwVjbnBWmSUdUVQ9CJ3WoQCdrJysTFPewLToeLQo5KideGrmu5IH
+        KoN61n6Ew==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5nAv-0007ow-FU; Thu, 05 Sep 2019 08:31:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D52B305E47;
+        Thu,  5 Sep 2019 10:30:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 42FD620EFA5D9; Thu,  5 Sep 2019 10:31:27 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 10:31:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     subhra mazumdar <subhra.mazumdar@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com,
+        patrick.bellasi@arm.com
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+Message-ID: <20190905083127.GA2332@hirez.programming.kicks-ass.net>
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+ <20190830174944.21741-2-subhra.mazumdar@oracle.com>
 MIME-Version: 1.0
-References: <20190905054647.1235-1-james.tai@realtek.com>
-In-Reply-To: <20190905054647.1235-1-james.tai@realtek.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 5 Sep 2019 10:31:00 +0200
-Message-ID: <CAK8P3a13=VBZnj6E=s7mZk0o7Q3XkMHgcsL12s-3psuOWsfOtQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Add support for Realtek SOC
-To:     jamestai.sky@gmail.com
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Doug Anderson <armlinux@m.disordat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Thierry Reding <treding@nvidia.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Rob Herring <robh@kernel.org>, CY_Huang <cy.huang@realtek.com>,
-        Phinex Hung <phinex@realtek.com>,
-        "james.tai" <james.tai@realtek.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190830174944.21741-2-subhra.mazumdar@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 7:48 AM <jamestai.sky@gmail.com> wrote:
->
-> From: "james.tai" <james.tai@realtek.com>
->
-> This patch adds the basic machine file for
-> the Realtek RTD16XX platform.
->
-> Signed-off-by: james.tai <james.tai@realtek.com>
+On Fri, Aug 30, 2019 at 10:49:36AM -0700, subhra mazumdar wrote:
+> Add Cgroup interface for latency-nice. Each CPU Cgroup adds a new file
+> "latency-nice" which is shared by all the threads in that Cgroup.
 
-Hi James,
+*sigh*, no. We start with a normal per task attribute, and then later,
+if it is needed and makes sense, we add it to cgroups.
 
-Thanks a lot for your submission! I'm glad to see interest in upstream
-support for this SoC family. I have a few small comments on
-details, mostly where I would either like to see an explanation
-in the patch description, or things that looks like they can be
-left out from the patch.
+Also, your Changelog fails on pretty much every point. It doesn't
+explain why, it doesn't describe anything and so on.
 
-> index 33b00579beff..c7c9a3662eb7 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -836,6 +836,8 @@ source "arch/arm/mach-zx/Kconfig"
->
->  source "arch/arm/mach-zynq/Kconfig"
->
-> +source "arch/arm/mach-realtek/Kconfig"
-> +
-> diff --git a/arch/arm/mach-realtek/Kconfig b/arch/arm/mach-realtek/Kconfig
-> @@ -225,6 +226,7 @@ machine-$(CONFIG_ARCH_VT8500)               += vt8500
->  machine-$(CONFIG_ARCH_W90X900)         += w90x900
->  machine-$(CONFIG_ARCH_ZX)              += zx
->  machine-$(CONFIG_ARCH_ZYNQ)            += zynq
-> +machine-$(CONFIG_ARCH_REALTEK)         += realtek
->  machine-$(CONFIG_PLAT_SPEAR)           += spear
->
->  # Platform directory name.  This list is sorted alphanumerically
-
-Please keep these lists in alphabetical order.
-
->  # ARMv7-M architecture
->  config ARCH_EFM32
->         bool "Energy Micro efm32"
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index c3624ca6c0bc..1f0926449d47 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -148,6 +148,7 @@ endif
->  textofs-$(CONFIG_ARCH_MSM8X60) := 0x00208000
->  textofs-$(CONFIG_ARCH_MSM8960) := 0x00208000
->  textofs-$(CONFIG_ARCH_MESON) := 0x00208000
-> +textofs-$(CONFIG_ARCH_REALTEK) := 0x00208000
->  textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
-
-Can you explain why this is needed for your platform?
-
->  # Machine directory name.  This list is sorted alphanumerically
-> new file mode 100644
-> index 000000000000..a8269964dbdb
-> --- /dev/null
-> +++ b/arch/arm/mach-realtek/Kconfig
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +menuconfig ARCH_REALTEK
-> +       bool "Realtek SoCs"
-
-Please add "depends on ARCH_MULTI_V7" to avoid
-compile time issues when selecting it on an earlier
-architecture.
-
-> +       select ARM_GLOBAL_TIMER
-> +       select CLKDEV_LOOKUP
-> +       select HAVE_SMP
-> +       select HAVE_MACH_CLKDEV
-> +       select GENERIC_CLOCKEVENTS
-> +       select HAVE_SCHED_CLOCK
-> +       select ARCH_HAS_CPUFREQ
-> +       select CLKSRC_OF
-> +       select ARCH_REQUIRE_GPIOLIB
-> +       select GENERIC_IRQ_CHIP
-> +       select IRQ_DOMAIN
-> +       select PINCTRL
-> +       select COMMON_CLK
-> +       select ARCH_HAS_BARRIERS
-> +       select SPARSE_IRQ
-> +       select PM_OPP
-> +       select ARM_HAS_SG_CHAIN
-> +       select ARM_PATCH_PHYS_VIRT
-> +       select AUTO_ZRELADDR
-> +       select MIGHT_HAVE_PCI
-> +       select MULTI_IRQ_HANDLER
-> +       select PCI_DOMAINS if PCI
-> +       select USE_OF
-
-Almost all of the symbols above are implied by
-ARCH_MULTI_V7 and should not be selected
-separately.
-
-> +config ARCH_RTD16XX
-> +       bool "Enable support for RTD1619"
-> +       depends on ARCH_REALTEK
-> +       select ARM_GIC_V3
-> +       select ARM_PSCI
-
-As I understand, this chip uses a Cortex-A55. What is the reason
-for adding support only to the 32-bit ARM architecture rather than
-64-bit?
-
-Most 64-bit SoCs are only supported with arch/arm64, but generally
-speaking that is not a requirement. My rule of thumb is that on
-systems with 1GB of RAM or more, one would want to run a 64-bit
-kernel, while systems with less than that are better off with a 32-bit
-one, but that is clearly not the only reason for picking one over the
-other.
-
-> +
-> +static int rtk_boot_secondary(unsigned int cpu, struct task_struct *idle)
-> +{
-> +       unsigned long entry_pa = __pa_symbol(secondary_startup);
-> +
-> +       writel_relaxed(entry_pa | (cpu << CPUID), cpu_release_virt);
-> +
-> +       arch_send_wakeup_ipi_mask(cpumask_of(cpu));
-> +
-> +       return 0;
-> +}
-
-It's very unusual to see custom smp operations on an ARMv8
-system, as we normally use PSCI here. Can you explain what
-is going on here? Are you able to use a boot wrapper that implements
-these in psci instead?
-> +
-> +#include "platsmp.h"
-> +
-> +#define RBUS_BASE_PHYS (0x98000000)
-> +#define RBUS_BASE_VIRT (0xfe000000)
-> +#define RBUS_BASE_SIZE (0x00100000)
-> +
-> +static struct map_desc rtk_io_desc[] __initdata = {
-> +       {
-> +               .virtual = (unsigned long) IOMEM(RBUS_BASE_VIRT),
-> +               .pfn = __phys_to_pfn(RBUS_BASE_PHYS),
-> +               .length = RBUS_BASE_SIZE,
-> +               .type = MT_DEVICE,
-> +       },
-> +};
-
-This needs a comment: Why do you require a static mapping for
-"RBUS_BASE_PHYS"? Normally device drivers should just use
-ioremap() for mapping whichever registers they want to access.
-
-> +static void __init rtk_dt_init(void)
-> +{
-> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-> +}
-
-This should be taken care of by the
-of_platform_default_populate_init() and can be dropped.
-
-> +static void __init rtk_timer_init(void)
-> +{
-> +#ifdef CONFIG_COMMON_CLK
-> +       of_clk_init(NULL);
-> +#endif
-
-COMMON_CLK is implied by ARCH_MULTI_V7, so the
-#ifdef can be dropped.
-
-> +       timer_probe();
-> +       tick_setup_hrtimer_broadcast();
-> +}
-
-What do you need tick_setup_hrtimer_broadcast() for? I don't
-see any other platform calling this.
-
-> +bool __init rtk_smp_init_ops(void)
-> +{
-> +       smp_set_ops(smp_ops(rtk_smp_ops));
-> +
-> +       return true;
-> +}
-
-I think this can also be dropped, as you set the smp_ops in the
-machine descriptor.
-
-
-       Arnd
+From just reading the above, I would expect it to have the range
+[-20,19] just like normal nice. Apparently this is not so.
