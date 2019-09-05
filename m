@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF89CC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD5DC41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E9F2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A961E22CF6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="rSLa9Diu"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="toHTMERg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387769AbfIEMWH (ORCPT
+        id S2389325AbfIEMWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:22:07 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35996 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726498AbfIEMWH (ORCPT
+        Thu, 5 Sep 2019 08:22:11 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:41246 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731173AbfIEMWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:22:07 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85C7Ju0029738;
-        Thu, 5 Sep 2019 14:21:55 +0200
+        Thu, 5 Sep 2019 08:22:10 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85CLTKk016715;
+        Thu, 5 Sep 2019 14:21:59 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=/TKVh//IObDPGslFFkBCflQ1T5rnSJQOZcR1Arftvfo=;
- b=rSLa9Diud2IAaGaU46GNGfcw6Pd+m9R2E7ez98BfhBh70s54QQglJEhhNw5bSaWGx9y5
- xVF577HPjleRi+9JzWD2oP8trZEIyeCNdMtxrPCooAk5YZC3Kok9ByIz6bAJOymGHv3S
- paaxcU2AKJ6Axu7oN5K6FurClgEhJpmrtpO6SD489X5EmPFvb2isAYOJUs5coosKt7J7
- 5ZQ1+hz456XRayLJ35vlRIaFll5+5wtdodJ/ci+ZMcHF4A9RSZJ5fta4MsoDRXp5SYvi
- ytjdCW5/PPTo910ewZzjA7QVruv7npwUg3U4CMAbSWA14HWitUww11Uwk3KEv3e8As3F kQ== 
+ bh=0ND6yWcbICCLXkEHKUCkaFeaadKXcm5KDuBVNmBow4U=;
+ b=toHTMERg4rxITNeAJ0ekGoWn5LtPOceKW4tljc0yNy/2PmGuaikiMEytUod6/cgbCf43
+ TBuL2+F5KON7KRvlaeGs0a1LzqCH71koRCGsXLd2CvAoqQi4bYCKi3ZOwprJQfe9wPOG
+ UYa14z2D3uoBwQoTznyRJhgWxT1iLpghuTB/x9/nV8/HsYNN9JaMnttfhye1p9Ui8yc9
+ xTJIS/7TbLiqOdIFjVmL/kiZhveVLmyioPgNnGF6gdlEJytG4YaLzlVaceoCpRQuWRvZ
+ HhdGAByDDOs29bRZckuKxMW3oW51mx3x/CnGldg2RhIrcDRr3LLIfVFld3veU0aFcEJE lg== 
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2uqfsj7ut2-1
+        by mx07-00178001.pphosted.com with ESMTP id 2uqec385ep-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 05 Sep 2019 14:21:55 +0200
+        Thu, 05 Sep 2019 14:21:59 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5277757;
-        Thu,  5 Sep 2019 12:21:52 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0EFE02CBDA0;
-        Thu,  5 Sep 2019 14:21:52 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 5 Sep 2019
- 14:21:50 +0200
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 957AD22;
+        Thu,  5 Sep 2019 12:21:56 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F1AE42CBDA0;
+        Thu,  5 Sep 2019 14:21:55 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 5 Sep 2019
+ 14:21:55 +0200
 Received: from lmecxl0923.lme.st.com (10.48.0.237) by Webmail-ga.st.com
  (10.75.90.48) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 5 Sep 2019
- 14:21:50 +0200
+ 14:21:54 +0200
 From:   Ludovic Barre <ludovic.Barre@st.com>
 To:     Ulf Hansson <ulf.hansson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -62,9 +62,9 @@ CC:     <srinivas.kandagatla@linaro.org>,
         <linux-mmc@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         Ludovic Barre <ludovic.barre@st.com>
-Subject: [PATCH V6 1/3] mmc: mmci: add hardware busy timeout feature
-Date:   Thu, 5 Sep 2019 14:21:10 +0200
-Message-ID: <20190905122112.29672-2-ludovic.Barre@st.com>
+Subject: [PATCH V6 3/3] mmc: mmci: sdmmc: add busy_complete callback
+Date:   Thu, 5 Sep 2019 14:21:12 +0200
+Message-ID: <20190905122112.29672-4-ludovic.Barre@st.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190905122112.29672-1-ludovic.Barre@st.com>
 References: <20190905122112.29672-1-ludovic.Barre@st.com>
@@ -80,154 +80,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ludovic Barre <ludovic.barre@st.com>
 
-In some variants, the data timer starts and decrements
-when the DPSM enters in Wait_R or Busy state
-(while data transfer or MMC_RSP_BUSY), and generates a
-data timeout error if the counter reach 0.
+This patch adds a specific busy_complete callback for sdmmc variant.
 
--Define max_busy_timeout (in ms) according to clock.
--Set data timer register if the command has rsp_busy flag.
- If busy_timeout is not defined by framework, the busy
- length after Data Burst is defined as 1 second
- (refer: 4.6.2.2 Write of sd specification part1 v6-0).
--Add MCI_DATATIMEOUT error management in mmci_cmd_irq.
+sdmmc has 2 status flags:
+-busyd0: This is a hardware status flag (inverted value of d0 line).
+it does not generate an interrupt.
+-busyd0end: This indicates only end of busy following a CMD response.
+On busy to Not busy changes, an interrupt is generated (if unmask)
+and BUSYD0END status flag is set. Status flag is cleared by writing
+corresponding interrupt clear bit in MMCICLEAR.
+
+The legacy busy completion monitors step by step the busy progression
+start/in-progress/end. On sdmmc variant, the monitoring of busy steps
+is difficult and not adapted (the software can miss a step and locks
+the monitoring), the sdmmc has just need to wait the busyd0end bit
+without monitoring all the changes.
 
 Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- drivers/mmc/host/mmci.c | 42 ++++++++++++++++++++++++++++++++++++-----
- drivers/mmc/host/mmci.h |  3 +++
- 2 files changed, 40 insertions(+), 5 deletions(-)
+ drivers/mmc/host/mmci.c             |  3 +++
+ drivers/mmc/host/mmci.h             |  1 +
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 38 +++++++++++++++++++++++++++++
+ 3 files changed, 42 insertions(+)
 
 diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index c37e70dbe250..c30319255dc2 100644
+index e20164f4354d..a666d826dbbd 100644
 --- a/drivers/mmc/host/mmci.c
 +++ b/drivers/mmc/host/mmci.c
-@@ -1075,6 +1075,7 @@ static void
- mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
- {
- 	void __iomem *base = host->base;
-+	unsigned long long clks;
+@@ -260,6 +260,9 @@ static struct variant_data variant_stm32_sdmmc = {
+ 	.datalength_bits	= 25,
+ 	.datactrl_blocksz	= 14,
+ 	.stm32_idmabsize_mask	= GENMASK(12, 5),
++	.busy_timeout		= true,
++	.busy_detect_flag	= MCI_STM32_BUSYD0,
++	.busy_detect_mask	= MCI_STM32_BUSYD0ENDMASK,
+ 	.init			= sdmmc_variant_init,
+ };
  
- 	dev_dbg(mmc_dev(host->mmc), "op %02x arg %08x flags %08x\n",
- 	    cmd->opcode, cmd->arg, cmd->flags);
-@@ -1097,6 +1098,16 @@ mmci_start_command(struct mmci_host *host, struct mmc_command *cmd, u32 c)
- 		else
- 			c |= host->variant->cmdreg_srsp;
- 	}
-+
-+	if (host->variant->busy_timeout && cmd->flags & MMC_RSP_BUSY) {
-+		if (!cmd->busy_timeout)
-+			cmd->busy_timeout = 1000;
-+
-+		clks = (unsigned long long)cmd->busy_timeout * host->cclk;
-+		do_div(clks, MSEC_PER_SEC);
-+		writel_relaxed(clks, host->base + MMCIDATATIMER);
-+	}
-+
- 	if (/*interrupt*/0)
- 		c |= MCI_CPSM_INTERRUPT;
- 
-@@ -1201,6 +1212,7 @@ static void
- mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
- 	     unsigned int status)
- {
-+	u32 err_msk = MCI_CMDCRCFAIL | MCI_CMDTIMEOUT;
- 	void __iomem *base = host->base;
- 	bool sbc, busy_resp;
- 
-@@ -1215,8 +1227,11 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
- 	 * handling. Note that we tag on any latent IRQs postponed
- 	 * due to waiting for busy status.
- 	 */
--	if (!((status|host->busy_status) &
--	      (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT|MCI_CMDSENT|MCI_CMDRESPEND)))
-+	if (host->variant->busy_timeout && busy_resp)
-+		err_msk |= MCI_DATATIMEOUT;
-+
-+	if (!((status | host->busy_status) &
-+	      (err_msk | MCI_CMDSENT | MCI_CMDRESPEND)))
- 		return;
- 
- 	/* Handle busy detection on DAT0 if the variant supports it. */
-@@ -1235,8 +1250,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
- 		 * while, to allow it to be set, but tests indicates that it
- 		 * isn't needed.
- 		 */
--		if (!host->busy_status &&
--		    !(status & (MCI_CMDCRCFAIL|MCI_CMDTIMEOUT)) &&
-+		if (!host->busy_status && !(status & err_msk) &&
- 		    (readl(base + MMCISTATUS) & host->variant->busy_detect_flag)) {
- 
- 			writel(readl(base + MMCIMASK0) |
-@@ -1290,6 +1304,9 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
- 		cmd->error = -ETIMEDOUT;
- 	} else if (status & MCI_CMDCRCFAIL && cmd->flags & MMC_RSP_CRC) {
- 		cmd->error = -EILSEQ;
-+	} else if (host->variant->busy_timeout && busy_resp &&
-+		   status & MCI_DATATIMEOUT) {
-+		cmd->error = -ETIMEDOUT;
- 	} else {
- 		cmd->resp[0] = readl(base + MMCIRESPONSE0);
- 		cmd->resp[1] = readl(base + MMCIRESPONSE1);
-@@ -1583,6 +1600,20 @@ static void mmci_request(struct mmc_host *mmc, struct mmc_request *mrq)
- 	spin_unlock_irqrestore(&host->lock, flags);
- }
- 
-+static void mmci_set_max_busy_timeout(struct mmc_host *mmc)
-+{
-+	struct mmci_host *host = mmc_priv(mmc);
-+	u32 max_busy_timeout = 0;
-+
-+	if (!host->variant->busy_detect)
-+		return;
-+
-+	if (host->variant->busy_timeout && mmc->actual_clock)
-+		max_busy_timeout = ~0UL / (mmc->actual_clock / MSEC_PER_SEC);
-+
-+	mmc->max_busy_timeout = max_busy_timeout;
-+}
-+
- static void mmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	struct mmci_host *host = mmc_priv(mmc);
-@@ -1687,6 +1718,8 @@ static void mmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	else
- 		mmci_set_clkreg(host, ios->clock);
- 
-+	mmci_set_max_busy_timeout(mmc);
-+
- 	if (host->ops && host->ops->set_pwrreg)
- 		host->ops->set_pwrreg(host, pwr);
- 	else
-@@ -1957,7 +1990,6 @@ static int mmci_probe(struct amba_device *dev,
- 			mmci_write_datactrlreg(host,
- 					       host->variant->busy_dpsm_flag);
- 		mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
--		mmc->max_busy_timeout = 0;
- 	}
- 
- 	/* Prepare a CMD12 - needed to clear the DPSM on some variants. */
 diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index 833236ecb31e..d8b7f6774e8f 100644
+index 733f9a035b06..841c5281beb5 100644
 --- a/drivers/mmc/host/mmci.h
 +++ b/drivers/mmc/host/mmci.h
-@@ -287,6 +287,8 @@ struct mmci_host;
-  * @signal_direction: input/out direction of bus signals can be indicated
-  * @pwrreg_clkgate: MMCIPOWER register must be used to gate the clock
-  * @busy_detect: true if the variant supports busy detection on DAT0.
-+ * @busy_timeout: true if the variant starts data timer when the DPSM
-+ *		  enter in Wait_R or Busy state.
-  * @busy_dpsm_flag: bitmask enabling busy detection in the DPSM
-  * @busy_detect_flag: bitmask identifying the bit in the MMCISTATUS register
-  *		      indicating that the card is busy
-@@ -333,6 +335,7 @@ struct variant_data {
- 	u8			signal_direction:1;
- 	u8			pwrreg_clkgate:1;
- 	u8			busy_detect:1;
-+	u8			busy_timeout:1;
- 	u32			busy_dpsm_flag;
- 	u32			busy_detect_flag;
- 	u32			busy_detect_mask;
+@@ -164,6 +164,7 @@
+ #define MCI_ST_CARDBUSY		(1 << 24)
+ /* Extended status bits for the STM32 variants */
+ #define MCI_STM32_BUSYD0	BIT(20)
++#define MCI_STM32_BUSYD0END	BIT(21)
+ 
+ #define MMCICLEAR		0x038
+ #define MCI_CMDCRCFAILCLR	(1 << 0)
+diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+index 8e83ae6920ae..bb5499cc9e81 100644
+--- a/drivers/mmc/host/mmci_stm32_sdmmc.c
++++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+@@ -282,6 +282,43 @@ static u32 sdmmc_get_dctrl_cfg(struct mmci_host *host)
+ 	return datactrl;
+ }
+ 
++bool sdmmc_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
++{
++	void __iomem *base = host->base;
++	u32 busy_d0, busy_d0end, mask;
++
++	mask = readl_relaxed(base + MMCIMASK0);
++	busy_d0end = readl_relaxed(base + MMCISTATUS) & MCI_STM32_BUSYD0END;
++	busy_d0 = readl_relaxed(base + MMCISTATUS) & MCI_STM32_BUSYD0;
++
++	/* complete if there is an error or busy_d0end */
++	if ((status & err_msk) || busy_d0end)
++		goto complete;
++
++	/*
++	 * On response the busy signaling is reflected in the BUSYD0 flag.
++	 * if busy_d0 is in-progress we must activate busyd0end interrupt
++	 * to wait this completion. Else this request has no busy step.
++	 */
++	if (busy_d0) {
++		if (!host->busy_status) {
++			writel_relaxed(mask | host->variant->busy_detect_mask,
++				       base + MMCIMASK0);
++			host->busy_status = status &
++				(MCI_CMDSENT | MCI_CMDRESPEND);
++		}
++		return false;
++	}
++
++complete:
++	writel_relaxed(mask & ~host->variant->busy_detect_mask,
++		       base + MMCIMASK0);
++	writel_relaxed(host->variant->busy_detect_mask, base + MMCICLEAR);
++	host->busy_status = 0;
++
++	return true;
++}
++
+ static struct mmci_host_ops sdmmc_variant_ops = {
+ 	.validate_data = sdmmc_idma_validate_data,
+ 	.prep_data = sdmmc_idma_prep_data,
+@@ -292,6 +329,7 @@ static struct mmci_host_ops sdmmc_variant_ops = {
+ 	.dma_finalize = sdmmc_idma_finalize,
+ 	.set_clkreg = mmci_sdmmc_set_clkreg,
+ 	.set_pwrreg = mmci_sdmmc_set_pwrreg,
++	.busy_complete = sdmmc_busy_complete,
+ };
+ 
+ void sdmmc_variant_init(struct mmci_host *host)
 -- 
 2.17.1
 
