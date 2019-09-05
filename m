@@ -2,180 +2,88 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5B8C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A78CEC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBDE2173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9B021848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BbVfEcGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733111AbfIEJPK (ORCPT
+        id S1733131AbfIEJPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:15:10 -0400
-Received: from cnshjsmin05.nokia-sbell.com ([116.246.26.45]:9396 "EHLO
-        cnshjsmin05.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732968AbfIEJPJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:15:09 -0400
-X-AuditID: ac18929d-d43ff7000000dbec-74-5d70d217f412
-Received: from CNSHPPEXCH1608.nsn-intra.net (Unknown_Domain [135.251.51.108])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by cnshjsmin05.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id EB.C0.56300.712D07D5; Thu,  5 Sep 2019 17:15:03 +0800 (HKT)
-Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
- CNSHPPEXCH1608.nsn-intra.net (135.251.51.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 5 Sep 2019 17:15:03 +0800
-Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
- CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
- Thu, 5 Sep 2019 17:15:03 +0800
-From:   "Xu, Lingyan (NSB - CN/Hangzhou)" <lingyan.xu@nokia-sbell.com>
-To:     Jean Delvare <jdelvare@suse.de>
-CC:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
-        <krzysztof.adamski@nokia.com>,
-        "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] i801_smbus: clear SMBALERT status bit and disable
- SMBALERT interrupt
-Thread-Topic: [PATCH] i801_smbus: clear SMBALERT status bit and disable
- SMBALERT interrupt
-Thread-Index: AQHVULdbLY35dV27K065atkwcJuHaqcQKcMAgAkqZLCAA5540A==
-Date:   Thu, 5 Sep 2019 09:15:03 +0000
-Message-ID: <75809576d53146f29500fdf5fdbc1940@nokia-sbell.com>
-References: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
- <20190828155822.7cb13a7b@endymion>
- <a6cd1872effd46c7ba088f28402b32b8@nokia-sbell.com>
-In-Reply-To: <a6cd1872effd46c7ba088f28402b32b8@nokia-sbell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [135.251.51.115]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 5 Sep 2019 05:15:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:53490 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733117AbfIEJPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:15:22 -0400
+Received: from zn.tnic (p200300EC2F0A5F00AD0514FFC49C0308.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:5f00:ad05:14ff:c49c:308])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2096C1EC06F3;
+        Thu,  5 Sep 2019 11:15:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1567674921;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=FQa5pOo72S+jI4zr4GX6frwocxhPc2IhNcrD8ofhhsY=;
+        b=BbVfEcGXDpQTPBcoxho2/6tKzLda03FGu3HD/5JwTOkwpf1zM6xZNKd550+fk0gH2lKQvM
+        2cBe2xQZysVlippdBHUBYN0P84GqTbwW/+kdPhL/kCnizUytm8PO1D6lNZ0fs1zGzI8sCI
+        +qXgajKfc9UQkllr23LyP8si42bqWYU=
+Date:   Thu, 5 Sep 2019 11:15:14 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Steve Wahl <steve.wahl@hpe.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, vaibhavrustagi@google.com,
+        russ.anderson@hpe.com, dimitri.sivanich@hpe.com,
+        mike.travis@hpe.com
+Subject: Re: [PATCH 1/1] x86/purgatory: Change compiler flags to avoid
+ relocation errors.
+Message-ID: <20190905091514.GA21479@zn.tnic>
+References: <20190904214505.GA15093@swahl-linux>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprIIsWRmVeSWpSXmKPExsXS/ts4R1f8UkGswc+FNhZL735is+j4+4XR
-        4vKuOWwOzB6bT1d7fN4kF8AUxWWTkpqTWZZapG+XwJVxcbJ6wRu7ijNTVzI2MM6x7WLk5JAQ
-        MJG4MWsecxcjF4eQwCEmiT/vVjNCOH8YJZ48m8gE4WxklNjybzVQGQcHm4CLxMtZgiDdIgLK
-        Es//H2MFqWEW6GKSWNvZxAKSEBaIlli/fCErRFGMxIlr16BsJ4mGa8+ZQGwWARWJzdP2s4LM
-        5BWwk1i5rRZi1xJGiU3H9jGD1HAK2EucbFrGBmIzCohJfD+1BqyXWUBc4taT+UwQLwhILNlz
-        nhnCFpV4+fgf2EwJASWJvg1Q5VoS8xp+Q9mKElO6H7KD2LwCghInZz5hmcAoNgvJ1FlIWmYh
-        aZmFpGUBI8sqRunkvOKMrOLczDwDU728/OzMRN3ipNScHL3k/NxNjMCIWiMxae4Oxs7O+EOM
-        AhyMSjy8D+bmxwqxJpYVV+YeYpTgYFYS4V2/sSBWiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/v
-        VqdYIYH0xJLU7NTUgtQimCwTB6dUA6PiwyN3b7e3/YmZbd06bf7uZ0bOU7f6/eybWxG8+6Hi
-        IQ2ztcnXTmpH7JZfPiczxLXpjSJDLMvsyuwlpz0S9RT2GW1NnfBAW8V00hbz44XTdm1j5hSr
-        ql91/fqu5fIfn3wX+VzDpL98n5nNyZUlc6yP3OiY/G3X+iNilkVMy+7tnn3WZlLW3tzVSizF
-        GYmGWsxFxYkApWbsrKQCAAA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190904214505.GA15093@swahl-linux>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmVhbiwNCkFmdGVyIG91ciBsb2NhbCB0ZXN0LCB0aGUgYWN0aW9uIGNsZWFyIFNNQkFMRVJU
-IHN0YXR1cyBiaXQgaXMgbmVlZGVkIG9ubHkgaGVyZSBmb3IgdGhlIEhXIGludGVycnVwdCB3aWxs
-IGJlIGNsZWFyZWQgYnkgc2xhdmUgY2hpcC4NClNvIEkgY2hhbmdlIHRoZSBwYXRjaCBhcyBmb2xs
-b3cuDQoNCkZyb206IExpbmd5YW4gWHUgPGxpbmd5YW4ueHVAbm9raWEtc2JlbGwuY29tPg0KDQpJ
-biBjdXJyZW50IGk4MDEgZHJpdmVyLCBTTUJBTEVSVCBpbnRlcnJ1cHQgaXMgYWxsb3dlZCAoU2xh
-dmUgQ29tbWFuZCBSZWdpc3RlciBiaXQyIGlzIDApLg0KQnV0IHRoZXNlIGlzIG5vIGhhbmRsZXIg
-Zm9yIFNNQkFMRVJUIGludGVycnVwdCBpbiBpODAxX2lzciwgaWYgdGhlcmUgaXMgU01CQUxFUlQg
-aW50ZXJydXB0IGFzc2VydGVkIGFuZCBkZWFzc2VydGVkLA0KaTgwMSB3aWxsIGhhdmUgYW4gaXJx
-IGZsb29kIGZvciB0aGUgcmVsYXRlZCBzdGF0dXMgYml0IGlzIHNldHRlZC4NCg0KU28gU01CQUxF
-UlQgc3RhdHVzIGNsZWFyIGlzIG5lZWRlZC4NCg0KQWJvdXQgdGhlIHNvbHV0aW9uLA0KcGxlYXNl
-IHNlZSBodHRwOi8vd3d3LmZhcm5lbGwuY29tL2RhdGFzaGVldHMvMTU4MTk2Ny5wZGYNClBhZ2U2
-MzIgUDY0MCBmb3IgbW9yZS4NCg0KU2lnbmVkLW9mZi1ieTogTGluZ3lhbiBYdSA8bGluZ3lhbi54
-dUBub2tpYS1zYmVsbC5jb20+DQotLS0NCiBkcml2ZXJzL2kyYy9idXNzZXMvaTJjLWk4MDEuYyB8
-IDUgKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLWk4MDEuYyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMt
-aTgwMS5jIGluZGV4IGYyOTU2OTMuLjI5YzkwZjAgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2kyYy9i
-dXNzZXMvaTJjLWk4MDEuYw0KKysrIGIvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1pODAxLmMNCkBA
-IC02NjEsNiArNjYxLDExIEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBpODAxX2lzcihpbnQgaXJxLCB2
-b2lkICpkZXZfaWQpDQogCSAqIENsZWFyIGlycSBzb3VyY2VzIGFuZCByZXBvcnQgdHJhbnNhY3Rp
-b24gcmVzdWx0Lg0KIAkgKiAtPnN0YXR1cyBtdXN0IGJlIGNsZWFyZWQgYmVmb3JlIHRoZSBuZXh0
-IHRyYW5zYWN0aW9uIGlzIHN0YXJ0ZWQuDQogCSAqLw0KKwkNCisJaWYgKHN0YXR1cyAmIFNNQkhT
-VFNUU19TTUJBTEVSVF9TVFMpIHsNCisJCW91dGJfcChzdGF0dXMgJiBTTUJIU1RTVFNfU01CQUxF
-UlRfU1RTLCBTTUJIU1RTVFMocHJpdikpOw0KKwl9DQorDQogCXN0YXR1cyAmPSBTTUJIU1RTVFNf
-SU5UUiB8IFNUQVRVU19FUlJPUl9GTEFHUzsNCiAJaWYgKHN0YXR1cykgew0KIAkJb3V0Yl9wKHN0
-YXR1cywgU01CSFNUU1RTKHByaXYpKTsNCi0tDQoyLjYuMg0KDQpCZXN0IFJlZ2FyZHMhDQpMaW5n
-eWFuIHh1DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBYdSwgTGluZ3lhbiAo
-TlNCIC0gQ04vSGFuZ3pob3UpIA0KU2VudDogMjAxOcTqOdTCM8jVIDEwOjE2DQpUbzogJ0plYW4g
-RGVsdmFyZScgPGpkZWx2YXJlQHN1c2UuZGU+DQpDYzogQWRhbXNraSwgS3J6eXN6dG9mIChOb2tp
-YSAtIFBML1dyb2NsYXcpIDxrcnp5c3p0b2YuYWRhbXNraUBub2tpYS5jb20+OyBXaWViZSwgV2xh
-ZGlzbGF2IChOb2tpYSAtIERFL1VsbSkgPHdsYWRpc2xhdi53aWViZUBub2tpYS5jb20+OyBsaW51
-eC1pMmNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJq
-ZWN0OiBSRTogW1BBVENIXSBpODAxX3NtYnVzOiBjbGVhciBTTUJBTEVSVCBzdGF0dXMgYml0IGFu
-ZCBkaXNhYmxlIFNNQkFMRVJUIGludGVycnVwdA0KDQpIaSBKZWFuLA0KVGhhbmtzIGEgbG90IGZv
-ciB5b3VyIGNvbW1lbnRzLiBBbmQsIHllcywgaXQgaXMgZGFuZ2Vyb3VzIHRoYXQgY2xlYXIgYWxs
-IGludGVycnVwdCBiaXQgaGVyZSBiYXNlZCBteSBsb2NhbCB0ZXN0LiBBbmQgYWJvdXQgdGhlIGlu
-dGVycnVwdCBmbG9vZCwgSSB3aWxsIHNob3cgeW91IGluIGF0dGFjaGVkIGZpbGUuIEFuZCBJIGFn
-cmVlIHdpdGggeW91IHRoYXQgYWRkIFNNQkFMRVJUIGludGVycnVwdCBoYW5kbGVyIGlmIHBvc3Np
-YmxlLCBidXQgSSBoYXZlIG5vIGlkZWEgYWJvdXQgd2hhdCBhY3Rpb24gaXMgbmVlZCBpbiB0aGlz
-IGhhbmRsZXIgYmVjYXVzZSB0aGF0IGl0IHNlYW1zIHRoYXQgaTgwMSBjYW4gbm90IGNsZWFyIHNh
-bHZlIGNoaXAncyBzdGF0dXMgYml0IGRpcmVjdGx5Lg0KDQoNCkJlc3QgUmVnYXJkcyENCkxpbmd5
-YW4geHUNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEplYW4gRGVsdmFyZSA8
-amRlbHZhcmVAc3VzZS5kZT4NClNlbnQ6IDIwMTnE6jjUwjI4yNUgMjE6NTgNClRvOiBYdSwgTGlu
-Z3lhbiAoTlNCIC0gQ04vSGFuZ3pob3UpIDxsaW5neWFuLnh1QG5va2lhLXNiZWxsLmNvbT4NCkNj
-OiBBZGFtc2tpLCBLcnp5c3p0b2YgKE5va2lhIC0gUEwvV3JvY2xhdykgPGtyenlzenRvZi5hZGFt
-c2tpQG5va2lhLmNvbT47IFdpZWJlLCBXbGFkaXNsYXYgKE5va2lhIC0gREUvVWxtKSA8d2xhZGlz
-bGF2LndpZWJlQG5va2lhLmNvbT47IGxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmcNClN1YmplY3Q6IFJlOiBbUEFUQ0hdIGk4MDFfc21idXM6IGNs
-ZWFyIFNNQkFMRVJUIHN0YXR1cyBiaXQgYW5kIGRpc2FibGUgU01CQUxFUlQgaW50ZXJydXB0DQoN
-CkhpIExpbmd5YW4sDQoNCk9uIE1vbiwgMTIgQXVnIDIwMTkgMTA6NDA6MzQgKzA4MDAsIGxpbmd5
-eHUgd3JvdGU6DQo+IEZyb206IExpbmd5YW4gWHUgPGxpbmd5YW4ueHVAbm9raWEtc2JlbGwuY29t
-Pg0KPiANCj4gSW4gY3VycmVudCBpODAxIGRyaXZlciwgU01CQUxFUlQgaW50ZXJydXB0IGlzIGFs
-bG93ZWQgKFNsYXZlIENvbW1hbmQgDQo+IFJlZ2lzdGVyIGJpdDIgaXMgMCkuDQo+IEJ1dCB0aGVz
-ZSBpcyBubyBoYW5kbGVyIGZvciBTTUJBTEVSVCBpbnRlcnJ1cHQgaW4gaTgwMV9pc3IsIGlmIHRo
-ZXJlIA0KPiBpcyBTTUJBTEVSVCBpbnRlcnJ1cHQgYXNzZXJ0ZWQgYW5kIGRlYXNzZXJ0ZWQsDQo+
-IGk4MDEgd2lsbCBoYXZlIGFuIGlycSBmbG9vZCBmb3IgdGhlIHJlbGF0ZWQgc3RhdHVzIGJpdCBp
-cyBzZXR0ZWQuDQo+IA0KPiBTbyBTTUJBTEVSVCBpbnRlcnJ1cHQgaGFuZGxlciBpcyBuZWVkZWQs
-IGFuZCBhbHNvLCBTTUJBTEVSVCBpbnRlcnJ1cHQgDQo+IHdpbGwgYmUgZ2VuZXJhdGVkIGZyb20g
-dGltZSB0byB0aW1lIGlmIHNsYXZlIGNoaXAgaGF2ZSBzb21lIGZhdWx0Lg0KPiBTbyBkaXNhYmxl
-IFNNQkFMRVJUIGludGVycnVwdCBpcyBhbHNvIG5lZWRlZC4NCj4gDQo+IEFib3V0IHRoZSBzb2x1
-dGlvbiwNCj4gcGxlYXNlIHNlZSBodHRwOi8vd3d3LmZhcm5lbGwuY29tL2RhdGFzaGVldHMvMTU4
-MTk2Ny5wZGYNCj4gUGFnZTYzMiBQNjQwIGZvciBtb3JlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTog
-TGluZ3lhbiBYdSA8bGluZ3lhbi54dUBub2tpYS1zYmVsbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVy
-cy9pMmMvYnVzc2VzL2kyYy1pODAxLmMgfCAgICA3ICsrKysrKy0NCj4gIDEgZmlsZXMgY2hhbmdl
-ZCwgNiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvaTJjL2J1c3Nlcy9pMmMtaTgwMS5jIA0KPiBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMt
-aTgwMS5jIGluZGV4IGYyOTU2OTMuLjAzM2JhZmUgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaTJj
-L2J1c3Nlcy9pMmMtaTgwMS5jDQo+ICsrKyBiL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtaTgwMS5j
-DQo+IEBAIC02NjEsOSArNjYxLDExIEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBpODAxX2lzcihpbnQg
-aXJxLCB2b2lkICpkZXZfaWQpDQo+ICAJICogQ2xlYXIgaXJxIHNvdXJjZXMgYW5kIHJlcG9ydCB0
-cmFuc2FjdGlvbiByZXN1bHQuDQo+ICAJICogLT5zdGF0dXMgbXVzdCBiZSBjbGVhcmVkIGJlZm9y
-ZSB0aGUgbmV4dCB0cmFuc2FjdGlvbiBpcyBzdGFydGVkLg0KPiAgCSAqLw0KPiArDQo+ICsJb3V0
-Yl9wKHN0YXR1cywgU01CSFNUU1RTKHByaXYpKTsNCj4gKw0KPiAgCXN0YXR1cyAmPSBTTUJIU1RT
-VFNfSU5UUiB8IFNUQVRVU19FUlJPUl9GTEFHUzsNCj4gIAlpZiAoc3RhdHVzKSB7DQo+IC0JCW91
-dGJfcChzdGF0dXMsIFNNQkhTVFNUUyhwcml2KSk7DQo+ICAJCXByaXYtPnN0YXR1cyA9IHN0YXR1
-czsNCj4gIAkJd2FrZV91cCgmcHJpdi0+d2FpdHEpOw0KPiAgCX0NCg0KTG9va3Mgc2NhcnkuIFdy
-aXRpbmcgdGhlIHdob2xlIHZhbHVlIG9mIFNNQkhTVFNUUyBiYWNrIHRvIGl0c2VsZiB3aXRob3V0
-IHNlbGVjdGluZyB3aGljaCBiaXRzIHlvdSB3cml0ZSBpcyBkYW5nZXJvdXMuIFNwZWNpZmljYWxs
-eSwgd3JpdGluZyBiYWNrIFNNQkhTVFNUU19CWVRFX0RPTkUsIFNNQkhTVFNUU19JTlVTRV9TVFMg
-YW5kIFNNQkhTVFNUU19IT1NUX0JVU1kgY291bGQgaGF2ZSB1bmV4cGVjdGVkIGNvbnNlcXVlbmNl
-cy4gSSB3b3VsZCBmZWVsIG11Y2ggYmV0dGVyIGlmIHlvdSB3b3VsZCBqdXN0IGV4cGxpY2l0bHkg
-YWRkIFNNQkhTVFNUU19TTUJBTEVSVF9TVFMgdG8gdGhlIGxpc3QuDQoNCj4gQEAgLTE4MTAsNiAr
-MTgxMiw5IEBAIHN0YXRpYyBpbnQgaTgwMV9wcm9iZShzdHJ1Y3QgcGNpX2RldiAqZGV2LCBjb25z
-dCBzdHJ1Y3QgcGNpX2RldmljZV9pZCAqaWQpDQo+ICAJLyogRGVmYXVsdCB0aW1lb3V0IGluIGlu
-dGVycnVwdCBtb2RlOiAyMDAgbXMgKi8NCj4gIAlwcml2LT5hZGFwdGVyLnRpbWVvdXQgPSBIWiAv
-IDU7DQo+ICANCj4gKwkvKiBEaXNhYmxlIFNNQkFMRVJUIGludGVycnVwdCAqLw0KPiArCW91dGJf
-cChpbmJfcChTTUJTTFZDTUQocHJpdikpIHwgQklUKDIpLCBTTUJTTFZDTUQocHJpdikpOw0KDQpQ
-bGVhc2UgZ2l2ZSBTTUJTTFZDTUQncyBCSVQoMikgYSBuYW1lIGFuZCBkZWZpbmUgaXQgYWZ0ZXIg
-U01CU0xWQ01EX0hTVF9OVEZZX0lOVFJFTi4NCg0KQWxzbyBpdCBpcyBtYW5kYXRvcnkgdG8gcmVz
-dG9yZSB0aGUgdmFsdWUgb2YgU01CU0xWQ01EIGJlZm9yZSByZXR1cm5pbmcgdGhlIGNvbnRyb2wg
-YmFjayB0byB0aGUgQklPUy4gQ3VycmVudGx5IHRoaXMgaXMgb25seSBiZWluZyBkb25lIHdoZW4g
-dGhlIEZFQVRVUkVfSE9TVF9OT1RJRlkgYml0IGlzIHNldCBiZWNhdXNlIHRoYXQncyB0aGUgb25s
-eSBjYXNlIHdoZXJlIHdlIGNoYW5nZSB0aGUgdmFsdWUgb2YgdGhhdCByZWdpc3RlciwgYnV0IGlm
-IHdlIGNoYW5nZSBpdCB1bmNvbmRpdGlvbmFsbHkgdGhlbiBpdCBtdXN0IGJlIHNhdmVkIGFuZCBy
-ZXN0b3JlZCB1bmNvbmRpdGlvbmFsbHkgdG9vLg0KDQo+ICsNCj4gIAlpZiAoZGV2LT5pcnEgPT0g
-SVJRX05PVENPTk5FQ1RFRCkNCj4gIAkJcHJpdi0+ZmVhdHVyZXMgJj0gfkZFQVRVUkVfSVJROw0K
-PiAgDQoNClRoYXQgYmVpbmcgc2FpZCwgaWYgeW91IHNlZSB0aGlzIGludGVycnVwdCBmbG9vZCwg
-aXQgbWVhbnMgdGhhdCBhdCBsZWFzdCBvbmUgZGV2aWNlIG9uIHlvdXIgU01CdXMgd291bGQgYmVu
-ZWZpdCBmcm9tIFNNQnVzIEFsZXJ0IGJlaW5nIHN1cHBvcnRlZC4gVGhlIGluZnJhc3RydWN0dXJl
-IGlzIGFscmVhZHkgdGhlcmUgYXMgd2UgYWRkZWQgc3VwcG9ydCBpbiBhIGZldyBJMkMgYnVzIGRy
-aXZlcnMgYWxyZWFkeS4gU28gbWF5YmUgaW5zdGVhZCBvZiBzaWxlbmNpbmcgdGhlIGludGVycnVw
-dHMsIHdlIGNvdWxkIGFkZCBwcm9wZXIgU01CdXMgQWxlcnQgc3VwcG9ydCB0byB0aGUgaTJjLWk4
-MDEgZHJpdmVyPw0KDQpEaWQgeW91IGZpZ3VyZSBvdXQgd2hpY2ggZGV2aWNlIGlzIHJhaXNpbmcg
-dGhlIFNNQnVzIEFsZXJ0IGFuZCB3aHk/DQoNCi0tDQpKZWFuIERlbHZhcmUNClNVU0UgTDMgU3Vw
-cG9ydA0K
+On Wed, Sep 04, 2019 at 04:45:05PM -0500, Steve Wahl wrote:
+> The last change to this Makefile caused relocation errors when loading
+> a kdump kernel.
+
+How do those relocation errors look like?
+
+What exactly caused those errors, the flags removal from
+kexec-purgatory.o?
+
+Because this is the difference I can see from
+
+b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
+
+Or is it something else?
+
+Can we have the failure properly explained in the commit message pls?
+
+> This change restores the appropriate flags, without
+
+You don't have to say "This change" in the commit message - it is
+obvious which change you're talking about. Instead say: "Restore the
+appropriate... "
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
