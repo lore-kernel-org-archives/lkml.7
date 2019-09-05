@@ -2,166 +2,132 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D83EC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0126C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43A920870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8276C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:03:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="tIYrAWAR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r9T1e6uW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389422AbfIEQCN (ORCPT
+        id S2389557AbfIEQDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:02:13 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:51554 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730937AbfIEQCM (ORCPT
+        Thu, 5 Sep 2019 12:03:16 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38507 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389438AbfIEQDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:02:12 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85G1k8B024599;
-        Thu, 5 Sep 2019 18:02:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=9aNLD8I30iSCXYQuoK3fnEQebuHYYFccizzyDOOMuIA=;
- b=tIYrAWARMx++UdA4uU7k6oR72UH7TwVXEoFVmS4UiBNxJEO+PInhoDnJaWSka5FNyje+
- lYEgpKfMCcMNpa4WK5KbhQyHtAm2nroBwpHXNci89kpwnEoKo5VngQT7XklD+rggnmU4
- O/BWljUvIok0S0s5kjjhNoAltc0ejt3Z/vZ2+ihIrZFCHcWG4CMgBxHDSIX5r7RKzNsz
- 2UlqId7PszmPkwwqgCB5tVBxZJxji+Y2bvn1RLiO8C8gySQBh3LfO2I/1MQS/wWP32xq
- 6zyhtYPJcGs5Gak5CN9a5DlBAEne5Vgur7nEgERl2kyVbOgI7QbMMcUYPeKdl2UMDuXh /g== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2uqfsj90jk-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 05 Sep 2019 18:02:05 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D40A64E;
-        Thu,  5 Sep 2019 16:02:01 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 382102FF5EA;
-        Thu,  5 Sep 2019 18:02:01 +0200 (CEST)
-Received: from [10.48.0.131] (10.75.127.48) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
- 2019 18:02:00 +0200
-Subject: Re: [PATCH 1/3] rpmsg: core: add API to get message length
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-CC:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1567693630-27544-1-git-send-email-arnaud.pouliquen@st.com>
- <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
- <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com>
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Message-ID: <8e87ccff-1bdb-255c-0be4-db34869f0d13@st.com>
-Date:   Thu, 5 Sep 2019 18:02:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 12:03:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o184so3720970wme.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xF5g9IO6jKnafhVzgDApXP2oM7DXnYkebnFH9y77eNE=;
+        b=r9T1e6uWz1LE6nNNk8y0oqPRvd8zqa6gn7QDLNHiVCUH7vRly5jrqlmsPYtj9d1RKh
+         v+3Esb1sjsGDRbND9GSNtycU3df7f7+1pEUYlkfnYh0Jripc/KwYnbfhlIbm982nC3Ev
+         2R2yYm0BVRvJXOf4wvIf14T24AJ2P3aOei3lsX+3+tlRBZmQcprOacmv1tzWkgf6TGI3
+         q6O9UGIv/4XF2K0O7xQ/SPUUjkipL3j/KcdRxrl9iSxEV8W5Do6YyDRK04T4DkGCS74o
+         LimaWvMf0JtIOwj+brZ5XGVf7/gtJiq29j+6LA8fFMx8/NtiwAzun7s4pSONcQ1DkLWl
+         pJZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xF5g9IO6jKnafhVzgDApXP2oM7DXnYkebnFH9y77eNE=;
+        b=D/4icUv9TkbLKmuTrZeLn5AvbK/IFqgqsm7u30eLxsFeMK1bZA71GRLcgleRPAE+Bi
+         6PAdaLYaYZradwu40dq54GlF8rrp6iknJ3wDIfy9+fKcKNx1h5mDuiLc2B+OgzyCpOTX
+         rjdx4NNKPvajFrXQ15XEU9Sm3sSoyLe5gTSf+6ol+bSE8aNo54R3c0Zz2ZbgeZshuDnY
+         eXjM+3DOclITBT1TSP0usPOpqLmu4JUyLU0o16HXjYai2lxzpQLR7OiM1m1uzTavhkYG
+         FpfosrW2BOSSlL2XTkfOOZdCQHbmdgcxNWH54bIxh7T+WYI4KcdUmwmOYqD1LjzBuHK8
+         Rf5A==
+X-Gm-Message-State: APjAAAXCtQsqQHZU62LYz/KzGmJ2eqVYom9CiBvtkxDNAQhxvpxKSfec
+        VJjnJlFoOubqJq3Xe5VLSAcUPLcyp7PSM8qZdnvs8Q==
+X-Google-Smtp-Source: APXvYqxn697f0MLbHLVLiNrv31ZON72Qw9YwLPyxM0jd0I67TVVrGvqak6f1I7B6szc8twvaNTAUZ5K2Mhj8xS132j0=
+X-Received: by 2002:a1c:cfc9:: with SMTP id f192mr3378872wmg.85.1567699392897;
+ Thu, 05 Sep 2019 09:03:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-05_05:2019-09-04,2019-09-05 signatures=0
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz> <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz> <20190904162808.GO240514@google.com> <20190905144310.GA14491@dhcp22.suse.cz>
+In-Reply-To: <20190905144310.GA14491@dhcp22.suse.cz>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Thu, 5 Sep 2019 09:03:01 -0700
+Message-ID: <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        Mayank Gupta <mayankgupta@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeffrey,
+On Thu, Sep 5, 2019 at 7:43 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> [Add Steven]
+>
+> On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> [...]
+> > > > but also for reducing
+> > > > tracing noise. Flooding the traces makes it less useful for long traces and
+> > > > post-processing of traces. IOW, the overhead reduction is a bonus.
+> > >
+> > > This is not really anything special for this tracepoint though.
+> > > Basically any tracepoint in a hot path is in the same situation and I do
+> > > not see a point why each of them should really invent its own way to
+> > > throttle. Maybe there is some way to do that in the tracing subsystem
+> > > directly.
+> >
+> > I am not sure if there is a way to do this easily. Add to that, the fact that
+> > you still have to call into trace events. Why call into it at all, if you can
+> > filter in advance and have a sane filtering default?
+> >
+> > The bigger improvement with the threshold is the number of trace records are
+> > almost halved by using a threshold. The number of records went from 4.6K to
+> > 2.6K.
+>
+> Steven, would it be feasible to add a generic tracepoint throttling?
 
+I might misunderstand this but is the issue here actually throttling
+of the sheer number of trace records or tracing large enough changes
+to RSS that user might care about? Small changes happen all the time
+but we are likely not interested in those. Surely we could postprocess
+the traces to extract changes large enough to be interesting but why
+capture uninteresting information in the first place? IOW the
+throttling here should be based not on the time between traces but on
+the amount of change of the traced signal. Maybe a generic facility
+like that would be a good idea?
 
-On 9/5/19 4:42 PM, Jeffrey Hugo wrote:
-> On Thu, Sep 5, 2019 at 8:35 AM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
->>
->> Return the rpmsg buffer size for sending message, so rpmsg users
->> can split a long message in several sub rpmsg buffers.
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->>   drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
->>   drivers/rpmsg/rpmsg_internal.h   |  2 ++
->>   drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
->>   include/linux/rpmsg.h            | 10 ++++++++++
->>   4 files changed, 43 insertions(+)
->>
->> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
->> index e330ec4dfc33..a6ef54c4779a 100644
->> --- a/drivers/rpmsg/rpmsg_core.c
->> +++ b/drivers/rpmsg/rpmsg_core.c
->> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->>   }
->>   EXPORT_SYMBOL(rpmsg_trysend_offchannel);
->>
->> +/**
->> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
->> + * @ept: the rpmsg endpoint
->> + *
->> + * This function returns maximum buffer size available for a single message.
->> + *
->> + * Return: the maximum transmission size on success and an appropriate error
->> + * value on failure.
->> + */
-> 
-> What is the intent of this?
-> 
-> The term "mtu" is "maximum transfer unit" - ie the largest payload of
-> data that could possibly be sent, however at any one point in time,
-> that might not be able to be accommodated.
-I was not aware that the MTU has to be static in time. And I'm not 
-enough expert to be able challenge this.
-The use of the MTU initially came from a Bjorn request and IMHO makes 
-sense in RPMSG protocol as other protocols. The aim here is not to 
-guaranty the available size but to provide to rpmsg client a packet size 
-information that is not available today at rpmsg client level.
-For instance for the virtio rpmsg bus we provide the size of a vring 
-buffer, not the total size available in the vring.
-
-> 
-> I don't think this is implemented correctly.  In GLINK and SMD, you've
-> not implemented MTU, you've implemented "how much can I send at this
-> point in time".  To me, this is not mtu.
-If MTU has to be static i agree with you.
-> 
-> In the case of SMD, you could get the fifo size and return that as the
-> mtu, but since you seem to be wanting to use this from the TTY layer
-> to determine how much can be sent at a particular point in time, I
-> don't think you actually want mtu.
-Please forget the TTY for the moment, The mtu is used to help the tty 
-framework to split the buffer to write. The size is then adjusted on write.
-For SMD i can provide the fifo_size,or a division of this size to 
-"limit" congestion.
-would this make sense for you?
-> 
-> For GLINK, I don't actually think you can get a mtu based on the
-> design, but I'm trying to remember from 5-6 years ago when we designed
-> it.  It would be possible that a larger intent would be made available
-> later.
-Is it possible to have the largest intent? or it's not deterministic.
-> 
-> I think you need to first determine if you are actually looking for
-> mtu, or "how much data can I send right now", because right now, it
-> isn't clear.
-> 
-In my view it is the MTU. "how much data can I send right now" is an 
-information that is very volatile as buffers can be shared between 
-several clients, therefore unusable.
-
-An alternative would be to make this ops optional, but that would mean
-that some generic clients would not be compatible with SMD and/or Glink 
-drivers.
-
-Thanks,
-Arnaud
+> --
+> Michal Hocko
+> SUSE Labs
+>
+> --
+> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+>
