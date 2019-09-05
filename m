@@ -2,148 +2,258 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E73C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17FEC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE4A2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="X+YjGd+d"
+	by mail.kernel.org (Postfix) with ESMTP id 77FDF20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732693AbfIEI30 (ORCPT
+        id S1732079AbfIEIbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:29:26 -0400
-Received: from mout.web.de ([212.227.17.12]:51413 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbfIEI3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:29:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1567671825;
-        bh=npYgpfnoh8nm62nIx4BVDPSEsogHvhCXGvC0CMvch1E=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=X+YjGd+dRZqfKAmb+4vBg2xTbWLg8wjmhsd2/TsV4CCzJS3Jr9Nr+oO4rsv7wPZKO
-         QfxdD/L1hiPsBfz0HdDgxEHN4j4rguz1lwhTb1QGIlhuZWz0Wtzm8wVom7OYcCAhDW
-         u2xQo7FP3HkJGaG0TUwedTPBuw6lkdIjzjYV1IVQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.131.221]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LkPjj-1ihspW14Ml-00cUf6; Thu, 05
- Sep 2019 10:23:45 +0200
-Subject: Re: [v2] drm/amdgpu: Remove two redundant null pointer checks
-To:     zhong jiang <zhongjiang@huawei.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Jack Xiao <Jack.Xiao@amd.com>,
-        Kevin Wang <Kevin1.Wang@amd.com>,
-        Tom St Denis <tom.stdenis@amd.com>,
-        Wang Xiayang <xywang.sjtu@sjtu.edu.cn>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <1567662552-3583-1-git-send-email-zhongjiang@huawei.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <d1aee32e-c9ad-2953-84c0-267037a82288@web.de>
-Date:   Thu, 5 Sep 2019 10:23:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Thu, 5 Sep 2019 04:31:18 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38316 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726162AbfIEIbS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:31:18 -0400
+Received: by mail-qk1-f194.google.com with SMTP id x5so1317186qkh.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:31:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HfKuAxk9/bRoioSR+a2a8fhqX2PF1AL0BOFS3W9OiGc=;
+        b=TYlMCHyNppXd/fmqOeDLNbnmaWov9AS4NpfzVVy+GxmOpswB4PIM+mKVKGz77kmaXM
+         btNKqrVZsVDAtuxlKVXVkI2bMorvsyrlG8vYEABMyHg08sN/Tmfui7w3t2m1vGzTNC6g
+         WUj4r06jM0tUM34wtpl+5OUpxNpTzLw0mU8VC1Rim8M1JvfI06csLKPcAJS7dsIQQTX+
+         u/3X+XVASIKiN5IDjdSLUG+Mhi6cz8KXi6rI0I9i/Rs/EAbE3CNMrkQkrIoxPJxGvx4b
+         mw7weezLQepE4mCE7ycqcFEg9ndABysecXHMGNcJTAGciwyt9Afm0ODt/Tc2DSkSfneq
+         VLLg==
+X-Gm-Message-State: APjAAAXUwV9mIA6fx5v82pDMDVMPbaQTc8MHRsBeKB0es09klELfrYl1
+        viOlJATcIzwJ5hP/vbvaw4E2veBklXBegdvk9Lo=
+X-Google-Smtp-Source: APXvYqwJP0cESRmEZHpkjp58dScikbAuglfHxNNCW2CGpnwyPfyt43xGIybh72k+p4oPPZxz8/N0O2S7OWaot+tNSmQ=
+X-Received: by 2002:a37:4051:: with SMTP id n78mr1599585qka.138.1567672276936;
+ Thu, 05 Sep 2019 01:31:16 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1567662552-3583-1-git-send-email-zhongjiang@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4B+B2FVevoEQTq0XZal697OL/zT8EA2jaMLOWgzRW8A8hai8MEw
- b8zziPXg4Mo1WelfJGb4FWR7E22gJ+B5EFbz0bvE4KruoaKWDnyn5RfHBt4GgtOqMHse6+X
- 88+CN7L/44MI9YugDJRzqRc/WMQDVa3FvBniBBKKnZ5qB/J4BH4XYlA2QjKLCvujkIUAO1r
- sFpRRofF/Eg0d4ciRqVfg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3NXzriC+D3g=:VlBO+7cF7lr1RwaUncYJAy
- C3Ekrz1Q25Pvh5e1qnJJzVGnMrczpOzw/jZi0UoJ2iOyHxD1aIb0wHNjCxvlFx42eam247Th8
- CQN31VBE8FIhfgonZdc74wbNSWzEq8YVGYvQC6Z71CJ4B8mfedP6vDZ6KtcQK5lBKRdGKpG6g
- VyVJQlN/XsliXC4mqEswqQ0Rzt0RHlpSqxdgfTJsW1cRj1p+i0AIAtz7KoXlvGXG9DMX0Z8BJ
- TjuImAwLBaotPHboi/8y/synnA+fZp+Cke0SblsHHCxc0caQEXJ07D2JdoLbdxCdR8wT5cf54
- WG4tDoD9GbAOTj4DmTxFyj4FCR8bcGU20L91t9a7XGRFUOq5JgmdQ59EsKWfzzN9Tx++dcrbf
- D9kuN7ctGEoue+5W2Pi+EzW831W4y2kWNmiqzgXi85Z076O0v8JZenTmIP7x4Wrk0iwfCZtV1
- PBJfLMidevfqx/ruEPiNswIoMacO4peR1YGL7CCD0LfMO8HqclWPU4rTy2j/ztj7Xim/OyW6p
- 17BMZR+95Zjn7AhfZPDHq03cErR6iTGy8uEtbztKbDDU86P3mH1o7RvXc5iSQS7rFNeobVUqa
- EyciWXtgU3RjABIczxBCnC/tIwUlLC+unobmr/b5igM+MkGtkI9O3501dMhYrHcTspmSUvn+k
- MWsGeHDeJam1ye4Tg1I9m8D5rI942CPx+saxcuGiwzmzR1Z5hQWKTB85cCa9GvQSnjJ7Y4Zm5
- PlgjXXQZ3RQt4JA+r/kz7qWpNdnclViIz9rEaQ0M65SMxsfR/4dRUEoKMYUvPlGZOagNhcfe8
- l5Fz3EluWRy9OeZHfXZAz9czTp5bpvdZUVOSeJYD5z0Ndx2nTnpROG4fUleAqpd59o7iyHZ7L
- YHb9KXGzHD8ILxlIt8oZ5fr5tnZXGhjUvD3yiMYZ3figMQ78k+VTYa3VUqZyUerzMVL0aavCr
- vTrFB79VgJtJPsRXUQPyu53/SbKzReBLrzrT9CQcvySS4bXAP64KZEwq3x627puLspMcU3kwJ
- Uwmydh2eMGCOi+7CFj55xSWiZikkTSou8VfuuP4WxbuFjPlIKsMkQQlngO8/MyszVAbkkY8t+
- q4ZM3k3AHIHFZrOsXRuCETwyabNtBagyUIWOO+/Oeu4XFy5UOnJ6llUNcnGpZtc8AFgOsnHnk
- Ld+xWlTVheqI112PS4MXsBYvk8FePrR33yYbYXjK84GJikHAY4mHfsP2+6ND3qWgtoGB1VSF4
- eC2jbMtjLHpct/KEs
+References: <20190905054647.1235-1-james.tai@realtek.com>
+In-Reply-To: <20190905054647.1235-1-james.tai@realtek.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 5 Sep 2019 10:31:00 +0200
+Message-ID: <CAK8P3a13=VBZnj6E=s7mZk0o7Q3XkMHgcsL12s-3psuOWsfOtQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Add support for Realtek SOC
+To:     jamestai.sky@gmail.com
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Doug Anderson <armlinux@m.disordat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Thierry Reding <treding@nvidia.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Rob Herring <robh@kernel.org>, CY_Huang <cy.huang@realtek.com>,
+        Phinex Hung <phinex@realtek.com>,
+        "james.tai" <james.tai@realtek.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The functions "debugfs_remove" and "kfree" tolerate the passing
-> of null pointers. Hence it is unnecessary to check such arguments
-> around the calls. Thus remove the extra condition check at two places.
+On Thu, Sep 5, 2019 at 7:48 AM <jamestai.sky@gmail.com> wrote:
+>
+> From: "james.tai" <james.tai@realtek.com>
+>
+> This patch adds the basic machine file for
+> the Realtek RTD16XX platform.
+>
+> Signed-off-by: james.tai <james.tai@realtek.com>
 
-Will a tag like =E2=80=9CGenerated-by: scripts/coccinelle/free/ifnullfree.=
-cocci=E2=80=9D be relevant here?
+Hi James,
 
-How do you think about to compare this change approach with another patch =
-variant?
+Thanks a lot for your submission! I'm glad to see interest in upstream
+support for this SoC family. I have a few small comments on
+details, mostly where I would either like to see an explanation
+in the patch description, or things that looks like they can be
+left out from the patch.
 
-drm/amdgpu: Delete an unnecessary check before two function calls
-https://lkml.org/lkml/2019/9/4/401
-https://lore.kernel.org/patchwork/patch/1123689/
-https://lore.kernel.org/r/a3739125-5fa8-cadb-d2b8-8a9f12e9bacd@web.de/
+> index 33b00579beff..c7c9a3662eb7 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -836,6 +836,8 @@ source "arch/arm/mach-zx/Kconfig"
+>
+>  source "arch/arm/mach-zynq/Kconfig"
+>
+> +source "arch/arm/mach-realtek/Kconfig"
+> +
+> diff --git a/arch/arm/mach-realtek/Kconfig b/arch/arm/mach-realtek/Kconfig
+> @@ -225,6 +226,7 @@ machine-$(CONFIG_ARCH_VT8500)               += vt8500
+>  machine-$(CONFIG_ARCH_W90X900)         += w90x900
+>  machine-$(CONFIG_ARCH_ZX)              += zx
+>  machine-$(CONFIG_ARCH_ZYNQ)            += zynq
+> +machine-$(CONFIG_ARCH_REALTEK)         += realtek
+>  machine-$(CONFIG_PLAT_SPEAR)           += spear
+>
+>  # Platform directory name.  This list is sorted alphanumerically
 
-Regards,
-Markus
+Please keep these lists in alphabetical order.
+
+>  # ARMv7-M architecture
+>  config ARCH_EFM32
+>         bool "Energy Micro efm32"
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index c3624ca6c0bc..1f0926449d47 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -148,6 +148,7 @@ endif
+>  textofs-$(CONFIG_ARCH_MSM8X60) := 0x00208000
+>  textofs-$(CONFIG_ARCH_MSM8960) := 0x00208000
+>  textofs-$(CONFIG_ARCH_MESON) := 0x00208000
+> +textofs-$(CONFIG_ARCH_REALTEK) := 0x00208000
+>  textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
+
+Can you explain why this is needed for your platform?
+
+>  # Machine directory name.  This list is sorted alphanumerically
+> new file mode 100644
+> index 000000000000..a8269964dbdb
+> --- /dev/null
+> +++ b/arch/arm/mach-realtek/Kconfig
+> @@ -0,0 +1,32 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +menuconfig ARCH_REALTEK
+> +       bool "Realtek SoCs"
+
+Please add "depends on ARCH_MULTI_V7" to avoid
+compile time issues when selecting it on an earlier
+architecture.
+
+> +       select ARM_GLOBAL_TIMER
+> +       select CLKDEV_LOOKUP
+> +       select HAVE_SMP
+> +       select HAVE_MACH_CLKDEV
+> +       select GENERIC_CLOCKEVENTS
+> +       select HAVE_SCHED_CLOCK
+> +       select ARCH_HAS_CPUFREQ
+> +       select CLKSRC_OF
+> +       select ARCH_REQUIRE_GPIOLIB
+> +       select GENERIC_IRQ_CHIP
+> +       select IRQ_DOMAIN
+> +       select PINCTRL
+> +       select COMMON_CLK
+> +       select ARCH_HAS_BARRIERS
+> +       select SPARSE_IRQ
+> +       select PM_OPP
+> +       select ARM_HAS_SG_CHAIN
+> +       select ARM_PATCH_PHYS_VIRT
+> +       select AUTO_ZRELADDR
+> +       select MIGHT_HAVE_PCI
+> +       select MULTI_IRQ_HANDLER
+> +       select PCI_DOMAINS if PCI
+> +       select USE_OF
+
+Almost all of the symbols above are implied by
+ARCH_MULTI_V7 and should not be selected
+separately.
+
+> +config ARCH_RTD16XX
+> +       bool "Enable support for RTD1619"
+> +       depends on ARCH_REALTEK
+> +       select ARM_GIC_V3
+> +       select ARM_PSCI
+
+As I understand, this chip uses a Cortex-A55. What is the reason
+for adding support only to the 32-bit ARM architecture rather than
+64-bit?
+
+Most 64-bit SoCs are only supported with arch/arm64, but generally
+speaking that is not a requirement. My rule of thumb is that on
+systems with 1GB of RAM or more, one would want to run a 64-bit
+kernel, while systems with less than that are better off with a 32-bit
+one, but that is clearly not the only reason for picking one over the
+other.
+
+> +
+> +static int rtk_boot_secondary(unsigned int cpu, struct task_struct *idle)
+> +{
+> +       unsigned long entry_pa = __pa_symbol(secondary_startup);
+> +
+> +       writel_relaxed(entry_pa | (cpu << CPUID), cpu_release_virt);
+> +
+> +       arch_send_wakeup_ipi_mask(cpumask_of(cpu));
+> +
+> +       return 0;
+> +}
+
+It's very unusual to see custom smp operations on an ARMv8
+system, as we normally use PSCI here. Can you explain what
+is going on here? Are you able to use a boot wrapper that implements
+these in psci instead?
+> +
+> +#include "platsmp.h"
+> +
+> +#define RBUS_BASE_PHYS (0x98000000)
+> +#define RBUS_BASE_VIRT (0xfe000000)
+> +#define RBUS_BASE_SIZE (0x00100000)
+> +
+> +static struct map_desc rtk_io_desc[] __initdata = {
+> +       {
+> +               .virtual = (unsigned long) IOMEM(RBUS_BASE_VIRT),
+> +               .pfn = __phys_to_pfn(RBUS_BASE_PHYS),
+> +               .length = RBUS_BASE_SIZE,
+> +               .type = MT_DEVICE,
+> +       },
+> +};
+
+This needs a comment: Why do you require a static mapping for
+"RBUS_BASE_PHYS"? Normally device drivers should just use
+ioremap() for mapping whichever registers they want to access.
+
+> +static void __init rtk_dt_init(void)
+> +{
+> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +}
+
+This should be taken care of by the
+of_platform_default_populate_init() and can be dropped.
+
+> +static void __init rtk_timer_init(void)
+> +{
+> +#ifdef CONFIG_COMMON_CLK
+> +       of_clk_init(NULL);
+> +#endif
+
+COMMON_CLK is implied by ARCH_MULTI_V7, so the
+#ifdef can be dropped.
+
+> +       timer_probe();
+> +       tick_setup_hrtimer_broadcast();
+> +}
+
+What do you need tick_setup_hrtimer_broadcast() for? I don't
+see any other platform calling this.
+
+> +bool __init rtk_smp_init_ops(void)
+> +{
+> +       smp_set_ops(smp_ops(rtk_smp_ops));
+> +
+> +       return true;
+> +}
+
+I think this can also be dropped, as you set the smp_ops in the
+machine descriptor.
+
+
+       Arnd
