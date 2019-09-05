@@ -2,82 +2,91 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7BFC41514
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCE7C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED1D21883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567682366;
-	bh=trWSMNdPAGCrEWjjBN4gvX5GSpUep8UtgXKdzyHMgGI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eMKEp2VukWCsFrSVqzqgdt0Jyb6UouHRKgwv3zlKdBnZCrECoIhGqxrrrXy3A64dY
-	 UhLZdCgjwSzK5WIEBowVbIEGJ2QduYP1xLP2gF26RFHoRsWVPwZOBdX2KBeV+0e380
-	 UhjT/NoFSno1YLceW5Rl5gX4wD13mA0LDdmrgtsU=
+	by mail.kernel.org (Postfix) with ESMTP id D8DC521883
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733182AbfIELTZ (ORCPT
+        id S2388327AbfIELVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:19:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56494 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 07:21:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:42458 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbfIELTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:19:24 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 648B321883;
-        Thu,  5 Sep 2019 11:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567682363;
-        bh=trWSMNdPAGCrEWjjBN4gvX5GSpUep8UtgXKdzyHMgGI=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=OgWjamNnWPljlkWynEYUq06hDNTq6oUnb7qTDfkELOCS8a8E5ovwXwfLwHNjHaflY
-         ePkzdy8A+LqrWYziDMGqUJ7bKYtzU7JHOGYvjtDL58Czo+usqCcSITcLj/uRQQzk/m
-         paBfn8l8NDTZOVM5vRT2eAao5PwOLMiwQGpll8Nk=
-Date:   Thu, 5 Sep 2019 13:19:06 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-In-Reply-To: <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
-Message-ID: <nycvar.YFH.7.76.1909051317550.31470@cbobk.fhfr.pm>
-References: <20190814151244.5xoaxib5iya2qjco@treble> <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz> <20190822223649.ptg6e7qyvosrljqx@treble> <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz> <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz> <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com> <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz> <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz> <20190905025055.36loaatxtkhdo4q5@treble>
- <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S2388200AbfIELVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:21:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BA6E28;
+        Thu,  5 Sep 2019 04:21:00 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E627A3F718;
+        Thu,  5 Sep 2019 04:20:57 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 12:20:55 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
+ in p2972-0000 platform
+Message-ID: <20190905112055.GB16642@e121166-lin.cambridge.arm.com>
+References: <20190905104553.2884-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905104553.2884-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Petr Mladek wrote:
-
-> > I don't have a number, but it's very common to patch a function which 
-> > uses jump labels or alternatives.
+On Thu, Sep 05, 2019 at 04:15:47PM +0530, Vidya Sagar wrote:
+> This patch series enables Tegra194's C5 controller which owns x16 slot in
+> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
+> output and bi-directional signals by default and hence they need to be
+> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
+> through GPIOs and hence they need to be enabled through regulator framework.
+> This patch series adds required infrastructural support to address both the
+> aforementioned requirements.
+> Testing done on p2972-0000 platform
+> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
+> - Enumerated device's functionality verified
+> - Suspend-Resume sequence is verified with device connected to x16 slot
 > 
-> Really? My impression is that both alternatives and jump_labels
-> are used in hot paths. I would expect them mostly in core code
-> that is always loaded.
+> V4:
+> * Rebased (Patch-4/6 particularly) on top of Lorenzo's pci/tegra branch
 > 
-> Alternatives are often used in assembly that we are not able
-> to livepatch anyway.
+> V3:
+> * Addressed some more review comments from Andrew Murray and Thierry Reding
 > 
-> Or are they spread widely via some macros or inlined functions?
+> V2:
+> * Changed the order of patches in the series for easy merging
+> * Addressed review comments from Thierry Reding and Andrew Murray
+> 
+> Vidya Sagar (6):
+>   dt-bindings: PCI: tegra: Add sideband pins configuration entries
+>   dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
+>   PCI: tegra: Add support to configure sideband pins
+>   PCI: tegra: Add support to enable slot regulators
+>   arm64: tegra: Add configuration for PCIe C5 sideband signals
+>   arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
+> 
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
+>  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
+>  .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
+>  drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
+>  5 files changed, 172 insertions(+), 4 deletions(-)
 
-All the indirect jumps are turned into alternatives when retpolines are in 
-place.
+Applied to pci/tegra for v5.4, thanks.
 
--- 
-Jiri Kosina
-SUSE Labs
-
+Lorenzo
