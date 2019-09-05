@@ -2,132 +2,90 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0891BC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4380C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6262173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEA321743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:40:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="DxYU4DWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfIEGiB (ORCPT
+        id S1731660AbfIEGkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:38:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31152 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731109AbfIEGiA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:38:00 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x856bepA113732
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 02:37:59 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2utswfypm0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 02:37:59 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Thu, 5 Sep 2019 07:37:57 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Sep 2019 07:37:52 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x856bpWm51249216
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 06:37:51 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 140C3AE053;
-        Thu,  5 Sep 2019 06:37:51 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22805AE051;
-        Thu,  5 Sep 2019 06:37:48 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.51.47])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Sep 2019 06:37:47 +0000 (GMT)
-Subject: Re: [RFC PATCH 9/9] sched: rotate the cpu search window for better
- spread
-To:     subhra mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, patrick.bellasi@arm.com
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-10-subhra.mazumdar@oracle.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Thu, 5 Sep 2019 12:07:47 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Thu, 5 Sep 2019 02:40:07 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:56420 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725921AbfIEGkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:40:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=jaOS9HgHTlVD8C1Eqdv5Xybi81D/yYlxVzy1ayZf3jw=; b=DxYU4DWnBmVLQJPd6CjzQVxzfB
+        KlQKhyIh3qqefvSm5EB+JSdOh3v96UoohgUE1tWYvUwASVF2B1KIUFN3aHBu9dJ6tXSvvkZ9V7bqx
+        rT7MRHAB4ON2SEGcR8GBOIclAEMn6nvyIv7Iw8tnUbnS2rVqPjgi9ntFe/ZmovyHJfYQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i5lR4-0000FB-HY; Thu, 05 Sep 2019 08:40:02 +0200
+Date:   Thu, 5 Sep 2019 08:40:02 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: Re: [PATCH v2 net-next] net: stmmac: Add support for MDIO interrupts
+Message-ID: <20190905064002.GB415@lunn.ch>
+References: <1567605774-5500-1-git-send-email-weifeng.voon@intel.com>
+ <20190904145804.GA9068@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC81475C23E@PGSMSX103.gar.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190830174944.21741-10-subhra.mazumdar@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090506-0028-0000-0000-00000397F1B2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090506-0029-0000-0000-0000245A458B
-Message-Id: <0931a2e0-0fbf-be64-d6c0-cba7745bb152@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050068
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC81475C23E@PGSMSX103.gar.corp.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/30/19 11:19 PM, subhra mazumdar wrote:
-> Rotate the cpu search window for better spread of threads. This will ensure
-> an idle cpu will quickly be found if one exists.
 > 
-> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
-> ---
->  kernel/sched/fair.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> The change log is near the end of the patch:
+> /**
+> --
+> Changelog v2
+> *mdio interrupt mode or polling mode will depends on mdio interrupt enable bit
+> *Disable the mdio interrupt enable bit in stmmac_release
+> *Remove the condition for initialize wait queues
+> *Applied reverse Christmas tree
+> 1.9.1
+
+At the end, nobody sees it, because everybody else does it at the beginning.
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html?highlight=submitting#the-canonical-patch-format
+
+This talks about the ---. David prefers to see the change log before
+the ---. Other maintainers want it after the ---.
+
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 94dd4a32..7419b47 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6188,7 +6188,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->  	u64 avg_cost, avg_idle;
->  	u64 time, cost;
->  	s64 delta;
-> -	int cpu, floor, nr = INT_MAX;
-> +	int cpu, floor, target_tmp, nr = INT_MAX;
->  
->  	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
->  	if (!this_sd)
-> @@ -6213,9 +6213,15 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->  			nr = floor;
->  	}
->  
-> +	if (per_cpu(next_cpu, target) != -1)
-> +		target_tmp = per_cpu(next_cpu, target);
-> +	else
-> +		target_tmp = target;
-> +
->  	time = local_clock();
->  
-> -	for_each_cpu_wrap(cpu, sched_domain_span(sd), target) {
-> +	for_each_cpu_wrap(cpu, sched_domain_span(sd), target_tmp) {
-> +		per_cpu(next_cpu, target) = cpu;
-
-Is it possible that two simultaneous select_idle_cpu call have the same target value?
-
->  		if (!--nr)
->  			return -1;
->  		if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
+> > 
+> > The formatting of this patch also looks a bit odd. Did you use git
+> > format-patch ; git send-email?
 > 
+> Yes, I do git format-patch, then ./scripts/checkpatch.pl. 
+> Lastly git send-email
 
+What looked odd is the missing --- marker. git format-patch should of
+create that as part of the patch.
+
+       Andrew
