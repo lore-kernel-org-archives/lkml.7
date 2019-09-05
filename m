@@ -2,145 +2,109 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 935B9C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D75C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E9C20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D9F20825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732928AbfIELjh (ORCPT
+        id S2388602AbfIELkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:39:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36178 "EHLO mx1.redhat.com"
+        Thu, 5 Sep 2019 07:40:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:42896 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730753AbfIELjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:39:37 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB3FB1DA2;
-        Thu,  5 Sep 2019 11:39:36 +0000 (UTC)
-Received: from [10.10.125.234] (ovpn-125-234.rdu2.redhat.com [10.10.125.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 01BA0600F8;
-        Thu,  5 Sep 2019 11:39:35 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-To:     Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     jikos@kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20190814151244.5xoaxib5iya2qjco@treble>
- <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
- <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
- <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
- <20190905025055.36loaatxtkhdo4q5@treble>
- <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <de73b9c6-fa57-8893-d7ae-5256bbb603b5@redhat.com>
-Date:   Thu, 5 Sep 2019 07:39:35 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730753AbfIELkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:40:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8DF2628;
+        Thu,  5 Sep 2019 04:40:05 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBCC43F718;
+        Thu,  5 Sep 2019 04:40:03 -0700 (PDT)
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <20190905083127.GA2332@hirez.programming.kicks-ass.net> <87r24v2i14.fsf@arm.com> <20190905104616.GD2332@hirez.programming.kicks-ass.net> <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com> <20190905113002.GK2349@hirez.programming.kicks-ass.net>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+In-reply-to: <20190905113002.GK2349@hirez.programming.kicks-ass.net>
+Date:   Thu, 05 Sep 2019 12:40:01 +0100
+Message-ID: <87ftlb2cq6.fsf@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Thu, 05 Sep 2019 11:39:36 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 7:09 AM, Petr Mladek wrote:
-> On Wed 2019-09-04 21:50:55, Josh Poimboeuf wrote:
->> On Wed, Sep 04, 2019 at 10:49:32AM +0200, Petr Mladek wrote:
->>> I wonder what is necessary for a productive discussion on Plumbers:
->>>
->>>    + Josh would like to see what code can get removed when late
->>>      handling of modules gets removed. I think that it might be
->>>      partially visible from Joe's blue-sky patches.
->>
->> Yes, and I like what I see.  Especially the removal of the .klp.arch
->> nastiness!
-> 
-> Could we get rid of it?
-> 
-> Is there any other way to get access to static variables
-> and functions from the livepatched code?
-> 
 
-Hi Petr,
+On Thu, Sep 05, 2019 at 12:30:02 +0100, Peter Zijlstra wrote...
 
-I think the question is whether .klp (not-arch specific) relocations 
-would be sufficient (without late module patching).  If it would a great 
-simplification if those were all we needed.  I'm not 100% sure about 
-this quite yet, but am hoping that is the case.
+> On Thu, Sep 05, 2019 at 12:13:47PM +0100, Qais Yousef wrote:
+>> On 09/05/19 12:46, Peter Zijlstra wrote:
+>
+>> > This is important because we want to be able to bias towards less
+>> > importance to (tail) latency as well as more importantance to (tail)
+>> > latency.
+>> > 
+>> > Specifically, Oracle wants to sacrifice (some) latency for throughput.
+>> > Facebook OTOH seems to want to sacrifice (some) throughput for latency.
+>> 
+>> Another use case I'm considering is using latency-nice to prefer an idle CPU if
+>> latency-nice is set otherwise go for the most energy efficient CPU.
+>> 
+>> Ie: sacrifice (some) energy for latency.
+>> 
+>> The way I see interpreting latency-nice here as a binary switch. But
+>> maybe we can use the range to select what (some) energy to sacrifice
+>> mean here. Hmmm.
+>
+> It cannot be binary, per definition is must be ternary, that is, <0, ==0
+> and >0 (or middle value if you're of that persuasion).
+>
+> In your case, I'm thinking you mean >0, we want to lower the latency.
+>
+> Anyway; there were a number of things mentioned at OSPM that we could
+> tie into this thing and finding sensible mappings is going to be a bit
+> of trial and error I suppose.
+>
+> But as patrick said; we're very much exporting a BIAS knob, not a set of
+> behaviours.
 
->>>        Anyway, it might rule out some variants so that we could better
->>>        concentrate on the acceptable ones. Or come with yet another
->>>        proposal that would avoid the real blockers.
->>
->> I'd like to hear more specific negatives about Joe's recent patches,
->> which IMO, are the best option we've discussed so far.
-> 
-> I discussed this approach with our project manager. He was not much
-> excited about this solution. His first idea was that it would block
-> attaching USB devices. They are used by admins when taking care of
-> the servers. And there might be other scenarios where a new module
-> might need loading to solve some situation.
-> > Customers understand Livepatching as a way how to secure system
-> without immediate reboot and with minimal (invisible) effect
-> on the workload. They might get pretty surprised when the system > suddenly blocks their "normal" workflow.
+Right, although I think behaviours could still be exported but via a
+different and configurable interface, using thresholds.
 
-FWIW the complete blue-sky idea was that the package delivered to the 
-customer (RPM, deb, whatever) would provide:
+Either at compile time or via procfs maybe we can expose and properly
+document what happen in the scheduler if/when a task has a "latency
+niceness" crossing a given threshold.
 
-  - livepatch .ko, blacklists known vulnerable srcversions
-  - updated .ko's for the blacklisted modules
+For example, by setting something like:
 
-The second part would maintain module loading workflow, albeit with a 
-new set .ko files.
+   /proc/sys/kernel/sched_cfs_latency_idle = 1000
 
-> As Miroslav said. No solution is perfect. We need to find the most
-> acceptable compromise. It seems that you are more concerned about
-> saving code, reducing complexity and risk. I am more concerned
-> about user satisfaction.
-> 
-> It is almost impossible to predict effects on user satisfaction
-> because they have different workflow, use case, expectation,
-> and tolerance.
-> 
-> We could better estimate the technical side of each solution:
-> 
->     + implementation cost
->     + maintenance cost
->     + risks
->     + possible improvements and hardening
->     + user visible effects
->     + complication and limits with creating livepatches
-> 
-> 
->  From my POV, the most problematic is the arch-specific code.
-> It is hard to maintain and we do not have it fully under
-> control.
-> 
-> And I do not believe that we could remove all arch specific code
-> when we do not allow delayed livepatching of modules.
-> 
+we state that the task is going to be scheduled according to the
+SCHED_IDLE policy.
 
-No doubt there will probably always be some arch-specific code, and even 
-my blue-sky branch didn't move all that much.  But I think the idea 
-could be a bigger simplification in terms of the mental model, should 
-the solution be acceptable by criteria you mention above.
+  ( ( (tomatoes target here) ) )
 
--- Joe
+Not sure also if we wanna commit to user-space APIs how we internally
+map/translate a "latency niceness" value into a scheduler behaviour
+bias. Maybe better not at least at the very beginning.
+
+Best,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
