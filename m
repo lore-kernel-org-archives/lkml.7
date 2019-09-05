@@ -2,65 +2,54 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16000C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6C4C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E12E22053B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567703455;
-	bh=cE3KZFvDaAholPh5xAVpoiqc6UG1iMmZeCae/IiaoPo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KcKKVsDJ5gd7WNQZmbkfrTyC2PNp5JMHavn8gNqgMtiENS2wMHi0GrhFQk5hbwt+s
-	 bQpqpp7lHHjmQlxdltEJkH6/SQY5FKRv/Xozw4J+g9ZnkgmEBizWBSJXnDRFcGWale
-	 vUzeb2xZDE5jDr5BHquHsnmVJtytsxOxGDJNe/sE=
+	by mail.kernel.org (Postfix) with ESMTP id CE01A218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:14:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390962AbfIERKw (ORCPT
+        id S2387690AbfIEROW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:10:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38202 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389559AbfIERKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:10:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MjKdVNiFjOdZvdwokVehwJ0c/QLPeMEzqUmQ6koohg0=; b=TP+HPDqbKM126/TJ1UiGl4y8r
-        GpMofqJxAwlaV7rYqLqTqswSp0aCoyLge2iul1chQJTRNXmGlJfx/FV+9cNyV//XEELyYh/fZxki4
-        BLR0FKBg8SAZkcbR6Sp/wBCHCLEWzUQXX+IBGlaEGm9QYPAu5oZgW+AkmZD16wyeYsnOyN2nvud0Q
-        F7X3jrdIEsqNwvK/aTeBvWNJ7DyNjsgNJ1XpkD9+Z3hvwobjk2igzTXMvtHJ1kx+cDDI1V6kvW4h2
-        bnmCVuO2YVn6ST/HzlSnGmOFhUMyWwTFzLXUmbJyQOW+PW/sunv2QxzN0ilG5yx2kxeLGg+htCZ4Z
-        4b73YB87w==;
-Received: from [177.159.253.249] (helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5vHW-0008Gt-I4; Thu, 05 Sep 2019 17:10:51 +0000
-Date:   Thu, 5 Sep 2019 14:10:44 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Jessica Yu <jeyu@kernel.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
- scripts
-Message-ID: <20190905141044.4eb3a622@coco.lan>
-In-Reply-To: <20190905141723.GB25790@kroah.com>
-References: <20190905055614.7958918b@coco.lan>
-        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
-        <20190905065701.4744e66a@lwn.net>
-        <20190905141723.GB25790@kroah.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 5 Sep 2019 13:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729945AbfIEROV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:14:21 -0400
+Received: from oasis.local.home (bl11-233-114.dsl.telepac.pt [85.244.233.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB8820828;
+        Thu,  5 Sep 2019 17:14:19 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 13:14:13 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20190905131413.0aa4e4f1@oasis.local.home>
+In-Reply-To: <1567699393.5576.96.camel@lca.pw>
+References: <20190903185305.GA14028@dhcp22.suse.cz>
+        <1567546948.5576.68.camel@lca.pw>
+        <20190904061501.GB3838@dhcp22.suse.cz>
+        <20190904064144.GA5487@jagdpanzerIV>
+        <20190904065455.GE3838@dhcp22.suse.cz>
+        <20190904071911.GB11968@jagdpanzerIV>
+        <20190904074312.GA25744@jagdpanzerIV>
+        <1567599263.5576.72.camel@lca.pw>
+        <20190904144850.GA8296@tigerII.localdomain>
+        <1567629737.5576.87.camel@lca.pw>
+        <20190905113208.GA521@jagdpanzerIV>
+        <1567699393.5576.96.camel@lca.pw>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -69,45 +58,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 5 Sep 2019 16:17:23 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+On Thu, 05 Sep 2019 12:03:13 -0400
+Qian Cai <cai@lca.pw> wrote:
 
-> On Thu, Sep 05, 2019 at 06:57:01AM -0600, Jonathan Corbet wrote:
-> > On Thu,  5 Sep 2019 06:23:13 -0300
-> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> >   
-> > > Python's PEP-263 [1] dictates that an script that needs to default to
-> > > UTF-8 encoding has to follow this rule:
-> > > 
-> > > 	'Python will default to ASCII as standard encoding if no other
-> > > 	 encoding hints are given.
-> > > 
-> > > 	 To define a source code encoding, a magic comment must be placed
-> > > 	 into the source files either as first or second line in the file'  
+> > > and could deal with console hardware that involve irq_exit() anyway.  
 > > 
-> > So this is only Python 2, right? 
-
-Well, Debian 10 (buster) was launched this year, and still comes with python2
-(with is the default):
-
-	$ ls -la /usr/bin/python
-	lrwxrwxrwx 1 root root 7 Mar  4  2019 /usr/bin/python -> python2
-
-I think Debian devs will keep it maintained for a while, as this is a LTS
-distro.
-
-> > Python 3 is UTF8 by default.  Given that
-> > Python 2 is EOL in January, is this something we should be concerned
-> > about?  Or should we instead be making sure that all the Python we have
-> > in-tree works properly with Python 3 and be done with it?  
+> > printk->console_driver->write() does not involve irq.  
 > 
-> I recommend just using python 3 everywhere and be done with it as there
-> are already many distros that default to that already.
+> Hmm, from the article,
+> 
+> https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter
+> 
+> "Since transmission of a single or multiple characters may take a long time
+> relative to CPU speeds, a UART maintains a flag showing busy status so that the
+> host system knows if there is at least one character in the transmit buffer or
+> shift register; "ready for next character(s)" may also be signaled with an
+> interrupt."
 
-Then we need to change the scripts, as they're currently pointing to
-/usr/bin/python instead of /usr/bin/python3. At least on the distros I
-use myself, this doesn't point to /etc/alternates. Instead, it is just
-an alias to python2.
+I'm pretty sure all serial consoles do a busy loop on the UART and not
+use interrupts to notify when it's available. That would require an
+asynchronous implementation of printk() which would be quite complex to
+implement.
 
-Thanks,
-Mauro
+-- Steve
