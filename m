@@ -2,99 +2,138 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3386EC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D67D5C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D2620650
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC3A2082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:49:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567687799;
+	bh=u5/6CYSwJw54q2AdpCKJ0XMdCuQlD+4IdreRDjcYlFU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=CAZI8dBdfHfWGbGpJUxTYsK5jLTnLGdSa9XjTaUiOiSS+sNwl9s99BawDCVVp+GMb
+	 daFKjcQMC6iVO3UQonoXd7qQ246t9VkSrk75fczqINIkiqDbJE6IDr7yF3wdf2OSQL
+	 yUwZpax75j0XdA1SM65hMyTLmy1SrmlX8ClSyQvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbfIEMtQ (ORCPT
+        id S2388061AbfIEMuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:49:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43184 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730864AbfIEMtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:49:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B0F3CB02C;
-        Thu,  5 Sep 2019 12:49:14 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 14:49:00 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>, jikos@kernel.org,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-In-Reply-To: <20190905123558.d4zh4h5pnej6pcuk@treble>
-Message-ID: <alpine.LSU.2.21.1909051445410.25712@pobox.suse.cz>
-References: <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz> <20190822223649.ptg6e7qyvosrljqx@treble> <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz> <20190826145449.wyo7avwpqyriem46@treble> <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com> <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz> <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz> <20190905025055.36loaatxtkhdo4q5@treble> <alpine.LSU.2.21.1909051355240.25712@pobox.suse.cz>
- <20190905123558.d4zh4h5pnej6pcuk@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 5 Sep 2019 08:50:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730864AbfIEMuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 08:50:00 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE61620640;
+        Thu,  5 Sep 2019 12:49:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567687797;
+        bh=u5/6CYSwJw54q2AdpCKJ0XMdCuQlD+4IdreRDjcYlFU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=k4CnjkwX+6Si0MYUHHzfDMUELVvp1IkFYzD9ZdviGrsA2kdvXZzSBCuFt/Wo2GhwY
+         il7E7xBY6+mHeqgsUJlT/faJnGPZCotfc23DstGh4xAVo/oh5yy9/Eo7xUYiM7GXDP
+         Qz25ZpkefgCcyYKHgMwCUqA8y4m30TW7c7lqVkP0=
+Date:   Thu, 5 Sep 2019 21:49:53 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Andrew Cooper <andrew.cooper3@citrix.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        <xen-devel@lists.xenproject.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
+Subject: [OT] Re: [Xen-devel] [PATCH -tip 0/2] x86: Prohibit kprobes on
+ XEN_EMULATE_PREFIX
+Message-Id: <20190905214953.e4ad9af6e83a911a141c8a11@kernel.org>
+In-Reply-To: <4de91a14-2051-197e-6ab0-beb2538c40f9@citrix.com>
+References: <156759754770.24473.11832897710080799131.stgit@devnote2>
+        <ad6431be-c86e-5ed5-518a-d1e9d1959e80@citrix.com>
+        <20190905104937.60aa03f699a9c0fbf1b651b9@kernel.org>
+        <1372ce73-e2d8-6144-57df-a98429587826@citrix.com>
+        <20190905082647.GZ2332@hirez.programming.kicks-ass.net>
+        <4de91a14-2051-197e-6ab0-beb2538c40f9@citrix.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, Josh Poimboeuf wrote:
+On Thu, 5 Sep 2019 09:53:32 +0100
+Andrew Cooper <andrew.cooper3@citrix.com> wrote:
 
-> On Thu, Sep 05, 2019 at 02:03:34PM +0200, Miroslav Benes wrote:
-> > > >   + I would like to better understand the scope of the current
-> > > >     problems. It is about modifying code in the livepatch that
-> > > >     depends on position of the related code:
-> > > > 
-> > > >       + relocations are rather clear; we will need them anyway
-> > > > 	to access non-public (static) API from the original code.
-> > > > 
-> > > >       + What are the other changes?
-> > > 
-> > > I think the .klp.arch sections are the big ones:
-> > > 
-> > >   .klp.arch.altinstructions
-> > >   .klp.arch.parainstructions
-> > >   .klp.arch.jump_labels (doesn't exist yet)
-> > > 
-> > > And that's just x86...
-> > 
-> > I may misunderstand, but we have .klp.arch sections because para and 
-> > alternatives have to be processed after relocations. And if we cannot get 
-> > rid of relocations completely, because of static symbols, then we cannot 
-> > get rid of .klp.arch sections either.
+> On 05/09/2019 09:26, Peter Zijlstra wrote:
+> > On Thu, Sep 05, 2019 at 08:54:17AM +0100, Andrew Cooper wrote:
+> >
+> >> I don't know if you've spotted, but the prefix is a ud2a instruction
+> >> followed by 'xen' in ascii.
+> >>
+> >> The KVM version was added in c/s 6c86eedc206dd1f9d37a2796faa8e6f2278215d2
+> > While the Xen one disassebles to valid instructions, that KVM one does
+> > not:
+> >
+> > 	.text
+> > xen:
+> > 	ud2; .ascii "xen"
+> > kvm:
+> > 	ud2; .ascii "kvm"
+> >
+> > disassembles like:
+> >
+> > 0000000000000000 <xen>:
+> >    0:   0f 0b                   ud2
+> >    2:   78 65                   js     69 <kvm+0x64>
+> >    4:   6e                      outsb  %ds:(%rsi),(%dx)
+> > 0000000000000005 <kvm>:
+> >    5:   0f 0b                   ud2
+> >    7:   6b                      .byte 0x6b
+> >    8:   76 6d                   jbe    77 <kvm+0x72>
+> >
+> > Which is a bit unfortunate I suppose. At least they don't appear to
+> > consume further bytes.
 > 
-> With late module patching gone, the module code can just process the klp
-> relocations at the same time it processes normal relocations.
+> It does when you give objdump one extra byte to look at.
 > 
-> Then the normal module alt/para/jump_label processing code can be used
-> instead of arch_klp_init_object_loaded().
-
-Ah, of course. I obviously cannot grasp the idea of not having late module 
-patching :)
- 
-> Note this also means that Joe's patches can remove copy_module_elf() and
-> free_module_elf().  And module_arch_freeing_init() in s390.
-
-Correct.
-
-So yes, it would simplify the code a lot. I am still worried about the 
-consequences.
-
-> > > And then of course there's the klp coming/going notifiers which have
-> > > also been an additional source of complexity.
-> > 
-> > True, but I think we (me and Petr) do not consider it as much of a problem 
-> > as you.
+> 0000000000000005 <kvm>:
+>    5:    0f 0b                    ud2   
+>    7:    6b 76 6d 00              imul   $0x0,0x6d(%rsi),%esi
 > 
-> It's less of an issue than .klp.arch and all the related code which can
-> be removed.
 
-Ok.
+Hmm, that consumes the first byte of the next instruction.
+For example, 
 
-Miroslav
+  .text
+xen:
+  ud2; .ascii "xen"; cpuid
+kvm:
+  ud2; .ascii "kvm"; cpuid
+
+0000000000000000 <xen>:
+   0:	0f 0b                	ud2    
+   2:	78 65                	js     69 <kvm+0x62>
+   4:	6e                   	outsb  %ds:(%rsi),(%dx)
+   5:	0f a2                	cpuid  
+
+0000000000000007 <kvm>:
+   7:	0f 0b                	ud2    
+   9:	6b 76 6d 0f          	imul   $0xf,0x6d(%rsi),%esi
+   d:	a2                   	.byte 0xa2
+
+This will disturbe decoding bytestream. Anyway, with the next version
+it will be fixed in x86 insn decoder.
+
+Thanks,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
