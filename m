@@ -2,140 +2,61 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAFDC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3299C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62506207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:33:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eVNvXseN"
+	by mail.kernel.org (Postfix) with ESMTP id F2E02207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732943AbfIEOdu (ORCPT
+        id S2388337AbfIEOdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:33:50 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38260 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731769AbfIEOdt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:33:49 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o184so3341454wme.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=0kWQEXS+ph2//LVOCjdO1AE5KiNrMj2peKb0h4PZi2w=;
-        b=eVNvXseNmZf9gF4JlJ38WkzGzId7Rgu2QI1agmcAC1WMAo7DFc//p/dikQDyNObe7r
-         AD0Ku0o6aLqrepbZpEAP2tSTLtWl/cgDYFite3oeWkDBX1MWEz6JD3Bo5EZzlOb//cC/
-         oo6URQjKmK3aiAWe3FzpNayt/Pm8uA1LlzSCrZwG+i+bDiM2VeSEpmzgRwTQat16IGiM
-         rE2aFL/djYliujAxKw3d52rugP9PFqCcMEgmVWI155TCYO1kJN9e5hNpAOzyCAkbkbA8
-         nc9dapTBKNIcSn61NIPiDtC069BrkdmGKaN2wJKTmurBTjyuML5MelDUoIvhd9iONLbQ
-         qwlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0kWQEXS+ph2//LVOCjdO1AE5KiNrMj2peKb0h4PZi2w=;
-        b=tzRTlIzGJGrbztFYLRsHB2WbAVslcSl+MrfirAQjqBnf8YwSwLyPL5zddOcFI92oGN
-         QApeTi6gkN2Tvc1Jd5kuDxiIc40fLt8OMuCtWaU9saUIqsBt+nCWHkjkbIR6Xsve1kYT
-         +Vb72W07ooh4UsNxm8gZ2wqlSTSWacMM1bg47arBVFuiTSs1P+Fg567SgTdDs7u8pLlT
-         9HZtgOfMchLSgl2CW2oDi+nDRvqp2lls7HpdLOseGcPbT1si44qz39WNbkk/b9RZ4HB0
-         Fh+6fMwkwhRjhI9+iOEuNXhPrgIz9uMMidiwTFPXvXt6VH0Kg6BBwYZy1O7reKZXJAH5
-         sK2w==
-X-Gm-Message-State: APjAAAWtR7fWtSgV4vsT9Piq3jzLin8V16/6uVqWHPF1pcTgBpWAXSoT
-        CT3dnYs0b3AnbYQkablJQOOcKw==
-X-Google-Smtp-Source: APXvYqxndoj+n5/jORTCTc0U+rjE4qY/hlpTto8yxEG1p+EkbUjD5WDA36ObaUU4QIXj7MlbI/xljA==
-X-Received: by 2002:a1c:9a4a:: with SMTP id c71mr3044824wme.99.1567694027358;
-        Thu, 05 Sep 2019 07:33:47 -0700 (PDT)
-Received: from dell ([95.147.198.36])
-        by smtp.gmail.com with ESMTPSA id b26sm2817469wmj.14.2019.09.05.07.33.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 07:33:46 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 15:33:45 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        "alokc@codeaurora.org" <alokc@codeaurora.org>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Message-ID: <20190905143345.GF26880@dell>
-References: <20190905102247.27583-1-lee.jones@linaro.org>
- <20190905134941.GG1157@kunai>
- <3458ed2a-ae49-b46b-3e89-ce039a2749b4@axentia.se>
+        Thu, 5 Sep 2019 10:33:53 -0400
+Received: from muru.com ([72.249.23.125]:59814 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731769AbfIEOdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:33:52 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 20DD5810D;
+        Thu,  5 Sep 2019 14:34:21 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 07:33:47 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Subject: Re: [RFC v2 0/3] OMAP3: convert opp-v1 to opp-v2 and read speed
+ binned / 720MHz grade bits
+Message-ID: <20190905143347.GX52127@atomide.com>
+References: <cover.1567587220.git.hns@goldelico.com>
+ <20190905050302.t7dsmyl7xa25umjg@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3458ed2a-ae49-b46b-3e89-ce039a2749b4@axentia.se>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190905050302.t7dsmyl7xa25umjg@vireshk-i7>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 05 Sep 2019, Peter Rosin wrote:
+* Viresh Kumar <viresh.kumar@linaro.org> [190905 05:03]:
+> Most of the stuff looks fine to me here. I will pick the patches when
+> the SoC maintainers provide an Ack.
 
-> On 2019-09-05 15:49, Wolfram Sang wrote:
-> > Hi Lee,
-> > 
-> > I understand you are in a hurry, but please double check before
-> > sending...
-> 
-> Linus indicated that an rc8 is coming up, which should provide an extra week.
-> https://lwn.net/Articles/798152/
+I noticed few issues with the dts changes but other than that
+looks good to me.
 
-That is good news.
+Regards,
 
-> > On Thu, Sep 05, 2019 at 11:22:47AM +0100, Lee Jones wrote:
-> >> We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
-> >> a rather horrific bug.  When I2C HID devices are being scanned for at
-> >> boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
-> >> When it does, the laptop reboots and the user never sees the OS.
-> >>
-> >> The beautiful thing about this approach is that, *if* the Geni SE DMA
-> >> ever starts working, we can remove the C code and any old properties
-> >> left in older DTs just become NOOP.  Older kernels with newer DTs (less
-> >> of a priority) *still* will not work - but they do not work now anyway.
-> > 
-> > ... becasue this paragraph doesn't fit anymore. Needs to be reworded.
-
-Yes, you're right.  I noticed almost the moment I pressed send. :(
-
-> >> Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
-> > 
-> > As said in the other thread, I don't get it, but this is not a show
-> > stopper for me.
-
-Ah wait.  Yes, this is applied against the wrong patch.
-
-Please ignore.
-
-> WAG: because ACPI made some driver load at all, and when it
-> did it something started happening which crashed some machines.
-
-I'm not sure I understand this sentence.
-
-... resending now.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Tony
