@@ -2,110 +2,108 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D4DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519F7C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603AD206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A3B206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389332AbfIEO1n (ORCPT
+        id S2389366AbfIEO2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:27:43 -0400
-Received: from muru.com ([72.249.23.125]:59764 "EHLO muru.com"
+        Thu, 5 Sep 2019 10:28:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48552 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389046AbfIEO1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:27:39 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 00B01810D;
-        Thu,  5 Sep 2019 14:28:07 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 07:27:34 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?B?QW5kcsOp?= Roth <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        letux-kernel@openphoenux.org, kernel@pyra-handheld.com
-Subject: Re: [RFC v2 3/3] ARM: dts: omap3: bulk convert compatible to be
- explicitly ti,omap3430 or ti,omap36xx
-Message-ID: <20190905142734.GV52127@atomide.com>
-References: <cover.1567587220.git.hns@goldelico.com>
- <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com>
+        id S1727914AbfIEO2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:28:15 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A34FB8980EA;
+        Thu,  5 Sep 2019 14:28:15 +0000 (UTC)
+Received: from treble (ovpn-120-170.rdu2.redhat.com [10.10.120.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23EEB100033E;
+        Thu,  5 Sep 2019 14:28:12 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 09:28:09 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     jikos@kernel.org, Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+Message-ID: <20190905142809.bpalx7wmihkvavxy@treble>
+References: <20190826145449.wyo7avwpqyriem46@treble>
+ <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
+ <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
+ <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+ <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
+ <20190905025055.36loaatxtkhdo4q5@treble>
+ <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
+ <20190905130832.dznviqrrg6lfrxvx@treble>
+ <20190905131502.mgiaplb3grlxsahp@treble>
+ <20190905135259.7obdymb7c2wdgafw@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a2b56edcada7b9000a6e906387a02c0ee42681db.1567587220.git.hns@goldelico.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190905135259.7obdymb7c2wdgafw@pathway.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 05 Sep 2019 14:28:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-* H. Nikolaus Schaller <hns@goldelico.com> [190904 08:54]:
-> According to omap.txt bindings documentation, matching the ti-cpufreq driver needs
-> to specify explicitly if a board uses an omap3430 or omap36xx chip.
+On Thu, Sep 05, 2019 at 03:52:59PM +0200, Petr Mladek wrote:
+> On Thu 2019-09-05 08:15:02, Josh Poimboeuf wrote:
+> > On Thu, Sep 05, 2019 at 08:08:32AM -0500, Josh Poimboeuf wrote:
+> > > On Thu, Sep 05, 2019 at 01:09:55PM +0200, Petr Mladek wrote:
+> > > > > I don't have a number, but it's very common to patch a function which
+> > > > > uses jump labels or alternatives.
+> > > > 
+> > > > Really? My impression is that both alternatives and jump_labels
+> > > > are used in hot paths. I would expect them mostly in core code
+> > > > that is always loaded.
+> > > > 
+> > > > Alternatives are often used in assembly that we are not able
+> > > > to livepatch anyway.
+> > > > 
+> > > > Or are they spread widely via some macros or inlined functions?
+> > > 
+> > > Jump labels are used everywhere.  Looking at vmlinux.o in my kernel:
+> > > 
+> > >   Relocation section [19621] '.rela__jump_table' for section [19620] '__jump_table' at offset 0x197873c8 contains 11913 entries:
+> > > 
+> > > Each jump label entry has 3 entries, so 11913/3 = 3971 jump labels.
+> > > 
+> > > $ readelf -s vmlinux.o |grep FUNC |wc -l
+> > > 46902
+> > > 
+> > > 3971/46902 = ~8.5%
+> > > 
+> > > ~8.5% of functions use jump labels.
+> > 
+> > Obviously some functions may use more than one jump label so this isn't
+> > exactly bulletproof math.  But it gives a rough idea of how widespread
+> > they are.
 > 
-> This needs to add ti,omap3430 to most omap34xx boards and replace ti,omap3630
-> by ti,omap36xx for some omap36xx boards (most others already have done it right).
-> 
-> We also clean up some instances of missing ti,am3517 so that we can rely on
-> seeing either one of:
-> 
-> ti,am3517
-> ti,omap34xx
-> ti,omap36xx
-> 
-> in addition to ti,omap3.
+> It looks scary. I just wonder why we have never met this problem during
+> last few years.
 
-Please set up things to use ti,omap3630 in addition to ti,omap36xx
-for compatible to avoid churning the same files later.
+Who knows what can happen when you disable jump label patching.
+Sometimes it may be harmless.  A panic is probably the worst case.
+There may be other fail modes which are harder to detect.
 
-> diff --git a/arch/arm/boot/dts/logicpd-som-lv-37xx-devkit.dts b/arch/arm/boot/dts/logicpd-som-lv-37xx-devkit.dts
-> --- a/arch/arm/boot/dts/logicpd-som-lv-37xx-devkit.dts
-> +++ b/arch/arm/boot/dts/logicpd-som-lv-37xx-devkit.dts
-> @@ -9,5 +9,5 @@
->  
->  / {
->  	model = "LogicPD Zoom DM3730 SOM-LV Development Kit";
-> -	compatible = "logicpd,dm3730-som-lv-devkit", "ti,omap3630", "ti,omap3";
-> +	compatible = "logicpd,dm3730-som-lv-devkit", "ti,omap36xx", "ti,omap3";
->  };
+> My only guess is that most of these functions are either in core
+> kernel or in code that we do not livepatch.
 
-So just make this:
+This is definitely not the case.  We recently introduced jump label
+checking in kpatch-build, and it complains a lot.  The workaround is to
+replace such uses with static_key_enabled().
 
-compatible = "logicpd,dm3730-som-lv-devkit", "ti,omap3630", "ti,omap36xx", "ti,omap3";
-
-And so on. It's fine to use ti,omap3630 for 37xx too as they're the same.
-
-> diff --git a/arch/arm/boot/dts/omap3-ldp.dts b/arch/arm/boot/dts/omap3-ldp.dts
-> index 9a5fde2d9bce..9947574bd0f8 100644
-> --- a/arch/arm/boot/dts/omap3-ldp.dts
-> +++ b/arch/arm/boot/dts/omap3-ldp.dts
-> @@ -10,7 +10,7 @@
->  
->  / {
->  	model = "TI OMAP3430 LDP (Zoom1 Labrador)";
-> -	compatible = "ti,omap3-ldp", "ti,omap3";
-> +	compatible = "ti,omap3-ldp", "ti,omap34xx, "ti,omap3";
-
-This fails to compile, it's missing a '"' for ti,omap34xx. And here too,
-please update to use:
-
-compatible = "ti,omap3-ldp", "ti,omap3430", "ti,omap34xx", "ti,omap3";
-
-And again it's fine to add "ti,omap3430" for 3530 variants.
-
-Regards,
-
-Tony
+-- 
+Josh
