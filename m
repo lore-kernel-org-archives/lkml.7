@@ -2,104 +2,87 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 924EBC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E209DC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B3120825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BDB20828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567719635;
+	bh=rE87t2IaGvkbqZwJKihoeOJJ/pPsL/ji2UDYBcMkVps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wW7AA+G7S0WM7TlrdBqxb3vOQUgGdNFuxXrVSyTkRQxnYuB6HoZ2jqlVHfsWBi9Qz
+	 B7lHmxACQYo/jnBjy8Y7YP4ck1DMJvUsVuEKmUKf/aOOUyTZY3maYReJPgwwNgp4zu
+	 +uAXIUnoGE8jXlTYiSsRFh+jkIAK+DlIG/tnym8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733299AbfIEViC convert rfc822-to-8bit (ORCPT
+        id S2388021AbfIEVke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:38:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46820 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730193AbfIEViC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:38:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0A7C5ABC7;
-        Thu,  5 Sep 2019 21:38:01 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 23:38:00 +0200
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-Id: <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
-In-Reply-To: <20190905154747.GB3650@rapoport-lnx>
-References: <1567662477-27404-1-git-send-email-rppt@kernel.org>
-        <20190905152150.f7ff6ef70726085de63df828@suse.de>
-        <20190905133251.GA3650@rapoport-lnx>
-        <20190905154831.88b7853b47ba7db7bd7626bd@suse.de>
-        <20190905154747.GB3650@rapoport-lnx>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8BIT
+        Thu, 5 Sep 2019 17:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730704AbfIEVkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:40:33 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB8D2206BB;
+        Thu,  5 Sep 2019 21:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567719633;
+        bh=rE87t2IaGvkbqZwJKihoeOJJ/pPsL/ji2UDYBcMkVps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XTBbGB50XJbmZ+ljQpoFIahI/vRJAJkhBdJgV5xPESKP5ztQb1cKc2sTmgYRu68gk
+         ZrY419ov9p+dgcvUVSsBQ9Qqf5sHUX8PGSxsFUC4FlDBvxz8QRne6ojHE9kkl9u9qr
+         K64iwBAjdrH6gxGidsFt19cVm3/KJ6EcJdFATW50=
+Date:   Thu, 5 Sep 2019 17:40:30 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Mike Travis <mike.travis@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
+Message-ID: <20190905214030.GE1616@sasha-vm>
+References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
+ <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
+ <20190905141634.GA25790@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190905141634.GA25790@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 18:47:49 +0300
-Mike Rapoport <rppt@kernel.org> wrote:
+On Thu, Sep 05, 2019 at 04:16:34PM +0200, Greg KH wrote:
+>On Thu, Sep 05, 2019 at 08:02:58AM -0500, Mike Travis wrote:
+>> --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
+>> +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+>> @@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
+>>  	struct uv_systab *st;
+>>  	int i;
+>>
+>> -	if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
+>> +	/* Select only UV4 (hubbed or hubless) and higher */
+>> +	if (is_uv_hubbed(-2) < uv(4) && is_uv_hubless(-2) < uv(4))
 
-> On Thu, Sep 05, 2019 at 03:48:31PM +0200, Thomas Bogendoerfer wrote:
-> > On Thu, 5 Sep 2019 16:32:53 +0300
-> > Mike Rapoport <rppt@kernel.org> wrote:
-> > 
-> > > On Thu, Sep 05, 2019 at 03:21:50PM +0200, Thomas Bogendoerfer wrote:
-> > > > On Thu,  5 Sep 2019 08:47:57 +0300
-> > > > Mike Rapoport <rppt@kernel.org> wrote:
-> > > > 
-> > > > > From: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > 
-> > > > > The memory initialization of SGI-IP27 is already half-way to support
-> > > > > SPARSEMEM and only a call to sparse_init() was missing. Add it to
-> > > > > prom_meminit() and adjust arch/mips/Kconfig to enable SPARSEMEM and
-> > > > > SPARSEMEM_EXTREME for SGI-IP27
-> > > > > 
-> > > > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > > > ---
-> > > > > 
-> > > > > Thomas, could you please test this on your Origin machine?
-> > > > 
-> > > > it crashes in sparse_early_usemaps_alloc_pgdat_section(). Since there is
-> > > > already a sparse_init() in arch_mem_setup() I removed it from ip27-memory.c.
-> > > 
-> > > Oops, missed that.
-> > > 
-> > > > With this booting made more progress but I get an unaligned access in
-> > > > kernel_init_free_pages(). 
-> > > 
-> > > Can you please share the log?
-> > 
-> > sure
-> 
-> Nothing looked particularly suspicious, but I've found that I've missed the
-> definition of pfn_to_nid() is for DISCONTIGMEM only, maybe making it
-> available for SPARSE would help :)
-> 
-> I'm pretty much shooting in the dark here, but can you please try the patch
-> below on top of the original one:
+For someone not too familiar with the code, this is completely
+unreadable. There must be a nicer way to do this.
 
-doesn't compile: 
-
-/home/tbogendoerfer/wip/mips/linux/include/linux/mmzone.h:1367:0: warning: "pfn_to_nid" redefined
- #define pfn_to_nid(pfn)       \
-
-
-For testing I've removed the version in linux/mmzone.h, but kernel still crashes. Only
-difference is that several CPUs are printing the oops in unaligned handler in parallel.
-With the sparse_init() in prom_meminit() kernel dies at the same spot as before.
-
-Thomas.
-
--- 
-SUSE Software Solutions Germany GmbH
-HRB 247165 (AG München)
-Geschäftsführer: Felix Imendörffer
+--
+Thanks,
+Sasha
