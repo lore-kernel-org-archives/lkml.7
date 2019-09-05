@@ -2,333 +2,138 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A558FC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D82BC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809AB20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63BD022CEC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567675628;
+	bh=/v41qPFClF2nhR0vF9NLnbhl2prgKAF/kweG4ZeX8w4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wCW7XbX3Vhz7LDDZ4EreybznqiYmwMU3zdUvKJM0WpoxQsW+E6zLmO0VXT7AsvQj7
+	 Qbkxs7XdQXm5UEoQG8xDcJJH5qSTWb91ekd4OtIsknZ0YGUjvfFpIdkO/y7GAe9wWO
+	 I04ExgPTNjy5fRUomvePrPbjWHaY6MFvTRvQ0sOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387395AbfIEJ1C (ORCPT
+        id S2387418AbfIEJ1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:27:02 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:61728 "EHLO mx2.mailbox.org"
+        Thu, 5 Sep 2019 05:27:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731550AbfIEJ1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:27:00 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        id S1731740AbfIEJ1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:27:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 572C6A167F;
-        Thu,  5 Sep 2019 11:26:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id A-4M1Owl_Xlc; Thu,  5 Sep 2019 11:26:48 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 19:26:22 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905092622.tlb6nn3uisssdfbu@yavin.dot.cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905073205.GY2332@hirez.programming.kicks-ass.net>
+        by mail.kernel.org (Postfix) with ESMTPSA id 9952B21848;
+        Thu,  5 Sep 2019 09:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567675626;
+        bh=/v41qPFClF2nhR0vF9NLnbhl2prgKAF/kweG4ZeX8w4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pg8pEJDBI+Tulk12m8DWGmgWMSuO5ZsuyJTqs1vQa5wlf+Aj3F7/IkPW6TjvQzAQo
+         72+wC1S6p5brjxr8PoEL7MGG0GlRU00po2g+i/t3k0WitgUuzE2dpRMfb75RdbCDmP
+         z+ukF5YSSYZZ+QtRlyNN/QgB/YGUgMdkMbKlYBVI=
+Date:   Thu, 5 Sep 2019 11:27:03 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
+ scripts
+Message-ID: <20190905092703.GA30899@kroah.com>
+References: <20190905055614.7958918b@coco.lan>
+ <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ctyxwo5xz342v75e"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905073205.GY2332@hirez.programming.kicks-ass.net>
+In-Reply-To: <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 05, 2019 at 06:23:13AM -0300, Mauro Carvalho Chehab wrote:
+> The author of the license-rules.rst file wanted to be very restrict
+> with regards to the location of the SPDX header. It says that
+> the SPDX header "shall be added at the first  possible line in
+> a file which can contain a comment". Not happy with this already
+> restrictive requiement, it goes further:
+> 
+> "For the majority  of files this is the first line, except for
+> scripts", opening an exception to have the SPDX header at the
+> second line, if the first line starts with "#!".
+> 
+> Well, it turns that this is too restrictive for Python scripts,
+> and may cause regressions if this would be enforced.
+> 
+> As mentioned on:
+> 	https://stackoverflow.com/questions/728891/correct-way-to-define-python-source-code-encoding
+> 
+> Python's PEP-263 [1] dictates that an script that needs to default to
+> UTF-8 encoding has to follow this rule:
+> 
+> 	'Python will default to ASCII as standard encoding if no other
+> 	 encoding hints are given.
+> 
+> 	 To define a source code encoding, a magic comment must be placed
+> 	 into the source files either as first or second line in the file'
+> 
+> And:
+> 	'More precisely, the first or second line must match the following
+> 	 regular expression:
+> 
+> 	 ^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)'
+> 
+> [1] https://www.python.org/dev/peps/pep-0263/
+> 
+> If a script has both "#!" and the charset encoding line, we can't place
+> a SPDX tag without either violating license-rules.rst or breaking the
+> script by making it crash with non-ASCII characters.
+> 
+> So, add a sort notice saying that, for Python scripts, the SPDX
+> header may be up to the third line, in order to cover the case
+> where both "#!" and "# .*coding.*UTF-8" lines are found.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/process/license-rules.rst | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/process/license-rules.rst b/Documentation/process/license-rules.rst
+> index 2ef44ada3f11..5d23e3498b1c 100644
+> --- a/Documentation/process/license-rules.rst
+> +++ b/Documentation/process/license-rules.rst
+> @@ -64,9 +64,12 @@ License identifier syntax
+>     possible line in a file which can contain a comment.  For the majority
+>     of files this is the first line, except for scripts which require the
+>     '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
+> -   identifier goes into the second line.
+> +   identifier goes into the second line\ [1]_.
+>  
+> -|
+> +.. [1] Please notice that Python scripts may also need an encoding rule
+> +   as defined on PEP-263, which should be defined either at the first
+> +   or the second line. So, for such scripts, the SPDX identifier may
+> +   go up to the third line.
+>  
+>  2. Style:
+>  
 
---ctyxwo5xz342v75e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If you are going to do this, can you also fix up scripts/spdxcheck.py to
+properly catch this, as well as fixing up the location of the spdx tag
+line in the file itself?
 
-On 2019-09-05, Peter Zijlstra <peterz@infradead.org> wrote:
-> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> > +/**
-> > + * copy_struct_to_user: copy a struct to user space
-> > + * @dst:   Destination address, in user space.
-> > + * @usize: Size of @dst struct.
-> > + * @src:   Source address, in kernel space.
-> > + * @ksize: Size of @src struct.
-> > + *
-> > + * Copies a struct from kernel space to user space, in a way that guar=
-antees
-> > + * backwards-compatibility for struct syscall arguments (as long as fu=
-ture
-> > + * struct extensions are made such that all new fields are *appended* =
-to the
-> > + * old struct, and zeroed-out new fields have the same meaning as the =
-old
-> > + * struct).
-> > + *
-> > + * @ksize is just sizeof(*dst), and @usize should've been passed by us=
-er space.
-> > + * The recommended usage is something like the following:
-> > + *
-> > + *   SYSCALL_DEFINE2(foobar, struct foo __user *, uarg, size_t, usize)
-> > + *   {
-> > + *      int err;
-> > + *      struct foo karg =3D {};
-> > + *
-> > + *      // do something with karg
-> > + *
-> > + *      err =3D copy_struct_to_user(uarg, usize, &karg, sizeof(karg));
-> > + *      if (err)
-> > + *        return err;
-> > + *
-> > + *      // ...
-> > + *   }
-> > + *
-> > + * There are three cases to consider:
-> > + *  * If @usize =3D=3D @ksize, then it's copied verbatim.
-> > + *  * If @usize < @ksize, then kernel space is "returning" a newer str=
-uct to an
-> > + *    older user space. In order to avoid user space getting incomplete
-> > + *    information (new fields might be important), all trailing bytes =
-in @src
-> > + *    (@ksize - @usize) must be zerored
->=20
-> s/zerored/zero/, right?
+thanks,
 
-It should've been "zeroed".
-
-> >                                          , otherwise -EFBIG is returned.
->=20
-> 'Funny' that, copy_struct_from_user() below seems to use E2BIG.
-
-This is a copy of the semantics that sched_[sg]etattr(2) uses -- E2BIG for
-a "too big" struct passed to the kernel, and EFBIG for a "too big"
-struct passed to user-space. I would personally have preferred EMSGSIZE
-instead of EFBIG, but felt using the existing error codes would be less
-confusing.
-
->=20
-> > + *  * If @usize > @ksize, then the kernel is "returning" an older stru=
-ct to a
-> > + *    newer user space. The trailing bytes in @dst (@usize - @ksize) w=
-ill be
-> > + *    zero-filled.
-> > + *
-> > + * Returns (in all cases, some data may have been copied):
-> > + *  * -EFBIG:  (@usize < @ksize) and there are non-zero trailing bytes=
- in @src.
-> > + *  * -EFAULT: access to user space failed.
-> > + */
-> > +int copy_struct_to_user(void __user *dst, size_t usize,
-> > +			const void *src, size_t ksize)
-> > +{
-> > +	size_t size =3D min(ksize, usize);
-> > +	size_t rest =3D abs(ksize - usize);
-> > +
-> > +	if (unlikely(usize > PAGE_SIZE))
-> > +		return -EFAULT;
->=20
-> Not documented above. Implementation consistent with *from*, but see
-> below.
-
-Will update the kernel-doc.
-
-> > +	if (unlikely(!access_ok(dst, usize)))
-> > +		return -EFAULT;
-> > +
-> > +	/* Deal with trailing bytes. */
-> > +	if (usize < ksize) {
-> > +		if (memchr_inv(src + size, 0, rest))
-> > +			return -EFBIG;
-> > +	} else if (usize > ksize) {
-> > +		if (__memzero_user(dst + size, rest))
-> > +			return -EFAULT;
-> > +	}
-> > +	/* Copy the interoperable parts of the struct. */
-> > +	if (__copy_to_user(dst, src, size))
-> > +		return -EFAULT;
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL(copy_struct_to_user);
-> > +
-> > +/**
-> > + * copy_struct_from_user: copy a struct from user space
-> > + * @dst:   Destination address, in kernel space. This buffer must be @=
-ksize
-> > + *         bytes long.
-> > + * @ksize: Size of @dst struct.
-> > + * @src:   Source address, in user space.
-> > + * @usize: (Alleged) size of @src struct.
-> > + *
-> > + * Copies a struct from user space to kernel space, in a way that guar=
-antees
-> > + * backwards-compatibility for struct syscall arguments (as long as fu=
-ture
-> > + * struct extensions are made such that all new fields are *appended* =
-to the
-> > + * old struct, and zeroed-out new fields have the same meaning as the =
-old
-> > + * struct).
-> > + *
-> > + * @ksize is just sizeof(*dst), and @usize should've been passed by us=
-er space.
-> > + * The recommended usage is something like the following:
-> > + *
-> > + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, =
-usize)
-> > + *   {
-> > + *      int err;
-> > + *      struct foo karg =3D {};
-> > + *
-> > + *      err =3D copy_struct_from_user(&karg, sizeof(karg), uarg, size);
-> > + *      if (err)
-> > + *        return err;
-> > + *
-> > + *      // ...
-> > + *   }
-> > + *
-> > + * There are three cases to consider:
-> > + *  * If @usize =3D=3D @ksize, then it's copied verbatim.
-> > + *  * If @usize < @ksize, then the user space has passed an old struct=
- to a
-> > + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @=
-usize)
-> > + *    are to be zero-filled.
-> > + *  * If @usize > @ksize, then the user space has passed a new struct =
-to an
-> > + *    older kernel. The trailing bytes unknown to the kernel (@usize -=
- @ksize)
-> > + *    are checked to ensure they are zeroed, otherwise -E2BIG is retur=
-ned.
-> > + *
-> > + * Returns (in all cases, some data may have been copied):
-> > + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes=
- in @src.
-> > + *  * -E2BIG:  @usize is "too big" (at time of writing, >PAGE_SIZE).
-> > + *  * -EFAULT: access to user space failed.
-> > + */
-> > +int copy_struct_from_user(void *dst, size_t ksize,
-> > +			  const void __user *src, size_t usize)
-> > +{
-> > +	size_t size =3D min(ksize, usize);
-> > +	size_t rest =3D abs(ksize - usize);
-> > +
-> > +	if (unlikely(usize > PAGE_SIZE))
-> > +		return -EFAULT;
->=20
-> Documented above as returning -E2BIG.
-
-I will switch this (and to) back to -E2BIG -- I must've had a brain-fart
-when doing some refactoring.
-
->=20
-> > +	if (unlikely(!access_ok(src, usize)))
-> > +		return -EFAULT;
-> > +
-> > +	/* Deal with trailing bytes. */
-> > +	if (usize < ksize)
-> > +		memset(dst + size, 0, rest);
-> > +	else if (usize > ksize) {
-> > +		const void __user *addr =3D src + size;
-> > +		char buffer[BUFFER_SIZE] =3D {};
->=20
-> Isn't that too big for on-stack?
-
-Is a 64-byte buffer too big? I picked the number "at random" to be the
-size of a cache line, but I could shrink it down to 32 bytes if the size
-is an issue (I wanted to avoid needless allocations -- hence it being
-on-stack).
-
-> > +
-> > +		while (rest > 0) {
-> > +			size_t bufsize =3D min(rest, sizeof(buffer));
-> > +
-> > +			if (__copy_from_user(buffer, addr, bufsize))
-> > +				return -EFAULT;
-> > +			if (memchr_inv(buffer, 0, bufsize))
-> > +				return -E2BIG;
-> > +
-> > +			addr +=3D bufsize;
-> > +			rest -=3D bufsize;
-> > +		}
->=20
-> The perf implementation uses get_user(); but if that is too slow, surely
-> we can do something with uaccess_try() here?
-
-Is there a non-x86-specific way to do that (unless I'm mistaken only x86
-has uaccess_try() or the other *_try() wrappers)? The main "performance
-improvement" (if you can even call it that) is that we use memchr_inv()
-which finds non-matching characters more efficiently than just doing a
-loop.
-
-> > +	}
-> > +	/* Copy the interoperable parts of the struct. */
-> > +	if (__copy_from_user(dst, src, size))
-> > +		return -EFAULT;
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL(copy_struct_from_user);
->=20
-> And personally I'm not a big fan of EXPORT_SYMBOL().
-
-I don't have much of an opinion (after all, it only really makes sense a
-lot of sense for syscalls) -- though out-of-tree modules that define
-ioctl()s wouldn't be able to make use of them.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ctyxwo5xz342v75e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXDUuwAKCRCdlLljIbnQ
-EkuOAP40xlR/F06o1fNB6rvD1iKaBJIRC05rW3WDn2pxUoltnAD/bSvjzMtd1lc1
-JInrmBQUHIPZa+Rk1zPMB2BFjgHRZAA=
-=mJdv
------END PGP SIGNATURE-----
-
---ctyxwo5xz342v75e--
+greg k-h
