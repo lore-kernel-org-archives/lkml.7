@@ -2,137 +2,145 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D7EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C9FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADFD20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF43D2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:34:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="sy+s6pB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387891AbfIESdU (ORCPT
+        id S2391313AbfIESeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:33:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41346 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391294AbfIESdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:33:19 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB4BB7CB80
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 18:33:18 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id f18so1372857wro.19
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:33:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JkgFvZx1SpfRB54bm11+3DOumUuDokZW525XdQCPb+E=;
-        b=q94w1/u/zp7YixExdQAVpEt2NCjW8tXY/mF3W+dVDY9X68x8wVu3woiuFzZTQV0o3x
-         KuTcqQRoDABJknWdkp2mcRhlWsmkF1J1lVT1xw7fTtw8Awyk2YgWfXQzTy8W4h+JecpT
-         76YN3OniOV4WGKPCZUyhJRByB2Tq7Zz6v1/ojhkyNF/w8PVhL7YqwghfSWmAWltm/WJL
-         vFey36/b50+2UklSOTh4WacV31w7oNcDjIt8aa4UZfwgUWwbPEqYWYGPTYR5zyV1OJQn
-         ardv3wG4YfaHibqP47psVyxxYc/eb4x7r3NBaZJRSfMb8p9R1EdbCyOQUcOMHSinCIUL
-         8YgA==
-X-Gm-Message-State: APjAAAUXY2oMXPfdm7GP6QJmed64F72iRgrBhh4H9ZVAhfwXWDEDkAAF
-        Teq+ye1m+h1g2SXKnmHZ+FY14c48/uqZ/hPXRpT2SAzOi2YCwVawOLi1f9RmfW6OXvwt0HsafFD
-        ghqJNGM2FoBjFakAKteBYxKMMyY6fhxI0obU3hGKj
-X-Received: by 2002:a5d:568c:: with SMTP id f12mr3942180wrv.248.1567708397324;
-        Thu, 05 Sep 2019 11:33:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzmOECwYwtvafDfOc5sH/mM1xRRq5odIdcrX+xDOVM3wNnjyolmP+riNwHwlSKTnHua2vRyqquS9BP4i+1k7Ig=
-X-Received: by 2002:a5d:568c:: with SMTP id f12mr3942141wrv.248.1567708396973;
- Thu, 05 Sep 2019 11:33:16 -0700 (PDT)
+        Thu, 5 Sep 2019 14:34:05 -0400
+Received: from mail-eopbgr680078.outbound.protection.outlook.com ([40.107.68.78]:56702
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732303AbfIESeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 14:34:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DWhj6iW8uuwBdo/bdlFUwoPPqG+E2dna3EXpkb3PKVujneYhWLtZKrskwdzby813Tfcd8RtYacjmezTiFwY5C7i50HxpFc2FcgoaMf0JW24fYOef+5G6pb2EtCOZfJ3g8LOoiAvjtssyEfpnygQgrMx08Fc6oM+OzKajR2IKVIYpm3G3mnSB7zRjMNviOsLtZ6XPLYUFw/QlmoUsuneA3BgqBWTascq6mjt6+wBKOfQM5cBVc77Frw9Q1IE08yaBZXUqLgdmJsqH179wSgc77hefTfZPqJxggDXY2OLi2BhbGoH6X4p2PfpPT9IA8qqhllKL5ebjWL0nHo5UfjDCAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=404TyObtbWVQSe9L2a1jKzpPw8N4sP9wkVhbyZoei8c=;
+ b=X/3EZwFpx+HHX7FAITYdMSPKQwtxoHLGR30EUQmNUjLXeV7mydEsMLTbKtrtDadaUk1ivHJNGwbUQ4VvRWmOkqFiXKpq23bJ5jhcmHwlcAn8T/KwAR1ZYSfIOcA7CumuJd9tUd8brSI4I8cYuxz+N0kQPxpmh0v8HSK3LqCRtcPEWm16Hj1v6olSZsyyAcLl38qDa93UU3s6Iuj4psezvKT67iyxE/TGpzs7flN8jPiji+5+ayWunNwhrlLkeJOYhyuFtzLwQ69nrdqsG1upLUfrCS1Szi8DuqCY2i17ICCzA9NN10X9Ntu5i0jwPq+b7veenOOTkB+bgFRiunkAsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=404TyObtbWVQSe9L2a1jKzpPw8N4sP9wkVhbyZoei8c=;
+ b=sy+s6pB5S8vOh9Vh5UNjSdS56Vu5nuSCUqU++EyKYQ5qfZnmk9Eh2N0EW5lv0nmQGLYSpzW8NTSJ0ruDYIb27i0em+nxadxD14nRFRj8eDqRqWbs756hELupTk9/zAV3NpGZu1DHaxnBt1e3+x4Jo9MO1gcGPsCZGpYwkDtQv+Y=
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com (10.172.79.7) by
+ CY4PR1201MB2532.namprd12.prod.outlook.com (10.172.120.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.15; Thu, 5 Sep 2019 18:34:01 +0000
+Received: from CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0]) by CY4PR1201MB0230.namprd12.prod.outlook.com
+ ([fe80::708e:c826:5b05:e3f0%11]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
+ 18:34:01 +0000
+From:   Harry Wentland <hwentlan@amd.com>
+To:     Krzysztof Wilczynski <kw@linux.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Cheng, Tony" <Tony.Cheng@amd.com>, "Lei, Jun" <Jun.Lei@amd.com>,
+        "Francis, David" <David.Francis@amd.com>,
+        "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>,
+        "Laktyushkin, Dmytro" <Dmytro.Laktyushkin@amd.com>,
+        "Liu, Wenjing" <Wenjing.Liu@amd.com>,
+        "Koo, Anthony" <Anthony.Koo@amd.com>,
+        Aidan Wood <Aidan.Wood@amd.com>,
+        "Park, Chris" <Chris.Park@amd.com>,
+        "Yang, Eric" <Eric.Yang2@amd.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amd/display: Move static keyword to the front of
+ declaration
+Thread-Topic: [PATCH] drm/amd/display: Move static keyword to the front of
+ declaration
+Thread-Index: AQHVZBhi2L6qhsoPZ0yUYciUFg8GBqcdaMOA
+Date:   Thu, 5 Sep 2019 18:34:01 +0000
+Message-ID: <8b5de881-2109-6f75-68e3-9c8c743b483e@amd.com>
+References: <20190905183306.32670-1-kw@linux.com>
+In-Reply-To: <20190905183306.32670-1-kw@linux.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2607:fea8:925f:916c::2]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-clientproxiedby: YTOPR0101CA0039.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::16) To CY4PR1201MB0230.namprd12.prod.outlook.com
+ (2603:10b6:910:1e::7)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Harry.Wentland@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd899465-f807-41d4-94b6-08d7322f9f02
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CY4PR1201MB2532;
+x-ms-traffictypediagnostic: CY4PR1201MB2532:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR1201MB253203333A951592DAB3033E8CBB0@CY4PR1201MB2532.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(4636009)(136003)(376002)(346002)(396003)(366004)(39860400002)(189003)(199004)(229853002)(4326008)(6116002)(305945005)(76176011)(2906002)(66446008)(64756008)(66556008)(66476007)(25786009)(6486002)(486006)(52116002)(81156014)(8676002)(2616005)(11346002)(446003)(7736002)(54906003)(476003)(81166006)(46003)(102836004)(99286004)(110136005)(58126008)(386003)(6506007)(53546011)(8936002)(316002)(186003)(65956001)(71190400001)(71200400001)(66946007)(31686004)(65806001)(6246003)(31696002)(53936002)(6436002)(478600001)(966005)(14454004)(256004)(36756003)(6306002)(6512007)(14444005)(5660300002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2532;H:CY4PR1201MB0230.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: M/HvTlzfGEvVWR1QchDsz7bfeY6yO+MCgo0r5N/mFuLoK0B7XVFmVTdeAuLJSiGGIRGpXyXefrlbWbJQYiIokmbIGcdhf5Ukec8PV505rXbTJhaDFxw2JrEtQE6SFwu7rD5WdEJ1FT4V0Hrwcqruj+9jBLqHK+WK/c+faPw3Fef4Xdedu86M2dsviQzlBUHq0wBHYQPKvzW3koilnUlcRb6GnhAshFT+cZpYz6bBylcfHirzgnp3f3r3YGa2T02S2q7HKSrajv/bNbky7hLUGszGj6uK5komjNOUk8WI3s6X6INBSjdVe7nNCOlFPeCyv2N1r4wU3YYhN74BT32wjP9D60m0/Twyc7AIBwkrPzqfw/+CVF+JeyXAxer3LT0c8E2+PCqNH1gF9eIsSNns0flUw5eyNfFyj+VrKftgcFg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5BA5A1659CF21F4D800F07B7DDEDD308@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
- <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
- <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
-In-Reply-To: <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
-From:   Ray Strode <rstrode@redhat.com>
-Date:   Thu, 5 Sep 2019 14:32:40 -0400
-Message-ID: <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
-Subject: Re: Why add the general notification queue and its sources
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray, Debarshi" <debarshi.ray@gmail.com>,
-        Robbie Harwood <rharwood@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd899465-f807-41d4-94b6-08d7322f9f02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 18:34:01.2631
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HqlAEHYIYUlTwcsWWaXmkeTQPNLf9Ge1T9JwEcR92LHTvXVY1/GIPuNwyc2l8sBGbEDyF9colEow45stQOwnKg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2532
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Sep 5, 2019 at 1:20 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> You've at least now answered part of the "Why", but you didn't
-> actually answer the whole "another developer" part.
-It's certainly something we've wanted in the GNOME world for a long time:
-
-See for instance
-
-https://bugzilla.redhat.com/show_bug.cgi?id=991110
-
-and
-
-https://bugzilla.gnome.org/show_bug.cgi?id=707402
-
-from all the way back 2013.  These are the alternatives I can think of:
-
-- poll? status quo, but not great for obvious wakeup reasons
-- use a different credential cache collection type that does support
-change notification?
-some of the other types do support change notification, but have their
-own set of
-problems. But maybe we should just go back to DIR type credential
-cache collections
-and try to figure out the life cycle problems they pose, i don't
-know... or get more
-man power behind KCM...
-- manage change notification entirely from userspace.  assume credentials will
-always be put in place from krb5-libs entry points, and just skip
-notification if
-it happens out from under the libraries. maybe upstream kerberos guys would
-be onboard with this, I don't know. This seems less robust than having
-the kernel
-in the loop, though.
-
-> I really don't like how nobody else than you seems to even look at any
-> of the key handling patches. Because nobody else seems to care.
-I've got no insight here, so i'll just throw a dart...
-
-viro, is this something you have any interest in watching closer?
-
-> See what I'm saying? This whole "David Howells does his own features
-> that nobody else uses" needs to stop. You need to have a champion. I
-> just don't feel safe pulling these kinds of changes from you, because
-> I get the feeling that ABSOLUTELY NOBODY ELSE ever really looked at it
-> or really cared.
-I get the "one man is not enough for proper maintenance" argument, and
-maybe it's true.  I don't know.
-
-But I just want to point out, I have been asking dhowells for this change
-notification API for years, so it's not something he did on his own and for
-no particularly good reason. It solves a real problem and has a real-world
-use case.
-
-He kindly did it because I (and Robbie Harwood and others) asked him about
-it, off and on, and  he was able to fit it onto his priority list for us.
-From this thread, it sounds like he solved a problem for Greg too, killing a
-couple birds with one stone?
-
---Ray
+T24gMjAxOS0wOS0wNSAyOjMzIHAubS4sIEtyenlzenRvZiBXaWxjenluc2tpIHdyb3RlOg0KPiBN
+b3ZlIHRoZSBzdGF0aWMga2V5d29yZCB0byB0aGUgZnJvbnQgb2YgZGVjbGFyYXRpb24gb2YgRENf
+QlVJTERfSUQsDQo+IGFuZCByZXNvbHZlIHRoZSBmb2xsb3dpbmcgY29tcGlsZXIgd2FybmluZyB0
+aGF0IGNhbiBiZSBzZWVuIHdoZW4NCj4gYnVpbGRpbmcgd2l0aCB3YXJuaW5ncyBlbmFibGVkIChX
+PTEpOg0KPiANCj4gZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvLi4vZGlzcGxheS9kYy9jb3Jl
+L2RjLmM6NzU6MTogd2FybmluZzoNCj4gICDigJhzdGF0aWPigJkgaXMgbm90IGF0IGJlZ2lubmlu
+ZyBvZiBkZWNsYXJhdGlvbiBbLVdvbGQtc3R5bGUtZGVjbGFyYXRpb25dDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBLcnp5c3p0b2YgV2lsY3p5bnNraSA8a3dAbGludXguY29tPg0KDQpSZXZpZXdlZC1i
+eTogSGFycnkgV2VudGxhbmQgPGhhcnJ5LndlbnRsYW5kQGFtZC5jb20+DQoNCkhhcnJ5DQoNCj4g
+LS0tDQo+IFJlbGF0ZWQ6IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3IvMjAxOTA4MjcyMzMwMTcu
+R0s5OTg3QGdvb2dsZS5jb20NCj4gDQo+ICBkcml2ZXJzL2dwdS9kcm0vYW1kL2Rpc3BsYXkvZGMv
+Y29yZS9kYy5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRl
+bGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FtZC9kaXNwbGF5
+L2RjL2NvcmUvZGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjLmMN
+Cj4gaW5kZXggODdjYTVhMjkwZDEyLi5hNWE4OWJjMGUxZDEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9hbWQvZGlzcGxheS9kYy9jb3JlL2RjLmMNCj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2FtZC9kaXNwbGF5L2RjL2NvcmUvZGMuYw0KPiBAQCAtNzIsNyArNzIsNyBAQA0KPiAgI2Rl
+ZmluZSBEQ19MT0dHRVIgXA0KPiAgCWRjLT5jdHgtPmxvZ2dlcg0KPiAgDQo+IC1jb25zdCBzdGF0
+aWMgY2hhciBEQ19CVUlMRF9JRFtdID0gInByb2R1Y3Rpb24tYnVpbGQiOw0KPiArc3RhdGljIGNv
+bnN0IGNoYXIgRENfQlVJTERfSURbXSA9ICJwcm9kdWN0aW9uLWJ1aWxkIjsNCj4gIA0KPiAgLyoq
+DQo+ICAgKiBET0M6IE92ZXJ2aWV3DQo+IA0K
