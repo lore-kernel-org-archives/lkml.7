@@ -2,146 +2,222 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61836C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE8EC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:43:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7532070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0702070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:43:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="XhlCG4rJ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="hpIQzluw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bPZVoBfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731814AbfIEInF (ORCPT
+        id S1732056AbfIEInq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:43:05 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:25550 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfIEInE (ORCPT
+        Thu, 5 Sep 2019 04:43:46 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51475 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIEInp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:43:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1567672984; x=1599208984;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=GxOr2rNiVhQoWKfx7Z8pZ3PQbWb4PsX+HKo+F1pinFQ=;
-  b=XhlCG4rJrjEPieVolLYmSOHHQPq7fKun+4Z1Mq0wcnsMHlgd8gRF2n0A
-   rWJ0Zwbu6iAjgW7ZVo9pojOZeSttzX9K+9Wjx/FQxsD6a3COp5RwNUJI6
-   XaUTPNYTksarhcU99dTZUQyxinDOXRBpiulM4vR6xFhAbOByNYdQOAM6u
-   D5v+vLOoY76Xp/h5EZgj7Zckdmztm+gzXZ9SrC8IvQ4NJ+Dv4burPqqxt
-   Ped2kQpsvDaIw2P8Qubej2AIC756B1zeZG12e5zroe7fYIVSR8Tn3qL2R
-   uv/LmGB47yotxAnH3J9/ua3JENMW1h0rOu97N/Nrn3W4HAuyfWjpqujih
-   w==;
-IronPort-SDR: 2TyVadzNtrKDdPx3w2DsVWswaPfpEEXAKlavrrMlHdN3u2Y2PdOkPYphutnFAnwurApbAit3EC
- v3I5uOpZwKPQ4lVBX2hEgRviDzeciYlK9MnpSYfi1W3SE4NaGWHzCFAAap33JwjXAXJvujrsMT
- AZVm3n8wZNo24QUDW0S452x0XCJwLAPJN3L3GNGZUYFn3QkiQOk+kr8GBzJhJvapAsOKGH+ZRU
- /3Hv74sl9ELV8gJKHnselw9qwka+Y7w13TwJuKdaUYOu/RUbbzj2OWF/iElB7lIExOOobw30vo
- Gu8=
-X-IronPort-AV: E=Sophos;i="5.64,470,1559491200"; 
-   d="scan'208";a="117520626"
-Received: from mail-by2nam01lp2059.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.59])
-  by ob1.hgst.iphmx.com with ESMTP; 05 Sep 2019 16:43:03 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bP1ew3xCOks3eIjObZ7IPu8sMHl8rFNhenoc5Zp8jEkKxTX/eGNlL57aqfo36RtCoc/nuutIcce7WP2HvpgRQ7kmkz97H5NxPktDFVh20cAyjLtE8AHL9FFdNknKIMISHJB2InG9uuX/rPQM/MyvTdmIEuPVEyVMxNRXFHDmlW62JaVmCe24jaymo+Zab+zS31z+pU8esQ982RbIg+SMq99hCzOhAxPvKgFGh2vwt4FnEXTNeAo8HcDaalt7S28kk+sMCheD3SzLoPsjyR+8SvDcedT2LfTg6FmJY5U+TujCg0u9chGkJjh8vVx7kqlZjKcQk9ovMQYY7qu1GD0PzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GxOr2rNiVhQoWKfx7Z8pZ3PQbWb4PsX+HKo+F1pinFQ=;
- b=jApHlGGLjRFMMT8/7B23wJKtPcy4enBS6moPSkVM65rmpfQ6B3YiKOY7pw1vK6aLoiZrn3JH2s9/1WVVZYTgqbC1kUqHjLPhZRhoYXOWDmP0bH4cVO8Q5IbkyuW3DYWB6k4OQCdAk66eBuRLBweJrQqyILCMs6x0fLA9KQe7yCTwBPK8dhyq657V+rN8efvcAWH8HhQfiJqN6XQXlJy8nu5G37StB9ylSEMGrg7YjcX6jPr1P0kLhatSDvNJ+lGWTu8dZ5mQnwj9VpxT4nyaxnlzulTjVUxXDKfCVtfXQrxHldMFN9i9IXRwG1GlNmoxQZ9tS4nKDW0XyoMRDSFtsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 5 Sep 2019 04:43:45 -0400
+Received: by mail-wm1-f68.google.com with SMTP id k1so1730076wmi.1;
+        Thu, 05 Sep 2019 01:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GxOr2rNiVhQoWKfx7Z8pZ3PQbWb4PsX+HKo+F1pinFQ=;
- b=hpIQzluwx8fU+eu66xR8l/B55YX4bEua3ybI0IRaWzE9gOH5N++Dh3UagrbD3oSridLylVpfb9sjPrcigV6JC6dsPBGk+QI0azLnQizBiN7rqbYFlJBQWPoKQVAtTs62MqXTaigV0/6NO831z5kugzDaZ670KLxyrb4rZPa+Ko0=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (10.186.144.209) by
- MN2PR04MB6784.namprd04.prod.outlook.com (10.141.117.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.19; Thu, 5 Sep 2019 08:43:02 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9c2b:ac1b:67b8:f371]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::9c2b:ac1b:67b8:f371%2]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
- 08:43:02 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Hannes Reinecke <hare@suse.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ming Lei <ming.lei@redhat.com>, Chris Boot <bootc@bootc.net>,
-        Zachary Hays <zhays@lexmark.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>
-Subject: RE: [PATCH v2 1/2] mmc: block: make the card_busy_detect() more
- generic
-Thread-Topic: [PATCH v2 1/2] mmc: block: make the card_busy_detect() more
- generic
-Thread-Index: AQHVY78D2wIhLs0r0UOGUgZKZkbOgKccwK8w
-Date:   Thu, 5 Sep 2019 08:43:01 +0000
-Message-ID: <MN2PR04MB69916E18CB87074C1189D82CFCBB0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <20190905075318.15554-1-chaotian.jing@mediatek.com>
- <20190905075318.15554-2-chaotian.jing@mediatek.com>
-In-Reply-To: <20190905075318.15554-2-chaotian.jing@mediatek.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8c68b9b7-b75e-417d-a8bd-08d731dd0fe6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR04MB6784;
-x-ms-traffictypediagnostic: MN2PR04MB6784:
-x-microsoft-antispam-prvs: <MN2PR04MB6784392BB9EAE3A1FACDC3C0FCBB0@MN2PR04MB6784.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:923;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(189003)(81156014)(5660300002)(316002)(54906003)(26005)(110136005)(81166006)(14444005)(7696005)(476003)(25786009)(6436002)(6116002)(3846002)(8676002)(52536014)(71190400001)(71200400001)(102836004)(99286004)(229853002)(486006)(66066001)(6506007)(478600001)(2906002)(8936002)(4326008)(7736002)(446003)(305945005)(14454004)(4744005)(256004)(186003)(9686003)(74316002)(86362001)(7416002)(11346002)(76176011)(55016002)(33656002)(76116006)(53936002)(66946007)(66476007)(6246003)(64756008)(66556008)(66446008)(41533002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6784;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: VNBrc5Kt8xsltZxn4cd3H06Wl0aRNYyW4sPSWBVAJoyMAJu2NewePevBgcGN8SwZKVGjF/3thMJSzJKR9o8DrHr1F0FBLxpYkCMsUv0WHgPBH9+tp4FlqvW+Qai/gfYK0XG8IJyX7waYAZk7DwcTlXVKqjhJ9boJGjROeIdT9xYWQ6o20fKJU8iCPRcdLS+TzfYrWnB8+WIDY3RQ5F/qu7jCRKXx8WYI6Krq+NC2T12qwpz26L04lW0qrkxPJ8SIe5mu1tXO4uunSBeTY8aiyzLvHAIvvgA6eLHWO6oG03dQJhcAe8dF8QmNL/VlST82NLbRMJa3E9500RuFF2tvxXpEL+WahMX4lHlUs+viyGGtOrqzkeVaB5mnXTHYUbHkY7WklEDGjUclczrofwq2BHLHtYDYL7ZYoh07/ZyXZzk=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CA6DN9VT7NVWqYWQWYhaDmOwL3C9+h1Hhmqr6+YHFU4=;
+        b=bPZVoBfiAa+jQVFM8v0rezBn1rG4oDXrnpwSrjyhrt78HNayXKjDWvuouBS3HAbjHV
+         KIdqDh8yz7yP9B/SN+6iChriPWurr1tufCC+CSiXuSN079DZsiyh0j1H8YwOHBljRnM7
+         pLxpmNv/lHXWTfrHcCO7jDrRFQ2INIBBxgFTb7rXy1RUh5UKI0ZRiZ1QqyusiC6GULx2
+         AiuXckgVG13KW1acs3O34So4b7PiyIQUvVkHL5zUo1tk244Ma0qTS9L+vwtoxVGqkucq
+         N5aTAXOrEESDMQ2o38TlukTfvnbNh4IFFWsJGOLqTBm3/rawjMBE77+I2yibN4wTlWqd
+         aSDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CA6DN9VT7NVWqYWQWYhaDmOwL3C9+h1Hhmqr6+YHFU4=;
+        b=SjU2ge/gTa03NYgO6/9aFZgw8yYppccZf7b0QzAP0xLnuevx5iGuH7IdRvr23nGIoV
+         iIOW9KqifHbjxHGmQfE4KyWlAgp02TcIXUfSMVgediiamkKeodo4V+/BTxWjN1sjCXcc
+         JRKyFl+SOB4bfCrN20T4ynD7LYAzig2SqbuyKGylwY8V0BrkuKGkczIoDQeKAa5JBMYg
+         b8Jtu8QPhUktRs9Lhe88Hs3KAD/lAY7g210arY4mOu40g0SalPOpKutKVkgidykMf97i
+         WPEy9ENHKpGaQqqtHVllZN7UMX1k3VCGWzznwzD0b/Mggixo+V9Jt6rzqNxb3l7YybKk
+         WNCA==
+X-Gm-Message-State: APjAAAXy9tkgHiy4zyfl4yhm/BFKk2MJaSHG4kYy+4WYPrae9VGzD5am
+        rKFgY4K4FB25SnGT4Z2/Tec=
+X-Google-Smtp-Source: APXvYqzWdCxIdT8hkYzDvW227BerlQZ+AtFaX7fHTBj/mJHJ8ljVRAGj0wl+VyONGvg1BW06rkXpvQ==
+X-Received: by 2002:a1c:98c9:: with SMTP id a192mr1992268wme.29.1567673023588;
+        Thu, 05 Sep 2019 01:43:43 -0700 (PDT)
+Received: from localhost.localdomain ([151.37.59.209])
+        by smtp.gmail.com with ESMTPSA id q124sm2983852wma.5.2019.09.05.01.43.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Sep 2019 01:43:42 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 09:43:26 +0100
+From:   Juri Lelli <juri.lelli@gmail.com>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Vincent Wang <vincent.wang@unisoc.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] cpuset: adjust the lock sequence when rebuilding the
+ sched domains.
+Message-ID: <20190905084326.GI5158@localhost.localdomain>
+References: <20190905021808.25130-1-zhang.lyra@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c68b9b7-b75e-417d-a8bd-08d731dd0fe6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 08:43:01.8771
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LiYie7xnxH72BiErNhedXJxPtoaHiwbz87CPx+y7gmhyTlcQqgI0WPXsLN4inpBS9dbh5c6u2atyKC0mp7Pu+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6784
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905021808.25130-1-zhang.lyra@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> to use the card_busy_detect() to wait card levae the programming state,
-> there may be do not have the "struct request *" argument.
-Maybe reword the commit log to make it more clear:
+Hi,
 
-A tad optimization, removing the "struct request *" argument from card_busy=
-_detect().
-It's not really needed there, and will prove its worth in the next patch,
-Where we'll use it in __mmc_blk_ioctl_cmd where struct request is not avail=
-able.
+On 05/09/19 10:18, Chunyan Zhang wrote:
+> From: Vincent Wang <vincent.wang@unisoc.com>
+> 
+> A deadlock issue is found when executing a cpu hotplug stress test on
+> android phones with cpuset and scheduil enabled.
+> 
+> When CPUx is plugged out, the hotplug thread that calls cpu_down()
+> will hold cpu_hotplug_lock and wait the thread cpuhp/x to finish
+> hotplug. If the core is the last one in a cluster, cpuhp/x have to
+> call cpuhp_cpufreq_offline() and the kernel thread sugov need to exit
+> for schedutil governor. The exit of sugov need to hold
+> cgroup_threadgroup_rwsem in exit_signals(). For example:
+> 
+> PID: 150    TASK: ffffffc0b9cad080  CPU: 0   COMMAND: "sprdhotplug"
+>  #0 [ffffff8009fcb9d0] __switch_to at ffffff80080858f0
+>  #1 [ffffff8009fcb9f0] __schedule at ffffff80089f185c
+>  #2 [ffffff8009fcba80] schedule at ffffff80089f1b84
+>  #3 [ffffff8009fcbaa0] schedule_timeout at ffffff80089f5124
+>  #4 [ffffff8009fcbb40] wait_for_common at ffffff80089f2944
+>  #5 [ffffff8009fcbbe0] wait_for_completion at ffffff80089f29a4
+>  #6 [ffffff8009fcbc00] __cpuhp_kick_ap at ffffff80080ab030
+>  #7 [ffffff8009fcbc20] cpuhp_kick_ap_work at ffffff80080ab154
+>  #8 [ffffff8009fcbc70] _cpu_down at ffffff80089ee19c
+>  #9 [ffffff8009fcbcd0] cpu_down at ffffff80080ac144
+> 
+> PID: 26     TASK: ffffffc0bbe22080  CPU: 3   COMMAND: "cpuhp/3"
+>  #0 [ffffff8009693a30] __switch_to at ffffff80080858f0
+>  #1 [ffffff8009693a50] __schedule at ffffff80089f185c
+>  #2 [ffffff8009693ae0] schedule at ffffff80089f1b84
+>  #3 [ffffff8009693b00] schedule_timeout at ffffff80089f5124
+>  #4 [ffffff8009693ba0] wait_for_common at ffffff80089f2944
+>  #5 [ffffff8009693c40] wait_for_completion at ffffff80089f29a4
+>  #6 [ffffff8009693c60] kthread_stop at ffffff80080ccd2c
+>  #7 [ffffff8009693c90] sugov_exit at ffffff8008102134
+>  #8 [ffffff8009693cc0] cpufreq_exit_governor at ffffff80086c03bc
+>  #9 [ffffff8009693ce0] cpufreq_offline at ffffff80086c0634
+> 
+> PID: 13819  TASK: ffffffc0affb6080  CPU: 0   COMMAND: "sugov:3"
+>  #0 [ffffff800ee73c30] __switch_to at ffffff80080858f0
+>  #1 [ffffff800ee73c50] __schedule at ffffff80089f185c
+>  #2 [ffffff800ee73ce0] schedule at ffffff80089f1b84
+>  #3 [ffffff800ee73d00] rwsem_down_read_failed at ffffff80089f49d0
+>  #4 [ffffff800ee73d80] __percpu_down_read at ffffff8008102ebc
+>  #5 [ffffff800ee73da0] exit_signals at ffffff80080bbd24
+>  #6 [ffffff800ee73de0] do_exit at ffffff80080ae65c
+>  #7 [ffffff800ee73e60] kthread at ffffff80080cc550
+> 
+> Sometimes cgroup_threadgroup_rwsem is hold by another thread, for
+> example Binder:681_2 on android, it wants to hold cpuset_mutex:
+> 
+> PID: 732    TASK: ffffffc09668b080  CPU: 2   COMMAND: "Binder:681_2"
+>  #0 [ffffff800cb7b8c0] __switch_to at ffffff80080858f0
+>  #1 [ffffff800cb7b8e0] __schedule at ffffff80089f185c
+>  #2 [ffffff800cb7b970] schedule at ffffff80089f1b84
+>  #3 [ffffff800cb7b990] schedule_preempt_disabled at ffffff80089f205c
+>  #4 [ffffff800cb7b9a0] __mutex_lock at ffffff80089f3118
+>  #5 [ffffff800cb7ba40] __mutex_lock_slowpath at ffffff80089f3230
+>  #6 [ffffff800cb7ba60] mutex_lock at ffffff80089f3278
+>  #7 [ffffff800cb7ba80] cpuset_can_attach at ffffff8008152f84
+>  #8 [ffffff800cb7bae0] cgroup_migrate_execute at ffffff800814ada8
+> 
+> On android, a thread kworker/3:0 will hold cpuset_mutex in
+> rebuild_sched_domains() and want to hold cpu_hotplug_lock which
+> is already hold by the hotplug thread.
+> 
+> PID: 4847   TASK: ffffffc031a6a080  CPU: 3   COMMAND: "kworker/3:0"
+>  #0 [ffffff8016fd3ad0] __switch_to at ffffff80080858f0
+>  #1 [ffffff8016fd3af0] __schedule at ffffff80089f185c
+>  #2 [ffffff8016fd3b80] schedule at ffffff80089f1b84
+>  #3 [ffffff8016fd3ba0] rwsem_down_read_failed at ffffff80089f49d0
+>  #4 [ffffff8016fd3c20] __percpu_down_read at ffffff8008102ebc
+>  #5 [ffffff8016fd3c40] cpus_read_lock at ffffff80080aa59c
+>  #6 [ffffff8016fd3c50] rebuild_sched_domains_locked at ffffff80081522a8
+> 
+> In order to fix the deadlock, this patch will adjust the lock sequence
+> when rebuilding sched domains. After stress tests, it works well.
+> 
+> Signed-off-by: Vincent Wang <vincent.wang@unisoc.com>
+> Signed-off-by: Chunyan Zhang <zhang.lyra@gmail.com>
+> ---
+>  kernel/cgroup/cpuset.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 5aa37531ce76..ef10d276da22 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -912,7 +912,6 @@ static void rebuild_sched_domains_locked(void)
+>  	int ndoms;
+>  
+>  	lockdep_assert_held(&cpuset_mutex);
+> -	get_online_cpus();
+>  
+>  	/*
+>  	 * We have raced with CPU hotplug. Don't do anything to avoid
+> @@ -921,19 +920,17 @@ static void rebuild_sched_domains_locked(void)
+>  	 */
+>  	if (!top_cpuset.nr_subparts_cpus &&
+>  	    !cpumask_equal(top_cpuset.effective_cpus, cpu_active_mask))
+> -		goto out;
+> +		return;
+>  
+>  	if (top_cpuset.nr_subparts_cpus &&
+>  	   !cpumask_subset(top_cpuset.effective_cpus, cpu_active_mask))
+> -		goto out;
+> +		return;
+>  
+>  	/* Generate domain masks and attrs */
+>  	ndoms = generate_sched_domains(&doms, &attr);
+>  
+>  	/* Have scheduler rebuild the domains */
+>  	partition_sched_domains(ndoms, doms, attr);
+> -out:
+> -	put_online_cpus();
+>  }
+>  #else /* !CONFIG_SMP */
+>  static void rebuild_sched_domains_locked(void)
+> @@ -943,9 +940,11 @@ static void rebuild_sched_domains_locked(void)
+>  
+>  void rebuild_sched_domains(void)
+>  {
+> +	get_online_cpus();
+>  	mutex_lock(&cpuset_mutex);
+>  	rebuild_sched_domains_locked();
+>  	mutex_unlock(&cpuset_mutex);
+> +	put_online_cpus();
+>  }
 
->=20
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
+This looks a subset of d74b27d63a8b ("cgroup/cpuset: Change cpuset_rwsem
+and hotplug lock order") from
+
+git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+
+right?
+
+Cc-ing Peter for reference.
+
+Best,
+
+Juri
