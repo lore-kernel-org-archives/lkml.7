@@ -2,82 +2,168 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7506CC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C2FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1042206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:47:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="IwNKxOS+"
+	by mail.kernel.org (Postfix) with ESMTP id 63FEC20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390046AbfIEOru (ORCPT
+        id S2390058AbfIEOrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:47:50 -0400
-Received: from forward106p.mail.yandex.net ([77.88.28.109]:45269 "EHLO
-        forward106p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389773AbfIEOru (ORCPT
+        Thu, 5 Sep 2019 10:47:53 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:57364 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728590AbfIEOrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:47:50 -0400
-Received: from mxback23o.mail.yandex.net (mxback23o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::74])
-        by forward106p.mail.yandex.net (Yandex) with ESMTP id 99C801C811AA;
-        Thu,  5 Sep 2019 17:47:47 +0300 (MSK)
-Received: from smtp2o.mail.yandex.net (smtp2o.mail.yandex.net [2a02:6b8:0:1a2d::26])
-        by mxback23o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id A9CRhuXvjK-ll3GAu2K;
-        Thu, 05 Sep 2019 17:47:47 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567694867;
-        bh=8aD9dO3AAn4axkTRS17W2/QjWZFlCar4FyR3QVxMvuY=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=IwNKxOS+GX0MbDQSkMUPJAL/M3ZSTQhKCQTZZpQ+5sm6OpXyuUWXYItXDtkab7aG1
-         bMcXLkEBMN9HjJ3Q0Q3WtQt9cM4Lz4ghNnHcQp/3/0tzzBrWemZFtJjDoUtX4Lib3L
-         70hbtDON22/ewUKLUuWIgVysQAkL/K8+ynycbMfM=
-Authentication-Results: mxback23o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id zkoybIaMjG-lexWkLJH;
-        Thu, 05 Sep 2019 17:47:45 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.co,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 19/19] MAINTAINERS: Add myself as maintainer of LOONGSON64
-Date:   Thu,  5 Sep 2019 22:43:16 +0800
-Message-Id: <20190905144316.12527-20-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
-References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
+        Thu, 5 Sep 2019 10:47:52 -0400
+Received: from pps.filterd (m0150241.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85EfhUR001204;
+        Thu, 5 Sep 2019 14:47:08 GMT
+Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2utevt1n0f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 14:47:08 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 966099A;
+        Thu,  5 Sep 2019 14:47:06 +0000 (UTC)
+Received: from [16.116.163.9] (unknown [16.116.163.9])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 79A4848;
+        Thu,  5 Sep 2019 14:47:04 +0000 (UTC)
+Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
+ <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
+ <20190905141634.GA25790@kroah.com>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <ae007007-02cc-0081-22c0-34b2d67f2cd3@hpe.com>
+Date:   Thu, 5 Sep 2019 07:47:34 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190905141634.GA25790@kroah.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_05:2019-09-04,2019-09-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 phishscore=0 impostorscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 clxscore=1011
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1906280000 definitions=main-1909050142
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm going to help with LOONGSON64 maintainance as well.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 836b21baeb20..36b656ded1b7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10753,6 +10753,7 @@ F:	drivers/*/*/*loongson2*
- 
- MIPS/LOONGSON64 ARCHITECTURE
- M:	Huacai Chen <chenhc@lemote.com>
-+M:	Jiaxun Yang <jiaxun.yang@flygoat.com>
- L:	linux-mips@vger.kernel.org
- S:	Maintained
- F:	arch/mips/boot/dts/loongson/
--- 
-2.22.0
+On 9/5/2019 7:16 AM, Greg KH wrote:
+> On Thu, Sep 05, 2019 at 08:02:58AM -0500, Mike Travis wrote:
+>> Decode the hubless UVsystab passed from BIOS to the kernel saving
+>> pertinent info in a similar manner that hubbed UVsystabs are decoded.
+>>
+>> Signed-off-by: Mike Travis <mike.travis@hpe.com>
+>> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+>> Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+>> To: Thomas Gleixner <tglx@linutronix.de>
+>> To: Ingo Molnar <mingo@redhat.com>
+>> To: H. Peter Anvin <hpa@zytor.com>
+>> To: Andrew Morton <akpm@linux-foundation.org>
+>> To: Borislav Petkov <bp@alien8.de>
+>> To: Christoph Hellwig <hch@infradead.org>
+>> Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+>> Cc: Russ Anderson <russ.anderson@hpe.com>
+>> Cc: Hedi Berriche <hedi.berriche@hpe.com>
+>> Cc: Steve Wahl <steve.wahl@hpe.com>
+>> Cc: x86@kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: stable@vger.kernel.org
+>> ---
+>>   arch/x86/kernel/apic/x2apic_uv_x.c |   16 ++++++++++++++--
+>>   1 file changed, 14 insertions(+), 2 deletions(-)
+> 
+> If you are trying to get one of my automated "WTF: patch XXXX was
+> seriously submitted to be applied to the stable tree?" emails, you are
+> on track for it...
+> 
+> Please go read the documentation link I sent you last time and figure
+> out how you can justify any of this patch series for a stable kernel
+> tree.
 
+Is it because it has fixes for new hardware?  If so, then I'll quit 
+submitting them to stable (we've had requests from distros for all 
+updates be in the stable tree for acceptance).  Otherwise I thought it 
+does comply with:
+
+    " - To have the patch automatically included in the stable tree,
+    add the tag
+      Cc: stable@vger.kernel.org
+    in the sign-off area. Once the patch is merged it will be applied
+    to the stable tree without anything else needing to be done by the
+    author or subsystem maintainer."
+
+Or is there some other reason that I'm not understanding?
+
+> 
+> Also, nit:
+> 
+>> --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
+>> +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+>> @@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
+>>   	struct uv_systab *st;
+>>   	int i;
+>>   
+>> -	if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
+>> +	/* Select only UV4 (hubbed or hubless) and higher */
+>> +	if (is_uv_hubbed(-2) < uv(4) && is_uv_hubless(-2) < uv(4))
+>>   		return 0;	/* No extended UVsystab required */
+>>   
+>>   	st = uv_systab;
+>> @@ -1554,8 +1555,19 @@ static __init int uv_system_init_hubless
+>>   
+>>   	/* Init kernel/BIOS interface */
+>>   	rc = uv_bios_init();
+>> +	if (rc < 0) {
+>> +		pr_err("UV: BIOS init error:%d\n", rc);
+> 
+> Why isn't that function printing an error?
+> 
+> 
+>> +		return rc;
+>> +	}
+>> +
+>> +	/* Process UVsystab */
+>> +	rc = decode_uv_systab();
+>> +	if (rc < 0) {
+>> +		pr_err("UV: UVsystab decode error:%d\n", rc);
+> 
+> Same here, have the function itself print the error, makes this type of
+> stuff much cleaner.
+
+You're right this would be much cleaner.  Mostly this was done because 
+of the rarity of an error here, and the specifics (BIOS failures) 
+usually cannot be dealt with by users.  The system log is captured as 
+part of the error and packaged with other fault details that are 
+analyzed internally.
+
+But I will make the changes you are suggesting.  And thanks.
+> 
+> greg k-h
+> 
