@@ -2,119 +2,149 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7923AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E1C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123F7206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:10:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567689004;
-	bh=T6Hjysi8KQ3q7Hw/PPwFXQ6fg/TWt+MuBSvYozhEKcY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mlzkqglChPgTYsdF3uKOH7r3J1BX4qtwdSYdlZmWgJuHBMT4vEQ54hM/+MSLcBGUc
-	 TdgskLjWTQgsbEl9trvrWQbpW1eb4wgo3cButEBWKosRrvD/87c8yjN2DeVAz6wu2M
-	 UpGQPsMd37J68mAfEESEy71zNs04a+u7qMdqRE00=
+	by mail.kernel.org (Postfix) with ESMTP id CCE3F2067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733030AbfIENKE (ORCPT
+        id S2388070AbfIENLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43272 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 09:11:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42652 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfIENKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:10:04 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730839AbfIENLh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:11:37 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02CC4206CD;
-        Thu,  5 Sep 2019 13:09:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567689002;
-        bh=T6Hjysi8KQ3q7Hw/PPwFXQ6fg/TWt+MuBSvYozhEKcY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oxqK7XnFmv/m8jH5QET6wGe5cWWTp/PCIVUr31qWbtDqzR5WkRSq906Qkr16jtNxb
-         MrtxJ3jWmOz9xJxqJE1suTgLAftz/i7cyFOf4SwdT2BnVPq59d1yrk3l/tMXlDw+am
-         hDDQyj9hAvxS6u5h+cOIMysaE70bTcIGivIJyF5E=
-Date:   Thu, 5 Sep 2019 22:09:58 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        "Stefano Stabellini" <sstabellini@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>, <x86@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        <xen-devel@lists.xenproject.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>
-Subject: Re: [Xen-devel] [PATCH -tip 0/2] x86: Prohibit kprobes on
- XEN_EMULATE_PREFIX
-Message-Id: <20190905220958.d0189e1e253f9e553b880675@kernel.org>
-In-Reply-To: <20190905203224.e41d7f3dfbf918c5031f9766@kernel.org>
-References: <156759754770.24473.11832897710080799131.stgit@devnote2>
-        <ad6431be-c86e-5ed5-518a-d1e9d1959e80@citrix.com>
-        <20190905104937.60aa03f699a9c0fbf1b651b9@kernel.org>
-        <1372ce73-e2d8-6144-57df-a98429587826@citrix.com>
-        <20190905203224.e41d7f3dfbf918c5031f9766@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mx1.redhat.com (Postfix) with ESMTPS id 0ECD183F4C
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 13:11:37 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id z2so980173wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:11:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=9ANyZ4dBkBOltXnKi+WoWQpmuFWiDil0u88wFq4AYQY=;
+        b=oE8LNOBZixsTSX544jFOLyKVR4WZCvCl6s0xf0DLVduDN+7NKTNgHe7kDN8BMhtvzT
+         Le7WEesoinJDJBk6Vham0/lXFLEmftS0F24LswOkwT/9HlqBlZ7eFFXRVy+YrZECLdS6
+         lRrqp2H91Ph1xMoIvc1VdAuJsReXKB7NgC/7S6aX1EQvXhq930CEaOySHvi6Tt2JH1sc
+         TynRfXMNAaYqqWUWQsDJTC5B3rRYF7MokZwLiwqvC3oehZR6ey5be+i0eBeBrC/1IUUQ
+         RbEVfPAY3YxgqYB0WDyEuB2fguSHF5DXmpF6eMqcdr6N3jGvv7reGFCsmkhOHXOcyuFo
+         ErRA==
+X-Gm-Message-State: APjAAAVkkkQv+Svdu3vGwVGA2iaVgIBK95ckUg/I1JD5eMVHXSyZCEsD
+        PQyAYC5lA0w8OmwbBmHF8Gxo7gnkGyet9Hkp8GDbz1Ss1JCsorzEWN6UhBvAb40lHZTxr3TYWNn
+        Va+CZbUREBPp4uhsOdGQbaI18
+X-Received: by 2002:a1c:80ca:: with SMTP id b193mr2630526wmd.171.1567689095193;
+        Thu, 05 Sep 2019 06:11:35 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyKbK6O+n/cVqLS49y3v2z3Wc3ajQWQx/waHdOI+hpMRHK7GNQBFj0JYwrQL53NYvHAotP2eA==
+X-Received: by 2002:a1c:80ca:: with SMTP id b193mr2630501wmd.171.1567689094909;
+        Thu, 05 Sep 2019 06:11:34 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id x5sm3093960wrg.69.2019.09.05.06.11.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 06:11:34 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>,
+        syzbot <syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, devel@linuxdriverproject.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm <kvm@vger.kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        LKML <linux-kernel@vger.kernel.org>, mikelley@microsoft.com,
+        Ingo Molnar <mingo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: general protection fault in __apic_accept_irq
+In-Reply-To: <CANRm+CxBdFjVrYzAe_Rs=v6BMSq9Gx+ngDrEitK6aez=kMq2XQ@mail.gmail.com>
+References: <000000000000e3072b0591ca1937@google.com> <CANRm+CxBdFjVrYzAe_Rs=v6BMSq9Gx+ngDrEitK6aez=kMq2XQ@mail.gmail.com>
+Date:   Thu, 05 Sep 2019 15:11:33 +0200
+Message-ID: <87imq6khve.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 20:32:24 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+Wanpeng Li <kernellwp@gmail.com> writes:
 
-> On Thu, 5 Sep 2019 08:54:17 +0100
-> Andrew Cooper <andrew.cooper3@citrix.com> wrote:
-> 
-> > On 05/09/2019 02:49, Masami Hiramatsu wrote:
-> > > On Wed, 4 Sep 2019 12:54:55 +0100
-> > > Andrew Cooper <andrew.cooper3@citrix.com> wrote:
-> > >
-> > >> On 04/09/2019 12:45, Masami Hiramatsu wrote:
-> > >>> Hi,
-> > >>>
-> > >>> These patches allow x86 instruction decoder to decode
-> > >>> xen-cpuid which has XEN_EMULATE_PREFIX, and prohibit
-> > >>> kprobes to probe on it.
-> > >>>
-> > >>> Josh reported that the objtool can not decode such special
-> > >>> prefixed instructions, and I found that we also have to
-> > >>> prohibit kprobes to probe on such instruction.
-> > >>>
-> > >>> This series can be applied on -tip master branch which
-> > >>> has merged Josh's objtool/perf sharing common x86 insn
-> > >>> decoder series.
-> > >> The paravirtualised xen-cpuid is were you'll see it most in a regular
-> > >> kernel, but be aware that it is also used for testing purposes in other
-> > >> circumstances, and there is an equivalent KVM prefix which is used for
-> > >> KVM testing.
-> > > Good catch! I didn't notice that. Is that really same sequance or KVM uses
-> > > another sequence of instructions for KVM prefix?
-> > 
-> > I don't know if you've spotted, but the prefix is a ud2a instruction
-> > followed by 'xen' in ascii.
-> > 
-> > The KVM version was added in c/s 6c86eedc206dd1f9d37a2796faa8e6f2278215d2
+> On Thu, 5 Sep 2019 at 16:53, syzbot
+> <syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com> wrote:
+>>
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    3b47fd5c Merge tag 'nfs-for-5.3-4' of git://git.linux-nfs...
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=124af12a600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=144488c6c6c6d2b6
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=dff25ee91f0c7d5c1695
+>> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+>> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10954676600000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
+>>
+>> The bug was bisected to:
+>>
+>> commit 0aa67255f54df192d29aec7ac6abb1249d45bda7
+>> Author: Vitaly Kuznetsov <vkuznets@redhat.com>
+>> Date:   Mon Nov 26 15:47:29 2018 +0000
+>>
+>>      x86/hyper-v: move synic/stimer control structures definitions to
+>> hyperv-tlfs.h
+>>
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=156128c1600000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=136128c1600000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
+>> Fixes: 0aa67255f54d ("x86/hyper-v: move synic/stimer control structures
+>> definitions to hyperv-tlfs.h")
+>>
+>> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data
+>> 0x94
+>> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data
+>> 0x48c
+>> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000004 data
+>> 0x4ac
+>> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000005 data
+>> 0x1520
+>> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000006 data
+>> 0x15d4
+>> kvm [9347]: vcpu0, guest rIP: 0xcc Hyper-V uhandled wrmsr: 0x40000007 data
+>> 0x15c4
+>> kasan: CONFIG_KASAN_INLINE enabled
+>> kasan: GPF could be caused by NULL-ptr deref or user memory access
+>> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+>> CPU: 0 PID: 9347 Comm: syz-executor665 Not tainted 5.3.0-rc7+ #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+>> Google 01/01/2011
+>> RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+>
+> Thanks for the report, I found the root cause, will send a patch soon.
+>
 
-Hmm, I think I might misunderstand what the "emulate prefix"... that is not
-a prefix which replace actual prefix, but just works like an escape sequence.
-Thus the next instruction can have any x86 prefix, correct?
-
-If so, this patch doesn't work. I have to add a new field in struct insn
-like "insn.emulate_prefix_size" so that we can keep a room for the prefixes
-for real instruction.
-
-Thank you,
-
+I'm really interested in how any issue can be caused by 0aa67255f54d as
+we just moved some definitions from a c file to a common header... (ok,
+we did more than that, some structures gained '__packed' but it all
+still seems legitimate to me and I can't recall any problems with
+genuine Hyper-V...)
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Vitaly
