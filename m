@@ -2,125 +2,197 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC85C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 207CAC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2CA20692
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567711350;
-	bh=+rcSeGTBLFPifEAacDA/4ZV6OmXaFqgTgQ/Y1RV665g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lwRNRi9YmNJMx0J2Akn7pXQTQIb0U6z5T7G/yCcRAwcRVfyJSP1BkipAIKPhpQswO
-	 QI7o1JG/LlbIv/Q0qbKxqnFtA0ljyDurM+d+i96z+9GcBLaLWFnLGSJIW4yrRlYZ3C
-	 R5U/4SGfwMK1e30bhST7JkBylsimAJvNEzQIo4PY=
+	by mail.kernel.org (Postfix) with ESMTP id B51F320692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnrajutK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733271AbfIETW2 (ORCPT
+        id S2388842AbfIET00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:22:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729825AbfIETW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:22:28 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6521E205ED;
-        Thu,  5 Sep 2019 19:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567711348;
-        bh=+rcSeGTBLFPifEAacDA/4ZV6OmXaFqgTgQ/Y1RV665g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BwOSBbFaiDzVCM6kpJm/NSFp0CUZO99T9pzTH1GdM/6faNLRbS2va/Xtrrm4+jZwm
-         LtIeCqY3FDGYk8oT8oXe69Y08JZaSmu4DGXH0UTP0AU5PL/Wq+X7Sc9LrHh0AT1iNQ
-         o2QWt+/YDLShMPHZqxAkj+1lVhE7gsf+qL91uAfs=
-Date:   Thu, 5 Sep 2019 14:22:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-Subject: Re: [PATCH v7 0/7] Fix PF/VF dependency issue
-Message-ID: <20190905192225.GF103977@google.com>
-References: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        Thu, 5 Sep 2019 15:26:26 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:37064 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbfIET00 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:26:26 -0400
+Received: by mail-qt1-f195.google.com with SMTP id g13so3779233qtj.4;
+        Thu, 05 Sep 2019 12:26:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0r/znGHIj2Grw9klAyjeQvZth4AaeZj93+usoxZBVCI=;
+        b=nnrajutKL1aJFG4M+XqaQqsGbl1ULe2ZDuBP5kA06rya+jN3ZjXcDANxXsQythz+Bo
+         XSUticCROrNWMMomCwX54h9/gF0LZYg2y9WoQ7w/tb6/iI6wfMF8oaWter2DRQarneOA
+         g7pWoVLTNrkbqs9et/yeKphmWQFcnDfQ1iNmy8MepfARUhHRPtkwSQWHxUk9DCkdo1Ma
+         YjqlZhdvCb4b082lDq3IhxxnLNbWIaVvRVWa5v+dWU+D1YLNw04sTa5nIdQ/5nV8A6bq
+         CIEhV4dOBHcj++mizon8s4jYHPG7VXaoR/2FJYNsT2fCy+TrL6Mb0S0x4Z6Kdq5ZkEaJ
+         lopw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0r/znGHIj2Grw9klAyjeQvZth4AaeZj93+usoxZBVCI=;
+        b=rTXsvlwIy/neP52g44etntola0h+dcYSuMvMzzJBOW7hZS11evp9/25CIdH9FCVnZY
+         n0lG7DgNmbKnJzN1V2Q5tG5Yj6aYL4BQhkE2XRZ4zhPoNgVX7K+oTQhTCHupdUpmHiZE
+         VEqk4AN5Z5zlRWqKUkXPU4KHhiBMFNlVJ590n07BQo3vGJ4EkNX70dPOAS0WyyjVVjpx
+         LDz6DPpnxyPj6ez01oJpR1b+ZthlYv9mbJc+nt9i6ygbHBacGeIwSeKn/YMLvq5Mq8V3
+         FKrIjYP0IZeQDb0Dpn0aFEva4B8ADAG8tc4gUVJuge4CWXakRBzePA5MRzyDBesgenIB
+         zw9Q==
+X-Gm-Message-State: APjAAAUbfc9RH0zNDvPnVqgK/UWbH7aXTjWhKoN03NJJB4mQ9FKOgM3s
+        INz6p1x+vhGyqlB3Bfm4m44oFnhIPOYPyvJMG2k=
+X-Google-Smtp-Source: APXvYqwMbXNzfBi/GIvilhcFGjlZQw/f5m+TrIcysRJsasuXyqXs1FeFeOSQeHZzhK+9dJHguhczBeE0knW9cEvflu0=
+X-Received: by 2002:ac8:478a:: with SMTP id k10mr5266013qtq.117.1567711584703;
+ Thu, 05 Sep 2019 12:26:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190904160021.72d104f1@canb.auug.org.au> <CAK7LNAQEU6uu-Z=VeR2KNa8ezCLA7VHtpvM2tvAKsWtUTi6Eug@mail.gmail.com>
+In-Reply-To: <CAK7LNAQEU6uu-Z=VeR2KNa8ezCLA7VHtpvM2tvAKsWtUTi6Eug@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 5 Sep 2019 12:26:13 -0700
+Message-ID: <CAEf4BzZLBV3o=t9+a4o4T7KZ_M04vddD0RMVs3s4JvDsvQ8onA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 28, 2019 at 03:14:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Current implementation of ATS, PASID, PRI does not handle VF dependencies
-> correctly. Following patches addresses this issue.
-> 
-> Changes since v6:
->  * Removed locking interfaces used in v6.
->  * Made necessary changes to PRI/PASID enable/disable calls to allow
->    register changes only for PF.
-> 
-> Changes since v5:
->  * Created new patches for PRI/PASID capability caching.
->  * Removed individual locks (pri_lock, pasid_lock) and added common
->    resource lock to synchronize PRI/PASID updates between PF/VF.
->  * Addressed comments from Bjorn Helgaas.
-> 
-> Changes since v4:
->  * Defined empty functions for pci_pri_init() and pci_pasid_init() for cases
->    where CONFIG_PCI_PRI and CONFIG_PCI_PASID are not enabled.
-> 
-> Changes since v3:
->  * Fixed critical path (lock context) in pci_restore_*_state functions.
-> 
-> Changes since v2:
->  * Added locking mechanism to synchronize accessing PF registers in VF.
->  * Removed spec compliance checks in patches.
->  * Addressed comments from Bjorn Helgaas.
-> 
-> Changes since v1:
->  * Added more details about the patches in commit log.
->  * Removed bulk spec check patch.
->  * Addressed comments from Bjorn Helgaas.
-> 
-> Kuppuswamy Sathyanarayanan (7):
->   PCI/ATS: Fix pci_prg_resp_pasid_required() dependency issues
->   PCI/ATS: Cache PRI capability check result
->   PCI/ATS: Cache PASID capability check result
->   PCI/ATS: Add PRI support for PCIe VF devices
->   PCI/ATS: Add PASID support for PCIe VF devices
->   PCI/ATS: Disable PF/VF ATS service independently
->   PCI: Skip Enhanced Allocation (EA) initialization for VF device
+On Tue, Sep 3, 2019 at 11:20 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> On Wed, Sep 4, 2019 at 3:00 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > After merging the net-next tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >
+> > scripts/link-vmlinux.sh: 74: Bad substitution
+> >
+> > Caused by commit
+> >
+> >   341dfcf8d78e ("btf: expose BTF info through sysfs")
+> >
+> > interacting with commit
+> >
+> >   1267f9d3047d ("kbuild: add $(BASH) to run scripts with bash-extension")
+> >
+> > from the kbuild tree.
+>
+>
+> I knew that they were using bash-extension
+> in the #!/bin/sh script.  :-D
+>
+> In fact, I wrote my patch in order to break their code
+> and  make btf people realize that they were doing wrong.
 
-To make it easier to backport things, I think these should be
-reordered so the important fixes are first, e.g., like this:
+Was there a specific reason to wait until this would break during
+Stephen's merge, instead of giving me a heads up (or just replying on
+original patch) and letting me fix it and save everyone's time and
+efforts?
 
-    PCI/ATS: Add PRI support for PCIe VF devices
-    PCI/ATS: Add PASID support for PCIe VF devices
-    PCI/ATS: Disable PF/VF ATS service independently
-    PCI/ATS: Cache PRI capability check result
-    PCI/ATS: Cache PASID capability check result
+Either way, I've fixed the issue in
+https://patchwork.ozlabs.org/patch/1158620/ and will pay way more
+attention to BASH-specific features going forward (I found it pretty
+hard to verify stuff like this, unfortunately). But again, code review
+process is the best place to catch this and I really hope in the
+future we can keep this process productive. Thanks!
 
-I don't think the following ones are actually needed:
+>
+>
+>
+> > The change in the net-next tree turned link-vmlinux.sh into a bash script
+> > (I think).
+> >
+> > I have applied the following patch for today:
+>
+>
+> But, this is a temporary fix only for linux-next.
+>
+> scripts/link-vmlinux.sh does not need to use the
+> bash-extension ${@:2} in the first place.
+>
+> I hope btf people will write the correct code.
 
-    PCI: Skip Enhanced Allocation (EA) initialization for VF device
-    PCI/ATS: Fix pci_prg_resp_pasid_required() dependency issues
+I replaced ${@:2} with shift and ${@}, I hope that's a correct fix,
+but if you think it's not, please reply on the patch and let me know.
 
-I'll post a v8 with my proposal.
 
->  drivers/pci/ats.c       | 202 ++++++++++++++++++++++++++++------------
->  drivers/pci/pci.c       |   7 ++
->  include/linux/pci-ats.h |  12 ++-
->  include/linux/pci.h     |   3 +-
->  4 files changed, 159 insertions(+), 65 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
+>
+> Thanks.
+>
+>
+>
+>
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Wed, 4 Sep 2019 15:43:41 +1000
+> > Subject: [PATCH] link-vmlinux.sh is now a bash script
+> >
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  Makefile                | 4 ++--
+> >  scripts/link-vmlinux.sh | 2 +-
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index ac97fb282d99..523d12c5cebe 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1087,7 +1087,7 @@ ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
+> >
+> >  # Final link of vmlinux with optional arch pass after final link
+> >  cmd_link-vmlinux =                                                 \
+> > -       $(CONFIG_SHELL) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
+> > +       $(BASH) $< $(LD) $(KBUILD_LDFLAGS) $(LDFLAGS_vmlinux) ;    \
+> >         $(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) $@, true)
+> >
+> >  vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
+> > @@ -1403,7 +1403,7 @@ clean: rm-files := $(CLEAN_FILES)
+> >  PHONY += archclean vmlinuxclean
+> >
+> >  vmlinuxclean:
+> > -       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/link-vmlinux.sh clean
+> > +       $(Q)$(BASH) $(srctree)/scripts/link-vmlinux.sh clean
+> >         $(Q)$(if $(ARCH_POSTLINK), $(MAKE) -f $(ARCH_POSTLINK) clean)
+> >
+> >  clean: archclean vmlinuxclean
+> > diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+> > index f7edb75f9806..ea1f8673869d 100755
+> > --- a/scripts/link-vmlinux.sh
+> > +++ b/scripts/link-vmlinux.sh
+> > @@ -1,4 +1,4 @@
+> > -#!/bin/sh
+> > +#!/bin/bash
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  #
+> >  # link vmlinux
+> > --
+> > 2.23.0.rc1
+> >
+> > --
+> > Cheers,
+> > Stephen Rothwell
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
