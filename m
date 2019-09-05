@@ -2,39 +2,40 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72699C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3590C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5931B2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00C220825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391349AbfIESsE (ORCPT
+        id S2391375AbfIESsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:48:04 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:29498 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388235AbfIESsE (ORCPT
+        Thu, 5 Sep 2019 14:48:12 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:3872 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391350AbfIESsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:48:04 -0400
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85IklBu025909;
+        Thu, 5 Sep 2019 14:48:12 -0400
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85IklPM019511;
         Thu, 5 Sep 2019 18:47:42 GMT
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2uu4s09k5a-1
+Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2utm9k0gnk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Thu, 05 Sep 2019 18:47:42 +0000
 Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g4t3426.houston.hpe.com (Postfix) with ESMTP id B04815A;
-        Thu,  5 Sep 2019 18:47:41 +0000 (UTC)
+        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 0BD2491;
+        Thu,  5 Sep 2019 18:47:42 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
-        id 72FC8201EAA6B; Thu,  5 Sep 2019 13:47:41 -0500 (CDT)
-Message-Id: <20190905184741.256857552@stormcage.eag.rdlabs.hpecorp.net>
+        id C6558201EAAA8; Thu,  5 Sep 2019 13:47:41 -0500 (CDT)
+Message-Id: <20190905184741.701374930@stormcage.eag.rdlabs.hpecorp.net>
+References: <20190905184741.256857552@stormcage.eag.rdlabs.hpecorp.net>
 User-Agent: quilt/0.46-1
-Date:   Thu, 05 Sep 2019 13:47:41 -0500
+Date:   Thu, 05 Sep 2019 13:47:44 -0500
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -47,29 +48,91 @@ Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Hedi Berriche <hedi.berriche@hpe.com>,
         Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 0/8] x86/platform/UV: Update UV Hubless System Support
+Subject: [PATCH 3/8] x86/platform/uv: Add return code to UV BIOS Init function
+Content-Disposition: inline; filename=add-bios_init-rc
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
  definitions=2019-09-05_06:2019-09-04,2019-09-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=511 suspectscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ spamscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 impostorscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1906280000 definitions=main-1909050176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add a return code to the UV BIOS init function that indicates the 
+successful initialization of the kernel/BIOS callback interface.
 
-These patches support upcoming UV systems that do not have a UV HUB.
+Signed-off-by: Mike Travis <mike.travis@hpe.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+To: Ingo Molnar <mingo@redhat.com>
+To: H. Peter Anvin <hpa@zytor.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+To: Borislav Petkov <bp@alien8.de>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Cc: Russ Anderson <russ.anderson@hpe.com>
+Cc: Hedi Berriche <hedi.berriche@hpe.com>
+Cc: Steve Wahl <steve.wahl@hpe.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/x86/include/asm/uv/bios.h |    2 +-
+ arch/x86/platform/uv/bios_uv.c |    9 +++++----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-	* Save OEM_ID from ACPI MADT probe
-	* Return UV Hubless System Type
-	* Add return code to UV BIOS Init function
-	* Setup UV functions for Hubless UV Systems
-	* Add UV Hubbed/Hubless Proc FS Files
-	* Decode UVsystab Info
-	* Account for UV Hubless in is_uvX_hub Ops
+--- linux.orig/arch/x86/include/asm/uv/bios.h
++++ linux/arch/x86/include/asm/uv/bios.h
+@@ -138,7 +138,7 @@ extern s64 uv_bios_change_memprotect(u64
+ extern s64 uv_bios_reserved_page_pa(u64, u64 *, u64 *, u64 *);
+ extern int uv_bios_set_legacy_vga_target(bool decode, int domain, int bus);
+ 
+-extern void uv_bios_init(void);
++extern int uv_bios_init(void);
+ 
+ extern unsigned long sn_rtc_cycles_per_second;
+ extern int uv_type;
+--- linux.orig/arch/x86/platform/uv/bios_uv.c
++++ linux/arch/x86/platform/uv/bios_uv.c
+@@ -184,20 +184,20 @@ int uv_bios_set_legacy_vga_target(bool d
+ }
+ EXPORT_SYMBOL_GPL(uv_bios_set_legacy_vga_target);
+ 
+-void uv_bios_init(void)
++int uv_bios_init(void)
+ {
+ 	uv_systab = NULL;
+ 	if ((uv_systab_phys == EFI_INVALID_TABLE_ADDR) ||
+ 	    !uv_systab_phys || efi_runtime_disabled()) {
+ 		pr_crit("UV: UVsystab: missing\n");
+-		return;
++		return -EEXIST;
+ 	}
+ 
+ 	uv_systab = ioremap(uv_systab_phys, sizeof(struct uv_systab));
+ 	if (!uv_systab || strncmp(uv_systab->signature, UV_SYSTAB_SIG, 4)) {
+ 		pr_err("UV: UVsystab: bad signature!\n");
+ 		iounmap(uv_systab);
+-		return;
++		return -EINVAL;
+ 	}
+ 
+ 	/* Starting with UV4 the UV systab size is variable */
+@@ -208,8 +208,9 @@ void uv_bios_init(void)
+ 		uv_systab = ioremap(uv_systab_phys, size);
+ 		if (!uv_systab) {
+ 			pr_err("UV: UVsystab: ioremap(%d) failed!\n", size);
+-			return;
++			return -EFAULT;
+ 		}
+ 	}
+ 	pr_info("UV: UVsystab: Revision:%x\n", uv_systab->revision);
++	return 0;
+ }
 
 -- 
