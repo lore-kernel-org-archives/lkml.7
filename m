@@ -4,62 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5425BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC782070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035EE2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567705152;
-	bh=13S+o/7KASRwpai+Ozi/RTL0hCKl0lCKmL7UpITczfg=;
+	s=default; t=1567705158;
+	bh=U2UzW/qldgBvlfclLo6riwWC9hJ/ZbM1VL2ZW4RpmzU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=BvTEw420UCqH4UaJP0IZz1pyU9MAcwlbfrYcyG5LNJYCUEVS3Kg0XKM6/2x4mwDaD
-	 oVW5nYSx9FQbAFg6Slb0ZE4FApyEgAZIhVHnV/VGBncubMe3CDIHz6zsDZrPPJ5T3w
-	 H9MIqpwxglePpd4UgrMZsyEG25KZRxY54dCqiStk=
+	b=bFpnywbZRtOGXcMPqPiq7r+Q8sqy7fj7C6iMSnskJ3WqGypGJ0+BlZDmVN5ZVw5iG
+	 KftX8iHhndUpu5DzAh+uFkr1K1DNUTxbkz1bhhqdr1gSNDnyYRa2FcKtZXT0wgW9oG
+	 JYawoz8apQfLfIexafPlh6P2lGUIuFgMA6KCVI7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391101AbfIERjK (ORCPT
+        id S2391117AbfIERjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:39:10 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57708 "EHLO
+        Thu, 5 Sep 2019 13:39:16 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57744 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391042AbfIERjG (ORCPT
+        with ESMTP id S2391089AbfIERjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:39:06 -0400
+        Thu, 5 Sep 2019 13:39:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=rtIzYqmrw6ZN5jUJED9NFhssAY92BE8w9JEYF5gkiiQ=; b=rFT+AfzP6j1d
-        vPA3tZ9NYc5583rcj5/km5pZuvhXafzUgRgvbjt+jB181N6EYC98t0IoIHd5SGsR1QgIcCNrd/lOz
-        4sKqrGeADbvr/B0jgFnF6843GCJF4S6vPPfL4EWtNZ+osndd1eQcC8QB2feAC5xGsnuiASzBKNA/u
-        tUsOw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        List-Archive; bh=u/jyKCR0c7O6hZK0BTOZC8fGSA/TBitpvpVeuX5oSeg=; b=X1aHfL7dDGT4
+        4sdiGhPr11mNXThpPVHqTtxeO0JqBg4a8hCYnY6CHEJ9OkelbhUTd+PVE4Dr7sAMWtfzvu4iYkI8B
+        XAo9rw+yB8C2qvPzEOJGG1VQukRA7Tml9rh6TMr59379boExPf1R/lr+FzTDuYdPU0rzNH5JnYszs
+        eFIzg=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i5vih-0005HR-H1; Thu, 05 Sep 2019 17:38:55 +0000
+        id 1i5vim-0005I9-PM; Thu, 05 Sep 2019 17:39:00 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 0BF572742D07; Thu,  5 Sep 2019 18:38:55 +0100 (BST)
+        id 4B98F2742D17; Thu,  5 Sep 2019 18:39:00 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     alsa-devel@alsa-project.org,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: qcom: common: Include link-name in error messages" to the asoc tree
-In-Reply-To: <20190905040306.21399-1-bjorn.andersson@linaro.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     avifishman70@gmail.com, benjaminfair@google.com,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        openbmc@lists.ozlabs.org, tali.perry1@gmail.com,
+        tmaimon77@gmail.com, venture@google.com, yuenn@google.com
+Subject: Applied "spi: npcm-fiu: remove set but not used variable 'retlen'" to the spi tree
+In-Reply-To: <20190905072436.23932-1-yuehaibing@huawei.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190905173855.0BF572742D07@ypsilon.sirena.org.uk>
-Date:   Thu,  5 Sep 2019 18:38:55 +0100 (BST)
+Message-Id: <20190905173900.4B98F2742D17@ypsilon.sirena.org.uk>
+Date:   Thu,  5 Sep 2019 18:39:00 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: qcom: common: Include link-name in error messages
+   spi: npcm-fiu: remove set but not used variable 'retlen'
 
-has been applied to the asoc tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -92,94 +89,45 @@ to this mail.
 Thanks,
 Mark
 
-From 1ab1b340f037760ec9944a9a4911e85f29fc6e2c Mon Sep 17 00:00:00 2001
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Date: Wed, 4 Sep 2019 21:03:06 -0700
-Subject: [PATCH] ASoC: qcom: common: Include link-name in error messages
+From a0ce1fd11e587be803eb2f299d478c962df3706f Mon Sep 17 00:00:00 2001
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Thu, 5 Sep 2019 15:24:36 +0800
+Subject: [PATCH] spi: npcm-fiu: remove set but not used variable 'retlen'
 
-Reading out the link-name earlier and including it in the various error
-messages makes it much more convenient to figure out what links have
-unmet dependencies.
+drivers/spi/spi-npcm-fiu.c: In function npcm_fiu_read:
+drivers/spi/spi-npcm-fiu.c:472:9: warning:
+ variable retlen set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20190905040306.21399-1-bjorn.andersson@linaro.org
+It is never used, so remove it.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Link: https://lore.kernel.org/r/20190905072436.23932-1-yuehaibing@huawei.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/qcom/common.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/spi/spi-npcm-fiu.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-index 2c7348ddbbb3..6c20bdd850f3 100644
---- a/sound/soc/qcom/common.c
-+++ b/sound/soc/qcom/common.c
-@@ -53,12 +53,18 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 		link->num_cpus		= 1;
- 		link->num_platforms	= 1;
+diff --git a/drivers/spi/spi-npcm-fiu.c b/drivers/spi/spi-npcm-fiu.c
+index d9e2f58b104b..cb52fd8008d0 100644
+--- a/drivers/spi/spi-npcm-fiu.c
++++ b/drivers/spi/spi-npcm-fiu.c
+@@ -469,7 +469,6 @@ static int npcm_fiu_read(struct spi_mem *mem, const struct spi_mem_op *op)
+ {
+ 	u8 *data = op->data.buf.in;
+ 	int i, readlen, currlen;
+-	size_t retlen = 0;
+ 	u8 *buf_ptr;
+ 	u32 addr;
+ 	int ret;
+@@ -494,8 +493,6 @@ static int npcm_fiu_read(struct spi_mem *mem, const struct spi_mem_op *op)
+ 		currlen -= 16;
+ 	} while (currlen > 0);
  
-+		ret = of_property_read_string(np, "link-name", &link->name);
-+		if (ret) {
-+			dev_err(card->dev, "error getting codec dai_link name\n");
-+			goto err;
-+		}
-+
- 		cpu = of_get_child_by_name(np, "cpu");
- 		platform = of_get_child_by_name(np, "platform");
- 		codec = of_get_child_by_name(np, "codec");
- 
- 		if (!cpu) {
--			dev_err(dev, "Can't find cpu DT node\n");
-+			dev_err(dev, "%s: Can't find cpu DT node\n", link->name);
- 			ret = -EINVAL;
- 			goto err;
- 		}
-@@ -66,7 +72,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 		ret = of_parse_phandle_with_args(cpu, "sound-dai",
- 					"#sound-dai-cells", 0, &args);
- 		if (ret) {
--			dev_err(card->dev, "error getting cpu phandle\n");
-+			dev_err(card->dev, "%s: error getting cpu phandle\n", link->name);
- 			goto err;
- 		}
- 		link->cpus->of_node = args.np;
-@@ -74,7 +80,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 
- 		ret = snd_soc_of_get_dai_name(cpu, &link->cpus->dai_name);
- 		if (ret) {
--			dev_err(card->dev, "error getting cpu dai name\n");
-+			dev_err(card->dev, "%s: error getting cpu dai name\n", link->name);
- 			goto err;
- 		}
- 
-@@ -83,14 +89,14 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 					"sound-dai",
- 					0);
- 			if (!link->platforms->of_node) {
--				dev_err(card->dev, "platform dai not found\n");
-+				dev_err(card->dev, "%s: platform dai not found\n", link->name);
- 				ret = -EINVAL;
- 				goto err;
- 			}
- 
- 			ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
- 			if (ret < 0) {
--				dev_err(card->dev, "codec dai not found\n");
-+				dev_err(card->dev, "%s: codec dai not found\n", link->name);
- 				goto err;
- 			}
- 			link->no_pcm = 1;
-@@ -110,12 +116,6 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 		}
- 
- 		link->ignore_suspend = 1;
--		ret = of_property_read_string(np, "link-name", &link->name);
--		if (ret) {
--			dev_err(card->dev, "error getting codec dai_link name\n");
--			goto err;
--		}
+-	retlen = i;
 -
- 		link->nonatomic = 1;
- 		link->dpcm_playback = 1;
- 		link->dpcm_capture = 1;
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
