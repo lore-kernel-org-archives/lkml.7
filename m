@@ -2,72 +2,158 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A34C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF298C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E2720650
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D0C206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbfIEODg (ORCPT
+        id S1732980AbfIEOD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:03:36 -0400
-Received: from 16.mo6.mail-out.ovh.net ([87.98.139.208]:35033 "EHLO
-        16.mo6.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfIEODg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:03:36 -0400
-X-Greylist: delayed 4203 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Sep 2019 10:03:35 EDT
-Received: from player778.ha.ovh.net (unknown [10.108.42.88])
-        by mo6.mail-out.ovh.net (Postfix) with ESMTP id 972BC1DF93F
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 12:26:17 +0200 (CEST)
-Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
-        (Authenticated sender: qperret@qperret.net)
-        by player778.ha.ovh.net (Postfix) with ESMTPSA id 9F16B968B125;
-        Thu,  5 Sep 2019 10:25:59 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 12:25:53 +0200
-From:   Quentin Perret <qperret@qperret.net>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Will Deacon <will@kernel.org>,
-        Quentin Perret <quentin.perret@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, rjw@rjwysocki.net,
-        vincent.guittot@linaro.org, juri.lelli@redhat.com,
-        catalin.marinas@arm.com, morten.rasmussen@arm.com,
-        chris.redpath@arm.com, dietmar.eggemann@arm.com,
-        patrick.bellasi@arm.com, valentin.schneider@arm.com,
-        qais.yousef@arm.com
-Subject: Re: [PATCH] mailmap: Update email address for Quentin Perret
-Message-ID: <20190905102552.GA12097@qperret.net>
-References: <20190902105036.32419-1-quentin.perret@arm.com>
- <20190903145950.xko5fejupxj3f5nx@willie-the-truck>
- <20190904144346.396a77f8@lwn.net>
+        Thu, 5 Sep 2019 10:03:56 -0400
+Received: from muru.com ([72.249.23.125]:59720 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbfIEOD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:03:56 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id CA4C5810D;
+        Thu,  5 Sep 2019 14:04:24 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     Dave Gerlach <d-gerlach@ti.com>, Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH] bus: ti-sysc: Fix clock handling for no-idle quirks
+Date:   Thu,  5 Sep 2019 07:03:37 -0700
+Message-Id: <20190905140337.19373-1-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904144346.396a77f8@lwn.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Ovh-Tracer-Id: 16341592727032519557
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduvddrudejjedgvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon,
+NFSroot can fail on dra7 when cpsw is probed using ti-sysc interconnect
+target module driver as reported by Keerthy.
 
-On Wednesday 04 Sep 2019 at 14:43:46 (-0600), Jonathan Corbet wrote:
-> If there's some value to having an entry in the mailmap file, then
-> obviously it should be added.
+Device clocks and the interconnect target module may or may not be
+enabled by the bootloader on init, but we currently assume the clocks
+and module are on from the bootloader for "ti,no-idle" and
+"ti,no-idle-on-init" quirks as reported by Grygorii Strashko.
 
-So, FWIW, get_maintainers.pl does return my name as 'author' or 'commit
-signer' on few files (include/linux/energy_model.h among others for ex).
-Which is why I thought updating .mailmap would be good practice.
+Let's fix the issue by always enabling clocks init, and
+never disable them for "ti,no-idle" quirk. For "ti,no-idle-on-init"
+quirk, we must decrement the usage count later on to allow PM
+runtime to idle the module if requested.
 
-Thanks,
-Quentin
+Fixes: 1a5cd7c23cc5 ("bus: ti-sysc: Enable all clocks directly during init to read revision")
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Reported-by: Keerthy <j-keerthy@ti.com>
+Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/bus/ti-sysc.c | 48 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1632,17 +1632,19 @@ static int sysc_init_module(struct sysc *ddata)
+ 	if (error)
+ 		return error;
+ 
+-	if (manage_clocks) {
+-		sysc_clkdm_deny_idle(ddata);
++	sysc_clkdm_deny_idle(ddata);
+ 
+-		error = sysc_enable_opt_clocks(ddata);
+-		if (error)
+-			return error;
++	/*
++	 * Always enable clocks. The bootloader may or may not have enabled
++	 * the related clocks.
++	 */
++	error = sysc_enable_opt_clocks(ddata);
++	if (error)
++		return error;
+ 
+-		error = sysc_enable_main_clocks(ddata);
+-		if (error)
+-			goto err_opt_clocks;
+-	}
++	error = sysc_enable_main_clocks(ddata);
++	if (error)
++		goto err_opt_clocks;
+ 
+ 	if (!(ddata->cfg.quirks & SYSC_QUIRK_NO_RESET_ON_INIT)) {
+ 		error = sysc_rstctrl_reset_deassert(ddata, true);
+@@ -1660,7 +1662,7 @@ static int sysc_init_module(struct sysc *ddata)
+ 			goto err_main_clocks;
+ 	}
+ 
+-	if (!ddata->legacy_mode && manage_clocks) {
++	if (!ddata->legacy_mode) {
+ 		error = sysc_enable_module(ddata->dev);
+ 		if (error)
+ 			goto err_main_clocks;
+@@ -1677,6 +1679,7 @@ static int sysc_init_module(struct sysc *ddata)
+ 	if (manage_clocks)
+ 		sysc_disable_main_clocks(ddata);
+ err_opt_clocks:
++	/* No re-enable of clockdomain autoidle to prevent module autoidle */
+ 	if (manage_clocks) {
+ 		sysc_disable_opt_clocks(ddata);
+ 		sysc_clkdm_allow_idle(ddata);
+@@ -2357,6 +2360,28 @@ static void ti_sysc_idle(struct work_struct *work)
+ 
+ 	ddata = container_of(work, struct sysc, idle_work.work);
+ 
++	/*
++	 * One time decrement of clock usage counts if left on from init.
++	 * Note that we disable opt clocks unconditionally in this case
++	 * as they are enabled unconditionally during init without
++	 * considering sysc_opt_clks_needed() at that point.
++	 */
++	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE |
++				 SYSC_QUIRK_NO_IDLE_ON_INIT)) {
++		sysc_clkdm_deny_idle(ddata);
++		sysc_disable_main_clocks(ddata);
++		sysc_disable_opt_clocks(ddata);
++		sysc_clkdm_allow_idle(ddata);
++	}
++
++	/* Keep permanent PM runtime usage count for SYSC_QUIRK_NO_IDLE */
++	if (ddata->cfg.quirks & SYSC_QUIRK_NO_IDLE)
++		return;
++
++	/*
++	 * Decrement PM runtime usage count for SYSC_QUIRK_NO_IDLE_ON_INIT
++	 * and SYSC_QUIRK_NO_RESET_ON_INIT
++	 */
+ 	if (pm_runtime_active(ddata->dev))
+ 		pm_runtime_put_sync(ddata->dev);
+ }
+@@ -2445,7 +2470,8 @@ static int sysc_probe(struct platform_device *pdev)
+ 	INIT_DELAYED_WORK(&ddata->idle_work, ti_sysc_idle);
+ 
+ 	/* At least earlycon won't survive without deferred idle */
+-	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE_ON_INIT |
++	if (ddata->cfg.quirks & (SYSC_QUIRK_NO_IDLE |
++				 SYSC_QUIRK_NO_IDLE_ON_INIT |
+ 				 SYSC_QUIRK_NO_RESET_ON_INIT)) {
+ 		schedule_delayed_work(&ddata->idle_work, 3000);
+ 	} else {
+-- 
+2.23.0
