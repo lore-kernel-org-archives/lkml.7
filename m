@@ -2,91 +2,94 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3C3C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E518EC43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB8702070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDDC20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567696178;
-	bh=NfBX9KrULy9QnrJyx1vJdGwafFge3XYVRmLdsNYeQxg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=ScA96rca59fE5St7jW5lnIGkBIKBg+zbOfuVYFiP0KXtLGxBuDWqmwtbzyZ7xDLQR
-	 1eO1829NMN1pp7bRQUv+ciU+zzVBZbFMKCjBj13N07VZUSXivB8biWZuRdVbbeVErn
-	 KB1s0CQjCO7h5LpfNmVHQK1G1/9FHn0iRG7iGDbY=
+	s=default; t=1567696306;
+	bh=c6Klt7mrqAOjCZDFyaHnc54eSVIfusmbzS0lo9b8yjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=g3+zF/aJzVF99YBZAoouCpl2zGD03o1UThGYkr9xw6hCCbug0q7P9p5HNcAE0koEx
+	 WSU3Y+F/VCO6yj19xqEBRduKiAdWcfKbLiGal7xeanPlg3oWAnHvLLFCNSXxx6PQ+X
+	 eiLGYDTwWD72fehIrkcjOu0pexS9phJyDdHScH64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388290AbfIEPJh (ORCPT
+        id S2389955AbfIEPLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:09:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:46602 "EHLO foss.arm.com"
+        Thu, 5 Sep 2019 11:11:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731401AbfIEPJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:09:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFCD81000;
-        Thu,  5 Sep 2019 08:09:36 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1B4B3F67D;
-        Thu,  5 Sep 2019 08:09:35 -0700 (PDT)
-Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
-To:     John Garry <john.garry@huawei.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        id S2388524AbfIEPLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 11:11:44 -0400
+Received: from localhost (unknown [62.28.240.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B90020828;
+        Thu,  5 Sep 2019 15:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567696304;
+        bh=c6Klt7mrqAOjCZDFyaHnc54eSVIfusmbzS0lo9b8yjg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BR+UiPaPkce7W1s47hLG/KmG+0HffACHMGYM2+hEDzS9b48b+DvoYN1RuWp+jOrgG
+         dzZ5nt1uv8vaa+QStOAh+M3DN3zooejScHpembX/hUA1ESLusCxlyMl69h4pJT3FLt
+         ZdfGF8q4IxAfflOjcKU3vyLN4Z/oIfvVASUT8pMw=
+Date:   Thu, 5 Sep 2019 11:11:41 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
- <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
- <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
- <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
- <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
- <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
- <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
- <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
- <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
- <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
- <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
- <ecdb638b-d5d3-efdc-becd-478ce6e6ff96@huawei.com>
- <e3a4a04a-4669-5a03-5115-84c6573b99e9@kernel.org>
- <d48c9e64-2a65-45a5-c61e-b69505531b1e@huawei.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <e14e2b68-1d72-46c7-0255-1b3039d089d7@kernel.org>
-Date:   Thu, 5 Sep 2019 16:09:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [PATCH] HID: hyperv: Use in-place iterator API in the channel
+ callback
+Message-ID: <20190905151141.GB1616@sasha-vm>
+References: <1566269763-26817-1-git-send-email-decui@microsoft.com>
+ <KU1P153MB016679060F4360071B751AF0BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
+ <nycvar.YFH.7.76.1909041623050.31470@cbobk.fhfr.pm>
 MIME-Version: 1.0
-In-Reply-To: <d48c9e64-2a65-45a5-c61e-b69505531b1e@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <nycvar.YFH.7.76.1909041623050.31470@cbobk.fhfr.pm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 15:53, John Garry wrote:
+On Wed, Sep 04, 2019 at 04:23:27PM +0200, Jiri Kosina wrote:
+>On Tue, 3 Sep 2019, Dexuan Cui wrote:
+>
+>> > Hi Jiri, Benjamin, can this patch go through Sasha's hyperv tree:
+>> > https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+>> >
+>> > This is a purely Hyper-V specific change.
+>>
+>> Hi Jiri, Benjamin,
+>> Are you OK if this patch for the Hyper-V HID driver goes through the Hyper-V
+>> tree maintained by Sasha Levin? It's a purely Hyper-V change, and I have
+>> been using the patch for several months and there is no regression.
+>
+>No problem with that. Feel free to add
+>
+>	Acked-by: Jiri Kosina <jkosina@suse.cz>
+>
+>in that case.
 
-[...[
+I've queued it up for hyperv-fixes, thank you!
 
->> Awesome. Can I take this as a Tested-by?
-> 
-> Sure, btw, could you please also add:
-> 
-> Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
-> 
-> ... as he did initial discovery and analysis on the problem.
-
-Sure. Now pushed to irqchip-next.
-
+--
 Thanks,
-	
-	M.
--- 
-Jazz is not dead, it just smells funny...
+Sasha
