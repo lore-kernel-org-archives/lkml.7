@@ -6,36 +6,35 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C366C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656CEC3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1842922CF7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426C321848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389235AbfIEMMG (ORCPT
+        id S2389295AbfIEMMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:12:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42703 "EHLO
+        Thu, 5 Sep 2019 08:12:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42705 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387662AbfIEMME (ORCPT
+        with ESMTP id S2387775AbfIEMMF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:12:04 -0400
+        Thu, 5 Sep 2019 08:12:05 -0400
 Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtp (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1i5qcM-0007tB-No; Thu, 05 Sep 2019 14:12:02 +0200
-Message-Id: <20190905120539.707986830@linutronix.de>
+        id 1i5qcN-0007tE-56; Thu, 05 Sep 2019 14:12:03 +0200
+Message-Id: <20190905120539.797994508@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 05 Sep 2019 14:03:40 +0200
+Date:   Thu, 05 Sep 2019 14:03:41 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <fweisbec@gmail.com>,
         Oleg Nesterov <oleg@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        syzbot+55acd54b57bb4b3840a4@syzkaller.appspotmail.com
-Subject: [patch 1/6] posix-cpu-timers: Always clear head pointer on dequeue
+        Kees Cook <keescook@chromium.org>
+Subject: [patch 2/6] posix-cpu-timers: Fix permission check regression
 References: <20190905120339.561100423@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -44,52 +43,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The head pointer in struct cpu_timer is checked to be NULL in
-posix_cpu_timer_del() when the delete raced with the exit cleanup. The
-works correctly as long as the timer is actually dequeued via
-posix_cpu_timers_exit*().
+The recent consolidation of the three permission checks introduced a subtle
+regression. For timer_create() with a process wide timer it returns the
+current task if the lookup through the PID which is encoded into the
+clockid results in returning current.
 
-But if the timer was dequeued due to expiry the head pointer is still set
-and triggers the warning.
+That's broken because it does not validate whether the current task is the
+group leader.
 
-In fact keeping the head pointer around after any dequeue is pointless as
-is has no meaning at all after that.
+That was caused by the two different variants of permission checks:
 
-Clear the head pointer always on dequeue and remove the unused requeue
-function while at it.
+  - posix_cpu_timer_get() allowed access to the process wide clock when the
+    looked up task is current. That's not an issue because the process wide
+    clock is in the shared sighand.
 
-Fixes: 60bda037f1dd ("posix-cpu-timers: Utilize timerqueue for storage")
-Reported-by: syzbot+55acd54b57bb4b3840a4@syzkaller.appspotmail.com
+  - posix_cpu_timer_create() made sure that the looked up task is the group
+    leader.
+
+Restore the previous state.
+
+Note, that these permission checks are more than questionable, but that's
+subject to follow up changes.
+
+Fixes: 6ae40e3fdcd3 ("posix-cpu-timers: Provide task validation functions")
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/posix-timers.h |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ kernel/time/posix-cpu-timers.c |   40 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 31 insertions(+), 9 deletions(-)
 
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -74,11 +74,6 @@ struct cpu_timer {
- 	int			firing;
- };
- 
--static inline bool cpu_timer_requeue(struct cpu_timer *ctmr)
--{
--	return timerqueue_add(ctmr->head, &ctmr->node);
--}
--
- static inline bool cpu_timer_enqueue(struct timerqueue_head *head,
- 				     struct cpu_timer *ctmr)
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -47,25 +47,42 @@ void update_rlimit_cpu(struct task_struc
+ /*
+  * Functions for validating access to tasks.
+  */
+-static struct task_struct *lookup_task(const pid_t pid, bool thread)
++static struct task_struct *lookup_task(const pid_t pid, bool thread,
++				       bool gettime)
  {
-@@ -88,8 +83,10 @@ static inline bool cpu_timer_enqueue(str
+ 	struct task_struct *p;
  
- static inline void cpu_timer_dequeue(struct cpu_timer *ctmr)
- {
--	if (!RB_EMPTY_NODE(&ctmr->node.node))
-+	if (ctmr->head) {
- 		timerqueue_del(ctmr->head, &ctmr->node);
-+		ctmr->head = NULL;
++	/*
++	 * If the encoded PID is 0, then the timer is targeted at current
++	 * or the process to which current belongs.
++	 */
+ 	if (!pid)
+ 		return thread ? current : current->group_leader;
+ 
+ 	p = find_task_by_vpid(pid);
+-	if (!p || p == current)
++	if (!p)
+ 		return p;
++
+ 	if (thread)
+ 		return same_thread_group(p, current) ? p : NULL;
+-	if (p == current)
+-		return p;
++
++	if (gettime) {
++		/*
++		 * For clock_gettime() the task does not need to be the
++		 * actual group leader. tsk->sighand gives access to the
++		 * group's clock.
++		 */
++		return (p == current || thread_group_leader(p)) ? p : NULL;
 +	}
++
++	/*
++	 * For processes require that p is group leader.
++	 */
+ 	return has_group_leader_pid(p) ? p : NULL;
  }
  
- static inline u64 cpu_timer_getexpires(struct cpu_timer *ctmr)
+ static struct task_struct *__get_task_for_clock(const clockid_t clock,
+-						bool getref)
++						bool getref, bool gettime)
+ {
+ 	const bool thread = !!CPUCLOCK_PERTHREAD(clock);
+ 	const pid_t pid = CPUCLOCK_PID(clock);
+@@ -75,7 +92,7 @@ static struct task_struct *__get_task_fo
+ 		return NULL;
+ 
+ 	rcu_read_lock();
+-	p = lookup_task(pid, thread);
++	p = lookup_task(pid, thread, gettime);
+ 	if (p && getref)
+ 		get_task_struct(p);
+ 	rcu_read_unlock();
+@@ -84,12 +101,17 @@ static struct task_struct *__get_task_fo
+ 
+ static inline struct task_struct *get_task_for_clock(const clockid_t clock)
+ {
+-	return __get_task_for_clock(clock, true);
++	return __get_task_for_clock(clock, true, false);
++}
++
++static inline struct task_struct *get_task_for_clock_get(const clockid_t clock)
++{
++	return __get_task_for_clock(clock, true, true);
+ }
+ 
+ static inline int validate_clock_permissions(const clockid_t clock)
+ {
+-	return __get_task_for_clock(clock, false) ? 0 : -EINVAL;
++	return __get_task_for_clock(clock, false, false) ? 0 : -EINVAL;
+ }
+ 
+ /*
+@@ -339,7 +361,7 @@ static int posix_cpu_clock_get(const clo
+ 	struct task_struct *tsk;
+ 	u64 t;
+ 
+-	tsk = get_task_for_clock(clock);
++	tsk = get_task_for_clock_get(clock);
+ 	if (!tsk)
+ 		return -EINVAL;
+ 
 
 
