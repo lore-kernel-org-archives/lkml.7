@@ -2,386 +2,165 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645ECC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8C9C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0C820693
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3820022CF5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="qDpJAt9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388561AbfIELdC (ORCPT
+        id S2388578AbfIELfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:33:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49192 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732033AbfIELdC (ORCPT
+        Thu, 5 Sep 2019 07:35:00 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:60981 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732741AbfIELe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:33:02 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85BWW6T017256;
-        Thu, 5 Sep 2019 07:32:40 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2usu18rqm8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Sep 2019 07:32:39 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x85BQFvB010338;
-        Thu, 5 Sep 2019 11:32:25 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02dal.us.ibm.com with ESMTP id 2uqgh7gv2p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Sep 2019 11:32:25 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85BWNS546268754
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 11:32:23 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 594EB6A047;
-        Thu,  5 Sep 2019 11:32:23 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5B1C86A04D;
-        Thu,  5 Sep 2019 11:32:21 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.80.196.15])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Sep 2019 11:32:21 +0000 (GMT)
-Subject: Re: [PATCH v5 1/2] powerpc: detect the secure boot mode of the system
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Eric Ricther <erichte@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Paul Mackerras <paulus@samba.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>
-References: <1566218108-12705-1-git-send-email-nayna@linux.ibm.com>
- <1566218108-12705-2-git-send-email-nayna@linux.ibm.com>
- <87tv9usynv.fsf@mpe.ellerman.id.au>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <8366281f-5b24-63cf-bd79-9794298b5bf7@linux.vnet.ibm.com>
-Date:   Thu, 5 Sep 2019 07:32:20 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <87tv9usynv.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 5 Sep 2019 07:34:59 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Ajay.Kathat@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="Ajay.Kathat@microchip.com"; x-conformance=spf_only;
+  x-record-type="v=spf1"; x-record-text="v=spf1 mx
+  a:ushub1.microchip.com a:smtpout.microchip.com
+  a:mx1.microchip.iphmx.com a:mx2.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Ajay.Kathat@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Ajay.Kathat@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: PtPIRUosD9LyyRb75RUDAqPif8RNDAC6fNYr0P84QzhhFS1w/i2950s2C5u/tdw0Gme8AkG++q
+ K6N2OHqQ4VSyYK+REbKpD/t9hd8uPs3zDyc+94HUuXN1sjyCyfkVXc1ogfJmYWqHPEcns//cO5
+ GMZPShSYr6DbwE7DW2KVJu1giIfxcK9XgQxkt7W0MuPiPk7e5T3kMbFt8pBlvz+3uEX2LuWByM
+ TT3u0EoIJEH87Lryjzj7mp0fsmavTqt1DesiwKRa22PHuy29oYG0KmA0GUm1nFuZljJG9hrU/W
+ 8fk=
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="47936976"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 05 Sep 2019 04:34:59 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 5 Sep 2019 04:34:58 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Thu, 5 Sep 2019 04:34:58 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jX4nwhnWSqOgsWso4ocCYETqcb7bIAvC4ap0WbDwM+hDx22vgaFkzhx7g5SLQa4/XbkxjgR+VcXU1y4Qo/hUGGYR1GYNLW8F3fykCfEUB3KWClZY6NTwWtdPVJiJU7eeuTw+yc7DyuRC3RpfPt6h7FFZ8W2gvEU6+fFnnPYH19TqzqS4ubhPOWaTDiVVSxYykf5r2cfJCMf0jI9+jrsPpEpYKpJym5AbjdqNaWunTYw9KfSaQZYDNHomkhsS9GfmD4OgXx34J5BhmlPXLf70NAEGOPFPWKnwHgsGZZVm+Qd8QMCiGHXcJAmSXbNRAbVv2Hy+xw0/8MT3CMX9s5u2yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=29FwnydSVZa44ay7U18Q8Q3QOvBIPCZSaJ2UQrkSOvQ=;
+ b=mE+Hw3Zi6ZANcbfAS1D+pjiUrdUdHhBLCRxHGmbjd/CnQekkkL2NDuuzJ0MT79Q4EGhuKP3rCWSDjynr0YzF4tzS9DEx0Y4UvlW5ZcLCP1XiFS/tJXBgkgPeqVvE3ioSvKlicmHKlwxgK9gbaEsWb3OZRy+1oe4kMZ6HsMnIl2znDfS0xZmuRvg4yhheZp6Q0LFXJV0cXW9cOQdEzx2t+hlUJigeXG4XiELt2q/ghaNF6bV5Kbyb0BvWd4Pp7xVXK55GiaDGdWLFFDTf8Sn1rg6v5RSpQOiVhLCQdsTdr3PE0ys34khdo1dX0pNK56DagvsjJVn2qN+wxOAj0b5IrQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=29FwnydSVZa44ay7U18Q8Q3QOvBIPCZSaJ2UQrkSOvQ=;
+ b=qDpJAt9Y49vLpLu4I4hHGD0IC80I/oFfr8o0tYOuc6yUb3swLCuTojZb/7Fg+WTB+c6MIE1isFaA1fO2/t2h+M/HZphgiIDNhpOEQamLzMspJa0eRUdQecP5O6OgndZNJMQo4mdAx3P81VHSXwzqAR5Jk/u8caCXyeqGx9xxeyo=
+Received: from BN6PR11MB3985.namprd11.prod.outlook.com (10.255.129.78) by
+ BN6PR11MB1489.namprd11.prod.outlook.com (10.172.22.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Thu, 5 Sep 2019 11:34:56 +0000
+Received: from BN6PR11MB3985.namprd11.prod.outlook.com
+ ([fe80::5864:dae1:9b7e:ff83]) by BN6PR11MB3985.namprd11.prod.outlook.com
+ ([fe80::5864:dae1:9b7e:ff83%4]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
+ 11:34:56 +0000
+From:   <Ajay.Kathat@microchip.com>
+To:     <greg@kroah.com>
+CC:     <Eugen.Hristev@microchip.com>, <Adham.Abozaeid@microchip.com>,
+        <linux-wireless@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] staging: dt-bindings: wilc1000: add optional rtc_clk
+ property
+Thread-Topic: [PATCH 1/2] staging: dt-bindings: wilc1000: add optional rtc_clk
+ property
+Thread-Index: AQHVYyVmBkghZ7w+IkiStodl6jvpxKccmquAgAAYcQCAAEJxAA==
+Date:   Thu, 5 Sep 2019 11:34:56 +0000
+Message-ID: <5878d3a6-65b7-0f02-2810-57f5c060b931@microchip.com>
+References: <1567603548-13355-1-git-send-email-eugen.hristev@microchip.com>
+ <da5ea898-d8da-a6e2-97a0-4662b7d70b31@microchip.com>
+ <20190905073700.GA30339@kroah.com>
+In-Reply-To: <20190905073700.GA30339@kroah.com>
+Reply-To: <Ajay.Kathat@microchip.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050117
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR05CA0012.namprd05.prod.outlook.com
+ (2603:10b6:a03:c0::25) To BN6PR11MB3985.namprd11.prod.outlook.com
+ (2603:10b6:405:7b::14)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [121.244.27.38]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 999e74f4-3326-4f8d-401b-08d731f513c3
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1489;
+x-ms-traffictypediagnostic: BN6PR11MB1489:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN6PR11MB14898052B1CBCB84189969C5E3BB0@BN6PR11MB1489.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39850400004)(136003)(376002)(346002)(396003)(189003)(199004)(52116002)(6246003)(53936002)(66066001)(31696002)(86362001)(256004)(6116002)(3846002)(2616005)(229853002)(66446008)(11346002)(64756008)(476003)(446003)(66476007)(305945005)(7736002)(6512007)(6436002)(31686004)(486006)(6306002)(36756003)(66946007)(66556008)(71190400001)(6486002)(81166006)(76176011)(3450700001)(478600001)(14454004)(81156014)(8676002)(5660300002)(6916009)(54906003)(966005)(71200400001)(316002)(2906002)(43066004)(102836004)(53546011)(6506007)(386003)(4326008)(186003)(8936002)(99286004)(25786009)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1489;H:BN6PR11MB3985.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: p1CuM5RoWcW0AbAn/paFHiBLK4gZblthm6N43cF4qAD0fQ0JTFTsh6mFvKJGAGhJ8iOOVA0gIPEfcTZkdiknNKUb2dGG3lFwL3/1mU7ajE/GD9kvnrp6W5DAo9fK4YV15LB9y6eF0p9Yt3DsxgTAwoQkrgY37mni1TFpop4UmO7fnEbieOzhEBw9TVZ13OStoz507ud3BfbbHAyu1XSQ2soehh9LLA0L8ypx3KeWm4SK2/qoFdUtF2wfo7hbBcE4JqBgtSoypeKlxJcE2Cetj7yF9PeSqDZo3W+Hi+qoBg5dV+AJ9/yEiDSLKYfUG3m3ycZg9agaBWklc739P2H5osRUFzR5bbO1p3Xz7Z0jp44NOgpvY2Tzi2imiUihoXmtaenq4tn1AXe3VhgrOYWGxgHAKrJQyvNwzWJ0cjENRr8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <25DBC010746EEB4F8B6A46E4EBFD80F4@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 999e74f4-3326-4f8d-401b-08d731f513c3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 11:34:56.5745
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0NIB7JrzKfcIfl6b3wTVI7sOEHKf1lmBtIml5WPSbnn/8KAewUZY1GJZwGkd0QSwexcbehS7IfCpbehdLqF7LbS6YqePP0pfM/hZqR496EI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1489
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/02/2019 07:52 AM, Michael Ellerman wrote:
-> Hi Nayna,
-
-Hi Michael,
-
->
-> Sorry I've taken so long to get to this series, there's just too many
-> patches that need reviewing :/
-
-No problem. I understand. Thanks for reviewing.
-
->
-> Nayna Jain <nayna@linux.ibm.com> writes:
->> Secure boot on POWER defines different IMA policies based on the secure
->> boot state of the system.
-> The terminology throughout is a bit vague, we have POWER, PowerPC, Linux
-> on POWER etc.
->
-> What this patch is talking about is a particular implemention of secure
-> boot on some OpenPOWER machines running bare metal - am I right?
->
-> So saying "Secure boot on POWER defines different IMA policies" is a bit
-> broad I think. Really we've just decided that a way to implement secure
-> boot is to use IMA policies.
-
-I think the idea was to convey that the same design can be reused or 
-extended as needed.
-But I agree for now it is currently only OpenPOWER machines running on 
-bare metal, I will fix the wordings to use "PowerNV" consistently.
-
-
-
->
->> This patch defines a function to detect the secure boot state of the
->> system.
->>
->> The PPC_SECURE_BOOT config represents the base enablement of secureboot
->> on POWER.
->>
->> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
->> ---
->>   arch/powerpc/Kconfig               | 11 +++++
->>   arch/powerpc/include/asm/secboot.h | 27 ++++++++++++
->>   arch/powerpc/kernel/Makefile       |  2 +
->>   arch/powerpc/kernel/secboot.c      | 71 ++++++++++++++++++++++++++++++
->>   4 files changed, 111 insertions(+)
->>   create mode 100644 arch/powerpc/include/asm/secboot.h
->>   create mode 100644 arch/powerpc/kernel/secboot.c
->>
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index 77f6ebf97113..c902a39124dc 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -912,6 +912,17 @@ config PPC_MEM_KEYS
->>   
->>   	  If unsure, say y.
->>   
->> +config PPC_SECURE_BOOT
->> +	prompt "Enable PowerPC Secure Boot"
-> How about "Enable secure boot support"
-
-Yes. Sounds better.
-
->
->> +	bool
->> +	default n
-> The default is 'n', so you don't need that default line.
-
-Sure.
-
-
->
->> +	depends on PPC64
-> Should it just depend on POWERNV for now? AFAIK there's nothing in here
-> that's necessarily going to be shared with the guest secure boot code is
-> there?
-
-Yes. sounds good.
-
-
->
->> +	help
->> +	  Linux on POWER with firmware secure boot enabled needs to define
->> +	  security policies to extend secure boot to the OS.This config
->> +	  allows user to enable OS Secure Boot on PowerPC systems that
->> +	  have firmware secure boot support.
-> Again POWER vs PowerPC.
->
-> I think something like:
->
-> "Enable support for secure boot on some systems that have firmware
-> support for it. If in doubt say N."
-
-Sure.
-
->
->
->> diff --git a/arch/powerpc/include/asm/secboot.h b/arch/powerpc/include/asm/secboot.h
-> secure_boot.h would be fine.
-
-Sure.
-
->
->> new file mode 100644
->> index 000000000000..e726261bb00b
->> --- /dev/null
->> +++ b/arch/powerpc/include/asm/secboot.h
->> @@ -0,0 +1,27 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * PowerPC secure boot definitions
->> + *
->> + * Copyright (C) 2019 IBM Corporation
->> + * Author: Nayna Jain <nayna@linux.ibm.com>
-> I prefer to not have email addresses in copyright headers, as they just
-> bit rot. Your email is in the git log.
-
-Sure.
-
-
->
->> + *
->> + */
->> +#ifndef POWERPC_SECBOOT_H
->> +#define POWERPC_SECBOOT_H
-> We usually do _ASM_POWERPC_SECBOOT_H (or _ASM_POWERPC_SECURE_BOOT_H).
-
-Sure.
-
->
->> +#ifdef CONFIG_PPC_SECURE_BOOT
->> +extern struct device_node *is_powerpc_secvar_supported(void);
->> +extern bool get_powerpc_secureboot(void);
-> You don't need 'extern' for functions in headers.
-
-Yes. will fix.
-
->
->> +#else
->> +static inline struct device_node *is_powerpc_secvar_supported(void)
->> +{
->> +	return NULL;
->> +}
->> +
->> +static inline bool get_powerpc_secureboot(void)
->> +{
->> +	return false;
->> +}
->> +
->> +#endif
->> +#endif
->> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
->> index ea0c69236789..d310ebb4e526 100644
->> --- a/arch/powerpc/kernel/Makefile
->> +++ b/arch/powerpc/kernel/Makefile
->> @@ -157,6 +157,8 @@ endif
->>   obj-$(CONFIG_EPAPR_PARAVIRT)	+= epapr_paravirt.o epapr_hcalls.o
->>   obj-$(CONFIG_KVM_GUEST)		+= kvm.o kvm_emul.o
->>   
->> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secboot.o
->> +
->>   # Disable GCOV, KCOV & sanitizers in odd or sensitive code
->>   GCOV_PROFILE_prom_init.o := n
->>   KCOV_INSTRUMENT_prom_init.o := n
->> diff --git a/arch/powerpc/kernel/secboot.c b/arch/powerpc/kernel/secboot.c
->> new file mode 100644
->> index 000000000000..5ea0d52d64ef
->> --- /dev/null
->> +++ b/arch/powerpc/kernel/secboot.c
->> @@ -0,0 +1,71 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2019 IBM Corporation
->> + * Author: Nayna Jain <nayna@linux.ibm.com>
->> + *
->> + * secboot.c
->> + *      - util function to get powerpc secboot state
-> That's not really necessary.
-
-Sure.
-
->
->> + */
->> +#include <linux/types.h>
->> +#include <linux/of.h>
->> +#include <asm/secboot.h>
->> +
->> +struct device_node *is_powerpc_secvar_supported(void)
-> This is a pretty weird signature. The "is_" implies it will return a
-> bool, but then it actually returns a device node *.
-
-Yes. Agree. Will fix.
-
->
->> +{
->> +	struct device_node *np;
->> +	int status;
->> +
->> +	np = of_find_node_by_name(NULL, "ibm,secureboot");
->> +	if (!np) {
->> +		pr_info("secureboot node is not found\n");
->> +		return NULL;
->> +	}
-> There's no good reason to search by name. You should just search by compatible.
->
-> eg. of_find_compatible_node()
-
-Sure.
-
-
->
->> +	status = of_device_is_compatible(np, "ibm,secureboot-v3");
->> +	if (!status) {
->> +		pr_info("Secure variables are not supported by this firmware\n");
->> +		return NULL;
->> +	}
->> +
->> +	return np;
->> +}
->> +
->> +bool get_powerpc_secureboot(void)
->> +{
->> +	struct device_node *np;
->> +	struct device_node *secvar_np;
->> +	const u64 *psecboot;
->> +	u64 secboot = 0;
->> +
->> +	np = is_powerpc_secvar_supported();
->> +	if (!np)
->> +		goto disabled;
->> +
->> +	/* Fail-safe for any failure related to secvar */
->> +	secvar_np = of_get_child_by_name(np, "secvar");
-> Finding a child by name is not ideal, it encodes the structure of the
-> tree in the API. It's better to just search by compatible.
->
-> eg. of_find_compatible_node("ibm,secvar-v1")
->
-> You should also define what that means, ie. write a little snippet of
-> doc to define what the expected properties are and their meaning and so
-> on.
-
-It is part of the skiboot patches 
-(https://patchwork.ozlabs.org/patch/1157346/)
-Sure. I will add one in the kernel as well.
-
-
->
->> +	if (!secvar_np) {
->> +		pr_err("Expected secure variables support, fail-safe\n");
-> I'm a bit confused by this. This is the exact opposite of what I
-> understand fail-safe to mean. We shouldn't tell the user the system is
-> securely booted unless we're 100% sure it is. Right?
-
-Yes. Thanks for pointing this out. "Fail secure" is the correct term. 
-This is the situation where secure variables are supported. Any failure 
-reading the secure variables may be an attack, so we fail securely.
-
-
->
->> +		goto enabled;
->> +	}
->> +
->> +	if (!of_device_is_available(secvar_np)) {
->> +		pr_err("Secure variables support is in error state, fail-safe\n");
->> +		goto enabled;
->> +	}
-> It seems a little weird to use the status property to indicate ok/error
-> and then also have a "secure-mode" property. Wouldn't just "secure-mode"
-> be sufficient with several states to represent what we need?
-
-Before we check in which mode the system booted (e.g. setup, user, etc) 
-using "secure mode" property, the "status" check helps to ensure that 
-the system secure boot initialized correctly. We will look into
-combining the two variables.
-
-
-
->
->> +	psecboot = of_get_property(secvar_np, "secure-mode", NULL);
->> +	if (!psecboot)
->> +		goto enabled;
-> Please use of_read_property_u64() or similar.
-
-Sure.
-
->
->> +	secboot = be64_to_cpup((__be64 *)psecboot);
->> +	if (!(secboot & (~0x0)))
-> I'm not sure what that's trying to do.
-
-We are exposing secure modes from the skiboot to the kernel via a 
-bitfield, partitioned into generic modes and backend specific modes. I 
-will update this code so that it is clearer.
-
-Thanks & Regards,
-       - Nayna
+SGkgR3JlZywNCg0KT24gMDUtU2VwLTE5IDE6MDcgUE0sIEdyZWcgS0ggd3JvdGU6DQo+IE9uIFRo
+dSwgU2VwIDA1LCAyMDE5IGF0IDA2OjA5OjQzQU0gKzAwMDAsIEFqYXkuS2F0aGF0QG1pY3JvY2hp
+cC5jb20gd3JvdGU6DQo+PiBIaSBFdWdlbiwNCj4+DQo+PiBPbiAwNC1TZXAtMTkgNzowMyBQTSwg
+RXVnZW4gSHJpc3RldiAtIE0xODI4MiB3cm90ZToNCj4+PiBGcm9tOiBFdWdlbiBIcmlzdGV2IDxl
+dWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pj4NCj4+PiBBZGQgYmluZGluZ3MgZm9yIG9w
+dGlvbmFsIHJ0YyBjbG9jayBwaW4uDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBFdWdlbiBIcmlz
+dGV2IDxldWdlbi5ocmlzdGV2QG1pY3JvY2hpcC5jb20+DQo+Pg0KPj4gVGhhbmtzIGZvciBzZW5k
+aW5nIHRoZSBwYXRjaCBzZXJpZXMuIFRoZSBjaGFuZ2VzIGluIHRoaXMgc2VyaWVzIGxvb2tzDQo+
+PiBnb29kIHRvIG1lLg0KPj4NCj4+IEFja2VkLWJ5OiBBamF5IFNpbmdoIDxhamF5LmthdGhhdEBt
+aWNyb2NoaXAuY29tPg0KPiANCj4gVGhpcyBpcyBnb29kLCBidXQsIHlvdSBhcmUgYWRkaW5nIG5l
+dyBmZWF0dXJlcyB0byB0aGUgZHJpdmVyLCB3aGVuIGl0IGlzDQo+IHN0aWxsIGluIHRoZSBzdGFn
+aW5nIGRpcmVjdG9yeS4gIFdoYXQncyB0aGUgcGxhbiBvbiBnZXR0aW5nIGl0IG91dCBvZg0KPiBo
+ZXJlPyAgV2hhdCBpcyBsZWZ0IHRvIGRvPw0KPiANCg0KVGhlIHBsYW4gaXMgdG8gZ2V0IHRoaXMg
+ZHJpdmVyIHJldmlld2VkIGFuZCBpZGVudGlmeSBpZiB0aGVyZSBhcmUgYW55DQptb3JlIFRPRE8g
+aXRlbXMuIFdhaXRpbmcgZm9yIHRoZSByZXZpZXcgdG8gY29tcGxldGUuDQoNCkR1cmluZyB0aGUg
+bGFzdCByZXZpZXcgWzFdLCB3ZSBoYXZlIHJlY2VpdmVkIGNvbW1lbnQgdG8gc2ltcGxpZnkgdGhl
+DQpwYWNraW5nIG9mIFdJRCBjb21tYW5kcyBieSBhdm9pZGluZyB0aGUgdHJhbnNsYXRpb24gbGF5
+ZXIuIFdlIGhhZCBkb25lDQpzb21lIGltcHJvdmVtZW50cyBpbiB0aGlzIGJ1dCBzdGlsbCwgdGhl
+cmUgYXJlIGZldyBpdGVtcyB1bmRlciBkaXNjdXNzaW9uLg0KQnV0IEkgYW0gbm90IHN1cmUgaWYg
+dGhpcyBpcyBhIGJsb2NrZXIgZm9yIG1haW5saW5lIG9yIGNhbiBiZSBhZGRyZXNzZWQNCmxhdGVy
+Lg0KQXQgdGhpcyB0aW1lLCBJIGRvbid0IGtub3cgaWYgdGhlcmUgYXJlIGFueSBtb3JlIFRPRE8g
+Zm9yIHRoaXMgZHJpdmVyLg0KQ3VycmVudGx5IGFsc28gd29ya2luZyBvbiB0ZXN0aW5nIGFuZCBm
+aXhpbmcgYnVncy4NCg0KWzFdLg0KaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGludXgtd2lyZWxl
+c3MvMTU2Mjg5NjY5Ny04MDAyLTEtZ2l0LXNlbmQtZW1haWwtYWpheS5rYXRoYXRAbWljcm9jaGlw
+LmNvbS8NCg0KUmVnYXJkcywNCkFqYXkNCg==
