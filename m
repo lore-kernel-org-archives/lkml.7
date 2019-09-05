@@ -2,117 +2,79 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557FFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A73C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451A020828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F6F206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391023AbfIERfS (ORCPT
+        id S2391026AbfIERg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:35:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727143AbfIERfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:35:17 -0400
-Received: from oasis.local.home (bl11-233-114.dsl.telepac.pt [85.244.233.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2B3206A5;
-        Thu,  5 Sep 2019 17:35:13 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 13:35:07 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Murray <timmurray@google.com>,
-        Carmen Jackson <carmenjackson@google.com>,
-        Mayank Gupta <mayankgupta@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kernel-team <kernel-team@android.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-Message-ID: <20190905133507.783c6c61@oasis.local.home>
-In-Reply-To: <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
-References: <20190903200905.198642-1-joel@joelfernandes.org>
-        <20190904084508.GL3838@dhcp22.suse.cz>
-        <20190904153258.GH240514@google.com>
-        <20190904153759.GC3838@dhcp22.suse.cz>
-        <20190904162808.GO240514@google.com>
-        <20190905144310.GA14491@dhcp22.suse.cz>
-        <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 5 Sep 2019 13:36:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41789 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfIERg5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:36:57 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i5vgl-00017A-FQ; Thu, 05 Sep 2019 17:36:55 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-input@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] input: sidewinder: make array seq static const, makes object smaller
+Date:   Thu,  5 Sep 2019 18:36:55 +0100
+Message-Id: <20190905173655.5621-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+Don't populate the array seq on the stack but instead make it
+static const. Makes the object code smaller by 30 bytes.
 
-[ Added Tom ]
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  22284	   3184	      0	  25468	   637c	drivers/input/joystick/sidewinder.o
 
-On Thu, 5 Sep 2019 09:03:01 -0700
-Suren Baghdasaryan <surenb@google.com> wrote:
+After:
+   text	   data	    bss	    dec	    hex	filename
+  22158	   3280	      0	  25438	   635e	drivers/input/joystick/sidewinder.o
 
-> On Thu, Sep 5, 2019 at 7:43 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > [Add Steven]
-> >
-> > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:  
-> > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:  
-> > > >
-> > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:  
-> > [...]  
-> > > > > but also for reducing
-> > > > > tracing noise. Flooding the traces makes it less useful for long traces and
-> > > > > post-processing of traces. IOW, the overhead reduction is a bonus.  
-> > > >
-> > > > This is not really anything special for this tracepoint though.
-> > > > Basically any tracepoint in a hot path is in the same situation and I do
-> > > > not see a point why each of them should really invent its own way to
-> > > > throttle. Maybe there is some way to do that in the tracing subsystem
-> > > > directly.  
-> > >
-> > > I am not sure if there is a way to do this easily. Add to that, the fact that
-> > > you still have to call into trace events. Why call into it at all, if you can
-> > > filter in advance and have a sane filtering default?
-> > >
-> > > The bigger improvement with the threshold is the number of trace records are
-> > > almost halved by using a threshold. The number of records went from 4.6K to
-> > > 2.6K.  
-> >
-> > Steven, would it be feasible to add a generic tracepoint throttling?  
-> 
-> I might misunderstand this but is the issue here actually throttling
-> of the sheer number of trace records or tracing large enough changes
-> to RSS that user might care about? Small changes happen all the time
-> but we are likely not interested in those. Surely we could postprocess
-> the traces to extract changes large enough to be interesting but why
-> capture uninteresting information in the first place? IOW the
-> throttling here should be based not on the time between traces but on
-> the amount of change of the traced signal. Maybe a generic facility
-> like that would be a good idea?
+(gcc version 9.2.1, amd64)
 
-You mean like add a trigger (or filter) that only traces if a field has
-changed since the last time the trace was hit? Hmm, I think we could
-possibly do that. Perhaps even now with histogram triggers?
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/input/joystick/sidewinder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- Steve
+diff --git a/drivers/input/joystick/sidewinder.c b/drivers/input/joystick/sidewinder.c
+index 0284da874a2b..1777e68c9f02 100644
+--- a/drivers/input/joystick/sidewinder.c
++++ b/drivers/input/joystick/sidewinder.c
+@@ -223,7 +223,7 @@ static __u64 sw_get_bits(unsigned char *buf, int pos, int num, char bits)
+ 
+ static void sw_init_digital(struct gameport *gameport)
+ {
+-	int seq[] = { 140, 140+725, 140+300, 0 };
++	static const int seq[] = { 140, 140+725, 140+300, 0 };
+ 	unsigned long flags;
+ 	int i, t;
+ 
+-- 
+2.20.1
 
