@@ -2,130 +2,143 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBC8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063C1C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D44D222BF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:14:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="a2pBHK6e"
+	by mail.kernel.org (Postfix) with ESMTP id 02CEB21E6F
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731206AbfIEOOz (ORCPT
+        id S1731631AbfIEOPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:14:55 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35030 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729157AbfIEOOy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:14:54 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n4so1519572pgv.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2dyh/qzhi2qens90CnAyZpu8nc1Cd1yi17MqcISR+xc=;
-        b=a2pBHK6eVeP+DeXitzdhwlEvM99BkuEdPz9b/HbbIFuBRONPO0F/o6Um+dJ+WhLiki
-         loBC03lOXyRmzxlQZn5Tub6me3ggBWFKOWP+jpBivc0UDj0Fuao3xzjPV3fWdHbmL60s
-         bMR4jmepYzML3yWOff4TJnVSFSDkAhK0twfJk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2dyh/qzhi2qens90CnAyZpu8nc1Cd1yi17MqcISR+xc=;
-        b=U0lxyrJsh03inFn4W1pup+7RDfO33R+XaJZjDiGSICjXRAJzJIcFGx8rX+4ssYTUOw
-         iC36roSdn2BNxJBXBGDXMm/4AIN834kK9zRLLXwwD+IRu4EDANtydmXdnuvnPqZynYkg
-         Mib7ls3V726t02Zn16tgqs/fcO94ZZhjgFb24MZ6OXPbrdFJSjo6I0LF/IxoWXWj29Gm
-         1B6Y+XAfpkfDncCtdC/yHqN0Hf0qFfRjL1E9OEFMLqqPRYvgWienomodP720K0oPLr4K
-         8vb6Vob96f2+J5gUGQeL3VTbEEDsKe37WeaJjH3UwMcEYrz3O9zO13JZVdvjiQCi4z1C
-         mUFg==
-X-Gm-Message-State: APjAAAWxa3q6BVI4rTXyL3GYXcfBGkvRY9FsHeOUhMaxbuDeQfip7lwn
-        XedLw8nVSYnBk0y/0iKSlbMwYg==
-X-Google-Smtp-Source: APXvYqyWhg5wWBza0xoQXn734lb+BXrNSStNRVuCl14e2+JVF+qyGjoVQWM/ZfKFG0+uOaZkfe8M4w==
-X-Received: by 2002:a65:518a:: with SMTP id h10mr3310283pgq.117.1567692894079;
-        Thu, 05 Sep 2019 07:14:54 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id l6sm8709786pje.28.2019.09.05.07.14.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 07:14:53 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 10:14:52 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
-        carmenjackson@google.com, mayankgupta@google.com,
-        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
-        akpm@linux-foundation.org, kernel-team@android.com,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-Message-ID: <20190905141452.GA26466@google.com>
-References: <20190903200905.198642-1-joel@joelfernandes.org>
- <20190904084508.GL3838@dhcp22.suse.cz>
- <20190904153258.GH240514@google.com>
- <20190904153759.GC3838@dhcp22.suse.cz>
- <20190904162808.GO240514@google.com>
- <20190905105424.GG3838@dhcp22.suse.cz>
+        Thu, 5 Sep 2019 10:15:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:44686 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729157AbfIEOPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:15:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 07:15:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="334569928"
+Received: from smvarma-mobl3.amr.corp.intel.com (HELO [10.251.12.77]) ([10.251.12.77])
+  by orsmga004.jf.intel.com with ESMTP; 05 Sep 2019 07:15:08 -0700
+Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
+ encryption bit
+To:     =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, pv-drivers@vmware.com
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
+ <20190905103541.4161-2-thomas_os@shipmail.org>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
+Date:   Thu, 5 Sep 2019 07:15:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905105424.GG3838@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190905103541.4161-2-thomas_os@shipmail.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:54:24PM +0200, Michal Hocko wrote:
-> On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
-> > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
-> > > > On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
-> > > > > On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
-> > > > > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
-> > > > > > memory hogs. Several Android teams have been using this patch in various
-> > > > > > kernel trees for half a year now. Many reported to me it is really
-> > > > > > useful so I'm posting it upstream.
-> > > > > >
-> > > > > > Initial patch developed by Tim Murray. Changes I made from original patch:
-> > > > > > o Prevent any additional space consumed by mm_struct.
-> > > > > > o Keep overhead low by checking if tracing is enabled.
-> > > > > > o Add some noise reduction and lower overhead by emitting only on
-> > > > > >   threshold changes.
-> > > > >
-> > > > > Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
-> > > > > the Linus tree (nor in linux-next).
-> > > >
-> > > > No, this is generated automatically by the tracepoint infrastructure when a
-> > > > tracepoint is added.
-> > >
-> > > OK, I was not aware of that.
-> > >
-> > > > > Besides that why do we need batching in the first place. Does this have a
-> > > > > measurable overhead? How does it differ from any other tracepoints that we
-> > > > > have in other hotpaths (e.g.  page allocator doesn't do any checks).
-> > > >
-> > > > We do need batching not only for overhead reduction,
-> > >
-> > > What is the overhead?
-> > 
-> > The overhead is occasionally higher without the threshold (that is if we
-> > trace every counter change). I would classify performance benefit to be
-> > almost the same and within the noise.
-> 
-> OK, so the additional code is not really justified.
+Hi Thomas,
 
-It is really justified. Did you read the whole of the last email?
+Thanks for the second batch of patches!  These look much improved on all
+fronts.
 
-thanks,
+On 9/5/19 3:35 AM, Thomas Hellström (VMware) wrote:
+> -/* mprotect needs to preserve PAT bits when updating vm_page_prot */
+> +/*
+> + * mprotect needs to preserve PAT and encryption bits when updating
+> + * vm_page_prot
+> + */
+>  #define pgprot_modify pgprot_modify
+>  static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+>  {
+> -	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
+> -	pgprotval_t addbits = pgprot_val(newprot);
+> +	pgprotval_t preservebits = pgprot_val(oldprot) &
+> +		(_PAGE_CHG_MASK | sme_me_mask);
+> +	pgprotval_t addbits = pgprot_val(newprot) & ~sme_me_mask;
+>  	return __pgprot(preservebits | addbits);
+>  }
 
- - Joel
+_PAGE_CHG_MASK is claiming similar functionality about preserving bits
+when changing PTEs:
 
+> /*
+>  * Set of bits not changed in pte_modify.  The pte's
+>  * protection key is treated like _PAGE_RW, for
+>  * instance, and is *not* included in this mask since
+>  * pte_modify() does modify it.
+>  */
+> #define _PAGE_CHG_MASK  (PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |         \
+>                          _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY | \
+>                          _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
+
+This makes me wonder if we should be including sme_me_mask in
+_PAGE_CHG_MASK (logically).
