@@ -2,153 +2,154 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E52C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415D2C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05897206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567701336;
-	bh=jNn5zm8Ht0eC2xdCX4BiClCD+4OqtqeysHe67Ti2ceA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RQNNKmc5pr5fnsSNPqPA6PUOQgm+YKnTrdC1+EQTtLVMiZbTTzl/gI2bKLWSSeplC
-	 P+pgeHkJ9LiRMFnPo9xsIufADui5HvteHWQHmdUXTM/5R2m4RHhlcufsJUv3czw1Xp
-	 zX8Xrx2hUd1GvRcxEEHUT4jJ5uNALZZ6YyB8sjr0=
+	by mail.kernel.org (Postfix) with ESMTP id 005142082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:36:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CHYo7f5m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388976AbfIEQfe (ORCPT
+        id S2389049AbfIEQgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:35:34 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3509 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbfIEQfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:35:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 09:35:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
-   d="scan'208";a="182875587"
-Received: from unknown (HELO localhost.lm.intel.com) ([10.232.112.69])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Sep 2019 09:35:33 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        Sagi Grimberg <sagi@grimberg.me>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCHv2] nvme: Assign subsy instance from first ctrl
-Date:   Thu,  5 Sep 2019 10:33:54 -0600
-Message-Id: <20190905163354.25139-1-kbusch@kernel.org>
-X-Mailer: git-send-email 2.13.6
+        Thu, 5 Sep 2019 12:36:43 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53170 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388234AbfIEQgn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:36:43 -0400
+Received: by mail-wm1-f68.google.com with SMTP id t17so3567580wmi.2;
+        Thu, 05 Sep 2019 09:36:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AkGp5CuoZ7+DBs4HS2vxktRn4TIDGSJOXm8qEsfnCug=;
+        b=CHYo7f5m6VPqE9QLpkVzXSD6hkAvDyeC6o/nT2cG/NAlupPoCvxlSNJ9WJ/fCabKX+
+         RuCXNuBcezQ3NyxM5dr4EGNeqH/Vr7iq4+1Uv9WVYVP7jiMVUHSG/lNjw3yToh3SUGfA
+         pkQRvFNI0bmaECFdIGhrz40A/qnK6in/WB92eNHldOZL75D89eby2AKCD7fM75DwJdM0
+         CxrozoYT5B6FvgVgeGrmDS83v474qTxvRsSWPmmz0NZpSJxEZKaIRVE1sPyabVSxZO3k
+         P185atT0E4KK2sM9dbue//XvVONoE9Re9KIcvwJUbAtowkAHQT8dvSVjS+7Z/H6zhMU5
+         a1gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AkGp5CuoZ7+DBs4HS2vxktRn4TIDGSJOXm8qEsfnCug=;
+        b=tqlvcaG6mpy+8NTIXIMXKZFq/2XSngycG9TzVATmsRt22df4lO7lGwPhYG+azdy4hz
+         TH4A2a7RjV6/AzUI4wOIJLk6u1urDt1ESPf6kv0Z7sWpP0bFm1ktqsyBzSqfnrCN4JOP
+         9uwWpt9Zun3hWRydU5BsQ/02k1t7SvJ6av94cmCbFmfCCF3fEcBB4GlR4RGeOkw38lDL
+         rWscrJBB0/sRoI3mdf99gf3GKGO1y6EZajOQZzffdhlqP/BGVF3dcPdWo5R4N7pu1o8m
+         2X6V2qbrLITtu6GCwcHwmK9PkYk5N0n5QGHJ/PWFgoPKGN2TBeWGCqliNTCC216LbgcO
+         Aevg==
+X-Gm-Message-State: APjAAAV938DTBxVnX6DEx8xvF9k4vL3QIunZgawweGIoOgLI+9UHjZUW
+        5NIVZJBY1fzfF1cniZEKbr3rGAIZoYumZxAnzbg=
+X-Google-Smtp-Source: APXvYqz9hFfnXxS5LgTBQz7g+RYOpjxUXfn5LexEg3DPsbwv7ynAv2O9TVtk+V6OTPQbyewJo1sVCMTYFV0YBT0Qo5E=
+X-Received: by 2002:a7b:c8d6:: with SMTP id f22mr2086098wml.67.1567701400749;
+ Thu, 05 Sep 2019 09:36:40 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190814213118.28473-1-kherbst@redhat.com> <20190814213118.28473-2-kherbst@redhat.com>
+ <CAPM=9ty7yEUqKrcixV1tTuWCpyh6UikA3rxX8BF1E3fDb6WLQQ@mail.gmail.com>
+ <2215840.qs0dBhReda@kreacher> <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com>
+In-Reply-To: <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 5 Sep 2019 12:35:56 -0400
+Message-ID: <CADnq5_NSY=usXHcX8UqBiTbenPE8K3+yZ5Ujnu3vSWziVTr_QQ@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to
+ enable dGPU direct output"
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Alex Hung <alex.hung@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The namespace disk names must be unique for the lifetime of the
-subsystem. This was accomplished by using their parent subsystems'
-instances which were allocated independently from the controllers
-connected to that subsystem. This allowed name prefixes assigned to
-namespaces to match a controller from an unrelated subsystem, and has
-created confusion among users examining device nodes.
+On Thu, Sep 5, 2019 at 11:51 AM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> is there any update on the testing with my patches? On the hardware I
+> had access to those patches helped, but I can't know if it also helped
+> on the hardware for which those workarounds where actually added.
+>
+> On Mon, Aug 19, 2019 at 11:52 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Thursday, August 15, 2019 12:47:35 AM CEST Dave Airlie wrote:
+> > > On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
+> > > >
+> > > > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
+> > > >
+> > > > The original commit message didn't even make sense. AMD _does_ support it and
+> > > > it works with Nouveau as well.
+> > > >
+> > > > Also what was the issue being solved here? No references to any bugs and not
+> > > > even explaining any issue at all isn't the way we do things.
+> > > >
+> > > > And even if it means a muxed design, then the fix is to make it work inside the
+> > > > driver, not adding some hacky workaround through ACPI tricks.
+> > > >
+> > > > And what out of tree drivers do or do not support we don't care one bit anyway.
+> > > >
+> > >
+> > > I think the reverts should be merged via Rafael's tree as the original
+> > > patches went in via there, and we should get them in asap.
+> > >
+> > > Acked-by: Dave Airlie <airlied@redhat.com>
+> >
+> > The _OSI strings are to be dropped when all of the needed support is there in
+> > drivers, so they should go away along with the requisite driver changes.
+> >
+>
+> that goes beside the point. firmware level workarounds for GPU driver
+> issues were pushed without consulting with upstream GPU developers.
+> That's something which shouldn't have happened in the first place. And
+> yes, I am personally annoyed by the fact, that people know about
+> issues, but instead of contacting the proper persons and working on a
+> proper fix, we end up with stupid firmware level workarounds. I can't
+> see why we ever would have wanted such workarounds in the first place.
+>
+> And I would be much happier if the next time something like that comes
+> up, that the drm mailing list will be contacted as well or somebody
+> involved.
+>
+> We could have also just disable the feature inside the driver (and
+> probably we should have done that a long time ago, so that is
+> essentially our fault, but still....)
 
-Ensure a namespace's subsystem instance never clashes with a controller
-instance of another subsystem by transferring the instance ownership
-to the parent subsystem from the first controller discovered in that
-subsystem.
+Generally these conversations happen between the OEM, the relevant
+distro, and hw vendor prior to production so they can't always be
+discussed in public.  These programs have power, feature, and distro
+targets and not all of those align.  Sometimes fixing this at the
+firmware level is the best way to make the product work well at launch
+given the state of Linux at a particular time.  Windows already does
+similar stuff so that older versions of windows will work properly on
+newer hardware.  I agree that we should all strive to fix stuff
+properly, but that's not always possible.
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
----
-v1 -> v2:
+Alex
 
-  Changelog: reduce sensationalism, fix spelling 
-
- drivers/nvme/host/core.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 14c0bfb55615..8a8279ece5ee 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -81,7 +81,6 @@ EXPORT_SYMBOL_GPL(nvme_reset_wq);
- struct workqueue_struct *nvme_delete_wq;
- EXPORT_SYMBOL_GPL(nvme_delete_wq);
- 
--static DEFINE_IDA(nvme_subsystems_ida);
- static LIST_HEAD(nvme_subsystems);
- static DEFINE_MUTEX(nvme_subsystems_lock);
- 
-@@ -2344,7 +2343,8 @@ static void nvme_release_subsystem(struct device *dev)
- 	struct nvme_subsystem *subsys =
- 		container_of(dev, struct nvme_subsystem, dev);
- 
--	ida_simple_remove(&nvme_subsystems_ida, subsys->instance);
-+	if (subsys->instance >= 0)
-+		ida_simple_remove(&nvme_instance_ida, subsys->instance);
- 	kfree(subsys);
- }
- 
-@@ -2473,12 +2473,8 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 	subsys = kzalloc(sizeof(*subsys), GFP_KERNEL);
- 	if (!subsys)
- 		return -ENOMEM;
--	ret = ida_simple_get(&nvme_subsystems_ida, 0, 0, GFP_KERNEL);
--	if (ret < 0) {
--		kfree(subsys);
--		return ret;
--	}
--	subsys->instance = ret;
-+
-+	subsys->instance = -1;
- 	mutex_init(&subsys->lock);
- 	kref_init(&subsys->ref);
- 	INIT_LIST_HEAD(&subsys->ctrls);
-@@ -2497,7 +2493,7 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 	subsys->dev.class = nvme_subsys_class;
- 	subsys->dev.release = nvme_release_subsystem;
- 	subsys->dev.groups = nvme_subsys_attrs_groups;
--	dev_set_name(&subsys->dev, "nvme-subsys%d", subsys->instance);
-+	dev_set_name(&subsys->dev, "nvme-subsys%d", ctrl->instance);
- 	device_initialize(&subsys->dev);
- 
- 	mutex_lock(&nvme_subsystems_lock);
-@@ -2528,6 +2524,8 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 		goto out_put_subsystem;
- 	}
- 
-+	if (!found)
-+		subsys->instance = ctrl->instance;
- 	ctrl->subsys = subsys;
- 	list_add_tail(&ctrl->subsys_entry, &subsys->ctrls);
- 	mutex_unlock(&nvme_subsystems_lock);
-@@ -3803,7 +3801,9 @@ static void nvme_free_ctrl(struct device *dev)
- 		container_of(dev, struct nvme_ctrl, ctrl_device);
- 	struct nvme_subsystem *subsys = ctrl->subsys;
- 
--	ida_simple_remove(&nvme_instance_ida, ctrl->instance);
-+	if (subsys && ctrl->instance != subsys->instance)
-+		ida_simple_remove(&nvme_instance_ida, ctrl->instance);
-+
- 	kfree(ctrl->effects);
- 	nvme_mpath_uninit(ctrl);
- 	__free_page(ctrl->discard_page);
-@@ -4085,7 +4085,6 @@ static int __init nvme_core_init(void)
- 
- static void __exit nvme_core_exit(void)
- {
--	ida_destroy(&nvme_subsystems_ida);
- 	class_destroy(nvme_subsys_class);
- 	class_destroy(nvme_class);
- 	unregister_chrdev_region(nvme_chr_devt, NVME_MINORS);
--- 
-2.14.5
-
+>
+> > I'm all for dropping then when that's the case, so please feel free to add ACKs
+> > from me to the patches in question at that point.
+> >
+> > Cheers,
+> > Rafael
+> >
+> >
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
