@@ -2,137 +2,77 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C878C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8266CC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E304F2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iCjY2UfL"
+	by mail.kernel.org (Postfix) with ESMTP id 55F932070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388431AbfIEL0Q (ORCPT
+        id S2388436AbfIEL1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:26:16 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:53056 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732049AbfIEL0O (ORCPT
+        Thu, 5 Sep 2019 07:27:01 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:49666 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIEL1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:26:14 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x85BQ83R019832;
-        Thu, 5 Sep 2019 20:26:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x85BQ83R019832
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567682769;
-        bh=eYLn272Sy9fhUXrERxsg5RcSmedtHOfjBVG9VJ4bb5Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iCjY2UfL6jd45sNhs0jxhiNCQWLUr3ZcSneQD6AKR9pu+jxMrDLKVOlLj/ycVHIT1
-         jyvVrPsWl//7r7yQBeXkQbAZxbmtWgERcc7lzJnxg046ZgTqiOSxcxJqO6ozlmOhiP
-         I4Wa/6r9IgYuYFO0hno/hl3yQ6Dv/1MYv7o1DOY8eV3urCwhYHsyowxzRyllHTIg4p
-         AGmLdOdydztJHV/2uGG3KVSIhr5d5hDbpAJNMjlLIdwYSQSUvvcug8rr7VfhfLxbJ/
-         glDa8jIUnR2yrPKmX398FPHc+uyBvh4d8Y79UOjq9fptnzGb8fIHWT5JU6FXpWLvPe
-         /cgK/xB8Z01LA==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id w195so1288686vsw.11;
-        Thu, 05 Sep 2019 04:26:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAXnjgeUux9E4OjdThVuQg342h4JzZl1Td5dLZq87Pv0m9K7ngBY
-        knYZTc0+y34BWjXAwrYHBEu3su986gcQz3mYRnM=
-X-Google-Smtp-Source: APXvYqwOMv33jlhvXcxrJswfOYxSINojKomiw5PHTIePxV8kcg4TNPSESzrAsXtvN5eyFhUDcaxoE1yimV3bVbvTnwM=
-X-Received: by 2002:a67:e9cc:: with SMTP id q12mr1416862vso.181.1567682768019;
- Thu, 05 Sep 2019 04:26:08 -0700 (PDT)
+        Thu, 5 Sep 2019 07:27:01 -0400
+Received: by mail-io1-f70.google.com with SMTP id j23so2783906iog.16
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:27:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=7woNlVISujRJGF9f7Yv9hP0vcjuDeQlRJErmR/nep/s=;
+        b=npyD7RMFcSfqSBSxR+n/FvbwA0lYS1jNQIhWRcyTmsu6iPZwAdpRd77tNoPrNM+DZB
+         wmyJgqydQlYEPlqThAnOkF+ohZKQyAo1YI4ctHJ6WnhAcY+QhoHtaP1nU8X2C1Ze63Tl
+         88OyJcyHLISf3ExVOD1S+UXDRcmfwYvQPZUA0Je2AwvEIt58B6Q8XQmpn5hBoIEcmA5H
+         /ateAwJOIVQmfbluyebWY7WjKE1hU0OuCyeEHbNsWAemt45zDsSGpvuugWbWwsWCAdHt
+         TCtqYQbwrjpDYGE77aERtmkjYazBMY+fYq22cP4TrfJkI1lrrb2HbQQ7J+anQ1tCmUhO
+         +89A==
+X-Gm-Message-State: APjAAAUSDBiVKhPxOKXOfDkR9wza4/YoErcTldTgKN32Qyz2gpvMWUvS
+        3moFSaFt1ihXWlRVxQIovW4p+zQwiO3cAg1jusViwyxhGSfj
+X-Google-Smtp-Source: APXvYqzrPWl90MY6xFLW6kE5r7FYbX5PnvVkgsNXXwiFcVSlOrXw4c1TUHRlr2M/2Ww7NwqWIs7UZ4UFqMX/6zQlqsJJFcJYxnZm
 MIME-Version: 1.0
-References: <20180716122125.175792-1-maco@android.com> <20190903150638.242049-1-maennich@google.com>
- <20190903150638.242049-13-maennich@google.com> <20190903161045.GA22754@roeck-us.net>
- <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
- <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net> <CAA6KcBBeP9xYbVws4=RMFNA4kyrodE-R3mifhbkee-Q+jFRcoQ@mail.gmail.com>
- <20190905104147.GA27788@linux-8ccs> <CAK8P3a0rf0PhXK1RdF1mWTyGggBJeH0h0YOCxDvJFgxu8wmWKw@mail.gmail.com>
- <20190905111617.GB27788@linux-8ccs>
-In-Reply-To: <20190905111617.GB27788@linux-8ccs>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 5 Sep 2019 20:25:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATBWCTJ-FXydob5FUYMymsqCxhenBynb2_NfJdSC2yGDQ@mail.gmail.com>
-Message-ID: <CAK7LNATBWCTJ-FXydob5FUYMymsqCxhenBynb2_NfJdSC2yGDQ@mail.gmail.com>
-Subject: Re: [usb-storage] Re: [PATCH v4 12/12] RFC: watchdog: export core
- symbols in WATCHDOG_CORE namespace
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Matthew Dharm <mdharm-usb@one-eyed-alien.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Matthias Maennich <maennich@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Martijn Coenen <maco@android.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-modules@vger.kernel.org,
-        linux-usb <linux-usb@vger.kernel.org>,
-        USB Mass Storage on Linux 
-        <usb-storage@lists.one-eyed-alien.net>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:9a12:: with SMTP id b18mr3575178jal.70.1567682820439;
+ Thu, 05 Sep 2019 04:27:00 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 04:27:00 -0700
+In-Reply-To: <CAAeHK+xJrv1hCbO5qOGTBu=c8STo+-obatOGZ4cHkbuhqmEvrg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a2044d0591cc99b2@google.com>
+Subject: Re: WARNING: ODEBUG bug in usbhid_disconnect (2)
+From:   syzbot <syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com>
+To:     Roderick.Colenbrander@sony.com, andreyknvl@google.com,
+        benjamin.tissoires@redhat.com, jikos@kernel.org,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 8:16 PM Jessica Yu <jeyu@kernel.org> wrote:
->
-> +++ Arnd Bergmann [05/09/19 12:52 +0200]:
-> >On Thu, Sep 5, 2019 at 12:41 PM Jessica Yu <jeyu@kernel.org> wrote:
-> >> +++ Matthew Dharm [04/09/19 09:16 -0700]:
-> >> >On Wed, Sep 4, 2019 at 5:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> >> >HOWEVER, I have one question:  If these patches are included, and
-> >> >someone wants to introduce a bit of code which needs to use two
-> >> >symbols from different namespaces but with the same name, can that be
-> >> >done?  That is, if driver A has symbol 'foo' and driver B has symbol
-> >> >'foo' (both in their respective namespaces), and driver C wants to use
-> >> >A.foo and B.foo, can that be supported?
-> >>
-> >> As of now, we currently don't support this - modpost will warn if a
-> >> symbol is exported more than once (across modules + vmlinux), and the
-> >> module loader currently assumes exported symbol names are unique.  Do
-> >> you have a concrete use case? If there is a strong need for this, I
-> >> don't think it'd be too hard to implement.
-> >
-> >I think what would prevent this from working in general is that having
-> >two modules with the same exported symbol in different namespaces
-> >won't link if you try to build both modules into the kernel itself.
-> >
-> >      Arnd
->
-> Ah yeah, you are right. I only tried building an identically named
-> exported symbol in a module and in the kernel, and there I got away
-> with a modpost warning. But this breaks when building the module into
-> the kernel, so I guess this is out of the question.
->
-> Thanks,
->
-> Jessica
->
+Hello,
 
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-The cover letter starts with
-"As of Linux 5.3-rc7, there are 31207 [1] exported symbols in the kernel".
+Reported-and-tested-by:  
+syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com
 
-Whether or not we apply this patch set,
-we will have to carefully maintain them
-so that 31207 symbols are unique, anyway.
-(And, we can do this with allmodconfig + modpost)
+Tested on:
 
-So, what is the point of the namespace,
-where it does not loosen the scope of uniqueness?
+commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=14b53bfeb17f2b210eb7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12b6944e600000
 
-
-
---
-Best Regards
-Masahiro Yamada
+Note: testing is done by a robot and is best-effort only.
