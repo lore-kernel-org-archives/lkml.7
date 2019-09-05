@@ -2,133 +2,96 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814FFC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585F8C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44E3120828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CDED2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="trHCi8aa"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="G6D6hbs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388694AbfIETQl (ORCPT
+        id S2388720AbfIETRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:16:41 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33992 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729067AbfIETQl (ORCPT
+        Thu, 5 Sep 2019 15:17:32 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37756 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730921AbfIETRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:16:41 -0400
-Received: by mail-io1-f67.google.com with SMTP id s21so7349937ioa.1;
-        Thu, 05 Sep 2019 12:16:40 -0700 (PDT)
+        Thu, 5 Sep 2019 15:17:32 -0400
+Received: by mail-io1-f66.google.com with SMTP id r4so7325174iop.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 12:17:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SeNhzZJnbTj4DW4++p0vK7Bp7AcJgIkbPLU7cUgS82Y=;
-        b=trHCi8aaOFYCtIIbjw99+xFl3hanazQ81YvOunKQeR3rGonw1QhRzR3vb074+7QYst
-         frU5K92RhvZBg3yYZI50naNHvYj4u1jVo/O18jNA1AQmHgvL9IKENRMa2tYWkZheQuxV
-         R3FUCXxCK8ifhcMNfqRZfSEZ5G+KtDPyIGPi9Hq3wdZKxRA2hMxLTK6/eTE1NlML8YHc
-         ia/E0ts8NlJBOXvQgTmGcHAX3lkcz4Ri666fuoo/RHcUl8muazj4j+XUNNqBfix3rSQs
-         HLAxFaMGeWU0FGHsRT347oGieJh2DawFoEgetnTMkBHEZfcshZ7vGqKv5LXEPdRmGxMh
-         iCgg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=07l5/Jsc4rfr7mEknFKWMgXZVVL/gt11eZpE2uqlnWI=;
+        b=G6D6hbs3OQCyBGac4MAnfNpozwHAPKW4Ng4nKHnqWVQpDlgoQnUNXDdJI2S6oQDv5T
+         7pTWFGykQ3c5pWUA281I2jvFTgK5O0gCgG+sdjS/6Kjh/xpHNMn3rnHKxwTyqsZ7sO0w
+         aahz8fVhvCckzdkQmg/d/bQA4SZ+IaoL8u6EC5CbSR7HZozoNL1BbQVUx8+3wpvNjbUg
+         7jODd0oF4UIHu8nTaqMgyDmDIHMfO2obBB3Ecas1V2FEovopNENBCr+V5EmL2m03kjtk
+         ZE7SoW3/SInhBd3AVcYbSS5uAbuhdL4dbSOE5Xk2YdELyeeGI4wIoONC1wDxKUe/4vgY
+         9oFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SeNhzZJnbTj4DW4++p0vK7Bp7AcJgIkbPLU7cUgS82Y=;
-        b=ancVdNkpv8kfbwsyfHf7mNiL7av8kkRpiI4IBQoJslf7mOm/KPll7jFN3Xof2y4Lq3
-         +/ZICQnzKmFpNGIqouNqQmnFYgMgI/7+EynkPQTKRzVu4QfMybC0AaJIgDdu4fXIElCU
-         0dsFz884+g175aIxhAx7JQ6HFmpDsV+8eo4fJF8AanG8TKxyHx1KsIVSd29NXGlgaubJ
-         t75aLHjOsQzsY4hFGLWf78g07ji1zA0yrnOE75/pKC8zUrC04jZbnDKXm+vsFrX2gfMJ
-         vK0Y3EzeGk7x7uA1WPcLRInGnHWiEA61/HiJvcHdgz4fO9NyvEsUatbLv+JO6pXoHRrG
-         x/mw==
-X-Gm-Message-State: APjAAAWx0W7QXAKvN7j/1L32gdWIj7gznPLsY5s1WECMzHIEowbsWhFl
-        nmO9ttuHu/lfi+ccP9xGqRQ=
-X-Google-Smtp-Source: APXvYqx9tHLXz1eLp/4aXO/Vef4AWTvUfN/xQL/YJmMXhTNtvCiEqccIipw8UN5VprCIcdbCvTviRw==
-X-Received: by 2002:a02:2e54:: with SMTP id u20mr5991984jae.5.1567710999653;
-        Thu, 05 Sep 2019 12:16:39 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id h70sm5177098iof.48.2019.09.05.12.16.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 12:16:38 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 13:16:37 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bodong@mellanox.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, ddutile@redhat.com, berrange@redhat.com,
-        sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH] PCI/IOV: Make SR-IOV attributes with mode 0664 use 0644
-Message-ID: <20190905191637.GA22813@JATN>
-References: <20190905063226.43269-1-skunberg.kelsey@gmail.com>
- <20190905073416.GC29933@kroah.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=07l5/Jsc4rfr7mEknFKWMgXZVVL/gt11eZpE2uqlnWI=;
+        b=V0CtR1xdNvEonx/mFVLYB5G0S98jqOK82BIOmpFuR2sD9tElxN2fO2uPxfNnnhTzOU
+         PEG6f4AUS2f5Z6KQB7HaUfEumRzMZtF/JFjX6jI0h2e3F4Bky103RNNyXkRNBuNMDEC+
+         fvWvKolD2EaCF96lXpcvwddk7htyIJaTXBWzCmtqKM4GNwswxKEmNYjf3lfL4HeBRvTh
+         Z7Mw+x1Wl3Sl4v0P5xhlptFq7Z7Y686LqHmMp6vBvspJx7mYheFEYaCl5XgyCZwpLFEH
+         D8608MW/Vy3Gishyawb7HcesZHXXjnzPpqK6136tMoSnQy9ODIsVbPl2qS1G0LRRp+5z
+         1Cyw==
+X-Gm-Message-State: APjAAAV5GHxvtmhzAVDBS0u6ff/pchOh+2bAhNeIq/788p23AwSRsIfL
+        qpqo+YeU/NTMXMX7LT9DrTXp0Hp3ttUapw==
+X-Google-Smtp-Source: APXvYqwcWd4GiAMfp6QCg6xW1thuGLMjfSkv3UpdNbv3CnPE/bFg3mZZ/plXxVEZRAtGfVTrIi1tdw==
+X-Received: by 2002:a5d:8502:: with SMTP id q2mr5926036ion.287.1567711050783;
+        Thu, 05 Sep 2019 12:17:30 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id u3sm2537795iog.36.2019.09.05.12.17.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 12:17:29 -0700 (PDT)
+Subject: Re: [GIT PULL 0/2] lightnvm updates for 5.4
+To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190905190433.8247-1-mb@lightnvm.io>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2138dd03-4969-4e02-b1dc-d8209a835a22@kernel.dk>
+Date:   Thu, 5 Sep 2019 13:17:28 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905073416.GC29933@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190905190433.8247-1-mb@lightnvm.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 09:34:16AM +0200, Greg KH wrote:
-> On Thu, Sep 05, 2019 at 12:32:26AM -0600, Kelsey Skunberg wrote:
-> > sriov_numvfs and sriov_drivers_autoprobe have "unusual" permissions (0664)
-> > with no reported or found reason for allowing group write permissions.
-> > libvirt runs as root when dealing with PCI, and chowns files for qemu
-> > needs. There is not a need for the "0664" permissions.
-> > 
-> > sriov_numvfs was introduced in:
-> > 	commit 1789382a72a5 ("PCI: SRIOV control and status via sysfs")
-> > 
-> > sriov_drivers_autoprobe was introduced in:
-> > 	commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to
-> > 			      control VF driver binding")
-> > 
-> > Change sriov_numvfs and sriov_drivers_autoprobe from "0664" permissions to
-> > "0644" permissions.
-> > 
-> > Exchange DEVICE_ATTR() with DEVICE_ATTR_RW() which sets the mode to "0644".
-> > DEVICE_ATTR() should only be used for "unusual" permissions.
-> > 
-> > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > ---
-> >  drivers/pci/iov.c | 5 ++---
-> >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/pci/iov.c b/drivers/pci/iov.c
-> > index b335db21c85e..b3f972e8cfed 100644
-> > --- a/drivers/pci/iov.c
-> > +++ b/drivers/pci/iov.c
-> > @@ -375,12 +375,11 @@ static ssize_t sriov_drivers_autoprobe_store(struct device *dev,
-> >  }
-> >  
-> >  static DEVICE_ATTR_RO(sriov_totalvfs);
-> > -static DEVICE_ATTR(sriov_numvfs, 0664, sriov_numvfs_show, sriov_numvfs_store);
-> > +static DEVICE_ATTR_RW(sriov_numvfs);
-> >  static DEVICE_ATTR_RO(sriov_offset);
-> >  static DEVICE_ATTR_RO(sriov_stride);
-> >  static DEVICE_ATTR_RO(sriov_vf_device);
-> > -static DEVICE_ATTR(sriov_drivers_autoprobe, 0664, sriov_drivers_autoprobe_show,
-> > -		   sriov_drivers_autoprobe_store);
-> > +static DEVICE_ATTR_RW(sriov_drivers_autoprobe);
-> >  
-> >  static struct attribute *sriov_dev_attrs[] = {
-> >  	&dev_attr_sriov_totalvfs.attr,
+On 9/5/19 1:04 PM, Matias Bjørling wrote:
+> Hi Jens,
 > 
+> Two small patches for the 5.4 window. Can you please pick them up?
 > 
-> Nice!!!
+> Thank you,
+> Matias
 > 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Minwoo Im (2):
+>    lightnvm: introduce pr_fmt for the prefix nvm
+>    lightnvm: print error when target is not found
+> 
+>   drivers/lightnvm/core.c | 54 ++++++++++++++++++++++-------------------
+>   1 file changed, 29 insertions(+), 25 deletions(-)
 
-Thank you for reviewing!
+Applied, thanks.
 
--Kelsey
+-- 
+Jens Axboe
+
