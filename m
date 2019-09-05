@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD3BC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B43C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9041206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E8BF206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404070AbfIEUuK (ORCPT
+        id S2404097AbfIEUuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:50:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44590 "EHLO
+        Thu, 5 Sep 2019 16:50:18 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44591 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391712AbfIEUuB (ORCPT
+        with ESMTP id S2391713AbfIEUuC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:50:01 -0400
+        Thu, 5 Sep 2019 16:50:02 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1i5yha-0001kc-Dx; Thu, 05 Sep 2019 22:49:58 +0200
+        id 1i5yhW-0001js-7c; Thu, 05 Sep 2019 22:49:54 +0200
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 16CE71C0DEC;
-        Thu,  5 Sep 2019 22:49:58 +0200 (CEST)
-Date:   Thu, 05 Sep 2019 20:49:58 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6C8B01C0895;
+        Thu,  5 Sep 2019 22:49:53 +0200 (CEST)
+Date:   Thu, 05 Sep 2019 20:49:53 -0000
+From:   "tip-bot2 for Yunfeng Ye" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: refs/heads/timers/core] posix-cpu-timers: Always clear head
- pointer on dequeue
+Subject: [tip: refs/heads/irq/urgent] genirq: Prevent NULL pointer dereference
+ in resend_irqs()
 Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
 MIME-Version: 1.0
-Message-ID: <156771659804.12994.17024357039924554686.tip-bot2@tip-bot2>
+Message-ID: <156771659332.12994.218475588018626814.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -52,66 +52,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the refs/heads/timers/core branch of tip:
+The following commit has been merged into the refs/heads/irq/urgent branch of tip:
 
-Commit-ID:     00d9e47f8ec2a293db9ebed86aab0583d9a49533
-Gitweb:        https://git.kernel.org/tip/00d9e47f8ec2a293db9ebed86aab0583d9a49533
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Thu, 05 Sep 2019 14:03:40 +02:00
+Commit-ID:     eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a
+Gitweb:        https://git.kernel.org/tip/eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a
+Author:        Yunfeng Ye <yeyunfeng@huawei.com>
+AuthorDate:    Wed, 04 Sep 2019 20:46:25 +08:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 05 Sep 2019 21:16:22 +02:00
+CommitterDate: Thu, 05 Sep 2019 21:31:14 +02:00
 
-posix-cpu-timers: Always clear head pointer on dequeue
+genirq: Prevent NULL pointer dereference in resend_irqs()
 
-The head pointer in struct cpu_timer is checked to be NULL in
-posix_cpu_timer_del() when the delete raced with the exit cleanup. The
-works correctly as long as the timer is actually dequeued via
-posix_cpu_timers_exit*().
+The following crash was observed:
 
-But if the timer was dequeued due to expiry the head pointer is still set
-and triggers the warning.
+  Unable to handle kernel NULL pointer dereference at 0000000000000158
+  Internal error: Oops: 96000004 [#1] SMP
+  pc : resend_irqs+0x68/0xb0
+  lr : resend_irqs+0x64/0xb0
+  ...
+  Call trace:
+   resend_irqs+0x68/0xb0
+   tasklet_action_common.isra.6+0x84/0x138
+   tasklet_action+0x2c/0x38
+   __do_softirq+0x120/0x324
+   run_ksoftirqd+0x44/0x60
+   smpboot_thread_fn+0x1ac/0x1e8
+   kthread+0x134/0x138
+   ret_from_fork+0x10/0x18
 
-In fact keeping the head pointer around after any dequeue is pointless as
-is has no meaning at all after that.
+The reason for this is that the interrupt resend mechanism happens in soft
+interrupt context, which is a asynchronous mechanism versus other
+operations on interrupts. free_irq() does not take resend handling into
+account. Thus, the irq descriptor might be already freed before the resend
+tasklet is executed. resend_irqs() does not check the return value of the
+interrupt descriptor lookup and derefences the return value
+unconditionally.
 
-Clear the head pointer always on dequeue and remove the unused requeue
-function while at it.
+  1):
+  __setup_irq
+    irq_startup
+      check_irq_resend  // activate softirq to handle resend irq
+  2):
+  irq_domain_free_irqs
+    irq_free_descs
+      free_desc
+        call_rcu(&desc->rcu, delayed_free_desc)
+  3):
+  __do_softirq
+    tasklet_action
+      resend_irqs
+        desc = irq_to_desc(irq)
+        desc->handle_irq(desc)  // desc is NULL --> Ooops
 
-Fixes: 60bda037f1dd ("posix-cpu-timers: Utilize timerqueue for storage")
-Reported-by: syzbot+55acd54b57bb4b3840a4@syzkaller.appspotmail.com
+Fix this by adding a NULL pointer check in resend_irqs() before derefencing
+the irq descriptor.
+
+Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Link: https://lkml.kernel.org/r/20190905120539.707986830@linutronix.de
-
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
 ---
- include/linux/posix-timers.h |  9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ kernel/irq/resend.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
-index e685916..3d10c84 100644
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -74,11 +74,6 @@ struct cpu_timer {
- 	int			firing;
- };
- 
--static inline bool cpu_timer_requeue(struct cpu_timer *ctmr)
--{
--	return timerqueue_add(ctmr->head, &ctmr->node);
--}
--
- static inline bool cpu_timer_enqueue(struct timerqueue_head *head,
- 				     struct cpu_timer *ctmr)
- {
-@@ -88,8 +83,10 @@ static inline bool cpu_timer_enqueue(struct timerqueue_head *head,
- 
- static inline void cpu_timer_dequeue(struct cpu_timer *ctmr)
- {
--	if (!RB_EMPTY_NODE(&ctmr->node.node))
-+	if (ctmr->head) {
- 		timerqueue_del(ctmr->head, &ctmr->node);
-+		ctmr->head = NULL;
-+	}
- }
- 
- static inline u64 cpu_timer_getexpires(struct cpu_timer *ctmr)
+diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
+index 95414ad..98c04ca 100644
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -36,6 +36,8 @@ static void resend_irqs(unsigned long arg)
+ 		irq = find_first_bit(irqs_resend, nr_irqs);
+ 		clear_bit(irq, irqs_resend);
+ 		desc = irq_to_desc(irq);
++		if (!desc)
++			continue;
+ 		local_irq_disable();
+ 		desc->handle_irq(desc);
+ 		local_irq_enable();
