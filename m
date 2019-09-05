@@ -2,83 +2,89 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOCALPART_IN_SUBJECT,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324F6C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB80C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F354522BEF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:02:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cQFOWKcI"
+	by mail.kernel.org (Postfix) with ESMTP id 87C4521743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:03:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbfIEGCt (ORCPT
+        id S1731402AbfIEGDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:02:49 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:55361 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfIEGCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:02:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46P98Q2S8Wz9sBF;
-        Thu,  5 Sep 2019 16:02:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567663366;
-        bh=uUwByufKpnFTkAp/bGgn90W1r1vFi14mgdTW1FMySiw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cQFOWKcIti5p/B2VuY8sM0NSfUx3ow6BUwj3QT0TWWYmnh9PsHqsit4bfYShOD96Z
-         0j29VhLsCiGiDGN48qDLf3RlmW86kHe4MH/LF4R2qgdq6w8zp1u3oV2hTQN2sM8JFQ
-         DiW79WM4YN4flLzGwhBRTueEEdekV5Yr9XwNCliBozmkReMBk4bZX9FkhBwkJqVB8j
-         ZopJ3MFAjDqwpkLz5eseFb+RBSKHanPgEnKwQU/DDFWM+Qza597VVSr04nse4Y+DPM
-         lAwP8RORPiBMzJdfazf94m8mXE+DwXw8OJyGZKFLu57/F+ujxgXe/pbCBR7Me6r/w7
-         2OnecaFUfCiEQ==
-Date:   Thu, 5 Sep 2019 16:02:37 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: no release today
-Message-ID: <20190905160237.2e972a89@canb.auug.org.au>
+        Thu, 5 Sep 2019 02:03:50 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6221 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726175AbfIEGDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:03:50 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0180536790BE16221016;
+        Thu,  5 Sep 2019 14:03:48 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 14:03:39 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>,
+        <peter.ujfalusi@ti.com>, <arnd@arndb.de>, <yuehaibing@huawei.com>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] dmaengine: ti: edma: remove unused code
+Date:   Thu, 5 Sep 2019 14:02:49 +0800
+Message-ID: <20190905060249.23928-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Ob.n=vBwyb3Yk1MRhgx8y4I";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Ob.n=vBwyb3Yk1MRhgx8y4I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+drivers/dma/ti/edma.c: In function edma_probe:
+drivers/dma/ti/edma.c:2252:11: warning:
+ variable off set but not used [-Wunused-but-set-variable]
 
-Hi all,
+'off' is not used now, so remove it.
 
-As I said yesterday, there will be no release today, or any day until
-September 30.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/dma/ti/edma.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
---=20
-Cheers,
-Stephen Rothwell
+diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+index ba7c4f0..54fd981 100644
+--- a/drivers/dma/ti/edma.c
++++ b/drivers/dma/ti/edma.c
+@@ -2249,10 +2249,8 @@ static int edma_probe(struct platform_device *pdev)
+ {
+ 	struct edma_soc_info	*info = pdev->dev.platform_data;
+ 	s8			(*queue_priority_mapping)[2];
+-	int			i, off;
+ 	const s16		(*rsv_slots)[2];
+-	const s16		(*xbar_chans)[2];
+-	int			irq;
++	int			i, irq;
+ 	char			*irq_name;
+ 	struct resource		*mem;
+ 	struct device_node	*node = pdev->dev.of_node;
+@@ -2349,14 +2347,6 @@ static int edma_probe(struct platform_device *pdev)
+ 			edma_write_slot(ecc, i, &dummy_paramset);
+ 	}
+ 
+-	/* Clear the xbar mapped channels in unused list */
+-	xbar_chans = info->xbar_chans;
+-	if (xbar_chans) {
+-		for (i = 0; xbar_chans[i][1] != -1; i++) {
+-			off = xbar_chans[i][1];
+-		}
+-	}
+-
+ 	irq = platform_get_irq_byname(pdev, "edma3_ccint");
+ 	if (irq < 0 && node)
+ 		irq = irq_of_parse_and_map(node, 0);
+-- 
+2.7.4
 
---Sig_/Ob.n=vBwyb3Yk1MRhgx8y4I
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1wpP0ACgkQAVBC80lX
-0GwTjwgAkG71xe53hMTmDnsuAb2tDr4VtADU+Up8niCXJdyWpQA1qlCBe9OtZjHj
-XO8b+sFwjoOkObNGhrsw3yi4g4dUZ6p1CIFC++4Z7XXETR3+3bHQPM4mEqz7dGYd
-ImoEp83Q3XrBemfWvCOTZzwSQ+FN+s+tS9NXU8m2qWEb+BJlEkBTzfqNx61u/KFP
-s0IDeiDSxJZXV956UpKGk5RpatAzvyD46BnQCb8lrAAwfvlNwUBEszPDQN+9Zcti
-8AxdaCMuu1nlSkPfG38iTqsyc3+d1BvVKlSnnq8NWnN9j4vEflJnQqW3ezd/tpin
-cIBbbPxqZfMZE+Fz948ZkRAfbUtB3w==
-=kl9O
------END PGP SIGNATURE-----
-
---Sig_/Ob.n=vBwyb3Yk1MRhgx8y4I--
