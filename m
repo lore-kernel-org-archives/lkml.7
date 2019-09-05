@@ -2,124 +2,78 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E7AC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B23DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A2220870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:46:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77F5221848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732477AbfIELqn (ORCPT
+        id S1732614AbfIELrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:46:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:43226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbfIELqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:46:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FB3B28;
-        Thu,  5 Sep 2019 04:46:40 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3B523F718;
-        Thu,  5 Sep 2019 04:46:38 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-To:     Patrick Bellasi <patrick.bellasi@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-2-subhra.mazumdar@oracle.com>
- <20190905083127.GA2332@hirez.programming.kicks-ass.net>
- <87r24v2i14.fsf@arm.com>
- <20190905104616.GD2332@hirez.programming.kicks-ass.net>
- <87imq72dpc.fsf@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <df69627e-8aa0-e2cb-044e-fb392f34efa5@arm.com>
-Date:   Thu, 5 Sep 2019 12:46:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 07:47:01 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:53009 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730780AbfIELrB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:47:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id q5so2844138iof.19
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:47:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Nuyvp9vyMVnR3ZMhOYe+0oKwj4ltt2pST6dZGPPFdDs=;
+        b=rPSWWM0dElxyJVszR9CjIkp9yU5JGp9dTUP+yEo9BIMdnnLizmBMk53tIu866bpKkC
+         cCoJPBKWCRVSf1yRVWXXEav306Jm6GJBxqfTpbOSeyFMp77VGRauPHb9MqConC3NDUN2
+         JnuyhGmDebJtPX+k/d70OPyQa5kP4E00uMLMYnT/YtFNzHsRK5KnFVzkXA0+I98fjxYS
+         uFX5vdrRX6HmyroZ8zHjmYRm7FjtvXhPD3pkB0UtzkZe1gn9lWGxnB63DITWDXqsrqAx
+         gIi4U4Ck1c84KcqOQkk+VzdZ7Fk86EXgJUsZOnwTxfZsZCet4TOvsoiEQgkvxr7ZlacA
+         Somw==
+X-Gm-Message-State: APjAAAU4zdMS8BS/fw0Z2G579drt81YIpd0+pyfXc6VS3awI64X2j0Nb
+        qkD0zSXamFBJakLoMWNI4uHas1mckXquY3GzinHUAmShp16N
+X-Google-Smtp-Source: APXvYqwXx5xVREHqN2GcbqE+Tt8E1onLoKBKAcj+sRYuDGmkwww2a9nv2C6YStKt8wJGXh8WFQyP/WmdeP9MEZWuHR92/vOHwLjw
 MIME-Version: 1.0
-In-Reply-To: <87imq72dpc.fsf@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a5d:8599:: with SMTP id f25mr3413002ioj.265.1567684020483;
+ Thu, 05 Sep 2019 04:47:00 -0700 (PDT)
+Date:   Thu, 05 Sep 2019 04:47:00 -0700
+In-Reply-To: <CAAeHK+y3eQ7bXvo1tiAkwLCsFkbSU5B+6hsKbdEzkSXP2_Jyzg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000293ed00591cce18a@google.com>
+Subject: Re: WARNING in hso_free_net_device
+From:   syzbot <syzbot+44d53c7255bb1aea22d2@syzkaller.appspotmail.com>
+To:     alexios.zavras@intel.com, andreyknvl@google.com,
+        benquike@gmail.com, davem@davemloft.net,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mathias.payer@nebelwelt.net,
+        netdev@vger.kernel.org, oneukum@suse.com, rfontana@redhat.com,
+        stephen@networkplumber.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 12:18, Patrick Bellasi wrote:
->> There's a few things wrong there; I really feel that if we call it nice,
->> it should be like nice. Otherwise we should call it latency-bias and not
->> have the association with nice to confuse people.
->>
->> Secondly; the default should be in the middle of the range. Naturally
->> this would be a signed range like nice [-(x+1),x] for some x. but if you
->> want [0,1024], then the default really should be 512, but personally I
->> like 0 better as a default, in which case we need negative numbers.
->>
->> This is important because we want to be able to bias towards less
->> importance to (tail) latency as well as more importantance to (tail)
->> latency.
->>
->> Specifically, Oracle wants to sacrifice (some) latency for throughput.
->> Facebook OTOH seems to want to sacrifice (some) throughput for latency.
-> 
-> Right, we have this dualism to deal with and current mainline behaviour
-> is somehow in the middle.
-> 
-> BTW, the FB requirement is the same we have in Android.
-> We want some CFS tasks to have very small latency and a low chance
-> to be preempted by the wake-up of less-important "background" tasks.
-> 
-> I'm not totally against the usage of a signed range, but I'm thinking
-> that since we are introducing a new (non POSIX) concept we can get the
-> chance to make it more human friendly.
-> 
-> Give the two extremes above, would not be much simpler and intuitive to
-> have 0 implementing the FB/Android (no latency) case and 1024 the
-> (max latency) Oracle case?
-> 
+Hello,
 
-For something like latency-<whatever>, I don't see the point of having
-such a wide range. The nice range is probably more than enough - and before
-even bothering about the range, we should probably agree on what the range
-should represent.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-If it's niceness, I read it as: positive latency-nice value means we're
-nice to latency, means we reduce it. So the further up you go, the more you
-restrict your wakeup scan. I think it's quite easy to map that into the
-code: current behaviour at 0, with a decreasing scan mask size as we go
-towards +19. I don't think anyone needs 512 steps to tune this.
+Reported-and-tested-by:  
+syzbot+44d53c7255bb1aea22d2@syzkaller.appspotmail.com
 
-I don't know what logic we'd follow for negative values though. Maybe
-latency-nice -20 means always going through the slowpath, but what of the
-intermediate values?
+Tested on:
 
-AFAICT this RFC only looks at wakeups, but I guess latency-nice can be
-applied elsewhere (e.g. load-balance, something like task_hot() and its
-use of sysctl_sched_migration_cost).
+commit:         eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+dashboard link: https://syzkaller.appspot.com/bug?extid=44d53c7255bb1aea22d2
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1188fcc6600000
 
-> Moreover, we will never match completely the nice semantic, give that
-> a 1 nice unit has a proper math meaning, isn't something like 10% CPU
-> usage change for each step?
-> 
-> For latency-nice instead we will likely base our biasing strategies on
-> some predefined (maybe system-wide configurable) const thresholds.
-> 
-> Could changing the name to "latency-tolerance" break the tie by marking
-> its difference wrt prior/nice levels? AFAIR, that was also the original
-> proposal [1] by PaulT during the OSPM discussion.
-> 
-> Best,
-> Patrick
-> 
-> [1] https://youtu.be/oz43thSFqmk?t=1302
-> 
+Note: testing is done by a robot and is best-effort only.
