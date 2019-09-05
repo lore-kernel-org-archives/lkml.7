@@ -2,121 +2,127 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE37C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBCBC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706FE21743
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6652053B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:13:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="vRnmheRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732779AbfIEKLV (ORCPT
+        id S1732834AbfIEKNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:11:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:41014 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbfIEKLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:11:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 195181576;
-        Thu,  5 Sep 2019 03:11:20 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 632483F718;
-        Thu,  5 Sep 2019 03:11:18 -0700 (PDT)
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <11aaa3a8-e6b9-cf1f-08bb-0f8e1b63942b@linux.intel.com> <c09bf5fc-8fc6-dddd-0a18-bd7d5f2136b5@linux.ibm.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        subhra mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, tglx@linutronix.de, steven.sistare@oracle.com,
-        dhaval.giani@oracle.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
-        mgorman@techsingularity.net
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-In-reply-to: <c09bf5fc-8fc6-dddd-0a18-bd7d5f2136b5@linux.ibm.com>
-Date:   Thu, 05 Sep 2019 11:11:16 +0100
-Message-ID: <87o8zz2gu3.fsf@arm.com>
+        Thu, 5 Sep 2019 06:13:04 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42958 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfIEKND (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:13:03 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so1821630lje.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 03:13:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WM4svmPInntGde0Mb4h49CeOyrkMQizTssxeoRTCMZs=;
+        b=vRnmheRVRIyNu1yOxwrrhCtj/3kZ1d0t5JyKsRuOscwUyBBy5Pen7wUCNYp6TyopQk
+         w2rxw6vPsm17LHzDCBNT332TPFMbfozti2ysHnKH3+7FWmvupoa0+YDyizlOQQkePcy2
+         oADtXPAeLdN/7Z84sFKLuro+l6/WEm4W9nHiUTTkcyZ4tUCSlsN9OLzu3ARVvnGjLGaQ
+         4rbITO+SdwYFNpYHbiVRAOx2MbYvSIDDhzP0/TIUqIogBHKFiRLNX/Ql0TbNy0woI2Op
+         CnnPVM92pl0riCp3TInQGvtHDW9+8kaeObZ1UR58Olez4CoE/d0ZCHLN3BzEYtZBtUH1
+         wXmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WM4svmPInntGde0Mb4h49CeOyrkMQizTssxeoRTCMZs=;
+        b=FcmUQE53+lLERFLWxd9HguUfPxlAYVEwwwD1i8PV7oSY0r29sqIy8k5MJP92dYk1Hy
+         o/BoEr1TIjWkCp13GTZOs74zF8GYab7wtGUohLylwxqw3SUnF19PHW5iA7UoHg9bm1J9
+         VVP2rn0w2A+y3R/OD1TLRfoLHpKYhI7/XAdu8+NdgmYYSPYxqj5UxfWEtsM/P0UwpoK+
+         Vs46COYzsf8r8xoTgd2SstpjqZXsGJz68Rl4hmbJSTS5H1eMl/qgtt+aAUA0FUQum/U1
+         JvF0dspiJdTKNtPjcNJzrpuLhW7Fiki+jsOVA3nZLERjZwOZGSijGonHaQN3t54ugxF1
+         q/vw==
+X-Gm-Message-State: APjAAAVhUY9UjkOoP2gyW6I5bXIXUJzWzWOfRLenoLSbX3O1v0Ulmzt2
+        c14IxL1SlilredHS6IRAuj6KNQ==
+X-Google-Smtp-Source: APXvYqy3A+azbPbg/1KwTZbN5fOs8mzxKRC4QS8uK+LhfmrAK7TY/oNz5c8RHtwqX0w9skwFxCyxQQ==
+X-Received: by 2002:a2e:878a:: with SMTP id n10mr1526787lji.117.1567678381628;
+        Thu, 05 Sep 2019 03:13:01 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:413:7297:c53b:e0f7:7608:d21c? ([2a00:1fa0:413:7297:c53b:e0f7:7608:d21c])
+        by smtp.gmail.com with ESMTPSA id w1sm349824lfe.67.2019.09.05.03.13.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 03:13:00 -0700 (PDT)
+Subject: Re: [PATCH net-next 4/7] net: hns3: add client node validity judgment
+To:     Huazhong Tan <tanhuazhong@huawei.com>, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
+        linuxarm@huawei.com, jakub.kicinski@netronome.com,
+        Peng Li <lipeng321@huawei.com>
+References: <1567606006-39598-1-git-send-email-tanhuazhong@huawei.com>
+ <1567606006-39598-5-git-send-email-tanhuazhong@huawei.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <b0aa6da6-cd42-dd31-8ff7-ca3f48de58ff@cogentembedded.com>
+Date:   Thu, 5 Sep 2019 13:12:51 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <1567606006-39598-5-git-send-email-tanhuazhong@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04.09.2019 17:06, Huazhong Tan wrote:
 
-On Thu, Sep 05, 2019 at 07:15:34 +0100, Parth Shah wrote...
+> From: Peng Li <lipeng321@huawei.com>
+> 
+> HNS3 driver can only unregister client which included in hnae3_client_list.
+> This patch adds the client node validity judgment.
+> 
+> Signed-off-by: Peng Li <lipeng321@huawei.com>
+> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+> ---
+>   drivers/net/ethernet/hisilicon/hns3/hnae3.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.c b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+> index 528f624..6aa5257 100644
+> --- a/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+> +++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.c
+> @@ -138,12 +138,28 @@ EXPORT_SYMBOL(hnae3_register_client);
+>   
+>   void hnae3_unregister_client(struct hnae3_client *client)
+>   {
+> +	struct hnae3_client *client_tmp;
+>   	struct hnae3_ae_dev *ae_dev;
+> +	bool existed = false;
+>   
+>   	if (!client)
+>   		return;
+>   
+>   	mutex_lock(&hnae3_common_lock);
+> +
+> +	list_for_each_entry(client_tmp, &hnae3_client_list, node) {
+> +		if (client_tmp->type == client->type) {
+> +			existed = true;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (!existed) {
+> +		mutex_unlock(&hnae3_common_lock);
+> +		pr_err("client %s not existed!\n", client->name);
 
-> On 9/4/19 11:02 PM, Tim Chen wrote:
->> On 8/30/19 10:49 AM, subhra mazumdar wrote:
->>> Add Cgroup interface for latency-nice. Each CPU Cgroup adds a new file
->>> "latency-nice" which is shared by all the threads in that Cgroup.
->> 
->> 
->> Subhra,
->> 
->> Thanks for posting the patchset.  Having a latency nice hint
->> is useful beyond idle load balancing.  I can think of other
->> application scenarios, like scheduling batch machine learning AVX 512
->> processes with latency sensitive processes.  AVX512 limits the frequency
->> of the CPU and it is best to avoid latency sensitive task on the
->> same core with AVX512.  So latency nice hint allows the scheduler
->> to have a criteria to determine the latency sensitivity of a task
->> and arrange latency sensitive tasks away from AVX512 tasks.
->> 
->
->
-> Hi Tim and Subhra,
->
-> This patchset seems to be interesting for my TurboSched patches as well
-> where I try to pack jitter tasks on fewer cores to get higher Turbo Frequencies.
-> Well, the problem I face is that we sometime end up putting multiple jitter tasks on a core
-> running some latency sensitive application which may see performance degradation.
-> So my plan was to classify such tasks to be latency sensitive thereby hinting the load
-> balancer to not put tasks on such cores.
->
-> TurboSched: https://lkml.org/lkml/2019/7/25/296
->
->> You configure the latency hint on a cgroup basis.
->> But I think not all tasks in a cgroup necessarily have the same
->> latency sensitivity.
->> 
->> For example, I can see that cgroup can be applied on a per user basis,
->> and the user could run different tasks that have different latency sensitivity.
->> We may also need a way to configure latency sensitivity on a per task basis instead on
->> a per cgroup basis.
->> 
->
-> AFAIU, the problem defined above intersects with my patches as well where the interface
-> is required to classify the jitter tasks. I have already tried few methods like
-> syscall and cgroup to classify such tasks and maybe something like that can be adopted
-> with these patchset as well.
+    Did not exist, you mean?
 
-Agree, these two patchest are definitively overlapping in terms of
-mechanisms and APIs to expose to userspace. You to guys seems to target
-different goals but the general approach should be:
+[...]
 
- - expose a single and abstract concept to user-space
-   latency-nice or latency-tolerant as PaulT proposed at OSPM
-
- - map this concept in kernel-space to different kind of bias, both at
-   wakeup time and load-balance time, and use both for RT and CFS tasks.
-
-That's my understanding at least ;)
-
-I guess we will have interesting discussions at the upcoming LPC to
-figure out a solution fitting all needs.
-
-> Thanks,
-> Parth
-
-Best,
-Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+MBR, Sergei
