@@ -2,145 +2,327 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD9BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9BCC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AE9920820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC3820828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f/a2wjUZ"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b0xo5sei"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389410AbfIEVow (ORCPT
+        id S2389639AbfIEVqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:44:52 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42180 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfIEVov (ORCPT
+        Thu, 5 Sep 2019 17:46:10 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:25528 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732646AbfIEVqK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:44:51 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so4028446lje.9;
-        Thu, 05 Sep 2019 14:44:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h2bk3j52P30Q1CTEXW10Z5tA0jiFGXaEQ+rZ6Wp9rtw=;
-        b=f/a2wjUZxmDspNldx7I3qghloHCzwxYNI4xFcoXbdP5KP+eN1RQmq83F9HgVXwJaPX
-         NCinIjm2C0lQAHsiGIAPUUmlErnY/jzThdbblnlCyYU2opwVbOm7x9h/pErfp7SkqiTM
-         a3Kjv89nvO7DVtUTyakUmpPMukfusBraJpzzFcRjSkWtfyZ6AlbIgUu8jo6bIDWQ6N0M
-         5Yb4ayEuktTJzvSgPKBENAc+vnDZTmRBZAjgpB2tnCAyG6RA4lKMc3g2ICHdl1tYh5DR
-         WG/Kg2d9CWerk17gLxqDjJFIh4a+pVYbhl9hSOsBDoD66/J5BGqBG/S8Vph5S/E5irCq
-         +rkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h2bk3j52P30Q1CTEXW10Z5tA0jiFGXaEQ+rZ6Wp9rtw=;
-        b=X9Lhkv3b7x6Bmc74ZexKr8JTBKhaGHeL9Yg1Ld17TwJODtzPiKySURp4cutB1eVS5g
-         sdBGmlw5ekmCQg0n/rnoGRubFe10IqZkmo/Ls5DQsXHKpVeP7pxh9DtAZeKn0YXYRpa5
-         Nt9zECNjuvFXrjNc5Dr7UxauEzN3kd74y3YgRiiqT9dhGfoEbRT7m0QNtnKuSZ8uNk1+
-         g96R1g3fWGgvn7kCnZmR6v+VOS0xded9pbGTZJDSTwTdD7mxdTinUiDfsT1nuARP6Bk0
-         RKrT1I1o5QEN0tbylyCurq4gh6fcIfPmjTt0aLbYUq2OYYtELC+6M6l5yEqqOTe+fzlS
-         N02g==
-X-Gm-Message-State: APjAAAVuP4hqvfNFdNbeHcaTDCd1db3jvKRt6u02FETcSbUXUWHIVEkX
-        ZbqZZSuG067JUaEIueuAuJqaf9nZ2EZyNoSLJ2c=
-X-Google-Smtp-Source: APXvYqyk6skdfl/16FhYXB68WgXTcAV0P1eaA9Y9REhksLUKbhCAx0u0UL9AhebkLoG8ZgVXF2woSJqnHh7LpFzcAho=
-X-Received: by 2002:a2e:4489:: with SMTP id b9mr3613889ljf.17.1567719889033;
- Thu, 05 Sep 2019 14:44:49 -0700 (PDT)
+        Thu, 5 Sep 2019 17:46:10 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85LgktF016046
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 14:46:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=jUYA9V6/76PQuUuUoRBz8Z4hZkBQOhxwB/mAKjBuibo=;
+ b=b0xo5seiQRBzPeolJLt20bUGceN0SA+D2w/06RSqqA+HMXoaYd6WRwRbLZYWDneA149q
+ VPBE0N6l+ymMTHo1prbnguhUIGr1kM2zd/X5hGkOuv81ZHRzn5vbm1n0TlqELpIW/tRh
+ PZaFZPhk3kh5CbM+NrCTLNRCVc5vYyEvHxo= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2uu93b0drb-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:46:09 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 5 Sep 2019 14:46:07 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id A65A717229DFA; Thu,  5 Sep 2019 14:46:06 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     <linux-mm@kvack.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH RFC 02/14] mm: memcg: introduce mem_cgroup_ptr
+Date:   Thu, 5 Sep 2019 14:45:46 -0700
+Message-ID: <20190905214553.1643060-3-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190905214553.1643060-1-guro@fb.com>
+References: <20190905214553.1643060-1-guro@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-References: <0000000000005091a70591d3e1d9@google.com>
-In-Reply-To: <0000000000005091a70591d3e1d9@google.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 5 Sep 2019 14:44:37 -0700
-Message-ID: <CAADnVQK94boXD8Y=g1LsBtNG4wrYQ0Jnjxhq7hdxvyBKZuPwXw@mail.gmail.com>
-Subject: Re: general protection fault in dev_map_hash_update_elem
-To:     syzbot <syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com>
-Cc:     bpf <bpf@vger.kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_08:2019-09-04,2019-09-05 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ spamscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=4
+ impostorscore=0 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ mlxscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909050202
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 1:08 PM syzbot
-<syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    6d028043 Add linux-next specific files for 20190830
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=135c1a92600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=82a6bec43ab0cb69
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4e7a85b1432052e8d6f8
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109124e1600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
->
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 1 PID: 10235 Comm: syz-executor.0 Not tainted 5.3.0-rc6-next-20190830
-> #75
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:__write_once_size include/linux/compiler.h:203 [inline]
-> RIP: 0010:__hlist_del include/linux/list.h:795 [inline]
-> RIP: 0010:hlist_del_rcu include/linux/rculist.h:475 [inline]
-> RIP: 0010:__dev_map_hash_update_elem kernel/bpf/devmap.c:668 [inline]
-> RIP: 0010:dev_map_hash_update_elem+0x3c8/0x6e0 kernel/bpf/devmap.c:691
-> Code: 48 89 f1 48 89 75 c8 48 c1 e9 03 80 3c 11 00 0f 85 d3 02 00 00 48 b9
-> 00 00 00 00 00 fc ff df 48 8b 53 10 48 89 d6 48 c1 ee 03 <80> 3c 0e 00 0f
-> 85 97 02 00 00 48 85 c0 48 89 02 74 38 48 89 55 b8
-> RSP: 0018:ffff88808d607c30 EFLAGS: 00010046
-> RAX: 0000000000000000 RBX: ffff8880a7f14580 RCX: dffffc0000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a7f14588
-> RBP: ffff88808d607c78 R08: 0000000000000004 R09: ffffed1011ac0f73
-> R10: ffffed1011ac0f72 R11: 0000000000000003 R12: ffff88809f4e9400
-> R13: ffff88809b06ba00 R14: 0000000000000000 R15: ffff88809f4e9528
-> FS:  00007f3a3d50c700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007feb3fcd0000 CR3: 00000000986b9000 CR4: 00000000001406e0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   map_update_elem+0xc82/0x10b0 kernel/bpf/syscall.c:966
->   __do_sys_bpf+0x8b5/0x3350 kernel/bpf/syscall.c:2854
->   __se_sys_bpf kernel/bpf/syscall.c:2825 [inline]
->   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2825
->   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x459879
-> Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f3a3d50bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459879
-> RDX: 0000000000000020 RSI: 0000000020000040 RDI: 0000000000000002
-> RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f3a3d50c6d4
-> R13: 00000000004bfc86 R14: 00000000004d1960 R15: 00000000ffffffff
-> Modules linked in:
-> ---[ end trace 083223e21dbd0ae5 ]---
-> RIP: 0010:__write_once_size include/linux/compiler.h:203 [inline]
-> RIP: 0010:__hlist_del include/linux/list.h:795 [inline]
-> RIP: 0010:hlist_del_rcu include/linux/rculist.h:475 [inline]
-> RIP: 0010:__dev_map_hash_update_elem kernel/bpf/devmap.c:668 [inline]
-> RIP: 0010:dev_map_hash_update_elem+0x3c8/0x6e0 kernel/bpf/devmap.c:691
+This commit introduces mem_cgroup_ptr structure and corresponding API.
+It implements a pointer to a memory cgroup with a built-in reference
+counter. The main goal of it is to implement reparenting efficiently.
 
-Toke,
-please take a look.
-Thanks!
+If a number of objects (e.g. slab pages) have to keep a pointer and
+a reference to a memory cgroup, they can use mem_cgroup_ptr instead.
+On reparenting, only one mem_cgroup_ptr->memcg pointer has to be
+changed, instead of walking over all accounted objects.
+
+mem_cgroup_ptr holds a single reference to the corresponding memory
+cgroup. Because it's initialized before the css reference counter,
+css's refcounter can't be bumped at allocation time. Instead, it's
+bumped on reparenting which happens during offlining. A cgroup is
+never released online, so it's fine.
+
+mem_cgroup_ptr is released using rcu, so memcg->kmem_memcg_ptr can
+be accessed in a rcu read section. On reparenting it's atomically
+switched to NULL. If the reader gets NULL, it can just read parent's
+kmem_memcg_ptr instead.
+
+Each memory cgroup contains a list of kmem_memcg_ptrs. On reparenting
+the list is spliced into the parent's list. The list is protected
+using the css set lock.
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+---
+ include/linux/memcontrol.h | 50 ++++++++++++++++++++++
+ mm/memcontrol.c            | 87 ++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 133 insertions(+), 4 deletions(-)
+
+diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+index 120d39066148..dd5ebfe5a86c 100644
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -23,6 +23,7 @@
+ #include <linux/page-flags.h>
+ 
+ struct mem_cgroup;
++struct mem_cgroup_ptr;
+ struct page;
+ struct mm_struct;
+ struct kmem_cache;
+@@ -197,6 +198,22 @@ struct memcg_cgwb_frn {
+ 	int memcg_id;			/* memcg->css.id of foreign inode */
+ 	u64 at;				/* jiffies_64 at the time of dirtying */
+ 	struct wb_completion done;	/* tracks in-flight foreign writebacks */
++}
++
++/*
++ * A pointer to a memory cgroup with a built-in reference counter.
++ * For a use as an intermediate object to simplify reparenting of
++ * objects charged to the cgroup. The memcg pointer can be switched
++ * to the parent cgroup without a need to modify all objects
++ * which hold the reference to the cgroup.
++ */
++struct mem_cgroup_ptr {
++	struct percpu_ref refcnt;
++	struct mem_cgroup *memcg;
++	union {
++		struct list_head list;
++		struct rcu_head rcu;
++	};
+ };
+ 
+ /*
+@@ -312,6 +329,8 @@ struct mem_cgroup {
+ 	int kmemcg_id;
+ 	enum memcg_kmem_state kmem_state;
+ 	struct list_head kmem_caches;
++	struct mem_cgroup_ptr __rcu *kmem_memcg_ptr;
++	struct list_head kmem_memcg_ptr_list;
+ #endif
+ 
+ 	int last_scanned_node;
+@@ -440,6 +459,21 @@ struct mem_cgroup *mem_cgroup_from_css(struct cgroup_subsys_state *css){
+ 	return css ? container_of(css, struct mem_cgroup, css) : NULL;
+ }
+ 
++static inline bool mem_cgroup_ptr_tryget(struct mem_cgroup_ptr *ptr)
++{
++	return percpu_ref_tryget(&ptr->refcnt);
++}
++
++static inline void mem_cgroup_ptr_get(struct mem_cgroup_ptr *ptr)
++{
++	percpu_ref_get(&ptr->refcnt);
++}
++
++static inline void mem_cgroup_ptr_put(struct mem_cgroup_ptr *ptr)
++{
++	percpu_ref_put(&ptr->refcnt);
++}
++
+ static inline void mem_cgroup_put(struct mem_cgroup *memcg)
+ {
+ 	if (memcg)
+@@ -1433,6 +1467,22 @@ static inline int memcg_cache_id(struct mem_cgroup *memcg)
+ 	return memcg ? memcg->kmemcg_id : -1;
+ }
+ 
++static inline struct mem_cgroup_ptr *
++mem_cgroup_get_kmem_ptr(struct mem_cgroup *memcg)
++{
++	struct mem_cgroup_ptr *memcg_ptr;
++
++	rcu_read_lock();
++	do {
++		memcg_ptr = rcu_dereference(memcg->kmem_memcg_ptr);
++		if (memcg_ptr && mem_cgroup_ptr_tryget(memcg_ptr))
++			break;
++	} while ((memcg = parent_mem_cgroup(memcg)));
++	rcu_read_unlock();
++
++	return memcg_ptr;
++}
++
+ #else
+ 
+ static inline int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index effefcec47b3..cb9adb31360e 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -266,6 +266,77 @@ struct cgroup_subsys_state *vmpressure_to_css(struct vmpressure *vmpr)
+ }
+ 
+ #ifdef CONFIG_MEMCG_KMEM
++extern spinlock_t css_set_lock;
++
++static void memcg_ptr_release(struct percpu_ref *ref)
++{
++	struct mem_cgroup_ptr *ptr = container_of(ref, struct mem_cgroup_ptr,
++						  refcnt);
++	unsigned long flags;
++
++	spin_lock_irqsave(&css_set_lock, flags);
++	list_del(&ptr->list);
++	spin_unlock_irqrestore(&css_set_lock, flags);
++
++	mem_cgroup_put(ptr->memcg);
++	percpu_ref_exit(ref);
++	kfree_rcu(ptr, rcu);
++}
++
++static int memcg_init_kmem_memcg_ptr(struct mem_cgroup *memcg)
++{
++	struct mem_cgroup_ptr *kmem_memcg_ptr;
++	int ret;
++
++	kmem_memcg_ptr = kmalloc(sizeof(struct mem_cgroup_ptr), GFP_KERNEL);
++	if (!kmem_memcg_ptr)
++		return -ENOMEM;
++
++	ret = percpu_ref_init(&kmem_memcg_ptr->refcnt, memcg_ptr_release,
++			      0, GFP_KERNEL);
++	if (ret) {
++		kfree(kmem_memcg_ptr);
++		return ret;
++	}
++
++	kmem_memcg_ptr->memcg = memcg;
++	INIT_LIST_HEAD(&kmem_memcg_ptr->list);
++	rcu_assign_pointer(memcg->kmem_memcg_ptr, kmem_memcg_ptr);
++	list_add(&kmem_memcg_ptr->list, &memcg->kmem_memcg_ptr_list);
++	return 0;
++}
++
++static void memcg_reparent_kmem_memcg_ptr(struct mem_cgroup *memcg,
++					  struct mem_cgroup *parent)
++{
++	unsigned int nr_reparented = 0;
++	struct mem_cgroup_ptr *memcg_ptr = NULL;
++
++	rcu_swap_protected(memcg->kmem_memcg_ptr, memcg_ptr, true);
++	percpu_ref_kill(&memcg_ptr->refcnt);
++
++	/*
++	 * kmem_memcg_ptr is initialized before css refcounter, so until now
++	 * it doesn't hold a reference to the memcg. Bump it here.
++	 */
++	css_get(&memcg->css);
++
++	spin_lock_irq(&css_set_lock);
++	list_for_each_entry(memcg_ptr, &memcg->kmem_memcg_ptr_list, list) {
++		xchg(&memcg_ptr->memcg, parent);
++		nr_reparented++;
++	}
++	if (nr_reparented)
++		list_splice(&memcg->kmem_memcg_ptr_list,
++			    &parent->kmem_memcg_ptr_list);
++	spin_unlock_irq(&css_set_lock);
++
++	if (nr_reparented) {
++		css_get_many(&parent->css, nr_reparented);
++		css_put_many(&memcg->css, nr_reparented);
++	}
++}
++
+ /*
+  * This will be the memcg's index in each cache's ->memcg_params.memcg_caches.
+  * The main reason for not using cgroup id for this:
+@@ -3554,7 +3625,7 @@ static void memcg_flush_percpu_vmevents(struct mem_cgroup *memcg)
+ #ifdef CONFIG_MEMCG_KMEM
+ static int memcg_online_kmem(struct mem_cgroup *memcg)
+ {
+-	int memcg_id;
++	int memcg_id, ret;
+ 
+ 	if (cgroup_memory_nokmem)
+ 		return 0;
+@@ -3566,6 +3637,12 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
+ 	if (memcg_id < 0)
+ 		return memcg_id;
+ 
++	ret = memcg_init_kmem_memcg_ptr(memcg);
++	if (ret) {
++		memcg_free_cache_id(memcg_id);
++		return ret;
++	}
++
+ 	static_branch_inc(&memcg_kmem_enabled_key);
+ 	/*
+ 	 * A memory cgroup is considered kmem-online as soon as it gets
+@@ -3601,12 +3678,13 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
+ 		parent = root_mem_cgroup;
+ 
+ 	/*
+-	 * Deactivate and reparent kmem_caches. Then flush percpu
+-	 * slab statistics to have precise values at the parent and
+-	 * all ancestor levels. It's required to keep slab stats
++	 * Deactivate and reparent kmem_caches and reparent kmem_memcg_ptr.
++	 * Then flush percpu slab statistics to have precise values at the
++	 * parent and all ancestor levels. It's required to keep slab stats
+ 	 * accurate after the reparenting of kmem_caches.
+ 	 */
+ 	memcg_deactivate_kmem_caches(memcg, parent);
++	memcg_reparent_kmem_memcg_ptr(memcg, parent);
+ 	memcg_flush_percpu_vmstats(memcg, true);
+ 
+ 	kmemcg_id = memcg->kmemcg_id;
+@@ -5171,6 +5249,7 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
+ 	memcg->socket_pressure = jiffies;
+ #ifdef CONFIG_MEMCG_KMEM
+ 	memcg->kmemcg_id = -1;
++	INIT_LIST_HEAD(&memcg->kmem_memcg_ptr_list);
+ #endif
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ 	INIT_LIST_HEAD(&memcg->cgwb_list);
+-- 
+2.21.0
+
