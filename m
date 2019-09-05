@@ -2,127 +2,93 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3ADC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B56C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE53121848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:09:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1062145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733044AbfIEJJs (ORCPT
+        id S1732169AbfIEJLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:09:48 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:43258 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731421AbfIEJJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:09:47 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 46PFJ40dnZz1rK5J;
-        Thu,  5 Sep 2019 11:09:40 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 46PFJ32zjcz1qqkk;
-        Thu,  5 Sep 2019 11:09:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id bsFr3srmzyBP; Thu,  5 Sep 2019 11:09:36 +0200 (CEST)
-X-Auth-Info: HjUMDzwcEehHBjaVffXZjtB4a4fj/TG0EaQI9SDHSpRwfnDQz77oFMRdUd9Aa8bN
-Received: from hawking (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 5 Sep 2019 05:11:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38230 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731167AbfIEJLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:11:19 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Thu,  5 Sep 2019 11:09:36 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 60DC93007C23;
+        Thu,  5 Sep 2019 09:11:19 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 18A8D5D9CA;
+        Thu,  5 Sep 2019 09:11:08 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 17:11:04 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Keith Busch <keith.busch@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-scsi@vger.kernel.org,
+        Long Li <longli@microsoft.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user helpers
-References: <20190904201933.10736-1-cyphar@cyphar.com>
-        <20190904201933.10736-2-cyphar@cyphar.com>
-X-Yow:  RELATIVES!!
-Date:   Thu, 05 Sep 2019 11:09:35 +0200
-In-Reply-To: <20190904201933.10736-2-cyphar@cyphar.com> (Aleksa Sarai's
-        message of "Thu, 5 Sep 2019 06:19:22 +1000")
-Message-ID: <mvma7bj85yo.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190905091103.GC4432@ming.t460p>
+References: <299fb6b5-d414-2e71-1dd2-9d6e34ee1c79@linaro.org>
+ <20190903063125.GA21022@ming.t460p>
+ <6b88719c-782a-4a63-db9f-bf62734a7874@linaro.org>
+ <20190903072848.GA22170@ming.t460p>
+ <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+ <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
+ <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+ <de16de12-fa1a-666c-ea19-fea5d096c1ca@acm.org>
+ <20190904180211.GX2332@hirez.programming.kicks-ass.net>
+ <9b924e48-e217-9c11-c1fb-46c92a82ea2d@acm.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b924e48-e217-9c11-c1fb-46c92a82ea2d@acm.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 09:11:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sep 05 2019, Aleksa Sarai <cyphar@cyphar.com> wrote:
+On Wed, Sep 04, 2019 at 12:47:13PM -0700, Bart Van Assche wrote:
+> On 9/4/19 11:02 AM, Peter Zijlstra wrote:
+> > On Wed, Sep 04, 2019 at 10:38:59AM -0700, Bart Van Assche wrote:
+> > > I think it is widely known that rdtsc is a relatively slow x86 instruction.
+> > > So I expect that using that instruction will cause a measurable overhead if
+> > > it is called frequently enough. I'm not aware of any publicly available
+> > > measurement data however.
+> > 
+> > https://www.agner.org/optimize/instruction_tables.pdf
+> > 
+> > RDTSC, Ryzen: ~36
+> > RDTSC, Skylake: ~20
+> > 
+> > Sadly those same tables don't list the cost of actual exceptions or even
+> > IRET :/
+> 
+> Thanks Peter for having looked up these numbers. These numbers are much
+> better than last time I checked. Ming, would CONFIG_IRQ_TIME_ACCOUNTING help
+> your workload?
 
-> diff --git a/lib/struct_user.c b/lib/struct_user.c
-> new file mode 100644
-> index 000000000000..7301ab1bbe98
-> --- /dev/null
-> +++ b/lib/struct_user.c
-> @@ -0,0 +1,182 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Copyright (C) 2019 SUSE LLC
-> + * Copyright (C) 2019 Aleksa Sarai <cyphar@cyphar.com>
-> + */
-> +
-> +#include <linux/types.h>
-> +#include <linux/export.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/kernel.h>
-> +#include <linux/string.h>
-> +
-> +#define BUFFER_SIZE 64
-> +
-> +/*
-> + * "memset(p, 0, size)" but for user space buffers. Caller must have already
-> + * checked access_ok(p, size).
-> + */
-> +static int __memzero_user(void __user *p, size_t s)
-> +{
-> +	const char zeros[BUFFER_SIZE] = {};
+In my fio test on azure L80sv2, IRQ_TIME_ACCOUNTING isn't enabled.
+However the irq flood detection introduces two RDTSC for each do_IRQ(),
+not see obvious IOPS difference.
 
-Perhaps make that static?
-
-Andreas.
-
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+Thanks,
+Ming
