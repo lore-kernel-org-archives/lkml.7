@@ -2,70 +2,130 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922E8C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6EAC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E94221743
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:13:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8CB2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732966AbfIEKNc (ORCPT
+        id S1733024AbfIEKPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:13:32 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:44158 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbfIEKNc (ORCPT
+        Thu, 5 Sep 2019 06:15:07 -0400
+Received: from outbound4mad.lav.puc.rediris.es ([130.206.19.146]:16868 "EHLO
+        mx01.puc.rediris.es" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732504AbfIEKPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:13:32 -0400
-Received: from localhost (unknown [89.248.140.11])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DE683153878EF;
-        Thu,  5 Sep 2019 03:13:30 -0700 (PDT)
-Date:   Thu, 05 Sep 2019 12:13:29 +0200 (CEST)
-Message-Id: <20190905.121329.764571693233274743.davem@davemloft.net>
-To:     suyj.fnst@cn.fujitsu.com
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] ipv4: fix ifa_flags reuse problem in using
- ifconfig tool
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1567582667-56549-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-References: <1567582667-56549-1-git-send-email-suyj.fnst@cn.fujitsu.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 05 Sep 2019 03:13:32 -0700 (PDT)
+        Thu, 5 Sep 2019 06:15:06 -0400
+Received: from mta-out02.sim.rediris.es (mta-out02.sim.rediris.es [130.206.24.44])
+        by mx01.puc.rediris.es  with ESMTP id x85ADag1012008-x85ADag3012008
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 5 Sep 2019 12:13:36 +0200
+Received: from mta-out02.sim.rediris.es (localhost.localdomain [127.0.0.1])
+        by mta-out02.sim.rediris.es (Postfix) with ESMTPS id 655BCC7BE2B;
+        Thu,  5 Sep 2019 12:13:30 +0200 (CEST)
+Received: from mta-out02.sim.rediris.es (localhost.localdomain [127.0.0.1])
+        by mta-out02.sim.rediris.es (Postfix) with ESMTPS id 40229C7BE2C;
+        Thu,  5 Sep 2019 12:13:27 +0200 (CEST)
+Received: from lt-gp.iram.es (mrt-fw.iram.es [150.214.224.223])
+        by mta-out02.sim.rediris.es (Postfix) with ESMTPA id 95D21C7BE2B;
+        Thu,  5 Sep 2019 12:13:19 +0200 (CEST)
+Date:   Thu, 5 Sep 2019 12:13:15 +0200
+From:   Gabriel Paubert <paubert@iram.es>
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org,
+        Shuah Khan <shuah@kernel.org>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
+        Aleksa Sarai <asarai@suse.de>, Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-m68k@lists.linux-m68k.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        David Drysdale <drysdale@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-parisc@vger.kernel.org, linux-api@vger.kernel.org,
+        Chanho Min <chanho.min@lge.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        linux-alpha@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to, from}_user
+ helpers
+Message-ID: <20190905101315.GA25637@lt-gp.iram.es>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <mvma7bj85yo.fsf@linux-m68k.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mvma7bj85yo.fsf@linux-m68k.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-FEAS-CONTENT-MODIFICATION:      
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Date: Wed, 4 Sep 2019 15:37:47 +0800
-
-> When NetworkManager has already set ipv4 address then uses
-> ifconfig set another ipv4 address. It will use previous ifa_flags
-> that will cause device route not be inserted.
+On Thu, Sep 05, 2019 at 11:09:35AM +0200, Andreas Schwab wrote:
+> On Sep 05 2019, Aleksa Sarai <cyphar@cyphar.com> wrote:
 > 
-> As NetworkManager has already support IFA_F_NOPREFIXROUTE flag [1],
-> but ifconfig will reuse the ifa_flags. It's weird especially
-> some old scripts or program [2]  still  use ifconfig.
+> > diff --git a/lib/struct_user.c b/lib/struct_user.c
+> > new file mode 100644
+> > index 000000000000..7301ab1bbe98
+> > --- /dev/null
+> > +++ b/lib/struct_user.c
+> > @@ -0,0 +1,182 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * Copyright (C) 2019 SUSE LLC
+> > + * Copyright (C) 2019 Aleksa Sarai <cyphar@cyphar.com>
+> > + */
+> > +
+> > +#include <linux/types.h>
+> > +#include <linux/export.h>
+> > +#include <linux/uaccess.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/string.h>
+> > +
+> > +#define BUFFER_SIZE 64
+> > +
+> > +/*
+> > + * "memset(p, 0, size)" but for user space buffers. Caller must have already
+> > + * checked access_ok(p, size).
+> > + */
+> > +static int __memzero_user(void __user *p, size_t s)
+> > +{
+> > +	const char zeros[BUFFER_SIZE] = {};
 > 
-> [1] https://gitlab.freedesktop.org/NetworkManager/NetworkManager/
-> commit/fec80e7473ad16979af75ed299d68103e7aa3fe9
+> Perhaps make that static?
+
+On SMP? It should at least be per cpu, and I'm not even sure
+with preemption.
+
+	Gabriel
+
 > 
-> [2] LTP or TAHI
+> Andreas.
 > 
-> Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-
-I don't know about this.
-
-This will lose things like IFA_F_SECONDARY as well.
-
-Sorry, I am not convinced that this change is correct nor safe.
+> -- 
+> Andreas Schwab, schwab@linux-m68k.org
+> GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+> "And now for something completely different."
