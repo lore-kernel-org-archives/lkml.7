@@ -2,84 +2,173 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9433AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F01DC43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE71206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0382082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:37:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="P3bnWoid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389082AbfIEQhb (ORCPT
+        id S2389219AbfIEQhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:37:31 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:40710 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfIEQhb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:37:31 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i5ulD-0005h3-3d; Thu, 05 Sep 2019 16:37:27 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dmaengine: iop-adma: make array 'handler' static const, makes object smaller
-Date:   Thu,  5 Sep 2019 17:37:26 +0100
-Message-Id: <20190905163726.19690-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 5 Sep 2019 12:37:35 -0400
+Received: from mail-eopbgr770075.outbound.protection.outlook.com ([40.107.77.75]:42982
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725921AbfIEQhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:37:33 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=buDAhgtGMVBmM6OvA36ItCbv3R660zgbyCG+7ShCPbiGdpF8TND/cSRcBNOLqyDN9ZOmkKLRDmtyfkHosvBoEvMn4DXW/1LpDrkpMnfFp2VxUNERQWJJUSdFM+sK8s6cWck1Jqb5omdtZdWQjHOm1GhV3C+bwIeXO+TZrZ+BWFGSwqkvd2Biqf1S3KIocb0O/j067N0S0ifrwQ3hjuuUXhdZPadu7PN9h2vJY5w0LZ/aRsO1GCGM0fYEsNhMBlzg7GR+aB97oEuniIwOpXjfWxVNw4MimPFnh1ZIdMsTVKEPeqypqXF3eYSeK4QDJfY/XdxGGq0VWxS+/T8Tw3CANg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JemmC9wTSkAg4G+qjpwkHOPXaMK3prtocB96XorHJhk=;
+ b=G2M9sS+/FRg70mXnFoUbZuUHCnhz2vswCY0WKe4QxXJA+aJD93+k+le6bQQqcLy27LXzgah+LUXZAIdDtgOC7UueWk8aRaM7iSBoikNAwzHNYMx29p0QG9YcJZeyRgGaB49PW29clH/e+uVZNh6jNx8cnTlWKcw7jkMlo3eLJvasaYM4VKT18Sb8FHFGNfUWyJ9nCP0p++Er4quXzSzm4I073v8wvbNCxmyFV61spqVQ1xolxMNtuIk3Rj08lNoStk16Qdpm8YAb6d8vLe91PTN7INdSF9OvK4rIjx8zH96NzMv0cJVb9KSwCUwD8/EGcFy9gatLzFKSV0I/+Cp9jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JemmC9wTSkAg4G+qjpwkHOPXaMK3prtocB96XorHJhk=;
+ b=P3bnWoidf/gSlAy62Fc9LP3Zmh0S8YST3WNtrfUK97IQAAHMkDykmU3YkohVZjY/jcELUNoOEX0ZVgUxzbEXHTclOSYOuMN6aKtr2g80YvuUZOk8j67nMupVUzsg9QZn8zQ7Q/sKa8PL0X2GbGULzHP/EM3E1LGjMN8/4X89D5Q=
+Received: from BYAPR02CA0049.namprd02.prod.outlook.com (2603:10b6:a03:54::26)
+ by SN6PR02MB5344.namprd02.prod.outlook.com (2603:10b6:805:71::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.19; Thu, 5 Sep
+ 2019 16:37:30 +0000
+Received: from SN1NAM02FT003.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::202) by BYAPR02CA0049.outlook.office365.com
+ (2603:10b6:a03:54::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.19 via Frontend
+ Transport; Thu, 5 Sep 2019 16:37:30 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ SN1NAM02FT003.mail.protection.outlook.com (10.152.73.29) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2241.14
+ via Frontend Transport; Thu, 5 Sep 2019 16:37:28 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:59539 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1i5ulD-0006fc-Ur; Thu, 05 Sep 2019 09:37:27 -0700
+Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radhey.shyam.pandey@xilinx.com>)
+        id 1i5ul8-0006xf-KW; Thu, 05 Sep 2019 09:37:22 -0700
+Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x85GbLSW015585;
+        Thu, 5 Sep 2019 09:37:21 -0700
+Received: from [10.140.184.180] (helo=ubuntu)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <radheys@ubuntu>)
+        id 1i5ul7-0006wc-12; Thu, 05 Sep 2019 09:37:21 -0700
+Received: by ubuntu (Postfix, from userid 13245)
+        id 534B7101071; Thu,  5 Sep 2019 22:07:19 +0530 (IST)
+From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To:     vkoul@kernel.org, dan.j.williams@intel.com,
+        michal.simek@xilinx.com, nick.graumann@gmail.com,
+        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
+        mcgrof@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Subject: [PATCH -next 5/8] dmaengine: xilinx_dma: Remove residue from channel data
+Date:   Thu,  5 Sep 2019 22:07:01 +0530
+Message-Id: <1567701424-25658-6-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-Result: No--2.201-7.0-31-1
+X-imss-scan-details: No--2.201-7.0-31-1;No--2.201-5.0-31-1
+X-TM-AS-User-Approved-Sender: No;No
+X-TM-AS-Result-Xfilter: Match text exemption rules:No
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(979002)(4636009)(346002)(39860400002)(376002)(396003)(136003)(2980300002)(189003)(199004)(478600001)(70586007)(53936002)(70206006)(8676002)(50466002)(8936002)(81166006)(2906002)(186003)(48376002)(36756003)(50226002)(26005)(14444005)(305945005)(2616005)(126002)(6666004)(356004)(106002)(16586007)(42186006)(316002)(51416003)(76176011)(47776003)(426003)(52956003)(6266002)(486006)(446003)(103686004)(11346002)(81156014)(5660300002)(4326008)(336012)(476003)(107886003)(42866002)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5344;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:ErrorRetry;MX:1;A:1;
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d94c0e48-63c4-4be8-45fb-08d7321f5788
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:SN6PR02MB5344;
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5344:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB5344C0B8E445CBE359902FD1C7BB0@SN6PR02MB5344.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 015114592F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: il2zpD7QC7ckbaRQcffZAUsuR528pWXFBuc/woznurqf8sFhPwx7GP/BsQSLF3/a7rPap37IcFzqdr5TUmMh5YavUBFMGyIDeXnp7mbdvt7xh+DA9y+8jyBGaT0QND3C+XdtOEjX+4LPrq6/dnhnZEle0stPRHXtVosA13Vanh6L55ahY7fQskbLksnUKt4aGlvr2lX1k5RQr3S1ooAla1NCyAjmhMulOGwGByhLiSTu4y56QMonH0IoLgGJBkfBlCcPaYwz7BRotw+CcHv/UI4zLE6XBACsywOpNND1g1N1dW1qUsuJtFXVuDyavkGB3SSMezZNISYxugLfe8q8qUCEtdhsQ03nzXskV/dBtopg+Y23ed1KfqcDb3yt4ZuMyIe7CzPAa8EWfkeOxsCYIz/EkUY4b3ngo7dbgh0mESg=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2019 16:37:28.7235
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d94c0e48-63c4-4be8-45fb-08d7321f5788
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5344
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Nicholas Graumann <nick.graumann@gmail.com>
 
-Don't populate the array 'handler' on the stack but instead make it
-static const. Makes the object code smaller by 80 bytes.
+Now that we track residues for each descriptor, there is no need to keep
+track of the residue for each channel.
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  38225	   9084	     64	  47373	   b90d	drivers/dma/iop-adma.o
-
-After:
-   text	   data	    bss	    dec	    hex	filename
-  38081	   9148	     64	  47293	   b8bd	drivers/dma/iop-adma.o
-
-(gcc version 9.2.1, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 ---
- drivers/dma/iop-adma.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/dma/xilinx/xilinx_dma.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dma/iop-adma.c b/drivers/dma/iop-adma.c
-index a3f942a6a946..4dc5478fc156 100644
---- a/drivers/dma/iop-adma.c
-+++ b/drivers/dma/iop-adma.c
-@@ -1359,9 +1359,11 @@ static int iop_adma_probe(struct platform_device *pdev)
- 	iop_adma_device_clear_err_status(iop_chan);
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 3f2e0ad..bf3fa2e 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -340,7 +340,6 @@ struct xilinx_dma_tx_descriptor {
+  * @desc_pendingcount: Descriptor pending count
+  * @ext_addr: Indicates 64 bit addressing is supported by dma channel
+  * @desc_submitcount: Descriptor h/w submitted count
+- * @residue: Residue for AXI DMA
+  * @seg_v: Statically allocated segments base
+  * @seg_p: Physical allocated segments base
+  * @cyclic_seg_v: Statically allocated segment base for cyclic transfers
+@@ -377,7 +376,6 @@ struct xilinx_dma_chan {
+ 	u32 desc_pendingcount;
+ 	bool ext_addr;
+ 	u32 desc_submitcount;
+-	u32 residue;
+ 	struct xilinx_axidma_tx_segment *seg_v;
+ 	dma_addr_t seg_p;
+ 	struct xilinx_axidma_tx_segment *cyclic_seg_v;
+@@ -1068,11 +1066,11 @@ static enum dma_status xilinx_dma_tx_status(struct dma_chan *dchan,
  
- 	for (i = 0; i < 3; i++) {
--		irq_handler_t handler[] = { iop_adma_eot_handler,
--					iop_adma_eoc_handler,
--					iop_adma_err_handler };
-+		static const irq_handler_t handler[] = {
-+			iop_adma_eot_handler,
-+			iop_adma_eoc_handler,
-+			iop_adma_err_handler
-+		};
- 		int irq = platform_get_irq(pdev, i);
- 		if (irq < 0) {
- 			ret = -ENXIO;
+ 	desc = list_last_entry(&chan->active_list,
+ 			       struct xilinx_dma_tx_descriptor, node);
+-	chan->residue = xilinx_dma_get_residue(chan, desc);
++	desc->residue = xilinx_dma_get_residue(chan, desc);
+ 
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+ 
+-	dma_set_residue(txstate, chan->residue);
++	dma_set_residue(txstate, desc->residue);
+ 
+ 	return ret;
+ }
 -- 
-2.20.1
+2.7.4
 
