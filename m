@@ -2,126 +2,518 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_75_100,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FA0C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24473C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E3220644
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:13:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567671197;
-	bh=xTzl3Bs9KH6EaXx8AUbfuR0tf5A0ejhhKi3vWyW3Qmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aRfajsMpXXlklxfpCIhWX6qd5IVHGAtSHnz3Zo7cgXVoZ1ud5+ed8HR0a2kl1KZ6l
-	 8/3RMY/NqympoH/Z2e6ACawRQS/ZvcwoVi23KCVGVsvMvUWwgJj9XGZ47+IleM+naF
-	 NxOskaDiuFEj0F0HPBIya8AS6vb8WKt81g51ftys=
+	by mail.kernel.org (Postfix) with ESMTP id DDC5421881
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:13:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uGyZpHhX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbfIEINQ (ORCPT
+        id S1732441AbfIEINq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:13:16 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36472 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730864AbfIEINP (ORCPT
+        Thu, 5 Sep 2019 04:13:46 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36855 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731301AbfIEINp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:13:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id p13so1751116wmh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:13:14 -0700 (PDT)
+        Thu, 5 Sep 2019 04:13:45 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y22so1237815pfr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:13:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2o/1YFznLwjV3F8hw+vjLNUnsNfENj5CCyIBGxY1daM=;
-        b=QBTwnI40rOBh5j4QFkUbcDyDSPIS8IiSzfmmBZo2mUizQqXiSkFvJE4gFfoXzuVlV5
-         1PrBh/IZ+ea5PRVyv/cC0ccviNZWlbHWP4sG+Yqi9gcco0j7v20pNv6HSl12YdzsnVun
-         r4U9lfPClmyWBHaPfVMMYSQfKyuiXFS+auWTEW7GnjZ0qniacDOD/v6fX3R8/NkEYqdj
-         hPCilQbUMLg4EBxacqbbbJu35nljeAwJPxmfXcdk9FaUnBl7uMMIeTd0m11TQQDJhpaX
-         usGeCfceJoA94et6qeTtONBOUMwJmwTchcEWZRT3fAQ1NWj2RqzpkfpU6w2m5pVOIM9n
-         1+KA==
+        h=from:to:cc:subject:date:message-id;
+        bh=tJpwaD8u0kjGg40L7abzz2RnWVvCPXQhzk338PApXHM=;
+        b=uGyZpHhXkQelqHHHjz88DJV19sRWB/op3T69Ve8c4QsAuYThRM6fSZCNJ5XtAkAfqJ
+         sv4Uj/NQrmrIVY4U8epdS7deknz0Jkmavr61qrfVHQxZRuHr74BfMb1JKSoudyys/1Qe
+         0Q6w+3dhIHrsymzEhKQdti0lEkJ4PbDAD20tz2TX2POTggeBlvwsMTBiwK19/4cTIqKs
+         f0y5CFr+G5jkEmLv+M08bMyoWwKU4b2usTLGDoN9x/EMpeRqTpv2jflSDrUNZUNfmndZ
+         2VtO8blbN8uOVMQ66RTVLP+PvGp6Enp0jwWjUrpuqMdvp12+yjvzk/xusJ8nk6Sv9HRN
+         f8cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2o/1YFznLwjV3F8hw+vjLNUnsNfENj5CCyIBGxY1daM=;
-        b=aZiS4OB4BLxeC6Gz5ztIuwgFON9RNdcPgWDYRxjAHhqN53cWac75YyvfPSKrTAHy19
-         MTnYZzm6TOehujMLcZJuria2a6OK3M+5ByaPreox+4paptUe5hpENwo4/VYNy602UqjT
-         Nrb8M3QUIl9+hrIzEIiLgBWTUXbLvcJ62pRk3CMX4f1PaHRBEOBBAtKLJgLruoqBJEtd
-         sqKVHOlN+DJUFtJv3rZOUWVHAS9Bh5As2/9jGQkDdkEpX7kEr4D8Nl4Mj8fgt//WC7ZW
-         3iJUYUHVYhyU2GJOImIg57DJoe7lqlFfhFHMP50/rtuHwxmjEzqTcrVKmASn7aJAkgti
-         3REg==
-X-Gm-Message-State: APjAAAWcuy6qtaXkCS8DTr3/NZzSa/ZiMp9OVBGaYuAQ1NEEAQW60gCg
-        OJlUPW56TU4smoCZhbniC0s=
-X-Google-Smtp-Source: APXvYqwigSNUr/U++R/UjraGEXmAABPisGmBPQx06e+pxK1ev5HaH5FE2Wy+sKcOymRYenFqiLUf4g==
-X-Received: by 2002:a1c:4e09:: with SMTP id g9mr1733036wmh.157.1567671193801;
-        Thu, 05 Sep 2019 01:13:13 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id q25sm1342343wmj.22.2019.09.05.01.13.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tJpwaD8u0kjGg40L7abzz2RnWVvCPXQhzk338PApXHM=;
+        b=Cn6ZGAPXlDkes7FwrYK4YcSBIg9Jcg02yV5epPTAmRbWnyCFUme45Q3mmtx0ddBgWb
+         pzLmt0oaOK/EPtvfh+F5sBgVopSyQjmPSf1FLzsvZkiKTFGD9xVqfw+NK2kYlpezo5Ri
+         i0hw6h+p+4FfTtfzfEcP9+ZyoNFvc34kjP9GvEeFrOzrgm2tawCmVnKizUg5Igmh5xKL
+         43Ytwv4DEk4m47rTvOQXJPub+AHHlsoZIRbJ2wqnlKXn+P0G0o2wNWWaWYbTTPmi//9M
+         9PwVJNhih4x7G/M1s++Dyzy0Ex1JKPfBSGMeQpm8ls9TuHaxR4LTaLggoBzDtAhxCuiA
+         D4og==
+X-Gm-Message-State: APjAAAVJpgl72y1Ilvtc2NVnKHxBU4LZynlHY3Jh06z7n7ORxKJfdeHH
+        p70g+2I0uyeXPOI3IXj5JSA=
+X-Google-Smtp-Source: APXvYqyU/eIducO3v/gSgwGGxJRFLGHsasDnj29HpwmQOEhSfjl8SjHXb0bSYam3NAoNH6J5lVPJjg==
+X-Received: by 2002:a63:2026:: with SMTP id g38mr1983016pgg.172.1567671224840;
+        Thu, 05 Sep 2019 01:13:44 -0700 (PDT)
+Received: from localhost.localdomain ([49.216.8.243])
+        by smtp.gmail.com with ESMTPSA id w207sm1711415pff.93.2019.09.05.01.13.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 01:13:13 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 10:13:10 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jirka =?iso-8859-1?Q?Hladk=FD?= <jhladky@redhat.com>,
-        =?utf-8?B?SmnFmcOtIFZvesOhcg==?= <jvozar@redhat.com>,
-        X86 ML <x86@kernel.org>
-Subject: Re: [PATCH 2/2] sched/debug: add sched_update_nr_running tracepoint
-Message-ID: <20190905081310.GA46285@gmail.com>
-References: <20190903154340.860299-3-rkrcmar@redhat.com>
- <a2924d91-df68-42de-0709-af53649346d5@arm.com>
- <20190904042310.GA159235@google.com>
- <20190904104332.ogsjtbtuadhsglxh@e107158-lin.cambridge.arm.com>
- <20190904130628.GE144846@google.com>
- <CAADnVQJzgTRWUAaH+L6qwJvHk0vsLPX3eWdZNUr5X77TuEgvPw@mail.gmail.com>
- <20190904154000.GJ240514@google.com>
- <CAADnVQK+bSzFdZmgTnDSgibhJ81pR19P6hFArqmZa_xKA1r1VQ@mail.gmail.com>
- <20190904174707.GV2332@hirez.programming.kicks-ass.net>
- <CAADnVQJFXq0n1J+vFMwhNgGNBYXK+EsFaE_Zebp84wMOLN8TNA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQJFXq0n1J+vFMwhNgGNBYXK+EsFaE_Zebp84wMOLN8TNA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 05 Sep 2019 01:13:44 -0700 (PDT)
+From:   jamestai.sky@gmail.com
+X-Google-Original-From: james.tai@realtek.com
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Russell King <linux@armlinux.org.uk>,
+        CY_Huang <cy.huang@realtek.com>,
+        Phinex Hung <phinex@realtek.com>,
+        "james.tai" <james.tai@realtek.com>
+Subject: [PATCH] ARM: config: Add Realtek RTD16XX defconfig
+Date:   Thu,  5 Sep 2019 16:11:40 +0800
+Message-Id: <20190905081140.1428-1-james.tai@realtek.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "james.tai" <james.tai@realtek.com>
 
-* Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+Add a defconfig for Realtek RTD16XX platform.
 
-> On Wed, Sep 4, 2019 at 10:47 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Wed, Sep 04, 2019 at 08:51:21AM -0700, Alexei Starovoitov wrote:
-> > > Anything in tracing can be deleted.
-> > > Tracing is about debugging and introspection.
-> > > When underlying kernel code changes the introspection points change as well.
-> >
-> > Right; except when it breaks widely used tools; like say powertop. Been
-> > there, done that.
-> 
-> powertop was a lesson learned, but it's not a relevant example anymore.
-> There are more widely used tools today. Like bcc tools.
-> And bpftrace is quickly gaining momentum and large user base.
-> bcc tools did break already several times and people fixed them.
+Signed-off-by: james.tai <james.tai@realtek.com>
+---
+ arch/arm/configs/rtd16xx_defconfig | 427 +++++++++++++++++++++++++++++
+ 1 file changed, 427 insertions(+)
+ create mode 100644 arch/arm/configs/rtd16xx_defconfig
 
-Are these tools using libtraceevents?
+diff --git a/arch/arm/configs/rtd16xx_defconfig b/arch/arm/configs/rtd16xx_defconfig
+new file mode 100644
+index 000000000000..49bcbe6c6af8
+--- /dev/null
++++ b/arch/arm/configs/rtd16xx_defconfig
+@@ -0,0 +1,427 @@
++CONFIG_SYSVIPC=y
++CONFIG_NO_HZ=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_CGROUPS=y
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_EMBEDDED=y
++CONFIG_PERF_EVENTS=y
++CONFIG_ARCH_REALTEK=y
++CONFIG_ARCH_RTD16XX=y
++CONFIG_ARM_THUMBEE=y
++# CONFIG_CACHE_L2X0 is not set
++# CONFIG_ARM_ERRATA_643719 is not set
++CONFIG_ARM_ERRATA_814220=y
++CONFIG_SMP=y
++CONFIG_SCHED_MC=y
++CONFIG_SCHED_SMT=y
++CONFIG_HAVE_ARM_ARCH_TIMER=y
++CONFIG_MCPM=y
++CONFIG_NR_CPUS=6
++CONFIG_HZ_250=y
++CONFIG_OABI_COMPAT=y
++CONFIG_HIGHMEM=y
++CONFIG_FORCE_MAX_ZONEORDER=12
++CONFIG_SECCOMP=y
++CONFIG_ARM_APPENDED_DTB=y
++CONFIG_ARM_ATAG_DTB_COMPAT=y
++CONFIG_KEXEC=y
++CONFIG_EFI=y
++CONFIG_CPU_FREQ=y
++CONFIG_CPU_FREQ_STAT=y
++CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
++CONFIG_CPU_FREQ_GOV_POWERSAVE=m
++CONFIG_CPU_FREQ_GOV_USERSPACE=m
++CONFIG_CPU_FREQ_GOV_CONSERVATIVE=m
++CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
++CONFIG_CPUFREQ_DT=y
++CONFIG_QORIQ_CPUFREQ=y
++CONFIG_CPU_IDLE=y
++CONFIG_ARM_CPUIDLE=y
++CONFIG_VFP=y
++CONFIG_NEON=y
++CONFIG_KERNEL_MODE_NEON=y
++CONFIG_TRUSTED_FOUNDATIONS=y
++CONFIG_EFI_VARS=m
++CONFIG_EFI_CAPSULE_LOADER=m
++CONFIG_ARM_CRYPTO=y
++CONFIG_CRYPTO_SHA1_ARM_NEON=m
++CONFIG_CRYPTO_SHA1_ARM_CE=m
++CONFIG_CRYPTO_SHA2_ARM_CE=m
++CONFIG_CRYPTO_SHA512_ARM=m
++CONFIG_CRYPTO_AES_ARM=m
++CONFIG_CRYPTO_AES_ARM_BS=m
++CONFIG_CRYPTO_AES_ARM_CE=m
++CONFIG_CRYPTO_GHASH_ARM_CE=m
++CONFIG_CRYPTO_CRC32_ARM_CE=m
++CONFIG_CRYPTO_CHACHA20_NEON=m
++CONFIG_JUMP_LABEL=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_CMDLINE_PARTITION=y
++CONFIG_CMA=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_IP_PNP=y
++CONFIG_IP_PNP_DHCP=y
++CONFIG_IP_PNP_BOOTP=y
++CONFIG_IP_PNP_RARP=y
++CONFIG_IPV6_ROUTER_PREF=y
++CONFIG_IPV6_OPTIMISTIC_DAD=y
++CONFIG_INET6_AH=m
++CONFIG_INET6_ESP=m
++CONFIG_INET6_IPCOMP=m
++CONFIG_IPV6_MIP6=m
++CONFIG_IPV6_TUNNEL=m
++CONFIG_IPV6_MULTIPLE_TABLES=y
++CONFIG_NET_DSA=m
++CONFIG_CAN=y
++CONFIG_CAN_FLEXCAN=m
++CONFIG_CAN_RCAR=m
++CONFIG_BT=m
++CONFIG_BT_HCIUART=m
++CONFIG_BT_HCIUART_BCM=y
++CONFIG_BT_MRVL=m
++CONFIG_BT_MRVL_SDIO=m
++CONFIG_CFG80211=m
++CONFIG_MAC80211=m
++CONFIG_RFKILL=y
++CONFIG_RFKILL_INPUT=y
++CONFIG_RFKILL_GPIO=y
++CONFIG_PCI=y
++CONFIG_PCIEPORTBUS=y
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_MTD=y
++CONFIG_MTD_CMDLINE_PARTS=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_CFI=y
++CONFIG_MTD_PHYSMAP=y
++CONFIG_MTD_PHYSMAP_OF=y
++CONFIG_MTD_RAW_NAND=y
++CONFIG_MTD_NAND_DENALI_DT=y
++CONFIG_MTD_NAND_BRCMNAND=y
++CONFIG_MTD_SPI_NOR=y
++CONFIG_MTD_UBI=y
++CONFIG_OF_OVERLAY=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_SIZE=65536
++CONFIG_VIRTIO_BLK=y
++CONFIG_AD525X_DPOT=y
++CONFIG_AD525X_DPOT_I2C=y
++CONFIG_SRAM=y
++CONFIG_BLK_DEV_SD=y
++CONFIG_BLK_DEV_SR=y
++CONFIG_ATA=y
++CONFIG_SATA_AHCI=y
++CONFIG_SATA_AHCI_PLATFORM=y
++# CONFIG_ATA_SFF is not set
++CONFIG_NETDEVICES=y
++CONFIG_VIRTIO_NET=y
++CONFIG_B53_MDIO_DRIVER=m
++CONFIG_B53_MMAP_DRIVER=m
++CONFIG_B53_SRAB_DRIVER=m
++CONFIG_B53_SERDES=m
++CONFIG_NET_DSA_BCM_SF2=m
++# CONFIG_NET_VENDOR_3COM is not set
++# CONFIG_NET_VENDOR_ADAPTEC is not set
++# CONFIG_NET_VENDOR_AGERE is not set
++# CONFIG_NET_VENDOR_ALACRITECH is not set
++# CONFIG_NET_VENDOR_ALTEON is not set
++# CONFIG_NET_VENDOR_AMAZON is not set
++# CONFIG_NET_VENDOR_AMD is not set
++# CONFIG_NET_VENDOR_AQUANTIA is not set
++# CONFIG_NET_VENDOR_ARC is not set
++# CONFIG_NET_VENDOR_ATHEROS is not set
++# CONFIG_NET_VENDOR_AURORA is not set
++# CONFIG_NET_VENDOR_BROADCOM is not set
++# CONFIG_NET_VENDOR_BROCADE is not set
++# CONFIG_NET_VENDOR_CADENCE is not set
++# CONFIG_NET_VENDOR_CAVIUM is not set
++# CONFIG_NET_VENDOR_CHELSIO is not set
++# CONFIG_NET_VENDOR_CIRRUS is not set
++# CONFIG_NET_VENDOR_CISCO is not set
++# CONFIG_NET_VENDOR_CORTINA is not set
++# CONFIG_NET_VENDOR_DEC is not set
++# CONFIG_NET_VENDOR_DLINK is not set
++# CONFIG_NET_VENDOR_EMULEX is not set
++# CONFIG_NET_VENDOR_EZCHIP is not set
++# CONFIG_NET_VENDOR_FARADAY is not set
++# CONFIG_NET_VENDOR_GOOGLE is not set
++# CONFIG_NET_VENDOR_HISILICON is not set
++# CONFIG_NET_VENDOR_HP is not set
++# CONFIG_NET_VENDOR_HUAWEI is not set
++# CONFIG_NET_VENDOR_INTEL is not set
++# CONFIG_NET_VENDOR_MARVELL is not set
++# CONFIG_NET_VENDOR_MELLANOX is not set
++# CONFIG_NET_VENDOR_MICREL is not set
++# CONFIG_NET_VENDOR_MICROCHIP is not set
++# CONFIG_NET_VENDOR_MICROSEMI is not set
++# CONFIG_NET_VENDOR_MYRI is not set
++# CONFIG_NET_VENDOR_NATSEMI is not set
++# CONFIG_NET_VENDOR_NETERION is not set
++# CONFIG_NET_VENDOR_NETRONOME is not set
++# CONFIG_NET_VENDOR_NI is not set
++# CONFIG_NET_VENDOR_NVIDIA is not set
++# CONFIG_NET_VENDOR_OKI is not set
++# CONFIG_NET_VENDOR_PACKET_ENGINES is not set
++# CONFIG_NET_VENDOR_QLOGIC is not set
++# CONFIG_NET_VENDOR_QUALCOMM is not set
++# CONFIG_NET_VENDOR_RDC is not set
++# CONFIG_NET_VENDOR_REALTEK is not set
++# CONFIG_NET_VENDOR_RENESAS is not set
++# CONFIG_NET_VENDOR_ROCKER is not set
++# CONFIG_NET_VENDOR_SAMSUNG is not set
++# CONFIG_NET_VENDOR_SEEQ is not set
++# CONFIG_NET_VENDOR_SOLARFLARE is not set
++# CONFIG_NET_VENDOR_SILAN is not set
++# CONFIG_NET_VENDOR_SIS is not set
++# CONFIG_NET_VENDOR_SMSC is not set
++# CONFIG_NET_VENDOR_SOCIONEXT is not set
++# CONFIG_NET_VENDOR_STMICRO is not set
++# CONFIG_NET_VENDOR_SUN is not set
++# CONFIG_NET_VENDOR_SYNOPSYS is not set
++# CONFIG_NET_VENDOR_TEHUTI is not set
++# CONFIG_NET_VENDOR_TI is not set
++# CONFIG_NET_VENDOR_VIA is not set
++# CONFIG_NET_VENDOR_WIZNET is not set
++# CONFIG_NET_VENDOR_XILINX is not set
++CONFIG_USB_PEGASUS=y
++CONFIG_USB_RTL8152=m
++CONFIG_USB_LAN78XX=m
++CONFIG_USB_USBNET=y
++CONFIG_USB_NET_SMSC75XX=y
++CONFIG_USB_NET_SMSC95XX=y
++CONFIG_BRCMFMAC=m
++CONFIG_MWIFIEX=m
++CONFIG_MWIFIEX_SDIO=m
++CONFIG_RT2X00=m
++CONFIG_RT2800USB=m
++CONFIG_INPUT_JOYDEV=y
++CONFIG_INPUT_EVDEV=y
++CONFIG_KEYBOARD_QT1070=m
++CONFIG_KEYBOARD_GPIO=y
++CONFIG_KEYBOARD_SAMSUNG=m
++CONFIG_KEYBOARD_CROS_EC=m
++CONFIG_KEYBOARD_BCM=y
++CONFIG_MOUSE_PS2_ELANTECH=y
++CONFIG_MOUSE_CYAPA=m
++CONFIG_MOUSE_ELAN_I2C=y
++CONFIG_INPUT_TOUCHSCREEN=y
++CONFIG_TOUCHSCREEN_ADC=m
++CONFIG_TOUCHSCREEN_ATMEL_MXT=m
++CONFIG_TOUCHSCREEN_ELAN=m
++CONFIG_TOUCHSCREEN_MMS114=m
++CONFIG_TOUCHSCREEN_ST1232=m
++CONFIG_TOUCHSCREEN_STMPE=y
++CONFIG_INPUT_MISC=y
++CONFIG_INPUT_MAX77693_HAPTIC=m
++CONFIG_INPUT_MAX8997_HAPTIC=m
++CONFIG_INPUT_AXP20X_PEK=m
++CONFIG_INPUT_ADXL34X=m
++CONFIG_INPUT_STPMIC1_ONKEY=y
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_EXTENDED=y
++CONFIG_SERIAL_8250_SHARE_IRQ=y
++CONFIG_SERIAL_8250_DW=y
++CONFIG_SERIAL_OF_PLATFORM=y
++CONFIG_SERIAL_DEV_BUS=y
++CONFIG_VIRTIO_CONSOLE=y
++CONFIG_HW_RANDOM=y
++CONFIG_TCG_TPM=m
++CONFIG_TCG_TIS_I2C_INFINEON=m
++CONFIG_I2C_CHARDEV=y
++CONFIG_I2C_MUX=y
++CONFIG_I2C_SLAVE=y
++CONFIG_I2C_SLAVE_EEPROM=y
++CONFIG_PINCTRL_SINGLE=y
++CONFIG_GPIOLIB=y
++CONFIG_GPIO_GENERIC_PLATFORM=y
++CONFIG_POWER_SUPPLY=y
++CONFIG_SENSORS_IIO_HWMON=y
++CONFIG_SENSORS_PWM_FAN=m
++CONFIG_THERMAL=y
++CONFIG_CPU_THERMAL=y
++CONFIG_WATCHDOG=y
++CONFIG_WATCHDOG_CORE=y
++CONFIG_MFD_ACT8945A=y
++CONFIG_MFD_AS3711=y
++CONFIG_MFD_AS3722=y
++CONFIG_MFD_ATMEL_FLEXCOM=y
++CONFIG_MFD_ATMEL_HLCDC=m
++CONFIG_MFD_BCM590XX=y
++CONFIG_MFD_AXP20X_I2C=y
++CONFIG_MFD_CROS_EC=m
++CONFIG_MFD_CROS_EC_CHARDEV=m
++CONFIG_MFD_DA9063=m
++CONFIG_MFD_MAX14577=y
++CONFIG_MFD_MAX77686=y
++CONFIG_MFD_MAX77693=m
++CONFIG_MFD_MAX8907=y
++CONFIG_MFD_MAX8997=y
++CONFIG_MFD_MAX8998=y
++CONFIG_MFD_PM8XXX=y
++CONFIG_MFD_RK808=y
++CONFIG_MFD_RN5T618=y
++CONFIG_MFD_SEC_CORE=y
++CONFIG_ABX500_CORE=y
++CONFIG_MFD_STMPE=y
++CONFIG_MFD_SYSCON=y
++CONFIG_MFD_PALMAS=y
++CONFIG_MFD_TPS65090=y
++CONFIG_MFD_TPS65217=y
++CONFIG_MFD_TPS65218=y
++CONFIG_MFD_TPS6586X=y
++CONFIG_MFD_TPS65910=y
++CONFIG_TWL4030_CORE=y
++CONFIG_TWL4030_POWER=y
++CONFIG_MFD_WM8994=m
++CONFIG_MFD_STPMIC1=y
++CONFIG_MFD_STMFX=y
++CONFIG_REGULATOR=y
++CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_PWM=y
++CONFIG_MEDIA_SUPPORT=m
++CONFIG_MEDIA_CAMERA_SUPPORT=y
++CONFIG_MEDIA_CEC_SUPPORT=y
++CONFIG_MEDIA_CONTROLLER=y
++CONFIG_VIDEO_V4L2_SUBDEV_API=y
++CONFIG_MEDIA_USB_SUPPORT=y
++CONFIG_USB_VIDEO_CLASS=m
++CONFIG_V4L_PLATFORM_DRIVERS=y
++CONFIG_V4L_MEM2MEM_DRIVERS=y
++CONFIG_V4L_TEST_DRIVERS=y
++CONFIG_VIDEO_VIVID=m
++CONFIG_CEC_PLATFORM_DRIVERS=y
++# CONFIG_MEDIA_SUBDRV_AUTOSELECT is not set
++CONFIG_DRM=y
++CONFIG_DRM_PANEL_SIMPLE=y
++CONFIG_DRM_PANEL_ORISETECH_OTM8009A=m
++CONFIG_DRM_PANEL_RAYDIUM_RM68200=m
++CONFIG_DRM_PANEL_SAMSUNG_S6E63J0X03=m
++CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0=m
++CONFIG_DRM_DUMB_VGA_DAC=m
++CONFIG_DRM_NXP_PTN3460=m
++CONFIG_DRM_PARADE_PS8622=m
++CONFIG_DRM_SII902X=m
++CONFIG_DRM_SII9234=m
++CONFIG_DRM_TOSHIBA_TC358764=m
++CONFIG_DRM_I2C_ADV7511=m
++CONFIG_DRM_I2C_ADV7511_AUDIO=y
++CONFIG_DRM_PANFROST=m
++CONFIG_DRM_LEGACY=y
++CONFIG_FB_MODE_HELPERS=y
++CONFIG_FB_EFI=y
++CONFIG_FB_SIMPLE=y
++CONFIG_LCD_PLATFORM=m
++CONFIG_BACKLIGHT_CLASS_DEVICE=y
++CONFIG_BACKLIGHT_PWM=y
++CONFIG_BACKLIGHT_GPIO=y
++CONFIG_FRAMEBUFFER_CONSOLE=y
++CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
++CONFIG_SOUND=m
++CONFIG_SND=m
++CONFIG_SND_DYNAMIC_MINORS=y
++CONFIG_SND_USB_AUDIO=m
++CONFIG_SND_SOC=m
++CONFIG_SND_SOC_FSL_SAI=m
++CONFIG_SND_SIMPLE_CARD=m
++CONFIG_USB=y
++CONFIG_USB_OTG=y
++CONFIG_USB_XHCI_HCD=y
++CONFIG_USB_STORAGE=y
++CONFIG_USB_UAS=y
++CONFIG_USB_DWC3=y
++# CONFIG_USB_DWC3_HAPS is not set
++# CONFIG_USB_DWC3_OF_SIMPLE is not set
++CONFIG_NOP_USB_XCEIV=y
++CONFIG_USB_GPIO_VBUS=y
++CONFIG_USB_ULPI=y
++CONFIG_USB_GADGET=y
++CONFIG_USB_SNP_UDC_PLAT=y
++CONFIG_USB_BDC_UDC=y
++CONFIG_USB_CONFIGFS=m
++CONFIG_USB_CONFIGFS_SERIAL=y
++CONFIG_USB_CONFIGFS_ACM=y
++CONFIG_USB_CONFIGFS_OBEX=y
++CONFIG_USB_CONFIGFS_NCM=y
++CONFIG_USB_CONFIGFS_ECM=y
++CONFIG_USB_CONFIGFS_ECM_SUBSET=y
++CONFIG_USB_CONFIGFS_RNDIS=y
++CONFIG_USB_CONFIGFS_EEM=y
++CONFIG_USB_CONFIGFS_MASS_STORAGE=y
++CONFIG_USB_CONFIGFS_F_LB_SS=y
++CONFIG_USB_CONFIGFS_F_FS=y
++CONFIG_USB_CONFIGFS_F_UAC1=y
++CONFIG_USB_CONFIGFS_F_UAC1_LEGACY=y
++CONFIG_USB_CONFIGFS_F_UAC2=y
++CONFIG_USB_CONFIGFS_F_MIDI=y
++CONFIG_USB_CONFIGFS_F_HID=y
++CONFIG_USB_CONFIGFS_F_UVC=y
++CONFIG_USB_CONFIGFS_F_PRINTER=y
++CONFIG_USB_ETH=m
++CONFIG_USB_ROLE_SWITCH=y
++CONFIG_USB_ULPI_BUS=y
++CONFIG_MMC=y
++CONFIG_MMC_BLOCK_MINORS=16
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_PLTFM=y
++CONFIG_MMC_CQHCI=y
++CONFIG_EDAC=y
++CONFIG_RTC_CLASS=y
++CONFIG_DMADEVICES=y
++CONFIG_SW_SYNC=y
++CONFIG_UDMABUF=y
++CONFIG_VIRTIO_PCI=y
++CONFIG_VIRTIO_MMIO=y
++CONFIG_STAGING=y
++CONFIG_CROS_EC_I2C=m
++CONFIG_REMOTEPROC=m
++CONFIG_RPMSG_VIRTIO=m
++CONFIG_MEMORY=y
++CONFIG_IIO=y
++CONFIG_IIO_BUFFER_HW_CONSUMER=m
++CONFIG_IIO_KFIFO_BUF=y
++CONFIG_IIO_SW_TRIGGER=y
++CONFIG_IIO_CROS_EC_SENSORS_CORE=m
++CONFIG_IIO_CROS_EC_SENSORS=m
++CONFIG_IIO_HRTIMER_TRIGGER=y
++CONFIG_PWM=y
++CONFIG_RESET_CONTROLLER=y
++CONFIG_GENERIC_PHY=y
++CONFIG_EXT4_FS=y
++CONFIG_AUTOFS4_FS=y
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_NTFS_FS=y
++CONFIG_TMPFS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_UBIFS_FS=y
++CONFIG_SQUASHFS=y
++CONFIG_SQUASHFS_LZO=y
++CONFIG_SQUASHFS_XZ=y
++CONFIG_PSTORE=y
++CONFIG_PSTORE_CONSOLE=y
++CONFIG_PSTORE_PMSG=y
++CONFIG_PSTORE_RAM=y
++CONFIG_NFS_FS=y
++CONFIG_NFS_V3_ACL=y
++CONFIG_NFS_V4=y
++CONFIG_ROOT_NFS=y
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_UTF8=y
++CONFIG_CRYPTO_USER=m
++CONFIG_CRYPTO_SHA512=m
++CONFIG_CRYPTO_USER_API_HASH=m
++CONFIG_CRYPTO_USER_API_SKCIPHER=m
++CONFIG_CRYPTO_USER_API_RNG=m
++CONFIG_CRYPTO_USER_API_AEAD=m
++CONFIG_DMA_CMA=y
++CONFIG_CMA_SIZE_MBYTES=64
++CONFIG_PRINTK_TIME=y
++CONFIG_MAGIC_SYSRQ=y
+-- 
+2.17.1
 
-Thanks,
-
-	Ingo
