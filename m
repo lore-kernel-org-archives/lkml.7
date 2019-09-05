@@ -2,127 +2,124 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DEEC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A35C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8776320870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="s+Yc/gzr"
+	by mail.kernel.org (Postfix) with ESMTP id A294720870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:55:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbfIEFzd (ORCPT
+        id S1731267AbfIEFzt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 01:55:33 -0400
-Received: from mail-eopbgr680085.outbound.protection.outlook.com ([40.107.68.85]:50375
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725786AbfIEFzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 01:55:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HVSqd9rlCBX3dOQ0pL1lEDdwrfLhkCFBDOkZp6Qw7sf/jOnJS+ujtkeGcLDn86I4qnBH58vIg/bxRDDN9KoSr9hUFMUwUeoztZEzdIhjp/6aoyePFYIIKJDYbBcFRbRXQzY3sWvtagEnfCh7GkaMJb3y/xC3dr8QXaClIodELrvPCElAXYSnYRPJ9cLvpKLbk564nwl7PoCWFRfjnfC9tLn4OYKyezGOtiqUfeCqLvk+AtYRTOd++crASgNX5k/ajPrh3YCkpbOFDhFpBMQ/a9PTOQVKIP3uvEKv6DJn4qGm+/tLYJ+U9DVXxc0QzgCNZU5UUU6lDxa990yKfDuBDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gjDj7eR+o1o/0275Yt+ta1qwWWBxYg60QPpyTSr8hP8=;
- b=QFhyErqu9aQDWVRhUyPbxwbmz8WUF+CMA2JIx1Ri3tYyZCXBG6jJOoeaM7gX61R+zOLFiYfdbqNMXRrduKw6+1cwlV5tarqSylqeiIiGpfLNHLFyv3js1XN0ivCxVF1gCIN/WJT7sC+0w7EUoldcqd3U5QMp+V4y+gJ/H5piUzH7vuUu1lhOE/RYYy908YYIcaN+Loi9kaL8Q0AXn9HQS8O/qj7zxa7C7dfcellkEjkpKxZP10IXGYUIx8dX9JRmvqdiGtpMWn8I4LeLO1RGN7SuSgmbCEywZySdoFG4vGFEOKy47W/yl5bRlku2wi4PihhQZp8jHZv1MWdr0EWx8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gjDj7eR+o1o/0275Yt+ta1qwWWBxYg60QPpyTSr8hP8=;
- b=s+Yc/gzrspT+07FKDuHaVC+3T4P2CAMtcUBfMnCf0qP92EUkmObSOdj42l3U2iaAJLjh3nrTmFyR8S/GzyUhQqNlyK7AjAs9JTB3Z4B1+tlDXhOfV++gUIGp3S5YO/itnT/G/jX3fW75n83dGMBsIWMHFbSCGzeQuNcy6QRDfJY=
-Received: from DM6PR12MB2908.namprd12.prod.outlook.com (20.179.71.214) by
- DM6PR12MB3658.namprd12.prod.outlook.com (10.255.76.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.21; Thu, 5 Sep 2019 05:55:28 +0000
-Received: from DM6PR12MB2908.namprd12.prod.outlook.com
- ([fe80::f47d:6368:ae50:3fbb]) by DM6PR12MB2908.namprd12.prod.outlook.com
- ([fe80::f47d:6368:ae50:3fbb%4]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
- 05:55:28 +0000
-From:   "Zhou, David(ChunMing)" <David1.Zhou@amd.com>
-To:     zhong jiang <zhongjiang@huawei.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>
-CC:     "Markus.Elfring@web.de" <Markus.Elfring@web.de>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] drm/amdgpu: Remove two redundant null pointer checks
-Thread-Topic: [PATCH v2] drm/amdgpu: Remove two redundant null pointer checks
-Thread-Index: AQHVY64seNhdzuLt5ECII87pYAedc6cclaMA
-Date:   Thu, 5 Sep 2019 05:55:28 +0000
-Message-ID: <bd65192e-baca-19d7-47ec-dd5d0523ad30@amd.com>
-References: <1567662552-3583-1-git-send-email-zhongjiang@huawei.com>
-In-Reply-To: <1567662552-3583-1-git-send-email-zhongjiang@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR02CA0213.apcprd02.prod.outlook.com
- (2603:1096:201:20::25) To DM6PR12MB2908.namprd12.prod.outlook.com
- (2603:10b6:5:15f::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=David1.Zhou@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [180.167.199.189]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: df41889e-8915-458e-e1b6-08d731c5a73e
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3658;
-x-ms-traffictypediagnostic: DM6PR12MB3658:|DM6PR12MB3658:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR12MB36587016B134938AA71FB658B4BB0@DM6PR12MB3658.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(39860400002)(376002)(199004)(189003)(2616005)(31686004)(229853002)(476003)(81156014)(11346002)(81166006)(66066001)(36756003)(6486002)(102836004)(316002)(6506007)(386003)(25786009)(14454004)(5660300002)(486006)(26005)(66446008)(446003)(76176011)(66946007)(66556008)(64756008)(66476007)(478600001)(4326008)(3846002)(8936002)(31696002)(7736002)(2906002)(86362001)(6116002)(53936002)(6512007)(305945005)(256004)(186003)(6246003)(6436002)(99286004)(8676002)(2201001)(52116002)(110136005)(71200400001)(2501003)(71190400001)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3658;H:DM6PR12MB2908.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1IKCjqT2+dZSKMzIKuL8Sp4qSMSEFK7rYX/tlgZeC4Z5MDUE0+bb7Z8jwO3ARpfBA+0SfnYRwHJgJ9buSSaClYYivALfs5w6C3EtaXzn6spbdWHNnFycuZJNDzuviNdUDNRtxG74ONaFKYQ0P0t5ASnOBf+5ZOAi1Fy8N3yxR/eJiAyNTRBsoXg2T/i5SSCyqEjhq4CiYP6xPA3/lkgWQxsrNmyh5a8z7k/Oy+dH0bI9IwHzoC/37k08LJlJVC5/1jcqMcc6hC8BDYshGi+SPWbR0o8O8E+jI0bvXSKNxrsS+FMNWsaeIAkgA0Mx2DZ3J46lX8NYpscgpPckTCOInZoonzLoSbby+t+xg8FsoUD52oM6x11VA17DcczA/pQHljBR4zqV/Kf/apEuCvrfPLuN5Tr2c31gfh4o7JBZxSU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <14DD2F0BBA21A746AB6C2C53181AF2E7@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 5 Sep 2019 01:55:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28972 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730804AbfIEFzt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 01:55:49 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x855qJZv133754
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 01:55:47 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uttnt4pae-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:55:47 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Thu, 5 Sep 2019 06:55:45 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Sep 2019 06:55:42 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x855tfIa34603494
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 05:55:41 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A86C5204F;
+        Thu,  5 Sep 2019 05:55:41 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.164])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 39CA552052;
+        Thu,  5 Sep 2019 05:55:39 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/9] Task latency-nice
+To:     subhra mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, patrick.bellasi@arm.com
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Thu, 5 Sep 2019 11:25:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: df41889e-8915-458e-e1b6-08d731c5a73e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 05:55:28.1818
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VHE+r/ZOOzmO4kOj++/7ssTHDJLrPU2eMkLCotL8BBtjsjUydWH/7orRlspz0Dy6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3658
+In-Reply-To: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090505-4275-0000-0000-0000036161A0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090505-4276-0000-0000-00003873A870
+Message-Id: <cef0717a-e1da-c4a3-9fd0-ddb0914e3850@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=563 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAyMDE5LzkvNSDkuIvljYgxOjQ5LCB6aG9uZyBqaWFuZyB3cm90ZToNCj4gVGhlIGZ1bmN0
-aW9ucyAiZGVidWdmc19yZW1vdmUiIGFuZCAia2ZyZWUiIHRvbGVyYXRlIHRoZSBwYXNzaW5nDQo+
-IG9mIG51bGwgcG9pbnRlcnMuIEhlbmNlIGl0IGlzIHVubmVjZXNzYXJ5IHRvIGNoZWNrIHN1Y2gg
-YXJndW1lbnRzDQo+IGFyb3VuZCB0aGUgY2FsbHMuIFRodXMgcmVtb3ZlIHRoZSBleHRyYSBjb25k
-aXRpb24gY2hlY2sgYXQgdHdvIHBsYWNlcy4NCj4NCj4gU2lnbmVkLW9mZi1ieTogemhvbmcgamlh
-bmcgPHpob25namlhbmdAaHVhd2VpLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IENodW5taW5nIFpob3Ug
-PGRhdmlkMS56aG91QGFtZC5jb20+DQoNCg0KPiAtLS0NCj4gICBkcml2ZXJzL2dwdS9kcm0vYW1k
-L2FtZGdwdS9hbWRncHVfZGVidWdmcy5jIHwgNiArKy0tLS0NCj4gICAxIGZpbGUgY2hhbmdlZCwg
-MiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RlYnVnZnMuYyBiL2RyaXZlcnMvZ3B1L2RybS9h
-bWQvYW1kZ3B1L2FtZGdwdV9kZWJ1Z2ZzLmMNCj4gaW5kZXggNTY1MmNjNy4uY2I5NDYyNyAxMDA2
-NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2RlYnVnZnMuYw0K
-PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfZGVidWdmcy5jDQo+IEBA
-IC0xMDc3LDggKzEwNzcsNyBAQCBzdGF0aWMgaW50IGFtZGdwdV9kZWJ1Z2ZzX2liX3ByZWVtcHQo
-dm9pZCAqZGF0YSwgdTY0IHZhbCkNCj4gICANCj4gICAJdHRtX2JvX3VubG9ja19kZWxheWVkX3dv
-cmtxdWV1ZSgmYWRldi0+bW1hbi5iZGV2LCByZXNjaGVkKTsNCj4gICANCj4gLQlpZiAoZmVuY2Vz
-KQ0KPiAtCQlrZnJlZShmZW5jZXMpOw0KPiArCWtmcmVlKGZlbmNlcyk7DQo+ICAgDQo+ICAgCXJl
-dHVybiAwOw0KPiAgIH0NCj4gQEAgLTExMDMsOCArMTEwMiw3IEBAIGludCBhbWRncHVfZGVidWdm
-c19pbml0KHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2KQ0KPiAgIA0KPiAgIHZvaWQgYW1kZ3B1
-X2RlYnVnZnNfcHJlZW1wdF9jbGVhbnVwKHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2KQ0KPiAg
-IHsNCj4gLQlpZiAoYWRldi0+ZGVidWdmc19wcmVlbXB0KQ0KPiAtCQlkZWJ1Z2ZzX3JlbW92ZShh
-ZGV2LT5kZWJ1Z2ZzX3ByZWVtcHQpOw0KPiArCWRlYnVnZnNfcmVtb3ZlKGFkZXYtPmRlYnVnZnNf
-cHJlZW1wdCk7DQo+ICAgfQ0KPiAgIA0KPiAgICNlbHNlDQo=
+Hi Subhra,
+
+On 8/30/19 11:19 PM, subhra mazumdar wrote:
+> Introduce new per task property latency-nice for controlling scalability
+> in scheduler idle CPU search path. Valid latency-nice values are from 1 to
+> 100 indicating 1% to 100% search of the LLC domain in select_idle_cpu. New
+> CPU cgroup file cpu.latency-nice is added as an interface to set and get.
+> All tasks in the same cgroup share the same latency-nice value. Using a
+> lower latency-nice value can help latency intolerant tasks e.g very short
+> running OLTP threads where full LLC search cost can be significant compared
+> to run time of the threads. The default latency-nice value is 5.
+> 
+> In addition to latency-nice, it also adds a new sched feature SIS_CORE to
+> be able to disable idle core search altogether which is costly and hurts
+> more than it helps in short running workloads.
+> 
+> Finally it also introduces a new per-cpu variable next_cpu to track
+> the limit of search so that every time search starts from where it ended.
+> This rotating search window over cpus in LLC domain ensures that idle
+> cpus are eventually found in case of high load.
+> 
+> Uperf pingpong on 2 socket, 44 core and 88 threads Intel x86 machine with
+> message size = 8k (higher is better):
+> threads baseline   latency-nice=5,SIS_CORE     latency-nice=5,NO_SIS_CORE 
+> 8       64.66      64.38 (-0.43%)              64.79 (0.2%)
+> 16      123.34     122.88 (-0.37%)             125.87 (2.05%)
+> 32      215.18     215.55 (0.17%)              247.77 (15.15%)
+> 48      278.56     321.6 (15.45%)              321.2 (15.3%)
+> 64      259.99     319.45 (22.87%)             333.95 (28.44%)
+> 128     431.1      437.69 (1.53%)              431.09 (0%)
+> 
+
+The result seems to be appealing with your experimental setup.
+BTW, do you have any plans of load balancing as well based on latency niceness
+of the tasks? It seems to be a more interesting case when we give pack the lower
+latency sensitive tasks on fewer CPUs.
+
+Also, do you see any workload results showing performance regression with NO_SIS_CORE?
+
+
+Thanks,
+Parth
+
