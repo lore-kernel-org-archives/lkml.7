@@ -2,96 +2,160 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585F8C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F643C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDED2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:17:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="G6D6hbs3"
+	by mail.kernel.org (Postfix) with ESMTP id EA7132070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:18:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567711139;
+	bh=lHXmlHm6b27COW2mrPddTjNkNktmB067pe+ggnrN9zM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p4Sa9EwbNWerdk4MS2py2kFheiUt/LI5RHTIKIorecj38Y80nXMMG9MqS1+ZGB7BT
+	 mJzZ/vpS54zl8cz0DRkhO34wHJ4rD/0XV5rCTTB3F/PnC3RcQFstx88mEZcw6+fu83
+	 8Yc8CKwrdlt6BBnPCJkUpnqEwCIkb15sLTg+9AnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388720AbfIETRc (ORCPT
+        id S2388449AbfIETS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:17:32 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37756 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730921AbfIETRc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:17:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id r4so7325174iop.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 12:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=07l5/Jsc4rfr7mEknFKWMgXZVVL/gt11eZpE2uqlnWI=;
-        b=G6D6hbs3OQCyBGac4MAnfNpozwHAPKW4Ng4nKHnqWVQpDlgoQnUNXDdJI2S6oQDv5T
-         7pTWFGykQ3c5pWUA281I2jvFTgK5O0gCgG+sdjS/6Kjh/xpHNMn3rnHKxwTyqsZ7sO0w
-         aahz8fVhvCckzdkQmg/d/bQA4SZ+IaoL8u6EC5CbSR7HZozoNL1BbQVUx8+3wpvNjbUg
-         7jODd0oF4UIHu8nTaqMgyDmDIHMfO2obBB3Ecas1V2FEovopNENBCr+V5EmL2m03kjtk
-         ZE7SoW3/SInhBd3AVcYbSS5uAbuhdL4dbSOE5Xk2YdELyeeGI4wIoONC1wDxKUe/4vgY
-         9oFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=07l5/Jsc4rfr7mEknFKWMgXZVVL/gt11eZpE2uqlnWI=;
-        b=V0CtR1xdNvEonx/mFVLYB5G0S98jqOK82BIOmpFuR2sD9tElxN2fO2uPxfNnnhTzOU
-         PEG6f4AUS2f5Z6KQB7HaUfEumRzMZtF/JFjX6jI0h2e3F4Bky103RNNyXkRNBuNMDEC+
-         fvWvKolD2EaCF96lXpcvwddk7htyIJaTXBWzCmtqKM4GNwswxKEmNYjf3lfL4HeBRvTh
-         Z7Mw+x1Wl3Sl4v0P5xhlptFq7Z7Y686LqHmMp6vBvspJx7mYheFEYaCl5XgyCZwpLFEH
-         D8608MW/Vy3Gishyawb7HcesZHXXjnzPpqK6136tMoSnQy9ODIsVbPl2qS1G0LRRp+5z
-         1Cyw==
-X-Gm-Message-State: APjAAAV5GHxvtmhzAVDBS0u6ff/pchOh+2bAhNeIq/788p23AwSRsIfL
-        qpqo+YeU/NTMXMX7LT9DrTXp0Hp3ttUapw==
-X-Google-Smtp-Source: APXvYqwcWd4GiAMfp6QCg6xW1thuGLMjfSkv3UpdNbv3CnPE/bFg3mZZ/plXxVEZRAtGfVTrIi1tdw==
-X-Received: by 2002:a5d:8502:: with SMTP id q2mr5926036ion.287.1567711050783;
-        Thu, 05 Sep 2019 12:17:30 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id u3sm2537795iog.36.2019.09.05.12.17.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 12:17:29 -0700 (PDT)
-Subject: Re: [GIT PULL 0/2] lightnvm updates for 5.4
-To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <mb@lightnvm.io>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190905190433.8247-1-mb@lightnvm.io>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2138dd03-4969-4e02-b1dc-d8209a835a22@kernel.dk>
-Date:   Thu, 5 Sep 2019 13:17:28 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 15:18:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729433AbfIETS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:18:57 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C0D2070C;
+        Thu,  5 Sep 2019 19:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567711137;
+        bh=lHXmlHm6b27COW2mrPddTjNkNktmB067pe+ggnrN9zM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vQgeQyYq3J1fVBeqhZ6zgMOh3rD8fHwSWpiNbWn6eEG9+eOBQjmeiflIt0aBOeMBF
+         2MRyXsMLhrxjgU5uh1G87ULtbMFmx4YJLDJgQ7UADbxMk6Ynm2Fs1jtoPkgNjmRI3v
+         55h1Py/o91DxZH7kigWIYE7CmJ9ZzvwWIjGEgeBE=
+Date:   Thu, 5 Sep 2019 14:18:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, keith.busch@intel.com
+Subject: Re: [PATCH v7 1/7] PCI/ATS: Fix pci_prg_resp_pasid_required()
+ dependency issues
+Message-ID: <20190905191854.GE103977@google.com>
+References: <cover.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+ <ef40dbdc4eae32490caec47bed5b57eeb438dd80.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905190433.8247-1-mb@lightnvm.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef40dbdc4eae32490caec47bed5b57eeb438dd80.1567029860.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 1:04 PM, Matias Bjørling wrote:
-> Hi Jens,
+On Wed, Aug 28, 2019 at 03:14:01PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > 
-> Two small patches for the 5.4 window. Can you please pick them up?
+> Since pci_prg_resp_pasid_required() function has dependency on both
+> PASID and PRI, define it only if both CONFIG_PCI_PRI and
+> CONFIG_PCI_PASID config options are enabled.
 > 
-> Thank you,
-> Matias
-> 
-> Minwoo Im (2):
->    lightnvm: introduce pr_fmt for the prefix nvm
->    lightnvm: print error when target is not found
-> 
->   drivers/lightnvm/core.c | 54 ++++++++++++++++++++++-------------------
->   1 file changed, 29 insertions(+), 25 deletions(-)
+> Fixes: e5567f5f6762 ("PCI/ATS: Add pci_prg_resp_pasid_required()
+> interface.")
 
-Applied, thanks.
+[Don't split tags, including "Fixes:" across lines]
 
--- 
-Jens Axboe
+This definitely doesn't fix e5567f5f6762.  That commit added
+pci_prg_resp_pasid_required(), but with no dependency on
+CONFIG_PCI_PRI or CONFIG_PCI_PASID.
 
+This patch is only required when a subsequent patch is applied.  It
+should be squashed into the commit that requires it so it's obvious
+why it's needed.
+
+I've been poking at this series, and I'll post a v8 soon with this and
+other fixes.
+
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/ats.c       | 10 ++++++----
+>  include/linux/pci-ats.h | 12 +++++++++---
+>  2 files changed, 15 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> index e18499243f84..cdd936d10f68 100644
+> --- a/drivers/pci/ats.c
+> +++ b/drivers/pci/ats.c
+> @@ -395,6 +395,8 @@ int pci_pasid_features(struct pci_dev *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_pasid_features);
+>  
+> +#ifdef CONFIG_PCI_PRI
+> +
+>  /**
+>   * pci_prg_resp_pasid_required - Return PRG Response PASID Required bit
+>   *				 status.
+> @@ -402,10 +404,8 @@ EXPORT_SYMBOL_GPL(pci_pasid_features);
+>   *
+>   * Returns 1 if PASID is required in PRG Response Message, 0 otherwise.
+>   *
+> - * Even though the PRG response PASID status is read from PRI Status
+> - * Register, since this API will mainly be used by PASID users, this
+> - * function is defined within #ifdef CONFIG_PCI_PASID instead of
+> - * CONFIG_PCI_PRI.
+> + * Since this API has dependency on both PRI and PASID, protect it
+> + * with both CONFIG_PCI_PRI and CONFIG_PCI_PASID.
+>   */
+>  int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>  {
+> @@ -425,6 +425,8 @@ int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(pci_prg_resp_pasid_required);
+>  
+> +#endif
+> +
+>  #define PASID_NUMBER_SHIFT	8
+>  #define PASID_NUMBER_MASK	(0x1f << PASID_NUMBER_SHIFT)
+>  /**
+> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+> index 1ebb88e7c184..1a0bdaee2f32 100644
+> --- a/include/linux/pci-ats.h
+> +++ b/include/linux/pci-ats.h
+> @@ -40,7 +40,6 @@ void pci_disable_pasid(struct pci_dev *pdev);
+>  void pci_restore_pasid_state(struct pci_dev *pdev);
+>  int pci_pasid_features(struct pci_dev *pdev);
+>  int pci_max_pasids(struct pci_dev *pdev);
+> -int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+>  
+>  #else  /* CONFIG_PCI_PASID */
+>  
+> @@ -67,11 +66,18 @@ static inline int pci_max_pasids(struct pci_dev *pdev)
+>  	return -EINVAL;
+>  }
+>  
+> +#endif /* CONFIG_PCI_PASID */
+> +
+> +#if defined(CONFIG_PCI_PRI) && defined(CONFIG_PCI_PASID)
+> +
+> +int pci_prg_resp_pasid_required(struct pci_dev *pdev);
+> +
+> +#else /* CONFIG_PCI_PASID && CONFIG_PCI_PRI */
+> +
+>  static inline int pci_prg_resp_pasid_required(struct pci_dev *pdev)
+>  {
+>  	return 0;
+>  }
+> -#endif /* CONFIG_PCI_PASID */
+> -
+> +#endif
+>  
+>  #endif /* LINUX_PCI_ATS_H*/
+> -- 
+> 2.21.0
+> 
