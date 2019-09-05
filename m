@@ -2,99 +2,164 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44082C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D13C41514
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C4D21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8032145D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567673773;
-	bh=nxynrq1ZfNXPmxOvki9jsnLzdsi03WB1FQJR4M9tk9E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nLjjoGEh7k+O6eXijdKMgUqQCdYHkqXIH98Exp0NbXbUqDAmSdLTna9tQctv5Iid8
-	 NZJPMJuzRPWloCAfGVGprdVd2UHaH4UzyBVDzisekpjtw9BPvuXDEyqFRADQnathdb
-	 cJq+b3kXrs0sQiK2krAajB606WeUJtV1pjQjXJ1o=
+	s=default; t=1567673784;
+	bh=HSN3NksX2+WfC+NKdYczZE4awRrLtoObpT6SMBUvJGA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xPfRTLiTpTAYTQceHXQwpdDGBAcJ7YRnQXjH9g2CwfJH3VSVJ6gXajfkqhuAGMwwX
+	 F0Jg4ZLSJq4SxEen7faGzMxAnVL6xm2y9b59aud6pmdnO8cgTuNMZ4guBb0s8byQSZ
+	 NFiywl0XoLpFQVkupF6t+c9u2wpodoupneyxySVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732855AbfIEI4M (ORCPT
+        id S1732871AbfIEI4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfIEI4M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:56:12 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC3D021743;
-        Thu,  5 Sep 2019 08:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567673771;
-        bh=nxynrq1ZfNXPmxOvki9jsnLzdsi03WB1FQJR4M9tk9E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ecyFj7MxRKASyJLrsL7kjE7VL6EGorP4cT5Z64pFYPksHfFHpZq++Vistm/eDhA/I
-         GlZ7DfdU8fVfLFoqLKajsUIIuXI1A3dnnvl9MPvfN4Iq0XowyLbXSdttXZoUpwNFgd
-         MyejiMAf0qs1wvlS8CdTggdiz2OzFkcNkbGHpyNk=
-Received: by mail-qt1-f172.google.com with SMTP id k10so1913803qth.2;
-        Thu, 05 Sep 2019 01:56:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAWE2xkPS0TYBRsBzBSUhweYfl5sCATqBMOlcOiwgeE6Qskgiadf
-        6c+tkdx94zWz4SlqqY4aGB8pd6ZZQ9C9ksNikg==
-X-Google-Smtp-Source: APXvYqwe7WYxk3XElGIIkDrb0I2DrV8ccOBgRzEx1xzn6PSLs7xZ9sDEOQkVezo7W2c1bqph8/273A3ZNIydErCuYfc=
-X-Received: by 2002:ac8:6b05:: with SMTP id w5mr2408517qts.136.1567673770094;
- Thu, 05 Sep 2019 01:56:10 -0700 (PDT)
+        Thu, 5 Sep 2019 04:56:23 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38722 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIEI4X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:56:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=46bdmJAj05c8cmX9LGKLrze0o9OvutSp9qj+K6a1Is8=; b=YBLOP6upwBsfS581IJZRplqet
+        7HQh4n/+Xd+BrX8l0K8FPvZd30p6WjpH7oEei4JoZx9UwScWdae0L8XHnbXFNixaRoMra69o/kESg
+        q6kffmadlQADXTJNq+o5kq4H2eeLzpmFzGYMGuy1Z3DSyqEDqw/agXgFDQs5QmA+5oPyWcyup4ZOw
+        a19ADBDn/CdB2QbYoshkAM+c3rVxynzq6oPcRy5lFhovAGTAQSnIwvC6ZAdUNfIp0THKQPBK+0lg6
+        X/+8NlfJNyuZ3gf2DKcttOgA0rPiIE2PrkLK2Xbht3ZxaEgEQ9VwqhJ3PNBb3Xm6iG/cc29XzDqGA
+        P8z3gRS/g==;
+Received: from 177.17.137.173.dynamic.adsl.gvt.net.br ([177.17.137.173] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5nYx-0000nv-2V; Thu, 05 Sep 2019 08:56:19 +0000
+Date:   Thu, 5 Sep 2019 05:56:14 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20190905055614.7958918b@coco.lan>
+In-Reply-To: <20190905055430.GA23826@kroah.com>
+References: <20190831151147.GA7082@nishad>
+        <20190904153432.7fb54f02@coco.lan>
+        <20190904183608.GA495@kroah.com>
+        <20190904160010.4532c3f5@coco.lan>
+        <20190905055430.GA23826@kroah.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190903162519.7136-1-sashal@kernel.org> <20190903162519.7136-147-sashal@kernel.org>
-In-Reply-To: <20190903162519.7136-147-sashal@kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 5 Sep 2019 09:55:58 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqJrwwsp1wjCBnNmx45ZiLTXVY_nCfN6OrJ5o9dLbc+_2w@mail.gmail.com>
-Message-ID: <CAL_JsqJrwwsp1wjCBnNmx45ZiLTXVY_nCfN6OrJ5o9dLbc+_2w@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 4.19 147/167] drm/panel: Add support for Armadeus
- ST0700 Adapt
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 3, 2019 at 5:31 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com>
->
-> [ Upstream commit c479450f61c7f1f248c9a54aedacd2a6ca521ff8 ]
->
-> This patch adds support for the Armadeus ST0700 Adapt. It comes with a
-> Santek ST0700I5Y-RBSLW 7.0" WVGA (800x480) TFT and an adapter board so
-> that it can be connected on the TFT header of Armadeus Dev boards.
->
-> Cc: stable@vger.kernel.org # v4.19
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: S=C3=A9bastien Szymanski <sebastien.szymanski@armadeus.com=
->
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Link: https://patchwork.freedesktop.org/patch/msgid/20190507152713.27494-=
-1-sebastien.szymanski@armadeus.com
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  .../display/panel/armadeus,st0700-adapt.txt   |  9 ++++++
->  drivers/gpu/drm/panel/panel-simple.c          | 29 +++++++++++++++++++
->  2 files changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/armad=
-eus,st0700-adapt.txt
+Em Thu, 5 Sep 2019 07:54:30 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
 
-Looks like a new feature, not stable material. Not sure why it got
-tagged for stable.
+> On Wed, Sep 04, 2019 at 04:00:10PM -0300, Mauro Carvalho Chehab wrote:
+> > Em Wed, 4 Sep 2019 20:36:08 +0200
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+> >   
+> > > On Wed, Sep 04, 2019 at 03:34:32PM -0300, Mauro Carvalho Chehab wrote:  
+> > > > Em Sat, 31 Aug 2019 20:41:51 +0530
+> > > > Nishad Kamdar <nishadkamdar@gmail.com> escreveu:
+> > > >     
+> > > > > This patch corrects the SPDX License Identifier style
+> > > > > in header file related to Siano Mobile Silicon Digital TV.
+> > > > > For C header files Documentation/process/license-rules.rst
+> > > > > mandates C-like comments (opposed to C source files where
+> > > > > C++ style should be used)
+> > > > > 
+> > > > > Changes made by using a script provided by Joe Perches here:
+> > > > > https://lkml.org/lkml/2019/2/7/46
+> > > > > 
+> > > > > Suggested-by: Joe Perches <joe@perches.com>
+> > > > > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> > > > > ---
+> > > > >  drivers/media/common/siano/smsir.h | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/media/common/siano/smsir.h b/drivers/media/common/siano/smsir.h
+> > > > > index b2c54c256e86..ada41d5c4e83 100644
+> > > > > --- a/drivers/media/common/siano/smsir.h
+> > > > > +++ b/drivers/media/common/siano/smsir.h
+> > > > > @@ -1,5 +1,5 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > > > >  /*
+> > > > > - * SPDX-License-Identifier: GPL-2.0+
+> > > > >   *
+> > > > >   * Siano Mobile Silicon, Inc.
+> > > > >   * MDTV receiver kernel modules.    
+> > > > 
+> > > > What's wrong with that? The above is a perfectly fine SPDX header.    
+> > > 
+> > > It is not the first line of the file :(
+> > >   
+> > 
+> > A requirement for having it at the first line is not realistic.  
+> 
+> But it is "the rule" as Joe points out.
+> 
+> > I'd say more: some script that would check for SPDX only at the 
+> > first line won't work.
+> > 
+> > The reason is simple: we have some scripts at the Kernel tree.  
+> 
+> This is not a script, for those, it is fine to use the second line,
+> again, this is documented.
+> 
+> This isn't new at all, been that way since December of 2017, see commit
+> aa19a176df95 ("Documentation: Add license-rules.rst to describe how to
+> properly identify file licenses")
 
-Rob
+It sounds that I somehow misinterpreted this. Ok, be it. I'll accept
+this patch and keep such rule in mind for next SPDX changes.
+
+Anyway, with regards to script, we need to change the rules in order to
+allow adding SPDX for python scripts, as otherwise the addition of SPDX
+headers may cause regressions.
+
+As mentioned on
+	https://stackoverflow.com/questions/728891/correct-way-to-define-python-source-code-encoding
+Python's PEP-263 [1] dictates that an script that needs to default to UTF-8 
+encoding has to follow this rule:
+
+	'Python will default to ASCII as standard encoding if no other
+	 encoding hints are given.
+
+	 To define a source code encoding, a magic comment must be placed
+	 into the source files either as first or second line in the file'
+
+And:
+	'More precisely, the first or second line must match the following
+	 regular expression:
+
+	 ^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)'
+
+[1] https://www.python.org/dev/peps/pep-0263/
+
+If a script has both shebang and the charset encoding line, we can't place 
+a SPDX tag without either violating license-rules.rst or breaking the script
+by making it crash with non-ASCII characters.
+
+I'll submit a separate patch in order to address such issue at
+license-rules.txt.
+
+Thanks,
+Mauro
