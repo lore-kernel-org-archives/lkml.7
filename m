@@ -2,302 +2,482 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19375C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CFFC3A5A9
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BABA6206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:45:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cqAa42dp"
+	by mail.kernel.org (Postfix) with ESMTP id C0E47206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbfIECpg (ORCPT
+        id S1730912AbfIECqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:45:36 -0400
-Received: from mail-eopbgr50063.outbound.protection.outlook.com ([40.107.5.63]:10054
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727544AbfIECpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:45:36 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gjt/JhT4mTX7ekvohbaKczx+B4W7cBr7XJ7COsbrMrBg8zIAB/Dnd9MDSg4J79QcixIhQyvJTYkliUTM40/WNVEaL2U/W3oumTxEQH7qYv05D1/RkyaCdf6CIu2CJ5fC4tRX5lFyaGsXVlvkhrXLR93gQANeCTLWo86pp4qUCvDe8gqu0qir13DEO5fAGb6g96nMBigQFaAj1xGV8HLEV1+chkXqYaTjoKqPdP6zWmnifTwZ3OHulJOAiiPL8fJb+AJow12OWzV1pKr5wuhyIixYCbbfBqGpwaa0BfOh4wCgXyegGJXGvNkUtwiDKd0MtaSX1xm92AuPqTN1k0xhxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PCvzHu84mdm5T4pesz9ZAKR2TNci4f8bmsJsnZRRYsk=;
- b=K0kwvmyVg63jiT2/D0gLlKRhwhTJkk8TUnJ4L5ut/M/a15V3fHRTWn7FkWMmSGNd2oxGyi9brzwFFdGpmGJqdh4SbXPPiX3+Ln4IPyJQBTSwFGRKlSd6okDIcj8gzSTYWWQpq1xRogTNdWLXEvrwRhlMkHY6U2L7pIxDXb4X5Sf9qvW0z0yDYbUAxJF3vM2jgrn8+Jbq6JyLvJtTwvLZaUgx4ac39Nleg99l8muymsYMg6YBByVVwEkEFX38F1M+Xfas0jwLMtz505PHFKyfvdp7Pc8Fw3LV4BWMIxFyHvVoZGX4actTm/WnR5FeRuqI4IXRAj09IemTVI9JOoqztg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PCvzHu84mdm5T4pesz9ZAKR2TNci4f8bmsJsnZRRYsk=;
- b=cqAa42dpSwhTeCfbHeq2XnTWb4iGW6XuxPeW/D8wX7DLDxfIxQdtf0rrFF1/FV6sHhVeXGX1H1ROo9/3cycWzF9TsFX6IM+aa4SMLagzL3zWu8WpUz6g8NldZG0ZGNWB3rAdFEkt72nuFh0jN4e73kBHbDpHJvBy/GJGhDSB7ZA=
-Received: from DB7PR04MB5195.eurprd04.prod.outlook.com (20.176.236.27) by
- DB7PR04MB5962.eurprd04.prod.outlook.com (20.178.104.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.13; Thu, 5 Sep 2019 02:45:26 +0000
-Received: from DB7PR04MB5195.eurprd04.prod.outlook.com
- ([fe80::5cca:4549:eda4:7baf]) by DB7PR04MB5195.eurprd04.prod.outlook.com
- ([fe80::5cca:4549:eda4:7baf%7]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
- 02:45:26 +0000
-From:   Wen He <wen.he_1@nxp.com>
-To:     Liviu Dudau <liviu.dudau@arm.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "brian.starkey@arm.com" <brian.starkey@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>, Leo Li <leoyang.li@nxp.com>
-Subject: RE: [EXT] Re: [v2 1/3] drm/arm/mali-dp: Add display QoS interface
- configuration for Mali DP500
-Thread-Topic: [EXT] Re: [v2 1/3] drm/arm/mali-dp: Add display QoS interface
- configuration for Mali DP500
-Thread-Index: AQHVPhlNBn8r2UCjPE68MMKIi4MPSqbR0vsAgAQHHnCAAIqFgIAlz+MAgB/GqwCAAKUEUA==
-Date:   Thu, 5 Sep 2019 02:45:26 +0000
-Message-ID: <DB7PR04MB51954E804019B4EEC4B17562E2BB0@DB7PR04MB5195.eurprd04.prod.outlook.com>
-References: <20190719095445.11575-1-wen.he_1@nxp.com>
- <20190719114624.GB16673@e110455-lin.cambridge.arm.com>
- <DB7PR04MB5195BD852798B113D4CB8BA4E2C40@DB7PR04MB5195.eurprd04.prod.outlook.com>
- <20190722093241.GC15612@e110455-lin.cambridge.arm.com>
- <DB7PR04MB519533DF619D0E114EBA4C3AE2AC0@DB7PR04MB5195.eurprd04.prod.outlook.com>
- <20190904161328.35k7s6knfzpvlsyr@e110455-lin.cambridge.arm.com>
-In-Reply-To: <20190904161328.35k7s6knfzpvlsyr@e110455-lin.cambridge.arm.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=wen.he_1@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 944c8422-a044-4807-3d0d-08d731ab1b3f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB5962;
-x-ms-traffictypediagnostic: DB7PR04MB5962:|DB7PR04MB5962:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5962BD0D44A83E43AE17FD6AE2BB0@DB7PR04MB5962.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(199004)(189003)(54094003)(52314003)(13464003)(6246003)(30864003)(305945005)(4326008)(54906003)(86362001)(2906002)(25786009)(66946007)(76116006)(14454004)(6116002)(446003)(74316002)(33656002)(5660300002)(7696005)(8936002)(3846002)(476003)(11346002)(316002)(102836004)(71190400001)(71200400001)(256004)(7736002)(478600001)(53546011)(6506007)(81166006)(81156014)(486006)(52536014)(186003)(76176011)(9686003)(6436002)(99286004)(8676002)(53936002)(66556008)(229853002)(66066001)(14444005)(6916009)(26005)(64756008)(55016002)(66446008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5962;H:DB7PR04MB5195.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 3C4q4au28X1c7b3lNVvdngw7z0d5a6PYhMjScWjH1P81EFePXZ/j0ul7JjHG9xOt71bY0EQiyL8vGn3zVp+9bruoWZZM6zPktHOiR2ExcBOVRv4lGKe0Snh3r9lUIt6IAPxoNw9dTAmZJKKAtE1fB7yEF7l1ksDWU1gJUeN819ECRBFf5KBiOfxT5lF9l2WHXzSC2OUb0w9ppcTq5LsZc5vfF7+Dk5IOVvtgFGgDD7w52HcvDPoPIgUe3CwS4Ud22kOj0ZcOBFFKOWsDJesIaf6TkfvQHPJLcXC8nGW98ACnjIcSnFGF2WtfODt9tRe3nzFBKiECJhcE3oEgB5w4djoCIYa8hlSPCT+oBxpqc35PgX/mCB4CqphVJIKMovnSt+jkOXXs9x7qqR1tVE11MmmY9e1+awpVfuZdkE0KaEo=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 4 Sep 2019 22:46:35 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:54040 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfIECqf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:46:35 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x852kXCk030194, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x852kXCk030194
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 5 Sep 2019 10:46:33 +0800
+Received: from fc30.localdomain (172.21.177.138) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.468.0; Thu, 5 Sep 2019
+ 10:46:31 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     <netdev@vger.kernel.org>
+CC:     <nic_swsd@realtek.com>, <linux-kernel@vger.kernel.org>,
+        Hayes Wang <hayeswang@realtek.com>
+Subject: [PATCH net-next v2] r8152: adjust the settings of ups flags
+Date:   Thu, 5 Sep 2019 10:46:20 +0800
+Message-ID: <1394712342-15778-328-Taiwan-albertk@realtek.com>
+X-Mailer: Microsoft Office Outlook 11
+In-Reply-To: <1394712342-15778-327-Taiwan-albertk@realtek.com>
+References: <1394712342-15778-327-Taiwan-albertk@realtek.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 944c8422-a044-4807-3d0d-08d731ab1b3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 02:45:26.1393
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CWskUs49OHnhDhTPvx/zDfjjwsTRG8I5Imbyf/Uy9TagGFXRwlmCnJIg+TirJWKnsTr3aUnUlXrzn27b0e+ByA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5962
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [172.21.177.138]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGl2aXUgRHVkYXUgPGxp
-dml1LmR1ZGF1QGFybS5jb20+DQo+IFNlbnQ6IDIwMTnlubQ55pyINeaXpSAwOjEzDQo+IFRvOiBX
-ZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBicmlhbi5zdGFya2V5QGFy
-bS5jb207IGFpcmxpZWRAbGludXguaWU7IGRhbmllbEBmZndsbC5jaDsgTGVvIExpDQo+IDxsZW95
-YW5nLmxpQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW3YyIDEvM10gZHJtL2Fy
-bS9tYWxpLWRwOiBBZGQgZGlzcGxheSBRb1MgaW50ZXJmYWNlDQo+IGNvbmZpZ3VyYXRpb24gZm9y
-IE1hbGkgRFA1MDANCj4gDQo+IENhdXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gVGh1LCBBdWcg
-MTUsIDIwMTkgYXQgMTE6MTQ6MTdBTSArMDAwMCwgV2VuIEhlIHdyb3RlOg0KPiA+DQo+ID4NCj4g
-PiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBMaXZpdSBEdWRhdSA8
-bGl2aXUuZHVkYXVAYXJtLmNvbT4NCj4gPiA+IFNlbnQ6IDIwMTnlubQ35pyIMjLml6UgMTc6MzMN
-Cj4gPiA+IFRvOiBXZW4gSGUgPHdlbi5oZV8xQG54cC5jb20+DQo+ID4gPiBDYzogZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4g
-PiA+IGJyaWFuLnN0YXJrZXlAYXJtLmNvbTsgYWlybGllZEBsaW51eC5pZTsgZGFuaWVsQGZmd2xs
-LmNoOyBMZW8gTGkNCj4gPiA+IDxsZW95YW5nLmxpQG54cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBS
-ZTogW0VYVF0gUmU6IFt2MiAxLzNdIGRybS9hcm0vbWFsaS1kcDogQWRkIGRpc3BsYXkgUW9TDQo+
-ID4gPiBpbnRlcmZhY2UgY29uZmlndXJhdGlvbiBmb3IgTWFsaSBEUDUwMA0KPiA+ID4NCj4gPiA+
-IENhdXRpb246IEVYVCBFbWFpbA0KPiA+ID4NCj4gPiA+IE9uIE1vbiwgSnVsIDIyLCAyMDE5IGF0
-IDAyOjEyOjA4QU0gKzAwMDAsIFdlbiBIZSB3cm90ZToNCj4gPiA+ID4NCj4gPiA+ID4NCj4gPiA+
-ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+IEZyb206IExpdml1IER1
-ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPg0KPiA+ID4gPiA+IFNlbnQ6IDIwMTnlubQ35pyIMTnm
-l6UgMTk6NDYNCj4gPiA+ID4gPiBUbzogV2VuIEhlIDx3ZW4uaGVfMUBueHAuY29tPg0KPiA+ID4g
-PiA+IENjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOw0KPiA+ID4gPiA+IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGJyaWFuLnN0YXJrZXlAYXJtLmNvbTsNCj4gPiA+ID4g
-PiBhaXJsaWVkQGxpbnV4LmllOyBkYW5pZWxAZmZ3bGwuY2g7IExlbyBMaSA8bGVveWFuZy5saUBu
-eHAuY29tPg0KPiA+ID4gPiA+IFN1YmplY3Q6IFtFWFRdIFJlOiBbdjIgMS8zXSBkcm0vYXJtL21h
-bGktZHA6IEFkZCBkaXNwbGF5IFFvUw0KPiA+ID4gPiA+IGludGVyZmFjZSBjb25maWd1cmF0aW9u
-IGZvciBNYWxpIERQNTAwDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBDYXV0aW9uOiBFWFQgRW1haWwN
-Cj4gPiA+ID4gPg0KPiA+ID4gPiA+IE9uIEZyaSwgSnVsIDE5LCAyMDE5IGF0IDA1OjU0OjQ1UE0g
-KzA4MDAsIFdlbiBIZSB3cm90ZToNCj4gPiA+ID4gPiA+IENvbmZpZ3VyZSB0aGUgZGlzcGxheSBR
-dWFsaXR5IG9mIHNlcnZpY2UgKFFvUykgbGV2ZWxzIHByaW9yaXR5DQo+ID4gPiA+ID4gPiBpZiB0
-aGUgb3B0aW9uYWwgcHJvcGVydHkgbm9kZSAiYXJtLG1hbGlkcC1hcXJvcy12YWx1ZSIgaXMNCj4g
-PiA+ID4gPiA+IGRlZmluZWQgaW4gRFRTDQo+ID4gPiBmaWxlLg0KPiA+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+IFFvUyBzaWduYWxpbmcgdXNpbmcgQVFST1MgYW5kIEFXUU9TIEFYSSBpbnRlcmZhY2Ug
-c2lnbmFscywgdGhlDQo+ID4gPiA+ID4gPiBBUVJPUyBpcyBkcml2ZW4gZnJvbSB0aGUgIlJRT1Mi
-IHJlZ2lzdGVyLCBzbyBuZWVkZWQgdG8gcHJvZ3JhbQ0KPiA+ID4gPiA+ID4gdGhlIFJRT1MgcmVn
-aXN0ZXIgdG8gYXZvaWQgdGhlIDRrIHJlc29sdXRpb24gZmxpY2tlciBpc3N1ZSBvbg0KPiA+ID4g
-PiA+ID4gdGhlIExTMTAyOEENCj4gPiA+IHBsYXRmb3JtLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4g
-PiA+IFNpZ25lZC1vZmYtYnk6IFdlbiBIZSA8d2VuLmhlXzFAbnhwLmNvbT4NCj4gPiA+ID4gPiA+
-IC0tLQ0KPiA+ID4gPiA+ID4gY2hhbmdlIGluIHYyOg0KPiA+ID4gPiA+ID4gICAgICAgICAtIG1v
-ZGlmeSBzb21lIGNvbnRlbnQgYmFzZWQgb24gZmVlZGJhY2sgZnJvbQ0KPiA+ID4gPiA+ID4gbWFp
-bnRhaW5lcnMNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgZHJpdmVycy9ncHUvZHJtL2FybS9t
-YWxpZHBfZHJ2LmMgIHwgIDYgKysrKysrDQo+ID4gPiA+ID4gPiAgZHJpdmVycy9ncHUvZHJtL2Fy
-bS9tYWxpZHBfaHcuYyAgIHwgMTMgKysrKysrKysrKysrKw0KPiA+ID4gPiA+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9hcm0vbWFsaWRwX2h3LmggICB8ICAzICsrKw0KPiA+ID4gPiA+ID4gIGRyaXZlcnMv
-Z3B1L2RybS9hcm0vbWFsaWRwX3JlZ3MuaCB8IDEwICsrKysrKysrKysNCj4gPiA+ID4gPiA+ICA0
-IGZpbGVzIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKykNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMNCj4gPiA+ID4g
-PiA+IGIvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMNCj4gPiA+ID4gPiA+IGluZGV4
-IGYyNWVjNDM4MjI3Ny4uNjFjNDlhMDY2OGE3IDEwMDY0NA0KPiA+ID4gPiA+ID4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL2FybS9tYWxpZHBfZHJ2LmMNCj4gPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9hcm0vbWFsaWRwX2Rydi5jDQo+ID4gPiA+ID4gPiBAQCAtODE4LDYgKzgxOCwxMiBA
-QCBzdGF0aWMgaW50IG1hbGlkcF9iaW5kKHN0cnVjdCBkZXZpY2UNCj4gPiA+ID4gPiA+ICpkZXYp
-DQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gICAgICAgbWFsaWRwLT5jb3JlX2lkID0gdmVyc2lv
-bjsNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiArICAgICByZXQgPSBvZl9wcm9wZXJ0eV9yZWFk
-X3UzMihkZXYtPm9mX25vZGUsDQo+ID4gPiA+ID4gPiArDQo+ICJhcm0sbWFsaWRwLWFycW9zLXZh
-bHVlIiwNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-Jmh3ZGV2LT5hcnFvc192YWx1ZSk7DQo+ID4gPiA+ID4gPiArICAgICBpZiAocmV0KQ0KPiA+ID4g
-PiA+ID4gKyAgICAgICAgICAgICBod2Rldi0+YXJxb3NfdmFsdWUgPSAweDA7DQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiBJcyB6ZXJvIHRoZSBkZWZhdWx0IHZhbHVlIHRoYXQgeW91IHdhbnQ/IEkgdGhv
-dWdodCBpdCB3YXMgMHgwMDAxMDAwMS4NCj4gPiA+ID4NCj4gPiA+ID4gQWN0dWFsbHksIHRoZSBy
-ZWdpc3RlciBkZWZhdWx0IHZhbHVlIGFsd2F5cyBpcyAweDAwMDEwMDAxKGNhbiBiZQ0KPiA+ID4g
-PiBmb3VuZCBpbiBSTQ0KPiA+ID4gZG9jdW1lbnQpLg0KPiA+ID4NCj4gPiA+IEV4YWN0bHksIGJ1
-dCB3aXRoIHlvdXIgY29kZSB5b3UgYXJlIG92ZXJ3cml0aW5nIGl0IHRvIDAgaWYgdGhlIERUDQo+
-ID4gPiBkb2Vzbid0IGhhdmUgdGhlIGFybSxtYWxpZHAtYXJxb3MtdmFsdWUgcHJvcGVydHkuDQo+
-ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiAgICAg
-ICAvKiBzZXQgdGhlIG51bWJlciBvZiBsaW5lcyB1c2VkIGZvciBvdXRwdXQgb2YgUkdCIGRhdGEg
-Ki8NCj4gPiA+ID4gPiA+ICAgICAgIHJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdThfYXJyYXkoZGV2
-LT5vZl9ub2RlLA0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICJhcm0sbWFsaWRwLW91dHB1dC1w
-b3J0LWxpbmVzIiwgZGlmZiAtLWdpdA0KPiA+ID4gPiA+ID4gYS9kcml2ZXJzL2dwdS9kcm0vYXJt
-L21hbGlkcF9ody5jDQo+ID4gPiA+ID4gPiBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3
-LmMgaW5kZXgNCj4gPiA+ID4gPiA+IDUwYWYzOTlkN2Y2Zi4uMzIzNjgzYjFlOWY3DQo+ID4gPiA+
-ID4gPiAxMDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRw
-X2h3LmMNCj4gPiA+ID4gPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX2h3LmMN
-Cj4gPiA+ID4gPiA+IEBAIC0zNzQsNiArMzc0LDE5IEBAIHN0YXRpYyB2b2lkIG1hbGlkcDUwMF9t
-b2Rlc2V0KHN0cnVjdA0KPiA+ID4gPiA+IG1hbGlkcF9od19kZXZpY2UgKmh3ZGV2LCBzdHJ1Y3Qg
-dmlkZW9tb2RlICoNCj4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgbWFsaWRwX2h3X3NldGJpdHMo
-aHdkZXYsDQo+ID4gPiA+ID4gPiBNQUxJRFBfRElTUF9GVU5DX0lMQUNFRCwNCj4gPiA+ID4gPiBN
-QUxJRFBfREVfRElTUExBWV9GVU5DKTsNCj4gPiA+ID4gPiA+ICAgICAgIGVsc2UNCj4gPiA+ID4g
-PiA+ICAgICAgICAgICAgICAgbWFsaWRwX2h3X2NsZWFyYml0cyhod2RldiwNCj4gPiA+IE1BTElE
-UF9ESVNQX0ZVTkNfSUxBQ0VELA0KPiA+ID4gPiA+ID4gTUFMSURQX0RFX0RJU1BMQVlfRlVOQyk7
-DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAvKg0KPiA+ID4gPiA+ID4gKyAgICAg
-ICogUHJvZ3JhbSB0aGUgUlFvUyByZWdpc3RlciB0byBhdm9pZCA0ayByZXNvbHV0aW9uIGZsaWNr
-ZXINCj4gPiA+ID4gPiA+ICsgICAgICAqIG9uIHRoZSBMUzEwMjhBLg0KPiA+ID4gPiA+ID4gKyAg
-ICAgICovDQo+ID4gPiA+ID4gPiArICAgICBpZiAoaHdkZXYtPmFycW9zX3ZhbHVlKSB7DQo+ID4g
-PiA+ID4gPiArICAgICAgICAgICAgIHZhbCA9IGh3ZGV2LT5hcnFvc192YWx1ZTsNCj4gPiA+ID4g
-PiA+ICsNCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgaWYgKG1vZGUtPnBpeGVsY2xvY2sgPT0g
-NTk0MDAwMDAwKQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gSWYgSSByZW1lbWJlciBjb3JyZWN0bHks
-IHlvdSBkZWNsYXJlIHRoZSBwaXhlbGNsb2NrcyBpbiB0aGUNCj4gPiA+ID4gPiBkZXZpY2UgdHJl
-ZSwgc28gSSB3b25kZXIgaWYgdGhpcyBpcyBuZWVkZWQgaGVyZS4gV2Ugc2hvdWxkIGp1c3QNCj4g
-PiA+ID4gPiBzZXQgd2hhdCB2YWx1ZSB3YXMgaW4gdGhlIERUIHJlZ2FyZGxlc3Mgb2YgdGhlIHBp
-eGVsY2xvY2ssIGFuZA0KPiA+ID4gPiA+IHRoZW4geW91IG1hbmlwdWxhdGUgdGhlIERUIHRvIGNo
-b29zZSBvbmUgb2YgeW91ciBmaXhlZA0KPiA+ID4gPiA+IHJlc29sdXRpb25zIGFuZCBhbHNvIHNl
-dCB0aGUNCj4gPiA+IFFvUyB2YWx1ZS4NCj4gPiA+ID4NCj4gPiA+ID4gWWVzLCB5b3UgcmVtZW1i
-ZXIgY29ycmVjdGx5LCBidXQNCj4gPiA+ID4gMS4gZGVjbGFyZSB0aGUgcGl4ZWxjbG9ja3MgaW4g
-dGhlIGRldmljZSB0cmVlLg0KPiA+ID4gPiBBYm91dCB0aGlzLCBJIHdhcyBob3BpbmcgdG8gZGlz
-Y3VzcyBpdCB3aXRoIHlvdS4gSSB3YW50IHRvDQo+ID4gPiA+IGltcGxlbWVudCBhbm90aGVyIHBh
-dGNoIHRoYXQganVzdCBkZWNsYXJlIDI3TUh6IHJlZmVyZW5jZSBjbG9jayBpbg0KPiA+ID4gPiB0
-aGUgZGV2aWNlIHRyZWUgYW5kIGFkZCBhIGZha2UgY2xvY2sgc3Vic3lzdGVtIHRvIGVuYWJsZS9k
-aXNwbGF5DQo+ID4gPiA+IHByZXBhcmUgdG8gc2V0IFBMTC4gSQ0KPiA+ID4gYW0gdGhpbmtpbmcg
-d2hhdCB0byBkbyBuZXh0Lg0KPiA+ID4gPiBBcyBJIHJlbWVtYmVyLCBJIHNlbnQgb3V0IGEgcGF0
-Y2ggdGhhdCAiRGlzYWJsZSBjaGVja2luZyBmb3INCj4gPiA+ID4gcmVxdWlyZWQgcGl4ZWwgY2xv
-Y2siLCBJIHRoaW5rIHNob3VsZCBiZSBjYW5jZWwgaXQuDQo+ID4gPiA+DQo+ID4gPiA+IDIuIGRl
-Y2xhcmUgdGhlIGZpeGVkIHJlc29sdXRpb25zIGxpc3QgaW4gRFRTLg0KPiA+ID4gPiBZZXMsIEFs
-dGhvdWdoIEkgcHV0IGZvdXIgcmVzb2x1dGlvbnMgZm9yIHN1cHBvcnRlZCBsaXN0IGluIERUUw0K
-PiA+ID4gPiBmaWxlLCBidXQgdGhpcyBqdXN0IGEgd29ya2Fyb3VuZCB0aGF0IElmIG5vdCBlbmFi
-bGUgRURJRCBPUiBFRElEDQo+ID4gPiA+IGlzIG5vdCBhdmFpbGFibGUuIE9uY2UgRURJRCBpcyBl
-bmFibGVkLCB0aGVzZSByZXNvbHV0aW9ucyBsaXN0DQo+ID4gPiA+IGRlY2xhcmUgd2lsbCBiZSBy
-ZW1vdmUgaW4gRFRTLiBzbyB3ZSBjYW4ndCB1c2UgaXQgYXMgYSBjb25kaXRpb24gdG8gc2V0IHRo
-ZQ0KPiBRb1MgdmFsdWUuDQo+ID4gPg0KPiA+ID4gMy4gQWN0dWFsbHkgZW5hYmxlIHRoZSBjbG9j
-ayBwcm92aWRlci4gSSd2ZSBoYWQgYSBsb29rIGF0IHRoZSBwdWJsaWMNCj4gPiA+IGRvY3VtZW50
-YXRpb24gYW5kIGl0IGxvb2tzIGxpa2UgdGhlIHRoZSBwaXhlbGNsb2NrIGlzIHByb3ZpZGVkIGJ5
-IGFuDQo+ID4gPiBJRFQgVmVyc2FDbG9jayA1IGdlbmVyYXRvciwgZm9yIHdoaWNoIHRoZXJlIGlz
-IGEga2VybmVsIGRyaXZlci4gSSd2ZQ0KPiA+ID4gc3RhcnRlZCBwbGF5aW5nIHdpdGggaXQgYnV0
-IGdvdCBwdWxsZWQgYmFjayBieSBvdGhlciBtb3JlIGltbWVkaWF0ZSB0YXNrcy4NCj4gPiA+DQo+
-ID4gPiBBbnl3YXksIHdoYXQgSSB3YXMgdHJ5aW5nIHRvIGhpbnQgd2FzIHRoYXQgcHV0dGluZyBp
-biB0aGUgY29kZSB0aGUNCj4gPiA+IGV4YWN0IHBpeGVsY2xvY2sgdmFsdWUgbWlnaHQgbm90IGJl
-IHRoZSBiZXN0IHRoaW5nLiBJbiBteSB2aWV3LA0KPiA+ID4gcGl4ZWxjbG9jayByZWZsZWN0cyB0
-aGUgbmVlZCBmb3IgYSBjZXJ0YWluIGJhbmR3aWR0aCwgd2l0aCBpcw0KPiA+ID4gdXN1YWxseSBh
-IHByb2R1Y3Qgb2Ygb3V0cHV0IChudW1iZXIgb2YNCj4gPiA+IHBpeGVscykgYW5kIHJlZnJlc2gg
-ZnJlcXVlbmN5LiBJJ20gZ3Vlc3NpbmcgZ29pbmcgYWJvdmUgNGtANjAgd2lsbA0KPiA+ID4gYWxz
-byB0cmlnZ2VyIHRoZSBmbGlja2VyLCBidXQgd2l0aCB5b3VyIHBhdGNoIHdlIHdpbGwgbm90IHJl
-YWN0IGNvcnJlY3RseS4NCj4gPiA+DQo+ID4gPiBCZXN0IHJlZ2FyZHMsDQo+ID4gPiBMaXZpdQ0K
-PiA+ID4NCj4gPg0KPiA+IEhtbS4uIEkndmUgYWxyZWFkeSB3cml0dGVuIHRoZSBwaXhlbCBjbG9j
-ayBwcm92aWRlciBkcml2ZXIgb2YgdGhlIExTMTAyOEEgYW5kDQo+IHVwc3RyZWFtZWQuLg0KPiA+
-IFNvIG1vcmUgcmVzb2x1dGlvbnMgd2lsbCBiZSBzdXBwb3J0IG9uIExTMTAyOEEuDQo+ID4gVGhh
-bmsgeW91IGZvciB0aGUgY29tbWVudHMgdGhhdCB3aGljaCBtYWRlIG1lIGRldGVybWluZWQgdG8g
-Z2V0IHRoaXMNCj4gZG9uZS4NCj4gPg0KPiA+IEZvciB0aGlzIGNoYW5nZSwgSSB3b3VsZCBiZSBy
-ZW1vdmUgdGhpcyBjb25kaXRpb24gImlmIChtb2RlLT5waXhlbGNsb2NrID09DQo+IDU5NDAwMDAw
-MCkiDQo+ID4gQW5kIGFwcGx5IHRoaXMgY2hhbmdlIGZvciBhbGwgcmVzb2x1dGlvbnMgb24gTFMx
-MDI4QS4NCj4gPg0KPiA+IEhvdyBkbyB5b3UgdGhpbms/DQo+IA0KPiBIaSBXZW4sDQo+IA0KPiBT
-b3JyeSwgSSB3YXMgYXdheSBvbiBzYWJiYXRpY2FsIHVudGlsIG5vdy4NCj4gDQo+IE5vdCBzdXJl
-IGlmIEkgZ290IHlvdXIgbWVzc2FnZSByaWdodDogZG8geW91IHdhbnQgdG8gYXBwbHkgdGhlIFJR
-T1MgdmFsdWUNCj4gcmVnYXJkbGVzcyBvZiB0aGUgcmVzb2x1dGlvbiAoYnV0IG9ubHkgaWYgZGVm
-aW5lZCB0byBhIG5vbi16ZXJvIHZhbHVlIGluIHRoZSBEVFMpPw0KPiBJZiBzbywgdGhlbiBJJ20g
-ZmluZSB3aXRoIHRoYXQgaWRlYS4gQ2FuIHlvdSBzZW5kIGEgcmVmcmVzaGVkIHBhdGNoPw0KPiAN
-Cg0KWWVzLCBidXQgSSBhZGQgb25lIGNvbmRpdGlvbiAoaWYgcGl4ZWwgY2xvY2sgPiAxNDguNU1o
-eikgaW4gaGVyZSAsIEkgYWxyZWFkeSBzZW5kIHYzIHBhdGNoIHRvIG1haWwgbGlzdCwgcGxlYXNl
-IHJldmlldyBhZ2FpbiwgVGhhbmtzIGEgbG90LiANCg0KQmVzdCBSZWdhcmRzLA0KV2VuDQoNCj4g
-QmVzdCByZWdhcmRzLA0KPiBMaXZpdQ0KPiANCj4gDQo+ID4NCj4gPiBCZXN0IFJlZ2FyZHMsDQo+
-ID4gV2VuDQo+ID4gPg0KPiA+ID4gPg0KPiA+ID4gPiBCZXN0IFJlZ2FyZHMsDQo+ID4gPiA+IFdl
-bg0KPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gQmVzdCByZWdhcmRzLA0KPiA+ID4gPiA+
-IExpdml1DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBtYWxp
-ZHBfaHdfc2V0Yml0cyhod2RldiwgdmFsLA0KPiA+ID4gPiA+IE1BTElEUDUwMF9SUU9TX1FVQUxJ
-VFkpOw0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICBlbHNlDQo+ID4gPiA+ID4gPiArICAgICAg
-ICAgICAgICAgICAgICAgbWFsaWRwX2h3X2NsZWFyYml0cyhod2RldiwgdmFsLA0KPiA+ID4gPiA+
-IE1BTElEUDUwMF9SUU9TX1FVQUxJVFkpOw0KPiA+ID4gPiA+ID4gKyAgICAgfQ0KPiA+ID4gPiA+
-ID4gIH0NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiAgaW50IG1hbGlkcF9mb3JtYXRfZ2V0X2Jw
-cCh1MzIgZm10KSBkaWZmIC0tZ2l0DQo+ID4gPiA+ID4gPiBhL2RyaXZlcnMvZ3B1L2RybS9hcm0v
-bWFsaWRwX2h3LmgNCj4gPiA+ID4gPiA+IGIvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcu
-aCBpbmRleA0KPiA+ID4gOTY4YTY1ZWVkMzcxLi5lNGMzNmJjOTBiZGENCj4gPiA+ID4gPiA+IDEw
-MDY0NA0KPiA+ID4gPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuaA0K
-PiA+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfaHcuaA0KPiA+ID4g
-PiA+ID4gQEAgLTI1MSw2ICsyNTEsOSBAQCBzdHJ1Y3QgbWFsaWRwX2h3X2RldmljZSB7DQo+ID4g
-PiA+ID4gPg0KPiA+ID4gPiA+ID4gICAgICAgLyogc2l6ZSBvZiBtZW1vcnkgdXNlZCBmb3Igcm90
-YXRpbmcgbGF5ZXJzLCB1cCB0byB0d28NCj4gPiA+ID4gPiA+IGJhbmtzIGF2YWlsYWJsZQ0KPiA+
-ID4gPiA+ICovDQo+ID4gPiA+ID4gPiAgICAgICB1MzIgcm90YXRpb25fbWVtb3J5WzJdOw0KPiA+
-ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgLyogcHJpb3JpdHkgbGV2ZWwgb2YgUlFPUyBy
-ZWdpc3RlciB1c2VkIGZvciBkcml2ZW4gdGhlDQo+ID4gPiA+ID4gPiArIEFSUU9TIHNpZ25hbA0K
-PiA+ID4gKi8NCj4gPiA+ID4gPiA+ICsgICAgIHUzMiBhcnFvc192YWx1ZTsNCj4gPiA+ID4gPiA+
-ICB9Ow0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ICBzdGF0aWMgaW5saW5lIHUzMiBtYWxpZHBf
-aHdfcmVhZChzdHJ1Y3QgbWFsaWRwX2h3X2RldmljZQ0KPiA+ID4gPiA+ID4gKmh3ZGV2LA0KPiA+
-ID4gPiA+ID4gdTMyDQo+ID4gPiA+ID4gPiByZWcpIGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vYXJtL21hbGlkcF9yZWdzLmgNCj4gPiA+ID4gPiA+IGIvZHJpdmVycy9ncHUvZHJtL2FybS9t
-YWxpZHBfcmVncy5oDQo+ID4gPiA+ID4gPiBpbmRleCA5OTMwMzE1NDJmYTEuLjUxNGM1MGRjYjc0
-ZCAxMDA2NDQNCj4gPiA+ID4gPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vbWFsaWRwX3Jl
-Z3MuaA0KPiA+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9tYWxpZHBfcmVncy5o
-DQo+ID4gPiA+ID4gPiBAQCAtMjEwLDYgKzIxMCwxNiBAQA0KPiA+ID4gPiA+ID4gICNkZWZpbmUg
-TUFMSURQNTAwX0NPTkZJR19WQUxJRCAgICAgICAgICAgICAgIDB4MDBmMDANCj4gPiA+ID4gPiA+
-ICAjZGVmaW5lIE1BTElEUDUwMF9DT05GSUdfSUQgICAgICAgICAgMHgwMGZkNA0KPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+ICsvKg0KPiA+ID4gPiA+ID4gKyAqIFRoZSBxdWFsaXR5IG9mIHNlcnZp
-Y2UgKFFvUykgcmVnaXN0ZXIgb24gdGhlIERQNTAwLiBSUU9TDQo+ID4gPiA+ID4gPiArcmVnaXN0
-ZXIgdmFsdWVzDQo+ID4gPiA+ID4gPiArICogYXJlIGRyaXZlbiBieSB0aGUgQVJRT1Mgc2lnbmFs
-LCB1c2luZyBBWEkgdHJhbnNhY2F0aW9ucywNCj4gPiA+ID4gPiA+ICtkZXBlbmRlbnQgb24gdGhl
-DQo+ID4gPiA+ID4gPiArICogRklGTyBpbnB1dCBsZXZlbC4NCj4gPiA+ID4gPiA+ICsgKiBUaGUg
-UlFPUyByZWdpc3RlciBjYW4gYWxzbyBzZXQgUW9TIGxldmVscyBmb3I6DQo+ID4gPiA+ID4gPiAr
-ICogICAgLSBSRURfQVJRT1MgICBAIEEgNC1iaXQgc2lnbmFsIHZhbHVlIGZvciBjbG9zZSB0byB1
-bmRlcmZsb3cNCj4gPiA+ID4gPiBjb25kaXRpb25zDQo+ID4gPiA+ID4gPiArICogICAgLSBHUkVF
-Tl9BUlFPUyBAIEEgNC1iaXQgc2lnbmFsIHZhbHVlIGZvciBub3JtYWwgY29uZGl0aW9ucw0KPiA+
-ID4gPiA+ID4gKyAqLw0KPiA+ID4gPiA+ID4gKyNkZWZpbmUgTUFMSURQNTAwX1JRT1NfUVVBTElU
-WSAgICAgICAgICAweDAwNTAwDQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiAgLyogcmVnaXN0
-ZXIgb2Zmc2V0cyBhbmQgYml0cyBzcGVjaWZpYyB0byBEUDU1MC9EUDY1MCAqLw0KPiA+ID4gPiA+
-ID4gICNkZWZpbmUgTUFMSURQNTUwX0FERFJfU1BBQ0VfU0laRSAgICAweDEwMDAwDQo+ID4gPiA+
-ID4gPiAgI2RlZmluZSBNQUxJRFA1NTBfREVfQ09OVFJPTCAgICAgICAgIDB4MDAwMTANCj4gPiA+
-ID4gPiA+IC0tDQo+ID4gPiA+ID4gPiAyLjE3LjENCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiAtLQ0KPiA+ID4gPiA+ID09PT09PT09PT09PT09PT09PT09DQo+ID4gPiA+ID4gfCBJ
-IHdvdWxkIGxpa2UgdG8gfA0KPiA+ID4gPiA+IHwgZml4IHRoZSB3b3JsZCwgIHwNCj4gPiA+ID4g
-PiB8IGJ1dCB0aGV5J3JlIG5vdCB8DQo+ID4gPiA+ID4gfCBnaXZpbmcgbWUgdGhlICAgfA0KPiA+
-ID4gPiA+ICBcIHNvdXJjZSBjb2RlISAgLw0KPiA+ID4gPiA+ICAgLS0tLS0tLS0tLS0tLS0tDQo+
-ID4gPiA+ID4gICAgIMKvXF8o44OEKV8vwq8NCj4gPiA+DQo+ID4gPiAtLQ0KPiA+ID4gPT09PT09
-PT09PT09PT09PT09PT0NCj4gPiA+IHwgSSB3b3VsZCBsaWtlIHRvIHwNCj4gPiA+IHwgZml4IHRo
-ZSB3b3JsZCwgIHwNCj4gPiA+IHwgYnV0IHRoZXkncmUgbm90IHwNCj4gPiA+IHwgZ2l2aW5nIG1l
-IHRoZSAgIHwNCj4gPiA+ICBcIHNvdXJjZSBjb2RlISAgLw0KPiA+ID4gICAtLS0tLS0tLS0tLS0t
-LS0NCj4gPiA+ICAgICDCr1xfKOODhClfL8KvDQo+IA0KPiAtLQ0KPiA9PT09PT09PT09PT09PT09
-PT09PQ0KPiB8IEkgd291bGQgbGlrZSB0byB8DQo+IHwgZml4IHRoZSB3b3JsZCwgIHwNCj4gfCBi
-dXQgdGhleSdyZSBub3QgfA0KPiB8IGdpdmluZyBtZSB0aGUgICB8DQo+ICBcIHNvdXJjZSBjb2Rl
-ISAgLw0KPiAgIC0tLS0tLS0tLS0tLS0tLQ0KPiAgICAgwq9cXyjjg4QpXy/Crw0K
+The UPS feature only works for runtime suspend, so UPS flags only
+need to be set before enabling runtime suspend. Therefore, I create
+a struct to record relative information, and use it before runtime
+suspend.
+
+All chips could record such information, even though not all of
+them support the feature of UPS. Then, some functions could be
+combined.
+
+Signed-off-by: Hayes Wang <hayeswang@realtek.com>
+---
+v2:
+Fix the conflicts after commit 771efeda3936 ("r8152: modify
+rtl8152_set_speed function") is applied.
+---
+ drivers/net/usb/r8152.c | 208 +++++++++++++++++++++++-----------------
+ 1 file changed, 120 insertions(+), 88 deletions(-)
+
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index ec23c166e67b..08726090570e 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -445,18 +445,18 @@
+ #define UPS_FLAGS_250M_CKDIV		BIT(2)
+ #define UPS_FLAGS_EN_ALDPS		BIT(3)
+ #define UPS_FLAGS_CTAP_SHORT_DIS	BIT(4)
+-#define UPS_FLAGS_SPEED_MASK		(0xf << 16)
+ #define ups_flags_speed(x)		((x) << 16)
+ #define UPS_FLAGS_EN_EEE		BIT(20)
+ #define UPS_FLAGS_EN_500M_EEE		BIT(21)
+ #define UPS_FLAGS_EN_EEE_CKDIV		BIT(22)
++#define UPS_FLAGS_EEE_PLLOFF_100	BIT(23)
+ #define UPS_FLAGS_EEE_PLLOFF_GIGA	BIT(24)
+ #define UPS_FLAGS_EEE_CMOD_LV_EN	BIT(25)
+ #define UPS_FLAGS_EN_GREEN		BIT(26)
+ #define UPS_FLAGS_EN_FLOW_CTR		BIT(27)
+ 
+ enum spd_duplex {
+-	NWAY_10M_HALF = 1,
++	NWAY_10M_HALF,
+ 	NWAY_10M_FULL,
+ 	NWAY_100M_HALF,
+ 	NWAY_100M_FULL,
+@@ -749,6 +749,23 @@ struct r8152 {
+ 		void (*autosuspend_en)(struct r8152 *tp, bool enable);
+ 	} rtl_ops;
+ 
++	struct ups_info {
++		u32 _10m_ckdiv:1;
++		u32 _250m_ckdiv:1;
++		u32 aldps:1;
++		u32 lite_mode:2;
++		u32 speed_duplex:4;
++		u32 eee:1;
++		u32 eee_lite:1;
++		u32 eee_ckdiv:1;
++		u32 eee_plloff_100:1;
++		u32 eee_plloff_giga:1;
++		u32 eee_cmod_lv:1;
++		u32 green:1;
++		u32 flow_control:1;
++		u32 ctap_short_off:1;
++	} ups_info;
++
+ 	atomic_t rx_count;
+ 
+ 	bool eee_en;
+@@ -2865,14 +2882,76 @@ static void r8153_u2p3en(struct r8152 *tp, bool enable)
+ 	ocp_write_word(tp, MCU_TYPE_USB, USB_U2P3_CTRL, ocp_data);
+ }
+ 
+-static void r8153b_ups_flags_w1w0(struct r8152 *tp, u32 set, u32 clear)
++static void r8153b_ups_flags(struct r8152 *tp)
+ {
+-	u32 ocp_data;
++	u32 ups_flags = 0;
++
++	if (tp->ups_info.green)
++		ups_flags |= UPS_FLAGS_EN_GREEN;
++
++	if (tp->ups_info.aldps)
++		ups_flags |= UPS_FLAGS_EN_ALDPS;
++
++	if (tp->ups_info.eee)
++		ups_flags |= UPS_FLAGS_EN_EEE;
++
++	if (tp->ups_info.flow_control)
++		ups_flags |= UPS_FLAGS_EN_FLOW_CTR;
++
++	if (tp->ups_info.eee_ckdiv)
++		ups_flags |= UPS_FLAGS_EN_EEE_CKDIV;
++
++	if (tp->ups_info.eee_cmod_lv)
++		ups_flags |= UPS_FLAGS_EEE_CMOD_LV_EN;
++
++	if (tp->ups_info._10m_ckdiv)
++		ups_flags |= UPS_FLAGS_EN_10M_CKDIV;
++
++	if (tp->ups_info.eee_plloff_100)
++		ups_flags |= UPS_FLAGS_EEE_PLLOFF_100;
+ 
+-	ocp_data = ocp_read_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS);
+-	ocp_data &= ~clear;
+-	ocp_data |= set;
+-	ocp_write_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS, ocp_data);
++	if (tp->ups_info.eee_plloff_giga)
++		ups_flags |= UPS_FLAGS_EEE_PLLOFF_GIGA;
++
++	if (tp->ups_info._250m_ckdiv)
++		ups_flags |= UPS_FLAGS_250M_CKDIV;
++
++	if (tp->ups_info.ctap_short_off)
++		ups_flags |= UPS_FLAGS_CTAP_SHORT_DIS;
++
++	switch (tp->ups_info.speed_duplex) {
++	case NWAY_10M_HALF:
++		ups_flags |= ups_flags_speed(1);
++		break;
++	case NWAY_10M_FULL:
++		ups_flags |= ups_flags_speed(2);
++		break;
++	case NWAY_100M_HALF:
++		ups_flags |= ups_flags_speed(3);
++		break;
++	case NWAY_100M_FULL:
++		ups_flags |= ups_flags_speed(4);
++		break;
++	case NWAY_1000M_FULL:
++		ups_flags |= ups_flags_speed(5);
++		break;
++	case FORCE_10M_HALF:
++		ups_flags |= ups_flags_speed(6);
++		break;
++	case FORCE_10M_FULL:
++		ups_flags |= ups_flags_speed(7);
++		break;
++	case FORCE_100M_HALF:
++		ups_flags |= ups_flags_speed(8);
++		break;
++	case FORCE_100M_FULL:
++		ups_flags |= ups_flags_speed(9);
++		break;
++	default:
++		break;
++	}
++
++	ocp_write_dword(tp, MCU_TYPE_USB, USB_UPS_FLAGS, ups_flags);
+ }
+ 
+ static void r8153b_green_en(struct r8152 *tp, bool enable)
+@@ -2893,7 +2972,7 @@ static void r8153b_green_en(struct r8152 *tp, bool enable)
+ 	data |= GREEN_ETH_EN;
+ 	sram_write(tp, SRAM_GREEN_CFG, data);
+ 
+-	r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_GREEN, 0);
++	tp->ups_info.green = enable;
+ }
+ 
+ static u16 r8153_phy_status(struct r8152 *tp, u16 desired)
+@@ -2923,6 +3002,8 @@ static void r8153b_ups_en(struct r8152 *tp, bool enable)
+ 	u32 ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_POWER_CUT);
+ 
+ 	if (enable) {
++		r8153b_ups_flags(tp);
++
+ 		ocp_data |= UPS_EN | USP_PREWAKE | PHASE2_EN;
+ 		ocp_write_byte(tp, MCU_TYPE_USB, USB_POWER_CUT, ocp_data);
+ 
+@@ -3231,16 +3312,8 @@ static void r8153_eee_en(struct r8152 *tp, bool enable)
+ 
+ 	ocp_write_word(tp, MCU_TYPE_PLA, PLA_EEE_CR, ocp_data);
+ 	ocp_reg_write(tp, OCP_EEE_CFG, config);
+-}
+-
+-static void r8153b_eee_en(struct r8152 *tp, bool enable)
+-{
+-	r8153_eee_en(tp, enable);
+ 
+-	if (enable)
+-		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_EEE, 0);
+-	else
+-		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_EEE);
++	tp->ups_info.eee = enable;
+ }
+ 
+ static void rtl_eee_enable(struct r8152 *tp, bool enable)
+@@ -3262,21 +3335,13 @@ static void rtl_eee_enable(struct r8152 *tp, bool enable)
+ 	case RTL_VER_04:
+ 	case RTL_VER_05:
+ 	case RTL_VER_06:
+-		if (enable) {
+-			r8153_eee_en(tp, true);
+-			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
+-		} else {
+-			r8153_eee_en(tp, false);
+-			ocp_reg_write(tp, OCP_EEE_ADV, 0);
+-		}
+-		break;
+ 	case RTL_VER_08:
+ 	case RTL_VER_09:
+ 		if (enable) {
+-			r8153b_eee_en(tp, true);
++			r8153_eee_en(tp, true);
+ 			ocp_reg_write(tp, OCP_EEE_ADV, tp->eee_adv);
+ 		} else {
+-			r8153b_eee_en(tp, false);
++			r8153_eee_en(tp, false);
+ 			ocp_reg_write(tp, OCP_EEE_ADV, 0);
+ 		}
+ 		break;
+@@ -3292,6 +3357,8 @@ static void r8152b_enable_fc(struct r8152 *tp)
+ 	anar = r8152_mdio_read(tp, MII_ADVERTISE);
+ 	anar |= ADVERTISE_PAUSE_CAP | ADVERTISE_PAUSE_ASYM;
+ 	r8152_mdio_write(tp, MII_ADVERTISE, anar);
++
++	tp->ups_info.flow_control = true;
+ }
+ 
+ static void rtl8152_disable(struct r8152 *tp)
+@@ -3485,22 +3552,8 @@ static void r8153_aldps_en(struct r8152 *tp, bool enable)
+ 				break;
+ 		}
+ 	}
+-}
+ 
+-static void r8153b_aldps_en(struct r8152 *tp, bool enable)
+-{
+-	r8153_aldps_en(tp, enable);
+-
+-	if (enable)
+-		r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_ALDPS, 0);
+-	else
+-		r8153b_ups_flags_w1w0(tp, 0, UPS_FLAGS_EN_ALDPS);
+-}
+-
+-static void r8153b_enable_fc(struct r8152 *tp)
+-{
+-	r8152b_enable_fc(tp);
+-	r8153b_ups_flags_w1w0(tp, UPS_FLAGS_EN_FLOW_CTR, 0);
++	tp->ups_info.aldps = enable;
+ }
+ 
+ static void r8153_hw_phy_cfg(struct r8152 *tp)
+@@ -3577,11 +3630,11 @@ static u32 r8152_efuse_read(struct r8152 *tp, u8 addr)
+ 
+ static void r8153b_hw_phy_cfg(struct r8152 *tp)
+ {
+-	u32 ocp_data, ups_flags = 0;
++	u32 ocp_data;
+ 	u16 data;
+ 
+ 	/* disable ALDPS before updating the PHY parameters */
+-	r8153b_aldps_en(tp, false);
++	r8153_aldps_en(tp, false);
+ 
+ 	/* disable EEE before updating the PHY parameters */
+ 	rtl_eee_enable(tp, false);
+@@ -3629,28 +3682,27 @@ static void r8153b_hw_phy_cfg(struct r8152 *tp)
+ 		data = ocp_reg_read(tp, OCP_POWER_CFG);
+ 		data |= EEE_CLKDIV_EN;
+ 		ocp_reg_write(tp, OCP_POWER_CFG, data);
++		tp->ups_info.eee_ckdiv = true;
+ 
+ 		data = ocp_reg_read(tp, OCP_DOWN_SPEED);
+ 		data |= EN_EEE_CMODE | EN_EEE_1000 | EN_10M_CLKDIV;
+ 		ocp_reg_write(tp, OCP_DOWN_SPEED, data);
++		tp->ups_info.eee_cmod_lv = true;
++		tp->ups_info._10m_ckdiv = true;
++		tp->ups_info.eee_plloff_giga = true;
+ 
+ 		ocp_reg_write(tp, OCP_SYSCLK_CFG, 0);
+ 		ocp_reg_write(tp, OCP_SYSCLK_CFG, clk_div_expo(5));
+-
+-		ups_flags |= UPS_FLAGS_EN_10M_CKDIV | UPS_FLAGS_250M_CKDIV |
+-			     UPS_FLAGS_EN_EEE_CKDIV | UPS_FLAGS_EEE_CMOD_LV_EN |
+-			     UPS_FLAGS_EEE_PLLOFF_GIGA;
++		tp->ups_info._250m_ckdiv = true;
+ 
+ 		r8153_patch_request(tp, false);
+ 	}
+ 
+-	r8153b_ups_flags_w1w0(tp, ups_flags, 0);
+-
+ 	if (tp->eee_en)
+ 		rtl_eee_enable(tp, true);
+ 
+-	r8153b_aldps_en(tp, true);
+-	r8153b_enable_fc(tp);
++	r8153_aldps_en(tp, true);
++	r8152b_enable_fc(tp);
+ 	r8153_u2p3en(tp, true);
+ 
+ 	set_bit(PHY_RESET, &tp->flags);
+@@ -3801,18 +3853,9 @@ static void rtl8153_disable(struct r8152 *tp)
+ 	r8153_aldps_en(tp, true);
+ }
+ 
+-static void rtl8153b_disable(struct r8152 *tp)
+-{
+-	r8153b_aldps_en(tp, false);
+-	rtl_disable(tp);
+-	rtl_reset_bmu(tp);
+-	r8153b_aldps_en(tp, true);
+-}
+-
+ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
+ 			     u32 advertising)
+ {
+-	enum spd_duplex speed_duplex;
+ 	u16 bmcr;
+ 	int ret = 0;
+ 
+@@ -3825,24 +3868,24 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
+ 			bmcr = BMCR_SPEED10;
+ 			if (duplex == DUPLEX_FULL) {
+ 				bmcr |= BMCR_FULLDPLX;
+-				speed_duplex = FORCE_10M_FULL;
++				tp->ups_info.speed_duplex = FORCE_10M_FULL;
+ 			} else {
+-				speed_duplex = FORCE_10M_HALF;
++				tp->ups_info.speed_duplex = FORCE_10M_HALF;
+ 			}
+ 			break;
+ 		case SPEED_100:
+ 			bmcr = BMCR_SPEED100;
+ 			if (duplex == DUPLEX_FULL) {
+ 				bmcr |= BMCR_FULLDPLX;
+-				speed_duplex = FORCE_100M_FULL;
++				tp->ups_info.speed_duplex = FORCE_100M_FULL;
+ 			} else {
+-				speed_duplex = FORCE_100M_HALF;
++				tp->ups_info.speed_duplex = FORCE_100M_HALF;
+ 			}
+ 			break;
+ 		case SPEED_1000:
+ 			if (tp->mii.supports_gmii) {
+ 				bmcr = BMCR_SPEED1000 | BMCR_FULLDPLX;
+-				speed_duplex = NWAY_1000M_FULL;
++				tp->ups_info.speed_duplex = NWAY_1000M_FULL;
+ 				break;
+ 			}
+ 			/* fall through */
+@@ -3875,20 +3918,20 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
+ 				ADVERTISE_100HALF | ADVERTISE_100FULL);
+ 		if (advertising & RTL_ADVERTISED_10_HALF) {
+ 			tmp1 |= ADVERTISE_10HALF;
+-			speed_duplex = NWAY_10M_HALF;
++			tp->ups_info.speed_duplex = NWAY_10M_HALF;
+ 		}
+ 		if (advertising & RTL_ADVERTISED_10_FULL) {
+ 			tmp1 |= ADVERTISE_10FULL;
+-			speed_duplex = NWAY_10M_FULL;
++			tp->ups_info.speed_duplex = NWAY_10M_FULL;
+ 		}
+ 
+ 		if (advertising & RTL_ADVERTISED_100_HALF) {
+ 			tmp1 |= ADVERTISE_100HALF;
+-			speed_duplex = NWAY_100M_HALF;
++			tp->ups_info.speed_duplex = NWAY_100M_HALF;
+ 		}
+ 		if (advertising & RTL_ADVERTISED_100_FULL) {
+ 			tmp1 |= ADVERTISE_100FULL;
+-			speed_duplex = NWAY_100M_FULL;
++			tp->ups_info.speed_duplex = NWAY_100M_FULL;
+ 		}
+ 
+ 		if (anar != tmp1) {
+@@ -3905,7 +3948,7 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
+ 
+ 			if (advertising & RTL_ADVERTISED_1000_FULL) {
+ 				tmp1 |= ADVERTISE_1000FULL;
+-				speed_duplex = NWAY_1000M_FULL;
++				tp->ups_info.speed_duplex = NWAY_1000M_FULL;
+ 			}
+ 
+ 			if (gbcr != tmp1)
+@@ -3922,17 +3965,6 @@ static int rtl8152_set_speed(struct r8152 *tp, u8 autoneg, u32 speed, u8 duplex,
+ 
+ 	r8152_mdio_write(tp, MII_BMCR, bmcr);
+ 
+-	switch (tp->version) {
+-	case RTL_VER_08:
+-	case RTL_VER_09:
+-		r8153b_ups_flags_w1w0(tp, ups_flags_speed(speed_duplex),
+-				      UPS_FLAGS_SPEED_MASK);
+-		break;
+-
+-	default:
+-		break;
+-	}
+-
+ 	if (bmcr & BMCR_RESET) {
+ 		int i;
+ 
+@@ -4017,12 +4049,12 @@ static void rtl8153b_up(struct r8152 *tp)
+ 
+ 	r8153b_u1u2en(tp, false);
+ 	r8153_u2p3en(tp, false);
+-	r8153b_aldps_en(tp, false);
++	r8153_aldps_en(tp, false);
+ 
+ 	r8153_first_init(tp);
+ 	ocp_write_dword(tp, MCU_TYPE_USB, USB_RX_BUF_TH, RX_THR_B);
+ 
+-	r8153b_aldps_en(tp, true);
++	r8153_aldps_en(tp, true);
+ 	r8153_u2p3en(tp, true);
+ 	r8153b_u1u2en(tp, true);
+ }
+@@ -4037,9 +4069,9 @@ static void rtl8153b_down(struct r8152 *tp)
+ 	r8153b_u1u2en(tp, false);
+ 	r8153_u2p3en(tp, false);
+ 	r8153b_power_cut_en(tp, false);
+-	r8153b_aldps_en(tp, false);
++	r8153_aldps_en(tp, false);
+ 	r8153_enter_oob(tp);
+-	r8153b_aldps_en(tp, true);
++	r8153_aldps_en(tp, true);
+ }
+ 
+ static bool rtl8152_in_nway(struct r8152 *tp)
+@@ -5445,7 +5477,7 @@ static int rtl_ops_init(struct r8152 *tp)
+ 	case RTL_VER_09:
+ 		ops->init		= r8153b_init;
+ 		ops->enable		= rtl8153_enable;
+-		ops->disable		= rtl8153b_disable;
++		ops->disable		= rtl8153_disable;
+ 		ops->up			= rtl8153b_up;
+ 		ops->down		= rtl8153b_down;
+ 		ops->unload		= rtl8153b_unload;
+-- 
+2.21.0
+
