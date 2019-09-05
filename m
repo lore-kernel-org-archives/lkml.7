@@ -2,110 +2,120 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 627E8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4B0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8407520828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B642067B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Gey3+CNr"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pn3UjrWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404023AbfIEUkM (ORCPT
+        id S2404033AbfIEUpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:40:12 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41933 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388834AbfIEUkL (ORCPT
+        Thu, 5 Sep 2019 16:45:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37826 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731142AbfIEUpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:40:11 -0400
-Received: by mail-pl1-f194.google.com with SMTP id m9so1925197pls.8
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=VpJQlHdzOL058GU4wP50cEjksEXzOUX3pb5wvWLJu64=;
-        b=Gey3+CNrdw64IW7vegKv4QWSElXeflb3/Gxy6dQ2wD/aUu5pkiNOpTrKaCmRUsOMSy
-         zUTs/UyK7dICk5MzNYx5SWhQYTmIZ8CGeYZNwFv5FytESHKQucDLj12213hLkrRiA3h0
-         ZW9R8hEaNJzR+xxm0cVuXW+OxS+SEHN3+KPDdandS5SRTgiO5VNlTu1Ano4df2zNrEMd
-         DjA2BWRrdgJOoQjA61B4zk0ntC2jme7mMIdmWVUpW/u9JS2Dps+6Uq7BT0kaAOvlJGxi
-         Hi4xiO33WQEvM9fSPVzsTXSMhtoegaqTVyCWvY2ocYACd2ZMXC0DDzsX74dttYU01bXd
-         M+PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=VpJQlHdzOL058GU4wP50cEjksEXzOUX3pb5wvWLJu64=;
-        b=uQ90lPdoRpi0+aBGTnbIZJiTAr1rRamaxYqTUBKNEk4f/s725Cc0B+0jPPKH8vt66C
-         aALqnmrOqDO49vRDXYAOeyO9QFJPlpSfjGa/WssncbKQ/laBjgOzCFrb7z/1DQPSjLWp
-         usrFf4BBNHBgvt/IqsntvKjeYimhNVJSuhrgFocnd/mRTXpH7LyYrijCVW9OqXXjmoGB
-         TEFmejCitpInMMk/s5VjxzHu97xj9FZNiiS8Fwo4XYbXt25C9eZrq4y9Jfk0IXSXEfhM
-         k1Uwt7xyU9ocW44iyArE16o/yig8ek0OPSBQU2eWTb5/LG45NlLtGU/B2rp4DoKgyUgg
-         dxCQ==
-X-Gm-Message-State: APjAAAU00WADNw6oPQfkQpMWQ25U3/MJMvSHoevtRfwnfBs+Tk2kHf+g
-        2mOCn4iabEmYpswTI4BS/ZUcbw==
-X-Google-Smtp-Source: APXvYqyAQ4j/FUjC8TaAxYwTxb/knA75vtgilVu+e635/0e4hiV75mi8XILgeD8bJPqHj3zWdWW4jw==
-X-Received: by 2002:a17:902:708c:: with SMTP id z12mr5615924plk.173.1567716010812;
-        Thu, 05 Sep 2019 13:40:10 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id m4sm4706664pgs.71.2019.09.05.13.40.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 05 Sep 2019 13:40:10 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: meson: sm1: set gpio interrupt controller compatible
-In-Reply-To: <20190902160334.14321-1-jbrunet@baylibre.com>
-References: <20190902160334.14321-1-jbrunet@baylibre.com>
-Date:   Thu, 05 Sep 2019 13:40:09 -0700
-Message-ID: <7hpnkeqxxy.fsf@baylibre.com>
+        Thu, 5 Sep 2019 16:45:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85KhxwM001368;
+        Thu, 5 Sep 2019 20:44:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=aqDnQxZxonMvjcV/XCftl9y61xAtbi3wkQPOl+rmUng=;
+ b=Pn3UjrWJWLwxEHkpvou1UJExMc0Liv/nmZSrk7VX++NAw1ezKbm9WaQf4lURWXxrI1/a
+ Vkw/DVE95sl5Rjy6DwZh/dXUEqp/O8E77IEdgPeQ0AY7CGOTNkOrEZtO8t0cYoaD6flW
+ l1VWePBA1+IPut4Ds8jbbfmNW9ZzTnf9H4EnXfzjaLMsgN3BjKwJy2NpkWUrO7cQKjOB
+ Eu2dAeOXqRApuMG7SVYk3L509nzC4N027wGWsIy4NZfcaWQnwiWk/l7Esak/m7DEsisk
+ IMh/TW6L/ZwV2WJr/VxWgO8X1UDNDFeaGebBsQo6k5NqjkUHA+C9Ol5yTIpa5NLunS+T BA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2uu9g9026y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 20:44:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85KhQo5157189;
+        Thu, 5 Sep 2019 20:44:53 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2utpmbtvfy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 20:44:53 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85Kinhv005857;
+        Thu, 5 Sep 2019 20:44:49 GMT
+Received: from [10.132.91.113] (/10.132.91.113)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 13:44:49 -0700
+Subject: Re: [RFC PATCH 7/9] sched: search SMT before LLC domain
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com,
+        patrick.bellasi@arm.com
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+ <20190830174944.21741-8-subhra.mazumdar@oracle.com>
+ <20190905093127.GI2349@hirez.programming.kicks-ass.net>
+From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Message-ID: <fadf55b2-c825-8636-6c9a-6eedf9a20733@oracle.com>
+Date:   Thu, 5 Sep 2019 13:40:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190905093127.GI2349@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909050193
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909050193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> Set the appropriate gpio interrupt controller compatible for the
-> sm1 SoC family. This newer version of the controller can now
-> trig irq on both edge of the input signal
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-
-Queued.
-
-I may do a late round for the dev cycle of v5.4, otherwise this will go
-for v5.5.  If it goes for v5.5, it should probably have a Fixes tag, no?
-
-Kevin
-
-> ---
->  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-> index 521573f3a5ba..6152e928aef2 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
-> @@ -134,6 +134,11 @@
->  	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
->  };
->  
-> +&gpio_intc {
-> +	compatible = "amlogic,meson-sm1-gpio-intc",
-> +		     "amlogic,meson-gpio-intc";
-> +};
-> +
->  &pwrc {
->  	compatible = "amlogic,meson-sm1-pwrc";
->  };
-> -- 
-> 2.21.0
+On 9/5/19 2:31 AM, Peter Zijlstra wrote:
+> On Fri, Aug 30, 2019 at 10:49:42AM -0700, subhra mazumdar wrote:
+>> Search SMT siblings before all CPUs in LLC domain for idle CPU. This helps
+>> in L1 cache locality.
+>> ---
+>>   kernel/sched/fair.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 8856503..94dd4a32 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6274,11 +6274,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
+>>   			return i;
+>>   	}
+>>   
+>> -	i = select_idle_cpu(p, sd, target);
+>> +	i = select_idle_smt(p, target);
+>>   	if ((unsigned)i < nr_cpumask_bits)
+>>   		return i;
+>>   
+>> -	i = select_idle_smt(p, target);
+>> +	i = select_idle_cpu(p, sd, target);
+>>   	if ((unsigned)i < nr_cpumask_bits)
+>>   		return i;
+>>   
+> But it is absolutely conceptually wrong. An idle core is a much better
+> target than an idle sibling.
+This is select_idle_smt not select_idle_core.
