@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D213C3A5AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56788C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 151D920693
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D6D2173B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfIEGq0 (ORCPT
+        id S1731378AbfIEGq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:46:26 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35678 "EHLO huawei.com"
+        Thu, 5 Sep 2019 02:46:27 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6678 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726120AbfIEGqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:46:23 -0400
+        id S1726089AbfIEGqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 02:46:24 -0400
 Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A5A599B3E27DF3E625FB;
+        by Forcepoint Email with ESMTP id 7D494C6F98C930736F07;
         Thu,  5 Sep 2019 14:46:21 +0800 (CST)
 Received: from linux-ibm.site (10.175.102.37) by
  DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 5 Sep 2019 14:46:12 +0800
+ 14.3.439.0; Thu, 5 Sep 2019 14:46:11 +0800
 From:   zhong jiang <zhongjiang@huawei.com>
 To:     <tony@atomide.com>, <udeep.dutt@intel.com>,
         <ashutosh.dixit@intel.com>, <gregkh@linuxfoundation.org>,
@@ -33,9 +34,9 @@ To:     <tony@atomide.com>, <udeep.dutt@intel.com>,
 CC:     <zhongjiang@huawei.com>, <linux-kernel@vger.kernel.org>,
         <linux-rtc@vger.kernel.org>, <arnd@arndb.de>,
         <lorenzo.pieralisi@arm.com>
-Subject: [PATCH 2/4] misc: mic: Use PTR_ERR_OR_ZERO rather than its implementation
-Date:   Thu, 5 Sep 2019 14:43:13 +0800
-Message-ID: <1567665795-5901-3-git-send-email-zhongjiang@huawei.com>
+Subject: [PATCH 1/4] bus: ti-sysc: Use PTR_ERR_OR_ZERO rather than its implementation
+Date:   Thu, 5 Sep 2019 14:43:12 +0800
+Message-ID: <1567665795-5901-2-git-send-email-zhongjiang@huawei.com>
 X-Mailer: git-send-email 1.7.12.4
 In-Reply-To: <1567665795-5901-1-git-send-email-zhongjiang@huawei.com>
 References: <1567665795-5901-1-git-send-email-zhongjiang@huawei.com>
@@ -53,25 +54,25 @@ use it directly. hence just replace it.
 
 Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 ---
- drivers/misc/mic/scif/scif_epd.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/bus/ti-sysc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/misc/mic/scif/scif_epd.h b/drivers/misc/mic/scif/scif_epd.h
-index d3837f8..0b9dfe1 100644
---- a/drivers/misc/mic/scif/scif_epd.h
-+++ b/drivers/misc/mic/scif/scif_epd.h
-@@ -156,9 +156,8 @@ static inline int scif_verify_epd(struct scif_endpt *ep)
- static inline int scif_anon_inode_getfile(scif_epd_t epd)
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 9207ac2..6f4c102 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -504,10 +504,8 @@ static int sysc_init_resets(struct sysc *ddata)
  {
- 	epd->anon = anon_inode_getfile("scif", &scif_anon_fops, NULL, 0);
--	if (IS_ERR(epd->anon))
--		return PTR_ERR(epd->anon);
+ 	ddata->rsts =
+ 		devm_reset_control_get_optional_shared(ddata->dev, "rstctrl");
+-	if (IS_ERR(ddata->rsts))
+-		return PTR_ERR(ddata->rsts);
+ 
 -	return 0;
-+
-+	return PTR_ERR_OR_ZERO(epd->anon);
++	return PTR_ERR_OR_ZERO(ddata->rsts);
  }
  
- static inline void scif_anon_inode_fput(scif_epd_t epd)
+ /**
 -- 
 1.7.12.4
 
