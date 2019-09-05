@@ -2,94 +2,88 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234F4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6DAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E038D20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:53:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lbxwZdSk"
+	by mail.kernel.org (Postfix) with ESMTP id B346520825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390388AbfIEQxj (ORCPT
+        id S2390462AbfIEQyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:53:39 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37699 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbfIEQxi (ORCPT
+        Thu, 5 Sep 2019 12:54:11 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41040 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbfIEQyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:53:38 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y9so2139002pfl.4;
-        Thu, 05 Sep 2019 09:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RWnMjjgITJJqdE2woZBvos5GFZ5W8pugG64G2X+tFzM=;
-        b=lbxwZdSkgDsz8thBfK05SolVFonN7ns0WmIQsha4NqlZij7+w9cC8i3INFtRYbZRhj
-         EZVmNIrGWtUqZAZYANLqTiVo+9NkqO74p/Yivm87vBHoTA4jjeUtfZAKOlhV2eqP2gfT
-         0EK+OKsuGeXkWrIc37ztsq2d+ZH86hMUatvBzyyA6VAWfZ4R6/Om+LRll2wS7rvx+Wsr
-         s37QR+aMWh9piE6l+t/qFRTNFU4jtzBGmKAibaA1GpomsO3mdfEf+euc7ZISjzN1RTtz
-         VPUNDeWyYxal1zJvbmNq99KqDPDj9TkES+HCLFsjHKTdaHFlpBBlfGN6m3HzhetJq0Sq
-         Rccg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RWnMjjgITJJqdE2woZBvos5GFZ5W8pugG64G2X+tFzM=;
-        b=BDm0vWGTwooWaRYwcrfoWSFqr4YVhJkjLFgEXhxwiWJC5VtautzBl1BubplV5jP7TH
-         csA6B4ztdw8b7kOVvpDJ0x92zXD5KNvIPJm+jF+fC8+RjslNqxVDyW78+xaXNs/YjKsJ
-         b85f0Yt1b1RXlWjZB2SlmjxtURk5HEMf5lAbPB6Dn9MCsTxiEiYXhPBvMY3e8LZDGVRB
-         IReOP8B+U4RKCCKVn62H56FRmcBrGP/2IARZsKzN5frUGjeZYicQlnzFO+CsGe1IZnOz
-         VaLI5PSz/8GjFbFBR4MrBUSmouYyCTr+s6YE8oAwlocHr83vSKWqgE/5O5rqqeuW468x
-         II7Q==
-X-Gm-Message-State: APjAAAXO8ZcMf/aBMZcBCAvkqFVTeyJGwQyCIVWx1IN4L+AxbRYdoEeg
-        WqmimoTXKOBZ6KZZKTA+ncjjPE7U
-X-Google-Smtp-Source: APXvYqxuur0SmCF/3LNMIqDzfUVkMPZT/G5qyihsk72t9YIOjXosGzQm/HCfA8STogqJAbz+dfBRAw==
-X-Received: by 2002:a17:90a:a611:: with SMTP id c17mr5090767pjq.17.1567702418117;
-        Thu, 05 Sep 2019 09:53:38 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s73sm2684946pjb.15.2019.09.05.09.53.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 09:53:36 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 09:53:35 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Cc:     peda@axentia.se, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: muxes: pca9541: use BIT() macro
-Message-ID: <20190905165335.GA23158@roeck-us.net>
-References: <20190905131318.GA21280@SD.eic.com>
- <1d248333-abe9-cff8-ad29-d3b618643dc6@roeck-us.net>
- <20190905154448.GA3378@SD>
+        Thu, 5 Sep 2019 12:54:10 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1i5v1L-0006eF-4q; Thu, 05 Sep 2019 16:54:07 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: prodikeys: make array keys static const, makes object smaller
+Date:   Thu,  5 Sep 2019 17:54:06 +0100
+Message-Id: <20190905165406.24641-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905154448.GA3378@SD>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 09:15:36PM +0530, Saiyam Doshi wrote:
-> On Thu, Sep 05, 2019 at 06:21:06AM -0700, Guenter Roeck wrote:
-> > linux/bitops.h should be included when using BIT().
-> 
-> It's included from linux/i2c-mux.h and it compiled successfully.
-> But if it's needed I'll update the patch and resend.
-> 
-> Just a question - What is the best practice in such case? Should the 
-> header included explicitly?
-> 
+From: Colin Ian King <colin.king@canonical.com>
 
-process/submit-checklist.rst says, as very first point:
+Don't populate the array keys on the stack but instead make it
+static const. Makes the object code smaller by 166 bytes.
 
-1) If you use a facility then #include the file that defines/declares
-   that facility.  Don't depend on other header files pulling in ones
-   that you use.
+Before:
+   text	   data	    bss	    dec	    hex	filename
+  18931	   5872	    480	  25283	   62c3	drivers/hid/hid-prodikeys.o
 
-Guenter
+After:
+   text	   data	    bss	    dec	    hex	filename
+  18669	   5968	    480	  25117	   621d	drivers/hid/hid-prodikeys.o
+
+(gcc version 9.2.1, amd64)
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/hid/hid-prodikeys.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hid/hid-prodikeys.c b/drivers/hid/hid-prodikeys.c
+index 21544ebff855..fb6841ebe4d9 100644
+--- a/drivers/hid/hid-prodikeys.c
++++ b/drivers/hid/hid-prodikeys.c
+@@ -516,7 +516,7 @@ static void pcmidi_setup_extra_keys(
+ 		MY PICTURES =>	KEY_WORDPROCESSOR
+ 		MY MUSIC=>	KEY_SPREADSHEET
+ 	*/
+-	unsigned int keys[] = {
++	static const unsigned int keys[] = {
+ 		KEY_FN,
+ 		KEY_MESSENGER, KEY_CALENDAR,
+ 		KEY_ADDRESSBOOK, KEY_DOCUMENTS,
+@@ -532,7 +532,7 @@ static void pcmidi_setup_extra_keys(
+ 		0
+ 	};
+ 
+-	unsigned int *pkeys = &keys[0];
++	const unsigned int *pkeys = &keys[0];
+ 	unsigned short i;
+ 
+ 	if (pm->ifnum != 1)  /* only set up ONCE for interace 1 */
+-- 
+2.20.1
+
