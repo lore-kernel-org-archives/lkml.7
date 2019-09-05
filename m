@@ -2,121 +2,125 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256C5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 722ADC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C273D20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:59:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WtxX3fE0"
+	by mail.kernel.org (Postfix) with ESMTP id 4E8BC20825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390860AbfIEQ7z (ORCPT
+        id S2390874AbfIERAb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:59:55 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:49736 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbfIEQ7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:59:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=X5UwKiV0EAfKocHoGuK5g2l4qyHfAtt7HoIzvyAXWSA=; b=WtxX3fE0Uyw2f5b4XVSLt+wIz
-        qFCLxTnl56DKA5FNK2xcVKHI4eEMAN8z2unfeuhZrjlgrs+StxHpf6wqBuELm8DahSn+ZupIi1NKp
-        2gORG5YFv5PCJV+hXeRDCXH8oYJbrmpHqeRhMr24zrWV7vSNQpiljq901rCcOy6nfnO7w6vOie/2X
-        ICpBdn0nHpNr2EJtj2d8IAUe7BQKnjA4z1YkE1OopjohDVnG7P+m38U/EtkA4T9SlDYV8KhBbG/P8
-        ntAFx+2yxjumH6lYSssEfJH3iBXHJZ8uclIgxBHa/LzTzsNbgB6Bv/DLlfBoZA1O+8ViFIVPQfyrj
-        jH41PJwNQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40032)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i5v6q-0003WW-0p; Thu, 05 Sep 2019 17:59:48 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i5v6m-0005hy-3o; Thu, 05 Sep 2019 17:59:44 +0100
-Date:   Thu, 5 Sep 2019 17:59:44 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     stefanc@marvell.com
-Cc:     davem@davemloft.net, andrew@lunn.ch, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, shaulb@marvell.com,
-        nadavh@marvell.com, ymarkman@marvell.com, marcin@marvell.com
-Subject: Re: [PATCH] net: phylink: Fix flow control resolution
-Message-ID: <20190905165943.GL13294@shell.armlinux.org.uk>
-References: <1567701978-16056-1-git-send-email-stefanc@marvell.com>
+        Thu, 5 Sep 2019 13:00:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:5869 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389197AbfIERAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:00:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 10:00:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="182883502"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Sep 2019 10:00:30 -0700
+Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 5 Sep 2019 10:00:30 -0700
+Received: from fmsmsx125.amr.corp.intel.com ([169.254.2.49]) by
+ fmsmsx116.amr.corp.intel.com ([169.254.2.181]) with mapi id 14.03.0439.000;
+ Thu, 5 Sep 2019 10:00:30 -0700
+From:   "Brown, Len" <len.brown@intel.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+CC:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Subject: RE: [PATCH AUTOSEL 5.2 82/94] tools/power turbostat: fix file
+ descriptor leaks
+Thread-Topic: [PATCH AUTOSEL 5.2 82/94] tools/power turbostat: fix file
+ descriptor leaks
+Thread-Index: AQHVYznN/Ro8M0co9U+Uq7T0wLP1CKcdTlTA
+Date:   Thu, 5 Sep 2019 17:00:30 +0000
+Message-ID: <1A7043D5F58CCB44A599DFD55ED4C9486D97C3FA@FMSMSX125.amr.corp.intel.com>
+References: <20190904155739.2816-1-sashal@kernel.org>
+ <20190904155739.2816-82-sashal@kernel.org>
+In-Reply-To: <20190904155739.2816-82-sashal@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmU5M2FlNmUtODZkZC00ZWQ1LWIxODgtNmM2YWVmNzcwZDU4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWG5wb1wvM0tnU0FRdmt5cG5aRW11MjJmK2J0WnB2ZW1pSlNBZURvbGY1VlE1aHpSK3FqNVRDeko1K2RcLzh4T1wvQiJ9
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.108]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567701978-16056-1-git-send-email-stefanc@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 07:46:18PM +0300, stefanc@marvell.com wrote:
-> From: Stefan Chulski <stefanc@marvell.com>
-> 
-> Regarding to IEEE 802.3-2015 standard section 2
-> 28B.3 Priority resolution - Table 28-3 - Pause resolution
-> 
-> In case of Local device Pause=1 AsymDir=0, Link partner
-> Pause=1 AsymDir=1, Local device resolution should be enable PAUSE
-> transmit, disable PAUSE receive.
-> And in case of Local device Pause=1 AsymDir=1, Link partner
-> Pause=1 AsymDir=0, Local device resolution should be enable PAUSE
-> receive, disable PAUSE transmit.
-> 
-> Signed-off-by: Stefan Chulski <stefanc@marvell.com>
-> Reported-by: Shaul Ben-Mayor <shaulb@marvell.com>
+FWIW,
 
-Good catch, thanks for the patch.
+The latest turbostat and x86_energy_perf_policy utilities in the upstream kernel tree should always be backward compatible with all old kernels.  If that is EVER not the case, I want to know about it.
 
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-Fixes: 9525ae83959b ("phylink: add phylink infrastructure")
+Yes, I know that some distros ship old versions of these utilities built out of their matching kernel tree snapshots.
+Yes, applying upstream fixes to .stable for such distros is a good thing.
 
-> ---
->  drivers/net/phy/phylink.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index a45c5de..a5a57ca 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -376,8 +376,8 @@ static void phylink_get_fixed_state(struct phylink *pl, struct phylink_link_stat
->   *  Local device  Link partner
->   *  Pause AsymDir Pause AsymDir Result
->   *    1     X       1     X     TX+RX
-> - *    0     1       1     1     RX
-> - *    1     1       0     1     TX
-> + *    0     1       1     1     TX
-> + *    1     1       0     1     RX
->   */
->  static void phylink_resolve_flow(struct phylink *pl,
->  				 struct phylink_link_state *state)
-> @@ -398,7 +398,7 @@ static void phylink_resolve_flow(struct phylink *pl,
->  			new_pause = MLO_PAUSE_TX | MLO_PAUSE_RX;
->  		else if (pause & MLO_PAUSE_ASYM)
->  			new_pause = state->pause & MLO_PAUSE_SYM ?
-> -				 MLO_PAUSE_RX : MLO_PAUSE_TX;
-> +				 MLO_PAUSE_TX : MLO_PAUSE_RX;
->  	} else {
->  		new_pause = pl->link_config.pause & MLO_PAUSE_TXRX_MASK;
->  	}
-> -- 
-> 1.9.1
-> 
-> 
+However, the better solution for these particular utilities, is that they simply always use upstream utilities -- even with old kernels.
 
+When somebody reports a problem and I need them to run these tools, 100% of the time, I start by sending them the latest upstream version to replace the old version shipped by the distro.
+
+Cheers,
+-Len
+
+
+
+-----Original Message-----
+From: Sasha Levin [mailto:sashal@kernel.org] 
+Sent: Wednesday, September 04, 2019 11:57 AM
+To: linux-kernel@vger.kernel.org; stable@vger.kernel.org
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>; Prarit Bhargava <prarit@redhat.com>; Brown, Len <len.brown@intel.com>; Sasha Levin <sashal@kernel.org>; linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 82/94] tools/power turbostat: fix file descriptor leaks
+
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+
+[ Upstream commit 605736c6929d541c78a85dffae4d33a23b6b2149 ]
+
+Fix file descriptor leaks by closing fp before return.
+
+Addresses-Coverity-ID: 1444591 ("Resource leak")
+Addresses-Coverity-ID: 1444592 ("Resource leak")
+Fixes: 5ea7647b333f ("tools/power turbostat: Warn on bad ACPI LPIT data")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Prarit Bhargava <prarit@redhat.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/power/x86/turbostat/turbostat.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 71a931813de00..066bd43ed6c9f 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -2912,6 +2912,7 @@ int snapshot_cpu_lpi_us(void)
+ 	if (retval != 1) {
+ 		fprintf(stderr, "Disabling Low Power Idle CPU output\n");
+ 		BIC_NOT_PRESENT(BIC_CPU_LPI);
++		fclose(fp);
+ 		return -1;
+ 	}
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.20.1
+
