@@ -2,152 +2,186 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9572C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3F5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C83206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DACBE206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:34:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CVIIrQpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390189AbfIEWca (ORCPT
+        id S2390221AbfIEWeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:32:30 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43054 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732639AbfIEWc2 (ORCPT
+        Thu, 5 Sep 2019 18:34:06 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33741 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfIEWeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:32:28 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
-        id 1i60I9-0001pN-0U; Thu, 05 Sep 2019 22:31:49 +0000
-Date:   Thu, 5 Sep 2019 23:31:48 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905223148.GS1131@ZenIV.linux.org.uk>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
- <20190905182303.7f6bxpa2enbgcegv@wittgenstein>
- <20190905182801.GR1131@ZenIV.linux.org.uk>
- <20190905195618.pwzgvuzadkfpznfz@yavin.dot.cyphar.com>
+        Thu, 5 Sep 2019 18:34:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t11so2080600plo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 15:34:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dALbmXd8B2KRQsGHWDockZQmAxsIGJFCG+7TAhj6O5A=;
+        b=CVIIrQpTBu4ZsGqnfmEBpZbLBuqSsbV8wc/RKcxa4Uy7Gnw+LyWGoVhgzXQRgr6IT0
+         mp/CGLJj+FVYwjaNPHB0ePrWiVSNDRRFFdZNmKb6L+ko4Ai0g4tAip9joCjhA0vNwh6r
+         eCGbe/YM8FxoUtRQmtkGB3Wn8ypxCuLpnk3jY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dALbmXd8B2KRQsGHWDockZQmAxsIGJFCG+7TAhj6O5A=;
+        b=azGoWV6edyIUO985AAbaB4Rl7lJbrngKmfEk453UW7yFbgJkbU0qmAu/NZdMupdgGX
+         6S4AcNQB4ZoI/FUYHyLfSfEJhjHjc2yNkAKTpjXBaNTeX574/hwxN4tissmIH6zFDxkm
+         XdiJnXkHHIvAGhr9B2NFlAK3o6E/i2HZsWCZAVx1tVZlIUoT3s/MWb0xTzxTjYBtV3gK
+         T+yWsswqaYiWBKKQt+/nC9qSG75Mdn0ZOW5p4YrjAkrrt93o9+VaaqsN0kSF7ljCs9Iu
+         AW9LkrBZLGYIqNhZNI+LAiHdjnDmY5qG5q4qLaX0q83gDlc5Am1IIjKzRhxkXJCTfgMy
+         UPIw==
+X-Gm-Message-State: APjAAAWmdLkRrg6lOAZap2+IKsKrqaEJM4FBuVwVFVzy3GC6ZKwVZFDd
+        K8C+dHAfJZVzmlleUvt7cI2Vf+BuRkA=
+X-Google-Smtp-Source: APXvYqxUdydbfTnj+0h6KV7oUwPV4Ut1OCxwGutgiWc3K+sVjYqAgl9cF8lJB26+v0oizqzYU51EcQ==
+X-Received: by 2002:a17:902:f204:: with SMTP id gn4mr6054222plb.23.1567722845519;
+        Thu, 05 Sep 2019 15:34:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id br18sm2581293pjb.20.2019.09.05.15.34.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 15:34:04 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 15:34:03 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 9/9] Remove string_escape_mem_ascii
+Message-ID: <201909051532.3062C94A1@keescook>
+References: <20190905193604.GC31247@fieldses.org>
+ <1567712673-1629-1-git-send-email-bfields@redhat.com>
+ <1567712673-1629-9-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905195618.pwzgvuzadkfpznfz@yavin.dot.cyphar.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <1567712673-1629-9-git-send-email-bfields@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 05:56:18AM +1000, Aleksa Sarai wrote:
-> On 2019-09-05, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Thu, Sep 05, 2019 at 08:23:03PM +0200, Christian Brauner wrote:
-> > 
-> > > Because every caller of that function right now has that limit set
-> > > anyway iirc. So we can either remove it from here and place it back for
-> > > the individual callers or leave it in the helper.
-> > > Also, I'm really asking, why not? Is it unreasonable to have an upper
-> > > bound on the size (for a long time probably) or are you disagreeing with
-> > > PAGE_SIZE being used? PAGE_SIZE limit is currently used by sched, perf,
-> > > bpf, and clone3 and in a few other places.
-> > 
-> > For a primitive that can be safely used with any size (OK, any within
-> > the usual 2Gb limit)?  Why push the random policy into the place where
-> > it doesn't belong?
-> > 
-> > Seriously, what's the point?  If they want to have a large chunk of
-> > userland memory zeroed or checked for non-zeroes - why would that
-> > be a problem?
+On Thu, Sep 05, 2019 at 03:44:33PM -0400, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
 > 
-> Thinking about it some more, there isn't really any r/w amplification --
-> so there isn't much to gain by passing giant structs. Though, if we are
-> going to permit 2GB buffers, isn't that also an argument to use
-> memchr_inv()? :P
+> It's easier to do this in string_escape_mem now.
+> 
+> Might also consider non-ascii and quote-mark sprintf modifiers and then
+> we might make do with seq_printk.
 
-I'm not sure I understand the last bit.  If you look at what copy_from_user()
-does on misaligned source/destination, especially on architectures that
-really, really do not like unaligned access...
+With '\' always handled, it can be dropped from the "esc" args below. I
+wonder if ESCAPE_QUOTES is needed or if "esc" can just continue to be
+used for that.
 
-Case in point: alpha (and it's not unusual in that respect).  What it boils
-down to is
-	copy bytes until the destination is aligned
-	if source and destination are both aligned
-		copy word by word
-	else
-		read word by word, storing the mix of two adjacent words
-	copy the rest byte by byte
+(Also, do we want to add the "hex escape" modifier back to snprintf's
+%pE stuff?)
 
-The unpleasant case (to and from having different remainders modulo 8) is
-basically
+-Kees
 
-	if (count >= 8) {
-		u64 *aligned = (u64 *)(from & ~7);
-		u64 *dest = (u64 *)to;
-		int bitshift = (from & 7) * 8;
-		u64 prev, next;
+> ---
+>  fs/seq_file.c                  |  3 ++-
+>  include/linux/string_helpers.h |  3 +--
+>  lib/string_helpers.c           | 24 ++++--------------------
+>  3 files changed, 7 insertions(+), 23 deletions(-)
+> 
+> diff --git a/fs/seq_file.c b/fs/seq_file.c
+> index 63e5a7c4dbf7..0e45a25523ad 100644
+> --- a/fs/seq_file.c
+> +++ b/fs/seq_file.c
+> @@ -390,7 +390,8 @@ void seq_escape_mem_ascii(struct seq_file *m, const char *src, size_t isz)
+>  	size_t size = seq_get_buf(m, &buf);
+>  	int ret;
+>  
+> -	ret = string_escape_mem_ascii(src, isz, buf, size);
+> +	ret = string_escape_mem(src, isz, buf, size, ESCAPE_NP|ESCAPE_NONASCII|
+> +				ESCAPE_STYLE_SLASH|ESCAPE_STYLE_HEX, "\"\\");
+>  	seq_commit(m, ret < size ? ret : -1);
+>  }
+>  EXPORT_SYMBOL(seq_escape_mem_ascii);
+> diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
+> index 5d350f7f6874..f3388591d83f 100644
+> --- a/include/linux/string_helpers.h
+> +++ b/include/linux/string_helpers.h
+> @@ -43,6 +43,7 @@ static inline int string_unescape_any_inplace(char *buf)
+>  
+>  #define ESCAPE_SPECIAL		0x01
+>  #define ESCAPE_NP		0x02
+> +#define ESCAPE_NONASCII		0x04
+>  #define ESCAPE_ANY_NP		(ESCAPE_SPECIAL | ESCAPE_NP)
+>  #define ESCAPE_STYLE_SLASH	0x20
+>  #define ESCAPE_STYLE_OCTAL	0x40
+> @@ -52,8 +53,6 @@ static inline int string_unescape_any_inplace(char *buf)
+>  int string_escape_mem(const char *src, size_t isz, char *dst, size_t osz,
+>  		unsigned int flags, const char *only);
+>  
+> -int string_escape_mem_ascii(const char *src, size_t isz, char *dst,
+> -					size_t osz);
+>  static inline int string_escape_str(const char *src, char *dst, size_t sz,
+>  		unsigned int flags, const char *only)
+>  {
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 6f553f893fda..1dacf76eada0 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -439,6 +439,8 @@ static bool is_special(char c)
+>   *		'\a' - alert (BEL)
+>   *		'\e' - escape
+>   *		'\0' - null
+> + *	%ESCAPE_NONASCII:
+> + *		escape characters with the high bit set
+>   *	%ESCAPE_NP:
+>   *		escape only non-printable characters (checked by isprint)
+>   *	%ESCAPE_ANY_NP:
+> @@ -468,7 +470,8 @@ int string_escape_mem(const char *src, size_t isz, char *dst, size_t osz,
+>  
+>  		if ((is_dict && strchr(esc, c)) ||
+>  		    (flags & ESCAPE_NP && !isprint(c)) ||
+> -		    (flags & ESCAPE_SPECIAL && is_special(c))) {
+> +		    (flags & ESCAPE_SPECIAL && is_special(c)) ||
+> +		    (flags & ESCAPE_NONASCII && !isascii(c))) {
+>  
+>  			if (flags & ESCAPE_STYLE_SLASH &&
+>  					escape_special(c, &p, end))
+> @@ -491,25 +494,6 @@ int string_escape_mem(const char *src, size_t isz, char *dst, size_t osz,
+>  }
+>  EXPORT_SYMBOL(string_escape_mem);
+>  
+> -int string_escape_mem_ascii(const char *src, size_t isz, char *dst,
+> -					size_t osz)
+> -{
+> -	char *p = dst;
+> -	char *end = p + osz;
+> -
+> -	while (isz--) {
+> -		unsigned char c = *src++;
+> -
+> -		if (!isprint(c) || !isascii(c) || c == '"' || c == '\\')
+> -			escape_hex(c, &p, end);
+> -		else
+> -			escape_passthrough(c, &p, end);
+> -	}
+> -
+> -	return p - dst;
+> -}
+> -EXPORT_SYMBOL(string_escape_mem_ascii);
+> -
+>  /*
+>   * Return an allocated string that has been escaped of special characters
+>   * and double quotes, making it safe to log in quotes.
+> -- 
+> 2.21.0
+> 
 
-		prev = aligned[0];
-		do {   
-			next = aligned[1];
-			prev <<= bitshift;
-			prev |= next >> (64 - bitshift);
-			*dest++ = prev;
-			aligned++;  
-			prev = next;
-			from += 8;
-			to += 8;
-			count -= 8;
-		} while (count >= 8);
-	}
-
-Now, mix that with "... and do memchr_inv() on the copy to find if we'd
-copied any non-zeroes, nevermind where" and it starts looking really
-ridiculous.
-
-We should just read the fscking source, aligned down to word boundary
-and check each word being read.  The first and the last ones - masked.
-All there is to it.  On almost all architectures that'll work well
-enough; s390 might want something more elaborate (there even word-by-word
-copies are costly, but I'd suggest talking to them for details).
-
-Something like bool all_zeroes_user(const void __user *p, size_t count)
-would probably be a sane API...
+-- 
+Kees Cook
