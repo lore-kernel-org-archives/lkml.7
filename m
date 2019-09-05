@@ -2,134 +2,148 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF6FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CBAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD03206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C747206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GopTnzop"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dYXtS8J5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387606AbfIEUyr (ORCPT
+        id S2388128AbfIEUyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:54:47 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34725 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbfIEUyq (ORCPT
+        Thu, 5 Sep 2019 16:54:55 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42738 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbfIEUyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:54:46 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d3so1972543plr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=GXDxXxiCunZuVnnF1WXh8fyTBtwvohzNRCSob8YCkqs=;
-        b=GopTnzopJhGc/1E7pEIdNYj2NEOXRitfg7q7knEqeyOrCB56oE1KvBY/akZgWAGqNp
-         +CO2TqvOoZRa/Gm04jeqvL+0ls+id2lQ8ynq84VeoITKnEGjdukbHVvrERSVq6Q8youN
-         HP/Q1oediJvamd6gH0laUTqRsW+VtIpg0+0J1KHkndTx5FfCjmBursJcsImruJMkxkkD
-         t7RT1R8pfb6VuHVvRV+/5VbOm+sU7nqhws7PM2t+VfjZ5Y1wZH23dsAxmvnbxy068ENy
-         f9QH9XDheQm3J7k+bVJjSGHWy8yjlW/E6xfPAYO56Gz1vhssx+LJuvkg9CtqyudaBDs4
-         7LFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=GXDxXxiCunZuVnnF1WXh8fyTBtwvohzNRCSob8YCkqs=;
-        b=ce3GHogg4645hcHA1/9Kc4Rx1BFOKPL3xTkaBmi2pnpaEcZf9ZSsHlpqMzlFkR3dJL
-         TsoRuI1zTcen40PUdYh/c37sj+Q794Umjphw7LPFz6I9tf8CEhcyg8u3GHRXQ+fSIC6H
-         EDioFS48pg/BpETrqTvycZfa8u8y/4qlKDYaGeSKeivgClio4G3o+crBm1vZBlt5o/YO
-         UMGtSjoQPYiZCVqXkEDXlZK8xXbbaW1BO8+tLnjgxqZ9XGApGwo/EvWJqUczOWKAd0Hr
-         Nkx5iLi0cgbV7D3FryoqFC+89nHQ2ZuIY2pL0o3aeiL1w/U433t+FdWqAiK6HNI4iT31
-         xI7g==
-X-Gm-Message-State: APjAAAWgr1bYg2BPUpWMOA9k6XrfJpj0VhHV4cPNR8GakM/U+hhqdb0z
-        dboN6P+tFBTI9zq6Qhyfr0bqSg==
-X-Google-Smtp-Source: APXvYqzAYeM22/fyHxCBOrtmbXM7+LXZbeoTfXSzse1HU/s8jOAo6MSqcBcOscaTohoVBfw5DzgyqQ==
-X-Received: by 2002:a17:902:9348:: with SMTP id g8mr5794411plp.18.1567716885572;
-        Thu, 05 Sep 2019 13:54:45 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id v18sm3394315pfn.24.2019.09.05.13.54.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 13:54:44 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 13:54:44 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Thu, 5 Sep 2019 16:54:54 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85KsKcK178893;
+        Thu, 5 Sep 2019 20:54:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=LobIa40dQfX3Mwk3VFS2lCym9vgLwHXTJbr7YdB/OiA=;
+ b=dYXtS8J5HRY0+pbcFqRdELFbQADyrvTgmyjjhgpNUDBxJkELpMVJKW/v/6I9NqgO1y3I
+ gdXlqffIQzIsV2OLfzm6zJJElL2AbcAvOxhb/TubR/3Osmy90aqIhAUlCo1momVjqFl8
+ vt5eM6ct4a8jGgKg9V8FIoJ3NfZcWLU1ermXvHlERSnZRb45cV20aDqt2HGgFcp8OcWH
+ Fv+DnnZE/Uo8rQLvHNQCEjVszwKZzbqQNBvn6m9bTAJTwAZGE4zBMT7Ro15Nq+ieCnUP
+ T7pAnBSo8qnixoQvDaV1vNzxc8YUcEo1DN55jaWKDRgNnRZrhhuZVOMKKwv8ehjX7EIN zg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2uu9h3g30u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 20:54:39 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85KsP1M065217;
+        Thu, 5 Sep 2019 20:54:38 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2utvr46tna-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 05 Sep 2019 20:54:38 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x85KrWxF014027;
+        Thu, 5 Sep 2019 20:53:32 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 05 Sep 2019 13:53:31 -0700
+Subject: Re: [rfc 3/4] mm, page_alloc: avoid expensive reclaim when compaction
+ may not succeed
+To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@suse.com>, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@suse.de>,
         "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
- hugepages
-In-Reply-To: <CAHk-=wjmF_MGe5sBDmQB1WGpr+QFWkqboHpL37JYB5WgnG8nMA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1909051345030.217933@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com> <CAHk-=wjmF_MGe5sBDmQB1WGpr+QFWkqboHpL37JYB5WgnG8nMA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <alpine.DEB.2.21.1909041252230.94813@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.1909041253390.94813@chino.kir.corp.google.com>
+ <20190905090009.GF3838@dhcp22.suse.cz>
+ <fab91766-da33-d62f-59fb-c226e4790a91@suse.cz>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <3468b605-a3a9-6978-9699-57c52a90bd7e@oracle.com>
+Date:   Thu, 5 Sep 2019 13:53:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <fab91766-da33-d62f-59fb-c226e4790a91@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1906280000 definitions=main-1909050195
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
+ definitions=main-1909050195
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019, Linus Torvalds wrote:
-
-> > This series reverts those reverts and attempts to propose a more sane
-> > default allocation strategy specifically for hugepages.  Andrea
-> > acknowledges this is likely to fix the swap storms that he originally
-> > reported that resulted in the patches that removed __GFP_THISNODE from
-> > hugepage allocations.
+On 9/5/19 4:22 AM, Vlastimil Babka wrote:
+> On 9/5/19 11:00 AM, Michal Hocko wrote:
+>> [Ccing Mike for checking on the hugetlb side of this change]
+>> On Wed 04-09-19 12:54:22, David Rientjes wrote:
+>>> @@ -4458,6 +4458,28 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
+>>>  		if (page)
+>>>  			goto got_pg;
+>>>  
+>>> +		 if (order >= pageblock_order && (gfp_mask & __GFP_IO)) {
+>>> +			/*
+>>> +			 * If allocating entire pageblock(s) and compaction
+>>> +			 * failed because all zones are below low watermarks
+>>> +			 * or is prohibited because it recently failed at this
+>>> +			 * order, fail immediately.
+>>> +			 *
+>>> +			 * Reclaim is
+>>> +			 *  - potentially very expensive because zones are far
+>>> +			 *    below their low watermarks or this is part of very
+>>> +			 *    bursty high order allocations,
+>>> +			 *  - not guaranteed to help because isolate_freepages()
+>>> +			 *    may not iterate over freed pages as part of its
+>>> +			 *    linear scan, and
+>>> +			 *  - unlikely to make entire pageblocks free on its
+>>> +			 *    own.
+>>> +			 */
+>>> +			if (compact_result == COMPACT_SKIPPED ||
+>>> +			    compact_result == COMPACT_DEFERRED)
+>>> +				goto nopage;
 > 
-> There's no way we can try this for 5.3 even if looks ok. This is
-> "let's try this during the 5.4 merge window" material, and see how it
-> works.
-> 
-> But I'd love affected people to test this all on their loads and post
-> numbers, so that we have actual numbers for this series when we do try
-> to merge it.
-> 
+> As I said, I expect this will make hugetlbfs reservations fail
+> prematurely - Mike can probably confirm or disprove that.
 
-I'm certainly not proposing the last two patches in the series marked as 
-RFC to be merged.  I'm proposing the first two patches in the series, 
-reverts of the reverts that went into 5.3-rc5, are merged for 5.3 so that 
-we return to the same behavior that we have had for years and semantics 
-that MADV_HUGEPAGE has provided that entire libraries and userspaces have 
-been based on.
+I don't have a specific test for this.  It is somewhat common for people
+to want to allocate "as many hugetlb pages as possible".  Therefore, they
+will try to allocate more pages than reasonable for their environment and
+take what they can get.  I 'tested' by simply creating some background
+activity and then seeing how many hugetlb pages could be allocated.  Of
+course, many tries over time in a loop.
 
-It is very clear that there is a path forward here to address the *bug* 
-that Andrea is reporting: it has become conflated with NUMA allocation 
-policies which is not at all the issue.  Note that if 5.3 is released with 
-these patches that it requires a very specialized usecase to benefit from: 
-workloads that are larger than one socket and *requires* remote memory not 
-being low on memory or fragmented.  If remote memory is as low on memory 
-or fragmented as local memory (like in a datacenter), the reverts that 
-went into 5.3 will double the impact of the very bug being reported 
-because now it's causing swap storms for remote memory as well.  I don't 
-anticipate we'll get numbers for that since it's not a configuration they 
-run in.
+This patch did not cause premature allocation failures in my limited testing.
+The number of pages which could be allocated with and without patch were
+pretty much the same.
 
-The bug here is reclaim in the page allocator that does not benefit memory 
-compaction because we are failing per-zone watermarks already.  The last 
-two patches in these series avoid that, which is a sane default page 
-allocation policy, and the allow fallback to remote memory only when we 
-can't easily allocate locally.
+Do note that I tested on top of Andrew's tree which contains this series:
+http://lkml.kernel.org/r/20190806014744.15446-1-mike.kravetz@oracle.com
+Patch 3 in that series causes allocations to fail sooner in the case of
+COMPACT_DEFERRED:
+http://lkml.kernel.org/r/20190806014744.15446-4-mike.kravetz@oracle.com
 
-We *need* the ability to allocate hugepages locally if compaction can 
-work, anything else kills performance.  5.3-rc7 won't try that, it will 
-simply fallback to remote memory.  We need to try compaction but we do not 
-want to reclaim if failing watermark checks.
-
-I hope that I'm not being unrealistically optimistic that we can make 
-progress on providing a sane default allocation policy using those last 
-two patches as a starter for 5.4, but I'm strongly suggesting that you 
-take the first two patches to return us to the policy that has existed for 
-years and not allow MADV_HUGEPAGE to be used for immediate remote 
-allocation when local is possible.
+hugetlb allocations have the __GFP_RETRY_MAYFAIL flag set.  They are willing
+to retry and wait and callers are aware of this.  Even though my limited
+testing did not show regressions caused by this patch, I would prefer if the
+quick exit did not apply to __GFP_RETRY_MAYFAIL requests.
+-- 
+Mike Kravetz
