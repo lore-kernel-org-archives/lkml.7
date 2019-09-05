@@ -2,134 +2,112 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C20DC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E5EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45E87206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11464206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:17:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eEbudfEF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391832AbfIEVQL (ORCPT
+        id S2389106AbfIEVRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:16:11 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35918 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726073AbfIEVQK (ORCPT
+        Thu, 5 Sep 2019 17:17:13 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44737 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbfIEVRN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:16:10 -0400
-Received: by mail-ed1-f68.google.com with SMTP id g24so4275170edu.3;
-        Thu, 05 Sep 2019 14:16:09 -0700 (PDT)
+        Thu, 5 Sep 2019 17:17:13 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so2141022pgl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:17:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UIRtWL98QY7LQCCdEU+L5v6PUGcyGbsiZsUBWNy9eQ4=;
+        b=eEbudfEF6neRn1gT0xh0aAkTpqGoCMlJB9O5rTKm9acSrTEXdKWtPk33cPifM5g6k3
+         GZbq5NnlA807jkM3lQuO9Z/QaxJ3QeCEx+/crZSI9REJn7aBcIttEuhV7fA3wYqibDgv
+         FMiXA6sqfjLYieHp21VQRbWSOvw4ffDdIkLcM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ke7ZiPqKDeHvlrOFd98Cv/8z7gFqetiE/M/oVJxGJv8=;
-        b=Nz21zDiPk1fH/DW15Q2R1V1IEkIvjk7dw3bLBTuwOY6qlkDW5O8rOONi9bGtaeCBbD
-         4tpVsWSE+QFnuZXoSJDePNyb+LORYtbGc3rMGVyFuW+9cmCnTmL577qUciD18aYC2SvQ
-         jc+SRjWRo0KW8I7RW6yrYK7ywP6FEm0b6LP/xV3mwOsOVEuYKjARvfj7xydO4CY4BmZN
-         WoK5zEqJhhujko1NCZCBtelpxVnI96RziJWGftgeZAd/OV71xqN1ZNPlYqC6kCHRGP0c
-         JhLhb0DqL9WQge7O3fZLqdLHzdM73pOkWhh8SMq5bU24DVl8VWMHk8YLm1vJ3Ev9A6nW
-         Fbag==
-X-Gm-Message-State: APjAAAU3l+FR4wKnrb/aVpMbvgoY3RnON70eE7D6uLlGHKuUzS8BctWv
-        5JapVvRJXXGQbaYoiVPZdX64+TxiO4U=
-X-Google-Smtp-Source: APXvYqxOuRTdfEcN5G+oqBahkGBcnt2M2uKQnJ013r2UU5HDk85O8jrPzFGaRykws6WjTWilnv8NGQ==
-X-Received: by 2002:a50:c10a:: with SMTP id l10mr6045903edf.79.1567718168828;
-        Thu, 05 Sep 2019 14:16:08 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id f23sm568892edd.39.2019.09.05.14.16.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 14:16:08 -0700 (PDT)
-Subject: Re: [PATCH v4 0/4] Simplify PCIe hotplug indicator control
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UIRtWL98QY7LQCCdEU+L5v6PUGcyGbsiZsUBWNy9eQ4=;
+        b=DZNBNOVPUzjF2jRbYsySBG6U+dEElw5rubQMou69BKR5/idVH0pKmdP05v3cOL54Ok
+         qubSIt/K1aARYyoiqzHkbAZUHFmNUd4iO7gOT/z1hHXw+a6WMVC81rGwKBrWssqBTiZ8
+         z9vzpBjefuB73ccgmjerawqu6JILvlNvQahkKgwAGJZSd7Q8spqKiR7h0BgSELhBR6zZ
+         /apiXn66bffopSIV6tjSmZu6DYT18bh/pLOGqygtCIY7+PzGpjNRv87/p6C9Kw0V30r0
+         AaLcv8K7ctn3jIEJc/lSH3Dyk/IRHeMaingdYoKLUFbAWZ88tPf6gCR11E+5Uf0Lsp5u
+         lTpA==
+X-Gm-Message-State: APjAAAVqQU+ViTpX7ePTHM6PSxqq+fIZZ0XM5DW3Uj6ls4r6DKC5nzgF
+        TwsDWkiey1rBohUNS+X7a0XdntVr/4I=
+X-Google-Smtp-Source: APXvYqxil/9JhgnFLSMY7nNDIRI9VhMzTmtcNzIddNIVEdT7r8hU3805QipX3phx57LusXkxX2j82w==
+X-Received: by 2002:a65:6415:: with SMTP id a21mr4791629pgv.98.1567718232797;
+        Thu, 05 Sep 2019 14:17:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x13sm3598106pfm.157.2019.09.05.14.17.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 14:17:11 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 14:17:10 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org
-References: <20190903111021.1559-1-efremov@linux.com>
- <20190905210102.GG103977@google.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <3e5cbc0f-ca9f-bbbe-5486-05915fe4ec63@linux.com>
-Date:   Fri, 6 Sep 2019 00:16:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+Subject: Re: [PATCH 2/9] thunderbolt: show key using %*s not %*pE
+Message-ID: <201909051416.973A701E@keescook>
+References: <20190905193604.GC31247@fieldses.org>
+ <1567712673-1629-1-git-send-email-bfields@redhat.com>
+ <1567712673-1629-2-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905210102.GG103977@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567712673-1629-2-git-send-email-bfields@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 05, 2019 at 03:44:26PM -0400, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
+> 
+> %*pEp (without "h" or "o") is a no-op.  This string could contain
+> arbitrary (non-NULL) characters, so we do want escaping.  Use %*pE like
+> every other caller.
 
+Agreed on all counts. pEp is actively resulting in NO escaping, which is
+a bug here.
 
-On 06.09.2019 00:01, Bjorn Helgaas wrote:
-> On Tue, Sep 03, 2019 at 02:10:17PM +0300, Denis Efremov wrote:
->> PCIe defines two optional hotplug indicators: a Power indicator and an
->> Attention indicator. Both are controlled by the same register, and each
->> can be on, off or blinking. The current interfaces
->> (pciehp_green_led_{on,off,blink}() and pciehp_set_attention_status()) are
->> non-uniform and require two register writes in many cases where we could
->> do one.
->>
->> This patchset introduces the new function pciehp_set_indicators(). It
->> allows one to set two indicators with a single register write. All
->> calls to previous interfaces (pciehp_green_led_* and
->> pciehp_set_attention_status()) are replaced with a new one. Thus,
->> the amount of duplicated code for setting indicators is reduced.
->>
->> Changes in v4:
->>   - Changed the inputs validation in pciehp_set_indicators()
->>   - Moved PCI_EXP_SLTCTL_ATTN_IND_NONE, PCI_EXP_SLTCTL_PWR_IND_NONE
->>     to drivers/pci/hotplug/pciehp.h and set to -1 for not interfering
->>     with reserved values in the PCIe Base spec
->>   - Added set_power_indicator define
->>
->> Changes in v3:
->>   - Changed pciehp_set_indicators() to work with existing
->>     PCI_EXP_SLTCTL_* macros
->>   - Reworked the inputs validation in pciehp_set_indicators()
->>   - Removed pciehp_set_attention_status() and pciehp_green_led_*()
->>     completely
->>
->> Denis Efremov (4):
->>   PCI: pciehp: Add pciehp_set_indicators() to jointly set LED indicators
->>   PCI: pciehp: Switch LED indicators with a single write
->>   PCI: pciehp: Remove pciehp_set_attention_status()
->>   PCI: pciehp: Remove pciehp_green_led_{on,off,blink}()
->>
->>  drivers/pci/hotplug/pciehp.h      | 12 ++++--
->>  drivers/pci/hotplug/pciehp_core.c |  7 ++-
->>  drivers/pci/hotplug/pciehp_ctrl.c | 26 +++++------
->>  drivers/pci/hotplug/pciehp_hpc.c  | 72 +++++++------------------------
->>  include/uapi/linux/pci_regs.h     |  1 +
->>  5 files changed, 45 insertions(+), 73 deletions(-)
-> 
-> Thanks, Denis, I applied these to pci/pciehp for v5.4.  I think this
-> is a great improvement.
-> 
-> I tweaked a few things:
-> 
->   - Updated comments to refer to "Power" intead of "green",
->     "Attention" instead of "amber", and "Indicator" instead of "LED".
-> 
->   - Replaced PCI_EXP_SLTCTL_ATTN_IND_NONE and
->     PCI_EXP_SLTCTL_PWR_IND_NONE with INDICATOR_NOOP because I didn't
->     want them to look like definitions from the spec.
-> 
->   - Dropped set_power_indicator().  It does make things locally easier
->     to read, but I think the overall benefit of having fewer
->     interfaces outweighs that.
-> 
-> The interdiff from your v4 is below.  Let me know if I broke anything.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Thank you for the improvements. Looks good to me.
+-Kees
 
-Regards,
-Denis
+> 
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+> ---
+>  drivers/thunderbolt/xdomain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thunderbolt/xdomain.c b/drivers/thunderbolt/xdomain.c
+> index 5118d46702d5..4e17a7c7bf0a 100644
+> --- a/drivers/thunderbolt/xdomain.c
+> +++ b/drivers/thunderbolt/xdomain.c
+> @@ -636,7 +636,7 @@ static ssize_t key_show(struct device *dev, struct device_attribute *attr,
+>  	 * It should be null terminated but anything else is pretty much
+>  	 * allowed.
+>  	 */
+> -	return sprintf(buf, "%*pEp\n", (int)strlen(svc->key), svc->key);
+> +	return sprintf(buf, "%*pE\n", (int)strlen(svc->key), svc->key);
+>  }
+>  static DEVICE_ATTR_RO(key);
+>  
+> -- 
+> 2.21.0
+> 
+
+-- 
+Kees Cook
