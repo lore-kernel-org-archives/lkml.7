@@ -3,121 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B56C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDA5C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A26820692
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC482067D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:15:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zmastz/g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b+63NMLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388557AbfIENNb (ORCPT
+        id S2388660AbfIENPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:13:31 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45097 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388243AbfIENNa (ORCPT
+        Thu, 5 Sep 2019 09:15:01 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36354 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388385AbfIENPA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:13:30 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x3so1267963plr.12;
-        Thu, 05 Sep 2019 06:13:29 -0700 (PDT)
+        Thu, 5 Sep 2019 09:15:00 -0400
+Received: by mail-lf1-f68.google.com with SMTP id x80so2001929lff.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:14:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ptZLHQ1J+Ct+T0uB2ajpX+RvL5VEPREpdkE/veVM7GM=;
-        b=Zmastz/gxQ4vmfAfi2QeIIzzAirZrh4VskadspM4qowBOEKy6IKjEATwI5R6oYzW4H
-         o8E7mzlpcCLA1xDKM+BzjAgycqLqWQ+PVNY6Ent4J0ZtQKtZQ/LHdXtDffOxIP5854VI
-         g6TvSt2BsULbv+T9p0byL8nAdo2DZ8MoxPkgcyJbJkNn3U7NFOwlvPVrM+fat4slphok
-         A14DUZWrpLj57335kr8uEWHA1pqIPwVqvEIDm1zexv4oc3Q6NBgQXRsxvf2Yf9autsWS
-         Qp+O0VTyUeYAGa44vQYdVrXMB9w0MCwytKGtzFepS7S+SVEGGsZaSWQd1ZpnS89CiTVQ
-         AWhg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X6liaIL8n/K+qZNHyRxBvsG3aE56VnalzfSINEJsXSQ=;
+        b=b+63NMLiO6uu9ngd3jzIr8Dsw188HJm9sNb07rlJMnX80r7/h5LUN3/Lpbh3bxpJ9z
+         xYJqjXXgagt+VDuvA3yKvH7qp7A2+W1iv5h1mRb24Jb2adl7EuLWgyNX1JPnrepTNa9Q
+         goCuPYhfmvTDmiz0qWuVckEjqgfqRDoltmXHgdBIf8vad80BD+OtqWFql1CSBxLD7jDL
+         PWs9E6CwQdu80zJAOHSJX+PJNszKu0Zwaywda1OI5fC9bc/t0il8d+aa4SI03VA65BG0
+         pqsIykPn5ko3cJwLwAXbf0ErZ98Dsu+DqnGqOb8fcfaBo5zLC2Uk4FyM9xYDgLnBUVyl
+         HiPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ptZLHQ1J+Ct+T0uB2ajpX+RvL5VEPREpdkE/veVM7GM=;
-        b=Jl1DR2FMMPAn13wlRw11oUxiZHqmrPTPKBsVBya24GjNBmnoNvSiRcZwN3GN4HB8V4
-         4jJUgEPMG3ng2pj9IG6QnhDPNfRWHBr86zT9SBfxoxZsms1MSFcGfoLqaa1oi2OjhAXp
-         B0QCUNOTYteccU6MY4E+CIDliYZ4DVxUDpNkmCpCft+tMKpQjo9xJHruXyJdNhH1XoPj
-         R8ZUytR22vyjtQHbnpDCe3X8cmmXIsI5KxewdQjUwcR08CkSk43Mj1l8o/tTu+jbZXiJ
-         vcQyI2P+pPT2w+zUnu5TVVYqluUTbU9HOVPrHyMdCMjbSuoxhMfT6a89ftweEQ3FcBLU
-         WIbA==
-X-Gm-Message-State: APjAAAVtDZ2OizSD2yJrPPZaIH43XEYN+kq8pBzGK9eJBP/Lw9Fng6pX
-        ZNFAWTTgALZgasbYxjwp/qkCxXck
-X-Google-Smtp-Source: APXvYqxy70mGQpqIud6JAWMI76CEQgzdxYAkDUxyKnKK4jbHMIiN9+96n2lvo//uEAIE+ZxDGmr4Hw==
-X-Received: by 2002:a17:902:aa91:: with SMTP id d17mr3231903plr.74.1567689209526;
-        Thu, 05 Sep 2019 06:13:29 -0700 (PDT)
-Received: from SD.eic.com ([106.222.7.175])
-        by smtp.gmail.com with ESMTPSA id z21sm2532546pfn.183.2019.09.05.06.13.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X6liaIL8n/K+qZNHyRxBvsG3aE56VnalzfSINEJsXSQ=;
+        b=Cs3+78NdjWHudoLgbgaFRb/J5i2iPvAUxinQ/JRcHIOPqAl3DrhpAMfTWI4kFwHEzF
+         xK27cgNPWgxdWzBX9L45wZdKUNQqvgwoaX26tPzRJgs9uL+5aqfxST43Rc3lkbDzKK2E
+         ro/FyN8+R1UeidGmHGHqpE5jtfOTW3nbvz3uz5bsiqP0CO8lB6B49BIBTp05BN5cF8VU
+         hwaCw3GZ8+Ws1gAP0Rw++GE9hlCf7VIIz9j3YH6FpxGBsNa+2fwyHvq1Rc20fOLXtIa9
+         3oGnzBl1o5RhWJLXn3zfFXTOVkm4j5PKmHJfTJLu8rzXE48iTS5gvWI0Z2LJa3Oue+aY
+         FWug==
+X-Gm-Message-State: APjAAAUOZSYz+EGvctkwED6POHv23AbivirzEUsCzIFQc45TYeMlo8T4
+        C+B0W4fXhQTH4xBpwXaKBxUuKw==
+X-Google-Smtp-Source: APXvYqzbCMnjO//eiTEa0kZuQw26H3btOjLN9fQPzx/MdOvkhMnN7oM0V3sFQZMv6aa2tmtB3chimQ==
+X-Received: by 2002:a19:4912:: with SMTP id w18mr2283793lfa.93.1567689298714;
+        Thu, 05 Sep 2019 06:14:58 -0700 (PDT)
+Received: from centauri (ua-84-219-138-247.bbcust.telenor.se. [84.219.138.247])
+        by smtp.gmail.com with ESMTPSA id b25sm486140lfa.90.2019.09.05.06.14.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 06:13:28 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 18:43:18 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     linux@roeck-us.net, peda@axentia.se
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] i2c: muxes: pca9541: use BIT() macro
-Message-ID: <20190905131318.GA21280@SD.eic.com>
+        Thu, 05 Sep 2019 06:14:58 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 15:14:56 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] rpmsg: glink-smem: Name the edge based on parent
+ remoteproc
+Message-ID: <20190905131456.GA26674@centauri>
+References: <20190820041656.17197-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190820041656.17197-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use bit mask macro BIT() for definition where appropriate.
+On Mon, Aug 19, 2019 at 09:16:56PM -0700, Bjorn Andersson wrote:
+> Naming the glink edge device on the parent of_node short name causes
+> collisions when multiple remoteproc instances with only different unit
+> address are described on the platform_bus in DeviceTree.
+> 
+> Base the edge's name on the parent remoteproc's name instead, to ensure
+> that it's unique.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/rpmsg/qcom_glink_smem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rpmsg/qcom_glink_smem.c b/drivers/rpmsg/qcom_glink_smem.c
+> index 64a5ce324c7f..4238383d8685 100644
+> --- a/drivers/rpmsg/qcom_glink_smem.c
+> +++ b/drivers/rpmsg/qcom_glink_smem.c
+> @@ -201,7 +201,7 @@ struct qcom_glink *qcom_glink_smem_register(struct device *parent,
+>  	dev->parent = parent;
+>  	dev->of_node = node;
+>  	dev->release = qcom_glink_smem_release;
+> -	dev_set_name(dev, "%pOFn:%pOFn", node->parent, node);
+> +	dev_set_name(dev, "%s:%pOFn", dev_name(parent->parent), node);
+>  	ret = device_register(dev);
+>  	if (ret) {
+>  		pr_err("failed to register glink edge\n");
+> -- 
+> 2.18.0
+> 
 
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
----
- drivers/i2c/muxes/i2c-mux-pca9541.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
-index 9e75d6b9140b..bd4cf8341a06 100644
---- a/drivers/i2c/muxes/i2c-mux-pca9541.c
-+++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
-@@ -43,20 +43,20 @@
- #define PCA9541_CONTROL		0x01
- #define PCA9541_ISTAT		0x02
- 
--#define PCA9541_CTL_MYBUS	(1 << 0)
--#define PCA9541_CTL_NMYBUS	(1 << 1)
--#define PCA9541_CTL_BUSON	(1 << 2)
--#define PCA9541_CTL_NBUSON	(1 << 3)
--#define PCA9541_CTL_BUSINIT	(1 << 4)
--#define PCA9541_CTL_TESTON	(1 << 6)
--#define PCA9541_CTL_NTESTON	(1 << 7)
--
--#define PCA9541_ISTAT_INTIN	(1 << 0)
--#define PCA9541_ISTAT_BUSINIT	(1 << 1)
--#define PCA9541_ISTAT_BUSOK	(1 << 2)
--#define PCA9541_ISTAT_BUSLOST	(1 << 3)
--#define PCA9541_ISTAT_MYTEST	(1 << 6)
--#define PCA9541_ISTAT_NMYTEST	(1 << 7)
-+#define PCA9541_CTL_MYBUS	BIT(0)
-+#define PCA9541_CTL_NMYBUS	BIT(1)
-+#define PCA9541_CTL_BUSON	BIT(2)
-+#define PCA9541_CTL_NBUSON	BIT(3)
-+#define PCA9541_CTL_BUSINIT	BIT(4)
-+#define PCA9541_CTL_TESTON	BIT(6)
-+#define PCA9541_CTL_NTESTON	BIT(7)
-+
-+#define PCA9541_ISTAT_INTIN	BIT(0)
-+#define PCA9541_ISTAT_BUSINIT	BIT(1)
-+#define PCA9541_ISTAT_BUSOK	BIT(2)
-+#define PCA9541_ISTAT_BUSLOST	BIT(3)
-+#define PCA9541_ISTAT_MYTEST	BIT(6)
-+#define PCA9541_ISTAT_NMYTEST	BIT(7)
- 
- #define BUSON		(PCA9541_CTL_BUSON | PCA9541_CTL_NBUSON)
- #define MYBUS		(PCA9541_CTL_MYBUS | PCA9541_CTL_NMYBUS)
--- 
-2.20.1
-
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
