@@ -2,75 +2,88 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22046C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9995DC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F19217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63EA620870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbfIEHFj (ORCPT
+        id S1731190AbfIEHID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:05:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36658 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731301AbfIEHFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:05:14 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E561910F23E3;
-        Thu,  5 Sep 2019 07:05:13 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-72.ams2.redhat.com [10.36.117.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 211D960BE1;
-        Thu,  5 Sep 2019 07:05:11 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 6832231EEC; Thu,  5 Sep 2019 09:05:10 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/8] drm/vram: switch to gem vma offset manager
-Date:   Thu,  5 Sep 2019 09:05:04 +0200
-Message-Id: <20190905070509.22407-4-kraxel@redhat.com>
-In-Reply-To: <20190905070509.22407-1-kraxel@redhat.com>
-References: <20190905070509.22407-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Thu, 05 Sep 2019 07:05:14 +0000 (UTC)
+        Thu, 5 Sep 2019 03:08:03 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:16472 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729366AbfIEHID (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 03:08:03 -0400
+Received: from droid13.amlogic.com (116.236.93.172) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server id 15.1.1591.10; Thu, 5 Sep 2019
+ 15:08:52 +0800
+From:   Jianxin Pan <jianxin.pan@amlogic.com>
+To:     Kevin Hilman <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>
+CC:     Jianxin Pan <jianxin.pan@amlogic.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carlo Caione <carlo@caione.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Jian Hu <jian.hu@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Victor Wan <victor.wan@amlogic.com>,
+        Qiufang Dai <qiufang.dai@amlogic.com>,
+        Tao Zeng <tao.zeng@amlogic.com>
+Subject: [PATCH v2 0/4] arm64: Add basic support for Amlogic A1 SoC Family
+Date:   Thu, 5 Sep 2019 03:07:26 -0400
+Message-ID: <1567667251-33466-1-git-send-email-jianxin.pan@amlogic.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [116.236.93.172]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass gem vma_offset_manager to ttm_bo_device_init(), so ttm uses it
-instead of its own embedded struct.  This makes some gem functions
-(specifically drm_gem_object_lookup) work on ttm objects.
+A1 is an application processor designed for smart audio and IoT applications,
+with Dual core ARM Cortex-A35 CPU. Unlike the previous GXL and G12 series,
+there is no Cortex-M3 AO CPU in it.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/drm_vram_mm_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This serial add basic support for the Amlogic A1 based Amlogic AD401 board:
+which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+Timer, UART. It's capable of booting up into the serial console.
 
-diff --git a/drivers/gpu/drm/drm_vram_mm_helper.c b/drivers/gpu/drm/drm_vram_mm_helper.c
-index 56fd1519eb35..3b2552bec4e6 100644
---- a/drivers/gpu/drm/drm_vram_mm_helper.c
-+++ b/drivers/gpu/drm/drm_vram_mm_helper.c
-@@ -172,7 +172,7 @@ int drm_vram_mm_init(struct drm_vram_mm *vmm, struct drm_device *dev,
- 
- 	ret = ttm_bo_device_init(&vmm->bdev, &bo_driver,
- 				 dev->anon_inode->i_mapping,
--				 NULL,
-+				 dev->vma_offset_manager,
- 				 true);
- 	if (ret)
- 		return ret;
+The pclk for uart_AO_B need to be fixed once A1 clock driver is merged.
+In this version, it rely on bootloader to enable the pclk gate
+
+Changes since v1 [0]:
+ - fix coding style
+ - collect Reviewed-by
+
+[0] https://lore.kernel.org/linux-amlogic/1567493475-75451-1-git-send-email-jianxin.pan@amlogic.com/
+
+Jianxin Pan (4):
+  soc: amlogic: meson-gx-socinfo: Add A1 and A113L IDs
+  dt-bindings: arm: amlogic: add A1 bindings
+  dt-bindings: arm: amlogic: add Amlogic AD401 bindings
+  arm64: dts: add support for A1 based Amlogic AD401
+
+ Documentation/devicetree/bindings/arm/amlogic.yaml |   6 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts     |  31 ++++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi          | 122 +++++++++++++++++++++
+ drivers/soc/amlogic/meson-gx-socinfo.c             |   2 +
+ 5 files changed, 162 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1-ad401.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-a1.dtsi
+
 -- 
-2.18.1
+2.7.4
 
