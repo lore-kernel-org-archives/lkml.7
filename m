@@ -2,140 +2,133 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499BEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1BBC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FEC206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA02A2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:04:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhCB0Non"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403806AbfIESA1 (ORCPT
+        id S2403822AbfIESEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:00:27 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39688 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730995AbfIESA1 (ORCPT
+        Thu, 5 Sep 2019 14:04:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42679 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403808AbfIESEf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:00:27 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 595DB28DD72
-Message-ID: <93b49e964b1f9f5c799affd2ab5416a16f0dda23.camel@collabora.com>
-Subject: Re: [PATCH for 5.4] media: hantro: Fix s_fmt for dynamic resolution
- changes
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org
-Cc:     kernel@collabora.com,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Thu, 05 Sep 2019 15:00:15 -0300
-In-Reply-To: <1567603704.3041.10.camel@pengutronix.de>
-References: <20190903171256.25052-1-ezequiel@collabora.com>
-                 <1567592011.3041.1.camel@pengutronix.de>
-                 <37bbd1b8ee7bb82c75aefb675e0c3ddd955dde0b.camel@collabora.com>
-         <1567603704.3041.10.camel@pengutronix.de>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 5 Sep 2019 14:04:35 -0400
+Received: by mail-pg1-f194.google.com with SMTP id p3so1824237pgb.9;
+        Thu, 05 Sep 2019 11:04:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=5Txs8VAPnXGIf8GTDK3ZKbmSl6EOvud6WzjlGid3JPU=;
+        b=ZhCB0Nonj3gFneSqLa92SuVHC9IgVs6cKMaMkTpUFxGd55oHGSaZHuPd48zNZ/M0ib
+         37p870SX5/SlaWaESMJ+uAtwusA8+QJSxCd6MQiMuqN6xgg2UtpbUMKX70AQilD7c4TX
+         uO6kHd4krZruQ9U2PjSmzRpRBlii4l5vluhhKrjN8pxQlmXWb2pd+8UEaEiBbpb0xP0Y
+         cxYtVeTcjA+8PQ4Q/7LJN6YiDjeIH5cFG7x+h1Sy8ZPYxdMWrUl+aGpIW4NhjEW8g/w1
+         Z+03OtpeGLBr/OyHTdr+USOW2dYMFoWZVcHXSPLtQ7IT+3g4Wb7HkbJsW6wzocfhuqu3
+         Epqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=5Txs8VAPnXGIf8GTDK3ZKbmSl6EOvud6WzjlGid3JPU=;
+        b=ZE/zEFvVy32CKPDDKs+KiRCdq715kPmXm84iRXE8W7ovhuLD81tYyWdS/Hy6DyN7J/
+         Z9rtpxBiechGPbVMUtRATuvXiljfyFjbbYk7z9YS9NEty+L38SAnruvIbsuT2dCuohhd
+         YnQyHmjzHKeTph9wPhSQbY85BOYk4CzeFLGvjllaxzWzEzHz23w+KT3hZAUnMhahRBMn
+         Bm+8nlvOEFFXXuti0Z+2L4JifMaLBK/NHv/xasI1K66Krsqpm9LPoWWJnXWAIuFkl2ce
+         /Hc68UKJd5TF7yowJ25+IxnTzOro79Nf7zEp1z5BfwfpdNXQvWlExuOlzDrB0+hnaZxi
+         Pn5Q==
+X-Gm-Message-State: APjAAAWPuG8t/MYfL5YiVV1RfQijaqO/uZxE7rOTvNC9pl+B0HGX0aKE
+        mFEVbVy305Z2nvdPp1z/yt1lPOIg
+X-Google-Smtp-Source: APXvYqzCX2u/8LIA815JES2DTFxq97719BEhEovJICs0D9Y0aCAxaQrLFa4yL1/cTDPmXOueCVLuXw==
+X-Received: by 2002:a65:6454:: with SMTP id s20mr4343018pgv.15.1567706674352;
+        Thu, 05 Sep 2019 11:04:34 -0700 (PDT)
+Received: from SD ([2409:4041:2682:8a8d:f8f8:fdec:f250:db13])
+        by smtp.gmail.com with ESMTPSA id y6sm3372556pfp.82.2019.09.05.11.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 11:04:33 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 23:34:23 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     linux@roeck-us.net, peda@axentia.se
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] i2c: muxes: pca9541: use BIT() macro
+Message-ID: <20190905180423.GA7477@SD>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-04 at 15:28 +0200, Philipp Zabel wrote:
-> On Wed, 2019-09-04 at 10:01 -0300, Ezequiel Garcia wrote:
-> > On Wed, 2019-09-04 at 12:13 +0200, Philipp Zabel wrote:
-> > > Hi Ezequiel,
-> > > 
-> > > On Tue, 2019-09-03 at 14:12 -0300, Ezequiel Garcia wrote:
-> > > > Commit 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> > > > changed the conditions under S_FMT was allowed for OUTPUT
-> > > > CAPTURE buffers.
-> > > > 
-> > > > However, and according to the mem-to-mem stateless decoder specification,
-> > > > in order to support dynamic resolution changes, S_FMT should be allowed
-> > > > even if OUTPUT buffers have been allocated.
-> > > > 
-> > > > Relax decoder S_FMT restrictions on OUTPUT buffers, allowing a resolution
-> > > > modification, provided the pixel format stays the same.
-> > > > 
-> > > > Tested on RK3288 platforms using ChromiumOS Video Decode/Encode Accelerator Unittests.
-> > > > 
-> > > > Fixes: 953aaa1492c53 ("media: rockchip/vpu: Prepare things to support decoders")
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > ---
-> > > >  drivers/staging/media/hantro/hantro_v4l2.c | 22 ++++++++++++++++------
-> > > >  1 file changed, 16 insertions(+), 6 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/staging/media/hantro/hantro_v4l2.c b/drivers/staging/media/hantro/hantro_v4l2.c
-> > > > index 3dae52abb96c..d48b548842cf 100644
-> > > > --- a/drivers/staging/media/hantro/hantro_v4l2.c
-> > > > +++ b/drivers/staging/media/hantro/hantro_v4l2.c
-> > > > @@ -367,19 +367,22 @@ vidioc_s_fmt_out_mplane(struct file *file, void *priv, struct v4l2_format *f)
-> > > >  {
-> > > >  	struct v4l2_pix_format_mplane *pix_mp = &f->fmt.pix_mp;
-> > > >  	struct hantro_ctx *ctx = fh_to_ctx(priv);
-> > > > +	struct vb2_queue *vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> > > >  	const struct hantro_fmt *formats;
-> > > >  	unsigned int num_fmts;
-> > > > -	struct vb2_queue *vq;
-> > > >  	int ret;
-> > > >  
-> > > > -	/* Change not allowed if queue is busy. */
-> > > > -	vq = v4l2_m2m_get_vq(ctx->fh.m2m_ctx, f->type);
-> > > > -	if (vb2_is_busy(vq))
-> > > > -		return -EBUSY;
-> > > > -
-> > > >  	if (!hantro_is_encoder_ctx(ctx)) {
-> > > >  		struct vb2_queue *peer_vq;
-> > > >  
-> > > > +		/*
-> > > > +		 * In other to support dynamic resolution change,
-> > > > +		 * the decoder admits a resolution change, as long
-> > > > +		 * as the pixelformat remains. Can't be done if streaming.
-> > > > +		 */
-> > > > +		if (vb2_is_streaming(vq) || (vb2_is_busy(vq) &&
-> > > > +		    pix_mp->pixelformat != ctx->src_fmt.pixelformat))
-> > > 
-> > > Before using contents of the v4l2_format f for comparison, we should run
-> > > vidioc_try_fmt_out_mplane over it.
-> > 
-> > Right, good catch.
-> > 
-> > >  Also, besides pixelformat, sizeimage
-> > > shouldn't change either, at least if this is a VB2_MMAP queue.
-> > > 
-> > 
-> > This is the OUTPUT queue, so I don't see why the sizeimage
-> > of the coded buffers should stay the same. Maybe I'm missing
-> > something? 
-> 
-> If the OUTPUT vb2_queue is busy, we already have some buffers of the old
-> size allocated. We can't change their size dynamically with just
-> VIDIOC_S_FMT.
-> 
-> Maybe this should correct sizeimage to the old size instead of returning
-> -EBUSY? Either way, if the old buffer size is too small to reasonably
-> decode the new resolution, the OUTPUT buffers have to be reallocated.
-> 
+Use bit mask macro BIT() for definition where appropriate.
 
-Note that for a decoder, the OUTPUT side buffers are coded. Is there any
-straightforward correlation between the buffer size and the resolution?
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+Changes in v2:
+* Include linux/bits.h which defines BIT()
 
-In other words, how does the driver figure out if the size is
-resonably large?
+ drivers/i2c/muxes/i2c-mux-pca9541.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-Regards,
-Ezequiel
+diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
+index 50e1fb4aedf5..c9b17a305bb5 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca9541.c
++++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
+@@ -16,6 +16,7 @@
+  * warranty of any kind, whether express or implied.
+  */
+ 
++#include <linux/bits.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/i2c.h>
+@@ -42,20 +43,20 @@
+ #define PCA9541_CONTROL		0x01
+ #define PCA9541_ISTAT		0x02
+ 
+-#define PCA9541_CTL_MYBUS	(1 << 0)
+-#define PCA9541_CTL_NMYBUS	(1 << 1)
+-#define PCA9541_CTL_BUSON	(1 << 2)
+-#define PCA9541_CTL_NBUSON	(1 << 3)
+-#define PCA9541_CTL_BUSINIT	(1 << 4)
+-#define PCA9541_CTL_TESTON	(1 << 6)
+-#define PCA9541_CTL_NTESTON	(1 << 7)
+-
+-#define PCA9541_ISTAT_INTIN	(1 << 0)
+-#define PCA9541_ISTAT_BUSINIT	(1 << 1)
+-#define PCA9541_ISTAT_BUSOK	(1 << 2)
+-#define PCA9541_ISTAT_BUSLOST	(1 << 3)
+-#define PCA9541_ISTAT_MYTEST	(1 << 6)
+-#define PCA9541_ISTAT_NMYTEST	(1 << 7)
++#define PCA9541_CTL_MYBUS	BIT(0)
++#define PCA9541_CTL_NMYBUS	BIT(1)
++#define PCA9541_CTL_BUSON	BIT(2)
++#define PCA9541_CTL_NBUSON	BIT(3)
++#define PCA9541_CTL_BUSINIT	BIT(4)
++#define PCA9541_CTL_TESTON	BIT(6)
++#define PCA9541_CTL_NTESTON	BIT(7)
++
++#define PCA9541_ISTAT_INTIN	BIT(0)
++#define PCA9541_ISTAT_BUSINIT	BIT(1)
++#define PCA9541_ISTAT_BUSOK	BIT(2)
++#define PCA9541_ISTAT_BUSLOST	BIT(3)
++#define PCA9541_ISTAT_MYTEST	BIT(6)
++#define PCA9541_ISTAT_NMYTEST	BIT(7)
+ 
+ #define BUSON		(PCA9541_CTL_BUSON | PCA9541_CTL_NBUSON)
+ #define MYBUS		(PCA9541_CTL_MYBUS | PCA9541_CTL_NMYBUS)
+-- 
+2.20.1
 
