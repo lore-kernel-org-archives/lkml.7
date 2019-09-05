@@ -2,92 +2,127 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8C2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0A7C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF71E20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90DA20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BM+ek/d3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rs23x8dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbfIEQN1 (ORCPT
+        id S1732754AbfIEQQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:13:27 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38323 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbfIEQN0 (ORCPT
+        Thu, 5 Sep 2019 12:16:49 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33824 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729050AbfIEQQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:13:26 -0400
-Received: by mail-lj1-f195.google.com with SMTP id y23so2782778ljn.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:13:25 -0700 (PDT)
+        Thu, 5 Sep 2019 12:16:48 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n9so1696188pgc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j8yKc9SHJAoYLzBrn3BT3OVSk2JhvmmAFDyBdCdHQDQ=;
-        b=BM+ek/d3V9T6GKREugYTLjnPwoLY87hw+TftOCbo0oTZp5p0Qpt3Uze1Oz0p6viGqj
-         94KLegS8mri/SGOpqrLeNW7YOyCOB4kP90Un6kzSr8WBpOdH925KmCgl7t/5pd38ji+4
-         v37BX55Lpk3GaWdgORhcSzxWYqTZBLTFbpqpeRs2dgIPKMruBEp6k+WI+8dBDqVGI5MH
-         VsOUzyBIttSKNaWSooyeI8tvfISBqHx/McEurKNuBCpBgqn40bHKGUFk/dGYPU0RyPqs
-         DfXW/IPuSPN6cyHjDYgE3RxzBIeTs91yLBXcE/f1bzWwu8SHEIJH2g3tEPMoTI5qNBfQ
-         lFhA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zLM+6nR5kv0jA5pGHIzbvsVXa3x+dUW2QtYks/r40f8=;
+        b=Rs23x8dw7GNwFF5sAuRVlA7534c9DKs0L/yALEsSWRiX4/5qSOq4NsK/+UkxmIa5la
+         Gq/rTRc8kEE1eEFrGxGAuNTTnQ0iawxg53jfe6sYokG7mIkkq3ZYbAE1uMWLCmsnerLw
+         +pC8IIsmjQ2c7fy3Y9Qq+TjopTvaljw//fQliuUdnTRWCD+tev7K5ztgokg9Qw5qdoRi
+         LKD6d0yFh9jVBb/gWWCma52CyZziSZyX6VcXQ/WVHH7eQt66nfsmI5Zn5Dd849Dwqmyj
+         BZjMHQ9xA9yr1+faHo1NgNM8I47zagV/SXGBm4tcYhSdY7w/8Zt/7H2SRUPZH9wE0Ohw
+         raZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j8yKc9SHJAoYLzBrn3BT3OVSk2JhvmmAFDyBdCdHQDQ=;
-        b=X9IE9L08EFriRfLylIt/Z4Sq9zXUOTzhh3in5c2e4Piay20JmynwEgBUuyUMdpt5Jt
-         VIiTlSB2iXompSCneanFONFP8jJH8jaV4W9XOY7kEhVJNbNuWYoupQhr2KkLcgRMmRsd
-         GMMX/AZs/AHZpcSISKddaiECGECGbeVlin6p0B+RqpiDQgp9BSubTYVSt6i8TffK44IH
-         N9QjnS7DHdyJVNTSAyR4y60SkoQUC/U48j0Nc7kXtsy2qU/d2WXpj3wgplbMLaQSk8p6
-         G5KSOCkGPRtZBxwwjnQsbaGnnw+yi9Xu8aDelyMbX0c27V+BsqXewDiSFQ2E42Iw1y5P
-         3Odg==
-X-Gm-Message-State: APjAAAXzjrgL1mE6qNOOEAnzAQIinyuPr1/m+uAMJerTe5kS/Nez0W8a
-        VHgnacxsaIxuK0y1aB05+eV4LIHXSiJ814g4Ke8=
-X-Google-Smtp-Source: APXvYqzCTJkFJfiZRgqh5jU9AOsfmAvYm1fHOp9MWUc9KkIpke8TwJqseKNrFfCUzEiq7/yLXkENRlHrZUvUktncius=
-X-Received: by 2002:a2e:9555:: with SMTP id t21mr2605931ljh.93.1567700004732;
- Thu, 05 Sep 2019 09:13:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=zLM+6nR5kv0jA5pGHIzbvsVXa3x+dUW2QtYks/r40f8=;
+        b=bvuVEaYencJiNQL+ZXgKGI7HQ0JFNcEphNUj9CLuMei5KlW3qFW072Dd+AtVE8aD+7
+         mlxGzR+lnEHHSnJ+4ZzmKzsu7sf6LIiNmSNRzKZV7Rov3x5/LtXM043bfejH2sOsjdQx
+         eoEoW5ZPRD9NjwxBdqHpu/i3Hbg7qXEKXjZshU8RGbFtQip7KP4Dzh1OuA9VX1wP1XCF
+         XSQmGn1mmXUGHcR45bgoqYwN7l9EIrdwV9jWn5NeBwlt3Y8JqvwPOdbm4azTyiL9Ra7U
+         3MyJdZ56Zj0HTVvdPUvrmoO7dsc8r0wrkUeQhO+qrIVR09c9+jO3U44or7EdRjkOoBh/
+         g8Zg==
+X-Gm-Message-State: APjAAAUnrxAVcWIBbh/lN3UJRMZpZGlHaf3fVDF1KXYK0HXltxXR1p0K
+        DkvrtCFl3GefJx16UhMZezdpiA==
+X-Google-Smtp-Source: APXvYqxEBFkp4cs0Pgueg9uCVRPDD958q5uceWoGhxYtP8uOhgc042tzvTTvOAKl/Q+rSGxux5qnbg==
+X-Received: by 2002:a63:5648:: with SMTP id g8mr3831728pgm.81.1567700207580;
+        Thu, 05 Sep 2019 09:16:47 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:765b:31cb:30c4:166])
+        by smtp.gmail.com with ESMTPSA id c125sm4858015pfa.107.2019.09.05.09.16.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 09:16:46 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 09:16:42 -0700
+From:   Eric Biggers <ebiggers@google.com>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     stable@vger.kernel.org, paulus@samba.org,
+        linux-ppp@vger.kernel.org, netdev@vger.kernel.org, arnd@arndb.de,
+        orsonzhai@gmail.com, vincent.guittot@linaro.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BACKPORT 4.14.y v2 5/6] ppp: mppe: Revert "ppp: mppe: Add
+ softdep to arc4"
+Message-ID: <20190905161642.GA5659@google.com>
+Mail-Followup-To: Baolin Wang <baolin.wang@linaro.org>,
+        stable@vger.kernel.org, paulus@samba.org, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org, arnd@arndb.de, orsonzhai@gmail.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
+References: <cover.1567649728.git.baolin.wang@linaro.org>
+ <c24710bae9098ba971a2778a1a44627d5fa3ddc0.1567649729.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-5-linux@rasmusvillemoes.dk>
- <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
- <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk> <20190905134535.GP9749@gate.crashing.org>
- <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com>
-In-Reply-To: <CANiq72nXXBgwKcs36R+uau2o1YypfSFKAYWV2xmcRZgz8LRQww@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 5 Sep 2019 18:13:13 +0200
-Message-ID: <CANiq72ne3TWt7ydmt9eZsawMfAs-qgPoM92-c1EJ=zfFTdcBQw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c24710bae9098ba971a2778a1a44627d5fa3ddc0.1567649729.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 5:52 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> Yes and no. GNU libc defines feature test macros like you say, but
-> C++'s feature macros are like Rasmus/Nick are saying. I think libc's
-> definition is weird, I would call those "feature selection macros"
-> instead, because the user is selecting between some features (whether
-> to enable or not, for instance), rather than testing for the features.
+On Thu, Sep 05, 2019 at 11:10:45AM +0800, Baolin Wang wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> [Upstream commit 25a09ce79639a8775244808c17282c491cff89cf]
+> 
+> Commit 0e5a610b5ca5 ("ppp: mppe: switch to RC4 library interface"),
+> which was merged through the crypto tree for v5.3, changed ppp_mppe.c to
+> use the new arc4_crypt() library function rather than access RC4 through
+> the dynamic crypto_skcipher API.
+> 
+> Meanwhile commit aad1dcc4f011 ("ppp: mppe: Add softdep to arc4") was
+> merged through the net tree and added a module soft-dependency on "arc4".
+> 
+> The latter commit no longer makes sense because the code now uses the
+> "libarc4" module rather than "arc4", and also due to the direct use of
+> arc4_crypt(), no module soft-dependency is required.
+> 
+> So revert the latter commit.
+> 
+> Cc: Takashi Iwai <tiwai@suse.de>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  drivers/net/ppp/ppp_mppe.c |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
+> index d9eda7c..6c7fd98 100644
+> --- a/drivers/net/ppp/ppp_mppe.c
+> +++ b/drivers/net/ppp/ppp_mppe.c
+> @@ -63,7 +63,6 @@
+>  MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
+>  MODULE_LICENSE("Dual BSD/GPL");
+>  MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
+> -MODULE_SOFTDEP("pre: arc4");
 
-By the way, this is not to criticize libc, I imagine they employed that
-nomenclature since that is what some standards used, but still, the
-naming is not great from the users' perspective vs. the header
-writer's perspective, IMO.
+Why is this being backported?  This revert was only needed because of a
+different patch that was merged in v5.3, as I explained in the commit message.
 
-Cheers,
-Miguel
+- Eric
