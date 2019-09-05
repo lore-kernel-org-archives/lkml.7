@@ -2,192 +2,148 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E90AC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6CAC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56142082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67291206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391247AbfIEWlF (ORCPT
+        id S2391266AbfIEWmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:41:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47238 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbfIEWlF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:41:05 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A015C300BEB4;
-        Thu,  5 Sep 2019 22:41:04 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83EDB19C77;
-        Thu,  5 Sep 2019 22:41:02 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 23:41:00 +0100
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Srinath Mannam <srinath.mannam@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Abhinav Ratna <abhinav.ratna@broadcom.com>
-Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
-Message-ID: <20190905234100.4799bad8@x1.home>
-In-Reply-To: <20190905222649.GK103977@google.com>
-References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
-        <20190905222649.GK103977@google.com>
-Organization: Red Hat
+        Thu, 5 Sep 2019 18:42:44 -0400
+Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:37712 "EHLO
+        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725290AbfIEWmo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 18:42:44 -0400
+Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85MfSmY023499;
+        Thu, 5 Sep 2019 22:42:15 GMT
+Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2uu4s0axy0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 22:42:15 +0000
+Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
+        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 69D5984;
+        Thu,  5 Sep 2019 22:42:14 +0000 (UTC)
+Received: from [16.116.163.9] (unknown [16.116.163.9])
+        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id B1C1749;
+        Thu,  5 Sep 2019 22:42:11 +0000 (UTC)
+Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
+To:     Sasha Levin <sashal@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Hedi Berriche <hedi.berriche@hpe.com>,
+        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
+ <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
+ <20190905141634.GA25790@kroah.com> <20190905214030.GE1616@sasha-vm>
+From:   Mike Travis <mike.travis@hpe.com>
+Message-ID: <9745d473-e4bc-7ae2-fc67-a898c3606088@hpe.com>
+Date:   Thu, 5 Sep 2019 15:42:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 22:41:04 +0000 (UTC)
+In-Reply-To: <20190905214030.GE1616@sasha-vm>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_09:2019-09-04,2019-09-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 mlxlogscore=946 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0 clxscore=1011
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1906280000 definitions=main-1909050211
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 17:26:49 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> [+cc Alex]
-> 
-> On Tue, Aug 20, 2019 at 10:09:45AM +0530, Srinath Mannam wrote:
-> > From: Abhinav Ratna <abhinav.ratna@broadcom.com>
-> > 
-> > IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> > Add quirk to have separate IOMMU groups for all EPs and functions connected
-> > to root port, by masking RR/CR/SV/UF bits.
-> > 
-> > Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>  
-> 
-> I tentatively applied this to pci/misc with Scott's ack for v5.4.
-> 
-> I tweaked the patch itself to follow the style of similar quirks
-> (interdiff is below, plus a diff of the commit log).  Please make sure
-> I didn't break it.
-> 
-> I also went out on a limb and reworded the comment to give what I
-> *think* is the justification for this patch, as opposed to merely a
-> description of the code.  I'm making a lot of assumptions there, so
-> please confirm that they're correct, or supply alternate justification
-> if they're not.
 
-Agreed, this really needs to be the vendor vouching for ACS equivalent
-functionality, not simply splitting IOMMU groups because it's
-inconvenient.  Thanks,
+On 9/5/2019 2:40 PM, Sasha Levin wrote:
+> On Thu, Sep 05, 2019 at 04:16:34PM +0200, Greg KH wrote:
+>> On Thu, Sep 05, 2019 at 08:02:58AM -0500, Mike Travis wrote:
+>>> --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
+>>> +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+>>> @@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
+>>>      struct uv_systab *st;
+>>>      int i;
+>>>
+>>> -    if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
+>>> +    /* Select only UV4 (hubbed or hubless) and higher */
+>>> +    if (is_uv_hubbed(-2) < uv(4) && is_uv_hubless(-2) < uv(4))
+> 
+> For someone not too familiar with the code, this is completely
+> unreadable. There must be a nicer way to do this.
+> 
+> -- 
+> Thanks,
+> Sasha
 
-Alex
+Hi Sasha,
 
+I can put in further explanation but first the uv() function returns 1 
+left shifted by the UV #:
+
+static inline int uv(int uvtype)
+{
+         /* uv(0) is "any" */
+         if (uvtype >= 0 && uvtype <= 30)
+                 return 1 << uvtype;
+         return 1;
+}
+
+The "is_uv_hubbed(x)" and "is_uv_hubless(x)" AND's the incoming arg with 
+the actual uv type:
+
+int is_uv_hubbed(int uvtype)
+{
+         return (uv_hubbed_system & uvtype);
+}
+
+The uv_hub{bed,less}_system is set to 1 left shifted by the UV # plus in 
+bit 0 is a '1' to indicate "any" UV (as in "is_uv_hubbed(1)" is any UV 
+hubbed system).  Hubbed indicates a hubbed system, and hubless indicates 
+a hubless system, it cannot be both but can be neither.
+
+>                 /* UV4 Hubless, (0x11:UV4+Any) */
+>                 if (strncmp(oem_id, "NSGI4", 5) == 0)
+>                         uv_hubless_system = 0x11;
 > 
-> > ---
-> >  drivers/pci/quirks.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 0f16acc..f9584c0 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
-> >  	return acs_flags ? 0 : 1;
-> >  }
-> >  
-> > +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
-> > +{
-> > +	/*
-> > +	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> > +	 * Add quirk to to have separate IOMMU groups for all EPs and functions
-> > +	 * connected to root port, by masking RR/CR/SV/UF bits.
-> > +	 */
-> > +
-> > +	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> > +	int ret = acs_flags & ~flags ? 0 : 1;
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +
-> >  static const struct pci_dev_acs_enabled {
-> >  	u16 vendor;
-> >  	u16 device;
-> > @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
-> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
-> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
-> >  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> > +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
-> >  	{ 0 }
-> >  };  
+>                 /* UV3 Hubless, UV300/MC990X w/o hub (0x9:UV3+Any) */
+>                 else
+>                         uv_hubless_system = 0x9;
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 77c0330ac922..2edbce35e8c5 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4466,21 +4466,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
->  	return acs_flags ? 0 : 1;
->  }
->  
-> -static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
-> +static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
->  {
->  	/*
-> -	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> -	 * Add quirk to to have separate IOMMU groups for all EPs and functions
-> -	 * connected to root port, by masking RR/CR/SV/UF bits.
-> +	 * iProc PAXB Root Ports don't advertise an ACS capability, but
-> +	 * they do not allow peer-to-peer transactions between Root Ports.
-> +	 * Allow each Root Port to be in a separate IOMMU group by masking
-> +	 * SV/RR/CR/UF bits.
->  	 */
-> +	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
->  
-> -	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> -	int ret = acs_flags & ~flags ? 0 : 1;
-> -
-> -	return ret;
-> +	return acs_flags ? 0 : 1;
->  }
->  
-> -
->  static const struct pci_dev_acs_enabled {
->  	u16 vendor;
->  	u16 device;
-> @@ -4574,7 +4572,7 @@ static const struct pci_dev_acs_enabled {
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> -	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
-> +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
->  	{ 0 }
->  };
->  
-> 
-> 
-> 
-> @@ -1,49 +1,49 @@
-> -commit b50ae502eff0
-> +commit 46b2c32df7a4
->  Author: Abhinav Ratna <abhinav.ratna@broadcom.com>
->  Date:   Tue Aug 20 10:09:45 2019 +0530
->  
-> -    PCI: Add PCIE ACS quirk for IPROC PAXB
-> +    PCI: Add ACS quirk for iProc PAXB
->      
-> -    IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> -    Add quirk to have separate IOMMU groups for all EPs and functions connected
-> -    to root port, by masking RR/CR/SV/UF bits.
-> +    iProc PAXB Root Ports don't advertise an ACS capability, but they do not
-> +    allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
-> +    each Root Port can be in a separate IOMMU group.
->      
-> +    [bhelgaas: commit log, comment, use common implementation style]
->      Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
->      Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
->      Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> +    Acked-by: Scott Branden <scott.branden@broadcom.com>
->  
+
+(There are only hubbed versions of UV1 and UV2.)
+
+Lastly (-2) translates to 0xffff...fffe (note bit 0 is clear to avoid 
+the "any" bit.   So it is looking for a a hubbed or hubless UV system 
+that is less than UV4 meaning only UV4,5,6...qualify, hence this comment:
+
+ >>> +    /* Select only UV4 (hubbed or hubless) and higher */
+	if (UV is less than UV4 either hubbed or hubless)
+		return;  /* does not have an extended UVsystab */
+
+Have you a suggestion on what would make it more clear?  Perhaps instead 
+of -2 I should use a hex mask?
+
+Thanks,
+Mike
+
 
