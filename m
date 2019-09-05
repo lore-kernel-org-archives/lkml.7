@@ -2,148 +2,121 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B20FC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE37C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671BF2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IfOrNb+k"
+	by mail.kernel.org (Postfix) with ESMTP id 706FE21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732767AbfIEKJH (ORCPT
+        id S1732779AbfIEKLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:09:07 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:39153 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfIEKJH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:09:07 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190905100904euoutp019c3fb88940e131aac2700c13f8fe9444~BgvdSTqE20300203002euoutp01c;
-        Thu,  5 Sep 2019 10:09:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190905100904euoutp019c3fb88940e131aac2700c13f8fe9444~BgvdSTqE20300203002euoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1567678144;
-        bh=/gWIDZvkTZVAyd2igvpxAXU5UpAa7v1JWESLTLXaxFw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=IfOrNb+kZTkxao1FkAlfYSuc8UYpRuLZkeYTp0AmZWnqYGrhNdC1uJwpM1LUQ0o49
-         3Kw/1TAn0xoy5xgy2Jv1q092BWMiCrVw2rrOy3T1DGkgXu1xSY0zkkhfqa14/d6jag
-         vjigfdntWpwgehGDFmhxbPl55oa+X35ck/BjSiz4=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190905100903eucas1p1283984102bb9a7fb247fbcf34bf5dfcd~Bgvc2KnLq3213432134eucas1p1e;
-        Thu,  5 Sep 2019 10:09:03 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id E8.9C.04374.FBED07D5; Thu,  5
-        Sep 2019 11:09:03 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190905100902eucas1p1ce36a6d769640de92f9ff880728a3d26~BgvbnHTXS3108231082eucas1p15;
-        Thu,  5 Sep 2019 10:09:02 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190905100901eusmtrp1407fd3d63aef001914d4e303eb138f5b~BgvbXMxgv1278212782eusmtrp1k;
-        Thu,  5 Sep 2019 10:09:01 +0000 (GMT)
-X-AuditID: cbfec7f5-4ddff70000001116-92-5d70debf8784
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B6.F9.04166.DBED07D5; Thu,  5
-        Sep 2019 11:09:01 +0100 (BST)
-Received: from [106.120.51.75] (unknown [106.120.51.75]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190905100859eusmtip21ad6487f711eebd3b0f45bf62944f9e5~BgvZXo8JY1345813458eusmtip2b;
-        Thu,  5 Sep 2019 10:08:59 +0000 (GMT)
-Subject: Re: [PATCH -next 25/36] spi: s3c24xx: use
- devm_platform_ioremap_resource() to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>, broonie@kernel.org,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        eric@anholt.net, wahrenst@gmx.net, shc_work@mail.ru,
-        agross@kernel.org, khilman@baylibre.com, matthias.bgg@gmail.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, avifishman70@gmail.com,
-        tmaimon77@gmail.com, tali.perry1@gmail.com, venture@google.com,
-        yuenn@google.com, benjaminfair@google.com, kgene@kernel.org,
-        krzk@kernel.org, andi@etezian.org, palmer@sifive.com,
-        paul.walmsley@sifive.com, baohua@kernel.org, mripard@kernel.org,
-        wens@csie.org, ldewangan@nvidia.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, yamada.masahiro@socionext.com,
-        michal.simek@xilinx.com
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
-        linux-samsung-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-tegra@vger.kernel.org
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-Message-ID: <d3803e7b-4d5a-8260-e999-12465744c2a7@samsung.com>
-Date:   Thu, 5 Sep 2019 12:08:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Thu, 5 Sep 2019 06:11:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:41014 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbfIEKLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:11:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 195181576;
+        Thu,  5 Sep 2019 03:11:20 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 632483F718;
+        Thu,  5 Sep 2019 03:11:18 -0700 (PDT)
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <11aaa3a8-e6b9-cf1f-08bb-0f8e1b63942b@linux.intel.com> <c09bf5fc-8fc6-dddd-0a18-bd7d5f2136b5@linux.ibm.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Parth Shah <parth@linux.ibm.com>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        subhra mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, tglx@linutronix.de, steven.sistare@oracle.com,
+        dhaval.giani@oracle.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
+        mgorman@techsingularity.net
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+In-reply-to: <c09bf5fc-8fc6-dddd-0a18-bd7d5f2136b5@linux.ibm.com>
+Date:   Thu, 05 Sep 2019 11:11:16 +0100
+Message-ID: <87o8zz2gu3.fsf@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190904135918.25352-26-yuehaibing@huawei.com>
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TbUxbZRj17X1776Wz89LV8Ib5kXQkRjOByX48iQQx4cf9oUH/IYZoHXeM
-        yFdaOt1m4qClCgNWhhPabYBQt1EygcL42viQlRU2oUwCMhmjSAk40xKh6GBjs/R2kX/POc85
-        ec55k5elFFYmks3MyRc0OeosFS3DHTc3XG/2389Li+2clcPYwiMMDQ+XJLBRVS4Bz2AZBVfK
-        hjBU97opODvvoWGgYALBps/BwPxkMhgs9RhsZ7sxnF74i4KNb9ol4HK1MPBjXxOGunO7wL4w
-        JYWK/lEGSjYbKZjoOU/DhP4Ogo41Aw0VMwFttatPAgV/32Wg2G+hodAQB74/U8BYfFEKtwzL
-        GNpMdVIwWl6ARXMbDVuddgy+Jg+C5fYIONMVCT0DBQxs9NRg2Gx/gKB3oBWDc7g4kGfQJYHe
-        +2sI7q0vYTBuXqQTY/jClZs0vzJdxPCWuVGab/mjScr/Zl2l+G7LLMM32Ptpvs6u4w0Or5S3
-        24ppvs36Ne+q/gHx311wSPkyvY/mW31dEv70VuwHylRZfLqQlXlU0MQkfCo70rZsQnmtki/N
-        7h7qJNJLSlAYS7iDZHRxDZcgGavgLiNyyj9Oi8CPyM/fmykRrCFiejiPnlnuVbSFFpcQqf1n
-        XCoCLyK/ls4EVXu4w6Ry1Yq2F0quhCaO9cogoDgzRVzmu/S2iuYOkLKh8qBDziUQT40Bb8+Y
-        iyJLo8ag5kUuhay6b0hFTTgZMXuCmjAunvw0fzXIU1wEKfQ3huZXSaf3fDAf4cplpGzsHCMG
-        TyIj455QiT3kgbM9xL9EbleWYtGgR6T02gwjAhMic866kONtcsN5J3CCDZx4nTT3xIj0u+T6
-        L15mmybcbjLtDRdD7CZnOqookZaTb40KUR1FHtmqQk8fSU55nmITUll2VLPsqGPZUcfy/906
-        hG0oQtBpszMEbVyO8EW0Vp2t1eVkRB/KzbajwN+5/cS53oX6Hn82iDgWqZ6Xuy/kpimk6qPa
-        Y9mDiLCUSilvbs1LU8jT1ceOC5rcTzS6LEE7iPayWBUhP/Gc+2MFl6HOFz4XhDxB82wrYcMi
-        T6Jbw0/zx6MmU/2X7BOXtxQLj6firs1OR23F1e4tsibUZ0oao2c0SenvjdS83xWffGLyyf6a
-        yaJ/X5naFdb5O14ec1QfRtdbEl6u3Z/4judgcspKg5wbxexHqY1vscL0oeNM9D5NbO3cYrfm
-        qw/jlPor4Ulc4ms23b6hvOHm+quVWUoV1h5RH3iD0mjV/wEZcpemNwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf2wTZRjH895d725o43GM7E0TozQmGhM6bqX2GY4Fjc4DiZCoyVQarHBs
-        hHadvRaZEmVb2VxN6abg1hNmBwXCFh1txxiNZaMMUEltZDo1zP1wlU2QTmEmbGNou2Gy/755
-        v59PnudNHpbkO2gNu73MIdnLzBYtvYi6fO/S4PLoYLlpxcCfRvhudIaCI3fGCJhq3EdAMuYh
-        4QvPBQqaosMkHBhJ0tBT2YdgOtXLwMiPG8ClHKag9cAZCryjN0iYqu0gIJE4ycDRs20U+D97
-        AEKj/Spo6I4z4J4+QUJf5CANfdXfI+i87aKh4WqabUqcJaDy718YqJtUaKhy6SH1RzHU1B1T
-        wbeucQrC9X4V1CgPwe++MA2zp0MUpNqSCMY7cuDjLg1EeioZmIo0UzDdcR1BtCdIwaWv69L7
-        xBIERAdvIxj4Z4yCmulj9JpcsWriIi1O/LyXEZWhOC2e/K1NJf4UuEWKZ5RfGfFIqJsW/SGn
-        6Oq9qRJDrXW0GA58ICaaWpC4/1CvSvRUp2gxmOoiRO/sio3Zr+sK7DanQ3q01CY7VmvfECBP
-        J+SDLm9lvk7QG02r8gza3MKCrZJl+07Jnlv4pq40PF6PyoPELt9whNyDqgk3ymIxtxIPNIRJ
-        N1rE8txRhK9VVzFuxKYLDf7cpZ1nluC7/W56nrmB8Mzxe0ymWMJtw5/cCqBMkc25adzoujpH
-        kZyPxO2+v+gMxXMW7B3unxtHcwL2XNiHMlnNFeJks4vKZIp7DI/Fa+b4pVwxPt+l3GcW4298
-        yTkmiyvAX46cUmUyyT2O7zZfIedzDq6aPHH//RF8+uZBsh7xygJdWaAoCxRlgeJHVCvKlpyy
-        tcQqCzrZbJWdZSW6LTZrCKUvtvPiVLgLXQm+HEMci7QPqocP2Uy8yrxTrrDGEGZJbba6PVhu
-        4tVbzRXvSnbbZrvTIskxZEh/roHULN1iS99/mWOzYBCMkC8Y9Ub9U6DNUX/IndvEcyVmh7RD
-        ksol+/8ewWZp9qD1z67zrck1zUZeOd7y9vPtnfHa1QPFRYZJYn3WhgL5xZJ4xcgdU3iSS1mu
-        767ctdZz/t9P98LE7lr+hxeW9egbg4vf8gbcLz1j22bb1F0/U/oEvO9YZhqMFp3yLrfqmcBh
-        /7VzxNNJ1vDae/6hVQ9/tH/HVy1Frz5nu/zOWs0QP+5Zp6XkUrPwJGmXzf8Bw90gF8cDAAA=
-X-CMS-MailID: 20190905100902eucas1p1ce36a6d769640de92f9ff880728a3d26
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190905100902eucas1p1ce36a6d769640de92f9ff880728a3d26
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190905100902eucas1p1ce36a6d769640de92f9ff880728a3d26
-References: <20190904135918.25352-1-yuehaibing@huawei.com>
-        <20190904135918.25352-26-yuehaibing@huawei.com>
-        <CGME20190905100902eucas1p1ce36a6d769640de92f9ff880728a3d26@eucas1p1.samsung.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 15:59, YueHaibing wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+On Thu, Sep 05, 2019 at 07:15:34 +0100, Parth Shah wrote...
 
+> On 9/4/19 11:02 PM, Tim Chen wrote:
+>> On 8/30/19 10:49 AM, subhra mazumdar wrote:
+>>> Add Cgroup interface for latency-nice. Each CPU Cgroup adds a new file
+>>> "latency-nice" which is shared by all the threads in that Cgroup.
+>> 
+>> 
+>> Subhra,
+>> 
+>> Thanks for posting the patchset.  Having a latency nice hint
+>> is useful beyond idle load balancing.  I can think of other
+>> application scenarios, like scheduling batch machine learning AVX 512
+>> processes with latency sensitive processes.  AVX512 limits the frequency
+>> of the CPU and it is best to avoid latency sensitive task on the
+>> same core with AVX512.  So latency nice hint allows the scheduler
+>> to have a criteria to determine the latency sensitivity of a task
+>> and arrange latency sensitive tasks away from AVX512 tasks.
+>> 
+>
+>
+> Hi Tim and Subhra,
+>
+> This patchset seems to be interesting for my TurboSched patches as well
+> where I try to pack jitter tasks on fewer cores to get higher Turbo Frequencies.
+> Well, the problem I face is that we sometime end up putting multiple jitter tasks on a core
+> running some latency sensitive application which may see performance degradation.
+> So my plan was to classify such tasks to be latency sensitive thereby hinting the load
+> balancer to not put tasks on such cores.
+>
+> TurboSched: https://lkml.org/lkml/2019/7/25/296
+>
+>> You configure the latency hint on a cgroup basis.
+>> But I think not all tasks in a cgroup necessarily have the same
+>> latency sensitivity.
+>> 
+>> For example, I can see that cgroup can be applied on a per user basis,
+>> and the user could run different tasks that have different latency sensitivity.
+>> We may also need a way to configure latency sensitivity on a per task basis instead on
+>> a per cgroup basis.
+>> 
+>
+> AFAIU, the problem defined above intersects with my patches as well where the interface
+> is required to classify the jitter tasks. I have already tried few methods like
+> syscall and cgroup to classify such tasks and maybe something like that can be adopted
+> with these patchset as well.
+
+Agree, these two patchest are definitively overlapping in terms of
+mechanisms and APIs to expose to userspace. You to guys seems to target
+different goals but the general approach should be:
+
+ - expose a single and abstract concept to user-space
+   latency-nice or latency-tolerant as PaulT proposed at OSPM
+
+ - map this concept in kernel-space to different kind of bias, both at
+   wakeup time and load-balance time, and use both for RT and CFS tasks.
+
+That's my understanding at least ;)
+
+I guess we will have interesting discussions at the upcoming LPC to
+figure out a solution fitting all needs.
+
+> Thanks,
+> Parth
+
+Best,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
