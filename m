@@ -2,120 +2,148 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4B0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6804FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B642067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5B0206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:47:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pn3UjrWJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQ8fdCt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404033AbfIEUpe (ORCPT
+        id S2391644AbfIEUr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:45:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37826 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731142AbfIEUpe (ORCPT
+        Thu, 5 Sep 2019 16:47:26 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41901 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731142AbfIEUrZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:45:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85KhxwM001368;
-        Thu, 5 Sep 2019 20:44:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=aqDnQxZxonMvjcV/XCftl9y61xAtbi3wkQPOl+rmUng=;
- b=Pn3UjrWJWLwxEHkpvou1UJExMc0Liv/nmZSrk7VX++NAw1ezKbm9WaQf4lURWXxrI1/a
- Vkw/DVE95sl5Rjy6DwZh/dXUEqp/O8E77IEdgPeQ0AY7CGOTNkOrEZtO8t0cYoaD6flW
- l1VWePBA1+IPut4Ds8jbbfmNW9ZzTnf9H4EnXfzjaLMsgN3BjKwJy2NpkWUrO7cQKjOB
- Eu2dAeOXqRApuMG7SVYk3L509nzC4N027wGWsIy4NZfcaWQnwiWk/l7Esak/m7DEsisk
- IMh/TW6L/ZwV2WJr/VxWgO8X1UDNDFeaGebBsQo6k5NqjkUHA+C9Ol5yTIpa5NLunS+T BA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2uu9g9026y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Sep 2019 20:44:54 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x85KhQo5157189;
-        Thu, 5 Sep 2019 20:44:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2utpmbtvfy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 05 Sep 2019 20:44:53 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x85Kinhv005857;
-        Thu, 5 Sep 2019 20:44:49 GMT
-Received: from [10.132.91.113] (/10.132.91.113)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 05 Sep 2019 13:44:49 -0700
-Subject: Re: [RFC PATCH 7/9] sched: search SMT before LLC domain
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com,
-        patrick.bellasi@arm.com
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-8-subhra.mazumdar@oracle.com>
- <20190905093127.GI2349@hirez.programming.kicks-ass.net>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <fadf55b2-c825-8636-6c9a-6eedf9a20733@oracle.com>
-Date:   Thu, 5 Sep 2019 13:40:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 16:47:25 -0400
+Received: by mail-ed1-f68.google.com with SMTP id z9so4177585edq.8;
+        Thu, 05 Sep 2019 13:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kB2jjwTxmG739/c0X2n3JU0/QMvBG/XQ10gbX2t4+Y0=;
+        b=fQ8fdCt8EW4/NlLWLwQGlzuxB9Cb0xJQpoiNZFpeo7vpr1WiyuFy52ABSmJLhHRX2m
+         o9A+tnlGklM4eqRSQN3Hcb2lkRhxkBtQPUMfjcM99jrctka6tLjodmyCyZdUlCoLwTxo
+         gTa8VSJXt2JUBYOCOabyyPzREEmlZnlhgrFx7fdZ1wrdRBOhehNmhoGOK+mLw3L3DR/4
+         NIt6wa8pDEhChnM94cXIVZi4YTooBKMAYHRxs9hAmIiEp04Mtqnz6jIUJXfPmBHh1xWt
+         xfR1K+JHkpuqvea3pXidDqDZ1GUZDJU5AzyzNPSTDSPNwxkg2hu4rb3mixSO1JlCGBDx
+         9oMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kB2jjwTxmG739/c0X2n3JU0/QMvBG/XQ10gbX2t4+Y0=;
+        b=d7bgdxU+0xz0AVvDGy1dF+q9V4UJoJjgID7Lm30w6Zz1t6ngIVWenPxLNUDYhWnBe4
+         RekFifLywRi80Z2nv8cUxpC5vAjvltvQmPZW+a3sYDI69p9u1UyYFcIQJNd3qO16ECGr
+         bkd8DXK62YP9PWeA9CDOdyfZlnv8P2t28fTZxHT4ZtrLPw8hCtxQtVBWued3/ah5m4r8
+         Cnv+W7KgIukm/jriFmbEr4PIa3Vu+Zr5E/LIMFBm6ujbGmAtFZNT2g7g3y4avW3X1bta
+         vA7m12ltcGQJkulNQcq8m40Rubx9HlweFmf5oamIc3K9Kv+xj3+nds4XGiAZwPXnOCeB
+         Tc1g==
+X-Gm-Message-State: APjAAAXXl5BC5/A044kwHNNI4Ty6sZdXoaVuckVBfd/uHYiFCXxt2kF+
+        ma89UjcKXHpJXH5BkdzvtOHS3mpThdSm6myPwI5WKE9h
+X-Google-Smtp-Source: APXvYqz7tCLIOTjgqv3aJAxKS0GQAQXdJfEE8ntxpKWtICMOaScSqpWOtFxjgwihZYRLoPn594HD1NCdYyCtHE7pw3I=
+X-Received: by 2002:a17:906:4056:: with SMTP id y22mr4662235ejj.230.1567716444102;
+ Thu, 05 Sep 2019 13:47:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190905093127.GI2349@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1906280000 definitions=main-1909050193
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9371 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1906280000
- definitions=main-1909050193
+References: <20190903010817.GA13595@embeddedor> <cb7d53cd-3f1e-146b-c1ab-f11a584a7224@gmail.com>
+ <CA+h21hpCAJhE8xhsgDQ55_MUUiesV=uVY4tD=TzaCE6wynUPoQ@mail.gmail.com> <8736hd9ilm.fsf@intel.com>
+In-Reply-To: <8736hd9ilm.fsf@intel.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Thu, 5 Sep 2019 23:47:13 +0300
+Message-ID: <CA+h21hqtuGuJm0rMx_SZAy_HCjSVD_UK1j8wa7fv+p_zUGNV7A@mail.gmail.com>
+Subject: Re: [PATCH] net: sched: taprio: Fix potential integer overflow in taprio_set_picos_per_byte
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vinicius,
 
-On 9/5/19 2:31 AM, Peter Zijlstra wrote:
-> On Fri, Aug 30, 2019 at 10:49:42AM -0700, subhra mazumdar wrote:
->> Search SMT siblings before all CPUs in LLC domain for idle CPU. This helps
->> in L1 cache locality.
->> ---
->>   kernel/sched/fair.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 8856503..94dd4a32 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -6274,11 +6274,11 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
->>   			return i;
->>   	}
->>   
->> -	i = select_idle_cpu(p, sd, target);
->> +	i = select_idle_smt(p, target);
->>   	if ((unsigned)i < nr_cpumask_bits)
->>   		return i;
->>   
->> -	i = select_idle_smt(p, target);
->> +	i = select_idle_cpu(p, sd, target);
->>   	if ((unsigned)i < nr_cpumask_bits)
->>   		return i;
->>   
-> But it is absolutely conceptually wrong. An idle core is a much better
-> target than an idle sibling.
-This is select_idle_smt not select_idle_core.
+On Wed, 4 Sep 2019 at 00:26, Vinicius Costa Gomes
+<vinicius.gomes@intel.com> wrote:
+>
+> Hi,
+>
+> Vladimir Oltean <olteanv@gmail.com> writes:
+>
+> > Right. And while we're at it, there's still the potential
+> > division-by-zero problem which I still don't know how to solve without
+> > implementing a full-blown __ethtool_get_link_ksettings parser that
+> > checks against all the possible outputs it can have under the "no
+> > carrier" condition - see "[RFC PATCH 1/1] phylink: Set speed to
+> > SPEED_UNKNOWN when there is no PHY connected" for details.
+> > And there's also a third fix to be made: the netdev_dbg should be made
+> > to print "speed" instead of "ecmd.base.speed".
+>
+> For the ksettings part I am thinking on adding something like this to
+> ethtool.c. Do you think anything is missing (apart from the
+> documentation)?
+>
+> ->
+>
+> diff --git a/include/linux/ethtool.h b/include/linux/ethtool.h
+> index 95991e43..d37c80b 100644
+> --- a/include/linux/ethtool.h
+> +++ b/include/linux/ethtool.h
+> @@ -177,6 +177,9 @@ void ethtool_convert_legacy_u32_to_link_mode(unsigned long *dst,
+>  bool ethtool_convert_link_mode_to_legacy_u32(u32 *legacy_u32,
+>                                      const unsigned long *src);
+>
+> +u32 ethtool_link_ksettings_to_speed(const struct ethtool_link_ksettings *settings,
+> +                                   u32 default_speed);
+> +
+>  /**
+>   * struct ethtool_ops - optional netdev operations
+>   * @get_drvinfo: Report driver/device information.  Should only set the
+> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+> index 6288e69..80e3db3 100644
+> --- a/net/core/ethtool.c
+> +++ b/net/core/ethtool.c
+> @@ -539,6 +539,18 @@ struct ethtool_link_usettings {
+>         } link_modes;
+>  };
+>
+> +u32 ethtool_link_ksettings_to_speed(const struct ethtool_link_ksettings *settings,
+> +                                  u32 default_speed)
+> +{
+> +       if (settings->base.speed == SPEED_UNKNOWN)
+> +               return default_speed;
+> +
+> +       if (settings->base.speed == 0)
+> +               return default_speed;
+> +
+> +       return settings->base.speed;
+> +}
+> +
+>  /* Internal kernel helper to query a device ethtool_link_settings. */
+>  int __ethtool_get_link_ksettings(struct net_device *dev,
+>                                  struct ethtool_link_ksettings *link_ksettings)
+
+Looks ok to me, but I have no saying over ethtool API. Actually I
+don't even know whom to ask - the output of
+./scripts/get_maintainer.pl net/core/ethtool.c is a bit overwhelming.
+To avoid conflicts, there needs to be somebody out of us who takes
+Eric's simplification, with Gustavo's Reported-by tag, and the 2
+ethtool & taprio patches to avoid division by zero, and the printing
+fix, and maybe do the same in cbs. Will you be the one? Should I?
+
+Thanks,
+-Vladimir
