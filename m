@@ -2,132 +2,137 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DB0C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55330C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049BF20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2463522CF6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:45:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Boo6OqKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732510AbfIEJpf (ORCPT
+        id S1732546AbfIEJpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:45:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:40542 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731806AbfIEJpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:45:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E17121576;
-        Thu,  5 Sep 2019 02:45:34 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38E7B3F67D;
-        Thu,  5 Sep 2019 02:45:33 -0700 (PDT)
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com> <20190905083127.GA2332@hirez.programming.kicks-ass.net>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, parth@linux.ibm.com
-Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
-In-reply-to: <20190905083127.GA2332@hirez.programming.kicks-ass.net>
-Date:   Thu, 05 Sep 2019 10:45:27 +0100
-Message-ID: <87r24v2i14.fsf@arm.com>
+        Thu, 5 Sep 2019 05:45:45 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36615 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731806AbfIEJpo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 05:45:44 -0400
+Received: by mail-lj1-f195.google.com with SMTP id l20so1765964ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 02:45:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TY/VAMXSgKUK1/PqoRLKLXcdBHJ5xdp8p/A6hRUlgeQ=;
+        b=Boo6OqKmqCSgWJ+melMhgT/nvrdsiffQ9ZYYfkj/WSYGAGyflvROS/oKLnJpS9EVEn
+         iKFLTWKI6iTzQDM56jO7C+RLGiPG3svRe/kgKCtYxjQ4YLMADZA7hs6q8QgdHeAeov3E
+         GhwbanV0Lg+PHabWSmwMYWkOz71QRNdUm9dnM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TY/VAMXSgKUK1/PqoRLKLXcdBHJ5xdp8p/A6hRUlgeQ=;
+        b=Uyp8E0r5b7ItbdhdQLnuOYhuaszkGk2U9yCwEbES0Flr/a/90Veq1b6jg3Ic1jEf8c
+         WKRkYPxZP5s2dPEwdKBtXhWHSuvBPlbTznuuLCaBmCF17awNF+H347KykXKo5AU9Xykm
+         9ERvMg5/g5Qkx0FJObaWzugDccMnC5nso/FItKVEsYp82rRIDk4s9XGPad3FBFJvcGkD
+         wD1Z51BJIZxzBFmBW4d3cnU6Ky3BlhDA6vgBI173wCn8IjCPQToMva7g/4D0XdIlL12Z
+         k0LAKReAMr4OiBLWks1pTkEqKicrmfWZOHj3NQ6cNs6my9Q99S+8JqxQoVzvEStpSCtF
+         r04A==
+X-Gm-Message-State: APjAAAWlC+fVyDudWoMJtFboQ0Q6P/X1VAXA7WX4O1jxJ5bv9osMEOpi
+        TX9bVXKkA7s8CuUFwz/RC7l/M9GBz5+v6LZglMg=
+X-Google-Smtp-Source: APXvYqxtbpDGzOrTsl646TScqM698QP59n4fIimIm9TjmaNb/OkdFlRfJFs7DmxiCihxnMuQhKeeFA==
+X-Received: by 2002:a2e:9104:: with SMTP id m4mr1433674ljg.28.1567676742759;
+        Thu, 05 Sep 2019 02:45:42 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id h5sm281820ljf.83.2019.09.05.02.45.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 02:45:42 -0700 (PDT)
+Subject: Re: [PATCH v2 3/6] compiler_types.h: don't #define __inline
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+ <20190830231527.22304-1-linux@rasmusvillemoes.dk>
+ <20190830231527.22304-4-linux@rasmusvillemoes.dk>
+ <CAKwvOdn2zbRCL+L92zjjuyhj4NLLtOEWd3pjady9KyYb7PAbmw@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <d13a9088-e17a-0bae-9bf3-5ea334c18aa1@rasmusvillemoes.dk>
+Date:   Thu, 5 Sep 2019 11:45:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAKwvOdn2zbRCL+L92zjjuyhj4NLLtOEWd3pjady9KyYb7PAbmw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/09/2019 02.13, Nick Desaulniers wrote:
+> On Fri, Aug 30, 2019 at 4:15 PM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+>>
+> 
+> Besides patch 1 and 2 of this series, I also see:
+> Documentation/trace/tracepoint-analysis.rst
+> 318:         :      extern __inline void
+> __attribute__((__gnu_inline__, __always_inline__, _
+> 
 
-On Thu, Sep 05, 2019 at 09:31:27 +0100, Peter Zijlstra wrote...
+That seems to be copy-pasted output from some command, so I won't edit that.
 
-> On Fri, Aug 30, 2019 at 10:49:36AM -0700, subhra mazumdar wrote:
->> Add Cgroup interface for latency-nice. Each CPU Cgroup adds a new file
->> "latency-nice" which is shared by all the threads in that Cgroup.
->
-> *sigh*, no. We start with a normal per task attribute, and then later,
-> if it is needed and makes sense, we add it to cgroups.
+> scripts/kernel-doc
+> 1574:    $prototype =~ s/^__inline +//;
 
-FWIW, to add on top of what Peter says, we used this same approach for
-uclamp and it proved to be a very effective way to come up with a good
-design. General principles have been:
+That one can indeed go once all uses of __inline in the source code is gone.
 
- - a system wide API [1] (under /proc/sys/kernel/sched_*) defines
-   default values for all tasks affected by that feature.
-   This interface has to define also upper bounds for task specific
-   values. Thus, in the case of latency-nice, it should be set by
-   default to the MIN value, since that's the current mainline
-   behaviour: all tasks are latency sensitive.
+>> The exception is include/acpi/platform/acintel.h. However, that header
+>> is only included when using the intel compiler (does anybody actually
+>> build the kernel with that?), and the ACPI_INLINE macro is only used
+> 
+> In my effort to make the kernel slightly more compiler-portable, I
+> have not yet found anyone building with ICC.  I would love to be
+> proven wrong.  Let me go ask some of my Intel friends.
 
- - a per-task API [2] (via the sched_setattr() syscall) can be used to
-   relax the system wide setting thus implementing a "nice" policy.
+Yeah, the whole compiler-attributes.h only deal with gcc and clang, and
+a lot of the attributes are unconditionally defined, so I assume either
+ICC implements them all, or perhaps simply ignores (unknown) attributes?
+It would be lovely if we could just throw out all the icc stuff.
 
- - a per-taskgroup API [3] (via cpu controller's attributes) can be used
-   to relax the system-wide settings and restrict the per-task API.
+>> in the definition of utterly trivial stub functions, where I doubt a
+> 
+> See:
+> include/acpi/platform/acenv.h
+> 146 #elif defined(__INTEL_COMPILER)
+> 147 #include <acpi/platform/acintel.h>
+> 
+>> small change of semantics (lack of __gnu_inline) changes anything.
+> 
+> include/acpi/platform/acintel.h
+> 25:#define ACPI_INLINE                 __inline
+> include/acpi/platform/acgcc.h
+> 29:#define ACPI_INLINE             __inline__
+> 
+> lol wut
+> 
+> I mean, you just would have to change that one line in
+> include/acpi/platform/acintel.h, right?  I'd sign off on this patch
+> with such a patch added to the series.
 
-The above features are worth to be added in that exact order.
+I'm not sure what you mean. Just switch the above __inline to inline?
+It's annoying not being able to test it.
 
-> Also, your Changelog fails on pretty much every point. It doesn't
-> explain why, it doesn't describe anything and so on.
-
-On the description side, I guess it's worth to mention somewhere to
-which scheduling classes this feature can be useful for. It's worth to
-mention that it can apply only to:
-
- - CFS tasks: for example, at wakeup time a task with an high
-   latency-nice should avoid to preempt a low latency-nice task.
-   Maybe by mapping the latency nice value into proper vruntime
-   normalization value?
-
- - RT tasks: for example, at wakeup time a task with an high
-   latency-nice value could avoid to preempt a CFS task.
-
-I'm sure there will be discussion about some of these features, that's
-why it's important in the proposal presentation to keep a well defined
-distinction among the "mechanisms and API" and how we use the new
-concept to "bias" some scheduler policies.
-
-> From just reading the above, I would expect it to have the range
-> [-20,19] just like normal nice. Apparently this is not so.
-
-Regarding the range for the latency-nice values, I guess we have two
-options:
-
-  - [-20..19], which makes it similar to priorities
-  downside: we quite likely end up with a kernel space representation
-  which does not match the user-space one, e.g. look at
-  task_struct::prio.
-
-  - [0..1024], which makes it more similar to a "percentage"
-
-Being latency-nice a new concept, we are not constrained by POSIX and
-IMHO the [0..1024] scale is a better fit.
-
-That will translate into:
-
-  latency-nice=0 : default (current mainline) behaviour, all "biasing"
-  policies are disabled and we wakeup up as fast as possible
-
-  latency-nice=1024 : maximum niceness, where for example we can imaging
-  to turn switch a CFS task to be SCHED_IDLE?
-
-Best,
-Patrick
-
-[1] commit e8f14172c6b1 ("sched/uclamp: Add system default clamps")
-[2] commit a509a7cd7974 ("sched/uclamp: Extend sched_setattr() to support utilization clamping")
-[3] 5 patches in today's tip/sched/core up to:
-    commit babbe170e053 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+Rasmus
