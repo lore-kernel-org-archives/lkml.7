@@ -2,211 +2,146 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68189C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628A9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A042A20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:00:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lonelycoder.com header.i=@lonelycoder.com header.b="JbiJASYb"
+	by mail.kernel.org (Postfix) with ESMTP id 9FCE020692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfIEUAd (ORCPT
+        id S1731556AbfIEUDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:00:33 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40786 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfIEUAc (ORCPT
+        Thu, 5 Sep 2019 16:03:15 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:49198 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfIEUDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:00:32 -0400
-Received: by mail-ot1-f66.google.com with SMTP id y39so3482101ota.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:00:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lonelycoder.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kYbfxjyep6baFu31BTNCvbKxo9XSMomaphW0a6NF1fA=;
-        b=JbiJASYb3UBO8o5tlD5TlGdhbHX+n5lCJgTSiUK4YBmH461KYIP/YaUP0HrXEIbWT5
-         iDZ13WDbIL2kHzpv1TO3nnuccYT8mbJKcU7dw/uJTedARmYZYiVuoPvsnotURr3zmvBx
-         IY4QUkYIWGmLSXfA6MqWbRKHPjrv2SPeA5tBxGMiuuZ1hPoKHL5/1emMjCc2ClsFUTHN
-         dkfB9dcrU7TiTsQYQ4O1t75Lp7cg0d/kYrMt8H3w7RnP4T4N8aEAIMw174BVnN+wkRu+
-         GIUCA4VvXGQ5s9NYwiTwvJeSkOF6+MN124ERC68qibk50pQt2v+8rVNrNreKg6iq6dMm
-         OZMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kYbfxjyep6baFu31BTNCvbKxo9XSMomaphW0a6NF1fA=;
-        b=pS64AH04sd/m4LAYeJqQ0bG/opwPFZ0vFLUCH3Qljf9kFuxnGf0OwRTqs7fRsz0+2C
-         QqvEk7cCIBkrvkF6vZGDA+pX5+oVDse1L+UMoy2U1i1quM7POaCyUt2LZhrM++qbsX4u
-         fqiP7lblX926YryOcH8FAS8S1NPO8bY3BqKFd/CISbW9owWnPUs8P67wKZjYz2eM4ubE
-         O6jVRZ+zegKzhalOy5wn45b6I9vvD3mYmTqRGUGxC45ZI7HTxBcwNAs5OUmbQ1Pwry4f
-         eK5O/HyRg2+QxktcZPzKR2Ykp7F2FnV1P6/g1Nv9q98zIKykFPFes3kaAXbg6b8gIoop
-         QtRg==
-X-Gm-Message-State: APjAAAWtQRv9YQJO7eEf1wPbuD4/DigTkowfeEDa+QZCvE5ii3XzmWMW
-        cbf7n2+qrNb/0RayMCzr0+VPvKlIT0PnQMEKUPztGg==
-X-Google-Smtp-Source: APXvYqwMSGL1dyw+dICgAaGva7Qmuz5wumaM8x3YtaA5uG52urC1NJlseB3zMpe+xw4XLbcBonJioM7EsYTFsY7v3qY=
-X-Received: by 2002:a9d:21a6:: with SMTP id s35mr4468457otb.77.1567713631363;
- Thu, 05 Sep 2019 13:00:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190904214505.GA15093@swahl-linux> <CAKwvOdnX3qVq1wGovViyGJSnySKzCATU4SU_ASsL-9XfDZ8+Eg@mail.gmail.com>
- <CAObFT-RqSa+8re=jLfM-=yyFH38dz89jRjrwGjnhHhGszKxXmQ@mail.gmail.com> <CAKwvOdk00-v=yT3C3NfN=-FJWLF+9sAYXm_LeFXo+DBZ-vKSxw@mail.gmail.com>
-In-Reply-To: <CAKwvOdk00-v=yT3C3NfN=-FJWLF+9sAYXm_LeFXo+DBZ-vKSxw@mail.gmail.com>
-From:   Andreas Smas <andreas@lonelycoder.com>
-Date:   Thu, 5 Sep 2019 13:00:20 -0700
-Message-ID: <CAObFT-Tj=Ye9NbKQjvBP1YtjOKSTMi77i2rc9LFTaLxDwvbLWw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86/purgatory: Change compiler flags to avoid
- relocation errors.
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Steve Wahl <steve.wahl@hpe.com>,
+        Thu, 5 Sep 2019 16:03:15 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i5xyH-0001xb-MB; Thu, 05 Sep 2019 14:03:10 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i5xyG-0007jz-QM; Thu, 05 Sep 2019 14:03:09 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Vaibhav Rustagi <vaibhavrustagi@google.com>,
-        russ.anderson@hpe.com, dimitri.sivanich@hpe.com,
-        mike.travis@hpe.com, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>, mpe@ellerman.id.au
+References: <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+        <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+        <878sr6t21a.fsf_-_@x220.int.ebiederm.org>
+        <20190903074117.GX2369@hirez.programming.kicks-ass.net>
+        <20190903074718.GT2386@hirez.programming.kicks-ass.net>
+        <87k1apqqgk.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjVGLr8wArT9P4MXxA-XpkG=9ZXdjM3vpemSF25vYiLoA@mail.gmail.com>
+        <874l1tp7st.fsf@x220.int.ebiederm.org>
+        <CAHk-=wjvyRJEdativFqqGGxzSgWnc-m7b+B04iQBMcZV4uM=hA@mail.gmail.com>
+        <20190903200603.GW2349@hirez.programming.kicks-ass.net>
+        <20190903213218.GG4125@linux.ibm.com>
+Date:   Thu, 05 Sep 2019 15:02:49 -0500
+In-Reply-To: <20190903213218.GG4125@linux.ibm.com> (Paul E. McKenney's message
+        of "Tue, 3 Sep 2019 14:32:18 -0700")
+Message-ID: <87r24umryu.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1i5xyG-0007jz-QM;;;mid=<87r24umryu.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+VmoE5LIizasbxQiu3HicjHrn61hokgnc=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 2/3] task: RCU protect tasks on the runqueue
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 11:20 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
+"Paul E. McKenney" <paulmck@kernel.org> writes:
+
+> On Tue, Sep 03, 2019 at 10:06:03PM +0200, Peter Zijlstra wrote:
+>> On Tue, Sep 03, 2019 at 12:18:47PM -0700, Linus Torvalds wrote:
+>> > Now, if you can point to some particular field where that ordering
+>> > makes sense for the particular case of "make it active on the
+>> > runqueue" vs "look up the task from the runqueue using RCU", then I do
+>> > think that the whole release->acquire consistency makes sense.
+>> > 
+>> > But it's not clear that such a field exists, particularly when this is
+>> > in no way the *common* way to even get a task pointer, and other paths
+>> > do *not* use the runqueue as the serialization point.
+>> 
+>> Even if we could find a case (and I'm not seeing one in a hurry), I
+>> would try really hard to avoid adding extra barriers here and instead
+>> make the consumer a little more complicated if at all possible.
+>> 
+>> The Power folks got rid of a SYNC (yes, more expensive than LWSYNC) from
+>> their __switch_to() implementation and that had a measurable impact.
+>> 
+>> 9145effd626d ("powerpc/64: Drop explicit hwsync in context switch")
 >
-> On Wed, Sep 4, 2019 at 10:34 PM Andreas Smas <andreas@lonelycoder.com> wrote:
-> >
-> > On Wed, Sep 4, 2019 at 3:19 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > > Thanks for confirming the fix.  While it sounds like -mcmodel=large is
-> > > the only necessary change, I don't object to -ffreestanding of
-> > > -fno-zero-initialized-in-bss being readded, especially since I think
-> > > what you've done with PURGATORY_CFLAGS_REMOVE is more concise.
-> >
-> > Without -ffreestanding this results in undefined symbols (as before this patch)
+> The patch [1] looks good to me.  And yes, if the structure pointed to by
+> the second argument of rcu_assign_pointer() is already visible to readers,
+> it is OK to instead use RCU_INIT_POINTER().  Yes, this loses ordering.
+> But weren't these simple assignments before RCU got involved?
 >
-> Thanks for the report and sorry for the breakage.  Can you test
-> Steve's patch and send your tested by tag?  Steve will likely respin
-> the final patch today with Boris' feedback, so now is the time to get
-> on the train.
+> As a very rough rule of thumb, LWSYNC is about twice as fast as SYNC.
+> (Depends on workload, exact details of the hardware, timing, phase of
+> the moon, you name it.)  So removing the LWSYNC is likely to provide
+> measureable benefit, but I must defer to the powerpc maintainers.
+> To that end, I added Michael on CC.
 >
-> >
-> > $ readelf -a arch/x86/purgatory/purgatory.ro|grep UND
-> >      0: 0000000000000000     0 NOTYPE  LOCAL  DEFAULT  UND
->
-> ^ what's that? A <strikethrough>horse</strikethrough> symbol with no name?
+> [1] https://lore.kernel.org/lkml/878sr6t21a.fsf_-_@x220.int.ebiederm.org/
 
-No idea TBH. Not enough of an ELF-expert to explain that. It's also there with
-the -ffreestanding -patch (when kexec() works for me again)
-so it doesn't seem to cause any harm.
+Paul, what is the purpose of the barrier in rcu_assign_pointer?
 
->
-> >     51: 0000000000000000     0 NOTYPE  GLOBAL DEFAULT  UND __stack_chk_fail
->
-> ^ so I would have expected the stackprotector changes in my and Steve
-> commits to prevent compiler emission of that runtime-implemented
-> symbol.  ie. that `-ffreestanding` affects that and not removing the
-> stackprotector flags begs another question.  Without `-ffreestanding`
-> and `-fstack-protector` (or `-fstack-protector-strong`), why would the
-> compiler emit references to __stack_chk_fail?  Which .o file that
-> composes the .ro file did we fail to remove the `-fstack-protector*`
-> flag from?  `-ffreestanding` seems to be covering that up.
+My intuition says it is the assignment half of rcu_dereference, and that
+anything that rcu_dereference does not need is too strong.
 
-So, I'm using
+My basic understanding is that only alpha ever has the memory ordering
+issue that rcu_dereference deals with.  So I am a bit surprised that
+this is anything other than a noop for anything except alpha.
 
-$ gcc --version
-gcc (Ubuntu 7.4.0-1ubuntu1~18.04.1) 7.4.0
+In my patch I used rcu_assign_pointer because that is the canonically
+correct way to do things.  Peter makes a good case that adding an extra
+barrier in ___schedule could be detrimental to system performance.
+At the same time if there is a correctness issue on alpha that we have
+been overlooking because of low testing volume on alpha I don't want to
+just let this slide and have very subtle bugs.
 
-I think the problem is that stock ubuntu gcc defaults to -fstack-protector.
-I haven't figured out where to check how/where ubuntu configures gcc except
-an ancient discussion here: https://wiki.ubuntu.com/GccSsp.
+The practical concern is that people have been really wanting to do
+lockless and rcu operations on tasks in the runqueue for a while and
+there are several very clever pieces of code doing that now.  By
+changing the location of the rcu put I am trying to make these uses
+ordinary rcu uses.
 
-Both -fno-stack-protector or -ffreestanding fixes the issue. I'm not sure
-which would be preferred? -ffreestanding sounds a bit better to me though,
-as that's really what we are dealing with here.
+The uses in question are the pieces of code I update in:
+https://lore.kernel.org/lkml/8736het20c.fsf_-_@x220.int.ebiederm.org/
 
-So,
+In short.  Why is rcu_assign_pointer() more than WRITE_ONCE() on
+anything but alpha?  Do other architectures need more?  Is the trade off
+worth it if we avoid using rcu_assign_pointer on performance critical
+paths.
 
-Tested-by: Andreas Smas <andreas@lonelycoder.com>
+Eric
 
+p.s. I am being slow at working through all of this as I am dealing
+     with my young baby son, and busy packing for the conference.
 
-FWIW, one of the offending functions is sha256_transform() where the u32 W[64];
-triggers insert of a stack guard variable. (since -fstack-protector is
-default on)
-
-
-End of sha256_transform()
-
-        /* clear any sensitive info... */
-        a = b = c = d = e = f = g = h = t1 = t2 = 0;
-        memset(W, 0, 64 * sizeof(u32));
-}
-    1aab:       48 8b 84 24 00 01 00    mov    0x100(%rsp),%rax
-    1ab2:       00
-    1ab3:       65 48 33 04 25 28 00    xor    %gs:0x28,%rax
-    1aba:       00 00
-        state[0] += a; state[1] += b; state[2] += c; state[3] += d;
-    1abc:       44 89 37                mov    %r14d,(%rdi)
-    1abf:       44 89 47 0c             mov    %r8d,0xc(%rdi)
-        state[4] += e; state[5] += f; state[6] += g; state[7] += h;
-    1ac3:       44 89 6f 10             mov    %r13d,0x10(%rdi)
-    1ac7:       89 4f 14                mov    %ecx,0x14(%rdi)
-    1aca:       89 5f 18                mov    %ebx,0x18(%rdi)
-}
-    1acd:       75 12                   jne    1ae1 <sha256_transform+0x1ae1>
-    1acf:       48 81 c4 08 01 00 00    add    $0x108,%rsp
-    1ad6:       5b                      pop    %rbx
-    1ad7:       5d                      pop    %rbp
-    1ad8:       41 5c                   pop    %r12
-    1ada:       41 5d                   pop    %r13
-    1adc:       41 5e                   pop    %r14
-    1ade:       41 5f                   pop    %r15
-    1ae0:       c3                      retq
-    1ae1:       e8 00 00 00 00          callq  1ae6 <sha256_transform+0x1ae6>
-
-
-.rela.text:
-
-1ae2  001100000002 R_X86_64_PC32     __stack_chk_fail - 4
-
-
-Same thing with this latest patch (ie, -ffreestanding)
-
-        /* clear any sensitive info... */
-        a = b = c = d = e = f = g = h = t1 = t2 = 0;
-        memset(W, 0, 64 * sizeof(u32));
-    1aa2:       ba 00 01 00 00          mov    $0x100,%edx
-        state[4] += e; state[5] += f; state[6] += g; state[7] += h;
-    1aa7:       89 47 1c                mov    %eax,0x1c(%rdi)
-        state[0] += a; state[1] += b; state[2] += c; state[3] += d;
-    1aaa:       44 89 47 0c             mov    %r8d,0xc(%rdi)
-        memset(W, 0, 64 * sizeof(u32));
-    1aae:       31 f6                   xor    %esi,%esi
-        state[4] += e; state[5] += f; state[6] += g; state[7] += h;
-    1ab0:       89 4f 14                mov    %ecx,0x14(%rdi)
-        memset(W, 0, 64 * sizeof(u32));
-    1ab3:       48 b8 00 00 00 00 00    movabs $0x0,%rax    <- &memset()
-    1aba:       00 00 00
-    1abd:       48 89 e7                mov    %rsp,%rdi
-    1ac0:       ff d0                   callq  *%rax
-}
-    1ac2:       48 81 c4 00 01 00 00    add    $0x100,%rsp
-    1ac9:       5b                      pop    %rbx
-    1aca:       5d                      pop    %rbp
-    1acb:       41 5c                   pop    %r12
-    1acd:       41 5d                   pop    %r13
-    1acf:       41 5e                   pop    %r14
-    1ad1:       41 5f                   pop    %r15
-    1ad3:       c3                      retq
-
-
-1ab5  001100000001 R_X86_64_64           memset + 0
-
-It's interesting / odd (?) that the memset() is eliminated when
-stack-guard is enabled.
-I've no idea why this happens. But I suppose that's a separate thing.
+     I might not be able to get back to this discussion until after
+     I have landed in Lisbon on Saturday night.
