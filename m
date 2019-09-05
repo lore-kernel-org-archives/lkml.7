@@ -2,149 +2,119 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7ECC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84DFC43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8722173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035AB2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403891AbfIESVJ (ORCPT
+        id S2389826AbfIESXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:21:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391241AbfIESVE (ORCPT
+        Thu, 5 Sep 2019 14:23:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43028 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727764AbfIESXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:21:04 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85ICYDY032607
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 14:21:02 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uu4wa6k3k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:21:02 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 5 Sep 2019 19:21:00 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Sep 2019 19:20:57 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85IKuPR55836852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 18:20:56 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61EF5AE053;
-        Thu,  5 Sep 2019 18:20:56 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86CC9AE051;
-        Thu,  5 Sep 2019 18:20:54 +0000 (GMT)
-Received: from naverao1-tp.ibmuc.com (unknown [9.85.95.49])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Sep 2019 18:20:54 +0000 (GMT)
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>
-Subject: [PATCH 3/3] powerpc: Use ftrace_graph_ret_addr() when unwinding
-Date:   Thu,  5 Sep 2019 23:50:30 +0530
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1567707399.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1567707399.git.naveen.n.rao@linux.vnet.ibm.com>
+        Thu, 5 Sep 2019 14:23:41 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i5wPR-00053t-Nn; Thu, 05 Sep 2019 18:23:05 +0000
+Date:   Thu, 5 Sep 2019 20:23:03 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>, Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
+ helpers
+Message-ID: <20190905182303.7f6bxpa2enbgcegv@wittgenstein>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <20190905180750.GQ1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090518-4275-0000-0000-000003619928
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090518-4276-0000-0000-00003873E295
-Message-Id: <dc89c9a887121342d9c7819482c3dabdece2a323.1567707399.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=498 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050172
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190905180750.GQ1131@ZenIV.linux.org.uk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With support for HAVE_FUNCTION_GRAPH_RET_ADDR_PTR,
-ftrace_graph_ret_addr() provides more robust unwinding when function
-graph is in use. Update show_stack() to use the same.
+On Thu, Sep 05, 2019 at 07:07:50PM +0100, Al Viro wrote:
+> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
+> > +/*
+> > + * "memset(p, 0, size)" but for user space buffers. Caller must have already
+> > + * checked access_ok(p, size).
+> > + */
+> > +static int __memzero_user(void __user *p, size_t s)
+> > +{
+> > +	const char zeros[BUFFER_SIZE] = {};
+> > +	while (s > 0) {
+> > +		size_t n = min(s, sizeof(zeros));
+> > +
+> > +		if (__copy_to_user(p, zeros, n))
+> > +			return -EFAULT;
+> > +
+> > +		p += n;
+> > +		s -= n;
+> > +	}
+> > +	return 0;
+> > +}
+> 
+> That's called clear_user().
+> 
+> > +int copy_struct_to_user(void __user *dst, size_t usize,
+> > +			const void *src, size_t ksize)
+> > +{
+> > +	size_t size = min(ksize, usize);
+> > +	size_t rest = abs(ksize - usize);
+> > +
+> > +	if (unlikely(usize > PAGE_SIZE))
+> > +		return -EFAULT;
+> 
+> Why?
 
-With dump_stack() added to sysrq_sysctl_handler(), before this patch:
-  root@(none):/sys/kernel/debug/tracing# cat /proc/sys/kernel/sysrq
-  CPU: 0 PID: 218 Comm: cat Not tainted 5.3.0-rc7-00868-g8453ad4a078c-dirty #20
-  Call Trace:
-  [c0000000d1e13c30] [c00000000006ab98] return_to_handler+0x0/0x40 (dump_stack+0xe8/0x164) (unreliable)
-  [c0000000d1e13c80] [c000000000145680] sysrq_sysctl_handler+0x48/0xb8
-  [c0000000d1e13cd0] [c00000000006ab98] return_to_handler+0x0/0x40 (proc_sys_call_handler+0x274/0x2a0)
-  [c0000000d1e13d60] [c00000000006ab98] return_to_handler+0x0/0x40 (return_to_handler+0x0/0x40)
-  [c0000000d1e13d80] [c00000000006ab98] return_to_handler+0x0/0x40 (__vfs_read+0x3c/0x70)
-  [c0000000d1e13dd0] [c00000000006ab98] return_to_handler+0x0/0x40 (vfs_read+0xb8/0x1b0)
-  [c0000000d1e13e20] [c00000000006ab98] return_to_handler+0x0/0x40 (ksys_read+0x7c/0x140)
-
-After this patch:
-  Call Trace:
-  [c0000000d1e33c30] [c00000000006ab58] return_to_handler+0x0/0x40 (dump_stack+0xe8/0x164) (unreliable)
-  [c0000000d1e33c80] [c000000000145680] sysrq_sysctl_handler+0x48/0xb8
-  [c0000000d1e33cd0] [c00000000006ab58] return_to_handler+0x0/0x40 (proc_sys_call_handler+0x274/0x2a0)
-  [c0000000d1e33d60] [c00000000006ab58] return_to_handler+0x0/0x40 (__vfs_read+0x3c/0x70)
-  [c0000000d1e33d80] [c00000000006ab58] return_to_handler+0x0/0x40 (vfs_read+0xb8/0x1b0)
-  [c0000000d1e33dd0] [c00000000006ab58] return_to_handler+0x0/0x40 (ksys_read+0x7c/0x140)
-  [c0000000d1e33e20] [c00000000006ab58] return_to_handler+0x0/0x40 (system_call+0x5c/0x68)
-
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
- arch/powerpc/kernel/process.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
-
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 24621e7e5033..f289bdd2b562 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -2047,10 +2047,8 @@ void show_stack(struct task_struct *tsk, unsigned long *stack)
- 	int count = 0;
- 	int firstframe = 1;
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
--	struct ftrace_ret_stack *ret_stack;
--	extern void return_to_handler(void);
--	unsigned long rth = (unsigned long)return_to_handler;
--	int curr_frame = 0;
-+	unsigned long ret_addr;
-+	int ftrace_idx = 0;
- #endif
- 
- 	if (tsk == NULL)
-@@ -2079,15 +2077,10 @@ void show_stack(struct task_struct *tsk, unsigned long *stack)
- 		if (!firstframe || ip != lr) {
- 			printk("["REG"] ["REG"] %pS", sp, ip, (void *)ip);
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
--			if ((ip == rth) && curr_frame >= 0) {
--				ret_stack = ftrace_graph_get_ret_stack(current,
--								  curr_frame++);
--				if (ret_stack)
--					pr_cont(" (%pS)",
--						(void *)ret_stack->ret);
--				else
--					curr_frame = -1;
--			}
-+			ret_addr = ftrace_graph_ret_addr(current,
-+						&ftrace_idx, ip, stack);
-+			if (ret_addr != ip)
-+				pr_cont(" (%pS)", (void *)ret_addr);
- #endif
- 			if (firstframe)
- 				pr_cont(" (unreliable)");
--- 
-2.23.0
-
+Because every caller of that function right now has that limit set
+anyway iirc. So we can either remove it from here and place it back for
+the individual callers or leave it in the helper.
+Also, I'm really asking, why not? Is it unreasonable to have an upper
+bound on the size (for a long time probably) or are you disagreeing with
+PAGE_SIZE being used? PAGE_SIZE limit is currently used by sched, perf,
+bpf, and clone3 and in a few other places.
