@@ -2,190 +2,110 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A5BC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:26:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFB9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E742070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567722413;
-	bh=E+LbLUkOPDuZw8Ahapl/LSZPxW0inipop6mc4+zfRR8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e3fLVEv0edO6JIziC9/zWUMDehbyUTqgBUO2ROb1M5metGTwGV+8G1yYO/rAxKspu
-	 2qm/MSstGmD6AMuW5NT/WE8g2W5d7gT0XQEa2R8VuDvYa2sIwbFe0tX+rbRlgjN1YI
-	 1utyVyuPdlcd/ozh2yaOEFQ4LMp5MpdZ8xvXekwQ=
+	by mail.kernel.org (Postfix) with ESMTP id EC2BD2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389092AbfIEW0w (ORCPT
+        id S2389814AbfIEW1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 18:27:07 -0400
+Received: from mga12.intel.com ([192.55.52.136]:53141 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfIEW0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:26:51 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F5F12070C;
-        Thu,  5 Sep 2019 22:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567722411;
-        bh=E+LbLUkOPDuZw8Ahapl/LSZPxW0inipop6mc4+zfRR8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nB7d4jdItk6J6oz8Y3EuRM4SeY4p/Vs7+/jFTsBfIFqNpRsyeZ6Tey69rrdYofkwb
-         eH7917jOOL2lqRt33JS53CRkWpkQwo7+g8aIHkUsdFV5+eYneZjb7Nq6bqZYsPUVB4
-         cNu/drAZe3fbfIqTPF8pIGVFbVV5y3xjhOtEVTys=
-Date:   Thu, 5 Sep 2019 17:26:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Abhinav Ratna <abhinav.ratna@broadcom.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
-Message-ID: <20190905222649.GK103977@google.com>
-References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
+        id S1732714AbfIEW1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 18:27:07 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 15:27:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,471,1559545200"; 
+   d="scan'208";a="267161496"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.145])
+  by orsmga001.jf.intel.com with ESMTP; 05 Sep 2019 15:27:06 -0700
+Date:   Thu, 5 Sep 2019 15:27:06 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, patrick.colp@oracle.com,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
+ revision is unchanged
+Message-ID: <20190905222706.GA4422@otc-nc-03>
+References: <1567056803-6640-1-git-send-email-ashok.raj@intel.com>
+ <20190829060942.GA1312@zn.tnic>
+ <20190829130213.GA23510@araj-mobl1.jf.intel.com>
+ <20190903164630.GF11641@zn.tnic>
+ <41cee473-321c-2758-032a-ccf0f01359dc@oracle.com>
+ <D8A3D2BD-1FD4-4183-8663-3EF02A6099F3@alien8.de>
+ <20190905002132.GA26568@otc-nc-03>
+ <20190905072029.GB19246@zn.tnic>
+ <20190905194044.GA3663@otc-nc-03>
+ <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Alex]
+Hi Thomas,
 
-On Tue, Aug 20, 2019 at 10:09:45AM +0530, Srinath Mannam wrote:
-> From: Abhinav Ratna <abhinav.ratna@broadcom.com>
+
+On Thu, Sep 05, 2019 at 11:22:31PM +0200, Thomas Gleixner wrote:
+> Raj,
 > 
-> IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> Add quirk to have separate IOMMU groups for all EPs and functions connected
-> to root port, by masking RR/CR/SV/UF bits.
+> On Thu, 5 Sep 2019, Raj, Ashok wrote:
+> > On Thu, Sep 05, 2019 at 09:20:29AM +0200, Borislav Petkov wrote:
+> > > On Wed, Sep 04, 2019 at 05:21:32PM -0700, Raj, Ashok wrote:
+> > > > But echo 2 > reload would allow reading a microcode file from 
+> > > > /lib/firmware/intel-ucode/ even if the revision hasn't changed right?
+> > > > 
+> > > > #echo 1 > reload wouldn't load if the revision on disk is same as what's loaded,
+> > > > and we want to permit that with the echo 2 option.
+> > > 
+> > > Then before we continue with this, please specify what the exact
+> > > requirements are. Talk to your microcoders or whoever is going to use
+> > > this and give the exact use cases which should be supported and describe
+> > > them in detail.
+> > 
+> > https://lore.kernel.org/lkml/1567056803-6640-1-git-send-email-ashok.raj@intel.com/
+> > 
+> > The original description said to load a new microcode file, the content
+> > could have changed, but revision in the header hasn't increased. 
+> > 
+> > The other rules are same, i.e we can't go backwards. There is another
+> > SVN (Security version number) embedded in the microcode which won't allow
+> > going backwards anyway. 
+> > 
+> > I'll get back to you if there are additional uses, but allowing the facility to 
+> > actually read the file achieves the same purpose as using the in-kernel copy.
+> > 
+> > I have used it multiple times during development :-)
 > 
-> Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-
-I tentatively applied this to pci/misc with Scott's ack for v5.4.
-
-I tweaked the patch itself to follow the style of similar quirks
-(interdiff is below, plus a diff of the commit log).  Please make sure
-I didn't break it.
-
-I also went out on a limb and reworded the comment to give what I
-*think* is the justification for this patch, as opposed to merely a
-description of the code.  I'm making a lot of assumptions there, so
-please confirm that they're correct, or supply alternate justification
-if they're not.
-
-> ---
->  drivers/pci/quirks.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> That's all nice, but what it the general use case for this outside of Intel's
+> microcode development and testing?
 > 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 0f16acc..f9584c0 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
->  	return acs_flags ? 0 : 1;
->  }
->  
-> +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
-> +{
-> +	/*
-> +	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
-> +	 * Add quirk to to have separate IOMMU groups for all EPs and functions
-> +	 * connected to root port, by masking RR/CR/SV/UF bits.
-> +	 */
-> +
-> +	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
-> +	int ret = acs_flags & ~flags ? 0 : 1;
-> +
-> +	return ret;
-> +}
-> +
-> +
->  static const struct pci_dev_acs_enabled {
->  	u16 vendor;
->  	u16 device;
-> @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
->  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
-> +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
->  	{ 0 }
->  };
+> We all know that late microcode loading has severe limitations and we
+> really don't want to proliferate that further if not absolutely required
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 77c0330ac922..2edbce35e8c5 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4466,21 +4466,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
- 	return acs_flags ? 0 : 1;
- }
- 
--static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
-+static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
- {
- 	/*
--	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
--	 * Add quirk to to have separate IOMMU groups for all EPs and functions
--	 * connected to root port, by masking RR/CR/SV/UF bits.
-+	 * iProc PAXB Root Ports don't advertise an ACS capability, but
-+	 * they do not allow peer-to-peer transactions between Root Ports.
-+	 * Allow each Root Port to be in a separate IOMMU group by masking
-+	 * SV/RR/CR/UF bits.
- 	 */
-+	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- 
--	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
--	int ret = acs_flags & ~flags ? 0 : 1;
--
--	return ret;
-+	return acs_flags ? 0 : 1;
- }
- 
--
- static const struct pci_dev_acs_enabled {
- 	u16 vendor;
- 	u16 device;
-@@ -4574,7 +4572,7 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
- 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
--	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
-+	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
- 	{ 0 }
- };
- 
+Several customers have asked this to check the safety of late loads. They want
+to validate in production setup prior to rolling late-load to all production systems.
 
-
-
-@@ -1,49 +1,49 @@
--commit b50ae502eff0
-+commit 46b2c32df7a4
- Author: Abhinav Ratna <abhinav.ratna@broadcom.com>
- Date:   Tue Aug 20 10:09:45 2019 +0530
- 
--    PCI: Add PCIE ACS quirk for IPROC PAXB
-+    PCI: Add ACS quirk for iProc PAXB
-     
--    IPROC PAXB RC doesn't support ACS capabilities and control registers.
--    Add quirk to have separate IOMMU groups for all EPs and functions connected
--    to root port, by masking RR/CR/SV/UF bits.
-+    iProc PAXB Root Ports don't advertise an ACS capability, but they do not
-+    allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
-+    each Root Port can be in a separate IOMMU group.
-     
-+    [bhelgaas: commit log, comment, use common implementation style]
-     Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
-     Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
-     Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-+    Acked-by: Scott Branden <scott.branden@broadcom.com>
- 
+Thanks
+Ashok
