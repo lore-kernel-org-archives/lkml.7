@@ -2,151 +2,194 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A764C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E07C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73E72168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E25C2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:11:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Pd93E1BQ";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="FAYCydVr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="By8LGyTh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731727AbfIEHKn (ORCPT
+        id S1731841AbfIEHLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:10:43 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:7218 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727900AbfIEHKl (ORCPT
+        Thu, 5 Sep 2019 03:11:09 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36167 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbfIEHLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:10:41 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x857AXs9015648;
-        Thu, 5 Sep 2019 00:10:33 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=vU54gZjxiVxvJl2eoW2EscWr256c2EwuGn7IFr80evw=;
- b=Pd93E1BQ0OMoyqne6LWZKY7XnHIYDF12Zc2WWU3LIsO8MjCKqa2Vbto4K/v4hrR2RsCN
- lGW4WBMIwXxxA5ePlUH6ih/+9W8mPnVZpUiuQ9tF0mjl75kujDBfNlwcctCNAwUZwRK5
- maZaJ712ZSjts3PCy90vMg/cYSU5XcqV1ZE3YjR6tXeTz93gz4010O6Drj9DvWP2NeWn
- x7wtEV3Q1k8/PMlfUfd/N+APx7GP3kybUDBDd13I3HkjUc2iHj2FH70qqwkv0h6rDVWn
- z/+rpcguw7M8wKJjqbeCEUri8JnaDtChEljNbhj5LMGUipUZYCd4KGyzWuwCVwSle/Q9 iA== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2uqp8pj97t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 05 Sep 2019 00:10:33 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 5 Sep
- 2019 00:10:31 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.59) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 5 Sep 2019 00:10:31 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ABe0f7QRyo0/j/f350CeDao1spHIr+1ZpAKiv8wq/JbUgoayoinOKZKi6Fj12l/emscAToMWouQi0oyaAFXN7YaTI6vC0VzShEyNBy8OBpqIagL4KOIIZaGtUkZW9JfXAiystKrbwqScPrTCBaQPbZkyot+lvfi1mSiD92RdlYwYxoS3hlyRAZeMFipSB6JGHsFAKq/49VC4JyN2Rsy6sG6wCgWZp3geKa9Rj/h+Ke/JoJ78GrMo0452nBv+kbnBYe2jKs2sfoEbhgQDe9YKFaiBPCOsv6ZkbBF3fbNEY9gQed270/TYlJRTvfeKf0+N8u/cn39Pwd0kEuKZ1Ozz1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vU54gZjxiVxvJl2eoW2EscWr256c2EwuGn7IFr80evw=;
- b=hobx28RN6GvblQUq8UlN+6KSxeLG6s0mUtVy7iSPmV3fEasOQfdCcxGSWvlyaW3QMpKIF7ar0oKUE8wx4gNxxyhlQXRI65Kl37cR69mx6BViX1+NMqTeih+dYEeuTjv3+DDhbFxUjE+aELmDRjf+J5nw/PPbvyO2FMIwXKHPsPJW9MWC6uN/QvMST8hFh/AThopv9h5oexTfR2yAb5rmpfIaKn7bn0orhZdPiousC86z/EkJkkXabWaChWX4N8SligjDkqDE7rq1md7Hz+pRf76VN5867uJa/AUrk6EhO7Xwcfu6ouVCqm2NOZapCZjS/bbU9ZlNEsgC9iOHxVjhpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Thu, 5 Sep 2019 03:11:09 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so1358514wrd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 00:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vU54gZjxiVxvJl2eoW2EscWr256c2EwuGn7IFr80evw=;
- b=FAYCydVrsPnA+PeRdTT7CLIHyIHB4EUe/rgrwjgn+1ZkYNfIt49TMJMNJK8ufGwUF5qpy/OhcCD8J01Y5Z5ADFbVx6ifGh3VmXTM2oTKiURJHk0nI1ED67Fwd73N61Z9gH4RJX+CgJyIN78z/0D/PxhMU+3cq02y15dJu1JoM6E=
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
- MN2PR18MB2413.namprd18.prod.outlook.com (20.179.83.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2241.13; Thu, 5 Sep 2019 07:10:29 +0000
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::9d49:7d09:abb5:34e8]) by MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::9d49:7d09:abb5:34e8%7]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
- 07:10:28 +0000
-From:   Michal Kalderon <mkalderon@marvell.com>
-To:     Krzysztof Wilczynski <kw@linux.com>,
-        Ariel Elior <aelior@marvell.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH] net: qed: Move static keyword to the front of
- declaration
-Thread-Topic: [EXT] [PATCH] net: qed: Move static keyword to the front of
- declaration
-Thread-Index: AQHVYyuGjobw/PbCY0StEUp6RayVWaccq3cw
-Date:   Thu, 5 Sep 2019 07:10:28 +0000
-Message-ID: <MN2PR18MB3182E7412AECBEE5408AA0EDA1BB0@MN2PR18MB3182.namprd18.prod.outlook.com>
-References: <20190904141730.31497-1-kw@linux.com>
-In-Reply-To: <20190904141730.31497-1-kw@linux.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [199.203.130.254]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 08d7c0a6-ae37-4f71-0f09-08d731d02202
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2413;
-x-ms-traffictypediagnostic: MN2PR18MB2413:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB241357E0BDA14655DA61689EA1BB0@MN2PR18MB2413.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:126;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39850400004)(376002)(396003)(346002)(136003)(199004)(189003)(6506007)(6436002)(14454004)(53936002)(25786009)(55016002)(4326008)(316002)(110136005)(54906003)(99286004)(86362001)(9686003)(6306002)(7696005)(33656002)(66066001)(71200400001)(71190400001)(966005)(186003)(102836004)(14444005)(76176011)(256004)(6246003)(486006)(26005)(478600001)(446003)(11346002)(476003)(66476007)(66446008)(52536014)(64756008)(7736002)(74316002)(305945005)(229853002)(76116006)(6636002)(66946007)(5660300002)(8936002)(8676002)(81166006)(3846002)(81156014)(2906002)(66556008)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2413;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gIe3uZsahRDTLmtFbb1dB+mjp377vUV858xvRjMEbBPg8b0JfKyXZTmUES/SP2enNu74vR+rwENg5zqReRJhtsCT9Xh6JIEfVpJfe+XCdflDVRRuw1lFsjkXnr9WAR1NDzQ1rdyPVjnVuLVcPyzRbAEHmDO06tZza8iKwcxtapYkPXesOwrlB+W8Kq0Jqp8mSCXKab/H5IuFifkFpec2BGshsbsBKFCwL6C4cANBmy4OV2QiKPxc8GB74eol97FxZPxZ3OiWvdwc+pSLTlnJHcAlQc8ljFuIsZ/QZbf5JtNZqpVi0NNLHBbnE0RysTACbur8q9Z/FFVdKOx8NhfX9Wa/srEAavME/SzfukocAopOSlabKMo4CDBa9F3nNHvxy5rLO/WAbESS+e+obKOcq3Ish2NTR9qK19Q59/WH0Pc=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=DFvvnaHLzFEzaTnNYzUt4Q2hQTFq/NK+O6UpsbmEMb0=;
+        b=By8LGyThV3tQ7KpjUQafQj2mWoVF3UaQyPDD/AsSXb+5tk4zZFZVekW3CeEG2npb2B
+         Jmy5Qb0Gklgk/axCGfbNZJSWL5JklgbojPM3DCPn25IMckFHtdSMHFMkMKwn7/d9ZmWv
+         NLlXUPiedZKGcQzpUT6V3EIMJJci8gkcWnpcauUrUpDTBdDfs6O8etqFgheEto1vISaT
+         rTOEicKYLY89K5mHry30Y6vbjFHGz2jb/uZ/4t9ZzErtlzLlh8SbtbMZiSpSdYxh5rsz
+         Kv529cVvW8zneJb4OdeHcTYd38NSZx322XL6q16Xz2Oj3s9WMBkYdcj0JhBNbdVGNIE9
+         JkqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=DFvvnaHLzFEzaTnNYzUt4Q2hQTFq/NK+O6UpsbmEMb0=;
+        b=L5yUcbfj9kDPXjX5Jdcgo7MScNwHIPFcqHW4ymhp7gPwF+1J9eUTjNcUPmQIdDD0Fv
+         J/vwJ2wWULSs79Pj6dLG6kb0Z0qbrPSW09TFSO/ouZIlasuMjA4dzmGAh3xEzDBiASL9
+         2a5an4BO0Lh98dl9YYS1LSXBwFcUQFh0Rvivzz4FrUMCaxtKvbQCoX1WH+Ys6hVY7R2G
+         Su3IEkQHKz23nW7vf7YzvBmAAB7vQE5nOXuFFmkgmCmSMu2dwot97H4gIlMJlbXnVCHr
+         gpRv502SswaxvweXBo6WSvssxs632Q71BIAXdW0W34sDaeleYFCjf0c82MpPIuQZjWDo
+         H7EA==
+X-Gm-Message-State: APjAAAXKe2VlS5T5fzAiV/73QPlF+6Vknf8l7kvClaW5CGh8nIg7ADpY
+        ekXeLKY6c960HuSW71AY2SwH3A==
+X-Google-Smtp-Source: APXvYqwmUfGIDO2UDqtQ8Ewygc0VpleSUBO6Yhj2gmAs7eRwG0RusGrqdiNi/OFtceHOm46lPN3l5g==
+X-Received: by 2002:a5d:528a:: with SMTP id c10mr1153426wrv.111.1567667466248;
+        Thu, 05 Sep 2019 00:11:06 -0700 (PDT)
+Received: from dell ([95.147.198.36])
+        by smtp.gmail.com with ESMTPSA id m18sm1455462wrg.97.2019.09.05.00.11.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Sep 2019 00:11:05 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 08:11:03 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, alokc@codeaurora.org,
+        agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: qcom-geni: Provide an option to select FIFO
+ processing
+Message-ID: <20190905071103.GX26880@dell>
+References: <20190904113613.14997-1-lee.jones@linaro.org>
+ <20190904203548.GC580@tuxbook-pro>
+ <20190904212337.GF23608@ninjato>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08d7c0a6-ae37-4f71-0f09-08d731d02202
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 07:10:28.8943
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FV0tZyMGemrBkhPh4JnTADNF9x+kZRqJsWr+PRJe5gyRDC7YZBlrUzDrEyg3BI8UnKSP4DCQgfd7EqG9qa9RYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2413
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-05_02:2019-09-04,2019-09-05 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190904212337.GF23608@ninjato>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBLcnp5c3p0b2YgV2lsY3p5bnNraSA8a3N3aWxjenluc2tpQGdtYWlsLmNvbT4gT24g
-QmVoYWxmIE9mIEtyenlzenRvZg0KPiBXaWxjenluc2tpDQo+IA0KPiBFeHRlcm5hbCBFbWFpbA0K
-PiANCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiBNb3ZlIHRoZSBzdGF0aWMga2V5d29yZCB0byB0aGUgZnJv
-bnQgb2YgZGVjbGFyYXRpb24gb2YgaXdhcnBfc3RhdGVfbmFtZXMsDQo+IGFuZCByZXNvbHZlIHRo
-ZSBmb2xsb3dpbmcgY29tcGlsZXIgd2FybmluZyB0aGF0IGNhbiBiZSBzZWVuIHdoZW4gYnVpbGRp
-bmcNCj4gd2l0aCB3YXJuaW5ncyBlbmFibGVkIChXPTEpOg0KPiANCj4gZHJpdmVycy9uZXQvZXRo
-ZXJuZXQvcWxvZ2ljL3FlZC9xZWRfaXdhcnAuYzozODU6MTogd2FybmluZzoNCj4gICDigJhzdGF0
-aWPigJkgaXMgbm90IGF0IGJlZ2lubmluZyBvZiBkZWNsYXJhdGlvbiBbLVdvbGQtc3R5bGUtZGVj
-bGFyYXRpb25dDQo+IA0KPiBBbHNvLCByZXNvbHZlIGNoZWNrcGF0Y2gucGwgc2NyaXB0IHdhcm5p
-bmc6DQo+IA0KPiBXQVJOSU5HOiBzdGF0aWMgY29uc3QgY2hhciAqIGFycmF5IHNob3VsZCBwcm9i
-YWJseSBiZQ0KPiAgIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QNCj4gDQo+IFNpZ25lZC1vZmYt
-Ynk6IEtyenlzenRvZiBXaWxjenluc2tpIDxrd0BsaW51eC5jb20+DQo+IC0tLQ0KPiBSZWxhdGVk
-OiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMTkwODI3MjMzMDE3LkdLOTk4N0Bnb29nbGUu
-Y29tDQo+IA0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvcWxvZ2ljL3FlZC9xZWRfaXdhcnAuYyB8
-IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L3Fsb2dpYy9xZWQvcWVkX2l3
-YXJwLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9xbG9naWMvcWVkL3FlZF9pd2FycC5jDQo+
-IGluZGV4IGYzODBmYWU4Nzk5ZC4uNjVlYzE2YTMxNjU4IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9xbG9naWMvcWVkL3FlZF9pd2FycC5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0
-L2V0aGVybmV0L3Fsb2dpYy9xZWQvcWVkX2l3YXJwLmMNCj4gQEAgLTM4Miw3ICszODIsNyBAQCBx
-ZWRfaXdhcnAycm9jZV9zdGF0ZShlbnVtIHFlZF9pd2FycF9xcF9zdGF0ZQ0KPiBzdGF0ZSkNCj4g
-IAl9DQo+ICB9DQo+IA0KPiAtY29uc3Qgc3RhdGljIGNoYXIgKml3YXJwX3N0YXRlX25hbWVzW10g
-PSB7DQo+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGl3YXJwX3N0YXRlX25hbWVzW10gPSB7
-DQo+ICAJIklETEUiLA0KPiAgCSJSVFMiLA0KPiAgCSJURVJNSU5BVEUiLA0KDQpUaGFua3MswqAN
-Cg0KQWNrZWQtYnk6IE1pY2hhbCBLYWxkZXJvbsKgPG1pY2hhbC5rYWxkZXJvbkBtYXJ2ZWxsLmNv
-bT4NCg0KDQo+IC0tDQo+IDIuMjIuMQ0KDQo=
+On Wed, 04 Sep 2019, Wolfram Sang wrote:
+
+> On Wed, Sep 04, 2019 at 01:35:48PM -0700, Bjorn Andersson wrote:
+> > On Wed 04 Sep 04:36 PDT 2019, Lee Jones wrote:
+> > 
+> > The subject implies that we select FIFO mode instead of DMA, but that's
+> > not really true, because with DMA enabled we still fall back to FIFO for
+> > messages below 32 bytes. 
+
+Do you mean, we fall back to DMA?
+
+> > So what this does it to disable DMA, which neither the subject or the DT
+> > property describes.
+> > 
+> > Also missing is a description of why this is needed.
+> 
+> Yes.
+> 
+> I am willing to help to get this resolved soonish. However, I have
+> issues with the approach.
+> 
+> It looks like a workaround to me. It would be interesting to hear which
+> I2C client breaks with DMA and if it's driver can't be fixed somehow
+> instead. But even if we agree on a workaround short term, adding a
+> binding for this workaround seems like a no-go to me. We have to live
+> with this binding forever. Sidenote: I could think of a generic
+> 'disable-dma' which could be reused everywhere but we probably won't get
+> that upstream that late in the cycle.
+> 
+> Is there no other way to disable DMA which is local to this driver so we
+> can easily revert the workaround later?
+
+This is the most local low-impact solution (nomenclature aside).
+
+The beautiful thing about this approach is that, *if* the Geni SE DMA
+ever starts working, we can remove the C code and any old properties
+left in older DTs just become NOOP.  Older kernels with newer DTs
+(less of a priority) *still* won't work, but they don't work now
+anyway.
+
+NB: QCom have also made it pretty clear that DTBs *must* match their
+kernel version.  I know this is controversial amongst DT purists, but
+it's still how QCom operate.
+
+The offending line can be found at [0].  There is no obvious bug to
+fix and this code obviously works well on some of the hardware
+platforms using it.  But on our platform (Lenovo Yoga C630 - QCom
+SMD850) that final command, which initiates the DMA transaction, ends
+up rebooting the machine.
+
+With regards to the nomenclature, my original suggestion was
+'qcom,geni-se-no-dma'.  Would that better suit your request?
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/soc/qcom/qcom-geni-se.c#n644
+
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  drivers/i2c/busses/i2c-qcom-geni.c | 14 ++++++++++----
+> > >  1 file changed, 10 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> > > index a89bfce5388e..dfdbce067827 100644
+> > > --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> > > +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> > > @@ -353,13 +353,16 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
+> > >  static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+> > >  				u32 m_param)
+> > >  {
+> > > +	struct device_node *np = gi2c->se.dev->of_node;
+> > >  	dma_addr_t rx_dma;
+> > >  	unsigned long time_left;
+> > > -	void *dma_buf;
+> > > +	void *dma_buf = NULL;
+> > >  	struct geni_se *se = &gi2c->se;
+> > >  	size_t len = msg->len;
+> > >  
+> > > -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> > > +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
+> > > +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> > > +
+> > >  	if (dma_buf)
+> > >  		geni_se_select_mode(se, GENI_SE_DMA);
+> > >  	else
+> > > @@ -392,13 +395,16 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+> > >  static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+> > >  				u32 m_param)
+> > >  {
+> > > +	struct device_node *np = gi2c->se.dev->of_node;
+> > >  	dma_addr_t tx_dma;
+> > >  	unsigned long time_left;
+> > > -	void *dma_buf;
+> > > +	void *dma_buf = NULL;
+> > >  	struct geni_se *se = &gi2c->se;
+> > >  	size_t len = msg->len;
+> > >  
+> > > -	dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> > > +	if (!of_property_read_bool(np, "qcom,geni-se-fifo"))
+> > > +		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+> > > +
+> > >  	if (dma_buf)
+> > >  		geni_se_select_mode(se, GENI_SE_DMA);
+> > >  	else
+
+
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
