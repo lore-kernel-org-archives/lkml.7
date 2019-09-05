@@ -2,87 +2,144 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A52C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9792BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B0820820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567694915;
-	bh=kne+Sj8X9QI9UZunIV3pySjiZcGO8BjWgmU6q2bXzLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=npgvQOCcsQ0KCV9EbPbygVaSiDBr4MaqrIoVuBHLN7cbhuQQzJ3FPcKiCgN3e3nqv
-	 ryFOQ/vsolCmVxv5qsbmAwIs6TSGyZ2aAHv3cjbzI9g3LdXpRJ1yBAqRHU1HhnrVwR
-	 xMAlKTgYEs/9ToQlfG4KQb59eFOyDEgeqX5AFr6g=
+	by mail.kernel.org (Postfix) with ESMTP id D8B402082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390061AbfIEOse (ORCPT
+        id S2390085AbfIEOtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbfIEOse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:48:34 -0400
-Received: from localhost (lfbn-ncy-1-174-150.w83-194.abo.wanadoo.fr [83.194.254.150])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72F46206CD;
-        Thu,  5 Sep 2019 14:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567694914;
-        bh=kne+Sj8X9QI9UZunIV3pySjiZcGO8BjWgmU6q2bXzLo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k8FmjgN2igMx3q114j2trtv8EqXzLDQjAn4GUAGYXMOO03TDLi/FT5HPrrzH85/kp
-         zJylTv9kFj28wR7EOMt2fm/Tgvudbtxyjq8h+fXrF1DWBMv++C56su5bQr/y+JGTJ/
-         onGyTNBgT7N834BvRNKNMAYvE5HyHGph8dUZZ7Js=
-Date:   Thu, 5 Sep 2019 16:48:30 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [patch 0/6] posix-cpu-timers: Fallout fixes and permission
- tightening
-Message-ID: <20190905144829.GA18251@lenoir>
-References: <20190905120339.561100423@linutronix.de>
+        Thu, 5 Sep 2019 10:49:01 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51721 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728590AbfIEOtA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:49:00 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id B1E0E2000B;
+        Thu,  5 Sep 2019 14:48:57 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu.Beznea@microchip.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
+Date:   Thu,  5 Sep 2019 16:48:49 +0200
+Message-Id: <20190905144849.24882-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905120339.561100423@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 02:03:39PM +0200, Thomas Gleixner wrote:
-> Sysbot triggered an issue in the posix timer rework which was trivial to
-> fix, but after running another test case I discovered that the rework broke
-> the permission checks subtly. That's also a straightforward fix.
-> 
-> Though when staring at it I discovered that the permission checks for
-> process clocks and process timers are completely bonkers. The only
-> requirement is that the target PID is a group leader. Which means that any
-> process can read the clocks and attach timers to any other process without
-> priviledge restrictions.
-> 
-> That's just wrong because the clocks and timers can be used to observe
-> behaviour and both reading the clocks and arming timers adds overhead and
-> influences runtime performance of the target process.
+Implement .get_multiple and .set_multiple to allow reading or setting
+multiple pins simultaneously. Pins in the same bank will all be switched at
+the same time, improving synchronization and performances.
 
-Yeah I stumbled upon that by the past and found out the explanation behind
-in old history: https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git/commit/kernel/posix-cpu-timers.c?id=a78331f2168ef1e67b53a0f8218c70a19f0b2a4c
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
 
-"This makes no constraint on who can see whose per-process clocks.  This
-information is already available for the VIRT and PROF (i.e.  utime and stime)
-information via /proc.  I am open to suggestions on if/how security
-constraints on who can see whose clocks should be imposed."
+Changes since v1
+https://lore.kernel.org/lkml/20190905141304.22005-1-alexandre.belloni@bootlin.com/ :
+ - Removed debug line
 
-I'm all for mitigating that, let's just hope that won't break some ABIs.
+
+
+ drivers/pinctrl/pinctrl-at91-pio4.c | 58 +++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index d6de4d360cd4..d281ec40e098 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -328,6 +328,33 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	return !!(reg & BIT(pin->line));
+ }
+ 
++static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
++				   unsigned long *bits)
++{
++	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
++	unsigned int bank;
++
++	bitmap_zero(bits, atmel_pioctrl->npins);
++
++	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
++		unsigned int word = bank;
++		unsigned int offset = 0;
++		unsigned int reg;
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
++		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
++#endif
++		if (!mask[word])
++			continue;
++
++		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
++		bits[word] |= mask[word] & (reg << offset);
++	}
++
++	return 0;
++}
++
+ static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
+ 				       int value)
+ {
+@@ -358,11 +385,42 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
+ 			 BIT(pin->line));
+ }
+ 
++static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
++				    unsigned long *bits)
++{
++	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
++	unsigned int bank;
++
++	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
++		unsigned int bitmask;
++		unsigned int word = bank;
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
++#endif
++		if (!mask[word])
++			continue;
++
++		bitmask = mask[word] & bits[word];
++		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
++
++		bitmask = mask[word] & ~bits[word];
++		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
++		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
++#endif
++	}
++}
++
+ static struct gpio_chip atmel_gpio_chip = {
+ 	.direction_input        = atmel_gpio_direction_input,
+ 	.get                    = atmel_gpio_get,
++	.get_multiple           = atmel_gpio_get_multiple,
+ 	.direction_output       = atmel_gpio_direction_output,
+ 	.set                    = atmel_gpio_set,
++	.set_multiple           = atmel_gpio_set_multiple,
+ 	.to_irq                 = atmel_gpio_to_irq,
+ 	.base                   = 0,
+ };
+-- 
+2.21.0
+
