@@ -2,130 +2,161 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC8FC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF140C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E159D2080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74166216F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgYtsyg2"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ojmNIiUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfIEEd1 (ORCPT
+        id S1730988AbfIEEdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:33:27 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:45442 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfIEEd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:33:26 -0400
-Received: by mail-io1-f65.google.com with SMTP id f12so1612570iog.12;
-        Wed, 04 Sep 2019 21:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A9lp9rhuOjuiUtpTZbai2HQ4h+Vi7sUNNaRy+CQ2YQk=;
-        b=vgYtsyg2WXd34VyqbkP05aghwRT4lvZ1s7eC0B2UvEemyrW2CCG4XVY+Oirqhhxklh
-         RVjpqeQX/D8sjnATnNTYS8aJTAVTwybboUE1RgXr5FSwr651eQ5eq2rxqibcalc/oY9f
-         D1dlubk0qbTK0JWtb9n8jkjX272/T1nWav8wnwzTbMLIzT/p+uobe5rtL8RyMhoZBov7
-         MoUmLz4sbKd1ADh8IvEKRqGOOU/mQndzLlz3qdSgWjD8L9dYcm+3q6TWLhjIEVNcRDva
-         dPxBX7ShbQIPz3dXW02LX+YHBys4IikU8eJ/U74y9msfzMdrp2NC1750E3E/ph1BWf2F
-         rPLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A9lp9rhuOjuiUtpTZbai2HQ4h+Vi7sUNNaRy+CQ2YQk=;
-        b=TkoD7UOHueXxPe8VTMPn2Yhj2iJZHq6w7LtgQDjdiFf9TyLv/STkA/ZGWQvtEvYwW1
-         B9k5ws7G8aelVAMNGcKydEImUGqNMGsjoQ0tnzYcyXBEC7gJkyvDHeFJKrbda4CVzX6F
-         GaMLiHEiiYhGvNpCilz+OsOkW1lFQot7VHV8F2KmXz4QiCSSbjyGegvCoggVsVTuL82R
-         TvwRLMGPrDRa9aUxTmBZlkN0mA8UiRdyZjLAJhGDDheFP8bWObgNLVWtXb/qBGZlyYV6
-         wfQu9m5Ssc3Nkj4WaM7W9VSerjpdlkzNV7/J3a10Vywx/fCp025Pumm/dyh9uMqhYurf
-         vTtg==
-X-Gm-Message-State: APjAAAVhBQobNPBEofh0ndA2CMn7ZOCEbhE3Z4QXIkOpHqk+uxZqMSLp
-        Id4yTDbh0YvIWxZuQpvZ28CJNA+vwOmi6Ulv768=
-X-Google-Smtp-Source: APXvYqwI06AxNfsCKmqOxx7MSL+aEzYNxe4/ymVxIAaBMvoQMCqgLN2EWGT4E8EOVJ7ZbABYbNhB62igxw+9X9uHtSI=
-X-Received: by 2002:a6b:7503:: with SMTP id l3mr1689873ioh.244.1567658006037;
- Wed, 04 Sep 2019 21:33:26 -0700 (PDT)
+        Thu, 5 Sep 2019 00:33:49 -0400
+Received: from mail-eopbgr40073.outbound.protection.outlook.com ([40.107.4.73]:43190
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726047AbfIEEdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 00:33:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cr656mdKnZmL/TCrDxmvMKJZ3SL67BsOSULaOZYlTWPcHpmHwB6m1bb7fa6IyUGVVEdZWqIyOFBoklrlxuauZ07RU0fCxwVgKqGew0QNkUTvDQEZa7ZtxsQY4ZgJ7UmGN24wg/wFlX7hXVlN4deUWkHIcfN8Jklcp5q8/WsKFtV4PmaW/HeUZBI4bG568yiQoDOkCb69xnpC/8lC7xhuXZq+wwhRKLo9sr4AnohCBLxn98Yqi9HKWCovi9evhljQCrIBFguZ+6MBjVfUZRNRRws/3PNfvfVBNXbKQFEwAzTnqqZNWhRCilguLf6rd5YH6q9H3b73HrMPsV19Y7B6XQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=avaDpKvXgso4dx/QmtD7Hl71dbR5CxEuNE1/dUXMv+4=;
+ b=dviwHyu9/tMe7aqZ/qlXBe5K3wKAOwdPmWQZlf13oCwvXhAM6udfXpsitK60whhowBP08TcZ2ESw8PWA9NuODc36rYhFiTV2kVLs6hExDLvCYQW1dbAq2rRSIqRTdFVuLzIntL/KdHl+eAs9QCB8TH+PYk5mOZ0aeRXT8ReMdANd55Ve9P8BMSsoNDJrHrV6+rnkzZ1EeUeIUZgNlg4mxTv6H6JtS7TxEa4BafyDgkHFKQNlpQakgJMcGCvUBb/tWj3TBAsHFlciS0OzXK/dS66Et0fEIqAznFRRdZRjyajOt8u8oYJPZv2Bg9xp/uVOXsnoL4eOA0Dxbl28/2ANXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=avaDpKvXgso4dx/QmtD7Hl71dbR5CxEuNE1/dUXMv+4=;
+ b=ojmNIiUvX1hCHDXc1pl9DW1TFcGjEvOA+fakr8dYgWZ2KqfMTqsDq4oWGVREuSFoZTAvL5HPVhM0u50Jq1NhJL2CgamkVRfPfWbVbl4j7RoXXgC1cZkMYgH+6/AIrJg8ktXJ76/TwAnULEkllbsxkhTr9ZLwrDO6BPMOc+YaJcE=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4667.eurprd04.prod.outlook.com (52.135.139.13) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2220.20; Thu, 5 Sep 2019 04:33:44 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
+ 04:33:44 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     "'andy.shevchenko@gmail.com'" <andy.shevchenko@gmail.com>,
+        "'rafael@kernel.org'" <rafael@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Meenakshi Aggarwal <meenakshi.aggarwal@nxp.com>,
+        Udit Kumar <udit.kumar@nxp.com>,
+        "'wsa@the-dreams.de'" <wsa@the-dreams.de>,
+        "'rjw@rjwysocki.net'" <rjw@rjwysocki.net>
+CC:     Chuanhua Han <chuanhua.han@nxp.com>,
+        "'shawnguo@kernel.org'" <shawnguo@kernel.org>,
+        "'s.hauer@pengutronix.de'" <s.hauer@pengutronix.de>,
+        "'linux-acpi@vger.kernel.org'" <linux-acpi@vger.kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'linux-i2c@vger.kernel.org'" <linux-i2c@vger.kernel.org>,
+        "'linux-arm-kernel@lists.infradead.org'" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH] ACPI: support for NXP i2c controller
+Thread-Topic: [PATCH] ACPI: support for NXP i2c controller
+Thread-Index: AQHVN9RWONVodUogYk2tb4fLvCueOacZMhcAgAAFiwCAAI1AgIAABROQgAMCJ+A=
+Date:   Thu, 5 Sep 2019 04:33:44 +0000
+Message-ID: <DB7PR04MB4490E737C00CF9CA173AB2898FBB0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190711102601.20582-1-chuanhua.han@nxp.com>
+ <CAJZ5v0hY2sL+XfN_4v07_hjvoxgCAt+Q89+wNg5Pky6XKP-mqA@mail.gmail.com>
+ <CAHp75VfFtMMQhetRFHrx=Ft7OWwyMqLrwP3sPjT6YVtr8xCHoQ@mail.gmail.com>
+ <896b88d4-9d1b-922b-1784-55ef9a1a1830@pengutronix.de>
+ <AM7PR04MB6885DB03C6B96C7932DDA74B8EB90@AM7PR04MB6885.eurprd04.prod.outlook.com>
+In-Reply-To: <AM7PR04MB6885DB03C6B96C7932DDA74B8EB90@AM7PR04MB6885.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 09ddf1b3-09d0-4333-f572-08d731ba3c9a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600166)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB4667;
+x-ms-traffictypediagnostic: DB7PR04MB4667:|DB7PR04MB4667:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB46678644953757242F8865408FBB0@DB7PR04MB4667.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(199004)(189003)(26005)(6246003)(8936002)(966005)(74316002)(110136005)(6436002)(8676002)(66066001)(478600001)(9686003)(54906003)(4326008)(6306002)(476003)(86362001)(305945005)(2906002)(81156014)(81166006)(3846002)(7736002)(76176011)(11346002)(102836004)(53546011)(6506007)(53936002)(229853002)(446003)(14454004)(7696005)(186003)(45080400002)(7416002)(486006)(55016002)(6116002)(44832011)(256004)(64756008)(66446008)(66946007)(66476007)(66556008)(76116006)(71190400001)(25786009)(33656002)(71200400001)(99286004)(14444005)(5660300002)(52536014)(316002)(491001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4667;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: dsZ+rVCRe1StNRXL2GWcOUTLbQTy7W5efTggCMQsGX0/hKHTXdjFuLhHthmemMbVm76yJ3vsVyHVNGzBJh3ZnzyC7dVQX9R00HrwCL8MQVXAmw2dJMqR9zd6cz6IavL4Jb89F+ZzvH41xj6LY+9jlxmAoDKFKaVrhAUOwiBwzDneRHlFKqHZQB57cJzdOLwnuEfr0TA/kxpMG87rtz4O1Rq7LUFB6Pf1peARWi3+gTMWxLMc57W1bITLWDv3BgZZjJXagH2MrAY4ETopHOzs7lXIQybwypzyN2XgObUl6DjiVURrwFLUFTabzuhZmvFEpnkeSD+u6s2/y47MyIgdqOmFCaBTXaOtQQ4ZLwaUQws9/J+80CLoKX4MWBY6t2rkkyw32KQ6Aa7LqVAyWVkaRv8Ab0p1tBgAvc4cRPyMauE=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190903111342.17731-1-florian.schmidt@nutanix.com> <20190904204241.y6c335djr3bwm6xo@ca-dmjordan1.us.oracle.com>
-In-Reply-To: <20190904204241.y6c335djr3bwm6xo@ca-dmjordan1.us.oracle.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 5 Sep 2019 12:32:49 +0800
-Message-ID: <CALOAHbA+82kfEDvzotJu50QtskqrWv6RzHyMBiHz2gXw1ySL=Q@mail.gmail.com>
-Subject: Re: [PATCH 0/2] trace-vmscan-postprocess: fix parsing and output
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Florian Schmidt <florian.schmidt@nutanix.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09ddf1b3-09d0-4333-f572-08d731ba3c9a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 04:33:44.5791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VebfGvSMsR2OHpZ/pyjQ7o5bqoBjwEhONfx0Ew8jxjsjpGt5pEX53BRm1RlROvsPAVRge10QdvlxM8ZRBwz/yg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4667
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 4:42 AM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
->
-> On Tue, Sep 03, 2019 at 11:14:07AM +0000, Florian Schmidt wrote:
-> > This patch series updates trace-vmscan-postprocess.pl to work without
-> > throwing warnings and errors which stem from updates to several trace
-> > points.
->
-> Cc Yafang, who made (most of?) these updates.
->
-
-Yes, I made 3481c37ffa1d and 3b775998eca7 but didn't remeber to update
-the scripts in the Document directory.
-Thanks for improving it.
-
-> > 3481c37ffa1d ("mm/vmscan: drop may_writepage and classzone_idx from
-> > direct reclaim begin template") removed "may_writepage" from
-> > mm_vmscan_direct_reclaim_begin, and 3b775998eca7
-> > ("include/trace/events/vmscan.h: drop zone id from kswapd tracepoints")
-> > removed "zid" from mm_vmscan_wakeup_kswapd. The output of
-> > mm_vmscan_lru_isolate and mm_vmscan_lru_shrink_active seems to never
-> > have matched the format of the trace point output since they were
-> > created, or at least for as long as I can tell. Patch 1 aligns the
-> > format parsing of the perl script with the current output of the trace
-> > points.
->
-> Thanks, patch 1 fixes the script for me for all tracepoints you touched.
->
-> > In addition, the tables that are printed by the script were not properly
-> > aligned any more, so patch 2 fixes the spacing.
->
-> Nit, not for Pages Scanned.  With your series I get
->
-> Kswapd          Kswapd      Order      Pages     Pages    Pages    Pages
-> Instance       Wakeups  Re-wakeup    Scanned    Rclmed  Sync-IO ASync-IO
-> kswapd0-175          1          0    253694     253691        3   129896               wake-0=1
->
-> > A side remark: parsing the trace output for mm_vmscan_lru_shrink_active
-> > has been in the script ever since it was created in 2010, but at no
-> > point the parsed output was ever used for anything. I updated the
-> > parsing code now, but I wonder if we could just get rid of that part...
->
-> I wonder if we shouldn't just get rid of the whole script, it's hard to
-> remember to keep in sync with vmscan changes and I can't think of a way to
-> remedy that short of having mm regression tests that run this.
-
-There are some similar scripts under tools/perf/scripts/, i.e.
-compaction-times.py.
-What about intergrating these vmscan scripts into perf/scripts as well ?
-Something like vmscan-times.py...
-
-> But your
-> patches are an improvement for now.
-
-Agreed.
-
-Thanks
-Yafang
+PiBIaSwNCj4gDQo+IE9uIDAyLjA5LjE5IDIzOjE2LCBBbmR5IFNoZXZjaGVua28gd3JvdGU6DQo+
+ID4gT24gTW9uLCBTZXAgMiwgMjAxOSBhdCAxMTo1OCBQTSBSYWZhZWwgSi4gV3lzb2NraSA8cmFm
+YWVsQGtlcm5lbC5vcmc+DQo+IHdyb3RlOg0KPiA+Pg0KPiA+PiBPbiBUaHUsIEp1bCAxMSwgMjAx
+OSBhdCAxMjozNSBQTSBDaHVhbmh1YSBIYW4gPGNodWFuaHVhLmhhbkBueHAuY29tPg0KPiB3cm90
+ZToNCj4gPj4+DQo+ID4+PiBFbmFibGUgTlhQIGkyYyBjb250cm9sbGVyIHRvIGJvb3Qgd2l0aCBB
+Q1BJDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1ieTogTWVlbmFrc2hpIEFnZ2Fyd2FsIDxtZWVu
+YWtzaGkuYWdnYXJ3YWxAbnhwLmNvbT4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IFVkaXQgS3VtYXIg
+PHVkaXQua3VtYXJAbnhwLmNvbT4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IENodWFuaHVhIEhhbiA8
+Y2h1YW5odWEuaGFuQG54cC5jb20+DQo+ID4+DQo+ID4+IFdvbGZyYW0sIGFueSBvYmplY3Rpb25z
+IHRvIHRoaXMgZnJvbSB0aGUgaTJjIHNpZGU/DQo+ID4NCj4gPiBNYXkgSSBwcm9wb3NlIGFtZW5k
+bWVudChzKT8NCj4gPg0KPiA+Pj4gQEAgLTQ0LDYgKzQ0LDcgQEANCj4gPj4+ICAgI2luY2x1ZGUg
+PGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gPj4+ICAgI2luY2x1ZGUgPGxpbnV4L3NjaGVkLmg+DQo+
+ID4+PiAgICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ID4NCj4gPj4+ICsjaW5jbHVkZSA8bGlu
+dXgvYWNwaS5oPg0KPiA+DQo+ID4gSWYgaXQncyBrZXB0IGluIG9yZGVyLCBiZXR0ZXIgdG8gZ28g
+d2l0aCBpdC4gKFllcywgaXQgaXMgYXMgSSBoYXZlDQo+ID4gY2hlY2tlZCkgSG93ZXZlciwgcHJv
+cGVydHkuaCBzaG91bGQgYmUgaW5jbHVkZWQgaW5zdGVhZCwgc2VlIGJlbG93Lg0KPiA+DQo+ID4+
+PiAgICAgICAgICBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpvZl9pZCA9DQo+IG9mX21hdGNo
+X2RldmljZShpMmNfaW14X2R0X2lkcywNCj4gPj4+DQo+ID4+PiAmcGRldi0+ZGV2KTsNCj4gPj4+
+ICsgICAgICAgY29uc3Qgc3RydWN0IGFjcGlfZGV2aWNlX2lkICphY3BpX2lkID0NCj4gPj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGFjcGlfbWF0Y2hfZGV2aWNlKGkyY19pbXhfYWNwaV9pZHMs
+DQo+ID4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmcGRldi0+
+ZGV2KTsNCj4gPg0KPiA+DQo+ID4+PiAgICAgICAgICBpZiAob2ZfaWQpDQo+ID4+PiAgICAgICAg
+ICAgICAgICAgIGkyY19pbXgtPmh3ZGF0YSA9IG9mX2lkLT5kYXRhOw0KPiA+Pj4gKyAgICAgICBl
+bHNlIGlmIChhY3BpX2lkKQ0KPiA+Pj4gKyAgICAgICAgICAgICAgIGkyY19pbXgtPmh3ZGF0YSA9
+IChzdHJ1Y3QgaW14X2kyY19od2RhdGEgKikNCj4gPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgYWNwaV9pZC0+ZHJpdmVyX2RhdGE7DQo+ID4NCj4gPg0KPiA+IFRoZSBhYm92ZSBh
+bHRvZ2hlciBtYXkgYmUgcmVwbGFjZWQgd2l0aA0KPiA+DQo+ID4gY29uc3Qgc3RydWN0IGlteF9p
+MmNfaHdkYXRhICptYXRjaDsNCj4gPiAuLi4NCj4gPiBtYXRjaCA9IGRldmljZV9nZXRfbWF0Y2hf
+ZGF0YSgmcGRldi0+ZGV2KTsNCj4gPiBpZiAobWF0Y2gpDQo+ID4gICBpMmNfaW14LT5od2RhdGEg
+PSBtYXRjaDsNCj4gPiBlbHNlDQo+ID4gLi4uDQo+IA0KPiBJbnN0ZWFkIG9mICJtYXkgYmUgcmVw
+bGFjZWQiLCBJIHdvdWxkIHNheTogaXQgc2hvdWxkIGJlIHJlcGxhY2VkIDopDQo+IA0KPiA+Pj4g
+KyAgICAgICAgICAgICAgIC5hY3BpX21hdGNoX3RhYmxlID0gQUNQSV9QVFIoaTJjX2lteF9hY3Bp
+X2lkcyksDQo+ID4NCj4gPiBTaW5jZSB0aGVyZSBpcyBubyAjaWZkZWYgZ3VhcmQgbm8gbmVlZCB0
+byB1c2UgQUNQSV9QVFIoKS4NCj4gPg0KPiANCj4gV2hhdCBpTVgvKG90aGVyIE5YUD8pIFNvQ3Mg
+YXJlIHdpdGggQUNQSSBzdXBwb3J0PyAgV2hlcmUgSSBjYW4gZ2V0IG9uZT8gSQ0KPiB3b3VsZCBs
+aWtlIHRvIGtub3cgbW9yZSBhYm91dCBpdC4NCi0gTnhwIGhhcyB2YXJpZXR5IFNvY3MsIGluY2x1
+ZGUgaS5NWCwgTGF5ZXJzY2FwZSwgZXRjLg0KLSBZb3UgY2FuIGdldCBvbmUgZnJvbSBoZXJlIGh0
+dHBzOi8vd3d3Lm54cC5jb20vZGVzaWduL3FvcmlxLWRldmVsb3Blci1yZXNvdXJjZXMvcW9yaXEt
+bHgyMTYwYS1kZXZlbG9wbWVudC1ib2FyZDpMWDIxNjBBLVJEQg0KDQo+IA0KPiBLaW5kIHJlZ2Fy
+ZHMsDQo+IE9sZWtzaWogUmVtcGVsDQo+IA0KPiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfA0KPiB8DQo+IEluZHVzdHJpYWwgTGludXggU29sdXRpb25z
+ICAgICAgICAgICAgICAgICB8DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24u
+b3V0bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3LnBlDQo+IG5ndXRyb25peC5kZSUyRiZh
+bXA7ZGF0YT0wMiU3QzAxJTdDbWVlbmFrc2hpLmFnZ2Fyd2FsJTQwbnhwLmNvbSUNCj4gN0M2NDBl
+YjAxNWE5MWY0OTU5ZDNiNTA4ZDczMDMxNjhmYiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVj
+DQo+IDMwMTYzNSU3QzAlN0MwJTdDNjM3MDMwODYxMDc2ODc5OTM4JmFtcDtzZGF0YT1zUFd0a1Z0
+SEhEdm9SUg0KPiBabVdKdWlwQ08lMkJFd0clMkJjdXBnWnZjSVYxJTJCcmxFWSUzRCZhbXA7cmVz
+ZXJ2ZWQ9MCAgfA0KPiBQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkg
+fCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTANCj4gfA0KPiBBbXRzZ2VyaWNodCBIaWxkZXNoZWlt
+LCBIUkEgMjY4NiAgICAgICAgICAgfCBGYXg6DQo+ICs0OS01MTIxLTIwNjkxNy01NTU1IHwNCg==
