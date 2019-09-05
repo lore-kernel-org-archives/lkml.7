@@ -2,152 +2,162 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD89C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CBBC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75BD22CF6
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C0021848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:07:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567685230;
+	bh=bhnaac05j/PHNmIMKq9xVZ3sapPPKzazHKPdKwAXtgU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=sUeKQng8hq0S6dLsAjr+w57zv7Hbx+xulWPMKHBgxIydLZSRbanOJXEUq73AvDwH7
+	 AT2Nc9RIRHTREhalm9qA9cG6g2tGRVv0yI4O5UlgBhnFo1kV4ofwjtrXwkaG+uWQtX
+	 UgQN/fF2+Tm1wJz6V/rbWxKvm8ycJ+AezCJ/AAqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389208AbfIEMFr (ORCPT
+        id S2389211AbfIEMHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:05:47 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46614 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731568AbfIEMFq (ORCPT
+        Thu, 5 Sep 2019 08:07:10 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59870 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732374AbfIEMHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:05:46 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x7so1550653oie.13;
-        Thu, 05 Sep 2019 05:05:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uDPcDY1i2jtjkqYWiRv99e2tz5csWw3OmT8nJpxEh5w=;
-        b=Cp3v34mrnkt7jsyGpN3v4FQt5MB8Rh8IGWoLwQBnafA0h8l1r/iCKYtgUOhp+/tAaf
-         exm/aR2YPdnPRMTTL9IjaMtzwVLcbBgS2RTgghk9O/YDZtIJimHvkuqzhgnPUcJJWV3T
-         ncS5P82egYHtJQk0j/DJoE3Hga5pTRpbMGSCC0b2zmTFVjJlO0kD6/+TpHJuPDFJYWXn
-         +m4Q5A080qZ6e2d4iFzdB77YAYWMnH6SmQLJYS8aSPiozWpCi4tBZ/wTFTj+WZpJSFNn
-         UwpuV9WCrjLC96x4vNVbq4Zp9VDAjRJATAXWKIOp/hLd9K2MwXCPnlQxNOxU0dJLi/9s
-         6p/g==
-X-Gm-Message-State: APjAAAVOch0N3VdzQ17C0HVAHUSld5X1Q9SbUgRjipHbCQNfcn1JgNlc
-        Nz4D2g2LXcoU7xlkMVDwPEnludiuovf65SRtFmE=
-X-Google-Smtp-Source: APXvYqwpJ443LWGufLd3u3Kr3HTxqxfWDoGjtPVjZUudTj0e2WRY1jT2mf+lcBAhCcqSef0fzUV0E58hAN+JwMzXjDw=
-X-Received: by 2002:a05:6808:98a:: with SMTP id a10mr2275766oic.54.1567685145527;
- Thu, 05 Sep 2019 05:05:45 -0700 (PDT)
+        Thu, 5 Sep 2019 08:07:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+M5pUPd0CSd5IqfYJSlkUN21WzkPkfZPQNuEhTOUOgo=; b=XJxqYaSDJ0FmgiWHpkI6ft+c3
+        xpR0PYf82uONs7qbR16qRqH2gjeCTKZcuij6XuYltzRPRBM9aSEx8Lctmhs40s8h4IMaLeu7sqt9X
+        NDqPjvyqhaVfOvVDdCKGb1L2LeSLkunvHggzBLtmw+Uf9c3H+j1f8Eic5cRAwYLPP9Ta6ZnLoJKRM
+        mDAKSnHhoRibTk3TY1j+uaOxMx8JGf/zIFe8yDRjPLVwnAFoasHLZzwIItaVLTwB52kA7QCJbkugF
+        A06FClA44XGCu5sYW3lcm/PAUHIEDnVWs7w9pmr/MNrXK7Fz+w1WNvGXoo/OJ5VqQsm1siPTobWAG
+        p7bsRQUGg==;
+Received: from [177.159.253.249] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5qXb-0001t5-MF; Thu, 05 Sep 2019 12:07:08 +0000
+Date:   Thu, 5 Sep 2019 09:07:01 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
+ scripts
+Message-ID: <20190905090701.37dcf75e@coco.lan>
+In-Reply-To: <20190905092703.GA30899@kroah.com>
+References: <20190905055614.7958918b@coco.lan>
+        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+        <20190905092703.GA30899@kroah.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-2-jacopo+renesas@jmondi.org> <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
- <20190826075943.h7ivwagape3glym5@uno.localdomain> <20190826101550.GB5031@pendragon.ideasonboard.com>
- <20190830180108.mlei4wbfn3mktj23@uno.localdomain> <20190905115017.GI5035@pendragon.ideasonboard.com>
-In-Reply-To: <20190905115017.GI5035@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 5 Sep 2019 14:05:34 +0200
-Message-ID: <CAMuHMdW-MEQvf7MgY7XQkKap-mm8=TO8V61BFtVv63oacFTfYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car CMM documentation
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+Em Thu, 5 Sep 2019 11:27:03 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
 
-On Thu, Sep 5, 2019 at 1:50 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Fri, Aug 30, 2019 at 08:01:09PM +0200, Jacopo Mondi wrote:
-> > On Mon, Aug 26, 2019 at 01:15:50PM +0300, Laurent Pinchart wrote:
-> > > How about converting this binding to yaml alreay ? It should be fairly
-> > > simple.
-> >
-> > I'm trying to, and I'm having my portion of fun time at it.
-> >
-> > The definition of the schema itself seems good, but I wonder, is this
-> > the first renesas schema we have? Because it seems to me the schema
-> > validator is having an hard time to digest the examplea 'clocks' and
-> > 'power-domains' properties, which have 1 phandle and 2 specifiers and 1
-> > phandle and 1 specifier respectively for Rensas SoCs.
-> >
-> > In other words, if in the example I have:
-> >
-> >  examples:
-> >    - |
-> >      cmm0: cmm@fea40000 {
-> >           compatible = "renesas,r8a7796-cmm";
-> >           reg = <0 0xfea40000 0 0x1000>;
-> >           clocks = <&cpg 711>              <---- 1 phandle + 1 specifier
-> >           resets = <&cpg 711>;
-> >           power-domains = <&sysc>;         <---- 1 phandle
-> >      };
-> >
-> > The schema validation is good.
-> >
-> > While if I use an actual example
-> >    - |
-> >      cmm0: cmm@fea40000 {
-> >           compatible = "renesas,r8a7796-cmm";
-> >           reg = <0 0xfea40000 0 0x1000>;
-> >           clocks = <&cpg CPG_MOD 711>         <---- 1 phandle + 2 specifier
-> >           resets = <&cpg 711>;
-> >           power-domains = <&sysc R8A7796_PD_ALWAYS_ON>; <---- 1 phandle
-> >      };                                                       + 1 specfier
-> >
-> > The schema validation fails...
-> > Error: Documentation/devicetree/bindings/display/renesas,cmm.example.dts:20.29-30 syntax error
-> > FATAL ERROR: Unable to parse input tree
-> >
-> > Are clocks properties with > 2 entries and power-domains properties with
-> > > 1 entries supported?
-> >
-> > Because from what I read here:
-> > https://github.com/robherring/yaml-bindings/blob/master/schemas/clock/clock.yaml
-> > "The length of a clock specifier is defined by the value of a #clock-cells
-> > property in the clock provider node."
-> >
-> > And that's expected, but is the examples actually validated against the
-> > clock provider pointed by the phandle? Because in that case, if we had a
-> > yaml schema for the cpg-mssr provider, it would indeed specify clock-cells=2.
-> >
-> > Do we need a schema for cpg-mssr first, or am I doing something else
-> > wrong?
->
-> I think you just need to #include the headers that define CPG_MOD and
-> R8A7796_PD_ALWAYS_ON.
+> On Thu, Sep 05, 2019 at 06:23:13AM -0300, Mauro Carvalho Chehab wrote:
+> > The author of the license-rules.rst file wanted to be very restrict
+> > with regards to the location of the SPDX header. It says that
+> > the SPDX header "shall be added at the first  possible line in
+> > a file which can contain a comment". Not happy with this already
+> > restrictive requiement, it goes further:
+> > 
+> > "For the majority  of files this is the first line, except for
+> > scripts", opening an exception to have the SPDX header at the
+> > second line, if the first line starts with "#!".
+> > 
+> > Well, it turns that this is too restrictive for Python scripts,
+> > and may cause regressions if this would be enforced.
+> > 
+> > As mentioned on:
+> > 	https://stackoverflow.com/questions/728891/correct-way-to-define-python-source-code-encoding
+> > 
+> > Python's PEP-263 [1] dictates that an script that needs to default to
+> > UTF-8 encoding has to follow this rule:
+> > 
+> > 	'Python will default to ASCII as standard encoding if no other
+> > 	 encoding hints are given.
+> > 
+> > 	 To define a source code encoding, a magic comment must be placed
+> > 	 into the source files either as first or second line in the file'
+> > 
+> > And:
+> > 	'More precisely, the first or second line must match the following
+> > 	 regular expression:
+> > 
+> > 	 ^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)'
+> > 
+> > [1] https://www.python.org/dev/peps/pep-0263/
+> > 
+> > If a script has both "#!" and the charset encoding line, we can't place
+> > a SPDX tag without either violating license-rules.rst or breaking the
+> > script by making it crash with non-ASCII characters.
+> > 
+> > So, add a sort notice saying that, for Python scripts, the SPDX
+> > header may be up to the third line, in order to cover the case
+> > where both "#!" and "# .*coding.*UTF-8" lines are found.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > ---
+> >  Documentation/process/license-rules.rst | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/process/license-rules.rst b/Documentation/process/license-rules.rst
+> > index 2ef44ada3f11..5d23e3498b1c 100644
+> > --- a/Documentation/process/license-rules.rst
+> > +++ b/Documentation/process/license-rules.rst
+> > @@ -64,9 +64,12 @@ License identifier syntax
+> >     possible line in a file which can contain a comment.  For the majority
+> >     of files this is the first line, except for scripts which require the
+> >     '#!PATH_TO_INTERPRETER' in the first line.  For those scripts the SPDX
+> > -   identifier goes into the second line.
+> > +   identifier goes into the second line\ [1]_.
+> >  
+> > -|
+> > +.. [1] Please notice that Python scripts may also need an encoding rule
+> > +   as defined on PEP-263, which should be defined either at the first
+> > +   or the second line. So, for such scripts, the SPDX identifier may
+> > +   go up to the third line.
+> >  
+> >  2. Style:
+> >    
+> 
+> If you are going to do this, can you also fix up scripts/spdxcheck.py to
+> properly catch this
 
-If that helps, you might want to replace the symbols in the examples by their
-actual values (1 resp. 32).
+For completeness, just added a check for it, and a "stats" mode at the
+script that will tell on what line the first SPDX tag occurs.
 
-And perhaps keep the symbols as comments?
+I'll probably rework at the patch later, in order to disable the pedantic
+mode by default.
 
-        clocks = <&cpg 1 /* CPG_MOD */ 711>;
-        power-domains = <&sysc 32 /* R8A7796_PD_ALWAYS_ON */>;
+There are currently 227 files that don't complain with the "up to line 3"
+rule, including COPYING (with should probably be excluded from the check).
 
-Gr{oetje,eeting}s,
+Patches are at:
 
-                        Geert
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=spdx_pedantic
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Btw, most violations are due to:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+/*
+ * SPDX...
+
+Regards,
+Mauro
