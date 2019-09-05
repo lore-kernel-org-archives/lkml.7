@@ -2,203 +2,119 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEC2C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C44BC3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC88520820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:00:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BDk/GviO"
+	by mail.kernel.org (Postfix) with ESMTP id 6C0D92168B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbfIECAa (ORCPT
+        id S1730765AbfIECEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:00:30 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:35152 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730219AbfIECA3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:00:29 -0400
-Received: by mail-vs1-f66.google.com with SMTP id b11so470229vsq.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 19:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gtBbVu2YuRjZxQMG+WWVEf96/N7afgxfmZK4Z/+uFWI=;
-        b=BDk/GviOuG+apQ6Q/QhHTj1xqYrRLRJ/U+Vl5q95c5rnTaFT0q9vnD0FlSm+FhOZMu
-         fT3dBm8RjTrA4gE8Cd+3Pq/OuU0LqZqI5fGoyijCmEo1OJ9YH4GJGxcVEf8Hf37u+BD3
-         JKtzoiTPyiQgXrUzG0AlNoYIgK56qBaMpOsakxiGkp99hGkduJGX4MlrhOmNoYzbtrzt
-         myehfK5bh1Iz/GmYMogUXHiUhsPrJtTsuQaCcfnCGQ6ZxdIzSgf92h3Kbr14WQSM8GyK
-         Y7yXbjI3ABUK3pplcWrvaGBY9jw2ZJkaI2Bqq6xyydd6jTSm9wxtlqXVMKEFOjexq/FK
-         klIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gtBbVu2YuRjZxQMG+WWVEf96/N7afgxfmZK4Z/+uFWI=;
-        b=dUjEqIyKs50EGIOBtVr9e85kHBr+qls9aHD5IM0XYMnntgD91ODbNdLPG0GPiyAB5d
-         QOivErfakPmPRlNNa3EWyFIhe0iXXvcIkdYxqgl/9wWuERySXb4OL3Fx3fC1sMFeVr9O
-         llVjWPndXmmW0YU4Fc+pblXM7xwhuIOsRle2ihSBBpu59Qgf6BtAQwLRmQ7zPmiH2Liv
-         UGvU2T+LBcVX30OhXMBE3VeqDa0ZIhKONbhR30A5n2bQpQL9Sv9h+eaMBetj1JOMc/Pv
-         NECCymIYsh3oJyrVBUJ92xNt/BiMClq2R8IFLpOmO2aFz40B9VZyaTAhxXZ0lCMt6hg8
-         RuKA==
-X-Gm-Message-State: APjAAAW4rgA0DRZ3aIJ7Tz8dqkNXLNVC1/XDFYikXRpEU6+J/bpXyqgb
-        yWOA55WjwURFnvmo56HXUrVhtRrOK76VpoiYQ2+5bQ==
-X-Google-Smtp-Source: APXvYqxacjUbubh/fjdELzo+yEIBzA6Pet0cEMCgAbXj6+KDUhSdstEp8OETBjK3tdrz7F17KCo/GA17ho1MZ4H5QAs=
-X-Received: by 2002:a67:3147:: with SMTP id x68mr509652vsx.29.1567648828184;
- Wed, 04 Sep 2019 19:00:28 -0700 (PDT)
+        Wed, 4 Sep 2019 22:04:35 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730730AbfIECEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:04:35 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AB9F98287DF39B640022;
+        Thu,  5 Sep 2019 10:04:33 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 10:04:28 +0800
+Subject: Re: [PATCH] gpio: Move gpiochip_.*lock_as_irq() to the proper ifdef
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20190822031817.32888-1-yuehaibing@huawei.com>
+ <CACRpkdapgDbkm3JjywtPv=5gYKQCCXzdabDumVukFv5Dn5pomA@mail.gmail.com>
+ <20190904154631.kjegnsk6cf473nr6@flow>
+CC:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alexandre Courbot <acourbot@nvidia.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <23aeaa05-3a59-5f01-7a67-de1d1d1de547@huawei.com>
+Date:   Thu, 5 Sep 2019 10:04:27 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <20190813224620.31005-1-dave@stgolabs.net> <20190813224620.31005-2-dave@stgolabs.net>
- <20190821215707.GA99147@google.com> <20190822044936.qusm5zgjdf6n5fds@linux-r8p5>
- <20190822181701.zhfdkjbwjh56i3ax@linux-r8p5> <CANN689E+xsZWOKFBuv1pkpXO-i4i=Yhg3ebnD++ujz7yfDqwuQ@mail.gmail.com>
- <20190905005234.vse4pm4mw7bogcbp@linux-r8p5>
-In-Reply-To: <20190905005234.vse4pm4mw7bogcbp@linux-r8p5>
-From:   Michel Lespinasse <walken@google.com>
-Date:   Wed, 4 Sep 2019 19:00:13 -0700
-Message-ID: <CANN689HnDABO6kyy_+FDJu0tQzVihcdNP9WhEyA1GJJxD_HOrQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] x86,mm/pat: Use generic interval trees
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dbueso@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190904154631.kjegnsk6cf473nr6@flow>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Davidlohr,
+On 2019/9/4 23:46, Sebastian Andrzej Siewior wrote:
+> In a recent commit the gpiochip_.*lock_as_irq() were moved and ended up
+> in the wrong `ifdef' section. Now for !CONFIG_GPIOLIB the function is
+> defined twice leading to an compile error.
+> 
+> Move the extern function declaration under CONFIG_GPIOLIB, the "static
+> inline" version is already under !CONFIG_GPIOLIB.
+> 
+> Fixes: c7663fa2a6631 ("gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h")
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+>  include/linux/gpio/driver.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index b74a3bee85e5d..fb134ff20f6b2 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -702,14 +702,14 @@ void gpiochip_free_own_desc(struct gpio_desc *desc);
+>  void devprop_gpiochip_set_names(struct gpio_chip *chip,
+>  				const struct fwnode_handle *fwnode);
+>  
+> -/* lock/unlock as IRQ */
+> -int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+> -void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+> -
+>  #ifdef CONFIG_GPIOLIB
+>  
+>  struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+>  
+> +/* lock/unlock as IRQ */
+> +int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+> +void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
+> +
+>  #else /* CONFIG_GPIOLIB */
 
-On Wed, Sep 4, 2019 at 5:52 PM Davidlohr Bueso <dave@stgolabs.net> wrote:
-> Ok, so for that I've added the following helper which will make the
-> conversion a bit more straightforward:
->
-> #define vma_interval_tree_foreach_stab(vma, root, start)
->        vma_interval_tree_foreach(vma, root, start, start)
+Interesting, my patch indeed do the correct thing：
 
-Yes, that should help with the conversion :)
++/* lock/unlock as IRQ */
++int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
++void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
++
+ #else /* CONFIG_GPIOLIB */
 
-> I think this also makes sense as it documents the nature of the lookup.
->
-> Now for the interval-tree conversion to [a,b[ , how does the following
-> look to you? Note that this should be the end result; we can discuss
-> how to get there later, but I wanna make sure that it was more or less
-> what you were picturing.
+however, now in include/linux/gpio/driver.h, it is:
 
-I do not have time for a full review right now, but I did have a quick
-pass at it and it does seem to match the direction I'd like this to
-take.
+/* lock/unlock as IRQ */
+int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset);
+void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset);
 
-Please let me know if you'd like me to do a full review of this, or if
-it'll be easier to do it on the individual steps once this gets broken
-up.
+#ifdef CONFIG_GPIOLIB
 
-BTW are you going to plumbers ? I am and I would love to talk to you
-there, about this and about MM range locking, too.
+struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
 
-Things I noticed in my quick pass:
+#else /* CONFIG_GPIOLIB */
 
-> diff --git a/drivers/gpu/drm/radeon/radeon_vm.c b/drivers/gpu/drm/radeon/radeon_vm.c
-> index e0ad547786e8..dc9fad8ea84a 100644
-> --- a/drivers/gpu/drm/radeon/radeon_vm.c
-> +++ b/drivers/gpu/drm/radeon/radeon_vm.c
-> @@ -450,13 +450,14 @@ int radeon_vm_bo_set_addr(struct radeon_device *rdev,
->  {
->         uint64_t size = radeon_bo_size(bo_va->bo);
->         struct radeon_vm *vm = bo_va->vm;
-> -       unsigned last_pfn, pt_idx;
-> +       unsigned pt_idx;
->         uint64_t eoffset;
->         int r;
->
->         if (soffset) {
-> +               unsigned last_pfn;
->                 /* make sure object fit at this offset */
-> -               eoffset = soffset + size - 1;
-> +               eoffset = soffset + size;
->                 if (soffset >= eoffset) {
-Should probably be if (soffset > eoffset) now (just checking for
-arithmetic overflow).
->                         r = -EINVAL;
->                         goto error_unreserve;
-> @@ -471,7 +472,7 @@ int radeon_vm_bo_set_addr(struct radeon_device *rdev,
->                 }
->
->         } else {
-> -               eoffset = last_pfn = 0;
-> +               eoffset = 1; /* interval trees are [a,b[ */
-Looks highly suspicious to me, and doesn't jive with the eoffset /=
-RADEON_GPU_PAGE_SIZE below.
-I did not look deep enough into this to figure out what would be correct though.
->         }
->
->         mutex_lock(&vm->mutex);
-> diff --git a/drivers/infiniband/hw/hfi1/mmu_rb.c b/drivers/infiniband/hw/hfi1/mmu_rb.c
-> index 14d2a90964c3..d708c45bfabf 100644
-> --- a/drivers/infiniband/hw/hfi1/mmu_rb.c
-> +++ b/drivers/infiniband/hw/hfi1/mmu_rb.c
-> @@ -195,13 +195,13 @@ static struct mmu_rb_node *__mmu_rb_search(struct mmu_rb_handler *handler,
->         trace_hfi1_mmu_rb_search(addr, len);
->         if (!handler->ops->filter) {
->                 node = __mmu_int_rb_iter_first(&handler->root, addr,
-> -                                              (addr + len) - 1);
-> +                                              (addr + len));
->         } else {
->                 for (node = __mmu_int_rb_iter_first(&handler->root, addr,
-> -                                                   (addr + len) - 1);
-> +                                                   (addr + len));
->                      node;
->                      node = __mmu_int_rb_iter_next(node, addr,
-> -                                                  (addr + len) - 1)) {
-> +                                                  (addr + len))) {
->                         if (handler->ops->filter(node, addr, len))
->                                 return node;
->                 }
 
-Weird unnecessary parentheses through this block.
+Maybe this caused by the fuzzing?  Anyway, this fix the issue, so
 
-> @@ -787,7 +787,7 @@ static phys_addr_t viommu_iova_to_phys(struct iommu_domain *domain,
->         struct viommu_domain *vdomain = to_viommu_domain(domain);
->
->         spin_lock_irqsave(&vdomain->mappings_lock, flags);
-> -       node = interval_tree_iter_first(&vdomain->mappings, iova, iova);
-> +       node = interval_tree_iter_first(&vdomain->mappings, iova, iova + 1);
+Reviewed-by: YueHaibing <yuehaibing@huawei.com>
 
-I was gonna suggest a stab iterator for the generic interval tree, but
-maybe not if it's only used here.
+>  
+>  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+> 
 
-> diff --git a/include/linux/interval_tree_generic.h b/include/linux/interval_tree_generic.h
-> index aaa8a0767aa3..e714e67ebdb5 100644
-> --- a/include/linux/interval_tree_generic.h
-> +++ b/include/linux/interval_tree_generic.h
-> @@ -69,12 +69,12 @@ ITSTATIC void ITPREFIX ## _remove(ITSTRUCT *node,                         \
->  }                                                                            \
->                                                                               \
->  /*                                                                           \
-> - * Iterate over intervals intersecting [start;last]                          \
-> + * Iterate over intervals intersecting [start;last[                          \
-
-Maybe I'm extra nitpicky, but I would suggest to use 'end' instead of
-'last' when the intervals are half open: [start;end[
-To me 'last' implies that it's in the interval, while 'end' doesn't
-imply anything (and thus the half open convention used through the
-kernel applies).
-similarly ITLAST should be changed to ITEND, etc and similarly in the
-various call sites (drm and others).
-Again, maybe it's nitpicky but I feel changing the name also helps
-verify that we don't leave behind any off-by-one use.
-
-That said, it's really only my preference - if you think it's too
-painful to change, that's OK.
-
--- 
-Michel "Walken" Lespinasse
-A program is never fully debugged until the last user dies.
