@@ -2,117 +2,91 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4075BC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3C3C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BDC2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sAZJDoPX"
+	by mail.kernel.org (Postfix) with ESMTP id CB8702070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567696178;
+	bh=NfBX9KrULy9QnrJyx1vJdGwafFge3XYVRmLdsNYeQxg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ScA96rca59fE5St7jW5lnIGkBIKBg+zbOfuVYFiP0KXtLGxBuDWqmwtbzyZ7xDLQR
+	 1eO1829NMN1pp7bRQUv+ciU+zzVBZbFMKCjBj13N07VZUSXivB8biWZuRdVbbeVErn
+	 KB1s0CQjCO7h5LpfNmVHQK1G1/9FHn0iRG7iGDbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388387AbfIEPIp (ORCPT
+        id S2388290AbfIEPJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:08:45 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:45699 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732147AbfIEPIo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:08:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y72so1919254pfb.12;
-        Thu, 05 Sep 2019 08:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LB6xSBfuSinZAMV9aZFPQIN9CvwHLjeqldm8lg5+A+Y=;
-        b=sAZJDoPXIbsX6QlILVophZ3Bq/anEIraDsVmTx3AukE6/pGhp7fYUtWiiU1kS1OP8p
-         dEBvDbtNfKtJAfS5JP3HGcfdtHwxW2Y3AY9IUf6NF63ZbOv3Upl2bOH0PnKgHGVr0STS
-         7+G1WP6DcE9RJ50xVxTNrS7P0ILJUWTpPJ8i9qpIIfo+DuCNp/Ecy7CMjsOXm3jwoiG8
-         JW5PP90uSM5hGN1uLoq/9IN6VEHV2eI2d26qGMBQtLZS4mWfC4fQuO+AVObMdgD867qc
-         YzOh+ch+V65CcQbzeHMe7wfDHQnm3niS9XxozCdKS2ehwyp7oFy+jvy5NrS4bEs/zzel
-         3mXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LB6xSBfuSinZAMV9aZFPQIN9CvwHLjeqldm8lg5+A+Y=;
-        b=uY16QGJMLPdG3KwbxJgU5UbALdENiyM5DDJeP1oC1KJR1NAMudTe0dkRs+xC64ykN0
-         nG3yoVZyus0Kn4YRChn4fyHJZBMisXUOqhnilGqoAtgJgzgaivhrh9GDTOSKYoxetyzZ
-         GPcgoFjwT+okxSUfK2ZqPpMXwA0ToiP7VyYpaxPJr9nUV/ExAYHhnIPzkrBDkj2weTnL
-         yqPacn+halAYJyziYzCvgTzGz/pyPM8jKRWpWpQqgw97ZFtMnPc9Es9PGpA1tz0hAAHh
-         y5V9mdg1J0/4DXoxhQlecm+zCkm7DIDcrORxbyKyya+h+BSOcnm3gyMqRH8fjU8CkqFr
-         fiCA==
-X-Gm-Message-State: APjAAAUdEUAJwPLWIblImHSpIHyQsoJA9qKPqQC6gs8CactPY2cOb5nd
-        jXvRG/f4QwuVNoge1dtjeS8=
-X-Google-Smtp-Source: APXvYqzqkGvx3UcZXiDT5spOETXK6s5o3oXyFaN70PjXaqGaH2s7389q6JxbkaQZHonn8smeEqxCvw==
-X-Received: by 2002:a63:3281:: with SMTP id y123mr3510207pgy.72.1567696123943;
-        Thu, 05 Sep 2019 08:08:43 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f62sm3746676pfg.74.2019.09.05.08.08.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 08:08:43 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 08:08:42 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Oliver Graute <oliver.graute@kococonnector.com>
-Cc:     "oliver.graute@gmail.com" <oliver.graute@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Subject: Re: [PATCH v2] watchdog: imx_sc: this patch just fixes whitespaces
-Message-ID: <20190905150842.GB18080@roeck-us.net>
-References: <20190905143644.20952-1-oliver.graute@kococonnector.com>
+        Thu, 5 Sep 2019 11:09:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:46602 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731401AbfIEPJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 11:09:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFCD81000;
+        Thu,  5 Sep 2019 08:09:36 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1B4B3F67D;
+        Thu,  5 Sep 2019 08:09:35 -0700 (PDT)
+Subject: Re: PCI/kernel msi code vs GIC ITS driver conflict?
+To:     John Garry <john.garry@huawei.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        "luojiaxing@huawei.com" <luojiaxing@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <f5e948aa-e32f-3f74-ae30-31fee06c2a74@huawei.com>
+ <5fd4c1cf-76c1-4054-3754-549317509310@kernel.org>
+ <ef258ec7-877c-406a-3d88-80ff79b823f2@huawei.com>
+ <20190904102537.GV9720@e119886-lin.cambridge.arm.com>
+ <8f1c1fe6-c0d4-1805-b119-6a48a4900e6d@kernel.org>
+ <84f6756f-79f2-2e46-fe44-9a46be69f99d@huawei.com>
+ <651b4d5f-2d86-65dc-1232-580445852752@kernel.org>
+ <8ac8e372-15a0-2f95-089c-c189b619ea62@huawei.com>
+ <73c22eaa-172e-0fba-7a44-381106dee50d@kernel.org>
+ <a73262e6-6ece-4946-896b-2dad5ca28417@huawei.com>
+ <a90e6f99-cad3-8eda-dd08-0ab05ed9ca04@kernel.org>
+ <ecdb638b-d5d3-efdc-becd-478ce6e6ff96@huawei.com>
+ <e3a4a04a-4669-5a03-5115-84c6573b99e9@kernel.org>
+ <d48c9e64-2a65-45a5-c61e-b69505531b1e@huawei.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <e14e2b68-1d72-46c7-0255-1b3039d089d7@kernel.org>
+Date:   Thu, 5 Sep 2019 16:09:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905143644.20952-1-oliver.graute@kococonnector.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <d48c9e64-2a65-45a5-c61e-b69505531b1e@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 02:36:49PM +0000, Oliver Graute wrote:
-> Fix only whitespace errors in imx_sc_wdt_probe()
-> 
-> Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
+On 05/09/2019 15:53, John Garry wrote:
 
-Ah, there are indeed extra spaces in these lines.
+[...[
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>> Awesome. Can I take this as a Tested-by?
+> 
+> Sure, btw, could you please also add:
+> 
+> Reported-by: Jiaxing Luo <luojiaxing@huawei.com>
+> 
+> ... as he did initial discovery and analysis on the problem.
 
-> ---
->  drivers/watchdog/imx_sc_wdt.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/imx_sc_wdt.c b/drivers/watchdog/imx_sc_wdt.c
-> index 9260475439eb..7ea5cf54e94a 100644
-> --- a/drivers/watchdog/imx_sc_wdt.c
-> +++ b/drivers/watchdog/imx_sc_wdt.c
-> @@ -176,8 +176,8 @@ static int imx_sc_wdt_probe(struct platform_device *pdev)
->  
->  	ret = devm_watchdog_register_device(dev, wdog);
->  	if (ret)
-> - 		return ret;
-> - 
-> +		return ret;
-> +
->  	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WDOG,
->  				       SC_IRQ_WDOG,
->  				       true);
-> -- 
-> 2.17.1
-> 
+Sure. Now pushed to irqchip-next.
+
+Thanks,
+	
+	M.
+-- 
+Jazz is not dead, it just smells funny...
