@@ -2,88 +2,90 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A39C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E41C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E920B206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567693378;
-	bh=Y49Pw93Kmg/6UZTb9gRSuwQkNuuRJuxwKt59AgHDvnY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=vsQ4eRtSzD1qGjndbJsRyvBFfPbj/kAsjrXvZB2f9SMcBV0uBRnWb4+zTiKCg5Gm3
-	 +sYR3ZVTwocZHBHmGDGF3xL+DhArj5KiDnlD5Oza2PRTcTKRpESszzQFz6IBspxFFJ
-	 BIWtXw5qVpWSpMhXIhYvVerLxcubva5RfAaMXHjw=
+	by mail.kernel.org (Postfix) with ESMTP id 313912137B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388303AbfIEOW5 (ORCPT
+        id S2388422AbfIEOXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:22:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
+        Thu, 5 Sep 2019 10:23:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:46036 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725290AbfIEOW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:22:56 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E825C206A5;
-        Thu,  5 Sep 2019 14:22:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567693376;
-        bh=Y49Pw93Kmg/6UZTb9gRSuwQkNuuRJuxwKt59AgHDvnY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=iQjp9uB35mLrCL1slK8xqZAF7vrVPh7ARF93psDG/8IsVX/ikoMRD2ElVCOaoc7jX
-         +YxLAAasHaDsg+bcjtOuV0NmezKPcIIOh//Q+Utxd/iBn7hMX172TLRm24+zbCk/Q/
-         OTLxwQMYEU2ZJ+hyX/GmYBEp+JDD728PaqL8fWhg=
-Subject: Re: [PATCH 4.4 00/77] 4.4.191-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190904175303.317468926@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6320937d-1730-39f3-2af4-447e04079739@kernel.org>
-Date:   Thu, 5 Sep 2019 08:22:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725290AbfIEOXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:23:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1637028;
+        Thu,  5 Sep 2019 07:23:01 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 596C33F67D;
+        Thu,  5 Sep 2019 07:23:00 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 15:22:58 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Jonathan Chocron <jonnyc@amazon.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, dwmw@amazon.co.uk,
+        benh@kernel.crashing.org, alisaidi@amazon.com, ronenk@amazon.com,
+        barakw@amazon.com, talel@amazon.com, hanochu@amazon.com,
+        hhhawa@amazon.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 3/7] PCI/VPD: Prevent VPD access for Amazon's
+ Annapurna Labs Root Port
+Message-ID: <20190905142258.GB9720@e119886-lin.cambridge.arm.com>
+References: <20190905140018.5139-1-jonnyc@amazon.com>
+ <20190905140018.5139-4-jonnyc@amazon.com>
 MIME-Version: 1.0
-In-Reply-To: <20190904175303.317468926@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905140018.5139-4-jonnyc@amazon.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 11:52 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.191 release.
-> There are 77 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Thu, Sep 05, 2019 at 05:00:17PM +0300, Jonathan Chocron wrote:
+> The Amazon Annapurna Labs PCIe Root Port exposes the VPD capability,
+> but there is no actual support for it.
 > 
-> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
-> Anything received after that time might be too late.
+> Trying to access the VPD (for example, as part of lspci -vv or when
+> reading the vpd sysfs file), results in the following warning print:
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.191-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
+> pcieport 0001:00:00.0: VPD access failed.  This is likely a firmware bug on this device.  Contact the card vendor for a firmware update
 > 
-> thanks,
-> 
-> greg k-h
-> 
+> Signed-off-by: Jonathan Chocron <jonnyc@amazon.com>
+> Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 
-Compiled and booted on my test system. No dmesg regressions.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-thanks,
--- Shuah
-
+> ---
+>  drivers/pci/vpd.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index 4963c2e2bd4c..7915d10f9aa1 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -571,6 +571,12 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_LSI_LOGIC, 0x005f, quirk_blacklist_vpd);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATTANSIC, PCI_ANY_ID,
+>  		quirk_blacklist_vpd);
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_QLOGIC, 0x2261, quirk_blacklist_vpd);
+> +/*
+> + * The Amazon Annapurna Labs 0x0031 device id is reused for other non Root Port
+> + * device types, so the quirk is registered for the PCI_CLASS_BRIDGE_PCI class.
+> + */
+> +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031,
+> +			      PCI_CLASS_BRIDGE_PCI, 8, quirk_blacklist_vpd);
+>  
+>  /*
+>   * For Broadcom 5706, 5708, 5709 rev. A nics, any read beyond the
+> -- 
+> 2.17.1
+> 
