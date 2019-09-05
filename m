@@ -2,115 +2,121 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840EEC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256C5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54EFF2082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567702627;
-	bh=A9rEMrkzcP1PllWUo7qsbxgP4IfNmyWL9LWYqH72v+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XyIlV6R3FmBmpXb1GYVXQUz9cccna6uv78jw1XZ9HlhoDEN5WKYaDbu391CCHidkC
-	 29/ErLgcWIjMLNHZyXM8JQlL8VjXS7l9xdAGb3PXt3o1HlT5T/FYgTmQviszYE7uQx
-	 g/vt6ayK9ZgsUGaSw2BAqWzRtFqDCc217ZpbMZYM=
+	by mail.kernel.org (Postfix) with ESMTP id C273D20825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:59:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WtxX3fE0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390844AbfIEQ5F (ORCPT
+        id S2390860AbfIEQ7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389547AbfIEQ5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:57:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C65720825;
-        Thu,  5 Sep 2019 16:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567702625;
-        bh=A9rEMrkzcP1PllWUo7qsbxgP4IfNmyWL9LWYqH72v+s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NMA2qIoVrX7S/z/t3jBgNqQm/y28n8bEfnyEUp/5gy3FqP9MZt2NUF+SJLZhDJBEf
-         Hs7syyJTF8NT+PmKrugERHEsji/M8ehihFon8eM23ni1ye0sR/NtPXwwU6mPYs8jsl
-         DCbXQWizidahWTMhPgvy3gpdE954wHEdxKZG3H5c=
-Date:   Thu, 5 Sep 2019 18:57:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
-Message-ID: <20190905165701.GB2737@kroah.com>
-References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
- <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
- <20190905141634.GA25790@kroah.com>
- <ae007007-02cc-0081-22c0-34b2d67f2cd3@hpe.com>
- <d0675e8f-80a2-bba4-888c-90feda085a14@hpe.com>
+        Thu, 5 Sep 2019 12:59:55 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:49736 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728507AbfIEQ7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:59:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=X5UwKiV0EAfKocHoGuK5g2l4qyHfAtt7HoIzvyAXWSA=; b=WtxX3fE0Uyw2f5b4XVSLt+wIz
+        qFCLxTnl56DKA5FNK2xcVKHI4eEMAN8z2unfeuhZrjlgrs+StxHpf6wqBuELm8DahSn+ZupIi1NKp
+        2gORG5YFv5PCJV+hXeRDCXH8oYJbrmpHqeRhMr24zrWV7vSNQpiljq901rCcOy6nfnO7w6vOie/2X
+        ICpBdn0nHpNr2EJtj2d8IAUe7BQKnjA4z1YkE1OopjohDVnG7P+m38U/EtkA4T9SlDYV8KhBbG/P8
+        ntAFx+2yxjumH6lYSssEfJH3iBXHJZ8uclIgxBHa/LzTzsNbgB6Bv/DLlfBoZA1O+8ViFIVPQfyrj
+        jH41PJwNQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40032)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i5v6q-0003WW-0p; Thu, 05 Sep 2019 17:59:48 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i5v6m-0005hy-3o; Thu, 05 Sep 2019 17:59:44 +0100
+Date:   Thu, 5 Sep 2019 17:59:44 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     stefanc@marvell.com
+Cc:     davem@davemloft.net, andrew@lunn.ch, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shaulb@marvell.com,
+        nadavh@marvell.com, ymarkman@marvell.com, marcin@marvell.com
+Subject: Re: [PATCH] net: phylink: Fix flow control resolution
+Message-ID: <20190905165943.GL13294@shell.armlinux.org.uk>
+References: <1567701978-16056-1-git-send-email-stefanc@marvell.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d0675e8f-80a2-bba4-888c-90feda085a14@hpe.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1567701978-16056-1-git-send-email-stefanc@marvell.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 09:43:57AM -0700, Mike Travis wrote:
+On Thu, Sep 05, 2019 at 07:46:18PM +0300, stefanc@marvell.com wrote:
+> From: Stefan Chulski <stefanc@marvell.com>
 > 
+> Regarding to IEEE 802.3-2015 standard section 2
+> 28B.3 Priority resolution - Table 28-3 - Pause resolution
 > 
-> On 9/5/2019 7:47 AM, Mike Travis wrote:
-> > Also, nit:
-> > 
-> > > --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
-> > > +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-> > > @@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
-> > >       struct uv_systab *st;
-> > >       int i;
-> > > -    if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
-> > > +    /* Select only UV4 (hubbed or hubless) and higher */
-> > > +    if (is_uv_hubbed(-2) < uv(4) && is_uv_hubless(-2) < uv(4))
-> > >           return 0;    /* No extended UVsystab required */
-> > >       st = uv_systab;
-> > > @@ -1554,8 +1555,19 @@ static __init int uv_system_init_hubless
-> > >       /* Init kernel/BIOS interface */
-> > >       rc = uv_bios_init();
-> > > +    if (rc < 0) {
-> > > +        pr_err("UV: BIOS init error:%d\n", rc);
-> > 
-> > Why isn't that function printing an error?
-> > 
-> > 
-> > > +        return rc;
-> > > +    }
-> > > +
-> > > +    /* Process UVsystab */
-> > > +    rc = decode_uv_systab();
-> > > +    if (rc < 0) {
-> > > +        pr_err("UV: UVsystab decode error:%d\n", rc);
-> > 
-> > Same here, have the function itself print the error, makes this type of
-> > stuff much cleaner.
+> In case of Local device Pause=1 AsymDir=0, Link partner
+> Pause=1 AsymDir=1, Local device resolution should be enable PAUSE
+> transmit, disable PAUSE receive.
+> And in case of Local device Pause=1 AsymDir=1, Link partner
+> Pause=1 AsymDir=0, Local device resolution should be enable PAUSE
+> receive, disable PAUSE transmit.
 > 
-> Turns out both functions already print an error message for each instance of
-> an error.  The only redundancy is the caller also printing an error with
-> just the numeric error code.  Shall I remove that?
+> Signed-off-by: Stefan Chulski <stefanc@marvell.com>
+> Reported-by: Shaul Ben-Mayor <shaulb@marvell.com>
 
-Of course you should, why would you want to see multiple error messages
-for the same single error?
+Good catch, thanks for the patch.
 
-greg k-h
+Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 9525ae83959b ("phylink: add phylink infrastructure")
+
+> ---
+>  drivers/net/phy/phylink.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+> index a45c5de..a5a57ca 100644
+> --- a/drivers/net/phy/phylink.c
+> +++ b/drivers/net/phy/phylink.c
+> @@ -376,8 +376,8 @@ static void phylink_get_fixed_state(struct phylink *pl, struct phylink_link_stat
+>   *  Local device  Link partner
+>   *  Pause AsymDir Pause AsymDir Result
+>   *    1     X       1     X     TX+RX
+> - *    0     1       1     1     RX
+> - *    1     1       0     1     TX
+> + *    0     1       1     1     TX
+> + *    1     1       0     1     RX
+>   */
+>  static void phylink_resolve_flow(struct phylink *pl,
+>  				 struct phylink_link_state *state)
+> @@ -398,7 +398,7 @@ static void phylink_resolve_flow(struct phylink *pl,
+>  			new_pause = MLO_PAUSE_TX | MLO_PAUSE_RX;
+>  		else if (pause & MLO_PAUSE_ASYM)
+>  			new_pause = state->pause & MLO_PAUSE_SYM ?
+> -				 MLO_PAUSE_RX : MLO_PAUSE_TX;
+> +				 MLO_PAUSE_TX : MLO_PAUSE_RX;
+>  	} else {
+>  		new_pause = pl->link_config.pause & MLO_PAUSE_TXRX_MASK;
+>  	}
+> -- 
+> 1.9.1
+> 
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
