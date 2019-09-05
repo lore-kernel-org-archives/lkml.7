@@ -6,151 +6,102 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A455BC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6737AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CB020825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E222184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388265AbfIELKC (ORCPT
+        id S1732065AbfIELNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:10:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49696 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732051AbfIELJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:09:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A9FA2B6AD;
-        Thu,  5 Sep 2019 11:09:55 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 13:09:55 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     jikos@kernel.org, Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-Message-ID: <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
-References: <20190814151244.5xoaxib5iya2qjco@treble>
- <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
- <20190822223649.ptg6e7qyvosrljqx@treble>
- <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
- <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
- <20190905025055.36loaatxtkhdo4q5@treble>
+        Thu, 5 Sep 2019 07:13:52 -0400
+Received: from foss.arm.com ([217.140.110.172]:42326 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731124AbfIELNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:13:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24F4928;
+        Thu,  5 Sep 2019 04:13:51 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56BCB3F718;
+        Thu,  5 Sep 2019 04:13:49 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 12:13:47 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de,
+        steven.sistare@oracle.com, dhaval.giani@oracle.com,
+        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
+        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
+        mgorman@techsingularity.net, parth@linux.ibm.com
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+Message-ID: <20190905111346.2w6kuqrdvaqvgilu@e107158-lin.cambridge.arm.com>
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
+ <20190830174944.21741-2-subhra.mazumdar@oracle.com>
+ <20190905083127.GA2332@hirez.programming.kicks-ass.net>
+ <87r24v2i14.fsf@arm.com>
+ <20190905104616.GD2332@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190905025055.36loaatxtkhdo4q5@treble>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <20190905104616.GD2332@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-09-04 21:50:55, Josh Poimboeuf wrote:
-> On Wed, Sep 04, 2019 at 10:49:32AM +0200, Petr Mladek wrote:
-> > I wonder what is necessary for a productive discussion on Plumbers:
+On 09/05/19 12:46, Peter Zijlstra wrote:
+> On Thu, Sep 05, 2019 at 10:45:27AM +0100, Patrick Bellasi wrote:
+> 
+> > > From just reading the above, I would expect it to have the range
+> > > [-20,19] just like normal nice. Apparently this is not so.
 > > 
-> >   + Josh would like to see what code can get removed when late
-> >     handling of modules gets removed. I think that it might be
-> >     partially visible from Joe's blue-sky patches.
+> > Regarding the range for the latency-nice values, I guess we have two
+> > options:
+> > 
+> >   - [-20..19], which makes it similar to priorities
+> >   downside: we quite likely end up with a kernel space representation
+> >   which does not match the user-space one, e.g. look at
+> >   task_struct::prio.
+> > 
+> >   - [0..1024], which makes it more similar to a "percentage"
+> > 
+> > Being latency-nice a new concept, we are not constrained by POSIX and
+> > IMHO the [0..1024] scale is a better fit.
+> > 
+> > That will translate into:
+> > 
+> >   latency-nice=0 : default (current mainline) behaviour, all "biasing"
+> >   policies are disabled and we wakeup up as fast as possible
+> > 
+> >   latency-nice=1024 : maximum niceness, where for example we can imaging
+> >   to turn switch a CFS task to be SCHED_IDLE?
 > 
-> Yes, and I like what I see.  Especially the removal of the .klp.arch
-> nastiness!
-
-Could we get rid of it?
-
-Is there any other way to get access to static variables
-and functions from the livepatched code?
-
-> I think the .klp.arch sections are the big ones:
+> There's a few things wrong there; I really feel that if we call it nice,
+> it should be like nice. Otherwise we should call it latency-bias and not
+> have the association with nice to confuse people.
 > 
->   .klp.arch.altinstructions
->   .klp.arch.parainstructions
->   .klp.arch.jump_labels (doesn't exist yet)
+> Secondly; the default should be in the middle of the range. Naturally
+> this would be a signed range like nice [-(x+1),x] for some x. but if you
+> want [0,1024], then the default really should be 512, but personally I
+> like 0 better as a default, in which case we need negative numbers.
 > 
-> And that's just x86...
+> This is important because we want to be able to bias towards less
+> importance to (tail) latency as well as more importantance to (tail)
+> latency.
 > 
-> And then of course there's the klp coming/going notifiers which have
-> also been an additional source of complexity.
-> 
-> >       + Do we use them in livepatches? How often?
-> 
-> I don't have a number, but it's very common to patch a function which
-> uses jump labels or alternatives.
+> Specifically, Oracle wants to sacrifice (some) latency for throughput.
+> Facebook OTOH seems to want to sacrifice (some) throughput for latency.
 
-Really? My impression is that both alternatives and jump_labels
-are used in hot paths. I would expect them mostly in core code
-that is always loaded.
+Another use case I'm considering is using latency-nice to prefer an idle CPU if
+latency-nice is set otherwise go for the most energy efficient CPU.
 
-Alternatives are often used in assembly that we are not able
-to livepatch anyway.
+Ie: sacrifice (some) energy for latency.
 
-Or are they spread widely via some macros or inlined functions?
+The way I see interpreting latency-nice here as a binary switch. But maybe we
+can use the range to select what (some) energy to sacrifice mean here. Hmmm.
 
-
-> >       + How often new problematic features appear?
-> 
-> I'm not exactly sure what you mean, but it seems that anytime we add a
-> new feature, we have to try to wrap our heads around how it interacts
-> with the weirdness of late module patching.
-
-I agree that we need to think about it and it makes complications.
-Anyway, I think that these are never the biggest problems.
-
-I would be more concerned about arch-specific features that might need
-special handling in the livepatch code. Everyone talks only about
-alternatives and jump_labels that were added long time ago.
-
-
-> >       Anyway, it might rule out some variants so that we could better
-> >       concentrate on the acceptable ones. Or come with yet another
-> >       proposal that would avoid the real blockers.
-> 
-> I'd like to hear more specific negatives about Joe's recent patches,
-> which IMO, are the best option we've discussed so far.
-
-I discussed this approach with our project manager. He was not much
-excited about this solution. His first idea was that it would block
-attaching USB devices. They are used by admins when taking care of
-the servers. And there might be other scenarios where a new module
-might need loading to solve some situation.
-
-Customers understand Livepatching as a way how to secure system
-without immediate reboot and with minimal (invisible) effect
-on the workload. They might get pretty surprised when the system
-suddenly blocks their "normal" workflow.
-
-As Miroslav said. No solution is perfect. We need to find the most
-acceptable compromise. It seems that you are more concerned about
-saving code, reducing complexity and risk. I am more concerned
-about user satisfaction.
-
-It is almost impossible to predict effects on user satisfaction
-because they have different workflow, use case, expectation,
-and tolerance.
-
-We could better estimate the technical side of each solution:
-
-   + implementation cost
-   + maintenance cost
-   + risks
-   + possible improvements and hardening
-   + user visible effects
-   + complication and limits with creating livepatches
-
-
-From my POV, the most problematic is the arch-specific code.
-It is hard to maintain and we do not have it fully under
-control.
-
-And I do not believe that we could remove all arch specific code
-when we do not allow delayed livepatching of modules.
-
-Best Regards,
-Petr
+--
+Qais Yousef
