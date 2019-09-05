@@ -2,110 +2,106 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B5AC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90728C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABFC206A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:22:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qtt0GUuu"
+	by mail.kernel.org (Postfix) with ESMTP id 6DB0C20693
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:22:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567704177;
+	bh=aVhEQtqSMjs1vLoaEKRn69IAUX9ujdgC14lBzwc7J4Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MkDlEQ1WZTr23v8FRIsmjbDCnxvyizMle8yR4zkqzKTQanVqWy4dvIp0u5PfOHf/g
+	 FJJZie7RUW1c4HlA8+ZD7ypSd4fF4MSOL3JiIx1M01jhe+9SlwVydfmKsb13MghZbz
+	 bSSXGqSq/AYYe1P9lnvlZl5kbB8zvwZt1oxkuUvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389691AbfIERWu (ORCPT
+        id S2390013AbfIERWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:22:50 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37904 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387700AbfIERWu (ORCPT
+        Thu, 5 Sep 2019 13:22:54 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37119 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387700AbfIERWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:22:50 -0400
-Received: by mail-io1-f66.google.com with SMTP id p12so6572282iog.5;
-        Thu, 05 Sep 2019 10:22:49 -0700 (PDT)
+        Thu, 5 Sep 2019 13:22:52 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t14so3344496lji.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:22:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=h6XoJHJRp5DArbWmdsadcBh6z83BVCBg1lEJgWUn+MU=;
-        b=qtt0GUuuzbT+VVZKgagf+GRHgGI0fW1B4GMj/VCLED/LaUQtC3Doa6lDQZmwnyIvkV
-         9psItuNC8ixEYfpe0kkcXATOMiVrDlbNR3wVgMnjNbZ56FIzek+nJpUq0PkvjVd2Piuk
-         3p9T409z7ubUuFeyV52eRAj4mu0pAcHM7GJ7KwHH6ZmBk7yTAHIlZt0zdaqhiml2jHTg
-         zd89V+AFtTv5neOc3WUAJIJ/sKDy7Evom/9L+XLF66QJdSrTWr5S8ZbEGuIfbY7X6HEv
-         m57Q/8YcJE2ZRvsH6OYv6HCXOHjRsVnVkwyWjDDp5+1kii6M9kxBNSirWw0CjEsJLlN0
-         VOvQ==
+        bh=tmlyESraaU291QJUIsvfH7FyXZWDE8ub8JEIcxQG6sE=;
+        b=eGZQuxs3EB4CKkRcVzaZkG91ZTsthu/3MCVcUAmI19FZDHyPEOG/eMEjOa8IU9oMKM
+         DId//Vm4d5y/ai/hVwmOo3zUhrnEE0ufsvGcEZnKqGrqqiIHMpCuHu0lcWna7aTLEbez
+         WrsriTiHVIUjQpHi25iBaTgzUOdcaZL3QNQhk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=h6XoJHJRp5DArbWmdsadcBh6z83BVCBg1lEJgWUn+MU=;
-        b=Z53e4uNx0Ju+YgQ/ROJ3wNB8EiujsUVWaOGwKzNkDUcFUUQHJDyhONyWegWkKNS/0L
-         bfPuoRCuBz7OORuneanxaUAJ9DoFXgngE9A1WyCwoGoz1Ep8+wsiEEhJbrDn36IoVqEE
-         c/+lz4SrK97nClkM0+PSkF8Vb/xDoSmV6bNEUYRo2IjRbJCwMMEYLbkrwAQIzop4qm7t
-         czYxSzETwTFfNiGAsUpzZaOdjIeMUBxL6sDyPVnMGuHwcqn2LoZRgqstsyeJJkQyfrX9
-         LAgNpTNylkdYJcs/x3Z87oAUi3LXQk1U9D7G9/wxCLEm38fGND9CRW8T3q+nuIaNbYu2
-         P+LQ==
-X-Gm-Message-State: APjAAAVt54JaVM2UrhYudXImmcDiWSKFR5Tpr957jtD/trq5sRYMAI81
-        x1gZLz7qrCIdwWwjG2w2Ar5LxOUvG8YlsAVF7RU=
-X-Google-Smtp-Source: APXvYqwR6nUdIEnweUzSLPMmz8Y4JAgL2rhI2t+NPwcMEOMxKH7cQoHHYETKZPPYFXTwePI2PBrbWLvEK7QmYjbydaQ=
-X-Received: by 2002:a6b:cac2:: with SMTP id a185mr5529429iog.142.1567704168865;
+        bh=tmlyESraaU291QJUIsvfH7FyXZWDE8ub8JEIcxQG6sE=;
+        b=OznF55SvfH76eXDMAF28NyuO+syPDFYFvgza5hMHinw6D/prnZV9MIzIJuGM5JRBnf
+         DIMphnF8jAV/VPIbymTdydj81KtU4nhsS8qXNHgg3C5cD1ZgVUWuk33mfQHpbfswwNuD
+         xa9WFUbst3WpdMkMOquy62+aLM5UA2SFnZqszj8YVv5T/pPsW/LpbzANoA382HtWtFNZ
+         nrWeNpgx2sg1NXvaZgbE4b6yB8s87/9ZiP5ZufecJIwPLTIMfVqFswhk3pKw+cgfOZpO
+         I4cFVFgmGqO6hILNPxoENdjSuuGxz3piE954poVu6TV+kh/VrC96fr/WNZokER7pMWE7
+         LdaA==
+X-Gm-Message-State: APjAAAWKq0+DMQKIBaBym2vni9nKQv9GaD4mUuB2quq7/8kPiJ/mZmHy
+        nYoMvMO/il4Q4eoA+vYp8oatupYFCNE=
+X-Google-Smtp-Source: APXvYqxv4R7OQCWciR0kcU2A5k6Q4WDhAfrcXXpB4ybokDT9nUJiQ0+NH0RVXMOTPKo1tO/aTK8vQQ==
+X-Received: by 2002:a2e:974c:: with SMTP id f12mr2922029ljj.15.1567704169666;
+        Thu, 05 Sep 2019 10:22:49 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id f8sm484583ljm.44.2019.09.05.10.22.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Sep 2019 10:22:48 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id r134so2665533lff.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:22:48 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr3219447lfp.134.1567704168405;
  Thu, 05 Sep 2019 10:22:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190905152155.1392871-1-arnd@arndb.de> <20190905152155.1392871-2-arnd@arndb.de>
-In-Reply-To: <20190905152155.1392871-2-arnd@arndb.de>
-From:   Matt Turner <mattst88@gmail.com>
-Date:   Thu, 5 Sep 2019 10:22:36 -0700
-Message-ID: <CAEdQ38G24-s0x+xKzUfg1GH8JAPtcAq5e5L37SnOZ3gQth1STQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ipc: fix sparc64 ipc() wrapper
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+References: <20190904181740.GA19688@gmail.com> <CAHk-=wi2VOPoweqnDhxXKJ9fcLQzkV1oEDjteV=z-C7KXrpomg@mail.gmail.com>
+ <CAKwvOdm3CbZ1Uad4b8+9HU8qDgTwSFw2oqjcAvFkR8jaQQN-5g@mail.gmail.com>
+In-Reply-To: <CAKwvOdm3CbZ1Uad4b8+9HU8qDgTwSFw2oqjcAvFkR8jaQQN-5g@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 5 Sep 2019 10:22:32 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjBsC0bWrCy++Gzimwwfx2+3kSaac9_PbBWmH9hrWdC8g@mail.gmail.com>
+Message-ID: <CAHk-=wjBsC0bWrCy++Gzimwwfx2+3kSaac9_PbBWmH9hrWdC8g@mail.gmail.com>
+Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        stable@vger.kernel.org, sparclinux@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>
+        Paul Burton <paul.burton@mips.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 8:23 AM Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, Sep 5, 2019 at 10:18 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> Matt bisected a sparc64 specific issue with semctl, shmctl and msgctl
-> to a commit from my y2038 series in linux-5.1, as I missed the custom
-> sys_ipc() wrapper that sparc64 uses in place of the generic version that
-> I patched.
->
-> The problem is that the sys_{sem,shm,msg}ctl() functions in the kernel
-> now do not allow being called with the IPC_64 flag any more, resulting
-> in a -EINVAL error when they don't recognize the command.
->
-> Instead, the correct way to do this now is to call the internal
-> ksys_old_{sem,shm,msg}ctl() functions to select the API version.
->
-> As we generally move towards these functions anyway, change all of
-> sparc_ipc() to consistently use those in place of the sys_*() versions,
-> and move the required ksys_*() declarations into linux/syscalls.h
->
-> Reported-by: Matt Turner <mattst88@gmail.com>
-> Fixes: 275f22148e87 ("ipc: rename old-style shmctl/semctl/msgctl syscalls")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Hi Matt,
->
-> Can you check that this solves your problem?
+> Please consider picking up just:
+> https://github.com/ojeda/linux/commit/c97e82b97f4bba00304905fe7965f923abd2d755
+> That lone patch is the one that fixes the particularly observed Oops.
+> The rest are just cleanup; if I made that change in the more important
+> patch, why not clean up the rest of the instances in the kernel?
 
-Works great. Thank you Arnd!
+"Why not just clean up the rest" is how bugs happen.
 
-Tested-by: Matt Turner <mattst88@gmail.com>
+If it's not a fix, and it's not marked for stable (or a regression
+from the merge window) it shouldn't go in this late in the rc period.
+
+Send me _fixes_. Don't send me stuff that is "fixes plus random
+cleanups that were noticed at the same time".
+
+                     Linus
