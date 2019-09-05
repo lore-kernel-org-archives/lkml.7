@@ -2,276 +2,183 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1573C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A6CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17F2206A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9399E206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:27:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dkqsqXNK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388860AbfIER1R (ORCPT
+        id S2389743AbfIER1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:27:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55382 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727522AbfIER1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:27:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 55CE6AC49;
-        Thu,  5 Sep 2019 17:27:14 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 05 Sep 2019 19:27:13 +0200
-From:   Roman Penyaev <rpenyaev@suse.de>
-To:     Heiher <r@hev.cc>
-Cc:     Jason Baron <jbaron@akamai.com>, linux-fsdevel@vger.kernel.org,
-        Eric Wong <e@80x24.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Davide Libenzi <davidel@xmailserver.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        Thu, 5 Sep 2019 13:27:44 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41504 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388702AbfIER1o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:27:44 -0400
+Received: by mail-oi1-f196.google.com with SMTP id h4so2514615oih.8
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WAmS7Uw9e8bB1PTN/jfmWoS315U1NsxPNMRijsnDbxQ=;
+        b=dkqsqXNKtTclKScxZkHGZibCTePLCiDheG7n82N6Z0YAhb9MhjwtpjI9iEh9mhoiDU
+         Ae48MU3pA6l7531xauvCN6OPOVMPihk3vmHbTCfvQuud1iGXxK3orhUbNvSwED/Z9s3b
+         ecCHlrhxja0B5WdKnMqViByl4fTwh6wqa1f1+rOiDl1Zqc/2y71h7mqjEGm2iLz3PTYL
+         Sa08p5tS7vDvwkUqcyjt4eTIegsJPLA2LFKJPt3Lp1436zd2UtBsC31FdiX7OibZIsx3
+         u+4tSqOrs4lGkwJytUMVIm4i4Uao+/cpbkPytXDZJJ0cWsumxQLyAA2bL+/elpwlU1cx
+         Z2kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WAmS7Uw9e8bB1PTN/jfmWoS315U1NsxPNMRijsnDbxQ=;
+        b=YpIw4fr+OBsFtyMQqcnM8L5vAev5YSiAx6t+Tl7afzd9niNzsqXr8gz7a0GipoY/o5
+         hq0O/hfUaYyN/Qg6adwiaDmDtmhXc8b5KlYE7qSxZ4BwzoUvaN3hhJPdhCb5Mm02EA6J
+         2Hi7jaZJ5jfgigZ5xA9zBCBwJvALwvOjb/0+EM5ReIO36MtcBa84q//sofpR4KhWaW7l
+         Y2tHLwVE7KtgnhDQY4gp7Sj2jWNtKVdJs+mdCtpcC1rvny8xz8pO7cBqF8illCcoTqpo
+         GLl/DBCt2yelCr/hfUnLTqwavNy2qYGigD+Ho5zZEuFikpTd2eB7XE0a/32cGX7y9Dup
+         IFqQ==
+X-Gm-Message-State: APjAAAXhRsS5uTSP6sI/L7QfnM2ld+w/kKK5vD/BUOOXNLlLB6dsPRfU
+        yAw9SfaufxJEHxJa0shDC4nd+w==
+X-Google-Smtp-Source: APXvYqzf61sR6IMOtL4FYHi37t+VAq6FMQiw2rdkpaDYnlAlDO20X/MzR54nMXzKFdu7sk4J21N5WQ==
+X-Received: by 2002:aca:416:: with SMTP id 22mr3365398oie.93.1567704463807;
+        Thu, 05 Sep 2019 10:27:43 -0700 (PDT)
+Received: from [192.168.17.59] (CableLink-189-218-29-211.Hosts.InterCable.net. [189.218.29.211])
+        by smtp.gmail.com with ESMTPSA id z16sm628100oic.10.2019.09.05.10.27.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 10:27:43 -0700 (PDT)
+Subject: Re: [PATCH 4.14 00/57] 4.14.142-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] fs/epoll: fix the edge-triggered mode for nested
- epoll
-In-Reply-To: <CAHirt9iZAj67FVnhd9ORp2Sk2xAXHDrJ2BANf4VrtM4dLWv9ww@mail.gmail.com>
-References: <20190902052034.16423-1-r@hev.cc>
- <0cdc9905efb9b77b159e09bee17d3ad4@suse.de>
- <7075dd44-feea-a52f-ddaa-087d7bb2c4f6@akamai.com>
- <23659bc3e5f80efe9746aefd4d6791e8@suse.de>
- <341df9eb-7e8e-98c8-5183-402bdfff7d59@akamai.com>
- <CAHirt9hra2tA_OPNSow+CgD_CF2Z11ZqGG=1P45noqtdMtWuJw@mail.gmail.com>
- <CAHirt9j+DSR+uP-SBLHn0ika86uixSOPLXft+vVj5G5Ge0xr5w@mail.gmail.com>
- <CAHirt9iZAj67FVnhd9ORp2Sk2xAXHDrJ2BANf4VrtM4dLWv9ww@mail.gmail.com>
-Message-ID: <d5914273597707b8780d188688fe0ac2@suse.de>
-X-Sender: rpenyaev@suse.de
-User-Agent: Roundcube Webmail
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190904175301.777414715@linuxfoundation.org>
+From:   =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
+Message-ID: <781333c7-645e-548d-28f8-cfd00779e5b6@linaro.org>
+Date:   Thu, 5 Sep 2019 12:27:41 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-05 11:56, Heiher wrote:
-> Hi,
+Hello!
+
+On 9/4/19 12:53 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.142 release.
+> There are 57 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> On Thu, Sep 5, 2019 at 10:53 AM Heiher <r@hev.cc> wrote:
->> 
->> Hi,
->> 
->> I created an epoll wakeup test project, listed some possible cases,
->> and any other corner cases needs to be added?
->> 
->> https://github.com/heiher/epoll-wakeup/blob/master/README.md
->> 
->> On Wed, Sep 4, 2019 at 10:02 PM Heiher <r@hev.cc> wrote:
->> >
->> > Hi,
->> >
->> > On Wed, Sep 4, 2019 at 8:02 PM Jason Baron <jbaron@akamai.com> wrote:
->> > >
->> > >
->> > >
->> > > On 9/4/19 5:57 AM, Roman Penyaev wrote:
->> > > > On 2019-09-03 23:08, Jason Baron wrote:
->> > > >> On 9/2/19 11:36 AM, Roman Penyaev wrote:
->> > > >>> Hi,
->> > > >>>
->> > > >>> This is indeed a bug. (quick side note: could you please remove efd[1]
->> > > >>> from your test, because it is not related to the reproduction of a
->> > > >>> current bug).
->> > > >>>
->> > > >>> Your patch lacks a good description, what exactly you've fixed.  Let
->> > > >>> me speak out loud and please correct me if I'm wrong, my understanding
->> > > >>> of epoll internals has become a bit rusty: when epoll fds are nested
->> > > >>> an attempt to harvest events (ep_scan_ready_list() call) produces a
->> > > >>> second (repeated) event from an internal fd up to an external fd:
->> > > >>>
->> > > >>>      epoll_wait(efd[0], ...):
->> > > >>>        ep_send_events():
->> > > >>>           ep_scan_ready_list(depth=0):
->> > > >>>             ep_send_events_proc():
->> > > >>>                 ep_item_poll():
->> > > >>>                   ep_scan_ready_list(depth=1):
->> > > >>>                     ep_poll_safewake():
->> > > >>>                       ep_poll_callback()
->> > > >>>                         list_add_tail(&epi, &epi->rdllist);
->> > > >>>                         ^^^^^^
->> > > >>>                         repeated event
->> > > >>>
->> > > >>>
->> > > >>> In your patch you forbid wakeup for the cases, where depth != 0, i.e.
->> > > >>> for all nested cases. That seems clear.  But what if we can go further
->> > > >>> and remove the whole chunk, which seems excessive:
->> > > >>>
->> > > >>> @@ -885,26 +886,11 @@ static __poll_t ep_scan_ready_list(struct
->> > > >>> eventpoll *ep,
->> > > >>>
->> > > >>> -
->> > > >>> -       if (!list_empty(&ep->rdllist)) {
->> > > >>> -               /*
->> > > >>> -                * Wake up (if active) both the eventpoll wait list and
->> > > >>> -                * the ->poll() wait list (delayed after we release the
->> > > >>> lock).
->> > > >>> -                */
->> > > >>> -               if (waitqueue_active(&ep->wq))
->> > > >>> -                       wake_up(&ep->wq);
->> > > >>> -               if (waitqueue_active(&ep->poll_wait))
->> > > >>> -                       pwake++;
->> > > >>> -       }
->> > > >>>         write_unlock_irq(&ep->lock);
->> > > >>>
->> > > >>>         if (!ep_locked)
->> > > >>>                 mutex_unlock(&ep->mtx);
->> > > >>>
->> > > >>> -       /* We have to call this outside the lock */
->> > > >>> -       if (pwake)
->> > > >>> -               ep_poll_safewake(&ep->poll_wait);
->> > > >>>
->> > > >>>
->> > > >>> I reason like that: by the time we've reached the point of scanning events
->> > > >>> for readiness all wakeups from ep_poll_callback have been already fired and
->> > > >>> new events have been already accounted in ready list (ep_poll_callback()
->> > > >>> calls
->> > > >>> the same ep_poll_safewake()). Here, frankly, I'm not 100% sure and probably
->> > > >>> missing some corner cases.
->> > > >>>
->> > > >>> Thoughts?
->> > > >>
->> > > >> So the: 'wake_up(&ep->wq);' part, I think is about waking up other
->> > > >> threads that may be in waiting in epoll_wait(). For example, there may
->> > > >> be multiple threads doing epoll_wait() on the same epoll fd, and the
->> > > >> logic above seems to say thread 1 may have processed say N events and
->> > > >> now its going to to go off to work those, so let's wake up thread 2 now
->> > > >> to handle the next chunk.
->> > > >
->> > > > Not quite. Thread which calls ep_scan_ready_list() processes all the
->> > > > events, and while processing those, removes them one by one from the
->> > > > ready list.  But if event mask is !0 and event belongs to
->> > > > Level Triggered Mode descriptor (let's say default mode) it tails event
->> > > > again back to the list (because we are in level mode, so event should
->> > > > be there).  So at the end of this traversing loop ready list is likely
->> > > > not empty, and if so, wake up again is called for nested epoll fds.
->> > > > But, those nested epoll fds should get already all the notifications
->> > > > from the main event callback ep_poll_callback(), regardless any thread
->> > > > which traverses events.
->> > > >
->> > > > I suppose this logic exists for decades, when Davide (the author) was
->> > > > reshuffling the code here and there.
->> > > >
->> > > > But I do not feel confidence to state that this extra wakeup is bogus,
->> > > > I just have a gut feeling that it looks excessive.
->> > >
->> > > Note that I was talking about the wakeup done on ep->wq not ep->poll_wait.
->> > > The path that I'm concerned about is let's say that there are N events
->> > > queued on the ready list. A thread that was woken up in epoll_wait may
->> > > decide to only process say N/2 of then. Then it will call wakeup on ep->wq
->> > > and this will wakeup another thread to process the remaining N/2. Without
->> > > the wakeup, the original thread isn't going to process the events until
->> > > it finishes with the original N/2 and gets back to epoll_wait(). So I'm not
->> > > sure how important that path is but I wanted to at least note the change
->> > > here would impact that behavior.
->> > >
->> > > Thanks,
->> > >
->> > > -Jason
->> > >
->> > >
->> > > >
->> > > >> So I think removing all that even for the
->> > > >> depth 0 case is going to change some behavior here. So perhaps, it
->> > > >> should be removed for all depths except for 0? And if so, it may be
->> > > >> better to make 2 patches here to separate these changes.
->> > > >>
->> > > >> For the nested wakeups, I agree that the extra wakeups seem unnecessary
->> > > >> and it may make sense to remove them for all depths. I don't think the
->> > > >> nested epoll semantics are particularly well spelled out, and afaict,
->> > > >> nested epoll() has behaved this way for quite some time. And the current
->> > > >> behavior is not bad in the way that a missing wakeup or false negative
->> > > >> would be.
->> > > >
->> > > > That's 100% true! For edge mode extra wake up is not a bug, not optimal
->> > > > for userspace - yes, but that can't lead to any lost wakeups.
->> > > >
->> > > > --
->> > > > Roman
->> > > >
->> >
->> > I tried to remove the whole chunk of code that Roman said, and it
->> > seems that there
->> > are no obvious problems with the two test programs below:
+> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
+> Anything received after that time might be too late.
 > 
-> I recall this message, the test case 9/25/26 of epoll-wakeup (on
-> github) are failed while
-> the whole chunk are removed.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.142-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
 > 
-> Apply the original patch, all tests passed.
+> thanks,
+> 
+> greg k-h
+
+Results from Linaro’s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.142-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.14.y
+git commit: 39a17ab1edd4adb3fb732726a36cb54a21cc570d
+git describe: v4.14.141-58-g39a17ab1edd4
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/build/v4.14.141-58-g39a17ab1edd4
 
 
-These are failing on my bare 5.2.0-rc2
+No regressions (compared to build v4.14.141)
 
-TEST  bin/epoll31       FAIL
-TEST  bin/epoll46       FAIL
-TEST  bin/epoll50       FAIL
-TEST  bin/epoll32       FAIL
-TEST  bin/epoll19       FAIL
-TEST  bin/epoll27       FAIL
-TEST  bin/epoll42       FAIL
-TEST  bin/epoll34       FAIL
-TEST  bin/epoll48       FAIL
-TEST  bin/epoll40       FAIL
-TEST  bin/epoll20       FAIL
-TEST  bin/epoll28       FAIL
-TEST  bin/epoll38       FAIL
-TEST  bin/epoll52       FAIL
-TEST  bin/epoll24       FAIL
-TEST  bin/epoll23       FAIL
+No fixes (compared to build v4.14.141)
+
+Ran 23684 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-commands-tests
+* ltp-math-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
 
 
-These are failing if your patch is applied:
-(my 5.2.0-rc2 is old? broken?)
+Greetings!
 
-TEST  bin/epoll46       FAIL
-TEST  bin/epoll42       FAIL
-TEST  bin/epoll34       FAIL
-TEST  bin/epoll48       FAIL
-TEST  bin/epoll40       FAIL
-TEST  bin/epoll44       FAIL
-TEST  bin/epoll38       FAIL
+Daniel Díaz
+daniel.diaz@linaro.org
 
-These are failing if "ep_poll_safewake(&ep->poll_wait)" is not called,
-but wakeup(&ep->wq); is still invoked:
-
-TEST  bin/epoll46       FAIL
-TEST  bin/epoll42       FAIL
-TEST  bin/epoll34       FAIL
-TEST  bin/epoll40       FAIL
-TEST  bin/epoll44       FAIL
-TEST  bin/epoll38       FAIL
-
-So at least 48 has been "fixed".
-
-These are failing if the whole chunk is removed, like your
-said 9,25,26 are among which do not pass:
-
-TEST  bin/epoll26       FAIL
-TEST  bin/epoll42       FAIL
-TEST  bin/epoll34       FAIL
-TEST  bin/epoll9        FAIL
-TEST  bin/epoll48       FAIL
-TEST  bin/epoll40       FAIL
-TEST  bin/epoll25       FAIL
-TEST  bin/epoll44       FAIL
-TEST  bin/epoll38       FAIL
-
-This can be a good test suite, probably can be added to kselftests?
-
---
-Roman
-
+-- 
+Linaro LKFT
+https://lkft.linaro.org
