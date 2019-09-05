@@ -2,146 +2,111 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6087BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F0C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A561D2082C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25EE2082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388509AbfIEUIJ (ORCPT
+        id S2388883AbfIEUKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:08:09 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:51189 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726097AbfIEUIJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:08:09 -0400
-Received: by mail-io1-f70.google.com with SMTP id z12so3837444iop.17
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:08:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Abbd0TSs66/zCB2hcq/kRDumBVAAFLe4IOeLRBtvGas=;
-        b=tAFiVni7EJuRl3NlKn4zyjnQ21kXW9Gzb2ImCAYB9/2UlzarZbSlJ8G8zz0r9hh7sq
-         0WPseVQTiS9wpGbJsTicbgUKdD7/OaQ71fItaidvw4wZYN3AQ/VJ3NtayEef11NkNnzY
-         cim7r96r8o0VbydQLtlAmJ342DfKDhSlwSpX4Pi+4/1nHYUrOON5K/VDNrkz8BVqZemX
-         O+ojjfRMzJ10b0hLDbfcpUP5pl0dSTNg12w1P6v6hStSYhSRdenndjruHFl30XUvn1Lk
-         zs5a9FU1zAKkiuWneiXg/b6xF1TV/Y8X0feu3e9JhuUeSxKLgNFvLszy5j25CfmFNSTO
-         8MlA==
-X-Gm-Message-State: APjAAAVLorPmWUBvYUnbh/rhVvO5IZlkxEykkSGGThAnQYLr1mU6n5p0
-        c5DL9/lpUx3leVfJ4IPYdiB5ajVMU14RE5BYzdo/nidw26yH
-X-Google-Smtp-Source: APXvYqwemc/4NDS04xk5eP5U95GqM6jnkkJWflKsban4wQWb879YYrAVRiYPmeVbK5uR5ZL4Kr7i98jSqkgtPCBagdaJpO0QD/58
+        Thu, 5 Sep 2019 16:10:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39844 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732468AbfIEUKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 16:10:02 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C742300BEAE;
+        Thu,  5 Sep 2019 20:10:01 +0000 (UTC)
+Received: from ovpn-124-235.rdu2.redhat.com (ovpn-124-235.rdu2.redhat.com [10.10.124.235])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 26E605C1D4;
+        Thu,  5 Sep 2019 20:09:59 +0000 (UTC)
+Message-ID: <d19e8783e7fe47e51fbc12bf33c95fea16c93070.camel@redhat.com>
+Subject: Re: Why add the general notification queue and its sources
+From:   David Lehman <dlehman@redhat.com>
+To:     Ray Strode <rstrode@redhat.com>,
+        Steven Whitehouse <swhiteho@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Ian Kent <ikent@redhat.com>
+Date:   Thu, 05 Sep 2019 16:09:58 -0400
+In-Reply-To: <CAKCoTu7ms4ckwDA_-onuJg+famnMzGZE9gGUcqqMz0kCAAECRg@mail.gmail.com>
+References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
+         <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
+         <17703.1567702907@warthog.procyon.org.uk>
+         <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+         <11667f69-fbb5-28d2-3c31-7f865f2b93e5@redhat.com>
+         <CAKCoTu7ms4ckwDA_-onuJg+famnMzGZE9gGUcqqMz0kCAAECRg@mail.gmail.com>
+Organization: Red Hat, Inc.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9591:: with SMTP id a17mr6266918ioo.303.1567714087830;
- Thu, 05 Sep 2019 13:08:07 -0700 (PDT)
-Date:   Thu, 05 Sep 2019 13:08:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005091a70591d3e1d9@google.com>
-Subject: general protection fault in dev_map_hash_update_elem
-From:   syzbot <syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, hawk@kernel.org, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 05 Sep 2019 20:10:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, 2019-09-05 at 14:51 -0400, Ray Strode wrote:
+> Hi,
+> 
+> On Thu, Sep 5, 2019 at 2:37 PM Steven Whitehouse <swhiteho@redhat.com
+> > wrote:
+> > The original reason for the mount notification mechanism was so
+> > that we
+> > are able to provide information to GUIs and similar filesystem and
+> > storage management tools, matching the state of the filesystem with
+> > the
+> > state of the underlying devices. This is part of a larger project
+> > entitled "Project Springfield" to try and provide better management
+> > tools for storage and filesystems. I've copied David Lehman in,
+> > since he
+> > can provide a wider view on this topic.
+> So one problem that I've heard discussed before is what happens in a
+> thinp
+> setup when the disk space is overallocated and gets used up. IIRC,
+> the
+> volumes just sort of eat themselves?
+> 
+> Getting proper notification of looming catastrophic failure to the
+> workstation user
+> before it's too late would be useful, indeed.
+> 
+> I don't know if this new mechanism dhowells has development can help
+> with that,
 
-syzbot found the following crash on:
+My understanding is that there is already a dm devent that gets sent
+when the low water mark is crossed for a thin pool, but there is
+nothing in userspace that knows how to effectively get the user's
+attention at that time.
 
-HEAD commit:    6d028043 Add linux-next specific files for 20190830
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=135c1a92600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=82a6bec43ab0cb69
-dashboard link: https://syzkaller.appspot.com/bug?extid=4e7a85b1432052e8d6f8
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=109124e1600000
+> and/or if solving that problem is part of the Project Springfield
+> initiative or not. Do you
+> know off hand?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4e7a85b1432052e8d6f8@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 10235 Comm: syz-executor.0 Not tainted 5.3.0-rc6-next-20190830  
-#75
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__write_once_size include/linux/compiler.h:203 [inline]
-RIP: 0010:__hlist_del include/linux/list.h:795 [inline]
-RIP: 0010:hlist_del_rcu include/linux/rculist.h:475 [inline]
-RIP: 0010:__dev_map_hash_update_elem kernel/bpf/devmap.c:668 [inline]
-RIP: 0010:dev_map_hash_update_elem+0x3c8/0x6e0 kernel/bpf/devmap.c:691
-Code: 48 89 f1 48 89 75 c8 48 c1 e9 03 80 3c 11 00 0f 85 d3 02 00 00 48 b9  
-00 00 00 00 00 fc ff df 48 8b 53 10 48 89 d6 48 c1 ee 03 <80> 3c 0e 00 0f  
-85 97 02 00 00 48 85 c0 48 89 02 74 38 48 89 55 b8
-RSP: 0018:ffff88808d607c30 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffff8880a7f14580 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a7f14588
-RBP: ffff88808d607c78 R08: 0000000000000004 R09: ffffed1011ac0f73
-R10: ffffed1011ac0f72 R11: 0000000000000003 R12: ffff88809f4e9400
-R13: ffff88809b06ba00 R14: 0000000000000000 R15: ffff88809f4e9528
-FS:  00007f3a3d50c700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007feb3fcd0000 CR3: 00000000986b9000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  map_update_elem+0xc82/0x10b0 kernel/bpf/syscall.c:966
-  __do_sys_bpf+0x8b5/0x3350 kernel/bpf/syscall.c:2854
-  __se_sys_bpf kernel/bpf/syscall.c:2825 [inline]
-  __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:2825
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x459879
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f3a3d50bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000459879
-RDX: 0000000000000020 RSI: 0000000020000040 RDI: 0000000000000002
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f3a3d50c6d4
-R13: 00000000004bfc86 R14: 00000000004d1960 R15: 00000000ffffffff
-Modules linked in:
----[ end trace 083223e21dbd0ae5 ]---
-RIP: 0010:__write_once_size include/linux/compiler.h:203 [inline]
-RIP: 0010:__hlist_del include/linux/list.h:795 [inline]
-RIP: 0010:hlist_del_rcu include/linux/rculist.h:475 [inline]
-RIP: 0010:__dev_map_hash_update_elem kernel/bpf/devmap.c:668 [inline]
-RIP: 0010:dev_map_hash_update_elem+0x3c8/0x6e0 kernel/bpf/devmap.c:691
-Code: 48 89 f1 48 89 75 c8 48 c1 e9 03 80 3c 11 00 0f 85 d3 02 00 00 48 b9  
-00 00 00 00 00 fc ff df 48 8b 53 10 48 89 d6 48 c1 ee 03 <80> 3c 0e 00 0f  
-85 97 02 00 00 48 85 c0 48 89 02 74 38 48 89 55 b8
-RSP: 0018:ffff88808d607c30 EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffff8880a7f14580 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff8880a7f14588
-RBP: ffff88808d607c78 R08: 0000000000000004 R09: ffffed1011ac0f73
-R10: ffffed1011ac0f72 R11: 0000000000000003 R12: ffff88809f4e9400
-R13: ffff88809b06ba00 R14: 0000000000000000 R15: ffff88809f4e9528
-FS:  00007f3a3d50c700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007feb3fcd0000 CR3: 00000000986b9000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+We have been looking into building a userspace event notification
+service (for storage, initially) to aggregate and add context to low-
+level events such as these, providing a single source for all kinds of
+storage events with an excellent signal:noise ratio. Thin pool
+exhaustion is high on the list of problems we would want to address.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+David
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
