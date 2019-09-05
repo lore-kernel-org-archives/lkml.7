@@ -2,172 +2,204 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D81FC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1815C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC422184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B231A21883
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="btHT7GGq"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jSwFjPB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbfIELHQ (ORCPT
+        id S2388231AbfIELIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:07:16 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34200 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388210AbfIELHQ (ORCPT
+        Thu, 5 Sep 2019 07:08:42 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36882 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387964AbfIELIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:07:16 -0400
-Received: by mail-lj1-f193.google.com with SMTP id x18so2035258ljh.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:07:14 -0700 (PDT)
+        Thu, 5 Sep 2019 07:08:41 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d1so1247046pgp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=awgGG7PoehyEFjxIOMZzO82Py8AU0HzM0+1fNVh8Nek=;
-        b=btHT7GGqzGrm1wNvvUgF7ReN983yTJv20r++3a81YmdaYCUtLuLXMg5FEkOINUFfH3
-         B1LoEbas2kd9E6f6mIe4JmHN1eXIwUcX3o0HiK6RElvTu5+2O9byq3MVghNq/yC4KuiH
-         EHGJdLEAmcTgwyOk0tQupREnLQVij3L6M6U0U=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IsGhtR4juM/sYum7+X4pQEZ76tiNHdfcf9pTAOCBICQ=;
+        b=jSwFjPB4SKzYsvLjZg5oMby0G86HsCQ0NQFoE0Dg2VfKTaiKQA1BxbkVihj1TWo5eL
+         VdR+zEpOtYsZISYaCnvvaFjVP+iVpHG+hxHSAiDd8EGFrR4Ps7kU3dLGVXL6duEpy/Fl
+         NeDAlDeVRUUes6AxxzvSa10N1V93Qyf5eyDggivLnsyEOkCBBYply3ohcJJ6blpjThLn
+         fCWAES2h/UWf26B1spEqDO3rfSh80z/GjbS+SiuH8FbjuuB78UXyXJ1T7LQ9g14ATN05
+         mFdFE20Qahj5wS+VKQhfaOBfZ78X+/Iu/R7xCJ2P28lxV3H2wHcSljsdlQ40czIsnF4j
+         mupQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=awgGG7PoehyEFjxIOMZzO82Py8AU0HzM0+1fNVh8Nek=;
-        b=edJ/HnnGJeZ4+/BJ6Ma/PulJJHtSL7E/uE/x9Sa2AFtM6B/dbwOJn/MBPrbk76aScH
-         uMW97WtPTEc4FkiAgrq//g6LU2Qs586+s+GNIOR2xtTg5cWT3B5ik8zj71xA3qAarJ/g
-         gyugXCxZp5PxMV67z64mluMXjoUrbIQb/uc8+yWXVp9QIqZ6PTXNnTQOB1ZqrpLuagRV
-         IwsWJh/tvFJLmpZ311tJkdNwRxqs4QNVcagLbkXepo04Qoi57LJM0elDwyd5ts6X9k7Y
-         2Uo7xE0bzqM5TcJwWdZBR+732qfKZhAUOn1lCjZbfVh3qi+pmUC1GS+35ko7g+ldXzbM
-         o5kA==
-X-Gm-Message-State: APjAAAU9+1WwmYF+EfBZImc/U5eSj0C1m40Ab19/z2m1eG5Ru/fu82L6
-        rvw5V8Dhi4+qUdkL3hK3zSiavQ==
-X-Google-Smtp-Source: APXvYqzmTD/daq/Fw2gpo8A24bIobH6jRq2E7/vrdw2MFtDRcZqN9kZKWZKI/Q1smrKhpGAnB0ZuLA==
-X-Received: by 2002:a2e:8507:: with SMTP id j7mr1714520lji.156.1567681633894;
-        Thu, 05 Sep 2019 04:07:13 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id l23sm313049lje.106.2019.09.05.04.07.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 04:07:13 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-5-linux@rasmusvillemoes.dk>
- <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk>
-Date:   Thu, 5 Sep 2019 13:07:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IsGhtR4juM/sYum7+X4pQEZ76tiNHdfcf9pTAOCBICQ=;
+        b=OTYNasScxUrBozE2/T7Ar6G6HDYZs7Qpc0zrog6hpEuOnv63KO0ZkcsCxG6r6d1VFR
+         THUWlccYXJFFkUYlU660n8YF6qZeVVI3WsHTvBtAeZ75W//AYSAt2qfOXmBwCWe5Jf6r
+         lr/ckRYGCBkD5ZQCO4RfcflDTqiu/OQ8xoOHCaUSkacBj1iJMkL48OXXFgwkTFFo+lR1
+         dCVPYt/emRJr6MH1sJRiAMLXL5gZEBnQ0EnxLGiUJlNOtE/kXNxgqiFK/T/ILJk2Fdci
+         6ye4NqyDqcZobtDLpO0bFFvdNeRC7inJYVJ0Di5O8tKkDWv53ZtmQ8nxoLqFF2mc+vQt
+         4lLg==
+X-Gm-Message-State: APjAAAU/TZxhFTTACBCVTlfYUEBz/2k9EmQg+9a+YpZYx01z6OYfqoBS
+        R0pzM3shZYh0vmHgrNCzPdjporF76zbQQ5x6iP1ezg==
+X-Google-Smtp-Source: APXvYqywXduqq6vseMGYg7WG19XluWzyDUjsEjNzkG45dJgNK0O9oULt/wac61mAKxlZbPCDwzZ/nJ7HuSItNicFbpk=
+X-Received: by 2002:a17:90a:c210:: with SMTP id e16mr3166147pjt.123.1567681720136;
+ Thu, 05 Sep 2019 04:08:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <0000000000001b41900591a4f149@google.com> <CAAeHK+zdtLm6CZ9=vJDF4d52a=vebPj10gpFkuETcxMjvEwsNg@mail.gmail.com>
+In-Reply-To: <CAAeHK+zdtLm6CZ9=vJDF4d52a=vebPj10gpFkuETcxMjvEwsNg@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 5 Sep 2019 13:08:28 +0200
+Message-ID: <CAAeHK+xJrv1hCbO5qOGTBu=c8STo+-obatOGZ4cHkbuhqmEvrg@mail.gmail.com>
+Subject: Re: WARNING: ODEBUG bug in usbhid_disconnect (2)
+To:     Roderick.Colenbrander@sony.com
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        syzbot <syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Content-Type: multipart/mixed; boundary="0000000000000d7f580591cc58f7"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 02.18, Nick Desaulniers wrote:
-> On Fri, Aug 30, 2019 at 4:15 PM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->>
->> This adds an asm_inline macro which expands to "asm inline" [1] when gcc
->> is new enough (>= 9.1), and just asm for older gccs and other
->> compilers.
->>
->> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->> ---
->>  include/linux/compiler-gcc.h   | 4 ++++
->>  include/linux/compiler_types.h | 4 ++++
->>  2 files changed, 8 insertions(+)
->>
->> diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
->> index d7ee4c6bad48..544b87b41b58 100644
->> --- a/include/linux/compiler-gcc.h
->> +++ b/include/linux/compiler-gcc.h
->> @@ -172,3 +172,7 @@
->>  #endif
->>
->>  #define __no_fgcse __attribute__((optimize("-fno-gcse")))
->> +
->> +#if GCC_VERSION >= 90100
-> 
-> Is it too late to ask for a feature test macro? Maybe one already
-> exists? 
+--0000000000000d7f580591cc58f7
+Content-Type: text/plain; charset="UTF-8"
 
-No, not as far as I know. Perhaps something like below, though that
-won't affect the already released gcc 9.1 and 9.2, of course.
+On Tue, Sep 3, 2019 at 2:17 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Tue, Sep 3, 2019 at 2:08 PM syzbot
+> <syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    eea39f24 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=173983ac600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d0c62209eedfd54e
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=14b53bfeb17f2b210eb7
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d36aca600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=178e208e600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+14b53bfeb17f2b210eb7@syzkaller.appspotmail.com
+> >
+> > ------------[ cut here ]------------
+> > ODEBUG: free active (active state 0) object type: timer_list hint:
+> > hid_retry_timeout+0x0/0xd0 drivers/hid/usbhid/hid-core.c:712
+> > WARNING: CPU: 1 PID: 17 at lib/debugobjects.c:481
+> > debug_print_object+0x160/0x250 lib/debugobjects.c:481
+> > Kernel panic - not syncing: panic_on_warn set ...
+> > CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.0-rc5+ #28
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   panic+0x2a3/0x6da kernel/panic.c:219
+> >   __warn.cold+0x20/0x4a kernel/panic.c:576
+> >   report_bug+0x262/0x2a0 lib/bug.c:186
+> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
+> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+> >   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+> >   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+> >   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+> > RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:481
+> > Code: dd 80 ef da 85 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48
+> > 8b 14 dd 80 ef da 85 48 c7 c7 c0 e4 da 85 e8 e5 dd 31 ff <0f> 0b 83 05 4b
+> > 0f a8 05 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+> > RSP: 0018:ffff8881da24f718 EFLAGS: 00010282
+> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+> > RDX: 0000000000000000 RSI: ffffffff81288cfd RDI: ffffed103b449ed5
+> > RBP: 0000000000000001 R08: ffff8881da233000 R09: fffffbfff11ad79a
+> > R10: fffffbfff11ad799 R11: ffffffff88d6bccf R12: ffffffff86d0dc60
+> > R13: ffffffff812e7b70 R14: ffff8881c9d5a8c8 R15: ffff8881cf8943f0
+> >   __debug_check_no_obj_freed lib/debugobjects.c:963 [inline]
+> >   debug_check_no_obj_freed+0x2df/0x443 lib/debugobjects.c:994
+> >   free_pages_prepare mm/page_alloc.c:1174 [inline]
+> >   __free_pages_ok+0x222/0x1d70 mm/page_alloc.c:1420
+> >   usbhid_disconnect+0xab/0xd0 drivers/hid/usbhid/hid-core.c:1414
+> >   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+> >   __device_release_driver drivers/base/dd.c:1134 [inline]
+> >   device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+> >   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+> >   device_del+0x420/0xb10 drivers/base/core.c:2339
+> >   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+> >   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+> >   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+> >   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >   port_event drivers/usb/core/hub.c:5359 [inline]
+> >   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+> >   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >   process_scheduled_works kernel/workqueue.c:2331 [inline]
+> >   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+> >   kthread+0x318/0x420 kernel/kthread.c:255
+> >   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > Kernel Offset: disabled
+> > Rebooting in 86400 seconds..
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+>
+> Roderick, FYI, this particular repro is triggering that issue in the
+> Sony driver AFAICS.
 
-gcc maintainers, WDYT? Can we add a feature test macro for asm inline()?
-For context, I'm trying to add an asm_inline macro to the kernel source
-that will fall back to asm when "asm inline" is not supported - see
-https://lore.kernel.org/lkml/20190830231527.22304-1-linux@rasmusvillemoes.dk/
-for the whole thread.
+Let's try Roderick's patch from [1] here:
 
-From: Rasmus Villemoes <rv@rasmusvillemoes.dk>
-Subject: [PATCH] add feature test macro for "asm inline"
+#syz test: https://github.com/google/kasan.git eea39f24
 
-Allow users to check availability of "asm inline()" via a feature test
-macro. If and when clang implements support for "asm inline()", it's
-easier for users if they can just test __HAVE_ASM_INLINE rather than
-juggling different version checks for different compilers.
+[1] https://patchwork.kernel.org/patch/11131703/
 
-Changelog:
+--0000000000000d7f580591cc58f7
+Content-Type: text/x-patch; charset="US-ASCII"; name="hid-sony.patch"
+Content-Disposition: attachment; filename="hid-sony.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k06l7hox0>
+X-Attachment-Id: f_k06l7hox0
 
-gcc/c-family/
-
-	* c-cppbuiltin.c (c_cpp_builtins): Add pre-define for
-	__HAVE_ASM_INLINE.
-
-gcc/
-
-	* doc/cpp.texi: Document predefine __HAVE_ASM_INLINE.
----
- gcc/c-family/c-cppbuiltin.c | 3 +++
- gcc/doc/cpp.texi            | 5 +++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/gcc/c-family/c-cppbuiltin.c b/gcc/c-family/c-cppbuiltin.c
-index fc68bc4d0c4..163f3058741 100644
---- a/gcc/c-family/c-cppbuiltin.c
-+++ b/gcc/c-family/c-cppbuiltin.c
-@@ -1383,6 +1383,9 @@ c_cpp_builtins (cpp_reader *pfile)
-   if (targetm.have_speculation_safe_value (false))
-     cpp_define (pfile, "__HAVE_SPECULATION_SAFE_VALUE");
-
-+  /* Show the availability of "asm inline()".  */
-+  cpp_define (pfile, "__HAVE_ASM_INLINE");
-+
- #ifdef DWARF2_UNWIND_INFO
-   if (dwarf2out_do_cfi_asm ())
-     cpp_define (pfile, "__GCC_HAVE_DWARF2_CFI_ASM");
-diff --git a/gcc/doc/cpp.texi b/gcc/doc/cpp.texi
-index e271f5180d8..98f6d625857 100644
---- a/gcc/doc/cpp.texi
-+++ b/gcc/doc/cpp.texi
-@@ -2386,6 +2386,11 @@ and swap operations on operands 1, 2, 4, 8 or 16
-bytes in length, respectively.
- This macro is defined with the value 1 to show that this version of GCC
- supports @code{__builtin_speculation_safe_value}.
-
-+@item __HAVE_ASM_INLINE
-+This macro is defined with the value 1 to show that this version of GCC
-+supports @code{asm inline()}.  @xref{Size of an asm,,, gcc, Using
-+the GNU Compiler Collection (GCC)}.
-+
- @item __GCC_HAVE_DWARF2_CFI_ASM
- This macro is defined when the compiler is emitting DWARF CFI directives
- to the assembler.  When this is defined, it is possible to emit those same
-
+RnJvbTogUm9kZXJpY2sgQ29sZW5icmFuZGVyIDxyb2Rlcmljay5jb2xlbmJyYW5kZXJAc29ueS5j
+b20+CgpUaGUgc29ueSBkcml2ZXIgaXMgbm90IHByb3Blcmx5IGNsZWFuaW5nIHVwIGZyb20gcG90
+ZW50aWFsIGZhaWx1cmVzIGluCnNvbnlfaW5wdXRfY29uZmlndXJlZC4gQ3VycmVudGx5IGl0IGNh
+bGxzIGhpZF9od19zdG9wLCB3aGlsZSBoaWRfY29ubmVjdAppcyBzdGlsbCBydW5uaW5nLiBUaGlz
+IGlzIG5vdCBhIGdvb2QgaWRlYSwgaW5zdGVhZCBoaWRfaHdfc3RvcCBzaG91bGQKYmUgbW92ZWQg
+dG8gc29ueV9wcm9iZS4gU2ltaWxhciBjaGFuZ2VzIHdlcmUgcmVjZW50bHkgbWFkZSB0byBMb2dp
+dGVjaApkcml2ZXJzLCB3aGljaCB3ZXJlIGFsc28gZG9pbmcgaW1wcm9wZXIgY2xlYW51cC4KClNp
+Z25lZC1vZmYtYnk6IFJvZGVyaWNrIENvbGVuYnJhbmRlciA8cm9kZXJpY2suY29sZW5icmFuZGVy
+QHNvbnkuY29tPgpDQzogc3RhYmxlQHZnZXIua2VybmVsLm9yZwotLS0KIGRyaXZlcnMvaGlkL2hp
+ZC1zb255LmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
+b24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2hpZC9oaWQtc29ueS5jIGIvZHJpdmVycy9oaWQv
+aGlkLXNvbnkuYwppbmRleCAzMWYxMDIzMjE0ZDMuLjA5ZjJjNjE3YjA5ZiAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9oaWQvaGlkLXNvbnkuYworKysgYi9kcml2ZXJzL2hpZC9oaWQtc29ueS5jCkBAIC0y
+ODA2LDcgKzI4MDYsNiBAQCBzdGF0aWMgaW50IHNvbnlfaW5wdXRfY29uZmlndXJlZChzdHJ1Y3Qg
+aGlkX2RldmljZSAqaGRldiwKIAlzb255X2NhbmNlbF93b3JrX3N5bmMoc2MpOwogCXNvbnlfcmVt
+b3ZlX2Rldl9saXN0KHNjKTsKIAlzb255X3JlbGVhc2VfZGV2aWNlX2lkKHNjKTsKLQloaWRfaHdf
+c3RvcChoZGV2KTsKIAlyZXR1cm4gcmV0OwogfQogCkBAIC0yODY4LDYgKzI4NjcsNyBAQCBzdGF0
+aWMgaW50IHNvbnlfcHJvYmUoc3RydWN0IGhpZF9kZXZpY2UgKmhkZXYsIGNvbnN0IHN0cnVjdCBo
+aWRfZGV2aWNlX2lkICppZCkKIAkgKi8KIAlpZiAoIShoZGV2LT5jbGFpbWVkICYgSElEX0NMQUlN
+RURfSU5QVVQpKSB7CiAJCWhpZF9lcnIoaGRldiwgImZhaWxlZCB0byBjbGFpbSBpbnB1dFxuIik7
+CisJCWhpZF9od19zdG9wKGhkZXYpOwogCQlyZXR1cm4gLUVOT0RFVjsKIAl9CiAKLS0gCjIuMjEu
+MAo=
+--0000000000000d7f580591cc58f7--
