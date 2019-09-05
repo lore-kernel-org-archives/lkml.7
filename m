@@ -2,94 +2,118 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E518EC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3952EC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDDC20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:11:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567696306;
-	bh=c6Klt7mrqAOjCZDFyaHnc54eSVIfusmbzS0lo9b8yjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g3+zF/aJzVF99YBZAoouCpl2zGD03o1UThGYkr9xw6hCCbug0q7P9p5HNcAE0koEx
-	 WSU3Y+F/VCO6yj19xqEBRduKiAdWcfKbLiGal7xeanPlg3oWAnHvLLFCNSXxx6PQ+X
-	 eiLGYDTwWD72fehIrkcjOu0pexS9phJyDdHScH64=
+	by mail.kernel.org (Postfix) with ESMTP id 93FE220828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:14:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4csicVe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389955AbfIEPLp (ORCPT
+        id S2390360AbfIEPOU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388524AbfIEPLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:11:44 -0400
-Received: from localhost (unknown [62.28.240.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B90020828;
-        Thu,  5 Sep 2019 15:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567696304;
-        bh=c6Klt7mrqAOjCZDFyaHnc54eSVIfusmbzS0lo9b8yjg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BR+UiPaPkce7W1s47hLG/KmG+0HffACHMGYM2+hEDzS9b48b+DvoYN1RuWp+jOrgG
-         dzZ5nt1uv8vaa+QStOAh+M3DN3zooejScHpembX/hUA1ESLusCxlyMl69h4pJT3FLt
-         ZdfGF8q4IxAfflOjcKU3vyLN4Z/oIfvVASUT8pMw=
-Date:   Thu, 5 Sep 2019 11:11:41 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        "benjamin.tissoires@redhat.com" <benjamin.tissoires@redhat.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HID: hyperv: Use in-place iterator API in the channel
- callback
-Message-ID: <20190905151141.GB1616@sasha-vm>
-References: <1566269763-26817-1-git-send-email-decui@microsoft.com>
- <KU1P153MB016679060F4360071B751AF0BFB90@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM>
- <nycvar.YFH.7.76.1909041623050.31470@cbobk.fhfr.pm>
+        Thu, 5 Sep 2019 11:14:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51958 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732265AbfIEPOT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 11:14:19 -0400
+Received: by mail-wm1-f68.google.com with SMTP id k1so3274687wmi.1;
+        Thu, 05 Sep 2019 08:14:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dfUO9a7E9R+fOWFokuwHNXPizB7LWxoWz7TwHKPJeKA=;
+        b=f4csicVeVdbTjTLkGvuU0mio8k0xnxfoLTmb8gdYb5QJnAEFROnPSH7xc73HYN+ixy
+         e7gsFYRoSkO7Br2jflzTOhyh3rBXVyvrUz6DglZJyLAz55fNeDFqYRKseYc5o5YYmG9X
+         9EH6/ZINv9WZapt2Lac5IXHUER+zSZ8KE5NYwoWAMtg+lG2QKlwMyc5entzeSaE+ljVK
+         SaVxAbTmwbe+Lz2ctOldV92jLUOuBjwE6ipjqOdeWVnYpT2TFYkopT5bgHkmRtBU3hPo
+         PrrkIH3ne82+4DNJs2FLPJ3tAQarRkLp+JhsT7jjovcykTPt5+3w0RpXc3x76k90mUlq
+         CFCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dfUO9a7E9R+fOWFokuwHNXPizB7LWxoWz7TwHKPJeKA=;
+        b=sz2JrCrAlOdU1Hdd7FVZEqKC0I2bUkQZzV1fPLHHPAc3ojuS7VCbu6YFo5whsbQT+r
+         9VuI3LRK7zp6msfgku4bQl/6KCujxmZatB7U6KaxygHqgyVVaD40MkiNQF7xJfwOGnhU
+         YxP89niruZ7j87GTCOIKCIEC2iEHTYWpG6jKcVAEvv50QGc+/IF3xk2jr/QLbyPPMiPa
+         U3T5e0kETZ6627X+E1ddLf1kF9/bqXyaYk//CcJ+I/izXJA0hfs9UChvySTLCHe2wgkk
+         mH6krs65WhtyRZY0fByfTtSqcUHDu3jQtb/M9SvDPqn9sKo4yYPmtuuND+Ygl/cIykeJ
+         mKPw==
+X-Gm-Message-State: APjAAAVENdsbhUoxdc1Y/pI8z0vG6G7XnYff5RL5X1cwAkOIOnWy/elt
+        0js7ZSu0jJQhnauUKo8sk14=
+X-Google-Smtp-Source: APXvYqzYIkx/gnO7fVC7G+fRVIplybcIMoud+HvMrsXB+dAIK4P1jN6ol9+wQvapxKMmcT0X7chTUA==
+X-Received: by 2002:a1c:9950:: with SMTP id b77mr3552791wme.46.1567696457429;
+        Thu, 05 Sep 2019 08:14:17 -0700 (PDT)
+Received: from [192.168.8.147] (163.175.185.81.rev.sfr.net. [81.185.175.163])
+        by smtp.gmail.com with ESMTPSA id y14sm3817913wrd.84.2019.09.05.08.14.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Sep 2019 08:14:16 -0700 (PDT)
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+To:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Michal Hocko <mhocko@kernel.org>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20190903132231.GC18939@dhcp22.suse.cz>
+ <1567525342.5576.60.camel@lca.pw> <20190903185305.GA14028@dhcp22.suse.cz>
+ <1567546948.5576.68.camel@lca.pw> <20190904061501.GB3838@dhcp22.suse.cz>
+ <20190904064144.GA5487@jagdpanzerIV> <20190904065455.GE3838@dhcp22.suse.cz>
+ <20190904071911.GB11968@jagdpanzerIV> <20190904074312.GA25744@jagdpanzerIV>
+ <1567599263.5576.72.camel@lca.pw> <20190904144850.GA8296@tigerII.localdomain>
+ <1567629737.5576.87.camel@lca.pw>
+ <165827b5-6783-f4f8-69d6-b088dd97eb45@gmail.com>
+ <1567692555.5576.91.camel@lca.pw>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <5405caf6-805b-d459-c447-15a23d0d71dd@gmail.com>
+Date:   Thu, 5 Sep 2019 17:14:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1909041623050.31470@cbobk.fhfr.pm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1567692555.5576.91.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 04, 2019 at 04:23:27PM +0200, Jiri Kosina wrote:
->On Tue, 3 Sep 2019, Dexuan Cui wrote:
->
->> > Hi Jiri, Benjamin, can this patch go through Sasha's hyperv tree:
->> > https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
->> >
->> > This is a purely Hyper-V specific change.
->>
->> Hi Jiri, Benjamin,
->> Are you OK if this patch for the Hyper-V HID driver goes through the Hyper-V
->> tree maintained by Sasha Levin? It's a purely Hyper-V change, and I have
->> been using the patch for several months and there is no regression.
->
->No problem with that. Feel free to add
->
->	Acked-by: Jiri Kosina <jkosina@suse.cz>
->
->in that case.
 
-I've queued it up for hyperv-fixes, thank you!
 
---
-Thanks,
-Sasha
+On 9/5/19 4:09 PM, Qian Cai wrote:
+
+> Instead of repeatedly make generalize statements, could you enlighten me with
+> some concrete examples that have the similar properties which would trigger a
+> livelock,
+> 
+> - guaranteed GFP_ATOMIC allocations when processing softirq batches.
+> - the allocation has a fallback mechanism that is unnecessary to warn a failure.
+> 
+> I thought "skb" is a special-case here as every packet sent or received is
+> handled using this data structure.
+>
+
+Just  'git grep GFP_ATOMIC -- net' and carefully study all the places.
+
+You will discover many allocations done for incoming packets.
+
+All of them can fail and trigger a trace.
+
+Please fix the problem for good, do not pretend addressing the skb allocations
+will solve it.
+
+The skb allocation can succeed, then the following allocation might fail.
+
+skb are one of the many objects that networking need to allocate dynamically.
+
