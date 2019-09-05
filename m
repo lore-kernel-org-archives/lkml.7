@@ -2,129 +2,190 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 134B6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A5BC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E472070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E742070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567721814;
-	bh=t1V58lMOvMILNoohMebRfHZO7tK+Gh/IkPCB82Q6oCg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nWOLNJlXYHtYZS8wDE05x1tGSzqSFdcNP5J62XcZHTW8DrrWOXYaGC1XHRCX2ULC5
-	 /faVc3GHwXFA96uIYi/WLJi/9ioIChp5Z8clkst3GL7LnRq88mej5wQJCIL/7peorA
-	 iw+Z47MVXq3XFHU0b+Xx2ZqELBG7UB9iE+PT26v0=
+	s=default; t=1567722413;
+	bh=E+LbLUkOPDuZw8Ahapl/LSZPxW0inipop6mc4+zfRR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e3fLVEv0edO6JIziC9/zWUMDehbyUTqgBUO2ROb1M5metGTwGV+8G1yYO/rAxKspu
+	 2qm/MSstGmD6AMuW5NT/WE8g2W5d7gT0XQEa2R8VuDvYa2sIwbFe0tX+rbRlgjN1YI
+	 1utyVyuPdlcd/ozh2yaOEFQ4LMp5MpdZ8xvXekwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391107AbfIEWQx (ORCPT
+        id S2389092AbfIEW0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:16:53 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:38842 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388847AbfIEWQw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:16:52 -0400
-Received: by mail-lf1-f49.google.com with SMTP id c12so3336364lfh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 15:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3+bS8S77AzTpTBzzxsdlLs0HnCbtRjNnmkiZK0MPy0c=;
-        b=LbASCsGx0k6udtd2AsgFeBhmCaCLrlsklx+62iSSE5Gkytkq0WN1acnDpFn5oCNEQS
-         KMkfsxyWBngO5Ing5S64rk5RN/Socr904CmKtCx01r5GqFjCKXQfIr7B9uXv9DslB2br
-         7qADnXCimEFjoVvgCL5m3EkgAFlL+VHV2J5FE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3+bS8S77AzTpTBzzxsdlLs0HnCbtRjNnmkiZK0MPy0c=;
-        b=iWU6y9LAEsw4sPJgB/hkh29hO5aGwBZybR8+p4WyqQHEHxOkqlo9X6vXAW2UEmowce
-         ciE8xBrZ7jmlRoEB0mutipGG0rjIU3d8aeCmRiBY1F3uILD+Y1WmeD9p91yzHW+JZinH
-         WeXWcyV52C2jmLl1W26ZlsQSxZXf2AD+BA99r0JF7EHlCzDICwcjYpQkJ49DWWvOgjkm
-         NTVkJNtoqao2Ze+BVvQjBvcRWBxVHfoR80Ww9BD7LIqSADOLWPicKgG6BxR+xUVrO3jh
-         WHSJrMZECcFu4Rh4vYetxzaFyw2Pg6rJNb7I60/tqTMfc7YqyjJAJm4AZGZ17OJRBtuJ
-         qslQ==
-X-Gm-Message-State: APjAAAX+UFiDQkQqDu6Mxq2GXF8Qy/LXptuVxNLz+9fUn49A5E+JgqNt
-        nANumH9P+3UjAjzUX2a8Uv8Re23yj3A=
-X-Google-Smtp-Source: APXvYqxYS9ur5uJy6tHygLeu1fXOdRzDXdlXDmH/MIjEZB+EsoZwfJyqlak7bAOre+7IvV/1h5qSBA==
-X-Received: by 2002:a19:cc15:: with SMTP id c21mr3988984lfg.64.1567721810235;
-        Thu, 05 Sep 2019 15:16:50 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id q13sm684203lfk.51.2019.09.05.15.16.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 15:16:49 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id x80so3344855lff.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 15:16:49 -0700 (PDT)
-X-Received: by 2002:a19:f204:: with SMTP id q4mr3910741lfh.29.1567721338167;
- Thu, 05 Sep 2019 15:08:58 -0700 (PDT)
+        Thu, 5 Sep 2019 18:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfIEW0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 18:26:51 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F5F12070C;
+        Thu,  5 Sep 2019 22:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567722411;
+        bh=E+LbLUkOPDuZw8Ahapl/LSZPxW0inipop6mc4+zfRR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nB7d4jdItk6J6oz8Y3EuRM4SeY4p/Vs7+/jFTsBfIFqNpRsyeZ6Tey69rrdYofkwb
+         eH7917jOOL2lqRt33JS53CRkWpkQwo7+g8aIHkUsdFV5+eYneZjb7Nq6bqZYsPUVB4
+         cNu/drAZe3fbfIqTPF8pIGVFbVV5y3xjhOtEVTys=
+Date:   Thu, 5 Sep 2019 17:26:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Abhinav Ratna <abhinav.ratna@broadcom.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH] PCI: Add PCIE ACS quirk for IPROC PAXB
+Message-ID: <20190905222649.GK103977@google.com>
+References: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
 MIME-Version: 1.0
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
- <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
- <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
- <CAKCoTu7ms_Mr-q08d9XB3uascpzwBa5LF9JTT2aq8uUsoFE8aQ@mail.gmail.com>
- <CAHk-=wjcsxQ8QB_v=cwBQw4pkJg7pp-bBsdWyPivFO_OeF-y+g@mail.gmail.com> <5396.1567719164@warthog.procyon.org.uk>
-In-Reply-To: <5396.1567719164@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Sep 2019 15:08:42 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com>
-Message-ID: <CAHk-=wgbCXea1a9OTWgMMvcsCGGiNiPp+ty-edZrBWn63NCYdw@mail.gmail.com>
-Subject: Re: Why add the general notification queue and its sources
-To:     David Howells <dhowells@redhat.com>
-Cc:     Ray Strode <rstrode@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Ray, Debarshi" <debarshi.ray@gmail.com>,
-        Robbie Harwood <rharwood@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 2:32 PM David Howells <dhowells@redhat.com> wrote:
->
->  (1) /dev/watch_queue just implements locked-in-memory buffers.  It gets you
->      no events by simply opening it.
+[+cc Alex]
 
-Cool. In-memory buffers.
+On Tue, Aug 20, 2019 at 10:09:45AM +0530, Srinath Mannam wrote:
+> From: Abhinav Ratna <abhinav.ratna@broadcom.com>
+> 
+> IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> Add quirk to have separate IOMMU groups for all EPs and functions connected
+> to root port, by masking RR/CR/SV/UF bits.
+> 
+> Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 
-But I know - we *have* one of those. There's already a system call for
-it, and has been forever. One that we then extended to allow people to
-change the buffer size, and do a lot of other things with.
+I tentatively applied this to pci/misc with Scott's ack for v5.4.
 
-It's called "pipe()". And you can give the writing side to other user
-space processes too, in case you are running an older kernel that
-didn't have some "event pipe support". It comes with resource
-management, because people already use those things.
+I tweaked the patch itself to follow the style of similar quirks
+(interdiff is below, plus a diff of the commit log).  Please make sure
+I didn't break it.
 
-If you want to make a message protocol on top of it, it has cool
-atomicity guarantees for any message size less than PIPE_BUF, but to
-make things simple, maybe just say "fixed record sizes of 64 bytes" or
-something like that for events.
+I also went out on a limb and reworded the comment to give what I
+*think* is the justification for this patch, as opposed to merely a
+description of the code.  I'm making a lot of assumptions there, so
+please confirm that they're correct, or supply alternate justification
+if they're not.
 
-Then you can use them from things like perl scripts, not just magical
-C programs.
+> ---
+>  drivers/pci/quirks.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 0f16acc..f9584c0 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -4466,6 +4466,21 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+>  	return acs_flags ? 0 : 1;
+>  }
+>  
+> +static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
+> +{
+> +	/*
+> +	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
+> +	 * Add quirk to to have separate IOMMU groups for all EPs and functions
+> +	 * connected to root port, by masking RR/CR/SV/UF bits.
+> +	 */
+> +
+> +	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+> +	int ret = acs_flags & ~flags ? 0 : 1;
+> +
+> +	return ret;
+> +}
+> +
+> +
+>  static const struct pci_dev_acs_enabled {
+>  	u16 vendor;
+>  	u16 device;
+> @@ -4559,6 +4574,7 @@ static const struct pci_dev_acs_enabled {
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+>  	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+> +	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
+>  	{ 0 }
+>  };
 
-Why do we need a new kind of super-fancy high-speed thing for event reporting?
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 77c0330ac922..2edbce35e8c5 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4466,21 +4466,19 @@ static int pci_quirk_mf_endpoint_acs(struct pci_dev *dev, u16 acs_flags)
+ 	return acs_flags ? 0 : 1;
+ }
+ 
+-static int pcie_quirk_brcm_bridge_acs(struct pci_dev *dev, u16 acs_flags)
++static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+ {
+ 	/*
+-	 * IPROC PAXB RC doesn't support ACS capabilities and control registers.
+-	 * Add quirk to to have separate IOMMU groups for all EPs and functions
+-	 * connected to root port, by masking RR/CR/SV/UF bits.
++	 * iProc PAXB Root Ports don't advertise an ACS capability, but
++	 * they do not allow peer-to-peer transactions between Root Ports.
++	 * Allow each Root Port to be in a separate IOMMU group by masking
++	 * SV/RR/CR/UF bits.
+ 	 */
++	acs_flags &= ~(PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ 
+-	u16 flags = (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF | PCI_ACS_SV);
+-	int ret = acs_flags & ~flags ? 0 : 1;
+-
+-	return ret;
++	return acs_flags ? 0 : 1;
+ }
+ 
+-
+ static const struct pci_dev_acs_enabled {
+ 	u16 vendor;
+ 	u16 device;
+@@ -4574,7 +4572,7 @@ static const struct pci_dev_acs_enabled {
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00A, pci_quirk_xgene_acs },
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00B, pci_quirk_xgene_acs },
+ 	{ PCI_VENDOR_ID_AMPERE, 0xE00C, pci_quirk_xgene_acs },
+-	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pcie_quirk_brcm_bridge_acs },
++	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+ 	{ 0 }
+ };
+ 
 
-If you have *so* many events that pipe handling is a performance
-issue, you have something seriously wrong going on.
 
-So no. I'm not interested in a magical memory-mapped pipe that is
-actually more limited than the real thing.
 
-                  Linus
+@@ -1,49 +1,49 @@
+-commit b50ae502eff0
++commit 46b2c32df7a4
+ Author: Abhinav Ratna <abhinav.ratna@broadcom.com>
+ Date:   Tue Aug 20 10:09:45 2019 +0530
+ 
+-    PCI: Add PCIE ACS quirk for IPROC PAXB
++    PCI: Add ACS quirk for iProc PAXB
+     
+-    IPROC PAXB RC doesn't support ACS capabilities and control registers.
+-    Add quirk to have separate IOMMU groups for all EPs and functions connected
+-    to root port, by masking RR/CR/SV/UF bits.
++    iProc PAXB Root Ports don't advertise an ACS capability, but they do not
++    allow peer-to-peer transactions between Root Ports.  Add an ACS quirk so
++    each Root Port can be in a separate IOMMU group.
+     
++    [bhelgaas: commit log, comment, use common implementation style]
+     Link: https://lore.kernel.org/r/1566275985-25670-1-git-send-email-srinath.mannam@broadcom.com
+     Signed-off-by: Abhinav Ratna <abhinav.ratna@broadcom.com>
+     Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
++    Acked-by: Scott Branden <scott.branden@broadcom.com>
+ 
