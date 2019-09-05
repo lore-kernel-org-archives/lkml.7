@@ -2,182 +2,269 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3700C3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAF8C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A695920828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A9120828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 02:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Cnhq127W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mqbppkmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbfIECTa (ORCPT
+        id S1730804AbfIECUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 22:19:30 -0400
-Received: from mail-eopbgr10053.outbound.protection.outlook.com ([40.107.1.53]:58883
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730571AbfIECTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 22:19:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VQFqcNjCj+jzKnKCFbL6PBP+riPPQZo01JL8LnVkBP3Bd9wGHz4CNtyc4FZJIRvH21BdY9EBpbHXy3iXqNpfN71xEndlWGL8L4TF4oaDUyOiYftfkmn1xSrMz5RzHytNL/mq4+p7d4fkRDHerQfBHrXFpGdYskNDs9hIEtWZxkdObwYbg/qXoeNe51jRwb8jA7QO4g5fBaR2F1iufPrnqTxqwNdZ+VtpeZAj2pO3US7MqAS8MySB1i6waXIVWTk4r78vx59ag30A+Kb7Qhu+RjHyJsVqv5Mb9QIAxUNUKZUwG9tBm9IaMq5BIKEvFlvDTr7UbHzESfLsPNPao6RyPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DTgv8BbokCsHUsum+UCAdsLIvAi1+MuAOLNEcrsFCEg=;
- b=QDx1f8GHxKPbvQB+enijIKRmNbxAq35gSlzU5w7k9rkZ6hpshJmqkzvL16Q/3ZF0uvJ6hmQZ35My5CGZewVjwNBFdb9ilwQ6dKmIKwVpIa6m0dljY12+D0Bv/mddBLGfo5wgodDB7jwblvaJzdD33k5JXIr+M+tLQjaXzHdXQYNu9dS43cPoKsulzp4in6JtzIGH5TtSrMwe5Pj39IVpd6klEZouOPT3hWMi0qaxMQ95sUSQy0v32roUUs7ABs85/m/s2JndI1ahVkcsJa+Avm0+JvIWWn+OIz8GIbGgvzaA/vtjJ8M/4K6jS0ovpY8hKRZW8hn1Abogpz4CXKI9wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DTgv8BbokCsHUsum+UCAdsLIvAi1+MuAOLNEcrsFCEg=;
- b=Cnhq127WloyVK/I7TzFMJ7o/Ja5qBmuNNZd+LYZB5HEeLyss/QK4ijaiMKlKWAjDRV/xQoY190vjB4pSLM1qmtOdflT5pUmDIVm+JG2GMHOTnL7/Pe8HVGzHiIPTHzG0kJVr9GYb1RGb+3wqyl2e71kMJCXrzzCl3ktV0pMiygc=
-Received: from DB7PR04MB4153.eurprd04.prod.outlook.com (52.134.111.144) by
- DB7PR04MB3996.eurprd04.prod.outlook.com (52.134.109.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.18; Thu, 5 Sep 2019 02:19:24 +0000
-Received: from DB7PR04MB4153.eurprd04.prod.outlook.com
- ([fe80::40cc:ea12:967f:ece7]) by DB7PR04MB4153.eurprd04.prod.outlook.com
- ([fe80::40cc:ea12:967f:ece7%3]) with mapi id 15.20.2220.021; Thu, 5 Sep 2019
- 02:19:24 +0000
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     'Felipe Balbi' <balbi@kernel.org>, Ran Wang <ran.wang_1@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC:     Xiaobo Xie <xiaobo.xie@nxp.com>, Jiafei Pan <jiafei.pan@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v1] usb: dwc3: remove the call trace of
- USBx_GFLADJ
-Thread-Topic: [EXT] Re: [PATCH v1] usb: dwc3: remove the call trace of
- USBx_GFLADJ
-Thread-Index: AQHVRdjlx4xav9SpcE6dT51LBbLuJ6bwwpYAgAYkuaCAACotgIAEhrMAgAA5UQCAEqOegIAAm7IAgA2DqFA=
-Date:   Thu, 5 Sep 2019 02:19:23 +0000
-Message-ID: <DB7PR04MB4153BCFB2380183EB5E5D2DCE9BB0@DB7PR04MB4153.eurprd04.prod.outlook.com>
-References: <20190729064607.8131-1-yinbo.zhu@nxp.com>
- <875zn8nt31.fsf@gmail.com>
- <VI1PR04MB41580DBF1A0C2DC143EE9CE3E9D30@VI1PR04MB4158.eurprd04.prod.outlook.com>
- <87h86nvtqo.fsf@gmail.com>
- <VI1PR04MB4158B49129BE9E3C00997555E9AC0@VI1PR04MB4158.eurprd04.prod.outlook.com>
- <87v9uzt1dr.fsf@gmail.com>
- <DB8PR04MB682695EEB3E358BDB3E2D5D0F1A00@DB8PR04MB6826.eurprd04.prod.outlook.com>
- <87sgpmx1pn.fsf@gmail.com>
-In-Reply-To: <87sgpmx1pn.fsf@gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yinbo.zhu@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a23356fa-3197-4219-8a44-08d731a7781f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB7PR04MB3996;
-x-ms-traffictypediagnostic: DB7PR04MB3996:|DB7PR04MB3996:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB3996CD4AB0F48B254F04E1E0E9BB0@DB7PR04MB3996.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(366004)(376002)(199004)(189003)(13464003)(3846002)(5660300002)(2501003)(66556008)(66446008)(64756008)(76116006)(316002)(476003)(86362001)(8936002)(66946007)(66476007)(53936002)(25786009)(478600001)(6436002)(55016002)(52536014)(6116002)(99286004)(4326008)(6246003)(81156014)(54906003)(14454004)(76176011)(44832011)(486006)(110136005)(71190400001)(71200400001)(8676002)(53546011)(6506007)(256004)(14444005)(26005)(7736002)(229853002)(2906002)(74316002)(66066001)(102836004)(186003)(11346002)(9686003)(33656002)(446003)(81166006)(7696005)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB3996;H:DB7PR04MB4153.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dckEVJPhoE+T61hbBMhcsIE4nThNQYzW21GIcOpLxeAtogDXBIzX/r/HL1fWjq1E0ZyjTL4buvMaRKdJUkauoqGROlne0nsztwglP0jXd+2M+i3yjRXgh6SWqREZ7334oADYdpiAiEmDJnzQyOEfvz6AyHv0UyJ3cQ/DW9qSRSZMiFWXTO0m2VR0SrcIaHHwYJQoDk6vEY6bua7xxigOzRtwatJZt90x6VuRHYzR39/vLKFRACsEm4aQygNoq5Trlqkvr4zFHbrv6uoAMKKV5vlQgD6v0EgpMZ+TUwdnsbNvuHgiiEmThveM/KNMyFE+Y4uJ6nkAcBqmYiKX7AwrjuUeFOMcQCHrEbTiwboyfLdau1atzWbnO58baMNYOJRZsIA+G7OwWB31x2fCq/RMC2pY8b9aTACV3aucAfh3/Qo=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 4 Sep 2019 22:20:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44928 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730571AbfIECUc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 22:20:32 -0400
+Received: by mail-io1-f67.google.com with SMTP id j4so1107803iog.11;
+        Wed, 04 Sep 2019 19:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language;
+        bh=+G46KvNlLn21VCpvk3pEp2Hl6SbV/sQ0K6A2KKrNWic=;
+        b=MqbppkmpjNeCkddBUPrJ/k/lBTska7xLBqjt13AofdQnaNny3T8CPnimKDysxCr6Qu
+         5nHhpvrxKtOl0Ah0DhOMX5GdcgmwtzG+5zdW2zEaxeD89rnzcykxQ4CvtHaK+fw6wFHV
+         rUx2YGjCujOQVbQAPGMiZauo/ZwcBADMJPKBatnQpT839mO1g4RztxRJy6uBl19Vme/c
+         3By/g3IjbIsEx40z4vISu7DcC1yorJ0nV6kD17lsrMaj66XNSCHGz7vLCmBaDWZnB1N6
+         V/RRL9PGV6y2AyU27TRFtYmQxLsfYrpiVKzVrCRUf5qontCOl6S2ozbY6niHFn5z7lfo
+         gUBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=+G46KvNlLn21VCpvk3pEp2Hl6SbV/sQ0K6A2KKrNWic=;
+        b=Nozmd6fJlqvKM5u8d0ErvoNIITxSoAlqpaa3PRGqGFcnpnSps7vch/EFplHIs+ORi8
+         knRBiUno3qWSyBpbuGPvoUZFV/miK3aFTZkSwAbS+m8LedI/RSM2licoJ3y9v4X/lS5J
+         Qa5rT4TWopZLINrj/sD097s7YmcY/FEYbnd3FONYU5hSJ7bxFIDf4jIoeteU2mOgpsCF
+         XxVhUf3jxWH16OCl4XQcqG5RcuQIBqnBE6eH0jbCrGnJh1b2GbNX8uiEURI+3JzlAkYW
+         5KnMMsoxct5AZE6huoBpJedB7+UhqJcvFC5lQhrfA55weZbdTlcN6dkKjnN2d+XvM4Ln
+         U2gA==
+X-Gm-Message-State: APjAAAU7x0o5U15+AfesJvMoHaCGZXe957x2+LcjHcJ3lEEBaFsNfRPR
+        UgLbfiMNg6O0+IKskz2paoE=
+X-Google-Smtp-Source: APXvYqwlQ5dCHOgIjH33DcYephWfaZjfm1Ruj5Me87A/V7PtQhc6DU2gZSDwhuWVocAd2SlOB8QfPA==
+X-Received: by 2002:a5e:c311:: with SMTP id a17mr1385428iok.140.1567650030923;
+        Wed, 04 Sep 2019 19:20:30 -0700 (PDT)
+Received: from [192.168.254.31] ([172.78.24.232])
+        by smtp.gmail.com with ESMTPSA id p20sm1663489iod.43.2019.09.04.19.20.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Sep 2019 19:20:29 -0700 (PDT)
+Subject: Re: WARNING in hso_free_net_device
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     syzbot+44d53c7255bb1aea22d2@syzkaller.appspotmail.com,
+        alexios.zavras@intel.com, andreyknvl@google.com,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        mathias.payer@nebelwelt.net, netdev@vger.kernel.org,
+        rfontana@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+References: <0000000000002a95df0591a4f114@google.com>
+ <d6e4d2da-66c6-a8fe-2fea-a3435fa7cb54@gmail.com>
+ <20190904154140.45dfb398@hermes.lan>
+From:   Hui Peng <benquike@gmail.com>
+Message-ID: <285edb24-01f9-3f9d-4946-b2f41ccd0774@gmail.com>
+Date:   Wed, 4 Sep 2019 22:20:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a23356fa-3197-4219-8a44-08d731a7781f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 02:19:23.9597
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IQh5BgxwvDPfeZmsMc7OwLY8V4qIo5m9BxbAn4eef0xEEsnAg3+aK5dCAgNNAg4ih1kBCeSGgxi8PnPkwX8drA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB3996
+In-Reply-To: <20190904154140.45dfb398@hermes.lan>
+Content-Type: multipart/mixed;
+ boundary="------------F0D63AB9033A22CB69F2E32D"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmFsYmksDQoNCklmIG5vIG90aGVyIGRvdWJ0cywgcGxlYXNlIGhlbHAgYXBwbHkgaXQuDQoN
-ClRoYW5rcywNClJlZ2FyZHMsDQpZaW5ibyBaaHUuDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQpGcm9tOiBGZWxpcGUgQmFsYmkgPGJhbGJpQGtlcm5lbC5vcmc+IA0KU2VudDogMjAxOcTq
-ONTCMjfI1SAxOTo1NQ0KVG86IFJhbiBXYW5nIDxyYW4ud2FuZ18xQG54cC5jb20+OyBZaW5ibyBa
-aHUgPHlpbmJvLnpodUBueHAuY29tPjsgR3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAbGludXhm
-b3VuZGF0aW9uLm9yZz47IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc7IG9wZW4gbGlzdCA8bGlu
-dXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCkNjOiBYaWFvYm8gWGllIDx4aWFvYm8ueGllQG54
-cC5jb20+OyBKaWFmZWkgUGFuIDxqaWFmZWkucGFuQG54cC5jb20+DQpTdWJqZWN0OiBSRTogW0VY
-VF0gUmU6IFtQQVRDSCB2MV0gdXNiOiBkd2MzOiByZW1vdmUgdGhlIGNhbGwgdHJhY2Ugb2YgVVNC
-eF9HRkxBREoNCg0KDQpIaSwNCg0KUmFuIFdhbmcgPHJhbi53YW5nXzFAbnhwLmNvbT4gd3JpdGVz
-Og0KPj4gWWluYm8gWmh1IDx5aW5iby56aHVAbnhwLmNvbT4gd3JpdGVzOg0KPj4gPj4gWWluYm8g
-Wmh1IDx5aW5iby56aHVAbnhwLmNvbT4gd3JpdGVzOg0KPj4gPj4gPj4gPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy91c2IvZHdjMy9jb3JlLmMgDQo+PiA+PiA+PiA+IGIvZHJpdmVycy91c2IvZHdjMy9j
-b3JlLmMgaW5kZXgNCj4+ID4+ID4+ID4gOThiY2U4NWMyOWQwLi5hMTMzZDg0OTAzMjIgMTAwNjQ0
-DQo+PiA+PiA+PiA+IC0tLSBhL2RyaXZlcnMvdXNiL2R3YzMvY29yZS5jDQo+PiA+PiA+PiA+ICsr
-KyBiL2RyaXZlcnMvdXNiL2R3YzMvY29yZS5jDQo+PiA+PiA+PiA+IEBAIC0zMDAsOCArMzAwLDcg
-QEAgc3RhdGljIHZvaWQgDQo+PiA+PiA+PiA+IGR3YzNfZnJhbWVfbGVuZ3RoX2FkanVzdG1lbnQo
-c3RydWN0DQo+PiA+PiA+PiA+IGR3YzMgKmR3YykNCj4+ID4+ID4+ID4NCj4+ID4+ID4+ID4gICAg
-ICAgcmVnID0gZHdjM19yZWFkbChkd2MtPnJlZ3MsIERXQzNfR0ZMQURKKTsNCj4+ID4+ID4+ID4g
-ICAgICAgZGZ0ID0gcmVnICYgRFdDM19HRkxBREpfMzBNSFpfTUFTSzsNCj4+ID4+ID4+ID4gLSAg
-ICAgaWYgKCFkZXZfV0FSTl9PTkNFKGR3Yy0+ZGV2LCBkZnQgPT0gZHdjLT5mbGFkaiwNCj4+ID4+
-ID4+ID4gLSAgICAgICAgICJyZXF1ZXN0IHZhbHVlIHNhbWUgYXMgZGVmYXVsdCwgaWdub3Jpbmdc
-biIpKSB7DQo+PiA+PiA+PiA+ICsgICAgIGlmIChkZnQgIT0gZHdjLT5mbGFkaikgew0KPj4gPj4g
-Pj4NCj4+ID4+ID4+IGlmIHRoZSB2YWx1ZSBpc24ndCBkaWZmZXJlbnQsIHdoeSBkbyB5b3Ugd2Fu
-dCB0byBjaGFuZ2UgaXQ/DQo+PiA+PiA+Pg0KPj4gPj4gPj4gLS0NCj4+ID4+ID4+IEJhbGJpDQo+
-PiA+PiA+IEhpIEJhbGJpLA0KPj4gPj4gPg0KPj4gPj4gPiBJIGRvbid0IGNoYW5nZSBhbnkgdmFs
-dWUuIEkgd2FzIHJlbW92ZSB0aGF0IGNhbGwgdHJhY2UuDQo+PiA+Pg0KPj4gPj4gU3VyZSB5b3Ug
-ZG8uIFRoZSBzcGxhdCBvbmx5IHNob3dzIHdoZW4geW91IHJlcXVlc3QgYSBGTEFESiB2YWx1ZSAN
-Cj4+ID4+IHRoYXQncyB0aGUgc2FtZSBhcyB0aGUgb25lIGFscmVhZHkgaW4gdGhlIHJlZ2lzdGVy
-LiBUaGUgcmVhc29uIHlvdSANCj4+ID4+IHNlZSB0aGUgc3BsYXQgaXMgYmVjYXVzZSB5b3VyIHJl
-cXVlc3RlZCB2YWx1ZSBpcyB3aGF0J3MgYWxyZWFkeSBpbiB0aGUgSFcuDQo+PiA+Pg0KPj4gPj4g
-U28sIGFnYWluLCB3aHkgYXJlIHlvdSBhZGRpbmcgdGhpcyBkZXZpY2UgdHJlZSBwcm9wZXJ0eSBp
-ZiB0aGUgDQo+PiA+PiB2YWx1ZSBpcyBhbHJlYWR5IHRoZSBjb3JyZWN0IG9uZT8NCj4+ID4+DQo+
-PiA+PiA+IEluIGFkZGl0aW9uIHRoYXQgR0ZMQURKXzMwTUhaIHZhbHVlIGludGlhbCB2YWx1ZSBp
-cyAwLCBhbmQgaXQncyANCj4+ID4+ID4gdmFsdWUgbXVzdCBiZSAweDIwLCBpZiBub3QsIHVzYiB3
-aWxsIG5vdCB3b3JrLg0KPj4gPj4NCj4+ID4+IGl0J3Mgbm90IHplcm8sIG90aGVyd2lzZSB0aGUg
-c3BsYXQgd291bGRuJ3QgdHJpZ2dlci4gWW91J3JlIA0KPj4gPj4gcmVxdWVzdGluZyB0aGUgdmFs
-dWUgdGhhdCdzIGFscmVhZHkgaW4geW91ciByZWdpc3RlciBieSBkZWZhdWx0Lg0KPj4gPj4NCj4+
-ID4+IC0tDQo+PiA+PiBCYWxiaQ0KPj4gPg0KPj4gPiBIaSBCYWxiaSwNCj4+ID4NCj4+ID4gQWNj
-b3JkaW5nIHRoYXQgcm0gZG9jIHRoYXQgR0ZMQURKXzMwTUhaIGhhcyBhIGRlZmF1bHQgdmFsdWUg
-aXMgDQo+PiA+IDB4MjAsIHdoZW4gR0ZMQURKXzMwTUhaX1JFR19TRUwgaXMgMCwgdGhpcyAweDIw
-IGlzIGEgaGFyZC1jb2RlZCB2YWx1ZS4NCj4+ID4NCj4+ID4gQnV0IGluIGZhY3QsIHRoYXQgZGVm
-YXVsdCB2YWx1ZSBpcyAwLCBwbGVhc2UgeW91IG5vdGUhDQo+PiA+DQo+PiA+IFRoZW4gYWNjb3Jk
-aW5nIHRoYXQgeGhjaSBzcGVjIDUuMi40LCB0aGF0IHJlZ2lzdGVyIHRoZSBzaXh0aCBiaXQgaWYg
-DQo+PiA+IGlzIDAsIHRoZW4gdGhhdCBjYW4gc3VwcG9ydCBGcmFtZSBMZW50aCBUaW1pbmcgdmFs
-dWUuDQo+PiA+DQo+PiA+IFNvIHNldCBHRkxBREpfMzBNSFpfUkVHX1NFTCB0byAxIGZvciB1c2Ug
-RkxBREosIHRoZW4gSSBmaW5kIHRoYXQgaXQgDQo+PiA+IG11c3QgdXNlIDB4MjAgdXNiIHdpbGwg
-d29yayB3ZWxsLCBldmVuIHRob3VnIHhoY2kgY2FuIHBlcm1pdCANCj4+ID4gR0ZMQURKXzMwTUha
-IHVzZSBvdGhlciB2YWx1ZQ0KPj4gDQo+PiBZb3Ugb25seSBnZXQgdGhlIHNwbGF0IGJlY2F1c2Ug
-eW91IHRyeSB0byBzZW50IEdGTEFESiB0byAweDIwIGFuZCANCj4+IGl0J3MgQUxSRUFEWSAweDIw
-LiBUaGlzIG1lYW5zIHRoYXQgeW91IGRvbid0IG5lZWQgdGhlIHByb3BlcnR5IGluIERUUy4NCj4+
-IA0KPj4gPiBJbiBhZGRpdGlvbiBhYm91dCB3aGF0IHlvdSBzYWlkIGlzIGFib3V0IGR0cyBwYXRj
-aCwgYW5kIHRoYXQgcGF0Y2ggDQo+PiA+IGhhZCBtZXJnZWQgYnkgdXBzdHJlYW0sIHBhdGNoIG93
-bmVyIGlzbid0IG1lLA0KPj4gDQo+PiBXZWxsLCB0aGVuIHJlbW92ZSB0aGUgc2V0dGluZyBmcm9t
-IERUUywgc2luY2UgY2xlYXJseSBpdCdzIG5vdCBuZWVkZWQuDQo+DQo+IFBsZWFzZSBjb25zaWRl
-cmluZyBiZWxvdyBzY2VuYXJpb3Mgb24gdGhlIHNhbWUgYm9hcmQgd2hpY2ggbmVlZHMgR0ZMQURK
-IHByb3BlcnR5IG9uIGtlcm5lbCBEVFM6DQo+DQo+IDEuIEJvYXJkIGJvb3QgdG8gVS1Cb290IGZp
-cnN0LCB0aGVuIGxvYWQga2VybmVsLiBJbiB0aGlzIGNhc2UsIHdlIG5lZWQga2VybmVsIERUUw0K
-PiAgICAgaGVscCB0byBnZXQgR0ZMQURKIHNldHRpbmcgcmlnaHQsIGV2ZXJ5dGhpbmcgaXMgYXMg
-ZXhwZWN0ZWQuDQo+DQo+IDIuIEJvYXJkIGJvb3QgdG8gVS1Cb290IGNvbnNvbGUsIHRoZW4gZXhl
-Y3V0ZSAndXNiIHN0YXJ0JyB1bmRlciBVLUJvb3QgY29uc29sZSB0byBpbml0DQo+ICAgICBEV0Mz
-IGNvbnRyb2xsZXIsIHRoZW4gbG9hZCBrZXJuZWwuIEluIHRoaXMgY2FzZSwgYWN0dWFsbHkgR0ZM
-QURKIGlzIGNvcnJlY3RseQ0KPiAgICAgY29uZmlndXJlZCBhbHJlYWR5LCBhbmQgdGhlIEdGTEFE
-SiBjb25maWcgZG91YmxlLWNoZWNraW5nIGlzIGZpbmUgKGJlY2F1c2Uga2VybmVsDQo+ICAgICBj
-YW5ub3Qga25vdyBpZiBVLUJvb3QgaGFzIGluaXRpYWxpemVkIGl0IG9yIG5vdCksIGJ1dCB3YXJu
-aW5nIGxvb2tzIG5vdCBuZWNlc3NhcnkuDQo+DQo+IDMuIEJvYXJkIGJvb3QgdG8ga2VybmVsLCBH
-RkxBREogZ2V0IHNldCBmcm9tIERUUywgdGhlbiBzeXN0ZW0gc3VzcGVuZCAmIHJlc3VtZS4gSW4g
-dGhpcyBjYXNlDQo+ICAgICB3aGVuIHJlc3VtaW5nLCBHRkxBREogc2V0dGluZyBoYXMgYmVlbiBy
-ZXN0b3JlZCBjb3JyZWN0bHksIHNvIGhlcmUgd2UgbWlnaHQgbm90IG5lZWQNCj4gICAgIHNlbmQg
-b3V0IHRoZSB3YXJuaW5nIG1lc3NhZ2UgKGRvdWJsZS1jaGVja2luZyBtaWdodCBiZSBmaW5lKS4N
-Cj4NCj4gU28sIHdoYXQncyB5b3VyIHN1Z2dlc3Rpb24gdG8gcmVtb3ZlIHRoaXMgbG9va3Mgbm9u
-LW5lY2Vzc2FyeSB3YXJuaW5nIG1lc3NhZ2U/DQoNCm5vdyB0aGlzIGlzIHdlbGwgZXhwbGFpbmVk
-ISBTbyB0aGUgdmFsdWUgaW4gdGhlIHJlZ2lzdGVyIGlzICpOT1QqIDB4MjAgYnkgZGVmYXVsdCwg
-aG93ZXZlciwgdS1ib290IF9jYW5fIHVzZSBkd2MzIGlmIHdlJ3JlIGZsYXNoaW5nLCB0aGVuIGl0
-J2xsIHJlc3VsdCBpbiB0aGUgc3BsYXQuDQoNCk9rYXksIHRoaXMgaXMgYSB2YWxpZCBzY2VuYXJp
-byB0aGF0IHRoZSBrZXJuZWwgc2hvdWxkIGNvbnNpZGVyLiBJIGFncmVlIHRoYXQgd2Ugc2hvdWxk
-IHJlbW92ZSB0aGUgV0FSTigpIGZyb20gdGhlcmUuDQoNClRoYW5rcw0KDQotLQ0KYmFsYmkNCg==
+This is a multi-part message in MIME format.
+--------------F0D63AB9033A22CB69F2E32D
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+Can you guys have=C2=A0 a look at the attached patch?
+
+On 9/4/19 6:41 PM, Stephen Hemminger wrote:
+> On Wed, 4 Sep 2019 16:27:50 -0400
+> Hui Peng <benquike@gmail.com> wrote:
+>
+>> Hi, all:
+>>
+>> I looked at the bug a little.
+>>
+>> The issue is that in the error handling code, hso_free_net_device
+>> unregisters
+>>
+>> the net_device (hso_net->net)=C2=A0 by calling unregister_netdev. In t=
+he
+>> error handling code path,
+>>
+>> hso_net->net has not been registered yet.
+>>
+>> I think there are two ways to solve the issue:
+>>
+>> 1. fix it in drivers/net/usb/hso.c to avoiding unregistering the
+>> net_device when it is still not registered
+>>
+>> 2. fix it in unregister_netdev. We can add a field in net_device to
+>> record whether it is registered, and make unregister_netdev return if
+>> the net_device is not registered yet.
+>>
+>> What do you guys think ?
+> #1
+
+--------------F0D63AB9033A22CB69F2E32D
+Content-Type: text/x-patch;
+ name="0001-Fix-a-wrong-unregistering-bug-in-hso_free_net_device.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename*0="0001-Fix-a-wrong-unregistering-bug-in-hso_free_net_device.pa";
+ filename*1="tch"
+
+=46rom f3fdee8fc03aa2bc982f22da1d29bbf6bca72935 Mon Sep 17 00:00:00 2001
+From: Hui Peng <benquike@gmail.com>
+Date: Wed, 4 Sep 2019 21:38:35 -0400
+Subject: [PATCH] Fix a wrong unregistering bug in hso_free_net_device
+
+As shown below, hso_create_net_device may call hso_free_net_device
+before the net_device is registered. hso_free_net_device will
+unregister the network device no matter it is registered or not,
+unregister_netdev is not able to handle unregistered net_device,
+resulting in the bug reported by the syzbot.
+
+```
+static struct hso_device *hso_create_net_device(struct usb_interface *int=
+erface,
+					       int port_spec)
+{
+	......
+	net =3D alloc_netdev(sizeof(struct hso_net), "hso%d", NET_NAME_UNKNOWN,
+      			    hso_net_init);
+	......
+	if (!hso_net->out_endp) {
+   	   	dev_err(&interface->dev, "Can't find BULK OUT endpoint\n");
+		goto exit;
+	}
+
+	......
+	result =3D register_netdev(net);
+	......
+exit:
+	hso_free_net_device(hso_dev);
+	return NULL;
+}
+
+static void hso_free_net_device(struct hso_device *hso_dev)
+{
+	......
+	if (hso_net->net)
+		unregister_netdev(hso_net->net);
+	......
+}
+
+```
+
+This patch adds a net_registered field in struct hso_net to record whethe=
+r
+the containing net_device is registered or not, and avoid unregistering i=
+t
+if it is not registered yet.
+
+Reported-by: syzbot+44d53c7255bb1aea22d2@syzkaller.appspotmail.com
+Signed-off-by: Hui Peng <benquike@gmail.com>
+---
+ drivers/net/usb/hso.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
+index ce78714..5b3df33 100644
+--- a/drivers/net/usb/hso.c
++++ b/drivers/net/usb/hso.c
+@@ -128,6 +128,7 @@ struct hso_shared_int {
+ struct hso_net {
+ 	struct hso_device *parent;
+ 	struct net_device *net;
++	bool net_registered;
+ 	struct rfkill *rfkill;
+ 	char name[24];
+=20
+@@ -2362,7 +2363,7 @@ static void hso_free_net_device(struct hso_device *=
+hso_dev)
+=20
+ 	remove_net_device(hso_net->parent);
+=20
+-	if (hso_net->net)
++	if (hso_net->net && hso_net->net_registered)
+ 		unregister_netdev(hso_net->net);
+=20
+ 	/* start freeing */
+@@ -2544,6 +2545,7 @@ static struct hso_device *hso_create_net_device(str=
+uct usb_interface *interface,
+ 		dev_err(&interface->dev, "Failed to register device\n");
+ 		goto exit;
+ 	}
++	hso_net->net_registered =3D true;
+=20
+ 	hso_log_port(hso_dev);
+=20
+--=20
+2.7.4
+
+
+--------------F0D63AB9033A22CB69F2E32D
+Content-Type: application/pgp-keys;
+ name="pEpkey.asc"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="pEpkey.asc"
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQGNBF1wbDMBDAC3ikc0CLh9Zpu1WxQBj2Jy4TjGIUwt3Ls0WHg1+p2YcsW8/E63
+qC8IEqgWPGLAVksCQaRBKQYLDQaVc80hAbR8MhjlripDtKgonwxC5sD7b1b4pdQb
+Lqx5NTOdVk0GE5PeyqLOXsIxs+t85BSkejLmsSIPfyWWYvDZkXcDGpzVHLtIBgXk
+4bjjEtOa0EKpRCdjp4GJIul6MLejINff2kO2AKKcRgbhlG8AolqvaYJG15QqXTdb
+Nw/qxuDhsih08kEkDFC4lzGnP4+h8k5oDHGyWrA+UArUN8JIrnk6AYH67s25wWhc
+5xddf5N9AseorCBoA5A6xAyCpn+PSB5ysektzW6xMIe6m2eVuvDcfJZDpYKmhWiZ
+ZXFiW787jOFkvlJ/o0NFFUInRSq5DclT6rgkA4hxSqDXmSnlykh6b28EPx1neQ1y
+Hknv0bLYNwy1ZllNAJVCE3cSBj6DKzwjBFNJUlQzZvaoPON/CNGR3fRFdyVi8cwq
+jPaLIX5WWIpSVlkAEQEAAbQdSHVpIFBlbmcgPGJlbnF1aWtlQGdtYWlsLmNvbT6J
+AdQEEwEIAD4WIQRqj5YqeSTmrDjmTnL3OTmNm5lulAUCXXBsNQIbAwUJAeEzgAUL
+CQgHAgYVCgkICwIEFgIDAQIeAQIXgAAKCRD3OTmNm5lulKsSDACGHOv9I4YS+KHM
+m7XmwqWL0X7stYIR2wb2Bz0hQ0tbgu7vO/qjMNYMLFkgrBHgNmaGHBQ4cLDWmalN
+DEBCW5gS+JN9XYZiqJVU4rkjijgVf57wsFtNE5RwzijjKJS899s2Q492dbEr2W2s
+jPNdW3pvGiflTQyjmbd+HVsgJRpNh6oHwBRLmBHI6z9/jsrxerjNDkza+HgBTMFR
+yrlk2ODvYt/3/OcyfjS0TtFGUkbYllgYfFFW8hHScd0mlnrGW97Ngzs0J42pHA7X
+/vq4iRC0/5Aw2+XjHL+cvS+ZdFE/masJjozSXP82U/WmWkwoUpL+4EttWe7B++zf
+kxMHinMF300LCAaHAC0r8taqEHIp4Qylg8GlFtnsUTmZVwV67HPQ7okI17MBlGox
+8QXgozsaTLbfcL14whxPruRTl6SXz8SJnmMfqstt+sSpMKzpN18uY/qc2U3Cdv7d
+g3ZSlfmheTVFnHIMLngmN24tCyoKK2U4VagR8IUHxqKBlhmW7xC5AY0EXXBsNQEM
+AN5QQde2nbPK/lwZFsiG/toyrSZC7IdlDV6rcBho+B9e20Up22cUUPIajhvaSJad
+TVFkK/TT3CFgmPho67KtG6OEUok5pXONpVOBDM4C4u5CvDBuVLtmJuwJ/rsVMcOl
+yDGBFkHfVWMimrS5Q8YgTXYQdY8P88MeOSl/jEtKm4nI/gzSpUGuheorTME0A6n9
+ZT6WK/wBphXYofW92cL1+nQsTTstsbRWerTH1UusJwvb7HBj1MH+7CcLAL/KJOV1
+vylny6wKKzFYevu2g4+aYEHZCYLVXVFvl2IRR295dMF8BZOnjCB1YTLf6UN3sag9
+MOM8Hw5UTQ+raLGM2sOuN9fDdzQQwx4WjaNFaYoWPdrIB1RjrSL42eqOi7/Ul9jt
+hZHamMjZEJM+E2h1qdDiUwPMRGkD9vvH4NUJ42trO6QeOfmZe5UA7dzHko7DxiNY
+5YoURuaT6nqmUFSTb6jRHM3Y/GygGfOLLIVjNsrNXhdmqAWtX7g3mc/OjYyXdFkA
+awARAQABiQG8BBgBCAAmFiEEao+WKnkk5qw45k5y9zk5jZuZbpQFAl1wbDUCGwwF
+CQHhM4AACgkQ9zk5jZuZbpQ8hwv/YQqCdupIjCYTx+i19g9+8QO6U4q0zIUMgzMU
+lsHT+K7ay0s1/v1OU+3XRS03OA7fZTl7rHaaWT69x92CELS3uenh4cV+Q1Z7cqBy
+he7v44nXLEM5SGQihEioFtMTu2X9Cka/KLRDGJCkm8jcImvJyvLFTUO4BFFD7Jgf
+JAfU3gh1tEtLFdMbGQxHrxmwtXttQ71LvkwToThJzzpp8JASkgprI4obAGrYw3kk
+4Z2NfbA2/OXq+ea/g98cuMM4NWvX+JwlvCCiE24B4GY2xEHDafcg/q9wiCLJcRcg
+YE/BHsX53J2p8abo0IPSn6uoQeQZku0qtI+Up78srjw42Ox3siHmObAHiofKVTId
+litjWP9Pe1CYDf5uuUPtv4P5ZFvQ4KrYy1tWkrkweI/g36Ii6p/Ck3b4sxNjYLg/
+qX/XvNCnTnHmmUAhRte/en+8BzyHV72UGUbXpqQjOwePkrfB1YGP75FVRi/kOg7z
+upzUiZLN0LKxjlsZTGx9e5m6J0BT
+=3DVJU3
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------F0D63AB9033A22CB69F2E32D--
