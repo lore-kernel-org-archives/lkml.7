@@ -2,106 +2,100 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADB2C43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6902C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 472AF206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49268206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:51:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGrbQM6d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404009AbfIETu5 (ORCPT
+        id S2391546AbfIETvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:50:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55848 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732081AbfIETt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:49:26 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EDE0A883823;
-        Thu,  5 Sep 2019 19:49:25 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D6B46012D;
-        Thu,  5 Sep 2019 19:49:18 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id B6929220292; Thu,  5 Sep 2019 15:49:17 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, miklos@szeredi.hu
-Cc:     linux-kernel@vger.kernel.org, virtio-fs@redhat.com,
-        vgoyal@redhat.com, stefanha@redhat.com, dgilbert@redhat.com,
-        mst@redhat.com
-Subject: [PATCH 00/18] virtiofs: Fix various races and cleanups round 1
-Date:   Thu,  5 Sep 2019 15:48:41 -0400
-Message-Id: <20190905194859.16219-1-vgoyal@redhat.com>
+        Thu, 5 Sep 2019 15:51:24 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38274 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732081AbfIETvX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:51:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id p12so7548337iog.5;
+        Thu, 05 Sep 2019 12:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lyT6YuOmLituwU2N7i+W9QW0JEtw/N4RH9huVkG7ZMI=;
+        b=eGrbQM6dD97fdoUWq3X0vlcpzjL/N3GTrDHeCY6ie0OQrFMDcGNqJy+IKlHCsEhlYD
+         LCyF5sa3KY2kvhlf3t+qf0LBWb0Y8GMFis+nJBKEkgetGb3aWqSI2OocKXuenc2pQ0UJ
+         gnTXfabyfgGaI+1zdgedFRYgZ/+6YU0mgVvkIpx3CGDsuUBPwBUWZS7kG6Cjowc4FzPT
+         hh9c/7+iBvLfoaSMtdBerR6Mxm24HprRBKp/Eilw8OB2+pwd/89cvtVc2aTQT4wWVpq0
+         Jg2Fu6mD9PlA0HDilwGqhuHh1g9dPXy08Az2al68LtxQ08gPToDeP3woQJgMWw8Q1LnX
+         02WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lyT6YuOmLituwU2N7i+W9QW0JEtw/N4RH9huVkG7ZMI=;
+        b=pS3zvrcAcFcifXX71dCdvsJyfQoP5/2JT4qRM/zyay8o15b4SdixfkwuZIUbjsp88i
+         0SzmzjHwiWxNJhZmw3g6aKwidn9AjuXdBB3r43X9FfycEas+Q9xE9GjVh8vJuKXvK8j2
+         /SIBpHrMzHRNrC3sizN8p9weH3i/0oiXeG4boArY2malad97LNm+X3BfOSG/lXFSd5gf
+         Wtfg45UNCImEHg1fTE+t/ZNLG1Fm1/2ajQx8tyFU/js7x+7F1pj15o+v8P4CkGNQJ4Nj
+         6nRbf0mjckiljidlRhSCQbgSEDseo8G2Kb/eVPQoKQ3FVdroMM03urnp/zhFP7WKQilQ
+         zkXQ==
+X-Gm-Message-State: APjAAAWkDNt4BmyF3N/V/BooL8IDRCWMWhPeCWjvnxuHtNaCRUy6KAat
+        c6+1ZrVLVCd9k0nPQanQKkg=
+X-Google-Smtp-Source: APXvYqyvaf9TjsGptibp/pz+iWmCQ3Io3TRfB36QINya5dhg6MAXG7o195lKDTMsOwKakP0m4eGnPw==
+X-Received: by 2002:a5d:89c1:: with SMTP id a1mr5841295iot.306.1567713083218;
+        Thu, 05 Sep 2019 12:51:23 -0700 (PDT)
+Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id k17sm2585093ioc.30.2019.09.05.12.51.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 12:51:22 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 13:51:20 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/93] 4.19.70-stable review
+Message-ID: <20190905195120.GC3397@JATN>
+References: <20190904175302.845828956@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 05 Sep 2019 19:49:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904175302.845828956@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Sep 04, 2019 at 07:53:02PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.70 release.
+> There are 93 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.70-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Michael Tsirkin pointed out issues w.r.t various locking related TODO
-items and races w.r.t device removal. 
+Compiled, booted, and no regressions on my system.
 
-In this first round of cleanups, I have taken care of most pressing
-issues.
-
-These patches apply on top of following.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#virtiofs-v4
-
-I have tested these patches with mount/umount and device removal using
-qemu monitor. For example.
-
-virsh qemu-monitor-command --hmp vm9-f28 device_del myvirtiofs
-
-Now a mounted device can be removed and file system will return errors
--ENOTCONN and one can unmount it.
-
-Miklos, if you are fine with the patches, I am fine if you fold these
-all into existing patch. I kept them separate so that review is easier.
-
-Any feedback or comments are welcome.
-
-Thanks
-Vivek
-
-
-Vivek Goyal (18):
-  virtiofs: Remove request from processing list before calling end
-  virtiofs: Check whether hiprio queue is connected at submission time
-  virtiofs: Pass fsvq instead of vq as parameter to
-    virtio_fs_enqueue_req
-  virtiofs: Check connected state for VQ_REQUEST queue as well
-  Maintain count of in flight requests for VQ_REQUEST queue
-  virtiofs: ->remove should not clean virtiofs fuse devices
-  virtiofs: Stop virtiofs queues when device is being removed
-  virtiofs: Drain all pending requests during ->remove time
-  virtiofs: Add an helper to start all the queues
-  virtiofs: Do not use device managed mem for virtio_fs and virtio_fs_vq
-  virtiofs: stop and drain queues after sending DESTROY
-  virtiofs: Use virtio_fs_free_devs() in error path
-  virtiofs: Do not access virtqueue in request submission path
-  virtiofs: Add a fuse_iqueue operation to put() reference
-  virtiofs: Make virtio_fs object refcounted
-  virtiofs: Use virtio_fs_mutex for races w.r.t ->remove and mount path
-  virtiofs: Remove TODO to quiesce/end_requests
-  virtiofs: Remove TODO item from virtio_fs_free_devs()
-
- fs/fuse/fuse_i.h    |   5 +
- fs/fuse/inode.c     |   6 +
- fs/fuse/virtio_fs.c | 259 ++++++++++++++++++++++++++++++++------------
- 3 files changed, 198 insertions(+), 72 deletions(-)
-
--- 
-2.20.1
-
+-Kelsey
