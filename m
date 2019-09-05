@@ -2,145 +2,252 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2678DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12962C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0392B206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA894206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732432AbfIEKDx (ORCPT
+        id S1732365AbfIEKFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:03:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:52358 "EHLO mga12.intel.com"
+        Thu, 5 Sep 2019 06:05:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:40928 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730959AbfIEKDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:03:52 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 03:03:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
-   d="asc'?scan'208";a="182779968"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Sep 2019 03:03:50 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Christopher S Hall <christopher.s.hall@intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        davem@davemloft.net
-Subject: Re: [PATCH v2 2/2] PTP: add support for one-shot output
-In-Reply-To: <20190831144732.GA1692@localhost>
-References: <20190829095825.2108-1-felipe.balbi@linux.intel.com> <20190829095825.2108-2-felipe.balbi@linux.intel.com> <20190829172509.GB2166@localhost> <20190829172848.GC2166@localhost> <87r253ulpn.fsf@gmail.com> <20190831144732.GA1692@localhost>
-Date:   Thu, 05 Sep 2019 13:03:46 +0300
-Message-ID: <87h85roy9p.fsf@gmail.com>
+        id S1731215AbfIEKFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:05:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9403B1576;
+        Thu,  5 Sep 2019 03:05:22 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB4F03F67D;
+        Thu,  5 Sep 2019 03:05:20 -0700 (PDT)
+References: <20190830174944.21741-1-subhra.mazumdar@oracle.com> <20190830174944.21741-2-subhra.mazumdar@oracle.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     subhra mazumdar <subhra.mazumdar@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, tglx@linutronix.de, steven.sistare@oracle.com,
+        dhaval.giani@oracle.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
+        tim.c.chen@linux.intel.com, mgorman@techsingularity.net,
+        parth@linux.ibm.com
+Subject: Re: [RFC PATCH 1/9] sched,cgroup: Add interface for latency-nice
+In-reply-to: <20190830174944.21741-2-subhra.mazumdar@oracle.com>
+Date:   Thu, 05 Sep 2019 11:05:18 +0100
+Message-ID: <87pnkf2h41.fsf@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
+We already commented on adding the cgroup API after the per-task API.
 
-Hi,
+However, for the cgroup bits will be super important to have
 
-Richard Cochran <richardcochran@gmail.com> writes:
-> On Fri, Aug 30, 2019 at 11:00:20AM +0300, Felipe Balbi wrote:
->> >> @@ -177,9 +177,8 @@ long ptp_ioctl(struct posix_clock *pc, unsigned i=
-nt cmd, unsigned long arg)
->> >>  			err =3D -EFAULT;
->> >>  			break;
->> >>  		}
->> >> -		if ((req.perout.flags || req.perout.rsv[0] || req.perout.rsv[1]
->> >> -				|| req.perout.rsv[2] || req.perout.rsv[3])
->> >> -			&& cmd =3D=3D PTP_PEROUT_REQUEST2) {
->> >> +		if ((req.perout.rsv[0] || req.perout.rsv[1] || req.perout.rsv[2]
->> >> +			|| req.perout.rsv[3]) && cmd =3D=3D PTP_PEROUT_REQUEST2) {
->> >
->> > Please check that the reserved bits of req.perout.flags, namely
->> > ~PTP_PEROUT_ONE_SHOT, are clear.
->>=20
->> Actually, we should check more. PEROUT_FEATURE_ENABLE is still valid
->> here, right? So are RISING and FALLING edges, no?
+ [ +tejun ]
+
+in CC since here we are at discussing the idea to add a new cpu
+controller's attribute.
+
+There are opinions about which kind of attributes can be added to
+cgroups and I'm sure a "latency-nice" attribute will generate an
+interesting discussion. :)
+
+LPC is coming up, perhaps we can get the chance to have a chat with
+Tejun about the manoeuvring space in this area.
+
+On Fri, Aug 30, 2019 at 18:49:36 +0100, subhra mazumdar wrote...
+
+> Add Cgroup interface for latency-nice. Each CPU Cgroup adds a new file
+> "latency-nice" which is shared by all the threads in that Cgroup.
 >
-> No.  The ptp_extts_request.flags are indeed defined:
+> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
+> ---
+>  include/linux/sched.h |  1 +
+>  kernel/sched/core.c   | 40 ++++++++++++++++++++++++++++++++++++++++
+>  kernel/sched/fair.c   |  1 +
+>  kernel/sched/sched.h  |  8 ++++++++
+>  4 files changed, 50 insertions(+)
 >
-> struct ptp_extts_request {
-> 	...
-> 	unsigned int flags;  /* Bit field for PTP_xxx flags. */
-> 	...
-> };
->
-> But the ptp_perout_request.flags are reserved:
->
-> struct ptp_perout_request {
-> 	...
-> 	unsigned int flags;           /* Reserved for future use. */
-> 	...
-> };
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 1183741..b4a79c3 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -631,6 +631,7 @@ struct task_struct {
+>  	int				static_prio;
+>  	int				normal_prio;
+>  	unsigned int			rt_priority;
+> +	u64				latency_nice;
 
-This a bit confusing, really. Specially when the comment right above
-those flags states:
+I guess we can save some bit here... or, if we are very brave, maybe we
+can explore the possibility to pack all prios into a single u64?
 
-/* PTP_xxx bits, for the flags field within the request structures. */
+ ( ( (tomatoes target here) ) )
 
-The request "structures" include EXTTS and PEROUT:
+>  	const struct sched_class	*sched_class;
+>  	struct sched_entity		se;
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 874c427..47969bc 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -5976,6 +5976,7 @@ void __init sched_init(void)
+>  		init_dl_rq(&rq->dl);
+>  #ifdef CONFIG_FAIR_GROUP_SCHED
+>  		root_task_group.shares = ROOT_TASK_GROUP_LOAD;
+> +		root_task_group.latency_nice = LATENCY_NICE_DEFAULT;
+>  		INIT_LIST_HEAD(&rq->leaf_cfs_rq_list);
+>  		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
+>  		/*
+> @@ -6345,6 +6346,7 @@ static void sched_change_group(struct task_struct *tsk, int type)
+>  	 */
+>  	tg = container_of(task_css_check(tsk, cpu_cgrp_id, true),
+>  			  struct task_group, css);
+> +	tsk->latency_nice = tg->latency_nice;
+>  	tg = autogroup_task_group(tsk, tg);
+>  	tsk->sched_task_group = tg;
+>  
+> @@ -6812,6 +6814,34 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
+>  }
+>  #endif /* CONFIG_RT_GROUP_SCHED */
+>  
+> +static u64 cpu_latency_nice_read_u64(struct cgroup_subsys_state *css,
+> +				     struct cftype *cft)
+> +{
+> +	struct task_group *tg = css_tg(css);
+> +
+> +	return tg->latency_nice;
+> +}
+> +
+> +static int cpu_latency_nice_write_u64(struct cgroup_subsys_state *css,
+> +				      struct cftype *cft, u64 latency_nice)
+> +{
+> +	struct task_group *tg = css_tg(css);
+> +	struct css_task_iter it;
+> +	struct task_struct *p;
+> +
+> +	if (latency_nice < LATENCY_NICE_MIN || latency_nice > LATENCY_NICE_MAX)
+> +		return -ERANGE;
+> +
+> +	tg->latency_nice = latency_nice;
+> +
+> +	css_task_iter_start(css, 0, &it);
+> +	while ((p = css_task_iter_next(&it)))
+> +		p->latency_nice = latency_nice;
 
-struct ptp_clock_request {
-	enum {
-		PTP_CLK_REQ_EXTTS,
-		PTP_CLK_REQ_PEROUT,
-		PTP_CLK_REQ_PPS,
-	} type;
-	union {
-		struct ptp_extts_request extts;
-		struct ptp_perout_request perout;
-	};
-};
+Once (and if) the cgroup API is added we can avoid this (potentially
+massive) "update on write" in favour of an "on demand composition at
+wakeup-time".
 
-Seems like we will, at least, make it clear which flags are valid for
-which request structures.
+We don't care about updating the latency-nice of NON RUNNABLE tasks,
+do we?
 
-> For this ioctl, the test for enable/disable is
-> ptp_perout_request.period is zero:
->
-> 		enable =3D req.perout.period.sec || req.perout.period.nsec;
-> 		err =3D ops->enable(ops, &req, enable);
->
-> The usage pattern here is taken from timer_settime(2).
+AFAIK, we need that value only (or mostly) at wakeup time. Thus, when a
+task wakeup up we can easily compose (and eventually cache) it's
+current latency-nice value by considering, in priority order:
 
-got it
+  - the system wide upper-bound
+  - the task group restriction
+  - the task specific relaxation
 
-=2D-=20
-balbi
+Something similar to what we already do for uclamp composition with this
+patch currently in tip/sched/core:
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+   commit 3eac870a3247 ("sched/uclamp: Use TG's clamps to restrict TASK's clamps")
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl1w3YIACgkQzL64meEa
-mQZ4Tw//aydsxj0fUogJ3Owf7UEMyY3lxgJ/ksnZi3Yu5c/0i6uhPysMUQC+oKQ/
-SnY8pPTRe/4cwHwP/GQlCM0Ke5kGW6O48EY3JAO2/19gfEYU1PAb3/nhkngNVLnE
-YGry+95dB54oOPo7RhyKddidttqC4dkf5vbSQVtMOG4qP1AxFq0k7YZ8qfJXxtrQ
-Wuko8VL3JfG2uqJgQ6/20i1W6yC61cKLUhaXJxEsSuQaE9QbdkDuPfJ3L37uLQPM
-zhx1uedyUwUyrRbOfnICTK5xqXLWmTOstYckK+Wh4/LjFquyyPCsFHNs0ZmtrQWV
-aAkrX3NA6QrBSqwj3/iUr+6+xFMYrVCuj1haUuRbhSVNfSg9hkQXgP+m8kJbTCGX
-yX2wzKe7wl7M0CEln2QEbSmuMKP5oqY0lo9Nj+s/ZDk17EkgQ9g7djYY59osO/MP
-92DRp4ys63ajR3DLB6YlUi8yW5iC3R0kCJfxfbvnJIn3QJ3fmlC5l5P+eCZISoxq
-p4/QlJNscCI/BFffs861sM2bRipPf7wVHo13PJ8IWrQtlrrYKQCcPvArqke1xB/Y
-rPuXPWt/DEzVwH/kxoKQYq3V8yDqOhW477NmLKKub8X6CY4itGg+PHdGXMxfD6BT
-/vtnPtWCQVyB5ZNh+BivXv9+Vyo/ZHhtoUF2eKqRUugH51YuDqI=
-=SuGX
------END PGP SIGNATURE-----
---=-=-=--
+> +	css_task_iter_end(&it);
+> +
+> +	return 0;
+> +}
+> +
+>  static struct cftype cpu_legacy_files[] = {
+>  #ifdef CONFIG_FAIR_GROUP_SCHED
+>  	{
+> @@ -6848,6 +6878,11 @@ static struct cftype cpu_legacy_files[] = {
+>  		.write_u64 = cpu_rt_period_write_uint,
+>  	},
+>  #endif
+> +	{
+> +		.name = "latency-nice",
+> +		.read_u64 = cpu_latency_nice_read_u64,
+> +		.write_u64 = cpu_latency_nice_write_u64,
+> +	},
+>  	{ }	/* Terminate */
+>  };
+>  
+> @@ -7015,6 +7050,11 @@ static struct cftype cpu_files[] = {
+>  		.write = cpu_max_write,
+>  	},
+>  #endif
+> +	{
+> +		.name = "latency-nice",
+> +		.read_u64 = cpu_latency_nice_read_u64,
+> +		.write_u64 = cpu_latency_nice_write_u64,
+> +	},
+>  	{ }	/* terminate */
+>  };
+>  
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index f35930f..b08d00c 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -10479,6 +10479,7 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+>  		goto err;
+>  
+>  	tg->shares = NICE_0_LOAD;
+> +	tg->latency_nice = LATENCY_NICE_DEFAULT;
+                           ^^^^^^^^^^^^^^^^^^^^
+Maybe better NICE_0_LATENCY to be more consistent?
+
+
+>  	init_cfs_bandwidth(tg_cfs_bandwidth(tg));
+>  
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index b52ed1a..365c928 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -143,6 +143,13 @@ static inline void cpu_load_update_active(struct rq *this_rq) { }
+>  #define NICE_0_LOAD		(1L << NICE_0_LOAD_SHIFT)
+>  
+>  /*
+> + * Latency-nice default value
+> + */
+> +#define	LATENCY_NICE_DEFAULT	5
+> +#define	LATENCY_NICE_MIN	1
+> +#define	LATENCY_NICE_MAX	100
+
+Values 1 and 5 looks kind of arbitrary.
+For the range specifically, I already commented in this other message:
+
+   Message-ID: <87r24v2i14.fsf@arm.com>
+   https://lore.kernel.org/lkml/87r24v2i14.fsf@arm.com/
+
+> +
+> +/*
+>   * Single value that decides SCHED_DEADLINE internal math precision.
+>   * 10 -> just above 1us
+>   * 9  -> just above 0.5us
+> @@ -362,6 +369,7 @@ struct cfs_bandwidth {
+>  /* Task group related information */
+>  struct task_group {
+>  	struct cgroup_subsys_state css;
+> +	u64 latency_nice;
+>  
+>  #ifdef CONFIG_FAIR_GROUP_SCHED
+>  	/* schedulable entities of this group on each CPU */
+
+
+Best,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
