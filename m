@@ -2,85 +2,72 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF1CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5930AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDBC2082C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936AF20692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:05:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfIEUFQ (ORCPT
+        id S1732831AbfIEUFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:05:16 -0400
-Received: from smtprelay0137.hostedemail.com ([216.40.44.137]:51403 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725921AbfIEUFP (ORCPT
+        Thu, 5 Sep 2019 16:05:48 -0400
+Received: from mail-wm1-f51.google.com ([209.85.128.51]:51362 "EHLO
+        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIEUFs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:05:15 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id B663E8368F04;
-        Thu,  5 Sep 2019 20:05:13 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: noise97_846cb11498123
-X-Filterd-Recvd-Size: 2280
-Received: from XPS-9350.home (unknown [47.151.152.152])
-        (Authenticated sender: joe@perches.com)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  5 Sep 2019 20:05:09 +0000 (UTC)
-Message-ID: <20daa66d58e01f33a248b8703aa8e37933ef4154.camel@perches.com>
-Subject: Re: [PATCH 0/6] Address issues with SPDX requirements and PEP-263
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Doug Smythies <doug.smythies@gmail.com>,
-        =?ISO-8859-1?Q?Aur=E9lien?= Cedeyn <aurelien.cedeyn@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-doc@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, Jiri Olsa <jolsa@redhat.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Allison Randal <allison@lohutok.net>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Date:   Thu, 05 Sep 2019 13:05:08 -0700
-In-Reply-To: <cover.1567712829.git.mchehab+samsung@kernel.org>
-References: <cover.1567712829.git.mchehab+samsung@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.32.1-2 
+        Thu, 5 Sep 2019 16:05:48 -0400
+Received: by mail-wm1-f51.google.com with SMTP id k1so4172093wmi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:05:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=u7j6bRp6tgNAxHJKMuhoBeblo7uaqvEtq73jUP1ye78=;
+        b=gASahD/1KxtxUpvS/okKWD3KVkxcoxCwn3YWgCMItWQjcdNjhp171FpY+F2Pd/D7uo
+         YqAkQ1LQ/FEeOtW6QBwQDSPKiYHkVhBz1qbc6IQFIYhz2c/6xBitR4SJVyUSt7zG5TBM
+         nzxDPykOdrWpTEvZowNNuzEEdoCw+K1y15j1DOu3P6D4X2gI4/VUzCgUuGCMqqyT+sGm
+         C8exg/DxY/uMI0I3qvL+bslJQuVplwUKcHJ1+qQwMtRHSJCOA9ZGp4fnZbSKwYQA16KI
+         labmAHLKf2TFhFTQb+H0MtyC5POdJ3cuTRFeopN9yj0GcU4X6tCsBRdT6eGJ1YZ6Ak49
+         iOGw==
+X-Gm-Message-State: APjAAAUwQ7uJ1+eWzRn5KRmMi9zFhYLMmdP2xZgIslAD1XlmG1ZQZ8kC
+        jHGnrWl5cOL6mHAxVUWtdhg=
+X-Google-Smtp-Source: APXvYqwl4RwjiRyawN+y0OPGL+qW2tlPnNBWfsrd8ZA6SuH6V0ry+V4h28ZET6fPiFdUc1gXT1PMbw==
+X-Received: by 2002:a05:600c:24cb:: with SMTP id 11mr4269994wmu.94.1567713946456;
+        Thu, 05 Sep 2019 13:05:46 -0700 (PDT)
+Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
+        by smtp.gmail.com with ESMTPSA id m62sm5168268wmm.35.2019.09.05.13.05.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 13:05:45 -0700 (PDT)
+Subject: Re: [PATCHv2] nvme: Assign subsy instance from first ctrl
+To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+        linux-nvme@lists.infradead.org
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>
+References: <20190905163354.25139-1-kbusch@kernel.org>
+From:   Sagi Grimberg <sagi@grimberg.me>
+Message-ID: <b47de61c-c61e-359b-416e-28d8db0813f8@grimberg.me>
+Date:   Thu, 5 Sep 2019 13:05:42 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190905163354.25139-1-kbusch@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-05 at 16:57 -0300, Mauro Carvalho Chehab wrote:
-> The  description at Documentation/process/license-rules.rst is very strict
-> with regards to the position where the SPDX tags should be.
-[]
-> PS.: I sent already a RFC version for those patches along with this
-> thread:
-> 
->     https://lore.kernel.org/lkml/b32c2e46b91e7bcda2a9bd140673f06d71b2487a.camel@perches.com/
+Looks good,
 
-Nice, thanks.
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 
-Now I guess I have to update checkpatch too.
-(unless you want to... ;)
-
-
+Applied to nvme-5.4
