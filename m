@@ -2,156 +2,153 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C30C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46120C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0C9B22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E0F20578
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:12:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZblKNRK"
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="CTxhSJfA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfIEELR (ORCPT
+        id S1730769AbfIEEMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:11:17 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43814 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725209AbfIEELQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:11:16 -0400
-Received: by mail-io1-f65.google.com with SMTP id u185so1553650iod.10;
-        Wed, 04 Sep 2019 21:11:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gSeZn3vH2SFf4GEyKXemF8vokoCVQitABq8/fxDmNgM=;
-        b=JZblKNRKpMIXiw3muzOLwmrFvcpBrLI1d8Itv/p1HrlB5BFAT1tkFd6c09Wr9srGgH
-         7pIjYwIbZ+uqo289graRKrZ6IRf3hQ3rq8TkslViR9j1+Jfx1fnVHS67sKt+yh28V+uR
-         61jk/XsEi9NYP59nDpoTwCY1c/eY13mMIwDDtJgqegp2IoVl/VREUzk8HBS5+SDb+wtn
-         wKHCMOPipno413aF6oVbpm1BzayQxXtJ34llI21/D+X7hElPzSJl0X9+d7VInsc29mBn
-         aBNyeAWEjbuKRW4+6zS93ZDnMV2kU7c6FIWCwhWOkcFwJoZ3CXtcg3R0zZPH6uy4PQyR
-         sHAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gSeZn3vH2SFf4GEyKXemF8vokoCVQitABq8/fxDmNgM=;
-        b=CjVEIGEo/nyXWA0za3tA237w5cNvhZBRdj8cPnVl4caJk5QcVtP6fVJwWHEOO5PdhQ
-         MoGqfFI3bGdIvtqo8h4ZITMR/3GoqMmxOBhC+b40YgrKNVpftjezbHHlNW59D9p95K1V
-         5H4dCcWPTbGF0f3/UfdzvHB6rkDyBftt31iFgCLS4Gs92PE1jk8lD7gGP1lHjUATcShb
-         Qr3sUnbVIMBP/tPJiJtWiwGYqOyuPwR2HxU0Q3Fv8ZZNh1Jwmb9xSLdrumuV4/cpuwsn
-         gWVlI1jztX3xE1a66Y6XvB77YC65e7SAsE8RmwN7dquQrS53U+wMtwjA1akqjSsc7qXl
-         EgRw==
-X-Gm-Message-State: APjAAAWEciabXQUMJfyaQT8ZL/phIkYfZ1l9TfGNlu8zJTtdm1VaMkto
-        V1KSDrreQU2I0WvNXO11gh8=
-X-Google-Smtp-Source: APXvYqyT7zr86lBDWqJp0aKqf+pnuqW1JSsxf54/xAurwQ5sOFO4FWkAFfIIPhHAydbEjtGgFFREZA==
-X-Received: by 2002:a5d:9856:: with SMTP id p22mr296791ios.231.1567656675888;
-        Wed, 04 Sep 2019 21:11:15 -0700 (PDT)
-Received: from JATN (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id k6sm627669ioh.28.2019.09.04.21.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Sep 2019 21:11:14 -0700 (PDT)
-Date:   Wed, 4 Sep 2019 22:11:12 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Mailing List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org, bjorn@helgaas.com,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 1/3] ACPI: Remove acpi_has_method() call from acpi_adxl.c
-Message-ID: <20190905041112.GB117297@JATN>
-References: <20190722023530.67676-1-skunberg.kelsey@gmail.com>
- <20190722023530.67676-2-skunberg.kelsey@gmail.com>
- <CAJZ5v0gRzu0bVL+7L9NhbWu5OxveEP8H8v5qpiW-FeOtoOepiw@mail.gmail.com>
- <20190722182929.GA203187@google.com>
- <CAJZ5v0iF=TxxD_gCJfaZzORTrcu+2StJE1_vhthB70jxqCkHuw@mail.gmail.com>
+        Thu, 5 Sep 2019 00:12:54 -0400
+Received: from mail-eopbgr820107.outbound.protection.outlook.com ([40.107.82.107]:25050
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725209AbfIEEMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 00:12:53 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mYYHk6hviWhl3b+DaoSQAwmnaybKIyBecwvEK1lSojBOGdkX4zAeotUlwKQMOQZGSH1b2dQ88ZRxDRLUTIPK9N/cNYGcVhacjtqbwvDZuKYpdsOL6DbPe+zkB8DEhDWOeNcoXVK5JcXtO6fcQ4ZqycBNNxaninGyxCoS9E0XkAlgzmcPVyL7EH5mzugWng68iAU8lz7FU4Jla4EGK/X88uGxI31Z/M6Jpyalw/2UVbjoFG/TwWjbLn2shbPr8cVDj2vThuH6eVF16o/cJrF/rK0lqStN6IpuFM9D1szH6hH/OJguGvg4myA4x5CSIZsYwIdA2ZgkbK0zvjZh8UtFWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sH7IsC74NEyNMg5+baMspBpjHxuX1QtFxg8l2qAP5Aw=;
+ b=H9MwhFvCP/Vl6rJh9kpmBrHzgaAFLCxLymF0iE3mtn9kozEHw/tBi+cSeQER5+pMk0pvTFya20Glp8Zx5wutOwI1EPIi6LEpvIqvM+g5zXZo4+vkB+wCnrbem3BG4DLjgbY/AtRjfO6yuItLYzoi3MOxm0EbQtz9mTLi/uGNenSIc9Ou3/LVxnuHntncgKfnYbLLOzNKhzzuVKJeElSKlZIb8EKoGecjts8AyEcW9oK39u3I+ek3p0fctZB/YRHaiRUk7bA763mSuuZu/kJWupFHcD088jaT4YCL/tk348o1pGu9XI/0x/R1bB4w/GeeD4p5XBo3rJxZsc6QFJLZiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 117.103.190.106) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=sony.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=sony.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sH7IsC74NEyNMg5+baMspBpjHxuX1QtFxg8l2qAP5Aw=;
+ b=CTxhSJfAzi25R5+wEQUy3zjtBpPixAuC7b5Lo2aEN869bXLWSB7Qko5ZNb8Tqop87w2SRtYi+uampSoEcg/AnjvO3gk9/KDQ3jbeVYOM3SHDDQQG3dCHsjYqCL4dmm+p/rDx+pNvADtcHI3b817XFRaP6PJHA0Bbf6ES/aBSFaY=
+Received: from BN6PR13CA0033.namprd13.prod.outlook.com (2603:10b6:404:13e::19)
+ by MWHPR1301MB1966.namprd13.prod.outlook.com (2603:10b6:301:32::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.5; Thu, 5 Sep
+ 2019 04:12:07 +0000
+Received: from SN1NAM02FT023.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::203) by BN6PR13CA0033.outlook.office365.com
+ (2603:10b6:404:13e::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.5 via Frontend
+ Transport; Thu, 5 Sep 2019 04:12:07 +0000
+Authentication-Results: spf=pass (sender IP is 117.103.190.106)
+ smtp.mailfrom=sony.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none header.from=sony.com;
+Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
+ 117.103.190.106 as permitted sender) receiver=protection.outlook.com;
+ client-ip=117.103.190.106; helo=ap.sony.com;
+Received: from ap.sony.com (117.103.190.106) by
+ SN1NAM02FT023.mail.protection.outlook.com (10.152.72.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2241.14 via Frontend Transport; Thu, 5 Sep 2019 04:12:05 +0000
+Received: from APYOKXHT105.ap.sony.com (117.103.191.223) by
+ APYOKXEG102.ap.sony.com (117.103.190.106) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Thu, 5 Sep 2019 04:11:58 +0000
+Received: from APYOKXMS108.ap.sony.com ([169.254.3.47]) by
+ APYOKXHT105.ap.sony.com ([117.103.191.223]) with mapi id 14.03.0468.000; Thu,
+ 5 Sep 2019 04:11:58 +0000
+From:   <Jacky.Cao@sony.com>
+To:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <stern@rowland.harvard.edu>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <Kento.A.Kobayashi@sony.com>, <Jacky.Cao@sony.com>
+Subject: [PATCH v3] USB: dummy-hcd: fix power budget for SuperSpeed mode
+Thread-Topic: [PATCH v3] USB: dummy-hcd: fix power budget for SuperSpeed mode
+Thread-Index: AdVjnzygYGk1oEEuTFussd4DlSzUEg==
+Date:   Thu, 5 Sep 2019 04:11:57 +0000
+Message-ID: <16EA1F625E922C43B00B9D82250220500871CDE5@APYOKXMS108.ap.sony.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [43.82.17.73]
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iF=TxxD_gCJfaZzORTrcu+2StJE1_vhthB70jxqCkHuw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:117.103.190.106;IPV:NLI;CTRY:JP;EFV:NLI;SFV:NSPM;SFS:(10019020)(396003)(39860400002)(136003)(376002)(346002)(2980300002)(199004)(189003)(246002)(110136005)(316002)(6116002)(2201001)(26005)(3846002)(106002)(305945005)(66066001)(54906003)(2906002)(47776003)(102836004)(478600001)(86362001)(8936002)(7736002)(70586007)(7636002)(70206006)(8676002)(33656002)(107886003)(186003)(7696005)(16586007)(23726003)(2876002)(2171002)(486006)(126002)(50466002)(4326008)(37786003)(5660300002)(356004)(55016002)(426003)(97756001)(55846006)(14444005)(476003)(336012)(46406003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR1301MB1966;H:ap.sony.com;FPR:;SPF:Pass;LANG:en;PTR:apyokxeg102.ap.sony.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 06cc3eea-642e-4cd2-437b-08d731b736d8
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328)(7193020);SRVR:MWHPR1301MB1966;
+X-MS-TrafficTypeDiagnostic: MWHPR1301MB1966:
+X-Microsoft-Antispam-PRVS: <MWHPR1301MB19661E157296CDCCDFAAD0E487BB0@MWHPR1301MB1966.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:935;
+X-Forefront-PRVS: 015114592F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: Zg07XwStwO711yOuj3sbVLx6gruaH7cLPT/MB2xgAFOfsGuY7wtWj+0/GXv/qCVuMicFbyItP+E8GhlS6g9ql4U+8gmB6OqRQV8Nm/I/ZPpgjpQJgH1i97GNeARQTeMHwqe/kzHMEq0FQcjDjtOmtWOXYka2ouxYFegBZGL0gYXsqDs6mNh+TfwKEFfMV6ymukWJwGLYd4uNuTNL8pAnqNg9A/yecBNUal3+RIH5eMJBfGYOoYVGJEqeJinteUXABCTFA3TtP/Ao8YfH/J1TqNXOxKLgFGEypQLpPT5cvRUMRP0JwvxufDzOC7YxvMBFMXP7BV7F8mrtrdGBp+XuMhhR7JuRj5v64uofo4cSu3tHC7onz2C2fGMkTgywjWUz0sOy0h+lkgTMlrv2yswLWtu+0Qcty2SzExtS9Wr16nE=
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2019 04:12:05.9525
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06cc3eea-642e-4cd2-437b-08d731b736d8
+X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[117.103.190.106];Helo=[ap.sony.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1301MB1966
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:08:08PM +0200, Rafael J. Wysocki wrote:
-> Sorry for the delayed reply.
-> 
-> On Mon, Jul 22, 2019 at 8:29 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > [+cc Tony (original author), Borislav (merged original patch)]
-> >
-> > On Mon, Jul 22, 2019 at 10:31:11AM +0200, Rafael J. Wysocki wrote:
-> > > On Mon, Jul 22, 2019 at 4:36 AM Kelsey Skunberg
-> > > <skunberg.kelsey@gmail.com> wrote:
-> > > >
-> > > > acpi_check_dsm() will already return an error if the DSM method does not
-> > > > exist. Checking if the DSM method exists before the acpi_check_dsm() call
-> > > > is not needed. Remove acpi_has_method() call to avoid additional work.
-> > > >
-> > > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > > > ---
-> > > >  drivers/acpi/acpi_adxl.c | 5 -----
-> > > >  1 file changed, 5 deletions(-)
-> > > >
-> > > > diff --git a/drivers/acpi/acpi_adxl.c b/drivers/acpi/acpi_adxl.c
-> > > > index 13c8f7b50c46..89aac15663fd 100644
-> > > > --- a/drivers/acpi/acpi_adxl.c
-> > > > +++ b/drivers/acpi/acpi_adxl.c
-> > > > @@ -148,11 +148,6 @@ static int __init adxl_init(void)
-> > > >                 return -ENODEV;
-> > > >         }
-> > > >
-> > > > -       if (!acpi_has_method(handle, "_DSM")) {
-> > > > -               pr_info("No DSM method\n");
-> > >
-> > > And why is printing the message not useful?
-> > >
-> > > > -               return -ENODEV;
-> > > > -       }
-> > > > -
-> > > >         if (!acpi_check_dsm(handle, &adxl_guid, ADXL_REVISION,
-> > > >                             ADXL_IDX_GET_ADDR_PARAMS |
-> > > >                             ADXL_IDX_FORWARD_TRANSLATE)) {
-> >
-> > The next line of context (not included in the patch):
-> >
-> >                pr_info("DSM method does not support forward translate\n");
-> >
-> > IMHO kernel messages that are just a constant string, with no context
-> > or variable part (device ID, path, error code, etc) are questionable
-> > in general.  Is there any dev_printk()-like thing that takes an
-> > acpi_handle?  Seems like that would be useful for cases like this.
-> >
-> > This message *does* include an "ADXL: " prefix (from the pr_fmt
-> > definition), and from reading the code you can see that the only
-> > possible method is "\_SB.ADXL._DSM".
-> >
-> > There's nothing an end user can do with these messages, so I suspect
-> > their value is for debugging during platform bringup, and it would be
-> > sufficient to drop the first one (as Kelsey's patch does) and change
-> > the second one like this:
-> >
-> > -              pr_info("DSM method does not support forward translate\n");
-> > +              pr_info("%s DSM missing or does not support forward translate\n",
-> > +                      path);
-> 
-> You have a point, but then I would expect the changelog to mention that.
-> 
-> As it stands, the patch does more than the changelog says, which isn't nice.
+The power budget for SuperSpeed mode should be 900 mA
+according to USB specification, so set the power budget
+to 900mA for dummy_start_ss which is only used for
+SuperSpeed mode.
 
-You're right, the changelog should include this information. I'll get an
-updated version made. Thank you for getting back.
+If the max power consumption of SuperSpeed device is
+larger than 500 mA, insufficient available bus power
+error happens in usb_choose_configuration function
+when the device connects to dummy hcd.
 
--Kelsey
+Signed-off-by: Jacky Cao <Jacky.Cao@sony.com>
+---
+Changes in v3:
+  - Rename POWER_BUDGET_3_0 to POWER_BUDGET_3
+  - Update commit message from USB3.0 specification to USB specification
+
+Changes in v2:
+  - Fix whitespace damage
+
+ drivers/usb/gadget/udc/dummy_hcd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+index 8414fac..3d499d9 100644
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -48,6 +48,7 @@
+ #define DRIVER_VERSION	"02 May 2005"
+ 
+ #define POWER_BUDGET	500	/* in mA; use 8 for low-power port testing */
++#define POWER_BUDGET_3	900	/* in mA */
+ 
+ static const char	driver_name[] = "dummy_hcd";
+ static const char	driver_desc[] = "USB Host+Gadget Emulator";
+@@ -2432,7 +2433,7 @@ static int dummy_start_ss(struct dummy_hcd *dum_hcd)
+ 	dum_hcd->rh_state = DUMMY_RH_RUNNING;
+ 	dum_hcd->stream_en_ep = 0;
+ 	INIT_LIST_HEAD(&dum_hcd->urbp_list);
+-	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET;
++	dummy_hcd_to_hcd(dum_hcd)->power_budget = POWER_BUDGET_3;
+ 	dummy_hcd_to_hcd(dum_hcd)->state = HC_STATE_RUNNING;
+ 	dummy_hcd_to_hcd(dum_hcd)->uses_new_polling = 1;
+ #ifdef CONFIG_USB_OTG
+-- 
+2.7.4
