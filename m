@@ -2,118 +2,133 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3952EC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73175C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FE220828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27F820820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f4csicVe"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="KAkWOu+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390360AbfIEPOU (ORCPT
+        id S2390021AbfIEPVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:14:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51958 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732265AbfIEPOT (ORCPT
+        Thu, 5 Sep 2019 11:21:37 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:61181 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388057AbfIEPVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:14:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id k1so3274687wmi.1;
-        Thu, 05 Sep 2019 08:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dfUO9a7E9R+fOWFokuwHNXPizB7LWxoWz7TwHKPJeKA=;
-        b=f4csicVeVdbTjTLkGvuU0mio8k0xnxfoLTmb8gdYb5QJnAEFROnPSH7xc73HYN+ixy
-         e7gsFYRoSkO7Br2jflzTOhyh3rBXVyvrUz6DglZJyLAz55fNeDFqYRKseYc5o5YYmG9X
-         9EH6/ZINv9WZapt2Lac5IXHUER+zSZ8KE5NYwoWAMtg+lG2QKlwMyc5entzeSaE+ljVK
-         SaVxAbTmwbe+Lz2ctOldV92jLUOuBjwE6ipjqOdeWVnYpT2TFYkopT5bgHkmRtBU3hPo
-         PrrkIH3ne82+4DNJs2FLPJ3tAQarRkLp+JhsT7jjovcykTPt5+3w0RpXc3x76k90mUlq
-         CFCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dfUO9a7E9R+fOWFokuwHNXPizB7LWxoWz7TwHKPJeKA=;
-        b=sz2JrCrAlOdU1Hdd7FVZEqKC0I2bUkQZzV1fPLHHPAc3ojuS7VCbu6YFo5whsbQT+r
-         9VuI3LRK7zp6msfgku4bQl/6KCujxmZatB7U6KaxygHqgyVVaD40MkiNQF7xJfwOGnhU
-         YxP89niruZ7j87GTCOIKCIEC2iEHTYWpG6jKcVAEvv50QGc+/IF3xk2jr/QLbyPPMiPa
-         U3T5e0kETZ6627X+E1ddLf1kF9/bqXyaYk//CcJ+I/izXJA0hfs9UChvySTLCHe2wgkk
-         mH6krs65WhtyRZY0fByfTtSqcUHDu3jQtb/M9SvDPqn9sKo4yYPmtuuND+Ygl/cIykeJ
-         mKPw==
-X-Gm-Message-State: APjAAAVENdsbhUoxdc1Y/pI8z0vG6G7XnYff5RL5X1cwAkOIOnWy/elt
-        0js7ZSu0jJQhnauUKo8sk14=
-X-Google-Smtp-Source: APXvYqzYIkx/gnO7fVC7G+fRVIplybcIMoud+HvMrsXB+dAIK4P1jN6ol9+wQvapxKMmcT0X7chTUA==
-X-Received: by 2002:a1c:9950:: with SMTP id b77mr3552791wme.46.1567696457429;
-        Thu, 05 Sep 2019 08:14:17 -0700 (PDT)
-Received: from [192.168.8.147] (163.175.185.81.rev.sfr.net. [81.185.175.163])
-        by smtp.gmail.com with ESMTPSA id y14sm3817913wrd.84.2019.09.05.08.14.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 08:14:16 -0700 (PDT)
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-To:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20190903132231.GC18939@dhcp22.suse.cz>
- <1567525342.5576.60.camel@lca.pw> <20190903185305.GA14028@dhcp22.suse.cz>
- <1567546948.5576.68.camel@lca.pw> <20190904061501.GB3838@dhcp22.suse.cz>
- <20190904064144.GA5487@jagdpanzerIV> <20190904065455.GE3838@dhcp22.suse.cz>
- <20190904071911.GB11968@jagdpanzerIV> <20190904074312.GA25744@jagdpanzerIV>
- <1567599263.5576.72.camel@lca.pw> <20190904144850.GA8296@tigerII.localdomain>
- <1567629737.5576.87.camel@lca.pw>
- <165827b5-6783-f4f8-69d6-b088dd97eb45@gmail.com>
- <1567692555.5576.91.camel@lca.pw>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <5405caf6-805b-d459-c447-15a23d0d71dd@gmail.com>
-Date:   Thu, 5 Sep 2019 17:14:15 +0200
+        Thu, 5 Sep 2019 11:21:36 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id D8C7F3F478;
+        Thu,  5 Sep 2019 17:21:28 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=KAkWOu+x;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id WTG1gvVG6mPF; Thu,  5 Sep 2019 17:21:27 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id B49B73F6DE;
+        Thu,  5 Sep 2019 17:21:24 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 40C64360160;
+        Thu,  5 Sep 2019 17:21:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1567696884; bh=NG8liGCrurC3Kiw5aHunM7ayFbaO22LNknP8UX20R8A=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KAkWOu+xaC7GJBsRMY4xoJkMaq6SYn/mhV+QeVqOHLj/AZGAbCSmFa+29JWCp4jNY
+         hsM9PrQd/CgGI1evlVZ0n3opn8VR7YSQudWfMfFKBNYRnikSuGdIbkJK91RDncpdD5
+         FDyyTmK+JjSyGOcuFr7Y/vhb+2fdEKmfzPIocJ7Q=
+Subject: Re: [RFC PATCH 1/2] x86: Don't let pgprot_modify() change the page
+ encryption bit
+To:     Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, pv-drivers@vmware.com
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
+ <20190905103541.4161-2-thomas_os@shipmail.org>
+ <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <b84d1dca-4542-a491-e585-a96c9d178466@shipmail.org>
+Date:   Thu, 5 Sep 2019 17:21:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1567692555.5576.91.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <608bbec6-448e-f9d5-b29a-1984225eb078@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/5/19 4:09 PM, Qian Cai wrote:
-
-> Instead of repeatedly make generalize statements, could you enlighten me with
-> some concrete examples that have the similar properties which would trigger a
-> livelock,
-> 
-> - guaranteed GFP_ATOMIC allocations when processing softirq batches.
-> - the allocation has a fallback mechanism that is unnecessary to warn a failure.
-> 
-> I thought "skb" is a special-case here as every packet sent or received is
-> handled using this data structure.
+On 9/5/19 4:15 PM, Dave Hansen wrote:
+> Hi Thomas,
 >
+> Thanks for the second batch of patches!  These look much improved on all
+> fronts.
 
-Just  'git grep GFP_ATOMIC -- net' and carefully study all the places.
+Yes, although the TTM functionality isn't in yet. Hopefully we won't 
+have to bother you with those though, since this assumes TTM will be 
+using the dma API.
 
-You will discover many allocations done for incoming packets.
+> On 9/5/19 3:35 AM, Thomas Hellström (VMware) wrote:
+>> -/* mprotect needs to preserve PAT bits when updating vm_page_prot */
+>> +/*
+>> + * mprotect needs to preserve PAT and encryption bits when updating
+>> + * vm_page_prot
+>> + */
+>>   #define pgprot_modify pgprot_modify
+>>   static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+>>   {
+>> -	pgprotval_t preservebits = pgprot_val(oldprot) & _PAGE_CHG_MASK;
+>> -	pgprotval_t addbits = pgprot_val(newprot);
+>> +	pgprotval_t preservebits = pgprot_val(oldprot) &
+>> +		(_PAGE_CHG_MASK | sme_me_mask);
+>> +	pgprotval_t addbits = pgprot_val(newprot) & ~sme_me_mask;
+>>   	return __pgprot(preservebits | addbits);
+>>   }
+> _PAGE_CHG_MASK is claiming similar functionality about preserving bits
+> when changing PTEs:
+>
+>> /*
+>>   * Set of bits not changed in pte_modify.  The pte's
+>>   * protection key is treated like _PAGE_RW, for
+>>   * instance, and is *not* included in this mask since
+>>   * pte_modify() does modify it.
+>>   */
+>> #define _PAGE_CHG_MASK  (PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |         \
+>>                           _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY | \
+>>                           _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
+> This makes me wonder if we should be including sme_me_mask in
+> _PAGE_CHG_MASK (logically).
 
-All of them can fail and trigger a trace.
+I was thinking the same. But what confuses me is that addbits isn't 
+masked with ~_PAGE_CHG_MASK, which is needed for sme_me_mask, since the 
+problem otherwise is typically that the encryption bit is incorrectly 
+set in addbits. I wonder whether it's an optimization or intentional.
 
-Please fix the problem for good, do not pretend addressing the skb allocations
-will solve it.
+/Thomas
 
-The skb allocation can succeed, then the following allocation might fail.
 
-skb are one of the many objects that networking need to allocate dynamically.
 
