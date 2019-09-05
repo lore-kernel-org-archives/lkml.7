@@ -2,103 +2,114 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2050C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7419FC3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB5720828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5400420870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:11:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfIEA4m (ORCPT
+        id S1730074AbfIEBL6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 20:56:42 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6668 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbfIEA4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:56:42 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6F28EEC4EE7D02A7BC8D;
-        Thu,  5 Sep 2019 08:56:40 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
- 08:56:35 +0800
-Subject: Re: [PATCH net] net: sonic: remove dev_kfree_skb before return
- NETDEV_TX_BUSY
-To:     Eric Dumazet <eric.dumazet@gmail.com>, <tsbogend@alpha.franken.de>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20190904094211.117454-1-maowenan@huawei.com>
- <c4a4d1b0-d036-7af7-2b30-117f9fdee9ad@gmail.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <960c7d1f-6e80-84fb-8d7a-9c5692605500@huawei.com>
-Date:   Thu, 5 Sep 2019 08:56:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Wed, 4 Sep 2019 21:11:58 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56241 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727162AbfIEBL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 21:11:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Sep 2019 18:11:57 -0700
+X-IronPort-AV: E=Sophos;i="5.64,468,1559545200"; 
+   d="scan'208";a="173767401"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 04 Sep 2019 18:11:55 -0700
+Subject: Re: [PATCH v2] doc: kvm: Fix return description of KVM_SET_MSRS
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, kvm@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190904060118.43851-1-xiaoyao.li@intel.com>
+ <20190904174122.GK24079@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <5e61463e-b389-4393-81f9-a154ee4688be@intel.com>
+Date:   Thu, 5 Sep 2019 09:11:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <c4a4d1b0-d036-7af7-2b30-117f9fdee9ad@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190904174122.GK24079@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/9/4 18:19, Eric Dumazet wrote:
-> 
-> 
-> On 9/4/19 11:42 AM, Mao Wenan wrote:
->> When dma_map_single is failed to map buffer, skb can't be freed
->> before sonic driver return to stack with NETDEV_TX_BUSY, because
->> this skb may be requeued to qdisc, it might trigger use-after-free.
+On 9/5/2019 1:41 AM, Sean Christopherson wrote:
+> On Wed, Sep 04, 2019 at 02:01:18PM +0800, Xiaoyao Li wrote:
+>> Userspace can use ioctl KVM_SET_MSRS to update a set of MSRs of guest.
+>> This ioctl sets specified MSRs one by one. Once it fails to set an MSR
+>> due to setting reserved bits, the MSR is not supported/emulated by kvm,
+>> or violating other restrictions, it stops further processing and returns
+>> the number of MSRs have been set successfully.
 >>
->> Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 >> ---
->>  drivers/net/ethernet/natsemi/sonic.c | 1 -
->>  1 file changed, 1 deletion(-)
+>> v2:
+>>    elaborate the changelog and description of ioctl KVM_SET_MSRS based on
+>>    Sean's comments.
 >>
->> diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
->> index d0a01e8f000a..248a8f22a33b 100644
->> --- a/drivers/net/ethernet/natsemi/sonic.c
->> +++ b/drivers/net/ethernet/natsemi/sonic.c
->> @@ -233,7 +233,6 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
->>  	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
->>  	if (!laddr) {
->>  		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
->> -		dev_kfree_skb(skb);
->>  		return NETDEV_TX_BUSY;
->>  	}
->>  
+>> ---
+>>   Documentation/virt/kvm/api.txt | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
 >>
+>> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+>> index 2d067767b617..4638e893dec0 100644
+>> --- a/Documentation/virt/kvm/api.txt
+>> +++ b/Documentation/virt/kvm/api.txt
+>> @@ -586,7 +586,7 @@ Capability: basic
+>>   Architectures: x86
+>>   Type: vcpu ioctl
+>>   Parameters: struct kvm_msrs (in)
+>> -Returns: 0 on success, -1 on error
+>> +Returns: number of msrs successfully set (see below), -1 on error
+>>   
+>>   Writes model-specific registers to the vcpu.  See KVM_GET_MSRS for the
+>>   data structures.
+>> @@ -595,6 +595,11 @@ Application code should set the 'nmsrs' member (which indicates the
+>>   size of the entries array), and the 'index' and 'data' members of each
+>>   array entry.
+>>   
+>> +It tries to set the MSRs in array entries[] one by one. Once failing to
 > 
-> That is the wrong way to fix this bug.
+> Probably better to say 'If' as opposed to 'Once', don't want to imply that
+> userspace is incompetent :)
 > 
-> What guarantee do we have that the mapping operation will succeed next time we attempt
-> the transmit (and the dma_map_single() operation) ?
+>> +set an MSR (due to setting reserved bits, the MSR is not supported/emulated
+>> +by kvm, or violating other restrctions),
 > 
-> NETDEV_TX_BUSY is very dangerous, this might trigger an infinite loop.
+> Make it clear the list is not exhaustive, e.g.:
 > 
-> I would rather leave the dev_kfree_skb(skb), and return NETDEV_TX_OK
-yes, right, it will go to infinite loop if dma_map_single failed always.
-v2 will be sent later.
-> 
-> Also the printk(KERN_ERR ...) should be replaced by pr_err_ratelimited(...)
-> 
-> NETDEV_TX_BUSY really should only be used by drivers that call netif_tx_stop_queue()
-> at the wrong moment.
-It will call netif_tx_stop_queue() then return NETDEV_TX_BUSY, and give a chance to
-netif_tx_wake_queue(), then stack can be resent packet to driver?
+> It tries to set the MSRs in array entries[] one by one.  If setting an MSR
+> fails, e.g. due to setting reserved bits, the MSR isn't supported/emulated by
+> KVM, etc..., it stops processing the MSR list and returns the number of MSRs
+> that have been set successfully.
+>
 
-> 
-> .
-> 
+Refine it as you commented and send out v3, thanks.
 
+>> it stops setting following MSRs
+>> +and returns the number of MSRs have been set successfully.
+>> +
+>>   
+>>   4.20 KVM_SET_CPUID
+>>   
+>> -- 
+>> 2.19.1
+>>
