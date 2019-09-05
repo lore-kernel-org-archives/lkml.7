@@ -2,72 +2,120 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5930AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4447BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936AF20692
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF7C20692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567714061;
+	bh=CTlO67h7Upal8HOTBe8Hoyzy7uVAFLy4BJLzOSYOgmc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GlF553tP0Wn70a6I9BM5/Ai1QxtPrDAldzsM65hZabey6Ci6ce9joCA+oF5daQSsR
+	 7Rg/fJNqEnAw110YDuJwFjLvrCSL13LNE07gfdO8WYVh5eUJM7H1r2VLvIkBnPS8Kq
+	 U6qFezQ8HiahogfypmoO7N4f10kzpwBCo746UUbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732831AbfIEUFs (ORCPT
+        id S1733118AbfIEUHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:05:48 -0400
-Received: from mail-wm1-f51.google.com ([209.85.128.51]:51362 "EHLO
-        mail-wm1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfIEUFs (ORCPT
+        Thu, 5 Sep 2019 16:07:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60896 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIEUHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:05:48 -0400
-Received: by mail-wm1-f51.google.com with SMTP id k1so4172093wmi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:05:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=u7j6bRp6tgNAxHJKMuhoBeblo7uaqvEtq73jUP1ye78=;
-        b=gASahD/1KxtxUpvS/okKWD3KVkxcoxCwn3YWgCMItWQjcdNjhp171FpY+F2Pd/D7uo
-         YqAkQ1LQ/FEeOtW6QBwQDSPKiYHkVhBz1qbc6IQFIYhz2c/6xBitR4SJVyUSt7zG5TBM
-         nzxDPykOdrWpTEvZowNNuzEEdoCw+K1y15j1DOu3P6D4X2gI4/VUzCgUuGCMqqyT+sGm
-         C8exg/DxY/uMI0I3qvL+bslJQuVplwUKcHJ1+qQwMtRHSJCOA9ZGp4fnZbSKwYQA16KI
-         labmAHLKf2TFhFTQb+H0MtyC5POdJ3cuTRFeopN9yj0GcU4X6tCsBRdT6eGJ1YZ6Ak49
-         iOGw==
-X-Gm-Message-State: APjAAAUwQ7uJ1+eWzRn5KRmMi9zFhYLMmdP2xZgIslAD1XlmG1ZQZ8kC
-        jHGnrWl5cOL6mHAxVUWtdhg=
-X-Google-Smtp-Source: APXvYqwl4RwjiRyawN+y0OPGL+qW2tlPnNBWfsrd8ZA6SuH6V0ry+V4h28ZET6fPiFdUc1gXT1PMbw==
-X-Received: by 2002:a05:600c:24cb:: with SMTP id 11mr4269994wmu.94.1567713946456;
-        Thu, 05 Sep 2019 13:05:46 -0700 (PDT)
-Received: from ?IPv6:2600:1700:65a0:78e0:514:7862:1503:8e4d? ([2600:1700:65a0:78e0:514:7862:1503:8e4d])
-        by smtp.gmail.com with ESMTPSA id m62sm5168268wmm.35.2019.09.05.13.05.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 13:05:45 -0700 (PDT)
-Subject: Re: [PATCHv2] nvme: Assign subsy instance from first ctrl
-To:     Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        linux-nvme@lists.infradead.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@fb.com>
-References: <20190905163354.25139-1-kbusch@kernel.org>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <b47de61c-c61e-359b-416e-28d8db0813f8@grimberg.me>
-Date:   Thu, 5 Sep 2019 13:05:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 16:07:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=/RMKG1VmtC2gPGmK7VWh8EaeDGToHpuMmS1djuPjg9Y=; b=HzCrgT9ZhXEE69qWsnIA75rFg
+        HxRqmevdQ9RBjSwPeI87YRf+S1bIDVVH5G0EfMlgu2VA1y5WfwjouHPvNEXRKeSUVOhwzqDXqmgCT
+        yENCkE1gW9Np8oGYRMMN8EwCjOZfzjLEyBmOorojrxuVyCunW1dlaaW/iFBU4kaKvWy7sfYoQTqZQ
+        Emo+v0sAFKOH/cOlD+I3bHDXb0y2QC2Ua4dsXJW2sAsQ1RQnWFJ05m6dhtBG2ieV5aWAjg0se3IUQ
+        Rck8s0t0SOcN4UwdOM/FJ2kCLYsf5LiDMJDRp1r+pYH92BSJWhKqBblQB+30wDbY83pBTZqQ41rvi
+        n9yBeNflg==;
+Received: from [177.159.253.249] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5y2c-0003S4-Cm; Thu, 05 Sep 2019 20:07:38 +0000
+Date:   Thu, 5 Sep 2019 17:07:33 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jessica Yu <jeyu@kernel.org>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Thomas Gleixner <tglx@linutronix.de>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: license-rules.txt: cover SPDX headers on Python
+ scripts
+Message-ID: <20190905170733.3a25dee8@coco.lan>
+In-Reply-To: <20190905134008.57cd3e89@lwn.net>
+References: <20190905055614.7958918b@coco.lan>
+        <88e638eb959095ab6657d295f9f8c27169569bf2.1567675272.git.mchehab+samsung@kernel.org>
+        <20190905065701.4744e66a@lwn.net>
+        <20190905162810.2388d532@coco.lan>
+        <20190905134008.57cd3e89@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190905163354.25139-1-kbusch@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+Em Thu, 5 Sep 2019 13:40:08 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+> On Thu, 5 Sep 2019 16:28:10 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > I don't think we can count that python 3 uses utf-8 per default.
+> > 
+> > I strongly suspect that, if one uses a Python3 version < 3.7, it will
+> > still default to ASCII.
+> > 
+> > On a quick look, the new UTF-8 mode was added on PEP-540:
+> > 
+> > 	https://www.python.org/dev/peps/pep-0540/
+> > 
+> > Such change happened at Python 3.7.   
+> 
+> That PEP is to override the locale and use utf8 unconditionally.  It
+> says, with regard to the pre-PEP state:
+> 
+> 	UTF-8 is also the default encoding of Python scripts, XML and JSON
+> 	file formats.
+> 
+> Unicode was the reason for much of the Python 3 pain; it seems unlikely
+> that many installations are defaulting to ASCII anyway...?
 
-Applied to nvme-5.4
+Yeah, but I remember that UTF-8 handling changed a few times during python 3
+releases. I didn't really tracked what happened, as I don't usually program
+in Python. So, I'm actually relying on what I can find about that.
+
+Looking at Python 3.0 release[1], it says:
+
+	"In many cases, but not all, the system default is UTF-8;
+	 you should never count on this default."
+
+[1] https://docs.python.org/3.0/whatsnew/3.0.html
+
+So, at least on early Python 3 releases, the default may not be UTF-8.
+
+I don't know about you, but, from time to time, people complain about
+UTF-8 chars when I'm handling patches (last time was on a patch series
+for Kernel 5.3 by a core dev in Australia, with was unable to apply a
+patch from me with had some UTF-8 chars). 
+
+So, I'm pretty sure that some devs don't set the locale to UTF8 even
+those days.
+
+Thanks,
+Mauro
