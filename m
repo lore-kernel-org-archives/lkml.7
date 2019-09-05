@@ -2,138 +2,199 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573C5C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCE5C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074EA20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013D420CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K5DiiY2F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fiN3J4Pj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389321AbfIEQTE (ORCPT
+        id S2389381AbfIEQTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:19:04 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38523 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388032AbfIEQSP (ORCPT
+        Thu, 5 Sep 2019 12:19:09 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41142 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729928AbfIEQTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:18:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d10so1683928pgo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:18:14 -0700 (PDT)
+        Thu, 5 Sep 2019 12:19:08 -0400
+Received: by mail-io1-f66.google.com with SMTP id r26so6099480ioh.8;
+        Thu, 05 Sep 2019 09:19:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tpqdWISBmI7/K+eXW/BM3B61WGwPfixYNx9jyTHk1dU=;
-        b=K5DiiY2Fgz6MUrPKTtz10HsJkolwwVvGrdqBD69mgIMaQbkMXiTRCgCbb2ZyUxaTSS
-         TsurgVMOb8XwbIXgdyeF+rfzsvnXsAM1sHLEQ4y5Ke840f0eEdtxvvN3Pb5ZdVwNLiXE
-         UV+r4cWr5AN6DgFXtNn2GrDrgfsbA6uZcFqrnHfIbgan0lx/1+ZKIyh6gDp63fdh/v9I
-         KCxMrdpVzkF4eB9dCxcnzu4IORv5zjU09dggJmJTVefvcrHEGmUqyNXgA3hCndJldZef
-         81oH34LbhykA0VcHebAOIDd2RLBykltXAikm9fusMU2Bx4GGt+Kmw89s92q1rKZ+QSBQ
-         hcng==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CajS562MoQATDxwxssf/+Aj6VHqjQGsrZJGQ/UdgkBY=;
+        b=fiN3J4PjcucYIhGpQJhctxczkYO7iVTiNryMHrMykaW+P7UJEch7/u5psQzjFMV5IA
+         JGvfOGxmgscDU8vMfB/q6ODqnEwoqrqpX0bhLiaiHUHbg4GS3uxwinVyEeVNg8SMvmeQ
+         TcT1QGpxIXdruup3UKG1aLnFfGe/wGOlNSVwgDvO2Qwfvjo1eTnrya81lZ5qkFaRUWwM
+         /ENfLsQPxhI0+0qe9zcpksnn4a3xW6CxhKe1gja9IHfmO/KS7wGv3m20QdhAcsuMuqHu
+         1ULIh5MCpkBioN3Vvd7QuJcNjEYgBT2pHpFrVPA3V/A3hzsObQRJjf/MWOKtKHuLeXRN
+         4OoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=tpqdWISBmI7/K+eXW/BM3B61WGwPfixYNx9jyTHk1dU=;
-        b=KJ4M+hPtvVYBU6QneECk7pHvrUungWnkafS7pnJbAxHpVLSPqOgywavXaBKErAkSzf
-         N6soLAJWRPPrS0W8LZR5G58NbYX+b3cCyNO5ygz710bc9CR3FbL+4mlK6Wqs+EV2KwaW
-         XhA8YeQ5eHEh1+Y+tA1cYi8GC+vhYwLkuKSavQS+CCJz/olJgNKPBQmg3uttIuoTvUE5
-         P9OedYRjgw7VstXqlb+L2edsCGwR9HzkEfkGbYlv8GMZoh9Oz9rLQ1vkamxqBRO1n2uy
-         M2X/ywO37qj3Tcn3oE/StstuydDE7xO/fmDXXeRy+P2SEB8d+5x4AeoWoVsio3sIHa4v
-         pLlg==
-X-Gm-Message-State: APjAAAWkUbXvTha11TQsB7xJ4n8oUmaVPVbkXX88XAS46KHPtvdScLBD
-        XcfgH0j7IpT/VNesNSb9kmSrdg==
-X-Google-Smtp-Source: APXvYqzLPzIYaG0mi1vPeoIIvWEzHscZk32TWtoUUzrIK69h3pf7m60GZNfheMkCm5xxBpsI0LrElA==
-X-Received: by 2002:aa7:8e08:: with SMTP id c8mr849847pfr.238.1567700294324;
-        Thu, 05 Sep 2019 09:18:14 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.18.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:18:13 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     stable@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [BACKPORT 4.14.y 11/18] misc: pci_endpoint_test: Fix BUG_ON error during pci_disable_msi()
-Date:   Thu,  5 Sep 2019 10:17:52 -0600
-Message-Id: <20190905161759.28036-12-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
-References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CajS562MoQATDxwxssf/+Aj6VHqjQGsrZJGQ/UdgkBY=;
+        b=WGN6wiqa7cgpciiIs7DGa5nTlgjDcF1qTokAGuY1gl/7/TbtYrIZgR8r7AD0soQRJO
+         I+jpUrTeuSny+hk+a4YpY6GMsiCFi40Sj9g/Lj0B8x9GUesG16GOy/1FmS7lGwNzihbC
+         uzNrwhX4Ko3jA8Txsi042lBzcdsM3R86X6O/GX9sb7oys+VBD9c943rmZEOSj1sjA8Ct
+         CbiF+sHJBSdkAry/jZ44QpgoW7S3brkbMRFTAsW/05UWAO8EigZXhMWxc+XPhFx9pl6j
+         BIlMggbB+dZ6+1GIy7sKTcw5FB58KjQx1JGinU1ljdPx7fJ6Akh8prZPrsKyplnzx1a6
+         sfZg==
+X-Gm-Message-State: APjAAAV81IyVLJ9kijOCoAUM8+wj/AoIgerVRDd1CnAZZtmsHohzA+VD
+        QUEVsvXJxZlCSj/PN2ov1+bXhFuTOz/DRxQcwX0=
+X-Google-Smtp-Source: APXvYqwe3g4HGRjspWd6pTZz7swa81VEXbPlpvpyFa/hHrOm3AXu62I1RETQNPRRkodbQymEmSzD/AAkyYtFkHyqwSQ=
+X-Received: by 2002:a6b:e50c:: with SMTP id y12mr5132267ioc.199.1567700347062;
+ Thu, 05 Sep 2019 09:19:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <1567693630-27544-1-git-send-email-arnaud.pouliquen@st.com>
+ <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
+ <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com> <8e87ccff-1bdb-255c-0be4-db34869f0d13@st.com>
+In-Reply-To: <8e87ccff-1bdb-255c-0be4-db34869f0d13@st.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 5 Sep 2019 10:18:55 -0600
+Message-ID: <CAOCk7NraQwa2O=tptWk9enKdvta+eOCJ6ZZ=v6xOE-tocGdgpA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] rpmsg: core: add API to get message length
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        MSM <linux-arm-msm@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+On Thu, Sep 5, 2019 at 10:02 AM Arnaud Pouliquen
+<arnaud.pouliquen@st.com> wrote:
+>
+> Hi Jeffrey,
+>
+>
+> On 9/5/19 4:42 PM, Jeffrey Hugo wrote:
+> > On Thu, Sep 5, 2019 at 8:35 AM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
+> >>
+> >> Return the rpmsg buffer size for sending message, so rpmsg users
+> >> can split a long message in several sub rpmsg buffers.
+> >>
+> >> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> >> ---
+> >>   drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+> >>   drivers/rpmsg/rpmsg_internal.h   |  2 ++
+> >>   drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+> >>   include/linux/rpmsg.h            | 10 ++++++++++
+> >>   4 files changed, 43 insertions(+)
+> >>
+> >> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> >> index e330ec4dfc33..a6ef54c4779a 100644
+> >> --- a/drivers/rpmsg/rpmsg_core.c
+> >> +++ b/drivers/rpmsg/rpmsg_core.c
+> >> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+> >>   }
+> >>   EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+> >>
+> >> +/**
+> >> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
+> >> + * @ept: the rpmsg endpoint
+> >> + *
+> >> + * This function returns maximum buffer size available for a single message.
+> >> + *
+> >> + * Return: the maximum transmission size on success and an appropriate error
+> >> + * value on failure.
+> >> + */
+> >
+> > What is the intent of this?
+> >
+> > The term "mtu" is "maximum transfer unit" - ie the largest payload of
+> > data that could possibly be sent, however at any one point in time,
+> > that might not be able to be accommodated.
+> I was not aware that the MTU has to be static in time. And I'm not
+> enough expert to be able challenge this.
+> The use of the MTU initially came from a Bjorn request and IMHO makes
+> sense in RPMSG protocol as other protocols. The aim here is not to
+> guaranty the available size but to provide to rpmsg client a packet size
+> information that is not available today at rpmsg client level.
+> For instance for the virtio rpmsg bus we provide the size of a vring
+> buffer, not the total size available in the vring.
+>
+> >
+> > I don't think this is implemented correctly.  In GLINK and SMD, you've
+> > not implemented MTU, you've implemented "how much can I send at this
+> > point in time".  To me, this is not mtu.
+> If MTU has to be static i agree with you.
+> >
+> > In the case of SMD, you could get the fifo size and return that as the
+> > mtu, but since you seem to be wanting to use this from the TTY layer
+> > to determine how much can be sent at a particular point in time, I
+> > don't think you actually want mtu.
+> Please forget the TTY for the moment, The mtu is used to help the tty
+> framework to split the buffer to write. The size is then adjusted on write.
+> For SMD i can provide the fifo_size,or a division of this size to
+> "limit" congestion.
+> would this make sense for you?
 
-commit b7636e816adcb52bc96b6fb7bc9d141cbfd17ddb upstream
+Historically, TTY over SMD (I'm basing this on my experience with the
+downstream code) has operated in a streaming fasion, where it attempts
+to put as much data as will fit in the fifo at that point in time.  So
+you would have a "write_size_avail" operation that returns the amount
+of free space in the fifo, and then the TTY client would attempt to
+write that amount of data into the fifo.
 
-pci_disable_msi() throws a Kernel BUG if the driver has successfully
-requested an IRQ and not released it. Fix it here by freeing IRQs before
-invoking pci_disable_msi().
+In sort, the fifo size is the maximum that could be put into the
+transport, but at any one point in time, there may be data sitting in
+the fifo that the remote end has not yet procesed, which would limit
+the amount of data you could put in the fifo to fifo_size - size of
+data currently sitting in the fifo.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/misc/pci_endpoint_test.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+SMD channels have dedicated fifos, and are assumed to be used for a
+single client.  If the channel is muxed between multiple clients, and
+you want to manage "congestion", that would need to be managed at a
+layer above SMD.
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index 504fa680825d..230f1e8538dc 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -92,6 +92,7 @@ struct pci_endpoint_test {
- 	void __iomem	*bar[6];
- 	struct completion irq_raised;
- 	int		last_irq;
-+	int		num_irqs;
- 	/* mutex to protect the ioctls */
- 	struct mutex	mutex;
- 	struct miscdevice miscdev;
-@@ -514,6 +515,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 		irq = pci_alloc_irq_vectors(pdev, 1, 32, PCI_IRQ_MSI);
- 		if (irq < 0)
- 			dev_err(dev, "failed to get MSI interrupts\n");
-+		test->num_irqs = irq;
- 	}
- 
- 	err = devm_request_irq(dev, pdev->irq, pci_endpoint_test_irqhandler,
-@@ -581,6 +583,9 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- 			pci_iounmap(pdev, test->bar[bar]);
- 	}
- 
-+	for (i = 0; i < irq; i++)
-+		devm_free_irq(dev, pdev->irq + i, test);
-+
- err_disable_msi:
- 	pci_disable_msi(pdev);
- 	pci_release_regions(pdev);
-@@ -594,6 +599,7 @@ static int pci_endpoint_test_probe(struct pci_dev *pdev,
- static void pci_endpoint_test_remove(struct pci_dev *pdev)
- {
- 	int id;
-+	int i;
- 	enum pci_barno bar;
- 	struct pci_endpoint_test *test = pci_get_drvdata(pdev);
- 	struct miscdevice *misc_device = &test->miscdev;
-@@ -609,6 +615,8 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
- 		if (test->bar[bar])
- 			pci_iounmap(pdev, test->bar[bar]);
- 	}
-+	for (i = 0; i < test->num_irqs; i++)
-+		devm_free_irq(&pdev->dev, pdev->irq + i, test);
- 	pci_disable_msi(pdev);
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
--- 
-2.17.1
+> >
+> > For GLINK, I don't actually think you can get a mtu based on the
+> > design, but I'm trying to remember from 5-6 years ago when we designed
+> > it.  It would be possible that a larger intent would be made available
+> > later.
+> Is it possible to have the largest intent? or it's not deterministic.
 
+Not really.  I think GLINK defines a maximum size that it can handle
+as an intent (something like uint32_max), however there is no
+guarantee that any particular client will support that.  If you
+attempt to have the MTU as the max that GLINK supports, and a client
+never queues an intent that large, the data will never be able to be
+transmitted.  The MTU is really based on the the whims of the remote
+side, and I don't recall if there is a way in the GLINK protocol to
+query that.  If I recall correctly, there is a way to request the
+remote side queue an intent of a specific size, which the remote side
+can either do (success) or reject the request (failure).
+
+In my mind, there should be a valid scenario in which a client can
+transmit data of a size equal to the MTU (although the client may need
+to wait for that to happen), however I don't have a simple answer on
+how to determine that value in a generic way for GLINK.
+
+> >
+> > I think you need to first determine if you are actually looking for
+> > mtu, or "how much data can I send right now", because right now, it
+> > isn't clear.
+> >
+> In my view it is the MTU. "how much data can I send right now" is an
+> information that is very volatile as buffers can be shared between
+> several clients, therefore unusable.
+
+Thats valid.  If you want MTU, then I think you need to fix the
+GLINK/SMD implementations since those are not providing the correct
+information.  Unfortunately, GLINK is complicated.  I think Bjorn
+should chime in on what he thinks would be valid behavior for GLINK.
