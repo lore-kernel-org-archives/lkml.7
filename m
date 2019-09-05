@@ -2,91 +2,144 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0AAC3A5A9
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F985C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0C9206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:22:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="kiLVhU38"
+	by mail.kernel.org (Postfix) with ESMTP id 686E9206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 03:27:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730817AbfIEDWS (ORCPT
+        id S1730491AbfIED1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 23:22:18 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:18740 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbfIEDWS (ORCPT
+        Wed, 4 Sep 2019 23:27:37 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:54351 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729907AbfIED1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 23:22:18 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x853LWmj015290;
-        Thu, 5 Sep 2019 12:21:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x853LWmj015290
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1567653693;
-        bh=9WB476Jgz2iwQGx8WhZTdMWCoqoGKePNIED8HdmTYP8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kiLVhU38zUPA7LQClZMW0sQWODRJX2F4UsE3x4zKxgNMRBycx0jt9yloe0LKQDCwZ
-         C52osBMh2fmB07x5WN8kwdOEWM/gHY3Pg85mAbqBUa6aR13h3gcE4WS7T+ulBG2Uwh
-         w/bZf/ulT7dlgTF5NneQ56FhEWLWYhwuCGjWp8RlIv2kieTJjiSwjnxs/RSb+xlb4G
-         x9NwOTy0e09Nc4H/e0TlyrNBDG2qw93BNH5qmG3nxFl6YFqzv/Lk2lDGeympBrJuFB
-         6HNkutN+BF8n+eQdOwiPni/t/ngJsYhJf08bdIoyjpqzIFtyh0MUpL51lAIiUHEY9x
-         p1/sGsVffIBlA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     arm@kernel.org, Olof Johansson <olof@lixom.net>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     linux-kernel@vger.kernel.org, soc@kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] bus: uniphier-system-bus: use devm_platform_ioremap_resource()
-Date:   Thu,  5 Sep 2019 12:21:22 +0900
-Message-Id: <20190905032122.26076-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Sep 2019 23:27:37 -0400
+X-UUID: f6ab314cbd2349c7972528ade85c3875-20190905
+X-UUID: f6ab314cbd2349c7972528ade85c3875-20190905
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 852391426; Thu, 05 Sep 2019 11:27:32 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 5 Sep 2019 11:27:30 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 5 Sep 2019 11:27:28 +0800
+Message-ID: <1567654050.23074.38.camel@mtksdccf07>
+Subject: Re: [PATCH v5 07/13] dt-bindings: pwm: add a property "num-pwms"
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 5 Sep 2019 11:27:30 +0800
+In-Reply-To: <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+References: <1566457123-20791-1-git-send-email-sam.shih@mediatek.com>
+         <1566457123-20791-8-git-send-email-sam.shih@mediatek.com>
+         <20190827183924.GA24178@bogus>
+         <20190902160445.fitoa65t4ndzjq6v@pengutronix.de>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: F4EEF144BCC51E8C6B7272CD2260074CD95FDFA362855DF08FFFF6DA4DBF7AF12000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the chain of platform_get_resource() and devm_ioremap_resource()
-with devm_platform_ioremap_resource().
+On Mon, 2019-09-02 at 18:04 +0200, Uwe Kleine-König wrote:
+> On Tue, Aug 27, 2019 at 01:39:24PM -0500, Rob Herring wrote:
+> > On Thu, Aug 22, 2019 at 02:58:37PM +0800, Sam Shih wrote:
+> > > From: Ryder Lee <ryder.lee@mediatek.com>
+> > 
+> > The subject should indicate this is for Mediatek.
+> > 
+> > > 
+> > > This adds a property "num-pwms" in example so that we could
+> > > specify the number of PWM channels via device tree.
+> > > 
+> > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > ---
+> > > Changes since v5:
+> > > - Add an Acked-by tag
+> > > - This file is original v4 patch 5/10
+> > > (https://patchwork.kernel.org/patch/11102577/)
+> > > 
+> > > Change-Id: I429048afeffa96f3f14533910efe242f88776043
+> > > ---
+> > >  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
+> > >  1 file changed, 4 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > index 991728cb46cb..ea95b490a913 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+> > > @@ -14,12 +14,12 @@ Required properties:
+> > >                  has no clocks
+> > >     - "top": the top clock generator
+> > >     - "main": clock used by the PWM core
+> > > -   - "pwm1-8": the eight per PWM clocks for mt2712
+> > > -   - "pwm1-6": the six per PWM clocks for mt7622
+> > > -   - "pwm1-5": the five per PWM clocks for mt7623
+> > > +   - "pwm1-N": the PWM clocks for each channel
+> > > +   where N starting from 1 to the maximum number of PWM channels
+> > 
+> > Once converted to schema, you are going to be back to listing them out.
+> > 
+> > >   - pinctrl-names: Must contain a "default" entry.
+> > >   - pinctrl-0: One property must exist for each entry in pinctrl-names.
+> > >     See pinctrl/pinctrl-bindings.txt for details of the property values.
+> > > + - num-pwms: the number of PWM channels.
+> > 
+> > You can't add new required properties without breaking compatibility. 
+> > 
+> > You already have to imply the number of channels from the compatible (or 
+> > number of clocks) and you have to keep doing so to maintain 
+> > compatibility, so why not just keep doing that for new chips?
+> 
+> This was a suggestion by me. The driver still handles compatibility
+> (i.e. falls back to the number of PWMs that was implied by the
+> compatible before). Given that there are various drivers that all solve
+> the same problem (i.e. different variants with different number of PWMs)
+> I thought it would be a good idea to introduce a property in the device
+> tree that specifies this number.
+> Only for newly introduced compatibles the num-pwms property is really
+> required. Differentiating the ones that need it and the ones that don't
+> seems over-engineered to me.
 
-This allows to remove the local variable for (struct resource *), and
-have one function call less.
+I'm fine with both.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+num-pwms and pwm1-N is required properties for new chip, but it still
+have backward compatibility for old dt without num-pwms properties.
 
- drivers/bus/uniphier-system-bus.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/bus/uniphier-system-bus.c b/drivers/bus/uniphier-system-bus.c
-index e845c1a93f21..f70dedace20b 100644
---- a/drivers/bus/uniphier-system-bus.c
-+++ b/drivers/bus/uniphier-system-bus.c
-@@ -176,7 +176,6 @@ static int uniphier_system_bus_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct uniphier_system_bus_priv *priv;
--	struct resource *regs;
- 	const __be32 *ranges;
- 	u32 cells, addr, size;
- 	u64 paddr;
-@@ -186,8 +185,7 @@ static int uniphier_system_bus_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->membase = devm_ioremap_resource(dev, regs);
-+	priv->membase = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->membase))
- 		return PTR_ERR(priv->membase);
- 
--- 
-2.17.1
+> (BTW, using the number of clks doesn't really work because there are
+> also some variants without clocks. It is still under discussion if in
+> this case dummy-clocks should be provided IIRC.)
+
+Yes, the dummy-clocks of "top", "main" is needed in old MIPS dt.
+We also need fixed-clock for period calculation.
+
+
+
+Best Regards,
+Sam
 
