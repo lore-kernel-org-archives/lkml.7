@@ -2,203 +2,162 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A51DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62621C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B4E32082C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567713506;
-	bh=L2ilzE9mvYsv/6VrlXpNDiE8ACMdK7qUnTglrB7XykE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXBjItTtTqchhkdhOtL1pyCaWN3qDiNn1M3nAHWLjnYIKQ20K2DgQd0+FO03Yb7YX
-	 xCZgHXfhU5+vc9CaFBLNOQM1OkQS4U6ZNkVGk39pbPGdeUJXw1tjCmvZgaA+oBkUuX
-	 y9G2rdRAPApfdN2rY1Ine4LYddUApkhilgdprYbs=
+	by mail.kernel.org (Postfix) with ESMTP id A472220692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:00:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="RH81KOEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729928AbfIET6Z (ORCPT
+        id S1729134AbfIEUAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:58:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58466 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389223AbfIET56 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:57:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lmKR/QfPflgztvdRJ0TtD1IDJABz8ilaEopVRFO1xZk=; b=BKqaFdapbjhlq/k/T7gDhH0z9l
-        OUEh17fjaZsvdHiHqYWIwk0of2f24eoQpwVvWiBwjLKOk5LNzP37/dnhgx701sDuqLvmKYVgs87Qx
-        mr4YG+mqZoFkOF/F77Otea1denCJwSSAfIqyIkno+0GQEmvrTgPtVa8gO6NYKpMFTxJw3i2LVGzEf
-        GX14OjhKmh1EJleZQmAefzxiufUpSz8QqQtnn39fulF1KmTFr+Ir2YiA+8Py0lkMwNP/jGT9icWAT
-        Bes9gP4w2nOYu6rTiv3+rsK3n/rx89LXTsE61lOC92ieXt+AupbWVmRRxoab0RvUwq7/eWqfQtbhs
-        xbuoIX9Q==;
-Received: from [177.159.253.249] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5xtF-0000IG-Es; Thu, 05 Sep 2019 19:57:57 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.1)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1i5xtC-0005mO-PD; Thu, 05 Sep 2019 16:57:54 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Media Mailing List <linux-media@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sven Eckelmann <sven@narfation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        =?UTF-8?q?Aur=C3=A9lien=20Cedeyn?= <aurelien.cedeyn@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: [PATCH 6/6] scripts/spdxcheck.py: check if the line number follows the strict rule
-Date:   Thu,  5 Sep 2019 16:57:53 -0300
-Message-Id: <1b7b5c906646f8165fd818ec9e400609d7a7290b.1567712829.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1567712829.git.mchehab+samsung@kernel.org>
-References: <cover.1567712829.git.mchehab+samsung@kernel.org>
+        Thu, 5 Sep 2019 16:00:22 -0400
+Received: from mail-eopbgr1320129.outbound.protection.outlook.com ([40.107.132.129]:34496
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725945AbfIEUAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 16:00:22 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cK+E1iNYT591YhPh0r558dUZ6rfV52Ec6N0rlhNoBFnBCR37bgWsAPN+MP5mAMi70+i/oCZHNsYkE2yrWBXBwi5RawRZib6q0GblYbTi5Dbxqa3qszTlrwPHdQ0/WVMLmPidsAG2fdKq2mH98WVpRFoeomDqX7k2gFxGUAXOPqDHaCEwA6Dt5byYf2iAwPA77v6jA0QQ0kJ5hoezESuHHqH3/Zt7WHsEH32Estr4J2jLWhqucNyDkF3WSwK0Q6Ru9yve1tkFWXYuQ/2XBkbfWa0nt0EMvLv37OXxYaQ4YoyoIv8Nc4O1FP/jvqKSznT5Lx+zoyVGPsWCJ4OIaIZuyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LvVfNFhvkBHKqlUBnzZQC3txstf2nOGP79zUTiWLc70=;
+ b=dOm/IOXOx0e6ewqAiYjrSJg5TJxKQN9zAosRH3XLRgyUgMO2nM1ZiD/U/ocNybq0Ggnx86peXhwUc4jElxK0Df41LxFQpqp+86RiTcYbwpHuTWamOYzaCIu3P+VBHRUCPvKHrOj9xNKqVrNMN25Nfq2NtKgTaZ2Sb/1IyZajRr5z+fdMsoGDF9DuJFPxmAOASh8KXlCNfkNhPvj9R928eEbpdbLQqBznh4XTfISwCjiHX9ZKnp7QxwiGoD6BuSi/8ztUg1LQYPv75w8zbUqoyaVmSfNZvseBW4x6mcUeZj2qcK9ZMQIyT8P648mm8YsrRGQO0XwX7BxXFzClXXf/tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LvVfNFhvkBHKqlUBnzZQC3txstf2nOGP79zUTiWLc70=;
+ b=RH81KOEdlCDSrt+hGgG38vQCcjmp/LyjChLjc+zjYma9fJtbY5L/Gno/QdD9FogTH9EllYbrrWoY1gQ3B5fmSmRDJ0W+IwwmMJnOKhips7ebAuOXfvFZWEr1f6GZBkLz0HYbDScf7MTqq20p1HjH/jX8F+pVTcVLGTm3UqbUXfw=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0185.APCP153.PROD.OUTLOOK.COM (10.170.187.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.6; Thu, 5 Sep 2019 19:59:33 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::3415:3493:a660:90e3%4]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
+ 19:59:33 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sasha Levin <sashal@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 01/12] x86/hyper-v: Suspend/resume the hypercall page
+ for hibernation
+Thread-Topic: [PATCH v4 01/12] x86/hyper-v: Suspend/resume the hypercall page
+ for hibernation
+Thread-Index: AQHVZADV1Jf6Sio3tUuSYWx4JeBnGKcdZK0Q
+Date:   Thu, 5 Sep 2019 19:59:33 +0000
+Message-ID: <PU1P153MB016943AE103E3F17FDB51536BFBB0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1567470139-119355-1-git-send-email-decui@microsoft.com>
+ <1567470139-119355-2-git-send-email-decui@microsoft.com>
+ <20190905154429.GC1616@sasha-vm>
+In-Reply-To: <20190905154429.GC1616@sasha-vm>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-05T19:59:31.1640430Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=78e75f95-8f8d-42d6-baef-aed35e0fe2bf;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:a:e50e:d139:3a72:bc8a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7050884b-9a9f-403b-7c1f-08d7323b9278
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0185;
+x-ms-traffictypediagnostic: PU1P153MB0185:|PU1P153MB0185:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB0185AF3EB184DF3A2B8B89C1BFBB0@PU1P153MB0185.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(39860400002)(136003)(346002)(376002)(51914003)(189003)(199004)(66476007)(46003)(74316002)(53936002)(54906003)(186003)(229853002)(64756008)(486006)(66446008)(10090500001)(446003)(8676002)(66946007)(66556008)(76116006)(256004)(316002)(14444005)(22452003)(478600001)(81156014)(81166006)(6246003)(10290500003)(6116002)(305945005)(8936002)(6436002)(33656002)(99286004)(86362001)(11346002)(6916009)(71190400001)(7696005)(71200400001)(9686003)(7736002)(2906002)(476003)(52536014)(102836004)(55016002)(25786009)(8990500004)(4326008)(14454004)(76176011)(5660300002)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0185;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: HozYsa+qzJ+w2uK1UTNZM7/RvKe1SLj3kft143EG360B0WtKvjmhz9cY9HEa2GwTBM8akWCw0GHqHuygsEcdrCuqRTfaJIgl+tbbugmOQk6nv+P9JIVrmTrHTdxtmxv4yjnNKdUdO4FdZUr6HnGFGSUSkOzk8rN6kkjl9ztsk/tKPKSQZqTmAyFnNg+xIqLt6c667TLj+2R8Sru6AjWNL3x44ZrwPZ//X/tFqL4UZacMSyr2TJJxMYknEGtLsALrlvgbKvKbn6XW9f03/4jCOy9etysTsfx93Sj/kCdsgT49qBs0HmJg37JdmHGnApmSi3VJ52iUA5WEvrRqZuzj4A1KqeGC056ZBGYNleUpc3izQ/JcabSi7+OygwXliIOCDISp9gzlO+VcAlmibUndfNxd+YiDkr4uiB4KGAD57yI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7050884b-9a9f-403b-7c1f-08d7323b9278
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 19:59:33.3595
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ygc+FO6t0vV7iga+w/uRVIP99pxpRrVPJViE5a7FWxAPBF3RR1gEymZUDkpzbgvOtrjZBXVFQaTefjkV/f8Quw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a very strict rule saying on what line a SPDX header
-should be. Add an optional pedantic check for it.
+> From: Sasha Levin <sashal@kernel.org>
+> Sent: Thursday, September 5, 2019 8:44 AM
+> On Tue, Sep 03, 2019 at 12:23:16AM +0000, Dexuan Cui wrote:
+> >This is needed for hibernation, e.g. when we resume the old kernel, we n=
+eed
+> >to disable the "current" kernel's hypercall page and then resume the old
+> >kernel's.
+>=20
+> Hi Dexuan,
+>=20
+> When sending patches upstream, please make sure you send them to all
+> maintainers and mailing lists that it needs to go to according to
+> MAINTAINERS/get_maintainers.py rather than cherry-picking names off the
+> list.
+>=20
+> This is specially important in subsystems like x86 where it's a group
+> maintainers model, and it's very possible that Thomas is sipping
+> margaritas on a beach while one of the other x86 maintainers is covering
+> the tree.
+>=20
+> This is quite easy with git-send-email and get_maintainers.py, something
+> like this:
+>=20
+> 	git send-email --cc-cmd=3D"scripts/get_maintainer.pl --separator=3D,
+> --no-rolestats" your-work.patch
+>=20
+> Will do all of that automatically for you.
+> Sasha
 
-When the check is enabled, it will verify if the file has the
-SPDX header "at the first possible line in a file which can contain
-a comment", as stated at:
+Thanks for the reminder, Sasha!
+I didn't know the very useful parameter of git-send-email. :-)
+I'm going to post v5 with the parameter.
 
-	Documentation/process/license-rules.rst
+BTW, I'll split v4 into 2 patchsets.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- scripts/spdxcheck.py | 34 +++++++++++++++++++++++++---------
- 1 file changed, 25 insertions(+), 9 deletions(-)
+Patchset #1 consists of the first 3 patches of v4, and should go through th=
+e
+tip.git tree (I need to rebase it to the latest timers/core branch due to a=
+ conflict).
 
-diff --git a/scripts/spdxcheck.py b/scripts/spdxcheck.py
-index c969b050366f..f3260391f091 100755
---- a/scripts/spdxcheck.py
-+++ b/scripts/spdxcheck.py
-@@ -164,9 +164,15 @@ class id_parser(object):
-         self.lastid = None
-         self.parser.parse(expr, lexer = self.lexer)
- 
--    def parse_lines(self, fd, maxlines, fname):
-+    def parse_lines(self, fd, maxlines, fname, strict):
-         self.checked += 1
-         self.curline = 0
-+        self.max_line = 1
-+        self.is_python = False
-+
-+        if fname.find("COPYING") >= 0:
-+            self.max_line = maxlines
-+
-         try:
-             for line in fd:
-                 line = line.decode(locale.getpreferredencoding(False), errors='ignore')
-@@ -174,6 +180,13 @@ class id_parser(object):
-                 if self.curline > maxlines:
-                     break
-                 self.lines_checked += 1
-+                if self.curline == 1:
-+		    if re.match("\#\!", line):
-+                        self.max_line = 2
-+			if re.match("\#\!.*python", line):
-+			    is_python = True
-+                if self.curline == 2 and self.is_python and re.match("^[ \t\f]*#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)", line):
-+                        self.max_line = 3
-                 if line.find("SPDX-License-Identifier:") < 0:
-                     continue
-                 expr = line.split(':')[1].strip()
-@@ -189,6 +202,8 @@ class id_parser(object):
-                 # Should we check for more SPDX ids in the same file and
-                 # complain if there are any?
-                 #
-+                if strict and self.curline > self.max_line:
-+                    sys.stderr.write('Warning: SPDX header for file %s is at line %d\n' % (fname,self.curline))
-                 return self.curline - 1
- 
-             return -1
-@@ -202,7 +217,7 @@ class id_parser(object):
-                 sys.stdout.write('%s: %d:0 %s\n' %(fname, self.curline, col, pe.txt))
-             self.spdx_errors += 1
- 
--def scan_git_tree(ln_count, tree):
-+def scan_git_tree(ln_count, tree, strict):
-     for el in tree.traverse():
-         # Exclude stuff which would make pointless noise
-         # FIXME: Put this somewhere more sensible
-@@ -213,15 +228,15 @@ def scan_git_tree(ln_count, tree):
-         if not os.path.isfile(el.path):
-             continue
-         with open(el.path, 'rb') as fd:
--            ln = parser.parse_lines(fd, args.maxlines, el.path)
-+            ln = parser.parse_lines(fd, args.maxlines, el.path, strict)
-             if ln >= 0:
-                 ln_count[ln] += 1;
-     return ln_count
- 
--def scan_git_subtree(ln_count, tree, path):
-+def scan_git_subtree(ln_count, tree, path, strict):
-     for p in path.strip('/').split('/'):
-         tree = tree[p]
--    scan_git_tree(ln_count, tree)
-+    scan_git_tree(ln_count, tree, strict)
- 
- if __name__ == '__main__':
- 
-@@ -231,6 +246,7 @@ if __name__ == '__main__':
-                     help='Maximum number of lines to scan in a file. Default 15')
-     ap.add_argument('-v', '--verbose', action='store_true', help='Verbose statistics output')
-     ap.add_argument('-H', '--histogram', action='store_true', help='Verbose histogram about SPDX header position')
-+    ap.add_argument('-s', '--strict', action='store_true', help='Enable strict mode, making it complain about SPDX line position')
-     args = ap.parse_args()
- 
-     # Sanity check path arguments
-@@ -266,7 +282,7 @@ if __name__ == '__main__':
-     try:
-         if len(args.path) and args.path[0] == '-':
-             stdin = os.fdopen(sys.stdin.fileno(), 'rb')
--            ln = parser.parse_lines(stdin, args.maxlines, '-')
-+            ln = parser.parse_lines(stdin, args.maxlines, '-', args.strict)
-             if ln >= 0:
-                 ln_count[ln] += 1;
- 
-@@ -274,18 +290,18 @@ if __name__ == '__main__':
-             if args.path:
-                 for p in args.path:
-                     if os.path.isfile(p):
--                        ln = parser.parse_lines(open(p, 'rb'), args.maxlines, p)
-+                        ln = parser.parse_lines(open(p, 'rb'), args.maxlines, p, args.strict)
-                         if ln >= 0:
-                             ln_count[ln] += 1;
- 
-                     elif os.path.isdir(p):
--                        scan_git_subtree(ln_count, repo.head.reference.commit.tree, p)
-+                        scan_git_subtree(ln_count, repo.head.reference.commit.tree, p, args.strict)
-                     else:
-                         sys.stderr.write('path %s does not exist\n' %p)
-                         sys.exit(1)
-             else:
-                 # Full git tree scan
--                scan_git_tree(ln_count, repo.head.commit.tree)
-+                scan_git_tree(ln_count, repo.head.commit.tree, args.strict)
- 
-             if args.verbose:
-                 sys.stderr.write('\n')
--- 
-2.21.0
+Patchset #2 consists of the remaining 9 patches and can go through the hype=
+rv
+tree.
 
+Thanks,
+-- Dexuan
