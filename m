@@ -2,80 +2,112 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB282C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491DBC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F87207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C03720650
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbfIEQYn (ORCPT
+        id S1731438AbfIEQ0J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:24:43 -0400
-Received: from sauhun.de ([88.99.104.3]:58922 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728815AbfIEQYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:24:43 -0400
-Received: from localhost (p54B335F6.dip0.t-ipconnect.de [84.179.53.246])
-        by pokefinder.org (Postfix) with ESMTPSA id 835902C00C0;
-        Thu,  5 Sep 2019 18:24:40 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 18:24:40 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     stable@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-Subject: Re: [BACKPORT 4.14.y 00/18] Backport candidate from TI 4.14 product
- kernel
-Message-ID: <20190905162440.GB3695@kunai>
-References: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+        Thu, 5 Sep 2019 12:26:09 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60169 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbfIEQ0J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:26:09 -0400
+Received: from 79.184.255.97.ipv4.supernova.orange.pl (79.184.255.97) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 8a7029f060d47632; Thu, 5 Sep 2019 18:26:06 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Alex Hung <alex.hung@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: Re: [Nouveau] [PATCH 1/7] Revert "ACPI / OSI: Add OEM _OSI string to enable dGPU direct output"
+Date:   Thu, 05 Sep 2019 18:26:06 +0200
+Message-ID: <5228680.jBuKzensJx@kreacher>
+In-Reply-To: <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com>
+References: <20190814213118.28473-1-kherbst@redhat.com> <2215840.qs0dBhReda@kreacher> <CACO55ttC-o9bKU7nHNcfjm2YnffiupQ7UHUt7BYL3fu+yEyTbw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mojUlQ0s9EVzWg2t"
-Content-Disposition: inline
-In-Reply-To: <20190905161759.28036-1-mathieu.poirier@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thursday, September 5, 2019 5:51:23 PM CEST Karol Herbst wrote:
+> is there any update on the testing with my patches? On the hardware I
+> had access to those patches helped, but I can't know if it also helped
+> on the hardware for which those workarounds where actually added.
 
---mojUlQ0s9EVzWg2t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Alex Hung and Mario need to answer this question I think.
 
-On Thu, Sep 05, 2019 at 10:17:41AM -0600, Mathieu Poirier wrote:
-> These patches are backport candidates picked out of TI's 4.14.y tree [1],
-> with most of them already found in the 4.19.y stable tree.
+> On Mon, Aug 19, 2019 at 11:52 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Thursday, August 15, 2019 12:47:35 AM CEST Dave Airlie wrote:
+> > > On Thu, 15 Aug 2019 at 07:31, Karol Herbst <kherbst@redhat.com> wrote:
+> > > >
+> > > > This reverts commit 28586a51eea666d5531bcaef2f68e4abbd87242c.
+> > > >
+> > > > The original commit message didn't even make sense. AMD _does_ support it and
+> > > > it works with Nouveau as well.
+> > > >
+> > > > Also what was the issue being solved here? No references to any bugs and not
+> > > > even explaining any issue at all isn't the way we do things.
+> > > >
+> > > > And even if it means a muxed design, then the fix is to make it work inside the
+> > > > driver, not adding some hacky workaround through ACPI tricks.
+> > > >
+> > > > And what out of tree drivers do or do not support we don't care one bit anyway.
+> > > >
+> > >
+> > > I think the reverts should be merged via Rafael's tree as the original
+> > > patches went in via there, and we should get them in asap.
+> > >
+> > > Acked-by: Dave Airlie <airlied@redhat.com>
+> >
+> > The _OSI strings are to be dropped when all of the needed support is there in
+> > drivers, so they should go away along with the requisite driver changes.
+> >
+> 
+> that goes beside the point. firmware level workarounds for GPU driver
+> issues were pushed without consulting with upstream GPU developers.
+> That's something which shouldn't have happened in the first place. And
+> yes, I am personally annoyed by the fact, that people know about
+> issues, but instead of contacting the proper persons and working on a
+> proper fix, we end up with stupid firmware level workarounds. I can't
+> see why we ever would have wanted such workarounds in the first place.
+> 
+> And I would be much happier if the next time something like that comes
+> up, that the drm mailing list will be contacted as well or somebody
+> involved.
+> 
+> We could have also just disable the feature inside the driver (and
+> probably we should have done that a long time ago, so that is
+> essentially our fault, but still....)
+> 
+> > I'm all for dropping then when that's the case, so please feel free to add ACKs
+> > from me to the patches in question at that point.
+> >
+> > Cheers,
+> > Rafael
+> >
+> >
+> >
+> 
 
-Could you please update your scripting that only the cover-letter and
-I2C related patches will be sent to the I2C mailing list?
 
 
---mojUlQ0s9EVzWg2t
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl1xNscACgkQFA3kzBSg
-KbbSXA//Qr7qcTKeYW+0LEBOI7jVtHAd2WvUvM5Dd4cDxWi9xFJLp3mq9RHpUp2n
-C+TcMxlcW7slL8ffeERAPOV3hF+IOWkWiMg+9VUHgK2MvWf+fd3wcmBC/8Cn4DQ3
-B8582lHxQQcVy6jYAvgxkojUFDRrVNS0nSb0Vfb8am062q1DIkiilFqdNPNFoGWy
-UMV6JnawALcKyWVHftb8p66KvJ0SRMNdm36It3CDQhr4ZBRnuLkZD5HN0QKljKYp
-0iFy2yoJnsnTZKmtuEetjVNM01avU8wE0CY9gUb3Oi0xQUfPkqOgQ3WtmeolsOLQ
-PriFq6j8Xt4knqOjVhkyPFpfm1uedxeqNF8uUtRL+r0Fm7ytDTwsGashc7so4D0O
-s1oOEKDeYT6EOVBVC/4oxYJmIeRk6PX8qeyt6+7dz4MEkfrR+yWr10zOFr7wX6Bh
-xmDd5nGeWLVCUnRWaXmph+QTjUlmsP/bKDuTtpkVSuM5X5y62NYpZ7WqsQV2Hob9
-NsYPtS4xag5ak71KlvQRVpqaK8Lzgna0qHrXrk9gynDOYpoN+bUsBf+JNfRCKCOa
-RO1DDv2S35m+mFLoS5Ddxo/j2urW36sfuLuUmdGcR3oxovCNcgUyG+CRIDJTwnFn
-HVVbHqEnxF7f+gw6CiKqAdhye4IWXYWxYbK4hKWi540R8iLVI6g=
-=3bwX
------END PGP SIGNATURE-----
-
---mojUlQ0s9EVzWg2t--
