@@ -2,70 +2,139 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA302C0030D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C34C0030E
 	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A0A21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D0E21D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:13:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbfIEOK7 (ORCPT
+        id S1730471AbfIEONQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:10:59 -0400
-Received: from muru.com ([72.249.23.125]:59740 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfIEOK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:10:58 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D319A810D;
-        Thu,  5 Sep 2019 14:11:26 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 07:10:53 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     David Lechner <david@lechnology.com>,
-        Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
-        linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] counter: new TI eQEP driver
-Message-ID: <20190905141053.GU52127@atomide.com>
-References: <20190901225827.12301-1-david@lechnology.com>
- <20190905133721.GA728346@icarus>
+        Thu, 5 Sep 2019 10:13:16 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43949 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfIEONQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:13:16 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id DF4D72002B;
+        Thu,  5 Sep 2019 14:13:13 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
+Date:   Thu,  5 Sep 2019 16:13:04 +0200
+Message-Id: <20190905141304.22005-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905133721.GA728346@icarus>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* William Breathitt Gray <vilhelm.gray@gmail.com> [190905 13:38]:
-> On Sun, Sep 01, 2019 at 05:58:21PM -0500, David Lechner wrote:
-> > This series adds device tree bindings and a new counter driver for the Texas
-> > Instruments Enhanced Quadrature Encoder Pulse (eQEP).
-> > 
-> > As mentioned in one of the commit messages, to start with, the driver only
-> > supports reading the current counter value and setting the min/max values.
-> > Other features can be added as the counter subsystem gains support for them.
-...
+Implement .get_multiple and .set_multiple to allow reading or setting
+multiple pins simultaneously. Pins in the same bank will all be switched at
+the same time, improving synchronization and performances.
 
-> I'm satisfied with this version of the patchset.
-> 
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> 
-> Jonathan, if you have no objections please pick up this up so that it
-> can make it to the 5.4 merge window coming in soon. Alternatively, I can
-> merge it into my repository instead and hold it for a while longer
-> there, if you prefer that route.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ drivers/pinctrl/pinctrl-at91-pio4.c | 60 +++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-Looks good to me too:
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index d6de4d360cd4..488a302a60d4 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -328,6 +328,35 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	return !!(reg & BIT(pin->line));
+ }
+ 
++static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
++				   unsigned long *bits)
++{
++	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
++	unsigned int bank;
++
++	bitmap_zero(bits, atmel_pioctrl->npins);
++
++	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
++		unsigned int word = bank;
++		unsigned int offset = 0;
++		unsigned int reg;
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
++		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
++#endif
++		if (!mask[word])
++			continue;
++
++		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
++		bits[word] |= mask[word] & (reg << offset);
++
++		pr_err("ABE: %d %08x\n", bank, bits[word]);
++	}
++
++	return 0;
++}
++
+ static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
+ 				       int value)
+ {
+@@ -358,11 +387,42 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
+ 			 BIT(pin->line));
+ }
+ 
++static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
++				    unsigned long *bits)
++{
++	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
++	unsigned int bank;
++
++	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
++		unsigned int bitmask;
++		unsigned int word = bank;
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
++#endif
++		if (!mask[word])
++			continue;
++
++		bitmask = mask[word] & bits[word];
++		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
++
++		bitmask = mask[word] & ~bits[word];
++		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
++		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
++#endif
++	}
++}
++
+ static struct gpio_chip atmel_gpio_chip = {
+ 	.direction_input        = atmel_gpio_direction_input,
+ 	.get                    = atmel_gpio_get,
++	.get_multiple           = atmel_gpio_get_multiple,
+ 	.direction_output       = atmel_gpio_direction_output,
+ 	.set                    = atmel_gpio_set,
++	.set_multiple           = atmel_gpio_set_multiple,
+ 	.to_irq                 = atmel_gpio_to_irq,
+ 	.base                   = 0,
+ };
+-- 
+2.21.0
 
-Acked-by: Tony Lindgren <tony@atomide.com>
