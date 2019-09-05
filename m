@@ -2,99 +2,69 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E48DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644BDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB3020828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45A7F206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390539AbfIESv5 (ORCPT
+        id S1731995AbfIESz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:51:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388700AbfIESvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:51:53 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B6E972A09AB
-        for <linux-kernel@vger.kernel.org>; Thu,  5 Sep 2019 18:51:52 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id 124so2107512wmz.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:51:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/+X/R0y41DuJD8stDaaFF/mk4jlVxfRDTjRBOtakznc=;
-        b=ovfOlj/Y9rrqv86QUtJMWqeJl0m9/ZpDm8tLrd2bckA40FRqlN+bMlI4uUO6l4vSvR
-         xvLjBkawVSa0FkiodjP4zJcix6yQ4a5NPGjHpYLNZAZqm88bQ1ojH8V5nXQypE5WukJ6
-         1jy0XV+VQBySeyzpbjGk67GTjhcc65EsqsUyACK6vVO1mG68QJmYao5PUQ3NJQqfrHdE
-         vjs/z7a/0OgiXV31A9D6z2JT990BEr0FBp7KjLSD3lYA/AkIIpKlSa06D2CauvCY+5m5
-         aeOYW3abKEhY3w4zxwwOcNrKIH6vAKMj7bjRoEQflD3pfKsNZS2LJnl97vaP9P/Bl8CO
-         MxNg==
-X-Gm-Message-State: APjAAAWQwZ3VHXaQzZEkcqGrQsnci0eyf/53U2KeW+tmLjQPWJJDbIBY
-        qBB226ZiDD6lECIFY7+8UlhnDxB00s4S8rlccHXE+rUy42abklkJMeGSIWkaghl5SzA8cnpEkNb
-        Gcs348bbSGLG/y0hMtfVSUcEm1l0dpyXGzP6SrCYk
-X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr3763562wmj.123.1567709511264;
-        Thu, 05 Sep 2019 11:51:51 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxxppOJbXRzr0HT1qBIm7hjC+zxuRCss37FvJwDjsHuKSxoe+byuVe16izziNYRTPD8dFxdzcLlPcTR/VI7zzA=
-X-Received: by 2002:a05:600c:21d1:: with SMTP id x17mr3763540wmj.123.1567709510985;
- Thu, 05 Sep 2019 11:51:50 -0700 (PDT)
+        Thu, 5 Sep 2019 14:55:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44047 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729782AbfIESz0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 14:55:26 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i5wuh-0007Un-Ji; Thu, 05 Sep 2019 20:55:23 +0200
+Date:   Thu, 5 Sep 2019 20:55:22 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Frederic Weisbecker <frederic@kernel.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch 2/6] posix-cpu-timers: Fix permission check regression
+In-Reply-To: <20190905173148.GE18251@lenoir>
+Message-ID: <alpine.DEB.2.21.1909052054200.1902@nanos.tec.linutronix.de>
+References: <20190905120339.561100423@linutronix.de> <20190905120539.797994508@linutronix.de> <20190905173148.GE18251@lenoir>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
- <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
- <17703.1567702907@warthog.procyon.org.uk> <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
- <11667f69-fbb5-28d2-3c31-7f865f2b93e5@redhat.com>
-In-Reply-To: <11667f69-fbb5-28d2-3c31-7f865f2b93e5@redhat.com>
-From:   Ray Strode <rstrode@redhat.com>
-Date:   Thu, 5 Sep 2019 14:51:14 -0400
-Message-ID: <CAKCoTu7ms4ckwDA_-onuJg+famnMzGZE9gGUcqqMz0kCAAECRg@mail.gmail.com>
-Subject: Re: Why add the general notification queue and its sources
-To:     Steven Whitehouse <swhiteho@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        David Lehman <dlehman@redhat.com>, Ian Kent <ikent@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 5 Sep 2019, Frederic Weisbecker wrote:
+> On Thu, Sep 05, 2019 at 02:03:41PM +0200, Thomas Gleixner wrote:
+> > +	if (gettime) {
+> > +		/*
+> > +		 * For clock_gettime() the task does not need to be the
+> > +		 * actual group leader. tsk->sighand gives access to the
+> > +		 * group's clock.
+> > +		 */
+> 
+> I'm a bit confused with the explanation. Why is it fine to do so with clock
+> and not with timer? tsk->sighand gives access to the group's timer as
+> well.
 
-On Thu, Sep 5, 2019 at 2:37 PM Steven Whitehouse <swhiteho@redhat.com> wrote:
-> The original reason for the mount notification mechanism was so that we
-> are able to provide information to GUIs and similar filesystem and
-> storage management tools, matching the state of the filesystem with the
-> state of the underlying devices. This is part of a larger project
-> entitled "Project Springfield" to try and provide better management
-> tools for storage and filesystems. I've copied David Lehman in, since he
-> can provide a wider view on this topic.
-So one problem that I've heard discussed before is what happens in a thinp
-setup when the disk space is overallocated and gets used up. IIRC, the
-volumes just sort of eat themselves?
+Timer stores the target task and that's the group leader for process wide
+while clock read is just momentary. Lemme rephrase that.
 
-Getting proper notification of looming catastrophic failure to the
-workstation user
-before it's too late would be useful, indeed.
+Thanks,
 
-I don't know if this new mechanism dhowells has development can help with that,
-and/or if solving that problem is part of the Project Springfield
-initiative or not. Do you
-know off hand?
-
---Ray
+	tglx
