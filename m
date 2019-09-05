@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C769AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749C7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC9E2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59EFA2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567705179;
-	bh=ZwtPSFMK89SsqHGZT5I2EYvJI7m9xMOVCAW2oUhiCT4=;
+	s=default; t=1567705182;
+	bh=9t0HTsc84SJjzsATytWKnYo8qqC+FTVJb+ITwm336Rk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=hB75zjDsVuKLR2sCbSNetmhA2Mr9j53wtlEYhfHuU+MbvdvZM2IYrfGirz8H27EjV
-	 XC3ILdEAwNoXtSZaPo2x+I8OtO7EQs8HlicSnG1Go9Xa3EbKaJqwJc2ZRgb+9c5Vlx
-	 SmbJCCFxykqc0/v3fEGlFsKoAfuN6nYGKtfyTR5o=
+	b=FIL57MnumHohCAbwXMWWEN1j7SlEEAQfbMdC6NKTQZeDBx9VXP5IPOcFjvWQ+LtBq
+	 iGKkrdIilnjEmxd2XmosNWIiekccCX6oAyeCXxmq52LMVbMeWKV9W6pPOFdh38dddK
+	 765lUfMZiLKoZJOz4+UNEgPj6DHhjCFMvsr4ppds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403789AbfIERjh (ORCPT
+        id S2403804AbfIERjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:39:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57378 "EHLO
+        Thu, 5 Sep 2019 13:39:39 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57380 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728661AbfIERi6 (ORCPT
+        with ESMTP id S1727950AbfIERi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:38:58 -0400
+        Thu, 5 Sep 2019 13:38:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cn3jg8qjFG6TP6PEQnZ4N1Fp6NQ/mzS5IEcxvGh2rZQ=; b=aURExc63JKmS
-        ATZevZxKSdGJtjCx7kHh63i16np5kCKd0HamPjdcjJ/B4CMIVv3mpyj4geNO3GPk4lNaVUWL91vib
-        12zKN8AP8wHo6YkqQlX7M+v3of07IeGoiKNLiXXktYlVD1OJZ1CKg/l6WLmRsQIeDjU/UvW07uKqG
-        FuUd0=;
+        List-Archive; bh=4gbe+e5abX7vIgA3PShfmFuRCDSiOubAI1f9VXvtZ3U=; b=wZy0UVg1tMCJ
+        7mHw2mUsLSQrBuNZKA0n0hEvYduPG56kLdIpccjhXeEknoFTJGYDmqvm9xE/7P0T1jcSSnH0NrB9Z
+        QPDg3pEvz55HQHgnRP9dKiy8WCppYX1GC7XQke2SC1cPwS9z/1sb1lNA3rGiXRrPTAGgQhRgROKZU
+        UakUY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1i5vie-0005Gd-4w; Thu, 05 Sep 2019 17:38:52 +0000
+        id 1i5vie-0005Gg-D1; Thu, 05 Sep 2019 17:38:52 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7A4042742D17; Thu,  5 Sep 2019 18:38:51 +0100 (BST)
+        id D62452742D1F; Thu,  5 Sep 2019 18:38:51 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
@@ -52,10 +52,10 @@ Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         Liam Girdwood <lgirdwood@gmail.com>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: meson: tdmout: add sm1 support" to the asoc tree
-In-Reply-To: <20190905120120.31752-9-jbrunet@baylibre.com>
+Subject: Applied "ASoC: meson: axg-frddr: add sm1 support" to the asoc tree
+In-Reply-To: <20190905120120.31752-7-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190905173851.7A4042742D17@ypsilon.sirena.org.uk>
+Message-Id: <20190905173851.D62452742D1F@ypsilon.sirena.org.uk>
 Date:   Thu,  5 Sep 2019 18:38:51 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: tdmout: add sm1 support
+   ASoC: meson: axg-frddr: add sm1 support
 
 has been applied to the asoc tree at
 
@@ -89,163 +89,145 @@ to this mail.
 Thanks,
 Mark
 
-From 329299d6652fa287a0551ae412cc0227d539a0fe Mon Sep 17 00:00:00 2001
+From 52dd80d8f7386483bc60b2b7470e47a2e6f61d7c Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Thu, 5 Sep 2019 14:01:20 +0200
-Subject: [PATCH] ASoC: meson: tdmout: add sm1 support
+Date: Thu, 5 Sep 2019 14:01:18 +0200
+Subject: [PATCH] ASoC: meson: axg-frddr: add sm1 support
 
-On the sm1, the TDMOUT number of input is extended and the
-the gain enable bit moved to accommodate this extension
+On sm1, the output routing bits have moved to CTRL2 register
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Link: https://lore.kernel.org/r/20190905120120.31752-9-jbrunet@baylibre.com
+Link: https://lore.kernel.org/r/20190905120120.31752-7-jbrunet@baylibre.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/meson/axg-tdmout.c | 103 ++++++++++++++++++++++++++++-------
- 1 file changed, 84 insertions(+), 19 deletions(-)
+ sound/soc/meson/axg-fifo.c  |  2 +-
+ sound/soc/meson/axg-fifo.h  |  1 +
+ sound/soc/meson/axg-frddr.c | 73 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 75 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/meson/axg-tdmout.c b/sound/soc/meson/axg-tdmout.c
-index 86537fc0ecb5..418ec314b37d 100644
---- a/sound/soc/meson/axg-tdmout.c
-+++ b/sound/soc/meson/axg-tdmout.c
-@@ -24,6 +24,7 @@
- #define TDMOUT_CTRL1			0x04
- #define  TDMOUT_CTRL1_TYPE_MASK		GENMASK(6, 4)
- #define  TDMOUT_CTRL1_TYPE(x)		((x) << 4)
-+#define  SM1_TDMOUT_CTRL1_GAIN_EN	7
- #define  TDMOUT_CTRL1_MSB_POS_MASK	GENMASK(12, 8)
- #define  TDMOUT_CTRL1_MSB_POS(x)	((x) << 8)
- #define  TDMOUT_CTRL1_SEL_SHIFT		24
-@@ -51,25 +52,6 @@ static const struct regmap_config axg_tdmout_regmap_cfg = {
- 	.max_register	= TDMOUT_MASK_VAL,
+diff --git a/sound/soc/meson/axg-fifo.c b/sound/soc/meson/axg-fifo.c
+index 80a3dde35b5c..5a3749938900 100644
+--- a/sound/soc/meson/axg-fifo.c
++++ b/sound/soc/meson/axg-fifo.c
+@@ -306,7 +306,7 @@ static const struct regmap_config axg_fifo_regmap_cfg = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+ 	.reg_stride	= 4,
+-	.max_register	= FIFO_INIT_ADDR,
++	.max_register	= FIFO_CTRL2,
  };
  
--static const struct snd_kcontrol_new axg_tdmout_controls[] = {
--	SOC_DOUBLE("Lane 0 Volume", TDMOUT_GAIN0,  0,  8, 255, 0),
--	SOC_DOUBLE("Lane 1 Volume", TDMOUT_GAIN0, 16, 24, 255, 0),
--	SOC_DOUBLE("Lane 2 Volume", TDMOUT_GAIN1,  0,  8, 255, 0),
--	SOC_DOUBLE("Lane 3 Volume", TDMOUT_GAIN1, 16, 24, 255, 0),
--	SOC_SINGLE("Gain Enable Switch", TDMOUT_CTRL1,
--		   TDMOUT_CTRL1_GAIN_EN, 1, 0),
--};
--
--static const char * const tdmout_sel_texts[] = {
--	"IN 0", "IN 1", "IN 2",
--};
--
--static SOC_ENUM_SINGLE_DECL(axg_tdmout_sel_enum, TDMOUT_CTRL1,
--			    TDMOUT_CTRL1_SEL_SHIFT, tdmout_sel_texts);
--
--static const struct snd_kcontrol_new axg_tdmout_in_mux =
--	SOC_DAPM_ENUM("Input Source", axg_tdmout_sel_enum);
--
- static struct snd_soc_dai *
- axg_tdmout_get_be(struct snd_soc_dapm_widget *w)
- {
-@@ -197,6 +179,25 @@ static int axg_tdmout_prepare(struct regmap *map,
- 	return axg_tdm_formatter_set_channel_masks(map, ts, TDMOUT_MASK0);
- }
+ int axg_fifo_probe(struct platform_device *pdev)
+diff --git a/sound/soc/meson/axg-fifo.h b/sound/soc/meson/axg-fifo.h
+index 5caf81241dfe..bb1e2ce50256 100644
+--- a/sound/soc/meson/axg-fifo.h
++++ b/sound/soc/meson/axg-fifo.h
+@@ -61,6 +61,7 @@ struct snd_soc_pcm_runtime;
+ #define  STATUS1_INT_STS(x)		((x) << 0)
+ #define FIFO_STATUS2			0x18
+ #define FIFO_INIT_ADDR			0x24
++#define FIFO_CTRL2			0x28
  
-+static const struct snd_kcontrol_new axg_tdmout_controls[] = {
-+	SOC_DOUBLE("Lane 0 Volume", TDMOUT_GAIN0,  0,  8, 255, 0),
-+	SOC_DOUBLE("Lane 1 Volume", TDMOUT_GAIN0, 16, 24, 255, 0),
-+	SOC_DOUBLE("Lane 2 Volume", TDMOUT_GAIN1,  0,  8, 255, 0),
-+	SOC_DOUBLE("Lane 3 Volume", TDMOUT_GAIN1, 16, 24, 255, 0),
-+	SOC_SINGLE("Gain Enable Switch", TDMOUT_CTRL1,
-+		   TDMOUT_CTRL1_GAIN_EN, 1, 0),
-+};
-+
-+static const char * const axg_tdmout_sel_texts[] = {
-+	"IN 0", "IN 1", "IN 2",
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(axg_tdmout_sel_enum, TDMOUT_CTRL1,
-+			    TDMOUT_CTRL1_SEL_SHIFT, axg_tdmout_sel_texts);
-+
-+static const struct snd_kcontrol_new axg_tdmout_in_mux =
-+	SOC_DAPM_ENUM("Input Source", axg_tdmout_sel_enum);
-+
- static const struct snd_soc_dapm_widget axg_tdmout_dapm_widgets[] = {
- 	SND_SOC_DAPM_AIF_IN("IN 0", NULL, 0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("IN 1", NULL, 0, SND_SOC_NOPM, 0, 0),
-@@ -252,6 +253,67 @@ static const struct axg_tdm_formatter_driver g12a_tdmout_drv = {
- 	},
+ struct axg_fifo {
+ 	struct regmap *map;
+diff --git a/sound/soc/meson/axg-frddr.c b/sound/soc/meson/axg-frddr.c
+index 0968e8375000..6ab111c31b28 100644
+--- a/sound/soc/meson/axg-frddr.c
++++ b/sound/soc/meson/axg-frddr.c
+@@ -23,6 +23,12 @@
+ #define CTRL0_SEL3_SHIFT		8
+ #define CTRL0_SEL3_EN_SHIFT		11
+ #define CTRL1_FRDDR_FORCE_FINISH	BIT(12)
++#define CTRL2_SEL1_SHIFT		0
++#define CTRL2_SEL1_EN_SHIFT		4
++#define CTRL2_SEL2_SHIFT		8
++#define CTRL2_SEL2_EN_SHIFT		12
++#define CTRL2_SEL3_SHIFT		16
++#define CTRL2_SEL3_EN_SHIFT		20
+ 
+ static int g12a_frddr_dai_prepare(struct snd_pcm_substream *substream,
+ 				  struct snd_soc_dai *dai)
+@@ -269,6 +275,70 @@ static const struct axg_fifo_match_data g12a_frddr_match_data = {
+ 	.dai_drv	= &g12a_frddr_dai_drv
  };
  
-+static const struct snd_kcontrol_new sm1_tdmout_controls[] = {
-+	SOC_DOUBLE("Lane 0 Volume", TDMOUT_GAIN0,  0,  8, 255, 0),
-+	SOC_DOUBLE("Lane 1 Volume", TDMOUT_GAIN0, 16, 24, 255, 0),
-+	SOC_DOUBLE("Lane 2 Volume", TDMOUT_GAIN1,  0,  8, 255, 0),
-+	SOC_DOUBLE("Lane 3 Volume", TDMOUT_GAIN1, 16, 24, 255, 0),
-+	SOC_SINGLE("Gain Enable Switch", TDMOUT_CTRL1,
-+		   SM1_TDMOUT_CTRL1_GAIN_EN, 1, 0),
++/* On SM1, the output selection in on CTRL2 */
++static const struct snd_kcontrol_new sm1_frddr_out1_enable =
++	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL2,
++				    CTRL2_SEL1_EN_SHIFT, 1, 0);
++static const struct snd_kcontrol_new sm1_frddr_out2_enable =
++	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL2,
++				    CTRL2_SEL2_EN_SHIFT, 1, 0);
++static const struct snd_kcontrol_new sm1_frddr_out3_enable =
++	SOC_DAPM_SINGLE_AUTODISABLE("Switch", FIFO_CTRL2,
++				    CTRL2_SEL3_EN_SHIFT, 1, 0);
++
++static SOC_ENUM_SINGLE_DECL(sm1_frddr_sel1_enum, FIFO_CTRL2, CTRL2_SEL1_SHIFT,
++			    axg_frddr_sel_texts);
++static SOC_ENUM_SINGLE_DECL(sm1_frddr_sel2_enum, FIFO_CTRL2, CTRL2_SEL2_SHIFT,
++			    axg_frddr_sel_texts);
++static SOC_ENUM_SINGLE_DECL(sm1_frddr_sel3_enum, FIFO_CTRL2, CTRL2_SEL3_SHIFT,
++			    axg_frddr_sel_texts);
++
++static const struct snd_kcontrol_new sm1_frddr_out1_demux =
++	SOC_DAPM_ENUM("Output Src 1", sm1_frddr_sel1_enum);
++static const struct snd_kcontrol_new sm1_frddr_out2_demux =
++	SOC_DAPM_ENUM("Output Src 2", sm1_frddr_sel2_enum);
++static const struct snd_kcontrol_new sm1_frddr_out3_demux =
++	SOC_DAPM_ENUM("Output Src 3", sm1_frddr_sel3_enum);
++
++static const struct snd_soc_dapm_widget sm1_frddr_dapm_widgets[] = {
++	SND_SOC_DAPM_AIF_OUT("SRC 1", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("SRC 2", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("SRC 3", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_SWITCH("SRC 1 EN", SND_SOC_NOPM, 0, 0,
++			    &sm1_frddr_out1_enable),
++	SND_SOC_DAPM_SWITCH("SRC 2 EN", SND_SOC_NOPM, 0, 0,
++			    &sm1_frddr_out2_enable),
++	SND_SOC_DAPM_SWITCH("SRC 3 EN", SND_SOC_NOPM, 0, 0,
++			    &sm1_frddr_out3_enable),
++	SND_SOC_DAPM_DEMUX("SINK 1 SEL", SND_SOC_NOPM, 0, 0,
++			   &sm1_frddr_out1_demux),
++	SND_SOC_DAPM_DEMUX("SINK 2 SEL", SND_SOC_NOPM, 0, 0,
++			   &sm1_frddr_out2_demux),
++	SND_SOC_DAPM_DEMUX("SINK 3 SEL", SND_SOC_NOPM, 0, 0,
++			   &sm1_frddr_out3_demux),
++	SND_SOC_DAPM_AIF_OUT("OUT 0", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("OUT 1", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("OUT 2", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("OUT 3", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("OUT 4", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("OUT 5", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("OUT 6", NULL, 0, SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT("OUT 7", NULL, 0, SND_SOC_NOPM, 0, 0),
 +};
 +
-+static const char * const sm1_tdmout_sel_texts[] = {
-+	"IN 0", "IN 1", "IN 2", "IN 3", "IN 4",
++static const struct snd_soc_component_driver sm1_frddr_component_drv = {
++	.dapm_widgets		= sm1_frddr_dapm_widgets,
++	.num_dapm_widgets	= ARRAY_SIZE(sm1_frddr_dapm_widgets),
++	.dapm_routes		= g12a_frddr_dapm_routes,
++	.num_dapm_routes	= ARRAY_SIZE(g12a_frddr_dapm_routes),
++	.ops			= &g12a_fifo_pcm_ops
 +};
 +
-+static SOC_ENUM_SINGLE_DECL(sm1_tdmout_sel_enum, TDMOUT_CTRL1,
-+			    TDMOUT_CTRL1_SEL_SHIFT, sm1_tdmout_sel_texts);
-+
-+static const struct snd_kcontrol_new sm1_tdmout_in_mux =
-+	SOC_DAPM_ENUM("Input Source", sm1_tdmout_sel_enum);
-+
-+static const struct snd_soc_dapm_widget sm1_tdmout_dapm_widgets[] = {
-+	SND_SOC_DAPM_AIF_IN("IN 0", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 1", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 2", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 3", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("IN 4", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_MUX("SRC SEL", SND_SOC_NOPM, 0, 0, &sm1_tdmout_in_mux),
-+	SND_SOC_DAPM_PGA_E("ENC", SND_SOC_NOPM, 0, 0, NULL, 0,
-+			   axg_tdm_formatter_event,
-+			   (SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_PRE_PMD)),
-+	SND_SOC_DAPM_AIF_OUT("OUT", NULL, 0, SND_SOC_NOPM, 0, 0),
++static const struct axg_fifo_match_data sm1_frddr_match_data = {
++	.component_drv	= &sm1_frddr_component_drv,
++	.dai_drv	= &g12a_frddr_dai_drv
 +};
 +
-+static const struct snd_soc_dapm_route sm1_tdmout_dapm_routes[] = {
-+	{ "SRC SEL", "IN 0", "IN 0" },
-+	{ "SRC SEL", "IN 1", "IN 1" },
-+	{ "SRC SEL", "IN 2", "IN 2" },
-+	{ "SRC SEL", "IN 3", "IN 3" },
-+	{ "SRC SEL", "IN 4", "IN 4" },
-+	{ "ENC", NULL, "SRC SEL" },
-+	{ "OUT", NULL, "ENC" },
-+};
-+
-+static const struct snd_soc_component_driver sm1_tdmout_component_drv = {
-+	.controls		= sm1_tdmout_controls,
-+	.num_controls		= ARRAY_SIZE(sm1_tdmout_controls),
-+	.dapm_widgets		= sm1_tdmout_dapm_widgets,
-+	.num_dapm_widgets	= ARRAY_SIZE(sm1_tdmout_dapm_widgets),
-+	.dapm_routes		= sm1_tdmout_dapm_routes,
-+	.num_dapm_routes	= ARRAY_SIZE(sm1_tdmout_dapm_routes),
-+};
-+
-+static const struct axg_tdm_formatter_driver sm1_tdmout_drv = {
-+	.component_drv	= &sm1_tdmout_component_drv,
-+	.regmap_cfg	= &axg_tdmout_regmap_cfg,
-+	.ops		= &axg_tdmout_ops,
-+	.quirks		= &(const struct axg_tdm_formatter_hw) {
-+		.invert_sclk = true,
-+		.skew_offset = 2,
-+	},
-+};
-+
- static const struct of_device_id axg_tdmout_of_match[] = {
+ static const struct of_device_id axg_frddr_of_match[] = {
  	{
- 		.compatible = "amlogic,axg-tdmout",
-@@ -259,6 +321,9 @@ static const struct of_device_id axg_tdmout_of_match[] = {
+ 		.compatible = "amlogic,axg-frddr",
+@@ -276,6 +346,9 @@ static const struct of_device_id axg_frddr_of_match[] = {
  	}, {
- 		.compatible = "amlogic,g12a-tdmout",
- 		.data = &g12a_tdmout_drv,
+ 		.compatible = "amlogic,g12a-frddr",
+ 		.data = &g12a_frddr_match_data,
 +	}, {
-+		.compatible = "amlogic,sm1-tdmout",
-+		.data = &sm1_tdmout_drv,
++		.compatible = "amlogic,sm1-frddr",
++		.data = &sm1_frddr_match_data,
  	}, {}
  };
- MODULE_DEVICE_TABLE(of, axg_tdmout_of_match);
+ MODULE_DEVICE_TABLE(of, axg_frddr_of_match);
 -- 
 2.20.1
 
