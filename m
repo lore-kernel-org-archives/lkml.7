@@ -2,125 +2,110 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 722ADC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03395C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8BC20825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE09820578
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:00:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567702852;
+	bh=5sGaDo2Se80huorPhl7a0jrvqd8rgrTdusG+eyO1xYg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DrIVHNMjAmhFIPrAIYxogr37aoUQEjcBvEDP3joa3VirASOE+J53oIISt/+wNctbq
+	 7HQ78G4BlY7myZNPoy4jm615YXEVgv79x9Q/mZE+6UTtlhzL22gqskpXT52AENnMgI
+	 p1+atvvM1PBLF3XIbAV6jiYLb1wKE8DG6LjTHIWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390874AbfIERAb convert rfc822-to-8bit (ORCPT
+        id S2390886AbfIERAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:00:31 -0400
-Received: from mga01.intel.com ([192.55.52.88]:5869 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389197AbfIERAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:00:31 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 10:00:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
-   d="scan'208";a="182883502"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Sep 2019 10:00:30 -0700
-Received: from fmsmsx116.amr.corp.intel.com (10.18.116.20) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 5 Sep 2019 10:00:30 -0700
-Received: from fmsmsx125.amr.corp.intel.com ([169.254.2.49]) by
- fmsmsx116.amr.corp.intel.com ([169.254.2.181]) with mapi id 14.03.0439.000;
- Thu, 5 Sep 2019 10:00:30 -0700
-From:   "Brown, Len" <len.brown@intel.com>
-To:     Sasha Levin <sashal@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH AUTOSEL 5.2 82/94] tools/power turbostat: fix file
- descriptor leaks
-Thread-Topic: [PATCH AUTOSEL 5.2 82/94] tools/power turbostat: fix file
- descriptor leaks
-Thread-Index: AQHVYznN/Ro8M0co9U+Uq7T0wLP1CKcdTlTA
-Date:   Thu, 5 Sep 2019 17:00:30 +0000
-Message-ID: <1A7043D5F58CCB44A599DFD55ED4C9486D97C3FA@FMSMSX125.amr.corp.intel.com>
-References: <20190904155739.2816-1-sashal@kernel.org>
- <20190904155739.2816-82-sashal@kernel.org>
-In-Reply-To: <20190904155739.2816-82-sashal@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmU5M2FlNmUtODZkZC00ZWQ1LWIxODgtNmM2YWVmNzcwZDU4IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiWG5wb1wvM0tnU0FRdmt5cG5aRW11MjJmK2J0WnB2ZW1pSlNBZURvbGY1VlE1aHpSK3FqNVRDeko1K2RcLzh4T1wvQiJ9
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.108]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 5 Sep 2019 13:00:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49786 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733299AbfIERAu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:00:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RMR7yLB7eLVOGQ40Lw2gegmrpDn0f2yyxFNY+57x51Y=; b=OhQEtYy5rpuuDT9cChMUICtrE
+        V0tW7BD+A9HX+F/z9hBZQftsPGgvm/R5izgSEJ5VVldr9cr5p9E+7tESNq+lMRmSejsru2MBm8ut0
+        yXuPoNi1M9cL7+OeNlgKQa3w/+b5U2esN4wwxhLSiHfRzBf23qdvo7ilXoRjkGdoCuptI=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i5v79-00055J-N9; Thu, 05 Sep 2019 17:00:07 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3D7032742D07; Thu,  5 Sep 2019 18:00:06 +0100 (BST)
+Date:   Thu, 5 Sep 2019 18:00:06 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "shifu0704@thundersoft.com" <shifu0704@thundersoft.com>
+Cc:     lgirdwood <lgirdwood@gmail.com>, perex <perex@perex.cz>,
+        tiwai <tiwai@suse.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        Dan?Murphy <dmurphy@ti.com>,
+        "Navada Kanyana, Mukund" <navada@ti.com>
+Subject: Re: [PATCH]Add tas2770 driver code
+Message-ID: <20190905170006.GF4053@sirena.co.uk>
+References: <201909051335040840918@thundersoft.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="MZf7D3rAEoQgPanC"
+Content-Disposition: inline
+In-Reply-To: <201909051335040840918@thundersoft.com>
+X-Cookie: You humans are all alike.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FWIW,
 
-The latest turbostat and x86_energy_perf_policy utilities in the upstream kernel tree should always be backward compatible with all old kernels.  If that is EVER not the case, I want to know about it.
+--MZf7D3rAEoQgPanC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I know that some distros ship old versions of these utilities built out of their matching kernel tree snapshots.
-Yes, applying upstream fixes to .stable for such distros is a good thing.
+On Thu, Sep 05, 2019 at 01:35:04PM +0800, shifu0704@thundersoft.com wrote:
+> From 5b539e7dbebebf7e58c38a6b54f222bc116d63f3 Mon Sep 17 00:00:00 2001
+> From: Shi Fu <shifu0704@thundersoft.com>
+> Date: Mon, 1 Jul 2019 11:00:13 +0800
+> Signed-off-by: Shi Fu <shifu0704@thundersoft.com>
+> Subject: [PATCH v5] dt: tas2770: Add tas2770 smart PA dt bindings.
+>=20
+> Add tas2770 smart PA dt bindings.
+> ---
 
-However, the better solution for these particular utilities, is that they simply always use upstream utilities -- even with old kernels.
+This looks like it's a whole patch series sent as a single mail, and
+there's some confusing with things like Signed-off-by and general
+formatting.  Please see submitting-patches.rst in the kernel source for
+how to send patches, it's worth taking a look at other posts on the list
+and trying to ensure that your mails look the same as them.  As things
+stand it's really hard to read this since whatever happened with the way
+this has been sent seems to have mangled the indention so it doesn't
+look like normal kernel code unfortunately.
 
-When somebody reports a problem and I need them to run these tools, 100% of the time, I start by sending them the latest upstream version to replace the old version shipped by the distro.
+--MZf7D3rAEoQgPanC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers,
--Len
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1xPxUACgkQJNaLcl1U
+h9Auqwf9FZZMYjmrZdhmxYDfmduqhmJnimUlRbiugyYCzlakQ7QRyMF9tIfOOgtt
+RENe5mq1GM1/FQHJyCvbc8Ws4+98/6YIVqKuMoV4FtvOP9Tyfr2t33FgWWtfsy6u
+jbOYYpI8i4pTO9xaKSrovleO0se/6l8idMr71swiwLuzmByhS63/jBeiQNf1oTi+
+iC617tpwGRmTdPOppZXBvcBby+SOS6I9DkmhdHDhtjLQUHw/rE3umFxsL0hGwCDJ
+ePJIjWF7pQWvflzNTbD+lE/JdzqU0u9emaO4Lq9qC/uAJ3QXxRzlFnqJjnG2dC+T
+TBowIwKHWmZ5r26JpGhbWkVS2ZUicw==
+=K8ao
+-----END PGP SIGNATURE-----
 
-
------Original Message-----
-From: Sasha Levin [mailto:sashal@kernel.org] 
-Sent: Wednesday, September 04, 2019 11:57 AM
-To: linux-kernel@vger.kernel.org; stable@vger.kernel.org
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>; Prarit Bhargava <prarit@redhat.com>; Brown, Len <len.brown@intel.com>; Sasha Levin <sashal@kernel.org>; linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 82/94] tools/power turbostat: fix file descriptor leaks
-
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-
-[ Upstream commit 605736c6929d541c78a85dffae4d33a23b6b2149 ]
-
-Fix file descriptor leaks by closing fp before return.
-
-Addresses-Coverity-ID: 1444591 ("Resource leak")
-Addresses-Coverity-ID: 1444592 ("Resource leak")
-Fixes: 5ea7647b333f ("tools/power turbostat: Warn on bad ACPI LPIT data")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Len Brown <len.brown@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/power/x86/turbostat/turbostat.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 71a931813de00..066bd43ed6c9f 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -2912,6 +2912,7 @@ int snapshot_cpu_lpi_us(void)
- 	if (retval != 1) {
- 		fprintf(stderr, "Disabling Low Power Idle CPU output\n");
- 		BIC_NOT_PRESENT(BIC_CPU_LPI);
-+		fclose(fp);
- 		return -1;
- 	}
- 
--- 
-2.20.1
-
+--MZf7D3rAEoQgPanC--
