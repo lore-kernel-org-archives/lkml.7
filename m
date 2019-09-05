@@ -2,243 +2,188 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CB5C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E907C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14A9206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B44207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:37:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZ32udt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbfIENg2 (ORCPT
+        id S1730042AbfIENho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:36:28 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:22452 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728848AbfIENg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:36:27 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 812EBA1762;
-        Thu,  5 Sep 2019 15:36:21 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id QEpWHY7VDe2j; Thu,  5 Sep 2019 15:36:16 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 23:35:52 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905133552.xlckmxfzar4wh5ju@yavin.dot.cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905073205.GY2332@hirez.programming.kicks-ass.net>
- <20190905092622.tlb6nn3uisssdfbu@yavin.dot.cyphar.com>
- <20190905094305.GJ2349@hirez.programming.kicks-ass.net>
+        Thu, 5 Sep 2019 09:37:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:47014 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfIENhn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:37:43 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so1754156pfg.13;
+        Thu, 05 Sep 2019 06:37:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fi++776ImZEZT48n1qE4d0SlhAt4GD7N11zpq7SBZhM=;
+        b=iZ32udt5Ao+f4A8AcqWMD0UzwlSrvD4qFci1gCSpLs167HXqVYUYi0+M1A9Is/tjrD
+         dSLyGCd0tUG5IE29UZfmw1UIVLGaf3DaSHlaScDW+EX8J6bW6VlfZHdTVtslVlwEPW55
+         AbBtVYL4O7SmjSiyKhKSQ/6e4c3GcOgOm7iYlNwysHhdZs+JeO3YnSH//pWzjkFYoq+Y
+         Wo927FE786DNSu9sHlPoCEaLHphRMla1OzN01QiESJNg9tnViF3DHGe20a0yKaRE9NuT
+         EthsXjvgs5JZK1C99hc4SjQtyBoLqXW1eItvh+J+VIWJxI3QYY9qjmdBMPcXdh1XDjuD
+         gd/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fi++776ImZEZT48n1qE4d0SlhAt4GD7N11zpq7SBZhM=;
+        b=qxNgG7sY8E4672rhqwam/wjRA9bmeYp0SqKI8i4TLq7Zu4TNilK0yQfkcCYTIE17KA
+         O7hJ8wppVlI2au+UX+lSSAcgL2intL7ap/PXa5N87Tclb7Ev/c/7Qe751MRkRW+gTEvH
+         6dlkFlnrEH1EuEs6LCFwZXTsdQgrDxPTF/l4cyZoD61W4252fP74OvNjG2tRjevd6C/m
+         EFPD/tWhMV1r7AfgtGEajKAbM5z39xlsi/M9CrocaOBnDKrM+3C7qcaKzBIPAGQZwFcG
+         HJslk+sltcqe4GT2KoSX+RJC6qUBuMCDs9eyYFbu5nAOHUdx6oVl+x+fcECrcgIcm10c
+         OeLg==
+X-Gm-Message-State: APjAAAUl6Soyq3HG7wh5e3VOxciTxulW2QoquCEn78jwv/65xMWyYSsP
+        kxh5DR7DRgzCzAU2yh9XVP0=
+X-Google-Smtp-Source: APXvYqwfariauCzmmaTcCfPD/BTxjV8KxWhNia0IPgs/fMJkiUKEcxPoLnijDvxLMAc8xd3e4YgaWg==
+X-Received: by 2002:a17:90a:32c8:: with SMTP id l66mr3979785pjb.44.1567690662640;
+        Thu, 05 Sep 2019 06:37:42 -0700 (PDT)
+Received: from icarus ([2001:268:c145:7cce:aed2:6823:62ef:c22d])
+        by smtp.gmail.com with ESMTPSA id f188sm2268221pfa.170.2019.09.05.06.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 06:37:41 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 22:37:21 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     David Lechner <david@lechnology.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, linux-omap@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] counter: new TI eQEP driver
+Message-ID: <20190905133721.GA728346@icarus>
+References: <20190901225827.12301-1-david@lechnology.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p7vw24iv2smepbtp"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190905094305.GJ2349@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190901225827.12301-1-david@lechnology.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Sep 01, 2019 at 05:58:21PM -0500, David Lechner wrote:
+> This series adds device tree bindings and a new counter driver for the Texas
+> Instruments Enhanced Quadrature Encoder Pulse (eQEP).
+> 
+> As mentioned in one of the commit messages, to start with, the driver only
+> supports reading the current counter value and setting the min/max values.
+> Other features can be added as the counter subsystem gains support for them.
+> 
+> v3 changes:
+> - Minor changes to device tree bindings (style and generic node name)
+> - Drop action in initializer
+> - Fix ordering of pm runtime disable
+> v2 changes:
+> - New patch to move TI PWMSS driver from drivers/pwm/ to drivers/bus/
+> - Device tree bindings converted to .yaml format
+> - Device tree clock renamed from "fck" to "sysclkout"
+> - Dropped unused index and strobe signals from counter driver
+> - Added synapses and actions to counter driver
+> - Fixed base in of kstrtouint()
+> - Clarifications in commit messages
+> 
+> This series has been tested on a BeagleBone Blue with the following script:
+> 
+> #!/usr/bin/env python3
+> 
+> from os import path
+> from time import sleep
+> 
+> COUNTER_PATH = '/sys/bus/counter/devices'
+> COUNTERS = ['counter0', 'counter1', 'counter2']
+> COUNT0 = 'count0'
+> COUNT = 'count'
+> FUNCTION = 'function'
+> CEILING = 'ceiling'
+> FLOOR = 'floor'
+> ENABLE = 'enable'
+> 
+> cnts = []
+> 
+> for c in COUNTERS:
+>     function_path = path.join(COUNTER_PATH, c, COUNT0, FUNCTION)
+>     with open(function_path, 'w') as f:
+>         f.write('quadrature x4')
+>     floor_path = path.join(COUNTER_PATH, c, COUNT0, FLOOR)
+>     with open(floor_path, 'w') as f:
+>         f.write(str(0))
+>     ceiling_path = path.join(COUNTER_PATH, c, COUNT0, CEILING)
+>     with open(ceiling_path, 'w') as f:
+>         f.write(str(0xffffffff))
+>     enable_path = path.join(COUNTER_PATH, c, COUNT0, ENABLE)
+>     with open(enable_path, 'w') as f:
+>         f.write('1')
+> 
+>     cnt_path = path.join(COUNTER_PATH, c, COUNT0, COUNT)
+>     cnts.append(open(cnt_path, 'r'))
+> 
+> while True:
+>     for c in cnts:
+>         c.seek(0)
+>         val = int(c.read())
+>         if val >= 0x80000000:
+>             val -= 0x100000000
+>         print(val, end=' ')
+>     print()
+>     sleep(1)
+> 
+> David Lechner (6):
+>   bus/ti-pwmss: move TI PWMSS driver from PWM to bus subsystem
+>   dt-bindings: counter: new bindings for TI eQEP
+>   counter: new TI eQEP driver
+>   ARM: dts: am33xx: Add nodes for eQEP
+>   ARM: dts: am335x-boneblue: Enable eQEP
+>   ARM: dts: am335x-boneblue: Use of am335x-osd335x-common.dtsi
+> 
+>  .../devicetree/bindings/counter/ti-eqep.yaml  |  50 ++
+>  MAINTAINERS                                   |   6 +
+>  arch/arm/boot/dts/am335x-boneblue.dts         | 146 +++---
+>  arch/arm/boot/dts/am33xx-l4.dtsi              |  27 +
+>  drivers/bus/Kconfig                           |   9 +
+>  drivers/bus/Makefile                          |   1 +
+>  drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} |   0
+>  drivers/counter/Kconfig                       |  11 +
+>  drivers/counter/Makefile                      |   1 +
+>  drivers/counter/ti-eqep.c                     | 473 ++++++++++++++++++
+>  drivers/pwm/Kconfig                           |   9 -
+>  drivers/pwm/Makefile                          |   1 -
+>  12 files changed, 634 insertions(+), 100 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/counter/ti-eqep.yaml
+>  rename drivers/{pwm/pwm-tipwmss.c => bus/ti-pwmss.c} (100%)
+>  create mode 100644 drivers/counter/ti-eqep.c
+> 
+> -- 
+> 2.17.1
 
---p7vw24iv2smepbtp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm satisfied with this version of the patchset.
 
-On 2019-09-05, Peter Zijlstra <peterz@infradead.org> wrote:
-> On Thu, Sep 05, 2019 at 07:26:22PM +1000, Aleksa Sarai wrote:
-> > On 2019-09-05, Peter Zijlstra <peterz@infradead.org> wrote:
-> > > On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> > > > +/**
-> > > > + * copy_struct_to_user: copy a struct to user space
-> > > > + * @dst:   Destination address, in user space.
-> > > > + * @usize: Size of @dst struct.
-> > > > + * @src:   Source address, in kernel space.
-> > > > + * @ksize: Size of @src struct.
-> > > > + *
-> > > > + * Copies a struct from kernel space to user space, in a way that =
-guarantees
-> > > > + * backwards-compatibility for struct syscall arguments (as long a=
-s future
-> > > > + * struct extensions are made such that all new fields are *append=
-ed* to the
-> > > > + * old struct, and zeroed-out new fields have the same meaning as =
-the old
-> > > > + * struct).
-> > > > + *
-> > > > + * @ksize is just sizeof(*dst), and @usize should've been passed b=
-y user space.
-> > > > + * The recommended usage is something like the following:
-> > > > + *
-> > > > + *   SYSCALL_DEFINE2(foobar, struct foo __user *, uarg, size_t, us=
-ize)
-> > > > + *   {
-> > > > + *      int err;
-> > > > + *      struct foo karg =3D {};
-> > > > + *
-> > > > + *      // do something with karg
-> > > > + *
-> > > > + *      err =3D copy_struct_to_user(uarg, usize, &karg, sizeof(kar=
-g));
-> > > > + *      if (err)
-> > > > + *        return err;
-> > > > + *
-> > > > + *      // ...
-> > > > + *   }
-> > > > + *
-> > > > + * There are three cases to consider:
-> > > > + *  * If @usize =3D=3D @ksize, then it's copied verbatim.
-> > > > + *  * If @usize < @ksize, then kernel space is "returning" a newer=
- struct to an
-> > > > + *    older user space. In order to avoid user space getting incom=
-plete
-> > > > + *    information (new fields might be important), all trailing by=
-tes in @src
-> > > > + *    (@ksize - @usize) must be zerored
-> > >=20
-> > > s/zerored/zero/, right?
-> >=20
-> > It should've been "zeroed".
->=20
-> That reads wrong to me; that way it reads like this function must take
-> that action and zero out the 'rest'; which is just wrong.
->=20
-> This function must verify those bytes are zero, not make them zero.
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-Right, in my head I was thinking "must have been zeroed" which isn't
-what it says. I'll switch to "zero".
+Jonathan, if you have no objections please pick up this up so that it
+can make it to the 5.4 merge window coming in soon. Alternatively, I can
+merge it into my repository instead and hold it for a while longer
+there, if you prefer that route.
 
-> > > >                                          , otherwise -EFBIG is retu=
-rned.
-> > >=20
-> > > 'Funny' that, copy_struct_from_user() below seems to use E2BIG.
-> >=20
-> > This is a copy of the semantics that sched_[sg]etattr(2) uses -- E2BIG =
-for
-> > a "too big" struct passed to the kernel, and EFBIG for a "too big"
-> > struct passed to user-space. I would personally have preferred EMSGSIZE
-> > instead of EFBIG, but felt using the existing error codes would be less
-> > confusing.
->=20
-> Sadly a recent commit:
->=20
->   1251201c0d34 ("sched/core: Fix uclamp ABI bug, clean up and robustify s=
-ched_read_attr() ABI logic and code")
->=20
-> Made the situation even 'worse'.
+Thank you,
 
-I hadn't seen this patch before, and I have a few questions taking a
-look at it:
-
- * An error code for a particular behaviour was changed (EFBIG ->
-   E2BIG). Is this not a userspace breakage (I know Linus went ballistic
-   about something similar a while ago[1]), or did I misunderstand what
-   the issue was in [1]?
-   * At the risk of bike-shedding -- of we are changing it, wouldn't
-	 -EMSGSIZE be more appropriate? To be fair, picking errno values has
-	 always been more of an art than a science, but to my ears "Argument
-	 list too long" doesn't make too much sense in the context of
-	 "returning" a struct back to userspace (and the cause of the error
-	 is that the argument passed by user space *isn't big enough*). If
-	 there was an E2SMALL that would also work. ;)
-
- * Do you want me to write a patch based on that, to switch it to
-   copy_struct_to_user()?
-
- * That patch removes the "are there non-zero bytes in the tail that
-   userspace won't know about" check (which I have included in mine). I
-   understand that this caused issues specifically with sched_getattr(2)
-   due to the default value not being zero -- how should we rectify that
-   (given that we'd hopefully want to port everyone who uses that
-   interface to copy_struct_{to,from}_user())?
-
- * Given that the [uk]attr->size construct is pretty important to the
-   usability of the sched and perf interfaces, should we require (or
-   encourage) it for all struct-extension syscall setups?
-
-> > > > +	if (unlikely(!access_ok(src, usize)))
-> > > > +		return -EFAULT;
-> > > > +
-> > > > +	/* Deal with trailing bytes. */
-> > > > +	if (usize < ksize)
-> > > > +		memset(dst + size, 0, rest);
-> > > > +	else if (usize > ksize) {
-> > > > +		const void __user *addr =3D src + size;
-> > > > +		char buffer[BUFFER_SIZE] =3D {};
-> > >=20
-> > > Isn't that too big for on-stack?
-> >=20
-> > Is a 64-byte buffer too big? I picked the number "at random" to be the
-> > size of a cache line, but I could shrink it down to 32 bytes if the size
-> > is an issue (I wanted to avoid needless allocations -- hence it being
-> > on-stack).
->=20
-> Ah, my ctags gave me a definition of BUFFER_SIZE that was 512. I suppose
-> 64 should be OK.
-
-Good to know, though I'll rename it to avoid confusion.
-
-[1]: https://lore.kernel.org/lkml/CA+55aFy98A+LJK4+GWMcbzaa1zsPBRo76q+ioEjb=
-x-uaMKH6Uw@mail.gmail.com/
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---p7vw24iv2smepbtp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXEPNQAKCRCdlLljIbnQ
-EtdDAQC347lG5qRdA84KUpGgbwgprjAxcKgxqQIULhRNFfpXbgD/ZCHtkcVeJovi
-WTsQxqcwA375UPIXJ/SgrKfqOJOI7Q4=
-=dSqz
------END PGP SIGNATURE-----
-
---p7vw24iv2smepbtp--
+William Breathitt Gray
