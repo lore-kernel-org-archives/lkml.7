@@ -2,153 +2,63 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88D0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14132C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C322920828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567704020;
-	bh=EDI78DfE79jtMzHbcDiogan53CnxHKKFzcCNjHaz6wI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J3IuF5BETJLZ6Q2lKbsATb4ILqvs69VrD4IHSV2wVW+U0zrzfGjRrwjCNiN7ZfBNL
-	 c3YHqGN1Ms/dnFC+pAtdaPeLwrezu0dr7qISCYfSjkAF9LHmV5fuA22q+cz57XCzWE
-	 gJ8W2uwtDuNmGAmg/sPhLH8llq3mOAotm8zTR6eM=
+	by mail.kernel.org (Postfix) with ESMTP id EB43020693
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389496AbfIERUS (ORCPT
+        id S2389650AbfIERVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:20:18 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34950 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389117AbfIERUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:20:17 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w6so2711904lfl.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1KYTdnyfvsSaF6SRrjqwQi9Gt/hCAHZIxAtXY6aZZJ0=;
-        b=JGdKASNkgFHvBA05jXqdXX7Gpi6+9NL4cvo+gcNYqUSvjqoKuIvNGkviDlPZtR6WeE
-         TlbHiadWjxZKtu9iPHXIVgBm9c/Q2iEzthUZRUK4NhHiCU4gT3Zrwu7Fj6GF8TOr2PYi
-         RUy/jSH90pSu65c5M/A/XF8yr8GznFTNLI8nc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1KYTdnyfvsSaF6SRrjqwQi9Gt/hCAHZIxAtXY6aZZJ0=;
-        b=BfxtHj2f1yk8BzDvyxwntuAW5/TmOmM50Uz184r/uCp7voYxQqP3WQ0PRqErA5HpyE
-         d0XUz9x3FcpTtuk2aaTP3rs75f/JzX/vFQbM4Yvoxr3erAMp5nhWuKxeLBVUVJldtlbV
-         N+sPWd0nEaGCGq7fzHGbYgMsmhH+tSr4nhIEAMyU703Jv/eZ7hMx0yexFzKwLTClqSm5
-         41wivSaYD5mqBo3/fu54Yd2yo/THMsNg2Z9DvA+SRWUc4ACwtiosMRfG0ayYouVeIDjK
-         dzXbpEBuIWHZuaW15pCGWTf1hm0ko9WciSBPwgim5XRJIdf7LJlGhWNkkLNKFJK5AFjs
-         6EyQ==
-X-Gm-Message-State: APjAAAUpwx8Pgo8SXwGMSAkxSjTm3gMFFxGjzTgb1yxwVol/B1Xsv8jA
-        Je3YCLGDGGM/NF+2kPmzMQeX953Dq/Q=
-X-Google-Smtp-Source: APXvYqzB0TevA5dYjww5CHQdUUnb8j6PZWJt8tYj/np/6tizAJWAhVsnt4VPigc2HuzOABEolPcGCw==
-X-Received: by 2002:a19:8c1d:: with SMTP id o29mr3248912lfd.73.1567704014980;
-        Thu, 05 Sep 2019 10:20:14 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id w1sm551689lfe.67.2019.09.05.10.20.11
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 10:20:14 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id l11so2690893lfk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:20:11 -0700 (PDT)
-X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr3118360lfn.52.1567704010099;
- Thu, 05 Sep 2019 10:20:10 -0700 (PDT)
+        Thu, 5 Sep 2019 13:21:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:47924 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389544AbfIERVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 13:21:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7537A337;
+        Thu,  5 Sep 2019 10:21:32 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1EFA83F718;
+        Thu,  5 Sep 2019 10:21:30 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 18:21:28 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     hch@lst.de, wahrenst@gmx.net, marc.zyngier@arm.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, f.fainelli@gmail.com,
+        will@kernel.org, robin.murphy@arm.com,
+        linux-kernel@vger.kernel.org, mbrugger@suse.com,
+        linux-rpi-kernel@lists.infradead.org, phill@raspberrypi.org,
+        m.szyprowski@samsung.com
+Subject: Re: [PATCH v3 4/4] mm: refresh ZONE_DMA and ZONE_DMA32 comments in
+ 'enum zone_type'
+Message-ID: <20190905172126.GG31268@arrakis.emea.arm.com>
+References: <20190902141043.27210-1-nsaenzjulienne@suse.de>
+ <20190902141043.27210-5-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
- <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com> <17703.1567702907@warthog.procyon.org.uk>
-In-Reply-To: <17703.1567702907@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 5 Sep 2019 10:19:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
-Message-ID: <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
-Subject: Re: Why add the general notification queue and its sources
-To:     David Howells <dhowells@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rstrode@redhat.com, swhiteho@redhat.com,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-block <linux-block@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902141043.27210-5-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 10:01 AM David Howells <dhowells@redhat.com> wrote:
-> >
-> > I'm just going to be very blunt about this, and say that there is no
-> > way I can merge any of this *ever*, unless other people stand up and
-> > say that
-> >
-> >  (a) they'll use it
-> >
-> > and
-> >
-> >  (b) they'll actively develop it and participate in testing and coding
->
-> Besides the core notification buffer which ties this together, there are a
-> number of sources that I've implemented, not all of which are in this patch
-> series:
+On Mon, Sep 02, 2019 at 04:10:42PM +0200, Nicolas Saenz Julienne wrote:
+> These zones usage has evolved with time and the comments were outdated.
+> This joins both ZONE_DMA and ZONE_DMA32 explanation and gives up to date
+> examples on how they are used on different architectures.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-You've at least now answered part of the "Why", but you didn't
-actually answer the whole "another developer" part.
-
-I really don't like how nobody else than you seems to even look at any
-of the key handling patches. Because nobody else seems to care.
-
-This seems to be another new subsystem / driver that has the same
-pattern. If it's all just you, I don't want to merge it, because I
-really want more than just other developers doing "Reviewed-by" after
-looking at somebody elses code that they don't actually use or really
-care about.
-
-See what I'm saying?
-
-New features that go into the kernel should have multiple users. Not a
-single developer who pushes both the kernel feature and the single use
-of that feature.
-
-This very much comes from me reverting the key ACL pull. Not only did
-I revert it, ABSOLUTELY NOBODY even reacted to the revert. Nobody
-stepped up and said they they want that new ACL code, and pushed for a
-fix. There was some very little murmuring about it when Mimi at least
-figured out _why_ it broke, but other than that all the noise I saw
-about the revert was Eric Biggers pointing out it broke other things
-too, and that it had actually broken some test suites. But since it
-hadn't even been in linux-next, that too had been noticed much too
-late.
-
-See what I'm saying? This whole "David Howells does his own features
-that nobody else uses" needs to stop. You need to have a champion. I
-just don't feel safe pulling these kinds of changes from you, because
-I get the feeling that ABSOLUTELY NOBODY ELSE ever really looked at it
-or really cared.
-
-Most of the patches has nobody else even Cc'd, and even the patches
-that do have some "Reviewed-by" feel more like somebody else went "ok,
-the change looks fine to me", without any other real attachment to the
-code.
-
-New kernel features and interfaces really need to have a higher
-barrier of entry than one developer working on his or her own thing.
-
-Is that a change from 25 years ago? Or yes it is. We can point to lots
-of "single developer did a thing" from years past. But things have
-changed. And once bitten, twice shy: I really am a _lot_ more nervous
-about all these key changes now.
-
-                    Linus
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
