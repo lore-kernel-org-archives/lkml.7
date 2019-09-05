@@ -2,150 +2,130 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD711C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC8FC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22202080C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E159D2080C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lYLMDrnB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgYtsyg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731175AbfIEEap (ORCPT
+        id S1730694AbfIEEd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:30:45 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12812 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfIEEao (ORCPT
+        Thu, 5 Sep 2019 00:33:27 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45442 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfIEEd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:30:44 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d708f740000>; Wed, 04 Sep 2019 21:30:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 04 Sep 2019 21:30:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 04 Sep 2019 21:30:43 -0700
-Received: from [10.24.193.88] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
- 2019 04:30:40 +0000
-Subject: Re: [Patch V8 6/8] arm64: tegra: Enable xudc on Jetson TX1
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1567585440-13751-1-git-send-email-nkristam@nvidia.com>
- <1567585440-13751-7-git-send-email-nkristam@nvidia.com>
- <1567590435.7317.55.camel@mhfsdcap03>
-X-Nvconfidentiality: public
-From:   Nagarjuna Kristam <nkristam@nvidia.com>
-Message-ID: <cac7603a-ba64-5ce1-edd9-43bdad729f61@nvidia.com>
-Date:   Thu, 5 Sep 2019 10:02:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 00:33:26 -0400
+Received: by mail-io1-f65.google.com with SMTP id f12so1612570iog.12;
+        Wed, 04 Sep 2019 21:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A9lp9rhuOjuiUtpTZbai2HQ4h+Vi7sUNNaRy+CQ2YQk=;
+        b=vgYtsyg2WXd34VyqbkP05aghwRT4lvZ1s7eC0B2UvEemyrW2CCG4XVY+Oirqhhxklh
+         RVjpqeQX/D8sjnATnNTYS8aJTAVTwybboUE1RgXr5FSwr651eQ5eq2rxqibcalc/oY9f
+         D1dlubk0qbTK0JWtb9n8jkjX272/T1nWav8wnwzTbMLIzT/p+uobe5rtL8RyMhoZBov7
+         MoUmLz4sbKd1ADh8IvEKRqGOOU/mQndzLlz3qdSgWjD8L9dYcm+3q6TWLhjIEVNcRDva
+         dPxBX7ShbQIPz3dXW02LX+YHBys4IikU8eJ/U74y9msfzMdrp2NC1750E3E/ph1BWf2F
+         rPLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A9lp9rhuOjuiUtpTZbai2HQ4h+Vi7sUNNaRy+CQ2YQk=;
+        b=TkoD7UOHueXxPe8VTMPn2Yhj2iJZHq6w7LtgQDjdiFf9TyLv/STkA/ZGWQvtEvYwW1
+         B9k5ws7G8aelVAMNGcKydEImUGqNMGsjoQ0tnzYcyXBEC7gJkyvDHeFJKrbda4CVzX6F
+         GaMLiHEiiYhGvNpCilz+OsOkW1lFQot7VHV8F2KmXz4QiCSSbjyGegvCoggVsVTuL82R
+         TvwRLMGPrDRa9aUxTmBZlkN0mA8UiRdyZjLAJhGDDheFP8bWObgNLVWtXb/qBGZlyYV6
+         wfQu9m5Ssc3Nkj4WaM7W9VSerjpdlkzNV7/J3a10Vywx/fCp025Pumm/dyh9uMqhYurf
+         vTtg==
+X-Gm-Message-State: APjAAAVhBQobNPBEofh0ndA2CMn7ZOCEbhE3Z4QXIkOpHqk+uxZqMSLp
+        Id4yTDbh0YvIWxZuQpvZ28CJNA+vwOmi6Ulv768=
+X-Google-Smtp-Source: APXvYqwI06AxNfsCKmqOxx7MSL+aEzYNxe4/ymVxIAaBMvoQMCqgLN2EWGT4E8EOVJ7ZbABYbNhB62igxw+9X9uHtSI=
+X-Received: by 2002:a6b:7503:: with SMTP id l3mr1689873ioh.244.1567658006037;
+ Wed, 04 Sep 2019 21:33:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1567590435.7317.55.camel@mhfsdcap03>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567657844; bh=UD9f/D9VyQKio7JMo+pBG9krt73CQjyUYKHYsPw7ZK4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=lYLMDrnBHlM4+wYCJRstqpuMx7/VzVSZNqMhJGHBhl7+6+0eEth7KBqeouZIBDfbc
-         qqW/gqBupgzthOLNhDPXSwmOZfkAfN/34ZPF483FJmiQYV6uyTEZyyj6eex4GAP7DT
-         BHMMsmMrlvZR/qZ7DT3QbTQNrtXcOgWKmAkVJg3+TEHlPsAZBmsHHjq8JpJ5QShC5g
-         JzjfqESElcEpGkaRzy7r0kcatuLw0gDl9rGrlv2xLk6YOOZzJ/MIAcCV53RkZ2SE3g
-         fLxkBA6dN8fAgJ49bHu2wfEas6N+kwLyeEVDHx8CQbfIZ09B3mHpKhqfBC0WYui952
-         kEfj3bGgDzIAg==
+References: <20190903111342.17731-1-florian.schmidt@nutanix.com> <20190904204241.y6c335djr3bwm6xo@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20190904204241.y6c335djr3bwm6xo@ca-dmjordan1.us.oracle.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 5 Sep 2019 12:32:49 +0800
+Message-ID: <CALOAHbA+82kfEDvzotJu50QtskqrWv6RzHyMBiHz2gXw1ySL=Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] trace-vmscan-postprocess: fix parsing and output
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Florian Schmidt <florian.schmidt@nutanix.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Sep 5, 2019 at 4:42 AM Daniel Jordan <daniel.m.jordan@oracle.com> wrote:
+>
+> On Tue, Sep 03, 2019 at 11:14:07AM +0000, Florian Schmidt wrote:
+> > This patch series updates trace-vmscan-postprocess.pl to work without
+> > throwing warnings and errors which stem from updates to several trace
+> > points.
+>
+> Cc Yafang, who made (most of?) these updates.
+>
 
+Yes, I made 3481c37ffa1d and 3b775998eca7 but didn't remeber to update
+the scripts in the Document directory.
+Thanks for improving it.
 
-On 04-09-2019 15:17, Chunfeng Yun wrote:
-> On Wed, 2019-09-04 at 13:53 +0530, Nagarjuna Kristam wrote:
->> Enable XUSB device mode driver for USB0 slot on Jetson TX1.
->>
->> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
->> Reviewed-by: JC Kuo <jckuo@nvidia.com>
->> ---
->>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 31 +++++++++++++++++++++++++-
->>  1 file changed, 30 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
->> index a7dc319..6aba1ba 100644
->> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
->> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
->> @@ -1362,7 +1362,7 @@
->>  				status = "okay";
->>  
->>  				lanes {
->> -					usb2-0 {
->> +					micro_b: usb2-0 {
->>  						nvidia,function = "xusb";
->>  						status = "okay";
->>  					};
->> @@ -1483,6 +1483,21 @@
->>  		vmmc-supply = <&vdd_3v3_sd>;
->>  	};
->>  
->> +	usb@700d0000 {
->> +		status = "okay";
->> +		phys = <&micro_b>;
->> +		phy-names = "usb2";
->> +		avddio-usb-supply = <&vdd_3v3_sys>;
->> +		hvdd-usb-supply = <&vdd_1v8>;
->> +		usb-role-switch;
->> +
->> +		port {
->> +			usb_role_switch: endpoint {
->> +				remote-endpoint = <&usb_b_conn_ep>;
->> +			};
->> +		};
->> +	};
->> +
->>  	regulators {
->>  		compatible = "simple-bus";
->>  		#address-cells = <1>;
->> @@ -1641,4 +1656,18 @@
->>  			linux,code = <KEY_VOLUMEUP>;
->>  		};
->>  	};
->> +
->> +	usb_type_b: connector {
->> +		compatible = "linux,usb-conn-gpio", "gpio-usb-b-connector";
-> please use "gpio-usb-b-connector" and "usb-b-connector", due to
-> "linux,usb-conn-gpio" is not supported now
-> 
-> 
+> > 3481c37ffa1d ("mm/vmscan: drop may_writepage and classzone_idx from
+> > direct reclaim begin template") removed "may_writepage" from
+> > mm_vmscan_direct_reclaim_begin, and 3b775998eca7
+> > ("include/trace/events/vmscan.h: drop zone id from kswapd tracepoints")
+> > removed "zid" from mm_vmscan_wakeup_kswapd. The output of
+> > mm_vmscan_lru_isolate and mm_vmscan_lru_shrink_active seems to never
+> > have matched the format of the trace point output since they were
+> > created, or at least for as long as I can tell. Patch 1 aligns the
+> > format parsing of the perl script with the current output of the trace
+> > points.
+>
+> Thanks, patch 1 fixes the script for me for all tracepoints you touched.
+>
+> > In addition, the tables that are printed by the script were not properly
+> > aligned any more, so patch 2 fixes the spacing.
+>
+> Nit, not for Pages Scanned.  With your series I get
+>
+> Kswapd          Kswapd      Order      Pages     Pages    Pages    Pages
+> Instance       Wakeups  Re-wakeup    Scanned    Rclmed  Sync-IO ASync-IO
+> kswapd0-175          1          0    253694     253691        3   129896               wake-0=1
+>
+> > A side remark: parsing the trace output for mm_vmscan_lru_shrink_active
+> > has been in the script ever since it was created in 2010, but at no
+> > point the parsed output was ever used for anything. I updated the
+> > parsing code now, but I wonder if we could just get rid of that part...
+>
+> I wonder if we shouldn't just get rid of the whole script, it's hard to
+> remember to keep in sync with vmscan changes and I can't think of a way to
+> remedy that short of having mm regression tests that run this.
 
-Thanks for info, will update accordingly.
+There are some similar scripts under tools/perf/scripts/, i.e.
+compaction-times.py.
+What about intergrating these vmscan scripts into perf/scripts as well ?
+Something like vmscan-times.py...
 
->> +		label = "micro-USB";
->> +		type = "micro";
->> +		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
->> +
->> +		port {
->> +			usb_b_conn_ep: endpoint {
->> +				remote-endpoint = <&usb_role_switch>;
->> +			};
->> +		};
->> +	};
->> +
->>  };
-> 
-> 
+> But your
+> patches are an improvement for now.
+
+Agreed.
+
+Thanks
+Yafang
