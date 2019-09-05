@@ -3,217 +3,150 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D179C3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A764C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA8A2168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73E72168B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:10:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDkAL9nH"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Pd93E1BQ";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="FAYCydVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbfIEHIc (ORCPT
+        id S1731727AbfIEHKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:08:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37742 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730767AbfIEHIb (ORCPT
+        Thu, 5 Sep 2019 03:10:43 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:7218 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727900AbfIEHKl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:08:31 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b10so844295plr.4;
-        Thu, 05 Sep 2019 00:08:31 -0700 (PDT)
+        Thu, 5 Sep 2019 03:10:41 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x857AXs9015648;
+        Thu, 5 Sep 2019 00:10:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=vU54gZjxiVxvJl2eoW2EscWr256c2EwuGn7IFr80evw=;
+ b=Pd93E1BQ0OMoyqne6LWZKY7XnHIYDF12Zc2WWU3LIsO8MjCKqa2Vbto4K/v4hrR2RsCN
+ lGW4WBMIwXxxA5ePlUH6ih/+9W8mPnVZpUiuQ9tF0mjl75kujDBfNlwcctCNAwUZwRK5
+ maZaJ712ZSjts3PCy90vMg/cYSU5XcqV1ZE3YjR6tXeTz93gz4010O6Drj9DvWP2NeWn
+ x7wtEV3Q1k8/PMlfUfd/N+APx7GP3kybUDBDd13I3HkjUc2iHj2FH70qqwkv0h6rDVWn
+ z/+rpcguw7M8wKJjqbeCEUri8JnaDtChEljNbhj5LMGUipUZYCd4KGyzWuwCVwSle/Q9 iA== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2uqp8pj97t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 00:10:33 -0700
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 5 Sep
+ 2019 00:10:31 -0700
+Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.59) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 5 Sep 2019 00:10:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ABe0f7QRyo0/j/f350CeDao1spHIr+1ZpAKiv8wq/JbUgoayoinOKZKi6Fj12l/emscAToMWouQi0oyaAFXN7YaTI6vC0VzShEyNBy8OBpqIagL4KOIIZaGtUkZW9JfXAiystKrbwqScPrTCBaQPbZkyot+lvfi1mSiD92RdlYwYxoS3hlyRAZeMFipSB6JGHsFAKq/49VC4JyN2Rsy6sG6wCgWZp3geKa9Rj/h+Ke/JoJ78GrMo0452nBv+kbnBYe2jKs2sfoEbhgQDe9YKFaiBPCOsv6ZkbBF3fbNEY9gQed270/TYlJRTvfeKf0+N8u/cn39Pwd0kEuKZ1Ozz1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vU54gZjxiVxvJl2eoW2EscWr256c2EwuGn7IFr80evw=;
+ b=hobx28RN6GvblQUq8UlN+6KSxeLG6s0mUtVy7iSPmV3fEasOQfdCcxGSWvlyaW3QMpKIF7ar0oKUE8wx4gNxxyhlQXRI65Kl37cR69mx6BViX1+NMqTeih+dYEeuTjv3+DDhbFxUjE+aELmDRjf+J5nw/PPbvyO2FMIwXKHPsPJW9MWC6uN/QvMST8hFh/AThopv9h5oexTfR2yAb5rmpfIaKn7bn0orhZdPiousC86z/EkJkkXabWaChWX4N8SligjDkqDE7rq1md7Hz+pRf76VN5867uJa/AUrk6EhO7Xwcfu6ouVCqm2NOZapCZjS/bbU9ZlNEsgC9iOHxVjhpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=PwzRRjHAyauE5ygGFHxAxEXfzZozrZL9TYYXfKwo6ww=;
-        b=PDkAL9nH5jqUhNHP6Y7eT8x0B7kuGD5XK0dTinVzbocINTNmJMN2J6IBLGHuOIap0/
-         q+7HYZo1xoxoRvz5ZYQADiURHIXbhYgOybtLWyLD8MKkfUPItM6LDnQEiWuUccGmZzAa
-         OrWPTgVkNPaIAo4WLjXJ7ZLgnpJva7V13i6FFyeSMy+DaK8uQsk5RwpchEAIUOQtE/Yy
-         /feaBcwjeYWYNyru3hGPghhZ4fdFqfI3RHW458Xw1fswaousMGKu2NaKPZa+LIxsqatz
-         rvYH2AtizjnJqd1HIWf1DyocVmkKfKcklO9EbvAm+zLKEoJ/9gfRn1bmZBaqfGASaGZk
-         bgzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=PwzRRjHAyauE5ygGFHxAxEXfzZozrZL9TYYXfKwo6ww=;
-        b=KKtkRxRJTh6lIDqphmraqOD/oJHByrXfNLcus5PJCI+T3DwFx1yhd8OfggApoZYYKu
-         CuqfhhDt5UbPxzZivxc6/sGhVX5EPHI2v87FmI6nP8QJTDBTwub6/uEM8twKL+xqKH2j
-         qC5RYyJZbrVnzL4u1iTotw/fUMke483m78sEa5Xd/Krx+8dRG4DavfimObPKerj10djK
-         fjQL8JJ7Tlb0K2JF+hN9Ao9R/qw6CuPnQTNPZ2GBvJnHS2UKW6+nStgHy5oerXlUG40j
-         s+LN1hmbFEmGaPcjbG6z4yAq21NVN8nm0nbXqvrZSyKwXKKeCDjoGnJyzP6DXhuXk7Oy
-         yFQA==
-X-Gm-Message-State: APjAAAVOYxlqPVPny5Mn3w+WGSV+d+7Ahj8L8FNQM+FIqSh+bCUiIAHG
-        K0bIGrOkh98hHnznOk3KQXsgXHPvE2Y=
-X-Google-Smtp-Source: APXvYqxDU4O5RR5ccOAyRtGejxYvGW4X25EjIdd2LIc3b+4GZaBaRTzhGiT16qy7APgYJPZZniNa1g==
-X-Received: by 2002:a17:902:f301:: with SMTP id gb1mr1755357plb.249.1567667310708;
-        Thu, 05 Sep 2019 00:08:30 -0700 (PDT)
-Received: from rashmica.ozlabs.ibm.com ([122.99.82.10])
-        by smtp.googlemail.com with ESMTPSA id v27sm2714757pgn.76.2019.09.05.00.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 00:08:30 -0700 (PDT)
-Message-ID: <aa7bf455b3ef834fb4e965a6cfc594dc1f7ddb1c.camel@gmail.com>
-Subject: Re: [PATCH v2 3/4] gpio: Add in ast2600 details to Aspeed driver
-From:   Rashmica Gupta <rashmica.g@gmail.com>
-To:     Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Joel Stanley <joel@jms.id.au>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Thu, 05 Sep 2019 17:08:24 +1000
-In-Reply-To: <40601711-5fcf-40a0-bfc2-ae5043948a41@www.fastmail.com>
-References: <20190905011732.16059-1-rashmica.g@gmail.com>
-         <40601711-5fcf-40a0-bfc2-ae5043948a41@www.fastmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vU54gZjxiVxvJl2eoW2EscWr256c2EwuGn7IFr80evw=;
+ b=FAYCydVrsPnA+PeRdTT7CLIHyIHB4EUe/rgrwjgn+1ZkYNfIt49TMJMNJK8ufGwUF5qpy/OhcCD8J01Y5Z5ADFbVx6ifGh3VmXTM2oTKiURJHk0nI1ED67Fwd73N61Z9gH4RJX+CgJyIN78z/0D/PxhMU+3cq02y15dJu1JoM6E=
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
+ MN2PR18MB2413.namprd18.prod.outlook.com (20.179.83.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.13; Thu, 5 Sep 2019 07:10:29 +0000
+Received: from MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::9d49:7d09:abb5:34e8]) by MN2PR18MB3182.namprd18.prod.outlook.com
+ ([fe80::9d49:7d09:abb5:34e8%7]) with mapi id 15.20.2241.014; Thu, 5 Sep 2019
+ 07:10:28 +0000
+From:   Michal Kalderon <mkalderon@marvell.com>
+To:     Krzysztof Wilczynski <kw@linux.com>,
+        Ariel Elior <aelior@marvell.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH] net: qed: Move static keyword to the front of
+ declaration
+Thread-Topic: [EXT] [PATCH] net: qed: Move static keyword to the front of
+ declaration
+Thread-Index: AQHVYyuGjobw/PbCY0StEUp6RayVWaccq3cw
+Date:   Thu, 5 Sep 2019 07:10:28 +0000
+Message-ID: <MN2PR18MB3182E7412AECBEE5408AA0EDA1BB0@MN2PR18MB3182.namprd18.prod.outlook.com>
+References: <20190904141730.31497-1-kw@linux.com>
+In-Reply-To: <20190904141730.31497-1-kw@linux.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [199.203.130.254]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 08d7c0a6-ae37-4f71-0f09-08d731d02202
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2413;
+x-ms-traffictypediagnostic: MN2PR18MB2413:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR18MB241357E0BDA14655DA61689EA1BB0@MN2PR18MB2413.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:126;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39850400004)(376002)(396003)(346002)(136003)(199004)(189003)(6506007)(6436002)(14454004)(53936002)(25786009)(55016002)(4326008)(316002)(110136005)(54906003)(99286004)(86362001)(9686003)(6306002)(7696005)(33656002)(66066001)(71200400001)(71190400001)(966005)(186003)(102836004)(14444005)(76176011)(256004)(6246003)(486006)(26005)(478600001)(446003)(11346002)(476003)(66476007)(66446008)(52536014)(64756008)(7736002)(74316002)(305945005)(229853002)(76116006)(6636002)(66946007)(5660300002)(8936002)(8676002)(81166006)(3846002)(81156014)(2906002)(66556008)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2413;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gIe3uZsahRDTLmtFbb1dB+mjp377vUV858xvRjMEbBPg8b0JfKyXZTmUES/SP2enNu74vR+rwENg5zqReRJhtsCT9Xh6JIEfVpJfe+XCdflDVRRuw1lFsjkXnr9WAR1NDzQ1rdyPVjnVuLVcPyzRbAEHmDO06tZza8iKwcxtapYkPXesOwrlB+W8Kq0Jqp8mSCXKab/H5IuFifkFpec2BGshsbsBKFCwL6C4cANBmy4OV2QiKPxc8GB74eol97FxZPxZ3OiWvdwc+pSLTlnJHcAlQc8ljFuIsZ/QZbf5JtNZqpVi0NNLHBbnE0RysTACbur8q9Z/FFVdKOx8NhfX9Wa/srEAavME/SzfukocAopOSlabKMo4CDBa9F3nNHvxy5rLO/WAbESS+e+obKOcq3Ish2NTR9qK19Q59/WH0Pc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 08d7c0a6-ae37-4f71-0f09-08d731d02202
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 07:10:28.8943
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: FV0tZyMGemrBkhPh4JnTADNF9x+kZRqJsWr+PRJe5gyRDC7YZBlrUzDrEyg3BI8UnKSP4DCQgfd7EqG9qa9RYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2413
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_02:2019-09-04,2019-09-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-05 at 13:27 +0930, Andrew Jeffery wrote:
-> 
-> On Thu, 5 Sep 2019, at 10:47, Rashmica Gupta wrote:
-> > The ast2600 is a new generation of SoC from ASPEED. Similarly to
-> > the
-> > ast2400 and ast2500, it has a GPIO controller for it's 3.6V GPIO
-> > pins.
-> > Additionally, it has a GPIO controller for 36 1.8V GPIO pins. These
-> > voltages are fixed and cannot be configured via pinconf, so we need
-> > two
-> > separate drivers for them.
-> 
-> Working backwards, we don't really have multiple drivers, just
-> different
-> configurations for the same driver. So I think this should be
-> reworded.
-> 
-> Also it's not really the voltage differences that are driving the
-> different
-> configurations but rather that there are two separate sets of
-> registers
-> in the 2600 with overlapping bank names (they happen to be split into
-> 3.3V and 1.8V groups). The key point being that there aren't just
-> more
-> GPIO registers tacked on the end of the original 3.3V group.
-> 
-
-Good point! I'll reword this. Also they are 3.3V, I'm not sure why I
-wrote 3.6V in my patches.
-
-> > Signed-off-by: Rashmica Gupta <rashmica.g@gmail.com>
-> > ---
-> >  drivers/gpio/gpio-aspeed.c | 30 ++++++++++++++++++++++++++++--
-> >  1 file changed, 28 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-
-> > aspeed.c
-> > index 16c6eaf70857..4723b8780a8c 100644
-> > --- a/drivers/gpio/gpio-aspeed.c
-> > +++ b/drivers/gpio/gpio-aspeed.c
-> > @@ -662,12 +662,14 @@ static void aspeed_gpio_irq_handler(struct
-> > irq_desc *desc)
-> >  	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> >  	struct irq_chip *ic = irq_desc_get_chip(desc);
-> >  	struct aspeed_gpio *data = gpiochip_get_data(gc);
-> > -	unsigned int i, p, girq;
-> > +	unsigned int i, p, girq, banks;
-> >  	unsigned long reg;
-> > +	struct aspeed_gpio *gpio = gpiochip_get_data(gc);
-> >  
-> >  	chained_irq_enter(ic, desc);
-> >  
-> > -	for (i = 0; i < ARRAY_SIZE(aspeed_gpio_banks); i++) {
-> > +	banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
-> > +	for (i = 0; i < banks; i++) {
-> >  		const struct aspeed_gpio_bank *bank =
-> > &aspeed_gpio_banks[i];
-> >  
-> >  		reg = ioread32(bank_reg(data, bank, reg_irq_status));
-> > @@ -1108,9 +1110,33 @@ static const struct aspeed_gpio_config
-> > ast2500_config =
-> >  	/* 232 for simplicity, actual number is 228 (4-GPIO hole in
-> > GPIOAB) */
-> >  	{ .nr_gpios = 232, .props = ast2500_bank_props, };
-> >  
-> > +static const struct aspeed_bank_props ast2600_bank_props[] = {
-> > +	/*     input	  output   */
-> > +	{5, 0xffffffff,  0x0000ffff}, /* U/V/W/X */
-> > +	{6, 0xffff0000,  0x0fff0000}, /* Y/Z */
-> > +	{ },
-> > +};
-> > +
-> > +static const struct aspeed_gpio_config ast2600_config =
-> > +	/* 208 3.6V GPIOs */
-> > +	{ .nr_gpios = 208, .props = ast2600_bank_props, };
-> > +
-> > +static const struct aspeed_bank_props ast2600_1_8v_bank_props[] =
-> > {
-> > +	/*     input	  output   */
-> > +	{1, 0x0000000f,  0x0000000f}, /* E */
-> 
-> If there are 36 GPIOs then this configuration is suggesting that all
-> of them
-> are capable of input and output. A handy observation here is that the
-> first
-> 36 GPIOs of the 3.3V GPIO controller in the 2600 also have both
-> capabilities,
-> so we can re-use the 3.3V configuration if we can limit the number of
-> GPIOs
-> somehow.
-> 
-> The devicetree binding already describes an `ngpios` property so
-> perhaps
-> we could make use of this to use the same properties struct instance
-> for both
-> controllers in the 2600: Require that the property be present for
-> 2600-
-> compatible devicetree nodes and test for its presence in probe(),
-> then fall
-> back to the hard-coded value in the config struct if it is not (this
-> keeps
-> devicetree compatibility for the 2400 and 2500 drivers).
-> 
-> This way we can eliminate the aspeed,ast2600-1-8v-gpio compatible
-> string
-> below (we just use aspeed,ast2600-gpio for both controllers).
-> 
-> Thoughts?
-
-I like this idea. Once I have confirmation that all the 1.8V pins are
-indeed input and output capable I'll send out a v3.
-
-> 
-> Andrew
-> 
-> > +	{ },
-> > +};
-> > +
-> > +static const struct aspeed_gpio_config ast2600_1_8v_config =
-> > +	/* 36 1.8V GPIOs */
-> > +	{ .nr_gpios = 36, .props = ast2600_1_8v_bank_props, };
-> > +
-> >  static const struct of_device_id aspeed_gpio_of_table[] = {
-> >  	{ .compatible = "aspeed,ast2400-gpio", .data = &ast2400_config,
-> > },
-> >  	{ .compatible = "aspeed,ast2500-gpio", .data = &ast2500_config,
-> > },
-> > +	{ .compatible = "aspeed,ast2600-gpio", .data = &ast2600_config,
-> > },
-> > +	{ .compatible = "aspeed,ast2600-1-8v-gpio",
-> > +	  .data = &ast2600_1_8v_config, },
-> >  	{}
-> >  };
-> >  MODULE_DEVICE_TABLE(of, aspeed_gpio_of_table);
-> > -- 
-> > 2.20.1
-> > 
-> > 
-
+PiBGcm9tOiBLcnp5c3p0b2YgV2lsY3p5bnNraSA8a3N3aWxjenluc2tpQGdtYWlsLmNvbT4gT24g
+QmVoYWxmIE9mIEtyenlzenRvZg0KPiBXaWxjenluc2tpDQo+IA0KPiBFeHRlcm5hbCBFbWFpbA0K
+PiANCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiBNb3ZlIHRoZSBzdGF0aWMga2V5d29yZCB0byB0aGUgZnJv
+bnQgb2YgZGVjbGFyYXRpb24gb2YgaXdhcnBfc3RhdGVfbmFtZXMsDQo+IGFuZCByZXNvbHZlIHRo
+ZSBmb2xsb3dpbmcgY29tcGlsZXIgd2FybmluZyB0aGF0IGNhbiBiZSBzZWVuIHdoZW4gYnVpbGRp
+bmcNCj4gd2l0aCB3YXJuaW5ncyBlbmFibGVkIChXPTEpOg0KPiANCj4gZHJpdmVycy9uZXQvZXRo
+ZXJuZXQvcWxvZ2ljL3FlZC9xZWRfaXdhcnAuYzozODU6MTogd2FybmluZzoNCj4gICDigJhzdGF0
+aWPigJkgaXMgbm90IGF0IGJlZ2lubmluZyBvZiBkZWNsYXJhdGlvbiBbLVdvbGQtc3R5bGUtZGVj
+bGFyYXRpb25dDQo+IA0KPiBBbHNvLCByZXNvbHZlIGNoZWNrcGF0Y2gucGwgc2NyaXB0IHdhcm5p
+bmc6DQo+IA0KPiBXQVJOSU5HOiBzdGF0aWMgY29uc3QgY2hhciAqIGFycmF5IHNob3VsZCBwcm9i
+YWJseSBiZQ0KPiAgIHN0YXRpYyBjb25zdCBjaGFyICogY29uc3QNCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IEtyenlzenRvZiBXaWxjenluc2tpIDxrd0BsaW51eC5jb20+DQo+IC0tLQ0KPiBSZWxhdGVk
+OiBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMTkwODI3MjMzMDE3LkdLOTk4N0Bnb29nbGUu
+Y29tDQo+IA0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvcWxvZ2ljL3FlZC9xZWRfaXdhcnAuYyB8
+IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0K
+PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L3Fsb2dpYy9xZWQvcWVkX2l3
+YXJwLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9xbG9naWMvcWVkL3FlZF9pd2FycC5jDQo+
+IGluZGV4IGYzODBmYWU4Nzk5ZC4uNjVlYzE2YTMxNjU4IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
+L25ldC9ldGhlcm5ldC9xbG9naWMvcWVkL3FlZF9pd2FycC5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0
+L2V0aGVybmV0L3Fsb2dpYy9xZWQvcWVkX2l3YXJwLmMNCj4gQEAgLTM4Miw3ICszODIsNyBAQCBx
+ZWRfaXdhcnAycm9jZV9zdGF0ZShlbnVtIHFlZF9pd2FycF9xcF9zdGF0ZQ0KPiBzdGF0ZSkNCj4g
+IAl9DQo+ICB9DQo+IA0KPiAtY29uc3Qgc3RhdGljIGNoYXIgKml3YXJwX3N0YXRlX25hbWVzW10g
+PSB7DQo+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGl3YXJwX3N0YXRlX25hbWVzW10gPSB7
+DQo+ICAJIklETEUiLA0KPiAgCSJSVFMiLA0KPiAgCSJURVJNSU5BVEUiLA0KDQpUaGFua3MswqAN
+Cg0KQWNrZWQtYnk6IE1pY2hhbCBLYWxkZXJvbsKgPG1pY2hhbC5rYWxkZXJvbkBtYXJ2ZWxsLmNv
+bT4NCg0KDQo+IC0tDQo+IDIuMjIuMQ0KDQo=
