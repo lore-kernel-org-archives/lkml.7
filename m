@@ -2,114 +2,79 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B84C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DC0C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7589220828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C7820882
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730643AbfIEBgp (ORCPT
+        id S1730457AbfIEBjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 21:36:45 -0400
-Received: from mail.windriver.com ([147.11.1.11]:35123 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727741AbfIEBgp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 21:36:45 -0400
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x851agER017249
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Wed, 4 Sep 2019 18:36:43 -0700 (PDT)
-Received: from [128.224.162.188] (128.224.162.188) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 4 Sep
- 2019 18:36:35 -0700
-Subject: Re: Bug?: unlink cause btrfs error but other fs don't
-To:     Josef Bacik <josef@toxicpanda.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <49edadc4-9191-da89-3e3b-ca495f582a4d@windriver.com>
- <20190904104841.nrdocb7smfporu7m@macbook-pro-91.dhcp.thefacebook.com>
-From:   "Hongzhi, Song" <hongzhi.song@windriver.com>
-Message-ID: <853d3a5e-6e65-a7d8-df52-e293cad17600@windriver.com>
-Date:   Thu, 5 Sep 2019 09:36:31 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 4 Sep 2019 21:39:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:42110 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727162AbfIEBja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 21:39:30 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E23C17C8EED83C01DF7D;
+        Thu,  5 Sep 2019 09:39:28 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 5 Sep 2019 09:39:20 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <eric.dumazet@gmail.com>, <tsbogend@alpha.franken.de>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
+Subject: [PATCH v2 net] net: sonic: return NETDEV_TX_OK if failed to map buffer
+Date:   Thu, 5 Sep 2019 09:57:12 +0800
+Message-ID: <20190905015712.107173-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <960c7d1f-6e80-84fb-8d7a-9c5692605500@huawei.com>
+References: <960c7d1f-6e80-84fb-8d7a-9c5692605500@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190904104841.nrdocb7smfporu7m@macbook-pro-91.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.188]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+NETDEV_TX_BUSY really should only be used by drivers that call
+netif_tx_stop_queue() at the wrong moment. If dma_map_single() is
+failed to map tx DMA buffer, it might trigger an infinite loop.
+This patch use NETDEV_TX_OK instead of NETDEV_TX_BUSY, and change
+printk to pr_err_ratelimited.
 
-On 9/4/19 6:48 PM, Josef Bacik wrote:
-> On Wed, Sep 04, 2019 at 04:02:24PM +0800, Hongzhi, Song wrote:
->> Hi ,
->>
->>
->> *Kernel:*
->>
->>      After v5.2-rc1, qemux86-64
->>
->>      make -j40 ARCH=x86_64 CROSS_COMPILE=x86-64-gcc
->>      use qemu to bootup kernel
->>
->>
->> *Reproduce:*
->>
->>      There is a test case failed on btrfs but success on other fs(ext4,ext3),
->> see attachment.
->>
->>
->>      Download attachments:
->>
->>          gcc test.c -o myout -Wall -lpthread
->>
->>          copy myout and run.sh to your qemu same directory.
->>
->>          on qemu:
->>
->>              ./run.sh
->>
->>
->>      I found the block device size with btrfs set 512M will cause the error.
->>      256M and 1G all success.
->>
->>
->> *Error info:*
->>
->>      "BTRFS warning (device loop0): could not allocate space for a delete;
->> will truncate on mount"
->>
->>
->> *Related patch:*
->>
->>      I use git bisect to find the following patch introduces the issue.
->>
->>      commit c8eaeac7b734347c3afba7008b7af62f37b9c140
->>      Author: Josef Bacik <josef@toxicpanda.com>
->>      Date:   Wed Apr 10 15:56:10 2019 -0400
->>
->>          btrfs: reserve delalloc metadata differently
->>          ...
->>
->>
-> I meant to reply to this but couldn't find the original thread.  The patches I
-> wrote for this merge window were to address this issue.  Thanks,
->
-> Josef
+Fixes: d9fb9f384292 ("*sonic/natsemi/ns83829: Move the National Semi-conductor drivers")
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ v2: change subject and description of patch, use NETDEV_TX_OK instead of NETDEV_TX_BUSY.
+ drivers/net/ethernet/natsemi/sonic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/net/ethernet/natsemi/sonic.c b/drivers/net/ethernet/natsemi/sonic.c
+index d0a01e8f000a..18fd62fbfb64 100644
+--- a/drivers/net/ethernet/natsemi/sonic.c
++++ b/drivers/net/ethernet/natsemi/sonic.c
+@@ -232,9 +232,9 @@ static int sonic_send_packet(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	laddr = dma_map_single(lp->device, skb->data, length, DMA_TO_DEVICE);
+ 	if (!laddr) {
+-		printk(KERN_ERR "%s: failed to map tx DMA buffer.\n", dev->name);
++		pr_err_ratelimited("%s: failed to map tx DMA buffer.\n", dev->name);
+ 		dev_kfree_skb(skb);
+-		return NETDEV_TX_BUSY;
++		return NETDEV_TX_OK;
+ 	}
+ 
+ 	sonic_tda_put(dev, entry, SONIC_TD_STATUS, 0);       /* clear status */
+-- 
+2.20.1
 
-Ok, thank your, I will try to search them.
-
---Hongzhi
-
-
->
