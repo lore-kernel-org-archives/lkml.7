@@ -2,148 +2,147 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6CAC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9904C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67291206DE
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF99206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="kJ53qBFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391266AbfIEWmo (ORCPT
+        id S2391271AbfIEWrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:42:44 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:37712 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725290AbfIEWmo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:42:44 -0400
-Received: from pps.filterd (m0150245.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85MfSmY023499;
-        Thu, 5 Sep 2019 22:42:15 GMT
-Received: from g2t2353.austin.hpe.com (g2t2353.austin.hpe.com [15.233.44.26])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2uu4s0axy0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Sep 2019 22:42:15 +0000
-Received: from g2t2360.austin.hpecorp.net (g2t2360.austin.hpecorp.net [16.196.225.135])
-        by g2t2353.austin.hpe.com (Postfix) with ESMTP id 69D5984;
-        Thu,  5 Sep 2019 22:42:14 +0000 (UTC)
-Received: from [16.116.163.9] (unknown [16.116.163.9])
-        by g2t2360.austin.hpecorp.net (Postfix) with ESMTP id B1C1749;
-        Thu,  5 Sep 2019 22:42:11 +0000 (UTC)
-Subject: Re: [PATCH 6/8] x86/platform/uv: Decode UVsystab Info
-To:     Sasha Levin <sashal@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Hedi Berriche <hedi.berriche@hpe.com>,
-        Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
- <20190905130253.325911213@stormcage.eag.rdlabs.hpecorp.net>
- <20190905141634.GA25790@kroah.com> <20190905214030.GE1616@sasha-vm>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <9745d473-e4bc-7ae2-fc67-a898c3606088@hpe.com>
-Date:   Thu, 5 Sep 2019 15:42:41 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190905214030.GE1616@sasha-vm>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+        Thu, 5 Sep 2019 18:47:09 -0400
+Received: from mail-eopbgr720133.outbound.protection.outlook.com ([40.107.72.133]:29120
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726073AbfIEWrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 18:47:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FjFUTx/oo0QyHMcEuM9dREjJ4rr3fJpRn8i+6A5MEqxPDaLWfOXFmuQU2tJw2JpOQpG0W+w/7kukjdWtqiMfB7mM8HllAJb/XMJqt79rdxCFmGiwNYZr58LZyqxXAakrGTpwkKA/h1emqE7XC6j9Qi/qD/oRyt5Vvz1tTTg/FwSSTDYB/FkopvCRQCCeRca4HXvh/YslapAsoQNDBSfcHnYN2/o40a5f8fcoob275Q878b1K0gOJ3iaUdC7QLVpRo8/zDGmyvbbmYoyIRAqPpc+5Ktcz9M/EW7ZbP26ID886fZ496iSp1pACoE8lKfAFnahZ30G5XbystiiI5clmQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WamlG1JEr0ZoR83E8/3dBW9zjNcaFF2VYbF4Hl3/EMc=;
+ b=gpxr8LMw1aYnKvCjjyOrsAN0BhnDhqP6l5ZemoJRvor7IsEX7mugciyySv5nl3/uOAydT9b6ERQctgW12mJAeAMk9HMTJOR4pwALX6C4KlPod/muQFbImmqD4GOxGKPqtXHK5akgfAAYuf0FeFfXC4irDQx+ImNSJBwvLi5AFTPsN1dye4LkuXI6HKX9epsEByyeBZ3jBo7VIyzz5WJHbJvMu9o+f6iiRsBSRBIaSXcEe/4pQqY4jzptj0dLtDoOBQ5MePdUDU7viVlfbUFqgnFfVgwiGYLqCPJ+D/YIdZJQkYd/dnf78CBljPmHpFOVJzdxUc4kYBYGOc0DVYrdwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WamlG1JEr0ZoR83E8/3dBW9zjNcaFF2VYbF4Hl3/EMc=;
+ b=kJ53qBFcu+2dtI5C2DimPIkUliTUEJn4qsZkTiaAd7QDCEDlTasaOZjeNG+w+GT+WrnRLvdgOU9rdt3lfzP4n6SFLcqZQs5YrUneknqi1BGhqoIhQm5SyehjaHowtDSIrHSwBC8X49MOCWDHh16Z7c8quoIbyxlOKKnMdid3lqI=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB1101.namprd21.prod.outlook.com (52.132.115.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2241.7; Thu, 5 Sep 2019 22:47:05 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::dd56:aa4f:204f:86a4]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::dd56:aa4f:204f:86a4%3]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
+ 22:47:04 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de" <bp@alien8.de>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v5 0/3] Enhance Hyper-V for hibernation
+Thread-Topic: [PATCH v5 0/3] Enhance Hyper-V for hibernation
+Thread-Index: AQHVZDvWiJN7KE4mZkeEB0PYga91Ow==
+Date:   Thu, 5 Sep 2019 22:47:03 +0000
+Message-ID: <1567723581-29088-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-05_09:2019-09-04,2019-09-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=946 suspectscore=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0 clxscore=1011
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1906280000 definitions=main-1909050211
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR19CA0019.namprd19.prod.outlook.com
+ (2603:10b6:300:d4::29) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ad674e58-72cb-4523-7400-08d73252f85f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1101;
+x-ms-traffictypediagnostic: SN6PR2101MB1101:|SN6PR2101MB1101:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <SN6PR2101MB1101361C4FA9D3915CEA4DAEBFBB0@SN6PR2101MB1101.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(189003)(199004)(4326008)(36756003)(6512007)(25786009)(99286004)(6436002)(4744005)(7416002)(6306002)(81156014)(81166006)(8676002)(53936002)(386003)(6506007)(107886003)(6636002)(4720700003)(316002)(54906003)(110136005)(50226002)(22452003)(8936002)(52116002)(3450700001)(66066001)(2906002)(2501003)(43066004)(1511001)(10090500001)(66476007)(86362001)(66556008)(64756008)(26005)(66946007)(66446008)(966005)(3846002)(6116002)(2201001)(305945005)(2616005)(71200400001)(476003)(102836004)(14444005)(256004)(71190400001)(5660300002)(478600001)(10290500003)(6486002)(7736002)(14454004)(486006)(186003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1101;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2r1vk+t36mkVYdm1fZB4LblYUG8a6xPd+OamFvPjopusZzpBJI+/MzjqIFxV9adlhfx7Ip2W4HHuiYjmsL77jPMvDOFamstPWLwmX8VVNDiSCD8OFY5aOYwuFCvwiFZsn+BqsxIv6GQXiMdmKbEALAFsHuvhlZbP5+Xv9VRAfutgk8KEjjrP23a1bONCC8cWx/IcBy8Lqhl9rNFrD5iQ7N3rM9xH3YF+R1qnqTPx5cwPzZ8vPiallLCspWAiS81uuswlAnAjx1lVErpJGNlni2KosUWRAwGFzHmLEv6W/4Dt2Ba9Ml+9UrVkP2FTzL5+/l4njRu48sDZ16dW0HS2fiaWyyrKNyq+ReNUUbljTEpwKuqT81AE9yBNZRi9dl852qrrw/VDbA9Qdh/p8CmZZkWeVhs3lCoIdyOJx7wwbRo=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad674e58-72cb-4523-7400-08d73252f85f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 22:47:04.4409
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jYbyvubFjne8htuDvdIGdXVhXlI8xq5Og1l33vTHFvbZIH5puCUQBqFvXWmX0gpJNii7ompYt0EB3UKA2mR2CA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset (consisting of 3 patches) was part of the v4 patchset (consis=
+ting
+of 12 patches):
+    https://lkml.org/lkml/2019/9/2/894
 
+I realized these 3 patches must go through the tip.git tree, because I have
+to rebase 2 of the 3 patches due to recent changes from others in the tip
+tree.
 
-On 9/5/2019 2:40 PM, Sasha Levin wrote:
-> On Thu, Sep 05, 2019 at 04:16:34PM +0200, Greg KH wrote:
->> On Thu, Sep 05, 2019 at 08:02:58AM -0500, Mike Travis wrote:
->>> --- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
->>> +++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
->>> @@ -1303,7 +1303,8 @@ static int __init decode_uv_systab(void)
->>>      struct uv_systab *st;
->>>      int i;
->>>
->>> -    if (uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE)
->>> +    /* Select only UV4 (hubbed or hubless) and higher */
->>> +    if (is_uv_hubbed(-2) < uv(4) && is_uv_hubless(-2) < uv(4))
-> 
-> For someone not too familiar with the code, this is completely
-> unreadable. There must be a nicer way to do this.
-> 
-> -- 
-> Thanks,
-> Sasha
+All the 3 patches are now rebased to the tip tree's timers/core branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Dtimers=
+/core
+, and all the 3 patches have Michael Kelley's Signed-off-by's.
 
-Hi Sasha,
+Please review.
 
-I can put in further explanation but first the uv() function returns 1 
-left shifted by the UV #:
+Thanks!
+Dexuan
 
-static inline int uv(int uvtype)
-{
-         /* uv(0) is "any" */
-         if (uvtype >= 0 && uvtype <= 30)
-                 return 1 << uvtype;
-         return 1;
-}
+Dexuan Cui (3):
+  x86/hyper-v: Suspend/resume the hypercall page for hibernation
+  x86/hyper-v: Implement hv_is_hibernation_supported()
+  clocksource/drivers: Suspend/resume Hyper-V clocksource for
+    hibernation
 
-The "is_uv_hubbed(x)" and "is_uv_hubless(x)" AND's the incoming arg with 
-the actual uv type:
+ arch/x86/hyperv/hv_init.c          | 40 ++++++++++++++++++++++++++++++++++=
+++++
+ drivers/clocksource/hyperv_timer.c | 25 ++++++++++++++++++++++++
+ include/asm-generic/mshyperv.h     |  2 ++
+ 3 files changed, 67 insertions(+)
 
-int is_uv_hubbed(int uvtype)
-{
-         return (uv_hubbed_system & uvtype);
-}
-
-The uv_hub{bed,less}_system is set to 1 left shifted by the UV # plus in 
-bit 0 is a '1' to indicate "any" UV (as in "is_uv_hubbed(1)" is any UV 
-hubbed system).  Hubbed indicates a hubbed system, and hubless indicates 
-a hubless system, it cannot be both but can be neither.
-
->                 /* UV4 Hubless, (0x11:UV4+Any) */
->                 if (strncmp(oem_id, "NSGI4", 5) == 0)
->                         uv_hubless_system = 0x11;
-> 
->                 /* UV3 Hubless, UV300/MC990X w/o hub (0x9:UV3+Any) */
->                 else
->                         uv_hubless_system = 0x9;
-> 
-
-(There are only hubbed versions of UV1 and UV2.)
-
-Lastly (-2) translates to 0xffff...fffe (note bit 0 is clear to avoid 
-the "any" bit.   So it is looking for a a hubbed or hubless UV system 
-that is less than UV4 meaning only UV4,5,6...qualify, hence this comment:
-
- >>> +    /* Select only UV4 (hubbed or hubless) and higher */
-	if (UV is less than UV4 either hubbed or hubless)
-		return;  /* does not have an extended UVsystab */
-
-Have you a suggestion on what would make it more clear?  Perhaps instead 
-of -2 I should use a hex mask?
-
-Thanks,
-Mike
-
+--=20
+1.8.3.1
 
