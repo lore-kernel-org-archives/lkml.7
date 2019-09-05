@@ -2,297 +2,233 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCECC00307
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E992C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20069206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEAB206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H+Pa0Gor"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hOjYQuRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390915AbfIEVeJ (ORCPT
+        id S2389447AbfIEVfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:34:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46936 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390862AbfIEVeI (ORCPT
+        Thu, 5 Sep 2019 17:35:00 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38292 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731289AbfIEVe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:34:08 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h7so4377796wrt.13
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:34:06 -0700 (PDT)
+        Thu, 5 Sep 2019 17:34:59 -0400
+Received: by mail-pg1-f196.google.com with SMTP id d10so2183840pgo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:34:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V4w6sga0FIOl7Szr7q6ctpLCXiFJjLRqtuSSCXE+qjA=;
-        b=H+Pa0GornKzpQpcL73cJnsE8BV5Xp412v0HAM9zlxElU5LQ0oYHBxMgwMc7DsrBEhx
-         wJfl7Br2X3mNNnrXooPc0bj1uXnki/XI6CmSL1yJhuJIpC3RC/rFygle1MBTyw539vHU
-         ov95M3lrK+7INmQcOKYMtV+UDZ2dKXcBiDr7a7QGXPx2asoFJQkHojcHaShr8zw/eqsg
-         6RqH4gXsxzYxwrnWYcT9YQdkW2oPhs4t04VeDva48C1k2Bn7kKf4Q7Ng8NQuJv+dE4/N
-         Hzc11JA9dEMUnpGAj7dURcWQurAYiVpaDf/OLeTihWGQH26qhkTKUvqAznE5Fls2lMMx
-         iuxA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5RsLIl5K0jrZTsTxRJpmmFtsgDYlViFV+NPvDwNC4j0=;
+        b=hOjYQuRXhj8BvSViKqLnOIVjSzPtQ2tvajLEdY9gUXizUFvwdyMxZUB2ULjHRxtGte
+         eExvAF435vdi5QxIFwH6dneEgDjYg2NnYkGC5L2gKjYiTwGj1z6sOhu1espJgf/Fo405
+         FMEQ3ca8pe/C9m+h3nN5v6HbSAS8BuIPEzKrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=V4w6sga0FIOl7Szr7q6ctpLCXiFJjLRqtuSSCXE+qjA=;
-        b=NLJGh1fIWvzykKN6FPp8aOB5/KJaeJ9Dk/yLBpu8BYDmlW2BkLqtNP8ZNDre62iUy1
-         Bu1F3Wp5AaQ74imgsHzEwmlo45h6jmYVxb6x0cG4p7ajmZVOfvBVcWOZ0+H7yg2vHDOY
-         gu5BuYVeChcp3ckxLm8IbcU/4Ubo/6yGK3x4gpivezVHxTC3e7OkUFqp2KWhMnZhFEb4
-         PdnTAtiwv7sQtmj5bxcuTmlXuXrAwjYbyMA/Yr7MZQCXu/nz2+MMzwvWywNPGtKz7SgA
-         VJ4mcZ77fSgp2WgVsq0gD9mUXNS4qWOGDMU0LZwLtkKqn7yM2Eut8AhrnMm4VyH+hOO9
-         Piaw==
-X-Gm-Message-State: APjAAAUzug3/j53ALkqrN+1tLUfdWda7i1CRiC4YW9u39pHUHv3SJzRU
-        dxJ44pg0LhxeITzg0qciKIdQuNYyRf8=
-X-Google-Smtp-Source: APXvYqxehoMcp42BMx4NU36PzZo9MQM9r0cs4sI0+/gPlgLXiabiYd1OQJ7khBaf0w2SBvHgTbl0Fg==
-X-Received: by 2002:a5d:560f:: with SMTP id l15mr4447006wrv.64.1567719245092;
-        Thu, 05 Sep 2019 14:34:05 -0700 (PDT)
-Received: from [192.168.1.6] (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id 5sm2535842wmg.42.2019.09.05.14.34.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 14:34:04 -0700 (PDT)
-Subject: Re: [PATCH v4] watchdog: qcom: support pre-timeout when the bark irq
- is available
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     agross@kernel.org, wim@linux-watchdog.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190905210035.9985-1-jorge.ramirez-ortiz@linaro.org>
- <20190905211913.GA31094@roeck-us.net>
-From:   Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Message-ID: <68ca07e6-efa2-d5bd-111b-faaa86808192@linaro.org>
-Date:   Thu, 5 Sep 2019 23:34:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5RsLIl5K0jrZTsTxRJpmmFtsgDYlViFV+NPvDwNC4j0=;
+        b=sgTRGBQ+z4tA9+ZmoZq9B565Og9K7AT104V+c4zGKvwhfUkY8flzgPWJclFrll1TSA
+         WURX+TAHdX1143+hbOcPKEu3uUFNJZKCIMtHSUNx/UywhrAz6wGMpE4mL6z9jzT1Z5Oq
+         0aZg++Vs2FUoJDS8ytJxx0h6oEfW9iNqehoNrdGc9/gEhfIUYTbcFvBShLNOyo2+U8cl
+         J2+eOAeo5Si+GKrSrIzPemv3S+5XsZET45WsyBIcQnl5v0ljCptOzNyUt+jW0IKeC19c
+         xd+hrY47uhDWuZyVdfgK/EfJ0W3NW7kQ0FkwKc6BpTCXnt4Ofrx2E1zyW4/Itz15ecm5
+         qnWw==
+X-Gm-Message-State: APjAAAVQQ46FaTsvaYSrkVHhfEL+q0HGj/zlM3Zi+I0wjFuloTz1GI+s
+        Xx4qC6qQNHw+fkMlRzRj5JbvNg==
+X-Google-Smtp-Source: APXvYqwj77WtBTkqXYqrNSXC6Jn8HrrBsqnllRg6nXZzZ3oCqC97/sUAUyO1o0aO+MXP1EWaV/HrpQ==
+X-Received: by 2002:a17:90a:e654:: with SMTP id ep20mr6139880pjb.65.1567719298875;
+        Thu, 05 Sep 2019 14:34:58 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n66sm5364048pfn.90.2019.09.05.14.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 14:34:57 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 14:34:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/9] Remove unused %*pE[achnops] formats
+Message-ID: <201909051433.33DE38C2@keescook>
+References: <20190905193604.GC31247@fieldses.org>
+ <1567712673-1629-1-git-send-email-bfields@redhat.com>
+ <1567712673-1629-5-git-send-email-bfields@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905211913.GA31094@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1567712673-1629-5-git-send-email-bfields@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 23:19, Guenter Roeck wrote:
-> On Thu, Sep 05, 2019 at 11:00:35PM +0200, Jorge Ramirez-Ortiz wrote:
->> Use the bark interrupt as the pre-timeout notifier whenever this
->> interrupt is available.
->>
->> By default, the pretimeout notification shall occur one second earlier
->> than the timeout.
->>
->> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->> ---
->>  v4:
->>      address Guenter Roeck comments as follows:
->>        remove unnecessary include and private variable
->>        provide macro for WDT EN register values
->>        use pretimeout as per its API intent
->>        handle EPROBE_DEFER on get_irq
->>      also:
->>        handle the irq registration as done in pm8916_wdt.c
->>  v3:
->>     remove unnecesary variable added to private.
->>
->>  v2:
->>     register the pre-timeout notifier instead.
->>
->>  v1:
->>  drivers/watchdog/qcom-wdt.c | 64 ++++++++++++++++++++++++++++++++++---
->>  1 file changed, 59 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
->> index 7be7f87be28f..0f1d29eeb81d 100644
->> --- a/drivers/watchdog/qcom-wdt.c
->> +++ b/drivers/watchdog/qcom-wdt.c
->> @@ -10,6 +10,7 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/watchdog.h>
->>  #include <linux/of_device.h>
->> +#include <linux/interrupt.h>
->>  
->>  enum wdt_reg {
->>  	WDT_RST,
->> @@ -19,6 +20,9 @@ enum wdt_reg {
->>  	WDT_BITE_TIME,
->>  };
->>  
->> +#define QCOM_WDT_ENABLE		BIT(0)
->> +#define QCOM_WDT_ENABLE_IRQ	BIT(1)
->> +
+On Thu, Sep 05, 2019 at 03:44:29PM -0400, J. Bruce Fields wrote:
+> From: "J. Bruce Fields" <bfields@redhat.com>
 > 
-> Using BIT() requires "#include <linux/bits.h>".
-
-do you want it explicitly in the file even if it builds?
-
+> The [achnops] are confusing, and in practice the only one anyone seems
+> to need is the bare %*pE.
 > 
->>  static const u32 reg_offset_data_apcs_tmr[] = {
->>  	[WDT_RST] = 0x38,
->>  	[WDT_EN] = 0x40,
->> @@ -54,15 +58,38 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
->>  	return container_of(wdd, struct qcom_wdt, wdd);
->>  }
->>  
->> +static inline int qcom_get_enable(struct watchdog_device *wdd)
->> +{
->> +	int enable = QCOM_WDT_ENABLE;
->> +
->> +	if (wdd->info->options & WDIOF_PRETIMEOUT)
->> +		enable |= QCOM_WDT_ENABLE_IRQ;
->> +
+> I think some set of modifiers here might actually be useful, but the
+> ones we have are confusing and unused, so let's just toss these out and
+> then rethink what we might want to add back later.
 > 
-> Again, the condition needs to be that pretimeout != 0,
-> not that it is supported.
+> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 
-no I dont think so. doing that would propagate a possible error in some
-pretimeout setup code which would end up enabling an interrupt when it
-shouldnt. so I dont think that doing that would be correct.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-The interrupt should only be enabled if WDIOF_PRETIMEOUT is configured
-(independently of the pretimeout value); as a matter of fact, if
-pretimeout is 0, the interrupt will trigger at the same time than bark
-(which is what the original code used to do).
+Typo below...
 
-so I'd rather keep this condition unless you strongly oppose to it.
-
+> ---
+>  Documentation/core-api/printk-formats.rst | 23 ++---------
+>  lib/vsprintf.c                            | 50 ++---------------------
+>  2 files changed, 7 insertions(+), 66 deletions(-)
 > 
->> +	return enable;
->> +}
->> +
->> +static irqreturn_t qcom_wdt_isr(int irq, void *arg)
->> +{
->> +	struct watchdog_device *wdd = arg;
->> +
->> +	watchdog_notify_pretimeout(wdd);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->>  static int qcom_wdt_start(struct watchdog_device *wdd)
->>  {
->>  	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
->> +	unsigned int bark = wdd->timeout;
->> +
->> +	if (wdd->pretimeout)
->> +		bark = bark - wdd->pretimeout;
-> 
-> The if() just adds code and doesn't otherwise do any good.
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index c6224d039bcb..4f9d20dfb342 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -180,35 +180,20 @@ Raw buffer as an escaped string
+>  
+>  ::
+>  
+> -	%*pE[achnops]
+> +	%*pE
+>  
+>  For printing raw buffer as an escaped string. For the following buffer::
+>  
+>  		1b 62 20 5c 43 07 22 90 0d 5d
+>  
+> -A few examples show how the conversion would be done (excluding surrounding
+> +An example shows how the conversion would be done (excluding surrounding
+>  quotes)::
+>  
+>  		%*pE		"\eb \C\a"\220\r]"
+> -		%*pEhp		"\x1bb \C\x07"\x90\x0d]"
+> -		%*pEa		"\e\142\040\\\103\a\042\220\r\135"
+>  
+> -The conversion rules are applied according to an optional combination
+> -of flags (see :c:func:`string_escape_mem` kernel documentation for the
+> -details):
+> +See :c:func:`string_escape_mem` kernel documentation for the details.
+>  
+> -	- a - ESCAPE_ANY
+> -	- c - ESCAPE_SPECIAL
+> -	- h - ESCAPE_HEX
+> -	- n - ESCAPE_NULL
+> -	- o - ESCAPE_OCTAL
+> -	- p - ESCAPE_NP
+> -	- s - ESCAPE_SPACE
+> -
+> -By default ESCAPE_ANY_NP is used.
+> -
+> -ESCAPE_ANY_NP is the sane choice for many cases, in particularly for
+> -printing SSIDs.
+> +This is used, for example, for printing SSIDs.
+>  
+>  If field width is omitted then 1 byte only will be escaped.
+>  
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index b0967cf17137..5522d2a052e1 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1537,9 +1537,6 @@ static noinline_for_stack
+>  char *escaped_string(char *buf, char *end, u8 *addr, struct printf_spec spec,
+>  		     const char *fmt)
+>  {
+> -	bool found = true;
+> -	int count = 1;
+> -	unsigned int flags = 0;
+>  	int len;
+>  
+>  	if (spec.field_width == 0)
+> @@ -1548,38 +1545,6 @@ char *escaped_string(char *buf, char *end, u8 *addr, struct printf_spec spec,
+>  	if (check_pointer(&buf, end, addr, spec))
+>  		return buf;
+>  
+> -	do {
+> -		switch (fmt[count++]) {
+> -		case 'a':
+> -			flags |= ESCAPE_ANY;
+> -			break;
+> -		case 'c':
+> -			flags |= ESCAPE_SPECIAL;
+> -			break;
+> -		case 'h':
+> -			flags |= ESCAPE_HEX;
+> -			break;
+> -		case 'n':
+> -			flags |= ESCAPE_NULL;
+> -			break;
+> -		case 'o':
+> -			flags |= ESCAPE_OCTAL;
+> -			break;
+> -		case 'p':
+> -			flags |= ESCAPE_NP;
+> -			break;
+> -		case 's':
+> -			flags |= ESCAPE_SPACE;
+> -			break;
+> -		default:
+> -			found = false;
+> -			break;
+> -		}
+> -	} while (found);
+> -
+> -	if (!flags)
+> -		flags = ESCAPE_ANY_NP;
+> -
+>  	len = spec.field_width < 0 ? 1 : spec.field_width;
+>  
+>  	/*
+> @@ -1587,7 +1552,8 @@ char *escaped_string(char *buf, char *end, u8 *addr, struct printf_spec spec,
+>  	 * the given buffer, and returns the total size of the output
+>  	 * had the buffer been big enough.
+>  	 */
+> -	buf += string_escape_mem(addr, len, buf, buf < end ? end - buf : 0, flags, NULL);
+> +	buf += string_escape_mem(addr, len, buf, buf < end ? end - buf : 0,
+> +				 ESCAPE_ANY_NP, NULL);
+>  
+>  	return buf;
+>  }
+> @@ -2038,17 +2004,7 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+>   * - '[Ii][4S][hnbl]' IPv4 addresses in host, network, big or little endian order
+>   * - 'I[6S]c' for IPv6 addresses printed as specified by
+>   *       http://tools.ietf.org/html/rfc5952
+> - * - 'E[achnops]' For an escaped buffer, where rules are defined by combination
+> - *                of the following flags (see string_escape_mem() for the
+> - *                details):
+> - *                  a - ESCAPE_ANY
+> - *                  c - ESCAPE_SPECIAL
+> - *                  h - ESCAPE_HEX
+> - *                  n - ESCAPE_NULL
+> - *                  o - ESCAPE_OCTAL
+> - *                  p - ESCAPE_NP
+> - *                  s - ESCAPE_SPACE
+> - *                By default ESCAPE_ANY_NP is used.
+> + * - 'E[achnops]' For an escaped buffer (see string_escape_mem()
 
-yeah, was just for clarity and it is surely removed by the compiler. but
-sure will remove
+This line should be like this; no more suboptions and add missed final ")":
 
-> 
->>  
->>  	writel(0, wdt_addr(wdt, WDT_EN));
->>  	writel(1, wdt_addr(wdt, WDT_RST));
->> -	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
->> +	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
->>  	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
->> -	writel(1, wdt_addr(wdt, WDT_EN));
->> +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
->>  	return 0;
->>  }
->>  
->> @@ -89,6 +116,13 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
->>  	return qcom_wdt_start(wdd);
->>  }
->>  
->> +static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
->> +				   unsigned int timeout)
->> +{
->> +	wdd->pretimeout = timeout;
->> +	return qcom_wdt_start(wdd);
->> +}
->> +
->>  static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
->>  			    void *data)
->>  {
->> @@ -105,7 +139,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
->>  	writel(1, wdt_addr(wdt, WDT_RST));
->>  	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
->>  	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
->> -	writel(1, wdt_addr(wdt, WDT_EN));
->> +	writel(qcom_get_enable(wdd), wdt_addr(wdt, WDT_EN));
->>  
->>  	/*
->>  	 * Actually make sure the above sequence hits hardware before sleeping.
->> @@ -121,6 +155,7 @@ static const struct watchdog_ops qcom_wdt_ops = {
->>  	.stop		= qcom_wdt_stop,
->>  	.ping		= qcom_wdt_ping,
->>  	.set_timeout	= qcom_wdt_set_timeout,
->> +	.set_pretimeout	= qcom_wdt_set_pretimeout,
->>  	.restart        = qcom_wdt_restart,
->>  	.owner		= THIS_MODULE,
->>  };
->> @@ -133,6 +168,15 @@ static const struct watchdog_info qcom_wdt_info = {
->>  	.identity	= KBUILD_MODNAME,
->>  };
->>  
->> +static const struct watchdog_info qcom_wdt_pt_info = {
->> +	.options	= WDIOF_KEEPALIVEPING
->> +			| WDIOF_MAGICCLOSE
->> +			| WDIOF_SETTIMEOUT
->> +			| WDIOF_PRETIMEOUT
->> +			| WDIOF_CARDRESET,
->> +	.identity	= KBUILD_MODNAME,
->> +};
->> +
->>  static void qcom_clk_disable_unprepare(void *data)
->>  {
->>  	clk_disable_unprepare(data);
->> @@ -146,7 +190,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->>  	struct device_node *np = dev->of_node;
->>  	const u32 *regs;
->>  	u32 percpu_offset;
->> -	int ret;
->> +	int irq, ret;
->>  
->>  	regs = of_device_get_match_data(dev);
->>  	if (!regs) {
->> @@ -204,7 +248,17 @@ static int qcom_wdt_probe(struct platform_device *pdev)
->>  		return -EINVAL;
->>  	}
->>  
->> -	wdt->wdd.info = &qcom_wdt_info;
->> +	irq = platform_get_irq(pdev, 0);
->> +	if (irq > 0) {
->> +		if (devm_request_irq(dev, irq, qcom_wdt_isr,
->> +				     IRQF_TRIGGER_RISING, "wdt_bark",
->> +				     &wdt->wdd))
->> +			irq = 0;
->> +	} else if (irq == -EPROBE_DEFER)
->> +		return -EPROBE_DEFER;
->> +
->> +	wdt->wdd.info = irq > 0 ? &qcom_wdt_pt_info : &qcom_wdt_info;
->> +	wdt->wdd.pretimeout = irq > 0 ? 1 : 0;
-> 
-> Why repeat the conditional ? It seems to me that something like
-> 
-> 	wdt->wdd.info = &qcom_wdt_info;
-> 	...
-> 	if (irq > 0) {
-> 		wdt->wdd.info = &qcom_wdt_pt_info;
-> 		wdt->wdd.pretimeout = 1;
-> 		...
-> 	}
-> 
-> would be much easier and avoid the repeated conditionals.
+ * - 'E' For an escaped buffer (see string_escape_mem())
 
-I agree. will change.
+-Kees
 
-> 
->>  	wdt->wdd.ops = &qcom_wdt_ops;
->>  	wdt->wdd.min_timeout = 1;
->>  	wdt->wdd.max_timeout = 0x10000000U / wdt->rate;
->> -- 
->> 2.23.0
->>
+>   * - 'U' For a 16 byte UUID/GUID, it prints the UUID/GUID in the form
+>   *       "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+>   *       Options for %pU are:
+> -- 
+> 2.21.0
 > 
 
+-- 
+Kees Cook
