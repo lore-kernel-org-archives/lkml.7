@@ -2,103 +2,155 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C79DC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A455BC3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2F620825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86CB020825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbfIELJ4 (ORCPT
+        id S2388265AbfIELKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:09:56 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59887 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732051AbfIELJy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:09:54 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i5pdd-0000xz-G0; Thu, 05 Sep 2019 11:09:17 +0000
-Date:   Thu, 5 Sep 2019 13:09:15 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905110915.4vvhicg4ldmpi5u6@wittgenstein>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
+        Thu, 5 Sep 2019 07:10:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49696 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732051AbfIELJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:09:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A9FA2B6AD;
+        Thu,  5 Sep 2019 11:09:55 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 13:09:55 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     jikos@kernel.org, Joe Lawrence <joe.lawrence@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
+ removal
+Message-ID: <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
+References: <20190814151244.5xoaxib5iya2qjco@treble>
+ <20190816094608.3p2z73oxcoqavnm4@pathway.suse.cz>
+ <20190822223649.ptg6e7qyvosrljqx@treble>
+ <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
+ <20190826145449.wyo7avwpqyriem46@treble>
+ <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
+ <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
+ <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
+ <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
+ <20190905025055.36loaatxtkhdo4q5@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904201933.10736-2-cyphar@cyphar.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190905025055.36loaatxtkhdo4q5@treble>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> A common pattern for syscall extensions is increasing the size of a
-> struct passed from userspace, such that the zero-value of the new fields
-> result in the old kernel behaviour (allowing for a mix of userspace and
-> kernel vintages to operate on one another in most cases). This is done
-> in both directions -- hence two helpers -- though it's more common to
-> have to copy user space structs into kernel space.
+On Wed 2019-09-04 21:50:55, Josh Poimboeuf wrote:
+> On Wed, Sep 04, 2019 at 10:49:32AM +0200, Petr Mladek wrote:
+> > I wonder what is necessary for a productive discussion on Plumbers:
+> > 
+> >   + Josh would like to see what code can get removed when late
+> >     handling of modules gets removed. I think that it might be
+> >     partially visible from Joe's blue-sky patches.
 > 
-> Previously there was no common lib/ function that implemented
-> the necessary extension-checking semantics (and different syscalls
-> implemented them slightly differently or incompletely[1]). A future
-> patch replaces all of the common uses of this pattern to use the new
-> copy_struct_{to,from}_user() helpers.
-> 
-> [1]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
->      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
->      always rejects differently-sized struct arguments.
-> 
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> Yes, and I like what I see.  Especially the removal of the .klp.arch
+> nastiness!
 
-I would probably split this out into a separate patchset. It can very
-well go in before openat2(). Thoughts?
+Could we get rid of it?
 
-Christian
+Is there any other way to get access to static variables
+and functions from the livepatched code?
+
+> I think the .klp.arch sections are the big ones:
+> 
+>   .klp.arch.altinstructions
+>   .klp.arch.parainstructions
+>   .klp.arch.jump_labels (doesn't exist yet)
+> 
+> And that's just x86...
+> 
+> And then of course there's the klp coming/going notifiers which have
+> also been an additional source of complexity.
+> 
+> >       + Do we use them in livepatches? How often?
+> 
+> I don't have a number, but it's very common to patch a function which
+> uses jump labels or alternatives.
+
+Really? My impression is that both alternatives and jump_labels
+are used in hot paths. I would expect them mostly in core code
+that is always loaded.
+
+Alternatives are often used in assembly that we are not able
+to livepatch anyway.
+
+Or are they spread widely via some macros or inlined functions?
+
+
+> >       + How often new problematic features appear?
+> 
+> I'm not exactly sure what you mean, but it seems that anytime we add a
+> new feature, we have to try to wrap our heads around how it interacts
+> with the weirdness of late module patching.
+
+I agree that we need to think about it and it makes complications.
+Anyway, I think that these are never the biggest problems.
+
+I would be more concerned about arch-specific features that might need
+special handling in the livepatch code. Everyone talks only about
+alternatives and jump_labels that were added long time ago.
+
+
+> >       Anyway, it might rule out some variants so that we could better
+> >       concentrate on the acceptable ones. Or come with yet another
+> >       proposal that would avoid the real blockers.
+> 
+> I'd like to hear more specific negatives about Joe's recent patches,
+> which IMO, are the best option we've discussed so far.
+
+I discussed this approach with our project manager. He was not much
+excited about this solution. His first idea was that it would block
+attaching USB devices. They are used by admins when taking care of
+the servers. And there might be other scenarios where a new module
+might need loading to solve some situation.
+
+Customers understand Livepatching as a way how to secure system
+without immediate reboot and with minimal (invisible) effect
+on the workload. They might get pretty surprised when the system
+suddenly blocks their "normal" workflow.
+
+As Miroslav said. No solution is perfect. We need to find the most
+acceptable compromise. It seems that you are more concerned about
+saving code, reducing complexity and risk. I am more concerned
+about user satisfaction.
+
+It is almost impossible to predict effects on user satisfaction
+because they have different workflow, use case, expectation,
+and tolerance.
+
+We could better estimate the technical side of each solution:
+
+   + implementation cost
+   + maintenance cost
+   + risks
+   + possible improvements and hardening
+   + user visible effects
+   + complication and limits with creating livepatches
+
+
+From my POV, the most problematic is the arch-specific code.
+It is hard to maintain and we do not have it fully under
+control.
+
+And I do not believe that we could remove all arch specific code
+when we do not allow delayed livepatching of modules.
+
+Best Regards,
+Petr
