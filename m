@@ -2,370 +2,291 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084AFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F725C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF8420640
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:11:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9816320828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 22:12:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TinH6NpU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XTO/Z09y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389077AbfIEWLM (ORCPT
+        id S2391095AbfIEWMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 18:11:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43023 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732232AbfIEWLL (ORCPT
+        Thu, 5 Sep 2019 18:12:43 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:46305 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIEWMn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 18:11:11 -0400
-Received: by mail-pg1-f194.google.com with SMTP id u72so2213004pgb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 15:11:11 -0700 (PDT)
+        Thu, 5 Sep 2019 18:12:43 -0400
+Received: by mail-ua1-f67.google.com with SMTP id k12so1376235uan.13
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 15:12:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=j/Kcu+TEnxemcLHPBIOR7W7oCWdQ6H+R16+eaD60thM=;
-        b=TinH6NpUBURG6FRpa8HxppDuHhaOiMn0kcVvmKX/CJw73elJaPqag9mgbt/iahWZ6Q
-         +o73xSbFrRrarG1hQq+0AQonEfCn8zDmJrn2vzuQKa24kmmekdqzzi0kdmQpMZ88ASZT
-         JpCUzsQdGCkI4QFXo8+pbTN4xP8JWlROdrg7g=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+AgA2RE87QBvjkxBfkFX/aBO14ME6PxLoNXmdIpAqGc=;
+        b=XTO/Z09yZ+GceyBPVrP5uDDdoXWJGIqEQGbgilTL7WIBBGrMFB2cgpITJjvUEj4zzj
+         45b3vliYjwrizEdcsMU0Oq1lOLCTud7+DJMuXXeei01hKNze+imQZqfA+nlObIMJzjU6
+         OzGOo1EMjSM1jeP0pwJHTki4r7PM7gVvYwx0F3c7kklkHDVjb2GTWe4dkBgc6jxsGX4o
+         YSyJ/+3jds9co9eUVVDPFjYGFhkP3AX6zekkqekMV/JKjoVc5R9n70+w5GMYapnF2vBO
+         VcDSWOiVxEM4aiT5oCCdBAs0/bxTSop+OrOikf75MfJkro+wMxTeWaW+tkPEiZscC47f
+         FWgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=j/Kcu+TEnxemcLHPBIOR7W7oCWdQ6H+R16+eaD60thM=;
-        b=KPJ3mtjfQ6jlCKuTc96ALiwlnaXqA0ldO94ej7eBdyVTiHLJcNg9hiwKR44WzWTdh/
-         lDmftw5pk8sGG3OvS7vHkB5ERN13mY4j6ZSNQGcoTlROepDqwNAqlzTo1u7Z3hjdhczo
-         EFrKThE8qYqL6CvoR4j+l0hq5mJ5csJqGINymgmWITBWWspOH4SVCvGoSByT9Ws6rUpy
-         MuxGju+vYZSTGrNlUlpUT7MJ9hdINvsFnxjOV9OISXHqllQXi8gX3nxbulVKYXTTfy7G
-         Xzdux2JHlC7WID+xufncToOS3H7OPJYwL5njpufMSVzsitspgWt3guc4ED2v1tfqBKQ9
-         DiGQ==
-X-Gm-Message-State: APjAAAXDSDpiNkYyQm5MRE9NEsX0gm+0ck96x0HI8dbw3qpcMRM6PtY5
-        OoD//EI/8Up4NdcTRtxtCSgEwQ==
-X-Google-Smtp-Source: APXvYqy185khK2qqfR3JxeV9WwUo02nEvBMioHwyGZ/tKK7i7ap8uRkmlwk9NRzc1F39R3us0Ac47A==
-X-Received: by 2002:a62:cec4:: with SMTP id y187mr6647808pfg.84.1567721470669;
-        Thu, 05 Sep 2019 15:11:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a23sm3692997pfc.71.2019.09.05.15.11.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 15:11:09 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 15:11:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] Eliminate unused ESCAPE_NULL, ESCAPE_SPACE flags
-Message-ID: <201909051437.56B9B68@keescook>
-References: <20190905193604.GC31247@fieldses.org>
- <1567712673-1629-1-git-send-email-bfields@redhat.com>
- <1567712673-1629-6-git-send-email-bfields@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+AgA2RE87QBvjkxBfkFX/aBO14ME6PxLoNXmdIpAqGc=;
+        b=iGYNSmLSG2z9EVI7dTN20c8WWhKmbDyM/fuZB7E0TLk9MJBaeY4NJUEYU3BjnuDkCb
+         yjzlCH/8jUnBvCW/+vcfkD+UX89bXA/TEiDxvjA8f4KfZHhVu+2RE16xsgHKuvPkTjUK
+         OehFOSwsglj440Q3kCuXuQ8Ji1jBkKSEjQ5xy8+JrhBNjdRH9GGCQrqFFl48KZtG+vQv
+         Pnm94sli0mrxQuB3qd+3mSzjaiLOTd/UKzmPf1EwDRe1UNAge7qnw+NYuIqs4hX74Sl3
+         vfQZAzkY84CJY4CvL48Z0Ym9hiCqjLKI3ayfZxxBaHi7HH4zU/pbV2KMse/QURcpaTRN
+         XDnQ==
+X-Gm-Message-State: APjAAAXBY4/U/AaEhrWPBEMEbbOS9cNjSLn52321YHHdpTBq2QIkbNa0
+        LHcATxyxbcv5G2c/IYWiCU8i2B6fcLRSEefBfqHf7w==
+X-Google-Smtp-Source: APXvYqwSofxfJYmi0XI4CwbyhSOv31Hhm30nFaOG36axP35t3H08DkhGPBO5HyBdHLkABRWlJM7wOq43GJppOMxxr9g=
+X-Received: by 2002:ab0:392:: with SMTP id 18mr2846023uau.85.1567721561347;
+ Thu, 05 Sep 2019 15:12:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1567712673-1629-6-git-send-email-bfields@redhat.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz> <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz> <20190904162808.GO240514@google.com>
+ <20190905144310.GA14491@dhcp22.suse.cz> <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
+ <20190905133507.783c6c61@oasis.local.home> <20190905174705.GA106117@google.com>
+ <20190905175108.GB106117@google.com> <1567713403.16718.25.camel@kernel.org>
+ <CAKOZuescyhpGWUrZT+WpOoQP-gQ-8YYTyzwzZzBTxaJiLhMHxw@mail.gmail.com> <1567718076.16718.39.camel@kernel.org>
+In-Reply-To: <1567718076.16718.39.camel@kernel.org>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Thu, 5 Sep 2019 15:12:04 -0700
+Message-ID: <CAKOZuetfzp0FsB0cBd8mqQHQ=5t_fX-vCcBvYL71MPxtF6erTA@mail.gmail.com>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        Mayank Gupta <mayankgupta@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 03:44:30PM -0400, J. Bruce Fields wrote:
-> From: "J. Bruce Fields" <bfields@redhat.com>
-> 
-> I can see how some finer-grained flags could be useful, but for now I'm
-> trying to simplify, so let's just remove these unused ones.
+On Thu, Sep 5, 2019 at 2:14 PM Tom Zanussi <zanussi@kernel.org> wrote:
+>
+> On Thu, 2019-09-05 at 13:24 -0700, Daniel Colascione wrote:
+> > On Thu, Sep 5, 2019 at 12:56 PM Tom Zanussi <zanussi@kernel.org>
+> > wrote:
+> > > On Thu, 2019-09-05 at 13:51 -0400, Joel Fernandes wrote:
+> > > > On Thu, Sep 05, 2019 at 01:47:05PM -0400, Joel Fernandes wrote:
+> > > > > On Thu, Sep 05, 2019 at 01:35:07PM -0400, Steven Rostedt wrote:
+> > > > > >
+> > > > > >
+> > > > > > [ Added Tom ]
+> > > > > >
+> > > > > > On Thu, 5 Sep 2019 09:03:01 -0700
+> > > > > > Suren Baghdasaryan <surenb@google.com> wrote:
+> > > > > >
+> > > > > > > On Thu, Sep 5, 2019 at 7:43 AM Michal Hocko <mhocko@kernel.
+> > > > > > > org>
+> > > > > > > wrote:
+> > > > > > > >
+> > > > > > > > [Add Steven]
+> > > > > > > >
+> > > > > > > > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> > > > > > > > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@ke
+> > > > > > > > > rnel
+> > > > > > > > > .org> wrote:
+> > > > > > > > > >
+> > > > > > > > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> > > > > > > >
+> > > > > > > > [...]
+> > > > > > > > > > > but also for reducing
+> > > > > > > > > > > tracing noise. Flooding the traces makes it less
+> > > > > > > > > > > useful
+> > > > > > > > > > > for long traces and
+> > > > > > > > > > > post-processing of traces. IOW, the overhead
+> > > > > > > > > > > reduction
+> > > > > > > > > > > is a bonus.
+> > > > > > > > > >
+> > > > > > > > > > This is not really anything special for this
+> > > > > > > > > > tracepoint
+> > > > > > > > > > though.
+> > > > > > > > > > Basically any tracepoint in a hot path is in the same
+> > > > > > > > > > situation and I do
+> > > > > > > > > > not see a point why each of them should really invent
+> > > > > > > > > > its
+> > > > > > > > > > own way to
+> > > > > > > > > > throttle. Maybe there is some way to do that in the
+> > > > > > > > > > tracing subsystem
+> > > > > > > > > > directly.
+> > > > > > > > >
+> > > > > > > > > I am not sure if there is a way to do this easily. Add
+> > > > > > > > > to
+> > > > > > > > > that, the fact that
+> > > > > > > > > you still have to call into trace events. Why call into
+> > > > > > > > > it
+> > > > > > > > > at all, if you can
+> > > > > > > > > filter in advance and have a sane filtering default?
+> > > > > > > > >
+> > > > > > > > > The bigger improvement with the threshold is the number
+> > > > > > > > > of
+> > > > > > > > > trace records are
+> > > > > > > > > almost halved by using a threshold. The number of
+> > > > > > > > > records
+> > > > > > > > > went from 4.6K to
+> > > > > > > > > 2.6K.
+> > > > > > > >
+> > > > > > > > Steven, would it be feasible to add a generic tracepoint
+> > > > > > > > throttling?
+> > > > > > >
+> > > > > > > I might misunderstand this but is the issue here actually
+> > > > > > > throttling
+> > > > > > > of the sheer number of trace records or tracing large
+> > > > > > > enough
+> > > > > > > changes
+> > > > > > > to RSS that user might care about? Small changes happen all
+> > > > > > > the
+> > > > > > > time
+> > > > > > > but we are likely not interested in those. Surely we could
+> > > > > > > postprocess
+> > > > > > > the traces to extract changes large enough to be
+> > > > > > > interesting
+> > > > > > > but why
+> > > > > > > capture uninteresting information in the first place? IOW
+> > > > > > > the
+> > > > > > > throttling here should be based not on the time between
+> > > > > > > traces
+> > > > > > > but on
+> > > > > > > the amount of change of the traced signal. Maybe a generic
+> > > > > > > facility
+> > > > > > > like that would be a good idea?
+> > > > > >
+> > > > > > You mean like add a trigger (or filter) that only traces if a
+> > > > > > field has
+> > > > > > changed since the last time the trace was hit? Hmm, I think
+> > > > > > we
+> > > > > > could
+> > > > > > possibly do that. Perhaps even now with histogram triggers?
+> > > > >
+> > > > >
+> > > > > Hey Steve,
+> > > > >
+> > > > > Something like an analog to digitial coversion function where
+> > > > > you
+> > > > > lose the
+> > > > > granularity of the signal depending on how much trace data:
+> > > > > https://www.globalspec.com/ImageRepository/LearnMore/20142/9ee3
+> > > > > 8d1a
+> > > > > 85d37fa23f86a14d3a9776ff67b0ec0f3b.gif
+> > > >
+> > > > s/how much trace data/what the resolution is/
+> > > >
+> > > > > so like, if you had a counter incrementing with values after
+> > > > > the
+> > > > > increments
+> > > > > as:  1,3,4,8,12,14,30 and say 5 is the threshold at which to
+> > > > > emit a
+> > > > > trace,
+> > > > > then you would get 1,8,12,30.
+> > > > >
+> > > > > So I guess what is need is a way to reduce the quantiy of trace
+> > > > > data this
+> > > > > way. For this usecase, the user mostly cares about spikes in
+> > > > > the
+> > > > > counter
+> > > > > changing that accurate values of the different points.
+> > > >
+> > > > s/that accurate/than accurate/
+> > > >
+> > > > I think Tim, Suren, Dan and Michal are all saying the same thing
+> > > > as
+> > > > well.
+> > > >
+> > >
+> > > There's not a way to do this using existing triggers (histogram
+> > > triggers have an onchange() that fires on any change, but that
+> > > doesn't
+> > > help here), and I wouldn't expect there to be - these sound like
+> > > very
+> > > specific cases that would never have support in the simple trigger
+> > > 'language'.
+> >
+> > I don't see the filtering under discussion as some "very specific"
+> > esoteric need. You need this general kind of mechanism any time you
+> > want to monitor at low frequency a thing that changes at high
+> > frequency. The general pattern isn't specific to RSS or even memory
+> > in
+> > general. One might imagine, say, wanting to trace large changes in
+> > TCP
+> > window sizes. Any time something in the kernel has a "level" and that
+> > level changes at high frequency and we want to learn about big swings
+> > in that level, the mechanism we're talking about becomes useful. I
+> > don't think it should be out of bounds for the histogram mechanism,
+> > which is *almost* there right now. We already have the ability to
+> > accumulate values derived from ftrace events into tables keyed on
+> > various fields in these events and things like onmax().
+> >
+>
+> OK, so with the histograms we already have onchange(), which triggers
+> on any change.
+>
+> Would it be sufficient to just add a 'threshold' param to that i.e.
+> onchange(x) means trigger whenever the difference between the new value
+> and the previous value is >= x?
 
-I might change the Subject to "merge ESCAPE_{NULL,SPACE,SPECIAL}" or so.
+By previous value, do you mean previously-reported value or the
+previously-set value? If the former, that's good, but we may be able
+to do better (see below). If the latter, I don't think that's quite
+right, because then we could miss an arbitrarily-large change in
+"level" so long as it occurred in sufficiently small steps.
 
-> Note the trickiest part is actually the tests, and I still need to check
-> them.
+Basically, what I have in mind is this:
 
-It looks correct to me, though I haven't run them myself yet. One
-thing to add might be adding a NULL test with explicit calls to
-string_escape_mem()?
+1) attach a trigger a tracepoint that contains some
+absolutely-specified "level" (say, task private RSS),
 
-> 
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+2) in the trigger, find the absolute value of the difference between
+the new "level" (some field in that tracepoint) and the last "level"
+we have for the combination of that value and configurable
+partitioning criteria (e.g., pid, uid, cpu, NUMA node) yielding an
+absdelta,
 
-Acked-by: Kees Cook <keescook@chromium.org>
+3) accumulate absdelta values in some table partitioned on the same
+fields as in #2, and
 
--Kees
+4) after updating accumulated absdelta, evaluate a filter expression,
+and if the filter expression evaluates to true, emit a tracepoint
+saying "the new value of $LEVEL for $PARTITION is $VALUE" and reset
+the accumulated absdelta to zero.
 
-> ---
->  fs/proc/array.c                |  2 +-
->  include/linux/string_helpers.h |  6 ++--
->  lib/string_helpers.c           | 54 +++----------------------------
->  lib/test-string_helpers.c      | 58 ++++------------------------------
->  4 files changed, 14 insertions(+), 106 deletions(-)
-> 
-> diff --git a/fs/proc/array.c b/fs/proc/array.c
-> index 46dcb6f0eccf..982c95d09176 100644
-> --- a/fs/proc/array.c
-> +++ b/fs/proc/array.c
-> @@ -111,7 +111,7 @@ void proc_task_name(struct seq_file *m, struct task_struct *p, bool escape)
->  	size = seq_get_buf(m, &buf);
->  	if (escape) {
->  		ret = string_escape_str(tcomm, buf, size,
-> -					ESCAPE_SPACE | ESCAPE_SPECIAL, "\n\\");
-> +					ESCAPE_SPECIAL, "\n\\");
->  		if (ret >= size)
->  			ret = -1;
->  	} else {
-> diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
-> index 8a299a29b767..7bf0d137373d 100644
-> --- a/include/linux/string_helpers.h
-> +++ b/include/linux/string_helpers.h
-> @@ -41,15 +41,13 @@ static inline int string_unescape_any_inplace(char *buf)
->  	return string_unescape_any(buf, buf, 0);
->  }
->  
-> -#define ESCAPE_SPACE		0x01
->  #define ESCAPE_SPECIAL		0x02
-> -#define ESCAPE_NULL		0x04
->  #define ESCAPE_OCTAL		0x08
-> -#define ESCAPE_ANY		\
-> -	(ESCAPE_SPACE | ESCAPE_OCTAL | ESCAPE_SPECIAL | ESCAPE_NULL)
-> +#define ESCAPE_ANY		(ESCAPE_OCTAL | ESCAPE_SPECIAL)
->  #define ESCAPE_NP		0x10
->  #define ESCAPE_ANY_NP		(ESCAPE_ANY | ESCAPE_NP)
->  #define ESCAPE_HEX		0x20
-> +#define ESCAPE_FLAG_MASK	0x3a
->  
->  int string_escape_mem(const char *src, size_t isz, char *dst, size_t osz,
->  		unsigned int flags, const char *only);
-> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-> index 963050c0283e..ac72159d3980 100644
-> --- a/lib/string_helpers.c
-> +++ b/lib/string_helpers.c
-> @@ -310,7 +310,7 @@ static bool escape_passthrough(unsigned char c, char **dst, char *end)
->  	return true;
->  }
->  
-> -static bool escape_space(unsigned char c, char **dst, char *end)
-> +static bool escape_special(unsigned char c, char **dst, char *end)
->  {
->  	char *out = *dst;
->  	unsigned char to;
-> @@ -331,27 +331,6 @@ static bool escape_space(unsigned char c, char **dst, char *end)
->  	case '\f':
->  		to = 'f';
->  		break;
-> -	default:
-> -		return false;
-> -	}
-> -
-> -	if (out < end)
-> -		*out = '\\';
-> -	++out;
-> -	if (out < end)
-> -		*out = to;
-> -	++out;
-> -
-> -	*dst = out;
-> -	return true;
-> -}
-> -
-> -static bool escape_special(unsigned char c, char **dst, char *end)
-> -{
-> -	char *out = *dst;
-> -	unsigned char to;
-> -
-> -	switch (c) {
->  	case '\\':
->  		to = '\\';
->  		break;
-> @@ -361,6 +340,9 @@ static bool escape_special(unsigned char c, char **dst, char *end)
->  	case '\e':
->  		to = 'e';
->  		break;
-> +	case '\0':
-> +		to = '0';
-> +		break;
->  	default:
->  		return false;
->  	}
-> @@ -376,24 +358,6 @@ static bool escape_special(unsigned char c, char **dst, char *end)
->  	return true;
->  }
->  
-> -static bool escape_null(unsigned char c, char **dst, char *end)
-> -{
-> -	char *out = *dst;
-> -
-> -	if (c)
-> -		return false;
-> -
-> -	if (out < end)
-> -		*out = '\\';
-> -	++out;
-> -	if (out < end)
-> -		*out = '0';
-> -	++out;
-> -
-> -	*dst = out;
-> -	return true;
-> -}
-> -
->  static bool escape_octal(unsigned char c, char **dst, char *end)
->  {
->  	char *out = *dst;
-> @@ -465,17 +429,15 @@ static bool escape_hex(unsigned char c, char **dst, char *end)
->   * destination buffer will not be NULL-terminated, thus caller have to append
->   * it if needs.   The supported flags are::
->   *
-> - *	%ESCAPE_SPACE: (special white space, not space itself)
-> + *	%ESCAPE_SPECIAL:
->   *		'\f' - form feed
->   *		'\n' - new line
->   *		'\r' - carriage return
->   *		'\t' - horizontal tab
->   *		'\v' - vertical tab
-> - *	%ESCAPE_SPECIAL:
->   *		'\\' - backslash
->   *		'\a' - alert (BEL)
->   *		'\e' - escape
-> - *	%ESCAPE_NULL:
->   *		'\0' - null
->   *	%ESCAPE_OCTAL:
->   *		'\NNN' - byte with octal value NNN (3 digits)
-> @@ -519,15 +481,9 @@ int string_escape_mem(const char *src, size_t isz, char *dst, size_t osz,
->  		    (is_dict && !strchr(only, c))) {
->  			/* do nothing */
->  		} else {
-> -			if (flags & ESCAPE_SPACE && escape_space(c, &p, end))
-> -				continue;
-> -
->  			if (flags & ESCAPE_SPECIAL && escape_special(c, &p, end))
->  				continue;
->  
-> -			if (flags & ESCAPE_NULL && escape_null(c, &p, end))
-> -				continue;
-> -
->  			/* ESCAPE_OCTAL and ESCAPE_HEX always go last */
->  			if (flags & ESCAPE_OCTAL && escape_octal(c, &p, end))
->  				continue;
-> diff --git a/lib/test-string_helpers.c b/lib/test-string_helpers.c
-> index 25b5cbfb7615..0da3c195a327 100644
-> --- a/lib/test-string_helpers.c
-> +++ b/lib/test-string_helpers.c
-> @@ -124,20 +124,6 @@ struct test_string_2 {
->  
->  #define	TEST_STRING_2_DICT_0		NULL
->  static const struct test_string_2 escape0[] __initconst = {{
-> -	.in = "\f\\ \n\r\t\v",
-> -	.s1 = {{
-> -		.out = "\\f\\ \\n\\r\\t\\v",
-> -		.flags = ESCAPE_SPACE,
-> -	},{
-> -		.out = "\\f\\134\\040\\n\\r\\t\\v",
-> -		.flags = ESCAPE_SPACE | ESCAPE_OCTAL,
-> -	},{
-> -		.out = "\\f\\x5c\\x20\\n\\r\\t\\v",
-> -		.flags = ESCAPE_SPACE | ESCAPE_HEX,
-> -	},{
-> -		/* terminator */
-> -	}},
-> -},{
->  	.in = "\\h\\\"\a\e\\",
->  	.s1 = {{
->  		.out = "\\\\h\\\\\"\\a\\e\\\\",
-> @@ -154,48 +140,26 @@ static const struct test_string_2 escape0[] __initconst = {{
->  },{
->  	.in = "\eb \\C\007\"\x90\r]",
->  	.s1 = {{
-> -		.out = "\eb \\C\007\"\x90\\r]",
-> -		.flags = ESCAPE_SPACE,
-> -	},{
-> -		.out = "\\eb \\\\C\\a\"\x90\r]",
-> -		.flags = ESCAPE_SPECIAL,
-> -	},{
->  		.out = "\\eb \\\\C\\a\"\x90\\r]",
-> -		.flags = ESCAPE_SPACE | ESCAPE_SPECIAL,
-> +		.flags = ESCAPE_SPECIAL,
->  	},{
->  		.out = "\\033\\142\\040\\134\\103\\007\\042\\220\\015\\135",
->  		.flags = ESCAPE_OCTAL,
-> -	},{
-> -		.out = "\\033\\142\\040\\134\\103\\007\\042\\220\\r\\135",
-> -		.flags = ESCAPE_SPACE | ESCAPE_OCTAL,
-> -	},{
-> -		.out = "\\e\\142\\040\\\\\\103\\a\\042\\220\\015\\135",
-> -		.flags = ESCAPE_SPECIAL | ESCAPE_OCTAL,
->  	},{
->  		.out = "\\e\\142\\040\\\\\\103\\a\\042\\220\\r\\135",
-> -		.flags = ESCAPE_SPACE | ESCAPE_SPECIAL | ESCAPE_OCTAL,
-> +		.flags = ESCAPE_SPECIAL | ESCAPE_OCTAL,
->  	},{
->  		.out = "\eb \\C\007\"\x90\r]",
->  		.flags = ESCAPE_NP,
-> -	},{
-> -		.out = "\eb \\C\007\"\x90\\r]",
-> -		.flags = ESCAPE_SPACE | ESCAPE_NP,
-> -	},{
-> -		.out = "\\eb \\C\\a\"\x90\r]",
-> -		.flags = ESCAPE_SPECIAL | ESCAPE_NP,
->  	},{
->  		.out = "\\eb \\C\\a\"\x90\\r]",
-> -		.flags = ESCAPE_SPACE | ESCAPE_SPECIAL | ESCAPE_NP,
-> +		.flags = ESCAPE_SPECIAL | ESCAPE_NP,
->  	},{
->  		.out = "\\033b \\C\\007\"\\220\\015]",
->  		.flags = ESCAPE_OCTAL | ESCAPE_NP,
-> -	},{
-> -		.out = "\\033b \\C\\007\"\\220\\r]",
-> -		.flags = ESCAPE_SPACE | ESCAPE_OCTAL | ESCAPE_NP,
->  	},{
->  		.out = "\\eb \\C\\a\"\\220\\r]",
-> -		.flags = ESCAPE_SPECIAL | ESCAPE_SPACE | ESCAPE_OCTAL |
-> -			 ESCAPE_NP,
-> +		.flags = ESCAPE_SPECIAL ESCAPE_OCTAL | ESCAPE_NP,
->  	},{
->  		.out = "\\x1bb \\C\\x07\"\\x90\\x0d]",
->  		.flags = ESCAPE_NP | ESCAPE_HEX,
-> @@ -247,9 +211,6 @@ static __init const char *test_string_find_match(const struct test_string_2 *s2,
->  	if (!flags)
->  		return s2->in;
->  
-> -	/* Test cases are NULL-aware */
-> -	flags &= ~ESCAPE_NULL;
-> -
->  	/* ESCAPE_OCTAL has a higher priority */
->  	if (flags & ESCAPE_OCTAL)
->  		flags &= ~ESCAPE_HEX;
-> @@ -290,13 +251,6 @@ static __init void test_string_escape(const char *name,
->  		const char *out;
->  		int len;
->  
-> -		/* NULL injection */
-> -		if (flags & ESCAPE_NULL) {
-> -			in[p++] = '\0';
-> -			out_test[q_test++] = '\\';
-> -			out_test[q_test++] = '0';
-> -		}
-> -
->  		/* Don't try strings that have no output */
->  		out = test_string_find_match(s2, flags);
->  		if (!out)
-> @@ -401,11 +355,11 @@ static int __init test_string_helpers_init(void)
->  			     get_random_int() % (UNESCAPE_ANY + 1), true);
->  
->  	/* Without dictionary */
-> -	for (i = 0; i < (ESCAPE_ANY_NP | ESCAPE_HEX) + 1; i++)
-> +	for (i = 0; i < ESCAPE_FLAG_MASK + 1; i++)
->  		test_string_escape("escape 0", escape0, i, TEST_STRING_2_DICT_0);
->  
->  	/* With dictionary */
-> -	for (i = 0; i < (ESCAPE_ANY_NP | ESCAPE_HEX) + 1; i++)
-> +	for (i = 0; i < ESCAPE_FLAG_MASK + 1; i++)
->  		test_string_escape("escape 1", escape1, i, TEST_STRING_2_DICT_1);
->  
->  	/* Test string_get_size() */
-> -- 
-> 2.21.0
-> 
+I think this mechanism would give us what we wanted in a general and
+powerful way, and we can dial the granularity up or down however want.
+The reason I want to accumulate absdelta values instead of just firing
+when the previously-reported value differs sufficiently from the
+last-set value is so we can tell whether a counter is fluctuating a
+lot without its value actually changing. The trigger expression could
+then allow any combination of conditions, e.g., "fire a tracepoint
+when the accumulated change is greater than 2MB _OR_ a single change
+is greater than 1MB _OR_ when we've gone 10 changes of this level
+value without reporting the level's new value".
 
--- 
-Kees Cook
+Let me know if this description doesn't make sense.
