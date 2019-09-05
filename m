@@ -2,67 +2,71 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78330C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA0EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDE520CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F8B206BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="NqwNQcGz"
+	dkim=pass (2048-bit key) header.d=lightnvm-io.20150623.gappssmtp.com header.i=@lightnvm-io.20150623.gappssmtp.com header.b="uRIJnd9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbfIETEs (ORCPT
+        id S2388858AbfIETEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:04:48 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46561 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfIETEs (ORCPT
+        Thu, 5 Sep 2019 15:04:54 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33274 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732250AbfIETEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:04:48 -0400
-Received: by mail-lf1-f65.google.com with SMTP id t8so2901083lfc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 12:04:46 -0700 (PDT)
+        Thu, 5 Sep 2019 15:04:51 -0400
+Received: by mail-lf1-f67.google.com with SMTP id d10so2967106lfi.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 12:04:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lightnvm-io.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0X0neFSzhuU4nKeVW55wrsCexXnGfAFzrsvBOwk+6g4=;
-        b=NqwNQcGzZieDYorRRnirEowNPE133HeDTZIG9gf9ZavEpMcLuYSz7K4ovB5kB7uh2Y
-         VFHUgW1FTd1kz8C7gTTzkGxtgGlg9l7Cgj/pKas0u9hdLA+8f07ueuoeo5ZMx9yb1ypj
-         4IN0U/62BFZksxsJ29+ap1J2pbQlRCS8AlMdwMhW2siDx36Jmzo8DOLcrh/564iivp1c
-         psmi+UmHDqwYBCAObtSq5zw1PhoJTIMsRNK2nwqsyMKw6kf70ADB/+Bgh+OJWTQrI7fa
-         v2LFuf3XoNWrJN157dT7hFtm+LJ2a1WDkmTYTQfOdf+M5A+QtH0wE3GSiedf6I2MhfrB
-         zJFA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AC8KgIe4I7rl1Y9J8H47wCl1hvzWhHksXFFSMwfg7Kk=;
+        b=uRIJnd9txX+OH9zCEWQr7/dlRYQBxnJMan0+PSBz7Dlf5LYejzl8XmcdYmyGZQzyXH
+         ZkEKIe+qNzkYdGU9ruhH49Djly4L5AJ92znRVMxFOixF164+nVdru1Al1ERLaMRvMYzX
+         Nigbbqb9NZf5b+1xaZ4JOELzfEsIjMtUY1q1kfuli5/NOSBEv2XMbj06SUpZEG1C7Qk0
+         YmMrBoYov8lfgmMBLbqem1fMhZgCDAOJ4buI9xyep/TxEno3jIqDskvnSCmOcqTqj3xI
+         cN3yZsSPcmN5345m9dzwL6NO9vDHko0nHnsuxDxPN5tXIKtkpi7LHHUXs/+NwCyGuCSj
+         KfMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0X0neFSzhuU4nKeVW55wrsCexXnGfAFzrsvBOwk+6g4=;
-        b=de6DXhchpfWZUaH65Jp9IpVDSWR9XRitvXxdAAQyMIzJi1kwJhtqmM5uH1TexuAen2
-         3ZvA3U7Hi56H8v+lp8F/65ZbnEsoeZDU39OeZIhx1tEO4XUN/OZnwToYDMeLwXLhzs69
-         D58aehdL0LRg4VRi//Xyn2h1dcMCfSR0dlM5/hfQC6Y2LN7p22s2QeaSOVaZCanSlHHd
-         IRM7dIX6c0IBFOffZyILwBL/Y2vKyMvb+5DGe2rLZZ69J6Gl+ZZQE6cuNm8PCcPk7rEk
-         DUhjXXnvY1xVM4VCcwEM1DfUYWgj2Jb2Vytq0cOijivrrloG9mkDRMOu2czgGadb16Ve
-         GxQw==
-X-Gm-Message-State: APjAAAXaWq3+/JhME2dfWwtD9T8hcYtwj2Qa6HQwlCjvsiVWqaVwNSng
-        b0oQDK7q9t5lAB3fUCpEGfW0ew==
-X-Google-Smtp-Source: APXvYqz6hpVqjB/kh1DpDc9oocq29hm053qCI8Ia4Ais3yvuwuGtk53gJroo21JJkcfrN8Xuzt0L0A==
-X-Received: by 2002:ac2:4835:: with SMTP id 21mr3383015lft.121.1567710286087;
-        Thu, 05 Sep 2019 12:04:46 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AC8KgIe4I7rl1Y9J8H47wCl1hvzWhHksXFFSMwfg7Kk=;
+        b=euQ9WGXPWQQaHxov+mZpDj5lsHas1XIevAEu2xXGat1lWklvRyWgP28sIwHnT4R6LJ
+         4FHibbfoZBOsUEQ9vaYgGEv6k62bCzqXhjfaTgppoxFMLE0bepVeElLI8VYNUSiK3yxF
+         Wiv+ZWcLS9878b9JXjsgEyVGnChMFyRHbTM8R1BqtXAho8MLiHQ3xqSFTuZ24qt7jA8I
+         bFuL7LD4k5xTR+okSl1r2fdn9p0Bx1zgSDvvdQHUCqKn1XHSSfNY6NF6OrGTli7J1Y/M
+         66+6y7d0qlS0JrsB+RUGmkt9WPAICthv9YcC8uqf9DVIiPI/lZOt6YSxbRitA3X/WNDl
+         GZAA==
+X-Gm-Message-State: APjAAAWJV8eBaHkr2ShafPih8F89LGhh8+oVI8rmyoAWTzXeGoOoEVeA
+        qzdeXHv0lp4+jEEVR98HyB7APw==
+X-Google-Smtp-Source: APXvYqzhbW5wYGXm1TidPCZIsQJ3itdNp6WmZYAM1OnVEmjREx5ULvto3nGRPRtzFhk70zZ4BFBtDg==
+X-Received: by 2002:ac2:4359:: with SMTP id o25mr3456523lfl.147.1567710289343;
+        Thu, 05 Sep 2019 12:04:49 -0700 (PDT)
 Received: from skyninja.webspeed.dk (2-111-91-225-cable.dk.customer.tdc.net. [2.111.91.225])
-        by smtp.gmail.com with ESMTPSA id 6sm599037ljr.63.2019.09.05.12.04.44
+        by smtp.gmail.com with ESMTPSA id 6sm599037ljr.63.2019.09.05.12.04.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 12:04:45 -0700 (PDT)
+        Thu, 05 Sep 2019 12:04:48 -0700 (PDT)
 From:   =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
 To:     axboe@fb.com
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
         =?UTF-8?q?Matias=20Bj=C3=B8rling?= <mb@lightnvm.io>
-Subject: [GIT PULL 0/2] lightnvm updates for 5.4
-Date:   Thu,  5 Sep 2019 21:04:31 +0200
-Message-Id: <20190905190433.8247-1-mb@lightnvm.io>
+Subject: [GIT PULL 2/2] lightnvm: print error when target is not found
+Date:   Thu,  5 Sep 2019 21:04:33 +0200
+Message-Id: <20190905190433.8247-3-mb@lightnvm.io>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190905190433.8247-1-mb@lightnvm.io>
+References: <20190905190433.8247-1-mb@lightnvm.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -71,20 +75,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+From: Minwoo Im <minwoo.im.dev@gmail.com>
 
-Two small patches for the 5.4 window. Can you please pick them up?
+If userspace requests target to be removed, nvm_remove_tgt() will
+iterate the nvm_devices to find out the given target, but if not
+found, then it should print out an error.
 
-Thank you,
-Matias
+Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
+Updated output string and patch description.
+Signed-off-by: Matias Bjørling <mb@lightnvm.io>
+---
+ drivers/lightnvm/core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Minwoo Im (2):
-  lightnvm: introduce pr_fmt for the prefix nvm
-  lightnvm: print error when target is not found
-
- drivers/lightnvm/core.c | 54 ++++++++++++++++++++++-------------------
- 1 file changed, 29 insertions(+), 25 deletions(-)
-
+diff --git a/drivers/lightnvm/core.c b/drivers/lightnvm/core.c
+index f88d4e57cff8..7543e395a2c6 100644
+--- a/drivers/lightnvm/core.c
++++ b/drivers/lightnvm/core.c
+@@ -495,8 +495,11 @@ static int nvm_remove_tgt(struct nvm_ioctl_remove *remove)
+ 	}
+ 	up_read(&nvm_lock);
+ 
+-	if (!t)
++	if (!t) {
++		pr_err("failed to remove target %s\n",
++				remove->tgtname);
+ 		return 1;
++	}
+ 
+ 	__nvm_remove_target(t, true);
+ 	kref_put(&dev->ref, nvm_free);
 -- 
 2.19.1
 
