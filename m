@@ -2,168 +2,323 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A65C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D324C43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4582067B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:44:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="jk0gpXqv"
+	by mail.kernel.org (Postfix) with ESMTP id B715D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567701868;
+	bh=zsTewNkT0XtC9c+G82ebOrhcEJ+cqdALxxHG/x0ORyI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=TGZ4ZefQ/aYq/bl5bQjs+0dJ0DDcook977HghJTk8niFBqJlAStPUpbm4qbdD4a4K
+	 dpVDChemtircwq03BT2OlXYcLGeQ91oHjf2Ho1AsVtgywbub+/lMy4srsYNQQkyXJj
+	 J2LKtak1P8nNuCKHMwpVtH4Jy4YdWLu0Z/CFSx4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389741AbfIEQoK (ORCPT
+        id S2389765AbfIEQo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:44:10 -0400
-Received: from mail-eopbgr700064.outbound.protection.outlook.com ([40.107.70.64]:42593
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387726AbfIEQoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:44:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JFhcfCIwwY2TQredgodRytsKtV10QlRQeWj+d3kXuIAYEBQGGjBgbus3cssFOKMr2uEuIvxVgrSMOX+T7UeevWO0vkF7BI6/d05+d0B+HiSbicp8DXSVrUBw6wOz60Yg0TOaHEube085tfqGzL8V69eCFiVQoqeO5lLA3GR8VE5H4d73WGp4HVoluI+Y/KgWtmmP/9H3cg6+EaCJXwseXE38y0cXC5Y1JruMqZyB8TPnjY+uphwXkcKsmPcyvzyj99MEaz66Cj1sneOFn6SPfOv/P65d96a/5YPs/gNH4J+7Ke506alBQ0sGbbdVwTmKyJ+46zAf9GOVjq20ktEuIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=imU3yJxwD3dnI0IsVH6zCtvtjA4T18YjoeWVTyYYcH8=;
- b=ocW35/No7q68O6Temmu90fMkqgutS45fcN5Yl9EEbwml7anEiIvyV9gDk2MaqPht4aqts8J6wvxxHCnpzMaVjdTY7MzU/0PQLBMWLRVVqQIWpMYUSrNjwEbAHZ0HlnA8wPmhlzUJvrVYK/Yg06TmmlFVe5nF7w3qd5IbnO2lUTLDkFteU0UwXlmsDd+u27NLfyyqmJAAs8NvhYdGtH1yE+2Icup6cm7M8uZ2AEq3QtN+2Vja5kbaqoXxELvjVKvp7v0J7bbd4YOQh4InWq3jjk9QbdtJfCVO35z0s21+H7Uc2UuCBeNNYSyZR+iN8ddsl4Ij7eM5CxJLZ9sKag30Eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=gmail.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=imU3yJxwD3dnI0IsVH6zCtvtjA4T18YjoeWVTyYYcH8=;
- b=jk0gpXqvFMtpwMtDt4bCUL0UuLJYepBaaFdVamm2gyjTV781C4gq6xUuSfNmKISJkW+WHWUDLy/hl20JMJ6HuIKHvix2WnuWqATNJXBtYv2xr7SEcs9rhBthHO5nwy+W9M4kNQEorZtqGv9Xi+Y82ZxqwccaUw5Cp487eKIQmFM=
-Received: from MWHPR0201CA0108.namprd02.prod.outlook.com
- (2603:10b6:301:75::49) by DM6PR02MB5257.namprd02.prod.outlook.com
- (2603:10b6:5:48::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.21; Thu, 5 Sep
- 2019 16:43:52 +0000
-Received: from CY1NAM02FT020.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::203) by MWHPR0201CA0108.outlook.office365.com
- (2603:10b6:301:75::49) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2241.13 via Frontend
- Transport; Thu, 5 Sep 2019 16:43:52 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT020.mail.protection.outlook.com (10.152.75.191) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2241.14
- via Frontend Transport; Thu, 5 Sep 2019 16:43:51 +0000
-Received: from [172.21.6.17] (helo=xir-smtp1.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1i5urO-00055x-97; Thu, 05 Sep 2019 09:43:50 -0700
-Received: from [127.0.0.1] (helo=xir-smtp-dlp2.xilinx.com)
-        by xir-smtp1.xilinx.com with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1i5uoF-0003dB-Jg; Thu, 05 Sep 2019 17:40:35 +0100
-Received: from xir-pvapsmtp01 (xir-pvapsmtp01.xilinx.com [172.21.6.17])
-        by xir-smtp-dlp2.xilinx.com (8.13.8/8.13.1) with ESMTP id x85GeWpD001919;
-        Thu, 5 Sep 2019 16:40:32 GMT
-Received: from [149.199.38.66] (helo=xsj-pvapsmtp01)
-        by xir-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1i5uoC-0003d5-D9; Thu, 05 Sep 2019 17:40:32 +0100
-Received: from [127.0.0.1] (helo=xsj-smtp-dlp2.xlnx.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radhey.shyam.pandey@xilinx.com>)
-        id 1i5ul8-0006xZ-O3; Thu, 05 Sep 2019 09:37:22 -0700
-Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x85GbL05015586;
-        Thu, 5 Sep 2019 09:37:21 -0700
-Received: from [10.140.184.180] (helo=ubuntu)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <radheys@ubuntu>)
-        id 1i5ul7-0006we-12; Thu, 05 Sep 2019 09:37:21 -0700
-Received: by ubuntu (Postfix, from userid 13245)
-        id 61619101073; Thu,  5 Sep 2019 22:07:19 +0530 (IST)
-From:   Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-To:     vkoul@kernel.org, dan.j.williams@intel.com,
-        michal.simek@xilinx.com, nick.graumann@gmail.com,
-        andrea.merello@gmail.com, appana.durga.rao@xilinx.com,
-        mcgrof@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Subject: [PATCH -next 7/8] dmaengine: xilinx_dma: Check for both idle and halted state in axidma stop_transfer
-Date:   Thu,  5 Sep 2019 22:07:03 +0530
-Message-Id: <1567701424-25658-8-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-References: <1567701424-25658-1-git-send-email-radhey.shyam.pandey@xilinx.com>
-X-RCIS-Action: ALLOW
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.002
-X-TM-AS-Result: No--2.872-7.0-31-1
-X-imss-scan-details: No--2.872-7.0-31-1;No--2.872-5.0-31-1
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-Result-Xfilter: Match text exemption rules:No
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39840400004)(396003)(376002)(346002)(2980300002)(199004)(189003)(478600001)(16586007)(316002)(356004)(6666004)(42186006)(4744005)(52956003)(103686004)(107886003)(6266002)(4326008)(305945005)(70586007)(476003)(446003)(126002)(426003)(2616005)(11346002)(486006)(26005)(47776003)(106002)(2906002)(36756003)(5660300002)(51416003)(81156014)(81166006)(8676002)(8936002)(50226002)(76176011)(70206006)(50466002)(186003)(48376002)(336012);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5257;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        Thu, 5 Sep 2019 12:44:27 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36484 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387726AbfIEQo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 12:44:26 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85GgqVp110978;
+        Thu, 5 Sep 2019 12:43:31 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uu3uwpc70-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 12:43:30 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x85Ggsti111126;
+        Thu, 5 Sep 2019 12:43:30 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uu3uwpc6a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 12:43:30 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x85Gewne012651;
+        Thu, 5 Sep 2019 16:43:29 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 2uqgh7au7m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 16:43:29 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85GhSGg12583176
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 16:43:28 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E64DB2064;
+        Thu,  5 Sep 2019 16:43:28 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E4EEB2066;
+        Thu,  5 Sep 2019 16:43:28 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.154])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Sep 2019 16:43:28 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id AA01116C2C84; Thu,  5 Sep 2019 09:43:29 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 09:43:29 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH -rcu dev 1/2] Revert b8c17e6664c4 ("rcu: Maintain special
+ bits at bottom of ->dynticks counter")
+Message-ID: <20190905164329.GT4125@linux.ibm.com>
+Reply-To: paulmck@kernel.org
+References: <20190830162348.192303-1-joel@joelfernandes.org>
+ <20190903200249.GD4125@linux.ibm.com>
+ <20190904045910.GC144846@google.com>
+ <20190904101210.GM4125@linux.ibm.com>
+ <20190904135420.GB240514@google.com>
+ <20190904231308.GB4125@linux.ibm.com>
+ <20190905153620.GG26466@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4ee56902-c49c-43ed-7437-08d732203be6
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:DM6PR02MB5257;
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5257:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB52575DBAF4703071B260C393C7BB0@DM6PR02MB5257.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-Forefront-PRVS: 015114592F
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: BywMnVk+n2TU3AuNb7tpmBiIrXB4YF+WkoTUUT51Cp8n7piTRtVLcFKtgYHo9nuzrzXQZ6E4p8Fjw2r+dhOKrq4ZVsfIsGk6/oP8Knjeht1U5QCHMiKayENac9wUCZ0OCJuM93WTT3Vxqe9cfv8y/LdZtf1XKfA37D4OFLBoi31jHfRvCweE5LJNNzNQv7WepdxzuocIG0AHqd3UvHaAToPYxIVgMNZ1P5s99facZ2+OUEHUqW1K0cEzYFRQPu1TmxrTRlQq2o4I2vwDFe3ehibDsFp5GImKL9/6d6NM8fl0cA8kWqXHtVO9vJeym++5IKYPyqTKxdacxLVeiHPF9k2h6TsB9aD/oxm0eyC4nD8S5jGRWuXCnJSH7M9NaIg3lsVa9SD78I5rBWPd8WmMZf9YgqPof8zciWrX+d6Cszg=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2019 16:43:51.7622
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ee56902-c49c-43ed-7437-08d732203be6
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5257
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905153620.GG26466@google.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Graumann <nick.graumann@gmail.com>
+On Thu, Sep 05, 2019 at 11:36:20AM -0400, Joel Fernandes wrote:
+> On Wed, Sep 04, 2019 at 04:13:08PM -0700, Paul E. McKenney wrote:
+> > On Wed, Sep 04, 2019 at 09:54:20AM -0400, Joel Fernandes wrote:
+> > > On Wed, Sep 04, 2019 at 03:12:10AM -0700, Paul E. McKenney wrote:
+> > > > On Wed, Sep 04, 2019 at 12:59:10AM -0400, Joel Fernandes wrote:
+> > > > > On Tue, Sep 03, 2019 at 01:02:49PM -0700, Paul E. McKenney wrote:
+> > 
+> > [ . . . ]
+> > 
+> > > > If this task gets delayed betweentimes, rcu_implicit_dynticks_qs() would
+> > > > fail to set .rcu_need_heavy_qs because it saw it already being set,
+> > > > even though the corresponding ->dynticks update had already happened.
+> > > > (It might be a new grace period, given that the old grace period might
+> > > > have ended courtesy of the atomic_add_return().)
+> > > 
+> > > Makes sense and I agree.
+> > > 
+> > > Also, I would really appreciate if you can correct the nits in the above
+> > > patch we're reviewing, and apply them (if you can).
+> > > I think, there are only 2 changes left:
+> > > - rename special to seq.
+> > > - reorder the rcu_need_heavy_qs write.
+> > > 
+> > >  On a related point, when I was working on the NOHZ_FULL testing I noticed a
+> > >  weird issue where rcu_urgent_qs was reset but rcu_need_heavy_qs was still
+> > >  set indefinitely. I am a bit afraid our hints are not being cleared
+> > >  appropriately and I believe I fixed a similar issue a few months ago. I
+> > >  would rather have them cleared once they are no longer needed.  What do you
+> > >  think about the below patch? I did not submit it yet because I was working
+> > >  on other patches. 
+> > > 
+> > > ---8<-----------------------
+> > > 
+> > > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > > Subject: [RFC] rcu/tree: Reset CPU hints when reporting a quiescent state
+> > > 
+> > > While tracing, I am seeing cases where need_heavy_qs is still set even
+> > > though urgent_qs was cleared, after a quiescent state is reported. One
+> > > such case is when the softirq reports that a CPU has passed quiescent
+> > > state.
+> > > 
+> > > Previously in 671a63517cf9 ("rcu: Avoid unnecessary softirq when system
+> > > is idle"), I had fixed a bug where core_needs_qs was not being cleared.
+> > > I worry we keep running into similar situations. Let us just add a
+> > > function to clear hints and call it from all relevant places to make the
+> > > code more robust and avoid such stale hints which could in theory at
+> > > least, cause false hints after the quiescent state was already reported.
+> > > 
+> > > Tested overnight with rcutorture running for 60 minutes on all
+> > > configurations of RCU.
+> > > 
+> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > ---
+> > >  kernel/rcu/tree.c | 17 ++++++++++++++++-
+> > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > Excellent point!  But how about if we combine it with the existing
+> > disabling of the scheduler tick, perhaps something like the following?
+> > 
+> > Note that the FQS clearing can come from some other CPU, hence the added
+> > {READ,WRITE}_ONCE() calls.  The call is moved down in rcu_report_qs_rdp()
+> > because something would have had to clear the bit to prevent execution
+> > from getting there, and I believe that the other bit-clearing events
+> > have calls to rcu_disable_urgency_upon_qs().  (But I easily could have
+> > missed something!)
+> 
+> Is there any harm just clearing it earlier in rcu_report_qs_rdp()? If no,
+> then let us just play it safe and do it that way (clear earlier in
+> rcu_report_qs_rdp())?
 
-When polling for a stopped transfer in AXI DMA mode, in some cases the
-status of the channel may indicate IDLE instead of HALTED if the
-channel was reset due to an error.
+Maybe...
 
-Signed-off-by: Nicholas Graumann <nick.graumann@gmail.com>
-Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
----
- drivers/dma/xilinx/xilinx_dma.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+But given that missing a path doesn't cause a major failure (too-short
+grace period, for example), I am more inclined to find the paths and
+fix them as needed.  Especially given that my ignorance of any path to
+a quiescent state likely hides a serious bug.
 
-diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-index b5dd62a..0896e07 100644
---- a/drivers/dma/xilinx/xilinx_dma.c
-+++ b/drivers/dma/xilinx/xilinx_dma.c
-@@ -1092,8 +1092,9 @@ static int xilinx_dma_stop_transfer(struct xilinx_dma_chan *chan)
- 
- 	/* Wait for the hardware to halt */
- 	return xilinx_dma_poll_timeout(chan, XILINX_DMA_REG_DMASR, val,
--				       val & XILINX_DMA_DMASR_HALTED, 0,
--				       XILINX_DMA_LOOP_COUNT);
-+				       val | (XILINX_DMA_DMASR_IDLE |
-+					      XILINX_DMA_DMASR_HALTED),
-+				       0, XILINX_DMA_LOOP_COUNT);
- }
- 
- /**
--- 
-2.7.4
+> > I am OK leaving RCU urgency set on offline CPUs, hence clearing things
+> > at online time.
+> 
+> Got it, probably this point can be added to the commit message.
+> 
+> Added more comments below but otherwise it looks good to me:
+> 
+> > ------------------------------------------------------------------------
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 68ebf0eb64c8..2b74b6c94086 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -827,7 +827,7 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
+> >  		incby = 1;
+> >  	} else if (tick_nohz_full_cpu(rdp->cpu) &&
+> >  		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> > -		   rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> > +		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
+> >  		rdp->rcu_forced_tick = true;
+> >  		tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> >  	}
+> > @@ -892,11 +892,15 @@ void rcu_irq_enter_irqson(void)
+> >  }
+> >  
+> >  /*
+> > - * If the scheduler-clock interrupt was enabled on a nohz_full CPU
+> > - * in order to get to a quiescent state, disable it.
+> > + * If any sort of urgency was applied to the current CPU (for example,
+> > + * the scheduler-clock interrupt was enabled on a nohz_full CPU) in order
+> > + * to get to a quiescent state, disable it.
+> >   */
+> > -void rcu_disable_tick_upon_qs(struct rcu_data *rdp)
+> > +void rcu_disable_urgency_upon_qs(struct rcu_data *rdp)
+> >  {
+> > +	WRITE_ONCE(rdp->core_needs_qs, false);
+> > +	WRITE_ONCE(rdp->rcu_urgent_qs, false);
+> > +	WRITE_ONCE(rdp->rcu_need_heavy_qs, false);
+> 
+> Better to put a comment here saying _ONCE is needed to avoid data-races with
+> the FQS loop? Just so if anyone thinks why we are using _ONCE().
 
+Good point.  I added a "// WRITE_ONCE() for FQS".
+
+> And I am guessing the __this_cpu_read(rcu_data.core_needs_qs) in
+> rcu_flavor_sched_clock_irq() implies READ_ONCE() so no need READ_ONCE()
+> there right?
+
+Assembly in x86.  Not so much on other architectures, though.  ;-)
+See raw_cpu_generic_read().
+
+> >  	if (tick_nohz_full_cpu(rdp->cpu) && rdp->rcu_forced_tick) {
+> >  		tick_dep_clear_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> >  		rdp->rcu_forced_tick = false;
+> > @@ -1417,7 +1421,7 @@ static bool __note_gp_changes(struct rcu_node *rnp, struct rcu_data *rdp)
+> >  		trace_rcu_grace_period(rcu_state.name, rnp->gp_seq, TPS("cpustart"));
+> >  		need_gp = !!(rnp->qsmask & rdp->grpmask);
+> >  		rdp->cpu_no_qs.b.norm = need_gp;
+> > -		rdp->core_needs_qs = need_gp;
+> > +		WRITE_ONCE(rdp->core_needs_qs, need_gp);
+> >  		zero_cpu_stall_ticks(rdp);
+> >  	}
+> >  	rdp->gp_seq = rnp->gp_seq;  /* Remember new grace-period state. */
+> > @@ -1987,7 +1991,6 @@ rcu_report_qs_rdp(int cpu, struct rcu_data *rdp)
+> >  		return;
+> >  	}
+> >  	mask = rdp->grpmask;
+> > -	rdp->core_needs_qs = false;
+> >  	if ((rnp->qsmask & mask) == 0) {
+> >  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+> >  	} else {
+> > @@ -1998,7 +2001,7 @@ rcu_report_qs_rdp(int cpu, struct rcu_data *rdp)
+> >  		if (!offloaded)
+> >  			needwake = rcu_accelerate_cbs(rnp, rdp);
+> >  
+> > -		rcu_disable_tick_upon_qs(rdp);
+> > +		rcu_disable_urgency_upon_qs(rdp);
+> >  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+> >  		/* ^^^ Released rnp->lock */
+> >  		if (needwake)
+> > @@ -2022,7 +2025,7 @@ rcu_check_quiescent_state(struct rcu_data *rdp)
+> >  	 * Does this CPU still need to do its part for current grace period?
+> >  	 * If no, return and let the other CPUs do their part as well.
+> >  	 */
+> > -	if (!rdp->core_needs_qs)
+> > +	if (!READ_ONCE(rdp->core_needs_qs))
+> >  		return;
+> >  
+> >  	/*
+> > @@ -2316,7 +2319,7 @@ static void force_qs_rnp(int (*f)(struct rcu_data *rdp))
+> >  				rdp = per_cpu_ptr(&rcu_data, cpu);
+> >  				if (f(rdp)) {
+> >  					mask |= bit;
+> > -					rcu_disable_tick_upon_qs(rdp);
+> > +					rcu_disable_urgency_upon_qs(rdp);
+> >  				}
+> >  			}
+> >  		}
+> > @@ -3004,7 +3007,7 @@ static int rcu_pending(void)
+> >  		return 0;
+> >  
+> >  	/* Is the RCU core waiting for a quiescent state from this CPU? */
+> > -	if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm)
+> > +	if (READ_ONCE(rdp->core_needs_qs) && !rdp->cpu_no_qs.b.norm)
+> >  		return 1;
+> >  
+> >  	/* Does this CPU have callbacks ready to invoke? */
+> > @@ -3244,7 +3247,6 @@ int rcutree_prepare_cpu(unsigned int cpu)
+> >  	rdp->gp_seq = rnp->gp_seq;
+> >  	rdp->gp_seq_needed = rnp->gp_seq;
+> >  	rdp->cpu_no_qs.b.norm = true;
+> > -	rdp->core_needs_qs = false;
+> 
+> How about calling the new hint-clearing function here as well? Just for
+> robustness and consistency purposes?
+
+This and the next function are both called during a CPU-hotplug online
+operation, so there is little robustness or consistency to be had by
+doing it twice.
+
+							Thanx, Paul
+
+> thanks,
+> 
+>  - Joel
+> 
+> >  	rdp->rcu_iw_pending = false;
+> >  	rdp->rcu_iw_gp_seq = rnp->gp_seq - 1;
+> >  	trace_rcu_grace_period(rcu_state.name, rdp->gp_seq, TPS("cpuonl"));
+> > @@ -3359,7 +3361,7 @@ void rcu_cpu_starting(unsigned int cpu)
+> >  	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+> >  	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
+> >  	if (rnp->qsmask & mask) { /* RCU waiting on incoming CPU? */
+> > -		rcu_disable_tick_upon_qs(rdp);
+> > +		rcu_disable_urgency_upon_qs(rdp);
+> >  		/* Report QS -after- changing ->qsmaskinitnext! */
+> >  		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+> >  	} else {
