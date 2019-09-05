@@ -2,87 +2,129 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBB2C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D755C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C178D20820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567694533;
-	bh=d2aZjDRW40dBxOLrRrZkuzdUXcO+RSiRgvHh/8OB/zg=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=f3Rn9UiWCH//7hpgykKajGncYQNtvoHhc6IHJJPh15mY+EYpfMmjh/aWM84Asgiee
-	 fu9le3/RiwD4n0g7XnAJRqikmdILChVr791L1F0ohngiyeTgV1BNbu8XOTf6+kogkH
-	 ZBsJ3lUmFiosb3zGBjNq/rO5RB7I2tZ5xpTiujvs=
+	by mail.kernel.org (Postfix) with ESMTP id 4EE792082C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:42:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIontiK2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389655AbfIEOmM (ORCPT
+        id S2389729AbfIEOmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:42:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726080AbfIEOmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:42:12 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B7D1206BA;
-        Thu,  5 Sep 2019 14:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567694532;
-        bh=d2aZjDRW40dBxOLrRrZkuzdUXcO+RSiRgvHh/8OB/zg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=YvB7b+TO37eyOb66C7FMbU3XFVDsEW7zCAywPy5GcgfOrW1GIthLF3yFdmnZdSXZX
-         W2GOf2MI5TCVzDyF3kxmIBbkU0/MROqxBaXMdieiq7/8wDjRQ7f7yo6pHwjrmZnzPy
-         S9TbGSdeWf/FFoKHL4qdxRcJ05po4O1ouoNe02YU=
-Subject: Re: [PATCH 4.14 00/57] 4.14.142-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190904175301.777414715@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <11e7d05c-4bb1-bd75-c6dd-779ec1142325@kernel.org>
-Date:   Thu, 5 Sep 2019 08:42:10 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 10:42:20 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:42769 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbfIEOmT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:42:19 -0400
+Received: by mail-io1-f67.google.com with SMTP id n197so5378463iod.9;
+        Thu, 05 Sep 2019 07:42:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bdAudQZ0HCJ8TRBm9ijNYepraRe/QpJqgeTn8uQsQX8=;
+        b=BIontiK2DTv/qpkcw8bqo+nSW7AR/xoHc7DGBgv5kPqhit+aqYI4uEyMy/Ss6RSaK5
+         hmWpjMQ9lfx7I0535vhSC3ozL00wKYYG5TSEaDh5y1MS7n/m0GkpcsbpLw+EjYfGS6rW
+         +nHaGhOCacxctPQGekqTXVouPBMX5i4VlYb++4o/GQSyiogo2erqjE7dYL7ho0IOYQhe
+         +1Bosh4NY01j5tPmU+lrHJkAyw2dMmGuI6RmMLaMrnc0UJMA5g4oCZ1xVHG4f1O1cG3N
+         h5Kq7PuHfOedJ/uZYlRHf+nxz1eyncsLhwmH5eGZ7wO60AXazvUiqrC4F+QNc35/SPSu
+         w3Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bdAudQZ0HCJ8TRBm9ijNYepraRe/QpJqgeTn8uQsQX8=;
+        b=fCB7YinBVO9uzr56IJMESH2PA8nMXzXHApVFy5DPTPpkj6mwIUZZEG8PuI6oQQxZv5
+         zpVoz03L1vGgla7tygbzBhiQfDBoFnyrR6PXl4IEDJi7joerh56F6z0F2010M6Yzi7vf
+         Gpwfi56Czg5clD0qetLTguQxVkbkQa+OaDJ8/owYMQiebvE7TOaEBNvN5wbTamdt/GpM
+         3a1xzyhbOYRpKpbEGpsUfgQstJTxvMY1YqzRQosHk32YirvRj0rwzGjFUpfiYxVTvgW6
+         VM5cx65z912MnaZMGWDi3xvPii2wRFyYWlMSQOfPDVb94VtXT1aRul9EvYpqqBNpsrat
+         4ZzA==
+X-Gm-Message-State: APjAAAXNegE5ULNr9wMafUs3qnpT1XO53fXo0yd8xlSCGFokx3/AG+UL
+        eUPhiO8zaebOMAx4UoV9kHHxNHZUbvQUbRsPOBQ=
+X-Google-Smtp-Source: APXvYqyX2pWhcTrhvray5HVD4t5UgZhCevIB50IwYtht6X5wox9aszGhaDh07sqZYAAepAbIq9CCwMnECTOlso4Ws3A=
+X-Received: by 2002:a02:a90a:: with SMTP id n10mr4223757jam.140.1567694539038;
+ Thu, 05 Sep 2019 07:42:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190904175301.777414715@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1567693630-27544-1-git-send-email-arnaud.pouliquen@st.com> <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
+In-Reply-To: <1567693630-27544-2-git-send-email-arnaud.pouliquen@st.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 5 Sep 2019 08:42:08 -0600
+Message-ID: <CAOCk7Nrja=31soMB+MhcrxhGHMT+bj9U+3_h6cTLo3+AAsFKqQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] rpmsg: core: add API to get message length
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        MSM <linux-arm-msm@vger.kernel.org>, Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 11:53 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.142 release.
-> There are 57 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 06 Sep 2019 05:50:23 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.142-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Thu, Sep 5, 2019 at 8:35 AM Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
+>
+> Return the rpmsg buffer size for sending message, so rpmsg users
+> can split a long message in several sub rpmsg buffers.
+>
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> ---
+>  drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+>  drivers/rpmsg/rpmsg_internal.h   |  2 ++
+>  drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+>  include/linux/rpmsg.h            | 10 ++++++++++
+>  4 files changed, 43 insertions(+)
+>
+> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> index e330ec4dfc33..a6ef54c4779a 100644
+> --- a/drivers/rpmsg/rpmsg_core.c
+> +++ b/drivers/rpmsg/rpmsg_core.c
+> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>  }
+>  EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+>
+> +/**
+> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
+> + * @ept: the rpmsg endpoint
+> + *
+> + * This function returns maximum buffer size available for a single message.
+> + *
+> + * Return: the maximum transmission size on success and an appropriate error
+> + * value on failure.
+> + */
 
-Compiled and booted on my test system. No dmesg regressions.
+What is the intent of this?
 
-thanks,
--- Shuah
+The term "mtu" is "maximum transfer unit" - ie the largest payload of
+data that could possibly be sent, however at any one point in time,
+that might not be able to be accommodated.
+
+I don't think this is implemented correctly.  In GLINK and SMD, you've
+not implemented MTU, you've implemented "how much can I send at this
+point in time".  To me, this is not mtu.
+
+In the case of SMD, you could get the fifo size and return that as the
+mtu, but since you seem to be wanting to use this from the TTY layer
+to determine how much can be sent at a particular point in time, I
+don't think you actually want mtu.
+
+For GLINK, I don't actually think you can get a mtu based on the
+design, but I'm trying to remember from 5-6 years ago when we designed
+it.  It would be possible that a larger intent would be made available
+later.
+
+I think you need to first determine if you are actually looking for
+mtu, or "how much data can I send right now", because right now, it
+isn't clear.
