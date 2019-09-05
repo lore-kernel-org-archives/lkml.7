@@ -2,240 +2,153 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63326C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DEDC00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC9C62070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4ED205ED
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="lgMhF+dD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388900AbfIEXAr (ORCPT
+        id S2389275AbfIEXBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 19:00:47 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:63818 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbfIEXAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:00:46 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id B3C5CA0128;
-        Fri,  6 Sep 2019 01:00:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id wlUb_R4_fkS3; Fri,  6 Sep 2019 01:00:32 +0200 (CEST)
-Date:   Fri, 6 Sep 2019 09:00:03 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905230003.bek7vqdvruzi4ybx@yavin.dot.cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
+        Thu, 5 Sep 2019 19:01:16 -0400
+Received: from mail-eopbgr700134.outbound.protection.outlook.com ([40.107.70.134]:14272
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726635AbfIEXBQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 19:01:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SU2A7RWlDrUgJvoS2Q4UzNKx69Bna3goMj1TL3o+fzT4DiXO5H07Mn67AZjYTCSsrPSWa6Y+oJv3FJdBgYFhHzc97cwbEGLS+0cQroprqzm0JL3T/DnhCEJ5pbgBovpuPa/Akkp+BPwUAJGmvPFGhG0JElbI/K5SlJrbpZfI49xa/ZPYmUM+zT15jHDfzC1ARuF4D7gxY136F6rS63sWgj0raiSK93773TVNjz9iNzWf1X57OOj8LAsNkipDiehKoY51CH5FYNoaqNVDvulHrEUDNttJMfzil/+GIrqueXjOBo5hGUWI2q4wc5qS32yWnM7KlXrrmGFRx2QI18JdbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=abOO3pBPLe7bUTueO3RQdKVsAoF2EJyg6Mzyrc2pj1A=;
+ b=jRqlSeGQ5CX8ZUx1BIm5pUcR8WhaQy2KeJU/NPghjRld56rlHddb6NqC/86S7WMh81iBjhjEmp/IhttOgdI6ZmKQRBR6pZr3e86JCMiD/cyO3+DwzEkyuFY6PjG3h6+bedhK/jhk//0iBOMnDKTrNeOkW/l4sQ/VS7IoBJY1ep8JlEzGYaw6DqCbxvplDuogQMmL1OhmBDwkhsiITbCMqENFSzLgTLIITuLUjb0wsNpjIQLp5ZJxYqxXBEBIUEh/uMET7/wp4ezSdRm9YatVQ+d4ps6xNNMG34wg+Rt/PdWTKphBrY7Uq45l+aP53I2uzj45gg77mBHnCGJ6BukRTQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=abOO3pBPLe7bUTueO3RQdKVsAoF2EJyg6Mzyrc2pj1A=;
+ b=lgMhF+dD0ZVNspvqRZ4SOKXDeHF9U3aFjpBbg/87lGSuhJKCs7yEv8XVhktHercey120DNdKq0njU8zAGdlghw1Cek5X0mbWNxchB+7i/IrrEnmiwkGtHrhwy1ZYIGBkGpj6FegcCnI+vBb9diZ9yuxFe0fotXeTHhkg+rSumbQ=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
+ SN6PR2101MB1038.namprd21.prod.outlook.com (52.132.115.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.4; Thu, 5 Sep 2019 23:01:14 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::dd56:aa4f:204f:86a4]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::dd56:aa4f:204f:86a4%3]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
+ 23:01:14 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH v5 0/9] Enhance the hv_vmbus driver to support hibernation
+Thread-Topic: [PATCH v5 0/9] Enhance the hv_vmbus driver to support
+ hibernation
+Thread-Index: AQHVZD3RG3904IwHxkahsxc3tv1IQA==
+Date:   Thu, 5 Sep 2019 23:01:14 +0000
+Message-ID: <1567724446-30990-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR0201CA0048.namprd02.prod.outlook.com
+ (2603:10b6:301:73::25) To SN6PR2101MB0942.namprd21.prod.outlook.com
+ (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf10697d-36c0-441b-585a-08d73254f390
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1038;
+x-ms-traffictypediagnostic: SN6PR2101MB1038:|SN6PR2101MB1038:
+x-ms-exchange-transport-forked: True
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <SN6PR2101MB1038A80C8ECE2B3B497A07B3BFBB0@SN6PR2101MB1038.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 015114592F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(6506007)(66446008)(256004)(14444005)(10290500003)(478600001)(476003)(102836004)(186003)(36756003)(52116002)(64756008)(6306002)(71200400001)(26005)(3450700001)(6512007)(71190400001)(305945005)(107886003)(4326008)(66946007)(316002)(966005)(7736002)(6436002)(66556008)(386003)(22452003)(66476007)(6486002)(486006)(53936002)(2616005)(25786009)(14454004)(54906003)(110136005)(5660300002)(2501003)(3846002)(2906002)(6116002)(81156014)(8676002)(81166006)(86362001)(50226002)(4720700003)(66066001)(10090500001)(1511001)(99286004)(8936002)(43066004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1038;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cJxSKbnLM1JphbphYTiQozh1tj+tIqZfbhtxTfQAsIVd4hJqTLCg8s2r9Em4OjGQB4YhZrq59KXx7F4RsTGRipSrFB8+t1heY3J76jB0ZNC3C/32g9ZZGyj3Q/2HK22yjmMkDK+XirB8lPJlPFhzMBHrQcLY+35TzNP4dN2o+QpEXCQqeOcLBvzCLHDl3EAVrblHOZuM5m1Q+EAEqfqk8P6Cv/9+VmG3Le8jb76R5MDMvuZQN4P8XZnPbQoI/FWq20q++vupuH8v4dR+acHPtzsPCx4rhWL3xQqKP4HzCFu00jwJIB9OVp21UD25cgwLh1uRAVbXqL3Jp966khfwMC+bkQ3UbQnMP4zNbWXxY3//K2CWG5WynqE2Gfj2ZhqkMAdYjtaSqVXmqVIN9Ux/sn9Y60VmhbFTeZCcXcw3o9c=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p5c7e3ucgw67wkfa"
-Content-Disposition: inline
-In-Reply-To: <20190905180750.GQ1131@ZenIV.linux.org.uk>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf10697d-36c0-441b-585a-08d73254f390
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 23:01:14.3148
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B8EM54+HApO/G4iJvb2p1XNvgh4fG5quskR38pmBMyb6VrWDsaF9+OIkwuh8lgdXOtSjtYuidpEWxBMydYQimg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset (consisting of 9 patches) was part of the v4 patchset (consis=
+ting
+of 12 patches):
+    https://lkml.org/lkml/2019/9/2/894
 
---p5c7e3ucgw67wkfa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The other 3 patches in v4 are posted in another patchset, which will go
+through the tip.git tree.
 
-On 2019-09-05, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> > +/*
-> > + * "memset(p, 0, size)" but for user space buffers. Caller must have a=
-lready
-> > + * checked access_ok(p, size).
-> > + */
-> > +static int __memzero_user(void __user *p, size_t s)
-> > +{
-> > +	const char zeros[BUFFER_SIZE] =3D {};
-> > +	while (s > 0) {
-> > +		size_t n =3D min(s, sizeof(zeros));
-> > +
-> > +		if (__copy_to_user(p, zeros, n))
-> > +			return -EFAULT;
-> > +
-> > +		p +=3D n;
-> > +		s -=3D n;
-> > +	}
-> > +	return 0;
-> > +}
->=20
-> That's called clear_user().
+All the 9 patches here are now rebased to the hyperv tree's hyperv-next bra=
+nch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=3Dh=
+yperv-next
+, and all the 9 patches have Michael Kelley's Signed-off-by's.
 
-Already switched, I didn't know about clear_user() -- I assumed it
-would've been called bzero_user() or memzero_user() and didn't find it
-when looking.
+Please review.
 
-> > +int copy_struct_to_user(void __user *dst, size_t usize,
-> > +			const void *src, size_t ksize)
-> > +{
-> > +	size_t size =3D min(ksize, usize);
-> > +	size_t rest =3D abs(ksize - usize);
-> > +
-> > +	if (unlikely(usize > PAGE_SIZE))
-> > +		return -EFAULT;
->=20
-> Why?
->=20
-> > +	} else if (usize > ksize) {
-> > +		if (__memzero_user(dst + size, rest))
-> > +			return -EFAULT;
-> > +	}
-> > +	/* Copy the interoperable parts of the struct. */
-> > +	if (__copy_to_user(dst, src, size))
-> > +		return -EFAULT;
->=20
-> Why not simply clear_user() and copy_to_user()?
+Thanks!
+Dexuan
 
-I'm not sure I understand what you mean -- are you asking why we need to
-do memchr_inv(src + size, 0, rest) earlier?
+Dexuan Cui (9):
+  Drivers: hv: vmbus: Break out synic enable and disable operations
+  Drivers: hv: vmbus: Suspend/resume the synic for hibernation
+  Drivers: hv: vmbus: Add a helper function is_sub_channel()
+  Drivers: hv: vmbus: Implement suspend/resume for VSC drivers for
+    hibernation
+  Drivers: hv: vmbus: Ignore the offers when resuming from hibernation
+  Drivers: hv: vmbus: Suspend/resume the vmbus itself for hibernation
+  Drivers: hv: vmbus: Clean up hv_sock channels by force upon suspend
+  Drivers: hv: vmbus: Suspend after cleaning up hv_sock and sub channels
+  Drivers: hv: vmbus: Resume after fixing up old primary channels
 
->=20
-> > +int copy_struct_from_user(void *dst, size_t ksize,
-> > +			  const void __user *src, size_t usize)
-> > +{
-> > +	size_t size =3D min(ksize, usize);
-> > +	size_t rest =3D abs(ksize - usize);
->=20
-> Cute, but... you would be just as well without that 'rest' thing.
-
-I would argue it's harder to mess up using "rest" compared to getting
-"ksize - usize" and "usize - ksize" mixed up (and it's a bit more
-readable).
-
-> > +
-> > +	if (unlikely(usize > PAGE_SIZE))
-> > +		return -EFAULT;
->=20
-> Again, why?
-
-As discussed in a sister thread, I will leave this in the callers
-(though I would argue callers should always do some kind of sanity check
-like this).
-
->=20
-> > +	if (unlikely(!access_ok(src, usize)))
-> > +		return -EFAULT;
->=20
-> Why not simply copy_from_user() here?
->=20
-> > +	/* Deal with trailing bytes. */
-> > +	if (usize < ksize)
-> > +		memset(dst + size, 0, rest);
-> > +	else if (usize > ksize) {
-> > +		const void __user *addr =3D src + size;
-> > +		char buffer[BUFFER_SIZE] =3D {};
-> > +
-> > +		while (rest > 0) {
-> > +			size_t bufsize =3D min(rest, sizeof(buffer));
-> > +
-> > +			if (__copy_from_user(buffer, addr, bufsize))
-> > +				return -EFAULT;
-> > +			if (memchr_inv(buffer, 0, bufsize))
-> > +				return -E2BIG;
->=20
-> Frankly, that looks like a candidate for is_all_zeroes_user().
-> With the loop like above serving as a dumb default.  And on
-> badly alighed address it _will_ be dumb.  Probably too much
-> so - something like
-> 	if ((unsigned long)addr & 1) {
-> 		u8 v;
-> 		if (get_user(v, (__u8 __user *)addr))
-> 			return -EFAULT;
-> 		if (v)
-> 			return -E2BIG;
-> 		addr++;
-> 	}
-> 	if ((unsigned long)addr & 2) {
-> 		u16 v;
-> 		if (get_user(v, (__u16 __user *)addr))
-> 			return -EFAULT;
-> 		if (v)
-> 			return -E2BIG;
-> 		addr +=3D2;
-> 	}
-> 	if ((unsigned long)addr & 4) {
-> 		u32 v;
-> 		if (get_user(v, (__u32 __user *)addr))
-> 			return -EFAULT;
-> 		if (v)
-> 			return -E2BIG;
-> 	}
-> 	<read the rest like you currently do>
-> would be saner, and things like x86 could trivially add an
-> asm variant - it's not hard.  Incidentally, memchr_inv() is
-> an overkill in this case...
-
-Why is memchr_inv() overkill?
-
-But yes, breaking this out to an asm-generic is_all_zeroes_user()
-wouldn't hurt -- and I'll put a cleaned-up version of the alignment
-handling there too. Should I drop it in asm-generic/uaccess.h, or
-somewhere else?
+ drivers/hv/channel_mgmt.c | 161 +++++++++++++++++++++++++---
+ drivers/hv/connection.c   |   8 +-
+ drivers/hv/hv.c           |  66 +++++++-----
+ drivers/hv/hyperv_vmbus.h |  30 ++++++
+ drivers/hv/vmbus_drv.c    | 265 ++++++++++++++++++++++++++++++++++++++++++=
+++++
+ include/linux/hyperv.h    |  16 ++-
+ 6 files changed, 497 insertions(+), 49 deletions(-)
 
 --=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+1.8.3.1
 
---p5c7e3ucgw67wkfa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXGTcAAKCRCdlLljIbnQ
-ErrcAP4jP69XXagvV6A6fZ62FZE+PxzGL1xMstNZGHLRdqnO0wD9FZDD6+QiCq2T
-ReQjcKXuuyo3tBJtN7kYSwVg0ZE4dw8=
-=qRhr
------END PGP SIGNATURE-----
-
---p5c7e3ucgw67wkfa--
