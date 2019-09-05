@@ -6,117 +6,143 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76777C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51B9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842BC207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFE6F206A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="G/YNik1G"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="hpdJnxdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388477AbfIEOXQ (ORCPT
+        id S2388593AbfIEOXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:23:16 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:42175 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbfIEOXP (ORCPT
+        Thu, 5 Sep 2019 10:23:20 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38035 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725290AbfIEOXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:23:15 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y23so2683293lje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:23:14 -0700 (PDT)
+        Thu, 5 Sep 2019 10:23:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id h195so1861794pfe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:23:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LPztoN3Fg0/PfSpfw7cEnAqEPRh799k2jxpgxiRRCHA=;
-        b=G/YNik1GclJrN7gztCf7hQqyrJqZWIjZGJzI03IDYHeBt1xOf4ipze7k1Cshr1Wrbn
-         i2jTsLWNR+WfE14XyajTmah+0LaTGevGCdBRh1VVcnQY8X8Om7LI4DNAeU8gEc1W5pfy
-         X+5+w1m6czJiMAsp+UuN9nmL2XtOz2M0wMqro=
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o0kJLOF+oseq1sFKQHmWAceakgmtIl8cUwVOf1CyohA=;
+        b=hpdJnxdrixWVfeofcxwBZ6pDNTjh757qry9LSInbu6J/TKbviVyCRd4+icNXHOfbu/
+         enOsoYQtx00GpthU5ztf0reocsmYwyDwhMRZW4u63+ccuTefIwvgH/4GI5O0qs9GGtD0
+         ELjmFfLbDQjkIcAtui4m3jtUvnImposTuinC0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LPztoN3Fg0/PfSpfw7cEnAqEPRh799k2jxpgxiRRCHA=;
-        b=NCqsUtErCWVIqzKXvHy3Myu1ja+sIfyk9WYTovoq3X2WqF/s0hlVG3rzCHYOplVzLG
-         wwlfcwbK2nuXO9TZYjbu+g33NJjOHwtPyoSHudTkhjQRDLay7vk6+z7SvLe2qavgi16Y
-         LjFR3PGCusz7Aw5OpPocOMSM3EdWI/Nbf/En2E9huw/VGFbNg8fvmczp639ksRGLZEqN
-         OZTxk+13b066VGiy5lmjTrzExIZwrUxPp8QXCb6a/Qan4cPHCOahbn+r5UP1E3f3E1rn
-         W0BwgxgkKzIeBKedo11gjLMNgDDYBCxidBQ1MiU/YYEDUMRUKbNWcor3fViR7toe6LBl
-         hqoQ==
-X-Gm-Message-State: APjAAAW4KKwsb+zOhfEBoe3fSf6Yit+67ytXjs9LdIe9V6WpeiG1ox6y
-        azJ/oypu8PWIcj0uBD6nTnLNNcrHOpzIvA+0FJU=
-X-Google-Smtp-Source: APXvYqwK6hlDidvoX1XHjLEpXeyyZfiGakyOZcQDFwkD7Cs9G8HHGLzX1fwlEnJzQpe0RldEwtI2Pw==
-X-Received: by 2002:a2e:93d7:: with SMTP id p23mr2363500ljh.100.1567693393910;
-        Thu, 05 Sep 2019 07:23:13 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u26sm462173lfd.19.2019.09.05.07.23.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 05 Sep 2019 07:23:12 -0700 (PDT)
-Subject: Re: [PATCH v2 4/6] compiler-gcc.h: add asm_inline definition
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        "gcc-patches@gcc.gnu.org" <gcc-patches@gcc.gnu.org>
-References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-1-linux@rasmusvillemoes.dk>
- <20190830231527.22304-5-linux@rasmusvillemoes.dk>
- <CAKwvOdktYpMH8WnEQwNE2JJdKn4w0CHv3L=YHkqU2JzQ6Qwkew@mail.gmail.com>
- <a5085133-33da-6c13-6953-d18cbc6ad3f5@rasmusvillemoes.dk>
- <20190905134535.GP9749@gate.crashing.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <ceb01e88-b172-d6e7-98d4-c14ddeae87d9@rasmusvillemoes.dk>
-Date:   Thu, 5 Sep 2019 16:23:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o0kJLOF+oseq1sFKQHmWAceakgmtIl8cUwVOf1CyohA=;
+        b=lonB7gIK/OykLrUbuWyzczkpPv++fyffgTtyzhBdlTYrPsUHThmgaqoResEN5++mTT
+         bSNKTJQWYlumOW80nl20UHVKSeYlbJH4lD76LPvkPKgOOwNoukurYCH+oHFWUwb3+Hng
+         JQgT0RXY4tAp5WHehBwO2gpKUB/fXGA7itfHYAEmtI+pJIDEgC2q/KjJqZxfIko73iK8
+         XxNtZg0vfaqQQAmONzr9Q95qWCw5bATKuC5m/7QZlry4eLCy7nsH/gfxO52qSTfTD5ZI
+         wLPN+d31peKN7B4EaGSiomq09pFGdBwrSTy1ScWTCQLEiMO4bfK/2VdhEZlFFd0uNe78
+         yDqg==
+X-Gm-Message-State: APjAAAWLlu6VNGIDR/9iNUdlv6h1ydd5+dNMinH7Ze+6J9zKvxiB/NNQ
+        DdMcaW084Xv3jO6BfPny5mzG8Q==
+X-Google-Smtp-Source: APXvYqyRmXPJSFub5OtQlmOXJveZtzr88UtyV9DSQaRDTAUPJYUtpXUW3xtLdzMJjjIysrig3oGj6w==
+X-Received: by 2002:a17:90a:d793:: with SMTP id z19mr4077370pju.36.1567693399291;
+        Thu, 05 Sep 2019 07:23:19 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s5sm2470598pfm.97.2019.09.05.07.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 07:23:18 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 10:23:17 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
+        carmenjackson@google.com, mayankgupta@google.com,
+        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
+        akpm@linux-foundation.org, kernel-team@android.com,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+Message-ID: <20190905142317.GD26466@google.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+ <20190904084508.GL3838@dhcp22.suse.cz>
+ <20190904153258.GH240514@google.com>
+ <20190904153759.GC3838@dhcp22.suse.cz>
+ <20190904162808.GO240514@google.com>
+ <20190905105424.GG3838@dhcp22.suse.cz>
+ <20190905141452.GA26466@google.com>
+ <20190905142010.GC3838@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190905134535.GP9749@gate.crashing.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905142010.GC3838@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2019 15.45, Segher Boessenkool wrote:
-> Hi Rasmus,
+On Thu, Sep 05, 2019 at 04:20:10PM +0200, Michal Hocko wrote:
+> On Thu 05-09-19 10:14:52, Joel Fernandes wrote:
+> > On Thu, Sep 05, 2019 at 12:54:24PM +0200, Michal Hocko wrote:
+> > > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> > > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> > > > > > On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
+> > > > > > > On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
+> > > > > > > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
+> > > > > > > > memory hogs. Several Android teams have been using this patch in various
+> > > > > > > > kernel trees for half a year now. Many reported to me it is really
+> > > > > > > > useful so I'm posting it upstream.
+> > > > > > > >
+> > > > > > > > Initial patch developed by Tim Murray. Changes I made from original patch:
+> > > > > > > > o Prevent any additional space consumed by mm_struct.
+> > > > > > > > o Keep overhead low by checking if tracing is enabled.
+> > > > > > > > o Add some noise reduction and lower overhead by emitting only on
+> > > > > > > >   threshold changes.
+> > > > > > >
+> > > > > > > Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
+> > > > > > > the Linus tree (nor in linux-next).
+> > > > > >
+> > > > > > No, this is generated automatically by the tracepoint infrastructure when a
+> > > > > > tracepoint is added.
+> > > > >
+> > > > > OK, I was not aware of that.
+> > > > >
+> > > > > > > Besides that why do we need batching in the first place. Does this have a
+> > > > > > > measurable overhead? How does it differ from any other tracepoints that we
+> > > > > > > have in other hotpaths (e.g.  page allocator doesn't do any checks).
+> > > > > >
+> > > > > > We do need batching not only for overhead reduction,
+> > > > >
+> > > > > What is the overhead?
+> > > > 
+> > > > The overhead is occasionally higher without the threshold (that is if we
+> > > > trace every counter change). I would classify performance benefit to be
+> > > > almost the same and within the noise.
+> > > 
+> > > OK, so the additional code is not really justified.
+> > 
+> > It is really justified. Did you read the whole of the last email?
 > 
-> On Thu, Sep 05, 2019 at 01:07:11PM +0200, Rasmus Villemoes wrote:
->> On 05/09/2019 02.18, Nick Desaulniers wrote:
->>> Is it too late to ask for a feature test macro? Maybe one already
->>> exists? 
->>
->> No, not as far as I know.
+> Of course I have. The information that numbers are in noise with some
+> outliers (without any details about the underlying reason) is simply
+> showing that you are optimizing something probably not worth it.
 > 
-> [ That's not what a feature test macro is; a feature test macro allows the
->   user to select some optional behaviour.  Things like _GNU_SOURCE.  ]
-> 
->> Perhaps something like below, though that
->> won't affect the already released gcc 9.1 and 9.2, of course.
-> 
-> That is one reason to not want such a predefined macro.  Another reason
-> is that you usually need to compile some test programs *anyway*, to see if
-> some bug is present for example, or to see if the exact implementation of
-> the feature is beneficial (or harmful) to your program in some way.
+> I would recommend adding a simple tracepoint. That should be pretty non
+> controversial. And if you want to add an optimization on top then
+> provide data to justify it.
 
-OK, I think I'll just use a version check for now, and then switch to a
-Kconfig test if and when clang grows support.
+Did you read the point about trace sizes? We don't want traces flooded and
+you are not really making any good points about why we should not reduce
+flooding of traces. I don't want to simplify it and lose the benefit. It is
+already simple enough and non-controversial.
 
->> gcc maintainers, WDYT? Can we add a feature test macro for asm inline()?
-> 
-> 
-> Why would GCC want to have macros for all features it has? 
+thanks,
 
-Well, gcc has implemented __has_attribute() which is similar - one could
-detect support by compiling a trivial test program. Or the same could be
-said for many of the predefined macros that are conditionally defined,
-e.g. __HAVE_SPECULATION_SAFE_VALUE.
+ - Joel
 
-But I was just throwing the question into the air, I won't pursue this
-further.
-
-Thanks,
-Rasmus
