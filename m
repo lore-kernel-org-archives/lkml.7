@@ -2,103 +2,126 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C83C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35F2FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A750520870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+UAEUh5"
+	by mail.kernel.org (Postfix) with ESMTP id 95A1B2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 15:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390240AbfIEPG3 (ORCPT
+        id S2390354AbfIEPHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 11:06:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46625 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387659AbfIEPG3 (ORCPT
+        Thu, 5 Sep 2019 11:07:53 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:49626 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731338AbfIEPHx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 11:06:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h7so3187104wrt.13;
-        Thu, 05 Sep 2019 08:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FUgWccw0woyG2e6M/7x469teGzAXAKjM5wym+f71oLU=;
-        b=e+UAEUh5SHxW1D8bYZCGYrbModyU/OXU3yDAxz4voldJsEaZQEXtvsXWm7v+9pAkGF
-         BJLTEX3dqNCBTw3qdGwjqLCbuLEUWwbYKZyfPDwt9GCwykySJwxjaUTa4ouNKatSzYd5
-         rHct195PnDwraMfmIPVbFnRoRLla15Km3O20FqlIZSLWwLpKJr/IKyvy3WdIqGhtVVNp
-         REu46XBQy4Ch90jVs9csNzj3+PiLgwZ6422f40CqfBdy7ZbucEcgsed1OYIi04xP7j3L
-         Yu3b+6pcITEPKPoEHElO/hI8qe8GyIEit60LnC0rGRGmCOspPYitYB2bnsJpU8GryxgH
-         YTeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FUgWccw0woyG2e6M/7x469teGzAXAKjM5wym+f71oLU=;
-        b=Sra2ZNGrg5XFY0GWSs4PzEVdLuNgXr6663g03K3mU3w0yqZEJCaIc3JAwVCR64bWz8
-         bQ+NyizskAVxTn0pyBOebS1whZ9mOld+BT2p2JeXKPvonXE98Kt8TYpCqIzcgBjSgpeC
-         lBKuWx/JimPiUSlDm5d9EzgKYGZYUJka8BaGwFwKFoR8CsPMfYqFqa1meq6KSDMV1w+y
-         N/nPjWd8wHv0dMYWU6DxG/zCjthshiAR/Yn4H3xkIYLpzAGX3Bn0lR9VTPuKPLNIZ7qy
-         vf99Lbmz6+BlYW96OJzWfzKFUuX/zWJeRRlTAN1UfzZWIc8sAZ18FoHHsSkZOLCtr42i
-         wjxQ==
-X-Gm-Message-State: APjAAAVrAKHQrrds9tUjEQRL+j7q0qhZN6eB3s1U/rsp/eIRtorgk3sL
-        Lf5XKnUl3I+ZCmZMA2lVDCE=
-X-Google-Smtp-Source: APXvYqzOItE1cvzLVy+eSPRwJEMTk3j5+XdfCLAUzFZEoTLNy6oDpYOIt9n+79BqphySIrPpLua5gg==
-X-Received: by 2002:a5d:4649:: with SMTP id j9mr2995539wrs.193.1567695986780;
-        Thu, 05 Sep 2019 08:06:26 -0700 (PDT)
-Received: from [192.168.8.147] (163.175.185.81.rev.sfr.net. [81.185.175.163])
-        by smtp.gmail.com with ESMTPSA id z5sm2501262wrl.33.2019.09.05.08.06.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 08:06:25 -0700 (PDT)
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-To:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Michal Hocko <mhocko@kernel.org>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <20190903132231.GC18939@dhcp22.suse.cz>
- <1567525342.5576.60.camel@lca.pw> <20190903185305.GA14028@dhcp22.suse.cz>
- <1567546948.5576.68.camel@lca.pw> <20190904061501.GB3838@dhcp22.suse.cz>
- <20190904064144.GA5487@jagdpanzerIV> <20190904065455.GE3838@dhcp22.suse.cz>
- <20190904071911.GB11968@jagdpanzerIV> <20190904074312.GA25744@jagdpanzerIV>
- <1567599263.5576.72.camel@lca.pw> <20190904144850.GA8296@tigerII.localdomain>
- <1567629737.5576.87.camel@lca.pw>
- <165827b5-6783-f4f8-69d6-b088dd97eb45@gmail.com>
- <1567692555.5576.91.camel@lca.pw>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <5b4b16b1-caf9-ceff-43a4-635489d6ac66@gmail.com>
-Date:   Thu, 5 Sep 2019 17:06:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 11:07:53 -0400
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85F78fS007860;
+        Thu, 5 Sep 2019 15:07:40 GMT
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0a-002e3701.pphosted.com with ESMTP id 2uttq6mv5y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Sep 2019 15:07:40 +0000
+Received: from g9t2301.houston.hpecorp.net (g9t2301.houston.hpecorp.net [16.220.97.129])
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 2D01E62;
+        Thu,  5 Sep 2019 15:07:39 +0000 (UTC)
+Received: from swahl-linux (swahl-linux.americas.hpqcorp.net [10.33.153.21])
+        by g9t2301.houston.hpecorp.net (Postfix) with ESMTP id 8454356;
+        Thu,  5 Sep 2019 15:07:38 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 10:07:38 -0500
+From:   Steve Wahl <steve.wahl@hpe.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Steve Wahl <steve.wahl@hpe.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, vaibhavrustagi@google.com,
+        russ.anderson@hpe.com, dimitri.sivanich@hpe.com,
+        mike.travis@hpe.com
+Subject: Re: [PATCH 1/1] x86/purgatory: Change compiler flags to avoid
+ relocation errors.
+Message-ID: <20190905150738.GD14263@swahl-linux>
+References: <20190904214505.GA15093@swahl-linux>
+ <20190905091514.GA21479@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <1567692555.5576.91.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905091514.GA21479@zn.tnic>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-05_05:2019-09-04,2019-09-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 impostorscore=0 adultscore=0 clxscore=1011 suspectscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=708 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1906280000
+ definitions=main-1909050144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/5/19 4:09 PM, Qian Cai wrote:
+On Thu, Sep 05, 2019 at 11:15:14AM +0200, Borislav Petkov wrote:
+> On Wed, Sep 04, 2019 at 04:45:05PM -0500, Steve Wahl wrote:
+> > The last change to this Makefile caused relocation errors when loading
+> > a kdump kernel.
 > 
-> I feel like you may not follow the thread closely. There are more details
-> uncovered in the last few days and narrowed down to the culprits.
+> How do those relocation errors look like?
+
+kexec: Overflow in relocation type 11 value 0x11fffd000
+
+... when loading the crash kernel.
+
+> What exactly caused those errors, the flags removal from
+> kexec-purgatory.o?
+
+No, it's the flags for compiling the other objects (purgatory.o,
+sha256.o, and string.o) that cause the problem.  You may have missed
+the added initial values for PURGATORY_CFLAGS_REMOVE and
+PURGATORY_CFLAGS.  This changes -mcmodel=kernel back to
+-mcmodel=large, and adds back -ffreestanding and
+-fno-zero-initialized-in-bss, to match the previous flags.
+
+-mcmodel=kernel is the major cause of the relocation errors, as the
+code generated contained only 32 bit references to things that can be
+anywhere in 64 bit address space.
+
+The remaining flag changes are appropriate for compiling a standalone
+module, which applies to 3 of the objects compiled from C files in
+this directory -- they contribute to a standalone piece of code that
+is not (technically) linked with the rest of the kernel.
+
+(Fine line here: the standalone binary does not get any symbols
+resolved against the rest of the kernel; which is why I say it's not
+*linked* with it.  The binary image of this standalone binary does get
+put into a character array that is pulled into the kernel object code,
+so it does become part of the kernel, but just as an array of bytes
+that kexec copies somewhere and eventually jumps to as a standalone
+program.)
+
+kexec-purgatory.o, on the other hand, does get linked with the rest of
+the kernel and should be compiled with the usual flags, not standalone
+flags. That is why changes for it are a bit different, which you
+noticed.
+
+> Can we have the failure properly explained in the commit message pls?
+
+Is " 'kexec: Overflow in relocation type 11 value 0x11fffd000' when
+loading the crash kernel" sufficient, or would you like more?
+
+> > This change restores the appropriate flags, without
 > 
+> You don't have to say "This change" in the commit message - it is
+> obvious which change you're talking about. Instead say: "Restore the
+> appropriate... "
 
-I have followed the thread closely, thank you very much.
+OK.
 
-I am happy that the problem is addressed as I suggested.
-Ie not individual patches adding selected __GFP_NOWARN.
+--> Steve
 
+-- 
+Steve Wahl, Hewlett Packard Enterprise
