@@ -2,183 +2,95 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FB1C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D8AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44AE322CEC
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 09:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D84122DD3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:00:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ExqotPmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387694AbfIEJ7c (ORCPT
+        id S2387723AbfIEKAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 05:59:32 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:43918 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbfIEJ7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 05:59:30 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 85E211A04AF;
-        Thu,  5 Sep 2019 11:59:28 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 33DD01A0110;
-        Thu,  5 Sep 2019 11:59:20 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 259A0402F0;
-        Thu,  5 Sep 2019 17:59:10 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     mturquette@baylibre.com, sboyd@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, abel.vesa@nxp.com, peng.fan@nxp.com,
-        ping.bai@nxp.com, chen.fang@nxp.com, shengjiu.wang@nxp.com,
-        aisheng.dong@nxp.com, sfr@canb.auug.org.au, l.stach@pengutronix.de,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] clk: imx8mn: Use common 1443X/1416X PLL clock structure
-Date:   Thu,  5 Sep 2019 17:58:19 -0400
-Message-Id: <1567720699-23514-2-git-send-email-Anson.Huang@nxp.com>
+        Thu, 5 Sep 2019 06:00:52 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:44176 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726115AbfIEKAv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:00:51 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 04CEFC0DD3;
+        Thu,  5 Sep 2019 10:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1567677651; bh=GosWZM2QU8S12Kgv9mW7HdYKBOJWFoe+3pD+Un3G66o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=ExqotPmXtPyrttYl0egCKAjoHy9K3A8M6MiMfU7TFhvGai2DEmP5d1TOunCx7WhsA
+         bX/GnJnv1VfJMFtbFDRdN4gssi2BYXCTPQlYC70C2+asnrlOjoLQ1ZNgyRxIWobJDe
+         rVyL2GEi/k7VN0bRoa6+QT+6F2pPczzRRDSXH7RYBjAj1tl8SBeCIbHd3i+9ysOLZD
+         hE4U3OjOjWVs+wqf70sAlHGL4p5llwvdm1A5ZodZ2N5eHp1LTag1JfbKvxhkeTLgrk
+         8R+WoNjcQTefQyM8qzXAVM+kK/a860lcqFq4C1w8ozE4F6B6DXLJ7FaTjyO+zeHW0Q
+         ab8UtiEl4ayVg==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 9989BA0061;
+        Thu,  5 Sep 2019 10:00:49 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 826F43F3BC;
+        Thu,  5 Sep 2019 12:00:49 +0200 (CEST)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-i3c@lists.infradead.org
+Cc:     bbrezillon@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        pgaj@cadence.com, Joao.Pinto@synopsys.com,
+        Vitor Soares <Vitor.Soares@synopsys.com>
+Subject: [PATCH v3 4/5] dt-bindings: i3c: add a note for no guarantee of 'assigned-address' use
+Date:   Thu,  5 Sep 2019 12:00:37 +0200
+Message-Id: <f8a0cbc92605dbf5f41a28edd7691c3e90087554.1567608245.git.vitor.soares@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1567720699-23514-1-git-send-email-Anson.Huang@nxp.com>
-References: <1567720699-23514-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
+References: <cover.1567608245.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1567608245.git.vitor.soares@synopsys.com>
+References: <cover.1567608245.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use common 1413X/1416X PLL clock structure to save a lot
-of duplicated code on i.MX8MN clock driver.
+By default, the framework will try to assign the 'assigned-address' to the
+device but if the address is already in use the device dynamic address
+will be different.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/imx/clk-imx8mn.c | 89 +++++---------------------------------------
- drivers/clk/imx/clk.c        |  2 +
- 2 files changed, 12 insertions(+), 79 deletions(-)
+Change in v3:
+  - Add Rob rb-tag
 
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index cc65c13..91b6da8 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -39,75 +39,6 @@ enum {
- 	NR_PLLS,
- };
+ Documentation/devicetree/bindings/i3c/i3c.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/i3c/i3c.txt b/Documentation/devicetree/bindings/i3c/i3c.txt
+index c851e75..e777f09 100644
+--- a/Documentation/devicetree/bindings/i3c/i3c.txt
++++ b/Documentation/devicetree/bindings/i3c/i3c.txt
+@@ -98,7 +98,9 @@ Required properties
  
--static const struct imx_pll14xx_rate_table imx8mn_pll1416x_tbl[] = {
--	PLL_1416X_RATE(1800000000U, 225, 3, 0),
--	PLL_1416X_RATE(1600000000U, 200, 3, 0),
--	PLL_1416X_RATE(1500000000U, 375, 3, 1),
--	PLL_1416X_RATE(1400000000U, 350, 3, 1),
--	PLL_1416X_RATE(1200000000U, 300, 3, 1),
--	PLL_1416X_RATE(1000000000U, 250, 3, 1),
--	PLL_1416X_RATE(800000000U,  200, 3, 1),
--	PLL_1416X_RATE(750000000U,  250, 2, 2),
--	PLL_1416X_RATE(700000000U,  350, 3, 2),
--	PLL_1416X_RATE(600000000U,  300, 3, 2),
--};
--
--static const struct imx_pll14xx_rate_table imx8mn_audiopll_tbl[] = {
--	PLL_1443X_RATE(393216000U, 262, 2, 3, 9437),
--	PLL_1443X_RATE(361267200U, 361, 3, 3, 17511),
--};
--
--static const struct imx_pll14xx_rate_table imx8mn_videopll_tbl[] = {
--	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
--	PLL_1443X_RATE(594000000U, 198, 2, 2, 0),
--};
--
--static const struct imx_pll14xx_rate_table imx8mn_drampll_tbl[] = {
--	PLL_1443X_RATE(650000000U, 325, 3, 2, 0),
--};
--
--static struct imx_pll14xx_clk imx8mn_audio_pll = {
--		.type = PLL_1443X,
--		.rate_table = imx8mn_audiopll_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_audiopll_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_video_pll = {
--		.type = PLL_1443X,
--		.rate_table = imx8mn_videopll_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_videopll_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_dram_pll = {
--		.type = PLL_1443X,
--		.rate_table = imx8mn_drampll_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_drampll_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_arm_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_gpu_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_vpu_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
--static struct imx_pll14xx_clk imx8mn_sys_pll = {
--		.type = PLL_1416X,
--		.rate_table = imx8mn_pll1416x_tbl,
--		.rate_count = ARRAY_SIZE(imx8mn_pll1416x_tbl),
--};
--
- static const char * const pll_ref_sels[] = { "osc_24m", "dummy", "dummy", "dummy", };
- static const char * const audio_pll1_bypass_sels[] = {"audio_pll1", "audio_pll1_ref_sel", };
- static const char * const audio_pll2_bypass_sels[] = {"audio_pll2", "audio_pll2_ref_sel", };
-@@ -409,16 +340,16 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
- 	clks[IMX8MN_SYS_PLL2_REF_SEL] = imx_clk_mux("sys_pll2_ref_sel", base + 0x104, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
- 	clks[IMX8MN_SYS_PLL3_REF_SEL] = imx_clk_mux("sys_pll3_ref_sel", base + 0x114, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+ Optional properties
+ -------------------
+-- assigned-address: dynamic address to be assigned to this device.
++- assigned-address: dynamic address to be assigned to this device. The framework
++		    will try to assign this dynamic address but if something
++		    fails the device dynamic address will be different.
  
--	clks[IMX8MN_AUDIO_PLL1] = imx_clk_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx8mn_audio_pll);
--	clks[IMX8MN_AUDIO_PLL2] = imx_clk_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx8mn_audio_pll);
--	clks[IMX8MN_VIDEO_PLL1] = imx_clk_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx8mn_video_pll);
--	clks[IMX8MN_DRAM_PLL] = imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx8mn_dram_pll);
--	clks[IMX8MN_GPU_PLL] = imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx8mn_gpu_pll);
--	clks[IMX8MN_VPU_PLL] = imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx8mn_vpu_pll);
--	clks[IMX8MN_ARM_PLL] = imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx8mn_arm_pll);
--	clks[IMX8MN_SYS_PLL1] = imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel", base + 0x94, &imx8mn_sys_pll);
--	clks[IMX8MN_SYS_PLL2] = imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel", base + 0x104, &imx8mn_sys_pll);
--	clks[IMX8MN_SYS_PLL3] = imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel", base + 0x114, &imx8mn_sys_pll);
-+	clks[IMX8MN_AUDIO_PLL1] = imx_clk_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx_1443x_pll);
-+	clks[IMX8MN_AUDIO_PLL2] = imx_clk_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx_1443x_pll);
-+	clks[IMX8MN_VIDEO_PLL1] = imx_clk_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx_1443x_pll);
-+	clks[IMX8MN_DRAM_PLL] = imx_clk_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx_1443x_pll);
-+	clks[IMX8MN_GPU_PLL] = imx_clk_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx_1416x_pll);
-+	clks[IMX8MN_VPU_PLL] = imx_clk_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx_1416x_pll);
-+	clks[IMX8MN_ARM_PLL] = imx_clk_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx_1416x_pll);
-+	clks[IMX8MN_SYS_PLL1] = imx_clk_pll14xx("sys_pll1", "sys_pll1_ref_sel", base + 0x94, &imx_1416x_pll);
-+	clks[IMX8MN_SYS_PLL2] = imx_clk_pll14xx("sys_pll2", "sys_pll2_ref_sel", base + 0x104, &imx_1416x_pll);
-+	clks[IMX8MN_SYS_PLL3] = imx_clk_pll14xx("sys_pll3", "sys_pll3_ref_sel", base + 0x114, &imx_1416x_pll);
  
- 	/* PLL bypass out */
- 	clks[IMX8MN_AUDIO_PLL1_BYPASS] = imx_clk_mux_flags("audio_pll1_bypass", base, 4, 1, audio_pll1_bypass_sels, ARRAY_SIZE(audio_pll1_bypass_sels), CLK_SET_RATE_PARENT);
-diff --git a/drivers/clk/imx/clk.c b/drivers/clk/imx/clk.c
-index 788e4eb..864e865e 100644
---- a/drivers/clk/imx/clk.c
-+++ b/drivers/clk/imx/clk.c
-@@ -17,6 +17,8 @@ DEFINE_SPINLOCK(imx_ccm_lock);
- const struct imx_pll14xx_rate_table imx_pll1416x_tbl[] = {
- 	PLL_1416X_RATE(1800000000U, 225, 3, 0),
- 	PLL_1416X_RATE(1600000000U, 200, 3, 0),
-+	PLL_1416X_RATE(1500000000U, 375, 3, 1),
-+	PLL_1416X_RATE(1400000000U, 350, 3, 1),
- 	PLL_1416X_RATE(1200000000U, 300, 3, 1),
- 	PLL_1416X_RATE(1000000000U, 250, 3, 1),
- 	PLL_1416X_RATE(800000000U,  200, 3, 1),
+ Example:
 -- 
 2.7.4
 
