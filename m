@@ -2,221 +2,124 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701DAC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C74C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8782173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A367217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 05:54:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567662875;
+	bh=Uf9AKCBn5jziRHZNbyaOFQh+/kEEr43vpEAZ+ka1xfY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TNVQbttVXNWP0StMGf0ca7fYy9AUbr2/qFCHl55T8IpeNSy5p/7YiXVIpD0qFL9iX
+	 PJGEHtWviNa3eQxbuTJ8FXx4IkSLC7xAgQD82wqIQRofOT7OnCBxY/y7bjoVmm2LbZ
+	 IaFdPmqghXaQYcmmPCNpdF6EMszIFjWacULwAbI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbfIEFxn (ORCPT
+        id S1731412AbfIEFye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 01:53:43 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:56720 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726047AbfIEFx2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 01:53:28 -0400
-X-UUID: 24b0868dde3d4b5093c781078472f71f-20190905
-X-UUID: 24b0868dde3d4b5093c781078472f71f-20190905
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1346871210; Thu, 05 Sep 2019 13:53:21 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Sep 2019 13:53:19 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Sep 2019 13:53:18 +0800
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v2 5/5] pinctrl: mediatek: Add support for pin configuration dump via debugfs.
-Date:   Thu, 5 Sep 2019 13:53:16 +0800
-Message-ID: <1567662796-25508-5-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1567662796-25508-1-git-send-email-light.hsieh@mediatek.com>
-References: <1567662796-25508-1-git-send-email-light.hsieh@mediatek.com>
+        Thu, 5 Sep 2019 01:54:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725786AbfIEFye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 01:54:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9108B2173B;
+        Thu,  5 Sep 2019 05:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567662873;
+        bh=Uf9AKCBn5jziRHZNbyaOFQh+/kEEr43vpEAZ+ka1xfY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2Z+aMos2+zBypg8rclvYgrozqQ/h7Fmi1k4rSSb+/VNt5cMXKM7MPs2VseLXbqLSw
+         4Ejxag8xVok55PlZGXHJWwqz6Ite5WJXw0f9vk3Kvt4ikh1NhzkX//OC7mWsTPmRHU
+         dvpcO1XmHnADUSAk1p1d9RjvQWEoF/alEWI6PuM8=
+Date:   Thu, 5 Sep 2019 07:54:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Nishad Kamdar <nishadkamdar@gmail.com>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20190905055430.GA23826@kroah.com>
+References: <20190831151147.GA7082@nishad>
+ <20190904153432.7fb54f02@coco.lan>
+ <20190904183608.GA495@kroah.com>
+ <20190904160010.4532c3f5@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 8F507CF79F1128C0F560FFE12F0559A64DBEDBFF4D653A0DB0A696AE6B4149FE2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190904160010.4532c3f5@coco.lan>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Light Hsieh <light.hsieh@mediatek.com>
+On Wed, Sep 04, 2019 at 04:00:10PM -0300, Mauro Carvalho Chehab wrote:
+> Em Wed, 4 Sep 2019 20:36:08 +0200
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+> 
+> > On Wed, Sep 04, 2019 at 03:34:32PM -0300, Mauro Carvalho Chehab wrote:
+> > > Em Sat, 31 Aug 2019 20:41:51 +0530
+> > > Nishad Kamdar <nishadkamdar@gmail.com> escreveu:
+> > >   
+> > > > This patch corrects the SPDX License Identifier style
+> > > > in header file related to Siano Mobile Silicon Digital TV.
+> > > > For C header files Documentation/process/license-rules.rst
+> > > > mandates C-like comments (opposed to C source files where
+> > > > C++ style should be used)
+> > > > 
+> > > > Changes made by using a script provided by Joe Perches here:
+> > > > https://lkml.org/lkml/2019/2/7/46
+> > > > 
+> > > > Suggested-by: Joe Perches <joe@perches.com>
+> > > > Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> > > > ---
+> > > >  drivers/media/common/siano/smsir.h | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/media/common/siano/smsir.h b/drivers/media/common/siano/smsir.h
+> > > > index b2c54c256e86..ada41d5c4e83 100644
+> > > > --- a/drivers/media/common/siano/smsir.h
+> > > > +++ b/drivers/media/common/siano/smsir.h
+> > > > @@ -1,5 +1,5 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > > >  /*
+> > > > - * SPDX-License-Identifier: GPL-2.0+
+> > > >   *
+> > > >   * Siano Mobile Silicon, Inc.
+> > > >   * MDTV receiver kernel modules.  
+> > > 
+> > > What's wrong with that? The above is a perfectly fine SPDX header.  
+> > 
+> > It is not the first line of the file :(
+> > 
+> 
+> A requirement for having it at the first line is not realistic.
 
-Add support for pin configuration dump via catting
-/sys/kernel/debug/pinctrl/$platform_dependent_path/pinconf-pins.
-pinctrl framework had already support such dump. This patch implement the
-operation function pointer to fullfill this dump.
+But it is "the rule" as Joe points out.
 
----
- drivers/pinctrl/mediatek/pinctrl-paris.c | 88 ++++++++++++++++++++++++++++++++
- drivers/pinctrl/mediatek/pinctrl-paris.h | 30 +++++++++++
- 2 files changed, 118 insertions(+)
+> I'd say more: some script that would check for SPDX only at the 
+> first line won't work.
+> 
+> The reason is simple: we have some scripts at the Kernel tree.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 0a9440a..91d6e72 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -531,12 +531,99 @@ static int mtk_pctrl_get_group_pins(struct pinctrl_dev *pctldev,
- 	return 0;
- }
- 
-+int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field)
-+{
-+	const struct mtk_pin_desc *desc;
-+	int value, err;
-+
-+	if (gpio > hw->soc->npins)
-+		return -EINVAL;
-+
-+	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-+
-+	err = mtk_hw_get_value(hw, desc, field, &value);
-+	if (err)
-+		return err;
-+
-+	return value;
-+}
-+
-+ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-+	unsigned int gpio, char *buf, unsigned int bufLen)
-+{
-+	const struct mtk_pin_desc *desc;
-+	int pinmux, pullup, pullen, r1 = -1, r0 = -1, len = 0;
-+
-+	if (gpio > hw->soc->npins)
-+		return -EINVAL;
-+
-+	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
-+	pinmux = mtk_pctrl_get_pinmux(hw, gpio);
-+	if (pinmux >= hw->soc->nfuncs)
-+		pinmux -= hw->soc->nfuncs;
-+
-+	mtk_pinconf_bias_get_combo(hw, desc, &pullup, &pullen);
-+	if (pullen == MTK_PUPD_SET_R1R0_00) {
-+		pullen = 0;
-+		r1 = 0;
-+		r0 = 0;
-+	} else if (pullen == MTK_PUPD_SET_R1R0_01) {
-+		pullen = 1;
-+		r1 = 0;
-+		r0 = 1;
-+	} else if (pullen == MTK_PUPD_SET_R1R0_10) {
-+		pullen = 1;
-+		r1 = 1;
-+		r0 = 0;
-+	} else if (pullen == MTK_PUPD_SET_R1R0_11) {
-+		pullen = 1;
-+		r1 = 1;
-+		r0 = 1;
-+	} else if (pullen != MTK_DISABLE && pullen != MTK_ENABLE) {
-+		pullen = 0;
-+	}
-+	len += snprintf(buf + len, bufLen - len,
-+			"%03d: %1d%1d%1d%1d%02d%1d%1d%1d%1d",
-+			gpio,
-+			pinmux,
-+			mtk_pctrl_get_direction(hw, gpio),
-+			mtk_pctrl_get_out(hw, gpio),
-+			mtk_pctrl_get_in(hw, gpio),
-+			mtk_pctrl_get_driving(hw, gpio),
-+			mtk_pctrl_get_smt(hw, gpio),
-+			mtk_pctrl_get_ies(hw, gpio),
-+			pullen,
-+			pullup);
-+
-+	if (r1 != -1) {
-+		len += snprintf(buf + len, bufLen - len, " (%1d %1d)\n",
-+			r1, r0);
-+	} else {
-+		len += snprintf(buf + len, bufLen - len, "\n");
-+	}
-+
-+	return len;
-+}
-+
-+#define PIN_DBG_BUF_SZ 96
-+static void mtk_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-+			  unsigned int gpio)
-+{
-+	struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
-+	char buf[PIN_DBG_BUF_SZ];
-+
-+	(void)mtk_pctrl_show_one_pin(hw, gpio, buf, PIN_DBG_BUF_SZ);
-+
-+	seq_printf(s, "%s", buf);
-+}
-+
- static const struct pinctrl_ops mtk_pctlops = {
- 	.dt_node_to_map		= mtk_pctrl_dt_node_to_map,
- 	.dt_free_map		= pinctrl_utils_free_map,
- 	.get_groups_count	= mtk_pctrl_get_groups_count,
- 	.get_group_name		= mtk_pctrl_get_group_name,
- 	.get_group_pins		= mtk_pctrl_get_group_pins,
-+	.pin_dbg_show           = mtk_pctrl_dbg_show,
- };
- 
- static int mtk_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
-@@ -633,6 +720,7 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
- 	.pin_config_get = mtk_pinconf_get,
- 	.pin_config_group_get	= mtk_pconf_group_get,
- 	.pin_config_group_set	= mtk_pconf_group_set,
-+	.is_generic = true,
- };
- 
- static struct pinctrl_desc mtk_desc = {
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.h b/drivers/pinctrl/mediatek/pinctrl-paris.h
-index 3d43771..d73f4b6 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.h
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.h
-@@ -60,6 +60,36 @@
- int mtk_paris_pinctrl_probe(struct platform_device *pdev,
- 			    const struct mtk_pin_soc *soc);
- 
-+int mtk_hw_get_value_wrap(struct mtk_pinctrl *hw, unsigned int gpio, int field);
-+
-+#define mtk_pctrl_get_pinmux(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_MODE)
-+
-+/* MTK HW use 0 as input, 1 for output
-+ * This interface is for get direct register value,
-+ * so don't reverse
-+ */
-+#define mtk_pctrl_get_direction(hw, gpio)		\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DIR)
-+
-+#define mtk_pctrl_get_out(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DO)
-+
-+#define mtk_pctrl_get_in(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DI)
-+
-+#define mtk_pctrl_get_smt(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_SMT)
-+
-+#define mtk_pctrl_get_ies(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_IES)
-+
-+#define mtk_pctrl_get_driving(hw, gpio)			\
-+	mtk_hw_get_value_wrap(hw, gpio, PINCTRL_PIN_REG_DRV)
-+
-+ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
-+	unsigned int gpio, char *buf, unsigned int bufLen);
-+
- extern const struct dev_pm_ops mtk_paris_pinctrl_pm_ops;
- 
- #endif /* __PINCTRL_PARIS_H */
--- 
-1.8.1.1.dirty
+This is not a script, for those, it is fine to use the second line,
+again, this is documented.
 
+This isn't new at all, been that way since December of 2017, see commit
+aa19a176df95 ("Documentation: Add license-rules.rst to describe how to
+properly identify file licenses")
+
+thanks,
+
+greg k-h
