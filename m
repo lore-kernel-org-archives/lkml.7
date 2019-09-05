@@ -2,191 +2,150 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561EEC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB45C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2309821883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:56:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K2qbfLgX"
+	by mail.kernel.org (Postfix) with ESMTP id EA42922CF5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567684618;
+	bh=wdTqBGzZQ4leglhr36XMdYedhNTdJDdwpiQCNXzkJDI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bRuxVVB4/dNH6QQVKBXKReK3ZC65bf93M8ogLvFpDpi2K7LmDUqNY4guDwBSWMgNV
+	 9vwthC1tZ8IwPQtba6Kik9XGLPcOAtwrTYW0tPb3QN+gVpH9FFvyUVzFhMTAuPixHW
+	 fdooQjxylLFQ6OBEBeyYeNsFWnHz6P4HPIN3YgSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbfIEL4b (ORCPT
+        id S2388222AbfIEL45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:56:31 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42374 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbfIEL4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:56:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id p3so1301429pgb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hQjgBHGvmm6cLhWASKb+Bb7AwJCJUdb2bnFuCs7Jtms=;
-        b=K2qbfLgXLyDMYx3CT4itk56rqQZeUYICpAiwxY+bHziP0L0EtB4dRdLUgUM2QcBUfs
-         W7ppzriDhlwCscxbAou1vfl55NzgsdM/0MfsnTKUslHf2cpjRrtDYcWKvv+eEN5mB/j6
-         X71J+wI280prcddvuW9IFUeZsBbaG5I4ddkKgV/iEwWuXAx/Jid/VFlsrCi//5CfsCFu
-         aASElFfTRJI+hIXO1uASEtUJJ+xUuYUxWMeEKPGoGDGbni065nojqjwzRb11k7bjF9Ab
-         a2fsWOxEiemX0WN8auAnjYEtaAMBC4KNkA4Z9qS3fAPJCanYldj2VCni38+ux4H264oC
-         YGiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hQjgBHGvmm6cLhWASKb+Bb7AwJCJUdb2bnFuCs7Jtms=;
-        b=rF2F6PR7izXlhnzKTsjUTbdl1eiW953+BOhLMklaRf4t3W9pYkWvIXT40PSZJk8H7r
-         xGCVw0w1wAgOZ4XqeCVtCNx4pAinmqxPInUAnDqqj5bEMCQee1iZLtNpabqojtvqtdXa
-         zyAPb1s8tI9t5hSm0V7gJcCxLR3DdLujuA3n/gpDU/QmpKbchPQvQacXti8NZ5Qv85ko
-         7bCA5c/3kt/k1/yF30VMANphuICczyu8HQof/RCUh4iRK9dstBrYGiwXhJ0WElPM2D1+
-         JNvVtvRiHGAdtrQkBC/iDhNutliul4DsWD1EejYnnBKEBX/uY0+g8wYx3nfG6txLhcSZ
-         wD9A==
-X-Gm-Message-State: APjAAAUxZQHf2r3HYBuXmCQGbgOjLZG16h346TtasAJTCVxyeTkxYh6d
-        ao0V9Yo3vdeG5//0W1CP/4SnFasgARgL8xJAWbE5wWqM4/1ZLA==
-X-Google-Smtp-Source: APXvYqzc8tR+1Eei1+UeBt7tujh4w17l1GmAOgfTaJEUhSU/o2sU9X3F/1/mpAjyhMhQh1pRjBZvA67ly+YggunTZ0g=
-X-Received: by 2002:a63:3006:: with SMTP id w6mr2822471pgw.440.1567684589317;
- Thu, 05 Sep 2019 04:56:29 -0700 (PDT)
+        Thu, 5 Sep 2019 07:56:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731817AbfIEL45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 07:56:57 -0400
+Received: from localhost (unknown [82.195.192.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8881122CEC;
+        Thu,  5 Sep 2019 11:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567684616;
+        bh=wdTqBGzZQ4leglhr36XMdYedhNTdJDdwpiQCNXzkJDI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H55l7QnkZ69A7MNWrWBau7Dhg05/2syJeQI/Q8uksMOXbsdGsMv680/B9iw6Y61pL
+         bl9m3A5v6iPbOpGjCnNbpcHDuGoGnFd1nE2WyOYvR+bc8WEQcBP3jzSSbL2tfjxCmT
+         RlBxBpvL8l7bA8gBXgxCjgEnixHlMDm/26kIqFzo=
+Date:   Thu, 5 Sep 2019 14:56:53 +0300
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     megous@megous.com, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org
+Subject: Re: [RESEND PATCH 0/5] Add bluetooth support for Orange Pi 3
+Message-ID: <20190905115653.o2w7eyl4hvqegucv@flea>
+References: <20190823103139.17687-1-megous@megous.com>
+ <5524D5E9-FA82-4244-A91F-78CF1C3FB3FB@holtmann.org>
+ <20190830092104.odipmbflounqpffo@flea>
+ <D02B89FB-F8C0-40AD-A99A-6C1B4FEB72A0@holtmann.org>
+ <20190830132034.u65arlv7umh64lx6@flea>
+ <76FD40C7-10C5-4818-8EF9-60326ECA4243@holtmann.org>
 MIME-Version: 1.0
-References: <00000000000005ae9c058ee5245c@google.com>
-In-Reply-To: <00000000000005ae9c058ee5245c@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 5 Sep 2019 13:56:18 +0200
-Message-ID: <CAAeHK+zxTpfNE9cT4u-PCQv6pgX=z4MXsbBM9h3iFG6Bf0_qXQ@mail.gmail.com>
-Subject: Re: WARNING in mxl111sf_ctrl_msg
-To:     syzbot <syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
-        USB list <linux-usb@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Krufky <mkrufky@linuxtv.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="66mhhep6w5jiiqrl"
+Content-Disposition: inline
+In-Reply-To: <76FD40C7-10C5-4818-8EF9-60326ECA4243@holtmann.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 30, 2019 at 2:28 PM syzbot
-<syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    7f7867ff usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11a7957c600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=792eb47789f57810
-> dashboard link: https://syzkaller.appspot.com/bug?extid=48eb85867b8a4c16adf0
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11ac50f8600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1718c75c600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+48eb85867b8a4c16adf0@syzkaller.appspotmail.com
->
-> usb 1-1: dvb_usb_v2: will pass the complete MPEG2 transport stream to the
-> software demuxer
-> dvbdev: DVB: registering new adapter (Hauppauge 126xxx ATSC+)
-> usb 1-1: media controller created
-> dvbdev: dvb_create_media_entity: media entity 'dvb-demux' registered.
-> usb 1-1: selecting invalid altsetting 1
-> set interface failed
-> ------------[ cut here ]------------
-> DEBUG_LOCKS_WARN_ON(lock->magic != lock)
-> WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912 __mutex_lock_common
-> kernel/locking/mutex.c:912 [inline]
-> WARNING: CPU: 0 PID: 12 at kernel/locking/mutex.c:912
-> __mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc2+ #23
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x2a3/0x6da kernel/panic.c:219
->   __warn.cold+0x20/0x4a kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1026
-> RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:912 [inline]
-> RIP: 0010:__mutex_lock+0xd31/0x1360 kernel/locking/mutex.c:1077
-> Code: d2 0f 85 f6 05 00 00 44 8b 05 bb 99 0a 02 45 85 c0 0f 85 0a f4 ff ff
-> 48 c7 c6 00 87 a6 85 48 c7 c7 a0 84 a6 85 e8 f4 24 b8 fb <0f> 0b e9 f0 f3
-> ff ff 65 48 8b 1c 25 00 ef 01 00 be 08 00 00 00 48
-> RSP: 0018:ffff8881da206f40 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff812830fd RDI: ffffed103b440dda
-> RBP: ffff8881da2070b0 R08: ffff8881da1f1800 R09: fffffbfff0d5eb25
-> R10: fffffbfff0d5eb24 R11: ffffffff86af5923 R12: 0000000000000000
-> R13: dffffc0000000000 R14: ffff8881d2ee6ec8 R15: ffff8881d2ee6ec8
->   mxl111sf_ctrl_msg+0xb8/0x210 drivers/media/usb/dvb-usb-v2/mxl111sf.c:66
->   mxl111sf_write_reg+0x8b/0x120 drivers/media/usb/dvb-usb-v2/mxl111sf.c:123
->   mxl1x1sf_soft_reset+0x6b/0x190
-> drivers/media/usb/dvb-usb-v2/mxl111sf-phy.c:47
->   mxl111sf_lgdt3305_frontend_attach.constprop.0+0x23e/0x790
-> drivers/media/usb/dvb-usb-v2/mxl111sf.c:447
->   mxl111sf_frontend_attach_atsc_mh+0x13/0x70
-> drivers/media/usb/dvb-usb-v2/mxl111sf.c:984
->   dvb_usbv2_adapter_frontend_init
-> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:641 [inline]
->   dvb_usbv2_adapter_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:804
-> [inline]
->   dvb_usbv2_init drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:865 [inline]
->   dvb_usbv2_probe.cold+0x1e04/0x2567
-> drivers/media/usb/dvb-usb-v2/dvb_usb_core.c:980
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x650 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:709
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:816
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:882
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2114
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
 
-Looks like the same issue as:
-https://syzkaller.appspot.com/bug?id=d7240bc21ef4b00a01e5ac7a7e616bdb7da26104
+--66mhhep6w5jiiqrl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-#syz dup: INFO: trying to register non-static key in mxl111sf_ctrl_msg
+On Wed, Sep 04, 2019 at 04:19:37PM +0200, Marcel Holtmann wrote:
+> Hi Maxime,
+>
+> >>>>> (Resend to add missing lists, sorry for the noise.)
+> >>>>>
+> >>>>> This series implements bluetooth support for Xunlong Orange Pi 3 board.
+> >>>>>
+> >>>>> The board uses AP6256 WiFi/BT 5.0 chip.
+> >>>>>
+> >>>>> Summary of changes:
+> >>>>>
+> >>>>> - add more delay to let initialize the chip
+> >>>>> - let the kernel detect firmware file path
+> >>>>> - add new compatible and update dt-bindings
+> >>>>> - update Orange Pi 3 / H6 DTS
+> >>>>>
+> >>>>> Please take a look.
+> >>>>>
+> >>>>> thank you and regards,
+> >>>>> Ondrej Jirman
+> >>>>>
+> >>>>> Ondrej Jirman (5):
+> >>>>> dt-bindings: net: Add compatible for BCM4345C5 bluetooth device
+> >>>>> bluetooth: bcm: Add support for loading firmware for BCM4345C5
+> >>>>> bluetooth: hci_bcm: Give more time to come out of reset
+> >>>>> arm64: dts: allwinner: h6: Add pin configs for uart1
+> >>>>> arm64: dts: allwinner: orange-pi-3: Enable UART1 / Bluetooth
+> >>>>>
+> >>>>> .../bindings/net/broadcom-bluetooth.txt       |  1 +
+> >>>>> .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 19 +++++++++++++++++++
+> >>>>> arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 10 ++++++++++
+> >>>>> drivers/bluetooth/btbcm.c                     |  3 +++
+> >>>>> drivers/bluetooth/hci_bcm.c                   |  3 ++-
+> >>>>> 5 files changed, 35 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> all 5 patches have been applied to bluetooth-next tree.
+> >>>
+> >>> The DTS patches (last 2) should go through the arm-soc tree, can you
+> >>> drop them?
+> >>
+> >> why is that? We have included DTS changes for Bluetooth devices
+> >> directly all the time. What is different with this hardware?
+> >
+> > I guess some maintainers are more relaxed with it than we are then,
+> > but for the why, well, it's the usual reasons, the most immediate one
+> > being that it reduces to a minimum the conflicts between trees.
+> >
+> > The other being that it's not really usual to merge patches supposed
+> > to be handled by another maintainer without (at least) his
+> > consent. I'm pretty sure you would have asked the same request if I
+> > would have merged the bluetooth patches through my tree without
+> > notice.
+>
+> I took the two DTS patches out now and let the submitter deal with
+> getting these merged.
+
+Thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--66mhhep6w5jiiqrl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXXD4BQAKCRDj7w1vZxhR
+xRuEAQD4NBPiyuvLlo3LM5wXaUbunkvUUCDpAZ3nIkj1OvPjIgD8Da8U574V2FaU
+aFSxv34yqbNn72v/P/KP/9zxT3Y40g8=
+=SOn6
+-----END PGP SIGNATURE-----
+
+--66mhhep6w5jiiqrl--
