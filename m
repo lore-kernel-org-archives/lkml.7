@@ -2,132 +2,97 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A4FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B7BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06B520825
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65D520CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 19:58:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567713480;
+	bh=kmwjHPFU1JbSFrNJzH99A3LUKqJd2p+4I7VkSc68g0M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mg8zvEeYim72mP32UepmKNKqyeImCaC9MmgnKiQ3d19karf8P/MssZAta+8bsOXeD
+	 lcr6RIRRgcYls8o4ki72ZRH0rat0vZA7Ftn5bgWHlo0I5gVZFt0fB5JspiNFK9w8dG
+	 Xsxnv5A0LOMSJ+2TPS3XzNWmIr3WBhyUKh4vRnE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391574AbfIET4z (ORCPT
+        id S2391594AbfIET6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 15:56:55 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:58904 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733174AbfIET4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 15:56:54 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id DCACBA0D19;
-        Thu,  5 Sep 2019 21:56:47 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id MUcBvZslYqK5; Thu,  5 Sep 2019 21:56:42 +0200 (CEST)
-Date:   Fri, 6 Sep 2019 05:56:18 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905195618.pwzgvuzadkfpznfz@yavin.dot.cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
- <20190905182303.7f6bxpa2enbgcegv@wittgenstein>
- <20190905182801.GR1131@ZenIV.linux.org.uk>
+        Thu, 5 Sep 2019 15:58:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58454 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388357AbfIET56 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 15:57:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Es/zISrtwllZAcTDfnj7OAQJAy+Bnf95m2mw7+BsncA=; b=cRUQgJXyebsUtHonyp0KxzifBH
+        WglPXPcpQ/tfLzvGpVcV8nitEA4RYBci9KhrGdaTMBQuneXeGyrnRlpEpTOncpRDfrdZ+xQgdDaUG
+        IEj53CSxz0Q7OmCTXdW1YlexxFQQzsFLCj6gHmxBIWo7Uglgt/ipRI0JSwesg9s2ATpAd9R547Gwa
+        eLPNjxXk2XEt/GCA5PP430YL2f+mUGJsG17K/tRohChOHwTgggbb6dbPwmKvUOEPvrzQJ6as2QlfM
+        jb0yhBWgB1+RumQLT8g/yLeXKx5GMt2EdNyq8V+NPU41Ab8WWH1IISteSEv9wQ/Y46uwaNILtNRO7
+        BLPrG5KQ==;
+Received: from [177.159.253.249] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5xtF-0000IE-CY; Thu, 05 Sep 2019 19:57:57 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.1)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1i5xtC-0005mC-Mj; Thu, 05 Sep 2019 16:57:54 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>,
+        Doug Smythies <doug.smythies@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 3/6] tools: intel_pstate_tracer.py: fix SPDX header in the light of PEP-263
+Date:   Thu,  5 Sep 2019 16:57:50 -0300
+Message-Id: <51e941b6b028ed619dfa93e29ab0c2930050af5b.1567712829.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1567712829.git.mchehab+samsung@kernel.org>
+References: <cover.1567712829.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lkob4nx2s4nikwgg"
-Content-Disposition: inline
-In-Reply-To: <20190905182801.GR1131@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As stated at PEP-263, the coding tag should be at the first or
+second line. On those two scripts, the tag is at the wrong line.
 
---lkob4nx2s4nikwgg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Place it at the right place and use the same kind of line that we're
+using on other python scripts that also work fine with emacs.
 
-On 2019-09-05, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, Sep 05, 2019 at 08:23:03PM +0200, Christian Brauner wrote:
->=20
-> > Because every caller of that function right now has that limit set
-> > anyway iirc. So we can either remove it from here and place it back for
-> > the individual callers or leave it in the helper.
-> > Also, I'm really asking, why not? Is it unreasonable to have an upper
-> > bound on the size (for a long time probably) or are you disagreeing with
-> > PAGE_SIZE being used? PAGE_SIZE limit is currently used by sched, perf,
-> > bpf, and clone3 and in a few other places.
->=20
-> For a primitive that can be safely used with any size (OK, any within
-> the usual 2Gb limit)?  Why push the random policy into the place where
-> it doesn't belong?
->=20
-> Seriously, what's the point?  If they want to have a large chunk of
-> userland memory zeroed or checked for non-zeroes - why would that
-> be a problem?
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thinking about it some more, there isn't really any r/w amplification --
-so there isn't much to gain by passing giant structs. Though, if we are
-going to permit 2GB buffers, isn't that also an argument to use
-memchr_inv()? :P
+diff --git a/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py b/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
+index 2d6d342b148f..1009be489f9a 100755
+--- a/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
++++ b/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
+@@ -1,6 +1,6 @@
+ #!/usr/bin/python
++# -*- coding: utf-8; mode: python -*-
+ # SPDX-License-Identifier: GPL-2.0-only
+-# -*- coding: utf-8 -*-
+ #
+ """ This utility can be used to debug and tune the performance of the
+ intel_pstate driver. This utility can be used in two ways:
+-- 
+2.21.0
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---lkob4nx2s4nikwgg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXFoXwAKCRCdlLljIbnQ
-EkH6AP4mTXfGXldo6DW9pN3b8QgoKfRKIsKKRirvrHzSGLXpkgEAgJQFw7jvGxM5
-R7P96Ylo52dN3tmTa+41vZfPhMozHwA=
-=OHll
------END PGP SIGNATURE-----
-
---lkob4nx2s4nikwgg--
