@@ -2,163 +2,122 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9438EC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B56C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52EE72067D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A26820692
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:13:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zmastz/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388504AbfIENN2 (ORCPT
+        id S2388557AbfIENNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:13:28 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56019 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388243AbfIENN1 (ORCPT
+        Thu, 5 Sep 2019 09:13:31 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45097 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388243AbfIENNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:13:27 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 9B3B7C0006;
-        Thu,  5 Sep 2019 13:13:19 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 15:14:53 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 08/14] drm: rcar-du: Add support for CMM
-Message-ID: <20190905131453.7ortosddn4afxd5j@uno.localdomain>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-9-jacopo+renesas@jmondi.org>
- <20190827002422.GQ5031@pendragon.ideasonboard.com>
- <20190827145619.33s7gkv7tgtsr6nz@uno.localdomain>
- <20190827163423.GB5054@pendragon.ideasonboard.com>
- <20190905095757.gg6s5pse5tvivxbs@uno.localdomain>
- <20190905111712.GG5035@pendragon.ideasonboard.com>
+        Thu, 5 Sep 2019 09:13:30 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x3so1267963plr.12;
+        Thu, 05 Sep 2019 06:13:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ptZLHQ1J+Ct+T0uB2ajpX+RvL5VEPREpdkE/veVM7GM=;
+        b=Zmastz/gxQ4vmfAfi2QeIIzzAirZrh4VskadspM4qowBOEKy6IKjEATwI5R6oYzW4H
+         o8E7mzlpcCLA1xDKM+BzjAgycqLqWQ+PVNY6Ent4J0ZtQKtZQ/LHdXtDffOxIP5854VI
+         g6TvSt2BsULbv+T9p0byL8nAdo2DZ8MoxPkgcyJbJkNn3U7NFOwlvPVrM+fat4slphok
+         A14DUZWrpLj57335kr8uEWHA1pqIPwVqvEIDm1zexv4oc3Q6NBgQXRsxvf2Yf9autsWS
+         Qp+O0VTyUeYAGa44vQYdVrXMB9w0MCwytKGtzFepS7S+SVEGGsZaSWQd1ZpnS89CiTVQ
+         AWhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ptZLHQ1J+Ct+T0uB2ajpX+RvL5VEPREpdkE/veVM7GM=;
+        b=Jl1DR2FMMPAn13wlRw11oUxiZHqmrPTPKBsVBya24GjNBmnoNvSiRcZwN3GN4HB8V4
+         4jJUgEPMG3ng2pj9IG6QnhDPNfRWHBr86zT9SBfxoxZsms1MSFcGfoLqaa1oi2OjhAXp
+         B0QCUNOTYteccU6MY4E+CIDliYZ4DVxUDpNkmCpCft+tMKpQjo9xJHruXyJdNhH1XoPj
+         R8ZUytR22vyjtQHbnpDCe3X8cmmXIsI5KxewdQjUwcR08CkSk43Mj1l8o/tTu+jbZXiJ
+         vcQyI2P+pPT2w+zUnu5TVVYqluUTbU9HOVPrHyMdCMjbSuoxhMfT6a89ftweEQ3FcBLU
+         WIbA==
+X-Gm-Message-State: APjAAAVtDZ2OizSD2yJrPPZaIH43XEYN+kq8pBzGK9eJBP/Lw9Fng6pX
+        ZNFAWTTgALZgasbYxjwp/qkCxXck
+X-Google-Smtp-Source: APXvYqxy70mGQpqIud6JAWMI76CEQgzdxYAkDUxyKnKK4jbHMIiN9+96n2lvo//uEAIE+ZxDGmr4Hw==
+X-Received: by 2002:a17:902:aa91:: with SMTP id d17mr3231903plr.74.1567689209526;
+        Thu, 05 Sep 2019 06:13:29 -0700 (PDT)
+Received: from SD.eic.com ([106.222.7.175])
+        by smtp.gmail.com with ESMTPSA id z21sm2532546pfn.183.2019.09.05.06.13.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 06:13:28 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 18:43:18 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     linux@roeck-us.net, peda@axentia.se
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] i2c: muxes: pca9541: use BIT() macro
+Message-ID: <20190905131318.GA21280@SD.eic.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iuoqgpboxu2vm3n7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905111712.GG5035@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use bit mask macro BIT() for definition where appropriate.
 
---iuoqgpboxu2vm3n7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+ drivers/i2c/muxes/i2c-mux-pca9541.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-Hi Laurent,
+diff --git a/drivers/i2c/muxes/i2c-mux-pca9541.c b/drivers/i2c/muxes/i2c-mux-pca9541.c
+index 9e75d6b9140b..bd4cf8341a06 100644
+--- a/drivers/i2c/muxes/i2c-mux-pca9541.c
++++ b/drivers/i2c/muxes/i2c-mux-pca9541.c
+@@ -43,20 +43,20 @@
+ #define PCA9541_CONTROL		0x01
+ #define PCA9541_ISTAT		0x02
+ 
+-#define PCA9541_CTL_MYBUS	(1 << 0)
+-#define PCA9541_CTL_NMYBUS	(1 << 1)
+-#define PCA9541_CTL_BUSON	(1 << 2)
+-#define PCA9541_CTL_NBUSON	(1 << 3)
+-#define PCA9541_CTL_BUSINIT	(1 << 4)
+-#define PCA9541_CTL_TESTON	(1 << 6)
+-#define PCA9541_CTL_NTESTON	(1 << 7)
+-
+-#define PCA9541_ISTAT_INTIN	(1 << 0)
+-#define PCA9541_ISTAT_BUSINIT	(1 << 1)
+-#define PCA9541_ISTAT_BUSOK	(1 << 2)
+-#define PCA9541_ISTAT_BUSLOST	(1 << 3)
+-#define PCA9541_ISTAT_MYTEST	(1 << 6)
+-#define PCA9541_ISTAT_NMYTEST	(1 << 7)
++#define PCA9541_CTL_MYBUS	BIT(0)
++#define PCA9541_CTL_NMYBUS	BIT(1)
++#define PCA9541_CTL_BUSON	BIT(2)
++#define PCA9541_CTL_NBUSON	BIT(3)
++#define PCA9541_CTL_BUSINIT	BIT(4)
++#define PCA9541_CTL_TESTON	BIT(6)
++#define PCA9541_CTL_NTESTON	BIT(7)
++
++#define PCA9541_ISTAT_INTIN	BIT(0)
++#define PCA9541_ISTAT_BUSINIT	BIT(1)
++#define PCA9541_ISTAT_BUSOK	BIT(2)
++#define PCA9541_ISTAT_BUSLOST	BIT(3)
++#define PCA9541_ISTAT_MYTEST	BIT(6)
++#define PCA9541_ISTAT_NMYTEST	BIT(7)
+ 
+ #define BUSON		(PCA9541_CTL_BUSON | PCA9541_CTL_NBUSON)
+ #define MYBUS		(PCA9541_CTL_MYBUS | PCA9541_CTL_NMYBUS)
+-- 
+2.20.1
 
-On Thu, Sep 05, 2019 at 02:17:12PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> > >>>> +/**
-> > >>>> + * rcar_cmm_enable() - enable the CMM unit
-> > >>>> + *
-> > >>>> + * @pdev: The platform device associated with the CMM instance
-> > >>>> + *
-> > >>>> + * Enable the CMM unit by enabling the parent clock and enabling =
-the CMM
-> > >>>> + * components, such as 1-D LUT, if requested.
-> > >>>> + */
-> > >>>> +int rcar_cmm_enable(struct platform_device *pdev)
-> > >>>> +{
-> > >>>> +	struct rcar_cmm *rcmm =3D platform_get_drvdata(pdev);
-> > >>>> +	int ret;
-> > >>>> +
-> > >>>> +	if (!rcmm)
-> > >>>> +		return -EPROBE_DEFER;
-> > >>>
-> > >>> This function is called in rcar_du_crtc_atomic_enable(), so that's =
-not
-> > >>> the right error code. It seems we need another function for the CMM=
- API
-> > >>> to defer probing :-/ I would call it rcar_cmm_init(). This check wo=
-uld
-> > >>> then be removed.
-> > >>
-> > >> I agree about the return code, but not the name, as this function
-> > >> actually enables the CMM.
-> > >
-> > > I meant creating a new rcar_cmm_init() function that would just have =
-the
-> > > !rcmm check.
-> > >
-> > >> PROBE_DEFER does not make any sense here, I
-> > >> wonder where it come from, as the probing of CMM and DU has long
-> > >> happened once we get here (at least, I assume so, if we receive a
-> > >> gamma_table, userspace has already been running, and both DU and CMM
-> > >> should have probed. Otherwise, we can exploit the newly created devi=
-ce
-> > >> link, and make sure DU probes after the CMM).
-> > >>
-> > >> I would just change the return value here, and possibly use the devi=
-ce
-> > >> link to ensure the correct probing sequence.
-> > >
-> > > How does device link help here ?
-> >
-> > Currently it doesn't, as we are creating a stateless link.
-> >
-> > But if we go for a managed device link (which is the default, by the
-> > way, you have to opt-out from it) we can guarantee the CMM has probed
-> > before the DU probes, so that we have a guarantee when we get here
-> > !rcmm cannot happen.
-> >
-> > https://www.kernel.org/doc/html/v5.2-rc7/driver-api/device_link.html
-> > "The consumer devices are not probed before the supplier is bound to a =
-driver,
-> >  and they=E2=80=99re unbound before the supplier is unbound."
-> >
-> > As we create the link, the CMM is the supplier of DU, so we could just
-> > drop the DL_FLAG_STATELESS flag in device_link_add() in 10/14.
-> >
-> > Does this match your understanding ?
->
-> Except there's a bit of a chicken and egg issue, as you call
-> device_link_add() from rcar_du_cmm_init(), which thus require the DU
-> driver to probe first :-) For this to work we would probably need an
-> early initcall in the DU driver.
->
-
-Yes indeed, the point where the link is created at the moment is too
-late... Is it worth an early initcall, or should we just assume that
-at the point where the LUT is operated userspace has already been
-running and both the CMM and the DU have probed already?
-
---iuoqgpboxu2vm3n7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1xCk0ACgkQcjQGjxah
-Vjy4WhAAs0hFWf0KGDxzpxaW2Is+PYr+7r9FJJCvIRLtHJrvMMa7ZiUHu6snKcwi
-c1af164xRrIBq9jUAnWlDfDACdyVgZIAZm1sKTXF8Y7lulTX8prColnNv9PbJkSf
-GFPk2NS60LnPYPDLxa5YnD/wCEluH6zZP0Iec0F60xCs288jmWasZUk1GE/nt6en
-tYOPmEtnGL74VYbqVzx9cYXQ/x/NEwpVRvTGTb5Z8JAWw0fiKoJcbWVNklfy++VE
-up2vaz4OSOJ5LT+KPIGqXW0FrTPHYVyu6FYHrxDzM+/IKmXWtWCNq4iRypltPd5R
-iixHQkqBq/G8aedqIzJbpeVFW/v2LowO/HlDwo2LmLmXkaJeBfX4V7/HK8dGNCjc
-XCnefTL1pFgJ0kP+pO8rybOtt74T/gcjcU3Yxj0EcOUXauzUiFYyKyt0pgyhfJxl
-8AYzAfmLAdQDawPntPIZ011LYVa5oF27Wek05zw3oWRC98VtJMro5CxX8vebKFrA
-gtqfZB2pz6MzO8IbNeAPr+LLcSjgHhSe13JlO9iAxJ0bDYHtnT9TEKxu49LagXnN
-xsKlzgRajJCcJEf5ldjFu0Ew9UM+BoiLuR7AKMiFdxCpCGlsBiUSGMWgEAtfbs4e
-TQ8x0CruiKbwXTirVnSU/mlf6+oh3fJ4CPB1+AhH7Mjjn4L5kXE=
-=ww4d
------END PGP SIGNATURE-----
-
---iuoqgpboxu2vm3n7--
