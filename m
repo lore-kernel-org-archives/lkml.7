@@ -2,119 +2,220 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84DFC43140
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89BEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 035AB2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC7342070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:24:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="egglMIP0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389826AbfIESXn (ORCPT
+        id S2391241AbfIESY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:23:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43028 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727764AbfIESXl (ORCPT
+        Thu, 5 Sep 2019 14:24:27 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34371 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389837AbfIESY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:23:41 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i5wPR-00053t-Nn; Thu, 05 Sep 2019 18:23:05 +0000
-Date:   Thu, 5 Sep 2019 20:23:03 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>, Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905182303.7f6bxpa2enbgcegv@wittgenstein>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
+        Thu, 5 Sep 2019 14:24:26 -0400
+Received: by mail-wr1-f66.google.com with SMTP id s18so3914431wrn.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fa+kyDa0J3UDgtTokX5PSraDFnwKfBrrRUNa7uKQ4zc=;
+        b=egglMIP0L9o76Prk2RwMG1+crapx0HRW3AFjHZt3+xYf2mak7Ip2QM/+K9lym4nQKr
+         +8/juAojIrEwENufL7O2CNyz4/vaXtBhcNc8CTOut9i6aLQe9Nz6J7H/LCFjtoA+Xzkq
+         Ta6BuRU24lH+GgGpc+y8goGQQPwks34+KUcYr46Qfx6ixCtDkm3Xkag72QIzllnBR82v
+         BIgCmt2Q+W7R8qDAdVITcLYFyV9jg6c2rhuKk78yVicztdbwdhZ+dSyITLVwxq6RFnOi
+         0eXi+6P/SdNJ5vrCv2Q1ByU0o3AEz7KZUhMyZ/rk+ooqrLuXkue5OdfJJebq9lV/t6sP
+         ENYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Fa+kyDa0J3UDgtTokX5PSraDFnwKfBrrRUNa7uKQ4zc=;
+        b=JCdTuXR1a1nA9NhwQF7FP9GshLPx/mFBgtj1eaMUWbqgwEMuraf/ptGEx1roSb2NK/
+         NQH28XKL+FgLl18AsREPzTRrxZwTiuNh/Vg3Jl4HUDIa3SOY0ut73p7VmbKntboMQsLI
+         LXx7Ds7z26TSmSLNQkARVu1latKVneGJlssUHYPkgyq06UMXZxwnNYzwgtPCZ/xd3lAR
+         aZEBfcyc/ZWLvKqLuuF6h/W5slMD/tiCEBGfhCKdHdmpjbManX8epLseiGFTNko2iweA
+         WoSoJmSafXS1O4PkBj/649pKw0ofIzB4JjEvGltuMaWeN/T0JMsiMQCypjWb2UfJSYSN
+         Ar+g==
+X-Gm-Message-State: APjAAAWUJkfHtVmeh43PNQ33/O8Amk5Xi8H9VaZ8OTuknDHRBq99NHb4
+        m6ZgLce5n9gdtzjmANbprgYj9g==
+X-Google-Smtp-Source: APXvYqzAoWh69dxryFmMtb7Y48F22r8XgnXXpcLfia/65KvWJxf0e1JvnELu4CzfFJjl4wNZVFyLuQ==
+X-Received: by 2002:adf:e790:: with SMTP id n16mr3666412wrm.120.1567707864040;
+        Thu, 05 Sep 2019 11:24:24 -0700 (PDT)
+Received: from localhost.localdomain (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
+        by smtp.gmail.com with ESMTPSA id x5sm4353851wrg.69.2019.09.05.11.24.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 05 Sep 2019 11:24:23 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To:     jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net
+Cc:     linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] watchdog: qcom: support pre-timeout when the bark irq is available
+Date:   Thu,  5 Sep 2019 20:24:19 +0200
+Message-Id: <20190905182419.26539-1-jorge.ramirez-ortiz@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190905180750.GQ1131@ZenIV.linux.org.uk>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 07:07:50PM +0100, Al Viro wrote:
-> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> > +/*
-> > + * "memset(p, 0, size)" but for user space buffers. Caller must have already
-> > + * checked access_ok(p, size).
-> > + */
-> > +static int __memzero_user(void __user *p, size_t s)
-> > +{
-> > +	const char zeros[BUFFER_SIZE] = {};
-> > +	while (s > 0) {
-> > +		size_t n = min(s, sizeof(zeros));
-> > +
-> > +		if (__copy_to_user(p, zeros, n))
-> > +			return -EFAULT;
-> > +
-> > +		p += n;
-> > +		s -= n;
-> > +	}
-> > +	return 0;
-> > +}
-> 
-> That's called clear_user().
-> 
-> > +int copy_struct_to_user(void __user *dst, size_t usize,
-> > +			const void *src, size_t ksize)
-> > +{
-> > +	size_t size = min(ksize, usize);
-> > +	size_t rest = abs(ksize - usize);
-> > +
-> > +	if (unlikely(usize > PAGE_SIZE))
-> > +		return -EFAULT;
-> 
-> Why?
+Use the bark interrupt as the pre-timeout notifier whenever this
+interrupt is available.
 
-Because every caller of that function right now has that limit set
-anyway iirc. So we can either remove it from here and place it back for
-the individual callers or leave it in the helper.
-Also, I'm really asking, why not? Is it unreasonable to have an upper
-bound on the size (for a long time probably) or are you disagreeing with
-PAGE_SIZE being used? PAGE_SIZE limit is currently used by sched, perf,
-bpf, and clone3 and in a few other places.
+By default, the pretimeout notification shall occur one second earlier
+than the timeout.
+
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+---
+ v3:
+    remove unnecesary variable added to private.
+
+ v2:
+    register the pre-timeout notifier instead.
+
+ v1:
+    use the bark irq to notify the user.
+
+ drivers/watchdog/qcom-wdt.c | 60 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 55 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index 7be7f87be28f..847dbf79df1c 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -10,6 +10,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/watchdog.h>
+ #include <linux/of_device.h>
++#include <linux/interrupt.h>
++#include <linux/watchdog.h>
+ 
+ enum wdt_reg {
+ 	WDT_RST,
+@@ -54,15 +56,37 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
+ 	return container_of(wdd, struct qcom_wdt, wdd);
+ }
+ 
++static inline int qcom_wdt_enable(struct watchdog_device *wdd)
++{
++	/* enable the bark interrupt */
++	if (wdd->info->options & WDIOF_PRETIMEOUT)
++		return 3;
++
++	return 1;
++}
++
++static irqreturn_t qcom_wdt_irq(int irq, void *cookie)
++{
++	struct watchdog_device *wdd = (struct watchdog_device *) cookie;
++
++	watchdog_notify_pretimeout(wdd);
++
++	return IRQ_HANDLED;
++}
++
+ static int qcom_wdt_start(struct watchdog_device *wdd)
+ {
+ 	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
++	unsigned int bark = wdd->pretimeout;
++
++	if (!(wdd->info->options & WDIOF_PRETIMEOUT))
++		bark = wdd->timeout;
+ 
+ 	writel(0, wdt_addr(wdt, WDT_EN));
+ 	writel(1, wdt_addr(wdt, WDT_RST));
+-	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
++	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
+ 	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
+-	writel(1, wdt_addr(wdt, WDT_EN));
++	writel(qcom_wdt_enable(wdd), wdt_addr(wdt, WDT_EN));
+ 	return 0;
+ }
+ 
+@@ -89,6 +113,14 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
+ 	return qcom_wdt_start(wdd);
+ }
+ 
++static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
++				   unsigned int timeout)
++{
++	wdd->pretimeout = timeout;
++
++	return 0;
++}
++
+ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+ 			    void *data)
+ {
+@@ -105,7 +137,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+ 	writel(1, wdt_addr(wdt, WDT_RST));
+ 	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
+ 	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
+-	writel(1, wdt_addr(wdt, WDT_EN));
++	writel(qcom_wdt_enable(wdd), wdt_addr(wdt, WDT_EN));
+ 
+ 	/*
+ 	 * Actually make sure the above sequence hits hardware before sleeping.
+@@ -121,11 +153,12 @@ static const struct watchdog_ops qcom_wdt_ops = {
+ 	.stop		= qcom_wdt_stop,
+ 	.ping		= qcom_wdt_ping,
+ 	.set_timeout	= qcom_wdt_set_timeout,
++	.set_pretimeout	= qcom_wdt_set_pretimeout,
+ 	.restart        = qcom_wdt_restart,
+ 	.owner		= THIS_MODULE,
+ };
+ 
+-static const struct watchdog_info qcom_wdt_info = {
++static struct watchdog_info qcom_wdt_info = {
+ 	.options	= WDIOF_KEEPALIVEPING
+ 			| WDIOF_MAGICCLOSE
+ 			| WDIOF_SETTIMEOUT
+@@ -146,7 +179,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	struct device_node *np = dev->of_node;
+ 	const u32 *regs;
+ 	u32 percpu_offset;
+-	int ret;
++	int irq, ret;
+ 
+ 	regs = of_device_get_match_data(dev);
+ 	if (!regs) {
+@@ -222,6 +255,23 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
+ 	watchdog_init_timeout(&wdt->wdd, 0, dev);
+ 
++	irq = platform_get_irq(pdev, 0);
++	if (irq >= 0) {
++		/* enable the pre-timeout notification */
++		qcom_wdt_info.options |= WDIOF_PRETIMEOUT;
++
++		ret = devm_request_irq(&pdev->dev, irq, qcom_wdt_irq,
++				       IRQF_TRIGGER_RISING, "wdog_bark",
++				       &wdt->wdd);
++		if (ret) {
++			dev_err(&pdev->dev, "failed to request irq\n");
++			return ret;
++		}
++	}
++
++	if (qcom_wdt_info.options & WDIOF_PRETIMEOUT)
++		wdt->wdd.pretimeout = wdt->wdd.timeout - 1;
++
+ 	ret = devm_watchdog_register_device(dev, &wdt->wdd);
+ 	if (ret)
+ 		return ret;
+-- 
+2.23.0
+
