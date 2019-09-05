@@ -2,158 +2,258 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B616CC00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F03DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFA82082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:31:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="eMG14L3n"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED9020828
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 20:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567715558;
+	bh=jND1byzr7Vi4ZUqwHS0s7Jh352lG35T0RmAaDn9PAB4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=QiR3too2KeGE41lnB0Z4t/2MVK46XuJbBq/BecuWbY366LEomvd9XdcvZ8npLadtC
+	 ImjhSqKhiNRTDO9ccjuRoH3ySzsgLSIkI3avdjLB9Q7UIPtHlbnB1us8d4kd3m2tq9
+	 TdcmdpiWpBlXzrGCNRKtIPB5mnjH5WsCVtKpI7yw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391507AbfIEUbm (ORCPT
+        id S2391586AbfIEUch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 16:31:42 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35347 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387491AbfIEUbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 16:31:42 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a127so3089316oii.2;
-        Thu, 05 Sep 2019 13:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cs7pSggiA638/NENn3nXpVetu5HgwNJEQ1fDCNSetg4=;
-        b=eMG14L3nTkKPDjnQt3Il0NaBunF7hnbOLozDIvNta4SyW4fjwipSZFTlImrxg1zHY0
-         0Onwwwa0G8XUEDs44pARBjafSWrKm+EBrySFUIllP7h1P9ahZ6Kl1bfJja1YVVYhNT1b
-         VmddePJa8cOpZje6DdalRuzzGqbXEu3jhgpWHdlZm6g1oXAByda9nbNxEIvgeO5vbjT7
-         fi/9y6+Z1zxnqvu+y9wz6tzOd9CJVLCjRSYq5O8t2+1cthvMYhwbkjGQHvRbR9xYwlba
-         nz3EOHFca39PoZAfRb9Whqb2DXC85+smqWFnUtn5VCoXnqhp6BA6ze4ytwKNJ7DfII/l
-         ilsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cs7pSggiA638/NENn3nXpVetu5HgwNJEQ1fDCNSetg4=;
-        b=YBHWhl3EwmhPfE/YX08LTSiacKiiaxb7Z286AIZGF3+FsbUEKuTsoe9tCdkx2DiOfw
-         wwtjBzxgwSSX71zDE9vOrlZE7rNs29cz6RdeEVvCaQ4WvsdDQMNWpLMH5hEn1LIMDPJ3
-         rj8fvSrnmA5xm84RIrvaBlxU3zHyVoPM/GYyHPnV+8uk3WKzUwVgrnnBjwsTykQG7EGI
-         SJxIO7AC0Jbuk9/zPZj3MV2x/HxIS7zWIWJOgq9xQM51Fw83vz0pDvqTLyxJSIhB+QQ6
-         PdDjpUJV2l+VWV3LGJ2SEed69X/hkIhzUrdyF0vOFGx2OayU3FmTPfubkOeCrVs+cu4+
-         muCQ==
-X-Gm-Message-State: APjAAAXV/1R/TdLEMVSo9x8gn8L2NMAAWODI2fe6fAGt/4TLSWEI+Ale
-        828ZHpRA80kIjuPbjsspkRB7WBqBryyxYfQottM=
-X-Google-Smtp-Source: APXvYqwUKj9QVoY719m4jv2mk0by7PXeu9zkQRWV7OtiqrYGrW3CNbjwsr5yaUuW4/iaHpW7DaBKGwSwHyEmopWn4Fo=
-X-Received: by 2002:a05:6808:b14:: with SMTP id s20mr4258444oij.15.1567715500998;
- Thu, 05 Sep 2019 13:31:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1567585181.git.eswara.kota@linux.intel.com> <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
-In-Reply-To: <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 5 Sep 2019 22:31:29 +0200
-Message-ID: <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, robh@kernel.org,
-        linux-pci@vger.kernel.org, hch@infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+        Thu, 5 Sep 2019 16:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732067AbfIEUcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 16:32:36 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC7B2082E;
+        Thu,  5 Sep 2019 20:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567715555;
+        bh=jND1byzr7Vi4ZUqwHS0s7Jh352lG35T0RmAaDn9PAB4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ElpduPjHn8/OdAB1Mjp2oVgCX+kPmVj0zJevc7xIypjHVwPa6BoOxZwaBM2uetxrN
+         cNGpF6QiSY+7vWOiyh0vsiFs9H0RMRtcgi/2xse/U2TCbdn3yXKy6GMnVmv5hxU8JW
+         2dUMQEY3rwmNvk3vDFt9+V0XLH5sqYTMXHW06EmI=
+Message-ID: <1567715553.16718.29.camel@kernel.org>
+Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Carmen Jackson <carmenjackson@google.com>,
+        Mayank Gupta <mayankgupta@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kernel-team <kernel-team@android.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Date:   Thu, 05 Sep 2019 15:32:33 -0500
+In-Reply-To: <CAKOZuescyhpGWUrZT+WpOoQP-gQ-8YYTyzwzZzBTxaJiLhMHxw@mail.gmail.com>
+References: <20190903200905.198642-1-joel@joelfernandes.org>
+         <20190904084508.GL3838@dhcp22.suse.cz> <20190904153258.GH240514@google.com>
+         <20190904153759.GC3838@dhcp22.suse.cz> <20190904162808.GO240514@google.com>
+         <20190905144310.GA14491@dhcp22.suse.cz>
+         <CAJuCfpFve2v7d0LX20btk4kAjEpgJ4zeYQQSpqYsSo__CY68xw@mail.gmail.com>
+         <20190905133507.783c6c61@oasis.local.home>
+         <20190905174705.GA106117@google.com> <20190905175108.GB106117@google.com>
+         <1567713403.16718.25.camel@kernel.org>
+         <CAKOZuescyhpGWUrZT+WpOoQP-gQ-8YYTyzwzZzBTxaJiLhMHxw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dilip,
+Hi,
 
-On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
-[...]
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pcie
-should we add the "snps,dw-pcie" here (and in the example below) as well?
-(this is what for example
-Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt does)
+On Thu, 2019-09-05 at 13:24 -0700, Daniel Colascione wrote:
+> On Thu, Sep 5, 2019 at 12:56 PM Tom Zanussi <zanussi@kernel.org>
+> wrote:
+> > On Thu, 2019-09-05 at 13:51 -0400, Joel Fernandes wrote:
+> > > On Thu, Sep 05, 2019 at 01:47:05PM -0400, Joel Fernandes wrote:
+> > > > On Thu, Sep 05, 2019 at 01:35:07PM -0400, Steven Rostedt wrote:
+> > > > > 
+> > > > > 
+> > > > > [ Added Tom ]
+> > > > > 
+> > > > > On Thu, 5 Sep 2019 09:03:01 -0700
+> > > > > Suren Baghdasaryan <surenb@google.com> wrote:
+> > > > > 
+> > > > > > On Thu, Sep 5, 2019 at 7:43 AM Michal Hocko <mhocko@kernel.
+> > > > > > org>
+> > > > > > wrote:
+> > > > > > > 
+> > > > > > > [Add Steven]
+> > > > > > > 
+> > > > > > > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
+> > > > > > > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@ke
+> > > > > > > > rnel
+> > > > > > > > .org> wrote:
+> > > > > > > > > 
+> > > > > > > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
+> > > > > > > 
+> > > > > > > [...]
+> > > > > > > > > > but also for reducing
+> > > > > > > > > > tracing noise. Flooding the traces makes it less
+> > > > > > > > > > useful
+> > > > > > > > > > for long traces and
+> > > > > > > > > > post-processing of traces. IOW, the overhead
+> > > > > > > > > > reduction
+> > > > > > > > > > is a bonus.
+> > > > > > > > > 
+> > > > > > > > > This is not really anything special for this
+> > > > > > > > > tracepoint
+> > > > > > > > > though.
+> > > > > > > > > Basically any tracepoint in a hot path is in the same
+> > > > > > > > > situation and I do
+> > > > > > > > > not see a point why each of them should really invent
+> > > > > > > > > its
+> > > > > > > > > own way to
+> > > > > > > > > throttle. Maybe there is some way to do that in the
+> > > > > > > > > tracing subsystem
+> > > > > > > > > directly.
+> > > > > > > > 
+> > > > > > > > I am not sure if there is a way to do this easily. Add
+> > > > > > > > to
+> > > > > > > > that, the fact that
+> > > > > > > > you still have to call into trace events. Why call into
+> > > > > > > > it
+> > > > > > > > at all, if you can
+> > > > > > > > filter in advance and have a sane filtering default?
+> > > > > > > > 
+> > > > > > > > The bigger improvement with the threshold is the number
+> > > > > > > > of
+> > > > > > > > trace records are
+> > > > > > > > almost halved by using a threshold. The number of
+> > > > > > > > records
+> > > > > > > > went from 4.6K to
+> > > > > > > > 2.6K.
+> > > > > > > 
+> > > > > > > Steven, would it be feasible to add a generic tracepoint
+> > > > > > > throttling?
+> > > > > > 
+> > > > > > I might misunderstand this but is the issue here actually
+> > > > > > throttling
+> > > > > > of the sheer number of trace records or tracing large
+> > > > > > enough
+> > > > > > changes
+> > > > > > to RSS that user might care about? Small changes happen all
+> > > > > > the
+> > > > > > time
+> > > > > > but we are likely not interested in those. Surely we could
+> > > > > > postprocess
+> > > > > > the traces to extract changes large enough to be
+> > > > > > interesting
+> > > > > > but why
+> > > > > > capture uninteresting information in the first place? IOW
+> > > > > > the
+> > > > > > throttling here should be based not on the time between
+> > > > > > traces
+> > > > > > but on
+> > > > > > the amount of change of the traced signal. Maybe a generic
+> > > > > > facility
+> > > > > > like that would be a good idea?
+> > > > > 
+> > > > > You mean like add a trigger (or filter) that only traces if a
+> > > > > field has
+> > > > > changed since the last time the trace was hit? Hmm, I think
+> > > > > we
+> > > > > could
+> > > > > possibly do that. Perhaps even now with histogram triggers?
+> > > > 
+> > > > 
+> > > > Hey Steve,
+> > > > 
+> > > > Something like an analog to digitial coversion function where
+> > > > you
+> > > > lose the
+> > > > granularity of the signal depending on how much trace data:
+> > > > https://www.globalspec.com/ImageRepository/LearnMore/20142/9ee3
+> > > > 8d1a
+> > > > 85d37fa23f86a14d3a9776ff67b0ec0f3b.gif
+> > > 
+> > > s/how much trace data/what the resolution is/
+> > > 
+> > > > so like, if you had a counter incrementing with values after
+> > > > the
+> > > > increments
+> > > > as:  1,3,4,8,12,14,30 and say 5 is the threshold at which to
+> > > > emit a
+> > > > trace,
+> > > > then you would get 1,8,12,30.
+> > > > 
+> > > > So I guess what is need is a way to reduce the quantiy of trace
+> > > > data this
+> > > > way. For this usecase, the user mostly cares about spikes in
+> > > > the
+> > > > counter
+> > > > changing that accurate values of the different points.
+> > > 
+> > > s/that accurate/than accurate/
+> > > 
+> > > I think Tim, Suren, Dan and Michal are all saying the same thing
+> > > as
+> > > well.
+> > > 
+> > 
+> > There's not a way to do this using existing triggers (histogram
+> > triggers have an onchange() that fires on any change, but that
+> > doesn't
+> > help here), and I wouldn't expect there to be - these sound like
+> > very
+> > specific cases that would never have support in the simple trigger
+> > 'language'.
+> 
+> I don't see the filtering under discussion as some "very specific"
+> esoteric need. You need this general kind of mechanism any time you
+> want to monitor at low frequency a thing that changes at high
+> frequency. The general pattern isn't specific to RSS or even memory
+> in
+> general. One might imagine, say, wanting to trace large changes in
+> TCP
+> window sizes. Any time something in the kernel has a "level" and that
+> level changes at high frequency and we want to learn about big swings
+> in that level, the mechanism we're talking about becomes useful. I
+> don't think it should be out of bounds for the histogram mechanism,
+> which is *almost* there right now. We already have the ability to
+> accumulate values derived from ftrace events into tables keyed on
+> various fields in these events and things like onmax().
+> 
+> > On the other hand, I have been working on something that should
+> > give
+> > you the ability to do something like this, by writing a module that
+> > hooks into arbitrary trace events, accessing their fields, building
+> > up
+> > any needed state across events, and then generating synthetic
+> > events as
+> > needed:
+> 
+> You might as well say we shouldn't have tracepoints at all and that
+> people should just write modules that kprobe what they need. :-) You
+> can reject *any* kernel interface by suggesting that people write a
+> module to do that thing. (You could also probably do something with
+> eBPF.) But there's a lot of value to having an easy-to-use
+> general-purpose mechanism that doesn't make people break out the
+> kernel headers and a C compiler.
 
-[...]
-> +  phy-names:
-> +    const: pciephy
-the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
-if Rob is happy with "pciephy" (which is already part of two other
-bindings) then I'm happy with "pciephy" as well
+Oh, I didn't mean to reject any interface - I guess I should go read
+the whole thread then, and find the interface you're talking about.
 
-> +  num-lanes:
-> +    description: Number of lanes to use for this port.
-are there SoCs with more than 2 lanes?
-you can list the allowed values in an enum so "num-lanes = <16>"
-causes an error when someone accidentally has this in their .dts (and
-runs the dt-bindings validation)
+Tom
 
-[...]
-> +  reset-assert-ms:
-maybe add:
-  $ref: /schemas/types.yaml#/definitions/uint32
-
-> +    description: |
-> +      Device reset interval in ms.
-> +      Some devices need an interval upto 500ms. By default it is 100ms.
-> +
-> +required:
-> +  - compatible
-> +  - device_type
-> +  - reg
-> +  - reg-names
-> +  - ranges
-> +  - resets
-> +  - clocks
-> +  - phys
-> +  - phy-names
-> +  - reset-gpios
-> +  - num-lanes
-> +  - linux,pci-domain
-> +  - interrupts
-> +  - interrupt-map
-> +  - interrupt-map-mask
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    pcie10:pcie@d0e00000 {
-> +      compatible = "intel,lgm-pcie";
-> +      device_type = "pci";
-> +      #address-cells = <3>;
-> +      #size-cells = <2>;
-> +      reg = <
-> +            0xd0e00000 0x1000
-> +            0xd2000000 0x800000
-> +            0xd0a41000 0x1000
-> +            >;
-> +      reg-names = "dbi", "config", "app";
-> +      linux,pci-domain = <0>;
-> +      max-link-speed = <4>;
-> +      bus-range = <0x00 0x08>;
-> +      interrupt-parent = <&ioapic1>;
-> +      interrupts = <67 1>;
-> +      #interrupt-cells = <1>;
-> +      interrupt-map-mask = <0 0 0 0x7>;
-> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
-> +                      <0 0 0 2 &ioapic1 28 1>,
-> +                      <0 0 0 3 &ioapic1 29 1>,
-> +                      <0 0 0 4 &ioapic1 30 1>;
-is the "1" in the interrupts and interrupt-map properties IRQ_TYPE_EDGE_RISING?
-you can use these macros in this example as well, see
-Documentation/devicetree/bindings/iio/accel/adi,adxl372.yaml for
-example
-
-
-Martin
