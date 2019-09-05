@@ -2,136 +2,74 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E218C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D2EC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D4B206BB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bXBy66Cm"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC07206BB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387948AbfIEKuk (ORCPT
+        id S2387966AbfIEKvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:50:40 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10312 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731476AbfIEKuk (ORCPT
+        Thu, 5 Sep 2019 06:51:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42419 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731476AbfIEKvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:50:40 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d70e8820000>; Thu, 05 Sep 2019 03:50:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Sep 2019 03:50:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Sep 2019 03:50:39 -0700
-Received: from [10.24.45.110] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Sep
- 2019 10:50:34 +0000
-Subject: Re: [PATCH V3 0/6] PCI: tegra: Enable PCIe C5 controller of Tegra194
- in p2972-0000 platform
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <digetx@gmail.com>,
-        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190828172850.19871-1-vidyas@nvidia.com>
- <7751a77d-5812-49b7-0c6b-00e6740e209b@nvidia.com>
- <20190905093444.GA16642@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <287e3013-9011-79f8-fc1d-56184480cdb7@nvidia.com>
-Date:   Thu, 5 Sep 2019 16:20:31 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 06:51:42 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i5pMG-0005iC-Gn; Thu, 05 Sep 2019 12:51:20 +0200
+Date:   Thu, 5 Sep 2019 12:51:18 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Borislav Petkov <bp@alien8.de>
+cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, patrick.colp@oracle.com,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even
+ if revision is unchanged
+In-Reply-To: <20190905072029.GB19246@zn.tnic>
+Message-ID: <alpine.DEB.2.21.1909051244250.1902@nanos.tec.linutronix.de>
+References: <1567056803-6640-1-git-send-email-ashok.raj@intel.com> <20190829060942.GA1312@zn.tnic> <20190829130213.GA23510@araj-mobl1.jf.intel.com> <20190903164630.GF11641@zn.tnic> <41cee473-321c-2758-032a-ccf0f01359dc@oracle.com> <D8A3D2BD-1FD4-4183-8663-3EF02A6099F3@alien8.de>
+ <20190905002132.GA26568@otc-nc-03> <20190905072029.GB19246@zn.tnic>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190905093444.GA16642@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1567680642; bh=VKSLkWMTBZ8TeEsRAG5d5mg7LuR8kaAugx+O7CWKc1w=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bXBy66CmsWTB1BXHGXjSJeS4s5qpZ5zpQRTF9GAYEixvZwJpaSxwZh5owvuGBXhAq
-         GZkVs9hIxA/wBVIG+wHljAkpeUeEg5Yyj7PL1LLazOpwbafcpwQA/ZQRH6UW5Enuez
-         hsgU0KKgW55KcoT9TyDdUsoJ4SsKSZz6cM9BJbCWh57crBex34BZ1W3G61hsLeXXNT
-         kvvM2ADt6FTzKWLehLfZlgpfDYyeK3RKrKmDLvs60AYxNv86odwzjOYmQdtiOI9d5q
-         hipAlFUSU4TEPXZCMYNl3fW1nX9qaAWvAuKGfQAEi95DbnlhB696YAyxgQIsR1sDB+
-         Bt1Lc76VspiJw==
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/2019 3:04 PM, Lorenzo Pieralisi wrote:
-> On Thu, Sep 05, 2019 at 01:44:46PM +0530, Vidya Sagar wrote:
->> Hi Lorenzo / Bjorn,
->> Can you please review this series?
->> I have Reviewed-by and Acked-by from Rob, Thierry and Andrew already.
+On Thu, 5 Sep 2019, Borislav Petkov wrote:
+> On Wed, Sep 04, 2019 at 05:21:32PM -0700, Raj, Ashok wrote:
+> > But echo 2 > reload would allow reading a microcode file from 
+> > /lib/firmware/intel-ucode/ even if the revision hasn't changed right?
+> > 
+> > #echo 1 > reload wouldn't load if the revision on disk is same as what's loaded,
+> > and we want to permit that with the echo 2 option.
 > 
-> Rebase it on top of my pci/tegra branch (it does not apply),
-> resend it and I will merge it.
-I just sent V4 after rebasing the series on top of pci/tegra.
+> Then before we continue with this, please specify what the exact
+> requirements are. Talk to your microcoders or whoever is going to use
+> this and give the exact use cases which should be supported and describe
+> them in detail.
+
+Plus I have to ask whether this facility makes any sense outside of
+microcode development. If so, then please explain the use case and give
+a proper justification why this needs to be in the mainline kernel.
 
 Thanks,
-Vidya Sagar
-> 
-> Thanks,
-> Lorenzo
-> 
->> Thanks,
->> Vidya Sagar
->>
->> On 8/28/2019 10:58 PM, Vidya Sagar wrote:
->>> This patch series enables Tegra194's C5 controller which owns x16 slot in
->>> p2972-0000 platform. C5 controller's PERST# and CLKREQ# are not configured as
->>> output and bi-directional signals by default and hence they need to be
->>> configured explicitly. Also, x16 slot's 3.3V and 12V supplies are controlled
->>> through GPIOs and hence they need to be enabled through regulator framework.
->>> This patch series adds required infrastructural support to address both the
->>> aforementioned requirements.
->>> Testing done on p2972-0000 platform
->>> - Able to enumerate devices connected to x16 slot (owned by C5 controller)
->>> - Enumerated device's functionality verified
->>> - Suspend-Resume sequence is verified with device connected to x16 slot
->>>
->>> V3:
->>> * Addressed some more review comments from Andrew Murray and Thierry Reding
->>>
->>> V2:
->>> * Changed the order of patches in the series for easy merging
->>> * Addressed review comments from Thierry Reding and Andrew Murray
->>>
->>> Vidya Sagar (6):
->>>     dt-bindings: PCI: tegra: Add sideband pins configuration entries
->>>     dt-bindings: PCI: tegra: Add PCIe slot supplies regulator entries
->>>     PCI: tegra: Add support to configure sideband pins
->>>     PCI: tegra: Add support to enable slot regulators
->>>     arm64: tegra: Add configuration for PCIe C5 sideband signals
->>>     arm64: tegra: Add PCIe slot supply information in p2972-0000 platform
->>>
->>>    .../bindings/pci/nvidia,tegra194-pcie.txt     | 16 ++++
->>>    .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi | 24 +++++
->>>    .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  4 +-
->>>    arch/arm64/boot/dts/nvidia/tegra194.dtsi      | 38 +++++++-
->>>    drivers/pci/controller/dwc/pcie-tegra194.c    | 94 ++++++++++++++++++-
->>>    5 files changed, 172 insertions(+), 4 deletions(-)
->>>
->>
 
+	tglx
