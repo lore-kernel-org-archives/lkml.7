@@ -2,179 +2,82 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838DEC3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9D5C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536FE2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75B42339D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="f+Hpg8NS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cEPuUO3D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388406AbfIEL0E (ORCPT
+        id S2388421AbfIEL0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:26:04 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:54340 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732580AbfIEL0E (ORCPT
+        Thu, 5 Sep 2019 07:26:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37678 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388377AbfIEL0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:26:04 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DB06126D;
-        Thu,  5 Sep 2019 13:26:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1567682761;
-        bh=PDM2yg84iLZxQ9w4hCMgxPNjGc9GtOUOGtLLgc+7y2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f+Hpg8NSUg1iGUf3k42bWXSJbLsMLp6/KZKiry+7CLg0Kil9hX+LlHRrMHKteTgDq
-         xESEcAnQjuF0Y8cy/KfKZ8tfYzI+Vn6/nI/uXJsiMB2g0n6FqA18hvlizMnIxbXsk8
-         pgHr0nJvYMV27Ysa2JcCE65YJT167kPsP585+iY0=
-Date:   Thu, 5 Sep 2019 14:25:54 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 14/14] drm: rcar-du: Force CMM enablement when resuming
-Message-ID: <20190905112554.GH5035@pendragon.ideasonboard.com>
-References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
- <20190825135154.11488-15-jacopo+renesas@jmondi.org>
- <20190827000517.GC5274@pendragon.ideasonboard.com>
- <20190905105809.iguzoqenlcriqegk@uno.localdomain>
+        Thu, 5 Sep 2019 07:26:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FF586Gx7pagckCQE7fW4rjr03JygAyA2r24BMBu1wCA=; b=cEPuUO3D/lnvG/7YuYlV5fgc2
+        ZxKkpjfOI/M9KXFwqzuDoX4Np91tRGmNAlWTKmaOD9egadePV9Ct5zkXBk3c90dqZQ6jG0qGPJ7im
+        s84I4mjGeKpvQFByHFZlCUB/FmZnj7EkiG+jVHtXDC2pt2xOw6OEMqVypd9TFCAJb0EZdVi8+V2ru
+        MpEIdhdjA9+afAh2c/0tuGoO1q3BpMmB1CuALpwQq3h+UClgy5pfVhEXdedz2xzy2qwn08M9xQWZ6
+        t9Y4dvKyv95VZLaV5hv938Ex6fIrpRkyfPr02P3P63hlE50Zy4s92Bdc/ysMdcQal55wD+xlU38fi
+        IE9KFIIXw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5pty-0005Cr-9h; Thu, 05 Sep 2019 11:26:10 +0000
+Date:   Thu, 5 Sep 2019 04:26:10 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        robh@kernel.org, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+Subject: Re: [PATCH v3 2/2] dwc: PCI: intel: Intel PCIe RC controller driver
+Message-ID: <20190905112610.GB10199@infradead.org>
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <35316bac59d3bc681e76d33e0345f4ef950c4414.1567585181.git.eswara.kota@linux.intel.com>
+ <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905105809.iguzoqenlcriqegk@uno.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190905104517.GX9720@e119886-lin.cambridge.arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacopo,
-
-On Thu, Sep 05, 2019 at 12:58:09PM +0200, Jacopo Mondi wrote:
-> On Tue, Aug 27, 2019 at 03:05:17AM +0300, Laurent Pinchart wrote:
-> > Hi Jacopo,
-> >
-> > (Question for Daniel below)
-> >
-> > Thank you for the patch.
-> >
-> > On Sun, Aug 25, 2019 at 03:51:54PM +0200, Jacopo Mondi wrote:
-> >> When resuming from system suspend, the DU driver is responsible for
-> >> reprogramming and enabling the CMM unit if it was in use at the time
-> >> the system entered the suspend state.
-> >>
-> >> Force the color_mgmt_changed flag to true if any of the DRM color
-> >> transformation properties was set in the CRTC state duplicated at
-> >> suspend time, as the CMM gets reprogrammed only if said flag is active in
-> >> the rcar_du_atomic_commit_update_cmm() method.
-> >>
-> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >> ---
-> >>  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 21 +++++++++++++++++++++
-> >>  1 file changed, 21 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> >> index 018480a8f35c..6e38495fb78f 100644
-> >> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> >> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-> >> @@ -17,6 +17,7 @@
-> >>  #include <linux/slab.h>
-> >>  #include <linux/wait.h>
-> >>
-> >> +#include <drm/drm_atomic.h>
-> >>  #include <drm/drm_atomic_helper.h>
-> >>  #include <drm/drm_fb_cma_helper.h>
-> >>  #include <drm/drm_fb_helper.h>
-> >> @@ -482,6 +483,26 @@ static int rcar_du_pm_suspend(struct device *dev)
-> >>  static int rcar_du_pm_resume(struct device *dev)
-> >>  {
-> >>  	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
-> >> +	struct drm_atomic_state *state = rcdu->ddev->mode_config.suspend_state;
-> >> +	unsigned int i;
-> >> +
-> >> +	for (i = 0; i < rcdu->num_crtcs; ++i) {
-> >> +		struct drm_crtc *crtc = &rcdu->crtcs[i].crtc;
-> >> +		struct drm_crtc_state *crtc_state;
-> >> +
-> >> +		crtc_state = drm_atomic_get_existing_crtc_state(state, crtc);
-> >> +		if (!crtc_state)
-> >> +			continue;
-> >
-> > Shouldn't you get the new state here ?
+On Thu, Sep 05, 2019 at 11:45:18AM +0100, Andrew Murray wrote:
+> > +        depends on OF
+> > +        select PCIE_DW_HOST
+> > +        help
+> > +          Say 'Y' here to enable support for Intel AHB/AXI PCIe Host
+> > +	  controller driver.
+> > +	  The Intel PCIe controller is based on the Synopsys Designware
+> > +	  pcie core and therefore uses the Designware core functions to
+> > +	  implement the driver.
 > 
-> I have followed the drm_atomic_helper_suspend() call stack, that calls
-> drm_atomic_helper_duplicate_state() which then assign the crtct state
-> with drm_atomic_get_crtc_state(), where I read:
-> 
->        	crtc_state = drm_atomic_get_existing_crtc_state(state, crtc);
->         ...
-> 	state->crtcs[index].state = crtc_state;
-> 	state->crtcs[index].old_state = crtc->state;
-> 	state->crtcs[index].new_state = crtc_state;
-> 
-> So state or new_state for the purpose of getting back the crtc state
-> are the same if I'm not mistaken.
+> I can see this description is similar to others in the same Kconfig,
+> however I'm not sure what value a user gains by knowing implementation
+> details - it's helpful to know that PCIE_INTEL_AXI is based on the
+> Designware core, but is it helpful to know that the Designware core
+> functions are used?
 
-It seems to be the case, but the documentation of
-drm_atomic_get_existing_crtc_state() states
-
- * This function is deprecated, @drm_atomic_get_old_crtc_state or
- * @drm_atomic_get_new_crtc_state should be used instead.
-
-I would thus use drm_atomic_get_new_crtc_state().
-
-> >> +
-> >> +		/*
-> >> +		 * Force re-enablement of CMM after system resume if any
-> >> +		 * of the DRM color transformation properties was set in
-> >> +		 * the state saved at system suspend time.
-> >> +		 */
-> >> +		if (crtc_state->gamma_lut || crtc_state->degamma_lut ||
-> >> +		    crtc_state->ctm)
-> >
-> > We don't support degamma_lut or crm, so I would drop those.
-> 
-> yeah, I added them as it was less code to change when we'll support
-> them. But for now they could be removed.
-> 
-> > With these small issues addressed,
-> >
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >
-> > Shouldn't we however squash this with the previous patch to avoid
-> > bisection issues ?
-> 
-> Which one in your opinion?
-> "drm: rcar-du: kms: Update CMM in atomic commit tail" ?
-> It seems to me they do quite different things though..
-
-Yes, but suspend/resume will be broken after 13/14 without 14/14. Not
-the end of the world, but not really nice if we need to bisect
-suspend/resume issues.
-
-> >> +			crtc_state->color_mgmt_changed = true;
-> >
-> > Daniel, is this something that would make sense in the KMS core (or
-> > helpers) ?
-> >
-> >> +	}
-> >>
-> >>  	return drm_mode_config_helper_resume(rcdu->ddev);
-> >>  }
-
--- 
-Regards,
-
-Laurent Pinchart
+Not really.  What would be extremely useful for a user is what Intel
+SOC contains this IP block, or the fact that most of those were
+actually produced by Lantiq, a company bought by Intel.
