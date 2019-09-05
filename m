@@ -2,138 +2,90 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD55C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3E7C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED51E2168B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90BC217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 06:23:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrmC8F3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731451AbfIEGWW (ORCPT
+        id S1731478AbfIEGX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 02:22:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32966 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726032AbfIEGWV (ORCPT
+        Thu, 5 Sep 2019 02:23:58 -0400
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:42394 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731293AbfIEGX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 02:22:21 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8567v9J174268
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 02:22:18 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2uttnt5ptp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 02:22:17 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Thu, 5 Sep 2019 07:22:16 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Sep 2019 07:22:11 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x856MArT48431298
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 06:22:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2BF7AAE051;
-        Thu,  5 Sep 2019 06:22:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78EE9AE058;
-        Thu,  5 Sep 2019 06:22:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.51.47])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Sep 2019 06:22:07 +0000 (GMT)
-Subject: Re: [RFC PATCH 2/9] sched: add search limit as per latency-nice
-To:     subhra mazumdar <subhra.mazumdar@oracle.com>,
-        linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
-        steven.sistare@oracle.com, dhaval.giani@oracle.com,
-        daniel.lezcano@linaro.org, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, tim.c.chen@linux.intel.com,
-        mgorman@techsingularity.net, patrick.bellasi@arm.com
-References: <20190830174944.21741-1-subhra.mazumdar@oracle.com>
- <20190830174944.21741-3-subhra.mazumdar@oracle.com>
-From:   Parth Shah <parth@linux.ibm.com>
-Date:   Thu, 5 Sep 2019 11:52:06 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.0
+        Thu, 5 Sep 2019 02:23:58 -0400
+Received: by mail-lj1-f177.google.com with SMTP id y23so1112350lje.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 23:23:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uQ5B0SOMWjcZt28lsTs/E8qAiAYYVgJARQcUjO5TKBM=;
+        b=DrmC8F3yi2lHHuP8as/6D3dAKoQREbL9E2VKcGgAozVIA4JT7BikvLkVCWwLvs4FuV
+         KxXdLonPWcr16xzEvwTUf5ryJDh6a1lTkVfHS+S7tluKj2DOEpLDZ+lmClLlRo0Uk4lN
+         g/R2vvfUCiMS93C5yKFmAYq6mJ56NqtlpStUYc6uOflRzs9tLnN27GaZOXDdXWjLH5Tf
+         dCL92feFvhlqmFUzzLHtpVOzP4AKOuBl9j2g19FYgtlvatnVlBATwFiVaO2tErFA8KB2
+         lzeeR8zoh/lrhMI/+AgbFWEnsRygdIfwyDNWfWdOGba6XqwjAvTm76xpyJcBCD+HsPQJ
+         NwAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uQ5B0SOMWjcZt28lsTs/E8qAiAYYVgJARQcUjO5TKBM=;
+        b=M4vWXeFpSmMHJsyP0MgarD5X047meZkMoc5HVURhMBxBpDHe8egJ+v9Ct9FDsJTTy9
+         FksrRP5zWsaYnUQwQmDoJrgBEJ331rmBQy7QxF8DIcB5Dj7c35LZVykDTK6xVK8qUY8G
+         0OXnoihVx5dq4g8J0VRYCSc3fFb12iaxSzLT3VWfz6efFJB9SwBTro7pS7S4bkuYMxpS
+         rNebVZFxMl1snkgqHe/NfmXs17qwdfmX/oKpB4CFc6F76KdMDrxFoCeE5ilTdMawTrU6
+         yZxTFEKfEZ0wyqqFRpQzhJScppzOiQ/OVyHJ+RF/6sv82QjLmkk4EuSJVuoIFYtxz1L6
+         ofAw==
+X-Gm-Message-State: APjAAAWvSdJcwo+2TbS8IsSgpFnsdC7z4cPVv/MPXGoriO8KgB0l+IEp
+        NcUVIJDSeECwz4A2ZloClRKTqQcT0LAoJWi+onw=
+X-Google-Smtp-Source: APXvYqxhB09PqX92csonV9YtKIw4/QYf3ZUpwYPeiLnKXhngzH+Grf1+6N5nXnLs0f6ATlOX1LNMzPaQBxcX+BnpoLA=
+X-Received: by 2002:a2e:3a13:: with SMTP id h19mr868106lja.220.1567664636414;
+ Wed, 04 Sep 2019 23:23:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190830174944.21741-3-subhra.mazumdar@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090506-0008-0000-0000-000003114EBB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090506-0009-0000-0000-00004A2FA6B4
-Message-Id: <5b7d3790-2510-f8b1-6515-bb9d307bba25@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050063
+References: <20190904181740.GA19688@gmail.com>
+In-Reply-To: <20190904181740.GA19688@gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 5 Sep 2019 08:23:45 +0200
+Message-ID: <CANiq72mJiBQXM4o9CahODLwQfNXfQdE_fE2bmPJFHq7Qep3rHQ@mail.gmail.com>
+Subject: Re: [GIT PULL] compiler-attributes for v5.3-rc8
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 4, 2019 at 8:18 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> I was going to send this for 5.4 since it is not that trivial, but since
+> you are doing an -rc8, and it fixes an oops, please consider pulling it.
 
+By the way, if you choose to pick it for 5.4 instead, I will take the
+chance to improve a few things (fix a whitespace/style issue in the
+arm patch, improve a few commit messages/typos, maybe get a few extra
+Acks for arches that don't have it). However, the Clang team would
+like to have this for 5.3 if possible, so I didn't want to delay
+sending it.
 
-On 8/30/19 11:19 PM, subhra mazumdar wrote:
-> Put upper and lower limit on CPU search in select_idle_cpu. The lower limit
-> is set to amount of CPUs in a core  while upper limit is derived from the
-> latency-nice of the thread. This ensures for any architecture we will
-> usually search beyond a core. Changing the latency-nice value by user will
-> change the search cost making it appropriate for given workload.
-> 
-> Signed-off-by: subhra mazumdar <subhra.mazumdar@oracle.com>
-> ---
->  kernel/sched/fair.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index b08d00c..c31082d 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6188,7 +6188,7 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->  	u64 avg_cost, avg_idle;
->  	u64 time, cost;
->  	s64 delta;
-> -	int cpu, nr = INT_MAX;
-> +	int cpu, floor, nr = INT_MAX;
-> 
->  	this_sd = rcu_dereference(*this_cpu_ptr(&sd_llc));
->  	if (!this_sd)
-> @@ -6205,11 +6205,12 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
->  		return -1;
-> 
->  	if (sched_feat(SIS_PROP)) {
-> -		u64 span_avg = sd->span_weight * avg_idle;
-> -		if (span_avg > 4*avg_cost)
-> -			nr = div_u64(span_avg, avg_cost);
-> -		else
-> -			nr = 4;
-> +		floor = cpumask_weight(topology_sibling_cpumask(target));
-> +		if (floor < 2)
-> +			floor = 2;
-> +		nr = (p->latency_nice * sd->span_weight) / LATENCY_NICE_MAX;
-
-I see you defined LATENCY_NICE_MAX = 100,
-So is the value 100 an experimental value?
-I was hoping to be something in the power of 2 resulting in just ">>>" rather than
-the heavy division operation.
-
-> +		if (nr < floor)
-> +			nr = floor;
->  	}
-> 
->  	time = local_clock();
-> 
-
+Cheers,
+Miguel
