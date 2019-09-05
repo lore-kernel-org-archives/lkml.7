@@ -2,116 +2,151 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9983C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078F1C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBE1F2145D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:56:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jMQkaaRR"
+	by mail.kernel.org (Postfix) with ESMTP id D81102339D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbfIEI45 (ORCPT
+        id S1732671AbfIEI6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:56:57 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40291 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfIEI45 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:56:57 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b80so1157969oii.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IaZJ01VOJ44Z6Y9Qs3oUQiygt2Sy6fVI1ZsDthTYEac=;
-        b=jMQkaaRRxSCpAfa0GGbTxN8sdW3BCz1aSdR6b+EoXx/Ue0KZCOzdiDMjAbfR7+eunv
-         kx6XBxSzt7twCIJybPMD0h4eaU9yCitmULNsKZtsM1dUaTLn0IRFZwSO/spnqaAIn/WK
-         smp1BnN01ssm7CCtza47yOcSEOeIXZ1ZULlSTfRZOEsNqdrJ7B42GvgGl8dAkW5Gxttk
-         u9esLSmQOOsONHcK/RUZ141vgbuInB0YtTAbMwB/kfkNXGOaqNn3qNIWIPfg6k2EvkkU
-         XJaDvfUoQwhTXwEmZVrsd8airEaBOdhwLNIkte996VruPPflokhLzMWXcXhvYQ73j8Px
-         FatA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IaZJ01VOJ44Z6Y9Qs3oUQiygt2Sy6fVI1ZsDthTYEac=;
-        b=oGrDXcSpOTs/QH1kp+44p4djkferyHWDDeKpxhMAjNatEnfvwqSk4vVRXXKWVI0lSi
-         hHqsKA3ybOumhbMciklM+kVYerHiabItEwHSTkuYXYF8+o7H/5YEnzMoIVxX45zGfefy
-         cGSyetwEibRjXWtVla2ksVuUOqvtz5pmw6qGUg834DmE18uQxgQgj1ZxyK3xgFL89Oxl
-         6uz2Wa7+dIfRjnSeeHmk4XpnUR4aJHpGFfw6/luh7jlN7mqxLEvfHs7Om4vKfceV8KZu
-         ZHE5b/pUK/vpa9vt9D28Vo9tPrGtKCE3Dy2sdVlBAiVmeDkt0boYJe7+RVzc6M3nA0KC
-         Rqag==
-X-Gm-Message-State: APjAAAVlLqjAu8QmrwsdS0mWNns2fNxP+FxMZiuMny1vgSv9m9A7PEkn
-        W6dv+8rwcezhLlFuQtj8Zy+721R4/z6wz503m5h+RQ==
-X-Google-Smtp-Source: APXvYqwoy7MTqB4H3mDdtS3aRDNvVJhhOoQARzpS77k98EfHG9CbyovynxJ3OmaOX9n7dO2thM4lg6LAw11dh4CzMMw=
-X-Received: by 2002:aca:f54d:: with SMTP id t74mr1740404oih.170.1567673816212;
- Thu, 05 Sep 2019 01:56:56 -0700 (PDT)
+        Thu, 5 Sep 2019 04:58:01 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6682 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726231AbfIEI6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:58:00 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DE6BF6DC045F2DE23E0F;
+        Thu,  5 Sep 2019 16:57:56 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 16:57:47 +0800
+Subject: Re: [PATCH RFC] driver core: ensure a device has valid node id in
+ device_add()
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <peterz@infradead.org>, <mingo@kernel.org>, <mhocko@kernel.org>,
+        <linuxarm@huawei.com>
+References: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
+ <20190905055727.GB23826@kroah.com>
+ <e5905af2-5a8d-7b00-d2a6-a961f3eee120@huawei.com>
+ <20190905073334.GA29933@kroah.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <d282774f-29fb-cffb-d606-ab678f792565@huawei.com>
+Date:   Thu, 5 Sep 2019 16:57:00 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-References: <20190904180736.29009-1-xypron.glpk@gmx.de> <86r24vrwyh.wl-maz@kernel.org>
- <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com> <86mufjrup7.wl-maz@kernel.org>
-In-Reply-To: <86mufjrup7.wl-maz@kernel.org>
-From:   Peter Maydell <peter.maydell@linaro.org>
-Date:   Thu, 5 Sep 2019 09:56:44 +0100
-Message-ID: <CAFEAcA9qkqkOTqSVrhTpt-NkZSNXomSBNiWo_D6Kr=QKYRRf=w@mail.gmail.com>
-Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        =?UTF-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190905073334.GA29933@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 at 09:52, Marc Zyngier <maz@kernel.org> wrote:
->
-> On Thu, 05 Sep 2019 09:16:54 +0100,
-> Peter Maydell <peter.maydell@linaro.org> wrote:
-> > This is true, but the problem is that barfing out to userspace
-> > makes it harder to debug the guest because it means that
-> > the VM is immediately destroyed, whereas AIUI if we
-> > inject some kind of exception then (assuming you're set up
-> > to do kernel-debug via gdbstub) you can actually examine
-> > the offending guest code with a debugger because at least
-> > your VM is still around to inspect...
->
-> To Christoffer's point, I find the benefit a bit dubious. Yes, you get
-> an exception, but the instruction that caused it may be completely
-> legal (store with post-increment, for example), leading to an even
-> more puzzled developer (that exception should never have been
-> delivered the first place).
+On 2019/9/5 15:33, Greg KH wrote:
+> On Thu, Sep 05, 2019 at 02:48:24PM +0800, Yunsheng Lin wrote:
+>> On 2019/9/5 13:57, Greg KH wrote:
+>>> On Thu, Sep 05, 2019 at 09:33:50AM +0800, Yunsheng Lin wrote:
+>>>> Currently a device does not belong to any of the numa nodes
+>>>> (dev->numa_node is NUMA_NO_NODE) when the FW does not provide
+>>>> the node id and the device has not no parent device.
+>>>>
+>>>> According to discussion in [1]:
+>>>> Even if a device's numa node is not set by fw, the device
+>>>> really does belong to a node.
+>>>>
+>>>> This patch sets the device node to node 0 in device_add() if
+>>>> the fw has not specified the node id and it either has no
+>>>> parent device, or the parent device also does not have a valid
+>>>> node id.
+>>>>
+>>>> There may be explicit handling out there relying on NUMA_NO_NODE,
+>>>> like in nvme_probe().
+>>>>
+>>>> [1] https://lkml.org/lkml/2019/9/2/466
+>>>>
+>>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>>> ---
+>>>>  drivers/base/core.c  | 17 ++++++++++++++---
+>>>>  include/linux/numa.h |  2 ++
+>>>>  2 files changed, 16 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>>>> index 1669d41..466b8ff 100644
+>>>> --- a/drivers/base/core.c
+>>>> +++ b/drivers/base/core.c
+>>>> @@ -2107,9 +2107,20 @@ int device_add(struct device *dev)
+>>>>  	if (kobj)
+>>>>  		dev->kobj.parent = kobj;
+>>>>  
+>>>> -	/* use parent numa_node */
+>>>> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+>>>> -		set_dev_node(dev, dev_to_node(parent));
+>>>> +	/* use parent numa_node or default node 0 */
+>>>> +	if (!numa_node_valid(dev_to_node(dev))) {
+>>>> +		int nid = parent ? dev_to_node(parent) : NUMA_NO_NODE;
+>>>
+>>> Can you expand this to be a "real" if statement please?
+>>
+>> Sure. May I ask why "? :" is not appropriate here?
+> 
+> Because it is a pain to read, just spell it out and make it obvious what
+> is happening.  You write code for developers first, and the compiler
+> second, and in this case, either way is identical to the compiler.
+> 
+>>>> +
+>>>> +		if (numa_node_valid(nid)) {
+>>>> +			set_dev_node(dev, nid);
+>>>> +		} else {
+>>>> +			if (nr_node_ids > 1U)
+>>>> +				pr_err("device: '%s': has invalid NUMA node(%d)\n",
+>>>> +				       dev_name(dev), dev_to_node(dev));
+>>>
+>>> dev_err() will show you the exact device properly, instead of having to
+>>> rely on dev_name().
+>>>
+>>> And what is a user to do if this message happens?  How do they fix this?
+>>> If they can not, what good is this error message?
+>>
+>> If user know about their system's topology well enough and node 0
+>> is not the nearest node to the device, maybe user can readjust that by
+>> writing the nearest node to /sys/class/pci_bus/XXXX/device/numa_node,
+>> if not, then maybe user need to contact the vendor for info or updates.
+>>
+>> Maybe print error message as below:
+>>
+>> dev_err(dev, FW_BUG "has invalid NUMA node(%d). Readjust it by writing to sysfs numa_node or contact your vendor for updates.\n",
+>> 	dev_to_node(dev));
+> 
+> FW_BUG?
 
-Right, but the combination of "host kernel prints a message
-about an unsupported load/store insn" and "within-guest debug
-dump/stack trace/etc" is much more useful than just having
-"host kernel prints message" and "QEMU exits"; and it requires
-about 3 lines of code change...
+The sysfs numa_node writing interface does print FW_BUG error.
+Maybe it is a way of telling the user to contact the vendors, which
+pushing the vendors to update the FW.
 
-> I'm far more in favour of dumping the state of the access in the run
-> structure (much like we do for a MMIO access) and let userspace do
-> something about it (such as dumping information on the console or
-> breaking). It could even inject an exception *if* the user has asked
-> for it.
+If FW_BUG is too much, there is FW_WARN or FW_INFO.
 
-...whereas this requires agreement on a kernel-userspace API,
-larger changes in the kernel, somebody to implement the userspace
-side of things, and the user to update both the kernel and QEMU.
-It's hard for me to see that the benefit here over the 3-line
-approach really outweighs the extra effort needed. In practice
-saying "we should do this" is saying "we're going to do nothing",
-based on the historical record.
+> 
+> Anyway, if you make this change, how many machines start reporting this
+> error?  You should also say something like "default node of 0 now
+> selected" or something like that, right?
 
-thanks
--- PMM
+Yes.
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> .
+> 
+
