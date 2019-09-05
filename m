@@ -2,156 +2,108 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B74CC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E4A3C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BC221743
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VjwV1nM5"
+	by mail.kernel.org (Postfix) with ESMTP id F3AFB20820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:51:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732821AbfIEIsz (ORCPT
+        id S1732580AbfIEIvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:48:55 -0400
-Received: from mout.gmx.net ([212.227.17.21]:36101 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731215AbfIEIsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:48:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1567673320;
-        bh=shlqMDrOPL2mFQcbMrl3Dmhn8G7cJYEwFhacKBjb9uk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=VjwV1nM5HPPWdBdmj0Bw9BD8tUUlZ3FOcTPMicBGoDUUnhHz7zrG+LwuLnUP0e/gU
-         dOeF2C6L3cHdCPF6BHsXylSaC6O1JAdQGFE6BO9GRTEQ5jCFZTHe/WLXaENUJ4C+IP
-         vduDGfY29gfawgXia3MkfAxYxaW3xgdvtTLTWTRM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.123.51] ([84.118.159.3]) by mail.gmx.com (mrgmx102
- [212.227.17.168]) with ESMTPSA (Nemesis) id 0MMpYB-1i5Wzw3GSl-008ZJA; Thu, 05
- Sep 2019 10:48:39 +0200
-Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be
- decoded
-To:     Peter Maydell <peter.maydell@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Suzuki K Pouloze <suzuki.poulose@arm.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        =?UTF-8?Q?Daniel_P_=2e_Berrang=c3=a9?= <berrange@redhat.com>,
-        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
-        kvmarm@lists.cs.columbia.edu,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190904180736.29009-1-xypron.glpk@gmx.de>
- <86r24vrwyh.wl-maz@kernel.org>
- <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-Message-ID: <a65029ac-a10d-35cb-97a1-70a786db9ddf@gmx.de>
-Date:   Thu, 5 Sep 2019 10:48:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 04:51:46 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38640 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfIEIvp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 04:51:45 -0400
+Received: by mail-qt1-f196.google.com with SMTP id b2so1876911qtq.5;
+        Thu, 05 Sep 2019 01:51:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p20Q0N9T++jYTpnThB0y4fzC3Jgac/dThX4GFqhd8fQ=;
+        b=Lj+4bSwrNI0pmF9vXl4R3SrdYAxXTX9q7/dwYIyhwIMjGgqml7TRqcrEzg5hkfGtKY
+         R2l3ez/ZOs3aoTBd1fnIRkC+w4wiGCgTj4aJzgfcRBuQUBL+Tv7bEF+3233XgHxj1rRl
+         VfsSBByoZZTeTtW4CRvRxpNnj8N+BbNw+4ve3S5em5ceAn0A+5lQRscQMvJYETFYAkD+
+         6W6h89izBN1/2zHZMYq8dDjG9Rqd/hDTEB94RO2DJ08h0be1Od36Flkde1ZGjVLj0klC
+         84ygyJPyCpWHJmLHzjxXC7l1C2GMP15nSueTL0OHt+DawKOoK8WGdViGtXaYzzfhO/4k
+         dokA==
+X-Gm-Message-State: APjAAAXy88dxdP7xdEeUVtwgRPirb/+4z6k1vfjeztIQbWuTw6yiWgV8
+        QY6knHk5zx5kQH0NUrF0FRYS+nfA2k+25B+A7+s=
+X-Google-Smtp-Source: APXvYqysJScfhnYVEnH4ACpboWpgvQmZTJNertVO4/MovZFR9io6yC6xAJj83VWXiaXtBpeGMc8eZXlYyda0XavhhdM=
+X-Received: by 2002:ac8:5306:: with SMTP id t6mr2345068qtn.204.1567673504645;
+ Thu, 05 Sep 2019 01:51:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:KxYUVwdwyV1sgcHyPJ9Y1C3193d8A9orrGeFRwziwaWw1v+3X7Y
- O5NZp0DxxFeMqvZaV1/ZSIEBlpH0lCwoSIMdq5vrOPkMIpFNv2P8t1eqsWMyDavj6V46I7z
- GaUVCnRKvOtVMmaNJ7uSBLld0LnIDj0ax5WeS1wc7/GBosx6Aq6qm1/ha9OluHZq3GOZ0SB
- jtuxt32IhbCU1Du6eZ2ww==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zbIUV7C6j3s=:lOzWjIAKXP73Hcz0gQnMG+
- PNSuwte4nimIq7L1qzyDL4veP4IPcMkxTz/I0DyBEE+QojSiD6gYTMPFrgvzGkOhP+J9AA0KM
- 39OW2AQn0sLZV7RtAiyCxo7fs+YQjVv9V0sP6zsEmMd2TkZOSk6/Q1IRGIecWIy9sA8FTB/mE
- rLdpkApY5zvBda8z+MZGCwpN/a+uaTwmhiONGlUTBqcyyBbQBBM0RnM8rq60HPkXVoHQB5K7X
- gUzfJjiDlo8pp6qbotmMlpYChLCtcYBdCzAChFsrftHaedexzPRVWOSIRKnFe003ig2APn62G
- YVifG4NqQkmtuhR5mWmzysmtwYKvzQoa9pT0Cnj75iC2jbpSumfuxLANat0tO0LtmKsThbeXC
- kQ/BypnVguqmZOs77gh4E17Inw6Z2f/6bOfUUYTrcEHMasl6Qh4OEbfxJhGj09yyoeCFupzJD
- om7AqNFhmceqxOYRDTZQD2OwbfHC2rAGyRyrNG6Ero8hWVVsv/2HqloW5VXgghXDw9NeK26fo
- JqMDh0ygkyAnCTZ67CZa0ROxzM0rFj7kbPogjQ+Ha1OaVTpqNHdIEKhM4QfQNx6RMGrpOHAhL
- lt9srD9U2VXGIePTlU9USGP1B7uBZS3xE8sxykjlZtbrRn24qc2YQfPM9OP/++hogYj88Bxen
- IKX69orI2ng3no6Zw0a8dfbf8KFMEhEqUOolgT4T/tBvpNlKu9giMnlqM6VTY3I6R+8JYMZ4U
- D6e+8M6JQQamt/7bujo1UVvb4pA7RUn7yyysD3BeteEtTCrzvsEmcD2NiRpcSzW3Xa6RQzzuH
- w2lgV0oBCj6tbQgvPcpdq17PPBS3QLcSELQ7YSCgs4kHPW6y9e/DVhH0B+pfsp6jhmcrLER32
- W7Wdga5VmXMijVgR64OkBPMZRGrO+QBJHk4hmPjgDfbTc6qppRp2xcEBBuxIKdos45dS7FWxw
- Vu4vhcPRaE7nhEuW4+mbKKn1+EPXK/3Mrue1e03HnZY2kqC1rNmVxJKFG2lFLwoNMxX8rTanv
- 0AwymqKXVItoqqHIU1o4haYjA4gwGouI6I/iqnvw6MbCBDa/Noanb922sHCZQmiNCctQhxXnG
- N7rwYxkh/8mKDuCTA4oY0+/bBKlNsTo2P8i4o6aqQ/iSQbQnk3Ll6L/7uWRukS8e5N4Z92T6G
- dghUzZTzeNknRCurHvlvOD3ew5sRt7N860zt9vjHGP9oZ5FrvqrcusOS8hZ6q513cnza+1ZDW
- JROa5SVVQse+umGt0
+References: <20190905080835.1376-1-james.tai@realtek.com>
+In-Reply-To: <20190905080835.1376-1-james.tai@realtek.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 5 Sep 2019 10:51:28 +0200
+Message-ID: <CAK8P3a3L7mzR+FUMgG75_hrp4HQm4vJR3hsUO_BkQp_247OLsA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: realtek: Add support for Realtek RTD16XX
+ evaluation board
+To:     jamestai.sky@gmail.com
+Cc:     DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        CY_Huang <cy.huang@realtek.com>,
+        Phinex Hung <phinex@realtek.com>,
+        "james.tai" <james.tai@realtek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/5/19 10:16 AM, Peter Maydell wrote:
-> On Thu, 5 Sep 2019 at 09:04, Marc Zyngier <maz@kernel.org> wrote:
->> How can you tell that the access would fault? You have no idea at that
->> stage (the kernel doesn't know about the MMIO ranges that userspace
->> handles). All you know is that you're faced with a memory access that
->> you cannot emulate in the kernel. Injecting a data abort at that stage
->> is not something that the architecture allows.
->
-> To be fair, locking up the whole CPU (which is effectively
-> what the kvm_err/ENOSYS is going to do to the VM) isn't
-> something the architecture allows either :-)
->
->> Of course, the best thing would be to actually fix the guest so that
->> it doesn't use non-emulatable MMIO accesses. In general, that the sign
->> of a bug in low-level accessors.
->
-> This is true, but the problem is that barfing out to userspace
-> makes it harder to debug the guest because it means that
-> the VM is immediately destroyed, whereas AIUI if we
-> inject some kind of exception then (assuming you're set up
-> to do kernel-debug via gdbstub) you can actually examine
-> the offending guest code with a debugger because at least
-> your VM is still around to inspect...
+On Thu, Sep 5, 2019 at 10:10 AM <jamestai.sky@gmail.com> wrote:
 
-Stopping the CPU and debugging is not what I am interested in. I want
-the QEMU guest to be able to react to an incorrect memory access.
+> +
+> +/ {
+> +       model= "Realtek Mjolnir Evaluation Board";
+> +       model_hex= <0x00000653>;
 
-Imagine Apollo 11's computer not restarting when hitting an exception.
-They would never have reached the moon. - I think allowing an emulation
-guest to react to an exception, e.g. by resetting, is a necessity.
+The 'mode_hex' property is rather unusual, please drop that for now.
 
-In my case U-Boot as a guest creates an output like the one below when a
-data abort occurs:
+> +       chosen {
+> +               bootargs = "console=ttyS0,115200 earlycon";
+> +       };
+> +
+> +       memory@0 {
+> +               device_type = "memory";
+> +               reg = <0x0 0x0 0x0 0x80000000>;
+> +       };
+> +
+> +       uart0: serial0@98007800 {
+> +               compatible = "snps,dw-apb-uart";
+> +               reg = <0x0 0x98007800 0x0 0x400>,
+> +                       <0x0 0x98007000 0x0 0x100>;
+> +               reg-shift = <2>;
+> +               reg-io-width = <4>;
+> +               interrupts = <0 68 4>;
+> +               clock-frequency = <27000000>;
+> +               status = "okay";
+> +       };
 
-"Synchronous Abort" handler, esr 0x02000000
-elr: fffffffffdeac19c lr : fffffffffdeac19c (reloc)
-elr: 000000007ddd719c lr : 000000007ddd719c
-x0 : 0000000000000000 x1 : 000000007ffbc000
-x2 : 000000000000000a x3 : 000000007ffbcd80
-x4 : 0000000000002800 x5 : 000000007ffbcdb0
-x6 : 0000000000000001 x7 : 000000007eef8b80
-x8 : 000000000000003f x9 : 0000000000000004
-x10: 0000000000000001 x11: 000000000000000d
-x12: 0000000000000006 x13: 000000000001869f
-x14: 0000000047f00000 x15: 0000000000000000
-x16: 000000007ff5b194 x17: 0000000000000000
-x18: 0000000000000000 x19: 000000007ffbcd30
-x20: 0000000000000000 x21: 000000007ffeb000
-x22: 0000000000000009 x23: 000000007eef5cf0
-x24: 0000000000000000 x25: 000000007ffa7806
-x26: 000000007ffa7834 x27: 0000000000000024
-x28: 000000007dddd040 x29: 000000007ede9990
+This looks like an on-chip uart. Please move that into rtd16xx.dtsi
+instead, and just mark it as 'status="disabled"' there if there are
+multiple uarts (and add the other ones as well), then enable
+it for the board here.
 
-UEFI image [0x000000007ddd7000:0x000000007ddd749f] pc=3D0x19c '/bug.efi'
-Resetting CPU ...
+There should also be an 'aliases'. You normally also want to add
 
-With this information I see that the problem occurred at 0x019C from the
-start of the loaded binary bug.efi. Next thing is to look at the map
-file of bug.efi to find out in which instruction the problem occurred.
+aliases {
+        serial0 = &uart0;
+};
 
-After providing the dump U-Boot continues to reset the system.
+chosen {
+       stdout-path= "serial0:115200n8"
+};
 
-When U-Boot is running the EDK II SCT (a test suite for UEFI firmware),
-SCT will log that a restart occurred (indicating that a test failed) and
-continue to run the next test.
+in the board file to make earlycon work right.
 
-Best regards
-
-Heinrich
+      Arnd
