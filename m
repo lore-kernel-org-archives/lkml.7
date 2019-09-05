@@ -2,100 +2,100 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D445C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C890EC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0150021848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:16:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F7AA21743
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 08:17:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwqSn6Hd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OuTz5wvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732494AbfIEIQl (ORCPT
+        id S1731881AbfIEIRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 04:16:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40335 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730849AbfIEIQk (ORCPT
+        Thu, 5 Sep 2019 04:17:06 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46958 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730937AbfIEIRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 04:16:40 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so988755pgj.7;
-        Thu, 05 Sep 2019 01:16:40 -0700 (PDT)
+        Thu, 5 Sep 2019 04:17:06 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g19so1260252otg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 01:17:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=8sJIwjC+uTMQQ+j3BpVe6IaoEgx2I750V29nK1aOgcw=;
-        b=EwqSn6HdrjkflUwwwTPz+oNB7PSPSe1vzzqd8PzgpQ/x4PVHPQhQTuJmL1GtfuNYCG
-         WG9pEel7UOok2H1UdGT8TNmDuS+4WPW0U5f3Udewev1VWDGKB70vF/N1tMk6VcDCiFLE
-         e5mnQaIVqBmWxrH9zL2Jd1kSOzbKTK9oO4sfABX7VcZ2KTXFhKZll11ir2LHIW2aKr+q
-         mOpjOA2gVj8KLBOIUq4S4Q5/m6Lgu9pRAPq0NXrsnQf7yGvOiRsI7x22zpTFxuOTdQ8O
-         t4sEB6JUmZjJ3rzT7E1ZqL1CG6EqADbK5eM7uJDe64PgDmWEQ9nZFI/2EXJgiuDLU4mc
-         nt5g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0xPzSESc4AZSzOz8iuenGzI1AlT1OxyaOVK/bXB62NU=;
+        b=OuTz5wvUQ35QYkpSKKPCxxQaaU1HK9r2e88MGLbbYqoqxReti2Duuk8kuS0KYSC1Ip
+         pdHLMs7zhO419UJhHXlo+5eiLjxOlJzvBJvCkJ3krsKonpbm0VX4vie2pR8FyWB7NvC8
+         xwNADNZ++jqxlZ73zV3Fv4RHQ1CtN/gCiJYwY6zC+I9oUFbUzixbhoF1ofdOq8nGsV/x
+         zsdighpHoFIa+hFO9Gfuw4SI4cNG/br0SpICPLmLwP7JT0b8Rw1es+25pX61XTWttPNd
+         pNvFwcXfQACkPtI8sYYB2mxINaHDTZiPwLrnEMjPnV1KdzshSBt/8xJLmUURA816hh65
+         xaDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8sJIwjC+uTMQQ+j3BpVe6IaoEgx2I750V29nK1aOgcw=;
-        b=GB/srr46ucUzcx2ZCsHqg4LDRm2TuD20Jt8boAUkhFo1ZB0M73X3/KWxQjm2kOnOGN
-         JmJV90yAuCghl0yZFCwoCuyrtjv15sRYs9Iw32dx8Dj/PizHaI2OeM1ZkhG49GZS9XTx
-         c8Lhv1kt+/E/kvRvMeq0vIPgRWLTr1TfwDEFxLmGdbrnDoV3RLYplKGFFOmo1WZbDGu+
-         RjpfJLCFK8BODlb1rSczVhCYDw2uLvkvXbu7joFk9ZAvTc1RUKuX8nkaSRsfH9JGFzt1
-         E7pBm996hO4LOn79cnQdmzNz9YuYq1EMSfa0TxTqKX5DCCOnunesl+SCgmPYuYimD7pW
-         hvMA==
-X-Gm-Message-State: APjAAAWM6IO2S9BmUyYPeKMxk4kcCgPYvIhrQvv2CZwRwhf+1ZULqJyk
-        WI6HRs3cleF266YSCvTwFV+iKIzj
-X-Google-Smtp-Source: APXvYqyymixaC/4ZmoAYVHw421NBXUFa1C+1zeteo7JioReZqYjJQ9yGnohHAF0A+fKrMjxJZR5TfQ==
-X-Received: by 2002:aa7:8dc9:: with SMTP id j9mr2305645pfr.233.1567671400065;
-        Thu, 05 Sep 2019 01:16:40 -0700 (PDT)
-Received: from localhost.localdomain ([49.216.8.243])
-        by smtp.gmail.com with ESMTPSA id g26sm1621121pfi.103.2019.09.05.01.16.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 01:16:39 -0700 (PDT)
-From:   jamestai.sky@gmail.com
-X-Google-Original-From: james.tai@realtek.com
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sugaya Taichi <sugaya.taichi@socionext.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Olof Johansson <olof@lixom.net>,
-        CY_Huang <cy.huang@realtek.com>,
-        Phinex Hung <phinex@realtek.com>,
-        "james.tai" <james.tai@realtek.com>
-Subject: [PATCH] dt-bindings: cpu: Add a support cpu type for cortex-a55
-Date:   Thu,  5 Sep 2019 16:14:35 +0800
-Message-Id: <20190905081435.1492-1-james.tai@realtek.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0xPzSESc4AZSzOz8iuenGzI1AlT1OxyaOVK/bXB62NU=;
+        b=XDIm8UwLNyHxhlTc7uvTfWNWAkL11RxpARXh4f+miUc+NoPWc2ZoLfLqetz4uxJMJE
+         dwz9KCBq07uWB0X6wUZwnqDFnApOD+9y/ccjqALCKsTm7lnhaPxkFv1d/V510w5Nexk3
+         O/y/tmlswHx+4zgrjUf70iPhVgvzpxjuARXhNMBKYrEiepv7R2KCeOpYmbgrZVH3b0Nm
+         ihTITPhwIPQPe0KYyVeLj5gkvFBEC4mWFDG5C00+yD20++aTnE5qQCtN87AqnSSro8zZ
+         PddLlA2QDo/QfxXHMsBeF4MH/Eh5rvrrEs7H5xDlilDbQs7C6BFaDsPj9FfUWnAvYrNY
+         F1CQ==
+X-Gm-Message-State: APjAAAVm/QPJGb+UaL+NJVtpz0lEYqoYmVN/38GtRkr7gHBQNfDJOW2a
+        i+5wlNp8GEcrQV3pM3/DLYSZvgsxuf2c10W2JQz/lg==
+X-Google-Smtp-Source: APXvYqy24rjXe/FVSgFiU9SxJ4vZK2hJu//H06XcbxMiz2ueKtSmAR0GsP61bsSotW7CRw5je/6qibK/HvRFMTwLvZ0=
+X-Received: by 2002:a9d:5e11:: with SMTP id d17mr1498113oti.135.1567671425605;
+ Thu, 05 Sep 2019 01:17:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190904180736.29009-1-xypron.glpk@gmx.de> <86r24vrwyh.wl-maz@kernel.org>
+In-Reply-To: <86r24vrwyh.wl-maz@kernel.org>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Thu, 5 Sep 2019 09:16:54 +0100
+Message-ID: <CAFEAcA-mc6cLmRGdGNOBR0PC1f_VBjvTdAL6xYtKjApx3NoPgQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] KVM: inject data abort if instruction cannot be decoded
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        =?UTF-8?Q?Daniel_P_=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        kvmarm@lists.cs.columbia.edu,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "james.tai" <james.tai@realtek.com>
+On Thu, 5 Sep 2019 at 09:04, Marc Zyngier <maz@kernel.org> wrote:
+> How can you tell that the access would fault? You have no idea at that
+> stage (the kernel doesn't know about the MMIO ranges that userspace
+> handles). All you know is that you're faced with a memory access that
+> you cannot emulate in the kernel. Injecting a data abort at that stage
+> is not something that the architecture allows.
 
-Add arm cpu type cortex-a55.
+To be fair, locking up the whole CPU (which is effectively
+what the kvm_err/ENOSYS is going to do to the VM) isn't
+something the architecture allows either :-)
 
-Signed-off-by: james.tai <james.tai@realtek.com>
----
- Documentation/devicetree/bindings/arm/cpus.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> Of course, the best thing would be to actually fix the guest so that
+> it doesn't use non-emulatable MMIO accesses. In general, that the sign
+> of a bug in low-level accessors.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.yaml b/Documentation/devicetree/bindings/arm/cpus.yaml
-index aa40b074b864..1fc7c8effd25 100644
---- a/Documentation/devicetree/bindings/arm/cpus.yaml
-+++ b/Documentation/devicetree/bindings/arm/cpus.yaml
-@@ -124,6 +124,7 @@ properties:
-       - arm,cortex-a15
-       - arm,cortex-a17
-       - arm,cortex-a53
-+      - arm,cortex-a55
-       - arm,cortex-a57
-       - arm,cortex-a72
-       - arm,cortex-a73
--- 
-2.17.1
+This is true, but the problem is that barfing out to userspace
+makes it harder to debug the guest because it means that
+the VM is immediately destroyed, whereas AIUI if we
+inject some kind of exception then (assuming you're set up
+to do kernel-debug via gdbstub) you can actually examine
+the offending guest code with a debugger because at least
+your VM is still around to inspect...
 
+thanks
+-- PMM
