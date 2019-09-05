@@ -2,116 +2,129 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6C2C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:46:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA233C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E9320820
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0009206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="iivXWVaf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MBtV92rB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389911AbfIEOqt (ORCPT
+        id S2389927AbfIEOrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:46:49 -0400
-Received: from forward100j.mail.yandex.net ([5.45.198.240]:45321 "EHLO
-        forward100j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725290AbfIEOqt (ORCPT
+        Thu, 5 Sep 2019 10:47:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39791 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389424AbfIEOrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:46:49 -0400
-Received: from mxback11o.mail.yandex.net (mxback11o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::62])
-        by forward100j.mail.yandex.net (Yandex) with ESMTP id A96CA50E0CE4;
-        Thu,  5 Sep 2019 17:46:47 +0300 (MSK)
-Received: from smtp2o.mail.yandex.net (smtp2o.mail.yandex.net [2a02:6b8:0:1a2d::26])
-        by mxback11o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id PdAROH777Q-klNOM4B3;
-        Thu, 05 Sep 2019 17:46:47 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1567694807;
-        bh=/bf2zDpeim9k1iAfS6rVozkZQSqGbfQAnlGiesOxd0U=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=iivXWVafXX1+L7CSwuNZYfMXuT/sOLNc8+CIKMvqgWQ0ZVEfu7ZGHvGoqGyFiqhlu
-         Y6nrrSMV/SyrmKu3y38Q7hV6lBybOKqt3MPp6Tn8KFzcDNyazrCQtF9pqNe9yZLfPS
-         uqOu93VP55gPNa+AIvSZ6KsrBjWyfvA3QhX6ckbE=
-Authentication-Results: mxback11o.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp2o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id zkoybIaMjG-kTxWTVZr;
-        Thu, 05 Sep 2019 17:46:46 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
-        jason@lakedaemon.net, maz@kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.co,
-        devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 12/19] dt-bindings: mips: Add loongson boards
-Date:   Thu,  5 Sep 2019 22:43:09 +0800
-Message-Id: <20190905144316.12527-13-jiaxun.yang@flygoat.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
-References: <20190905144316.12527-1-jiaxun.yang@flygoat.com>
+        Thu, 5 Sep 2019 10:47:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q12so3405262wmj.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 07:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zXRGEZPwLtQ5UinxPXKU5BfJwpOCdWN4x79WEBjhqjE=;
+        b=MBtV92rBa45246haRPT8qJPcyhwAnCzGKWvtch+yphLIQemMY/gh8rghP/zBtzfhZM
+         cpNvyMRnAG5QKZHMWcZ9nGFEPxpgrPHlGg7/XLUNNd4u6wM+0FQ2prtdPxZeCyRUYgG/
+         46UJM/NqDtwXc0nJ0q6SAb9xSMl58YKwCFKDbHGX/tVevKx8RK6diHCHAXeOi7MjI2lk
+         PvYvOQTx7+W8Qrmx13NqWuMQHWS6psl1gN95m/d/GLgjEpPk3HC1Stf1IKA/Ps6h4Sa/
+         B5GatoBEuuaROLE0BQKgN++QnG4MC66qo9gYpsjhhVJchmtowGwhpI1s78bjOcQhi51y
+         c6hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zXRGEZPwLtQ5UinxPXKU5BfJwpOCdWN4x79WEBjhqjE=;
+        b=CF/FyemcTaRFV/Xuaa/mMH46/YRIrTDm9JOA3Tf9sL0cXcnqQf/Y81kA9QBaQs+7R0
+         K6AdP2x5uay9TLuYVSlomxl+8j/q9bjN/pBp/We5ZH4+r5H3LnZJGX9qXHWlJDnqsHQg
+         0DId+VqU3swaC5LTzzDPqp9O/gpDhBKIQXCGqYDZ1StRf/mtAIndn/qUrh7YSBUEQljI
+         ngqj5ZRo1wiD4O4+Am6St33HnN4z8C6aWtIKKWZsB2wvYmKBOEq8InWcYXTNUs6PeZl+
+         4Vhj6soBGpw07974Eewrx+eH1yXiRFCf55Y5kuvz6yJG9Da187ZOMAIVc5W5kOrAP+a6
+         g3wQ==
+X-Gm-Message-State: APjAAAUcwhJXzruo7s+aF+4Svatu9IQTTsNSMXQdo4YhqI0lV5wX4ain
+        Q50NjGr8BBLlFSwglW0nHXW3qg==
+X-Google-Smtp-Source: APXvYqxrOWP3uRwxr+KtT9+/rUjsTzf8G+3Pk75+GnyZlEo2O+xCfU34WKNLUgQbN77l6Mtdb/VdMA==
+X-Received: by 2002:a1c:ef13:: with SMTP id n19mr3424489wmh.48.1567694819611;
+        Thu, 05 Sep 2019 07:46:59 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id y3sm3568846wra.88.2019.09.05.07.46.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 07:46:58 -0700 (PDT)
+Date:   Thu, 5 Sep 2019 15:46:55 +0100
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        maco@android.com, sspatil@google.com,
+        Will Deacon <will@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-modules@vger.kernel.org,
+        linux-usb <linux-usb@vger.kernel.org>,
+        usb-storage@lists.one-eyed-alien.net,
+        linux-watchdog@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH v4 08/12] scripts: Coccinelle script for namespace
+ dependencies.
+Message-ID: <20190905144655.GB136369@google.com>
+References: <20180716122125.175792-1-maco@android.com>
+ <20190903150638.242049-1-maennich@google.com>
+ <20190903150638.242049-9-maennich@google.com>
+ <CAK7LNARgxoXAABNXhO-LzxAm8rh6NJqAm9-iMo2=t2c_6_KXtQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARgxoXAABNXhO-LzxAm8rh6NJqAm9-iMo2=t2c_6_KXtQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare for later dts.
+On Wed, Sep 04, 2019 at 06:53:25PM +0900, Masahiro Yamada wrote:
+>On Wed, Sep 4, 2019 at 12:07 AM Matthias Maennich <maennich@google.com> wrote:
+>>
+>> A script that uses the '<module>.ns_deps' files generated by modpost to
+>> automatically add the required symbol namespace dependencies to each
+>> module.
+>>
+>> Usage:
+>> 1) Move some symbols to a namespace with EXPORT_SYMBOL_NS() or define
+>>    DEFAULT_SYMBOL_NAMESPACE
+>> 2) Run 'make' (or 'make modules') and get warnings about modules not
+>>    importing that namespace.
+>> 3) Run 'make nsdeps' to automatically add required import statements
+>>    to said modules.
+>>
+>> This makes it easer for subsystem maintainers to introduce and maintain
+>> symbol namespaces into their codebase.
+>>
+>> Co-developed-by: Martijn Coenen <maco@android.com>
+>> Signed-off-by: Martijn Coenen <maco@android.com>
+>> Acked-by: Julia Lawall <julia.lawall@lip6.fr>
+>> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Matthias Maennich <maennich@google.com>
+>
+>
+>Without any correct dependency,
+>this does not work.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../bindings/mips/loongson/devices.yaml       | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices.yaml
+You are right, 'nsdeps' needs to depend on 'modules' to make that work.
+I will fix that in the next version.
 
-diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-new file mode 100644
-index 000000000000..0665f0f7ec45
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-@@ -0,0 +1,39 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson based Platforms Device Tree Bindings
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+description: |
-+  Devices with a Loongson CPU shall have the following properties.
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+
-+      - description: Loongson 3A1000 + RS780E
-+        items:
-+          - const: loongson,ls3a1000-780e
-+
-+      - description: Loongson 3A2000 + RS780E
-+        items:
-+          - const: loongson,ls3a2000-780e
-+
-+      - description: Loongson 3A3000 + RS780E
-+        items:
-+          - const: loongson,ls3a3000-780e
-+
-+      - description: Loongson 3A3000 + 7A
-+        items:
-+          - const: loongson,ls3a3000-7a
-+
-+      - description: Loongson 3B1000/1500 + RS780E 2Way
-+        items:
-+          - const: loongson,ls3b1x00-780e
-+...
--- 
-2.22.0
-
+>$ make clean; make nsdeps
+>cat: modules.order: No such file or directory
+>cat: ./modules.order: No such file or directory
+>
+>
+>I do not see any point in the Makefile changes.
