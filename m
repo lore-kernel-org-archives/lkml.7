@@ -2,132 +2,169 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30ADC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE2BC3A5AD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A9421848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DB020825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:40:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kl7bFM+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388682AbfIELky (ORCPT
+        id S2388694AbfIELk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:40:54 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60615 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730753AbfIELkv (ORCPT
+        Thu, 5 Sep 2019 07:40:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50968 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730753AbfIELkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:40:51 -0400
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1i5q7j-0003X6-1p; Thu, 05 Sep 2019 11:40:23 +0000
-Date:   Thu, 5 Sep 2019 13:40:21 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905114020.52xaqqgp43wdctbl@wittgenstein>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905110915.4vvhicg4ldmpi5u6@wittgenstein>
- <20190905112718.ojg3znly6x3m4mjq@yavin.dot.cyphar.com>
+        Thu, 5 Sep 2019 07:40:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ToLkGG7hwcxGGmygjG5jqhrOLfqqyuWhx32hjXfzR00=; b=kl7bFM+GqcAfuqUUB88a0uOiRp
+        uQwjMEVDUmBO7vfh0lCdd8Dq16yQ/anutrhgBznG4EPjhvE1/h3vxJry95DygJ2XjvaXJqonaZnpf
+        MSWQ8MrLYLUKumyAJG3MW8u9x1oOgUbF6jwHTwKmaAZegTqN2KEht6B5dg4QvM3zdVpFdRGipctgd
+        BG/4HUTfEd7aMeCRYzUTQHuCPjorBLO9LmFdb1CYHo4Kk1pRvvGuT3hSJF6+AGcUk7r4Ty2Lx0G1B
+        Io7SdWPc3qASJ1cEUwMWMdgkl/RTZ2vLT8Q4H84hiBDJowFrLwJF2iAjkK5sRgN3hYRjHZCFh7Goy
+        PsZlnS2w==;
+Received: from [2001:4bb8:18c:1755:a4b2:9562:6bf1:4bb9] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5q89-0004qi-Kd; Thu, 05 Sep 2019 11:40:50 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Stefano Stabellini <sstabellini@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        gross@suse.com, boris.ostrovsky@oracle.com
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Julien Grall <julien.grall@arm.com>
+Subject: [PATCH 03/11] xen/arm: use dev_is_dma_coherent
+Date:   Thu,  5 Sep 2019 13:34:00 +0200
+Message-Id: <20190905113408.3104-4-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190905113408.3104-1-hch@lst.de>
+References: <20190905113408.3104-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190905112718.ojg3znly6x3m4mjq@yavin.dot.cyphar.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 09:27:18PM +1000, Aleksa Sarai wrote:
-> On 2019-09-05, Christian Brauner <christian.brauner@ubuntu.com> wrote:
-> > On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> > > A common pattern for syscall extensions is increasing the size of a
-> > > struct passed from userspace, such that the zero-value of the new fields
-> > > result in the old kernel behaviour (allowing for a mix of userspace and
-> > > kernel vintages to operate on one another in most cases). This is done
-> > > in both directions -- hence two helpers -- though it's more common to
-> > > have to copy user space structs into kernel space.
-> > > 
-> > > Previously there was no common lib/ function that implemented
-> > > the necessary extension-checking semantics (and different syscalls
-> > > implemented them slightly differently or incompletely[1]). A future
-> > > patch replaces all of the common uses of this pattern to use the new
-> > > copy_struct_{to,from}_user() helpers.
-> > > 
-> > > [1]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
-> > >      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
-> > >      always rejects differently-sized struct arguments.
-> > > 
-> > > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > 
-> > I would probably split this out into a separate patchset. It can very
-> > well go in before openat2(). Thoughts?
-> 
-> Yeah, I'll split this and the related patches out -- though I will admit
-> I'm not sure how you're supposed to deal with multiple independent
-> patchsets that depend on each other. How will folks reviewing openat2(2)
-> know to include the lib/struct_user.c changes?
+Use the dma-noncoherent dev_is_dma_coherent helper instead of the home
+grown variant.  Note that both are always initialized to the same
+value in arch_setup_dma_ops.
 
-The way I usually deal with this is to make two branches. One with the
-changes the other depends on and then merge this branch into the other
-and put the changes on top. Then you can provide a complete branch that
-people can test when you send the patchset out by just linking to it in
-the cover letter.
-(But if it's too much hazzle just leave it.)
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Julien Grall <julien.grall@arm.com>
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+---
+ arch/arm/include/asm/dma-mapping.h   |  6 ------
+ arch/arm/xen/mm.c                    | 12 ++++++------
+ arch/arm64/include/asm/dma-mapping.h |  9 ---------
+ 3 files changed, 6 insertions(+), 21 deletions(-)
 
-> 
-> Also, whose tree should it go through?
+diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+index dba9355e2484..bdd80ddbca34 100644
+--- a/arch/arm/include/asm/dma-mapping.h
++++ b/arch/arm/include/asm/dma-mapping.h
+@@ -91,12 +91,6 @@ static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+ }
+ #endif
+ 
+-/* do not use this function in a driver */
+-static inline bool is_device_dma_coherent(struct device *dev)
+-{
+-	return dev->archdata.dma_coherent;
+-}
+-
+ /**
+  * arm_dma_alloc - allocate consistent memory for DMA
+  * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
+diff --git a/arch/arm/xen/mm.c b/arch/arm/xen/mm.c
+index d33b77e9add3..90574d89d0d4 100644
+--- a/arch/arm/xen/mm.c
++++ b/arch/arm/xen/mm.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ #include <linux/cpu.h>
+-#include <linux/dma-mapping.h>
++#include <linux/dma-noncoherent.h>
+ #include <linux/gfp.h>
+ #include <linux/highmem.h>
+ #include <linux/export.h>
+@@ -99,7 +99,7 @@ void __xen_dma_map_page(struct device *hwdev, struct page *page,
+ 	     dma_addr_t dev_addr, unsigned long offset, size_t size,
+ 	     enum dma_data_direction dir, unsigned long attrs)
+ {
+-	if (is_device_dma_coherent(hwdev))
++	if (dev_is_dma_coherent(hwdev))
+ 		return;
+ 	if (attrs & DMA_ATTR_SKIP_CPU_SYNC)
+ 		return;
+@@ -112,7 +112,7 @@ void __xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
+ 		unsigned long attrs)
+ 
+ {
+-	if (is_device_dma_coherent(hwdev))
++	if (dev_is_dma_coherent(hwdev))
+ 		return;
+ 	if (attrs & DMA_ATTR_SKIP_CPU_SYNC)
+ 		return;
+@@ -123,7 +123,7 @@ void __xen_dma_unmap_page(struct device *hwdev, dma_addr_t handle,
+ void __xen_dma_sync_single_for_cpu(struct device *hwdev,
+ 		dma_addr_t handle, size_t size, enum dma_data_direction dir)
+ {
+-	if (is_device_dma_coherent(hwdev))
++	if (dev_is_dma_coherent(hwdev))
+ 		return;
+ 	__xen_dma_page_dev_to_cpu(hwdev, handle, size, dir);
+ }
+@@ -131,7 +131,7 @@ void __xen_dma_sync_single_for_cpu(struct device *hwdev,
+ void __xen_dma_sync_single_for_device(struct device *hwdev,
+ 		dma_addr_t handle, size_t size, enum dma_data_direction dir)
+ {
+-	if (is_device_dma_coherent(hwdev))
++	if (dev_is_dma_coherent(hwdev))
+ 		return;
+ 	__xen_dma_page_cpu_to_dev(hwdev, handle, size, dir);
+ }
+@@ -159,7 +159,7 @@ bool xen_arch_need_swiotlb(struct device *dev,
+ 	 * memory and we are not able to flush the cache.
+ 	 */
+ 	return (!hypercall_cflush && (xen_pfn != bfn) &&
+-		!is_device_dma_coherent(dev));
++		!dev_is_dma_coherent(dev));
+ }
+ 
+ int xen_create_contiguous_region(phys_addr_t pstart, unsigned int order,
+diff --git a/arch/arm64/include/asm/dma-mapping.h b/arch/arm64/include/asm/dma-mapping.h
+index bdcb0922a40c..67243255a858 100644
+--- a/arch/arm64/include/asm/dma-mapping.h
++++ b/arch/arm64/include/asm/dma-mapping.h
+@@ -18,14 +18,5 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+ 	return NULL;
+ }
+ 
+-/*
+- * Do not use this function in a driver, it is only provided for
+- * arch/arm/mm/xen.c, which is used by arm64 as well.
+- */
+-static inline bool is_device_dma_coherent(struct device *dev)
+-{
+-	return dev->dma_coherent;
+-}
+-
+ #endif	/* __KERNEL__ */
+ #endif	/* __ASM_DMA_MAPPING_H */
+-- 
+2.20.1
 
-If people think splitting it out makes sense and we can settle the
-technical details I can take it and let it stew in linux-next at least
-for a little while.
-I have changes to clone3() in there that touch
-copy_clone_args_from_user() anyway and there are tests for clone3()
-struct copying so we'd catch regressions (for clone3() at least) pretty
-quickly.
-If we don't see any major issues in the next two weeks it might even be
-ok to send for 5.4.
-
-Christian
