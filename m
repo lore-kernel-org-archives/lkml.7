@@ -2,72 +2,64 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95992C00307
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8800BC00306
 	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B901F206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567692515;
-	bh=lLiim3xozZsjHT0hv+3puo/J1QUY0m34Dk8S3dYgrd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bYLkNOB8UYW/8HMx8YoVjG0FqLWaKPDusIV2tia9ZjGypo3SqvY0wxr2buDg2NE12
-	 2tKodRfEpfJ/WXgiF3bEeZfrooX4s3RIPXveJPG4oH4siAzQB6hq6DuSc4K8vqg0b5
-	 Z+jDHkzjW+ZOCq0ZYhdwQr0x4XUr9Wzlklb9dprE=
+	by mail.kernel.org (Postfix) with ESMTP id 9D0DA21920
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727770AbfIEOIe (ORCPT
+        id S1729395AbfIEOKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:08:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40136 "EHLO mx1.suse.de"
+        Thu, 5 Sep 2019 10:10:47 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6231 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727053AbfIEOIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:08:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3F3F5AD07;
-        Thu,  5 Sep 2019 14:08:33 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 16:08:33 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] mm, oom: disable dump_tasks by default
-Message-ID: <20190905140833.GB3838@dhcp22.suse.cz>
-References: <20190903144512.9374-1-mhocko@kernel.org>
- <af0703d2-17e4-1b8e-eb54-58d7743cad60@i-love.sakura.ne.jp>
- <20190904054004.GA3838@dhcp22.suse.cz>
- <alpine.DEB.2.21.1909041302290.95127@chino.kir.corp.google.com>
- <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
+        id S1727914AbfIEOKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:10:47 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0FE5E5BA7995343B8379;
+        Thu,  5 Sep 2019 22:10:45 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 5 Sep 2019
+ 22:10:41 +0800
+Message-ID: <5D711760.20903@huawei.com>
+Date:   Thu, 5 Sep 2019 22:10:40 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12bcade2-4190-5e5e-35c6-7a04485d74b9@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     Kalle Valo <kvalo@codeaurora.org>
+CC:     <davem@davemloft.net>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] hostap: remove set but not used variable 'copied' in
+ prism2_io_debug_proc_read
+References: <1567497430-22539-1-git-send-email-zhongjiang@huawei.com> <5D6E1DF2.1000109@huawei.com> <87zhjij1q6.fsf@tynnyri.adurom.net>
+In-Reply-To: <87zhjij1q6.fsf@tynnyri.adurom.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 05-09-19 22:39:47, Tetsuo Handa wrote:
-[...]
-> There is nothing that prevents users from enabling oom_dump_tasks by sysctl.
-> But that requires a solution for OOM stalling problem.
+On 2019/9/5 21:45, Kalle Valo wrote:
+> zhong jiang <zhongjiang@huawei.com> writes:
+>
+>> Please ignore the patch.  Because  the hostap_proc.c is marked as 'obsolete'.
+> You mean marked in the MAINTAINERS file? I don't see that as a problem,
+> I can (and should) still apply any patches submitted to hostap driver.
+>
+I  hit the following issue when checking the patch by checkpatch.pl
 
-You can hardly remove stalling if you are not reducing the amount of
-output or get it into a different context. Whether the later is
-reasonable is another question but you are essentially losing "at the
-OOM event state".
+WARNING: drivers/net/wireless/intersil/hostap/hostap_proc.c is marked as 'obsolete' in the MAINTAINERS hierarchy.
+No unnecessary modifications please.
 
-> Since I know how
-> difficult to avoid problems caused by printk() flooding, I insist that
-> we need "mm,oom: Defer dump_tasks() output." patch.
+I certainly hope it can be appiled to upstream if the above check doesn't matter.
 
-insisting is not a way to cooperate.
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+zhong jiang
+
