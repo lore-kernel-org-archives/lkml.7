@@ -2,96 +2,61 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F2EC3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 833E1C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECC72070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4403C2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732835AbfIENxB (ORCPT
+        id S1732898AbfIENxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:53:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54198 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727735AbfIENxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:53:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 739D1AF84;
-        Thu,  5 Sep 2019 13:52:59 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 15:52:59 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     jikos@kernel.org, Joe Lawrence <joe.lawrence@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
-        live-patching@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] livepatch: Clear relocation targets on a module
- removal
-Message-ID: <20190905135259.7obdymb7c2wdgafw@pathway.suse.cz>
-References: <20190823081306.kbkm7b4deqrare2v@pathway.suse.cz>
- <20190826145449.wyo7avwpqyriem46@treble>
- <alpine.LSU.2.21.1909021802180.29987@pobox.suse.cz>
- <5c649320-a9bf-ae7f-5102-483bc34d219f@redhat.com>
- <alpine.LSU.2.21.1909031447140.3872@pobox.suse.cz>
- <20190904084932.gndrtewubqiaxmzy@pathway.suse.cz>
- <20190905025055.36loaatxtkhdo4q5@treble>
- <20190905110955.wl4lwjbnpqybhkcn@pathway.suse.cz>
- <20190905130832.dznviqrrg6lfrxvx@treble>
- <20190905131502.mgiaplb3grlxsahp@treble>
+        Thu, 5 Sep 2019 09:53:52 -0400
+Received: from mga07.intel.com ([134.134.136.100]:53272 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731109AbfIENxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:53:52 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 06:53:51 -0700
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="207873587"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 06:53:48 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 2B2112069D; Thu,  5 Sep 2019 16:53:16 +0300 (EEST)
+Date:   Thu, 5 Sep 2019 16:53:16 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     davem@davemloft.net, mareklindner@neomailbox.ch,
+        mchehab@kernel.org, leon@kernel.org, dledford@redhat.com,
+        a@unstable.cc, sw@simonwunderlich.de, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 2/3] media: v4l2: Use FIELD_SIZEOF directly
+Message-ID: <20190905135316.GF5475@paasikivi.fi.intel.com>
+References: <1567687896-19996-1-git-send-email-zhongjiang@huawei.com>
+ <1567687896-19996-3-git-send-email-zhongjiang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905131502.mgiaplb3grlxsahp@treble>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <1567687896-19996-3-git-send-email-zhongjiang@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-09-05 08:15:02, Josh Poimboeuf wrote:
-> On Thu, Sep 05, 2019 at 08:08:32AM -0500, Josh Poimboeuf wrote:
-> > On Thu, Sep 05, 2019 at 01:09:55PM +0200, Petr Mladek wrote:
-> > > > I don't have a number, but it's very common to patch a function which
-> > > > uses jump labels or alternatives.
-> > > 
-> > > Really? My impression is that both alternatives and jump_labels
-> > > are used in hot paths. I would expect them mostly in core code
-> > > that is always loaded.
-> > > 
-> > > Alternatives are often used in assembly that we are not able
-> > > to livepatch anyway.
-> > > 
-> > > Or are they spread widely via some macros or inlined functions?
-> > 
-> > Jump labels are used everywhere.  Looking at vmlinux.o in my kernel:
-> > 
-> >   Relocation section [19621] '.rela__jump_table' for section [19620] '__jump_table' at offset 0x197873c8 contains 11913 entries:
-> > 
-> > Each jump label entry has 3 entries, so 11913/3 = 3971 jump labels.
-> > 
-> > $ readelf -s vmlinux.o |grep FUNC |wc -l
-> > 46902
-> > 
-> > 3971/46902 = ~8.5%
-> > 
-> > ~8.5% of functions use jump labels.
+On Thu, Sep 05, 2019 at 08:51:35PM +0800, zhong jiang wrote:
+> It's more clear  to use FIELD_SIZEOF instead of its implementation.
 > 
-> Obviously some functions may use more than one jump label so this isn't
-> exactly bulletproof math.  But it gives a rough idea of how widespread
-> they are.
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
 
-It looks scary. I just wonder why we have never met this problem during
-last few years.
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-My only guess is that most of these functions are either in core
-kernel or in code that we do not livepatch.
-
-I do not want to say that we should ignore it. I want to
-understand the cost and impact of the various approaches.
-
-Regards,
-Petr
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
