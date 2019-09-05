@@ -2,269 +2,145 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1909C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB177C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705F222CEC
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:32:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AJRabzew"
+	by mail.kernel.org (Postfix) with ESMTP id 806822082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 07:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567668819;
+	bh=UM78GHAQdJKSl1mmPexlsahjUkr+j58W1W+NTOvlpPk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aWmsFVsB/2ywdDde66ImfX6g5V4Cgr78x9N9zPqp3IT1HiJcl2Ma71XO+XSr5t0d8
+	 A9XCWbWQFmFTV3UXAEtMVBFF39AATliuQSt4YDXPKqXN+JrW7ylOE7uGCMfEe6U+U7
+	 /2vqaQntXoR8V7Pqd1UnAK67mCM82EyfQJIzVYTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731667AbfIEHcj (ORCPT
+        id S1731717AbfIEHdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 03:32:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60790 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfIEHch (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 03:32:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4t74LAQ8HoNYAg0doAzYeg6TjlgtY7XOq8PTAR8Aews=; b=AJRabzewRFq+7OIffGLOihagu
-        Q6x11cx7vH4lTSeXsd4sAIih6IBnXO0V0QVaYKYPuOX5IyCWWNG/A5IpMM7XxnP5h6RLlcaHT7zAl
-        Fno/b6maUNUFsIFZfcSZQfkojE92I1guZML9x4l93b6YVf0uAT4pU5Fy9CwtrM/pmFvkV07Tl/NDH
-        UWkPdVlV3t+bv3MIvz+w7aolGCsHgXfQaMgu8S2KGM3coJTlVXl+SJRvUIqp+hXS+wtnXq+q3pBAn
-        iaVF6fnqduZ0Uuod15wKkSs509rKcOJZLU443oqaQooqsVuFFvY8MOtj86gBpYi+ToNnI/idUssy/
-        WNhx5pafw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5mFW-0005ul-GL; Thu, 05 Sep 2019 07:32:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 5 Sep 2019 03:33:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfIEHdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 03:33:38 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73B24306038;
-        Thu,  5 Sep 2019 09:31:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 550C129DE6C22; Thu,  5 Sep 2019 09:32:05 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 09:32:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905073205.GY2332@hirez.programming.kicks-ass.net>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8842C20828;
+        Thu,  5 Sep 2019 07:33:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567668817;
+        bh=UM78GHAQdJKSl1mmPexlsahjUkr+j58W1W+NTOvlpPk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jjqXhd25yVMUY+HjUJSDdeaBLk7NysVt4+JpkN/Skic5/naKMueDGSVQ6Ot6HS6Hi
+         Sc28y2a7RPNiz/TqDQC7wXVIMzkT9ZSpIuPzmGBhsZsBePpGhEbsOS0AeHSmCAek02
+         dBMBvgN7SUN5wAtcs21Z13uv5VKxD5OgYp3qkRJ0=
+Date:   Thu, 5 Sep 2019 09:33:34 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     rafael@kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@kernel.org, mhocko@kernel.org,
+        linuxarm@huawei.com
+Subject: Re: [PATCH RFC] driver core: ensure a device has valid node id in
+ device_add()
+Message-ID: <20190905073334.GA29933@kroah.com>
+References: <1567647230-166903-1-git-send-email-linyunsheng@huawei.com>
+ <20190905055727.GB23826@kroah.com>
+ <e5905af2-5a8d-7b00-d2a6-a961f3eee120@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190904201933.10736-2-cyphar@cyphar.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e5905af2-5a8d-7b00-d2a6-a961f3eee120@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> +/**
-> + * copy_struct_to_user: copy a struct to user space
-> + * @dst:   Destination address, in user space.
-> + * @usize: Size of @dst struct.
-> + * @src:   Source address, in kernel space.
-> + * @ksize: Size of @src struct.
-> + *
-> + * Copies a struct from kernel space to user space, in a way that guarantees
-> + * backwards-compatibility for struct syscall arguments (as long as future
-> + * struct extensions are made such that all new fields are *appended* to the
-> + * old struct, and zeroed-out new fields have the same meaning as the old
-> + * struct).
-> + *
-> + * @ksize is just sizeof(*dst), and @usize should've been passed by user space.
-> + * The recommended usage is something like the following:
-> + *
-> + *   SYSCALL_DEFINE2(foobar, struct foo __user *, uarg, size_t, usize)
-> + *   {
-> + *      int err;
-> + *      struct foo karg = {};
-> + *
-> + *      // do something with karg
-> + *
-> + *      err = copy_struct_to_user(uarg, usize, &karg, sizeof(karg));
-> + *      if (err)
-> + *        return err;
-> + *
-> + *      // ...
-> + *   }
-> + *
-> + * There are three cases to consider:
-> + *  * If @usize == @ksize, then it's copied verbatim.
-> + *  * If @usize < @ksize, then kernel space is "returning" a newer struct to an
-> + *    older user space. In order to avoid user space getting incomplete
-> + *    information (new fields might be important), all trailing bytes in @src
-> + *    (@ksize - @usize) must be zerored
+On Thu, Sep 05, 2019 at 02:48:24PM +0800, Yunsheng Lin wrote:
+> On 2019/9/5 13:57, Greg KH wrote:
+> > On Thu, Sep 05, 2019 at 09:33:50AM +0800, Yunsheng Lin wrote:
+> >> Currently a device does not belong to any of the numa nodes
+> >> (dev->numa_node is NUMA_NO_NODE) when the FW does not provide
+> >> the node id and the device has not no parent device.
+> >>
+> >> According to discussion in [1]:
+> >> Even if a device's numa node is not set by fw, the device
+> >> really does belong to a node.
+> >>
+> >> This patch sets the device node to node 0 in device_add() if
+> >> the fw has not specified the node id and it either has no
+> >> parent device, or the parent device also does not have a valid
+> >> node id.
+> >>
+> >> There may be explicit handling out there relying on NUMA_NO_NODE,
+> >> like in nvme_probe().
+> >>
+> >> [1] https://lkml.org/lkml/2019/9/2/466
+> >>
+> >> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> >> ---
+> >>  drivers/base/core.c  | 17 ++++++++++++++---
+> >>  include/linux/numa.h |  2 ++
+> >>  2 files changed, 16 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> >> index 1669d41..466b8ff 100644
+> >> --- a/drivers/base/core.c
+> >> +++ b/drivers/base/core.c
+> >> @@ -2107,9 +2107,20 @@ int device_add(struct device *dev)
+> >>  	if (kobj)
+> >>  		dev->kobj.parent = kobj;
+> >>  
+> >> -	/* use parent numa_node */
+> >> -	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+> >> -		set_dev_node(dev, dev_to_node(parent));
+> >> +	/* use parent numa_node or default node 0 */
+> >> +	if (!numa_node_valid(dev_to_node(dev))) {
+> >> +		int nid = parent ? dev_to_node(parent) : NUMA_NO_NODE;
+> > 
+> > Can you expand this to be a "real" if statement please?
+> 
+> Sure. May I ask why "? :" is not appropriate here?
 
-s/zerored/zero/, right?
+Because it is a pain to read, just spell it out and make it obvious what
+is happening.  You write code for developers first, and the compiler
+second, and in this case, either way is identical to the compiler.
 
->                                          , otherwise -EFBIG is returned.
+> >> +
+> >> +		if (numa_node_valid(nid)) {
+> >> +			set_dev_node(dev, nid);
+> >> +		} else {
+> >> +			if (nr_node_ids > 1U)
+> >> +				pr_err("device: '%s': has invalid NUMA node(%d)\n",
+> >> +				       dev_name(dev), dev_to_node(dev));
+> > 
+> > dev_err() will show you the exact device properly, instead of having to
+> > rely on dev_name().
+> > 
+> > And what is a user to do if this message happens?  How do they fix this?
+> > If they can not, what good is this error message?
+> 
+> If user know about their system's topology well enough and node 0
+> is not the nearest node to the device, maybe user can readjust that by
+> writing the nearest node to /sys/class/pci_bus/XXXX/device/numa_node,
+> if not, then maybe user need to contact the vendor for info or updates.
+> 
+> Maybe print error message as below:
+> 
+> dev_err(dev, FW_BUG "has invalid NUMA node(%d). Readjust it by writing to sysfs numa_node or contact your vendor for updates.\n",
+> 	dev_to_node(dev));
 
-'Funny' that, copy_struct_from_user() below seems to use E2BIG.
+FW_BUG?
 
-> + *  * If @usize > @ksize, then the kernel is "returning" an older struct to a
-> + *    newer user space. The trailing bytes in @dst (@usize - @ksize) will be
-> + *    zero-filled.
-> + *
-> + * Returns (in all cases, some data may have been copied):
-> + *  * -EFBIG:  (@usize < @ksize) and there are non-zero trailing bytes in @src.
-> + *  * -EFAULT: access to user space failed.
-> + */
-> +int copy_struct_to_user(void __user *dst, size_t usize,
-> +			const void *src, size_t ksize)
-> +{
-> +	size_t size = min(ksize, usize);
-> +	size_t rest = abs(ksize - usize);
-> +
-> +	if (unlikely(usize > PAGE_SIZE))
-> +		return -EFAULT;
+Anyway, if you make this change, how many machines start reporting this
+error?  You should also say something like "default node of 0 now
+selected" or something like that, right?
 
-Not documented above. Implementation consistent with *from*, but see
-below.
+thanks,
 
-> +	if (unlikely(!access_ok(dst, usize)))
-> +		return -EFAULT;
-> +
-> +	/* Deal with trailing bytes. */
-> +	if (usize < ksize) {
-> +		if (memchr_inv(src + size, 0, rest))
-> +			return -EFBIG;
-> +	} else if (usize > ksize) {
-> +		if (__memzero_user(dst + size, rest))
-> +			return -EFAULT;
-> +	}
-> +	/* Copy the interoperable parts of the struct. */
-> +	if (__copy_to_user(dst, src, size))
-> +		return -EFAULT;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(copy_struct_to_user);
-> +
-> +/**
-> + * copy_struct_from_user: copy a struct from user space
-> + * @dst:   Destination address, in kernel space. This buffer must be @ksize
-> + *         bytes long.
-> + * @ksize: Size of @dst struct.
-> + * @src:   Source address, in user space.
-> + * @usize: (Alleged) size of @src struct.
-> + *
-> + * Copies a struct from user space to kernel space, in a way that guarantees
-> + * backwards-compatibility for struct syscall arguments (as long as future
-> + * struct extensions are made such that all new fields are *appended* to the
-> + * old struct, and zeroed-out new fields have the same meaning as the old
-> + * struct).
-> + *
-> + * @ksize is just sizeof(*dst), and @usize should've been passed by user space.
-> + * The recommended usage is something like the following:
-> + *
-> + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, usize)
-> + *   {
-> + *      int err;
-> + *      struct foo karg = {};
-> + *
-> + *      err = copy_struct_from_user(&karg, sizeof(karg), uarg, size);
-> + *      if (err)
-> + *        return err;
-> + *
-> + *      // ...
-> + *   }
-> + *
-> + * There are three cases to consider:
-> + *  * If @usize == @ksize, then it's copied verbatim.
-> + *  * If @usize < @ksize, then the user space has passed an old struct to a
-> + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @usize)
-> + *    are to be zero-filled.
-> + *  * If @usize > @ksize, then the user space has passed a new struct to an
-> + *    older kernel. The trailing bytes unknown to the kernel (@usize - @ksize)
-> + *    are checked to ensure they are zeroed, otherwise -E2BIG is returned.
-> + *
-> + * Returns (in all cases, some data may have been copied):
-> + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes in @src.
-> + *  * -E2BIG:  @usize is "too big" (at time of writing, >PAGE_SIZE).
-> + *  * -EFAULT: access to user space failed.
-> + */
-> +int copy_struct_from_user(void *dst, size_t ksize,
-> +			  const void __user *src, size_t usize)
-> +{
-> +	size_t size = min(ksize, usize);
-> +	size_t rest = abs(ksize - usize);
-> +
-> +	if (unlikely(usize > PAGE_SIZE))
-> +		return -EFAULT;
-
-Documented above as returning -E2BIG.
-
-> +	if (unlikely(!access_ok(src, usize)))
-> +		return -EFAULT;
-> +
-> +	/* Deal with trailing bytes. */
-> +	if (usize < ksize)
-> +		memset(dst + size, 0, rest);
-> +	else if (usize > ksize) {
-> +		const void __user *addr = src + size;
-> +		char buffer[BUFFER_SIZE] = {};
-
-Isn't that too big for on-stack?
-
-> +
-> +		while (rest > 0) {
-> +			size_t bufsize = min(rest, sizeof(buffer));
-> +
-> +			if (__copy_from_user(buffer, addr, bufsize))
-> +				return -EFAULT;
-> +			if (memchr_inv(buffer, 0, bufsize))
-> +				return -E2BIG;
-> +
-> +			addr += bufsize;
-> +			rest -= bufsize;
-> +		}
-
-The perf implementation uses get_user(); but if that is too slow, surely
-we can do something with uaccess_try() here?
-
-> +	}
-> +	/* Copy the interoperable parts of the struct. */
-> +	if (__copy_from_user(dst, src, size))
-> +		return -EFAULT;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(copy_struct_from_user);
-
-And personally I'm not a big fan of EXPORT_SYMBOL().
+greg k-h
