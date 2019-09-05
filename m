@@ -2,187 +2,101 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7B6C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540E9C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC64214E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BC3218AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YSuQ5o6P"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ssbfMIbU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389595AbfIEM6e (ORCPT
+        id S2389610AbfIENAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:58:34 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:13534 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbfIEM6d (ORCPT
+        Thu, 5 Sep 2019 09:00:05 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52430 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfIENAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:58:33 -0400
+        Thu, 5 Sep 2019 09:00:05 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t17so2695029wmi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 06:00:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1567688312; x=1599224312;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=ETZlDN4IdF0kxziLoR9hjkO844T65juEVcnxEPAUrBo=;
-  b=YSuQ5o6P52iMHkPH4XY/9D7nyNN8jJvFLoBQdTsQ6xvrV7/9vYGjPf+A
-   VAXbT3z7RE0+H3yxl9LuAM1lbjQGlqCneYsp4qgi/nU4ayJAHAriTy91X
-   U1gnl/XwtCfspVut5kl/sGoSW2xjAZVrlVHTvV+rybqTIPppJAucPoSDI
-   s=;
-X-IronPort-AV: E=Sophos;i="5.64,470,1559520000"; 
-   d="scan'208";a="827706210"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Sep 2019 12:58:30 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id DB0B4A2822;
-        Thu,  5 Sep 2019 12:58:29 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Sep 2019 12:58:29 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.161.243) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 5 Sep 2019 12:58:26 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     <kvm@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v3] KVM: x86: Disable posted interrupts for odd IRQs
-Date:   Thu, 5 Sep 2019 14:58:18 +0200
-Message-ID: <20190905125818.22395-1-graf@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d5v0Dy23bszDikjahnfR50/JyqF0JMw3pYibReU0maQ=;
+        b=ssbfMIbUr7q1MBCXJtcNYU5Zqq2x2YbEn6f2TIT7lyHcFFxlKU+8ADEwzx8bzJEb7D
+         PmwjjhQRmOC6USAlOkBj0jll64frnU14pbOsMRquXNYt7uTQjSZs3g7cejUtFI1CUXS+
+         7LkylxpucT/6N12qSu1uwK9QvFgG+Hi1mwRzaQlPQf764Q8fvn6ymvrIuhOMEiUrQiPR
+         lt1pOl/xLCiVPZApcw0iFrEE+EDMWHfe/YDUTBtIeFtYhl7aK7vOmaylNiZURMOa1kHh
+         uZITr3iTK532vd+ITf2HJwsULPvriuet+8+c3DhjhfFa8Wi0zH3RKtsJXrxIBCDmHSfq
+         Pbsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d5v0Dy23bszDikjahnfR50/JyqF0JMw3pYibReU0maQ=;
+        b=b0Bi84WMQ1BvuLluvijs9YFN3N+2BGPH6kLkJO1KjguJgkVQ45XhBGuYkvNXJOcGt4
+         Uree/Mrigbm7T8/E+jd57w5kn7eaYfmz5SRQQzg4zRmvAJxZ7scedsYnkRTqUx3PxDS5
+         c5NFcaarGKiMzpGL26pYa7Miwty0u1oQ3Z8oG1yUppLkbV7AUSTLXrEfavT1gMOXSq0O
+         Z68DjyAnNK++ekF50VLExPUruYUnCo5QSTvCHEaxgaT845DCQ2PR/2C1gwpwj2pxDbr7
+         rIxTyH0QhfUnLpVkZjC1xiAOM/VAIBVsgIFKfFgMvsUzcWuvNIDaeGy4RpM43uJ/rpbl
+         UlKw==
+X-Gm-Message-State: APjAAAXvzjS9zk3hWFzpe6wdoqdN2tsMoh7pL5w3VVF6iil/+NOfz/Q6
+        KK3dN5+BfIn/tceE3fBR4+AijQ==
+X-Google-Smtp-Source: APXvYqyJ5a4GKbnNy6ifNCJ/h3sAEQrmaDMw8nRKCghJv8Y44i3udTkVE2loifhIC9yyK/Y6ScVf5A==
+X-Received: by 2002:a1c:7215:: with SMTP id n21mr2872266wmc.152.1567688403371;
+        Thu, 05 Sep 2019 06:00:03 -0700 (PDT)
+Received: from starbuck.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id z189sm3727903wmc.25.2019.09.05.06.00.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Sep 2019 06:00:02 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] arm64: dts: meson: audio updates
+Date:   Thu,  5 Sep 2019 14:59:51 +0200
+Message-Id: <20190905125956.4384-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.243]
-X-ClientProxiedBy: EX13D07UWA003.ant.amazon.com (10.43.160.35) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can easily route hardware interrupts directly into VM context when
-they target the "Fixed" or "LowPriority" delivery modes.
+The patchset features a few updates to prepare the addition of the audio
+on sm1. It fixes the register range of audio fifo which was incorrect.
 
-However, on modes such as "SMI" or "Init", we need to go via KVM code
-to actually put the vCPU into a different mode of operation, so we can
-not post the interrupt
+It also create another layer of dtsi, common to g12a and g12b but not sm1.
+The audio related device are moved to this file.
 
-Add code in the VMX and SVM PI logic to explicitly refuse to establish
-posted mappings for advanced IRQ deliver modes. This reflects the logic
-in __apic_accept_irq() which also only ever passes Fixed and LowPriority
-interrupts as posted interrupts into the guest.
+This was done because the audio bus, which was at 0xff642000 on g12, has
+moved 0xff660000 on sm1. Overwriting the reg property was option but it
+would have left confusing node names on the sm1.
 
-This fixes a bug I have with code which configures real hardware to
-inject virtual SMIs into my guest.
+Jerome Brunet (5):
+  arm64: dts: meson: axg: fix audio fifo reg size
+  arm64: dts: meson: g12: fix audio fifo reg size
+  arm64: dts: meson: g12: add a g12 layer
+  arm64: dts: meson: g12: factor the power domain.
+  arm64: dts: meson: g12: move audio bus out of g12-common
 
-Signed-off-by: Alexander Graf <graf@amazon.com>
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  12 +-
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 320 ----------------
+ arch/arm64/boot/dts/amlogic/meson-g12.dtsi    | 344 ++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |  15 +-
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  14 +-
+ 5 files changed, 352 insertions(+), 353 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12.dtsi
 
----
-
-v1 -> v2:
-
-  - Make error message more unique
-  - Update commit message to point to __apic_accept_irq()
-
-v2 -> v3:
-
-  - Use if() rather than switch()
-  - Move abort logic into existing if() branch for broadcast irqs
-  -> remove the updated error message again (thus remove R-B tag from Liran)
-  - Fold VMX and SVM changes into single commit
-  - Combine postability check into helper function kvm_irq_is_postable()
----
- arch/x86/include/asm/kvm_host.h | 7 +++++++
- arch/x86/kvm/svm.c              | 4 +++-
- arch/x86/kvm/vmx/vmx.c          | 6 +++++-
- 3 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 44a5ce57a905..5b14aa1fbeeb 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1581,6 +1581,13 @@ bool kvm_intr_is_single_vcpu(struct kvm *kvm, struct kvm_lapic_irq *irq,
- void kvm_set_msi_irq(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
- 		     struct kvm_lapic_irq *irq);
- 
-+static inline bool kvm_irq_is_postable(struct kvm_lapic_irq *irq)
-+{
-+	/* We can only post Fixed and LowPrio IRQs */
-+	return (irq->delivery_mode == dest_Fixed ||
-+		irq->delivery_mode == dest_LowestPrio);
-+}
-+
- static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
- {
- 	if (kvm_x86_ops->vcpu_blocking)
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 1f220a85514f..f5b03d0c9bc6 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5260,7 +5260,8 @@ get_pi_vcpu_info(struct kvm *kvm, struct kvm_kernel_irq_routing_entry *e,
- 
- 	kvm_set_msi_irq(kvm, e, &irq);
- 
--	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-+	if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-+	    !kvm_irq_is_postable(&irq)) {
- 		pr_debug("SVM: %s: use legacy intr remap mode for irq %u\n",
- 			 __func__, irq.vector);
- 		return -1;
-@@ -5314,6 +5315,7 @@ static int svm_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
- 		 * 1. When cannot target interrupt to a specific vcpu.
- 		 * 2. Unsetting posted interrupt.
- 		 * 3. APIC virtialization is disabled for the vcpu.
-+		 * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
- 		 */
- 		if (!get_pi_vcpu_info(kvm, e, &vcpu_info, &svm) && set &&
- 		    kvm_vcpu_apicv_active(&svm->vcpu)) {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 570a233e272b..63f3d88b36cc 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7382,10 +7382,14 @@ static int vmx_update_pi_irte(struct kvm *kvm, unsigned int host_irq,
- 		 * irqbalance to make the interrupts single-CPU.
- 		 *
- 		 * We will support full lowest-priority interrupt later.
-+		 *
-+		 * In addition, we can only inject generic interrupts using
-+		 * the PI mechanism, refuse to route others through it.
- 		 */
- 
- 		kvm_set_msi_irq(kvm, e, &irq);
--		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu)) {
-+		if (!kvm_intr_is_single_vcpu(kvm, &irq, &vcpu) ||
-+		    !kvm_irq_is_postable(&irq)) {
- 			/*
- 			 * Make sure the IRTE is in remapped mode if
- 			 * we don't handle it in posted mode.
 -- 
-2.17.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Ralf Herbrich
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+2.21.0
 
