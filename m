@@ -2,113 +2,124 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE052C3A59E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ED6C3A5AA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4A520882
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9071720882
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 01:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7JS3jem"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esUmt9b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730547AbfIEBr0 (ORCPT
+        id S1730643AbfIEBrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 21:47:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45890 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727156AbfIEBr0 (ORCPT
+        Wed, 4 Sep 2019 21:47:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44055 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727156AbfIEBrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 21:47:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id g16so493409otp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 18:47:25 -0700 (PDT)
+        Wed, 4 Sep 2019 21:47:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 30so707770wrk.11;
+        Wed, 04 Sep 2019 18:47:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mF+PyrayTBs+6EUlPi/FAPHJkbrkGOC+w4HZRZC21uU=;
-        b=M7JS3jemmcLHmPAmZdRLNxGVYKx189Xz9ebu92+yMQkAxd//lI5cNhBH0TqbIc7BNQ
-         3gjtXAoJkxCvVNRJvLK9aYYif0Eq716kvLoCpa+osdu4qYHI+HZrO6uJy+q2PXNY4cD5
-         T+sSVnSAIB/9QQQN0wB9e+jpnAg13NkQZVDXK9SM3UI1XFsFyW4aj2fQfmPp7wXZEjUo
-         sFRlqrFOVfuCqVP6xgP1NYmB6ZDz5iL16dIzVGTycywbsihFstFdSU3z+hRCQIP1D3os
-         QdVqmy0f5ojxsi3On6b5n10lJiirCTEa0zJ3tv0RESaEjA1fISNlIOgeB3ySyuEfYTrY
-         1WFA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3fEmvX2c1XkJUmAyhbV7F+bK25TJga6/ywCtOVMKmMA=;
+        b=esUmt9b0sGHozIEiOVEOlY0vld6q09PgYLIFYPDi07C0kEEjHmhVlIZ7Dg5Dgo+Gfg
+         iuxMmprgwv08CL/Mgu0PWdBS2U109aUyVsiqxPDlpxgu9HiFf+onaUnOxitDidVzeIfz
+         ZXpz9L6eRM3P00LwQNam5JkcS4qH3wDflAvWdXO+iMSttVYe7k0YCj9PctxvoWEYI1sg
+         jU59sChuxCKfBsdM3boEKEtcUyOUk+x+DEZKlG7qGZZlMUPWFzQi5MA7YAi2t1y2fQxr
+         LHv7eSLWuzYfsbKuwJJ1ZVO4k8npFVtnSXHZk5X/EItp/NPMriz6MPN1sN+fPJE1tFcs
+         ot9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mF+PyrayTBs+6EUlPi/FAPHJkbrkGOC+w4HZRZC21uU=;
-        b=HU5uPCq/vEYhH27TIp8/1xH0+mv5+poOPsD7hfG+qJvexVsXprDc0DxVws13WBAJAM
-         H+hL40kT8wc/bix60zXnRPUXcNqqVugHPo7bjTkKWYkUftTwPSKEuCwpdoLwdMkHBdHO
-         K2fHoQpr5/rdQKFpewGg8yrkDmmVyLqQzl527aTzWtsXvAEPc4x+yyuEx/PRfrRaH7Tb
-         aLn6/5ThqioRhQJhXRPkSXjyZb9dq79Plbvw2KI8poKv9099jt+kpypQS+euCPLGhNRw
-         RFge2HgrHfILCxFVAW1QR93+VaW4FUigJSUimw4dhwNwNJ3Y7Hxffp6GNY/OWSlh5ZwB
-         okhQ==
-X-Gm-Message-State: APjAAAWZtECxRtAo3JsQ5feYNrVrZEUwSnB8KdH08Bx+JepIDGILebTH
-        byaUtdwWq1UvyJbme3MsjVJhdtRMz+fOH18dow6D3w==
-X-Google-Smtp-Source: APXvYqw43p/uYYgAzSOozahZlzXabTMhHozC8Zwyus/oNppIbh7rBcXv72c6Tdb6xRr2QOo+h6G4HCVuoBawOfrM7jc=
-X-Received: by 2002:a9d:6304:: with SMTP id q4mr437483otk.269.1567648045565;
- Wed, 04 Sep 2019 18:47:25 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3fEmvX2c1XkJUmAyhbV7F+bK25TJga6/ywCtOVMKmMA=;
+        b=ICzDP7z3KSkFa9pwb/REFcYJbEgTE6FK+3E3jh6E83Fe/ZXmrq/NSGFxjOTDIxNcwh
+         uFuyWDeCMGEryPeG2T2Rs4pgA326us/Oh4w/tvavVOlpzMZXyjXQJTiwUiYdNKwUQDXE
+         afddDZH5VHaO/035LgpA//sKnUPn6YK6zznQAQ4HvLtvH0wO8HNHzWdmkhIq4s0yj6PT
+         lkilx9A0OvK97v+CBWm9cz5KH3cFfliY3ZvEFJKH8v4Ff2uVrqMXmn0KuMq3zca7svTG
+         SUPpFOJpEYNkFnP+7MBMUKUeNfw7LWdyO1wW3TwmbVw+Rnue+YSafLT5ds3JohEDP2fL
+         jFkQ==
+X-Gm-Message-State: APjAAAUoSAWqJ5X3kPnpvnKW3CukkkPcNwDHfss7mf6Af7vDiYML5Cmj
+        1DdzXkjMTLW+/z9/NwEa/Zg=
+X-Google-Smtp-Source: APXvYqxssPj/S9IdzdM4cz0nCvWyZIltFhf2meIfABTwT42pnpG3zBVCnvSQTXqK9lglKEC+BBqOHA==
+X-Received: by 2002:adf:de8a:: with SMTP id w10mr377490wrl.276.1567648060012;
+        Wed, 04 Sep 2019 18:47:40 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f8:222:2f1b::2])
+        by smtp.gmail.com with ESMTPSA id v7sm507565wru.87.2019.09.04.18.47.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Sep 2019 18:47:39 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] net/mlx5: Fix rt's type in dr_action_create_reformat_action
+Date:   Wed,  4 Sep 2019 18:47:33 -0700
+Message-Id: <20190905014733.17564-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <cover.1567492316.git.baolin.wang@linaro.org> <5723d9006de706582fb46f9e1e3eb8ce168c2126.1567492316.git.baolin.wang@linaro.org>
- <20190904172548.GA10973@kroah.com>
-In-Reply-To: <20190904172548.GA10973@kroah.com>
-From:   Baolin Wang <baolin.wang@linaro.org>
-Date:   Thu, 5 Sep 2019 09:47:14 +0800
-Message-ID: <CAMz4kuJWPgqSyyn_-Qxq6SCY8Vps5SnA9W6_d1w-3TwgTPM+WA@mail.gmail.com>
-Subject: Re: [BACKPORT 4.14.y 1/8] drm/i915/fbdev: Actually configure untiled displays
-To:     Greg KH <greg@kroah.com>
-Cc:     "# 3.4.x" <stable@vger.kernel.org>, chris@chris-wilson.co.uk,
-        airlied@linux.ie, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, Arnd Bergmann <arnd@arndb.de>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 at 01:25, Greg KH <greg@kroah.com> wrote:
->
-> On Tue, Sep 03, 2019 at 02:55:26PM +0800, Baolin Wang wrote:
-> > From: Chris Wilson <chris@chris-wilson.co.uk>
-> >
-> > If we skipped all the connectors that were not part of a tile, we would
-> > leave conn_seq=0 and conn_configured=0, convincing ourselves that we
-> > had stagnated in our configuration attempts. Avoid this situation by
-> > starting conn_seq=ALL_CONNECTORS, and repeating until we find no more
-> > connectors to configure.
-> >
-> > Fixes: 754a76591b12 ("drm/i915/fbdev: Stop repeating tile configuration on stagnation")
-> > Reported-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> > Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> > Link: https://patchwork.freedesktop.org/patch/msgid/20190215123019.32283-1-chris@chris-wilson.co.uk
-> > Cc: <stable@vger.kernel.org> # v3.19+
-> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> > ---
-> >  drivers/gpu/drm/i915/intel_fbdev.c |   12 +++++++-----
-> >  1 file changed, 7 insertions(+), 5 deletions(-)
->
-> What is the git commit id of this patch in Linus's tree?
+clang warns:
 
-The commit id is: d9b308b1f8a1acc0c3279f443d4fe0f9f663252e
+drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1080:9:
+warning: implicit conversion from enumeration type 'enum
+mlx5_reformat_ctx_type' to different enumeration type 'enum
+mlx5dr_action_type' [-Wenum-conversion]
+                        rt = MLX5_REFORMAT_TYPE_L2_TO_L2_TUNNEL;
+                           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1082:9:
+warning: implicit conversion from enumeration type 'enum
+mlx5_reformat_ctx_type' to different enumeration type 'enum
+mlx5dr_action_type' [-Wenum-conversion]
+                        rt = MLX5_REFORMAT_TYPE_L2_TO_L3_TUNNEL;
+                           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c:1084:51:
+warning: implicit conversion from enumeration type 'enum
+mlx5dr_action_type' to different enumeration type 'enum
+mlx5_reformat_ctx_type' [-Wenum-conversion]
+                ret = mlx5dr_cmd_create_reformat_ctx(dmn->mdev, rt, data_sz, data,
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~            ^~
+3 warnings generated.
 
->
-> Can you please add that as the first line of the changelog like is done
-> with all other stable patches?  That way I can verify that what you
-> posted here is the correct one.
->
-> Please fix the up for all of these and resend.
+Use the right type for rt, which is mlx5_reformat_ctx_type so there are
+no warnings about mismatched types.
 
-Sure. Thanks.
+Fixes: 9db810ed2d37 ("net/mlx5: DR, Expose steering action functionality")
+Link: https://github.com/ClangBuiltLinux/linux/issues/652
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c
+index a02f87f85c17..7d81a7735de5 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_action.c
+@@ -1074,7 +1074,7 @@ dr_action_create_reformat_action(struct mlx5dr_domain *dmn,
+ 	case DR_ACTION_TYP_L2_TO_TNL_L2:
+ 	case DR_ACTION_TYP_L2_TO_TNL_L3:
+ 	{
+-		enum mlx5dr_action_type rt;
++		enum mlx5_reformat_ctx_type rt;
+ 
+ 		if (action->action_type == DR_ACTION_TYP_L2_TO_TNL_L2)
+ 			rt = MLX5_REFORMAT_TYPE_L2_TO_L2_TUNNEL;
 -- 
-Baolin Wang
-Best Regards
+2.23.0
+
