@@ -2,376 +2,409 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC8FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40574C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4F2206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFE220825
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 21:25:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HXUuXtJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391848AbfIEVXG (ORCPT
+        id S2389927AbfIEVZi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 17:23:06 -0400
-Received: from mga03.intel.com ([134.134.136.65]:37535 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389651AbfIEVW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 17:22:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 14:22:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,471,1559545200"; 
-   d="scan'208";a="383038927"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2019 14:22:56 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] KVM: x86: Refactor up kvm_{g,s}et_msr() to simplify callers
-Date:   Thu,  5 Sep 2019 14:22:54 -0700
-Message-Id: <20190905212255.26549-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190905212255.26549-1-sean.j.christopherson@intel.com>
-References: <20190905212255.26549-1-sean.j.christopherson@intel.com>
+        Thu, 5 Sep 2019 17:25:38 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35088 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731231AbfIEVZh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 17:25:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id f4so7378189ion.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 14:25:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tmMKY6g3PUIgZ3R6PnKqEWnXPEdePtDlTYqPGktOaPE=;
+        b=HXUuXtJcEllopbukBgnSYYLN50ArZGRGskIrizMT5lSzbtOfQ3Rafp+jvf3icJ0Hpe
+         iO781bfD3+f2s6f5Ws9dNTazwbDtxwLn8irAcnW7j2y2C6+V7QAVknZ8wX428n1lYc1i
+         WYX72ur/CYRCuqlzTzCxebbskB4mEWk9Ts8wQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tmMKY6g3PUIgZ3R6PnKqEWnXPEdePtDlTYqPGktOaPE=;
+        b=oOOBTz7XY3wh5IvHlPsZXJykY+Ft5rlV0gJN8ct7cRlk7TIddoUTceDDEeakDUah0u
+         wFC4vbTyAvzbXzY8f6LnRKmI7faL7zKy+zF0+yBQIfCAElZYaLSmmufr3F3YGrzvdKBV
+         e7+U4pe6KC0chuUmadIKyL1wAyx+0rU7xalEpbIoiQgpgFQxHzjItOqQUlU3sH1zDLoA
+         0F96bVj6Sef5A0OZu7bSjHS70J2BXi0LgHGfZPXuQpYg5B8XZDeOr22el6bYN5+FtJjK
+         kwpk75s0WJCES1Ib0kpT2tppKymg+xJvb/BgvcxkII8f3gyogkd4q6orXbEplEB/tqNB
+         dlCg==
+X-Gm-Message-State: APjAAAUW7QIallwIK03iYEy9CjEeWRB5UzB1UF3tBrJWsD4qzqLwSqq9
+        ujA/g77gUFJPQLKiCgjgnfWclhHvC5bAON+kMxKZUQ==
+X-Google-Smtp-Source: APXvYqza0SGsYOxwQucfFKUGI7OC5B4qiesFZvENs+Mj98WDHSpgFDuj3FCzMxFhLn/o2lin/QKzfDHENmPU/JUbvnQ=
+X-Received: by 2002:a6b:b643:: with SMTP id g64mr6626477iof.149.1567718736658;
+ Thu, 05 Sep 2019 14:25:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190902160848.4738-1-enric.balletbo@collabora.com> <20190902162420.GU2680@smile.fi.intel.com>
+In-Reply-To: <20190902162420.GU2680@smile.fi.intel.com>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Thu, 5 Sep 2019 14:25:25 -0700
+Message-ID: <CAPUE2utLqOGhPXFO1w8Fhu_use7nbu+Q+A+jL5vL_9ROJjnQKQ@mail.gmail.com>
+Subject: Re: [PATCH v2] platform/chrome: cros_ec_chardev: Add a poll handler
+ to receive MKBP events
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Vincent Palatin <vpalatin@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor the top-level MSR accessors to take/return the index and value
-directly instead of requiring the caller to dump them into a msr_data
-struct.
-
-No functional change intended.
-
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/include/asm/kvm_host.h |   4 +-
- arch/x86/kvm/svm.c              |   7 +--
- arch/x86/kvm/vmx/nested.c       |  22 ++-----
- arch/x86/kvm/vmx/vmx.c          |   6 +-
- arch/x86/kvm/x86.c              | 103 ++++++++++++++++----------------
- 5 files changed, 61 insertions(+), 81 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 44a5ce57a905..649d80b5cd6f 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1326,8 +1326,8 @@ int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
- 
- void kvm_enable_efer_bits(u64);
- bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer);
--int kvm_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr);
--int kvm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr);
-+int kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data);
-+int kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data);
- 
- struct x86_emulate_ctxt;
- 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 1f220a85514f..030bc9f7b7a7 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -4425,15 +4425,10 @@ static int svm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
- 
- static int wrmsr_interception(struct vcpu_svm *svm)
- {
--	struct msr_data msr;
- 	u32 ecx = kvm_rcx_read(&svm->vcpu);
- 	u64 data = kvm_read_edx_eax(&svm->vcpu);
- 
--	msr.data = data;
--	msr.index = ecx;
--	msr.host_initiated = false;
--
--	if (kvm_set_msr(&svm->vcpu, &msr)) {
-+	if (kvm_set_msr(&svm->vcpu, ecx, data)) {
- 		trace_kvm_msr_write_ex(ecx, data);
- 		kvm_inject_gp(&svm->vcpu, 0);
- 		return 1;
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index ced9fba32598..34f3051092be 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -864,9 +864,7 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
- {
- 	u32 i;
- 	struct vmx_msr_entry e;
--	struct msr_data msr;
- 
--	msr.host_initiated = false;
- 	for (i = 0; i < count; i++) {
- 		if (kvm_vcpu_read_guest(vcpu, gpa + i * sizeof(e),
- 					&e, sizeof(e))) {
-@@ -881,9 +879,7 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
- 				__func__, i, e.index, e.reserved);
- 			goto fail;
- 		}
--		msr.index = e.index;
--		msr.data = e.value;
--		if (kvm_set_msr(vcpu, &msr)) {
-+		if (kvm_set_msr(vcpu, e.index, e.value)) {
- 			pr_debug_ratelimited(
- 				"%s cannot write MSR (%u, 0x%x, 0x%llx)\n",
- 				__func__, i, e.index, e.value);
-@@ -897,11 +893,11 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
- 
- static int nested_vmx_store_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
- {
-+	u64 data;
- 	u32 i;
- 	struct vmx_msr_entry e;
- 
- 	for (i = 0; i < count; i++) {
--		struct msr_data msr_info;
- 		if (kvm_vcpu_read_guest(vcpu,
- 					gpa + i * sizeof(e),
- 					&e, 2 * sizeof(u32))) {
-@@ -916,9 +912,7 @@ static int nested_vmx_store_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
- 				__func__, i, e.index, e.reserved);
- 			return -EINVAL;
- 		}
--		msr_info.host_initiated = false;
--		msr_info.index = e.index;
--		if (kvm_get_msr(vcpu, &msr_info)) {
-+		if (kvm_get_msr(vcpu, e.index, &data)) {
- 			pr_debug_ratelimited(
- 				"%s cannot read MSR (%u, 0x%x)\n",
- 				__func__, i, e.index);
-@@ -927,10 +921,10 @@ static int nested_vmx_store_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
- 		if (kvm_vcpu_write_guest(vcpu,
- 					 gpa + i * sizeof(e) +
- 					     offsetof(struct vmx_msr_entry, value),
--					 &msr_info.data, sizeof(msr_info.data))) {
-+					 &data, sizeof(data))) {
- 			pr_debug_ratelimited(
- 				"%s cannot write MSR (%u, 0x%x, 0x%llx)\n",
--				__func__, i, e.index, msr_info.data);
-+				__func__, i, e.index, data);
- 			return -EINVAL;
- 		}
- 	}
-@@ -3889,7 +3883,6 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	struct vmx_msr_entry g, h;
--	struct msr_data msr;
- 	gpa_t gpa;
- 	u32 i, j;
- 
-@@ -3949,7 +3942,6 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 	 * from the guest value.  The intent is to stuff host state as
- 	 * silently as possible, not to fully process the exit load list.
- 	 */
--	msr.host_initiated = false;
- 	for (i = 0; i < vmcs12->vm_entry_msr_load_count; i++) {
- 		gpa = vmcs12->vm_entry_msr_load_addr + (i * sizeof(g));
- 		if (kvm_vcpu_read_guest(vcpu, gpa, &g, sizeof(g))) {
-@@ -3979,9 +3971,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 				goto vmabort;
- 			}
- 
--			msr.index = h.index;
--			msr.data = h.value;
--			if (kvm_set_msr(vcpu, &msr)) {
-+			if (kvm_set_msr(vcpu, h.index, h.value)) {
- 				pr_debug_ratelimited(
- 					"%s WRMSR failed (%u, 0x%x, 0x%llx)\n",
- 					__func__, j, h.index, h.value);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 570a233e272b..f4f4114e756f 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4886,14 +4886,10 @@ static int handle_rdmsr(struct kvm_vcpu *vcpu)
- 
- static int handle_wrmsr(struct kvm_vcpu *vcpu)
- {
--	struct msr_data msr;
- 	u32 ecx = kvm_rcx_read(vcpu);
- 	u64 data = kvm_read_edx_eax(vcpu);
- 
--	msr.data = data;
--	msr.index = ecx;
--	msr.host_initiated = false;
--	if (kvm_set_msr(vcpu, &msr) != 0) {
-+	if (kvm_set_msr(vcpu, ecx, data) != 0) {
- 		trace_kvm_msr_write_ex(ecx, data);
- 		kvm_inject_gp(vcpu, 0);
- 		return 1;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b4cfd786d0b6..a67730600803 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1358,19 +1358,23 @@ void kvm_enable_efer_bits(u64 mask)
- EXPORT_SYMBOL_GPL(kvm_enable_efer_bits);
- 
- /*
-- * Writes msr value into into the appropriate "register".
-+ * Write @data into the MSR specified by @index.  Select MSR specific fault
-+ * checks are bypassed if @host_initiated is %true.
-  * Returns 0 on success, non-0 otherwise.
-  * Assumes vcpu_load() was already called.
-  */
--int kvm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
-+static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
-+			 bool host_initiated)
- {
--	switch (msr->index) {
-+	struct msr_data msr;
-+
-+	switch (index) {
- 	case MSR_FS_BASE:
- 	case MSR_GS_BASE:
- 	case MSR_KERNEL_GS_BASE:
- 	case MSR_CSTAR:
- 	case MSR_LSTAR:
--		if (is_noncanonical_address(msr->data, vcpu))
-+		if (is_noncanonical_address(data, vcpu))
- 			return 1;
- 		break;
- 	case MSR_IA32_SYSENTER_EIP:
-@@ -1387,9 +1391,46 @@ int kvm_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
- 		 * value, and that something deterministic happens if the guest
- 		 * invokes 64-bit SYSENTER.
- 		 */
--		msr->data = get_canonical(msr->data, vcpu_virt_addr_bits(vcpu));
-+		data = get_canonical(data, vcpu_virt_addr_bits(vcpu));
- 	}
--	return kvm_x86_ops->set_msr(vcpu, msr);
-+
-+	msr.data = data;
-+	msr.index = index;
-+	msr.host_initiated = host_initiated;
-+
-+	return kvm_x86_ops->set_msr(vcpu, &msr);
-+}
-+
-+/*
-+ * Read the MSR specified by @index into @data.  Select MSR specific fault
-+ * checks are bypassed if @host_initiated is %true.
-+ * Returns 0 on success, non-0 otherwise.
-+ * Assumes vcpu_load() was already called.
-+ */
-+static int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
-+			 bool host_initiated)
-+{
-+	struct msr_data msr;
-+	int ret;
-+
-+	msr.index = index;
-+	msr.host_initiated = host_initiated;
-+
-+	ret = kvm_x86_ops->get_msr(vcpu, &msr);
-+	if (!ret)
-+		*data = msr.data;
-+	return ret;
-+}
-+
-+int kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data)
-+{
-+	return __kvm_get_msr(vcpu, index, data, false);
-+}
-+EXPORT_SYMBOL_GPL(kvm_get_msr);
-+
-+int kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data)
-+{
-+	return __kvm_set_msr(vcpu, index, data, false);
- }
- EXPORT_SYMBOL_GPL(kvm_set_msr);
- 
-@@ -1398,27 +1439,12 @@ EXPORT_SYMBOL_GPL(kvm_set_msr);
-  */
- static int do_get_msr(struct kvm_vcpu *vcpu, unsigned index, u64 *data)
- {
--	struct msr_data msr;
--	int r;
--
--	msr.index = index;
--	msr.host_initiated = true;
--	r = kvm_get_msr(vcpu, &msr);
--	if (r)
--		return r;
--
--	*data = msr.data;
--	return 0;
-+	return __kvm_get_msr(vcpu, index, data, true);
- }
- 
- static int do_set_msr(struct kvm_vcpu *vcpu, unsigned index, u64 *data)
- {
--	struct msr_data msr;
--
--	msr.data = *data;
--	msr.index = index;
--	msr.host_initiated = true;
--	return kvm_set_msr(vcpu, &msr);
-+	return __kvm_set_msr(vcpu, index, *data, true);
- }
- 
- #ifdef CONFIG_X86_64
-@@ -2757,18 +2783,6 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- }
- EXPORT_SYMBOL_GPL(kvm_set_msr_common);
- 
--
--/*
-- * Reads an msr value (of 'msr_index') into 'pdata'.
-- * Returns 0 on success, non-0 otherwise.
-- * Assumes vcpu_load() was already called.
-- */
--int kvm_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
--{
--	return kvm_x86_ops->get_msr(vcpu, msr);
--}
--EXPORT_SYMBOL_GPL(kvm_get_msr);
--
- static int get_msr_mce(struct kvm_vcpu *vcpu, u32 msr, u64 *pdata, bool host)
- {
- 	u64 data;
-@@ -5972,28 +5986,13 @@ static void emulator_set_segment(struct x86_emulate_ctxt *ctxt, u16 selector,
- static int emulator_get_msr(struct x86_emulate_ctxt *ctxt,
- 			    u32 msr_index, u64 *pdata)
- {
--	struct msr_data msr;
--	int r;
--
--	msr.index = msr_index;
--	msr.host_initiated = false;
--	r = kvm_get_msr(emul_to_vcpu(ctxt), &msr);
--	if (r)
--		return r;
--
--	*pdata = msr.data;
--	return 0;
-+	return kvm_get_msr(emul_to_vcpu(ctxt), msr_index, pdata);
- }
- 
- static int emulator_set_msr(struct x86_emulate_ctxt *ctxt,
- 			    u32 msr_index, u64 data)
- {
--	struct msr_data msr;
--
--	msr.data = data;
--	msr.index = msr_index;
--	msr.host_initiated = false;
--	return kvm_set_msr(emul_to_vcpu(ctxt), &msr);
-+	return kvm_set_msr(emul_to_vcpu(ctxt), msr_index, data);
- }
- 
- static u64 emulator_get_smbase(struct x86_emulate_ctxt *ctxt)
--- 
-2.22.0
-
+On Mon, Sep 2, 2019 at 9:24 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Sep 02, 2019 at 06:08:48PM +0200, Enric Balletbo i Serra wrote:
+> > Allow to poll on the cros_ec device to receive the MKBP events.
+> >
+> > The /dev/cros_[ec|fp|..] file operations now implements the poll
+> > operation. The userspace can now receive specific MKBP events by doing
+> > the
+> > following:
+> > - Open the /dev/cros_XX file.
+> > - Call the CROS_EC_DEV_IOCEVENTMASK ioctl with the bitmap of the MKBP
+> >   events it wishes to receive as argument.
+> > - Poll on the file descriptor.
+> > - When it gets POLLIN, do a read on the file descriptor, the first
+> >   queued event will be returned (using the struct
+> >   ec_response_get_next_event format: one byte of event type, then
+> >   the payload).
+> >
+> > The read() operation returns at most one event even if there are several
+> > queued, and it might be truncated if the buffer is smaller than the
+> > event (but the caller should know the maximum size of the events it is
+> > reading).
+> >
+> > read() used to return the EC version string, it still does it when no
+> > event mask or an empty event is set for backward compatibility (despite
+> > nobody really using this feature).
+> >
+> > This will be used, for example, by the userspace daemon to receive and
+> > treat the EC_MKBP_EVENT_FINGERPRINT sent by the FP MCU.
+> >
+>
+> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+>
+> > Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > ---
+> > Note that this patch depends on the immutable branch [1] to apply
+> > cleanly.
+> >
+> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=ib-mfd-extcon-hid-i2c-iio-input-media-chrome-power-pwm-rtc-sound-5.4
+> >
+> >
+> > Changes in v2:
+> > - Moved the code to the cros_ec_chardev driver.
+> >
+> >  drivers/platform/chrome/cros_ec_chardev.c     | 177 +++++++++++++++++-
+> >  include/linux/platform_data/cros_ec_chardev.h |   1 +
+> >  2 files changed, 173 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+> > index 08abd7e5c7bf..eabb1fe85688 100644
+> > --- a/drivers/platform/chrome/cros_ec_chardev.c
+> > +++ b/drivers/platform/chrome/cros_ec_chardev.c
+> > @@ -16,21 +16,42 @@
+> >  #include <linux/mfd/cros_ec.h>
+> >  #include <linux/miscdevice.h>
+> >  #include <linux/module.h>
+> > +#include <linux/notifier.h>
+> >  #include <linux/platform_data/cros_ec_chardev.h>
+> >  #include <linux/platform_data/cros_ec_commands.h>
+> >  #include <linux/platform_data/cros_ec_proto.h>
+> >  #include <linux/platform_device.h>
+> > +#include <linux/poll.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/types.h>
+> >  #include <linux/uaccess.h>
+> >
+> >  #define DRV_NAME             "cros-ec-chardev"
+> >
+> > +/* Arbitrary bounded size for the event queue */
+> > +#define CROS_MAX_EVENT_LEN   PAGE_SIZE
+> > +
+> >  struct chardev_data {
+> >       struct cros_ec_dev *ec_dev;
+> >       struct miscdevice misc;
+> >  };
+> >
+> > +struct chardev_priv {
+> > +     struct cros_ec_dev *ec_dev;
+> > +     struct notifier_block notifier;
+> > +     wait_queue_head_t wait_event;
+> > +     unsigned long event_mask;
+> > +     struct list_head events;
+> > +     size_t event_len;
+> > +};
+> > +
+> > +struct ec_event {
+> > +     struct list_head node;
+> > +     size_t size;
+> > +     u8 event_type;
+> > +     u8 data[0];
+> > +};
+> > +
+> >  static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
+> >  {
+> >       static const char * const current_image_name[] = {
+> > @@ -69,6 +90,71 @@ static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
+> >       return ret;
+> >  }
+> >
+> > +static int ec_mkbp_event(struct notifier_block *nb,
+> > +                      unsigned long queued_during_suspend,
+> > +                      void *_notify)
+nit: call it cros_ec_chardev_mkbp_event()  to fit other functions
+naming convention. Change only if a v3 is needed.
+> > +{
+> > +     struct chardev_priv *priv = container_of(nb, struct chardev_priv,
+> > +                                              notifier);
+> > +     struct cros_ec_device *ec_dev = priv->ec_dev->ec_dev;
+> > +     struct ec_event *event;
+> > +     unsigned long event_bit = 1 << ec_dev->event_data.event_type;
+> > +     int total_size = sizeof(*event) + ec_dev->event_size;
+> > +
+> > +     if (!(event_bit & priv->event_mask) ||
+> > +         (priv->event_len + total_size) > CROS_MAX_EVENT_LEN)
+> > +             return NOTIFY_DONE;
+> > +
+> > +     event = kzalloc(total_size, GFP_KERNEL);
+> > +     if (!event)
+> > +             return NOTIFY_DONE;
+> > +
+> > +     event->size = ec_dev->event_size;
+> > +     event->event_type = ec_dev->event_data.event_type;
+> > +     memcpy(event->data, &ec_dev->event_data.data, ec_dev->event_size);
+> > +
+> > +     spin_lock(&priv->wait_event.lock);
+> > +     list_add_tail(&event->node, &priv->events);
+> > +     priv->event_len += total_size;
+> > +     wake_up_locked(&priv->wait_event);
+> > +     spin_unlock(&priv->wait_event.lock);
+> > +
+> > +     return NOTIFY_OK;
+> > +}
+> > +
+> > +static struct ec_event *ec_fetch_event(struct chardev_priv *priv, bool fetch,
+> > +                                    bool block)
+nit: cros_ec_chardev_fetch_event()
+> > +{
+> > +     struct ec_event *event;
+> > +     int err;
+> > +
+> > +     spin_lock(&priv->wait_event.lock);
+> > +     if (!block && list_empty(&priv->events)) {
+> > +             event = ERR_PTR(-EWOULDBLOCK);
+> > +             goto out;
+> > +     }
+> > +
+> > +     if (!fetch) {
+> > +             event = NULL;
+> > +             goto out;
+> > +     }
+> > +
+> > +     err = wait_event_interruptible_locked(priv->wait_event,
+> > +                                           !list_empty(&priv->events));
+> > +     if (err) {
+> > +             event = ERR_PTR(err);
+> > +             goto out;
+> > +     }
+> > +
+> > +     event = list_first_entry(&priv->events, struct ec_event, node);
+> > +     list_del(&event->node);
+> > +     priv->event_len -= sizeof(*event) + event->size;
+> > +
+> > +out:
+> > +     spin_unlock(&priv->wait_event.lock);
+> > +     return event;
+> > +}
+> > +
+> >  /*
+> >   * Device file ops
+> >   */
+> > @@ -76,11 +162,40 @@ static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
+> >  {
+> >       struct miscdevice *mdev = filp->private_data;
+> >       struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
+> > +     struct chardev_priv *priv;
+> > +     int ret;
+> > +
+> > +     priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> > +     if (!priv)
+> > +             return -ENOMEM;
+> >
+> > -     filp->private_data = ec_dev;
+> > +     priv->ec_dev = ec_dev;
+> > +     filp->private_data = priv;
+> > +     INIT_LIST_HEAD(&priv->events);
+> > +     init_waitqueue_head(&priv->wait_event);
+> >       nonseekable_open(inode, filp);
+> >
+> > -     return 0;
+> > +     priv->notifier.notifier_call = ec_mkbp_event;
+> > +     ret = blocking_notifier_chain_register(&ec_dev->ec_dev->event_notifier,
+> > +                                            &priv->notifier);
+> > +     if (ret) {
+> > +             dev_err(ec_dev->dev, "failed to register event notifier\n");
+> > +             kfree(priv);
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static __poll_t cros_ec_chardev_poll(struct file *filp, poll_table *wait)
+> > +{
+> > +     struct chardev_priv *priv = filp->private_data;
+> > +
+> > +     poll_wait(filp, &priv->wait_event, wait);
+> > +
+> > +     if (list_empty(&priv->events))
+> > +             return 0;
+> > +
+> > +     return EPOLLIN | EPOLLRDNORM;
+> >  }
+> >
+> >  static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+> > @@ -88,14 +203,42 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+> >  {
+> >       char msg[sizeof(struct ec_response_get_version) +
+> >                sizeof(CROS_EC_DEV_VERSION)];
+> > -     struct cros_ec_dev *ec = filp->private_data;
+> > +     struct chardev_priv *priv = filp->private_data;
+> > +     struct cros_ec_dev *ec_dev = priv->ec_dev;
+> >       size_t count;
+> >       int ret;
+> >
+> > +     if (priv->event_mask) { /* queued MKBP event */
+> > +             struct ec_event *event;
+> > +
+> > +             event = ec_fetch_event(priv, length != 0,
+> > +                                    !(filp->f_flags & O_NONBLOCK));
+> > +             if (IS_ERR(event))
+> > +                     return PTR_ERR(event);
+> > +             /*
+> > +              * length == 0 is special - no IO is done but we check
+> > +              * for error conditions.
+> > +              */
+> > +             if (length == 0)
+> > +                     return 0;
+> > +
+> > +             /* The event is 1 byte of type plus the payload */
+> > +             count = min(length, event->size + 1);
+> > +             ret = copy_to_user(buffer, &event->event_type, count);
+> > +             kfree(event);
+> > +             if (ret) /* the copy failed */
+> > +                     return -EFAULT;
+> > +             *offset = count;
+> > +             return count;
+> > +     }
+> > +
+> > +     /*
+> > +      * Legacy behavior if no event mask is defined
+> > +      */
+> >       if (*offset != 0)
+> >               return 0;
+> >
+> > -     ret = ec_get_version(ec, msg, sizeof(msg));
+> > +     ret = ec_get_version(ec_dev, msg, sizeof(msg));
+> >       if (ret)
+> >               return ret;
+> >
+> > @@ -108,6 +251,24 @@ static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
+> >       return count;
+> >  }
+> >
+> > +static int cros_ec_chardev_release(struct inode *inode, struct file *filp)
+> > +{
+> > +     struct chardev_priv *priv = filp->private_data;
+> > +     struct cros_ec_dev *ec_dev = priv->ec_dev;
+> > +     struct ec_event *event, *e;
+> > +
+> > +     blocking_notifier_chain_unregister(&ec_dev->ec_dev->event_notifier,
+> > +                                        &priv->notifier);
+> > +
+> > +     list_for_each_entry_safe(event, e, &priv->events, node) {
+> > +             list_del(&event->node);
+> > +             kfree(event);
+> > +     }
+> > +     kfree(priv);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /*
+> >   * Ioctls
+> >   */
+> > @@ -181,7 +342,8 @@ static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
+> >  static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+> >                                  unsigned long arg)
+> >  {
+> > -     struct cros_ec_dev *ec = filp->private_data;
+> > +     struct chardev_priv *priv = filp->private_data;
+> > +     struct cros_ec_dev *ec = priv->ec_dev;
+> >
+> >       if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
+> >               return -ENOTTY;
+> > @@ -191,6 +353,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+> >               return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
+> >       case CROS_EC_DEV_IOCRDMEM:
+> >               return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
+> > +     case CROS_EC_DEV_IOCEVENTMASK:
+> > +             priv->event_mask = arg;
+> > +             return 0;
+> >       }
+> >
+> >       return -ENOTTY;
+> > @@ -198,7 +363,9 @@ static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
+> >
+> >  static const struct file_operations chardev_fops = {
+> >       .open           = cros_ec_chardev_open,
+> > +     .poll           = cros_ec_chardev_poll,
+> >       .read           = cros_ec_chardev_read,
+> > +     .release        = cros_ec_chardev_release,
+> >       .unlocked_ioctl = cros_ec_chardev_ioctl,
+> >  #ifdef CONFIG_COMPAT
+> >       .compat_ioctl   = cros_ec_chardev_ioctl,
+> > diff --git a/include/linux/platform_data/cros_ec_chardev.h b/include/linux/platform_data/cros_ec_chardev.h
+> > index 973b2615aa02..7de8faaf77df 100644
+> > --- a/include/linux/platform_data/cros_ec_chardev.h
+> > +++ b/include/linux/platform_data/cros_ec_chardev.h
+> > @@ -33,5 +33,6 @@ struct cros_ec_readmem {
+> >  #define CROS_EC_DEV_IOC       0xEC
+> >  #define CROS_EC_DEV_IOCXCMD   _IOWR(CROS_EC_DEV_IOC, 0, struct cros_ec_command)
+> >  #define CROS_EC_DEV_IOCRDMEM  _IOWR(CROS_EC_DEV_IOC, 1, struct cros_ec_readmem)
+> > +#define CROS_EC_DEV_IOCEVENTMASK _IO(CROS_EC_DEV_IOC, 2)
+> >
+> >  #endif /* _CROS_EC_DEV_H_ */
+> > --
+> > 2.20.1
+> >
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
