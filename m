@@ -2,154 +2,115 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57039C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A54C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95E7B205ED
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Ai4cXKG9"
+	by mail.kernel.org (Postfix) with ESMTP id 074E7212CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 23:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391773AbfIEXBu (ORCPT
+        id S1732738AbfIEXEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 19:01:50 -0400
-Received: from mail-eopbgr700134.outbound.protection.outlook.com ([40.107.70.134]:14272
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388923AbfIEXBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:01:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IH/xO3nPEwM8Cjz650dRv1c4iB4byOys2gpDU9iReA8SmjTE2HkxTx7jHeUvPrO9pTKYmQKsEI9gLS4IcZl5bjiUIcLIGBaC6J0daEw5Uwxrwh+6gUc9AdCD3Mf792SeJBhDSWKQyStYkhSCS8zof2Ixm6q8loU5DaFL2BBMZEkfAjmV6QABG+TcmXQwRrSKNfl/JSIxcvQjpWDYatARTZNqBeKRSvh4+U8b9Pjd4CHaqfKm9rmDHONiP2izW6u8yF8L7xtkCnrnaPQJH/LSzP0eV8aJYRFYb/vmineQvh6qJMY95nSCk0DVXGHYh9K1NOmY3lEPuw7WidN+oHmNTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EtypEnsE04QKgPiMCZN3bk3hd68Lav0nZIRP5alzewY=;
- b=gHmoWJ7ztfqGFraxBuD5nhHnfyv8GYOYJfxGZeMp99TQ3Oi5ZWRWag5J1D6agDIhvpooXrBfKeQvhbdfDcZKfMryjFFX/6D7NHx2L9Y+RrBMUqr3i+28pUEX77gXdZpiHsxd7kymRVirWUSxDpneenY7PXhddKE3zrIYLuBFaFV1dUoTo6pQTcK33LaUg+swK174c/JZixiAx4/E4ILba9t5AH4ocijayES7PDEp0GMxX+5HytfFquhXEyR41EpUMrbc80RG8xVZ/iIw9Tb6uL5IDBSzmhyM05FCYTPjsh7CCs/htupUY/ttfT+tK3Be3bP+YgycYk2oD295Y/aLog==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EtypEnsE04QKgPiMCZN3bk3hd68Lav0nZIRP5alzewY=;
- b=Ai4cXKG9BreZvslBlQx92vhroADy9RbnTdB80SItkCl1SNa+vMo5AZ7KsQi68xX22EFjz5uGCiZAUtId4+iAqq6f66CfzSy0QT4E/0NloPbgwfTPjWt/9YgGHr6VQfjorccd+IPX7PNm6d5oPZHIAAz+xTMkzo44PrcO3idS50M=
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (52.132.114.19) by
- SN6PR2101MB1038.namprd21.prod.outlook.com (52.132.115.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.4; Thu, 5 Sep 2019 23:01:17 +0000
-Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::dd56:aa4f:204f:86a4]) by SN6PR2101MB0942.namprd21.prod.outlook.com
- ([fe80::dd56:aa4f:204f:86a4%3]) with mapi id 15.20.2263.005; Thu, 5 Sep 2019
- 23:01:17 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v5 3/9] Drivers: hv: vmbus: Add a helper function
- is_sub_channel()
-Thread-Topic: [PATCH v5 3/9] Drivers: hv: vmbus: Add a helper function
- is_sub_channel()
-Thread-Index: AQHVZD3S8dWi9FbX2UuDpeJl7Q2hEA==
-Date:   Thu, 5 Sep 2019 23:01:16 +0000
-Message-ID: <1567724446-30990-4-git-send-email-decui@microsoft.com>
-References: <1567724446-30990-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1567724446-30990-1-git-send-email-decui@microsoft.com>
-Reply-To: Dexuan Cui <decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR0201CA0048.namprd02.prod.outlook.com
- (2603:10b6:301:73::25) To SN6PR2101MB0942.namprd21.prod.outlook.com
- (2603:10b6:805:4::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.8.3.1
-x-originating-ip: [13.77.154.182]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e25c0d11-5f11-4d23-1932-08d73254f523
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1038;
-x-ms-traffictypediagnostic: SN6PR2101MB1038:|SN6PR2101MB1038:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR2101MB10381DBEEADE3D3AC6E918A8BFBB0@SN6PR2101MB1038.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(189003)(199004)(6506007)(66446008)(256004)(14444005)(10290500003)(478600001)(476003)(102836004)(186003)(36756003)(52116002)(64756008)(71200400001)(26005)(11346002)(3450700001)(6512007)(71190400001)(305945005)(107886003)(4326008)(446003)(66946007)(316002)(76176011)(7736002)(6436002)(66556008)(386003)(22452003)(66476007)(6486002)(486006)(53936002)(2616005)(25786009)(14454004)(54906003)(110136005)(5660300002)(2501003)(3846002)(2906002)(6116002)(81156014)(8676002)(81166006)(86362001)(50226002)(4720700003)(66066001)(10090500001)(1511001)(99286004)(8936002)(43066004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1038;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JybGXLF1/ZGKz2vxF4ZzLcOobLJ/F5gorOMeIrHwknQrCpps3ptc84X6x299wdbd0uTSdwQQnJH/O3we2XHK3y8++IQvJ01miuWF3N6xznPrxpRhiqdWxm4OeukuY0SNrehKa7uklUAEWcQklSkCCc6zo+b53EqSFNqysp4d+zgcJE/qf+EIEd2bgCX+kNRdy1dCLNevz9SrvW9iqe230aitMqqbdMw00FOtWWgsVAmBiogQed7Sx1U3FGYecNeM4YwktsihNjphknguhILHyGiubUGTzgTggMzPhI28yPCQezUOzszzW66T+VEUCheVCl28djoKkdwkYZJwIMFkBQYMAAY59bm/pf5wuvzUtgzNp2LOz8tkRq/VUwklJftJKYVEmZ+vl7jKUm9T6qTNQgFA2SaC5lOBAheOVTyLkJg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 5 Sep 2019 19:04:49 -0400
+Received: from muru.com ([72.249.23.125]:59894 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726908AbfIEXEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 19:04:49 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 0A27C810D;
+        Thu,  5 Sep 2019 23:05:16 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 16:04:43 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, pali.rohar@gmail.com, t-kristo@ti.com,
+        aaro.koskinen@iki.fi, adam.ford@logicpd.com,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Paul Walmsley <paul@pwsan.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC] ARM: omap3: Enable HWMODS for HW Random Number Generator
+Message-ID: <20190905230443.GA52127@atomide.com>
+References: <20190828150037.2640-1-aford173@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e25c0d11-5f11-4d23-1932-08d73254f523
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 23:01:16.9303
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KBXTqazh7NgnxqVkCgqMDoVaWOhj8MQzBbhESkVLgy8w1lm1sjWOWpmZ9htmREZSLDqyrYg4VelI1H7VB1nRcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1038
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190828150037.2640-1-aford173@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The existing method of telling if a channel is sub-channel in
-vmbus_process_offer() is cumbersome. This new simple helper function
-is preferred in future.
+Hi,
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
- include/linux/hyperv.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+* Adam Ford <aford173@gmail.com> [190828 15:01]:
+> The datasheet for the AM3517 shows the RNG is connected to L4.
+> It shows the module address for the RNG is 0x480A0000, and it
+> matches the omap2.dtsi description.  Since the driver can support
+> omap2 and omap4, it seems reasonable to assume the omap3 would
+> use the same core for the RNG.
+> 
+> This RFC, mimics much of the omap2 hwmods on the OMAP3. It
+> also adds the necessary clock for driving the RNG.  Unfortunately,
+> it appears non-functional.  If anyone has any suggestions on how
+> to finish the hwmod (or port it to the newer l4 device tree
+> format), feedback is requested.
 
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 6256cc3..2d39248 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -245,7 +245,10 @@ struct vmbus_channel_offer {
- 		} pipe;
- 	} u;
- 	/*
--	 * The sub_channel_index is defined in win8.
-+	 * The sub_channel_index is defined in Win8: a value of zero means a
-+	 * primary channel and a value of non-zero means a sub-channel.
-+	 *
-+	 * Before Win8, the field is reserved, meaning it's always zero.
- 	 */
- 	u16 sub_channel_index;
- 	u16 reserved3;
-@@ -934,6 +937,11 @@ static inline bool is_hvsock_channel(const struct vmbu=
-s_channel *c)
- 		  VMBUS_CHANNEL_TLNPI_PROVIDER_OFFER);
- }
-=20
-+static inline bool is_sub_channel(const struct vmbus_channel *c)
-+{
-+	return c->offermsg.offer.sub_channel_index !=3D 0;
-+}
+Yup I'll take the bait :) The patch below seems to do the trick
+for me on dm3730 based on translating your patch to probe with
+ti-sysc.
+
+Not sure about 34xx, it seems we're missing rng_clk? Care
+to give it a try and attempt simlar patches for 34xx and
+3517?
+
+At least I'm not needing the "ti,no-reset-on-init" property
+that your patch has a comment for. Maybe that's needed on
+some other omap3.
+
+Oh and this needs to default to status = "disabled" for
+HS devices like n900 as it needs to use the omap3-rom-rng.
+
+Regards,
+
+Tony
+
+8< -----------------------
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -140,6 +140,29 @@
+ 			};
+ 		};
+ 
++		rng_target: target-module@480a0000 {
++			compatible = "ti,sysc-omap2", "ti,sysc";
++			reg = <0x480a003c 0x4>,
++			      <0x480a0040 0x4>,
++			      <0x480a0044 0x4>;
++			reg-names = "rev", "sysc", "syss";
++			ti,sysc-mask = <(SYSC_OMAP2_AUTOIDLE)>;
++			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
++					<SYSC_IDLE_NO>;
++			ti,syss-mask = <1>;
++			clocks = <&rng_ick>;
++			clock-names = "ick";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0x480a0000 0x2000>;
 +
- static inline void set_channel_affinity_state(struct vmbus_channel *c,
- 					      enum hv_numa_policy policy)
- {
---=20
-1.8.3.1
-
++			rng: rng@0 {
++				compatible = "ti,omap2-rng";
++				reg = <0x0 0x2000>;
++				interrupts = <52>;
++			};
++		};
++
+ 		/*
+ 		 * Note that the sysconfig register layout is a subset of the
+ 		 * "ti,sysc-omap4" type register with just sidle and midle bits
