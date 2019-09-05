@@ -2,166 +2,238 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AAABC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4ECC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213F220870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64946206DE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 17:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=labbott.name header.i=@labbott.name header.b="s8B3vn/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387702AbfIERGz (ORCPT
+        id S2389245AbfIERIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 13:06:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11540 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731289AbfIERGy (ORCPT
+        Thu, 5 Sep 2019 13:08:31 -0400
+Received: from mail-io1-f41.google.com ([209.85.166.41]:42001 "EHLO
+        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732403AbfIERIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 13:06:54 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85H6g4N053820
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 13:06:53 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut0m81emx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 13:06:51 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Thu, 5 Sep 2019 18:06:42 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Sep 2019 18:06:33 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85H68Tu33030630
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 17:06:08 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 104054C050;
-        Thu,  5 Sep 2019 17:06:32 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0017A4C044;
-        Thu,  5 Sep 2019 17:06:30 +0000 (GMT)
-Received: from thinkpad (unknown [9.152.96.45])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Sep 2019 17:06:30 +0000 (GMT)
-Date:   Thu, 5 Sep 2019 19:06:29 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
- page table helpers
-In-Reply-To: <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
-References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
-        <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
-        <20190904221618.1b624a98@thinkpad>
-        <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090517-0012-0000-0000-000003471F7D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090517-0013-0000-0000-000021817691
-Message-Id: <20190905190629.523bdb87@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050164
+        Thu, 5 Sep 2019 13:08:31 -0400
+Received: by mail-io1-f41.google.com with SMTP id n197so6433755iod.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 10:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=labbott.name; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:date:references
+         :to:in-reply-to:message-id;
+        bh=uFRmeqr4ImXzE2YrX6PwPkXowk12+Bgtqx8az+3QeJM=;
+        b=s8B3vn/sw0hKicQLnoGbAzczXLHh0zknu3IXAjJWmChdcLzCzignHdddivGx1Fj0kj
+         /D4GrVBMuFbyFQBZyafWTs/Eyv7le0hwjZmj0fonm6NGaeWipdWXvSU3DmYle6eE3uHN
+         yGs9QNAMEa3/L9uFsg/2jkxTgBmgQBRpR6q54=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:date:references:to:in-reply-to:message-id;
+        bh=uFRmeqr4ImXzE2YrX6PwPkXowk12+Bgtqx8az+3QeJM=;
+        b=ZdQZb9PzZm1xBmWfWd0/vnwx3eW54LfqmBu7ExftEH0TfPikL4oUgxdn8LL3SLM9KA
+         tfRYSTbt222C1L3/0PrHUTgSCBKR9iNIsW4IjDiP29GiRBng1mamjBuSNJJHhhXPoqhY
+         vV8fkrE16UOAnluMhyHDrT6eVkhQLSkmVM86Y4XIkf5OE5fztQcEnnqbU54dcxhs1Fop
+         BiV+DoatCek5YOgYujEUIFZbid0Nc0+gWzMpJI5RKMYcoKWd5xo+pmXY99WyatJUwVx2
+         /srQB6BR7T6FzeASHtg1anwoyvI7PNEBWZgdqrdeZ2qIXfLs1g0ChJixWqUQFHIfQ/zv
+         JSAA==
+X-Gm-Message-State: APjAAAWCzVAbKyMOA8gH8PzoBMHT3dhTOBvvatv0DEB63M/YTs7Jrnwr
+        NMERPrR7T00IvOyWF9Wi5auiKg==
+X-Google-Smtp-Source: APXvYqxPNqY25iZOGsF3Yc/WFp8cLpdVc2X/x4i/PAysDfU6fITl8EbcyM6u18QQyy7iblF/G814kA==
+X-Received: by 2002:a5e:d90e:: with SMTP id n14mr5279937iop.29.1567703310144;
+        Thu, 05 Sep 2019 10:08:30 -0700 (PDT)
+Received: from [172.20.41.33] ([12.116.165.10])
+        by smtp.gmail.com with ESMTPSA id m67sm4107925iof.21.2019.09.05.10.08.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 10:08:29 -0700 (PDT)
+From:   Laura Abbott <laura@labbott.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: Linux Foundation Technical Advisory Board Elections -- voting
+ procedures
+Date:   Thu, 5 Sep 2019 13:08:23 -0400
+References: <0F702CB8-6D0C-4550-9EA7-EE86B4D96073@labbott.name>
+To:     ksummit-discuss@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <0F702CB8-6D0C-4550-9EA7-EE86B4D96073@labbott.name>
+Message-Id: <C232C11A-D3FA-476C-8F71-58F675246D37@labbott.name>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 14:48:14 +0530
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-> > [...]  
-> >> +
-> >> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-> >> +static void pud_clear_tests(pud_t *pudp)
-> >> +{
-> >> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
-> >> +	pud_clear(pudp);
-> >> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
-> >> +}  
-> > 
-> > For pgd/p4d/pud_clear(), we only clear if the page table level is present
-> > and not folded. The memset() here overwrites the table type bits, so
-> > pud_clear() will not clear anything on s390 and the pud_none() check will
-> > fail.
-> > Would it be possible to OR a (larger) random value into the table, so that
-> > the lower 12 bits would be preserved?  
-> 
-> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
-> it should OR a large random value preserving lower 12 bits. Hmm, this should
-> still do the trick for other platforms, they just need non zero value. So on
-> s390, the lower 12 bits on the page table entry already has valid value while
-> entering this function which would make sure that pud_clear() really does
-> clear the entry ?
+> On Sep 3, 2019, at 7:13 AM, Laura Abbott <laura@labbott.name> wrote:
+>=20
+> Hi,
+>=20
+> On behalf of the Linux Foundation Technical Advisory Board (TAB), I'd =
+like to
+> take this opportunity to announce the voting procedures for the 2019 =
+TAB
+> elections. As was announced[1], this year we are moving to electronic =
+voting.
+>=20
+> Everyone who is registered for kernel summit (co-located with Linux =
+Plumbers
+> Conference in Lisbon this year) by September 8th 2019 is eligible to =
+vote in
+> this year's TAB elections. This includes everyone registered for =
+Plumbers and
+> Maintainers summit. All eligible voters will receive a link from
+> Condorcet Internet Voting Service (https://civs.cs.cornell.edu) by the
+> start of the first Plumbers session (September 9th 10am UTC+1). The =
+voting
+> will run until September 11th at 10am UTC+1.
+>=20
+> The list of all candidates and their platform is available at the =
+following
+> Google doc
+>=20
+> =
+https://docs.google.com/document/d/1E3_W1c-xJMx9o2PCnKiGt3vqs-mPh77yNO4GSq=
+NipOQ/edit?usp=3Dsharing
+>=20
+> We will also be hosting an open TAB session at Plumbers on Monday
+> September 9th at 18:30. A more detailed FAQ about voting procedures is
+> below.
+>=20
+> If you have any questions, feel free to reach out to
+> tab@lists.linux-foundation.org .
+>=20
+> Thanks,
+> Laura
+>=20
+> P.S. Please consider this a reminder to send in your TAB nominations!
+>=20
+> [1] =
+https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
+82.html
+>=20
+> ---
+>=20
+> Q: Why are we making this change?
+> A: As explained in the previous announcement,
+> =
+https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2019-July/0065=
+82.html
+> In person voting has a number of limitations. We'd like to move to =
+electronic
+> voting with the objective of giving more members of our community a =
+voice in
+> the membership of the TAB
+>=20
+> Q: Who is eligible to vote?
+> A: All registered attendees of Plumbers and Kernel Maintainers Summit =
+are
+> eligible.
+>=20
+> Q: If I am registered for Plumbers but not attending can I still vote?
+> A: We will be sending the e-mail to all registered attendees before =
+confirming
+> they are present.
+>=20
+> Q: Can I register for Plumbers just to vote?
+> A: Plumbers is sold out this year.
+>=20
+> Q: Why bother with electronic voting if the voting pool is still =
+conference
+> attendees?
+> A: The kernel philosophy is small incremental changes. Based on =
+discussions
+> with the TAB, changing the voting method and widening the voting pool
+> simultaneously was too much for one year. The goal is to run the =
+electronic
+> voting this year with the same voting pool and then discuss how voting =
+will
+> work in subsequent years.
+>=20
+> Q: When does voting start?
+> A: E-mails with the voting link will be sent out before the start of =
+the
+> first Plumbers session on Monday September 9th at 10am UTC+1
+>=20
+> Q: When does voting end?
+> A: Voting ends on September 11th at 10am UTC+1
+>=20
+> Q: What's the software used for voting?
+> A: We will be using the hosted version of the Condorcet Internet =
+Voting Service
+> (CIVS) at https://civs.cs.cornell.edu
+>=20
+> Q: Is this code open source?
+> A: Yes. The code is available under a BSD-like research license
+>=20
+> Q: How do I vote?
+> A: You will receive an e-mail by Monday September 9th at 10am UTC+1 =
+with
+> a link to vote.
+>=20
+> Q: Is this method of voting secure?
+> A: Privacy and security is a focus of CIVS. See
+> https://civs.cs.cornell.edu/sec_priv.html for more information.
+>=20
+> Q: The website mentions ranked choice voting. What is this?
+> A: In ranked choice voting, you rank your preferred choices from most
+> to least liked. The theory is this results in a more accurate =
+representation
+> of what the voter pool wants. This is a different method than we've =
+used
+> for TAB elections in the past where you indicated your preferred $n =
+out
+> of $m candidates. Because we are using the hosted version of CIVS, we =
+did
+> not have the option to use our old method of voting.
+>=20
+> Q: The description mentions an 'election supervisor'. What is this =
+role?
+> A: The election supervisor's role is to start and stop the poll, send
+> links to voters, and set various options for the poll. A single e-mail
+> address is used to e-mail the link to manage the election, after which
+> anyone with the link can manage the poll.
+>=20
+> Q: Who is the election supervisor for the TAB elections?
+> A: We have created a mailing list for election management. This =
+mailing
+> list contains individuals from the kernel community who are not =
+running
+> for the TAB this year, similar to in-person proctors from past years.
+> We are still working on getting the mailing list set up, the address =
+will
+> be announced when it is ready.
+>=20
+> Q: What if I lose the e-mail before I vote?
+> A: Please e-mail the election list, address to be announced
+>=20
+> Q: What if I want to change my vote?
+> A: This is not possible, please make sure you've made your final =
+choices
+> when you click submit.
+>=20
+> Q: What if I want to practice voting?
+> A: CIVS has a number of sample polls available. Feel free to vote in =
+those
+> to see how the process works.
+>=20
+> Q: What if something unforeseen happens with electronic voting and we =
+don't
+> end up with results?
+> A: We will arrange an in person vote similar to previous years.
+>=20
+> Q: What if I have questions not addressed here?
+> A: E-mail tab@lists.linuxfoundation.org for the current Technical =
+Advisory
+> Board or the election list, address to be announced
+>=20
 
-Yes, in theory the table entry on s390 would have the type set in the last
-4 bits, so preserving those would be enough. If it does not conflict with
-others, I would still suggest preserving all 12 bits since those would contain
-arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
-would also work with the memset, but for consistency I think the same logic
-should be used in all pxd_clear_tests.
-
-However, there is another issue on s390 which will make this only work
-for pud_clear_tests(), and not for the p4d/pgd_tests. The problem is that
-mm_alloc() will only give you a 3-level page table initially on s390.
-This means that pudp == p4dp == pgdp, and so the p4d/pgd_tests will
-both see the pud level (of course this also affects other tests).
-
-Not sure yet how to fix this, i.e. how to initialize/update the page table
-to 5 levels. We can handle 5 level page tables, and it would be good if
-all levels could be tested, but using mm_alloc() to establish the page
-tables might not work on s390. One option could be to provide an arch-hook
-or weak function to allocate/initialize the mm.
-
-IIUC, the (dummy) mm is really only needed to provide an mm->pgd as starting
-point, right?
-
-Regards,
-Gerald
+The mailing list for questions about elections is =
+tab-elections@lists.linuxfoundation.org
 
