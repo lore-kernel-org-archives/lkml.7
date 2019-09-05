@@ -2,127 +2,155 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0A7C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7577EC43140
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90DA20CC7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221CE20CC7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 16:18:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Rs23x8dw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kl4bnPES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732754AbfIEQQt (ORCPT
+        id S1733029AbfIEQSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 12:16:49 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33824 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729050AbfIEQQs (ORCPT
+        Thu, 5 Sep 2019 12:18:02 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43717 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731806AbfIEQSB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 12:16:48 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n9so1696188pgc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:16:48 -0700 (PDT)
+        Thu, 5 Sep 2019 12:18:01 -0400
+Received: by mail-pl1-f196.google.com with SMTP id 4so1515393pld.10
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zLM+6nR5kv0jA5pGHIzbvsVXa3x+dUW2QtYks/r40f8=;
-        b=Rs23x8dw7GNwFF5sAuRVlA7534c9DKs0L/yALEsSWRiX4/5qSOq4NsK/+UkxmIa5la
-         Gq/rTRc8kEE1eEFrGxGAuNTTnQ0iawxg53jfe6sYokG7mIkkq3ZYbAE1uMWLCmsnerLw
-         +pC8IIsmjQ2c7fy3Y9Qq+TjopTvaljw//fQliuUdnTRWCD+tev7K5ztgokg9Qw5qdoRi
-         LKD6d0yFh9jVBb/gWWCma52CyZziSZyX6VcXQ/WVHH7eQt66nfsmI5Zn5Dd849Dwqmyj
-         BZjMHQ9xA9yr1+faHo1NgNM8I47zagV/SXGBm4tcYhSdY7w/8Zt/7H2SRUPZH9wE0Ohw
-         raZg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=mukYH+OPB5B2Q8cIXti1kEopT3yxftlik4aW1yItWl0=;
+        b=Kl4bnPESFCY769er88olLvIMydPIt7MSvRLFnbrMUBFJe2XGXC8oNJ+eB44CxUq8Z8
+         icVfI4Z7Zv2fzyYYpmgSfOeLpo80hrioId35SGiSFn9P8y2EAYTnu2zhJFWW2+ZCCuVB
+         Acsg/wxujlaWpromsOPO/XEkL8skQ8K6nxVzl/UgdDGnWguc6yvHxK/Wv797MeTMZZKg
+         uTS6IS/ihZs3WKvkhpct4BSG3iQljiRqCPgkcGGvlkMO9io8/jgOGOyYiaq1v5JzqePy
+         StJEuicwLxbARj/KoZGqt30jsFFl3ji38xfmmhdmOvICWnSF2ih5SFi0lKIRKtupViAc
+         aAVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=zLM+6nR5kv0jA5pGHIzbvsVXa3x+dUW2QtYks/r40f8=;
-        b=bvuVEaYencJiNQL+ZXgKGI7HQ0JFNcEphNUj9CLuMei5KlW3qFW072Dd+AtVE8aD+7
-         mlxGzR+lnEHHSnJ+4ZzmKzsu7sf6LIiNmSNRzKZV7Rov3x5/LtXM043bfejH2sOsjdQx
-         eoEoW5ZPRD9NjwxBdqHpu/i3Hbg7qXEKXjZshU8RGbFtQip7KP4Dzh1OuA9VX1wP1XCF
-         XSQmGn1mmXUGHcR45bgoqYwN7l9EIrdwV9jWn5NeBwlt3Y8JqvwPOdbm4azTyiL9Ra7U
-         3MyJdZ56Zj0HTVvdPUvrmoO7dsc8r0wrkUeQhO+qrIVR09c9+jO3U44or7EdRjkOoBh/
-         g8Zg==
-X-Gm-Message-State: APjAAAUnrxAVcWIBbh/lN3UJRMZpZGlHaf3fVDF1KXYK0HXltxXR1p0K
-        DkvrtCFl3GefJx16UhMZezdpiA==
-X-Google-Smtp-Source: APXvYqxEBFkp4cs0Pgueg9uCVRPDD958q5uceWoGhxYtP8uOhgc042tzvTTvOAKl/Q+rSGxux5qnbg==
-X-Received: by 2002:a63:5648:: with SMTP id g8mr3831728pgm.81.1567700207580;
-        Thu, 05 Sep 2019 09:16:47 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:765b:31cb:30c4:166])
-        by smtp.gmail.com with ESMTPSA id c125sm4858015pfa.107.2019.09.05.09.16.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mukYH+OPB5B2Q8cIXti1kEopT3yxftlik4aW1yItWl0=;
+        b=RtGEiiNJ7If92Xjsy9I8q2FbntTt/syHbeWiODwT3KmfrH5WUF3MPv7q7mY8JWJY8S
+         HaOxtrRaTWkOnW9p4+D1aZpxdOygBDMdQxRduRa35U6TbX2aet1Gdvzy1RX3+QhHEgkS
+         /qqmASlod9h8Jb7U45sZaMxv0GlLAMh5JvU/e/B5thbaY6I1BXJnJUZLaJMld/OfZWzA
+         59ZzX62Mh+bL7dqnE8Nusk5T+bGZfd2iG1889OWoeOpN7ofV8OySKGwSqOTH+swRRKRd
+         Pm6cSoksQgC9GTeRR7fIdrZkBcE/vEujGGIEATAMPdH1vxbZJ/Th72RxkLVX/r6bOQ1F
+         9i1A==
+X-Gm-Message-State: APjAAAUw1jJf3sRE1hbMONXEuLckLtfmnnl68jLlRqtCgNZfmDZAHutl
+        9pfuOIySDgRhnXHHsju8BwLBKg==
+X-Google-Smtp-Source: APXvYqzStzXxTWL+1VFEsqINN1zYVOMyUuv7eD3n8K9EXYt6eOChXB640bT4MB9P7QjeXftsWyVKSw==
+X-Received: by 2002:a17:902:b583:: with SMTP id a3mr4258322pls.52.1567700281066;
+        Thu, 05 Sep 2019 09:18:01 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id m129sm6324005pga.39.2019.09.05.09.17.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 09:16:46 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 09:16:42 -0700
-From:   Eric Biggers <ebiggers@google.com>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     stable@vger.kernel.org, paulus@samba.org,
-        linux-ppp@vger.kernel.org, netdev@vger.kernel.org, arnd@arndb.de,
-        orsonzhai@gmail.com, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [BACKPORT 4.14.y v2 5/6] ppp: mppe: Revert "ppp: mppe: Add
- softdep to arc4"
-Message-ID: <20190905161642.GA5659@google.com>
-Mail-Followup-To: Baolin Wang <baolin.wang@linaro.org>,
-        stable@vger.kernel.org, paulus@samba.org, linux-ppp@vger.kernel.org,
-        netdev@vger.kernel.org, arnd@arndb.de, orsonzhai@gmail.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org
-References: <cover.1567649728.git.baolin.wang@linaro.org>
- <c24710bae9098ba971a2778a1a44627d5fa3ddc0.1567649729.git.baolin.wang@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c24710bae9098ba971a2778a1a44627d5fa3ddc0.1567649729.git.baolin.wang@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 05 Sep 2019 09:18:00 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     stable@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [BACKPORT 4.14.y 00/18] Backport candidate from TI 4.14 product kernel 
+Date:   Thu,  5 Sep 2019 10:17:41 -0600
+Message-Id: <20190905161759.28036-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 11:10:45AM +0800, Baolin Wang wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> [Upstream commit 25a09ce79639a8775244808c17282c491cff89cf]
-> 
-> Commit 0e5a610b5ca5 ("ppp: mppe: switch to RC4 library interface"),
-> which was merged through the crypto tree for v5.3, changed ppp_mppe.c to
-> use the new arc4_crypt() library function rather than access RC4 through
-> the dynamic crypto_skcipher API.
-> 
-> Meanwhile commit aad1dcc4f011 ("ppp: mppe: Add softdep to arc4") was
-> merged through the net tree and added a module soft-dependency on "arc4".
-> 
-> The latter commit no longer makes sense because the code now uses the
-> "libarc4" module rather than "arc4", and also due to the direct use of
-> arc4_crypt(), no module soft-dependency is required.
-> 
-> So revert the latter commit.
-> 
-> Cc: Takashi Iwai <tiwai@suse.de>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  drivers/net/ppp/ppp_mppe.c |    1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/net/ppp/ppp_mppe.c b/drivers/net/ppp/ppp_mppe.c
-> index d9eda7c..6c7fd98 100644
-> --- a/drivers/net/ppp/ppp_mppe.c
-> +++ b/drivers/net/ppp/ppp_mppe.c
-> @@ -63,7 +63,6 @@
->  MODULE_DESCRIPTION("Point-to-Point Protocol Microsoft Point-to-Point Encryption support");
->  MODULE_LICENSE("Dual BSD/GPL");
->  MODULE_ALIAS("ppp-compress-" __stringify(CI_MPPE));
-> -MODULE_SOFTDEP("pre: arc4");
+These patches are backport candidates picked out of TI's 4.14.y tree [1],
+with most of them already found in the 4.19.y stable tree.
 
-Why is this being backported?  This revert was only needed because of a
-different patch that was merged in v5.3, as I explained in the commit message.
+The set apply and compiles cleanly on 4.14.141.
 
-- Eric
+Thanks,
+Mathieu
+
+
+[1]. http://git.ti.com/gitweb/?p=ti-linux-kernel/ti-linux-kernel.git;a=shortlog;h=refs/heads/ti-linux-4.14.y
+
+Andrew F. Davis (1):
+  ASoC: tlv320aic31xx: Handle inverted BCLK in non-DSP modes
+
+Arvind Yadav (1):
+  ASoC: davinci-mcasp: Handle return value of devm_kasprintf
+
+Christophe Jaillet (1):
+  ASoC: davinci-mcasp: Fix an error handling path in
+    'davinci_mcasp_probe()'
+
+Claudio Foellmi (1):
+  i2c: omap: Trigger bus recovery in lockup case
+
+Dan Carpenter (1):
+  misc: pci_endpoint_test: Prevent some integer overflows
+
+Gustavo A. R. Silva (1):
+  ASoC: tlv320dac31xx: mark expected switch fall-through
+
+Keerthy (2):
+  mfd: palmas: Assign the right powerhold mask for tps65917
+  PCI: dra7xx: Add shutdown handler to cleanly turn off clocks
+
+Kishon Vijay Abraham I (1):
+  misc: pci_endpoint_test: Fix BUG_ON error during pci_disable_msi()
+
+Niklas Cassel (1):
+  PCI: designware-ep: Fix find_first_zero_bit() usage
+
+Roger Quadros (1):
+  usb: dwc3: Allow disabling of metastability workaround
+
+Roman Yeryomin (1):
+  mtd: spi-nor: enable 4B opcodes for mx66l51235l
+
+Sudeep Holla (1):
+  mailbox: reset txdone_method TXDONE_BY_POLL if client knows_txdone
+
+Takashi Iwai (1):
+  ASoC: davinci: Kill BUG_ON() usage
+
+Tony Lindgren (1):
+  drm/omap: panel-dsi-cm: fix driver
+
+Vignesh R (2):
+  PCI: dra7xx: Fix legacy INTD IRQ handling
+  mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+
+Zumeng Chen (1):
+  cpufreq: ti-cpufreq: add missing of_node_put()
+
+ .../devicetree/bindings/usb/dwc3.txt          |  2 +
+ drivers/cpufreq/ti-cpufreq.c                  |  1 +
+ .../gpu/drm/omapdrm/displays/panel-dsi-cm.c   | 56 +++++++++++++++++--
+ drivers/i2c/busses/i2c-omap.c                 | 25 ++++++++-
+ drivers/mailbox/mailbox.c                     |  4 +-
+ drivers/mailbox/pcc.c                         |  4 +-
+ drivers/mfd/palmas.c                          | 10 +++-
+ drivers/misc/pci_endpoint_test.c              | 17 ++++++
+ drivers/mtd/spi-nor/cadence-quadspi.c         | 27 ++++++++-
+ drivers/mtd/spi-nor/spi-nor.c                 |  2 +-
+ drivers/pci/dwc/pci-dra7xx.c                  | 20 ++++++-
+ drivers/pci/dwc/pcie-designware-ep.c          | 34 ++++++++---
+ drivers/pci/dwc/pcie-designware.h             |  8 ++-
+ drivers/usb/dwc3/core.c                       |  3 +
+ drivers/usb/dwc3/core.h                       |  3 +
+ drivers/usb/dwc3/gadget.c                     |  6 +-
+ include/linux/mfd/palmas.h                    |  3 +
+ sound/soc/codecs/tlv320aic31xx.c              | 30 ++++++----
+ sound/soc/davinci/davinci-mcasp.c             | 21 ++++++-
+ 19 files changed, 235 insertions(+), 41 deletions(-)
+
+-- 
+2.17.1
+
