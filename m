@@ -2,156 +2,108 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C1CC3A5AB
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE8AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1019F20674
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:03:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UlWHaWw3"
+	by mail.kernel.org (Postfix) with ESMTP id DDB8B2168B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 04:04:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726175AbfIEEDL (ORCPT
+        id S1727562AbfIEEEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 00:03:11 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41228 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfIEEDK (ORCPT
+        Thu, 5 Sep 2019 00:04:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57246 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725786AbfIEEEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:03:10 -0400
-Received: by mail-pg1-f195.google.com with SMTP id x15so615252pgg.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 21:03:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=gzTkO0Rbhbc6qGDT4uIsvz+/20vaG5J88mBFRCtZ1I0=;
-        b=UlWHaWw3ysvzZNAgX+b35OI9+m0ei8mMYZmwfZkhVK967RNE5uj2MIBkIHRATZ5esw
-         qb2hPWTAVy6dFfKt9um30IWo4TxlIZ53AIWY/28YO0JO4StEDkqmHg80vf+RH6jcQLEz
-         ZWb0ozANSR8EuLNR2PzNS6phOTLdfV9S/Q/P/YNrtoXg45wfaFcNPw+0BI/TIMwWp3WN
-         kbyD3hUtDym4qEsogP3jw/HeyECxPiimveggDTcLyrotnFzwHZ7I9jVvypxJyOSQsYAS
-         vX2rANBi1fBc+TFWVqqG5PhXk53W73VDFlESbnWLTqIV3+vpAm33Y01DXzE4l1o+yOkh
-         G2Ww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=gzTkO0Rbhbc6qGDT4uIsvz+/20vaG5J88mBFRCtZ1I0=;
-        b=Eo42yCIlBmCEqaEvoaM5bpWnpMs4WS8lod63pFcEFwVIFAmwLB2ajVYoLp+7/6v1g1
-         ZfBtbGPncs0YnO5ewZURysv8cruxEFOat1Co+pDuZj62XZ69U1lJ0SDWHiCQIfaa/fhz
-         jjU9qbkn7eIvaeRe7JgtSrPe1bbS1TUzqh+5Ao1Meg/iGzg/4Xdjp5rtSO0O4gFIuGCJ
-         khzVFJge6CqHs1qMDl4PSEMJPoqvolInzwTfYxIuUX9468dLM3CyANrY2w1/NLMNUgF4
-         PvngE9MtvAf6yhOgUQTRu0HhIMUjORhSi6LqoIUzEcOqH0GEkVh75LnEnpk1FXHG4FDC
-         dfaQ==
-X-Gm-Message-State: APjAAAVziQ+vmH2k31wFBsD7Udg6hCLKbbfOqPSukeXC6NHbP5pklSb/
-        LLvR5QgS0wFnFXFl1mKbLTPDyQ==
-X-Google-Smtp-Source: APXvYqyzIkvz0yA2lrEI0RaVsZGYFyE3s0khoYRmNK/psHtkaYkobCO80VWq1O/SIMOTnPn49zIaiQ==
-X-Received: by 2002:aa7:8a13:: with SMTP id m19mr1324958pfa.228.1567656190065;
-        Wed, 04 Sep 2019 21:03:10 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u9sm498058pjb.4.2019.09.04.21.03.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Sep 2019 21:03:09 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] ASoC: qcom: common: Include link-name in error messages
-Date:   Wed,  4 Sep 2019 21:03:06 -0700
-Message-Id: <20190905040306.21399-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Thu, 5 Sep 2019 00:04:05 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8542YLA025101
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Sep 2019 00:04:04 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2utn8puy1m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 00:04:04 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <michaele@au1.ibm.com>;
+        Thu, 5 Sep 2019 05:04:02 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Sep 2019 05:03:58 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8543uBQ11665444
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 04:03:57 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6C124204C;
+        Thu,  5 Sep 2019 04:03:56 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7279242045;
+        Thu,  5 Sep 2019 04:03:56 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Sep 2019 04:03:56 +0000 (GMT)
+Received: from localhost (unknown [9.81.222.227])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CF2DFA0231;
+        Thu,  5 Sep 2019 14:03:54 +1000 (AEST)
+From:   Michael Ellerman <michaele@au1.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        Anshuman Khandual <anshuman.linux@gmail.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v4 02/16] powerpc/pseries: Introduce option to build secure virtual machines
+In-Reply-To: <87lfv5ky8j.fsf@morokweng.localdomain>
+References: <20190820021326.6884-3-bauerman@linux.ibm.com> <46MFv23NDjz9sNF@ozlabs.org> <87lfv5ky8j.fsf@morokweng.localdomain>
+Date:   Thu, 05 Sep 2019 14:03:54 +1000
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+x-cbid: 19090504-0008-0000-0000-00000311436B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090504-0009-0000-0000-00004A2F9AF2
+Message-Id: <878sr3pexh.fsf@mpe.ellerman.id.au>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=943 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reading out the link-name earlier and including it in the various error
-messages makes it much more convenient to figure out what links have
-unmet dependencies.
+Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+> Michael Ellerman <patch-notifications@ellerman.id.au> writes:
+>> On Tue, 2019-08-20 at 02:13:12 UTC, Thiago Jung Bauermann wrote:
+>>> Introduce CONFIG_PPC_SVM to control support for secure guests and include
+>>> Ultravisor-related helpers when it is selected
+>>> 
+>>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>>
+>> Patch 2-14 & 16 applied to powerpc next, thanks.
+>>
+>> https://git.kernel.org/powerpc/c/136bc0397ae21dbf63ca02e5775ad353a479cd2f
+>
+> Thank you very much!
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- sound/soc/qcom/common.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+No worries. I meant to say, there were some minor differences between
+your patch 15 adding the documentation and Claudio's version. If you
+want those differences applied please send me an incremental patch.
 
-diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-index 2c7348ddbbb3..6c20bdd850f3 100644
---- a/sound/soc/qcom/common.c
-+++ b/sound/soc/qcom/common.c
-@@ -53,12 +53,18 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 		link->num_cpus		= 1;
- 		link->num_platforms	= 1;
- 
-+		ret = of_property_read_string(np, "link-name", &link->name);
-+		if (ret) {
-+			dev_err(card->dev, "error getting codec dai_link name\n");
-+			goto err;
-+		}
-+
- 		cpu = of_get_child_by_name(np, "cpu");
- 		platform = of_get_child_by_name(np, "platform");
- 		codec = of_get_child_by_name(np, "codec");
- 
- 		if (!cpu) {
--			dev_err(dev, "Can't find cpu DT node\n");
-+			dev_err(dev, "%s: Can't find cpu DT node\n", link->name);
- 			ret = -EINVAL;
- 			goto err;
- 		}
-@@ -66,7 +72,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 		ret = of_parse_phandle_with_args(cpu, "sound-dai",
- 					"#sound-dai-cells", 0, &args);
- 		if (ret) {
--			dev_err(card->dev, "error getting cpu phandle\n");
-+			dev_err(card->dev, "%s: error getting cpu phandle\n", link->name);
- 			goto err;
- 		}
- 		link->cpus->of_node = args.np;
-@@ -74,7 +80,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 
- 		ret = snd_soc_of_get_dai_name(cpu, &link->cpus->dai_name);
- 		if (ret) {
--			dev_err(card->dev, "error getting cpu dai name\n");
-+			dev_err(card->dev, "%s: error getting cpu dai name\n", link->name);
- 			goto err;
- 		}
- 
-@@ -83,14 +89,14 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 					"sound-dai",
- 					0);
- 			if (!link->platforms->of_node) {
--				dev_err(card->dev, "platform dai not found\n");
-+				dev_err(card->dev, "%s: platform dai not found\n", link->name);
- 				ret = -EINVAL;
- 				goto err;
- 			}
- 
- 			ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
- 			if (ret < 0) {
--				dev_err(card->dev, "codec dai not found\n");
-+				dev_err(card->dev, "%s: codec dai not found\n", link->name);
- 				goto err;
- 			}
- 			link->no_pcm = 1;
-@@ -110,12 +116,6 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 		}
- 
- 		link->ignore_suspend = 1;
--		ret = of_property_read_string(np, "link-name", &link->name);
--		if (ret) {
--			dev_err(card->dev, "error getting codec dai_link name\n");
--			goto err;
--		}
--
- 		link->nonatomic = 1;
- 		link->dpcm_playback = 1;
- 		link->dpcm_capture = 1;
--- 
-2.18.0
+cheers
 
