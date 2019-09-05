@@ -2,140 +2,194 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6ACC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07F0C3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D81AA206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FE3206CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfIEN0q (ORCPT
+        id S1726937AbfIEN1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:26:46 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:45428 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726843AbfIEN0q (ORCPT
+        Thu, 5 Sep 2019 09:27:02 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:44657 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726606AbfIEN1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:26:46 -0400
-X-UUID: fa9d2b8632594392bb4a756e24b54930-20190905
-X-UUID: fa9d2b8632594392bb4a756e24b54930-20190905
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <jing-ting.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 424018845; Thu, 05 Sep 2019 21:26:40 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Sep 2019 21:26:37 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Sep 2019 21:26:36 +0800
-Message-ID: <1567689999.2389.5.camel@mtkswgap22>
-Subject: Re: [PATCH 1/1] sched/rt: avoid contend with CFS task
-From:   Jing-Ting Wu <jing-ting.wu@mediatek.com>
-To:     Qais Yousef <qais.yousef@arm.com>
-CC:     Valentin Schneider <valentin.schneider@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 5 Sep 2019 21:26:39 +0800
-In-Reply-To: <20190830145501.zadfv2ffuu7j46ft@e107158-lin.cambridge.arm.com>
-References: <1567048502-6064-1-git-send-email-jing-ting.wu@mediatek.com>
-         <d5100b2d-46c4-5811-8274-8b06710d2594@arm.com>
-         <20190830145501.zadfv2ffuu7j46ft@e107158-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Thu, 5 Sep 2019 09:27:01 -0400
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id A09C3100006;
+        Thu,  5 Sep 2019 13:26:52 +0000 (UTC)
+Date:   Thu, 5 Sep 2019 15:28:26 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Simon Horman <horms@verge.net.au>, Ulrich Hecht <uli@fpond.eu>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Koji Matsuoka <koji.matsuoka.xm@renesas.com>, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 01/14] dt-bindings: display: renesas,cmm: Add R-Car
+ CMM documentation
+Message-ID: <20190905132826.k5yn5ltsias2cyi2@uno.localdomain>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-2-jacopo+renesas@jmondi.org>
+ <CAMuHMdVvjrMXap5CQ-grNYpJfOG6QeN26EW4tR_YE=VFv5ozqw@mail.gmail.com>
+ <20190826075943.h7ivwagape3glym5@uno.localdomain>
+ <20190826101550.GB5031@pendragon.ideasonboard.com>
+ <20190830180108.mlei4wbfn3mktj23@uno.localdomain>
+ <20190905115017.GI5035@pendragon.ideasonboard.com>
+ <CAMuHMdW-MEQvf7MgY7XQkKap-mm8=TO8V61BFtVv63oacFTfYQ@mail.gmail.com>
+ <20190905122059.GK5035@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gxheopgdktwghftq"
+Content-Disposition: inline
+In-Reply-To: <20190905122059.GK5035@pendragon.ideasonboard.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-08-30 at 15:55 +0100, Qais Yousef wrote:
-> On 08/29/19 11:38, Valentin Schneider wrote:
-> > On 29/08/2019 04:15, Jing-Ting Wu wrote:
-> > > At original linux design, RT & CFS scheduler are independent.
-> > > Current RT task placement policy will select the first cpu in
-> > > lowest_mask, even if the first CPU is running a CFS task.
-> > > This may put RT task to a running cpu and let CFS task runnable.
-> > > 
-> > > So we select idle cpu in lowest_mask first to avoid preempting
-> > > CFS task.
-> > > 
-> > 
-> > Regarding the RT & CFS thing, that's working as intended. RT is a whole
-> > class above CFS, it shouldn't have to worry about CFS.
-> > 
-> > On the other side of things, CFS does worry about RT. We have the concept
-> > of RT-pressure in the CFS scheduler, where RT tasks will reduce a CPU's
-> > capacity (see fair.c::scale_rt_capacity()).
-> > 
-> > CPU capacity is looked at on CFS wakeup (see wake_cap() and
-> > find_idlest_cpu()), and the periodic load balancer tries to spread load
-> > over capacity, so it'll tend to put less things on CPUs that are also
-> > running RT tasks.
-> > 
-> > If RT were to start avoiding rqs with CFS tasks, we'd end up with a nasty
-> > situation were both are avoiding each other. It's even more striking when
-> > you see that RT pressure is done with a rq-wide RT util_avg, which
-> > *doesn't* get migrated when a RT task migrates. So if you decide to move
-> > a RT task to an idle CPU "B" because CPU "A" had runnable CFS tasks, the
-> > CFS scheduler will keep seeing CPU "B" as not significantly RT-pressured
-> > while that util_avg signal ramps up, whereas it would correctly see CPU
-> > "A" as RT-pressured if the RT task previously ran there.
-> > 
-> > So overall I think this is the wrong approach.
-> 
-> I like the idea, but yeah tend to agree the current approach might not be
-> enough.
-> 
-> I think the major problem here is that on generic systems where CFS is a first
-> class citizen, RT tasks can be hostile to them - not always necessarily for a
-> good reason.
-> 
-> To further complicate the matter, even among CFS tasks we can't tell which are
-> more important than the others - though hopefully latency-nice proposal will
-> make the situation better.
-> 
-> So I agree we have a problem here, but I think this patch is just a temporary
-> band aid and we need to do better. Though I have no concrete suggestion yet on
-> how to do that.
-> 
-> Another thing I couldn't quantify yet how common and how severe this problem is
-> yet. Jing-Ting, if you can share the details of your use case that'd be great.
-> 
-> Cheers
-> 
+
+--gxheopgdktwghftq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Laurent, Geert,
+
+
+On Thu, Sep 05, 2019 at 03:20:59PM +0300, Laurent Pinchart wrote:
+> Hi Geert,
+>
+> On Thu, Sep 05, 2019 at 02:05:34PM +0200, Geert Uytterhoeven wrote:
+> > On Thu, Sep 5, 2019 at 1:50 PM Laurent Pinchart wrote:
+> > > On Fri, Aug 30, 2019 at 08:01:09PM +0200, Jacopo Mondi wrote:
+> > > > On Mon, Aug 26, 2019 at 01:15:50PM +0300, Laurent Pinchart wrote:
+> > > > > How about converting this binding to yaml alreay ? It should be fairly
+> > > > > simple.
+> > > >
+> > > > I'm trying to, and I'm having my portion of fun time at it.
+> > > >
+> > > > The definition of the schema itself seems good, but I wonder, is this
+> > > > the first renesas schema we have? Because it seems to me the schema
+> > > > validator is having an hard time to digest the examplea 'clocks' and
+> > > > 'power-domains' properties, which have 1 phandle and 2 specifiers and 1
+> > > > phandle and 1 specifier respectively for Rensas SoCs.
+> > > >
+> > > > In other words, if in the example I have:
+> > > >
+> > > >  examples:
+> > > >    - |
+> > > >      cmm0: cmm@fea40000 {
+> > > >           compatible = "renesas,r8a7796-cmm";
+> > > >           reg = <0 0xfea40000 0 0x1000>;
+> > > >           clocks = <&cpg 711>              <---- 1 phandle + 1 specifier
+> > > >           resets = <&cpg 711>;
+> > > >           power-domains = <&sysc>;         <---- 1 phandle
+> > > >      };
+> > > >
+> > > > The schema validation is good.
+> > > >
+> > > > While if I use an actual example
+> > > >    - |
+> > > >      cmm0: cmm@fea40000 {
+> > > >           compatible = "renesas,r8a7796-cmm";
+> > > >           reg = <0 0xfea40000 0 0x1000>;
+> > > >           clocks = <&cpg CPG_MOD 711>         <---- 1 phandle + 2 specifier
+> > > >           resets = <&cpg 711>;
+> > > >           power-domains = <&sysc R8A7796_PD_ALWAYS_ON>; <---- 1 phandle
+> > > >      };                                                       + 1 specfier
+> > > >
+> > > > The schema validation fails...
+> > > > Error: Documentation/devicetree/bindings/display/renesas,cmm.example.dts:20.29-30 syntax error
+> > > > FATAL ERROR: Unable to parse input tree
+> > > >
+> > > > Are clocks properties with > 2 entries and power-domains properties with
+> > > > > 1 entries supported?
+> > > >
+> > > > Because from what I read here:
+> > > > https://github.com/robherring/yaml-bindings/blob/master/schemas/clock/clock.yaml
+> > > > "The length of a clock specifier is defined by the value of a #clock-cells
+> > > > property in the clock provider node."
+> > > >
+> > > > And that's expected, but is the examples actually validated against the
+> > > > clock provider pointed by the phandle? Because in that case, if we had a
+> > > > yaml schema for the cpg-mssr provider, it would indeed specify clock-cells=2.
+> > > >
+> > > > Do we need a schema for cpg-mssr first, or am I doing something else
+> > > > wrong?
+> > >
+> > > I think you just need to #include the headers that define CPG_MOD and
+> > > R8A7796_PD_ALWAYS_ON.
+> >
+> > If that helps, you might want to replace the symbols in the examples by their
+> > actual values (1 resp. 32).
+> >
+> > And perhaps keep the symbols as comments?
+> >
+> >         clocks = <&cpg 1 /* CPG_MOD */ 711>;
+> >         power-domains = <&sysc 32 /* R8A7796_PD_ALWAYS_ON */>;
+>
+> I think adding the required #include at the beginning of the example is
+> a better solution.
+
+I didn't realize that, but it actually makes sense, as the example is
+extracted and actually compiled from the yaml schema.. brilliant!
+
+With a simple:
+
+--- a/Documentation/devicetree/bindings/display/renesas,cmm.yaml
++++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+@@ -51,6 +51,9 @@ additionalProperties: false
+
+ examples:
+   - |
++    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
++    #include <dt-bindings/power/r8a7796-sysc.h>
+
+The example now compiles.
+
+Thanks, I will submit the bindings in yaml format in next iteration.
+
+>
 > --
-> Qais Yousef
+> Regards,
+>
+> Laurent Pinchart
 
+--gxheopgdktwghftq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I agree that the nasty situation will happen.The current approach and this patch might not be enough.
-But for requirement of performance, I think it is better to differentiate between idle CPU and CPU has CFS task.
+-----BEGIN PGP SIGNATURE-----
 
-For example, we use rt-app to evaluate runnable time on non-patched environment.
-There are (NR_CPUS-1) heavy CFS tasks and 1 RT Task. When a CFS task is running, the RT task wakes up and choose the same CPU.
-The CFS task will be preempted and keep runnable until it is migrated to another cpu by load balance.
-But load balance is not triggered immediately, it will be triggered until timer tick hits with some condition satisfied(ex. rq->next_balance).
-CFS tasks may be runnable for a long time. In this test case, it increase 332.091 ms runnable time for CFS task.
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl1xDXoACgkQcjQGjxah
+Vjy4Dg/8DGPc6KerGdHYq5Hdpy8U5Y92IMizppaQy9fpz+qQHURT/Y79Rli9j6zx
+EGVP1SE/D2DKYkWn9OyVtjcQib0ZR5emr7UoID8I+Pmwq1syn1pbuAxXNhV+Gj/I
+bECVgYyHyWzmutgUb41OL8doagWUmmNKk9W5B6jS+mFBpeSySPczvGU4rh8SiDQs
+1GdAjDWJ9H7I6xVfjU1mPlYBMr0/ufzw6tkYHapCPHayDvuYR9LVdTaw70WD8iLZ
+bwAVMaTVuD4ir7Uh8KGNcdub3vF85/naLzd9yWCz4Clzkg0CQCmUI5411jNVS0dK
+3iyEO/6BDy/LG8UDguFL5IaM+46Hh2fVVkwnwBZd50cWP+CUHu+w7uNdc4XGmVO4
+hG2SqpBZIOaBeIfWPb7yhVt66/LEgC9nmOVfjgVynO5+9CwZw8DuApb5iLG4+7Ds
+Z+pp46sfrMEQLU/Aw1/MGj2wksYEC427UI161pdVjPka7wnhlNr2hasNgb36ShDz
+TQHOEVp7OGsajo9oqxsKyAvTIx8HXflrd/LTNZmmMrRF8B0QKU8i1Xj8v1AJMvGw
+Cyr8oV0BCnZQg+Qa/Ujhv0bxmCnrXrhmdVhfCqvhTo2ulOdpNEnp7oWa05QRdpMS
+55MjegmjoLIHvl8ZJeRquJMGGoVwzjaIT0bAVd6/8OGXBWQQZyQ=
+=tNT+
+-----END PGP SIGNATURE-----
 
-The detailed log is shown as following, CFS task(thread1-6580) is preempted by RT task(thread0-6674) about 332ms:
-thread1-6580  [003] dnh2    94.452898: sched_wakeup: comm=thread0 pid=6674 prio=89 target_cpu=003 
-thread1-6580  [003] d..2    94.452916: sched_switch: prev_comm=thread1 prev_pid=6580 prev_prio=120 prev_state=R ==> next_comm=thread0 next_pid=6674 next_prio=89
-.... 332.091ms
-krtatm-1930  [001] d..2    94.785007: sched_migrate_task: comm=thread1 pid=6580 prio=120 orig_cpu=3 dest_cpu=1
-krtatm-1930  [001] d..2    94.785020: sched_switch: prev_comm=krtatm prev_pid=1930 prev_prio=100 prev_state=S ==> next_comm=thread1 next_pid=6580 next_prio=120
-
-So I think choose idle CPU at RT wake up flow could reduce the CFS runnable time. 
-
-
-Best regards,
-Jing-Ting Wu
-
-
+--gxheopgdktwghftq--
