@@ -2,116 +2,73 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B28C0030B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E39C0030C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C34206CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567693214;
-	bh=Q/wop4+TbQrDGzkdGySYx4C8Obj8YD0BcMoje+4adYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZNi7XDZoteZqncvolUMoQjkvdMrJohNiCpe64vRNVfgw8DKAZ7u4ZiUFMYOWlkfly
-	 GvMi+57M28eCcJPJNr7awUEhOnTjHPbaQ1ESejmqFdzmOwWxQyMY00LG9xeWxT0CXc
-	 1KdCa850clv4e9mARQLqnrR/LalnZtHD8Hah074k=
+	by mail.kernel.org (Postfix) with ESMTP id 741B621929
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 14:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388288AbfIEOUN (ORCPT
+        id S1730236AbfIEOLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 10:20:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47510 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725290AbfIEOUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 10:20:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A5554AF92;
-        Thu,  5 Sep 2019 14:20:11 +0000 (UTC)
-Date:   Thu, 5 Sep 2019 16:20:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, Tim Murray <timmurray@google.com>,
-        carmenjackson@google.com, mayankgupta@google.com,
-        dancol@google.com, rostedt@goodmis.org, minchan@kernel.org,
-        akpm@linux-foundation.org, kernel-team@android.com,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jerome Glisse <jglisse@redhat.com>, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2] mm: emit tracepoint when RSS changes by threshold
-Message-ID: <20190905142010.GC3838@dhcp22.suse.cz>
-References: <20190903200905.198642-1-joel@joelfernandes.org>
- <20190904084508.GL3838@dhcp22.suse.cz>
- <20190904153258.GH240514@google.com>
- <20190904153759.GC3838@dhcp22.suse.cz>
- <20190904162808.GO240514@google.com>
- <20190905105424.GG3838@dhcp22.suse.cz>
- <20190905141452.GA26466@google.com>
+        Thu, 5 Sep 2019 10:11:15 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43047 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfIEOLP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 10:11:15 -0400
+Received: from p5de0b6c5.dip0.t-ipconnect.de ([93.224.182.197] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1i5sTf-0002A9-IN; Thu, 05 Sep 2019 16:11:11 +0200
+Date:   Thu, 5 Sep 2019 16:11:10 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [patch 5/6] posix-cpu-timers: Sanitize thread clock
+ permissions
+In-Reply-To: <20190905122108.GO2349@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.DEB.2.21.1909051610200.1902@nanos.tec.linutronix.de>
+References: <20190905120339.561100423@linutronix.de> <20190905120540.068959005@linutronix.de> <20190905122108.GO2349@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190905141452.GA26466@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 05-09-19 10:14:52, Joel Fernandes wrote:
-> On Thu, Sep 05, 2019 at 12:54:24PM +0200, Michal Hocko wrote:
-> > On Wed 04-09-19 12:28:08, Joel Fernandes wrote:
-> > > On Wed, Sep 4, 2019 at 11:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > > >
-> > > > On Wed 04-09-19 11:32:58, Joel Fernandes wrote:
-> > > > > On Wed, Sep 04, 2019 at 10:45:08AM +0200, Michal Hocko wrote:
-> > > > > > On Tue 03-09-19 16:09:05, Joel Fernandes (Google) wrote:
-> > > > > > > Useful to track how RSS is changing per TGID to detect spikes in RSS and
-> > > > > > > memory hogs. Several Android teams have been using this patch in various
-> > > > > > > kernel trees for half a year now. Many reported to me it is really
-> > > > > > > useful so I'm posting it upstream.
-> > > > > > >
-> > > > > > > Initial patch developed by Tim Murray. Changes I made from original patch:
-> > > > > > > o Prevent any additional space consumed by mm_struct.
-> > > > > > > o Keep overhead low by checking if tracing is enabled.
-> > > > > > > o Add some noise reduction and lower overhead by emitting only on
-> > > > > > >   threshold changes.
-> > > > > >
-> > > > > > Does this have any pre-requisite? I do not see trace_rss_stat_enabled in
-> > > > > > the Linus tree (nor in linux-next).
-> > > > >
-> > > > > No, this is generated automatically by the tracepoint infrastructure when a
-> > > > > tracepoint is added.
-> > > >
-> > > > OK, I was not aware of that.
-> > > >
-> > > > > > Besides that why do we need batching in the first place. Does this have a
-> > > > > > measurable overhead? How does it differ from any other tracepoints that we
-> > > > > > have in other hotpaths (e.g.  page allocator doesn't do any checks).
-> > > > >
-> > > > > We do need batching not only for overhead reduction,
-> > > >
-> > > > What is the overhead?
-> > > 
-> > > The overhead is occasionally higher without the threshold (that is if we
-> > > trace every counter change). I would classify performance benefit to be
-> > > almost the same and within the noise.
+On Thu, 5 Sep 2019, Peter Zijlstra wrote:
+
+> On Thu, Sep 05, 2019 at 02:03:44PM +0200, Thomas Gleixner wrote:
+> > The thread clock permissions are restricted to tasks of the same thread
+> > group, but that also prevents a ptracer from reading them. This is
+> > inconsistent vs. the process restrictions and unnecessary strict.
 > > 
-> > OK, so the additional code is not really justified.
+> > Relax it to ptrace permissions in the same way as process permissions are
+> > handled.
 > 
-> It is really justified. Did you read the whole of the last email?
+> More of a meta comment on the added permission checking; so where
+> clock_getcpuclockid() is allowed to return -EPERM, it doesn't because
+> that's in glibc and it has no clue.
+> 
+> And these patches implement the ptrace checks and result in -EINVAL for
+> timer_create() and clock_gettime(), even though it should arguably be
+> -EPERM, but we're not allowed to return that here.
 
-Of course I have. The information that numbers are in noise with some
-outliers (without any details about the underlying reason) is simply
-showing that you are optimizing something probably not worth it.
+Yeah. Maybe we should nevertheless.
 
-I would recommend adding a simple tracepoint. That should be pretty non
-controversial. And if you want to add an optimization on top then
-provide data to justify it.
--- 
-Michal Hocko
-SUSE Labs
+Thanks,
+
+	tglx
