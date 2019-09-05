@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24131C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0983C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B2521D7A
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5517721D7A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:03:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388240AbfIENDh (ORCPT
+        id S2389534AbfIENDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:03:37 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:4662 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388059AbfIENDg (ORCPT
+        Thu, 5 Sep 2019 09:03:41 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:16212 "EHLO
+        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388234AbfIENDh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:03:36 -0400
-Received: from pps.filterd (m0134423.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85D2OCQ014703;
-        Thu, 5 Sep 2019 13:02:54 GMT
-Received: from g2t2352.austin.hpe.com (g2t2352.austin.hpe.com [15.233.44.25])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2utxxb236d-1
+        Thu, 5 Sep 2019 09:03:37 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x85D2Ton027792;
+        Thu, 5 Sep 2019 13:02:56 GMT
+Received: from g4t3427.houston.hpe.com (g4t3427.houston.hpe.com [15.241.140.73])
+        by mx0b-002e3701.pphosted.com with ESMTP id 2utc421t8n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Sep 2019 13:02:54 +0000
-Received: from stormcage.eag.rdlabs.hpecorp.net (stormcage.eag.rdlabs.hpecorp.net [128.162.236.70])
-        by g2t2352.austin.hpe.com (Postfix) with ESMTP id 3C9479C;
-        Thu,  5 Sep 2019 13:02:53 +0000 (UTC)
+        Thu, 05 Sep 2019 13:02:55 +0000
+Received: from stormcage.eag.rdlabs.hpecorp.net (unknown [128.162.236.70])
+        by g4t3427.houston.hpe.com (Postfix) with ESMTP id 1D72E7D;
+        Thu,  5 Sep 2019 13:02:54 +0000 (UTC)
 Received: by stormcage.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
-        id D0513201EA1B9; Thu,  5 Sep 2019 08:02:52 -0500 (CDT)
-Message-Id: <20190905130252.746448087@stormcage.eag.rdlabs.hpecorp.net>
+        id A3987201EA1B7; Thu,  5 Sep 2019 08:02:53 -0500 (CDT)
+Message-Id: <20190905130253.556878269@stormcage.eag.rdlabs.hpecorp.net>
 References: <20190905130252.590161292@stormcage.eag.rdlabs.hpecorp.net>
 User-Agent: quilt/0.46-1
-Date:   Thu, 05 Sep 2019 08:02:53 -0500
+Date:   Thu, 05 Sep 2019 08:03:00 -0500
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
@@ -48,24 +48,24 @@ Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Hedi Berriche <hedi.berriche@hpe.com>,
         Steve Wahl <steve.wahl@hpe.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 1/8] x86/platform/uv: Save OEM_ID from ACPI MADT probe
-Content-Disposition: inline; filename=save-oem_id
+Subject: [PATCH 8/8] x86/platform/uv: Account for UV Hubless in is_uvX_hub Ops
+Content-Disposition: inline; filename=mod-is_uvX_hub
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
  definitions=2019-09-05_04:2019-09-04,2019-09-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=868
- priorityscore=1501 clxscore=1015 malwarescore=0 suspectscore=0 mlxscore=0
- bulkscore=0 phishscore=0 spamscore=0 impostorscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 adultscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 mlxlogscore=655 clxscore=1015 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1906280000 definitions=main-1909050128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Save the OEM_ID and OEM_TABLE_ID passed to the apic driver probe function
-for later use.  Also, convert the char list arg passed from the kernel
-to a true null-terminated string.
+The references in the is_uvX_hub() function uses the hub_info pointer
+which will be NULL when the system is hubless.  This change avoids
+that NULL dereference.  It is also an optimization in performance.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
@@ -84,51 +84,125 @@ Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: stable@vger.kernel.org
 ---
- arch/x86/kernel/apic/x2apic_uv_x.c |   16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+v2: Add WARNING that the is UVx supported defines will be removed.
+---
+ arch/x86/include/asm/uv/.uv_hub.h.swp |binary
+ arch/x86/include/asm/uv/uv_hub.h |   61 ++++++++++++---------------------------
+ 1 file changed, 20 insertions(+), 41 deletions(-)
 
---- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -14,6 +14,7 @@
- #include <linux/memory.h>
- #include <linux/export.h>
- #include <linux/pci.h>
-+#include <linux/acpi.h>
- 
- #include <asm/e820/api.h>
+Binary files linux.orig/arch/x86/include/asm/uv/.uv_hub.h.swp and linux/arch/x86/include/asm/uv/.uv_hub.h.swp differ
+--- linux.orig/arch/x86/include/asm/uv/uv_hub.h
++++ linux/arch/x86/include/asm/uv/uv_hub.h
+@@ -19,6 +19,7 @@
+ #include <linux/topology.h>
+ #include <asm/types.h>
+ #include <asm/percpu.h>
++#include <asm/uv/uv.h>
  #include <asm/uv/uv_mmrs.h>
-@@ -31,6 +32,10 @@ static u64			gru_dist_base, gru_first_no
- static u64			gru_dist_lmask, gru_dist_umask;
- static union uvh_apicid		uvh_apicid;
+ #include <asm/uv/bios.h>
+ #include <asm/irq_vectors.h>
+@@ -243,83 +244,61 @@ static inline int uv_hub_info_check(int
+ #define UV4_HUB_REVISION_BASE		7
+ #define UV4A_HUB_REVISION_BASE		8	/* UV4 (fixed) rev 2 */
  
-+/* Unpack OEM/TABLE ID's to be NULL terminated strings */
-+static u8 oem_id[ACPI_OEM_ID_SIZE + 1];
-+static u8 oem_table_id[ACPI_OEM_TABLE_ID_SIZE + 1];
-+
- /* Information derived from CPUID: */
- static struct {
- 	unsigned int apicid_shift;
-@@ -248,11 +253,20 @@ static void __init uv_set_apicid_hibit(v
- 	}
+-#ifdef	UV1_HUB_IS_SUPPORTED
++/* WARNING: UVx_HUB_IS_SUPPORTED defines are deprecated and will be removed */
+ static inline int is_uv1_hub(void)
+ {
+-	return uv_hub_info->hub_revision < UV2_HUB_REVISION_BASE;
+-}
++#ifdef	UV1_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(1));
+ #else
+-static inline int is_uv1_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
+ 
+-#ifdef	UV2_HUB_IS_SUPPORTED
+ static inline int is_uv2_hub(void)
+ {
+-	return ((uv_hub_info->hub_revision >= UV2_HUB_REVISION_BASE) &&
+-		(uv_hub_info->hub_revision < UV3_HUB_REVISION_BASE));
+-}
++#ifdef	UV2_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(2));
+ #else
+-static inline int is_uv2_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
+ 
+-#ifdef	UV3_HUB_IS_SUPPORTED
+ static inline int is_uv3_hub(void)
+ {
+-	return ((uv_hub_info->hub_revision >= UV3_HUB_REVISION_BASE) &&
+-		(uv_hub_info->hub_revision < UV4_HUB_REVISION_BASE));
+-}
++#ifdef	UV3_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(3));
+ #else
+-static inline int is_uv3_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
+ 
+ /* First test "is UV4A", then "is UV4" */
+-#ifdef	UV4A_HUB_IS_SUPPORTED
+-static inline int is_uv4a_hub(void)
+-{
+-	return (uv_hub_info->hub_revision >= UV4A_HUB_REVISION_BASE);
+-}
+-#else
+ static inline int is_uv4a_hub(void)
+ {
++#ifdef	UV4A_HUB_IS_SUPPORTED
++	if (is_uv_hubbed(uv(4)))
++		return (uv_hub_info->hub_revision == UV4A_HUB_REVISION_BASE);
++#endif
+ 	return 0;
+ }
+-#endif
+ 
+-#ifdef	UV4_HUB_IS_SUPPORTED
+ static inline int is_uv4_hub(void)
+ {
+-	return uv_hub_info->hub_revision >= UV4_HUB_REVISION_BASE;
+-}
++#ifdef	UV4_HUB_IS_SUPPORTED
++	return is_uv_hubbed(uv(4));
+ #else
+-static inline int is_uv4_hub(void)
+-{
+ 	return 0;
+-}
+ #endif
++}
+ 
+ static inline int is_uvx_hub(void)
+ {
+-	if (uv_hub_info->hub_revision >= UV2_HUB_REVISION_BASE)
+-		return uv_hub_info->hub_revision;
+-
+-	return 0;
++	return (is_uv_hubbed(-2) >= uv(2));
  }
  
--static int __init uv_acpi_madt_oem_check(char *oem_id, char *oem_table_id)
-+static void __init uv_stringify(int len, char *to, char *from)
-+{
-+	/* Relies on 'to' being NULL chars so result will be NULL terminated */
-+	strncpy(to, from, len-1);
-+}
-+
-+static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
+ static inline int is_uv_hub(void)
  {
- 	int pnodeid;
- 	int uv_apic;
+-#ifdef	UV1_HUB_IS_SUPPORTED
+-	return uv_hub_info->hub_revision;
+-#endif
+-	return is_uvx_hub();
++	return is_uv1_hub() || is_uvx_hub();
+ }
  
-+	uv_stringify(sizeof(oem_id), oem_id, _oem_id);
-+	uv_stringify(sizeof(oem_table_id), oem_table_id, _oem_table_id);
-+
- 	if (strncmp(oem_id, "SGI", 3) != 0) {
- 		if (strncmp(oem_id, "NSGI", 4) == 0) {
- 			uv_hubless_system = true;
+ union uvh_apicid {
 
 -- 
