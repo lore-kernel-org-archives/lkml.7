@@ -3,132 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D98C3A5AA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EE8C3A59E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:08:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE2921883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C519C206B8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 00:08:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pmHcEEEi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="krSe2nyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfIEAHD (ORCPT
+        id S1729863AbfIEAIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Sep 2019 20:07:03 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56031 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfIEAHC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Sep 2019 20:07:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46P1Fv4Vv9z9sBF;
-        Thu,  5 Sep 2019 10:06:59 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1567642019;
-        bh=SGjMHE7u3hE2p7kKCzoJBEwTshTmrciNLgevu3T309c=;
-        h=Date:From:To:Cc:Subject:From;
-        b=pmHcEEEi+CCReKy7ZedCQubqPJs07QLbVMomVmnj7Iwbs9+8tkXW0be6dHCaB2DRa
-         tfWB5Um8tN1SgmLh6qxRt35442P7OVEjPTIw9qbK9HJvu3Du/1yYlqwkMdwBHrPdJj
-         WlrpoC58Yxf9E4IVF4ujJeJQ1oSLKqN6D8ESH0yQretPSxk1cWkrnB1VpWPn33Po/X
-         3JU+t95BX8P9W2RwEVD8LW4fUWtl8m41KfyOyyIDWpDA3msPV6zt4cMYnnHFbxaMSQ
-         L520DgXsHk+f7qufSwJoa/vs0H58f0qyh98+AQ6+FF6JG8lfcol2gZC7DoRP7w1NRd
-         4kxQAibLrgKZw==
-Date:   Thu, 5 Sep 2019 10:06:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     "Luck, Tony" <tony.luck@intel.com>, Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the ia64 tree with the dma-mapping tree
-Message-ID: <20190905100654.6aaee8fe@canb.auug.org.au>
+        Wed, 4 Sep 2019 20:08:01 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38649 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfIEAIB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Sep 2019 20:08:01 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y23so162398ljn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Sep 2019 17:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zu7o2811sm/C6A/KNhYCc0bgcwAt8nC3g9vfQBeCxDc=;
+        b=krSe2nyNUUQ42yEqQuiQKbA059yid8WbOIANwsENlZMWXndknivxXzrg98reyBRJUV
+         hpUoNg2NnmeOqg9ZRGsuRQCadxNODVU8w4xPvygITVO2JdAOWglH/AtkrBiRxUMFVal9
+         ZhebvNPPPQBnjKchG1YDL2JhwwSyYmYskdaqce6rnDdijto/M5W9iQ3pLhOHB5jlo0R2
+         yONuP2QhOeGZnUVJiAITYAixBGoNtaAbDGfOwPewDGBwHjLIn9I+BV0Lx9wrtmibyi97
+         UM+t/umTqDWRRho8tREbRaOtQgRx2JjMZ0vtEIyvGa2hPC4jQn8Kvrm59JCIitYFVNjg
+         IcYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zu7o2811sm/C6A/KNhYCc0bgcwAt8nC3g9vfQBeCxDc=;
+        b=YHlDofiMsstycrrr57uVn2AVLrJQyfy5DrxxWl6QVojh1mGbvoUpCGG6b+ACTXs3RR
+         J7xB7iRGqZ041ykUAryZdBVu0Qg+L6t/AtFf5QQfZ8Cxp9STn9oqAX/YVHfO7IAWnDrC
+         aajXvIfe5NCjoMM3qVvy8zxMtNma12TFdHhkflPDbnPAvHH7/0hAXaT5N7/q84XxU5mT
+         UW6L0ZQNUxFqwZcRd/IvZ4cVgbRR1j6WH0CBUWF8q9Jzv3Ynl7JlfG0NTK1/TbULKDHy
+         QignhsbOG6GoqOLFIcvT8+dr+A13TgHLIQG4szHfFg8+UlaG20nj/yG5oCudhOYHDLYO
+         0DBA==
+X-Gm-Message-State: APjAAAVFK5T0w8c6/+nGFRmmg8K2o11EsrAMEAyd14l4QsgZFO7mGP7E
+        VDBzBP/vFSZuRz43s20A/C8IGwj6bp3Wq5FZLpM=
+X-Google-Smtp-Source: APXvYqwBe/D/C2MAdljspvsS4HzS2f00tB+lfsXyQCB8edddc946d7rnWPwZNB9/csxjeRHVO8gh0V/d1ts4/E/c2/w=
+X-Received: by 2002:a2e:9555:: with SMTP id t21mr152882ljh.93.1567642079449;
+ Wed, 04 Sep 2019 17:07:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tCI0Wb7/=cLMW9_qg+_WW6U";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20190829083233.24162-1-linux@rasmusvillemoes.dk>
+ <20190830231527.22304-1-linux@rasmusvillemoes.dk> <20190830231527.22304-3-linux@rasmusvillemoes.dk>
+ <CAKwvOdnZE7pCTykwjX_DDh0wKcUAVKA8eSYXSUFWG2e3swFEJQ@mail.gmail.com>
+In-Reply-To: <CAKwvOdnZE7pCTykwjX_DDh0wKcUAVKA8eSYXSUFWG2e3swFEJQ@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 5 Sep 2019 02:07:48 +0200
+Message-ID: <CANiq72kQb7VYBnfho_joF3p_-vi24WgYETE19EO3Ou6T5ixLew@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] lib/zstd/mem.h: replace __inline by inline
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tCI0Wb7/=cLMW9_qg+_WW6U
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Sep 5, 2019 at 2:00 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> While you're here, would you mind replacing `__attribute__((unused))`
+> with `__unused`?  I would consider "naked attributes" (haven't been
+> feature tested in include/linux/compiler_attributes.h and are verbose)
+> to be an antipattern.
 
-Hi all,
++1 We should aim to avoid them entirely where possible.
 
-Today's linux-next merge of the ia64 tree got a conflict in:
+We have __always_unused and __maybe_unused, please choose whatever
+fits best (both map to "unused", we don't have __unused).
 
-  arch/ia64/hp/common/sba_iommu.c
-  arch/ia64/sn/pci/pci_dma.c
-
-between commit:
-
-  f9f3232a7d0a ("dma-mapping: explicitly wire up ->mmap and ->get_sgtable")
-
-from the dma-mapping tree and commits:
-
-  974f83ec1e5a ("ia64: rework iommu probing")
-  cf07cb1ff4ea ("ia64: remove support for the SGI SN2 platform")
-
-from the ia64 tree.
-
-I fixed it up (I removed the second file and see below) and can carry the
-fix as necessary. This is now fixed as far as linux-next is concerned,
-but any non trivial conflicts should be mentioned to your upstream
-maintainer when your tree is submitted for merging.  You may also want
-to consider cooperating with the maintainer of the conflicting tree to
-minimise any particularly complex conflicts.
-
---=20
 Cheers,
-Stephen Rothwell
-
-diff --cc arch/ia64/hp/common/sba_iommu.c
-index 4c0ea6c2833d,a7eff5e6d260..000000000000
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@@ -2062,6 -2055,22 +2055,24 @@@ static int __init acpi_sba_ioc_init_acp
-  /* This has to run before acpi_scan_init(). */
-  arch_initcall(acpi_sba_ioc_init_acpi);
- =20
-+ static int sba_dma_supported (struct device *dev, u64 mask)
-+ {
-+ 	/* make sure it's at least 32bit capable */
-+ 	return ((mask & 0xFFFFFFFFUL) =3D=3D 0xFFFFFFFFUL);
-+ }
-+=20
-+ static const struct dma_map_ops sba_dma_ops =3D {
-+ 	.alloc			=3D sba_alloc_coherent,
-+ 	.free			=3D sba_free_coherent,
-+ 	.map_page		=3D sba_map_page,
-+ 	.unmap_page		=3D sba_unmap_page,
-+ 	.map_sg			=3D sba_map_sg_attrs,
-+ 	.unmap_sg		=3D sba_unmap_sg_attrs,
-+ 	.dma_supported		=3D sba_dma_supported,
-++	.mmap			=3D dma_common_mmap,
-++	.get_sgtable		=3D dma_common_get_sgtable,
-+ };
-+=20
-  static int __init
-  sba_init(void)
-  {
-
---Sig_/tCI0Wb7/=cLMW9_qg+_WW6U
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1wUZ4ACgkQAVBC80lX
-0Gzy2Af/QJxrkI7hblDI7/YLcPR6lW27giUDSzjkBNoQYXfmZCFHM9+/YT7JuqMi
-NfeHUGSxySWHOJ/fbZS+kSXcyEJ6TJUU5TUQ4ZBKRD9kvvKmR89Un+a+vPigGTBI
-Jsre0ql+jHzzI2lZzJNgKgnjexYZswvcAi4x32VtpHiA21z0JTIH8+yXDaBWhsSx
-YGLHPsD9wyaaikkNu0QKlIsz1flcops1IfmfYphtUytkNGHe/2fp+tRx4K8d9fY9
-Xoy366uIxQsQAbG5H6xG90mK0ASiFaJQY44FzmEjMHxM1oiIF1Iy4PwWeWRJDepp
-9yluK6Y2jrhh0RE0U1Jn0w7YhVoNNw==
-=npfI
------END PGP SIGNATURE-----
-
---Sig_/tCI0Wb7/=cLMW9_qg+_WW6U--
+Miguel
