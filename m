@@ -2,139 +2,103 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE61C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A6AC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE082173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301EC2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1567681295;
+	bh=eGJBkaPf3i/03H75Ui1ZA3fc5FWUK4xk+D6etZpFnr0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rEzsXSr53khxvm8ovd/AJW2qGhJVG3i0dwyEqeBkYgNRVBiTSkNhExhPC7bvtKo3N
+	 sd0XK9EcDunyC6GvECC5/qj/ztu6FDwvlQGrWZfeOfjTQyZjLoKDC/X1rXGvaPl2Zf
+	 zOrNuDf1D0nBj65dsf4yG8QzUN1GejSds3B1E01c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387988AbfIEK74 (ORCPT
+        id S2388096AbfIELBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:59:56 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52743 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730633AbfIEK74 (ORCPT
+        Thu, 5 Sep 2019 07:01:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48310 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfIELBd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:59:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t17so2257008wmi.2;
-        Thu, 05 Sep 2019 03:59:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=WI/muE4aZHH5vwi+zdHuJs4/rz9oGaZKo9EVNAoHtpU=;
-        b=eOQPTRI5dQpgJOCiK+jKn3KIfCzuPTSiYYIUERviXOUV02KTwW6FySznXloF5NW2GH
-         oEX7WO1nN351S7xnkXoylHNzJlC6t3BwjTT23aM+22VoELn6OayIKbFMKV8b+IrhYo14
-         /fDQGPRDsgzxWq1rSVeP+ug3TuODfQV9b+iUS0yEnPa05ibepxERCbkR/A3JmZo7Fe0Y
-         jDphHOJ9SPpkoXQvhmvZTcSJ89VJL/6MncfT9XNpOyUoIfr8R7Uukca4HHb37iWvxvX0
-         0sDFv0RfjIYaAEltSzwa1VDmhlU8/WgfcYxbZNjUMv8wnqO2JKc/4OZr+jZq2Mb8/XM5
-         yyMw==
-X-Gm-Message-State: APjAAAXE9g6saKq2SnvW4xfiuw3Xt75K7Pq9LRZ5cEOVdhrmG9JicLwZ
-        Ar4Ewl91CA0t/LJEiqJRPEnW/A6eV/w=
-X-Google-Smtp-Source: APXvYqwrTWwXtvSD/OUfYpvxxCWblQiQjACZOQpqNHSKoE9ylMrjdO7huI9cv2GL/kHpOBPmfvWaeA==
-X-Received: by 2002:a1c:a90b:: with SMTP id s11mr2639646wme.92.1567681193559;
-        Thu, 05 Sep 2019 03:59:53 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id h125sm3072132wmf.31.2019.09.05.03.59.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Sep 2019 03:59:52 -0700 (PDT)
-Subject: Re: [PATCH v8 06/28] x86/asm/crypto: annotate local functions
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        x86@kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-References: <20190808103854.6192-1-jslaby@suse.cz>
- <20190808103854.6192-7-jslaby@suse.cz> <20190817091733.GB15364@zn.tnic>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <400845b5-d9a9-3db1-b3a5-bb0cfddc9237@suse.cz>
-Date:   Thu, 5 Sep 2019 12:59:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 5 Sep 2019 07:01:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Gd5Si23CQTkjXHrd1kfDMwHId0XN7lelZ5t8iFh3FtY=; b=siCmQcbRBU1+a6LPDnLeI+LN/p
+        uF+ApHOVakeqBxbCBMBZwDoLmgufJ81HdrUihZtcPe5S6KEWqVNV3oc5UOileqPOfagquF2TlEiMN
+        +pQz2Ixl5/yy4+HIc/SDNs0XofIZM1HwJsmoliA35trjpswlq17SCovLc10tjyzz+5gkEqZKbp5Hp
+        huh0bEpWI7NQOe2hg6Mv9EPS1DyYZbLvnng53LZfbS3z6X2pMxvjM+COAgUw6UVhUtLxh8i4S2Kyz
+        yvOZo+4U51vnVQRLBmwX2D0rjXGblveF8ARgij8vSj5QIPwcabhjLVZtG9leHpulrZFNucttxnAS6
+        9+TclA9A==;
+Received: from 177.17.137.173.dynamic.adsl.gvt.net.br ([177.17.137.173] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5pW8-0003ac-Uc; Thu, 05 Sep 2019 11:01:32 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92.1)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1i5pW6-00030x-Jb; Thu, 05 Sep 2019 08:01:30 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Media Mailing List <linux-media@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: [PATCH 1/3] docs: sphinx: add SPDX header for some sphinx extensions
+Date:   Thu,  5 Sep 2019 08:01:27 -0300
+Message-Id: <d1331081c206afb4ba71e07d5b11a67896cbd99f.1567681249.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190905075028.643f4b9d@coco.lan>
+References: <20190905075028.643f4b9d@coco.lan>
 MIME-Version: 1.0
-In-Reply-To: <20190817091733.GB15364@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17. 08. 19, 11:17, Borislav Petkov wrote:
-> On Thu, Aug 08, 2019 at 12:38:32PM +0200, Jiri Slaby wrote:
->> Use the newly added SYM_FUNC_START_LOCAL to annotate starts of all
->> functions which do not have ".globl" annotation, but their ends are
->> annotated by ENDPROC. This is needed to balance ENDPROC for tools that
->> generate debuginfo.
->>
->> To be symmetric, we also convert their ENDPROCs to the new SYM_FUNC_END.
-> 
-> All those functions look like they could be made local symbols by
-> prepending their names with ".L" so that they disappear from the
-> vmlinux symtable too.
+Those extensions are released under GPLv2, as stated at the
+:license: markup tag.
 
-In that case, objtool won't see them and won't generate ORC info for
-them. That means not only they disappear from stacktraces, but it will
-be disallowed to unwind below them. Note that objtool currently reads
-symtables and looks for STT_FUNC in them.
+Add the corresponding SPDX tags for such license.
 
-We can make them local (.L*) when the patchset is applied and all
-functions are annotated properly -- then we won't need entries in the
-global symtable. We can store the info in some private table and delete
-it after objtool is done with the object.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/sphinx/kernel_include.py | 1 +
+ Documentation/sphinx/rstFlatTable.py   | 1 +
+ 2 files changed, 2 insertions(+)
 
-thanks,
+diff --git a/Documentation/sphinx/kernel_include.py b/Documentation/sphinx/kernel_include.py
+index f523aa68a36b..7aaea4e31f78 100755
+--- a/Documentation/sphinx/kernel_include.py
++++ b/Documentation/sphinx/kernel_include.py
+@@ -1,5 +1,6 @@
+ #!/usr/bin/env python3
+ # -*- coding: utf-8; mode: python -*-
++# SPDX-License-Identifier: GPL-2.0
+ # pylint: disable=R0903, C0330, R0914, R0912, E0401
+ 
+ u"""
+diff --git a/Documentation/sphinx/rstFlatTable.py b/Documentation/sphinx/rstFlatTable.py
+index 2019a55f6b18..15769d01831b 100755
+--- a/Documentation/sphinx/rstFlatTable.py
++++ b/Documentation/sphinx/rstFlatTable.py
+@@ -1,5 +1,6 @@
+ #!/usr/bin/env python3
+ # -*- coding: utf-8; mode: python -*-
++# SPDX-License-Identifier: GPL-2.0
+ # pylint: disable=C0330, R0903, R0912
+ 
+ u"""
 -- 
-js
-suse labs
+2.21.0
+
