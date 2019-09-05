@@ -2,220 +2,112 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89BEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DDFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC7342070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0AE0207E0
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:28:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="egglMIP0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ul3BFuwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391241AbfIESY1 (ORCPT
+        id S2391260AbfIES17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:24:27 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34371 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389837AbfIESY0 (ORCPT
+        Thu, 5 Sep 2019 14:27:59 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:35732 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731541AbfIES17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:24:26 -0400
-Received: by mail-wr1-f66.google.com with SMTP id s18so3914431wrn.1
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:24:24 -0700 (PDT)
+        Thu, 5 Sep 2019 14:27:59 -0400
+Received: by mail-io1-f66.google.com with SMTP id f4so6244448ion.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:27:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fa+kyDa0J3UDgtTokX5PSraDFnwKfBrrRUNa7uKQ4zc=;
-        b=egglMIP0L9o76Prk2RwMG1+crapx0HRW3AFjHZt3+xYf2mak7Ip2QM/+K9lym4nQKr
-         +8/juAojIrEwENufL7O2CNyz4/vaXtBhcNc8CTOut9i6aLQe9Nz6J7H/LCFjtoA+Xzkq
-         Ta6BuRU24lH+GgGpc+y8goGQQPwks34+KUcYr46Qfx6ixCtDkm3Xkag72QIzllnBR82v
-         BIgCmt2Q+W7R8qDAdVITcLYFyV9jg6c2rhuKk78yVicztdbwdhZ+dSyITLVwxq6RFnOi
-         0eXi+6P/SdNJ5vrCv2Q1ByU0o3AEz7KZUhMyZ/rk+ooqrLuXkue5OdfJJebq9lV/t6sP
-         ENYg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+a3LtWFrnf98U6Vz9nmHmxlCeDZ2bfINz0CsyEoJr+Q=;
+        b=ul3BFuwDZE3rrJP8A2QO2y6ehBfCpRd6K12h43sXG/ssf31ITv2bLsODXbyOb2hvK2
+         GMQRX6MYcSGkQgrhJzVcF9WLxgWnicuiJEMTLAoixjJYdFqcFn1s+q+6g/zFSeWrfYzV
+         d8SMfysDdlecDhwyr693Tz72hTKxKEdDrdq9t219/YF3nt9m6OKl9pyb0cpfCHu48plm
+         /3dY+uMkhGwdlhS/rIx8oxfFNGV5wFZgq30x8/ZQdLm4i4HsTTvCjFU1Jx9EEIK125Qy
+         //q1z3DsrLNa+Yv++CHrBz/qZXv8m2KEZTAneXd3OWxbIvjUL6DH5bd9ozv6rjy3hcPD
+         UPXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Fa+kyDa0J3UDgtTokX5PSraDFnwKfBrrRUNa7uKQ4zc=;
-        b=JCdTuXR1a1nA9NhwQF7FP9GshLPx/mFBgtj1eaMUWbqgwEMuraf/ptGEx1roSb2NK/
-         NQH28XKL+FgLl18AsREPzTRrxZwTiuNh/Vg3Jl4HUDIa3SOY0ut73p7VmbKntboMQsLI
-         LXx7Ds7z26TSmSLNQkARVu1latKVneGJlssUHYPkgyq06UMXZxwnNYzwgtPCZ/xd3lAR
-         aZEBfcyc/ZWLvKqLuuF6h/W5slMD/tiCEBGfhCKdHdmpjbManX8epLseiGFTNko2iweA
-         WoSoJmSafXS1O4PkBj/649pKw0ofIzB4JjEvGltuMaWeN/T0JMsiMQCypjWb2UfJSYSN
-         Ar+g==
-X-Gm-Message-State: APjAAAWUJkfHtVmeh43PNQ33/O8Amk5Xi8H9VaZ8OTuknDHRBq99NHb4
-        m6ZgLce5n9gdtzjmANbprgYj9g==
-X-Google-Smtp-Source: APXvYqzAoWh69dxryFmMtb7Y48F22r8XgnXXpcLfia/65KvWJxf0e1JvnELu4CzfFJjl4wNZVFyLuQ==
-X-Received: by 2002:adf:e790:: with SMTP id n16mr3666412wrm.120.1567707864040;
-        Thu, 05 Sep 2019 11:24:24 -0700 (PDT)
-Received: from localhost.localdomain (124.red-83-36-179.dynamicip.rima-tde.net. [83.36.179.124])
-        by smtp.gmail.com with ESMTPSA id x5sm4353851wrg.69.2019.09.05.11.24.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 05 Sep 2019 11:24:23 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, wim@linux-watchdog.org, linux@roeck-us.net
-Cc:     linux-arm-msm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] watchdog: qcom: support pre-timeout when the bark irq is available
-Date:   Thu,  5 Sep 2019 20:24:19 +0200
-Message-Id: <20190905182419.26539-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        bh=+a3LtWFrnf98U6Vz9nmHmxlCeDZ2bfINz0CsyEoJr+Q=;
+        b=T2+6UpQ71EYoVHuCCLc+I53BKK9XuFfxKW+i73uxs0hyhbyvFvQCUy5uiZkW7j//+F
+         A1vi/ZRkMtn5fITJbOeOUscHJHuT0Z+msZjaqvL3ZqBB5SHwCFuLZomW9/6YzTDMKyOw
+         +ROKIpFiGSnhnXoELKuzALIelrTUwmGw5xFO+kPLPn1ZFHhWkt/oCw4HO1zYqffLf+RF
+         uLsEqgFLTjHpwqtsqK7KVeveuhaWidOrWf2I3L9nsx6d2qRDU1Li6KTpE1SG1COHd66W
+         y38RdeGwll0WVqatIu8n74yiqcL3uF/KJ59zMEGBBc7gR5skkH2M3LEel5TJBDBIS64W
+         dMNw==
+X-Gm-Message-State: APjAAAVwE+iQaltmU4g+jZBQBPaYNiHxTna8OAZRiM285n6LCQBKLHMw
+        fcf1L+4FV5WQ61nWoAFogA==
+X-Google-Smtp-Source: APXvYqy1iqfIwkwUZWO4/hfjhObtm2Y3L3t3tdetdH54rgz6grUIgYo0nqwz1QNkBHr43r1PhrKp7w==
+X-Received: by 2002:a6b:9308:: with SMTP id v8mr5463208iod.221.1567708078333;
+        Thu, 05 Sep 2019 11:27:58 -0700 (PDT)
+Received: from [192.168.1.99] ([92.117.180.21])
+        by smtp.googlemail.com with ESMTPSA id z20sm3107104iof.38.2019.09.05.11.27.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Sep 2019 11:27:57 -0700 (PDT)
+Subject: Re: [PATCH v5 2/4] preemptirq_delay_test: Add the burst feature and a
+ sysfs trigger
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190903132602.3440-1-viktor.rosendahl@gmail.com>
+ <20190903132602.3440-3-viktor.rosendahl@gmail.com>
+ <20190904074212.4c7d17dc@oasis.local.home>
+ <4e1c66b8-4aee-77d3-cf3b-dc633f9abf6b@gmail.com>
+ <20190905125227.2638e406@oasis.local.home>
+From:   Viktor Rosendahl <viktor.rosendahl@gmail.com>
+Message-ID: <f7edefa4-38c3-6c8f-588d-1e8afe08316f@gmail.com>
+Date:   Thu, 5 Sep 2019 20:27:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190905125227.2638e406@oasis.local.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the bark interrupt as the pre-timeout notifier whenever this
-interrupt is available.
+On 9/5/19 6:52 PM, Steven Rostedt wrote:
+> On Wed, 4 Sep 2019 21:10:38 +0200
+> Viktor Rosendahl <viktor.rosendahl@gmail.com> wrote:
+> 
+>> On 9/4/19 1:42 PM, Steven Rostedt wrote:
+>>
+>> I am not so keen to clutter source files with a new copyright message.
+>> My problem is that git-send-email doesn't work well with my work email
+>> address, so I am forced to use my private gmail, which may create a
+>> false impression that I as a private individual would be the copyright
+>> holder.
+>>
+> 
+> Then do what I do:
+> 
+>    Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> I did "(Red Hat)" when I worked for Red Hat.
+> 
+> -- Steve
+> 
 
-By default, the pretimeout notification shall occur one second earlier
-than the timeout.
+Ok, that seems simple and effective. I will update accordingly for v7 of 
+the patches.
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- v3:
-    remove unnecesary variable added to private.
+best regards,
 
- v2:
-    register the pre-timeout notifier instead.
-
- v1:
-    use the bark irq to notify the user.
-
- drivers/watchdog/qcom-wdt.c | 60 +++++++++++++++++++++++++++++++++----
- 1 file changed, 55 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-index 7be7f87be28f..847dbf79df1c 100644
---- a/drivers/watchdog/qcom-wdt.c
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -10,6 +10,8 @@
- #include <linux/platform_device.h>
- #include <linux/watchdog.h>
- #include <linux/of_device.h>
-+#include <linux/interrupt.h>
-+#include <linux/watchdog.h>
- 
- enum wdt_reg {
- 	WDT_RST,
-@@ -54,15 +56,37 @@ struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
- 	return container_of(wdd, struct qcom_wdt, wdd);
- }
- 
-+static inline int qcom_wdt_enable(struct watchdog_device *wdd)
-+{
-+	/* enable the bark interrupt */
-+	if (wdd->info->options & WDIOF_PRETIMEOUT)
-+		return 3;
-+
-+	return 1;
-+}
-+
-+static irqreturn_t qcom_wdt_irq(int irq, void *cookie)
-+{
-+	struct watchdog_device *wdd = (struct watchdog_device *) cookie;
-+
-+	watchdog_notify_pretimeout(wdd);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int qcom_wdt_start(struct watchdog_device *wdd)
- {
- 	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+	unsigned int bark = wdd->pretimeout;
-+
-+	if (!(wdd->info->options & WDIOF_PRETIMEOUT))
-+		bark = wdd->timeout;
- 
- 	writel(0, wdt_addr(wdt, WDT_EN));
- 	writel(1, wdt_addr(wdt, WDT_RST));
--	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
-+	writel(bark * wdt->rate, wdt_addr(wdt, WDT_BARK_TIME));
- 	writel(wdd->timeout * wdt->rate, wdt_addr(wdt, WDT_BITE_TIME));
--	writel(1, wdt_addr(wdt, WDT_EN));
-+	writel(qcom_wdt_enable(wdd), wdt_addr(wdt, WDT_EN));
- 	return 0;
- }
- 
-@@ -89,6 +113,14 @@ static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
- 	return qcom_wdt_start(wdd);
- }
- 
-+static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
-+				   unsigned int timeout)
-+{
-+	wdd->pretimeout = timeout;
-+
-+	return 0;
-+}
-+
- static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
- 			    void *data)
- {
-@@ -105,7 +137,7 @@ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
- 	writel(1, wdt_addr(wdt, WDT_RST));
- 	writel(timeout, wdt_addr(wdt, WDT_BARK_TIME));
- 	writel(timeout, wdt_addr(wdt, WDT_BITE_TIME));
--	writel(1, wdt_addr(wdt, WDT_EN));
-+	writel(qcom_wdt_enable(wdd), wdt_addr(wdt, WDT_EN));
- 
- 	/*
- 	 * Actually make sure the above sequence hits hardware before sleeping.
-@@ -121,11 +153,12 @@ static const struct watchdog_ops qcom_wdt_ops = {
- 	.stop		= qcom_wdt_stop,
- 	.ping		= qcom_wdt_ping,
- 	.set_timeout	= qcom_wdt_set_timeout,
-+	.set_pretimeout	= qcom_wdt_set_pretimeout,
- 	.restart        = qcom_wdt_restart,
- 	.owner		= THIS_MODULE,
- };
- 
--static const struct watchdog_info qcom_wdt_info = {
-+static struct watchdog_info qcom_wdt_info = {
- 	.options	= WDIOF_KEEPALIVEPING
- 			| WDIOF_MAGICCLOSE
- 			| WDIOF_SETTIMEOUT
-@@ -146,7 +179,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	const u32 *regs;
- 	u32 percpu_offset;
--	int ret;
-+	int irq, ret;
- 
- 	regs = of_device_get_match_data(dev);
- 	if (!regs) {
-@@ -222,6 +255,23 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 	wdt->wdd.timeout = min(wdt->wdd.max_timeout, 30U);
- 	watchdog_init_timeout(&wdt->wdd, 0, dev);
- 
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq >= 0) {
-+		/* enable the pre-timeout notification */
-+		qcom_wdt_info.options |= WDIOF_PRETIMEOUT;
-+
-+		ret = devm_request_irq(&pdev->dev, irq, qcom_wdt_irq,
-+				       IRQF_TRIGGER_RISING, "wdog_bark",
-+				       &wdt->wdd);
-+		if (ret) {
-+			dev_err(&pdev->dev, "failed to request irq\n");
-+			return ret;
-+		}
-+	}
-+
-+	if (qcom_wdt_info.options & WDIOF_PRETIMEOUT)
-+		wdt->wdd.pretimeout = wdt->wdd.timeout - 1;
-+
- 	ret = devm_watchdog_register_device(dev, &wdt->wdd);
- 	if (ret)
- 		return ret;
--- 
-2.23.0
-
+Viktor
