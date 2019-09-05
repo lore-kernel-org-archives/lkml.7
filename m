@@ -2,210 +2,118 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61102C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FC0C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F06D22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567679564;
-	bh=NQujPZaifvocqXBm599tGClyU1aW6kjLF6eo/z6uOaA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nH4N35fQbWjsaPd4arU4NjKQCb5SgVhdW88bF2gpMPHuYRGJUnfPdEQmVSxmdF/xn
-	 YdlnEPyI3lejehidy+YnvAEE3gajvd8FbpYcg8B8kz7QYYe2X4cwIQOcL+ajdOc232
-	 rXI+BkYXkBmzxyrEz4forEoIAWuIaYqOD7gpc85g=
+	by mail.kernel.org (Postfix) with ESMTP id 7DB9822CF5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:36:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="ITk07l7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387540AbfIEKcn (ORCPT
+        id S2387631AbfIEKgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731952AbfIEKcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:32:43 -0400
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EB1222DD3;
-        Thu,  5 Sep 2019 10:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567679561;
-        bh=NQujPZaifvocqXBm599tGClyU1aW6kjLF6eo/z6uOaA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W9Tn7qVrlMY1fcBtiJ06AOYQViFIU1snLQymJvqz/C/R0E6lNN6BZiflc+uA6jcGD
-         hWPgq0KYVqZW0NCdqUKPil1w9T0z0Nnoe5mlNDf3Helte4q3i+3+6iL52doqp04O5/
-         7pu6mXzqcaTvDHa+ohcsMqBCseKADvQF0n7/vB+0=
-Received: by mail-qt1-f171.google.com with SMTP id g4so2151306qtq.7;
-        Thu, 05 Sep 2019 03:32:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAXBa8QsPXluYGgNN16NPmExea60ik1hgjJa9FI2J60TmnkyZbqL
-        gtN0CJWixi0WR8RXo8B7gAic7RB5iDktebcIhQ==
-X-Google-Smtp-Source: APXvYqz7/ulBAvR7x3VrV/jxmMu9as/2Hzs9+dy1OH+geYhotKlOQxVVZj0kapvCvcSo3AeWsbYX9GZHNBzrJ0ONyGQ=
-X-Received: by 2002:a0c:f70c:: with SMTP id w12mr470851qvn.200.1567679560330;
- Thu, 05 Sep 2019 03:32:40 -0700 (PDT)
+        Thu, 5 Sep 2019 06:36:03 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:35117 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbfIEKgD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:36:03 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 4AD7F402F1;
+        Thu,  5 Sep 2019 12:35:55 +0200 (CEST)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=ITk07l7y;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ugycKdexNBHI; Thu,  5 Sep 2019 12:35:52 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id ECADF3F566;
+        Thu,  5 Sep 2019 12:35:50 +0200 (CEST)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id A96C9360596;
+        Thu,  5 Sep 2019 12:35:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1567679750; bh=X96uK3VjeYuEJK4wEC9dWptf0IWKYF+Y/2LEdXGYwRM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ITk07l7y9x/XtcDNNz3nHHEX52Lrv9AdcnNKxedEoZAnNxRtL40SLSrZQUhsIMfER
+         8YEXi5XK0W/llG2K7LLRBlQBxZDP9WSslbyMW92X2iRGfAtZjZdsgwbRu3k1TtMhfs
+         POFDU06wF8m9z8bn6SU/GbaGQlEmjQL5tirGcfiQ=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org, pv-drivers@vmware.com
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [RFC PATCH 2/2] dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
+Date:   Thu,  5 Sep 2019 12:35:41 +0200
+Message-Id: <20190905103541.4161-3-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190905103541.4161-1-thomas_os@shipmail.org>
+References: <20190905103541.4161-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-References: <20190905081546.42716-1-drinkcat@chromium.org> <CAL_JsqJCO2G90TTT9Mpy4kjVKQyXWw4aXEEnbRp_SE8X=EGc5g@mail.gmail.com>
- <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
-In-Reply-To: <CANMq1KCTPdFhJG1SLf-i+-557Yx-1WLzWCHu3tT_5Q2BF+JgdQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 5 Sep 2019 11:32:29 +0100
-X-Gmail-Original-Message-ID: <CAL_JsqLAEe1qYkTWCw7VPau9WnXTMUqtHR5XWGuk7ynZBiuLQA@mail.gmail.com>
-Message-ID: <CAL_JsqLAEe1qYkTWCw7VPau9WnXTMUqtHR5XWGuk7ynZBiuLQA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: mt8183: Add node for the Mali GPU
-To:     Nicolas Boichat <drinkcat@chromium.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nick Fan <nick.fan@mediatek.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 5, 2019 at 10:49 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> Thanks for the quick review!
->
-> On Thu, Sep 5, 2019 at 5:09 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Thu, Sep 5, 2019 at 9:16 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
-> > >
-> > > Add a basic GPU node and opp table for mt8183.
-> > >
-> > > The binding we use with out-of-tree Mali drivers includes more
-> > > clocks, I assume this would be required eventually if we have an
-> > > in-tree driver:
-> >
-> > We have an in-tree driver...
->
-> Right but AFAICT it does not support Bifrost GPU (yet?).
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-It's mostly the mesa userspace side that's missing. The kernel driver
-needs the compatible string and page table support[1]. The former
-should be enough to access the registers which is typically enough to
-sort out an platform specific clock, reset, power issues.
+When force_dma_unencrypted() returns true, the linear kernel map of the
+coherent pages have had the encryption bit explicitly cleared and the
+page content is unencrypted. Make sure that any additional PTEs we set
+up to these pages also have the encryption bit cleared by having
+dma_pgprot() return a protection with the encryption bit cleared in this
+case.
 
-> > > clocks =
-> > >         <&topckgen CLK_TOP_MFGPLL_CK>,
-> > >         <&topckgen CLK_TOP_MUX_MFG>,
-> > >         <&clk26m>,
-> > >         <&mfgcfg CLK_MFG_BG3D>;
-> > > clock-names =
-> > >         "clk_main_parent",
-> > >         "clk_mux",
-> > >         "clk_sub_parent",
-> > >         "subsys_mfg_cg";
->
-> Do you think we should add those to the binding document? May not be
-> easy to match what the amlogic binding does (I'm not sure to
-> understand the details of this device, but I can dig further/ask).
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Christian König <christian.koenig@amd.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+---
+ kernel/dma/mapping.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I somewhat expect this needs more investigation. I'm doubtful that
-there's a 26MHz clock going to Mali. Ideally, the clocks are what are
-actually connected to the h/w, not just a list of all the clocks
-needed on some platform because we fail to manage them elsewhere (like
-an interconnect driver). Otherwise we end up with a different list for
-every platform.
+diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+index b0038ca3aa92..2b499dcae74f 100644
+--- a/kernel/dma/mapping.c
++++ b/kernel/dma/mapping.c
+@@ -157,6 +157,8 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
+  */
+ pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
+ {
++	if (force_dma_unencrypted(dev))
++		prot = pgprot_decrypted(prot);
+ 	if (dev_is_dma_coherent(dev) ||
+ 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
+              (attrs & DMA_ATTR_NON_CONSISTENT)))
+-- 
+2.20.1
 
-> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > >
-> > > ---
-> > > Upstreaming what matches existing bindings from our Chromium OS tree:
-> > > https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-4.19/arch/arm64/boot/dts/mediatek/mt8183.dtsi#1348
-> > >
-> > > The evb part of this change depends on this patch to add PMIC dtsi:
-> > > https://patchwork.kernel.org/patch/10928161/
-> > >
-> > >  arch/arm64/boot/dts/mediatek/mt8183-evb.dts |   7 ++
-> > >  arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 103 ++++++++++++++++++++
-> > >  2 files changed, 110 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> > > index 1fb195c683c3d01..200d8e65a6368a1 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> > > @@ -7,6 +7,7 @@
-> > >
-> > >  /dts-v1/;
-> > >  #include "mt8183.dtsi"
-> > > +#include "mt6358.dtsi"
-> > >
-> > >  / {
-> > >         model = "MediaTek MT8183 evaluation board";
-> > > @@ -30,6 +31,12 @@
-> > >         status = "okay";
-> > >  };
-> > >
-> > > +&gpu {
-> > > +       supply-names = "mali", "mali_sram";
-> > > +       mali-supply = <&mt6358_vgpu_reg>;
-> > > +       mali_sram-supply = <&mt6358_vsram_gpu_reg>;
-> >
-> > Not documented. Just 'sram-supply' is enough.
->
-> Will fix.
->
-> > Note that the binding doc queued up for 5.4 has been converted to DT schema.
->
-> Yep I see that in linux-next.
->
-> >
-> > > +};
-> > > +
-> > >  &i2c0 {
-> > >         pinctrl-names = "default";
-> > >         pinctrl-0 = <&i2c_pins_0>;
-> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > index 97f84aa9fc6e1c1..8ea548a762ea252 100644
-> > > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > > @@ -579,6 +579,109 @@
-> > >                         #clock-cells = <1>;
-> > >                 };
-> > >
-> > > +               gpu: mali@13040000 {
-> >
-> > gpu@...
-> >
-> > > +                       compatible = "mediatek,mt8183-mali", "arm,mali-bifrost";
-> >
-> > You need to add this compatible string too.
->
-> Will do.
->
-> >
-> > > +                       reg = <0 0x13040000 0 0x4000>;
-> > > +                       interrupts =
-> > > +                               <GIC_SPI 280 IRQ_TYPE_LEVEL_LOW>,
-> > > +                               <GIC_SPI 279 IRQ_TYPE_LEVEL_LOW>,
-> > > +                               <GIC_SPI 278 IRQ_TYPE_LEVEL_LOW>;
-> > > +                       interrupt-names = "job", "mmu", "gpu";
-> > > +
-> > > +                       clocks = <&topckgen CLK_TOP_MFGPLL_CK>;
-> > > +                       power-domains =
-> > > +                               <&scpsys MT8183_POWER_DOMAIN_MFG_CORE0>,
-> > > +                               <&scpsys MT8183_POWER_DOMAIN_MFG_CORE1>,
-> > > +                               <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-> >
-> > This needs to be documented too.
->
-> I see that Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
-> has power-domains in the example both not in the yaml, is that
-> expected?
-
-Err, no. Probably some copy-n-paste from utgard.
-
-Rob
-
-[1] https://patchwork.freedesktop.org/patch/304731/
