@@ -2,142 +2,265 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1986CC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27245C3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E584E22CF5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:47:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1567680429;
-	bh=dUJlA+fkGMs22g1/a2iqFBSznkf7U1GChLVJQJXQwaA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=anWzwGkplD5F8ojX3L5vfykXV65EIkqei0P+7nMV8VQx1wPUF9agQLTtv34IspURh
-	 cmEpkxyazk3i7C990/b7datQT8/lXmcerBVQp3s5MxMm8QLpNXVILydNVsGsXBGJhc
-	 4RNLMtc814n5LR9csn3/iTMpjDw2oS3tZZOJfO1E=
+	by mail.kernel.org (Postfix) with ESMTP id E70ED22CF5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 10:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388173AbfIEKrI (ORCPT
+        id S2387682AbfIEKrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 06:47:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53848 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727160AbfIEKrH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 06:47:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=V5q/iL6TQFKVRLriXs4u0ENevVfl5lZEb9F1LrjSnaU=; b=O+IWbsCkCVXK9KTwSY02xtniD
-        E/AQb3HztIGacw60JxZ5g60jfqlK9/jNbdEHUt42IKCKSoYewPk6xCOHKqKfJoP0Dm2YhgrRh7QrT
-        C485qzCUrAKr8jc9SnVDV3N/e3OLwJlte5pPqcmWwL+lRSyEKzFABHU7qau6BzcB8mFlEbjMxM18W
-        JV10fkKGJkwqML0AYvTP2tZauLU8GCTwTtPhDtW33AhfT1m+4qkyYKeDuQKKsbSQL5DE9Kih3/Ar0
-        uz/DMPNUlNe4fWd/LOV/KCJqawnv6Hgeos5N6OlvFKvZVDP51IPqatR6CKJ28/5RNqpz+tsZ84aLr
-        DGJ9qd9Yg==;
-Received: from 177.17.137.173.dynamic.adsl.gvt.net.br ([177.17.137.173] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5pI6-0003BZ-P7; Thu, 05 Sep 2019 10:47:03 +0000
-Date:   Thu, 5 Sep 2019 07:46:58 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nishad Kamdar <nishadkamdar@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: siano: Use the correct style for SPDX License
- Identifier
-Message-ID: <20190905074658.0f229587@coco.lan>
-In-Reply-To: <f65bf8e7bc3234358d5956f94e3b4df81bc204e6.camel@perches.com>
-References: <20190831151147.GA7082@nishad>
-        <20190904153432.7fb54f02@coco.lan>
-        <20190904183608.GA495@kroah.com>
-        <20190904160010.4532c3f5@coco.lan>
-        <20190905055430.GA23826@kroah.com>
-        <20190905055614.7958918b@coco.lan>
-        <f65bf8e7bc3234358d5956f94e3b4df81bc204e6.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 5 Sep 2019 06:47:49 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3200 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731775AbfIEKrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 06:47:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 03:47:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="177265125"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by orsmga008.jf.intel.com with ESMTP; 05 Sep 2019 03:47:45 -0700
+Date:   Thu, 5 Sep 2019 18:48:11 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Chen, Rong A" <rong.a.chen@intel.com>,
+        Michel D?nzer <michel@daenzer.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, LKP <lkp@01.org>
+Subject: Re: [LKP] [drm/mgag200] 90f479ae51: vm-scalability.median -18.8%
+ regression
+Message-ID: <20190905104811.GF5541@shbuild999.sh.intel.com>
+References: <2e1b4d65-d477-f571-845d-fa0a670859af@suse.de>
+ <20190904062716.GC5541@shbuild999.sh.intel.com>
+ <72c33bf1-9184-e24a-c084-26d9c8b6f9b7@suse.de>
+ <CAKMK7uGdOtyDHZMSzY8J45bX57EFKo=DWNUi+WL+GVOzoBpUhw@mail.gmail.com>
+ <20190904083558.GD5541@shbuild999.sh.intel.com>
+ <CAKMK7uGVKEN=pi4Erc_gtbL3ZFN-b6pm-nXSznjd_rH4H2yn4w@mail.gmail.com>
+ <CAPM=9tzDMfRf_VKaiHmnb_KKVwqW3=y=09JO0SJrG6ySe=DbfQ@mail.gmail.com>
+ <CAKMK7uGtNu0M74+Ag5-7HJhuHDVv1HoMPz=2XjU6tCkfMScQnA@mail.gmail.com>
+ <20190905065917.GE5541@shbuild999.sh.intel.com>
+ <CAKMK7uESbH_0_SFUc+v=BhjW0bv4FbL8Dq2UG1fWcSqyue3wig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uESbH_0_SFUc+v=BhjW0bv4FbL8Dq2UG1fWcSqyue3wig@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 05 Sep 2019 02:28:05 -0700
-Joe Perches <joe@perches.com> escreveu:
-
-> On Thu, 2019-09-05 at 05:56 -0300, Mauro Carvalho Chehab wrote:
-> > I'll accept
-> > this patch and keep such rule in mind for next SPDX changes.
-> > 
-> > Anyway, with regards to script, we need to change the rules in order to
-> > allow adding SPDX for python scripts, as otherwise the addition of SPDX
-> > headers may cause regressions.  
+On Thu, Sep 05, 2019 at 06:37:47PM +0800, Daniel Vetter wrote:
+> On Thu, Sep 5, 2019 at 8:58 AM Feng Tang <feng.tang@intel.com> wrote:
+> >
+> > Hi Vetter,
+> >
+> > On Wed, Sep 04, 2019 at 01:20:29PM +0200, Daniel Vetter wrote:
+> > > On Wed, Sep 4, 2019 at 1:15 PM Dave Airlie <airlied@gmail.com> wrote:
+> > > >
+> > > > On Wed, 4 Sep 2019 at 19:17, Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > > >
+> > > > > On Wed, Sep 4, 2019 at 10:35 AM Feng Tang <feng.tang@intel.com> wrote:
+> > > > > >
+> > > > > > Hi Daniel,
+> > > > > >
+> > > > > > On Wed, Sep 04, 2019 at 10:11:11AM +0200, Daniel Vetter wrote:
+> > > > > > > On Wed, Sep 4, 2019 at 8:53 AM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+> > > > > > > >
+> > > > > > > > Hi
+> > > > > > > >
+> > > > > > > > Am 04.09.19 um 08:27 schrieb Feng Tang:
+> > > > > > > > >> Thank you for testing. But don't get too excited, because the patch
+> > > > > > > > >> simulates a bug that was present in the original mgag200 code. A
+> > > > > > > > >> significant number of frames are simply skipped. That is apparently the
+> > > > > > > > >> reason why it's faster.
+> > > > > > > > >
+> > > > > > > > > Thanks for the detailed info, so the original code skips time-consuming
+> > > > > > > > > work inside atomic context on purpose. Is there any space to optmise it?
+> > > > > > > > > If 2 scheduled update worker are handled at almost same time, can one be
+> > > > > > > > > skipped?
+> > > > > > > >
+> > > > > > > > To my knowledge, there's only one instance of the worker. Re-scheduling
+> > > > > > > > the worker before a previous instance started, will not create a second
+> > > > > > > > instance. The worker's instance will complete all pending updates. So in
+> > > > > > > > some way, skipping workers already happens.
+> > > > > > >
+> > > > > > > So I think that the most often fbcon update from atomic context is the
+> > > > > > > blinking cursor. If you disable that one you should be back to the old
+> > > > > > > performance level I think, since just writing to dmesg is from process
+> > > > > > > context, so shouldn't change.
+> > > > > >
+> > > > > > Hmm, then for the old driver, it should also do the most update in
+> > > > > > non-atomic context?
+> > > > > >
+> > > > > > One other thing is, I profiled that updating a 3MB shadow buffer needs
+> > > > > > 20 ms, which transfer to 150 MB/s bandwidth. Could it be related with
+> > > > > > the cache setting of DRM shadow buffer? say the orginal code use a
+> > > > > > cachable buffer?
+> > > > >
+> > > > > Hm, that would indicate the write-combining got broken somewhere. This
+> > > > > should definitely be faster. Also we shouldn't transfer the hole
+> > > > > thing, except when scrolling ...
+> > > >
+> > > > First rule of fbcon usage, you are always effectively scrolling.
+> > > >
+> > > > Also these devices might be on a PCIE 1x piece of wet string, not sure
+> > > > if the numbers reflect that.
+> > >
+> > > pcie 1x 1.0 is 250MB/s, so yeah with a bit of inefficiency and
+> > > overhead not entirely out of the question that 150MB/s is actually the
+> > > hw limit. If it's really pcie 1x 1.0, no idea where to check that.
+> > > Also might be worth to double-check that the gpu pci bar is listed as
+> > > wc in debugfs/x86/pat_memtype_list.
+> >
+> > Here is some dump of the device info and the pat_memtype_list, while it is
+> > running other 0day task:
 > 
-> Not really.
-> 
-> $ git grep -n '^# SPDX-License-Identifier' -- '*.py' | wc -l
-> 62
-> $ git grep -n '^# SPDX-License-Identifier' -- '*.py' | \
->   cut -f2 -d: | sort | uniq -c
->      32 1
->      27 2
->       3 3
-> $ git grep -n '^# SPDX-License-Identifier' -- '*.py' | \
->   cut -f1 -d: | xargs ./scripts/spdxcheck.py --verbose
-> 
-> License files:               14
-> Exception files:              2
-> License IDs                  19
-> Exception IDs                 2
-> 
-> Files checked:               62
-> Lines checked:               95
-> Files with SPDX:             62
-> Files with errors:            0
+> Looks all good, I guess Dave is right with this probably only being a
+> real slow, real old pcie link, plus maybe some inefficiencies in the
+> mapping. Your 150MB/s, was that just the copy, or did you include all
+> the setup/map/unmap/teardown too in your measurement in the trace?
 
-Not quite sure what you're meant with the above, but:
 
-1) this won't cover all python scripts, as there are some without
-.py extension:
+Following is the breakdown, the 19240 us is the memory copy time
 
-	$ git grep -lE "\#\!.*python"|grep -v \.py$
-	drivers/staging/greybus/tools/lbtest
-	scripts/bloat-o-meter
-	scripts/diffconfig
-	scripts/show_delta
-	tools/hv/lsvmbus
-	tools/kvm/kvm_stat/kvm_stat
-
-2) we have already some files that are violating PEP-263 due to
-SPDX headers. On a quick look at the results of:
-
-	$ git grep -lE "^\#.*coding" $(git grep -lE "\#\!.*python")
-	Documentation/sphinx/kernel_include.py
-	Documentation/sphinx/rstFlatTable.py
-	tools/perf/python/tracepoint.py
-	tools/perf/python/twatch.py
-	tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
-
-Those three files already have such problem:
-
-	tools/perf/python/tracepoint.py
-	tools/perf/python/twatch.py
-	tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
-
-On those scripts, the coding line is not at the right place, and will be
-silently ignored by python, causing them to crash with UTF-8 encoding
-chars, if any.
-
-And the other two doesn't have a SPDX header file. Adding a SPDX header
-there would violate the "up to the second line" rule.
+The drm_fb_helper_dirty_work() calls sequentially 
+1. drm_client_buffer_vmap	  (290 us)
+2. drm_fb_helper_dirty_blit_real  (19240 us)
+3. helper->fb->funcs->dirty()    ---> NULL for mgag200 driver
+4. drm_client_buffer_vunmap       (215 us)
 
 Thanks,
-Mauro
+Feng
+
+
+> -Daniel
+> 
+> >
+> > controller info
+> > =================
+> > 03:00.0 VGA compatible controller: Matrox Electronics Systems Ltd. MGA G200e [Pilot] ServerEngines (SEP1) (rev 05) (prog-if 00 [VGA controller])
+> >         Subsystem: Intel Corporation MGA G200e [Pilot] ServerEngines (SEP1)
+> >         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+> >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >         Interrupt: pin A routed to IRQ 16
+> >         NUMA node: 0
+> >         Region 0: Memory at d0000000 (32-bit, prefetchable) [size=16M]
+> >         Region 1: Memory at d1800000 (32-bit, non-prefetchable) [size=16K]
+> >         Region 2: Memory at d1000000 (32-bit, non-prefetchable) [size=8M]
+> >         Expansion ROM at 000c0000 [disabled] [size=128K]
+> >         Capabilities: [dc] Power Management version 2
+> >                 Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+> >                 Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+> >         Capabilities: [e4] Express (v1) Legacy Endpoint, MSI 00
+> >                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s <64ns, L1 <1us
+> >                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE- FLReset-
+> >                 DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+> >                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> >                         MaxPayload 128 bytes, MaxReadReq 128 bytes
+> >                 DevSta: CorrErr+ UncorrErr+ FatalErr- UnsuppReq+ AuxPwr- TransPend-
+> >                 LnkCap: Port #0, Speed 2.5GT/s, Width x1, ASPM L0s, Exit Latency L0s <64ns, L1 <1us
+> >                         ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+> >                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+> >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> >                 LnkSta: Speed 2.5GT/s, Width x1, TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> >         Capabilities: [54] MSI: Enable- Count=1/1 Maskable- 64bit-
+> >                 Address: 00000000  Data: 0000
+> >         Kernel driver in use: mgag200
+> >         Kernel modules: mgag200
+> >
+> >
+> > Related pat setting
+> > ===================
+> > uncached-minus @ 0xc0000000-0xc0001000
+> > uncached-minus @ 0xc0000000-0xd0000000
+> > uncached-minus @ 0xc0008000-0xc0009000
+> > uncached-minus @ 0xc0009000-0xc000a000
+> > uncached-minus @ 0xc0010000-0xc0011000
+> > uncached-minus @ 0xc0011000-0xc0012000
+> > uncached-minus @ 0xc0012000-0xc0013000
+> > uncached-minus @ 0xc0013000-0xc0014000
+> > uncached-minus @ 0xc0018000-0xc0019000
+> > uncached-minus @ 0xc0019000-0xc001a000
+> > uncached-minus @ 0xc001a000-0xc001b000
+> > write-combining @ 0xd0000000-0xd0300000
+> > write-combining @ 0xd0000000-0xd1000000
+> > uncached-minus @ 0xd1800000-0xd1804000
+> > uncached-minus @ 0xd1900000-0xd1980000
+> > uncached-minus @ 0xd1980000-0xd1981000
+> > uncached-minus @ 0xd1a00000-0xd1a80000
+> > uncached-minus @ 0xd1a80000-0xd1a81000
+> > uncached-minus @ 0xd1f10000-0xd1f11000
+> > uncached-minus @ 0xd1f11000-0xd1f12000
+> > uncached-minus @ 0xd1f12000-0xd1f13000
+> >
+> > Host bridge info
+> > ================
+> > 00:00.0 Host bridge: Intel Corporation Device 7853
+> >         Subsystem: Intel Corporation Device 0000
+> >         Control: I/O- Mem- BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+> >         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort+ <TAbort- <MAbort- >SERR- <PERR- INTx-
+> >         Interrupt: pin A routed to IRQ 0
+> >         NUMA node: 0
+> >         Capabilities: [90] Express (v2) Root Port (Slot-), MSI 00
+> >                 DevCap: MaxPayload 128 bytes, PhantFunc 0
+> >                         ExtTag- RBE+
+> >                 DevCtl: Report errors: Correctable- Non-Fatal- Fatal- Unsupported-
+> >                         RlxdOrd- ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> >                         MaxPayload 128 bytes, MaxReadReq 128 bytes
+> >                 DevSta: CorrErr- UncorrErr- FatalErr- UnsuppReq- AuxPwr- TransPend-
+> >                 LnkCap: Port #0, Speed 2.5GT/s, Width x4, ASPM L1, Exit Latency L0s <512ns, L1 <4us
+> >                         ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
+> >                 LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+> >                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> >                 LnkSta: Speed unknown, Width x0, TrErr- Train- SlotClk- DLActive- BWMgmt- ABWMgmt-
+> >                 RootCtl: ErrCorrectable+ ErrNon-Fatal+ ErrFatal+ PMEIntEna- CRSVisible-
+> >                 RootCap: CRSVisible-
+> >                 RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+> >                 DevCap2: Completion Timeout: Range BCD, TimeoutDis+, LTR-, OBFF Not Supported ARIFwd-
+> >                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
+> >                 LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
+> >                          Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+> >                          Compliance De-emphasis: -6dB
+> >                 LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+> >                          EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+> >         Capabilities: [e0] Power Management version 3
+> >                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+> >                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+> >         Capabilities: [100 v1] Vendor Specific Information: ID=0002 Rev=0 Len=00c <?>
+> >         Capabilities: [144 v1] Vendor Specific Information: ID=0004 Rev=1 Len=03c <?>
+> >         Capabilities: [1d0 v1] Vendor Specific Information: ID=0003 Rev=1 Len=00a <?>
+> >         Capabilities: [250 v1] #19
+> >         Capabilities: [280 v1] Vendor Specific Information: ID=0005 Rev=3 Len=018 <?>
+> >         Capabilities: [298 v1] Vendor Specific Information: ID=0007 Rev=0 Len=024 <?>
+> >
+> >
+> > Thanks,
+> > Feng
+> >
+> >
+> > >
+> > > -Daniel
+> > > --
+> > > Daniel Vetter
+> > > Software Engineer, Intel Corporation
+> > > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> 
+> 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
