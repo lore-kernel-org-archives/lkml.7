@@ -2,150 +2,130 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53FBC64E92
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20F2C48BC6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F0620828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF74620820
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 13:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="esarSxK0"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="WKMK7AE4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733021AbfIEN6c (ORCPT
+        id S1733123AbfIEN7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 09:58:32 -0400
-Received: from mail-eopbgr50099.outbound.protection.outlook.com ([40.107.5.99]:47493
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        Thu, 5 Sep 2019 09:59:16 -0400
+Received: from mail-eopbgr30058.outbound.protection.outlook.com ([40.107.3.58]:3286
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730739AbfIEN6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 09:58:32 -0400
+        id S1730739AbfIEN7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 09:59:15 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C5uaPA2gs4WQ1xXVtTvXgYR49gkKPbz/cB21D12depCR1ip7Bm0OqvFU3TPviCPpTc5dWV1hYo6k0CbnKe0Bif40rJuRdDDyWR+oNgeiCkmr3fse1AmXClVklAf8TaE3CiVlwlt9AsCG26zg8UQqDHhy7fBtIJqaKR3ZzxKlYh0733DEM/SLZL2fkkRR6SftGS51oXao1vdsloM9oIIJ7tcy/5JPGNEyY5RtmWE4aLpQuZ1WExaUqJbvuLj0kEcSt6MB4x/A0VGhAItg1ZSssANAubSlgYKNe93XHU6uE9U1nNI78mqeO5+axmEQnNqLqztguVnyHh8+XjkpZRikbg==
+ b=df63PsAn6WpgD0PLXPWb6ovX2vA30xB0dGq0Z2ifIsqAzxyA7vBH9/Y1G9RZfHGa6FZzSyXK8gtJhOgfpC1eDFktNw8TVjlO0KrQ2GiRMMEoYXuib6IYgTOdfwOhQPwPSv2cnj94LU7lTRXCkTI6ZNtrfFACYLJCdTN83aXo2WHRUlzMDMWCL+Ph5imDCqXNSxc8cQMfFBiE4eApE0u7lSwc2LdFh97MzwgNMJW+r1x5HB3O57cbO6TeRJ//V8HxbstM+JyWU3OKg9RqJUtPnH1AQhUS1y8dZwrHNurmMpFx35PseiSfB6cBqQQqH9hU2Uf3ia9p+jilq5YJD3NDdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=utsaBLCJganQV5SdQABLEt8dkWnVAQMfeaiOyy2TwNw=;
- b=eR40THKTGni2WVaXwFj5RV6zXba+DCmDPdgCS/jBhPcyTj4qAv+2U21gBVDdRd/ygbW+1xliG6qieAv1QI0kKPM/8N13dskX1huMvY4+yqZ5VDl+IUdZC1LKgTPgQquX1kv9x7vklO/ip2g8iRAUTQKDt9do9ckKlwKTdxF7FdAPHGszeYP9DLwlcFc9aR49GbCwfDDZf5rXJVKzhhDHq1B1o+snyRpLaBvtk2ihLOhHADLbb8uCAZ80BjtAtoIq0vuoUccZDoFPv5AfkvdYRQdLrAbjCD3McpCZrezL8RtwTooqjfgsU/bwJ0nxn9nn8+INz9LmDYejquOTmPjnYQ==
+ bh=MMizm16Z+F9Mrxrg67ccIMS7U02Y9WbnS9tOyZE5WOk=;
+ b=c1d+WInCV2GujWUAdm27kixitBef6NOEwCBspLl05rn1HUGfgofZnF4YTO4wH+kAhg6lxbYRHbIo/WdG/cBSqe0B6H1h0Qjc7XCuQOBGQdgXUflgxzEMkiMCP7zt61FeKcDqc+Zzxsq4eefYSn06FSr+OYSH6lUxuCO0QOuJg4iSwmHhzGbt3lKiCPVz8bRjOFRn7CIM+k/85LVAKtG2o8uplFafFRBr9PkYlF22Mq39n0iM7bnLH0yG5ieZfA0fBPG/bgXWi2MM2FQSxjAgeFYU+asBdPUMOudE9EzmTWBUyb4YQrkc0a9hu1RLjedr3Az0yvt4muJpD4kwxrJncg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=utsaBLCJganQV5SdQABLEt8dkWnVAQMfeaiOyy2TwNw=;
- b=esarSxK0SCESZ7uHnv2BHAUIcXFADsghNn7tEkp75KWzZ7bAihgdFpwfHYFH6Q0ZehKCStOHpAJqopVWWeeoVPMdMJaj/FzU1diAt5TEohf9KDa+HUebAwfPrvlaJoT6emEvMcOBiRdvbBwtBXZ6uxd7xS4Z3B8c4ilukWo01c0=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3404.eurprd02.prod.outlook.com (52.134.68.142) with Microsoft SMTP
+ bh=MMizm16Z+F9Mrxrg67ccIMS7U02Y9WbnS9tOyZE5WOk=;
+ b=WKMK7AE4+8mhynCpJh55lDsrjJi2cL46C8GpbsGOwC1fdMci3K7PwI2dLI8D3Mr5gWNzjnsXdDewkOYORcYERQDAai06J2R4Ax95co2uLkGxzChEi1YsYfAHgtlI1Tqhr5Vy/NCp4wHlMW2nsKZCYA4U+OpktgbzioDL65iM+Y4=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5183.eurprd05.prod.outlook.com (20.178.11.87) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2220.19; Thu, 5 Sep 2019 13:58:25 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::e12b:afcb:73e1:5d09]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::e12b:afcb:73e1:5d09%7]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
- 13:58:24 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Wolfram Sang <wsa@the-dreams.de>, Lee Jones <lee.jones@linaro.org>
-CC:     "alokc@codeaurora.org" <alokc@codeaurora.org>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+ 15.20.2241.15; Thu, 5 Sep 2019 13:59:11 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::79a3:d971:d1f3:ab6f%7]) with mapi id 15.20.2220.022; Thu, 5 Sep 2019
+ 13:59:11 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+CC:     "mst@redhat.com" <mst@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 1/1] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Thread-Topic: [PATCH v3 1/1] i2c: qcom-geni: Provide an option to disable DMA
- processing
-Thread-Index: AQHVY9PiTM9rqMwvEUyL0vDv3ajYn6cdGeCAgAACawA=
-Date:   Thu, 5 Sep 2019 13:58:24 +0000
-Message-ID: <3458ed2a-ae49-b46b-3e89-ce039a2749b4@axentia.se>
-References: <20190905102247.27583-1-lee.jones@linaro.org>
- <20190905134941.GG1157@kunai>
-In-Reply-To: <20190905134941.GG1157@kunai>
-Accept-Language: en-US, sv-SE
+        "aarcange@redhat.com" <aarcange@redhat.com>,
+        "jglisse@redhat.com" <jglisse@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH 0/2] Revert and rework on the metadata accelreation
+Thread-Topic: [PATCH 0/2] Revert and rework on the metadata accelreation
+Thread-Index: AQHVY+VUnpT/Tzy9vUuDxdg4xWUdk6cdHGCA
+Date:   Thu, 5 Sep 2019 13:59:10 +0000
+Message-ID: <20190905135907.GB6011@mellanox.com>
+References: <20190905122736.19768-1-jasowang@redhat.com>
+In-Reply-To: <20190905122736.19768-1-jasowang@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: HE1PR06CA0162.eurprd06.prod.outlook.com
- (2603:10a6:7:16::49) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
+x-clientproxiedby: LNXP265CA0085.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:76::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
+ smtp.mailfrom=jgg@mellanox.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eea0af23-5e3b-426a-4af0-08d732091eaa
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3404;
-x-ms-traffictypediagnostic: DB3PR0202MB3404:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <DB3PR0202MB3404D99EBF971483D51B7B0BBCBB0@DB3PR0202MB3404.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-office365-filtering-correlation-id: 171bda58-a846-45b7-175f-08d732093a20
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5183;
+x-ms-traffictypediagnostic: VI1PR05MB5183:
+x-microsoft-antispam-prvs: <VI1PR05MB5183FE3F1720403ACB20303ACFBB0@VI1PR05MB5183.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
 x-forefront-prvs: 015114592F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(42606007)(39830400003)(366004)(189003)(199004)(58126008)(65806001)(65956001)(54906003)(2616005)(316002)(11346002)(4326008)(53936002)(110136005)(476003)(66066001)(71190400001)(71200400001)(8936002)(446003)(99286004)(52116002)(76176011)(6512007)(6436002)(5660300002)(6246003)(6306002)(25786009)(31696002)(7736002)(256004)(6116002)(508600001)(14454004)(6486002)(102836004)(229853002)(26005)(86362001)(36756003)(66446008)(64756008)(66556008)(66476007)(66946007)(7416002)(186003)(486006)(81166006)(31686004)(81156014)(2906002)(966005)(8676002)(305945005)(386003)(6506007)(53546011)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3404;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(39860400002)(376002)(346002)(366004)(199004)(189003)(3846002)(6116002)(76176011)(5660300002)(102836004)(186003)(66556008)(26005)(71200400001)(71190400001)(66476007)(14444005)(4744005)(6512007)(8676002)(478600001)(66446008)(386003)(6506007)(66946007)(64756008)(2616005)(476003)(1076003)(486006)(86362001)(446003)(11346002)(256004)(66066001)(2906002)(6916009)(7736002)(6246003)(33656002)(8936002)(25786009)(4326008)(36756003)(305945005)(14454004)(53936002)(6436002)(52116002)(54906003)(81166006)(81156014)(316002)(229853002)(6486002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5183;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xDOuuvqxrS9glJKYa7/86AFZprjNL2TjHTSPqfDFOix3FIfXyaq3IAgmLYME7MuIVBL+SFX9S4XGaHHBttJuaeWICuur6/a72Wq9tU4XF5D8L5c5nuyZLQ69GzV4onREM59cH82gu2UU/H4trcbXzpgbUQc5+5RyYn7Rad8x4NT9w+fYAwPfO0HA0c/W7+EoBFDbYkSUWjq6zI48I5L5Ix2VM8BjTNs8hL2Dkqwva8VzwQyyFlOUeNMzOCjF6O/t/kZBsa4OlwaOTcWAVx5KtrDD73+OW2cUegf91nDLAUqhUKOEpdceaoqTAImVNKBLN+T0hDuHTR8nvonJUdGegeW1A86b9xEsF2yarsIOR6zCoyGcBhJphBf7XjRC6KfsuUpZpq15zF7H2KmtKJPRFfPRVBvfsZQWDwpb2Ph89jk=
+x-microsoft-antispam-message-info: adzM/hgIStuBPGyRMZbeZW3tI3aZg98pbWLvSgnzBMCvrrhjVxWQtFGqc1a/yi6I6imIOUt74wAxhCmO/Tz/tiDaA2ySB8idd5hZiZ1tSTteAKPcB8NVpLLOo1TOLpASe0tgRIauZAzZwRPIQmoU961/5qzmDNwEGFYCJj8QlcCoFZvCMnRTa50qh3vkbF2Vad5WOnyfkcTdcs6AMrcr5fh7e8+If6kUAK9OqwasHoVfR4c+IK+3QXCevNMykWAN+j/tYVSi68UHsPaa7tYxqZ3rfS8hY+FSPC3VxIGSaAJDHHoUhCcJdmlI93C4NKQTCRzfGxSXSun99PVWim/Q02+0wraqZqgrgY1gbF5+PBQycQCv/ZA2sGOFxH3q5dOSvRcsvnkXfKz4XzMwPBAuShLEIHOhNhPGzIkAHAXUOZ8=
 x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <813F8E51C3E2B141AF9AC8B67D62FE76@eurprd02.prod.outlook.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A9EFBDB41F67594A8536A97722126F60@eurprd05.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: eea0af23-5e3b-426a-4af0-08d732091eaa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 13:58:24.8524
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 171bda58-a846-45b7-175f-08d732093a20
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2019 13:59:10.9169
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jfgVotAS0pgobuVIHFfQC0PWUnx09cwdMJa6OY+7pSKyKaiEHOrbBxzNOgJ5a7JH
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3404
+X-MS-Exchange-CrossTenant-userprincipalname: cJHkiKeD5jjSxVxs3lfvbMZrXhjFojVGmf1BmFlK7WeSM62dGGLgx3Aw5ApkrsgJx+luBZMkx8jDfllTC7/ETg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-05 15:49, Wolfram Sang wrote:
-> Hi Lee,
+On Thu, Sep 05, 2019 at 08:27:34PM +0800, Jason Wang wrote:
+> Hi:
 >=20
-> I understand you are in a hurry, but please double check before
-> sending...
-
-Linus indicated that an rc8 is coming up, which should provide an extra wee=
-k.
-https://lwn.net/Articles/798152/
-
-> On Thu, Sep 05, 2019 at 11:22:47AM +0100, Lee Jones wrote:
->> We have a production-level laptop (Lenovo Yoga C630) which is exhibiting
->> a rather horrific bug.  When I2C HID devices are being scanned for at
->> boot-time the QCom Geni based I2C (Serial Engine) attempts to use DMA.
->> When it does, the laptop reboots and the user never sees the OS.
->>
->> The beautiful thing about this approach is that, *if* the Geni SE DMA
->> ever starts working, we can remove the C code and any old properties
->> left in older DTs just become NOOP.  Older kernels with newer DTs (less
->> of a priority) *still* will not work - but they do not work now anyway.
+> Per request from Michael and Jason, the metadata accelreation is
+> reverted in this version and rework in next version.
 >=20
-> ... becasue this paragraph doesn't fit anymore. Needs to be reworded.
+> Please review.
 >=20
->>
->> Fixes: 8bc529b25354 ("soc: qcom: geni: Add support for ACPI")
+> Thanks
 >=20
-> As said in the other thread, I don't get it, but this is not a show
-> stopper for me.
+> Jason Wang (2):
+>   Revert "vhost: access vq metadata through kernel virtual address"
+>   vhost: re-introducing metadata acceleration through kernel virtual
+>     address
 
-WAG: because ACPI made some driver load at all, and when it
-did it something started happening which crashed some machines.
+There are a bunch of patches in the queue already that will help
+vhost, and I a working on one for next cycle that will help alot more
+too.
 
-Cheers,
-Peter
+I think you should apply the revert this cycle and rebase the other
+patch for next..
+
+Jason
