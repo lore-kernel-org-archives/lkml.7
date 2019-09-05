@@ -2,158 +2,179 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5882EC3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838DEC3A5AB
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A7B2070C
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536FE2070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 11:26:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mt+7+hRD"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="f+Hpg8NS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388391AbfIELZt (ORCPT
+        id S2388406AbfIEL0E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 07:25:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40823 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388377AbfIELZs (ORCPT
+        Thu, 5 Sep 2019 07:26:04 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54340 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732580AbfIEL0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 07:25:48 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w13so2314755wru.7
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 04:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eSSehVjGWa5LE0/gH3icTwBJRpC+AS+nnud+/72hXME=;
-        b=Mt+7+hRDjQpIIeJgMoGnabQHJimWM0kgJ2UdEMA4e/koR8gzYQ1321o30N4BZocB2u
-         /qPsUN06ep9Ol+mmRjACdrinITrJu1c9O4N3xnvY5dqYqZ+/ItmVEl2A/ZYZrOg5W0oX
-         d7PWqHT4dqRUH6829VDN0TFRWP1t1mvuuMzlSP+Tki8dp5s7y99j397jmCxbbgGWrbln
-         y/8uvI+kalF1Wrvu+ca8Do/eDHZ/0edCauMNiGxvt5we7BPMssy+foqfahPlM0xsLnrz
-         SkWQLtSRXNWpZA/0iWLZbGPpULHsaKv9wnWz3rTo1RkEttQopkNbw9P2GXMkDn5AWHGB
-         KxTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eSSehVjGWa5LE0/gH3icTwBJRpC+AS+nnud+/72hXME=;
-        b=XQGjU3e6Mv09gP09m/GzNJaJY8KveH5RgdsOfrA7aAgl/9rHZRaNOMjevSBm4ob9Zo
-         +tmIH3inTq2KAAztdRS/cuKt10Q3hl9KNDSw/dgJ3ER7x3OcQ5EUVSVXfn787V4E8dnv
-         O7HpXOyKYuye9Z25gqBstmxlJ5Kz0DPzKVxa28g098Mg+VdtzFGH82CAC3F5ez/YtwI0
-         NdDH58Jvyl14oIG+51rxRD3mNwEz1lCTu/nyzAMrhLAzsw5++OHUMUgNnSDkRgBYmGeC
-         fp0BGOOW4J10DJYcvs8GzOkHtuRyX88XmU3Hq2nRHHjRgsrkBCZN0GPGbfxKJwAcXz9T
-         81tA==
-X-Gm-Message-State: APjAAAU9aIUDoyptqqKldU8t1YpkeYhAn1ldvXS1i/ll5jCPr9rGVnZT
-        xmBC7iFRHm8DELmZE+WPKGkGbg==
-X-Google-Smtp-Source: APXvYqxetEUY8/CDjePqsdfkQZ4EdeUdz1CGPrEUDvyI1B7HWzOYDYHQy7uMF49ubR5yv2wYKsd3pQ==
-X-Received: by 2002:a5d:6211:: with SMTP id y17mr45427wru.35.1567682745012;
-        Thu, 05 Sep 2019 04:25:45 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id f3sm2347171wmh.9.2019.09.05.04.25.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 04:25:44 -0700 (PDT)
-Date:   Thu, 5 Sep 2019 12:25:41 +0100
-From:   Matthias Maennich <maennich@google.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Matthew Dharm <mdharm-usb@one-eyed-alien.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        maco@android.com, sspatil@google.com,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-modules@vger.kernel.org,
-        linux-usb <linux-usb@vger.kernel.org>,
-        USB Mass Storage on Linux 
-        <usb-storage@lists.one-eyed-alien.net>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [usb-storage] Re: [PATCH v4 12/12] RFC: watchdog: export core
- symbols in WATCHDOG_CORE namespace
-Message-ID: <20190905112541.GA227928@google.com>
-References: <20180716122125.175792-1-maco@android.com>
- <20190903150638.242049-1-maennich@google.com>
- <20190903150638.242049-13-maennich@google.com>
- <20190903161045.GA22754@roeck-us.net>
- <CAK7LNARYqqCSCc0G4FL7_bj80iMoLLJrUJ7B3+huD25EUkrttA@mail.gmail.com>
- <c6ac941c-06a4-e5dc-5cb9-fca7b40d7e9a@roeck-us.net>
- <CAA6KcBBeP9xYbVws4=RMFNA4kyrodE-R3mifhbkee-Q+jFRcoQ@mail.gmail.com>
- <20190905104147.GA27788@linux-8ccs>
+        Thu, 5 Sep 2019 07:26:04 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id DB06126D;
+        Thu,  5 Sep 2019 13:26:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1567682761;
+        bh=PDM2yg84iLZxQ9w4hCMgxPNjGc9GtOUOGtLLgc+7y2w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=f+Hpg8NSUg1iGUf3k42bWXSJbLsMLp6/KZKiry+7CLg0Kil9hX+LlHRrMHKteTgDq
+         xESEcAnQjuF0Y8cy/KfKZ8tfYzI+Vn6/nI/uXJsiMB2g0n6FqA18hvlizMnIxbXsk8
+         pgHr0nJvYMV27Ysa2JcCE65YJT167kPsP585+iY0=
+Date:   Thu, 5 Sep 2019 14:25:54 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli@fpond.eu, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 14/14] drm: rcar-du: Force CMM enablement when resuming
+Message-ID: <20190905112554.GH5035@pendragon.ideasonboard.com>
+References: <20190825135154.11488-1-jacopo+renesas@jmondi.org>
+ <20190825135154.11488-15-jacopo+renesas@jmondi.org>
+ <20190827000517.GC5274@pendragon.ideasonboard.com>
+ <20190905105809.iguzoqenlcriqegk@uno.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190905104147.GA27788@linux-8ccs>
+In-Reply-To: <20190905105809.iguzoqenlcriqegk@uno.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 12:41:47PM +0200, Jessica Yu wrote:
->+++ Matthew Dharm [04/09/19 09:16 -0700]:
->>On Wed, Sep 4, 2019 at 5:12 AM Guenter Roeck <linux@roeck-us.net> wrote:
->>>
->>>Note that I don't object to the patch set in general. There may be symbols
->>>which only need be exported in the context of a single subsystem or even
->>>driver (if a driver consists of more than one module). For example, a mfd
->>>driver may export symbols which should only be called by its client drivers.
->>>In such a situation, it may well be beneficial to limit the use of exported
->>>symbols.
->>
->>I can appreciate this benefit.
->>
->>>I am not sure what good that does in practice (if I understand correctly,
->>>a driver only has to declare that it wants to use a restricted use symbol
->>>if it wants to use it), but that is a different question.
->>
->>I think this question implies that you are coming from the perspective
->>of "security" or wanting to restrict access to the underlying
->>functions, rather than wanting to clean-up the way symbols are handled
->>for manageability / maintainability purposes (which is the goal, as I
->>understand it).
+Hi Jacopo,
 
-The goal of this patch set is to introduce structure into the exported
-surface that goes beyond naming conventions like 'usb_*'. So, it is
-rather about maintainability then security. In particular, creating the
-visibility of which parts of the kernel use which other parts, might
-help to find cases where suboptimal choices were made. Maybe already
-during development/review.
+On Thu, Sep 05, 2019 at 12:58:09PM +0200, Jacopo Mondi wrote:
+> On Tue, Aug 27, 2019 at 03:05:17AM +0300, Laurent Pinchart wrote:
+> > Hi Jacopo,
+> >
+> > (Question for Daniel below)
+> >
+> > Thank you for the patch.
+> >
+> > On Sun, Aug 25, 2019 at 03:51:54PM +0200, Jacopo Mondi wrote:
+> >> When resuming from system suspend, the DU driver is responsible for
+> >> reprogramming and enabling the CMM unit if it was in use at the time
+> >> the system entered the suspend state.
+> >>
+> >> Force the color_mgmt_changed flag to true if any of the DRM color
+> >> transformation properties was set in the CRTC state duplicated at
+> >> suspend time, as the CMM gets reprogrammed only if said flag is active in
+> >> the rcar_du_atomic_commit_update_cmm() method.
+> >>
+> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >> ---
+> >>  drivers/gpu/drm/rcar-du/rcar_du_drv.c | 21 +++++++++++++++++++++
+> >>  1 file changed, 21 insertions(+)
+> >>
+> >> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> >> index 018480a8f35c..6e38495fb78f 100644
+> >> --- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> >> +++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
+> >> @@ -17,6 +17,7 @@
+> >>  #include <linux/slab.h>
+> >>  #include <linux/wait.h>
+> >>
+> >> +#include <drm/drm_atomic.h>
+> >>  #include <drm/drm_atomic_helper.h>
+> >>  #include <drm/drm_fb_cma_helper.h>
+> >>  #include <drm/drm_fb_helper.h>
+> >> @@ -482,6 +483,26 @@ static int rcar_du_pm_suspend(struct device *dev)
+> >>  static int rcar_du_pm_resume(struct device *dev)
+> >>  {
+> >>  	struct rcar_du_device *rcdu = dev_get_drvdata(dev);
+> >> +	struct drm_atomic_state *state = rcdu->ddev->mode_config.suspend_state;
+> >> +	unsigned int i;
+> >> +
+> >> +	for (i = 0; i < rcdu->num_crtcs; ++i) {
+> >> +		struct drm_crtc *crtc = &rcdu->crtcs[i].crtc;
+> >> +		struct drm_crtc_state *crtc_state;
+> >> +
+> >> +		crtc_state = drm_atomic_get_existing_crtc_state(state, crtc);
+> >> +		if (!crtc_state)
+> >> +			continue;
+> >
+> > Shouldn't you get the new state here ?
+> 
+> I have followed the drm_atomic_helper_suspend() call stack, that calls
+> drm_atomic_helper_duplicate_state() which then assign the crtct state
+> with drm_atomic_get_crtc_state(), where I read:
+> 
+>        	crtc_state = drm_atomic_get_existing_crtc_state(state, crtc);
+>         ...
+> 	state->crtcs[index].state = crtc_state;
+> 	state->crtcs[index].old_state = crtc->state;
+> 	state->crtcs[index].new_state = crtc_state;
+> 
+> So state or new_state for the purpose of getting back the crtc state
+> are the same if I'm not mistaken.
 
-As Guenter correctly noted, a module is able to declare that it wants to
-use a namespace. One idea that came up earlier was to maybe restrict the
-namespaces that can actually be imported by modules. But I would see
-anything in that direction as beyond the scope of this series.
+It seems to be the case, but the documentation of
+drm_atomic_get_existing_crtc_state() states
 
-A nice side effect of having to declare the usage is that it shows up in
-modinfo and module users can reason about how the module interacts with
-the rest of the kernel.
+ * This function is deprecated, @drm_atomic_get_old_crtc_state or
+ * @drm_atomic_get_new_crtc_state should be used instead.
 
+I would thus use drm_atomic_get_new_crtc_state().
 
->>HOWEVER, I have one question:  If these patches are included, and
->>someone wants to introduce a bit of code which needs to use two
->>symbols from different namespaces but with the same name, can that be
->>done?  That is, if driver A has symbol 'foo' and driver B has symbol
->>'foo' (both in their respective namespaces), and driver C wants to use
->>A.foo and B.foo, can that be supported?
->
->As of now, we currently don't support this - modpost will warn if a
->symbol is exported more than once (across modules + vmlinux), and the
->module loader currently assumes exported symbol names are unique.  Do
->you have a concrete use case? If there is a strong need for this, I
->don't think it'd be too hard to implement.
+> >> +
+> >> +		/*
+> >> +		 * Force re-enablement of CMM after system resume if any
+> >> +		 * of the DRM color transformation properties was set in
+> >> +		 * the state saved at system suspend time.
+> >> +		 */
+> >> +		if (crtc_state->gamma_lut || crtc_state->degamma_lut ||
+> >> +		    crtc_state->ctm)
+> >
+> > We don't support degamma_lut or crm, so I would drop those.
+> 
+> yeah, I added them as it was less code to change when we'll support
+> them. But for now they could be removed.
+> 
+> > With these small issues addressed,
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >
+> > Shouldn't we however squash this with the previous patch to avoid
+> > bisection issues ?
+> 
+> Which one in your opinion?
+> "drm: rcar-du: kms: Update CMM in atomic commit tail" ?
+> It seems to me they do quite different things though..
 
-The implementation does not change the fact that symbol names need to be
-unique. As Arnd just mentioned in the other thread: the linker will
-already fail if two builtin symbols use the same name. It is rather a
-tag attached to the symbol.
+Yes, but suspend/resume will be broken after 13/14 without 14/14. Not
+the end of the world, but not really nice if we need to bisect
+suspend/resume issues.
 
-Cheers,
-Matthias
+> >> +			crtc_state->color_mgmt_changed = true;
+> >
+> > Daniel, is this something that would make sense in the KMS core (or
+> > helpers) ?
+> >
+> >> +	}
+> >>
+> >>  	return drm_mode_config_helper_resume(rcdu->ddev);
+> >>  }
+
+-- 
+Regards,
+
+Laurent Pinchart
