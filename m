@@ -2,158 +2,425 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6432C3A5A5
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626FCC3A5A5
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929F421883
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WTcKN/e2"
+	by mail.kernel.org (Postfix) with ESMTP id 2FAF922CF6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 12:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389198AbfIEMDz (ORCPT
+        id S2388595AbfIEMFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 08:03:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43119 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389182AbfIEMDy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 08:03:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d15so1604057pfo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 05:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Aai7vMHcDPZtNFz3aO3i4nNt8bejCBiPZk07jBpgR2w=;
-        b=WTcKN/e2WDwsfZRb1ZPCK72rhmmq1i4MgNfFiMwmgX5EGjjROA4kusvu55uNFp1LBO
-         /uxRGx4Kayu9ebfdeUxNnP6bYiADt13UMJIKX6L+ZZjCmoWp2e0nHouJX6HE3lRpTTTU
-         TIBSeFBYHps1uGMozAJdlXex02DUv14fDyEtrhShlEKELzWoONBOpQva3epcqzSXMyJX
-         /tx017mSIhp4ZvDpsNuXNjJqQ97lJZI1Ly+ljw3udSBplBSStERPMX9+8FpCY0IgiuWP
-         TZv1uzAo1OFPuUkMUY1EvY6x/d2ZUI1Ox+0kF1tL9GXD0w+EBB4bNXObcdZu15DpMDu+
-         Vf9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Aai7vMHcDPZtNFz3aO3i4nNt8bejCBiPZk07jBpgR2w=;
-        b=V5X+J7WGt1ukZLm8HWevI7I/yMv60TGEJDAYFoH7zQ/fKVCYDSqpuqDGWaK+DRZdpR
-         w1B7h0pug8ABFFXACs0yeofZOuP1fXfGG4KlhUTOFfajGT5TeDS4eiGIUz4mXeBgxy/1
-         CvsRi4kkknu4h+BuL4a0e45B6bPHJ3E+Hwp67chwjmmMrgO55MAHYhlOSXfMmr7pkhjD
-         UZNfbjAeMnhzZXY00D5SF+lv8bOnUmpx4w/VpccNcQt0KAoPCYPlu1nxtwS+pdEUWkik
-         Qi9P5+l/0bGgbFKCOVBEZqGtZDNUXVa6tiaTnyn9t+Yo5uSUVaGd8e2yhyCcsTotUlOv
-         FXcw==
-X-Gm-Message-State: APjAAAWOQuIwL44sZ1Or/o8v146jw9dgb4zEupn2BoNZrzWtRmULgGHK
-        UgnfuYDgktPulIyLHKu2KHTA+u28cOjv1LNyzV07rg==
-X-Google-Smtp-Source: APXvYqyu8Win4to5U0SdZSHj6aVFd0Dn+v68b8PT7F4Jr4rllD6ZMBJGxv+/R/yW6QiPhDN64x5fnxAluKnbs/Aue7A=
-X-Received: by 2002:aa7:8bcc:: with SMTP id s12mr3295908pfd.93.1567685032809;
- Thu, 05 Sep 2019 05:03:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000490d4c058e8047e6@google.com>
-In-Reply-To: <000000000000490d4c058e8047e6@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Thu, 5 Sep 2019 14:03:41 +0200
-Message-ID: <CAAeHK+wq3M=75R=yjM0ECO4eoPjA1aOknHaE=nX48gidURD0wA@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in __free_pages_ok
-To:     syzbot <syzbot+6ff9bba63b987471b8be@syzkaller.appspotmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 5 Sep 2019 08:05:38 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3161 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731568AbfIEMFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 08:05:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Sep 2019 05:05:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,470,1559545200"; 
+   d="scan'208";a="185424430"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga003.jf.intel.com with ESMTP; 05 Sep 2019 05:05:32 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [PATCH v3 net-next] net: stmmac: Add support for MDIO interrupts
+Date:   Thu,  5 Sep 2019 20:05:30 +0800
+Message-Id: <1567685130-8153-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 25, 2019 at 2:08 PM syzbot
-<syzbot+6ff9bba63b987471b8be@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    6a3599ce usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10d72ef0600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=700ca426ab83faae
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6ff9bba63b987471b8be
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144edb68600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14cd0e64600000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+6ff9bba63b987471b8be@syzkaller.appspotmail.com
->
-> usb 1-1: USB disconnect, device number 2
-> ------------[ cut here ]------------
-> ODEBUG: free active (active state 0) object type: timer_list hint:
-> hid_retry_timeout+0x0/0xd0 drivers/hid/usbhid/hid-core.c:716
-> WARNING: CPU: 1 PID: 21 at lib/debugobjects.c:325
-> debug_print_object+0x160/0x250 lib/debugobjects.c:325
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.2.0-rc6+ #15
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x292/0x6c9 kernel/panic.c:219
->   __warn.cold+0x20/0x4b kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:325
-> Code: dd e0 16 ba 85 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48
-> 8b 14 dd e0 16 ba 85 48 c7 c7 c0 0c ba 85 e8 db c7 33 ff <0f> 0b 83 05 03
-> 6e 86 05 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-> RSP: 0018:ffff8881d9eff710 EFLAGS: 00010086
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3dfed4
-> RBP: 0000000000000001 R08: ffff8881d9e36000 R09: ffffed103b663ed7
-> R10: ffffed103b663ed6 R11: ffff8881db31f6b7 R12: ffffffff86b04760
-> R13: ffffffff812db3c0 R14: ffffffff88f4bae8 R15: ffff8881d0e1a8c8
->   __debug_check_no_obj_freed lib/debugobjects.c:785 [inline]
->   debug_check_no_obj_freed+0x2a3/0x42e lib/debugobjects.c:817
->   free_pages_prepare mm/page_alloc.c:1140 [inline]
->   __free_pages_ok+0x215/0x1bb0 mm/page_alloc.c:1366
->   usbhid_disconnect+0x98/0xd0 drivers/hid/usbhid/hid-core.c:1414
->   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
->   __device_release_driver drivers/base/dd.c:1081 [inline]
->   device_release_driver_internal+0x404/0x4c0 drivers/base/dd.c:1112
->   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
->   device_del+0x460/0xb80 drivers/base/core.c:2274
->   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
->   usb_disconnect+0x284/0x830 drivers/usb/core/hub.c:2199
->   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x13bd/0x3550 drivers/usb/core/hub.c:5441
->   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x30b/0x410 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
->
-> ======================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+From: "Chuah, Kim Tatt" <kim.tatt.chuah@intel.com>
 
-#syz dup: WARNING: ODEBUG bug in usbhid_disconnect (2)
+DW EQoS v5.xx controllers added capability for interrupt generation
+when MDIO interface is done (GMII Busy bit is cleared).
+This patch adds support for this interrupt on supported HW to avoid
+polling on GMII Busy bit.
+
+stmmac_mdio_read() & stmmac_mdio_write() will sleep until wake_up() is
+called by the interrupt handler.
+
+Reviewed-by: Voon Weifeng <weifeng.voon@intel.com>
+Reviewed-by: Kweh, Hock Leong <hock.leong.kweh@intel.com>
+Reviewed-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Chuah, Kim Tatt <kim.tatt.chuah@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+
+Changelog v3
+*Move the changelog to before the --- marker line
+Changelog v2
+*mdio interrupt mode or polling mode will depends on mdio interrupt
+ enable bit
+*Disable the mdio interrupt enable bit in stmmac_release
+*Remove the condition for initialize wait queues
+*Applied reverse Christmas tree
+---
+ drivers/net/ethernet/stmicro/stmmac/common.h      |  2 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |  1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |  7 +++
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.c      |  8 ++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac5.h      |  4 ++
+ drivers/net/ethernet/stmicro/stmmac/hwif.c        |  9 ++++
+ drivers/net/ethernet/stmicro/stmmac/hwif.h        |  4 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  5 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 57 +++++++++++++++++++----
+ 9 files changed, 89 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 49aa56ca09cc..775a1c114b1a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -448,6 +448,8 @@ struct mac_device_info {
+ 	unsigned int pcs;
+ 	unsigned int pmt;
+ 	unsigned int ps;
++	bool mdio_intr_en;
++	wait_queue_head_t mdio_busy_wait;
+ };
+ 
+ struct stmmac_rx_routing {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+index 2ed11a581d80..1be6a8a88b8f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
+@@ -106,6 +106,7 @@ enum dwmac4_irq_status {
+ 	mmc_irq = 0x00000100,
+ 	lpi_irq = 0x00000020,
+ 	pmt_irq = 0x00000010,
++	mdio_irq = 0x00040000,
+ };
+ 
+ /* MAC PMT bitmap */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+index fc9954e4a772..97fca6d65141 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -59,6 +59,9 @@ static void dwmac4_core_init(struct mac_device_info *hw,
+ 	if (hw->pcs)
+ 		value |= GMAC_PCS_IRQ_DEFAULT;
+ 
++	if (hw->mdio_intr_en)
++		value |= GMAC_INT_MDIO_EN;
++
+ 	writel(value, ioaddr + GMAC_INT_EN);
+ }
+ 
+@@ -629,6 +632,9 @@ static int dwmac4_irq_status(struct mac_device_info *hw,
+ 			x->irq_rx_path_exit_lpi_mode_n++;
+ 	}
+ 
++	if (intr_status & mdio_irq)
++		wake_up(&hw->mdio_busy_wait);
++
+ 	dwmac_pcs_isr(ioaddr, GMAC_PCS_BASE, intr_status, x);
+ 	if (intr_status & PCS_RGSMIIIS_IRQ)
+ 		dwmac4_phystatus(ioaddr, x);
+@@ -836,6 +842,7 @@ static void dwmac4_set_mac_loopback(void __iomem *ioaddr, bool enable)
+ 	.rxp_config = dwmac5_rxp_config,
+ 	.flex_pps_config = dwmac5_flex_pps_config,
+ 	.set_mac_loopback = dwmac4_set_mac_loopback,
++	.mdio_intr_dis = dwmac5_mdio_intr_dis,
+ };
+ 
+ int dwmac4_setup(struct stmmac_priv *priv)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+index 3f4f3132e16b..c58751e1dcb6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.c
+@@ -549,3 +549,11 @@ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
+ 	writel(val, ioaddr + MAC_PPS_CONTROL);
+ 	return 0;
+ }
++
++void dwmac5_mdio_intr_dis(void __iomem *ioaddr)
++{
++	u32 val = readl(ioaddr + GMAC_INT_EN);
++
++	val &= ~GMAC_INT_MDIO_EN;
++	writel(val, ioaddr + GMAC_INT_EN);
++}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
+index 775db776b3cc..a56511a4c97d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac5.h
+@@ -72,6 +72,9 @@
+ #define TCEIE				BIT(0)
+ #define DMA_ECC_INT_STATUS		0x00001088
+ 
++/* MDIO interrupt enable in MAC_Interrupt_Enable register */
++#define GMAC_INT_MDIO_EN		BIT(18)
++
+ int dwmac5_safety_feat_config(void __iomem *ioaddr, unsigned int asp);
+ int dwmac5_safety_feat_irq_status(struct net_device *ndev,
+ 		void __iomem *ioaddr, unsigned int asp,
+@@ -83,5 +86,6 @@ int dwmac5_rxp_config(void __iomem *ioaddr, struct stmmac_tc_entry *entries,
+ int dwmac5_flex_pps_config(void __iomem *ioaddr, int index,
+ 			   struct stmmac_pps_cfg *cfg, bool enable,
+ 			   u32 sub_second_inc, u32 systime_flags);
++void dwmac5_mdio_intr_dis(void __iomem *ioaddr);
+ 
+ #endif /* __DWMAC5_H__ */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.c b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+index 3af2e5015245..7127efe652db 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.c
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.c
+@@ -73,6 +73,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 	bool gmac;
+ 	bool gmac4;
+ 	bool xgmac;
++	bool mdio_intr_en;
+ 	u32 min_id;
+ 	const struct stmmac_regs_off regs;
+ 	const void *desc;
+@@ -90,6 +91,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = false,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC3_X_OFFSET,
+@@ -108,6 +110,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = true,
+ 		.gmac4 = false,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC3_X_OFFSET,
+@@ -126,6 +129,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = 0,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -144,6 +148,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = DWMAC_CORE_4_00,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -162,6 +167,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = false,
+ 		.min_id = DWMAC_CORE_4_10,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -180,6 +186,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = true,
+ 		.xgmac = false,
++		.mdio_intr_en = true,
+ 		.min_id = DWMAC_CORE_5_10,
+ 		.regs = {
+ 			.ptp_off = PTP_GMAC4_OFFSET,
+@@ -198,6 +205,7 @@ static int stmmac_dwmac4_quirks(struct stmmac_priv *priv)
+ 		.gmac = false,
+ 		.gmac4 = false,
+ 		.xgmac = true,
++		.mdio_intr_en = false,
+ 		.min_id = DWXGMAC_CORE_2_10,
+ 		.regs = {
+ 			.ptp_off = PTP_XGMAC_OFFSET,
+@@ -276,6 +284,7 @@ int stmmac_hwif_init(struct stmmac_priv *priv)
+ 		mac->mode = mac->mode ? : entry->mode;
+ 		mac->tc = mac->tc ? : entry->tc;
+ 		mac->mmc = mac->mmc ? : entry->mmc;
++		mac->mdio_intr_en = mac->mdio_intr_en ? : entry->mdio_intr_en;
+ 
+ 		priv->hw = mac;
+ 		priv->ptpaddr = priv->ioaddr + entry->regs.ptp_off;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index 9435b312495d..d42885426e78 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -363,6 +363,8 @@ struct stmmac_ops {
+ 	int (*get_mac_tx_timestamp)(struct mac_device_info *hw, u64 *ts);
+ 	/* Source Address Insertion / Replacement */
+ 	void (*sarc_configure)(void __iomem *ioaddr, int val);
++	/* Disable mdio interrupt */
++	void (*mdio_intr_dis)(void __iomem *ioaddr);
+ };
+ 
+ #define stmmac_core_init(__priv, __args...) \
+@@ -443,6 +445,8 @@ struct stmmac_ops {
+ 	stmmac_do_callback(__priv, mac, get_mac_tx_timestamp, __args)
+ #define stmmac_sarc_configure(__priv, __args...) \
+ 	stmmac_do_void_callback(__priv, mac, sarc_configure, __args)
++#define stmmac_mdio_intr_dis(__priv, __args...) \
++	stmmac_do_void_callback(__priv, mac, mdio_intr_dis, __args)
+ 
+ /* PTP and HW Timer helpers */
+ struct stmmac_hwtimestamp {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 06ccd216ae90..2557a2beb03d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2768,6 +2768,8 @@ static int stmmac_release(struct net_device *dev)
+ 	phylink_stop(priv->phylink);
+ 	phylink_disconnect_phy(priv->phylink);
+ 
++	stmmac_mdio_intr_dis(priv, priv->ioaddr);
++
+ 	stmmac_stop_all_queues(priv);
+ 
+ 	stmmac_disable_all_queues(priv);
+@@ -4463,6 +4465,9 @@ int stmmac_dvr_probe(struct device *device,
+ 	if (ret)
+ 		goto error_hw_init;
+ 
++	/* mdio intr wait queue */
++	init_waitqueue_head(&priv->hw->mdio_busy_wait);
++
+ 	stmmac_check_ether_addr(priv);
+ 
+ 	/* Configure real RX and TX queues */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+index 40c42637ad75..625e1fde0c86 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+@@ -19,6 +19,8 @@
+ #include <linux/property.h>
+ #include <linux/slab.h>
+ 
++#include "dwmac4.h"
++#include "dwmac5.h"
+ #include "dwxgmac2.h"
+ #include "stmmac.h"
+ 
+@@ -142,6 +144,18 @@ static int stmmac_xgmac2_mdio_write(struct mii_bus *bus, int phyaddr,
+ 				  !(tmp & MII_XGMAC_BUSY), 100, 10000);
+ }
+ 
++static bool stmmac_mdio_intr_done(struct mii_bus *bus)
++{
++	struct net_device *ndev = bus->priv;
++	struct stmmac_priv *priv;
++	unsigned int mii_address;
++
++	priv = netdev_priv(ndev);
++	mii_address = priv->hw->mii.addr;
++
++	return !(readl(priv->ioaddr + mii_address) & MII_BUSY);
++}
++
+ /**
+  * stmmac_mdio_read
+  * @bus: points to the mii_bus structure
+@@ -159,9 +173,11 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+ 	u32 value = MII_BUSY;
++	u32 mdio_intr_en = 0;
+ 	int data = 0;
+ 	u32 v;
+ 
++	mdio_intr_en = readl(priv->ioaddr + GMAC_INT_EN) & GMAC_INT_MDIO_EN;
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+ 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+@@ -181,16 +197,26 @@ static int stmmac_mdio_read(struct mii_bus *bus, int phyaddr, int phyreg)
+ 		}
+ 	}
+ 
+-	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-			       100, 10000))
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
+ 		return -EBUSY;
++	}
+ 
+ 	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+-	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-			       100, 10000))
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
+ 		return -EBUSY;
++	}
+ 
+ 	/* Read the data from the MII data register */
+ 	data = (int)readl(priv->ioaddr + mii_data) & MII_DATA_MASK;
+@@ -214,9 +240,11 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 	unsigned int mii_address = priv->hw->mii.addr;
+ 	unsigned int mii_data = priv->hw->mii.data;
+ 	u32 value = MII_BUSY;
++	u32 mdio_intr_en = 0;
+ 	int data = phydata;
+ 	u32 v;
+ 
++	mdio_intr_en = readl(priv->ioaddr + GMAC_INT_EN) & GMAC_INT_MDIO_EN;
+ 	value |= (phyaddr << priv->hw->mii.addr_shift)
+ 		& priv->hw->mii.addr_mask;
+ 	value |= (phyreg << priv->hw->mii.reg_shift) & priv->hw->mii.reg_mask;
+@@ -240,17 +268,30 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
+ 	}
+ 
+ 	/* Wait until any existing MII operation is complete */
+-	if (readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-			       100, 10000))
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
+ 		return -EBUSY;
++	}
+ 
+ 	/* Set the MII address register to write */
+ 	writel(data, priv->ioaddr + mii_data);
+ 	writel(value, priv->ioaddr + mii_address);
+ 
+ 	/* Wait until any existing MII operation is complete */
+-	return readl_poll_timeout(priv->ioaddr + mii_address, v, !(v & MII_BUSY),
+-				  100, 10000);
++	if (mdio_intr_en) {
++		if (!wait_event_timeout(priv->hw->mdio_busy_wait,
++					stmmac_mdio_intr_done(bus), HZ / 100))
++			return -EBUSY;
++	} else if (readl_poll_timeout(priv->ioaddr + mii_address, v,
++				      !(v & MII_BUSY), 100, 10000)) {
++		return -EBUSY;
++	}
++
++	return 0;
+ }
+ 
+ /**
+-- 
+1.9.1
+
