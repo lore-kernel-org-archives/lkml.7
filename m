@@ -2,312 +2,178 @@ Return-Path: <SRS0=AnJR=XA=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4F3C00306
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8486C00306
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A26B207E0
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wo036a/M"
+	by mail.kernel.org (Postfix) with ESMTP id CC9A12070C
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Sep 2019 18:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390293AbfIEShk (ORCPT
+        id S2391316AbfIEShp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Sep 2019 14:37:40 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:37640 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732093AbfIEShk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Sep 2019 14:37:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d1so1896138pgp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Sep 2019 11:37:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=DVXLinOn8C5sgE/iJ6npN/AotN1/ZmynoznI4Mz+Yz0=;
-        b=Wo036a/MVNiRCY/8ieCzuvcqpY38/FuRDkEbUTBQuXEfSFeNwRPPX/cxgd5gjpRfLY
-         +00gU4JEE5ti9UAcc825apaiLqvovOSFyI0Nc0arVCbtnNJ5R9N+GUlBorrxHwUL7IW1
-         jsLjvCT8iDRcVyhMVf4qRdvJ96DMU6u6SRpB0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=DVXLinOn8C5sgE/iJ6npN/AotN1/ZmynoznI4Mz+Yz0=;
-        b=jskF8/JOYF0aPLrwc2RlxMNtCqJtAYuHn5EDy0fEnCTBipwEfuCsU1A4p7a/h04K1N
-         Pv3Aj4PDNc5yae7wVqc+Fe7Exc8yH8wcALbis6EOaxXliNcPoUSei/MD+zsVkJNsVSyZ
-         +wk/YaV2c8B7ZGvKv3spQoG+RkRcCSvV5ugNlp3KVq2d7hknkguG2MXvJRa0o2K3bzky
-         vyD5/8DA4Sc8/yjsLFw8kxYnp6SWTa0dKwXK73geaLNW+Rtrz1U2izmPjHWLWWDGK2u3
-         NTUz7IAglSx0aRJgihcCblZoinDhA46C9ckQVt9R/8mkefOG0GVaSinaduiEylqzJFmU
-         AVRw==
-X-Gm-Message-State: APjAAAV5HHyNqcnuKmAqPNTKP9J+aE4bOkZqXhBjjz0sw2plpZKF8xQr
-        NnKqSKlQ4cvscxo369FVOvZGoEh4OVm+nA==
-X-Google-Smtp-Source: APXvYqzRud8B7hHX6wOgPLr5I8uTQvu8FG1Bk3AlyCTavbs7z3RrA6y/AQaftautCcysHal9XB2ZPg==
-X-Received: by 2002:a62:e50c:: with SMTP id n12mr5678778pff.206.1567708659361;
-        Thu, 05 Sep 2019 11:37:39 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id a134sm7202286pfa.162.2019.09.05.11.37.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2019 11:37:38 -0700 (PDT)
-Message-ID: <5d7155f2.1c69fb81.61bf.f862@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Thu, 5 Sep 2019 14:37:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59734 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732093AbfIEShn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Sep 2019 14:37:43 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C5A793090FD1;
+        Thu,  5 Sep 2019 18:37:42 +0000 (UTC)
+Received: from fogou.chygwyn.com (unknown [10.33.36.100])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA512600F8;
+        Thu,  5 Sep 2019 18:37:38 +0000 (UTC)
+Subject: Re: Why add the general notification queue and its sources
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rstrode@redhat.com, Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        raven@themaw.net, keyrings@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        linux-block <linux-block@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        David Lehman <dlehman@redhat.com>, Ian Kent <ikent@redhat.com>
+References: <156763534546.18676.3530557439501101639.stgit@warthog.procyon.org.uk>
+ <CAHk-=wh5ZNE9pBwrnr5MX3iqkUP4nspz17rtozrSxs5-OGygNw@mail.gmail.com>
+ <17703.1567702907@warthog.procyon.org.uk>
+ <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+From:   Steven Whitehouse <swhiteho@redhat.com>
+Message-ID: <11667f69-fbb5-28d2-3c31-7f865f2b93e5@redhat.com>
+Date:   Thu, 5 Sep 2019 19:37:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190905091707.14420-1-mkshah@codeaurora.org>
-References: <20190905091707.14420-1-mkshah@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        bjorn.andersson@linaro.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v2] soc: qcom: Introduce subsystem sleep stats driver
-To:     Maulik Shah <mkshah@codeaurora.org>, agross@kernel.org,
-        david.brown@linaro.org, linux-arm-msm@vger.kernel.org
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 05 Sep 2019 11:37:37 -0700
+In-Reply-To: <CAHk-=wjQ5Fpv0D7rxX0W=obx9xoOAxJ_Cr+pGCYOAi2S9FiCNg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 05 Sep 2019 18:37:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2019-09-05 02:17:07)
-> Multiple subsystems like modem, spss, adsp, cdsp present on
-> Qualcomm Technologies Inc's (QTI) SoCs maintains low power mode
-> statistics in shared memory (SMEM). Lets add a driver to read
-> and display this information using sysfs.
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
-> Changes in v2:
->         - Correct Makefile to use QCOM_SS_SLEEP_STATS config
-> ---
->  Documentation/ABI/testing/sysfs-power    |  10 ++
->  drivers/soc/qcom/Kconfig                 |   9 ++
->  drivers/soc/qcom/Makefile                |   1 +
->  drivers/soc/qcom/subsystem_sleep_stats.c | 146 +++++++++++++++++++++++
->  4 files changed, 166 insertions(+)
->  create mode 100644 drivers/soc/qcom/subsystem_sleep_stats.c
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/te=
-sting/sysfs-power
-> index 18b7dc929234..1f8bb201246a 100644
-> --- a/Documentation/ABI/testing/sysfs-power
-> +++ b/Documentation/ABI/testing/sysfs-power
-> @@ -288,6 +288,16 @@ Description:
->                 writing a "0" (default) to it disables them.  Reads from
->                 this file return the current value.
-> =20
-> +What:          /sys/power/subsystem_sleep/stats
-> +Date:          December 2017
+Hi,
 
-It isn't December 2017.
+On 05/09/2019 18:19, Linus Torvalds wrote:
+> On Thu, Sep 5, 2019 at 10:01 AM David Howells <dhowells@redhat.com> wrote:
+>>> I'm just going to be very blunt about this, and say that there is no
+>>> way I can merge any of this *ever*, unless other people stand up and
+>>> say that
+>>>
+>>>   (a) they'll use it
+>>>
+>>> and
+>>>
+>>>   (b) they'll actively develop it and participate in testing and coding
+>> Besides the core notification buffer which ties this together, there are a
+>> number of sources that I've implemented, not all of which are in this patch
+>> series:
+> You've at least now answered part of the "Why", but you didn't
+> actually answer the whole "another developer" part.
+>
+> I really don't like how nobody else than you seems to even look at any
+> of the key handling patches. Because nobody else seems to care.
+>
+> This seems to be another new subsystem / driver that has the same
+> pattern. If it's all just you, I don't want to merge it, because I
+> really want more than just other developers doing "Reviewed-by" after
+> looking at somebody elses code that they don't actually use or really
+> care about.
+>
+> See what I'm saying?
+>
+> New features that go into the kernel should have multiple users. Not a
+> single developer who pushes both the kernel feature and the single use
+> of that feature.
+>
+> This very much comes from me reverting the key ACL pull. Not only did
+> I revert it, ABSOLUTELY NOBODY even reacted to the revert. Nobody
+> stepped up and said they they want that new ACL code, and pushed for a
+> fix. There was some very little murmuring about it when Mimi at least
+> figured out _why_ it broke, but other than that all the noise I saw
+> about the revert was Eric Biggers pointing out it broke other things
+> too, and that it had actually broken some test suites. But since it
+> hadn't even been in linux-next, that too had been noticed much too
+> late.
+>
+> See what I'm saying? This whole "David Howells does his own features
+> that nobody else uses" needs to stop. You need to have a champion. I
+> just don't feel safe pulling these kinds of changes from you, because
+> I get the feeling that ABSOLUTELY NOBODY ELSE ever really looked at it
+> or really cared.
+>
+> Most of the patches has nobody else even Cc'd, and even the patches
+> that do have some "Reviewed-by" feel more like somebody else went "ok,
+> the change looks fine to me", without any other real attachment to the
+> code.
+>
+> New kernel features and interfaces really need to have a higher
+> barrier of entry than one developer working on his or her own thing.
+>
+> Is that a change from 25 years ago? Or yes it is. We can point to lots
+> of "single developer did a thing" from years past. But things have
+> changed. And once bitten, twice shy: I really am a _lot_ more nervous
+> about all these key changes now.
+>
+>                      Linus
 
-> +Contact:       Maulik Shah <mkshah@codeaurora.org>
-> +Description:
-> +               The /sys/power/subsystem_sleep/stats file prints the subs=
-ystem
-> +               sleep information on Qualcomm Technologies, Inc. (QTI) So=
-Cs.
-> +
-> +               Reading from this file will display subsystem level low p=
-ower
-> +               mode statistics.
-> +
+There are a number of potential users, some waiting just to have a 
+mechanism to avoid the racy alternatives to (for example) parsing 
+/proc/mounts repeatedly, others perhaps a bit further away, but who have 
+nonetheless expressed interest in having an interface which allows 
+notifications for mounts.
 
-This directory doesn't make any sense to me. It's in the top-level power
-directory and it is specific to qcom. Is this debugging information? Why
-does userspace care about understanding the sleep stats information?
-Please Cc Rafael on anything touching /sys/power/
+The subject of mount notifications has been discussed at LSF/MM in the 
+past too, I proposed it as a topic a little while back: 
+https://www.spinics.net/lists/linux-block/msg07653.html and David's 
+patch set is a potential solution to some of the issues that I raised 
+there. The original series for the new mount API came from an idea of 
+Al/Miklos which was also presented at LSF/MM 2017, and this is a follow 
+on project. So it has not come out of nowhere, but has been something 
+that has been discussed in various forums over a period of time.
 
->  What:          /sys/power/resume_offset
->  Date:          April 2018
->  Contact:       Mario Limonciello <mario.limonciello@dell.com>
-> diff --git a/drivers/soc/qcom/subsystem_sleep_stats.c b/drivers/soc/qcom/=
-subsystem_sleep_stats.c
-> new file mode 100644
-> index 000000000000..5379714b6ba4
-> --- /dev/null
-> +++ b/drivers/soc/qcom/subsystem_sleep_stats.c
-> @@ -0,0 +1,146 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +/*
-> + * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#define pr_fmt(fmt) "%s: " fmt, KBUILD_MODNAME
-> +
-> +#include <linux/errno.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#include <linux/soc/qcom/smem.h>
-> +
-> +enum subsystem_item_id {
-> +       MODEM =3D 605,
-> +       ADSP,
-> +       CDSP,
-> +       SLPI,
-> +       GPU,
-> +       DISPLAY,
-> +};
-> +
-> +enum subsystem_pid {
-> +       PID_APSS =3D 0,
-> +       PID_MODEM =3D 1,
-> +       PID_ADSP =3D 2,
-> +       PID_SLPI =3D 3,
-> +       PID_CDSP =3D 5,
-> +       PID_GPU =3D PID_APSS,
-> +       PID_DISPLAY =3D PID_APSS,
-> +};
-> +
-> +struct subsystem_data {
-> +       char *name;
-> +       enum subsystem_item_id item_id;
-> +       enum subsystem_pid pid;
-> +};
-> +
-> +static const struct subsystem_data subsystems[] =3D {
-> +       {"MODEM", MODEM, PID_MODEM},
-> +       {"ADSP", ADSP, PID_ADSP},
-> +       {"CDSP", CDSP, PID_CDSP},
-> +       {"SLPI", SLPI, PID_SLPI},
-> +       {"GPU", GPU, PID_GPU},
-> +       {"DISPLAY", DISPLAY, PID_DISPLAY},
+Originally, there was a proposal to use netlink for the notifications, 
+however that didn't seem to meet with general approval, even though Ian 
+Kent did some work towards figuring out whether that would be a useful 
+direction to go in.
 
-Please put spaces around braces.
+David has since come up with the proposal presented here, which is 
+intended to improve on the original proposal in various ways - mostly 
+making the notifications more efficient (i.e. smaller) and also generic 
+enough that it might have uses beyond the original intent of just being 
+a mount notification mechanism.
 
-> +};
-> +
-> +struct subsystem_stats {
-> +       uint32_t version_id;
-> +       uint32_t count;
-> +       uint64_t last_entered;
-> +       uint64_t last_exited;
-> +       uint64_t accumulated_duration;
-> +};
-> +
-> +struct subsystem_stats_prv_data {
-> +       struct kobj_attribute ka;
-> +       struct kobject *kobj;
-> +};
-> +
-> +static struct subsystem_stats_prv_data *prvdata;
-> +
-> +static inline ssize_t subsystem_stats_print(char *prvbuf, ssize_t length,
-> +                                           struct subsystem_stats *recor=
-d,
-> +                                           const char *name)
-> +{
-> +       return scnprintf(prvbuf, length, "%s\n\tVersion:0x%x\n"
-> +                       "\tSleep Count:0x%x\n"
-> +                       "\tSleep Last Entered At:0x%llx\n"
-> +                       "\tSleep Last Exited At:0x%llx\n"
-> +                       "\tSleep Accumulated Duration:0x%llx\n\n",
-> +                       name, record->version_id, record->count,
-> +                       record->last_entered, record->last_exited,
-> +                       record->accumulated_duration);
+The original reason for the mount notification mechanism was so that we 
+are able to provide information to GUIs and similar filesystem and 
+storage management tools, matching the state of the filesystem with the 
+state of the underlying devices. This is part of a larger project 
+entitled "Project Springfield" to try and provide better management 
+tools for storage and filesystems. I've copied David Lehman in, since he 
+can provide a wider view on this topic.
 
-Information in sysfs is supposed to be one value per file. This is a
-bunch of different values and it includes a version field. Looks almost
-like something we would put into /proc, but of course that doesn't make
-any sense to put in /proc either.
+It is something that I do expect will receive wide use, and which will 
+be tested carefully. I know that Ian Kent has started work on some 
+support for libmount for example, even outside of autofs.
 
-Please rethink the whole approach here. Can this be placed under the
-remoteproc nodes for each remote processor that's in the system? That
-would make it more discoverable by userspace looking at the remoteproc
-devices. I suppose GPU and DISPLAY aren't "remoteproc"s though so maybe
-this should be a new 'class' for devices that have an RPMh RSC? Maybe
-make a qcom_rpmh_rsc class and then have these be stats in there.
+We do regularly hear from customers that better storage and filesystem 
+management tools are something that they consider very important, so 
+that is why we are spending such a lot of effort in trying to improve 
+the support in this area.
 
-> +}
-> +
-> +static ssize_t subsystem_stats_show(struct kobject *kobj,
-> +                                   struct kobj_attribute *attr, char *bu=
-f)
-> +{
-> +       ssize_t length =3D 0;
-> +       int i =3D 0;
-> +       size_t size =3D 0;
-> +       struct subsystem_stats *record =3D NULL;
-> +
-> +       /* Read SMEM data written by other subsystems */
-> +       for (i =3D 0; i < ARRAY_SIZE(subsystems); i++) {
-> +               record =3D (struct subsystem_stats *) qcom_smem_get(
-> +                         subsystems[i].pid, subsystems[i].item_id, &size=
-);
-> +
-> +               if (!IS_ERR_OR_NULL(record) && (PAGE_SIZE - length > 0))
+I'm not sure if that really answers your question, except to say that it 
+is something that is much more than a personal project of David's and 
+that other people do care about it too,
 
-It can return ERR pointer or NULL? Why?
+Steve.
 
-> +                       length +=3D subsystem_stats_print(buf + length,
-> +                                                       PAGE_SIZE - lengt=
-h,
-> +                                                       record,
-> +                                                       subsystems[i].nam=
-e);
-> +       }
-> +
-> +       return length;
-> +}
-> +
-> +static int __init subsystem_sleep_stats_init(void)
-> +{
-> +       struct kobject *ss_stats_kobj;
-> +       int ret;
-> +
-> +       prvdata =3D kmalloc(sizeof(*prvdata), GFP_KERNEL);
-> +       if (!prvdata)
-> +               return -ENOMEM;
-> +
-> +       ss_stats_kobj =3D kobject_create_and_add("subsystem_sleep",
-> +                                              power_kobj);
-> +       if (!ss_stats_kobj)
-> +               return -ENOMEM;
-> +
-> +       prvdata->kobj =3D ss_stats_kobj;
-> +
-> +       sysfs_attr_init(&prvdata->ka.attr);
-> +       prvdata->ka.attr.mode =3D 0444;
-> +       prvdata->ka.attr.name =3D "stats";
-> +       prvdata->ka.show =3D subsystem_stats_show;
-> +       prvdata->ka.store =3D NULL;
-
-Does it need to be set to NULL explicitly? Why not kzalloc() prvdata
-above?
-
-> +
-> +       ret =3D sysfs_create_file(prvdata->kobj, &prvdata->ka.attr);
-> +       if (ret) {
-> +               pr_err("sysfs_create_file failed\n");
-
-Seems useless. Presumably sysfs_create_file() can complain itself.
-
-> +               kobject_put(prvdata->kobj);
-> +               kfree(prvdata);
-> +               return ret;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static void __exit subsystem_sleep_stats_exit(void)
-> +{
-> +       sysfs_remove_file(prvdata->kobj, &prvdata->ka.attr);
-> +       kobject_put(prvdata->kobj);
-> +       kfree(prvdata);
-> +}
-> +
-> +module_init(subsystem_sleep_stats_init);
-
-So if this is compiled into an arm/arm64 image that doesn't include qcom
-platform support it will create this directory? That's just nonsensical.
 
